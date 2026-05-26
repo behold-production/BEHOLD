@@ -1,182 +1,136 @@
 import React, { useState } from 'react';
-import { Star, CheckCircle2, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
+import { ShieldCheck, Award, HeartHandshake, Compass, Users } from 'lucide-react';
 
-const TESTIMONIALS = [
+const STORY_TABS = [
   {
-    quote: "Behold Aspire helped my daughter choose the right stream after 10th. Their scientific approach is unmatched in Kerala.",
-    author: "Shaji PK",
-    role: "Parent, Trivandrum",
-    stars: 5
+    id: 'mentorship',
+    icon: Compass,
+    title: 'Extended Mentorship',
+    desc: 'We support students across academic quarters, mapping milestones that translate assessment reports into real higher education achievements.'
   },
   {
-    quote: "I was extremely confused between Design and Computer Science. The aptitude test and follow-up consultation cleared all my doubts.",
-    author: "Anjana S.",
-    role: "Student, Kochi",
-    stars: 5
+    id: 'doorstep',
+    icon: HeartHandshake,
+    title: 'Doorstep Counselling',
+    desc: 'By visiting students directly inside their homes or preferred learning environments, we alleviate clinical barriers and ensure complete emotional privacy.'
   },
   {
-    quote: "The psychology-first approach helped our son handle CBSE board exam pressure while preparing for entrance timelines.",
-    author: "Dr. Rajesh Kumar",
-    role: "Parent, Calicut",
-    stars: 5
+    id: 'school',
+    icon: Users,
+    title: 'Personalized Career Support',
+    desc: 'Conducting in-school orientations, parent alignments, and focus workshops to configure healthy environments for student career decisions.'
   }
 ];
 
-const PARTNERS = ["CIGI", "CAREER360", "KERALA_EDU", "MIND_HUB"];
-
-export default function About() {
-  const [currentTestimonial, setCurrentTestimonial] = useState(0);
-
-  const nextTestimonial = () => {
-    setCurrentTestimonial((prev) => (prev + 1) % TESTIMONIALS.length);
-  };
-
-  const prevTestimonial = () => {
-    setCurrentTestimonial((prev) => (prev - 1 + TESTIMONIALS.length) % TESTIMONIALS.length);
-  };
-
-  React.useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTestimonial((prev) => (prev + 1) % TESTIMONIALS.length);
-    }, 6000);
-    return () => clearInterval(timer);
-  }, [currentTestimonial]);
+export default function About({ setView }) {
+  const [activeTab, setActiveTab] = useState('mentorship');
 
   return (
-    <section id="about" className="py-24 bg-white relative">
-      <div className="max-w-7xl mx-auto px-6">
+    <section id="about" className="py-24 md:py-32 px-6 text-black text-left grid-bg relative overflow-hidden">
+      
+      {/* Glow Effects */}
+      <div className="absolute bottom-10 left-10 w-[300px] h-[300px] bg-brand/10 rounded-full glow-glow pointer-events-none" />
 
-        {/* Partners Slider / Trust Indicators */}
-        <div className="mb-24 text-center">
-          <p className="text-xs font-header font-black text-slate-400 uppercase tracking-[0.3em] mb-8">
-            Our Frameworks & Recognitions
-          </p>
-          <div className="flex flex-wrap justify-center items-center gap-12 md:gap-24 opacity-50 hover:opacity-80 transition-opacity duration-300">
-            {PARTNERS.map((partner, index) => (
-              <div
-                key={index}
-                className="text-2xl md:text-3xl font-header font-black tracking-tighter text-primary hover:text-gold transition-colors duration-200"
-              >
-                {partner}
-              </div>
-            ))}
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+        
+        {/* Left Column: Text & Tab Selector */}
+        <div className="lg:col-span-6 space-y-8">
+          
+          <div className="space-y-4">
+            <span className="text-[10px] bg-black text-white px-3.5 py-1 rounded-full uppercase tracking-wider font-extrabold w-fit block">
+              our core purpose
+            </span>
+            <h2 className="text-4xl md:text-5xl font-header font-black tracking-tight text-gray-900 leading-[1.1] uppercase">
+              Why Choose BEHOLD
+            </h2>
+            <p className="text-black/60 font-sans text-sm md:text-base font-light leading-relaxed">
+              At BEHOLD, we go beyond traditional career guidance by offering extended mentorship, doorstep psychological counselling, and personalized career support directly within schools and student spaces. Our student-first approach combines scientific assessment, emotional support, and continuous guidance to help adolescents grow with clarity, confidence, and direction.
+            </p>
           </div>
+
+          {/* Interactive Feature Selectors */}
+          <div className="space-y-3">
+            {STORY_TABS.map(tab => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
+              return (
+                <div 
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`p-6 border transition-all duration-300 cursor-pointer text-left rounded-[24px] ${
+                    isActive 
+                      ? 'bg-white border-black/10 shadow-lg scale-[1.01]' 
+                      : 'bg-transparent border-transparent hover:border-black/[0.04] hover:bg-white/40'
+                  }`}
+                >
+                  <div className="flex items-start gap-4">
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 transition-colors ${
+                      isActive ? 'bg-black text-brand' : 'bg-black/5 text-black'
+                    }`}>
+                      <Icon className="w-4 h-4" />
+                    </div>
+                    <div className="space-y-1">
+                      <h4 className="font-header font-bold text-xs uppercase tracking-wider text-black">{tab.title}</h4>
+                      <p className="text-black/50 text-[11px] font-light leading-relaxed">{tab.desc}</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="pt-4">
+            <button
+              onClick={() => {
+                setView('booking');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="px-6 py-3.5 bg-black hover:bg-zinc-800 text-white font-bold text-xs uppercase tracking-widest rounded-full transition-all duration-200 cursor-pointer shadow-sm"
+            >
+              Get Started with Behold
+            </button>
+          </div>
+
         </div>
 
-        {/* Main Content Grid */}
-        <div className="grid lg:grid-cols-12 gap-16 items-center">
+        {/* Right Column: Immersive visual block */}
+        <div className="lg:col-span-6 relative flex items-center justify-center">
+          
+          {/* Main Visual Container */}
+          <div className="w-full aspect-square md:aspect-[4/3] rounded-[40px] overflow-hidden border border-black/5 shadow-2xl relative bg-zinc-200">
+            <img 
+              src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80" 
+              alt="Emotional student representation" 
+              className="w-full h-full object-cover grayscale-10 contrast-105"
+            />
+            {/* Visual Glass Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-brand/10 via-transparent to-transparent pointer-events-none" />
+          </div>
 
-          {/* Left Column: Testimonial & Image Card */}
-          <div className="lg:col-span-6 relative">
-            <div className="aspect-[4/5] sm:aspect-square bg-primary rounded-[48px] overflow-hidden relative shadow-2xl">
-              <img
-                src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=2070&auto=format&fit=crop"
-                className="w-full h-full object-cover mix-blend-luminosity opacity-40 hover:scale-105 transition-transform duration-700"
-                alt="Students studying career guidance paths"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/30 to-transparent"></div>
-
-              {/* Testimonials Slider Overlay */}
-              <div className="absolute bottom-6 left-6 right-6 md:bottom-10 md:left-10 md:right-10">
-                <div className="p-6 md:p-8 bg-slate-900/80 backdrop-blur-md rounded-3xl border border-white/10 text-left">
-
-                  <Quote className="w-8 h-8 text-gold/30 mb-3" />
-
-                  <p className="text-white italic text-base md:text-lg mb-4 font-sans font-medium leading-relaxed">
-                    "{TESTIMONIALS[currentTestimonial].quote}"
-                  </p>
-
-                  <div className="flex justify-between items-center mt-6 pt-4 border-t border-white/10">
-                    <div>
-                      <h5 className="text-white font-header font-bold text-sm md:text-base">
-                        {TESTIMONIALS[currentTestimonial].author}
-                      </h5>
-                      <p className="text-slate-400 text-xs mt-0.5">
-                        {TESTIMONIALS[currentTestimonial].role}
-                      </p>
-                    </div>
-
-                    <div className="flex gap-1.5">
-                      {Array.from({ length: TESTIMONIALS[currentTestimonial].stars }).map((_, i) => (
-                        <Star key={i} className="w-4 h-4 text-gold fill-gold" />
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Slider Buttons */}
-                  <div className="flex gap-2 mt-4 justify-end">
-                    <button
-                      id="testimonial-prev"
-                      onClick={prevTestimonial}
-                      className="p-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-gold hover:text-primary transition-colors cursor-pointer"
-                    >
-                      <ChevronLeft className="w-4 h-4" />
-                    </button>
-                    <button
-                      id="testimonial-next"
-                      onClick={nextTestimonial}
-                      className="p-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-gold hover:text-primary transition-colors cursor-pointer"
-                    >
-                      <ChevronRight className="w-4 h-4" />
-                    </button>
-                  </div>
-
-                </div>
-              </div>
+          {/* Floating UI Achievement */}
+          <div className="absolute bottom-8 -left-8 bg-white/95 backdrop-blur-md border border-black/[0.04] p-5 rounded-3xl shadow-xl flex items-center gap-3.5 max-w-[240px] z-20 pointer-events-none">
+            <div className="w-9 h-9 rounded-full bg-brand flex items-center justify-center text-black shadow-inner shrink-0">
+              <Award className="w-4 h-4" />
             </div>
-
-            {/* Floating Stats Card */}
-            <div className="absolute -top-6 -right-6 p-6 bg-white shadow-2xl rounded-3xl border border-slate-100 hidden sm:block text-left animate-float">
-              <div className="text-4xl font-header font-black text-gold">500+</div>
-              <div className="text-sm font-header font-extrabold text-primary mt-1">Students Guided</div>
-              <p className="text-[10px] font-sans font-bold text-slate-400 uppercase mt-0.5 tracking-wider">Across Kerala Districts</p>
+            <div>
+              <p className="text-[10px] font-extrabold uppercase tracking-wide text-black">Student First</p>
+              <p className="text-[9px] font-light text-black/55 mt-0.5">Continuous psychological check-in roadmaps</p>
             </div>
           </div>
 
-          {/* Right Column: Copy & Differentiators */}
-          <div className="lg:col-span-6 text-left">
-            <h2 className="text-sm font-header font-black text-gold tracking-[0.25em] uppercase mb-4">
-              The Behold Difference
-            </h2>
-            <h3 className="text-3xl md:text-5xl font-header font-black text-primary mb-8 leading-tight">
-              Genuine Guidance for <span className="gold-gradient-text">Real Success.</span>
-            </h3>
-
-            <div className="space-y-8">
-              {[
-                {
-                  t: "Genuine Aptitude Assessment",
-                  d: "We utilize testing standards featured by CIGI. No generic computer templates—our tests measure genuine cognitive parameters."
-                },
-                {
-                  t: "Psychology-First Approach",
-                  d: "Career selection isn't just about grades; it's a deep psychological alignment. Our qualified counseling psychologists analyze every result."
-                },
-                {
-                  t: "Lifetime Guidance Ecosystem",
-                  d: "We don't just hand over a report and walk away. Behold Aspire provides continuous university counseling, webinars, and roadmap updates."
-                }
-              ].map((item, i) => (
-                <div key={i} className="flex gap-5 items-start">
-                  <div className="flex-shrink-0 w-11 h-11 rounded-xl bg-gold/10 flex items-center justify-center text-gold mt-1">
-                    <CheckCircle2 className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-header font-extrabold text-primary mb-1.5">
-                      {item.t}
-                    </h4>
-                    <p className="text-slate-500 text-sm leading-relaxed font-sans">
-                      {item.d}
-                    </p>
-                  </div>
-                </div>
-              ))}
+          {/* Floating UI Trusted */}
+          <div className="absolute top-1/3 -right-8 bg-white/95 backdrop-blur-md border border-black/[0.04] p-4 rounded-3xl shadow-xl flex items-center gap-3.5 max-w-[200px] z-20 pointer-events-none">
+            <ShieldCheck className="w-4.5 h-4.5 text-emerald-600 shrink-0" />
+            <div>
+              <p className="text-[10px] font-extrabold uppercase tracking-wide text-black">Safe Environment</p>
+              <p className="text-[9px] font-light text-black/55 mt-0.5">100% encrypted, confidential advisory records</p>
             </div>
           </div>
 
         </div>
 
       </div>
+
     </section>
   );
 }

@@ -1,135 +1,121 @@
 import React from 'react';
-import { ArrowRight, Award, GraduationCap, CheckCircle2, Sparkles, Brain } from 'lucide-react';
+import { ArrowRight, Sparkles, Compass, ShieldCheck, HeartPulse } from 'lucide-react';
 
 export default function Hero({ setView, scrollToSection }) {
+  const handleBookNowClick = () => {
+    setView('booking');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
-    <section className="relative pt-32 pb-24 md:pt-48 md:pb-36 bg-primary overflow-hidden hero-radial-glow">
-      {/* Decorative Orbs */}
-      <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-gold/5 blur-[120px] rounded-full animate-pulse-slow"></div>
-      <div className="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-[#3B82F6]/5 blur-[100px] rounded-full"></div>
+    <section 
+      className="relative w-full py-20 md:py-32 px-6 text-black text-left grid-bg overflow-hidden flex flex-col items-center justify-center min-h-[90vh] select-none"
+    >
+      {/* Background Soft Glows */}
+      <div className="absolute top-1/4 left-1/3 w-[300px] h-[300px] bg-brand/20 rounded-full glow-glow pointer-events-none" />
+      <div className="absolute bottom-1/3 right-1/4 w-[400px] h-[400px] bg-brand/10 rounded-full glow-glow pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
-        <div className="grid lg:grid-cols-12 gap-16 items-center">
-
-          {/* Left Column: Heading and copy */}
-          <div className="lg:col-span-7 text-left flex flex-col items-start fade-in-up">
-
-            {/* Tagline Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-gold text-xs font-bold uppercase tracking-widest mb-8 animate-float">
-              <Award className="w-4 h-4 text-gold" />
-              <span>Kerala's Premier Career Guidance Ecosystem</span>
-            </div>
-
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-header font-black text-white mb-6 leading-[1.1] tracking-tight">
-              Design Your Future <br />
-              <span className="gold-gradient-text">To Your Paths</span>
-            </h1>
-
-            <p className="text-lg md:text-xl text-slate-300 mb-10 max-w-2xl leading-relaxed font-sans">
-              Scientifically mapping student potential through expert aptitude assessment,
-              psychological evaluation, and personalized career roadmaps. Featured by CIGI.
-            </p>
-
-            {/* CTAs */}
-            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-              <button
-                id="hero-btn-start-test"
-                onClick={() => setView('test')}
-                className="px-8 py-4.5 bg-gold text-primary rounded-xl font-header font-black text-base shadow-lg shadow-gold/20 hover:bg-gold-light hover:shadow-gold/30 hover:-translate-y-1 active:translate-y-0 transition-all duration-300 flex items-center justify-center gap-3 group cursor-pointer"
-              >
-                <span>Start Free Aptitude Test</span>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-              </button>
-
-              <button
-                id="hero-btn-book"
-                onClick={() => scrollToSection('inquiry')}
-                className="px-8 py-4.5 bg-white/5 border border-white/20 text-white rounded-xl font-header font-bold text-base hover:bg-white/10 hover:border-white/40 hover:-translate-y-1 active:translate-y-0 transition-all duration-300 flex items-center justify-center cursor-pointer"
-              >
-                Book a Consultation
-              </button>
-            </div>
-
-            {/* Fast Stats Row */}
-            <div className="grid grid-cols-3 gap-6 mt-16 pt-8 border-t border-white/10 w-full">
-              <div>
-                <div className="text-3xl md:text-4xl font-header font-black text-gold">500+</div>
-                <div className="text-xs md:text-sm font-semibold text-slate-400 mt-1">Students Mentored</div>
-              </div>
-              <div>
-                <div className="text-3xl md:text-4xl font-header font-black text-gold">100%</div>
-                <div className="text-xs md:text-sm font-semibold text-slate-400 mt-1">Career Clarity</div>
-              </div>
-              <div>
-                <div className="text-3xl md:text-4xl font-header font-black text-gold">CIGI</div>
-                <div className="text-xs md:text-sm font-semibold text-slate-400 mt-1">Featured Framework</div>
-              </div>
-            </div>
-
+      <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
+        
+        {/* Left Column: Heading and CTAs */}
+        <div className="lg:col-span-6 space-y-8 fade-in-up">
+          
+          {/* Subtle Tagline */}
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-xs border border-black/[0.04] rounded-full text-[10px] font-extrabold uppercase tracking-widest text-black/60 shadow-xs">
+            <Sparkles className="w-3.5 h-3.5 text-black" />
+            <span>BEHOLD Mentorship Framework</span>
           </div>
 
-          {/* Right Column: Visual Mockup or Graphic */}
-          <div className="lg:col-span-5 relative flex justify-center items-center">
+          {/* Main Title */}
+          <div className="space-y-4">
+            <h1 className="text-4xl md:text-6xl font-header font-black tracking-tight text-black leading-[1.05] uppercase">
+              Guiding Students <br />
+              Towards <span className="underline decoration-brand decoration-8 underline-offset-4">Clarity</span> & <span className="underline decoration-brand decoration-8 underline-offset-4">Confidence</span>
+            </h1>
+            <p className="text-black/60 font-sans text-sm md:text-base font-light max-w-lg leading-relaxed">
+              Scientific career guidance, emotional support, and personalized doorstep mentorship for every student. Empowering adolescents to grow with direction.
+            </p>
+          </div>
 
-            {/* Visual background circle */}
-            <div className="absolute w-[350px] h-[350px] md:w-[450px] md:h-[450px] bg-gradient-to-tr from-gold/10 to-blue-500/10 rounded-full blur-3xl"></div>
+          {/* CTAs */}
+          <div className="flex flex-wrap items-center gap-4 pt-2">
+            <button 
+              onClick={handleBookNowClick}
+              className="px-8 py-4 bg-brand hover:bg-brand-dark hover:scale-[1.02] active:scale-[0.98] text-xs font-black uppercase tracking-widest transition-all duration-300 cursor-pointer rounded-full shadow-md text-black flex items-center gap-2 border border-black/5"
+            >
+              <span>Book a Session</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+            <button 
+              onClick={() => scrollToSection('services')}
+              className="px-8 py-4 bg-white/70 hover:bg-white border border-black/10 hover:border-black text-black hover:scale-[1.02] active:scale-[0.98] text-xs font-black uppercase tracking-widest transition-all duration-300 cursor-pointer rounded-full shadow-xs"
+            >
+              Explore Services
+            </button>
+          </div>
 
-            {/* Decorative Stack of Premium Cards */}
-            <div className="relative w-full max-w-[400px] aspect-square flex items-center justify-center">
-
-              {/* Card 1: Main Feature Card */}
-              <div className="w-[85%] aspect-video bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl flex flex-col justify-between absolute z-20 -rotate-3 hover:rotate-0 transition-transform duration-500 hover:scale-105">
-                <div className="flex justify-between items-start">
-                  <div className="p-3 bg-gold/15 rounded-xl text-gold">
-                    <Brain className="w-8 h-8" />
-                  </div>
-                  <span className="px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-bold tracking-wider rounded-full uppercase">
-                    Scientific
-                  </span>
-                </div>
-                <div>
-                  <h3 className="font-header font-bold text-white text-lg leading-tight mb-1">Aptitude Discovery</h3>
-                  <p className="text-slate-300 text-xs font-medium">Analyzing logical, linguistic, and spatial capabilities.</p>
-                </div>
-              </div>
-
-              {/* Card 2: Support Card */}
-              <div className="w-[80%] aspect-video bg-slate-900/60 backdrop-blur-lg border border-white/5 rounded-2xl p-6 shadow-xl flex flex-col justify-between absolute z-10 translate-y-16 translate-x-8 rotate-6 hover:rotate-0 transition-transform duration-500 hover:scale-105">
-                <div className="flex justify-between items-start">
-                  <div className="p-3 bg-blue-500/15 rounded-xl text-blue-400">
-                    <GraduationCap className="w-8 h-8" />
-                  </div>
-                  <span className="px-2.5 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-bold tracking-wider rounded-full uppercase">
-                    Mentoring
-                  </span>
-                </div>
-                <div>
-                  <h3 className="font-header font-bold text-white text-base leading-tight mb-1">Class 8 - 12 Roadmap</h3>
-                  <p className="text-slate-400 text-xs">Curated pathways matching future market demand.</p>
-                </div>
-              </div>
-
-              {/* Card 3: Floating mini success badge */}
-              <div className="absolute top-4 right-4 z-30 bg-white text-primary rounded-xl p-3.5 shadow-2xl flex items-center gap-3 animate-float border border-slate-100">
-                <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center">
-                  <CheckCircle2 className="w-5 h-5" />
-                </div>
-                <div className="text-left leading-none">
-                  <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Psychology-First</p>
-                  <p className="text-sm font-black text-primary mt-0.5">Verified Counseling</p>
-                </div>
-              </div>
-
-              {/* Sparkle decorative */}
-              <div className="absolute bottom-10 left-4 z-30 text-gold animate-pulse-slow">
-                <Sparkles className="w-6 h-6" />
-              </div>
-
+          {/* Stats quick view */}
+          <div className="grid grid-cols-3 gap-6 pt-8 border-t border-black/[0.05] max-w-md">
+            <div>
+              <p className="text-2xl font-black text-black">5k+</p>
+              <p className="text-[9px] font-bold uppercase tracking-wider text-black/45">Guided</p>
             </div>
-
+            <div className="border-x border-black/[0.05] px-6">
+              <p className="text-2xl font-black text-black">100+</p>
+              <p className="text-[9px] font-bold uppercase tracking-wider text-black/45">Schools</p>
+            </div>
+            <div className="px-2">
+              <p className="text-2xl font-black text-black">95%</p>
+              <p className="text-[9px] font-bold uppercase tracking-wider text-black/45">Success</p>
+            </div>
           </div>
 
         </div>
+
+        {/* Right Column: Cinematic Image with Floating Visuals */}
+        <div className="lg:col-span-6 relative flex items-center justify-center fade-in-up" style={{ animationDelay: '0.2s' }}>
+          
+          {/* Main Visual Frame */}
+          <div className="w-full aspect-[4/3] md:aspect-[16/11] rounded-[40px] overflow-hidden shadow-2xl border-4 border-white bg-white relative z-10">
+            <img 
+              src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80" 
+              alt="Immersive mentoring storytelling visual" 
+              className="w-full h-full object-cover grayscale-15 contrast-105"
+            />
+            {/* Visual Soft Dark Gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
+          </div>
+
+          {/* Floating UI Card 1: Counselling */}
+          <div className="absolute -top-6 -left-6 bg-white/95 backdrop-blur-md border border-black/[0.04] p-4 rounded-3xl shadow-xl flex items-center gap-3.5 max-w-[220px] z-20 pointer-events-none">
+            <div className="w-9 h-9 rounded-full bg-brand flex items-center justify-center text-black shadow-inner">
+              <HeartPulse className="w-4 h-4" />
+            </div>
+            <div>
+              <p className="text-[10px] font-extrabold uppercase tracking-wide text-black">Personal Care</p>
+              <p className="text-[9px] font-light text-black/55 mt-0.5">Emotional & stress guidance</p>
+            </div>
+          </div>
+
+          {/* Floating UI Card 2: Career Mapping */}
+          <div className="absolute -bottom-6 -right-6 bg-white/95 backdrop-blur-md border border-black/[0.04] p-4 rounded-3xl shadow-xl flex items-center gap-3.5 max-w-[220px] z-20 pointer-events-none">
+            <div className="w-9 h-9 rounded-full bg-black flex items-center justify-center text-white shadow-md">
+              <Compass className="w-4 h-4" />
+            </div>
+            <div>
+              <p className="text-[10px] font-extrabold uppercase tracking-wide text-black">Scientific Cdac</p>
+              <p className="text-[9px] font-light text-black/55 mt-0.5">Custom stream roadmaps</p>
+            </div>
+          </div>
+
+          {/* Floating UI Card 3: Trust Badge */}
+          <div className="absolute top-1/2 -right-8 transform -translate-y-1/2 bg-white/95 backdrop-blur-md border border-black/[0.04] px-4 py-2.5 rounded-full shadow-lg flex items-center gap-2 z-20 pointer-events-none">
+            <ShieldCheck className="w-4 h-4 text-emerald-600" />
+            <span className="text-[9px] font-black uppercase tracking-wider text-black">RCI Certified Mentors</span>
+          </div>
+
+        </div>
+
       </div>
     </section>
   );

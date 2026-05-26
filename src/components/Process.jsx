@@ -1,93 +1,155 @@
 import React from 'react';
-import { Brain, FileText, Compass, HeartHandshake } from 'lucide-react';
+import { 
+  UserCheck, Building2, HeartPulse, Compass, 
+  Sparkles, CheckCircle2, Heart, GraduationCap, ArrowUpRight 
+} from 'lucide-react';
 
-const STEPS = [
+const OFFERINGS = [
   {
-    num: "01",
-    title: "Scientific Assessment",
-    desc: "Start with our certified aptitude and cognitive testing to isolate core intelligence domains.",
-    icon: <Brain className="w-6 h-6" />,
-    color: "from-blue-500 to-indigo-600"
+    icon: UserCheck,
+    title: "One-on-One Mentorship",
+    desc: "Personalized coaching sessions connecting academic milestones directly with student aspirations."
   },
   {
-    num: "02",
-    title: "Psychological Review",
-    desc: "Our registered educational psychologists evaluate testing profiles against personality indices.",
-    icon: <FileText className="w-6 h-6" />,
-    color: "from-amber-500 to-orange-600"
+    icon: Building2,
+    title: "School Counselling Programs",
+    desc: "Integrating psychological and career developmental modules straight into high school spaces."
   },
   {
-    num: "03",
-    title: "Custom Roadmapping",
-    desc: "Students receive a 12-page roadmap detailing exact streams, college options, and exam timelines.",
-    icon: <Compass className="w-6 h-6" />,
-    color: "from-emerald-500 to-teal-600"
+    icon: HeartPulse,
+    title: "Psychological Support",
+    desc: "doorstep and online counselling addressing test anxiety, focus issues, and emotional regulation."
   },
   {
-    num: "04",
-    title: "Lifetime Support",
-    desc: "Access quarterly mentoring meetups, university admissions support, and resource libraries.",
-    icon: <HeartHandshake className="w-6 h-6" />,
-    color: "from-purple-500 to-pink-600"
+    icon: Compass,
+    title: "Career Roadmaps",
+    desc: "Rigorous stream mapping and entrance guidelines matching university pathways with talents."
+  },
+  {
+    icon: Sparkles,
+    title: "Personality Development",
+    desc: "Milestone-driven workshops to build presentation skills, communication flow, and leadership."
+  },
+  {
+    icon: CheckCircle2,
+    title: "Goal Tracking",
+    desc: "Continuous checks ensuring students stay oriented toward their long-term developmental milestones."
+  },
+  {
+    icon: Heart,
+    title: "Parent Guidance Sessions",
+    desc: "Aligning family environments to reduce high school academic friction and stream-selection stress."
+  },
+  {
+    icon: GraduationCap,
+    title: "Future Planning Workshops",
+    desc: "Seminars on CUET, JEE, NEET, global scholarship guidelines, and upcoming industry roadmaps."
   }
 ];
 
 export default function Process() {
   return (
-    <section id="process" className="py-24 bg-slate-50 relative overflow-hidden">
-      {/* Decorative Elements */}
-      <div className="absolute top-1/2 left-0 w-72 h-72 bg-gold/5 blur-[120px] rounded-full -translate-y-1/2"></div>
+    <section id="process" className="py-24 md:py-32 px-6 text-black text-left grid-bg relative overflow-hidden">
+      
+      {/* Background glow */}
+      <div className="absolute top-10 right-10 w-[300px] h-[300px] bg-brand/10 rounded-full glow-glow pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
-
-        {/* Header */}
-        <div className="text-center mb-20">
-          <h2 className="text-sm font-header font-black text-gold tracking-[0.25em] uppercase mb-4">
-            How It Works
-          </h2>
-          <h3 className="text-3xl md:text-5xl font-header font-black text-primary leading-tight">
-            Your Roadmap to Certainty
-          </h3>
-          <p className="text-slate-500 font-sans mt-4 max-w-xl mx-auto text-base">
-            Four simple phases designed to guide students from confusion to a focused, scientific career track.
-          </p>
+      <div className="max-w-7xl mx-auto space-y-16 md:space-y-24">
+        
+        {/* Header section */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-black/[0.05] pb-8">
+          <div className="space-y-4">
+            <span className="text-[10px] bg-black text-white px-3.5 py-1 rounded-full uppercase tracking-wider font-extrabold w-fit block">
+              our framework
+            </span>
+            <h2 className="text-4xl md:text-5xl font-header font-black tracking-tight text-gray-900 leading-tight uppercase">
+              What We Offer
+            </h2>
+            <p className="text-black/50 font-sans text-sm md:text-base font-light max-w-xl">
+              A comprehensive grid of personal, academic, and psychological developmental modules.
+            </p>
+          </div>
         </div>
 
-        {/* Timeline Process */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 relative">
-
-          {/* Connector Line for Desktop */}
-          <div className="hidden lg:block absolute top-[52px] left-[10%] right-[10%] h-0.5 bg-slate-200 z-0"></div>
-
-          {STEPS.map((step, index) => (
-            <div
-              key={index}
-              id={`process-step-${index + 1}`}
-              className="relative z-10 flex flex-col items-center lg:items-start text-center lg:text-left bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow"
-            >
-              {/* Node Icon Box */}
-              <div className="flex justify-between items-center w-full mb-6">
-                <div className={`w-14 h-14 rounded-2xl bg-gradient-to-tr ${step.color} text-white flex items-center justify-center shadow-lg`}>
-                  {step.icon}
+        {/* Feature Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {OFFERINGS.map((item, idx) => {
+            const Icon = item.icon;
+            return (
+              <div 
+                key={idx}
+                className="bg-white hover:bg-white/90 border border-black/5 rounded-[32px] p-8 shadow-xs hover:shadow-lg transition-all duration-500 hover:-translate-y-1 flex flex-col justify-between group"
+              >
+                <div className="space-y-6">
+                  <div className="w-10 h-10 rounded-full bg-black/5 text-black flex items-center justify-center transition-colors group-hover:bg-black group-hover:text-brand">
+                    <Icon className="w-4 h-4" />
+                  </div>
+                  <div className="space-y-2">
+                    <h4 className="font-header font-bold text-xs uppercase tracking-wider text-black">{item.title}</h4>
+                    <p className="text-black/55 font-sans text-[11px] font-light leading-relaxed">{item.desc}</p>
+                  </div>
                 </div>
-                <span className="text-4xl font-header font-black text-slate-200">
-                  {step.num}
-                </span>
+                
+                <div className="pt-6 flex justify-end">
+                  <ArrowUpRight className="w-4 h-4 text-black/20 group-hover:text-black transition-colors" />
+                </div>
               </div>
+            );
+          })}
+        </div>
 
-              {/* Title & Description */}
-              <h4 className="text-xl font-header font-bold text-primary mb-3">
-                {step.title}
-              </h4>
-              <p className="text-slate-500 text-sm leading-relaxed font-sans">
-                {step.desc}
+        {/* Premium Counters / Statistics Panel */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-12">
+          
+          {/* Card 1 */}
+          <div className="bg-black text-white rounded-[32px] p-8 md:p-12 space-y-4 shadow-xl flex flex-col justify-between border border-zinc-900">
+            <span className="text-[9px] text-brand font-black uppercase tracking-widest font-mono">
+              milestones hit
+            </span>
+            <div>
+              <p className="text-5xl md:text-6xl font-header font-black tracking-tight text-white uppercase leading-none">
+                5000+
+              </p>
+              <p className="text-xs text-zinc-400 mt-3 font-light leading-relaxed">
+                Students Guided successfully with career maps, doorstep check-ins, and personal psychological mentorship.
               </p>
             </div>
-          ))}
+          </div>
+
+          {/* Card 2 */}
+          <div className="bg-white border border-black/5 rounded-[32px] p-8 md:p-12 space-y-4 shadow-sm flex flex-col justify-between">
+            <span className="text-[9px] text-black/50 font-black uppercase tracking-widest font-mono">
+              partnerships active
+            </span>
+            <div>
+              <p className="text-5xl md:text-6xl font-header font-black tracking-tight text-black uppercase leading-none">
+                100+
+              </p>
+              <p className="text-xs text-black/50 mt-3 font-light leading-relaxed">
+                Schools Connected across Kerala, incorporating CDAC profiling methods and parent alignment seminars.
+              </p>
+            </div>
+          </div>
+
+          {/* Card 3 */}
+          <div className="bg-white border border-black/5 rounded-[32px] p-8 md:p-12 space-y-4 shadow-sm flex flex-col justify-between">
+            <span className="text-[9px] text-black/50 font-black uppercase tracking-widest font-mono">
+              verified standard
+            </span>
+            <div>
+              <p className="text-5xl md:text-6xl font-header font-black tracking-tight text-black uppercase leading-none">
+                95%
+              </p>
+              <p className="text-xs text-black/50 mt-3 font-light leading-relaxed">
+                Student Satisfaction based on quarter-on-quarter feedback forms and long-term parent alignments.
+              </p>
+            </div>
+          </div>
 
         </div>
 
       </div>
+
     </section>
   );
 }

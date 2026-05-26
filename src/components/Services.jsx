@@ -1,218 +1,530 @@
-import React, { useState } from 'react';
-import {
-  GraduationCap,
-  BrainCircuit,
-  HeartHandshake,
-  Users,
-  ChevronRight,
-  X,
-  CheckCircle2
-} from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Sparkles, Info, ArrowUpRight, User, BookOpen, Heart, Award, Hash, Check } from 'lucide-react';
 
-const SERVICES = [
-  {
-    id: "career",
-    title: "Career Guidance",
-    desc: "Personalized roadmaps for students from Class 8 to 12 based on future market trends.",
-    icon: <GraduationCap className="w-8 h-8" />,
-    color: "bg-blue-50 text-blue-600 border-blue-100",
-    hoverColor: "group-hover:bg-blue-600",
-    detailedDesc: "Our career guidance program helps middle and high school students filter through hundreds of career choices to identify their true match. We look beyond traditional paths to modern engineering, humanities, digital arts, and emerging scientific domains.",
-    features: [
-      "Stream Selection (Science, Commerce, Humanities)",
-      "University and Entrance Exam mapping (JEE, NEET, CUET, CLAT)",
-      "Personalized Academic Milestones planning",
-      "Interactive sessions with both student and parents"
-    ],
-    target: "Students from Class 8 to 12 & College aspirants"
-  },
-  {
-    id: "aptitude",
-    title: "Aptitude Testing",
-    desc: "Kerala's most genuine assessment featured by CIGI for scientific discovery.",
-    icon: <BrainCircuit className="w-8 h-8" />,
-    color: "bg-amber-50 text-amber-600 border-amber-100",
-    hoverColor: "group-hover:bg-amber-600",
-    detailedDesc: "Utilizing the highly acclaimed CIGI (Centre for Information and Guidance India) testing framework, we provide a multi-dimensional assessment of a student's cognitive assets. The test measures logical, linguistic, spatial, numerical, and mechanical aptitudes.",
-    features: [
-      "Scientific multi-factorial testing",
-      "Comprehensive 12-page PDF report with detailed scores",
-      "Identification of cognitive strengths and blindspots",
-      "CIGI-certified assessment standard"
-    ],
-    target: "Students from Class 8 onwards wanting structural clarity"
-  },
-  {
-    id: "mentoring",
-    title: "Lifetime Mentoring",
-    desc: "Ongoing support ecosystem for students and parents throughout the journey.",
-    icon: <HeartHandshake className="w-8 h-8" />,
-    color: "bg-emerald-50 text-emerald-600 border-emerald-100",
-    hoverColor: "group-hover:bg-emerald-600",
-    detailedDesc: "Unlike transactional coaching centers, Behold Aspire acts as a long-term academic companion. We track student performance semester-over-semester, provide guidance during university admissions, and offer career realignment support.",
-    features: [
-      "Periodic progress check-ins and adjustment",
-      "Guidance on building a stellar student profile",
-      "College application assistance and essay review",
-      "Quarterly webinars with industry leaders"
-    ],
-    target: "Families seeking continuous guidance through transition phases"
-  },
-  {
-    id: "psychology",
-    title: "Psychology Support",
-    desc: "Expert mental health support and on-door psychology consultation services.",
-    icon: <Users className="w-8 h-8" />,
-    color: "bg-purple-50 text-purple-600 border-purple-100",
-    hoverColor: "group-hover:bg-purple-600",
-    detailedDesc: "Career success is deeply linked to mental well-being. We offer expert guidance to manage exam anxiety, boost concentration, improve parent-child communication, and resolve behavioral conflicts that affect educational growth.",
-    features: [
-      "One-on-one sessions with educational psychologists",
-      "Exam anxiety and stress management protocols",
-      "Parent-student relationship counseling",
-      "On-door/home consulting for maximum comfort"
-    ],
-    target: "Students experiencing academic pressure or focus difficulties"
-  }
+const INITIAL_STATE = {
+  name: '',
+  email: '',
+  confirmEmail: '',
+  dob: '',
+  gender: 'Male',
+  phone: '',
+  whatsapp: '',
+  country: 'India',
+  phoneCode: '0091',
+  homeDistrict: '',
+  grade: '',
+  schoolCountry: 'India',
+  schoolState: 'Kerala',
+  schoolDistrict: '',
+  schoolName: '',
+  medium: 'English',
+  board: 'Kerala-State',
+  careerInterests: '',
+  specialTalents: '',
+  achievements: '',
+  fatherQualification: '',
+  motherQualification: '',
+  fatherOccupation: '',
+  motherOccupation: '',
+  guardianName: '',
+  guardianRelationship: 'Father',
+  guardianPhone: '',
+  preferredBatch: '',
+  groupCode: ''
+};
+
+const DISTRICTS_KERALA = [
+  'Alappuzha', 'Ernakulam', 'Idukki', 'Kannur', 'Kasaragod', 
+  'Kollam', 'Kottayam', 'Kozhikode', 'Malappuram', 'Palakkad', 
+  'Pathanamthitta', 'Thiruvananthapuram', 'Thrissur', 'Wayanad'
 ];
 
-export default function Services() {
-  const [activeModal, setActiveModal] = useState(null);
+export default function Services({ setView, onBookTherapist }) {
+  const [showAptitudeForm, setShowAptitudeForm] = useState(false);
+  const [aptitudeForm, setAptitudeForm] = useState(INITIAL_STATE);
+  const [isAutofilled, setIsAutofilled] = useState(false);
 
-  const openServiceDetails = (service) => {
-    setActiveModal(service);
-    document.body.style.overflow = 'hidden'; // Lock scrolling
+  // Load from localStorage for autofill
+  useEffect(() => {
+    if (showAptitudeForm) {
+      const saved = localStorage.getItem('behold_student_profile');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          setAptitudeForm(prev => ({ ...INITIAL_STATE, ...parsed }));
+          setIsAutofilled(true);
+        } catch (e) {
+          console.error("Error reading student profile", e);
+        }
+      }
+    }
+  }, [showAptitudeForm]);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setAptitudeForm(prev => ({ ...prev, [name]: value }));
+    setIsAutofilled(false);
   };
 
-  const closeModal = () => {
-    setActiveModal(null);
-    document.body.style.overflow = 'auto'; // Unlock scrolling
+  const handleCigiRedirect = (e) => {
+    e.preventDefault();
+    // Build and save comprehensive query params to localStorage so they auto-fill
+    localStorage.setItem('behold_student_profile', JSON.stringify({
+      name: aptitudeForm.name,
+      email: aptitudeForm.email,
+      confirmEmail: aptitudeForm.confirmEmail,
+      dob: aptitudeForm.dob,
+      gender: aptitudeForm.gender,
+      phone: aptitudeForm.phone,
+      whatsapp: aptitudeForm.whatsapp,
+      country: aptitudeForm.country,
+      phoneCode: aptitudeForm.phoneCode,
+      homeDistrict: aptitudeForm.homeDistrict,
+      grade: aptitudeForm.grade,
+      schoolCountry: aptitudeForm.schoolCountry,
+      schoolState: aptitudeForm.schoolState,
+      schoolDistrict: aptitudeForm.schoolDistrict,
+      schoolName: aptitudeForm.schoolName,
+      medium: aptitudeForm.medium,
+      board: aptitudeForm.board,
+      careerInterests: aptitudeForm.careerInterests,
+      specialTalents: aptitudeForm.specialTalents,
+      achievements: aptitudeForm.achievements,
+      fatherQualification: aptitudeForm.fatherQualification,
+      motherQualification: aptitudeForm.motherQualification,
+      fatherOccupation: aptitudeForm.fatherOccupation,
+      motherOccupation: aptitudeForm.motherOccupation,
+      guardianName: aptitudeForm.guardianName,
+      guardianRelationship: aptitudeForm.guardianRelationship,
+      guardianPhone: aptitudeForm.guardianPhone,
+      preferredBatch: aptitudeForm.preferredBatch,
+      groupCode: aptitudeForm.groupCode
+    }));
+    
+    // Redirect to local booking page with Muhsina (c3) pre-selected
+    if (onBookTherapist) {
+      onBookTherapist('c3');
+    } else {
+      setView('booking');
+    }
+  };
+
+  // Dynamic 3D tilt effects handlers
+  const handleMouseMove = (e) => {
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    
+    const tiltX = (centerY - y) / 16;
+    const tiltY = (x - centerX) / 16;
+    
+    card.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale3d(1.01, 1.01, 1.01)`;
+  };
+
+  const handleMouseLeave = (e) => {
+    const card = e.currentTarget;
+    card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
   };
 
   return (
-    <section id="services" className="py-24 bg-white relative">
-      <div className="max-w-7xl mx-auto px-6">
+    <section id="services" className="max-w-7xl mx-auto px-6 py-24 md:py-32 text-black text-left relative">
+      {/* Background radial soft light */}
+      <div className="absolute top-1/2 left-1/4 w-[350px] h-[350px] bg-brand/10 rounded-full glow-glow pointer-events-none" />
 
-        {/* Header */}
-        <div className="text-center mb-20">
-          <h2 className="text-sm font-header font-black text-gold tracking-[0.25em] uppercase mb-4">
-            What We Offer
-          </h2>
-          <h3 className="text-3xl md:text-5xl font-header font-black text-primary leading-tight">
-            Comprehensive Career Solutions
-          </h3>
-          <p className="text-slate-500 font-sans mt-4 max-w-xl mx-auto text-base">
-            Equipping students with modern tools, scientific insights, and continuous human mentorship.
-          </p>
-        </div>
-
-        {/* Services Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {SERVICES.map((s, i) => (
-            <div
-              key={i}
-              id={`service-card-${s.id}`}
-              className="p-8 rounded-[32px] border border-slate-100 bg-white hover:border-gold hover:shadow-2xl hover:shadow-slate-200/80 hover:-translate-y-1.5 transition-all duration-300 group flex flex-col justify-between text-left cursor-pointer"
-              onClick={() => openServiceDetails(s)}
-            >
-              <div>
-                {/* Icon Box */}
-                <div className={`w-16 h-16 ${s.color} border rounded-2xl flex items-center justify-center mb-8 group-hover:bg-gold group-hover:text-primary group-hover:border-gold transition-all duration-300`}>
-                  {s.icon}
-                </div>
-                <h4 className="text-xl font-header font-bold text-primary mb-3">
-                  {s.title}
-                </h4>
-                <p className="text-slate-500 text-sm leading-relaxed mb-6 font-sans">
-                  {s.desc}
-                </p>
-              </div>
-
-              <button
-                id={`service-btn-learn-${s.id}`}
-                onClick={(e) => { e.stopPropagation(); openServiceDetails(s); }}
-                className="text-gold font-header font-black text-xs flex items-center gap-1.5 group-hover:gap-2.5 transition-all duration-200 uppercase tracking-widest mt-auto self-start cursor-pointer"
-              >
-                <span>Learn More</span>
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
-          ))}
-        </div>
+      {/* Editorial Header */}
+      <div className="mb-16 md:mb-24 space-y-4">
+        <span className="text-[10px] bg-black text-white px-3.5 py-1 rounded-full uppercase tracking-wider font-extrabold w-fit block">
+          our core specialities
+        </span>
+        <h2 className="text-4xl md:text-5xl font-header font-black tracking-tight text-gray-900 leading-tight uppercase">
+          Empowering Services
+        </h2>
+        <p className="text-black/50 font-sans text-sm md:text-base font-light max-w-xl">
+          Immersive mental health, career roadmaps, and certified psychometrics designed to cultivate confidence and emotional clarity.
+        </p>
       </div>
 
-      {/* Interactive Detail Modal */}
-      {activeModal && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-primary/45 backdrop-blur-md animate-in fade-in duration-200"
-          onClick={closeModal}
-          id="service-modal-overlay"
+      {/* Services Cards */}
+      <div className="space-y-12">
+        
+        {/* SERVICE 1: APTITUDE TEST CARD */}
+        <div 
+          id="card-aptitude" 
+          className="card-luxury card-luxury-hover p-8 md:p-14 flex flex-col justify-between space-y-8 select-none border border-black/5"
         >
-          <div
-            className="bg-white rounded-[32px] w-full max-w-2xl overflow-hidden shadow-2xl relative animate-in zoom-in-95 slide-in-from-bottom-8 duration-300 border border-slate-100 flex flex-col"
-            onClick={(e) => e.stopPropagation()}
-            id="service-modal"
-          >
-            {/* Modal Header Grid */}
-            <div className="p-8 border-b border-slate-100 flex justify-between items-start bg-slate-50/50">
-              <div className="flex items-center gap-4">
-                <div className={`w-14 h-14 rounded-2xl ${activeModal.color} flex items-center justify-center`}>
-                  {activeModal.icon}
-                </div>
-                <div>
-                  <h3 className="text-2xl font-header font-black text-primary leading-none mb-1.5">
-                    {activeModal.title}
-                  </h3>
-                  <span className="text-xs font-semibold text-slate-400 tracking-wider uppercase font-sans">
-                    {activeModal.target}
-                  </span>
-                </div>
+          <div className="space-y-6">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
+              <div className="space-y-2">
+                <span className="text-[9px] bg-brand text-black px-3 py-1 rounded-full uppercase tracking-widest font-black font-mono">
+                  scientific strengths mapping
+                </span>
+                <h3 className="text-2xl md:text-3xl font-header font-black uppercase tracking-wide text-black mt-1">Aptitude Test</h3>
               </div>
-              <button
-                id="close-service-modal"
-                className="p-2 hover:bg-slate-200 rounded-full text-slate-400 hover:text-primary transition-colors cursor-pointer"
-                onClick={closeModal}
-              >
-                <X className="w-5 h-5" />
-              </button>
+              <span className="text-[10px] text-black/50 font-bold tracking-wider uppercase border border-black/10 px-3 py-1 rounded-full bg-white/50 backdrop-blur-xs">
+                Service 01
+              </span>
             </div>
-
-            {/* Modal Body */}
-            <div className="p-8 space-y-6 text-left overflow-y-auto max-h-[70vh]">
-              <p className="text-slate-600 leading-relaxed font-sans text-base">
-                {activeModal.detailedDesc}
-              </p>
-
-              <div>
-                <h4 className="font-header font-bold text-primary text-sm uppercase tracking-wider mb-4">
-                  Key Inclusions & Framework
-                </h4>
-                <ul className="grid sm:grid-cols-2 gap-4">
-                  {activeModal.features.map((feature, fIndex) => (
-                    <li key={fIndex} className="flex gap-3 items-start">
-                      <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
-                      <span className="text-sm font-sans font-semibold text-slate-700">
-                        {feature}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-
-            {/* Modal Footer */}
-            <div className="p-6 bg-slate-50 border-t border-slate-100 flex justify-end">
-              <button
-                id="modal-btn-close"
-                onClick={closeModal}
-                className="px-6 py-2.5 bg-primary text-white hover:bg-primary-light rounded-xl font-header font-bold text-sm transition-colors cursor-pointer"
-              >
-                Close Details
-              </button>
+            
+            <p className="text-black/60 font-sans text-sm md:text-base font-light leading-relaxed max-w-4xl">
+              BEHOLD’s aptitude assessments help students discover their natural strengths, learning styles, interests, and hidden talents through scientifically designed evaluation methods. The assessment provides clear insights into suitable academic and career paths, helping students make informed future decisions with confidence.
+            </p>
+            
+            <div className="flex flex-wrap gap-x-8 gap-y-2 text-xs font-semibold text-black/80 font-mono">
+              <span className="flex items-center gap-1.5"><Check className="w-4 h-4 text-emerald-600" /> Certified CIGI psychometric models</span>
+              <span className="flex items-center gap-1.5"><Check className="w-4 h-4 text-emerald-600" /> Comprehensive 12-page cognitive diagnostic reports</span>
+              <span className="flex items-center gap-1.5"><Check className="w-4 h-4 text-emerald-600" /> In-school & Doorstep support</span>
             </div>
           </div>
+
+          <div className="pt-6 border-t border-black/[0.05]">
+            {!showAptitudeForm ? (
+              <div className="flex gap-4 flex-wrap">
+                <button 
+                  onClick={() => setView('test')}
+                  className="px-6 py-3.5 bg-black hover:bg-zinc-800 text-white font-bold text-xs uppercase tracking-widest rounded-full transition cursor-pointer shadow-sm"
+                >
+                  Take Aptitude Test
+                </button>
+                <button 
+                  onClick={() => setShowAptitudeForm(true)}
+                  className="px-6 py-3.5 bg-brand hover:bg-brand-dark text-black font-bold text-xs uppercase tracking-widest rounded-full transition cursor-pointer shadow-sm border border-black/5"
+                >
+                  Book Aptitude (CDAC Registration)
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-8 pt-4 animate-in fade-in duration-300">
+                <div className="flex justify-between items-center border-b border-black/[0.05] pb-4">
+                  <h4 className="text-xs font-black uppercase tracking-widest text-black flex items-center gap-2">
+                    Aptitude Registration Console (CIGI CDAT)
+                  </h4>
+                  <button 
+                    onClick={() => setShowAptitudeForm(false)}
+                    className="text-xs text-black/60 hover:text-black font-bold cursor-pointer underline"
+                  >
+                    Hide Form
+                  </button>
+                </div>
+
+                {isAutofilled && (
+                  <div className="p-4 bg-brand/10 border border-brand/30 text-black/80 rounded-2xl text-xs flex items-center justify-between max-w-xl">
+                    <span className="flex items-center gap-2 font-medium">
+                      <Sparkles className="w-4 h-4 text-black animate-pulse" />
+                      Autofilled 25+ parameters from your student profile.
+                    </span>
+                    <button 
+                      onClick={() => setView('profile')}
+                      className="underline text-black font-extrabold cursor-pointer hover:text-black/80"
+                    >
+                      Edit Profile
+                    </button>
+                  </div>
+                )}
+
+                <form onSubmit={handleCigiRedirect} className="space-y-8 text-xs font-semibold text-black/80">
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    
+                    {/* SECTION 1: Personal Details */}
+                    <div className="md:col-span-3">
+                      <span className="text-[10px] uppercase font-black tracking-widest text-black/45 block mb-4 flex items-center gap-2">
+                        <User className="w-4 h-4" /> 1. Personal Details
+                      </span>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="space-y-2">
+                          <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Name of Student</label>
+                          <input required type="text" name="name" placeholder="Your full name" value={aptitudeForm.name} onChange={handleInputChange} className="w-full p-3.5 bg-white/70 border border-black/10 rounded-xl outline-none focus:border-brand" />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Email</label>
+                          <input required type="email" name="email" placeholder="name@email.com" value={aptitudeForm.email} onChange={handleInputChange} className="w-full p-3.5 bg-white/70 border border-black/10 rounded-xl outline-none focus:border-brand" />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Confirm Email</label>
+                          <input required type="email" name="confirmEmail" placeholder="Re-enter email" value={aptitudeForm.confirmEmail} onChange={handleInputChange} className="w-full p-3.5 bg-white/70 border border-black/10 rounded-xl outline-none focus:border-brand" />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Date of Birth</label>
+                          <input required type="text" name="dob" placeholder="as 25-01-2006" value={aptitudeForm.dob} onChange={handleInputChange} className="w-full p-3.5 bg-white/70 border border-black/10 rounded-xl outline-none focus:border-brand" />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold mb-1">Gender</label>
+                          <div className="flex gap-6 pt-2">
+                            {['Male', 'Female'].map(g => (
+                              <label key={g} className="flex items-center gap-2 text-sm text-black cursor-pointer">
+                                <input type="radio" name="gender" value={g} checked={aptitudeForm.gender === g} onChange={handleInputChange} className="w-4 h-4 accent-black" />
+                                <span>{g}</span>
+                              </label>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Phone</label>
+                          <div className="flex gap-2">
+                            <input type="text" name="phoneCode" value={aptitudeForm.phoneCode} onChange={handleInputChange} className="w-16 p-3.5 bg-white/70 border border-black/10 rounded-xl text-center" />
+                            <input required type="tel" name="phone" placeholder="e.g. 8086664001" value={aptitudeForm.phone} onChange={handleInputChange} className="flex-1 p-3.5 bg-white/70 border border-black/10 rounded-xl outline-none focus:border-brand" />
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">WhatsApp</label>
+                          <input type="tel" name="whatsapp" placeholder="e.g. 8086664001" value={aptitudeForm.whatsapp} onChange={handleInputChange} className="w-full p-3.5 bg-white/70 border border-black/10 rounded-xl outline-none focus:border-brand" />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Home District</label>
+                          <select name="homeDistrict" value={aptitudeForm.homeDistrict} onChange={handleInputChange} className="w-full p-3.5 bg-white/70 border border-black/10 rounded-xl outline-none focus:border-brand cursor-pointer">
+                            <option value="">Select District</option>
+                            {DISTRICTS_KERALA.map(d => (
+                              <option key={d} value={d}>{d}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Grade</label>
+                          <select name="grade" value={aptitudeForm.grade} onChange={handleInputChange} className="w-full p-3.5 bg-white/70 border border-black/10 rounded-xl outline-none focus:border-brand cursor-pointer">
+                            <option value="">Select Grade</option>
+                            {['Class 8', 'Class 9', 'Class 10', 'Class 11', 'Class 12', 'Graduate', 'Other'].map(g => (
+                              <option key={g} value={g}>{g}</option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* SECTION 2: School Details */}
+                    <div className="md:col-span-3 border-t border-black/[0.05] pt-6">
+                      <span className="text-[10px] uppercase font-black tracking-widest text-black/45 block mb-4 flex items-center gap-2">
+                        <BookOpen className="w-4 h-4" /> 2. School Details
+                      </span>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="space-y-2 md:col-span-2">
+                          <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">School Name</label>
+                          <input type="text" name="schoolName" placeholder="Name of the school" value={aptitudeForm.schoolName} onChange={handleInputChange} className="w-full p-3.5 bg-white/70 border border-black/10 rounded-xl outline-none focus:border-brand" />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">School State</label>
+                          <input type="text" name="schoolState" value={aptitudeForm.schoolState} onChange={handleInputChange} className="w-full p-3.5 bg-white/70 border border-black/10 rounded-xl outline-none focus:border-brand" />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">School District</label>
+                          <select name="schoolDistrict" value={aptitudeForm.schoolDistrict} onChange={handleInputChange} className="w-full p-3.5 bg-white/70 border border-black/10 rounded-xl outline-none focus:border-brand cursor-pointer">
+                            <option value="">Select District</option>
+                            {DISTRICTS_KERALA.map(d => (
+                              <option key={d} value={d}>{d}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold mb-1">Medium</label>
+                          <div className="flex gap-6 pt-2">
+                            {['English', 'Malayalam', 'Other'].map(m => (
+                              <label key={m} className="flex items-center gap-2 text-sm text-black cursor-pointer">
+                                <input type="radio" name="medium" value={m} checked={aptitudeForm.medium === m} onChange={handleInputChange} className="w-4 h-4 accent-black" />
+                                <span>{m}</span>
+                              </label>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="space-y-2 md:col-span-3">
+                          <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold mb-1">Board</label>
+                          <div className="flex flex-wrap gap-6 pt-1">
+                            {['Kerala-State', 'CBSE', 'ICSE', 'Other'].map(b => (
+                              <label key={b} className="flex items-center gap-2 text-sm text-black cursor-pointer">
+                                <input type="radio" name="board" value={b} checked={aptitudeForm.board === b} onChange={handleInputChange} className="w-4 h-4 accent-black" />
+                                <span>{b}</span>
+                              </label>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* SECTION 3: Interests */}
+                    <div className="md:col-span-3 border-t border-black/[0.05] pt-6">
+                      <span className="text-[10px] uppercase font-black tracking-widest text-black/45 block mb-4 flex items-center gap-2">
+                        <Award className="w-4 h-4" /> 3. Interests & Talents
+                      </span>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="space-y-2 md:col-span-3">
+                          <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Career Interests</label>
+                          <input type="text" name="careerInterests" placeholder="You can give more than one profession" value={aptitudeForm.careerInterests} onChange={handleInputChange} className="w-full p-3.5 bg-white/70 border border-black/10 rounded-xl outline-none focus:border-brand" />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Special Talents</label>
+                          <input type="text" name="specialTalents" placeholder="music, painting, cricket, athletics, etc." value={aptitudeForm.specialTalents} onChange={handleInputChange} className="w-full p-3.5 bg-white/70 border border-black/10 rounded-xl outline-none focus:border-brand" />
+                        </div>
+                        <div className="space-y-2 md:col-span-2">
+                          <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Achievements</label>
+                          <input type="text" name="achievements" placeholder="Recognition in School / District / State Level" value={aptitudeForm.achievements} onChange={handleInputChange} className="w-full p-3.5 bg-white/70 border border-black/10 rounded-xl outline-none focus:border-brand" />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* SECTION 4: Parents */}
+                    <div className="md:col-span-3 border-t border-black/[0.05] pt-6">
+                      <span className="text-[10px] uppercase font-black tracking-widest text-black/45 block mb-4 flex items-center gap-2">
+                        <Heart className="w-4 h-4" /> 4. Parents & Guardian Details
+                      </span>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="space-y-2">
+                          <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Guardian Name</label>
+                          <input required type="text" name="guardianName" placeholder="name of parent or guardian" value={aptitudeForm.guardianName} onChange={handleInputChange} className="w-full p-3.5 bg-white/70 border border-black/10 rounded-xl outline-none focus:border-brand" />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Relationship</label>
+                          <select name="guardianRelationship" value={aptitudeForm.guardianRelationship} onChange={handleInputChange} className="w-full p-3.5 bg-white/70 border border-black/10 rounded-xl outline-none focus:border-brand cursor-pointer">
+                            <option value="Father">Father</option>
+                            <option value="Mother">Mother</option>
+                            <option value="Uncle">Uncle</option>
+                            <option value="Aunt">Aunt</option>
+                            <option value="Other">Other</option>
+                          </select>
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Guardian Phone</label>
+                          <input type="tel" name="guardianPhone" placeholder="Guardian mobile number" value={aptitudeForm.guardianPhone} onChange={handleInputChange} className="w-full p-3.5 bg-white/70 border border-black/10 rounded-xl outline-none focus:border-brand" />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Father's Education</label>
+                          <input type="text" name="fatherQualification" placeholder="Qualification of Father" value={aptitudeForm.fatherQualification} onChange={handleInputChange} className="w-full p-3.5 bg-white/70 border border-black/10 rounded-xl outline-none focus:border-brand" />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Mother's Education</label>
+                          <input type="text" name="motherQualification" placeholder="Qualification of Mother" value={aptitudeForm.motherQualification} onChange={handleInputChange} className="w-full p-3.5 bg-white/70 border border-black/10 rounded-xl outline-none focus:border-brand" />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Father's Occupation</label>
+                          <input type="text" name="fatherOccupation" placeholder="Occupation of Father" value={aptitudeForm.fatherOccupation} onChange={handleInputChange} className="w-full p-3.5 bg-white/70 border border-black/10 rounded-xl outline-none focus:border-brand" />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* SECTION 5: Batch */}
+                    <div className="md:col-span-3 border-t border-black/[0.05] pt-6">
+                      <span className="text-[10px] uppercase font-black tracking-widest text-black/45 block mb-4 flex items-center gap-2">
+                        <Hash className="w-4 h-4" /> 5. Batch & Group
+                      </span>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="space-y-2">
+                          <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Preferred Batch</label>
+                          <select name="preferredBatch" value={aptitudeForm.preferredBatch} onChange={handleInputChange} className="w-full p-3.5 bg-white/70 border border-black/10 rounded-xl outline-none focus:border-brand cursor-pointer">
+                            <option value="">Select Batch</option>
+                            <option value="Batch A (Weekends)">Batch A (Weekends)</option>
+                            <option value="Batch B (Weekdays)">Batch B (Weekdays)</option>
+                            <option value="Batch C (Evening)">Batch C (Evening)</option>
+                          </select>
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Group Code</label>
+                          <input type="text" name="groupCode" placeholder="Group Code" value={aptitudeForm.groupCode} onChange={handleInputChange} className="w-full p-3.5 bg-white/70 border border-black/10 rounded-xl outline-none focus:border-brand font-mono font-bold uppercase" />
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <div className="pt-6 border-t border-black/[0.05] flex items-center gap-4">
+                    <button 
+                      type="submit"
+                      className="px-8 py-4 bg-black hover:bg-zinc-800 text-white font-bold text-xs uppercase tracking-widest rounded-full transition cursor-pointer inline-flex items-center gap-2 shadow-md"
+                    >
+                      <span>Submit & Select Counselor</span>
+                      <ArrowUpRight className="w-4 h-4 text-brand" />
+                    </button>
+                    <p className="text-[10px] text-black/45 font-semibold max-w-lg">
+                      <Info className="w-4 h-4 inline mr-1" /> Saves entered details and redirects to Counselor Booking with counselor Muhsina P R preselected.
+                    </p>
+                  </div>
+                </form>
+              </div>
+            )}
+          </div>
         </div>
-      )}
+
+        {/* BOTTOM SECTION - DUAL COUPLING ROW */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-stretch w-full">
+          
+          {/* SERVICE 2: CAREER COUNSELLING */}
+          <div 
+            id="card-career" 
+            className="col-span-12 md:col-span-6 card-luxury card-luxury-hover p-8 md:p-12 flex flex-col justify-between space-y-8 select-none border border-black/5 min-h-[360px]"
+          >
+            <div className="space-y-4">
+              <div className="flex justify-between items-start">
+                <div className="space-y-1">
+                  <span className="text-[9px] bg-black text-white px-2.5 py-0.5 rounded-full uppercase tracking-widest font-black font-mono">
+                    stream selection & roadmap
+                  </span>
+                  <h3 className="text-xl md:text-2xl font-header font-black uppercase tracking-wide text-black mt-1">Career Counselling</h3>
+                </div>
+                <span className="text-[9px] text-black/50 font-bold uppercase tracking-wider border border-black/10 px-2 py-0.5 rounded-full bg-white/50 backdrop-blur-xs font-mono">
+                  02
+                </span>
+              </div>
+              <p className="text-black/60 font-sans text-xs md:text-sm font-light leading-relaxed">
+                Our personalized career counselling sessions guide students in choosing the right academic stream, career direction, and higher education opportunities based on their interests, abilities, personality, and future goals. We provide clarity, direction, and confidence for long-term success.
+              </p>
+            </div>
+
+            <button
+              onClick={() => {
+                if (onBookTherapist) {
+                  onBookTherapist('career_1'); // Pre-select a career advisor
+                } else {
+                  setView('booking');
+                }
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="px-6 py-3 bg-white/80 hover:bg-black hover:text-white border border-black/10 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer self-start shadow-xs hover:shadow-md"
+            >
+              Configure career session
+            </button>
+          </div>
+
+          {/* SERVICE 3: PERSONAL COUNSELLING */}
+          <div 
+            id="card-mental" 
+            className="col-span-12 md:col-span-6 card-luxury card-luxury-hover p-8 md:p-12 flex flex-col justify-between space-y-8 select-none border border-black/5 min-h-[360px]"
+          >
+            <div className="space-y-4">
+              <div className="flex justify-between items-start">
+                <div className="space-y-1">
+                  <span className="text-[9px] bg-black text-white px-2.5 py-0.5 rounded-full uppercase tracking-widest font-black font-mono">
+                    emotional & stress support
+                  </span>
+                  <h3 className="text-xl md:text-2xl font-header font-black uppercase tracking-wide text-black mt-1">Personal Counselling</h3>
+                </div>
+                <span className="text-[9px] text-black/50 font-bold uppercase tracking-wider border border-black/10 px-2 py-0.5 rounded-full bg-white/50 backdrop-blur-xs font-mono">
+                  03
+                </span>
+              </div>
+              <p className="text-black/60 font-sans text-xs md:text-sm font-light leading-relaxed">
+                BEHOLD offers emotional and psychological support for students dealing with stress, anxiety, confusion, low confidence, peer pressure, and academic challenges. Our counselling approach creates a safe and supportive environment where students can grow emotionally stronger and mentally healthier.
+              </p>
+            </div>
+
+            <button
+              onClick={() => {
+                if (onBookTherapist) {
+                  onBookTherapist('c3'); // Pre-select a personal counsellor
+                } else {
+                  setView('booking');
+                }
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="px-6 py-3 bg-white/80 hover:bg-black hover:text-white border border-black/10 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer self-start shadow-xs hover:shadow-md"
+            >
+              Configure counselling session
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
     </section>
   );
 }

@@ -5,13 +5,27 @@ import Hero from './components/Hero';
 import Services from './components/Services';
 import Process from './components/Process';
 import About from './components/About';
-import AptitudeTest from './components/AptitudeTest';
+import Testimonials from './components/Testimonials';
+import Faq from './components/Faq';
 import Inquiry from './components/Inquiry';
+import FinalCTA from './components/FinalCTA';
+import ServiceBooking from './components/ServiceBooking';
 import Footer from './components/Footer';
+import StudentProfile from './components/StudentProfile';
+import TherapistDirectory from './components/TherapistDirectory';
+import AptitudeTest from './components/AptitudeTest';
 
 export default function App() {
-  const [view, setView] = useState('landing'); // 'landing' or 'test'
+  const [view, setView] = useState('landing'); // 'landing', 'test', or 'booking'
   const [testProfile, setTestProfile] = useState(null);
+  const [bookingAdvisor, setBookingAdvisor] = useState(null);
+
+
+  const handleBookTherapist = (advisorId) => {
+    setBookingAdvisor(advisorId);
+    setView('booking');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const handleFinishTest = (dominantDomain, scores) => {
     // Save results
@@ -57,30 +71,55 @@ export default function App() {
   };
 
   return (
-    <div className="font-sans antialiased text-primary selection:bg-gold/30">
+    <div 
+      className="font-sans antialiased text-black bg-[#f3f3f3] selection:bg-gray-200 min-h-screen relative"
+    >
+
       {/* Premium Navbar */}
       <Navbar setView={setView} currentView={view} />
 
       {/* Route Views */}
-      {view === 'landing' ? (
+      {view === 'landing' && (
         <main className="fade-in-up">
           {/* Hero Section */}
           <Hero setView={setView} scrollToSection={scrollToSection} />
 
           {/* Services Section */}
-          <Services />
+          <Services setView={setView} onBookTherapist={handleBookTherapist} />
+
+          {/* Therapist Directory Section */}
+          <TherapistDirectory onBookTherapist={handleBookTherapist} />
 
           {/* Process Section */}
           <Process />
 
           {/* About Us & Testimonials Section */}
-          <About />
+          <About setView={setView} />
+
+          {/* Testimonials Carousel */}
+          <Testimonials />
+
+          {/* FAQs Accordion */}
+          <Faq />
 
           {/* Inquiry / Booking Section */}
           <Inquiry testProfile={testProfile} />
+
+          {/* Final Call to Action */}
+          <FinalCTA setView={setView} />
         </main>
-      ) : (
+      )}
+
+      {view === 'test' && (
         <AptitudeTest onFinishTest={handleFinishTest} />
+      )}
+
+      {view === 'booking' && (
+        <ServiceBooking preselectedAdvisorId={bookingAdvisor} clearPreselectedAdvisor={() => setBookingAdvisor(null)} />
+      )}
+
+      {view === 'profile' && (
+        <StudentProfile setView={setView} />
       )}
 
       {/* Floating WhatsApp Action Button */}
@@ -88,11 +127,11 @@ export default function App() {
         href="https://wa.me/919497174011"
         target="_blank"
         rel="noreferrer"
-        className="fixed bottom-8 right-8 w-16 h-16 bg-[#25D366] text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 hover:shadow-[#25D366]/30 transition-all duration-300 z-50 cursor-pointer"
+        className="fixed bottom-8 right-8 w-14 h-14 bg-black hover:bg-gray-850 text-white rounded-full shadow-lg flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-200 z-50 cursor-pointer"
         aria-label="Contact support on WhatsApp"
         id="whatsapp-float-btn"
       >
-        <MessageCircle className="w-8 h-8" />
+        <MessageCircle className="w-6 h-6" />
       </a>
 
       {/* Premium Footer */}

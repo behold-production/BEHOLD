@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Phone, Mail, Navigation, ArrowRight, Loader2 } from 'lucide-react';
+import { ArrowRight, Loader2, Sparkles } from 'lucide-react';
 
 export default function Inquiry({ testProfile }) {
   const [formData, setFormData] = useState({
@@ -15,10 +15,14 @@ export default function Inquiry({ testProfile }) {
   // If the user completed the test and was redirected here, pre-populate their profile
   useEffect(() => {
     if (testProfile) {
+      const scoresString = Object.entries(testProfile.scores || {})
+        .map(([cat, score]) => `${cat} ${score}%`)
+        .join(', ');
+
       setFormData(prev => ({
         ...prev,
         service: 'Aptitude Test Booking',
-        message: `I completed the online assessment! My dominant intelligence profile is: ${testProfile.dominantDomain}. Scores: Logical ${testProfile.scores.Logical}%, Linguistic ${testProfile.scores.Linguistic}%, Intrapersonal ${testProfile.scores.Intrapersonal}%. I would like to book a detailed CIGI consultation.`
+        message: `I completed the online assessment! My dominant profile is: ${testProfile.dominantDomain}. Scores: ${scoresString}. I would like to book a detailed consultation.`
       }));
     }
   }, [testProfile]);
@@ -38,7 +42,7 @@ export default function Inquiry({ testProfile }) {
     }
     const mobileRegex = /^[6-9]\d{9}$/;
     if (!formData.mobile || !mobileRegex.test(formData.mobile)) {
-      errors.mobile = "Please enter a valid 10-digit Indian mobile number";
+      errors.mobile = "Please enter a valid 10-digit mobile number";
     }
     return errors;
   };
@@ -68,205 +72,230 @@ export default function Inquiry({ testProfile }) {
   };
 
   return (
-    <section id="inquiry" className="py-24 bg-slate-50 relative overflow-hidden">
-      {/* Background Graphic */}
-      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-gold/5 blur-[120px] rounded-full translate-y-1/2 translate-x-1/4"></div>
-
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
-        <div className="grid lg:grid-cols-12 gap-16 items-center">
-
-          {/* Left Column: Contact Cards */}
-          <div className="lg:col-span-5 text-left space-y-8">
+    <div className="text-black text-left">
+      
+      {/* 1. METRICS SECTION */}
+      <section className="max-w-7xl mx-auto px-6 py-20 border-t border-gray-100 grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <div className="lg:col-span-5">
+          <h2 className="text-3xl font-normal tracking-tight font-header uppercase">
+            Guidance Supported <br /> by Numbers.
+          </h2>
+        </div>
+        <div className="lg:col-span-7 space-y-12">
+          <p className="text-gray-500 font-light max-w-xl leading-relaxed">
+            Our experience and CIGI-aligned scientific profiling systems ensure stable educational development and career direction for students.
+          </p>
+          <div className="grid grid-cols-2 gap-x-8 gap-y-12">
             <div>
-              <h2 className="text-sm font-header font-black text-gold tracking-[0.25em] uppercase mb-4">
-                Get In Touch
-              </h2>
-              <h3 className="text-3xl md:text-5xl font-header font-black text-primary leading-tight">
-                Take the First Step <br />
-                <span className="gold-gradient-text">Towards Success</span>
-              </h3>
-              <p className="text-slate-500 font-sans mt-4 max-w-sm text-sm md:text-base leading-relaxed">
-                Connect with our state coordinators to schedule in-office assessments, institutional tie-ups, or remote sessions.
-              </p>
+              <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Students Mentored</p>
+              <p className="text-4xl font-bold tracking-tight text-brand">500+</p>
             </div>
+            <div>
+              <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Cognitive Report Pages</p>
+              <p className="text-4xl font-bold tracking-tight text-brand">12 pages</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Success Mentorship Clarity</p>
+              <p className="text-4xl font-bold tracking-tight text-brand">100%</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Counsellors Active</p>
+              <p className="text-4xl font-bold tracking-tight text-brand">24/7</p>
+            </div>
+          </div>
+        </div>
+      </section>
 
+      {/* 2. CASE STUDIES / TESTIMONIALS */}
+      <section className="max-w-7xl mx-auto px-6 py-20 border-t border-gray-100">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+          <h2 className="text-2xl md:text-3xl font-normal tracking-tight max-w-xl leading-snug font-header uppercase">
+            Families & Students Use Our Guidance to Map Academic Streams, Overcome Anxieties and Drive Educational Development.
+          </h2>
+          <button className="bg-brand text-white px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-md whitespace-nowrap hover:bg-brand-dark transition duration-200 cursor-pointer shadow-sm">
+            All Stories (98)
+          </button>
+        </div>
+
+        {/* Testimonial Masonry/Grid Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 items-start">
+          
+          {/* Card 1 */}
+          <div className="lg:col-span-7 bg-gray-50 rounded-2xl p-6 flex flex-col md:flex-row gap-6 items-center">
+            <div className="w-full md:w-1/2 aspect-square rounded-xl overflow-hidden bg-gray-200 flex-shrink-0">
+              <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&q=80" alt="Student Anjana" className="w-full h-full object-cover" />
+            </div>
             <div className="space-y-4">
-              {[
-                {
-                  icon: <Phone className="w-5 h-5 text-primary" />,
-                  label: "Call Us Today",
-                  val: "+91 94971 74011",
-                  link: "tel:+919497174011"
-                },
-                {
-                  icon: <Mail className="w-5 h-5 text-primary" />,
-                  label: "Send Email",
-                  val: "beholdaspire@gmail.com",
-                  link: "mailto:beholdaspire@gmail.com"
-                },
-                {
-                  icon: <Navigation className="w-5 h-5 text-primary" />,
-                  label: "Corporate Office",
-                  val: "Trivandrum, Kerala, India",
-                  link: "https://maps.google.com"
-                }
-              ].map((item, i) => (
-                <a
-                  key={i}
-                  href={item.link}
-                  target={item.link.startsWith('http') ? '_blank' : undefined}
-                  rel="noreferrer"
-                  className="flex items-center gap-5 p-5 bg-white rounded-2xl border border-slate-100 hover:border-gold shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer"
-                >
-                  <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center shrink-0">
-                    {item.icon}
-                  </div>
-                  <div>
-                    <p className="text-[10px] font-header font-black text-slate-400 uppercase tracking-widest">
-                      {item.label}
-                    </p>
-                    <p className="text-base md:text-lg font-sans font-bold text-primary mt-0.5">
-                      {item.val}
-                    </p>
-                  </div>
-                </a>
-              ))}
+              <div>
+                <h4 className="font-semibold text-base text-gray-900">Anjana S.</h4>
+                <p className="text-xs text-gray-400">Student, Kochi</p>
+              </div>
+              <p className="text-sm text-gray-500 font-light leading-relaxed">
+                "I was deeply confused between Design and Computer Science. The CIGI-aligned aptitude test and follow-up guidance cleared my doubts, leaving me with a clear roadmap."
+              </p>
             </div>
           </div>
 
-          {/* Right Column: Custom Booking Form */}
-          <div className="lg:col-span-7">
-            <div className="bg-white p-8 md:p-12 rounded-[40px] shadow-2xl border border-slate-100 relative overflow-hidden text-left">
-              <div className="absolute top-0 right-0 w-36 h-36 bg-gold/5 rounded-bl-full"></div>
+          {/* Card 2 */}
+          <div className="lg:col-span-5 bg-gray-50 rounded-2xl p-6 space-y-6">
+            <div className="w-full aspect-[16/10] rounded-xl overflow-hidden bg-gray-200">
+              <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=500&q=80" alt="Consultation desk" className="w-full h-full object-cover" />
+            </div>
+            <div className="space-y-4">
+              <div>
+                <h4 className="font-semibold text-base text-gray-900">Shaji PK</h4>
+                <p className="text-xs text-gray-400">Parent, Trivandrum</p>
+              </div>
+              <p className="text-sm text-gray-500 font-light leading-relaxed">
+                "BEHOLD helped my daughter choose the right humanities stream after Class 10. Their psychological approach and structured tracking maps are truly exceptional."
+              </p>
+            </div>
+          </div>
 
-              <h4 className="text-2xl font-header font-black text-primary mb-6">
-                Consultation Request Form
-              </h4>
-
-              {/* Show Pre-filled Alert if they did test */}
-              {testProfile && (
-                <div className="mb-6 p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl text-xs font-sans font-semibold">
-                  ✓ Pre-filled with your diagnostic test scores ({testProfile.dominantDomain} profile).
-                </div>
-              )}
-
-              <form onSubmit={handleSubmit} className="space-y-5">
-                <div className="grid md:grid-cols-2 gap-5">
-                  {/* Name Input */}
-                  <div className="space-y-2">
-                    <label htmlFor="name-input" className="text-xs font-header font-black text-primary uppercase tracking-wide">
-                      Full Name
-                    </label>
-                    <input
-                      required
-                      type="text"
-                      name="name"
-                      id="name-input"
-                      autoComplete="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      placeholder="Student/Parent Name"
-                      className={`w-full px-5 py-4 bg-slate-50 border rounded-xl focus:ring-2 focus:ring-gold focus:bg-white outline-none font-sans font-medium text-sm transition-all ${formErrors.name ? 'border-red-400' : 'border-slate-100'
-                        }`}
-                    />
-                    {formErrors.name && (
-                      <p className="text-xs font-sans font-semibold text-red-500">{formErrors.name}</p>
-                    )}
-                  </div>
-
-                  {/* Mobile Input */}
-                  <div className="space-y-2">
-                    <label htmlFor="mobile-input" className="text-xs font-header font-black text-primary uppercase tracking-wide">
-                      Mobile Number
-                    </label>
-                    <input
-                      required
-                      type="tel"
-                      name="mobile"
-                      id="mobile-input"
-                      autoComplete="tel"
-                      value={formData.mobile}
-                      onChange={handleChange}
-                      placeholder="10-Digit Mobile"
-                      className={`w-full px-5 py-4 bg-slate-50 border rounded-xl focus:ring-2 focus:ring-gold focus:bg-white outline-none font-sans font-medium text-sm transition-all ${formErrors.mobile ? 'border-red-400' : 'border-slate-100'
-                        }`}
-                    />
-                    {formErrors.mobile && (
-                      <p className="text-xs font-sans font-semibold text-red-500">{formErrors.mobile}</p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Service Dropdown */}
-                <div className="space-y-2">
-                  <label htmlFor="service-select" className="text-xs font-header font-black text-primary uppercase tracking-wide">
-                    Select Service
-                  </label>
-                  <select
-                    name="service"
-                    id="service-select"
-                    value={formData.service}
-                    onChange={handleChange}
-                    className="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-gold focus:bg-white outline-none font-sans font-medium text-sm transition-all appearance-none cursor-pointer"
-                  >
-                    <option>Career Guidance</option>
-                    <option>Aptitude Test Booking</option>
-                    <option>Psychology Support</option>
-                    <option>School Collaboration</option>
-                  </select>
-                </div>
-
-                {/* Message Box */}
-                <div className="space-y-2">
-                  <label htmlFor="message-textarea" className="text-xs font-header font-black text-primary uppercase tracking-wide">
-                    Your Message
-                  </label>
-                  <textarea
-                    rows={4}
-                    name="message"
-                    id="message-textarea"
-                    value={formData.message}
-                    onChange={handleChange}
-                    placeholder="Provide context regarding class, stream, or specific queries..."
-                    className="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-gold focus:bg-white outline-none font-sans font-medium text-sm transition-all resize-none"
-                  ></textarea>
-                </div>
-
-                {/* Submit button */}
-                <button
-                  type="submit"
-                  id="inquiry-submit-btn"
-                  disabled={isSubmitting}
-                  className="w-full py-4.5 bg-gold text-primary font-header font-black text-base rounded-xl shadow-lg hover:bg-gold-light hover:shadow-gold/20 hover:-translate-y-0.5 active:translate-y-0 disabled:translate-y-0 disabled:bg-slate-350 disabled:shadow-none transition-all duration-300 flex items-center justify-center gap-3 cursor-pointer"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="w-5 h-5 animate-spin" />
-                      <span>Sending Message...</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>Send Consultation Inquiry</span>
-                      <ArrowRight className="w-5 h-5" />
-                    </>
-                  )}
-                </button>
-
-                {/* Status messages */}
-                {submitStatus === 'success' && (
-                  <div
-                    id="inquiry-success-alert"
-                    className="p-4 bg-emerald-50 border border-emerald-100 text-emerald-800 rounded-2xl text-center font-sans font-bold text-sm animate-in fade-in duration-300"
-                  >
-                    ✓ Inquiry sent successfully! Our Kerala state coordinator will reach out to you shortly.
-                  </div>
-                )}
-              </form>
+          {/* Card 3 */}
+          <div className="lg:col-span-5 lg:col-start-8 bg-gray-50 rounded-2xl p-6 space-y-6">
+            <div className="w-full aspect-square rounded-xl overflow-hidden bg-gray-200">
+              <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=500&q=80" alt="Psychology consultant" className="w-full h-full object-cover" />
+            </div>
+            <div className="space-y-4">
+              <div>
+                <h4 className="font-semibold text-base text-gray-900">Dr. Rajesh Kumar</h4>
+                <p className="text-xs text-gray-400">Parent, Calicut</p>
+              </div>
+              <p className="text-sm text-gray-500 font-light leading-relaxed">
+                "The doorstep psychology scaffolding helped our son manage board exam stress, keeping him motivated and aligned during crucial admission rounds."
+              </p>
             </div>
           </div>
 
         </div>
-      </div>
-    </section>
+      </section>
+
+      {/* 3. CALL TO ACTION BLOCK WITH INQUIRY FORM */}
+      <section id="inquiry" className="max-w-7xl mx-auto px-6 py-12">
+        <div className="bg-gray-50 rounded-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2 items-center border border-gray-100 shadow-sm">
+          <div className="p-8 md:p-12 space-y-6">
+            <h2 className="text-3xl font-normal tracking-tight text-gray-900 font-header uppercase">Consultation Request</h2>
+            <p className="text-gray-500 font-light text-sm max-w-sm">
+              Submit your request to align parents, students, and coordinators for assessments and counselling sessions.
+            </p>
+            
+            {testProfile && (
+              <div className="p-4 bg-emerald-50 border border-emerald-250 text-emerald-800 rounded-xl text-xs font-semibold flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-emerald-600 animate-pulse" /> Pre-filled with diagnostic test scores ({testProfile.dominantDomain} profile).
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-4 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label htmlFor="name-input" className="font-bold text-gray-500 uppercase tracking-wide">Full Name</label>
+                  <input
+                    required
+                    type="text"
+                    name="name"
+                    id="name-input"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="Student Name"
+                    className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-md text-sm outline-none focus:border-brand transition"
+                  />
+                  {formErrors.name && <p className="text-red-500 font-bold">{formErrors.name}</p>}
+                </div>
+                <div className="space-y-1">
+                  <label htmlFor="mobile-input" className="font-bold text-gray-500 uppercase tracking-wide">Mobile Number</label>
+                  <input
+                    required
+                    type="tel"
+                    name="mobile"
+                    id="mobile-input"
+                    value={formData.mobile}
+                    onChange={handleChange}
+                    placeholder="10-Digit Mobile"
+                    className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-md text-sm outline-none focus:border-brand transition"
+                  />
+                  {formErrors.mobile && <p className="text-red-500 font-bold">{formErrors.mobile}</p>}
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label htmlFor="service-select" className="font-bold text-gray-500 uppercase tracking-wide">Select Service</label>
+                <select
+                  name="service"
+                  id="service-select"
+                  value={formData.service}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-md text-sm outline-none focus:border-brand transition cursor-pointer"
+                >
+                  <option value="Career Guidance">Career Guidance</option>
+                  <option value="Aptitude Test Booking">Aptitude Test Booking</option>
+                  <option value="Psychology Support">Psychology Support</option>
+                  <option value="School Collaboration">School Collaboration</option>
+                </select>
+              </div>
+
+              <div className="space-y-1">
+                <label htmlFor="message-textarea" className="font-bold text-gray-500 uppercase tracking-wide">Your Message</label>
+                <textarea
+                  rows={3}
+                  name="message"
+                  id="message-textarea"
+                  value={formData.message}
+                  onChange={handleChange}
+                  placeholder="Details regarding stream, class or queries..."
+                  className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-md text-sm outline-none focus:border-brand transition resize-none"
+                ></textarea>
+              </div>
+
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full py-3 bg-brand hover:bg-brand-dark text-white font-bold text-xs uppercase tracking-wider rounded-md transition flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Sending...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Send Inquiry</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </>
+                )}
+              </button>
+
+              {submitStatus === 'success' && (
+                <div className="p-3 bg-emerald-50 border border-emerald-250 text-emerald-800 rounded-md text-center font-bold text-xs">
+                  ✓ Inquiry sent successfully! Our coordinator will contact you shortly.
+                </div>
+              )}
+            </form>
+          </div>
+          
+          <div className="h-full min-h-[320px] bg-gray-200 hidden md:block">
+            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=600&q=80" alt="Students meeting" className="w-full h-full object-cover" />
+          </div>
+        </div>
+      </section>
+
+      {/* 4. NEWSLETTER SIGNUP */}
+      <section className="max-w-xl mx-auto text-center px-6 py-24 space-y-6">
+        <h2 className="text-3xl font-normal tracking-tight text-gray-900 font-header uppercase">
+          Stay Informed. <br /> Subscribe to Career Updates.
+        </h2>
+        <div className="relative max-w-md mx-auto pt-4">
+          <input 
+            type="email" 
+            placeholder="your@email.com" 
+            className="w-full bg-transparent border-b border-gray-300 focus:border-brand py-3 px-1 text-sm outline-none transition"
+          />
+          <button className="absolute right-1 bottom-3 text-gray-400 hover:text-brand transition cursor-pointer">
+            <ArrowRight className="w-5 h-5" />
+          </button>
+        </div>
+      </section>
+
+    </div>
   );
 }

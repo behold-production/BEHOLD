@@ -1,15 +1,49 @@
-import React, { useState } from 'react';
-import { Menu, X, Award, ChevronRight } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Menu, X, ArrowUpRight } from 'lucide-react';
 
 export default function Navbar({ setView, currentView }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('');
+
+  useEffect(() => {
+    if (currentView !== 'landing') {
+      setActiveSection('');
+      return;
+    }
+
+    const sections = ['services', 'about', 'faqs', 'inquiry'];
+
+    const handleIntersect = (entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(handleIntersect, {
+      rootMargin: '-40% 0px -40% 0px',
+      threshold: 0
+    });
+
+    sections.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        observer.observe(el);
+      }
+    });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [currentView]);
 
   const scrollToSection = (id) => {
     setView('landing');
     setTimeout(() => {
       const element = document.getElementById(id);
       if (element) {
-        const offset = 80; // height of fixed navbar
+        const offset = 80;
         const bodyRect = document.body.getBoundingClientRect().top;
         const elementRect = element.getBoundingClientRect().top;
         const elementPosition = elementRect - bodyRect;
@@ -31,121 +65,153 @@ export default function Navbar({ setView, currentView }) {
   };
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 glass-panel-dark text-white border-b border-white/10 shadow-lg">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-        {/* Logo */}
-        <div
-          className="flex items-center gap-3 cursor-pointer group"
+    <header className="sticky top-0 bg-white/60 backdrop-blur-md z-50 border-b border-black/[0.05] px-6 py-4 flex items-center justify-between max-w-7xl mx-auto w-full text-black transition-all">
+      {/* Left Column: Logo & Nav Links */}
+      <div className="flex items-center space-x-12">
+        <span 
           onClick={handleLogoClick}
+          className="font-header font-black text-xl tracking-tighter cursor-pointer text-black hover:text-black/80 transition"
           id="nav-logo"
         >
-          <div className="w-10 h-10 bg-gold rounded-xl flex items-center justify-center font-bold text-primary text-xl shadow-md group-hover:rotate-6 transition-all duration-300">
-            B
-          </div>
-          <div className="flex flex-col leading-none">
-            <span className="text-xl font-header font-black tracking-tight group-hover:text-gold transition-colors">
-              BEHOLD ASPIRE
-            </span>
-            <span className="text-[9px] text-gold tracking-[0.22em] font-bold mt-0.5">
-              TO YOUR PATHS
-            </span>
-          </div>
-        </div>
-
-        {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-8 text-sm font-semibold tracking-wide">
-          <button
-            id="nav-link-about"
-            onClick={() => scrollToSection('about')}
-            className="hover:text-gold transition-colors duration-200 relative py-1 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gold hover:after:w-full after:transition-all after:duration-300"
-          >
-            About
-          </button>
-          <button
-            id="nav-link-services"
+          BEHOLD<span className="text-black/35 font-light">.</span>
+        </span>
+        
+        <nav className="hidden md:flex items-center space-x-8 text-xs font-semibold uppercase tracking-wider text-black/50">
+          <button 
             onClick={() => scrollToSection('services')}
-            className="hover:text-gold transition-colors duration-200 relative py-1 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gold hover:after:w-full after:transition-all after:duration-300"
+            className={`transition-all duration-300 cursor-pointer pb-1 relative ${
+              activeSection === 'services' && currentView === 'landing' ? 'text-black font-bold' : 'hover:text-black'
+            }`}
           >
-            Services
+            services
+            {activeSection === 'services' && currentView === 'landing' && (
+              <span className="absolute bottom-0 left-0 w-full h-[2px] bg-brand" />
+            )}
           </button>
-          <button
-            id="nav-link-process"
-            onClick={() => scrollToSection('process')}
-            className="hover:text-gold transition-colors duration-200 relative py-1 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gold hover:after:w-full after:transition-all after:duration-300"
-          >
-            Our Process
-          </button>
-          <button
-            id="nav-link-inquiry"
-            onClick={() => scrollToSection('inquiry')}
-            className="hover:text-gold transition-colors duration-200 relative py-1 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gold hover:after:w-full after:transition-all after:duration-300"
-          >
-            Contact
-          </button>
-
-          <button
-            id="nav-btn-test"
+          <button 
             onClick={() => setView('test')}
-            className={`px-6 py-2.5 rounded-xl font-bold font-header transition-all duration-300 shadow-md hover:shadow-gold/20 hover:-translate-y-0.5 ${currentView === 'test'
-                ? 'bg-white text-primary hover:bg-gold hover:text-primary'
-                : 'bg-gold text-primary hover:bg-gold-light'
-              }`}
+            className={`transition-all duration-300 cursor-pointer pb-1 relative ${
+              currentView === 'test' ? 'text-black font-bold' : 'hover:text-black'
+            }`}
           >
-            Take Test
+            aptitude test
+            {currentView === 'test' && (
+              <span className="absolute bottom-0 left-0 w-full h-[2px] bg-brand" />
+            )}
           </button>
-        </div>
+          <button 
+            onClick={() => scrollToSection('about')}
+            className={`transition-all duration-300 cursor-pointer pb-1 relative ${
+              activeSection === 'about' && currentView === 'landing' ? 'text-black font-bold' : 'hover:text-black'
+            }`}
+          >
+            why us
+            {activeSection === 'about' && currentView === 'landing' && (
+              <span className="absolute bottom-0 left-0 w-full h-[2px] bg-brand" />
+            )}
+          </button>
+          <button 
+            onClick={() => scrollToSection('faqs')}
+            className={`transition-all duration-300 cursor-pointer pb-1 relative ${
+              activeSection === 'faqs' && currentView === 'landing' ? 'text-black font-bold' : 'hover:text-black'
+            }`}
+          >
+            faqs
+            {activeSection === 'faqs' && currentView === 'landing' && (
+              <span className="absolute bottom-0 left-0 w-full h-[2px] bg-brand" />
+            )}
+          </button>
+        </nav>
+      </div>
 
-        {/* Mobile Menu Button */}
-        <button
-          id="mobile-menu-toggle"
-          className="md:hidden text-slate-300 hover:text-white transition-colors p-1"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
+      {/* Right Column: Actions */}
+      <div className="hidden md:flex items-center space-x-3">
+        <button 
+          onClick={() => setView('profile')}
+          className={`px-5 py-2 text-xs font-bold uppercase tracking-wider rounded-full border border-black/10 transition duration-300 cursor-pointer ${
+            currentView === 'profile' 
+              ? 'bg-black text-white' 
+              : 'bg-white hover:bg-black hover:text-white text-black'
+          }`}
         >
-          {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          student profile
+        </button>
+        <button 
+          onClick={() => setView('booking')}
+          className={`px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-full border border-black/10 transition-all duration-300 cursor-pointer flex items-center gap-1.5 ${
+            currentView === 'booking' 
+              ? 'bg-black text-white' 
+              : 'bg-brand hover:bg-brand-dark text-black shadow-xs'
+          }`}
+        >
+          <span>book session</span>
+          <ArrowUpRight className="w-3.5 h-3.5" />
         </button>
       </div>
 
+      {/* Mobile Menu Button */}
+      <button
+        id="mobile-menu-toggle"
+        className="md:hidden text-black hover:text-black/80 transition p-1 cursor-pointer"
+        onClick={() => setIsMenuOpen(!isMenuOpen)}
+      >
+        {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+      </button>
+
       {/* Mobile Dropdown Menu */}
       {isMenuOpen && (
-        <div className="md:hidden bg-primary/95 backdrop-blur-lg border-b border-white/10 px-6 py-8 flex flex-col gap-6 animate-in slide-in-from-top duration-300">
+        <div className="absolute top-16 left-0 right-0 bg-white/95 backdrop-blur-md border-b border-black/[0.05] px-6 py-8 flex flex-col gap-6 text-xs font-bold uppercase tracking-wider text-black/60 md:hidden shadow-xl animate-in fade-in slide-in-from-top-4 duration-300 rounded-b-3xl">
           <button
-            id="mobile-nav-about"
-            onClick={() => scrollToSection('about')}
-            className="text-left font-header font-bold text-lg hover:text-gold transition-colors border-b border-white/5 pb-2"
-          >
-            About Us
-          </button>
-          <button
-            id="mobile-nav-services"
             onClick={() => scrollToSection('services')}
-            className="text-left font-header font-bold text-lg hover:text-gold transition-colors border-b border-white/5 pb-2"
+            className={`text-left border-b border-black/[0.03] pb-2 cursor-pointer ${
+              activeSection === 'services' && currentView === 'landing' ? 'text-black' : 'hover:text-black'
+            }`}
           >
-            Services
+            services
           </button>
           <button
-            id="mobile-nav-process"
-            onClick={() => scrollToSection('process')}
-            className="text-left font-header font-bold text-lg hover:text-gold transition-colors border-b border-white/5 pb-2"
-          >
-            Our Process
-          </button>
-          <button
-            id="mobile-nav-inquiry"
-            onClick={() => scrollToSection('inquiry')}
-            className="text-left font-header font-bold text-lg hover:text-gold transition-colors border-b border-white/5 pb-2"
-          >
-            Contact Support
-          </button>
-
-          <button
-            id="mobile-nav-btn-test"
             onClick={() => { setView('test'); setIsMenuOpen(false); }}
-            className="bg-gold text-primary font-header font-black py-4 rounded-xl shadow-lg hover:bg-gold-light active:scale-95 transition-all text-center flex items-center justify-center gap-2"
+            className={`text-left border-b border-black/[0.03] pb-2 cursor-pointer ${
+              currentView === 'test' ? 'text-black' : 'hover:text-black'
+            }`}
           >
-            Start Aptitude Test <ChevronRight className="w-5 h-5" />
+            aptitude test
+          </button>
+          <button
+            onClick={() => scrollToSection('about')}
+            className={`text-left border-b border-black/[0.03] pb-2 cursor-pointer ${
+              activeSection === 'about' && currentView === 'landing' ? 'text-black' : 'hover:text-black'
+            }`}
+          >
+            why us
+          </button>
+          <button
+            onClick={() => scrollToSection('faqs')}
+            className={`text-left border-b border-black/[0.03] pb-2 cursor-pointer ${
+              activeSection === 'faqs' && currentView === 'landing' ? 'text-black' : 'hover:text-black'
+            }`}
+          >
+            faqs
+          </button>
+          <button
+            onClick={() => { setView('profile'); setIsMenuOpen(false); }}
+            className={`text-left border-b border-black/[0.03] pb-2 cursor-pointer ${
+              currentView === 'profile' ? 'text-black' : 'hover:text-black'
+            }`}
+          >
+            student profile
+          </button>
+          <button
+            onClick={() => { setView('booking'); setIsMenuOpen(false); }}
+            className={`text-left border-b border-black/[0.03] pb-2 cursor-pointer flex items-center justify-between ${
+              currentView === 'booking' ? 'text-black' : 'hover:text-black'
+            }`}
+          >
+            <span>book session</span>
+            <ArrowUpRight className="w-4 h-4 text-brand" />
           </button>
         </div>
       )}
-    </nav>
+    </header>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   CheckCircle2,
   ArrowRight,
@@ -7,7 +7,9 @@ import {
   UserCheck,
   RotateCcw,
   Award,
-  ArrowUpRight
+  ArrowUpRight,
+  Sparkles,
+  Heart
 } from 'lucide-react';
 
 const TEST_QUESTIONS = [
@@ -25,18 +27,18 @@ const TEST_QUESTIONS = [
   {
     id: 2,
     question: "Which of these activities sounds most exciting to you?",
-    category: "Linguistic",
+    category: "Career",
     options: [
-      { text: "Writing a persuasive short story, essay, or poem", weight: 5 },
-      { text: "Coding a logic-based math game or grid puzzle", weight: 4 },
-      { text: "Designing a architectural or interior floor plan", weight: 3 },
+      { text: "Coding a logic-based math game or grid puzzle", weight: 5 },
+      { text: "Writing a persuasive short story, essay, or poem", weight: 4 },
+      { text: "Designing an architectural or interior floor plan", weight: 3 },
       { text: "Leading a lively group debate on social issues", weight: 2 }
     ]
   },
   {
     id: 3,
     question: "When learning something new, you prefer:",
-    category: "Intrapersonal",
+    category: "Personality",
     options: [
       { text: "Reflecting in private on how it applies to your personal goals", weight: 5 },
       { text: "Drawing visual diagrams, color-coded mindmaps, or charts", weight: 4 },
@@ -47,7 +49,7 @@ const TEST_QUESTIONS = [
   {
     id: 4,
     question: "Which of the following describes your ideal workspace?",
-    category: "Intrapersonal",
+    category: "Personality",
     options: [
       { text: "A quiet, private study where I can concentrate deeply alone", weight: 5 },
       { text: "A structured office with checklists, files, and project trackers", weight: 4 },
@@ -58,23 +60,23 @@ const TEST_QUESTIONS = [
   {
     id: 5,
     question: "If you were to write a blog post, what would it be about?",
-    category: "Linguistic",
+    category: "Communication",
     options: [
-      { text: "A fictional story filled with rich dialogue and wordplay", weight: 5 },
-      { text: "An guide explaining how a complex logic formula works", weight: 4 },
       { text: "A personal reflection on lessons learned from failure", weight: 5 },
-      { text: "A commentary on a recent public debate or speech", weight: 3 }
+      { text: "A fictional story filled with rich dialogue and wordplay", weight: 4 },
+      { text: "A commentary on a recent public debate or speech", weight: 3 },
+      { text: "A guide explaining how a complex logic formula works", weight: 2 }
     ]
   },
   {
     id: 6,
     question: "When presented with a debate, what is your first reaction?",
-    category: "Linguistic",
+    category: "Communication",
     options: [
-      { text: "To analyze the persuasive power, vocabulary, and flow of speech", weight: 5 },
-      { text: "To construct structured logical counter-arguments to disprove errors", weight: 4 },
-      { text: "To reflect on my own internal feelings and moral stand first", weight: 5 },
-      { text: "To mediate the conversation and write down points of agreement", weight: 2 }
+      { text: "To mediate the conversation and write down points of agreement", weight: 5 },
+      { text: "To reflect on my own internal feelings and moral stand first", weight: 4 },
+      { text: "To analyze the persuasive power, vocabulary, and flow of speech", weight: 3 },
+      { text: "To construct structured logical counter-arguments to disprove errors", weight: 2 }
     ]
   },
   {
@@ -91,137 +93,318 @@ const TEST_QUESTIONS = [
   {
     id: 8,
     question: "Which elective course would you enroll in just for fun?",
-    category: "Logical",
+    category: "Aptitude",
     options: [
       { text: "Discrete Mathematics or Symbolic Logic puzzles", weight: 5 },
-      { text: "Creative Writing, Rhetoric, and Public Speaking", weight: 5 },
-      { text: "Philosophy of the Self, Ethics, and Mindfulness", weight: 5 },
-      { text: "Data Visualizations and Graphic Layout design", weight: 3 }
+      { text: "Creative Writing, Rhetoric, and Public Speaking", weight: 4 },
+      { text: "Philosophy of the Self, Ethics, and Mindfulness", weight: 3 },
+      { text: "Data Visualizations and Graphic Layout design", weight: 2 }
     ]
   },
   {
     id: 9,
     question: "When resolving an argument with a friend, you tend to:",
-    category: "Intrapersonal",
+    category: "Emotional",
     options: [
       { text: "Reflect privately on my own behavior and hidden biases first", weight: 5 },
       { text: "Analyze the facts and chronology objectively to find the root cause", weight: 4 },
-      { text: "Sit down and explain my feelings clearly using precise words", weight: 5 },
+      { text: "Sit down and explain my feelings clearly using precise words", weight: 3 },
       { text: "Let it cool down naturally without overthinking it", weight: 2 }
+    ]
+  },
+  {
+    id: 10,
+    question: "You have 3 boxes: one contains only apples, one contains oranges, and one both. All labels are incorrect. How many fruits must you draw to label all boxes correctly?",
+    category: "Aptitude",
+    options: [
+      { text: "Only 1 fruit from the box labeled 'Apples & Oranges'", weight: 5 },
+      { text: "At least 2 fruits from different boxes", weight: 3 },
+      { text: "It is mathematically impossible without opening all", weight: 1 },
+      { text: "Draw 1 from each box", weight: 2 }
+    ]
+  },
+  {
+    id: 11,
+    question: "A group member is quiet and seems frustrated during a session. How do you handle this?",
+    category: "Emotional",
+    options: [
+      { text: "Speak with them privately after the meeting to see if they want to share", weight: 5 },
+      { text: "Ask them directly in front of the group to share what is bothering them", weight: 2 },
+      { text: "Ignore it and focus on completing the task with active members", weight: 1 },
+      { text: "Assign them a direct task so they are forced to participate", weight: 3 }
+    ]
+  },
+  {
+    id: 12,
+    question: "What kind of project would you find most satisfying to deliver?",
+    category: "Career",
+    options: [
+      { text: "A successful community drive or charity event that helps people", weight: 5 },
+      { text: "A functional, well-designed application or physical prototype", weight: 4 },
+      { text: "A detailed research report analyzing future trends and data", weight: 4 },
+      { text: "An organized project roadmap and budget sheet for a client", weight: 3 }
+    ]
+  },
+  {
+    id: 13,
+    question: "You are given a brick. How many alternative uses can you brainstorm for it in 1 minute?",
+    category: "Creativity",
+    options: [
+      { text: "10+ creative uses (e.g., paperweight, doorstop, artistic sculpture, paint grinding)", weight: 5 },
+      { text: "5-9 functional uses (e.g., support block, garden border)", weight: 4 },
+      { text: "2-4 standard uses (e.g., building a wall, throwing)", weight: 2 },
+      { text: "I only see it as a construction material", weight: 1 }
+    ]
+  },
+  {
+    id: 14,
+    question: "When designing the visual layout of a page or poster, you start by:",
+    category: "Creativity",
+    options: [
+      { text: "Sketching multiple abstract layouts to see what feels most unique", weight: 5 },
+      { text: "Aligning components systematically using a strict grid layout", weight: 4 },
+      { text: "Copying an existing design that I know works well", weight: 2 },
+      { text: "Focusing on the text first and adding colors at the end", weight: 3 }
+    ]
+  },
+  {
+    id: 15,
+    question: "Your team is divided between two approaches for a project. How do you lead them to a decision?",
+    category: "Leadership",
+    options: [
+      { text: "Facilitate a structured vote after evaluating the pros and cons of both", weight: 5 },
+      { text: "Choose the option that I personally believe is best to keep moving forward", weight: 2 },
+      { text: "Let the group continue debating until a consensus emerges naturally", weight: 2 },
+      { text: "Divide the project into two parts so both groups do it their way", weight: 1 }
+    ]
+  },
+  {
+    id: 16,
+    question: "When taking on a group assignment, you naturally tend to:",
+    category: "Leadership",
+    options: [
+      { text: "Coordinate milestones, assign roles, and keep everyone aligned on the goal", weight: 5 },
+      { text: "Focus deeply on completing my own assigned tasks to high standards", weight: 3 },
+      { text: "Support others by offering help and resolving conflicts", weight: 4 },
+      { text: "Follow instructions and let others set the direction", weight: 2 }
     ]
   }
 ];
 
 const DOMAIN_DETAILS = {
+  Aptitude: {
+    title: "General Cognitive Aptitude",
+    icon: <BrainCircuit className="w-8 h-8 text-black" />,
+    desc: "You have a strong capacity for general cognitive problem-solving, mathematical tracking, and deductive reasoning under time-bounded scenarios."
+  },
   Logical: {
-    title: "Analytical & Logical Intelligence",
-    icon: <BrainCircuit className="w-8 h-8 text-blue-600" />,
-    color: "text-blue-600 bg-blue-50 border-blue-100",
-    barColor: "bg-blue-600",
-    desc: "You possess a powerful ability to analyze situations, spot patterns, and apply logical deductive reasoning to complex systems. You enjoy breaking problems down into scientific variables.",
-    careers: ["Software Engineer & Architect", "Data Scientist & Statistician", "Financial Analyst", "Scientific Researcher", "Astrophysicist"],
+    title: "Logical & Pattern Reasoning",
+    icon: <BrainCircuit className="w-8 h-8 text-black" />,
+    desc: "You possess a powerful ability to analyze sequential data, identify underlying formulas, and evaluate structured arguments objectively."
   },
-  Linguistic: {
-    title: "Verbal & Linguistic Intelligence",
-    icon: <BookOpen className="w-8 h-8 text-amber-600" />,
-    color: "text-amber-600 bg-amber-50 border-amber-100",
-    barColor: "bg-gold",
-    desc: "You have a high sensitivity to the structure, meanings, and rhythms of words. You express ideas articulately, write persuasively, and enjoy analyzing language-based structures.",
-    careers: ["Corporate Lawyer", "Journalist / News Editor", "Communications Director", "Content Strategist", "Public Relations Specialist"],
+  Emotional: {
+    title: "Emotional & Intrapersonal Intelligence",
+    icon: <Heart className="w-8 h-8 text-black" />,
+    desc: "You possess high self-awareness, active empathy, emotional regulation, and deep understanding of human psychological motivation models."
   },
-  Intrapersonal: {
-    title: "Reflective & Intrapersonal Intelligence",
-    icon: <UserCheck className="w-8 h-8 text-emerald-600" />,
-    color: "text-emerald-600 bg-emerald-50 border-emerald-100",
-    barColor: "bg-emerald-600",
-    desc: "You have deep self-awareness, an understanding of your own emotional drivers, values, and cognitive models. You excel at self-direction, philosophical research, and coaching.",
-    careers: ["Counseling Psychologist", "Social Entrepreneur", "Independent Writer / Philosopher", "Organizational Consultant", "Academic Researcher"],
+  Career: {
+    title: "Career Interests & Direction",
+    icon: <BookOpen className="w-8 h-8 text-black" />,
+    desc: "You have a highly defined interest profile in modern industrial and operational sectors, showing clear paths towards system planning and coaching."
+  },
+  Personality: {
+    title: "Self-Direction & Personality Alignment",
+    icon: <UserCheck className="w-8 h-8 text-black" />,
+    desc: "You excel at identifying personal values, managing focus quarters, and establishing productive study environments with high self-discipline."
+  },
+  Communication: {
+    title: "Verbal & Communication Flow",
+    icon: <BookOpen className="w-8 h-8 text-black" />,
+    desc: "You possess strong skills in speech articulation, conflict mediation, and clarifying complex technical systems for diverse audiences."
+  },
+  Creativity: {
+    title: "Lateral & Creative Thinking",
+    icon: <Sparkles className="w-8 h-8 text-black" />,
+    desc: "You excel at visual layouts, abstract brainstorming, and finding multiple alternative uses for ordinary systems. You reject copy-paste designs."
+  },
+  Leadership: {
+    title: "Leadership & Milestones Direction",
+    icon: <Award className="w-8 h-8 text-black" />,
+    desc: "You naturally coordinate group roles, structure consensus votes, establish milestone tracking, and maintain motivational energy for team delivery."
   }
 };
 
-export default function AptitudeTest({ onFinishTest, resetTrigger }) {
+const CATEGORIES = [
+  { key: 'Aptitude', label: 'Cognitive Aptitude' },
+  { key: 'Logical', label: 'Logical Reasoning' },
+  { key: 'Emotional', label: 'Emotional Intelligence' },
+  { key: 'Career', label: 'Career Interests' },
+  { key: 'Personality', label: 'Personality Align' },
+  { key: 'Communication', label: 'Communication Flow' },
+  { key: 'Creativity', label: 'Creativity & Design' },
+  { key: 'Leadership', label: 'Leadership Skills' }
+];
+
+export default function AptitudeTest({ onFinishTest }) {
+  const [shuffledQuestions, setShuffledQuestions] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [testScores, setTestScores] = useState({ Logical: 0, Linguistic: 0, Intrapersonal: 0 });
   const [testFinished, setTestFinished] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  
+  const [testScores, setTestScores] = useState({
+    Aptitude: 0,
+    Logical: 0,
+    Emotional: 0,
+    Career: 0,
+    Personality: 0,
+    Communication: 0,
+    Creativity: 0,
+    Leadership: 0
+  });
+
+  // Randomize questions order on initial load
+  useEffect(() => {
+    const shuffled = [...TEST_QUESTIONS].sort(() => Math.random() - 0.5);
+    setShuffledQuestions(shuffled);
+  }, []);
 
   const handleAnswer = (category, weight) => {
     if (isAnimating) return;
     setIsAnimating(true);
 
     setTimeout(() => {
-      const updatedScores = {
-        ...testScores,
-        [category]: (testScores[category] || 0) + weight
-      };
-      setTestScores(updatedScores);
+      setTestScores(prev => ({
+        ...prev,
+        [category]: (prev[category] || 0) + weight
+      }));
 
-      if (currentQuestion < TEST_QUESTIONS.length - 1) {
-        setCurrentQuestion(currentQuestion + 1);
+      if (currentQuestion < shuffledQuestions.length - 1) {
+        setCurrentQuestion(prev => prev + 1);
       } else {
         setTestFinished(true);
       }
       setIsAnimating(false);
-    }, 250);
+    }, 200);
   };
 
   const handleRestart = () => {
     setCurrentQuestion(0);
-    setTestScores({ Logical: 0, Linguistic: 0, Intrapersonal: 0 });
+    setTestScores({
+      Aptitude: 0,
+      Logical: 0,
+      Emotional: 0,
+      Career: 0,
+      Personality: 0,
+      Communication: 0,
+      Creativity: 0,
+      Leadership: 0
+    });
+    const reshuffled = [...TEST_QUESTIONS].sort(() => Math.random() - 0.5);
+    setShuffledQuestions(reshuffled);
     setTestFinished(false);
     setIsAnimating(false);
   };
 
-  // Calculations for results dashboard
-  const maxLogical = 15; // 3 questions * 5 max weight
-  const maxLinguistic = 15;
-  const maxIntrapersonal = 15;
-
+  // Calculations for results dashboard (max score is 10 per category as we have 2 questions each with max weight 5)
   const scorePercentages = {
-    Logical: Math.min(Math.round((testScores.Logical / maxLogical) * 100), 100),
-    Linguistic: Math.min(Math.round((testScores.Linguistic / maxLinguistic) * 100), 100),
-    Intrapersonal: Math.min(Math.round((testScores.Intrapersonal / maxIntrapersonal) * 100), 100),
+    Aptitude: Math.min(Math.round(((testScores.Aptitude || 0) / 10) * 100), 100),
+    Logical: Math.min(Math.round(((testScores.Logical || 0) / 10) * 100), 100),
+    Emotional: Math.min(Math.round(((testScores.Emotional || 0) / 10) * 100), 100),
+    Career: Math.min(Math.round(((testScores.Career || 0) / 10) * 100), 100),
+    Personality: Math.min(Math.round(((testScores.Personality || 0) / 10) * 100), 100),
+    Communication: Math.min(Math.round(((testScores.Communication || 0) / 10) * 100), 100),
+    Creativity: Math.min(Math.round(((testScores.Creativity || 0) / 10) * 100), 100),
+    Leadership: Math.min(Math.round(((testScores.Leadership || 0) / 10) * 100), 100)
   };
 
   // Find dominant domain
   const dominantDomain = Object.keys(scorePercentages).reduce((a, b) =>
     scorePercentages[a] > scorePercentages[b] ? a : b
-  );
+  , 'Aptitude');
 
-  const dominantInfo = DOMAIN_DETAILS[dominantDomain];
+  const dominantInfo = DOMAIN_DETAILS[dominantDomain] || DOMAIN_DETAILS.Aptitude;
+
+  // Generate dynamic careers recommendations based on score thresholds
+  const generateCareers = (pct) => {
+    const list = [];
+    if (pct.Logical >= 80) list.push({ career: "Software Engineer", reason: "Excellent logical reasoning & data synthesis scores" });
+    if (pct.Creativity >= 80) list.push({ career: "UI/UX Designer", reason: "High lateral thinking and abstract layout affinity" });
+    if (pct.Leadership >= 80) list.push({ career: "Product Manager / Director", reason: "Strong alignment, milestones coordination & vote mediation" });
+    if (pct.Emotional >= 80) list.push({ career: "Clinical Psychologist", reason: "Exceptional self-reflection, empathy & therapeutic listening" });
+    if (pct.Communication >= 80) list.push({ career: "Corporate Consultant", reason: "Articulate explanation & multi-stakeholder mediation" });
+    if (pct.Aptitude >= 80) list.push({ career: "Quantitative Analyst", reason: "Rapid deductive sorting & general intelligence" });
+    if (pct.Career >= 80) list.push({ career: "Systems Architect", reason: "Strategic organization, prototyping & roadmapping" });
+    if (pct.Personality >= 80) list.push({ career: "HR Director / Talent Advisor", reason: "Strong evaluation of personal goals and growth drivers" });
+
+    // Fallbacks if scores are lower or balanced
+    if (list.length < 3) {
+      const sorted = Object.entries(pct).sort((a, b) => b[1] - a[1]);
+      const fallbacks = {
+        Logical: { career: "Data Scientist", reason: "Excellent numerical sequencing & logical patterns score" },
+        Creativity: { career: "Creative Director", reason: "Top scores in lateral brainstorming and layout design" },
+        Leadership: { career: "Project Lead / Consultant", reason: "Capable of milestone tracking and coordinate roles" },
+        Emotional: { career: "Educational Counselor", reason: "Shows warmth, active conflict mediation & self-reflection" },
+        Communication: { career: "Technical Writer / Educator", reason: "Excellent verbal explanation and analogical speech" },
+        Aptitude: { career: "Academic Researcher", reason: "Robust cognitive problem-solving metrics" },
+        Career: { career: "Strategic Planner", reason: "Highly structured milestone planning and roadmap outline" },
+        Personality: { career: "Performance Coach", reason: "Deep comprehension of personal focus milestones" }
+      };
+      
+      sorted.forEach(([cat]) => {
+        if (list.length < 3 && !list.some(item => item.career === fallbacks[cat].career)) {
+          list.push(fallbacks[cat]);
+        }
+      });
+    }
+
+    return list.slice(0, 4); // Limit to top 4 recommendations
+  };
+
+  const recommendedCareers = generateCareers(scorePercentages);
+
+  if (shuffledQuestions.length === 0) {
+    return (
+      <div className="pt-32 pb-20 min-h-screen bg-[#f3f3f3] text-black flex items-center justify-center font-sans">
+        <p className="text-sm font-semibold uppercase tracking-widest text-black/50 animate-pulse">Initializing quiz console...</p>
+      </div>
+    );
+  }
+
+  const currentQObj = shuffledQuestions[currentQuestion];
 
   return (
-    <div className="pt-32 pb-20 min-h-screen bg-slate-50 relative">
-      <div className="max-w-4xl mx-auto px-6">
+    <div className="pt-32 pb-20 min-h-screen bg-[#f3f3f3] text-black relative overflow-hidden font-sans border-b border-black/[0.03] text-left">
+      <div className="max-w-4xl mx-auto px-6 relative z-10">
 
         {!testFinished ? (
           /* Quiz Interface Card */
           <div
-            className={`bg-white rounded-[40px] shadow-2xl p-8 md:p-16 border border-slate-100 text-left relative overflow-hidden transition-all duration-300 ${isAnimating ? 'opacity-0 scale-95 translate-y-2' : 'opacity-100 scale-100 translate-y-0'
-              }`}
+            className={`card-luxury p-8 md:p-14 select-none border border-black/5 transition-all duration-300 ${
+              isAnimating ? 'opacity-0 scale-95 translate-y-2' : 'opacity-100 scale-100 translate-y-0'
+            }`}
             id="quiz-card"
           >
             {/* Header / Progress bar */}
             <div className="mb-12">
-              <div className="flex justify-between items-end mb-4">
+              <div className="flex flex-col sm:flex-row justify-between sm:items-end gap-4 mb-4">
                 <div>
-                  <h2 className="text-3xl font-header font-black text-primary mb-2">
-                    Aptitude Assessment
+                  <h2 className="text-3xl font-header font-black text-gray-900 uppercase tracking-wide">
+                    Aptitude Profiling
                   </h2>
-                  <p className="text-slate-400 font-sans text-sm">
-                    Discover your core cognitive affinities through scientific profiling.
+                  <p className="text-gray-500 font-sans text-xs font-light mt-1">
+                    Discover your core cognitive affinities across 8 dimensions.
                   </p>
                 </div>
-                <span className="text-gold font-header font-black text-lg">
-                  {currentQuestion + 1} <span className="text-slate-300">/</span> {TEST_QUESTIONS.length}
+                <span className="text-black font-header font-black text-lg self-start sm:self-auto">
+                  {currentQuestion + 1} <span className="text-gray-300">/</span> {shuffledQuestions.length}
                 </span>
               </div>
 
               {/* Progress Bar Container */}
-              <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+              <div className="h-1.5 w-full bg-black/5 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-gold transition-all duration-500 ease-out"
-                  style={{ width: `${((currentQuestion + 1) / TEST_QUESTIONS.length) * 100}%` }}
+                  className="h-full bg-brand transition-all duration-500 ease-out"
+                  style={{ width: `${((currentQuestion + 1) / shuffledQuestions.length) * 100}%` }}
                 ></div>
               </div>
             </div>
@@ -229,28 +412,28 @@ export default function AptitudeTest({ onFinishTest, resetTrigger }) {
             {/* Question Text */}
             <div className="mb-10">
               <div className="flex gap-4 items-start mb-6">
-                <span className="flex items-center justify-center w-8 h-8 rounded-full bg-gold/10 text-gold font-header font-bold text-xs shrink-0 mt-0.5">
+                <span className="flex items-center justify-center w-7 h-7 rounded-full bg-black/5 text-black font-bold text-xs shrink-0 mt-0.5 font-mono">
                   Q
                 </span>
-                <h3 className="text-xl md:text-2xl font-header font-bold text-primary leading-snug">
-                  {TEST_QUESTIONS[currentQuestion].question}
+                <h3 className="text-lg md:text-xl font-header font-bold text-gray-900 leading-snug">
+                  {currentQObj.question}
                 </h3>
               </div>
 
               {/* Options Grid */}
               <div className="grid gap-4 mt-8">
-                {TEST_QUESTIONS[currentQuestion].options.map((opt, i) => (
+                {currentQObj.options.map((opt, i) => (
                   <button
                     key={i}
                     id={`opt-btn-${i}`}
-                    onClick={() => handleAnswer(TEST_QUESTIONS[currentQuestion].category, opt.weight)}
-                    className="w-full text-left p-5 md:p-6 rounded-2xl border border-slate-100 hover:border-gold hover:bg-gold/5 transition-all duration-200 flex items-center justify-between group cursor-pointer"
+                    onClick={() => handleAnswer(currentQObj.category, opt.weight)}
+                    className="w-full text-left p-5 rounded-2xl border border-black/5 bg-white/60 hover:bg-white hover:border-brand/45 transition-all duration-200 flex items-center justify-between group cursor-pointer"
                   >
-                    <span className="text-base md:text-lg font-sans font-semibold text-slate-600 group-hover:text-primary transition-colors">
+                    <span className="text-xs md:text-sm font-semibold text-gray-700 group-hover:text-black transition-colors">
                       {opt.text}
                     </span>
-                    <div className="w-5 h-5 rounded-full border-2 border-slate-200 group-hover:border-gold group-hover:bg-gold transition-all duration-200 flex items-center justify-center shrink-0 ml-4">
-                      <div className="w-2 h-2 rounded-full bg-white opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div className="w-4 h-4 rounded-full border border-black/10 group-hover:border-brand group-hover:bg-brand transition-all duration-200 flex items-center justify-center shrink-0 ml-4">
+                      <div className="w-1.5 h-1.5 rounded-full bg-black opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     </div>
                   </button>
                 ))}
@@ -258,22 +441,22 @@ export default function AptitudeTest({ onFinishTest, resetTrigger }) {
             </div>
           </div>
         ) : (
-          /* Enhanced Results Dashboard */
+          /* Results Dashboard */
           <div
-            className="bg-white rounded-[40px] shadow-2xl p-8 md:p-16 border border-slate-100 text-left relative overflow-hidden animate-in zoom-in-95 duration-500"
+            className="card-luxury p-8 md:p-14 border border-black/5 relative overflow-hidden animate-in zoom-in-95 duration-500"
             id="results-dashboard"
           >
             {/* Header Shield */}
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-8 border-b border-slate-100 mb-10">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-8 border-b border-black/[0.05] mb-10">
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center">
-                  <CheckCircle2 className="w-10 h-10" />
+                <div className="w-12 h-12 bg-black text-brand rounded-2xl flex items-center justify-center shadow-md">
+                  <CheckCircle2 className="w-6 h-6" />
                 </div>
                 <div>
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-500 text-[10px] font-bold uppercase tracking-wider mb-1">
-                    <Award className="w-3.5 h-3.5 text-gold" /> CIGI Framework Certified
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/70 border border-black/5 text-black text-[9px] font-extrabold uppercase tracking-wider mb-1">
+                    <Award className="w-3.5 h-3.5 text-black" /> CIGI Framework Certified
                   </div>
-                  <h2 className="text-3xl font-header font-black text-primary leading-none">
+                  <h2 className="text-3xl font-header font-black text-gray-900 leading-none">
                     Assessment Completed
                   </h2>
                 </div>
@@ -281,9 +464,9 @@ export default function AptitudeTest({ onFinishTest, resetTrigger }) {
               <button
                 id="btn-restart-test"
                 onClick={handleRestart}
-                className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl font-header font-bold text-sm transition-colors flex items-center gap-2 cursor-pointer"
+                className="px-5 py-2.5 bg-white border border-black/10 hover:border-black text-black rounded-full font-bold text-xs uppercase tracking-wider transition-colors flex items-center gap-2 cursor-pointer shadow-xs"
               >
-                <RotateCcw className="w-4 h-4" />
+                <RotateCcw className="w-3.5 h-3.5" />
                 <span>Retake Test</span>
               </button>
             </div>
@@ -293,17 +476,17 @@ export default function AptitudeTest({ onFinishTest, resetTrigger }) {
 
               {/* Left Column: Dominant Domain */}
               <div className="lg:col-span-7 space-y-6">
-                <h3 className="text-xs font-header font-black text-gold tracking-widest uppercase">
+                <h3 className="text-[10px] font-extrabold text-black/40 tracking-wider uppercase">
                   Your Dominant Affinity Profile
                 </h3>
 
-                <div className={`p-6 rounded-3xl border flex gap-4 ${dominantInfo.color}`}>
-                  <div className="shrink-0">{dominantInfo.icon}</div>
+                <div className="p-6 rounded-3xl border border-black/5 bg-white/70 flex gap-4 text-black shadow-xs">
+                  <div className="shrink-0 mt-1">{dominantInfo.icon}</div>
                   <div>
-                    <h4 className="text-xl font-header font-black text-primary leading-tight mb-2">
+                    <h4 className="text-lg font-header font-black text-gray-900 leading-tight mb-2 uppercase">
                       {dominantInfo.title}
                     </h4>
-                    <p className="text-slate-600 text-sm leading-relaxed font-sans font-medium">
+                    <p className="text-black/60 text-xs font-light leading-relaxed">
                       {dominantInfo.desc}
                     </p>
                   </div>
@@ -311,46 +494,53 @@ export default function AptitudeTest({ onFinishTest, resetTrigger }) {
 
                 {/* Score breakdown charts */}
                 <div className="space-y-4 pt-4">
-                  <h4 className="font-header font-bold text-primary text-sm uppercase tracking-wider">
+                  <h4 className="font-header font-extrabold text-gray-900 text-xs uppercase tracking-wider">
                     Cognitive Distribution Metrics
                   </h4>
 
-                  {Object.entries(DOMAIN_DETAILS).map(([key, value]) => {
-                    const pct = scorePercentages[key];
-                    return (
-                      <div key={key} className="space-y-1.5" id={`score-metric-${key.toLowerCase()}`}>
-                        <div className="flex justify-between text-sm font-sans font-extrabold text-primary">
-                          <span>{value.title.split(' ')[0]} Intelligence</span>
-                          <span>{pct}%</span>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {CATEGORIES.map(({ key, label }) => {
+                      const pct = scorePercentages[key];
+                      return (
+                        <div key={key} className="space-y-1 bg-white/40 p-3 rounded-2xl border border-black/[0.02]" id={`score-metric-${key.toLowerCase()}`}>
+                          <div className="flex justify-between text-[11px] font-bold text-black/60">
+                            <span>{label}</span>
+                            <span className="font-extrabold text-black">{pct}%</span>
+                          </div>
+                          <div className="h-2 w-full bg-black/5 rounded-full overflow-hidden">
+                            <div
+                              className="h-full bg-brand rounded-full transition-all duration-1000 ease-out"
+                              style={{ width: `${pct}%` }}
+                            ></div>
+                          </div>
                         </div>
-                        <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden">
-                          <div
-                            className={`h-full ${value.barColor} rounded-full transition-all duration-1000 ease-out`}
-                            style={{ width: `${pct}%` }}
-                          ></div>
-                        </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
 
               {/* Right Column: Recommendations */}
               <div className="lg:col-span-5 space-y-6">
-                <div className="p-8 bg-slate-50 border border-slate-100 rounded-[32px] space-y-6">
-                  <h4 className="font-header font-black text-primary text-sm uppercase tracking-wider border-b border-slate-200 pb-3">
-                    Recommended Career Sectors
+                <div className="p-6 bg-white/70 border border-black/5 rounded-3xl space-y-6 shadow-xs">
+                  <h4 className="font-header font-extrabold text-gray-900 text-xs uppercase tracking-wider border-b border-black/[0.05] pb-3">
+                    Recommended Pathways
                   </h4>
                   <ul className="space-y-3">
-                    {dominantInfo.careers.map((career, cIdx) => (
+                    {recommendedCareers.map((item, cIdx) => (
                       <li
                         key={cIdx}
-                        className="flex justify-between items-center bg-white p-3 rounded-xl border border-slate-100 shadow-sm hover:border-gold hover:translate-x-1 transition-all duration-200 group"
+                        className="flex flex-col bg-white p-4 rounded-2xl border border-black/5 hover:border-black/20 hover:scale-[1.01] transition-all duration-200 group text-left"
                       >
-                        <span className="text-sm font-sans font-bold text-slate-700">
-                          {career}
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs font-extrabold text-black">
+                            {item.career}
+                          </span>
+                          <ArrowUpRight className="w-3.5 h-3.5 text-black/40 group-hover:text-black transition-colors" />
+                        </div>
+                        <span className="text-[10px] text-black/50 font-light mt-1 leading-relaxed">
+                          {item.reason}
                         </span>
-                        <ArrowUpRight className="w-4 h-4 text-slate-300 group-hover:text-gold transition-colors" />
                       </li>
                     ))}
                   </ul>
@@ -360,13 +550,13 @@ export default function AptitudeTest({ onFinishTest, resetTrigger }) {
                     <button
                       id="btn-results-consult"
                       onClick={() => onFinishTest(dominantDomain, scorePercentages)}
-                      className="w-full py-4 bg-primary hover:bg-primary-light text-white font-header font-black text-sm rounded-xl transition-all shadow-md shadow-primary/10 hover:shadow-primary/20 flex items-center justify-center gap-2 cursor-pointer"
+                      className="w-full py-4 bg-brand hover:bg-brand-dark border border-black/5 text-black font-extrabold text-xs uppercase tracking-widest rounded-full transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm hover:scale-[1.02] active:scale-[0.98]"
                     >
-                      <span>Claim Free CIGI Counseling</span>
+                      <span>Claim Free Mentoring</span>
                       <ArrowRight className="w-4 h-4" />
                     </button>
-                    <p className="text-[10px] text-slate-400 text-center mt-3 font-sans font-semibold">
-                      Requires submitting parent details for verified scheduling.
+                    <p className="text-[9px] text-black/45 text-center mt-3 font-semibold flex items-center justify-center gap-1">
+                      <Sparkles className="w-3.5 h-3.5 text-black" /> Schedules with a State Coordinator.
                     </p>
                   </div>
                 </div>

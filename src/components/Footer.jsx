@@ -1,164 +1,98 @@
-import React, { useState } from 'react';
-import { MessageCircle, Mail, Phone, ArrowRight, Award } from 'lucide-react';
+import React from 'react';
+import { ArrowRight, Send } from 'lucide-react';
 
 export default function Footer({ setView }) {
-  const [email, setEmail] = useState('');
-  const [subscribed, setSubscribed] = useState(false);
-
-  const handleSubscribe = (e) => {
-    e.preventDefault();
-    if (!email || !email.includes('@')) return;
-    setSubscribed(true);
-    setEmail('');
+  const handleLogoClick = () => {
+    setView('landing');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const scrollToSection = (id) => {
+  const handleScroll = (id) => {
     setView('landing');
     setTimeout(() => {
-      const element = document.getElementById(id);
-      if (element) {
-        const offset = 80;
-        const bodyRect = document.body.getBoundingClientRect().top;
-        const elementRect = element.getBoundingClientRect().top;
-        const elementPosition = elementRect - bodyRect;
-        const offsetPosition = elementPosition - offset;
-
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: 'smooth'
-        });
-      }
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
     }, 50);
   };
 
   return (
-    <footer className="bg-primary text-white py-20 border-t border-white/5 relative overflow-hidden font-sans">
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
+    <footer className="bg-black text-zinc-500 text-xs py-20 px-6 border-t border-zinc-900 text-left select-none relative z-10">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-12 pb-16 border-b border-zinc-900">
         
-        {/* Footer Top Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-12 gap-12 mb-16">
+        {/* Brand column */}
+        <div className="col-span-1 md:col-span-3 lg:col-span-2 space-y-4">
+          <span 
+            onClick={handleLogoClick}
+            className="font-header font-black text-lg text-white hover:text-brand tracking-tighter cursor-pointer transition duration-300"
+          >
+            BEHOLD<span className="text-brand">.</span>
+          </span>
+          <p className="text-zinc-650 max-w-sm font-light leading-relaxed">
+            Elevating student psychological development and career directives through doorstep counselling and personalized mentoring.
+          </p>
+        </div>
+
+        {/* Column 2: Services */}
+        <div>
+          <h5 className="text-zinc-200 font-bold uppercase tracking-wider mb-4 font-header text-[10px]">Services</h5>
+          <ul className="space-y-3 font-light">
+            <li><button onClick={() => handleScroll('services')} className="hover:text-brand transition cursor-pointer text-left">Aptitude Test</button></li>
+            <li><button onClick={() => handleScroll('services')} className="hover:text-brand transition cursor-pointer text-left">Career Counselling</button></li>
+            <li><button onClick={() => handleScroll('services')} className="hover:text-brand transition cursor-pointer text-left">Personal Counselling</button></li>
+          </ul>
+        </div>
+
+        {/* Column 3: Booking */}
+        <div>
+          <h5 className="text-zinc-200 font-bold uppercase tracking-wider mb-4 font-header text-[10px]">Booking</h5>
+          <ul className="space-y-3 font-light">
+            <li><button onClick={() => setView('booking')} className="hover:text-brand transition cursor-pointer text-left">Online Sessions</button></li>
+            <li><button onClick={() => setView('booking')} className="hover:text-brand transition cursor-pointer text-left">Doorstep Support</button></li>
+            <li><button onClick={() => setView('booking')} className="hover:text-brand transition cursor-pointer text-left">Office Consultations</button></li>
+          </ul>
+        </div>
+
+        {/* Column 4: Company */}
+        <div>
+          <h5 className="text-zinc-200 font-bold uppercase tracking-wider mb-4 font-header text-[10px]">Company</h5>
+          <ul className="space-y-3 font-light">
+            <li><button onClick={() => handleScroll('about')} className="hover:text-brand transition cursor-pointer text-left">Why Us</button></li>
+            <li><a href="#" className="hover:text-brand transition block">Our Story</a></li>
+            <li><a href="#" className="hover:text-brand transition block">Careers</a></li>
+          </ul>
+        </div>
+
+        {/* Column 5: Newsletter */}
+        <div className="col-span-1 md:col-span-3 lg:col-span-2 space-y-4">
+          <h5 className="text-zinc-200 font-bold uppercase tracking-wider font-header text-[10px]">Newsletter</h5>
+          <p className="text-zinc-600 font-light leading-relaxed">Subscribe to get stream updates and student guidance guides.</p>
           
-          {/* Logo and Info */}
-          <div className="lg:col-span-4 space-y-6 text-left">
-            <div className="flex items-center gap-3 cursor-pointer" onClick={() => setView('landing')}>
-              <div className="w-10 h-10 bg-gold rounded-lg flex items-center justify-center font-bold text-primary text-xl shadow-lg">
-                B
-              </div>
-              <div className="flex flex-col leading-none">
-                <span className="text-xl font-header font-black tracking-tight">BEHOLD ASPIRE</span>
-                <span className="text-[9px] text-gold tracking-[0.22em] font-bold mt-0.5">TO YOUR PATHS</span>
-              </div>
-            </div>
-            
-            <p className="text-slate-400 text-sm leading-relaxed max-w-sm">
-              Kerala's premium, student-first educational mentoring ecosystem. We map cognitive capacities, provide psychological support, and design lifelong career roadmaps.
-            </p>
-            
-            <div className="flex gap-4">
-              <a 
-                href="https://wa.me/919497174011" 
-                target="_blank" 
-                rel="noreferrer"
-                className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-300 hover:bg-gold hover:text-primary hover:border-gold transition-all duration-300 cursor-pointer"
-              >
-                <MessageCircle size={18} />
-              </a>
-              <a 
-                href="mailto:beholdaspire@gmail.com" 
-                className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-300 hover:bg-gold hover:text-primary hover:border-gold transition-all duration-300 cursor-pointer"
-              >
-                <Mail size={18} />
-              </a>
-            </div>
-          </div>
-
-          {/* Quick Links */}
-          <div className="lg:col-span-2 text-left space-y-6">
-            <h4 className="text-sm font-header font-black tracking-wider uppercase text-gold">
-              Quick Links
-            </h4>
-            <ul className="space-y-3.5 text-slate-400 text-sm font-semibold">
-              <li>
-                <button onClick={() => setView('landing')} className="hover:text-gold transition-colors cursor-pointer">Home</button>
-              </li>
-              <li>
-                <button onClick={() => scrollToSection('about')} className="hover:text-gold transition-colors cursor-pointer">About Us</button>
-              </li>
-              <li>
-                <button onClick={() => setView('test')} className="hover:text-gold transition-colors cursor-pointer">Aptitude Test</button>
-              </li>
-              <li>
-                <button onClick={() => scrollToSection('inquiry')} className="hover:text-gold transition-colors cursor-pointer">Book Consultation</button>
-              </li>
-            </ul>
-          </div>
-
-          {/* Our Offerings */}
-          <div className="lg:col-span-3 text-left space-y-6">
-            <h4 className="text-sm font-header font-black tracking-wider uppercase text-gold">
-              Our Services
-            </h4>
-            <ul className="space-y-3.5 text-slate-400 text-sm font-semibold">
-              <li className="hover:text-white transition-colors cursor-default">Career Guidance (8-12)</li>
-              <li className="hover:text-white transition-colors cursor-default">CIGI Aptitude Profiling</li>
-              <li className="hover:text-white transition-colors cursor-default">Educational Mentorship</li>
-              <li className="hover:text-white transition-colors cursor-default">Psychology & Stress Support</li>
-            </ul>
-          </div>
-
-          {/* Newsletter Box */}
-          <div className="lg:col-span-3 text-left p-6 md:p-8 bg-white/5 rounded-3xl border border-white/10 flex flex-col justify-between">
-            <div>
-              <div className="inline-flex items-center gap-1 text-[10px] text-gold font-bold uppercase tracking-widest mb-2">
-                <Award className="w-3.5 h-3.5" /> Newsletter
-              </div>
-              <h4 className="text-base font-header font-bold text-white mb-2">
-                Stay Updated
-              </h4>
-              <p className="text-slate-400 text-xs leading-relaxed mb-6">
-                Receive notifications on upcoming entrance exams and parent webinars.
-              </p>
-            </div>
-            
-            <form onSubmit={handleSubscribe} className="space-y-3">
-              <label htmlFor="newsletter-email" className="sr-only">Parent Email Address</label>
-              <input 
-                required
-                type="email" 
-                id="newsletter-email"
-                name="email"
-                autoComplete="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter parent email" 
-                className="w-full px-4 py-3 bg-white/5 border border-white/15 rounded-xl focus:ring-1 focus:ring-gold outline-none text-xs font-semibold text-white placeholder-slate-500 transition-all"
-              />
-              <button 
-                type="submit" 
-                className="w-full py-3 bg-gold hover:bg-gold-light text-primary font-header font-black text-xs rounded-xl shadow-lg transition-colors flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <span>Subscribe</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-              {subscribed && (
-                <p className="text-[10px] font-sans font-bold text-emerald-400 text-center mt-2">
-                  ✓ Subscribed! Thank you for joining.
-                </p>
-              )}
-            </form>
-          </div>
-
+          <form onSubmit={(e) => e.preventDefault()} className="relative max-w-sm pt-2">
+            <input 
+              type="email" 
+              placeholder="Enter your email" 
+              className="w-full bg-zinc-950 border border-zinc-800 rounded-full py-3.5 pl-5 pr-12 text-xs outline-none focus:border-brand transition text-zinc-300 font-sans"
+            />
+            <button 
+              type="submit" 
+              className="absolute right-1.5 bottom-1.5 w-9 h-9 rounded-full bg-brand text-black hover:bg-brand-dark flex items-center justify-center transition cursor-pointer"
+            >
+              <Send className="w-3.5 h-3.5" />
+            </button>
+          </form>
         </div>
 
-        {/* Footer Bottom */}
-        <div className="pt-8 border-t border-white/5 text-center text-slate-500 text-xs flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p>© 2026 Behold Aspire. Developed in partnership with Kerala Educational Networks.</p>
-          <div className="flex gap-6 font-semibold">
-            <span className="hover:text-white cursor-pointer transition-colors">Privacy Policy</span>
-            <span className="hover:text-white cursor-pointer transition-colors">Terms of Service</span>
-          </div>
-        </div>
+      </div>
 
+      {/* Footer Info */}
+      <div className="max-w-7xl mx-auto pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 font-light text-zinc-650">
+        <p>© BEHOLD Ltd., 2026</p>
+        
+        <div className="flex gap-6 font-mono text-[9px] uppercase tracking-wider">
+          <a href="#" className="hover:text-brand transition">Privacy Policy</a>
+          <a href="#" className="hover:text-brand transition">Terms of Use</a>
+          <a href="#" className="hover:text-brand transition">Support</a>
+        </div>
       </div>
     </footer>
   );
