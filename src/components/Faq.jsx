@@ -24,7 +24,7 @@ export default function Faq() {
   };
 
   return (
-    <section id="faqs" className="max-w-4xl mx-auto px-4 sm:px-6 py-16 md:py-32 text-black text-left select-none relative">
+    <section id="faqs" className="max-w-4xl mx-auto px-4 sm:px-6 py-16 md:py-32 text-black text-left select-none relative overflow-hidden">
       {/* Background glow */}
       <div className="absolute top-1/3 left-1/2 w-[250px] h-[250px] bg-brand/10 rounded-[4px] glow-glow pointer-events-none" />
 

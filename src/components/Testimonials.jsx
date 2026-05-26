@@ -41,7 +41,7 @@ const REVIEWS = [
 
 export default function Testimonials() {
   return (
-    <section className="py-16 md:py-24 bg-white/40 backdrop-blur-xs border-y border-black/[0.04] text-left relative select-none">
+    <section className="py-16 md:py-24 bg-white/40 backdrop-blur-xs border-y border-black/[0.04] text-left relative select-none overflow-hidden">
       
       {/* Background radial glow */}
       <div className="absolute top-1/4 right-1/3 w-[300px] h-[300px] bg-brand/10 rounded-[4px] glow-glow pointer-events-none" />

@@ -71,14 +71,14 @@ export default function App() {
   };
 
   return (
-    <div 
+    <div
       className="font-sans antialiased text-black bg-[#f3f3f3] selection:bg-gray-200 min-h-screen relative"
     >
 
-      {/* Premium Navbar */}
+      Premium Navbar
       <Navbar setView={setView} currentView={view} />
 
-      {/* Route Views */}
+      Route Views
       {view === 'landing' && (
         <main className="fade-in-up">
           {/* Hero Section */}
@@ -127,7 +127,7 @@ export default function App() {
         href="https://wa.me/919497174011"
         target="_blank"
         rel="noreferrer"
-        className="fixed bottom-8 right-8 w-14 h-14 bg-black hover:bg-gray-850 text-white rounded-[4px] shadow-lg flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-200 z-50 cursor-pointer"
+        className="fixed bottom-2 right-2 w-14 h-14 bg-black hover:bg-gray-850 text-white rounded-[100px] shadow-lg flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-200 z-50 cursor-pointer"
         aria-label="Contact support on WhatsApp"
         id="whatsapp-float-btn"
       >

@@ -313,7 +313,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
           </h2>
 
           {isSuccess ? (
-            <div className="p-8 bg-gray-50 border border-gray-200 text-center rounded-[4px] space-y-4 max-w-xl mx-auto animate-in fade-in duration-500">
+            <div className="p-5 sm:p-8 bg-gray-50 border border-gray-200 text-center rounded-[4px] space-y-4 max-w-xl mx-auto animate-in fade-in duration-500">
               <CheckCircle2 className="w-12 h-12 text-black mx-auto" />
               <h3 className="text-lg font-bold uppercase">Session Successfully Booked!</h3>
               <p className="text-xs text-gray-600 max-w-md mx-auto leading-relaxed">
@@ -327,7 +327,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                   setSelectedAdvisor(null);
                   setAdvisorConfirmed(false);
                 }}
-                className="px-6 py-2 bg-black text-white hover:bg-gray-800 text-xs font-semibold uppercase tracking-wider rounded-[4px] transition cursor-pointer"
+                className="px-6 py-2 bg-black text-white hover:bg-gray-800 text-xs font-semibold uppercase tracking-wider rounded-[4px] transition cursor-pointer w-full sm:w-auto text-center"
               >
                 Book Another Session
               </button>

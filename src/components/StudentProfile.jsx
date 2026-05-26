@@ -34,8 +34,8 @@ const INITIAL_STATE = {
 };
 
 const DISTRICTS_KERALA = [
-  'Alappuzha', 'Ernakulam', 'Idukki', 'Kannur', 'Kasaragod', 
-  'Kollam', 'Kottayam', 'Kozhikode', 'Malappuram', 'Palakkad', 
+  'Alappuzha', 'Ernakulam', 'Idukki', 'Kannur', 'Kasaragod',
+  'Kollam', 'Kottayam', 'Kozhikode', 'Malappuram', 'Palakkad',
   'Pathanamthitta', 'Thiruvananthapuram', 'Thrissur', 'Wayanad'
 ];
 
@@ -132,7 +132,7 @@ export default function StudentProfile({ setView }) {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        
+
         {/* Left Side: Navigation Tabs */}
         <div className="lg:col-span-1 space-y-6">
           <div className="flex flex-row overflow-x-auto lg:flex-col gap-2 pb-2 lg:pb-0 scrollbar-none snap-x w-full">
@@ -150,11 +150,10 @@ export default function StudentProfile({ setView }) {
                   key={tab.id}
                   type="button"
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-3 p-3 rounded-[4px] border text-xs font-bold uppercase tracking-wider transition text-left cursor-pointer shrink-0 snap-start ${
-                    isActive 
-                      ? 'bg-brand text-white border-brand' 
+                  className={`flex items-center gap-3 p-3 rounded-[4px] border text-xs font-bold uppercase tracking-wider transition text-left cursor-pointer shrink-0 snap-start ${isActive
+                      ? 'bg-brand text-white border-brand'
                       : 'bg-white text-gray-500 border-gray-200 hover:border-brand hover:text-brand'
-                  }`}
+                    }`}
                 >
                   <Icon className="w-4 h-4 shrink-0" />
                   <span>{tab.label}</span>
@@ -176,7 +175,7 @@ export default function StudentProfile({ setView }) {
         {/* Right Side: Tab Forms */}
         <div className="lg:col-span-3 border border-black p-5 sm:p-8 bg-white">
           <form onSubmit={handleSave} className="space-y-8 text-xs font-medium">
-            
+
             {/* TAB 1: PERSONAL DETAILS */}
             {activeTab === 'personal' && (
               <div className="space-y-6 animate-in fade-in duration-200">
@@ -185,7 +184,7 @@ export default function StudentProfile({ setView }) {
                 </h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  
+
                   {/* Name of Student */}
                   <div className="space-y-1.5">
                     <label className="text-gray-500 uppercase tracking-wider">Name of Student</label>
@@ -195,9 +194,8 @@ export default function StudentProfile({ setView }) {
                       placeholder="Your full name"
                       value={profile.name}
                       onChange={handleChange}
-                      className={`w-full px-4 py-2.5 bg-white border text-sm text-gray-950 rounded-[4px] outline-none focus:border-brand transition ${
-                        errors.name ? 'border-red-500' : 'border-gray-300 hover:border-gray-400'
-                      }`}
+                      className={`w-full px-4 py-2.5 bg-white border text-sm text-gray-950 rounded-[4px] outline-none focus:border-brand transition ${errors.name ? 'border-red-500' : 'border-gray-300 hover:border-gray-400'
+                        }`}
                     />
                     {errors.name && <p className="text-[10px] text-red-500 font-semibold">{errors.name}</p>}
                   </div>
@@ -211,9 +209,8 @@ export default function StudentProfile({ setView }) {
                       placeholder="as 25-01-2006"
                       value={profile.dob}
                       onChange={handleChange}
-                      className={`w-full px-4 py-2.5 bg-white border text-sm text-gray-950 rounded-[4px] outline-none focus:border-brand transition ${
-                        errors.dob ? 'border-red-500' : 'border-gray-300 hover:border-gray-400'
-                      }`}
+                      className={`w-full px-4 py-2.5 bg-white border text-sm text-gray-950 rounded-[4px] outline-none focus:border-brand transition ${errors.dob ? 'border-red-500' : 'border-gray-300 hover:border-gray-400'
+                        }`}
                     />
                     {errors.dob && <p className="text-[10px] text-red-500 font-semibold">{errors.dob}</p>}
                   </div>
@@ -227,9 +224,8 @@ export default function StudentProfile({ setView }) {
                       placeholder="name@email.com"
                       value={profile.email}
                       onChange={handleChange}
-                      className={`w-full px-4 py-2.5 bg-white border text-sm text-gray-950 rounded-[4px] outline-none focus:border-brand transition ${
-                        errors.email ? 'border-red-500' : 'border-gray-300 hover:border-gray-400'
-                      }`}
+                      className={`w-full px-4 py-2.5 bg-white border text-sm text-gray-950 rounded-[4px] outline-none focus:border-brand transition ${errors.email ? 'border-red-500' : 'border-gray-300 hover:border-gray-400'
+                        }`}
                     />
                     {errors.email && <p className="text-[10px] text-red-500 font-semibold">{errors.email}</p>}
                   </div>
@@ -243,9 +239,8 @@ export default function StudentProfile({ setView }) {
                       placeholder="Re-enter email"
                       value={profile.confirmEmail}
                       onChange={handleChange}
-                      className={`w-full px-4 py-2.5 bg-white border text-sm text-gray-950 rounded-[4px] outline-none focus:border-brand transition ${
-                        errors.confirmEmail ? 'border-red-500' : 'border-gray-300 hover:border-gray-400'
-                      }`}
+                      className={`w-full px-4 py-2.5 bg-white border text-sm text-gray-950 rounded-[4px] outline-none focus:border-brand transition ${errors.confirmEmail ? 'border-red-500' : 'border-gray-300 hover:border-gray-400'
+                        }`}
                     />
                     {errors.confirmEmail && <p className="text-[10px] text-red-500 font-semibold">{errors.confirmEmail}</p>}
                   </div>
@@ -267,9 +262,8 @@ export default function StudentProfile({ setView }) {
                         placeholder="e.g. 8086664001"
                         value={profile.phone}
                         onChange={handleChange}
-                        className={`flex-1 px-4 py-2.5 bg-white border text-sm text-gray-950 rounded-[4px] outline-none focus:border-brand transition ${
-                          errors.phone ? 'border-red-500' : 'border-gray-300 hover:border-gray-400'
-                        }`}
+                        className={`flex-1 px-4 py-2.5 bg-white border text-sm text-gray-950 rounded-[4px] outline-none focus:border-brand transition ${errors.phone ? 'border-red-500' : 'border-gray-300 hover:border-gray-400'
+                          }`}
                       />
                     </div>
                     {errors.phone && <p className="text-[10px] text-red-500 font-semibold">{errors.phone}</p>}
@@ -374,7 +368,7 @@ export default function StudentProfile({ setView }) {
                 </h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  
+
                   {/* School Name */}
                   <div className="space-y-1.5 md:col-span-2">
                     <label className="text-gray-500 uppercase tracking-wider">School Name</label>
@@ -470,18 +464,18 @@ export default function StudentProfile({ setView }) {
 
                 </div>
 
-                <div className="flex justify-between pt-4">
+                <div className="flex flex-col sm:flex-row gap-3 justify-between pt-4">
                   <button
                     type="button"
                     onClick={() => setActiveTab('personal')}
-                    className="bg-white border border-brand text-brand px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand hover:text-white transition rounded-[4px] shadow-sm"
+                    className="bg-white border border-brand text-brand px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand hover:text-white transition rounded-[4px] shadow-sm w-full sm:w-auto text-center"
                   >
                     Previous
                   </button>
                   <button
                     type="button"
                     onClick={() => setActiveTab('interests')}
-                    className="bg-brand text-white px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand-dark transition rounded-[4px] shadow-sm"
+                    className="bg-brand text-white px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand-dark transition rounded-[4px] shadow-sm w-full sm:w-auto text-center"
                   >
                     Next Section
                   </button>
@@ -497,7 +491,7 @@ export default function StudentProfile({ setView }) {
                 </h3>
 
                 <div className="space-y-6">
-                  
+
                   {/* Career Interests */}
                   <div className="space-y-1.5">
                     <label className="text-gray-500 uppercase tracking-wider">Career Interests</label>
@@ -539,18 +533,18 @@ export default function StudentProfile({ setView }) {
 
                 </div>
 
-                <div className="flex justify-between pt-4">
+                <div className="flex flex-col sm:flex-row gap-3 justify-between pt-4">
                   <button
                     type="button"
                     onClick={() => setActiveTab('school')}
-                    className="bg-white border border-brand text-brand px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand hover:text-white transition rounded-[4px] shadow-sm"
+                    className="bg-white border border-brand text-brand px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand hover:text-white transition rounded-[4px] shadow-sm w-full sm:w-auto text-center"
                   >
                     Previous
                   </button>
                   <button
                     type="button"
                     onClick={() => setActiveTab('parents')}
-                    className="bg-brand text-white px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand-dark transition rounded-[4px] shadow-sm"
+                    className="bg-brand text-white px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand-dark transition rounded-[4px] shadow-sm w-full sm:w-auto text-center"
                   >
                     Next Section
                   </button>
@@ -566,7 +560,7 @@ export default function StudentProfile({ setView }) {
                 </h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  
+
                   {/* Father Qualification */}
                   <div className="space-y-1.5">
                     <label className="text-gray-500 uppercase tracking-wider">Educational Qualification of Father</label>
@@ -628,9 +622,8 @@ export default function StudentProfile({ setView }) {
                       placeholder="name of parent or guardian"
                       value={profile.guardianName}
                       onChange={handleChange}
-                      className={`w-full px-4 py-2.5 bg-white border text-sm text-gray-950 rounded-[4px] outline-none focus:border-brand transition ${
-                        errors.guardianName ? 'border-red-500' : 'border-gray-300 hover:border-gray-400'
-                      }`}
+                      className={`w-full px-4 py-2.5 bg-white border text-sm text-gray-950 rounded-[4px] outline-none focus:border-brand transition ${errors.guardianName ? 'border-red-500' : 'border-gray-300 hover:border-gray-400'
+                        }`}
                     />
                     {errors.guardianName && <p className="text-[10px] text-red-500 font-semibold">{errors.guardianName}</p>}
                   </div>
@@ -667,18 +660,18 @@ export default function StudentProfile({ setView }) {
 
                 </div>
 
-                <div className="flex justify-between pt-4">
+                <div className="flex flex-col sm:flex-row gap-3 justify-between pt-4">
                   <button
                     type="button"
                     onClick={() => setActiveTab('interests')}
-                    className="bg-white border border-brand text-brand px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand hover:text-white transition rounded-[4px] shadow-sm"
+                    className="bg-white border border-brand text-brand px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand hover:text-white transition rounded-[4px] shadow-sm w-full sm:w-auto text-center"
                   >
                     Previous
                   </button>
                   <button
                     type="button"
                     onClick={() => setActiveTab('batch')}
-                    className="bg-brand text-white px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand-dark transition rounded-[4px] shadow-sm"
+                    className="bg-brand text-white px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand-dark transition rounded-[4px] shadow-sm w-full sm:w-auto text-center"
                   >
                     Next Section
                   </button>
@@ -694,7 +687,7 @@ export default function StudentProfile({ setView }) {
                 </h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  
+
                   {/* Preferred Batch */}
                   <div className="space-y-1.5">
                     <label className="text-gray-500 uppercase tracking-wider">Preferred Batch</label>
@@ -726,17 +719,17 @@ export default function StudentProfile({ setView }) {
 
                 </div>
 
-                <div className="flex justify-between pt-4 border-t border-gray-100">
+                <div className="flex flex-col sm:flex-row gap-3 justify-between pt-4 border-t border-gray-100">
                   <button
                     type="button"
                     onClick={() => setActiveTab('parents')}
-                    className="bg-white border border-brand text-brand px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand hover:text-white transition rounded-[4px] shadow-sm"
+                    className="bg-white border border-brand text-brand px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand hover:text-white transition rounded-[4px] shadow-sm w-full sm:w-auto text-center"
                   >
                     Previous
                   </button>
                   <button
                     type="submit"
-                    className="bg-brand text-white px-8 py-3 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand-dark transition rounded-[4px] shadow-md"
+                    className="bg-brand text-white px-8 py-3 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand-dark transition rounded-[4px] shadow-md w-full sm:w-auto text-center"
                   >
                     Save & Sync Profile
                   </button>

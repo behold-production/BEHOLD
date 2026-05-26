@@ -131,7 +131,7 @@ export default function Services({ setView, onBookTherapist }) {
   };
 
   return (
-    <section id="services" className="max-w-7xl mx-auto px-4 sm:px-6 py-16 md:py-32 text-black text-left relative">
+    <section id="services" className="max-w-7xl mx-auto px-4 sm:px-6 py-16 md:py-32 text-black text-left relative overflow-hidden">
       {/* Background radial soft light */}
       <div className="absolute top-1/2 left-1/4 w-[350px] h-[350px] bg-brand/10 rounded-[4px] glow-glow pointer-events-none" />
 

@@ -280,7 +280,7 @@ export default function Inquiry({ testProfile }) {
       </section>
 
       {/* 4. NEWSLETTER SIGNUP */}
-      <section className="max-w-xl mx-auto text-center px-6 py-24 space-y-6">
+      <section className="max-w-xl mx-auto text-center px-4 sm:px-6 py-24 space-y-6">
         <h2 className="text-3xl font-normal tracking-tight text-gray-900 font-header uppercase">
           Stay Informed. <br /> Subscribe to Career Updates.
         </h2>

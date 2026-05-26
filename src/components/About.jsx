@@ -108,7 +108,7 @@ export default function About({ setView }) {
           </div>
 
           {/* Floating UI Achievement */}
-          <div className="absolute bottom-8 -left-8 bg-white/95 backdrop-blur-md border border-black/[0.04] p-5 rounded-[4px] shadow-xl hidden sm:flex items-center gap-3.5 max-w-[240px] z-20 pointer-events-none">
+          <div className="absolute bottom-8 -left-8 bg-white/95 backdrop-blur-md border border-black/[0.04] p-5 rounded-[4px] shadow-xl hidden lg:flex items-center gap-3.5 max-w-[240px] z-20 pointer-events-none">
             <div className="w-9 h-9 rounded-[4px] bg-brand flex items-center justify-center text-black shadow-inner shrink-0">
               <Award className="w-4 h-4" />
             </div>
@@ -119,7 +119,7 @@ export default function About({ setView }) {
           </div>
 
           {/* Floating UI Trusted */}
-          <div className="absolute top-1/3 -right-8 bg-white/95 backdrop-blur-md border border-black/[0.04] p-4 rounded-[4px] shadow-xl hidden sm:flex items-center gap-3.5 max-w-[200px] z-20 pointer-events-none">
+          <div className="absolute top-1/3 -right-8 bg-white/95 backdrop-blur-md border border-black/[0.04] p-4 rounded-[4px] shadow-xl hidden lg:flex items-center gap-3.5 max-w-[200px] z-20 pointer-events-none">
             <ShieldCheck className="w-4.5 h-4.5 text-emerald-600 shrink-0" />
             <div>
               <p className="text-[10px] font-extrabold uppercase tracking-wide text-black">Safe Environment</p>

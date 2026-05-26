@@ -276,18 +276,18 @@ export default function TherapistDirectory({ onBookTherapist }) {
                     <p className="text-[10px] font-bold text-gray-900">{therapist.availability.replace('Next available in', '').replace('Next available Today at', '')}</p>
                   </div>
                   
-                  <div className="flex w-full sm:w-auto gap-2 shrink-0">
+                  <div className="flex flex-col sm:flex-row w-full sm:w-auto gap-2 shrink-0">
                     <button
                       type="button"
                       onClick={() => setSelectedTherapist(therapist)}
-                      className="border border-brand hover:bg-brand/5 text-brand px-3.5 py-2 rounded-[4px] text-[10px] font-bold uppercase tracking-wider transition cursor-pointer flex-1 sm:flex-none text-center"
+                      className="border border-brand hover:bg-brand/5 text-brand px-3.5 py-2 rounded-[4px] text-[10px] font-bold uppercase tracking-wider transition cursor-pointer w-full sm:w-auto text-center"
                     >
                       View Profile
                     </button>
                     <button
                       type="button"
                       onClick={() => onBookTherapist(therapist.id)}
-                      className={`px-4 py-2 text-[10px] font-extrabold uppercase tracking-wider transition cursor-pointer rounded-[4px] shadow-xs flex-1 sm:flex-none text-center ${
+                      className={`px-4 py-2 text-[10px] font-extrabold uppercase tracking-wider transition cursor-pointer rounded-[4px] shadow-xs w-full sm:w-auto text-center ${
                         therapist.action === 'FOLLOW UP ONLY'
                           ? 'bg-gray-600 hover:bg-gray-700 text-white'
                           : 'bg-brand hover:bg-brand-dark text-white border border-brand/50'
@@ -310,7 +310,7 @@ export default function TherapistDirectory({ onBookTherapist }) {
 
       {/* VIEW MORE THERAPIST BUTTON */}
       <div className="mt-12 text-center">
-        <button className="px-6 py-2.5 bg-black hover:bg-brand text-white font-bold text-[10px] uppercase tracking-widest rounded-[4px] transition cursor-pointer">
+        <button className="px-6 py-2.5 bg-black hover:bg-brand text-white font-bold text-[10px] uppercase tracking-widest rounded-[4px] transition cursor-pointer w-full sm:w-auto text-center">
           View more therapist
         </button>
       </div>
@@ -318,7 +318,7 @@ export default function TherapistDirectory({ onBookTherapist }) {
       {/* DETAILED PROFILE MODAL */}
       {selectedTherapist && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-50 p-6 animate-in fade-in duration-200">
-          <div className="bg-white border border-brand max-w-lg w-full p-8 rounded-[4px] shadow-2xl relative space-y-6 text-left">
+          <div className="bg-white border border-brand max-w-lg w-full p-5 sm:p-8 rounded-[4px] shadow-2xl relative space-y-6 text-left">
             <button
               onClick={() => setSelectedTherapist(null)}
               className="absolute right-4 top-4 text-gray-400 hover:text-black transition cursor-pointer"
@@ -359,21 +359,21 @@ export default function TherapistDirectory({ onBookTherapist }) {
               </div>
             </div>
 
-            <div className="flex gap-3 pt-4 border-t border-gray-100">
+            <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-100 w-full">
               <button
                 type="button"
                 onClick={() => {
                   onBookTherapist(selectedTherapist.id);
                   setSelectedTherapist(null);
                 }}
-                className="flex-1 py-3 bg-brand hover:bg-brand-dark text-white font-bold text-xs uppercase tracking-wider rounded-[4px] text-center transition cursor-pointer shadow-sm"
+                className="w-full sm:flex-1 py-3 bg-brand hover:bg-brand-dark text-white font-bold text-xs uppercase tracking-wider rounded-[4px] text-center transition cursor-pointer shadow-sm"
               >
                 Book Session Now
               </button>
               <button
                 type="button"
                 onClick={() => setSelectedTherapist(null)}
-                className="flex-1 py-3 bg-white border border-gray-300 text-gray-700 hover:border-black font-bold text-xs uppercase tracking-wider rounded-[4px] text-center transition cursor-pointer"
+                className="w-full sm:flex-1 py-3 bg-white border border-gray-300 text-gray-700 hover:border-black font-bold text-xs uppercase tracking-wider rounded-[4px] text-center transition cursor-pointer"
               >
                 Close Profile
               </button>

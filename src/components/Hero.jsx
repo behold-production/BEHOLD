@@ -87,7 +87,7 @@ export default function Hero({ setView, scrollToSection }) {
           </div>
 
           {/* Floating UI Card 1: Counselling */}
-          <div className="absolute -top-6 -left-6 bg-white/95 backdrop-blur-md border border-black/[0.04] p-4 rounded-[4px] shadow-xl hidden sm:flex items-center gap-3.5 max-w-[220px] z-20 pointer-events-none">
+          <div className="absolute -top-6 -left-6 bg-white/95 backdrop-blur-md border border-black/[0.04] p-4 rounded-[4px] shadow-xl hidden lg:flex items-center gap-3.5 max-w-[220px] z-20 pointer-events-none">
             <div className="w-9 h-9 rounded-[4px] bg-brand flex items-center justify-center text-black shadow-inner">
               <HeartPulse className="w-4 h-4" />
             </div>
@@ -98,7 +98,7 @@ export default function Hero({ setView, scrollToSection }) {
           </div>
 
           {/* Floating UI Card 2: Career Mapping */}
-          <div className="absolute -bottom-6 -right-6 bg-white/95 backdrop-blur-md border border-black/[0.04] p-4 rounded-[4px] shadow-xl hidden sm:flex items-center gap-3.5 max-w-[220px] z-20 pointer-events-none">
+          <div className="absolute -bottom-6 -right-6 bg-white/95 backdrop-blur-md border border-black/[0.04] p-4 rounded-[4px] shadow-xl hidden lg:flex items-center gap-3.5 max-w-[220px] z-20 pointer-events-none">
             <div className="w-9 h-9 rounded-[4px] bg-black flex items-center justify-center text-white shadow-md">
               <Compass className="w-4 h-4" />
             </div>
@@ -109,7 +109,7 @@ export default function Hero({ setView, scrollToSection }) {
           </div>
 
           {/* Floating UI Card 3: Trust Badge */}
-          <div className="absolute top-1/2 -right-8 transform -translate-y-1/2 bg-white/95 backdrop-blur-md border border-black/[0.04] px-4 py-2.5 rounded-[4px] shadow-lg hidden md:flex items-center gap-2 z-20 pointer-events-none">
+          <div className="absolute top-1/2 -right-8 transform -translate-y-1/2 bg-white/95 backdrop-blur-md border border-black/[0.04] px-4 py-2.5 rounded-[4px] shadow-lg hidden lg:flex items-center gap-2 z-20 pointer-events-none">
             <ShieldCheck className="w-4 h-4 text-emerald-600" />
             <span className="text-[9px] font-black uppercase tracking-wider text-black">RCI Certified Mentors</span>
           </div>
