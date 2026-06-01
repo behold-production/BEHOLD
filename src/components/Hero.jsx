@@ -1,7 +1,7 @@
 import React from 'react';
 import { ArrowRight, Sparkles, Compass, ShieldCheck, HeartPulse, CheckCircle2 } from 'lucide-react';
 
-export default function Hero({ setView, scrollToSection }) {
+export default function Hero({ setView, navigateToSection }) {
   const handleBookNowClick = () => {
     window.location.hash = '#/booking';
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -9,6 +9,7 @@ export default function Hero({ setView, scrollToSection }) {
 
   return (
     <section
+      id="home"
       className="relative w-full py-10 lg:py-24 px-4 sm:px-6 text-black text-left grid-bg overflow-hidden flex flex-col items-center justify-center min-h-[60vh] lg:min-h-[90vh] select-none"
     >
       {/* Background Soft Glows */}
@@ -23,7 +24,7 @@ export default function Hero({ setView, scrollToSection }) {
 
 
           {/* Main Title */}
-          <div className="space-y-4">
+          <div className="space-y-8 mt-16">
             <h1 className="text-3xl sm:text-5xl lg:text-6xl font-header font-black tracking-tight text-black leading-[1.05] uppercase">
               The <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-dark to-brand">Right Guidance</span>, <br />
               When You <span className="relative inline-block whitespace-nowrap">
@@ -33,7 +34,7 @@ export default function Hero({ setView, scrollToSection }) {
                 </svg>
               </span>
             </h1>
-            <p className="text-black/60 font-sans text-xs sm:text-sm md:text-base font-light max-w-lg leading-relaxed">
+            <p className="text-black/60 font-sans text-xs sm:text-sm md:text-base font-light max-w-lg leading-relaxed pb-8">
               Guidance, counselling, and mentorship for life’s important decisions — helping individuals move forward with clarity and confidence.
             </p>
           </div>
@@ -48,7 +49,7 @@ export default function Hero({ setView, scrollToSection }) {
               <ArrowRight className="w-4 h-4" />
             </button>
             <button
-              onClick={() => scrollToSection('services')}
+              onClick={() => navigateToSection('services')}
               className="px-8 py-4 bg-white/70 hover:bg-white border border-black/10 hover:border-black text-black hover:scale-[1.02] active:scale-[0.98] text-xs font-black uppercase tracking-widest transition-all duration-300 cursor-pointer rounded-[4px] shadow-xs w-full sm:w-auto text-center"
             >
               Explore Services
@@ -85,7 +86,7 @@ export default function Hero({ setView, scrollToSection }) {
             />
             {/* Visual Soft Dark Gradient overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
-            
+
             {/* Overlay Text Box Labels */}
             <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-md border border-black/10 px-4 py-2 rounded-[4px] shadow-lg z-20 pointer-events-none">
               <span className="text-[10px] font-extrabold uppercase tracking-widest text-black">

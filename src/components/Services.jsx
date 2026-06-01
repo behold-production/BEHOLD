@@ -7,17 +7,17 @@ export default function Services({ setView, onBookTherapist }) {
       <div className="absolute top-1/2 left-1/4 w-[350px] h-[350px] bg-brand/5 rounded-[4px] glow-glow pointer-events-none" />
 
       {/* DUAL COUPLING ROW */}
-      <div className="flex overflow-x-auto md:grid md:grid-cols-12 gap-6 md:gap-8 items-stretch w-full snap-x snap-mandatory scrollbar-none scroll-smooth pb-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-stretch w-full">
 
         {/* SERVICE 2: CAREER COUNSELLING */}
         <div
           id="card-career"
-          className="min-w-[280px] sm:min-w-[340px] md:min-w-0 col-span-12 md:col-span-6 snap-center shrink-0 card-luxury card-luxury-hover p-5 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none border border-black/5 min-h-[280px] md:min-h-[360px] group"
+          className="card-luxury card-luxury-hover p-6 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none border border-black/5 min-h-[300px] md:min-h-[360px] group"
         >
           <div className="space-y-4">
             <div className="flex justify-between items-start">
-              <div className="space-y-1">
-                <span className="text-[9px] bg-black text-white px-2.5 py-0.5 rounded-[4px] uppercase tracking-widest font-black font-mono">
+              <div className="space-y-2">
+                <span className="inline-block text-[9px] bg-black text-white px-2.5 py-0.5 rounded-[4px] uppercase tracking-widest font-black font-mono">
                   Career Counselling
                 </span>
                 <h3 className="text-xl md:text-2xl font-header font-black uppercase tracking-wide text-black mt-1 group-hover:text-brand transition-colors duration-500">
@@ -51,16 +51,16 @@ export default function Services({ setView, onBookTherapist }) {
           </button>
         </div>
 
-        {/* SERVICE 3: PERSONAL COUNSELLING */}
+        {/* SERVICE 3: PSYCHOLOGICAL COUNSELLING */}
         <div
           id="card-mental"
-          className="min-w-[280px] sm:min-w-[340px] md:min-w-0 col-span-12 md:col-span-6 snap-center shrink-0 card-luxury card-luxury-hover p-5 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none border border-black/5 min-h-[280px] md:min-h-[360px] group"
+          className="card-luxury card-luxury-hover p-6 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none border border-black/5 min-h-[300px] md:min-h-[360px] group"
         >
           <div className="space-y-4">
             <div className="flex justify-between items-start">
-              <div className="space-y-1">
-                <span className="text-[9px] bg-black text-white px-2.5 py-0.5 rounded-[4px] uppercase tracking-widest font-black font-mono">
-                  Personal Counselling
+              <div className="space-y-2">
+                <span className="inline-block text-[9px] bg-black text-white px-2.5 py-0.5 rounded-[4px] uppercase tracking-widest font-black font-mono">
+                  Psychological Counselling
                 </span>
                 <h3 className="text-xl md:text-2xl font-header font-black uppercase tracking-wide text-black mt-1 group-hover:text-brand transition-colors duration-500">
                   Emotional Wellbeing & Support

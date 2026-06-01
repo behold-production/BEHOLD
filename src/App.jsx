@@ -16,6 +16,7 @@ export default function App() {
   const [view, setView] = useState('landing'); // 'landing', 'test', 'booking', 'profile'
   const [testProfile, setTestProfile] = useState(null);
   const [bookingAdvisor, setBookingAdvisor] = useState(null);
+  const [pendingScrollSection, setPendingScrollSection] = useState(null);
 
   // Hash-based Routing Listener
   useEffect(() => {
@@ -23,10 +24,13 @@ export default function App() {
       const hash = window.location.hash;
       if (hash === '#/sample-test') {
         setView('test');
+        window.scrollTo(0, 0);
       } else if (hash === '#/booking') {
         setView('booking');
+        window.scrollTo(0, 0);
       } else if (hash === '#/profile') {
         setView('profile');
+        window.scrollTo(0, 0);
       } else {
         setView('landing');
       }
@@ -41,53 +45,70 @@ export default function App() {
     };
   }, []);
 
+  // Handle pending scrolls once the landing view is mounted
+  useEffect(() => {
+    if (view === 'landing' && pendingScrollSection) {
+      if (pendingScrollSection === 'top') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setPendingScrollSection(null);
+        return;
+      }
+
+      let attempts = 0;
+      const tryScroll = () => {
+        const element = document.getElementById(pendingScrollSection);
+        if (element) {
+          const offset = 80;
+          const bodyRect = document.body.getBoundingClientRect().top;
+          const elementRect = element.getBoundingClientRect().top;
+          window.scrollTo({ top: elementRect - bodyRect - offset, behavior: 'smooth' });
+          setPendingScrollSection(null);
+        } else if (attempts < 15) {
+          attempts++;
+          setTimeout(tryScroll, 50);
+        } else {
+          setPendingScrollSection(null);
+        }
+      };
+      tryScroll();
+    }
+  }, [view, pendingScrollSection]);
+
   const handleBookTherapist = (advisorId) => {
     setBookingAdvisor(advisorId);
     window.location.hash = '#/booking';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleFinishTest = (dominantDomain, scores) => {
     // Save results
     setTestProfile({ dominantDomain, scores });
-    // Navigate back to landing
-    window.location.hash = '#/';
-
-    // Smoothly scroll to inquiry section
-    setTimeout(() => {
-      const element = document.getElementById('inquiry');
-      if (element) {
-        const offset = 80;
-        const bodyRect = document.body.getBoundingClientRect().top;
-        const elementRect = element.getBoundingClientRect().top;
-        const elementPosition = elementRect - bodyRect;
-        const offsetPosition = elementPosition - offset;
-
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: 'smooth'
-        });
-      }
-    }, 150);
+    // Navigate back to landing and scroll to inquiry
+    navigateToSection('inquiry');
   };
 
-  const scrollToSection = (id) => {
-    window.location.hash = '#/';
-    setTimeout(() => {
-      const element = document.getElementById(id);
+  const navigateToSection = (sectionId) => {
+    if (sectionId === 'top') {
+      if (view === 'landing') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        setPendingScrollSection('top');
+        window.location.hash = '#/';
+      }
+      return;
+    }
+
+    if (view === 'landing') {
+      const element = document.getElementById(sectionId);
       if (element) {
         const offset = 80;
         const bodyRect = document.body.getBoundingClientRect().top;
         const elementRect = element.getBoundingClientRect().top;
-        const elementPosition = elementRect - bodyRect;
-        const offsetPosition = elementPosition - offset;
-
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: 'smooth'
-        });
+        window.scrollTo({ top: elementRect - bodyRect - offset, behavior: 'smooth' });
       }
-    }, 50);
+    } else {
+      setPendingScrollSection(sectionId);
+      window.location.hash = '#/';
+    }
   };
 
   return (
@@ -96,13 +117,13 @@ export default function App() {
     >
 
       {/* Premium Navbar */}
-      <Navbar setView={setView} currentView={view} />
+      <Navbar navigateToSection={navigateToSection} currentView={view} />
 
       {/* Route Views */}
       {view === 'landing' && (
         <main className="fade-in-up">
           {/* Hero Section */}
-          <Hero setView={setView} scrollToSection={scrollToSection} />
+          <Hero setView={setView} navigateToSection={navigateToSection} />
 
           {/* CIGI Differential Aptitude Test (CDAT) Section */}
           <CdatSection setView={setView} />
@@ -146,7 +167,7 @@ export default function App() {
       </a>
 
       {/* Premium Footer */}
-      <Footer setView={setView} />
+      <Footer navigateToSection={navigateToSection} />
     </div>
   );
 }

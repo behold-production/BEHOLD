@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, ArrowUpRight } from 'lucide-react';
 
-export default function Navbar({ setView, currentView }) {
+export default function Navbar({ navigateToSection, currentView }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('');
 
@@ -11,7 +11,7 @@ export default function Navbar({ setView, currentView }) {
       return;
     }
 
-    const sections = ['services', 'about', 'faqs', 'inquiry', 'cdat'];
+    const sections = ['home', 'services', 'about', 'faqs', 'inquiry', 'cdat'];
 
     const handleIntersect = (entries) => {
       entries.forEach(entry => {
@@ -39,28 +39,12 @@ export default function Navbar({ setView, currentView }) {
   }, [currentView]);
 
   const scrollToSection = (id) => {
-    window.location.hash = '#/';
-    setTimeout(() => {
-      const element = document.getElementById(id);
-      if (element) {
-        const offset = 80;
-        const bodyRect = document.body.getBoundingClientRect().top;
-        const elementRect = element.getBoundingClientRect().top;
-        const elementPosition = elementRect - bodyRect;
-        const offsetPosition = elementPosition - offset;
-
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: 'smooth'
-        });
-      }
-    }, 50);
+    navigateToSection(id);
     setIsMenuOpen(false);
   };
 
   const handleLogoClick = () => {
-    window.location.hash = '#/';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    navigateToSection('top');
     setIsMenuOpen(false);
   };
 
@@ -82,11 +66,11 @@ export default function Navbar({ setView, currentView }) {
             <button 
               onClick={handleLogoClick}
               className={`transition-all duration-300 cursor-pointer pb-1 relative ${
-                currentView === 'landing' && activeSection === '' ? 'text-black font-bold' : 'hover:text-black'
+                currentView === 'landing' && (activeSection === 'home' || activeSection === 'cdat' || activeSection === '') ? 'text-black font-bold' : 'hover:text-black'
               }`}
             >
               Home
-              {currentView === 'landing' && activeSection === '' && (
+              {currentView === 'landing' && (activeSection === 'home' || activeSection === 'cdat' || activeSection === '') && (
                 <span className="absolute bottom-0 left-0 w-full h-[2px] bg-brand" />
               )}
             </button>
@@ -183,7 +167,7 @@ export default function Navbar({ setView, currentView }) {
           <button
             onClick={handleLogoClick}
             className={`text-left border-b border-black/[0.03] pb-2 cursor-pointer ${
-              currentView === 'landing' && activeSection === '' ? 'text-black' : 'hover:text-black'
+              currentView === 'landing' && (activeSection === 'home' || activeSection === 'cdat' || activeSection === '') ? 'text-black' : 'hover:text-black'
             }`}
           >
             Home

@@ -159,7 +159,7 @@ export default function CdatSection({ setView }) {
                 onClick={() => setShowAptitudeForm(true)}
                 className="px-6 py-3.5 bg-brand hover:bg-brand-dark text-black font-bold text-xs uppercase tracking-widest rounded-[4px] transition cursor-pointer shadow-sm border border-black/5 w-full sm:w-auto text-center"
               >
-                Book Aptitude (CDAC Registration)
+                Book Aptitude (CDAT Registration)
               </button>
             </div>
           ) : (

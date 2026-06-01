@@ -223,7 +223,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-brand shrink-0" />
                   <h3 className="font-bold uppercase tracking-wider text-xs text-gray-800">
-                    Session Flow: {bookingService === 'counselling' ? 'Personal Counselling' : 'Career Counselling'} ({bookingMode.replace('_', ' ')})
+                    Session Flow: {bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Counselling'} ({bookingMode.replace('_', ' ')})
                   </h3>
                 </div>
                 <span className="text-[10px] text-gray-400 font-light">Interactive Booking Guide</span>
@@ -289,7 +289,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
               <CheckCircle2 className="w-12 h-12 text-black mx-auto" />
               <h3 className="text-lg font-bold uppercase">Session Successfully Booked!</h3>
               <p className="text-xs text-gray-600 max-w-md mx-auto leading-relaxed">
-                Thank you, <strong>{bookingForm.name}</strong>. Your <strong>{bookingService === 'counselling' ? 'Personal Counselling' : 'Career Counselling'}</strong> session is scheduled on <strong>{selectedDate}</strong> at <strong>{selectedTime}</strong> via <strong>{bookingMode}</strong> with <strong>{selectedAdvisor?.name}</strong>.
+                Thank you, <strong>{bookingForm.name}</strong>. Your <strong>{bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Counselling'}</strong> session is scheduled on <strong>{selectedDate}</strong> at <strong>{selectedTime}</strong> via <strong>{bookingMode}</strong> with <strong>{selectedAdvisor?.name}</strong>.
               </p>
               <button
                 onClick={() => {
@@ -368,7 +368,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                         onChange={(e) => setBookingService(e.target.value)}
                         className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-[4px] text-sm outline-none focus:border-brand transition cursor-pointer"
                       >
-                        <option value="counselling">Personal Counselling</option>
+                        <option value="counselling">Psychological Counselling</option>
                         <option value="career">Career Counselling</option>
                       </select>
                     </div>

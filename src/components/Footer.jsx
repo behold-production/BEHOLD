@@ -1,18 +1,9 @@
 import React from 'react';
 import { ArrowRight, Send } from 'lucide-react';
 
-export default function Footer({ setView }) {
+export default function Footer({ navigateToSection }) {
   const handleLogoClick = () => {
-    setView('landing');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const handleScroll = (id) => {
-    setView('landing');
-    setTimeout(() => {
-      const el = document.getElementById(id);
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
-    }, 50);
+    navigateToSection('top');
   };
 
   return (
@@ -36,9 +27,9 @@ export default function Footer({ setView }) {
         <div>
           <h5 className="text-zinc-200 font-bold uppercase tracking-wider mb-4 font-header text-[10px]">Services</h5>
           <ul className="space-y-3 font-light">
-            <li><button onClick={() => handleScroll('services')} className="hover:text-brand transition cursor-pointer text-left">Aptitude Test</button></li>
-            <li><button onClick={() => handleScroll('services')} className="hover:text-brand transition cursor-pointer text-left">Career Counselling</button></li>
-            <li><button onClick={() => handleScroll('services')} className="hover:text-brand transition cursor-pointer text-left">Personal Counselling</button></li>
+            <li><button onClick={() => navigateToSection('cdat')} className="hover:text-brand transition cursor-pointer text-left">Aptitude Test</button></li>
+            <li><button onClick={() => navigateToSection('services')} className="hover:text-brand transition cursor-pointer text-left">Career Counselling</button></li>
+            <li><button onClick={() => navigateToSection('services')} className="hover:text-brand transition cursor-pointer text-left">Psychological Counselling</button></li>
           </ul>
         </div>
 
@@ -46,9 +37,9 @@ export default function Footer({ setView }) {
         <div>
           <h5 className="text-zinc-200 font-bold uppercase tracking-wider mb-4 font-header text-[10px]">Booking</h5>
           <ul className="space-y-3 font-light">
-            <li><button onClick={() => setView('booking')} className="hover:text-brand transition cursor-pointer text-left">Online Sessions</button></li>
-            <li><button onClick={() => setView('booking')} className="hover:text-brand transition cursor-pointer text-left">Doorstep Support</button></li>
-            <li><button onClick={() => setView('booking')} className="hover:text-brand transition cursor-pointer text-left">Office Consultations</button></li>
+            <li><button onClick={() => window.location.hash = '#/booking'} className="hover:text-brand transition cursor-pointer text-left">Online Sessions</button></li>
+            <li><button onClick={() => window.location.hash = '#/booking'} className="hover:text-brand transition cursor-pointer text-left">Doorstep Support</button></li>
+            <li><button onClick={() => window.location.hash = '#/booking'} className="hover:text-brand transition cursor-pointer text-left">Office Consultations</button></li>
           </ul>
         </div>
 
@@ -56,7 +47,7 @@ export default function Footer({ setView }) {
         <div>
           <h5 className="text-zinc-200 font-bold uppercase tracking-wider mb-4 font-header text-[10px]">Company</h5>
           <ul className="space-y-3 font-light">
-            <li><button onClick={() => handleScroll('about')} className="hover:text-brand transition cursor-pointer text-left">Why Us</button></li>
+            <li><button onClick={() => navigateToSection('about')} className="hover:text-brand transition cursor-pointer text-left">Why Us</button></li>
             <li><a href="#" className="hover:text-brand transition block">Our Story</a></li>
             <li><a href="#" className="hover:text-brand transition block">Careers</a></li>
           </ul>
