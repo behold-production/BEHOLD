@@ -33,7 +33,7 @@ export default function Faq() {
         <span className="text-[10px] bg-black text-white px-3.5 py-1 rounded-[4px] uppercase tracking-wider font-extrabold w-fit mx-auto block">
           clarity desk
         </span>
-        <h2 className="text-4xl md:text-5xl font-header font-black tracking-tight text-gray-900 leading-tight uppercase">
+        <h2 className="text-3xl md:text-5xl font-header font-black tracking-tight text-gray-900 leading-tight uppercase">
           Frequently Asked
         </h2>
         <p className="text-black/50 font-sans text-sm md:text-base font-light max-w-xl mx-auto">
@@ -52,19 +52,19 @@ export default function Faq() {
             >
               <button
                 onClick={() => toggleFaq(idx)}
-                className="w-full text-left font-medium text-gray-900 flex items-center justify-between hover:text-black transition cursor-pointer focus:outline-none"
+                className="w-full text-left font-medium text-gray-900 flex items-start justify-between hover:text-black transition cursor-pointer focus:outline-none"
                 aria-expanded={isOpen}
               >
-                <div className="flex items-center gap-4">
-                  <div className={`w-8 h-8 rounded-[4px] flex items-center justify-center shrink-0 transition-colors ${
+                <div className="flex items-start gap-4">
+                  <div className={`w-8 h-8 rounded-[4px] flex items-center justify-center shrink-0 transition-colors mt-0.5 ${
                     isOpen ? 'bg-black text-brand' : 'bg-black/5 text-black'
                   }`}>
                     <HelpCircle className="w-4 h-4" />
                   </div>
-                  <span className="text-sm md:text-base font-header font-bold uppercase tracking-wide leading-tight">{faq.question}</span>
+                  <span className="text-sm md:text-base font-header font-bold uppercase tracking-wide leading-tight pt-1">{faq.question}</span>
                 </div>
                 <ChevronDown 
-                  className={`w-5 h-5 text-black/30 shrink-0 transition-transform duration-500 ${
+                  className={`w-5 h-5 text-black/30 shrink-0 transition-transform duration-500 mt-1.5 ${
                     isOpen ? 'rotate-180 text-black' : ''
                   }`} 
                 />

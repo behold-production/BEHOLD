@@ -11,6 +11,7 @@ import ServiceBooking from './components/ServiceBooking';
 import Footer from './components/Footer';
 import StudentProfile from './components/StudentProfile';
 import AptitudeTest from './components/AptitudeTest';
+import CoordinatorDashboard from './components/CoordinatorDashboard';
 
 export default function App() {
   const [view, setView] = useState('landing'); // 'landing', 'test', 'booking', 'profile'
@@ -30,6 +31,9 @@ export default function App() {
         window.scrollTo(0, 0);
       } else if (hash === '#/profile') {
         setView('profile');
+        window.scrollTo(0, 0);
+      } else if (hash === '#/dashboard') {
+        setView('dashboard');
         window.scrollTo(0, 0);
       } else {
         setView('landing');
@@ -113,11 +117,15 @@ export default function App() {
 
   return (
     <div
-      className="font-sans antialiased text-black bg-[#f3f3f3] selection:bg-gray-200 min-h-screen relative"
+      className={`font-sans antialiased selection:bg-gray-200 min-h-screen relative ${
+        view === 'dashboard' ? 'bg-[#070708] text-gray-300' : 'text-black bg-[#f3f3f3]'
+      }`}
     >
 
       {/* Premium Navbar */}
-      <Navbar navigateToSection={navigateToSection} currentView={view} />
+      {view !== 'dashboard' && (
+        <Navbar navigateToSection={navigateToSection} currentView={view} />
+      )}
 
       {/* Route Views */}
       {view === 'landing' && (
@@ -154,20 +162,28 @@ export default function App() {
         <StudentProfile setView={setView} />
       )}
 
+      {view === 'dashboard' && (
+        <CoordinatorDashboard setView={setView} />
+      )}
+
       {/* Floating WhatsApp Action Button */}
-      <a
-        href="https://wa.me/919497174011"
-        target="_blank"
-        rel="noreferrer"
-        className="fixed bottom-2 right-2 w-14 h-14 bg-black hover:bg-gray-850 text-white rounded-[100px] shadow-lg flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-200 z-50 cursor-pointer"
-        aria-label="Contact support on WhatsApp"
-        id="whatsapp-float-btn"
-      >
-        <MessageCircle className="w-6 h-6" />
-      </a>
+      {view !== 'dashboard' && (
+        <a
+          href="https://wa.me/919497174011"
+          target="_blank"
+          rel="noreferrer"
+          className="fixed bottom-2 right-2 w-14 h-14 bg-black hover:bg-gray-850 text-white rounded-[100px] shadow-lg flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-200 z-50 cursor-pointer"
+          aria-label="Contact support on WhatsApp"
+          id="whatsapp-float-btn"
+        >
+          <MessageCircle className="w-6 h-6" />
+        </a>
+      )}
 
       {/* Premium Footer */}
-      <Footer navigateToSection={navigateToSection} />
+      {view !== 'dashboard' && (
+        <Footer navigateToSection={navigateToSection} />
+      )}
     </div>
   );
 }

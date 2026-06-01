@@ -146,9 +146,9 @@ export default function CdatSection({ setView }) {
           </p>
 
           <div className="flex flex-wrap gap-x-8 gap-y-2 text-xs font-semibold text-black/80 font-mono">
-            <span className="flex items-center gap-1.5"><Check className="w-4 h-4 text-emerald-600" /> Certified CIGI psychometric models</span>
-            <span className="flex items-center gap-1.5"><Check className="w-4 h-4 text-emerald-600" /> Comprehensive 12-page cognitive diagnostic reports</span>
-            <span className="flex items-center gap-1.5"><Check className="w-4 h-4 text-emerald-600" /> In-school & Doorstep support</span>
+            <span className="flex items-start gap-1.5"><Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" /> Certified CIGI psychometric models</span>
+            <span className="flex items-start gap-1.5"><Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" /> Comprehensive 12-page cognitive diagnostic reports</span>
+            <span className="flex items-start gap-1.5"><Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" /> In-school & Doorstep support</span>
           </div>
         </div>
 

@@ -49,7 +49,7 @@ export default function Navbar({ navigateToSection, currentView }) {
   };
 
   return (
-    <header className="sticky top-0 w-full bg-white/60 backdrop-blur-md z-50 border-b border-black/[0.05] text-black transition-all relative">
+    <header className="sticky top-0 w-full bg-white/60 backdrop-blur-md z-50 border-b border-black/[0.05] text-black transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
         {/* Left Column: Logo & Nav Links */}
         <div className="flex items-center space-x-12">
@@ -120,6 +120,18 @@ export default function Navbar({ navigateToSection, currentView }) {
             >
               FAQs
               {activeSection === 'faqs' && currentView === 'landing' && (
+                <span className="absolute bottom-0 left-0 w-full h-[2px] bg-brand" />
+              )}
+            </button>
+
+            <button 
+              onClick={() => window.location.hash = '#/dashboard'}
+              className={`transition-all duration-300 cursor-pointer pb-1 relative ${
+                currentView === 'dashboard' ? 'text-black font-bold' : 'hover:text-black'
+              }`}
+            >
+              Dashboard
+              {currentView === 'dashboard' && (
                 <span className="absolute bottom-0 left-0 w-full h-[2px] bg-brand" />
               )}
             </button>
@@ -203,6 +215,14 @@ export default function Navbar({ navigateToSection, currentView }) {
             }`}
           >
             FAQs
+          </button>
+          <button
+            onClick={() => { window.location.hash = '#/dashboard'; setIsMenuOpen(false); }}
+            className={`text-left border-b border-black/[0.03] pb-2 cursor-pointer ${
+              currentView === 'dashboard' ? 'text-black' : 'hover:text-black'
+            }`}
+          >
+            Dashboard
           </button>
           <button
             onClick={() => { window.location.hash = '#/profile'; setIsMenuOpen(false); }}

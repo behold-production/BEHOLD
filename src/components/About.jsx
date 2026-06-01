@@ -51,7 +51,7 @@ export default function About() {
           <span className="text-[10px] bg-black text-white px-3.5 py-1 rounded-[4px] uppercase tracking-wider font-extrabold w-fit mx-auto block">
             Why Us & What We Offer
           </span>
-          <h2 className="text-4xl md:text-5xl font-header font-black tracking-tight text-gray-900 leading-[1.1] uppercase">
+          <h2 className="text-3xl md:text-5xl font-header font-black tracking-tight text-gray-900 leading-[1.1] uppercase">
             The Pillars of BEHOLD
           </h2>
           <p className="text-black/60 font-sans text-sm md:text-base font-light leading-relaxed">
