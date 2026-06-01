@@ -20,16 +20,12 @@ export default function Hero({ setView, scrollToSection }) {
         {/* Left Column: Heading and CTAs */}
         <div className="lg:col-span-6 space-y-6 fade-in-up text-center lg:text-left flex flex-col items-center lg:items-start">
 
-          {/* Subtle Tagline */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-xs border border-black/[0.04] rounded-[4px] text-[10px] font-extrabold uppercase tracking-widest text-black/60 shadow-xs w-fit">
-            <Sparkles className="w-3.5 h-3.5 text-black" />
-            <span>BEHOLD Mentorship Framework</span>
-          </div>
+
 
           {/* Main Title */}
           <div className="space-y-4">
             <h1 className="text-3xl sm:text-5xl lg:text-6xl font-header font-black tracking-tight text-black leading-[1.05] uppercase">
-              The Right Guidance, <br />
+              The <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-dark to-brand">Right Guidance</span>, <br />
               When You <span className="relative inline-block whitespace-nowrap">
                 Need It Most.
                 <svg className="absolute left-0 -bottom-2 w-full h-[8px] text-brand pointer-events-none" viewBox="0 0 100 10" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">

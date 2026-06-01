@@ -71,10 +71,10 @@ export default function Navbar({ setView, currentView }) {
         <div className="flex items-center space-x-12">
           <span 
             onClick={handleLogoClick}
-            className="font-header font-black text-xl tracking-tighter cursor-pointer text-black hover:text-black/80 transition"
+            className="font-header font-black text-xl tracking-tighter cursor-pointer text-black hover:text-brand transition duration-300"
             id="nav-logo"
           >
-            BEHOLD<span className="text-black/35 font-light">.</span>
+            BEHOLD<span className="text-brand font-black">.</span>
           </span>
           
           <nav className="hidden md:flex items-center space-x-8 text-xs font-semibold uppercase tracking-wider text-black/50">

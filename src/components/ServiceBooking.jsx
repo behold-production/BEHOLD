@@ -6,49 +6,49 @@ import {
 
 const COUNSELLING_FLOW = {
   online: [
-    "Select Time",
-    "Confirm Counsellor on Availability",
-    "BookSession with Integrated payment link and login",
-    "Reminder Day Before",
-    "Session on Google Meet / Our Platform"
+    "Select preferred date & time slot",
+    "Choose available consultant psychologist",
+    "Complete booking via secure integrated payment",
+    "Receive session reminders & details via WhatsApp/Email",
+    "Join online session via Google Meet or our portal"
   ],
   doorstep: [
-    "Select Time & Date",
-    "Profile of Counsellor + Location",
-    "BookSession with Integrated payment link and login",
-    "Reminder Day Before",
-    "Session at clients location House prefered"
+    "Select date, time slot, & delivery mode",
+    "Review therapist profile & location suitability",
+    "Complete booking via secure integrated payment",
+    "Receive advisor details & reminder a day before",
+    "Personalised session at client's preferred location (home/office)"
   ],
   offline: [
-    "Select Time & Date",
-    "Profile of Counsellor",
-    "BookSession with Integrated payment link and login",
-    "Reminder Day Before",
-    "Session at the office"
+    "Select preferred date & time slot",
+    "Review consultant profile & offline schedule",
+    "Complete booking via secure integrated payment",
+    "Receive session reminder & directions a day before",
+    "In-person session at our professional counselling office"
   ]
 };
 
 const CAREER_FLOW = {
   online: [
-    "Select Time",
-    "Confirm Counsellor on Availability",
-    "BookSession with Integrated payment link and login",
-    "Reminder Day Before",
-    "Session on Google Meet / Our Platform"
+    "Select preferred date & time slot",
+    "Choose senior career coach or academic advisor",
+    "Complete booking via secure integrated payment",
+    "Receive session reminders & preparation checklist",
+    "Join live coaching session via Google Meet/our portal"
   ],
   doorstep: [
-    "Select Time & Date",
-    "Profile of Counsellor + Location",
-    "BookSession with Integrated payment link and login",
-    "Reminder Day Before",
-    "Session at clients location House prefered"
+    "Select date, time slot, & delivery mode",
+    "Review coach profile & location suitability",
+    "Complete booking via secure integrated payment",
+    "Receive advisor details & preparation guide a day before",
+    "Interactive coaching session at client's preferred location (home/office)"
   ],
   offline: [
-    "Select Time & Date",
-    "Profile of Counsellor",
-    "BookSession with Integrated payment link and login",
-    "Reminder Day Before",
-    "Session at the office"
+    "Select preferred date & time slot",
+    "Review coach profile & office schedule",
+    "Complete booking via secure integrated payment",
+    "Receive session reminder & directions a day before",
+    "In-person coaching session at our professional career centre"
   ]
 };
 
@@ -136,28 +136,6 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
     }
   }, [bookingService]);
 
-  const handleModeSelect = (service, mode) => {
-    setBookingService(service);
-    setBookingMode(mode);
-
-    // Smoothly scroll to the booking console
-    setTimeout(() => {
-      const element = document.getElementById('booking-console');
-      if (element) {
-        const offset = 80;
-        const bodyRect = document.body.getBoundingClientRect().top;
-        const elementRect = element.getBoundingClientRect().top;
-        const elementPosition = elementRect - bodyRect;
-        const offsetPosition = elementPosition - offset;
-
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: 'smooth'
-        });
-      }
-    }, 100);
-  };
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setBookingForm(prev => {
@@ -206,9 +184,12 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
     }, 1500);
   };
 
+  const flowKey = bookingMode === 'DOOR_STEP' ? 'doorstep' : bookingMode.toLowerCase();
+  const activeSteps = bookingService === 'counselling' ? COUNSELLING_FLOW[flowKey] : CAREER_FLOW[flowKey];
+
   return (
     <div className="min-h-screen pt-24 pb-20 bg-white text-black text-left font-sans border-b border-gray-150">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-10">
 
         {/* Header */}
         <div className="text-center flex flex-col items-center space-y-4">
@@ -216,189 +197,99 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
             booking engine
           </span>
           <h1 className="text-3xl md:text-5xl font-header font-black tracking-tight leading-none text-gray-900 uppercase">
-            Service Booking Flows
+            Session Booking
           </h1>
           <p className="text-gray-500 max-w-xl mx-auto text-sm md:text-base leading-relaxed font-light">
-            Review our online, doorstep, and offline booking flows, and configure your session details below.
+            Select your service, choose your preferred mode, and configure your session details below.
           </p>
         </div>
 
-        {/* 1. Counselling Booking Flow */}
-        <div className="space-y-6">
-          <h2 className="text-2xl font-bold uppercase tracking-wider border-b border-gray-150 pb-2">
-            Counselling Booking — Flow
-          </h2>
-          <p className="text-xs text-gray-400">Three session modes: Online | Door step | Office Visit</p>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* ONLINE CARD */}
-            <div
-              onClick={() => handleModeSelect('counselling', 'ONLINE')}
-              className={`border p-6 bg-white flex flex-col justify-between cursor-pointer rounded-[4px] transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] ${bookingService === 'counselling' && bookingMode === 'ONLINE'
-                ? 'border-brand ring-2 ring-brand/20 bg-brand/5 scale-[1.01]'
-                : 'border-gray-250 hover:border-brand/40 hover:bg-gray-50/30'
-                }`}
-            >
-              <div>
-                <div className="flex items-center gap-2 mb-4">
-                  <Globe className="w-5 h-5 text-brand" />
-                  <h3 className="font-bold uppercase tracking-wider text-sm">ONLINE</h3>
-                </div>
-                <ul className="space-y-3 text-xs">
-                  {COUNSELLING_FLOW.online.map((step, idx) => (
-                    <li key={idx} className="flex gap-2 items-start">
-                      <span className="font-bold text-gray-450 shrink-0">{idx + 1}.</span>
-                      <span className="text-gray-600 font-light">{step}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-
-            {/* DOOR STEP CARD */}
-            <div
-              onClick={() => handleModeSelect('counselling', 'DOOR_STEP')}
-              className={`border p-6 bg-white flex flex-col justify-between cursor-pointer rounded-[4px] transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] ${bookingService === 'counselling' && bookingMode === 'DOOR_STEP'
-                ? 'border-brand ring-2 ring-brand/20 bg-brand/5 scale-[1.01]'
-                : 'border-gray-250 hover:border-brand/40 hover:bg-gray-50/30'
-                }`}
-            >
-              <div>
-                <div className="flex items-center gap-2 mb-4">
-                  <MapPin className="w-5 h-5 text-brand" />
-                  <h3 className="font-bold uppercase tracking-wider text-sm">DOOR STEP</h3>
-                </div>
-                <ul className="space-y-3 text-xs">
-                  {COUNSELLING_FLOW.doorstep.map((step, idx) => (
-                    <li key={idx} className="flex gap-2 items-start">
-                      <span className="font-bold text-gray-455 shrink-0">{idx + 1}.</span>
-                      <span className="text-gray-600 font-light">{step}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-
-            {/* OFFLINE CARD */}
-            <div
-              onClick={() => handleModeSelect('counselling', 'OFFLINE')}
-              className={`border p-6 bg-white flex flex-col justify-between cursor-pointer rounded-[4px] transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] ${bookingService === 'counselling' && bookingMode === 'OFFLINE'
-                ? 'border-brand ring-2 ring-brand/20 bg-brand/5 scale-[1.01]'
-                : 'border-gray-200 hover:border-brand/40 hover:bg-gray-50/30'
-                }`}
-            >
-              <div>
-                <div className="flex items-center gap-2 mb-4">
-                  <Building className="w-5 h-5 text-brand" />
-                  <h3 className="font-bold uppercase tracking-wider text-sm">OFFLINE (Office Visit)</h3>
-                </div>
-                <ul className="space-y-3 text-xs">
-                  {COUNSELLING_FLOW.offline.map((step, idx) => (
-                    <li key={idx} className="flex gap-2 items-start">
-                      <span className="font-bold text-gray-455 shrink-0">{idx + 1}.</span>
-                      <span className="text-gray-600 font-light">{step}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+        {/* BOOKING CONSOLE */}
+        <div id="booking-console" className="border border-brand p-4 sm:p-8 bg-white space-y-8 rounded-[4px]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-100 pb-4">
+            <h2 className="text-xl font-bold uppercase tracking-wide">
+              Configure Your Session
+            </h2>
+            <div className="flex items-center gap-1.5 text-[10px] text-gray-500 bg-gray-50 px-3 py-1.5 rounded border border-gray-200">
+              <Info className="w-3.5 h-3.5 text-brand shrink-0" />
+              <span>Step-by-step guidance is dynamic based on your selections below.</span>
             </div>
           </div>
-        </div>
 
-        {/* 2. Career Counselling Booking Flow */}
-        <div className="space-y-6">
-          <h2 className="text-2xl font-bold uppercase tracking-wider border-b border-gray-150 pb-2">
-            Career Counselling Booking — Flow
-          </h2>
-          <p className="text-xs text-gray-400">Three session modes: Online | Door step | Office Visit</p>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* ONLINE CARD */}
-            <div
-              onClick={() => handleModeSelect('career', 'ONLINE')}
-              className={`border p-6 bg-white flex flex-col justify-between cursor-pointer rounded-[4px] transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] ${bookingService === 'career' && bookingMode === 'ONLINE'
-                ? 'border-brand ring-2 ring-brand/20 bg-brand/5 scale-[1.01]'
-                : 'border-gray-200 hover:border-brand/40 hover:bg-gray-50/30'
-                }`}
-            >
-              <div>
-                <div className="flex items-center gap-2 mb-4">
-                  <Globe className="w-5 h-5 text-brand" />
-                  <h3 className="font-bold uppercase tracking-wider text-sm">ONLINE</h3>
+          {/* Interactive Dynamic Journey Stepper */}
+          {!isSuccess && (
+            <div className="bg-gray-50 border border-gray-150 p-5 rounded-[4px] space-y-4 animate-in fade-in duration-300">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-gray-200 pb-3">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-brand shrink-0" />
+                  <h3 className="font-bold uppercase tracking-wider text-xs text-gray-800">
+                    Session Flow: {bookingService === 'counselling' ? 'Personal Counselling' : 'Career Counselling'} ({bookingMode.replace('_', ' ')})
+                  </h3>
                 </div>
-                <ul className="space-y-3 text-xs">
-                  {CAREER_FLOW.online.map((step, idx) => (
-                    <li key={idx} className="flex gap-2 items-start">
-                      <span className="font-bold text-gray-455 shrink-0">{idx + 1}.</span>
-                      <span className="text-gray-600 font-light">{step}</span>
-                    </li>
-                  ))}
-                </ul>
+                <span className="text-[10px] text-gray-400 font-light">Interactive Booking Guide</span>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+                {activeSteps.map((step, idx) => {
+                  let isCompleted = false;
+                  let isActive = false;
+
+                  if (idx === 0) {
+                    isCompleted = !!(selectedDate && selectedTime);
+                    isActive = !isCompleted;
+                  } else if (idx === 1) {
+                    isCompleted = !!(selectedAdvisor && advisorConfirmed);
+                    isActive = !isCompleted && !!(selectedDate && selectedTime);
+                  } else if (idx === 2) {
+                    isCompleted = !!(bookingForm.name && bookingForm.phone && bookingForm.email);
+                    isActive = !isCompleted && !!(selectedAdvisor && advisorConfirmed);
+                  } else if (idx === 3) {
+                    isCompleted = isSuccess;
+                    isActive = !isCompleted && !!(bookingForm.name && bookingForm.phone && bookingForm.email);
+                  } else {
+                    isCompleted = isSuccess;
+                    isActive = !isCompleted && isSuccess;
+                  }
+
+                  return (
+                    <div key={idx} className="flex md:flex-col items-start gap-3 md:gap-2 relative">
+                      <div className="flex items-center md:w-full">
+                        <div className={`flex items-center justify-center w-6 h-6 rounded-full font-bold text-[10px] border transition-all duration-300 shrink-0 ${
+                          isCompleted
+                            ? 'bg-black border-black text-white'
+                            : isActive
+                              ? 'bg-brand border-brand text-white shadow-xs ring-2 ring-brand/10'
+                              : 'bg-white border-gray-300 text-gray-405'
+                        }`}>
+                          {isCompleted ? '✓' : idx + 1}
+                        </div>
+                        {idx < 4 && (
+                          <div className={`hidden md:block h-0.5 w-full ml-2 transition-all duration-300 ${
+                            isCompleted ? 'bg-black' : 'bg-gray-200'
+                          }`} />
+                        )}
+                      </div>
+                      <div className="flex flex-col">
+                        <span className={`text-[9px] font-bold uppercase tracking-wider ${isActive ? 'text-brand' : isCompleted ? 'text-black' : 'text-gray-400'}`}>
+                          {idx === 0 ? 'Schedule' : idx === 1 ? 'Advisor' : idx === 2 ? 'Details' : idx === 3 ? 'Reminders' : 'Session'}
+                        </span>
+                        <span className={`text-[10px] font-light leading-tight transition-colors duration-300 mt-0.5 ${isActive ? 'text-gray-900 font-normal' : 'text-gray-500'}`}>
+                          {step}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
-
-            {/* DOOR STEP CARD */}
-            <div
-              onClick={() => handleModeSelect('career', 'DOOR_STEP')}
-              className={`border p-6 bg-white flex flex-col justify-between cursor-pointer rounded-[4px] transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] ${bookingService === 'career' && bookingMode === 'DOOR_STEP'
-                ? 'border-brand ring-2 ring-brand/20 bg-brand/5 scale-[1.01]'
-                : 'border-gray-200 hover:border-brand/40 hover:bg-gray-50/30'
-                }`}
-            >
-              <div>
-                <div className="flex items-center gap-2 mb-4">
-                  <MapPin className="w-5 h-5 text-brand" />
-                  <h3 className="font-bold uppercase tracking-wider text-sm">DOOR STEP</h3>
-                </div>
-                <ul className="space-y-3 text-xs">
-                  {CAREER_FLOW.doorstep.map((step, idx) => (
-                    <li key={idx} className="flex gap-2 items-start">
-                      <span className="font-bold text-gray-455 shrink-0">{idx + 1}.</span>
-                      <span className="text-gray-600 font-light">{step}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-
-            {/* OFFLINE CARD */}
-            <div
-              onClick={() => handleModeSelect('career', 'OFFLINE')}
-              className={`border p-6 bg-white flex flex-col justify-between cursor-pointer rounded-[4px] transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] ${bookingService === 'career' && bookingMode === 'OFFLINE'
-                ? 'border-brand ring-2 ring-brand/20 bg-brand/5 scale-[1.01]'
-                : 'border-gray-200 hover:border-brand/40 hover:bg-gray-50/30'
-                }`}
-            >
-              <div>
-                <div className="flex items-center gap-2 mb-4">
-                  <Building className="w-5 h-5 text-brand" />
-                  <h3 className="font-bold uppercase tracking-wider text-sm">OFFLINE (Office Visit)</h3>
-                </div>
-                <ul className="space-y-3 text-xs">
-                  {CAREER_FLOW.offline.map((step, idx) => (
-                    <li key={idx} className="flex gap-2 items-start">
-                      <span className="font-bold text-gray-455 shrink-0">{idx + 1}.</span>
-                      <span className="text-gray-600 font-light">{step}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* 3. BOOKING CONSOLE */}
-        <div id="booking-console" className="border border-brand p-4 sm:p-8 bg-white space-y-6 rounded-[4px]">
-          <h2 className="text-xl font-bold uppercase tracking-wide border-b border-gray-100 pb-3">
-            Session Booking Console
-          </h2>
+          )}
 
           {isSuccess ? (
             <div className="p-5 sm:p-8 bg-gray-50 border border-gray-200 text-center rounded-[4px] space-y-4 max-w-xl mx-auto animate-in fade-in duration-500">
               <CheckCircle2 className="w-12 h-12 text-black mx-auto" />
               <h3 className="text-lg font-bold uppercase">Session Successfully Booked!</h3>
               <p className="text-xs text-gray-600 max-w-md mx-auto leading-relaxed">
-                Thank you, <strong>{bookingForm.name}</strong>. Your <strong>{bookingService === 'counselling' ? 'Personal Counselling' : 'Career Counseling'}</strong> session is scheduled on <strong>{selectedDate}</strong> at <strong>{selectedTime}</strong> via <strong>{bookingMode}</strong> with <strong>{selectedAdvisor?.name}</strong>.
+                Thank you, <strong>{bookingForm.name}</strong>. Your <strong>{bookingService === 'counselling' ? 'Personal Counselling' : 'Career Counselling'}</strong> session is scheduled on <strong>{selectedDate}</strong> at <strong>{selectedTime}</strong> via <strong>{bookingMode}</strong> with <strong>{selectedAdvisor?.name}</strong>.
               </p>
               <button
                 onClick={() => {
@@ -430,7 +321,12 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                       <input
                         type="date"
                         value={selectedDate}
-                        onChange={(e) => setSelectedDate(e.target.value)}
+                        onChange={(e) => {
+                          setSelectedDate(e.target.value);
+                          if (errors.date) {
+                            setErrors(prev => ({ ...prev, date: null }));
+                          }
+                        }}
                         className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-[4px] text-xs text-gray-900 focus:border-brand outline-none"
                       />
                       {errors.date && <p className="text-[10px] text-red-500 font-semibold">{errors.date}</p>}
@@ -442,7 +338,12 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                       </label>
                       <select
                         value={selectedTime}
-                        onChange={(e) => setSelectedTime(e.target.value)}
+                        onChange={(e) => {
+                          setSelectedTime(e.target.value);
+                          if (errors.time) {
+                            setErrors(prev => ({ ...prev, time: null }));
+                          }
+                        }}
                         className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-[4px] text-xs text-gray-900 focus:border-brand outline-none appearance-none cursor-pointer"
                       >
                         <option value="">Select slot</option>
@@ -468,7 +369,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                         className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-[4px] text-sm outline-none focus:border-brand transition cursor-pointer"
                       >
                         <option value="counselling">Personal Counselling</option>
-                        <option value="career">Career Counseling</option>
+                        <option value="career">Career Counselling</option>
                       </select>
                     </div>
 
@@ -500,7 +401,13 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                     {ADVISORS.filter(advisor => advisor.type === bookingService).map((advisor) => (
                       <div
                         key={advisor.id}
-                        onClick={() => { setSelectedAdvisor(advisor); setAdvisorConfirmed(false); }}
+                        onClick={() => {
+                          setSelectedAdvisor(advisor);
+                          setAdvisorConfirmed(false);
+                          if (errors.advisor) {
+                            setErrors(prev => ({ ...prev, advisor: null }));
+                          }
+                        }}
                         className={`p-3 border rounded-[4px] flex items-center justify-between gap-3 cursor-pointer transition ${selectedAdvisor?.id === advisor.id
                           ? 'bg-brand/5 border-brand shadow-xs'
                           : 'bg-white border-gray-200 hover:border-brand/40 hover:bg-gray-50'
@@ -524,7 +431,13 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                       </span>
                       <button
                         type="button"
-                        onClick={() => setAdvisorConfirmed(!advisorConfirmed)}
+                        onClick={() => {
+                          const nextConfirmed = !advisorConfirmed;
+                          setAdvisorConfirmed(nextConfirmed);
+                          if (nextConfirmed && errors.confirm) {
+                            setErrors(prev => ({ ...prev, confirm: null }));
+                          }
+                        }}
                         className={`px-3 py-1 rounded-[4px] text-[10px] font-bold transition cursor-pointer ${advisorConfirmed
                           ? 'bg-brand/10 border border-brand/35 text-brand'
                           : 'bg-brand text-white hover:bg-brand-dark shadow-sm'
@@ -610,7 +523,9 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                       <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                     ) : (
                       <>
-                        <span>Book Counselling Session</span>
+                        <span>
+                          {bookingService === 'career' ? 'Book Career Guidance Session' : 'Book Counselling Session'}
+                        </span>
                         <ArrowRight className="w-4 h-4" />
                       </>
                     )}
