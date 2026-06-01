@@ -43,7 +43,7 @@ export default function StudentProfile({ setView }) {
   const [profile, setProfile] = useState(INITIAL_STATE);
   const [isSaved, setIsSaved] = useState(false);
   const [errors, setErrors] = useState({});
-  const [activeTab, setActiveTab] = useState('personal'); // personal, school, interests, parents, batch
+  const [activeTab, setActiveTab] = useState('personal'); // personal, school, interests, parents
 
   useEffect(() => {
     const saved = localStorage.getItem('behold_student_profile');
@@ -144,8 +144,7 @@ export default function StudentProfile({ setView }) {
               { id: 'personal', label: '1. Personal Details', icon: User },
               { id: 'school', label: '2. School Details', icon: BookOpen },
               { id: 'interests', label: '3. Talents & Interests', icon: Award },
-              { id: 'parents', label: '4. Parents / Guardian', icon: Heart },
-              { id: 'batch', label: '5. Batch & Group', icon: ChevronRight }
+              { id: 'parents', label: '4. Parents / Guardian', icon: Heart }
             ].map(tab => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
@@ -664,69 +663,10 @@ export default function StudentProfile({ setView }) {
 
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-3 justify-between pt-4">
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab('interests')}
-                    className="bg-white border border-brand text-brand px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand hover:text-white transition rounded-[4px] shadow-sm w-full sm:w-auto text-center"
-                  >
-                    Previous
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab('batch')}
-                    className="bg-brand text-white px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand-dark transition rounded-[4px] shadow-sm w-full sm:w-auto text-center"
-                  >
-                    Next Section
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* TAB 5: BATCH & GROUP REGISTRATION */}
-            {activeTab === 'batch' && (
-              <div className="space-y-6 animate-in fade-in duration-200">
-                <h3 className="text-sm font-bold uppercase tracking-widest border-b border-gray-150 pb-2 text-gray-900">
-                  Section 5: Preferred Batch & Group Registration
-                </h3>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-                  {/* Preferred Batch */}
-                  <div className="space-y-1.5">
-                    <label className="text-gray-500 uppercase tracking-wider">Preferred Batch</label>
-                    <select
-                      name="preferredBatch"
-                      value={profile.preferredBatch}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-[4px] outline-none focus:border-brand transition cursor-pointer"
-                    >
-                      <option value="">Select Batch</option>
-                      <option value="Batch A (Weekends)">Batch A (Weekends)</option>
-                      <option value="Batch B (Weekdays)">Batch B (Weekdays)</option>
-                      <option value="Batch C (Evening)">Batch C (Evening)</option>
-                    </select>
-                  </div>
-
-                  {/* Group Code */}
-                  <div className="space-y-1.5">
-                    <label className="text-gray-500 uppercase tracking-wider">Group Code</label>
-                    <input
-                      type="text"
-                      name="groupCode"
-                      placeholder="If you have a Group Registration Code"
-                      value={profile.groupCode}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-[4px] outline-none focus:border-brand transition font-mono font-bold uppercase tracking-wider"
-                    />
-                  </div>
-
-                </div>
-
                 <div className="flex flex-col sm:flex-row gap-3 justify-between pt-4 border-t border-gray-100">
                   <button
                     type="button"
-                    onClick={() => setActiveTab('parents')}
+                    onClick={() => setActiveTab('interests')}
                     className="bg-white border border-brand text-brand px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand hover:text-white transition rounded-[4px] shadow-sm w-full sm:w-auto text-center"
                   >
                     Previous

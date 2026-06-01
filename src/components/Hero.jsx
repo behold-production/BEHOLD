@@ -1,15 +1,15 @@
 import React from 'react';
-import { ArrowRight, Sparkles, Compass, ShieldCheck, HeartPulse } from 'lucide-react';
+import { ArrowRight, Sparkles, Compass, ShieldCheck, HeartPulse, CheckCircle2 } from 'lucide-react';
 
 export default function Hero({ setView, scrollToSection }) {
   const handleBookNowClick = () => {
-    setView('booking');
+    window.location.hash = '#/booking';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
     <section
-      className="relative w-full py-16 md:py-32 px-4 sm:px-6 text-black text-left grid-bg overflow-hidden flex flex-col items-center justify-center min-h-[90vh] select-none"
+      className="relative w-full py-10 lg:py-24 px-4 sm:px-6 text-black text-left grid-bg overflow-hidden flex flex-col items-center justify-center min-h-[60vh] lg:min-h-[90vh] select-none"
     >
       {/* Background Soft Glows */}
       <div className="absolute top-1/4 left-1/3 w-[300px] h-[300px] bg-brand/20 rounded-full glow-glow pointer-events-none" />
@@ -18,7 +18,7 @@ export default function Hero({ setView, scrollToSection }) {
       <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
 
         {/* Left Column: Heading and CTAs */}
-        <div className="lg:col-span-6 space-y-8 fade-in-up text-center lg:text-left flex flex-col items-center lg:items-start">
+        <div className="lg:col-span-6 space-y-6 fade-in-up text-center lg:text-left flex flex-col items-center lg:items-start">
 
           {/* Subtle Tagline */}
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-xs border border-black/[0.04] rounded-[4px] text-[10px] font-extrabold uppercase tracking-widest text-black/60 shadow-xs w-fit">
@@ -28,12 +28,17 @@ export default function Hero({ setView, scrollToSection }) {
 
           {/* Main Title */}
           <div className="space-y-4">
-            <h1 className="text-4xl md:text-6xl font-header font-black tracking-tight text-black leading-[1.05] uppercase">
-              Guiding Students <br />
-              Towards <span className="underline decoration-brand decoration-8 underline-offset-4">Clarity</span> & <span className="underline decoration-brand decoration-8 underline-offset-4">Confidence</span>
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-header font-black tracking-tight text-black leading-[1.05] uppercase">
+              The Right Guidance, <br />
+              When You <span className="relative inline-block whitespace-nowrap">
+                Need It Most.
+                <svg className="absolute left-0 -bottom-2 w-full h-[8px] text-brand pointer-events-none" viewBox="0 0 100 10" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M2 8C35 3 70 3 98 8" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
+                </svg>
+              </span>
             </h1>
-            <p className="text-black/60 font-sans text-sm md:text-base font-light max-w-lg leading-relaxed">
-              Scientific career guidance, emotional support, and personalized doorstep mentorship for every student. Empowering adolescents to grow with direction.
+            <p className="text-black/60 font-sans text-xs sm:text-sm md:text-base font-light max-w-lg leading-relaxed">
+              Guidance, counselling, and mentorship for life’s important decisions — helping individuals move forward with clarity and confidence.
             </p>
           </div>
 
@@ -54,36 +59,43 @@ export default function Hero({ setView, scrollToSection }) {
             </button>
           </div>
 
-          {/* Stats quick view */}
-          <div className="grid grid-cols-3 gap-4 sm:gap-6 pt-8 border-t border-black/[0.05] w-full max-w-md">
-            <div>
-              <p className="text-2xl font-black text-black">5k+</p>
-              <p className="text-[9px] font-bold uppercase tracking-wider text-black/45">Guided</p>
+          {/* Highlighted Points to Read (Replaced old quick stats) */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-6 border-t border-black/[0.05] w-full text-[10px] font-bold uppercase tracking-wider text-black/60">
+            <div className="flex items-center justify-center lg:justify-start gap-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span>Behold Lifetime Mentoring</span>
             </div>
-            <div className="border-x border-black/[0.05] px-3 sm:px-6">
-              <p className="text-2xl font-black text-black">100+</p>
-              <p className="text-[9px] font-bold uppercase tracking-wider text-black/45">Schools</p>
+            <div className="flex items-center justify-center lg:justify-start gap-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span>Online & Offline</span>
             </div>
-            <div className="px-2">
-              <p className="text-2xl font-black text-black">95%</p>
-              <p className="text-[9px] font-bold uppercase tracking-wider text-black/45">Success</p>
+            <div className="flex items-center justify-center lg:justify-start gap-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span>School & Doorstep Service</span>
             </div>
           </div>
 
         </div>
 
         {/* Right Column: Cinematic Image with Floating Visuals */}
-        <div className="lg:col-span-6 relative flex items-center justify-center fade-in-up group" style={{ animationDelay: '0.2s' }}>
+        <div className="hidden lg:flex lg:col-span-6 relative items-center justify-center fade-in-up group" style={{ animationDelay: '0.2s' }}>
 
           {/* Main Visual Frame */}
           <div className="w-full aspect-[4/3] md:aspect-[16/11] rounded-[4px] overflow-hidden shadow-2xl border-4 border-white bg-white relative z-10">
             <img
-              src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80"
+              src="/children-learning.png"
               alt="Immersive mentoring storytelling visual"
               className="w-full h-full object-cover grayscale-15 contrast-105 group-hover:scale-103 transition-transform duration-700"
             />
             {/* Visual Soft Dark Gradient overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
+            
+            {/* Overlay Text Box Labels */}
+            <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-md border border-black/10 px-4 py-2 rounded-[4px] shadow-lg z-20 pointer-events-none">
+              <span className="text-[10px] font-extrabold uppercase tracking-widest text-black">
+                Therapy | Career Counselling | CDAT
+              </span>
+            </div>
           </div>
 
           {/* Floating UI Card 1: Counselling */}
@@ -103,7 +115,7 @@ export default function Hero({ setView, scrollToSection }) {
               <Compass className="w-4 h-4" />
             </div>
             <div>
-              <p className="text-[10px] font-extrabold uppercase tracking-wide text-black">Scientific Cdac</p>
+              <p className="text-[10px] font-extrabold uppercase tracking-wide text-black">Scientific CDAT</p>
               <p className="text-[9px] font-light text-black/55 mt-0.5">Custom stream roadmaps</p>
             </div>
           </div>

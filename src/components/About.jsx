@@ -1,132 +1,102 @@
-import React, { useState } from 'react';
-import { ShieldCheck, Award, HeartHandshake, Compass, Users } from 'lucide-react';
+import React from 'react';
+import { 
+  Compass, HeartHandshake, Users, GraduationCap, CheckCircle2, Heart 
+} from 'lucide-react';
 
-const STORY_TABS = [
+const PILLARS = [
   {
-    id: 'mentorship',
     icon: Compass,
     title: 'Extended Mentorship',
     desc: 'We support students across academic quarters, mapping milestones that translate assessment reports into real higher education achievements.'
   },
   {
-    id: 'doorstep',
     icon: HeartHandshake,
-    title: 'Doorstep Counselling',
-    desc: 'By visiting students directly inside their homes or preferred learning environments, we alleviate clinical barriers and ensure complete emotional privacy.'
+    title: 'Doorstep & Online Counselling',
+    desc: 'By visiting students directly inside their homes or providing virtual sessions, we alleviate clinical barriers and ensure complete emotional privacy.'
   },
   {
-    id: 'school',
     icon: Users,
-    title: 'Personalized Career Support',
-    desc: 'Conducting in-school orientations, parent alignments, and focus workshops to configure healthy environments for student career decisions.'
+    title: 'Personalized School Programs',
+    desc: 'Conducting in-school orientations, student alignments, and focus workshops to configure healthy learning environments.'
+  },
+  {
+    icon: GraduationCap,
+    title: 'CDAT & Career Roadmaps',
+    desc: 'Rigorous stream mapping and aptitude evaluations matching university pathways with individual natural talents.'
+  },
+  {
+    icon: CheckCircle2,
+    title: 'Goal Tracking',
+    desc: 'Continuous checks and developmental reviews ensuring students stay oriented toward their long-term developmental milestones.'
+  },
+  {
+    icon: Heart,
+    title: 'Parent Guidance',
+    desc: 'Aligning family environments to reduce academic friction, stream-selection conflicts, and stress.'
   }
 ];
 
-export default function About({ setView }) {
-  const [activeTab, setActiveTab] = useState('mentorship');
-
+export default function About() {
   return (
-    <section id="about" className="py-24 md:py-32 px-4 sm:px-6 text-black text-left grid-bg relative overflow-hidden">
+    <section id="about" className="py-12 md:py-24 px-4 sm:px-6 text-black text-left grid-bg relative overflow-hidden">
       
       {/* Glow Effects */}
       <div className="absolute bottom-10 left-10 w-[300px] h-[300px] bg-brand/10 rounded-full glow-glow pointer-events-none" />
+      <div className="absolute top-10 right-10 w-[300px] h-[300px] bg-brand/10 rounded-full glow-glow pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+      <div className="max-w-7xl mx-auto space-y-12 md:space-y-24">
         
-        {/* Left Column: Text & Tab Selector */}
-        <div className="lg:col-span-6 space-y-8 flex flex-col items-center lg:items-start text-center lg:text-left">
-          
-          <div className="space-y-4 flex flex-col items-center lg:items-start">
-            <span className="text-[10px] bg-black text-white px-3.5 py-1 rounded-[4px] uppercase tracking-wider font-extrabold w-fit block">
-              our core purpose
-            </span>
-            <h2 className="text-4xl md:text-5xl font-header font-black tracking-tight text-gray-900 leading-[1.1] uppercase">
-              Why Choose BEHOLD
-            </h2>
-            <p className="text-black/60 font-sans text-sm md:text-base font-light leading-relaxed">
-              At BEHOLD, we go beyond traditional career guidance by offering extended mentorship, doorstep psychological counselling, and personalized career support directly within schools and student spaces. Our student-first approach combines scientific assessment, emotional support, and continuous guidance to help adolescents grow with clarity, confidence, and direction.
-            </p>
-          </div>
-
-          {/* Interactive Feature Selectors */}
-          <div className="space-y-3 w-full">
-            {STORY_TABS.map(tab => {
-              const Icon = tab.icon;
-              const isActive = activeTab === tab.id;
-              return (
-                <div 
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`p-6 border transition-all duration-300 cursor-pointer text-left rounded-[4px] ${
-                    isActive 
-                      ? 'bg-white border-black/10 shadow-lg scale-[1.01]' 
-                      : 'bg-transparent border-transparent hover:border-black/[0.04] hover:bg-white/40'
-                  }`}
-                >
-                  <div className="flex items-start gap-4">
-                    <div className={`w-10 h-10 rounded-[4px] flex items-center justify-center shrink-0 transition-colors ${
-                      isActive ? 'bg-black text-brand' : 'bg-black/5 text-black'
-                    }`}>
-                      <Icon className="w-4 h-4" />
-                    </div>
-                    <div className="space-y-1">
-                      <h4 className="font-header font-bold text-xs uppercase tracking-wider text-black">{tab.title}</h4>
-                      <p className="text-black/50 text-[11px] font-light leading-relaxed">{tab.desc}</p>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          <div className="pt-4 flex justify-center lg:justify-start w-full">
-            <button
-              onClick={() => {
-                setView('booking');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              className="px-6 py-3.5 bg-black hover:bg-zinc-800 text-white font-bold text-xs uppercase tracking-widest rounded-[4px] transition-all duration-200 cursor-pointer shadow-sm w-full sm:w-auto text-center"
-            >
-              Get Started with Behold
-            </button>
-          </div>
-
+        {/* Header Column */}
+        <div className="max-w-3xl mx-auto text-center space-y-4">
+          <span className="text-[10px] bg-black text-white px-3.5 py-1 rounded-[4px] uppercase tracking-wider font-extrabold w-fit mx-auto block">
+            Why Us & What We Offer
+          </span>
+          <h2 className="text-4xl md:text-5xl font-header font-black tracking-tight text-gray-900 leading-[1.1] uppercase">
+            The Pillars of BEHOLD
+          </h2>
+          <p className="text-black/60 font-sans text-sm md:text-base font-light leading-relaxed">
+            At BEHOLD, we go beyond traditional career guidance. Our student-first approach combines scientific assessment, emotional support, and continuous mentorship directly inside schools and student spaces to help adolescents grow with clarity, confidence, and direction.
+          </p>
         </div>
 
-        {/* Right Column: Immersive visual block */}
-        <div className="lg:col-span-6 relative flex items-center justify-center hidden sm:flex">
-          
-          {/* Main Visual Container */}
-          <div className="w-full aspect-square md:aspect-[4/3] rounded-[4px] overflow-hidden border border-black/5 shadow-2xl relative bg-zinc-200">
-            <img 
-              src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80" 
-              alt="Emotional student representation" 
-              className="w-full h-full object-cover grayscale-10 contrast-105"
-            />
-            {/* Visual Glass Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-brand/10 via-transparent to-transparent pointer-events-none" />
-          </div>
+        {/* 6-Card Grid */}
+        <div className="flex overflow-x-auto md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 pb-4 snap-x snap-mandatory scrollbar-none scroll-smooth">
+          {PILLARS.map((pillar, idx) => {
+            const Icon = pillar.icon;
+            return (
+              <div 
+                key={idx}
+                className="min-w-[280px] sm:min-w-[320px] md:min-w-0 snap-center shrink-0 bg-white hover:bg-white/95 border border-black/5 rounded-[4px] p-6 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between group"
+              >
+                <div className="space-y-6">
+                  <div className="w-10 h-10 rounded-[4px] bg-black/5 text-black flex items-center justify-center transition-all duration-300 group-hover:scale-105 group-hover:bg-black group-hover:text-brand">
+                    <Icon className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
+                  </div>
+                  <div className="space-y-2">
+                    <h4 className="font-header font-bold text-xs uppercase tracking-wider text-black group-hover:text-brand transition-colors duration-300">
+                      {pillar.title}
+                    </h4>
+                    <p className="text-black/55 font-sans text-[11px] font-light leading-relaxed">
+                      {pillar.desc}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
 
-          {/* Floating UI Achievement */}
-          <div className="absolute bottom-8 -left-8 bg-white/95 backdrop-blur-md border border-black/[0.04] p-5 rounded-[4px] shadow-xl hidden lg:flex items-center gap-3.5 max-w-[240px] z-20 pointer-events-none">
-            <div className="w-9 h-9 rounded-[4px] bg-brand flex items-center justify-center text-black shadow-inner shrink-0">
-              <Award className="w-4 h-4" />
-            </div>
-            <div>
-              <p className="text-[10px] font-extrabold uppercase tracking-wide text-black">Student First</p>
-              <p className="text-[9px] font-light text-black/55 mt-0.5">Continuous psychological check-in roadmaps</p>
-            </div>
-          </div>
-
-          {/* Floating UI Trusted */}
-          <div className="absolute top-1/3 -right-8 bg-white/95 backdrop-blur-md border border-black/[0.04] p-4 rounded-[4px] shadow-xl hidden lg:flex items-center gap-3.5 max-w-[200px] z-20 pointer-events-none">
-            <ShieldCheck className="w-4.5 h-4.5 text-emerald-600 shrink-0" />
-            <div>
-              <p className="text-[10px] font-extrabold uppercase tracking-wide text-black">Safe Environment</p>
-              <p className="text-[9px] font-light text-black/55 mt-0.5">100% encrypted, confidential advisory records</p>
-            </div>
-          </div>
-
+        {/* CTA Button */}
+        <div className="pt-4 flex justify-center w-full">
+          <button
+            onClick={() => {
+              window.location.hash = '#/booking';
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            className="px-8 py-4 bg-black hover:bg-zinc-800 text-white font-bold text-xs uppercase tracking-widest rounded-[4px] transition-all duration-200 cursor-pointer shadow-sm w-full sm:w-auto text-center"
+          >
+            Get Started with Behold
+          </button>
         </div>
 
       </div>

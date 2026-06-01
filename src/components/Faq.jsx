@@ -24,12 +24,12 @@ export default function Faq() {
   };
 
   return (
-    <section id="faqs" className="max-w-4xl mx-auto px-4 sm:px-6 py-16 md:py-32 text-black text-left select-none relative overflow-hidden">
+    <section id="faqs" className="max-w-4xl mx-auto px-4 sm:px-6 py-12 md:py-24 text-black text-left select-none relative overflow-hidden">
       {/* Background glow */}
       <div className="absolute top-1/3 left-1/2 w-[250px] h-[250px] bg-brand/10 rounded-[4px] glow-glow pointer-events-none" />
 
       {/* Section Header */}
-      <div className="mb-16 space-y-4 text-center">
+      <div className="mb-10 md:mb-16 space-y-4 text-center">
         <span className="text-[10px] bg-black text-white px-3.5 py-1 rounded-[4px] uppercase tracking-wider font-extrabold w-fit mx-auto block">
           clarity desk
         </span>

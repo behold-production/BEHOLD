@@ -81,7 +81,7 @@ export default function Inquiry({ testProfile }) {
               <span className="text-[10px] bg-black text-white px-3.5 py-1 rounded-[4px] uppercase tracking-wider font-extrabold w-fit block">
                 get in touch
               </span>
-              <h2 className="text-3xl font-normal tracking-tight text-gray-900 font-header uppercase leading-tight">Consultation Request</h2>
+              <h2 className="text-3xl font-normal tracking-tight text-gray-900 font-header uppercase leading-tight">Want to Know More</h2>
               <p className="text-gray-500 font-light text-sm max-w-sm">
                 Submit your request to align parents, students, and coordinators for assessments and counselling sessions.
               </p>
@@ -186,23 +186,33 @@ export default function Inquiry({ testProfile }) {
         </div>
       </section>
 
-      {/* 4. NEWSLETTER SIGNUP */}
-      <section className="max-w-xl mx-auto text-center px-4 sm:px-6 py-24 space-y-6 flex flex-col items-center">
+      {/* 4. NEWSLETTER SIGNUP & COMMUNITY */}
+      <section className="max-w-xl mx-auto text-center px-4 sm:px-6 py-10 lg:py-16 space-y-6 flex flex-col items-center">
         <span className="text-[10px] bg-black text-white px-3.5 py-1 rounded-[4px] uppercase tracking-wider font-extrabold w-fit block">
-          newsletter
+          Stay Informed
         </span>
-        <h2 className="text-3xl font-normal tracking-tight text-gray-900 font-header uppercase">
-          Stay Informed. <br /> Subscribe to Career Updates.
+        <h2 className="text-3xl font-normal tracking-tight text-gray-900 font-header uppercase leading-tight">
+          Subscribe to Career Updates
         </h2>
-        <div className="relative max-w-md mx-auto pt-4">
+        <div className="relative w-full max-w-md mx-auto pt-2">
           <input 
             type="email" 
             placeholder="your@email.com" 
-            className="w-full bg-transparent border-b border-gray-300 focus:border-brand py-3 px-1 text-sm outline-none transition"
+            className="w-full bg-transparent border-b border-gray-300 focus:border-brand py-3 px-1 text-sm outline-none transition text-center"
           />
           <button className="absolute right-1 bottom-3 text-gray-400 hover:text-brand transition cursor-pointer">
             <ArrowRight className="w-5 h-5" />
           </button>
+        </div>
+        <div className="pt-4">
+          <a 
+            href="https://wa.me/919999999999" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="text-xs font-bold uppercase tracking-widest text-black hover:text-brand transition flex items-center gap-1.5"
+          >
+            <span>Connect with Our Community →</span>
+          </a>
         </div>
       </section>
 

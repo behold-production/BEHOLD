@@ -11,7 +11,7 @@ export default function Navbar({ setView, currentView }) {
       return;
     }
 
-    const sections = ['services', 'about', 'faqs', 'inquiry'];
+    const sections = ['services', 'about', 'faqs', 'inquiry', 'cdat'];
 
     const handleIntersect = (entries) => {
       entries.forEach(entry => {
@@ -39,7 +39,7 @@ export default function Navbar({ setView, currentView }) {
   }, [currentView]);
 
   const scrollToSection = (id) => {
-    setView('landing');
+    window.location.hash = '#/';
     setTimeout(() => {
       const element = document.getElementById(id);
       if (element) {
@@ -59,7 +59,7 @@ export default function Navbar({ setView, currentView }) {
   };
 
   const handleLogoClick = () => {
-    setView('landing');
+    window.location.hash = '#/';
     window.scrollTo({ top: 0, behavior: 'smooth' });
     setIsMenuOpen(false);
   };
@@ -78,46 +78,63 @@ export default function Navbar({ setView, currentView }) {
           </span>
           
           <nav className="hidden md:flex items-center space-x-8 text-xs font-semibold uppercase tracking-wider text-black/50">
+            {/* Added Home Link */}
+            <button 
+              onClick={handleLogoClick}
+              className={`transition-all duration-300 cursor-pointer pb-1 relative ${
+                currentView === 'landing' && activeSection === '' ? 'text-black font-bold' : 'hover:text-black'
+              }`}
+            >
+              Home
+              {currentView === 'landing' && activeSection === '' && (
+                <span className="absolute bottom-0 left-0 w-full h-[2px] bg-brand" />
+              )}
+            </button>
+
             <button 
               onClick={() => scrollToSection('services')}
               className={`transition-all duration-300 cursor-pointer pb-1 relative ${
                 activeSection === 'services' && currentView === 'landing' ? 'text-black font-bold' : 'hover:text-black'
               }`}
             >
-              services
+              Services
               {activeSection === 'services' && currentView === 'landing' && (
                 <span className="absolute bottom-0 left-0 w-full h-[2px] bg-brand" />
               )}
             </button>
+
+            {/* Renamed Aptitude Test to Sample Test */}
             <button 
-              onClick={() => setView('test')}
+              onClick={() => window.location.hash = '#/sample-test'}
               className={`transition-all duration-300 cursor-pointer pb-1 relative ${
                 currentView === 'test' ? 'text-black font-bold' : 'hover:text-black'
               }`}
             >
-              aptitude test
+              Sample Test
               {currentView === 'test' && (
                 <span className="absolute bottom-0 left-0 w-full h-[2px] bg-brand" />
               )}
             </button>
+
             <button 
               onClick={() => scrollToSection('about')}
               className={`transition-all duration-300 cursor-pointer pb-1 relative ${
                 activeSection === 'about' && currentView === 'landing' ? 'text-black font-bold' : 'hover:text-black'
               }`}
             >
-              why us
+              Why Us
               {activeSection === 'about' && currentView === 'landing' && (
                 <span className="absolute bottom-0 left-0 w-full h-[2px] bg-brand" />
               )}
             </button>
+
             <button 
               onClick={() => scrollToSection('faqs')}
               className={`transition-all duration-300 cursor-pointer pb-1 relative ${
                 activeSection === 'faqs' && currentView === 'landing' ? 'text-black font-bold' : 'hover:text-black'
               }`}
             >
-              faqs
+              FAQs
               {activeSection === 'faqs' && currentView === 'landing' && (
                 <span className="absolute bottom-0 left-0 w-full h-[2px] bg-brand" />
               )}
@@ -128,24 +145,24 @@ export default function Navbar({ setView, currentView }) {
         {/* Right Column: Actions */}
         <div className="hidden md:flex items-center space-x-3">
           <button 
-            onClick={() => setView('profile')}
+            onClick={() => window.location.hash = '#/profile'}
             className={`px-5 py-2 text-xs font-bold uppercase tracking-wider rounded-[4px] border border-black/10 transition duration-300 cursor-pointer ${
               currentView === 'profile' 
                 ? 'bg-black text-white' 
                 : 'bg-white hover:bg-black hover:text-white text-black'
             }`}
           >
-            student profile
+            Student Profile
           </button>
           <button 
-            onClick={() => setView('booking')}
+            onClick={() => window.location.hash = '#/booking'}
             className={`px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-[4px] border border-black/10 transition-all duration-300 cursor-pointer flex items-center gap-1.5 ${
               currentView === 'booking' 
                 ? 'bg-black text-white' 
                 : 'bg-brand hover:bg-brand-dark text-black shadow-xs'
             }`}
           >
-            <span>book session</span>
+            <span>Book Session</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
           </button>
         </div>
@@ -164,20 +181,28 @@ export default function Navbar({ setView, currentView }) {
       {isMenuOpen && (
         <div className="absolute top-full left-0 right-0 bg-white/95 backdrop-blur-md border-b border-black/[0.05] px-4 sm:px-6 py-8 flex flex-col gap-6 text-xs font-bold uppercase tracking-wider text-black/60 md:hidden shadow-xl animate-in fade-in slide-in-from-top-4 duration-300 rounded-none">
           <button
+            onClick={handleLogoClick}
+            className={`text-left border-b border-black/[0.03] pb-2 cursor-pointer ${
+              currentView === 'landing' && activeSection === '' ? 'text-black' : 'hover:text-black'
+            }`}
+          >
+            Home
+          </button>
+          <button
             onClick={() => scrollToSection('services')}
             className={`text-left border-b border-black/[0.03] pb-2 cursor-pointer ${
               activeSection === 'services' && currentView === 'landing' ? 'text-black' : 'hover:text-black'
             }`}
           >
-            services
+            Services
           </button>
           <button
-            onClick={() => { setView('test'); setIsMenuOpen(false); }}
+            onClick={() => { window.location.hash = '#/sample-test'; setIsMenuOpen(false); }}
             className={`text-left border-b border-black/[0.03] pb-2 cursor-pointer ${
               currentView === 'test' ? 'text-black' : 'hover:text-black'
             }`}
           >
-            aptitude test
+            Sample Test
           </button>
           <button
             onClick={() => scrollToSection('about')}
@@ -185,7 +210,7 @@ export default function Navbar({ setView, currentView }) {
               activeSection === 'about' && currentView === 'landing' ? 'text-black' : 'hover:text-black'
             }`}
           >
-            why us
+            Why Us
           </button>
           <button
             onClick={() => scrollToSection('faqs')}
@@ -193,23 +218,23 @@ export default function Navbar({ setView, currentView }) {
               activeSection === 'faqs' && currentView === 'landing' ? 'text-black' : 'hover:text-black'
             }`}
           >
-            faqs
+            FAQs
           </button>
           <button
-            onClick={() => { setView('profile'); setIsMenuOpen(false); }}
+            onClick={() => { window.location.hash = '#/profile'; setIsMenuOpen(false); }}
             className={`text-left border-b border-black/[0.03] pb-2 cursor-pointer ${
               currentView === 'profile' ? 'text-black' : 'hover:text-black'
             }`}
           >
-            student profile
+            Student Profile
           </button>
           <button
-            onClick={() => { setView('booking'); setIsMenuOpen(false); }}
+            onClick={() => { window.location.hash = '#/booking'; setIsMenuOpen(false); }}
             className={`text-left border-b border-black/[0.03] pb-2 cursor-pointer flex items-center justify-between ${
               currentView === 'booking' ? 'text-black' : 'hover:text-black'
             }`}
           >
-            <span>book session</span>
+            <span>Book Session</span>
             <ArrowUpRight className="w-4 h-4 text-brand" />
           </button>
         </div>

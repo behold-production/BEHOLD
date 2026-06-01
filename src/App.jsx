@@ -1,29 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MessageCircle } from 'lucide-react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
+import CdatSection from './components/CdatSection';
 import Services from './components/Services';
-import Process from './components/Process';
 import About from './components/About';
-import Testimonials from './components/Testimonials';
 import Faq from './components/Faq';
 import Inquiry from './components/Inquiry';
-import FinalCTA from './components/FinalCTA';
 import ServiceBooking from './components/ServiceBooking';
 import Footer from './components/Footer';
 import StudentProfile from './components/StudentProfile';
-import TherapistDirectory from './components/TherapistDirectory';
 import AptitudeTest from './components/AptitudeTest';
 
 export default function App() {
-  const [view, setView] = useState('landing'); // 'landing', 'test', or 'booking'
+  const [view, setView] = useState('landing'); // 'landing', 'test', 'booking', 'profile'
   const [testProfile, setTestProfile] = useState(null);
   const [bookingAdvisor, setBookingAdvisor] = useState(null);
 
+  // Hash-based Routing Listener
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash;
+      if (hash === '#/sample-test') {
+        setView('test');
+      } else if (hash === '#/booking') {
+        setView('booking');
+      } else if (hash === '#/profile') {
+        setView('profile');
+      } else {
+        setView('landing');
+      }
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    // Initial check on mount
+    handleHashChange();
+
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+    };
+  }, []);
 
   const handleBookTherapist = (advisorId) => {
     setBookingAdvisor(advisorId);
-    setView('booking');
+    window.location.hash = '#/booking';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -31,7 +51,7 @@ export default function App() {
     // Save results
     setTestProfile({ dominantDomain, scores });
     // Navigate back to landing
-    setView('landing');
+    window.location.hash = '#/';
 
     // Smoothly scroll to inquiry section
     setTimeout(() => {
@@ -52,7 +72,7 @@ export default function App() {
   };
 
   const scrollToSection = (id) => {
-    setView('landing');
+    window.location.hash = '#/';
     setTimeout(() => {
       const element = document.getElementById(id);
       if (element) {
@@ -84,29 +104,20 @@ export default function App() {
           {/* Hero Section */}
           <Hero setView={setView} scrollToSection={scrollToSection} />
 
+          {/* CIGI Differential Aptitude Test (CDAT) Section */}
+          <CdatSection setView={setView} />
+
           {/* Services Section */}
           <Services setView={setView} onBookTherapist={handleBookTherapist} />
 
-          {/* Therapist Directory Section */}
-          <TherapistDirectory onBookTherapist={handleBookTherapist} />
-
-          {/* Process Section */}
-          <Process />
-
-          {/* About Us & Testimonials Section */}
+          {/* About Us & What We Offer Section (Combined) */}
           <About setView={setView} />
-
-          {/* Testimonials Carousel */}
-          <Testimonials />
 
           {/* FAQs Accordion */}
           <Faq />
 
           {/* Inquiry / Booking Section */}
           <Inquiry testProfile={testProfile} />
-
-          {/* Final Call to Action */}
-          <FinalCTA setView={setView} />
         </main>
       )}
 
