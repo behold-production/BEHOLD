@@ -26,16 +26,16 @@ export default function Hero({ setView, navigateToSection }) {
           {/* Main Title */}
           <div className="space-y-8 mt-16">
             <h1 className="text-3xl sm:text-5xl lg:text-6xl font-header font-black tracking-tight text-black leading-[1.05] uppercase">
-              The <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-dark to-brand">Right Guidance</span>, <br />
-              When You <span className="relative inline-block whitespace-nowrap">
-                Need It Most.
+              Guiding You <br />
+              Towards <span className="relative inline-block whitespace-nowrap">
+                What's Next.
                 <svg className="absolute left-0 -bottom-2 w-full h-[8px] text-brand pointer-events-none" viewBox="0 0 100 10" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M2 8C35 3 70 3 98 8" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
                 </svg>
               </span>
             </h1>
             <p className="text-black/60 font-sans text-xs sm:text-sm md:text-base font-light max-w-lg leading-relaxed pb-8">
-              Guidance, counselling, and mentorship for life’s important decisions — helping individuals move forward with clarity and confidence.
+              Guidance, counselling, and mentorship for life's important decisions - helping individuals move forward with clarity and confidence.
             </p>
           </div>
 

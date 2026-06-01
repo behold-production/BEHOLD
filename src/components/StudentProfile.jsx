@@ -45,6 +45,25 @@ export default function StudentProfile({ setView }) {
   const [errors, setErrors] = useState({});
   const [activeTab, setActiveTab] = useState('personal'); // personal, school, interests, parents
 
+  // History tracking popstate listener
+  useEffect(() => {
+    // Set initial state on mount if it's profile view
+    window.history.replaceState({ component: 'profile', tab: 'personal' }, '');
+
+    const handlePopState = (e) => {
+      if (e.state && e.state.component === 'profile' && e.state.tab) {
+        setActiveTab(e.state.tab);
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const handleTabChange = (tabId) => {
+    setActiveTab(tabId);
+    window.history.pushState({ component: 'profile', tab: tabId }, '');
+  };
+
   useEffect(() => {
     const saved = localStorage.getItem('behold_student_profile');
     if (saved) {
@@ -152,7 +171,7 @@ export default function StudentProfile({ setView }) {
                 <button
                   key={tab.id}
                   type="button"
-                  onClick={() => setActiveTab(tab.id)}
+                  onClick={() => handleTabChange(tab.id)}
                   className={`flex items-center gap-3 p-3 rounded-[4px] border text-xs font-bold uppercase tracking-wider transition text-left cursor-pointer shrink-0 snap-start ${isActive
                       ? 'bg-brand text-white border-brand'
                       : 'bg-white text-gray-500 border-gray-200 hover:border-brand hover:text-brand'
@@ -349,12 +368,25 @@ export default function StudentProfile({ setView }) {
                     </select>
                   </div>
 
+                  {/* Group Code */}
+                  <div className="space-y-1.5">
+                    <label className="text-gray-500 uppercase tracking-wider">Group / School Code (Optional)</label>
+                    <input
+                      type="text"
+                      name="groupCode"
+                      placeholder="e.g. CIGI-1002"
+                      value={profile.groupCode}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-[4px] outline-none focus:border-brand transition"
+                    />
+                  </div>
+
                 </div>
 
                 <div className="flex justify-end pt-4">
                   <button
                     type="button"
-                    onClick={() => setActiveTab('school')}
+                    onClick={() => handleTabChange('school')}
                     className="bg-brand text-white px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand-dark transition rounded-[4px] shadow-sm"
                   >
                     Next Section
@@ -470,14 +502,14 @@ export default function StudentProfile({ setView }) {
                 <div className="flex flex-col sm:flex-row gap-3 justify-between pt-4">
                   <button
                     type="button"
-                    onClick={() => setActiveTab('personal')}
+                    onClick={() => handleTabChange('personal')}
                     className="bg-white border border-brand text-brand px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand hover:text-white transition rounded-[4px] shadow-sm w-full sm:w-auto text-center"
                   >
                     Previous
                   </button>
                   <button
                     type="button"
-                    onClick={() => setActiveTab('interests')}
+                    onClick={() => handleTabChange('interests')}
                     className="bg-brand text-white px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand-dark transition rounded-[4px] shadow-sm w-full sm:w-auto text-center"
                   >
                     Next Section
@@ -539,14 +571,14 @@ export default function StudentProfile({ setView }) {
                 <div className="flex flex-col sm:flex-row gap-3 justify-between pt-4">
                   <button
                     type="button"
-                    onClick={() => setActiveTab('school')}
+                    onClick={() => handleTabChange('school')}
                     className="bg-white border border-brand text-brand px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand hover:text-white transition rounded-[4px] shadow-sm w-full sm:w-auto text-center"
                   >
                     Previous
                   </button>
                   <button
                     type="button"
-                    onClick={() => setActiveTab('parents')}
+                    onClick={() => handleTabChange('parents')}
                     className="bg-brand text-white px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand-dark transition rounded-[4px] shadow-sm w-full sm:w-auto text-center"
                   >
                     Next Section
@@ -666,7 +698,7 @@ export default function StudentProfile({ setView }) {
                 <div className="flex flex-col sm:flex-row gap-3 justify-between pt-4 border-t border-gray-100">
                   <button
                     type="button"
-                    onClick={() => setActiveTab('interests')}
+                    onClick={() => handleTabChange('interests')}
                     className="bg-white border border-brand text-brand px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand hover:text-white transition rounded-[4px] shadow-sm w-full sm:w-auto text-center"
                   >
                     Previous

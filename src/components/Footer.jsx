@@ -27,7 +27,7 @@ export default function Footer({ navigateToSection }) {
         <div>
           <h5 className="text-zinc-200 font-bold uppercase tracking-wider mb-4 font-header text-[10px]">Services</h5>
           <ul className="space-y-3 font-light">
-            <li><button onClick={() => navigateToSection('cdat')} className="hover:text-brand transition cursor-pointer text-left">Aptitude Test</button></li>
+            <li><button onClick={() => window.location.hash = '#/sample-test'} className="hover:text-brand transition cursor-pointer text-left">Sample Test</button></li>
             <li><button onClick={() => navigateToSection('services')} className="hover:text-brand transition cursor-pointer text-left">Career Counselling</button></li>
             <li><button onClick={() => navigateToSection('services')} className="hover:text-brand transition cursor-pointer text-left">Psychological Counselling</button></li>
           </ul>

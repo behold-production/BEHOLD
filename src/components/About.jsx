@@ -52,10 +52,10 @@ export default function About() {
             Why Us & What We Offer
           </span>
           <h2 className="text-3xl md:text-5xl font-header font-black tracking-tight text-gray-900 leading-[1.1] uppercase">
-            The Pillars of BEHOLD
+            Why Choose Us & What We Offer
           </h2>
           <p className="text-black/60 font-sans text-sm md:text-base font-light leading-relaxed">
-            At BEHOLD, we go beyond traditional career guidance. Our student-first approach combines scientific assessment, emotional support, and continuous mentorship directly inside schools and student spaces to help adolescents grow with clarity, confidence, and direction.
+            At BEHOLD, we go beyond traditional career guidance by offering extended mentorship, doorstep psychological counselling, and personalized career support directly within schools and student spaces.
           </p>
         </div>
 

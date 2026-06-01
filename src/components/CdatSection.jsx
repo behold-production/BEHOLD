@@ -43,6 +43,70 @@ export default function CdatSection({ setView }) {
   const [isAutofilled, setIsAutofilled] = useState(false);
   const [activeTab, setActiveTab] = useState('personal'); // personal, school, parents
 
+  const [groupRegName, setGroupRegName] = useState('');
+  const [groupRegPhone, setGroupRegPhone] = useState('');
+  const [groupRegEmail, setGroupRegEmail] = useState('');
+  const [groupRegCode, setGroupRegCode] = useState('');
+  const [groupMessage, setGroupMessage] = useState(null);
+
+  // History tracking for CDAT flow steps
+  useEffect(() => {
+    const handlePopState = (e) => {
+      if (e.state && e.state.component === 'cdat') {
+        setShowAptitudeForm(e.state.showForm);
+        if (e.state.tab) {
+          setActiveTab(e.state.tab);
+        }
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const handleShowForm = (show) => {
+    setShowAptitudeForm(show);
+    if (show) {
+      window.history.pushState({ component: 'cdat', showForm: true, tab: 'personal' }, '');
+    } else {
+      window.history.pushState({ component: 'cdat', showForm: false }, '');
+    }
+  };
+
+  const handleTabChange = (tabId) => {
+    setActiveTab(tabId);
+    window.history.pushState({ component: 'cdat', showForm: true, tab: tabId }, '');
+  };
+
+  const handleGroupCodeSubmit = (e) => {
+    e.preventDefault();
+    if (!groupRegName.trim() || !groupRegPhone.trim() || !groupRegEmail.trim() || !groupRegCode.trim()) {
+      setGroupMessage("⚠️ Please fill in all fields (Name, Phone, Email, and Group Code).");
+      return;
+    }
+
+    const saved = localStorage.getItem('behold_student_profile');
+    let profileData = {};
+    if (saved) {
+      try {
+        profileData = JSON.parse(saved);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    profileData.name = groupRegName.trim();
+    profileData.phone = groupRegPhone.trim();
+    profileData.email = groupRegEmail.trim();
+    profileData.confirmEmail = groupRegEmail.trim();
+    profileData.groupCode = groupRegCode.trim();
+    localStorage.setItem('behold_student_profile', JSON.stringify(profileData));
+
+    setGroupMessage("🎉 Group registration code applied successfully!");
+    
+    setTimeout(() => {
+      window.location.hash = '#/profile';
+    }, 1500);
+  };
+
   // Load from localStorage for autofill
   useEffect(() => {
     if (showAptitudeForm) {
@@ -154,13 +218,89 @@ export default function CdatSection({ setView }) {
 
         <div className="pt-6 border-t border-black/[0.05]">
           {!showAptitudeForm ? (
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full">
-              <button
-                onClick={() => setShowAptitudeForm(true)}
-                className="px-6 py-3.5 bg-brand hover:bg-brand-dark text-black font-bold text-xs uppercase tracking-widest rounded-[4px] transition cursor-pointer shadow-sm border border-black/5 w-full sm:w-auto text-center"
-              >
-                Book Aptitude (CDAT Registration)
-              </button>
+            <div className="space-y-8">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full">
+                <button
+                  onClick={() => handleShowForm(true)}
+                  className="px-6 py-3.5 bg-brand hover:bg-brand-dark text-black font-bold text-xs uppercase tracking-widest rounded-[4px] transition cursor-pointer shadow-sm border border-black/5 w-full sm:w-auto text-center"
+                >
+                  Book Aptitude (CDAT Registration)
+                </button>
+              </div>
+
+              {/* School & Group Registration */}
+              <div className="border-t border-black/[0.05] pt-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                <div className="lg:col-span-5 space-y-2">
+                  <h4 className="text-sm font-header font-black uppercase tracking-wider text-black">
+                    School & Group Registration
+                  </h4>
+                  <p className="text-black/60 font-sans text-xs md:text-sm font-light leading-relaxed">
+                    Enter your group access code below to register your profile. Results will be uploaded directly to your BEHOLD portal dashboard by the administrator.
+                  </p>
+                </div>
+                <div className="lg:col-span-7">
+                  <form onSubmit={handleGroupCodeSubmit} className="space-y-4 bg-white/50 border border-black/5 p-4 sm:p-5 rounded-[4px]">
+                    <div className="text-[10px] font-extrabold uppercase tracking-wider text-black/60 mb-2">
+                      Enter Group Code to Register
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                      <div>
+                        <input 
+                          type="text" 
+                          placeholder="Full Name" 
+                          value={groupRegName}
+                          onChange={(e) => setGroupRegName(e.target.value)}
+                          className="w-full px-4 py-3 rounded-[4px] bg-white border border-black/10 text-black text-xs font-semibold placeholder-black/35 outline-none focus:border-brand transition"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <input 
+                          type="tel" 
+                          placeholder="Phone Number" 
+                          value={groupRegPhone}
+                          onChange={(e) => setGroupRegPhone(e.target.value)}
+                          className="w-full px-4 py-3 rounded-[4px] bg-white border border-black/10 text-black text-xs font-semibold placeholder-black/35 outline-none focus:border-brand transition"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <input 
+                          type="email" 
+                          placeholder="Email Address" 
+                          value={groupRegEmail}
+                          onChange={(e) => setGroupRegEmail(e.target.value)}
+                          className="w-full px-4 py-3 rounded-[4px] bg-white border border-black/10 text-black text-xs font-semibold placeholder-black/35 outline-none focus:border-brand transition"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <input 
+                          type="text" 
+                          placeholder="Group Code" 
+                          value={groupRegCode}
+                          onChange={(e) => setGroupRegCode(e.target.value)}
+                          className="w-full px-4 py-3 rounded-[4px] bg-white border border-black/10 text-black text-xs font-semibold placeholder-black/35 outline-none focus:border-brand transition"
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div className="pt-1">
+                      <button 
+                        type="submit" 
+                        className="px-6 py-3 bg-brand hover:bg-brand-dark text-black font-extrabold text-[10px] uppercase tracking-wider rounded-[4px] transition cursor-pointer shadow-xs border border-black/5 w-full sm:w-auto"
+                      >
+                        Submit Group Code
+                      </button>
+                    </div>
+                  </form>
+                  {groupMessage && (
+                    <p className={`mt-2 text-[10px] font-bold uppercase tracking-wider font-mono ${groupMessage.includes('applied') ? 'text-emerald-600' : 'text-rose-600'}`}>
+                      {groupMessage}
+                    </p>
+                  )}
+                </div>
+              </div>
             </div>
           ) : (
             <div className="space-y-6 pt-4 animate-in fade-in duration-300">
@@ -169,7 +309,7 @@ export default function CdatSection({ setView }) {
                   Aptitude Registration Console (CIGI CDAT)
                 </h4>
                 <button
-                  onClick={() => setShowAptitudeForm(false)}
+                  onClick={() => handleShowForm(false)}
                   className="text-xs text-black/60 hover:text-black font-bold cursor-pointer underline"
                 >
                   Hide Form
@@ -204,7 +344,7 @@ export default function CdatSection({ setView }) {
                     <button
                       key={tab.id}
                       type="button"
-                      onClick={() => setActiveTab(tab.id)}
+                      onClick={() => handleTabChange(tab.id)}
                       className={`flex items-center gap-2 px-3 py-1.5 rounded-[4px] border text-[10px] font-extrabold uppercase tracking-wider transition-all duration-350 hover:scale-[1.03] active:scale-[0.97] ${isActive
                         ? 'bg-brand text-white border-brand shadow-md'
                         : 'bg-white text-gray-500 border-gray-200 hover:border-brand hover:text-brand'
@@ -281,7 +421,7 @@ export default function CdatSection({ setView }) {
                       </div>
                     </div>
                     <div className="flex justify-end pt-2">
-                      <button type="button" onClick={() => setActiveTab('school')} className="px-5 py-2.5 bg-black hover:bg-zinc-800 text-white font-bold text-[10px] uppercase tracking-wider rounded-[4px] transition cursor-pointer flex items-center gap-1.5">
+                      <button type="button" onClick={() => handleTabChange('school')} className="px-5 py-2.5 bg-black hover:bg-zinc-800 text-white font-bold text-[10px] uppercase tracking-wider rounded-[4px] transition cursor-pointer flex items-center gap-1.5">
                         <span>Next Tab</span>
                         <ArrowRight className="w-3.5 h-3.5" />
                       </button>
@@ -346,11 +486,11 @@ export default function CdatSection({ setView }) {
                       </div>
                     </div>
                     <div className="flex justify-between pt-2">
-                      <button type="button" onClick={() => setActiveTab('personal')} className="px-5 py-2.5 bg-white border border-gray-250 text-gray-700 hover:border-black hover:text-black font-bold text-[10px] uppercase tracking-wider rounded-[4px] transition cursor-pointer flex items-center gap-1.5">
+                      <button type="button" onClick={() => handleTabChange('personal')} className="px-5 py-2.5 bg-white border border-gray-250 text-gray-700 hover:border-black hover:text-black font-bold text-[10px] uppercase tracking-wider rounded-[4px] transition cursor-pointer flex items-center gap-1.5">
                         <ArrowLeft className="w-3.5 h-3.5" />
                         <span>Previous</span>
                       </button>
-                      <button type="button" onClick={() => setActiveTab('parents')} className="px-5 py-2.5 bg-black hover:bg-zinc-800 text-white font-bold text-[10px] uppercase tracking-wider rounded-[4px] transition cursor-pointer flex items-center gap-1.5">
+                      <button type="button" onClick={() => handleTabChange('parents')} className="px-5 py-2.5 bg-black hover:bg-zinc-800 text-white font-bold text-[10px] uppercase tracking-wider rounded-[4px] transition cursor-pointer flex items-center gap-1.5">
                         <span>Next Tab</span>
                         <ArrowRight className="w-3.5 h-3.5" />
                       </button>
@@ -394,7 +534,7 @@ export default function CdatSection({ setView }) {
                       </div>
                     </div>
                     <div className="flex flex-col sm:flex-row gap-3 pt-2 justify-between items-stretch sm:items-center">
-                      <button type="button" onClick={() => setActiveTab('school')} className="px-5 py-2.5 bg-white border border-gray-250 text-gray-700 hover:border-black hover:text-black font-bold text-[10px] uppercase tracking-wider rounded-[4px] transition cursor-pointer flex items-center justify-center gap-1.5 w-full sm:w-auto">
+                      <button type="button" onClick={() => handleTabChange('school')} className="px-5 py-2.5 bg-white border border-gray-250 text-gray-700 hover:border-black hover:text-black font-bold text-[10px] uppercase tracking-wider rounded-[4px] transition cursor-pointer flex items-center justify-center gap-1.5 w-full sm:w-auto">
                         <ArrowLeft className="w-3.5 h-3.5" />
                         <span>Previous</span>
                       </button>

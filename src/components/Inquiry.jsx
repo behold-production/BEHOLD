@@ -4,8 +4,7 @@ import { ArrowRight, Loader2, Sparkles } from 'lucide-react';
 export default function Inquiry({ testProfile }) {
   const [formData, setFormData] = useState({
     name: '',
-    mobile: '',
-    service: 'Career Guidance',
+    email: '',
     message: ''
   });
   const [formErrors, setFormErrors] = useState({});
@@ -21,7 +20,6 @@ export default function Inquiry({ testProfile }) {
 
       setFormData(prev => ({
         ...prev,
-        service: 'Aptitude Test Booking',
         message: `I completed the online assessment! My dominant profile is: ${testProfile.dominantDomain}. Scores: ${scoresString}. I would like to book a detailed consultation.`
       }));
     }
@@ -40,9 +38,9 @@ export default function Inquiry({ testProfile }) {
     if (!formData.name.trim() || formData.name.trim().length < 3) {
       errors.name = "Full name must be at least 3 characters";
     }
-    const mobileRegex = /^[6-9]\d{9}$/;
-    if (!formData.mobile || !mobileRegex.test(formData.mobile)) {
-      errors.mobile = "Please enter a valid 10-digit mobile number";
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!formData.email || !emailRegex.test(formData.email)) {
+      errors.email = "Please enter a valid email address";
     }
     return errors;
   };
@@ -64,8 +62,7 @@ export default function Inquiry({ testProfile }) {
       setSubmitStatus('success');
       setFormData({
         name: '',
-        mobile: '',
-        service: 'Career Guidance',
+        email: '',
         message: ''
       });
     }, 1500);
@@ -110,41 +107,25 @@ export default function Inquiry({ testProfile }) {
                   {formErrors.name && <p className="text-red-500 font-bold">{formErrors.name}</p>}
                 </div>
                 <div className="space-y-1">
-                  <label htmlFor="mobile-input" className="font-bold text-gray-500 uppercase tracking-wide">Mobile Number</label>
+                  <label htmlFor="email-input" className="font-bold text-gray-500 uppercase tracking-wide">Email Address</label>
                   <input
                     required
-                    type="tel"
-                    name="mobile"
-                    id="mobile-input"
-                    value={formData.mobile}
+                    type="email"
+                    name="email"
+                    id="email-input"
+                    value={formData.email}
                     onChange={handleChange}
-                    placeholder="10-Digit Mobile"
+                    placeholder="name@email.com"
                     className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-[4px] text-sm outline-none focus:border-brand transition"
                   />
-                  {formErrors.mobile && <p className="text-red-500 font-bold">{formErrors.mobile}</p>}
+                  {formErrors.email && <p className="text-red-500 font-bold">{formErrors.email}</p>}
                 </div>
-              </div>
-
-              <div className="space-y-1">
-                <label htmlFor="service-select" className="font-bold text-gray-500 uppercase tracking-wide">Select Service</label>
-                <select
-                  name="service"
-                  id="service-select"
-                  value={formData.service}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-[4px] text-sm outline-none focus:border-brand transition cursor-pointer"
-                >
-                  <option value="Career Guidance">Career Guidance</option>
-                  <option value="Aptitude Test Booking">Aptitude Test Booking</option>
-                  <option value="Psychology Support">Psychology Support</option>
-                  <option value="School Collaboration">School Collaboration</option>
-                </select>
               </div>
 
               <div className="space-y-1">
                 <label htmlFor="message-textarea" className="font-bold text-gray-500 uppercase tracking-wide">Your Message</label>
                 <textarea
-                  rows={3}
+                  rows={4}
                   name="message"
                   id="message-textarea"
                   value={formData.message}
@@ -157,7 +138,7 @@ export default function Inquiry({ testProfile }) {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-3 bg-brand hover:bg-brand-dark text-white font-bold text-xs uppercase tracking-wider rounded-[4px] transition-all duration-300 hover:scale-[1.01] active:scale-[0.98] cursor-pointer flex items-center justify-center gap-2 shadow-sm"
+                className="w-full py-3 bg-brand hover:bg-brand-dark text-black font-bold text-xs uppercase tracking-wider rounded-[4px] transition-all duration-300 hover:scale-[1.01] active:scale-[0.98] cursor-pointer flex items-center justify-center gap-2 shadow-sm"
               >
                 {isSubmitting ? (
                   <>
@@ -166,7 +147,7 @@ export default function Inquiry({ testProfile }) {
                   </>
                 ) : (
                   <>
-                    <span>Send Inquiry</span>
+                    <span>Send Request</span>
                     <ArrowRight className="w-4 h-4" />
                   </>
                 )}
@@ -174,7 +155,7 @@ export default function Inquiry({ testProfile }) {
 
               {submitStatus === 'success' && (
                 <div className="p-3 bg-emerald-50 border border-emerald-250 text-emerald-800 rounded-[4px] text-center font-bold text-xs">
-                  ✓ Inquiry sent successfully! Our coordinator will contact you shortly.
+                  ✓ Request sent successfully! Our coordinator will contact you shortly.
                 </div>
               )}
             </form>
@@ -186,32 +167,19 @@ export default function Inquiry({ testProfile }) {
         </div>
       </section>
 
-      {/* 4. NEWSLETTER SIGNUP & COMMUNITY */}
+      {/* 4. Stay Informed & Community */}
       <section className="max-w-xl mx-auto text-center px-4 sm:px-6 py-10 lg:py-16 space-y-6 flex flex-col items-center">
         <span className="text-[10px] bg-black text-white px-3.5 py-1 rounded-[4px] uppercase tracking-wider font-extrabold w-fit block">
-          Stay Informed
+          📢 Stay Informed
         </span>
-        <h2 className="text-3xl font-normal tracking-tight text-gray-900 font-header uppercase leading-tight">
-          Subscribe to Career Updates
-        </h2>
-        <div className="relative w-full max-w-md mx-auto pt-2">
-          <input 
-            type="email" 
-            placeholder="your@email.com" 
-            className="w-full bg-transparent border-b border-gray-300 focus:border-brand py-3 px-1 text-sm outline-none transition text-center"
-          />
-          <button className="absolute right-1 bottom-3 text-gray-400 hover:text-brand transition cursor-pointer">
-            <ArrowRight className="w-5 h-5" />
-          </button>
-        </div>
-        <div className="pt-4">
+        <div className="pt-2">
           <a 
-            href="https://wa.me/919999999999" 
+            href="https://wa.me/919497174011" 
             target="_blank" 
             rel="noopener noreferrer" 
-            className="text-xs font-bold uppercase tracking-widest text-black hover:text-brand transition flex items-center gap-1.5"
+            className="text-xs font-bold uppercase tracking-widest text-black hover:text-brand transition flex items-center gap-1.5 border border-black/10 px-6 py-3.5 rounded-[4px] bg-white hover:bg-black hover:text-white"
           >
-            <span>Connect with Our Community →</span>
+            <span>🔗 Connect with Our Community</span>
           </a>
         </div>
       </section>

@@ -83,6 +83,44 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
   const [isSuccess, setIsSuccess] = useState(false);
   const [isAutofilled, setIsAutofilled] = useState(false);
 
+  // History tracking popstate listener
+  useEffect(() => {
+    // Set initial state on mount if it's booking view
+    window.history.replaceState({ component: 'booking', step: 'config' }, '');
+
+    const handlePopState = (e) => {
+      if (e.state && e.state.component === 'booking' && e.state.step) {
+        const step = e.state.step;
+        if (step === 'config') {
+          setSelectedDate('');
+          setSelectedTime('');
+          setSelectedAdvisor(null);
+          setAdvisorConfirmed(false);
+          setIsSuccess(false);
+        } else if (step === 'advisor') {
+          setSelectedAdvisor(null);
+          setAdvisorConfirmed(false);
+          setIsSuccess(false);
+        } else if (step === 'details') {
+          setIsSuccess(false);
+        }
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const handleStepChange = (newStep) => {
+    window.history.pushState({ component: 'booking', step: newStep }, '');
+  };
+
+  // Monitor date/time selections to push advisor selection step
+  useEffect(() => {
+    if (selectedDate && selectedTime && !selectedAdvisor) {
+      handleStepChange('advisor');
+    }
+  }, [selectedDate, selectedTime]);
+
   // Autofill form from Student Profile if saved
   useEffect(() => {
     const saved = localStorage.getItem('behold_student_profile');
@@ -181,6 +219,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
     setTimeout(() => {
       setIsSubmitting(false);
       setIsSuccess(true);
+      handleStepChange('success');
     }, 1500);
   };
 
@@ -434,8 +473,11 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                         onClick={() => {
                           const nextConfirmed = !advisorConfirmed;
                           setAdvisorConfirmed(nextConfirmed);
-                          if (nextConfirmed && errors.confirm) {
-                            setErrors(prev => ({ ...prev, confirm: null }));
+                          if (nextConfirmed) {
+                            handleStepChange('details');
+                            if (errors.confirm) {
+                              setErrors(prev => ({ ...prev, confirm: null }));
+                            }
                           }
                         }}
                         className={`px-3 py-1 rounded-[4px] text-[10px] font-bold transition cursor-pointer ${advisorConfirmed
