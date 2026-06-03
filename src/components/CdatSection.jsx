@@ -79,8 +79,8 @@ export default function CdatSection({ setView }) {
 
   const handleGroupCodeSubmit = (e) => {
     e.preventDefault();
-    if (!groupRegName.trim() || !groupRegPhone.trim() || !groupRegEmail.trim() || !groupRegCode.trim()) {
-      setGroupMessage("⚠️ Please fill in all fields (Name, Phone, Email, and Group Code).");
+    if (!groupRegCode.trim()) {
+      setGroupMessage("⚠️ Please fill in the Group Code.");
       return;
     }
 
@@ -93,10 +93,12 @@ export default function CdatSection({ setView }) {
         console.error(err);
       }
     }
-    profileData.name = groupRegName.trim();
-    profileData.phone = groupRegPhone.trim();
-    profileData.email = groupRegEmail.trim();
-    profileData.confirmEmail = groupRegEmail.trim();
+    if (groupRegName.trim()) profileData.name = groupRegName.trim();
+    if (groupRegPhone.trim()) profileData.phone = groupRegPhone.trim();
+    if (groupRegEmail.trim()) {
+      profileData.email = groupRegEmail.trim();
+      profileData.confirmEmail = groupRegEmail.trim();
+    }
     profileData.groupCode = groupRegCode.trim();
     localStorage.setItem('behold_student_profile', JSON.stringify(profileData));
 
@@ -251,7 +253,6 @@ export default function CdatSection({ setView }) {
                           value={groupRegName}
                           onChange={(e) => setGroupRegName(e.target.value)}
                           className="w-full px-4 py-3 rounded-[4px] bg-white border border-black/10 text-black text-xs font-semibold placeholder-black/35 outline-none focus:border-brand transition"
-                          required
                         />
                       </div>
                       <div>
@@ -261,7 +262,6 @@ export default function CdatSection({ setView }) {
                           value={groupRegPhone}
                           onChange={(e) => setGroupRegPhone(e.target.value)}
                           className="w-full px-4 py-3 rounded-[4px] bg-white border border-black/10 text-black text-xs font-semibold placeholder-black/35 outline-none focus:border-brand transition"
-                          required
                         />
                       </div>
                       <div>
@@ -271,7 +271,6 @@ export default function CdatSection({ setView }) {
                           value={groupRegEmail}
                           onChange={(e) => setGroupRegEmail(e.target.value)}
                           className="w-full px-4 py-3 rounded-[4px] bg-white border border-black/10 text-black text-xs font-semibold placeholder-black/35 outline-none focus:border-brand transition"
-                          required
                         />
                       </div>
                       <div>
@@ -365,19 +364,19 @@ export default function CdatSection({ setView }) {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div className="space-y-1">
                         <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Name of Student</label>
-                        <input required type="text" name="name" placeholder="Your full name" value={aptitudeForm.name} onChange={handleInputChange} className="w-full p-3 bg-white/70 border border-black/10 rounded-[4px] outline-none focus:border-brand" />
+                        <input type="text" name="name" placeholder="Your full name" value={aptitudeForm.name} onChange={handleInputChange} className="w-full p-3 bg-white/70 border border-black/10 rounded-[4px] outline-none focus:border-brand" />
                       </div>
                       <div className="space-y-1">
                         <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Email</label>
-                        <input required type="email" name="email" placeholder="name@email.com" value={aptitudeForm.email} onChange={handleInputChange} className="w-full p-3 bg-white/70 border border-black/10 rounded-[4px] outline-none focus:border-brand" />
+                        <input type="email" name="email" placeholder="name@email.com" value={aptitudeForm.email} onChange={handleInputChange} className="w-full p-3 bg-white/70 border border-black/10 rounded-[4px] outline-none focus:border-brand" />
                       </div>
                       <div className="space-y-1">
                         <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Confirm Email</label>
-                        <input required type="email" name="confirmEmail" placeholder="Re-enter email" value={aptitudeForm.confirmEmail} onChange={handleInputChange} className="w-full p-3 bg-white/70 border border-black/10 rounded-[4px] outline-none focus:border-brand" />
+                        <input type="email" name="confirmEmail" placeholder="Re-enter email" value={aptitudeForm.confirmEmail} onChange={handleInputChange} className="w-full p-3 bg-white/70 border border-black/10 rounded-[4px] outline-none focus:border-brand" />
                       </div>
                       <div className="space-y-1">
                         <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Date of Birth</label>
-                        <input required type="text" name="dob" placeholder="as 25-01-2006" value={aptitudeForm.dob} onChange={handleInputChange} className="w-full p-3 bg-white/70 border border-black/10 rounded-[4px] outline-none focus:border-brand" />
+                        <input type="text" name="dob" placeholder="as 25-01-2006" value={aptitudeForm.dob} onChange={handleInputChange} className="w-full p-3 bg-white/70 border border-black/10 rounded-[4px] outline-none focus:border-brand" />
                       </div>
                       <div className="space-y-1">
                         <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold mb-1">Gender</label>
@@ -394,7 +393,7 @@ export default function CdatSection({ setView }) {
                         <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Phone</label>
                         <div className="flex gap-2">
                           <input type="text" name="phoneCode" value={aptitudeForm.phoneCode} onChange={handleInputChange} className="w-14 p-3 bg-white/70 border border-black/10 rounded-[4px] text-center" />
-                          <input required type="tel" name="phone" placeholder="e.g. 8086664001" value={aptitudeForm.phone} onChange={handleInputChange} className="flex-1 p-3 bg-white/70 border border-black/10 rounded-[4px] outline-none focus:border-brand" />
+                          <input type="tel" name="phone" placeholder="e.g. 8086664001" value={aptitudeForm.phone} onChange={handleInputChange} className="flex-1 p-3 bg-white/70 border border-black/10 rounded-[4px] outline-none focus:border-brand" />
                         </div>
                       </div>
                       <div className="space-y-1">
@@ -504,7 +503,7 @@ export default function CdatSection({ setView }) {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div className="space-y-1">
                         <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Guardian Name</label>
-                        <input required type="text" name="guardianName" placeholder="name of parent or guardian" value={aptitudeForm.guardianName} onChange={handleInputChange} className="w-full p-3 bg-white/70 border border-black/10 rounded-[4px] outline-none focus:border-brand" />
+                        <input type="text" name="guardianName" placeholder="name of parent or guardian" value={aptitudeForm.guardianName} onChange={handleInputChange} className="w-full p-3 bg-white/70 border border-black/10 rounded-[4px] outline-none focus:border-brand" />
                       </div>
                       <div className="space-y-1">
                         <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Relationship</label>

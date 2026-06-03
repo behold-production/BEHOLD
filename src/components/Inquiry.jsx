@@ -35,11 +35,11 @@ export default function Inquiry({ testProfile }) {
 
   const validateForm = () => {
     const errors = {};
-    if (!formData.name.trim() || formData.name.trim().length < 3) {
+    if (formData.name.trim() && formData.name.trim().length < 3) {
       errors.name = "Full name must be at least 3 characters";
     }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!formData.email || !emailRegex.test(formData.email)) {
+    if (formData.email && !emailRegex.test(formData.email)) {
       errors.email = "Please enter a valid email address";
     }
     return errors;
@@ -95,7 +95,6 @@ export default function Inquiry({ testProfile }) {
                 <div className="space-y-1">
                   <label htmlFor="name-input" className="font-bold text-gray-500 uppercase tracking-wide">Full Name</label>
                   <input
-                    required
                     type="text"
                     name="name"
                     id="name-input"
@@ -109,7 +108,6 @@ export default function Inquiry({ testProfile }) {
                 <div className="space-y-1">
                   <label htmlFor="email-input" className="font-bold text-gray-500 uppercase tracking-wide">Email Address</label>
                   <input
-                    required
                     type="email"
                     name="email"
                     id="email-input"

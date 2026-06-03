@@ -8,10 +8,13 @@
 }
 
 /* Base Body Styles */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
 body {
   background-color: #f3f3f3;
   color: #000000;
-  overflow-x: hidden;
   font-family: 'Inter', system-ui, sans-serif;
 }
 

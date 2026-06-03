@@ -57,16 +57,16 @@ export default function Hero({ setView, navigateToSection }) {
           </div>
 
           {/* Highlighted Points to Read (Replaced old quick stats) */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-6 border-t border-black/[0.05] w-full text-[10px] font-bold uppercase tracking-wider text-black/60">
-            <div className="flex items-center justify-center lg:justify-start gap-2">
+          <div className="flex flex-col sm:flex-row sm:flex-wrap gap-x-6 gap-y-3 pt-6 border-t border-black/[0.05] w-full text-[10px] font-bold uppercase tracking-wider text-black/60 justify-center lg:justify-start">
+            <div className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
               <span>Behold Lifetime Mentoring</span>
             </div>
-            <div className="flex items-center justify-center lg:justify-start gap-2">
+            <div className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
               <span>Online & Offline</span>
             </div>
-            <div className="flex items-center justify-center lg:justify-start gap-2">
+            <div className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
               <span>School & Doorstep Service</span>
             </div>

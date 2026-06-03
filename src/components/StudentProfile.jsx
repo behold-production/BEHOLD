@@ -91,25 +91,19 @@ export default function StudentProfile({ setView }) {
 
   const validate = () => {
     const err = {};
-    if (!profile.name.trim() || profile.name.trim().length < 3) {
+    if (profile.name.trim() && profile.name.trim().length < 3) {
       err.name = "Name of Student must be at least 3 characters";
     }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!profile.email || !emailRegex.test(profile.email)) {
+    if (profile.email && !emailRegex.test(profile.email)) {
       err.email = "Please enter a valid email address";
     }
     const phoneRegex = /^(\+?\d{1,4}[- ]?)?[6-9]\d{9}$/;
-    if (!profile.phone || !phoneRegex.test(profile.phone)) {
+    if (profile.phone && !phoneRegex.test(profile.phone)) {
       err.phone = "Please enter a valid phone number (e.g. 8086664001 or 0091-8086664001)";
     }
-    if (profile.email !== profile.confirmEmail) {
+    if ((profile.email || profile.confirmEmail) && profile.email !== profile.confirmEmail) {
       err.confirmEmail = "Emails do not match";
-    }
-    if (!profile.dob.trim()) {
-      err.dob = "Date of Birth is required";
-    }
-    if (!profile.guardianName.trim()) {
-      err.guardianName = "Guardian name is required";
     }
     return err;
   };

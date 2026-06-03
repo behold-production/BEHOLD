@@ -189,15 +189,15 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
   const validate = () => {
     const err = {};
-    if (!bookingForm.name.trim() || bookingForm.name.trim().length < 3) {
+    if (bookingForm.name.trim() && bookingForm.name.trim().length < 3) {
       err.name = "Name must be at least 3 characters";
     }
     const phoneRegex = /^(\+?\d{1,4}[- ]?)?[6-9]\d{9}$/;
-    if (!bookingForm.phone || !phoneRegex.test(bookingForm.phone)) {
+    if (bookingForm.phone && !phoneRegex.test(bookingForm.phone)) {
       err.phone = "Please enter a valid phone number (e.g. 8086664001 or 0091-8086664001)";
     }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!bookingForm.email || !emailRegex.test(bookingForm.email)) {
+    if (bookingForm.email && !emailRegex.test(bookingForm.email)) {
       err.email = "Please enter a valid email address";
     }
     if (!selectedDate) err.date = "Please select a date";
@@ -268,7 +268,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                 <span className="text-[10px] text-gray-400 font-light">Interactive Booking Guide</span>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
                 {activeSteps.map((step, idx) => {
                   let isCompleted = false;
                   let isActive = false;
@@ -291,8 +291,8 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                   }
 
                   return (
-                    <div key={idx} className="flex md:flex-col items-start gap-3 md:gap-2 relative">
-                      <div className="flex items-center md:w-full">
+                    <div key={idx} className="flex lg:flex-col items-start gap-3 lg:gap-2 relative">
+                      <div className="flex items-center lg:w-full">
                         <div className={`flex items-center justify-center w-6 h-6 rounded-full font-bold text-[10px] border transition-all duration-300 shrink-0 ${
                           isCompleted
                             ? 'bg-black border-black text-white'
@@ -303,7 +303,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                           {isCompleted ? '✓' : idx + 1}
                         </div>
                         {idx < 4 && (
-                          <div className={`hidden md:block h-0.5 w-full ml-2 transition-all duration-300 ${
+                          <div className={`hidden lg:block h-0.5 w-full ml-2 transition-all duration-300 ${
                             isCompleted ? 'bg-black' : 'bg-gray-200'
                           }`} />
                         )}
@@ -414,13 +414,13 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
                     <div className="space-y-1">
                       <label className="text-gray-500 uppercase tracking-wider block text-[10px] font-bold mb-1">Mode of Session</label>
-                      <div className="grid grid-cols-3 gap-2">
+                      <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
                         {['ONLINE', 'DOOR_STEP', 'OFFLINE'].map((m) => (
                           <button
                             type="button"
                             key={m}
                             onClick={() => setBookingMode(m)}
-                            className={`py-2.5 text-[10px] uppercase font-bold border rounded-[4px] transition cursor-pointer ${bookingMode === m
+                            className={`py-2 px-1 sm:py-2.5 text-[8px] min-[370px]:text-[10px] uppercase font-bold border rounded-[4px] transition cursor-pointer ${bookingMode === m
                               ? 'bg-brand text-white border-brand'
                               : 'bg-white text-gray-500 border-gray-300 hover:border-brand hover:text-brand'
                               }`}
@@ -447,7 +447,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                             setErrors(prev => ({ ...prev, advisor: null }));
                           }
                         }}
-                        className={`p-3 border rounded-[4px] flex items-center justify-between gap-3 cursor-pointer transition ${selectedAdvisor?.id === advisor.id
+                        className={`p-3 border rounded-[4px] flex flex-wrap items-center justify-between gap-2.5 cursor-pointer transition ${selectedAdvisor?.id === advisor.id
                           ? 'bg-brand/5 border-brand shadow-xs'
                           : 'bg-white border-gray-200 hover:border-brand/40 hover:bg-gray-50'
                           }`}
@@ -456,7 +456,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                           <h4 className="font-bold text-gray-900">{advisor.name}</h4>
                           <p className="text-[10px] text-gray-500">{advisor.role}</p>
                         </div>
-                        <span className="text-[9px] px-2 py-0.5 rounded bg-gray-100 text-black border border-gray-200 font-bold uppercase">{advisor.availability}</span>
+                        <span className="text-[9px] px-2 py-0.5 rounded bg-gray-100 text-black border border-gray-200 font-bold uppercase shrink-0">{advisor.availability}</span>
                       </div>
                     ))}
                   </div>
@@ -509,7 +509,6 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                     <div className="space-y-1">
                       <label className="text-gray-500 uppercase tracking-wide">Name</label>
                       <input
-                        required
                         type="text"
                         name="name"
                         value={bookingForm.name}
@@ -523,7 +522,6 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                     <div className="space-y-1">
                       <label className="text-gray-500 uppercase tracking-wide">Mobile Number</label>
                       <input
-                        required
                         type="tel"
                         name="phone"
                         value={bookingForm.phone}
@@ -537,7 +535,6 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                     <div className="space-y-1">
                       <label className="text-gray-500 uppercase tracking-wide">Email</label>
                       <input
-                        required
                         type="email"
                         name="email"
                         value={bookingForm.email}
