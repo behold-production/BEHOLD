@@ -1,6 +1,6 @@
 import React from 'react';
-import { 
-  Compass, HeartHandshake, Users, GraduationCap, CheckCircle2, Heart 
+import {
+  Compass, HeartHandshake, Users, GraduationCap, CheckCircle2, Heart
 } from 'lucide-react';
 
 const PILLARS = [
@@ -39,16 +39,16 @@ const PILLARS = [
 export default function About() {
   return (
     <section id="about" className="py-12 md:py-24 px-4 sm:px-6 text-black text-left grid-bg relative overflow-hidden">
-      
+
       {/* Glow Effects */}
       <div className="absolute bottom-10 left-10 w-[300px] h-[300px] bg-brand/10 rounded-full glow-glow pointer-events-none" />
       <div className="absolute top-10 right-10 w-[300px] h-[300px] bg-brand/10 rounded-full glow-glow pointer-events-none" />
 
       <div className="max-w-7xl mx-auto space-y-12 md:space-y-24">
-        
+
         {/* Header Column */}
         <div className="max-w-3xl mx-auto text-center space-y-4">
-          <span className="text-[10px] bg-black text-white px-3.5 py-1 rounded-[4px] uppercase tracking-wider font-extrabold w-fit mx-auto block">
+          <span className="text-[10px] bg-black text-white px-3.5 py-1 rounded-xl uppercase tracking-wider font-extrabold w-fit mx-auto block">
             Why Us & What We Offer
           </span>
           <h2 className="text-3xl md:text-5xl font-header font-black tracking-tight text-gray-900 leading-[1.1] uppercase">
@@ -64,12 +64,12 @@ export default function About() {
           {PILLARS.map((pillar, idx) => {
             const Icon = pillar.icon;
             return (
-              <div 
+              <div
                 key={idx}
-                className="min-w-[280px] sm:min-w-[320px] md:min-w-0 snap-center shrink-0 bg-white hover:bg-white/95 border border-black/5 rounded-[4px] p-6 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between group"
+                className="min-w-[280px] sm:min-w-[320px] md:min-w-0 snap-center shrink-0 bg-white hover:bg-white/95 border border-black/5 rounded-xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between group"
               >
                 <div className="space-y-6">
-                  <div className="w-10 h-10 rounded-[4px] bg-black/5 text-black flex items-center justify-center transition-all duration-300 group-hover:scale-105 group-hover:bg-black group-hover:text-brand">
+                  <div className="w-10 h-10 rounded-xl bg-black/5 text-black flex items-center justify-center transition-all duration-300 group-hover:scale-105 group-hover:bg-black group-hover:text-brand">
                     <Icon className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
                   </div>
                   <div className="space-y-2">
@@ -93,7 +93,7 @@ export default function About() {
               window.location.hash = '#/booking';
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className="px-8 py-4 bg-black hover:bg-zinc-800 text-white font-bold text-xs uppercase tracking-widest rounded-[4px] transition-all duration-200 cursor-pointer shadow-sm w-full sm:w-auto text-center"
+            className="px-8 py-4 bg-black hover:bg-zinc-800 text-white font-bold text-xs uppercase tracking-widest rounded-xl transition-all duration-200 cursor-pointer shadow-sm w-full sm:w-auto text-center"
           >
             Get Started with Behold
           </button>

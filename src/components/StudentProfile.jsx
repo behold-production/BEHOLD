@@ -91,20 +91,44 @@ export default function StudentProfile({ setView }) {
 
   const validate = () => {
     const err = {};
-    if (profile.name.trim() && profile.name.trim().length < 3) {
+    if (!profile.name.trim()) {
+      err.name = "Name of Student is required";
+    } else if (profile.name.trim().length < 3) {
       err.name = "Name of Student must be at least 3 characters";
     }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (profile.email && !emailRegex.test(profile.email)) {
-      err.email = "Please enter a valid email address";
+    
+    if (!profile.dob.trim()) {
+      err.dob = "Date of Birth is required";
     }
-    const phoneRegex = /^(\+?\d{1,4}[- ]?)?[6-9]\d{9}$/;
-    if (profile.phone && !phoneRegex.test(profile.phone)) {
-      err.phone = "Please enter a valid phone number (e.g. 8086664001 or 0091-8086664001)";
+    
+    if (!profile.email.trim()) {
+      err.email = "Email is required";
+    } else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(profile.email)) {
+        err.email = "Please enter a valid email address";
+      }
     }
-    if ((profile.email || profile.confirmEmail) && profile.email !== profile.confirmEmail) {
+    
+    if (!profile.confirmEmail.trim()) {
+      err.confirmEmail = "Please confirm your email";
+    } else if (profile.email !== profile.confirmEmail) {
       err.confirmEmail = "Emails do not match";
     }
+    
+    if (!profile.phone.trim()) {
+      err.phone = "Phone number is required";
+    } else {
+      const phoneRegex = /^(\+?\d{1,4}[- ]?)?[6-9]\d{9}$/;
+      if (!phoneRegex.test(profile.phone)) {
+        err.phone = "Please enter a valid phone number (e.g. 8086664001)";
+      }
+    }
+    
+    if (!profile.guardianName.trim()) {
+      err.guardianName = "Guardian Name is required";
+    }
+    
     return err;
   };
 
@@ -142,7 +166,7 @@ export default function StudentProfile({ setView }) {
         </div>
         <button
           onClick={() => setView('landing')}
-          className="bg-white border border-brand hover:bg-brand hover:text-white text-brand px-5 py-2 rounded-[4px] text-xs font-semibold uppercase tracking-wider transition cursor-pointer"
+          className="bg-white border border-brand hover:bg-brand hover:text-white text-brand px-5 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition cursor-pointer"
         >
           Back to Home
         </button>
@@ -166,7 +190,7 @@ export default function StudentProfile({ setView }) {
                   key={tab.id}
                   type="button"
                   onClick={() => handleTabChange(tab.id)}
-                  className={`flex items-center gap-3 p-3 rounded-[4px] border text-xs font-bold uppercase tracking-wider transition text-left cursor-pointer shrink-0 snap-start ${isActive
+                  className={`flex items-center gap-3 p-3 rounded-xl border text-xs font-bold uppercase tracking-wider transition text-left cursor-pointer shrink-0 snap-start ${isActive
                       ? 'bg-brand text-white border-brand'
                       : 'bg-white text-gray-500 border-gray-200 hover:border-brand hover:text-brand'
                     }`}
@@ -178,7 +202,7 @@ export default function StudentProfile({ setView }) {
             })}
           </div>
 
-          <div className="hidden lg:block p-4 bg-gray-50 border border-gray-200 rounded-[4px] space-y-2">
+          <div className="hidden lg:block p-4 bg-gray-50 border border-gray-200 rounded-xl space-y-2">
             <span className="text-[10px] uppercase font-bold tracking-wider text-gray-700 block flex items-center gap-1.5">
               <ShieldAlert className="w-3.5 h-3.5 text-gray-800" /> Privacy Notice
             </span>
@@ -210,7 +234,7 @@ export default function StudentProfile({ setView }) {
                       placeholder="Your full name"
                       value={profile.name}
                       onChange={handleChange}
-                      className={`w-full px-4 py-2.5 bg-white border text-sm text-gray-950 rounded-[4px] outline-none focus:border-brand transition ${errors.name ? 'border-red-500' : 'border-gray-300 hover:border-gray-400'
+                      className={`w-full px-4 py-2.5 bg-white border text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition ${errors.name ? 'border-red-500' : 'border-gray-300 hover:border-gray-400'
                         }`}
                     />
                     {errors.name && <p className="text-[10px] text-red-500 font-semibold">{errors.name}</p>}
@@ -225,7 +249,7 @@ export default function StudentProfile({ setView }) {
                       placeholder="as 25-01-2006"
                       value={profile.dob}
                       onChange={handleChange}
-                      className={`w-full px-4 py-2.5 bg-white border text-sm text-gray-950 rounded-[4px] outline-none focus:border-brand transition ${errors.dob ? 'border-red-500' : 'border-gray-300 hover:border-gray-400'
+                      className={`w-full px-4 py-2.5 bg-white border text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition ${errors.dob ? 'border-red-500' : 'border-gray-300 hover:border-gray-400'
                         }`}
                     />
                     {errors.dob && <p className="text-[10px] text-red-500 font-semibold">{errors.dob}</p>}
@@ -240,7 +264,7 @@ export default function StudentProfile({ setView }) {
                       placeholder="name@email.com"
                       value={profile.email}
                       onChange={handleChange}
-                      className={`w-full px-4 py-2.5 bg-white border text-sm text-gray-950 rounded-[4px] outline-none focus:border-brand transition ${errors.email ? 'border-red-500' : 'border-gray-300 hover:border-gray-400'
+                      className={`w-full px-4 py-2.5 bg-white border text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition ${errors.email ? 'border-red-500' : 'border-gray-300 hover:border-gray-400'
                         }`}
                     />
                     {errors.email && <p className="text-[10px] text-red-500 font-semibold">{errors.email}</p>}
@@ -255,7 +279,7 @@ export default function StudentProfile({ setView }) {
                       placeholder="Re-enter email"
                       value={profile.confirmEmail}
                       onChange={handleChange}
-                      className={`w-full px-4 py-2.5 bg-white border text-sm text-gray-950 rounded-[4px] outline-none focus:border-brand transition ${errors.confirmEmail ? 'border-red-500' : 'border-gray-300 hover:border-gray-400'
+                      className={`w-full px-4 py-2.5 bg-white border text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition ${errors.confirmEmail ? 'border-red-500' : 'border-gray-300 hover:border-gray-400'
                         }`}
                     />
                     {errors.confirmEmail && <p className="text-[10px] text-red-500 font-semibold">{errors.confirmEmail}</p>}
@@ -270,7 +294,7 @@ export default function StudentProfile({ setView }) {
                         name="phoneCode"
                         value={profile.phoneCode}
                         onChange={handleChange}
-                        className="w-20 px-3 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-[4px] outline-none text-center"
+                        className="w-20 px-3 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-xl outline-none text-center"
                       />
                       <input
                         type="tel"
@@ -278,7 +302,7 @@ export default function StudentProfile({ setView }) {
                         placeholder="e.g. 8086664001"
                         value={profile.phone}
                         onChange={handleChange}
-                        className={`flex-1 px-4 py-2.5 bg-white border text-sm text-gray-950 rounded-[4px] outline-none focus:border-brand transition ${errors.phone ? 'border-red-500' : 'border-gray-300 hover:border-gray-400'
+                        className={`flex-1 px-4 py-2.5 bg-white border text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition ${errors.phone ? 'border-red-500' : 'border-gray-300 hover:border-gray-400'
                           }`}
                       />
                     </div>
@@ -294,7 +318,7 @@ export default function StudentProfile({ setView }) {
                       placeholder="e.g. 8086664001"
                       value={profile.whatsapp}
                       onChange={handleChange}
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-[4px] outline-none focus:border-brand transition"
+                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition"
                     />
                   </div>
 
@@ -326,7 +350,7 @@ export default function StudentProfile({ setView }) {
                       name="country"
                       value={profile.country}
                       onChange={handleChange}
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-[4px] outline-none focus:border-brand transition"
+                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition"
                     />
                   </div>
 
@@ -337,7 +361,7 @@ export default function StudentProfile({ setView }) {
                       name="homeDistrict"
                       value={profile.homeDistrict}
                       onChange={handleChange}
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-[4px] outline-none focus:border-brand transition cursor-pointer"
+                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition cursor-pointer"
                     >
                       <option value="">Select District</option>
                       {DISTRICTS_KERALA.map(d => (
@@ -353,7 +377,7 @@ export default function StudentProfile({ setView }) {
                       name="grade"
                       value={profile.grade}
                       onChange={handleChange}
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-[4px] outline-none focus:border-brand transition cursor-pointer"
+                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition cursor-pointer"
                     >
                       <option value="">Select Grade</option>
                       {['Class 8', 'Class 9', 'Class 10', 'Class 11', 'Class 12', 'Graduate', 'Other'].map(g => (
@@ -371,7 +395,7 @@ export default function StudentProfile({ setView }) {
                       placeholder="e.g. CIGI-1002"
                       value={profile.groupCode}
                       onChange={handleChange}
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-[4px] outline-none focus:border-brand transition"
+                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition"
                     />
                   </div>
 
@@ -381,7 +405,7 @@ export default function StudentProfile({ setView }) {
                   <button
                     type="button"
                     onClick={() => handleTabChange('school')}
-                    className="bg-brand text-white px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand-dark transition rounded-[4px] shadow-sm"
+                    className="bg-brand text-white px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand-dark transition rounded-xl shadow-sm"
                   >
                     Next Section
                   </button>
@@ -407,7 +431,7 @@ export default function StudentProfile({ setView }) {
                       placeholder="Name of the school"
                       value={profile.schoolName}
                       onChange={handleChange}
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-[4px] outline-none focus:border-brand transition"
+                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition"
                     />
                   </div>
 
@@ -419,7 +443,7 @@ export default function StudentProfile({ setView }) {
                       name="schoolCountry"
                       value={profile.schoolCountry}
                       onChange={handleChange}
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-[4px] outline-none focus:border-brand transition"
+                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition"
                     />
                   </div>
 
@@ -431,7 +455,7 @@ export default function StudentProfile({ setView }) {
                       name="schoolState"
                       value={profile.schoolState}
                       onChange={handleChange}
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-[4px] outline-none focus:border-brand transition"
+                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition"
                     />
                   </div>
 
@@ -442,7 +466,7 @@ export default function StudentProfile({ setView }) {
                       name="schoolDistrict"
                       value={profile.schoolDistrict}
                       onChange={handleChange}
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-[4px] outline-none focus:border-brand transition cursor-pointer"
+                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition cursor-pointer"
                     >
                       <option value="">Select District</option>
                       {DISTRICTS_KERALA.map(d => (
@@ -497,14 +521,14 @@ export default function StudentProfile({ setView }) {
                   <button
                     type="button"
                     onClick={() => handleTabChange('personal')}
-                    className="bg-white border border-brand text-brand px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand hover:text-white transition rounded-[4px] shadow-sm w-full sm:w-auto text-center"
+                    className="bg-white border border-brand text-brand px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand hover:text-white transition rounded-xl shadow-sm w-full sm:w-auto text-center"
                   >
                     Previous
                   </button>
                   <button
                     type="button"
                     onClick={() => handleTabChange('interests')}
-                    className="bg-brand text-white px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand-dark transition rounded-[4px] shadow-sm w-full sm:w-auto text-center"
+                    className="bg-brand text-white px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand-dark transition rounded-xl shadow-sm w-full sm:w-auto text-center"
                   >
                     Next Section
                   </button>
@@ -530,7 +554,7 @@ export default function StudentProfile({ setView }) {
                       value={profile.careerInterests}
                       onChange={handleChange}
                       rows="3"
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-[4px] outline-none focus:border-brand transition"
+                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition"
                     />
                   </div>
 
@@ -543,7 +567,7 @@ export default function StudentProfile({ setView }) {
                       placeholder="music, painting, cricket, athletics, etc."
                       value={profile.specialTalents}
                       onChange={handleChange}
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-[4px] outline-none focus:border-brand transition"
+                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition"
                     />
                   </div>
 
@@ -556,7 +580,7 @@ export default function StudentProfile({ setView }) {
                       value={profile.achievements}
                       onChange={handleChange}
                       rows="3"
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-[4px] outline-none focus:border-brand transition"
+                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition"
                     />
                   </div>
 
@@ -566,14 +590,14 @@ export default function StudentProfile({ setView }) {
                   <button
                     type="button"
                     onClick={() => handleTabChange('school')}
-                    className="bg-white border border-brand text-brand px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand hover:text-white transition rounded-[4px] shadow-sm w-full sm:w-auto text-center"
+                    className="bg-white border border-brand text-brand px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand hover:text-white transition rounded-xl shadow-sm w-full sm:w-auto text-center"
                   >
                     Previous
                   </button>
                   <button
                     type="button"
                     onClick={() => handleTabChange('parents')}
-                    className="bg-brand text-white px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand-dark transition rounded-[4px] shadow-sm w-full sm:w-auto text-center"
+                    className="bg-brand text-white px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand-dark transition rounded-xl shadow-sm w-full sm:w-auto text-center"
                   >
                     Next Section
                   </button>
@@ -599,7 +623,7 @@ export default function StudentProfile({ setView }) {
                       placeholder="e.g. B.Tech, Tenth Class"
                       value={profile.fatherQualification}
                       onChange={handleChange}
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-[4px] outline-none focus:border-brand transition"
+                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition"
                     />
                   </div>
 
@@ -612,7 +636,7 @@ export default function StudentProfile({ setView }) {
                       placeholder="e.g. M.Sc, Higher Secondary"
                       value={profile.motherQualification}
                       onChange={handleChange}
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-[4px] outline-none focus:border-brand transition"
+                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition"
                     />
                   </div>
 
@@ -625,7 +649,7 @@ export default function StudentProfile({ setView }) {
                       placeholder="e.g. Business, Teacher"
                       value={profile.fatherOccupation}
                       onChange={handleChange}
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-[4px] outline-none focus:border-brand transition"
+                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition"
                     />
                   </div>
 
@@ -638,7 +662,7 @@ export default function StudentProfile({ setView }) {
                       placeholder="e.g. Homemaker, Govt Employee"
                       value={profile.motherOccupation}
                       onChange={handleChange}
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-[4px] outline-none focus:border-brand transition"
+                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition"
                     />
                   </div>
 
@@ -651,7 +675,7 @@ export default function StudentProfile({ setView }) {
                       placeholder="name of parent or guardian"
                       value={profile.guardianName}
                       onChange={handleChange}
-                      className={`w-full px-4 py-2.5 bg-white border text-sm text-gray-950 rounded-[4px] outline-none focus:border-brand transition ${errors.guardianName ? 'border-red-500' : 'border-gray-300 hover:border-gray-400'
+                      className={`w-full px-4 py-2.5 bg-white border text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition ${errors.guardianName ? 'border-red-500' : 'border-gray-300 hover:border-gray-400'
                         }`}
                     />
                     {errors.guardianName && <p className="text-[10px] text-red-500 font-semibold">{errors.guardianName}</p>}
@@ -664,7 +688,7 @@ export default function StudentProfile({ setView }) {
                       name="guardianRelationship"
                       value={profile.guardianRelationship}
                       onChange={handleChange}
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-[4px] outline-none focus:border-brand transition cursor-pointer"
+                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition cursor-pointer"
                     >
                       <option value="Father">Father</option>
                       <option value="Mother">Mother</option>
@@ -683,7 +707,7 @@ export default function StudentProfile({ setView }) {
                       placeholder="Guardian mobile number"
                       value={profile.guardianPhone}
                       onChange={handleChange}
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-[4px] outline-none focus:border-brand transition"
+                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition"
                     />
                   </div>
 
@@ -693,13 +717,13 @@ export default function StudentProfile({ setView }) {
                   <button
                     type="button"
                     onClick={() => handleTabChange('interests')}
-                    className="bg-white border border-brand text-brand px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand hover:text-white transition rounded-[4px] shadow-sm w-full sm:w-auto text-center"
+                    className="bg-white border border-brand text-brand px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand hover:text-white transition rounded-xl shadow-sm w-full sm:w-auto text-center"
                   >
                     Previous
                   </button>
                   <button
                     type="submit"
-                    className="bg-brand text-white px-8 py-3 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand-dark transition rounded-[4px] shadow-md w-full sm:w-auto text-center"
+                    className="bg-brand text-white px-8 py-3 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand-dark transition rounded-xl shadow-md w-full sm:w-auto text-center"
                   >
                     Save & Sync Profile
                   </button>
@@ -708,7 +732,7 @@ export default function StudentProfile({ setView }) {
             )}
 
             {isSaved && (
-              <div className="p-3 bg-emerald-50 border border-emerald-250 text-emerald-800 rounded-[4px] text-center font-bold text-xs flex items-center justify-center gap-2 animate-in fade-in duration-200">
+              <div className="p-3 bg-emerald-50 border border-emerald-250 text-emerald-800 rounded-xl text-center font-bold text-xs flex items-center justify-center gap-2 animate-in fade-in duration-200">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                 Profile Registered & Synchronized Locally!
               </div>

@@ -26,11 +26,11 @@ export default function Faq() {
   return (
     <section id="faqs" className="max-w-4xl mx-auto px-4 sm:px-6 py-12 md:py-24 text-black text-left select-none relative overflow-hidden">
       {/* Background glow */}
-      <div className="absolute top-1/3 left-1/2 w-[250px] h-[250px] bg-brand/10 rounded-[4px] glow-glow pointer-events-none" />
+      <div className="absolute top-1/3 left-1/2 w-[250px] h-[250px] bg-brand/10 rounded-xl glow-glow pointer-events-none" />
 
       {/* Section Header */}
       <div className="mb-10 md:mb-16 space-y-4 text-center">
-        <span className="text-[10px] bg-black text-white px-3.5 py-1 rounded-[4px] uppercase tracking-wider font-extrabold w-fit mx-auto block">
+        <span className="text-[10px] bg-black text-white px-3.5 py-1 rounded-xl uppercase tracking-wider font-extrabold w-fit mx-auto block">
           clarity desk
         </span>
         <h2 className="text-3xl md:text-5xl font-header font-black tracking-tight text-gray-900 leading-tight uppercase">
@@ -48,7 +48,7 @@ export default function Faq() {
           return (
             <div 
               key={idx} 
-              className="bg-white border border-black/5 rounded-[4px] p-5 md:p-10 shadow-xs hover:shadow-md transition-all duration-500"
+              className="bg-white border border-black/5 rounded-xl p-5 md:p-10 shadow-xs hover:shadow-md transition-all duration-500"
             >
               <button
                 onClick={() => toggleFaq(idx)}
@@ -56,7 +56,7 @@ export default function Faq() {
                 aria-expanded={isOpen}
               >
                 <div className="flex items-start gap-4">
-                  <div className={`w-8 h-8 rounded-[4px] flex items-center justify-center shrink-0 transition-colors mt-0.5 ${
+                  <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 transition-colors mt-0.5 ${
                     isOpen ? 'bg-black text-brand' : 'bg-black/5 text-black'
                   }`}>
                     <HelpCircle className="w-4 h-4" />

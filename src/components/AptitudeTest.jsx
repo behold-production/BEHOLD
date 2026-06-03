@@ -305,7 +305,7 @@ export default function AptitudeTest({ onFinishTest }) {
     setIsAnimating(false);
   };
 
-  // Calculations for results dashboard (max score is 10 per category as we have 2 questions each with max weight 5)
+  // Calculations for results panel (max score is 10 per category as we have 2 questions each with max weight 5)
   const scorePercentages = {
     Aptitude: Math.min(Math.round(((testScores.Aptitude || 0) / 10) * 100), 100),
     Logical: Math.min(Math.round(((testScores.Logical || 0) / 10) * 100), 100),
@@ -401,7 +401,7 @@ export default function AptitudeTest({ onFinishTest }) {
               </div>
 
               {/* Progress Bar Container */}
-              <div className="h-1.5 w-full bg-black/5 rounded-[4px] overflow-hidden">
+              <div className="h-1.5 w-full bg-black/5 rounded-xl overflow-hidden">
                 <div
                   className="h-full bg-brand transition-all duration-500 ease-out"
                   style={{ width: `${((currentQuestion + 1) / shuffledQuestions.length) * 100}%` }}
@@ -412,7 +412,7 @@ export default function AptitudeTest({ onFinishTest }) {
             {/* Question Text */}
             <div className="mb-10">
               <div className="flex gap-4 items-start mb-6">
-                <span className="flex items-center justify-center w-7 h-7 rounded-[4px] bg-black/5 text-black font-bold text-xs shrink-0 mt-0.5 font-mono">
+                <span className="flex items-center justify-center w-7 h-7 rounded-xl bg-black/5 text-black font-bold text-xs shrink-0 mt-0.5 font-mono">
                   Q
                 </span>
                 <h3 className="text-lg md:text-xl font-header font-bold text-gray-900 leading-snug">
@@ -427,13 +427,13 @@ export default function AptitudeTest({ onFinishTest }) {
                     key={i}
                     id={`opt-btn-${i}`}
                     onClick={() => handleAnswer(currentQObj.category, opt.weight)}
-                    className="w-full text-left p-5 rounded-[4px] border border-black/5 bg-white/60 hover:bg-white hover:border-brand/45 transition-all duration-200 flex items-center justify-between group cursor-pointer"
+                    className="w-full text-left p-5 rounded-xl border border-black/5 bg-white/60 hover:bg-white hover:border-brand/45 transition-all duration-200 flex items-center justify-between group cursor-pointer"
                   >
                     <span className="text-xs md:text-sm font-semibold text-gray-700 group-hover:text-black transition-colors">
                       {opt.text}
                     </span>
-                    <div className="w-4 h-4 rounded-[4px] border border-black/10 group-hover:border-brand group-hover:bg-brand transition-all duration-200 flex items-center justify-center shrink-0 ml-4">
-                      <div className="w-1.5 h-1.5 rounded-[4px] bg-black opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div className="w-4 h-4 rounded-xl border border-black/10 group-hover:border-brand group-hover:bg-brand transition-all duration-200 flex items-center justify-center shrink-0 ml-4">
+                      <div className="w-1.5 h-1.5 rounded-xl bg-black opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     </div>
                   </button>
                 ))}
@@ -441,19 +441,19 @@ export default function AptitudeTest({ onFinishTest }) {
             </div>
           </div>
         ) : (
-          /* Results Dashboard */
+          /* Results Panel */
           <div
             className="card-luxury p-8 md:p-14 border border-black/5 relative overflow-hidden animate-in zoom-in-95 duration-500"
-            id="results-dashboard"
+            id="results-panel"
           >
             {/* Header Shield */}
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-8 border-b border-black/[0.05] mb-10">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-black text-brand rounded-[4px] flex items-center justify-center shadow-md">
+                <div className="w-12 h-12 bg-black text-brand rounded-xl flex items-center justify-center shadow-md">
                   <CheckCircle2 className="w-6 h-6" />
                 </div>
                 <div>
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[4px] bg-white/70 border border-black/5 text-black text-[9px] font-extrabold uppercase tracking-wider mb-1">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white/70 border border-black/5 text-black text-[9px] font-extrabold uppercase tracking-wider mb-1">
                     <Award className="w-3.5 h-3.5 text-black" /> CIGI Framework Certified
                   </div>
                   <h2 className="text-3xl font-header font-black text-gray-900 leading-none">
@@ -464,7 +464,7 @@ export default function AptitudeTest({ onFinishTest }) {
               <button
                 id="btn-restart-test"
                 onClick={handleRestart}
-                className="px-5 py-2.5 bg-white border border-black/10 hover:border-black text-black rounded-[4px] font-bold text-xs uppercase tracking-wider transition-colors flex items-center gap-2 cursor-pointer shadow-xs"
+                className="px-5 py-2.5 bg-white border border-black/10 hover:border-black text-black rounded-xl font-bold text-xs uppercase tracking-wider transition-colors flex items-center gap-2 cursor-pointer shadow-xs"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 <span>Retake Test</span>
@@ -480,7 +480,7 @@ export default function AptitudeTest({ onFinishTest }) {
                   Your Dominant Affinity Profile
                 </h3>
 
-                <div className="p-6 rounded-[4px] border border-black/5 bg-white/70 flex gap-4 text-black shadow-xs">
+                <div className="p-6 rounded-xl border border-black/5 bg-white/70 flex gap-4 text-black shadow-xs">
                   <div className="shrink-0 mt-1">{dominantInfo.icon}</div>
                   <div>
                     <h4 className="text-lg font-header font-black text-gray-900 leading-tight mb-2 uppercase">
@@ -502,14 +502,14 @@ export default function AptitudeTest({ onFinishTest }) {
                     {CATEGORIES.map(({ key, label }) => {
                       const pct = scorePercentages[key];
                       return (
-                        <div key={key} className="space-y-1 bg-white/40 p-3 rounded-[4px] border border-black/[0.02]" id={`score-metric-${key.toLowerCase()}`}>
+                        <div key={key} className="space-y-1 bg-white/40 p-3 rounded-xl border border-black/[0.02]" id={`score-metric-${key.toLowerCase()}`}>
                           <div className="flex justify-between text-[11px] font-bold text-black/60">
                             <span>{label}</span>
                             <span className="font-extrabold text-black">{pct}%</span>
                           </div>
-                          <div className="h-2 w-full bg-black/5 rounded-[4px] overflow-hidden">
+                          <div className="h-2 w-full bg-black/5 rounded-xl overflow-hidden">
                             <div
-                              className="h-full bg-brand rounded-[4px] transition-all duration-1000 ease-out"
+                              className="h-full bg-brand rounded-xl transition-all duration-1000 ease-out"
                               style={{ width: `${pct}%` }}
                             ></div>
                           </div>
@@ -522,7 +522,7 @@ export default function AptitudeTest({ onFinishTest }) {
 
               {/* Right Column: Recommendations */}
               <div className="lg:col-span-5 space-y-6">
-                <div className="p-6 bg-white/70 border border-black/5 rounded-[4px] space-y-6 shadow-xs">
+                <div className="p-6 bg-white/70 border border-black/5 rounded-xl space-y-6 shadow-xs">
                   <h4 className="font-header font-extrabold text-gray-900 text-xs uppercase tracking-wider border-b border-black/[0.05] pb-3">
                     Recommended Pathways
                   </h4>
@@ -530,7 +530,7 @@ export default function AptitudeTest({ onFinishTest }) {
                     {recommendedCareers.map((item, cIdx) => (
                       <li
                         key={cIdx}
-                        className="flex flex-col bg-white p-4 rounded-[4px] border border-black/5 hover:border-black/20 hover:scale-[1.01] transition-all duration-200 group text-left"
+                        className="flex flex-col bg-white p-4 rounded-xl border border-black/5 hover:border-black/20 hover:scale-[1.01] transition-all duration-200 group text-left"
                       >
                         <div className="flex justify-between items-center">
                           <span className="text-xs font-extrabold text-black">
@@ -550,7 +550,7 @@ export default function AptitudeTest({ onFinishTest }) {
                     <button
                       id="btn-results-consult"
                       onClick={() => onFinishTest(dominantDomain, scorePercentages)}
-                      className="w-full py-4 bg-brand hover:bg-brand-dark border border-black/5 text-black font-extrabold text-xs uppercase tracking-widest rounded-[4px] transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm hover:scale-[1.02] active:scale-[0.98]"
+                      className="w-full py-4 bg-brand hover:bg-brand-dark border border-black/5 text-black font-extrabold text-xs uppercase tracking-widest rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm hover:scale-[1.02] active:scale-[0.98]"
                     >
                       <span>Claim Free Mentoring</span>
                       <ArrowRight className="w-4 h-4" />

@@ -1,184 +1,74 @@
 import React, { useState, useEffect } from 'react';
-import { Check, Sparkles, User, BookOpen, Heart, Info, ArrowLeft, ArrowRight } from 'lucide-react';
-
-const INITIAL_STATE = {
-  name: '',
-  email: '',
-  confirmEmail: '',
-  dob: '',
-  gender: 'Male',
-  phone: '',
-  whatsapp: '',
-  country: 'India',
-  phoneCode: '0091',
-  homeDistrict: '',
-  grade: '',
-  schoolCountry: 'India',
-  schoolState: 'Kerala',
-  schoolDistrict: '',
-  schoolName: '',
-  medium: 'English',
-  board: 'Kerala-State',
-  careerInterests: '',
-  specialTalents: '',
-  achievements: '',
-  fatherQualification: '',
-  motherQualification: '',
-  fatherOccupation: '',
-  motherOccupation: '',
-  guardianName: '',
-  guardianRelationship: 'Father',
-  guardianPhone: ''
-};
-
-const DISTRICTS_KERALA = [
-  'Alappuzha', 'Ernakulam', 'Idukki', 'Kannur', 'Kasaragod',
-  'Kollam', 'Kottayam', 'Kozhikode', 'Malappuram', 'Palakkad',
-  'Pathanamthitta', 'Thiruvananthapuram', 'Thrissur', 'Wayanad'
-];
+import { Check, ArrowRight, Copy } from 'lucide-react';
 
 export default function CdatSection({ setView }) {
-  const [showAptitudeForm, setShowAptitudeForm] = useState(false);
-  const [aptitudeForm, setAptitudeForm] = useState(INITIAL_STATE);
-  const [isAutofilled, setIsAutofilled] = useState(false);
-  const [activeTab, setActiveTab] = useState('personal'); // personal, school, parents
-
   const [groupRegName, setGroupRegName] = useState('');
   const [groupRegPhone, setGroupRegPhone] = useState('');
   const [groupRegEmail, setGroupRegEmail] = useState('');
-  const [groupRegCode, setGroupRegCode] = useState('');
-  const [groupMessage, setGroupMessage] = useState(null);
 
-  // History tracking for CDAT flow steps
+  const [generatedCode, setGeneratedCode] = useState(null);
+  const [copyMessage, setCopyMessage] = useState('');
+
+  // Auto-fill from local storage if available
   useEffect(() => {
-    const handlePopState = (e) => {
-      if (e.state && e.state.component === 'cdat') {
-        setShowAptitudeForm(e.state.showForm);
-        if (e.state.tab) {
-          setActiveTab(e.state.tab);
-        }
+    const saved = localStorage.getItem('behold_student_profile');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed.name) setGroupRegName(parsed.name);
+        if (parsed.phone) setGroupRegPhone(parsed.phone);
+        if (parsed.email) setGroupRegEmail(parsed.email);
+      } catch (e) {
+        console.error("Error reading student profile", e);
       }
-    };
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
+    }
   }, []);
 
-  const handleShowForm = (show) => {
-    setShowAptitudeForm(show);
-    if (show) {
-      window.history.pushState({ component: 'cdat', showForm: true, tab: 'personal' }, '');
-    } else {
-      window.history.pushState({ component: 'cdat', showForm: false }, '');
-    }
-  };
-
-  const handleTabChange = (tabId) => {
-    setActiveTab(tabId);
-    window.history.pushState({ component: 'cdat', showForm: true, tab: tabId }, '');
-  };
-
-  const handleGroupCodeSubmit = (e) => {
+  const handleGenerateCode = (e) => {
     e.preventDefault();
-    if (!groupRegCode.trim()) {
-      setGroupMessage("⚠️ Please fill in the Group Code.");
+    if (!groupRegName.trim() || !groupRegPhone.trim() || !groupRegEmail.trim()) {
+      setCopyMessage("⚠️ Please fill in all fields.");
       return;
     }
 
+    const HARDCODED_CODE = "BEHOLD-CDAT-2026";
+    setGeneratedCode(HARDCODED_CODE);
+
+    // Save to local storage
     const saved = localStorage.getItem('behold_student_profile');
     let profileData = {};
     if (saved) {
       try {
         profileData = JSON.parse(saved);
-      } catch (err) {
-        console.error(err);
-      }
+      } catch (err) { }
     }
-    if (groupRegName.trim()) profileData.name = groupRegName.trim();
-    if (groupRegPhone.trim()) profileData.phone = groupRegPhone.trim();
-    if (groupRegEmail.trim()) {
-      profileData.email = groupRegEmail.trim();
-      profileData.confirmEmail = groupRegEmail.trim();
-    }
-    profileData.groupCode = groupRegCode.trim();
+    profileData.name = groupRegName.trim();
+    profileData.phone = groupRegPhone.trim();
+    profileData.email = groupRegEmail.trim();
+    profileData.confirmEmail = groupRegEmail.trim();
+    profileData.groupCode = HARDCODED_CODE;
     localStorage.setItem('behold_student_profile', JSON.stringify(profileData));
 
-    setGroupMessage("🎉 Group registration code applied successfully!");
-    
-    setTimeout(() => {
-      window.location.hash = '#/profile';
-    }, 1500);
+    // Copy to clipboard
+    navigator.clipboard.writeText(HARDCODED_CODE).then(() => {
+      setCopyMessage("🎉 Code copied to clipboard! You can now register on CIGI.");
+    }).catch(() => {
+      setCopyMessage("🎉 Code generated! Please copy it manually.");
+    });
   };
 
-  // Load from localStorage for autofill
-  useEffect(() => {
-    if (showAptitudeForm) {
-      const saved = localStorage.getItem('behold_student_profile');
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          setAptitudeForm(prev => ({ ...INITIAL_STATE, ...parsed }));
-          setIsAutofilled(true);
-        } catch (e) {
-          console.error("Error reading student profile", e);
-        }
-      }
-    }
-  }, [showAptitudeForm]);
-
-  useEffect(() => {
-    if (showAptitudeForm) {
-      setTimeout(() => {
-        const element = document.getElementById('card-aptitude');
-        if (element) {
-          const offset = 85;
-          const bodyRect = document.body.getBoundingClientRect().top;
-          const elementRect = element.getBoundingClientRect().top;
-          const elementPosition = elementRect - bodyRect;
-          const offsetPosition = elementPosition - offset;
-          window.scrollTo({
-            top: offsetPosition,
-            behavior: 'smooth'
-          });
-        }
-      }, 100);
-    }
-  }, [showAptitudeForm]);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setAptitudeForm(prev => {
-      const updated = { ...prev, [name]: value };
-      localStorage.setItem('behold_student_profile', JSON.stringify(updated));
-      return updated;
-    });
-    setIsAutofilled(false);
-  };
-
-  const handleCigiRedirect = (e) => {
-    e.preventDefault();
-
-    // Save to localStorage
-    localStorage.setItem('behold_student_profile', JSON.stringify(aptitudeForm));
-
-    // Build external CIGI registration URL parameters
-    const queryParams = new URLSearchParams({ shem: 'rimspwouoe' });
-    Object.entries(aptitudeForm).forEach(([key, val]) => {
-      if (val !== undefined && val !== null && val !== '') {
-        queryParams.append(key, val);
-      }
-    });
-
-    const url = `https://cigicareer.com/cdat/`;
-    const newWindow = window.open(url, '_blank');
-    if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
-      window.location.href = url;
+  const copyManually = () => {
+    if (generatedCode) {
+      navigator.clipboard.writeText(generatedCode).then(() => {
+        setCopyMessage("🎉 Code copied to clipboard! You can now register on CIGI.");
+      });
     }
   };
 
   return (
     <section id="cdat" className="max-w-7xl mx-auto px-4 sm:px-6 py-12 text-black text-left relative overflow-hidden">
       {/* Background radial soft light */}
-      <div className="absolute top-1/2 left-1/4 w-[350px] h-[350px] bg-brand/5 rounded-[4px] glow-glow pointer-events-none" />
+      <div className="absolute top-1/2 left-1/4 w-[350px] h-[350px] bg-brand/5 rounded-xl glow-glow pointer-events-none" />
 
       {/* CDAT CARD */}
       <div
@@ -188,371 +78,119 @@ export default function CdatSection({ setView }) {
         <div className="space-y-6">
           <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
             <div className="space-y-2">
-              <span className="text-[9px] bg-brand text-black px-3 py-1 rounded-[4px] uppercase tracking-widest font-black font-mono">
+              <span className="text-[9px] bg-brand text-black px-3 py-1 rounded-xl uppercase tracking-widest font-black font-mono">
                 scientific strengths mapping
               </span>
               <h3 className="text-2xl md:text-3xl font-header font-black uppercase tracking-wide text-black mt-1 group-hover:text-brand transition-colors duration-500">
                 CIGI Differential Aptitude Test (CDAT)
               </h3>
             </div>
-            
-            {/* Sample Test button moved to the top of the section */}
-            {!showAptitudeForm && (
-              <button
-                onClick={() => window.location.hash = '#/sample-test'}
-                className="px-6 py-3.5 bg-black hover:bg-zinc-800 text-white font-bold text-xs uppercase tracking-widest rounded-[4px] transition cursor-pointer shadow-sm text-center shrink-0 w-full md:w-auto"
-              >
-                Sample Test
-              </button>
-            )}
+
+            <button
+              onClick={() => window.location.hash = '#/sample-test'}
+              className="px-6 py-3.5 bg-black hover:bg-zinc-800 text-white font-bold text-xs uppercase tracking-widest rounded-xl transition cursor-pointer shadow-sm text-center shrink-0 w-full md:w-auto"
+            >
+              Sample Test
+            </button>
           </div>
 
           <p className="text-black/60 font-sans text-sm md:text-base font-light leading-relaxed max-w-4xl">
             BEHOLD’s aptitude assessments help students discover their natural strengths, learning styles, interests, and hidden talents through scientifically designed evaluation methods. The assessment provides clear insights into suitable academic and career paths, helping students make informed future decisions with confidence.
           </p>
 
-          <div className="flex flex-wrap gap-x-8 gap-y-2 text-xs font-semibold text-black/80 font-mono">
-            <span className="flex items-start gap-1.5"><Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" /> Certified CIGI psychometric models</span>
-            <span className="flex items-start gap-1.5"><Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" /> Comprehensive 12-page cognitive diagnostic reports</span>
-            <span className="flex items-start gap-1.5"><Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" /> In-school & Doorstep support</span>
-          </div>
+
         </div>
 
         <div className="pt-6 border-t border-black/[0.05]">
-          {!showAptitudeForm ? (
-            <div className="space-y-8">
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full">
-                <button
-                  onClick={() => handleShowForm(true)}
-                  className="px-6 py-3.5 bg-brand hover:bg-brand-dark text-black font-bold text-xs uppercase tracking-widest rounded-[4px] transition cursor-pointer shadow-sm border border-black/5 w-full sm:w-auto text-center"
-                >
-                  Book Aptitude (CDAT Registration)
-                </button>
-              </div>
-
-              {/* School & Group Registration */}
-              <div className="border-t border-black/[0.05] pt-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-                <div className="lg:col-span-5 space-y-2">
-                  <h4 className="text-sm font-header font-black uppercase tracking-wider text-black">
-                    School & Group Registration
-                  </h4>
-                  <p className="text-black/60 font-sans text-xs md:text-sm font-light leading-relaxed">
-                    Enter your group access code below to register your profile. Results will be uploaded directly to your BEHOLD portal dashboard by the administrator.
-                  </p>
-                </div>
-                <div className="lg:col-span-7">
-                  <form onSubmit={handleGroupCodeSubmit} className="space-y-4 bg-white/50 border border-black/5 p-4 sm:p-5 rounded-[4px]">
-                    <div className="text-[10px] font-extrabold uppercase tracking-wider text-black/60 mb-2">
-                      Enter Group Code to Register
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                      <div>
-                        <input 
-                          type="text" 
-                          placeholder="Full Name" 
-                          value={groupRegName}
-                          onChange={(e) => setGroupRegName(e.target.value)}
-                          className="w-full px-4 py-3 rounded-[4px] bg-white border border-black/10 text-black text-xs font-semibold placeholder-black/35 outline-none focus:border-brand transition"
-                        />
-                      </div>
-                      <div>
-                        <input 
-                          type="tel" 
-                          placeholder="Phone Number" 
-                          value={groupRegPhone}
-                          onChange={(e) => setGroupRegPhone(e.target.value)}
-                          className="w-full px-4 py-3 rounded-[4px] bg-white border border-black/10 text-black text-xs font-semibold placeholder-black/35 outline-none focus:border-brand transition"
-                        />
-                      </div>
-                      <div>
-                        <input 
-                          type="email" 
-                          placeholder="Email Address" 
-                          value={groupRegEmail}
-                          onChange={(e) => setGroupRegEmail(e.target.value)}
-                          className="w-full px-4 py-3 rounded-[4px] bg-white border border-black/10 text-black text-xs font-semibold placeholder-black/35 outline-none focus:border-brand transition"
-                        />
-                      </div>
-                      <div>
-                        <input 
-                          type="text" 
-                          placeholder="Group Code" 
-                          value={groupRegCode}
-                          onChange={(e) => setGroupRegCode(e.target.value)}
-                          className="w-full px-4 py-3 rounded-[4px] bg-white border border-black/10 text-black text-xs font-semibold placeholder-black/35 outline-none focus:border-brand transition"
-                          required
-                        />
-                      </div>
-                    </div>
-                    <div className="pt-1">
-                      <button 
-                        type="submit" 
-                        className="px-6 py-3 bg-brand hover:bg-brand-dark text-black font-extrabold text-[10px] uppercase tracking-wider rounded-[4px] transition cursor-pointer shadow-xs border border-black/5 w-full sm:w-auto"
-                      >
-                        Submit Group Code
-                      </button>
-                    </div>
-                  </form>
-                  {groupMessage && (
-                    <p className={`mt-2 text-[10px] font-bold uppercase tracking-wider font-mono ${groupMessage.includes('applied') ? 'text-emerald-600' : 'text-rose-600'}`}>
-                      {groupMessage}
-                    </p>
-                  )}
-                </div>
-              </div>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            <div className="lg:col-span-5 space-y-2">
+              <h4 className="text-sm font-header font-black uppercase tracking-wider text-black">
+                Registration & Group Code
+              </h4>
+              <p className="text-black/60 font-sans text-xs md:text-sm font-light leading-relaxed">
+                Enter your details below to generate your group access code. Once generated and copied, proceed to the CIGI registration portal to complete your registration.
+              </p>
             </div>
-          ) : (
-            <div className="space-y-6 pt-4 animate-in fade-in duration-300">
-              <div className="flex justify-between items-center border-b border-black/[0.05] pb-4">
-                <h4 className="text-xs font-black uppercase tracking-widest text-black flex items-center gap-2">
-                  Aptitude Registration Console (CIGI CDAT)
-                </h4>
-                <button
-                  onClick={() => handleShowForm(false)}
-                  className="text-xs text-black/60 hover:text-black font-bold cursor-pointer underline"
-                >
-                  Hide Form
-                </button>
-              </div>
-
-              {isAutofilled && (
-                <div className="p-4 bg-brand/10 border border-brand/30 text-black/80 rounded-[4px] text-xs flex items-center justify-between max-w-xl">
-                  <span className="flex items-center gap-2 font-medium">
-                    <Sparkles className="w-4 h-4 text-black animate-pulse" />
-                    Autofilled 25+ parameters from your student profile.
-                  </span>
-                  <button
-                    onClick={() => window.location.hash = '#/profile'}
-                    className="underline text-black font-extrabold cursor-pointer hover:text-black/80"
-                  >
-                    Edit Profile
-                  </button>
+            <div className="lg:col-span-7">
+              <form onSubmit={handleGenerateCode} className="space-y-4 bg-white/50 border border-black/5 p-4 sm:p-5 rounded-xl">
+                <div className="text-[10px] font-extrabold uppercase tracking-wider text-black/60 mb-2">
+                  Generate Your Access Code
                 </div>
-              )}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                  <div>
+                    <input
+                      type="text"
+                      placeholder="Full Name"
+                      value={groupRegName}
+                      onChange={(e) => setGroupRegName(e.target.value)}
+                      className="w-full px-4 py-3 rounded-xl bg-white border border-black/10 text-black text-xs font-semibold placeholder-black/35 outline-none focus:border-brand transition"
+                    />
+                  </div>
+                  <div>
+                    <input
+                      type="tel"
+                      placeholder="Phone Number"
+                      value={groupRegPhone}
+                      onChange={(e) => setGroupRegPhone(e.target.value)}
+                      className="w-full px-4 py-3 rounded-xl bg-white border border-black/10 text-black text-xs font-semibold placeholder-black/35 outline-none focus:border-brand transition"
+                    />
+                  </div>
+                  <div className="sm:col-span-2">
+                    <input
+                      type="email"
+                      placeholder="Email Address"
+                      value={groupRegEmail}
+                      onChange={(e) => setGroupRegEmail(e.target.value)}
+                      className="w-full px-4 py-3 rounded-xl bg-white border border-black/10 text-black text-xs font-semibold placeholder-black/35 outline-none focus:border-brand transition"
+                    />
+                  </div>
+                </div>
 
-              {/* Subtabs for multi-step form */}
-              <div className="flex border-b border-gray-200 gap-2 overflow-x-auto pb-2 scrollbar-none">
-                {[
-                  { id: 'personal', label: '1. Personal Info', icon: User },
-                  { id: 'school', label: '2. School & Talents', icon: BookOpen },
-                  { id: 'parents', label: '3. Parents Details', icon: Heart }
-                ].map(tab => {
-                  const Icon = tab.icon;
-                  const isActive = activeTab === tab.id;
-                  return (
+                {!generatedCode ? (
+                  <div className="pt-1">
                     <button
-                      key={tab.id}
-                      type="button"
-                      onClick={() => handleTabChange(tab.id)}
-                      className={`flex items-center gap-2 px-3 py-1.5 rounded-[4px] border text-[10px] font-extrabold uppercase tracking-wider transition-all duration-350 hover:scale-[1.03] active:scale-[0.97] ${isActive
-                        ? 'bg-brand text-white border-brand shadow-md'
-                        : 'bg-white text-gray-500 border-gray-200 hover:border-brand hover:text-brand'
-                        }`}
+                      type="submit"
+                      className="px-6 py-3 bg-brand hover:bg-brand-dark text-black font-extrabold text-[10px] uppercase tracking-wider rounded-xl transition cursor-pointer shadow-xs border border-black/5 w-full sm:w-auto"
                     >
-                      <Icon className="w-3.5 h-3.5" />
-                      <span>{tab.label}</span>
+                      Generate Group Code
                     </button>
-                  );
-                })}
-              </div>
-
-              <form onSubmit={handleCigiRedirect} className="space-y-6 text-xs font-semibold text-black/80">
-
-                {/* TAB 1: PERSONAL DETAILS */}
-                {activeTab === 'personal' && (
-                  <div className="space-y-4 animate-in fade-in duration-200">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div className="space-y-1">
-                        <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Name of Student</label>
-                        <input type="text" name="name" placeholder="Your full name" value={aptitudeForm.name} onChange={handleInputChange} className="w-full p-3 bg-white/70 border border-black/10 rounded-[4px] outline-none focus:border-brand" />
+                  </div>
+                ) : (
+                  <div className="pt-2 space-y-4 animate-in fade-in duration-300">
+                    <div className="p-4 border border-brand/40 bg-brand/10 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                      <div>
+                        <span className="text-[10px] uppercase tracking-widest text-black/60 font-bold block mb-1">Your Group Code</span>
+                        <span className="text-lg font-mono font-black tracking-widest text-black">{generatedCode}</span>
                       </div>
-                      <div className="space-y-1">
-                        <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Email</label>
-                        <input type="email" name="email" placeholder="name@email.com" value={aptitudeForm.email} onChange={handleInputChange} className="w-full p-3 bg-white/70 border border-black/10 rounded-[4px] outline-none focus:border-brand" />
-                      </div>
-                      <div className="space-y-1">
-                        <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Confirm Email</label>
-                        <input type="email" name="confirmEmail" placeholder="Re-enter email" value={aptitudeForm.confirmEmail} onChange={handleInputChange} className="w-full p-3 bg-white/70 border border-black/10 rounded-[4px] outline-none focus:border-brand" />
-                      </div>
-                      <div className="space-y-1">
-                        <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Date of Birth</label>
-                        <input type="text" name="dob" placeholder="as 25-01-2006" value={aptitudeForm.dob} onChange={handleInputChange} className="w-full p-3 bg-white/70 border border-black/10 rounded-[4px] outline-none focus:border-brand" />
-                      </div>
-                      <div className="space-y-1">
-                        <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold mb-1">Gender</label>
-                        <div className="flex gap-4 pt-1">
-                          {['Male', 'Female'].map(g => (
-                            <label key={g} className="flex items-center gap-1.5 text-xs text-black cursor-pointer">
-                              <input type="radio" name="gender" value={g} checked={aptitudeForm.gender === g} onChange={handleInputChange} className="w-3.5 h-3.5 accent-black" />
-                              <span>{g}</span>
-                            </label>
-                          ))}
-                        </div>
-                      </div>
-                      <div className="space-y-1">
-                        <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Phone</label>
-                        <div className="flex gap-2">
-                          <input type="text" name="phoneCode" value={aptitudeForm.phoneCode} onChange={handleInputChange} className="w-14 p-3 bg-white/70 border border-black/10 rounded-[4px] text-center" />
-                          <input type="tel" name="phone" placeholder="e.g. 8086664001" value={aptitudeForm.phone} onChange={handleInputChange} className="flex-1 p-3 bg-white/70 border border-black/10 rounded-[4px] outline-none focus:border-brand" />
-                        </div>
-                      </div>
-                      <div className="space-y-1">
-                        <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">WhatsApp</label>
-                        <input type="tel" name="whatsapp" placeholder="e.g. 8086664001" value={aptitudeForm.whatsapp} onChange={handleInputChange} className="w-full p-3 bg-white/70 border border-black/10 rounded-[4px] outline-none focus:border-brand" />
-                      </div>
-                      <div className="space-y-1">
-                        <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Home District</label>
-                        <select name="homeDistrict" value={aptitudeForm.homeDistrict} onChange={handleInputChange} className="w-full p-3 bg-white/70 border border-black/10 rounded-[4px] outline-none focus:border-brand cursor-pointer">
-                          <option value="">Select District</option>
-                          {DISTRICTS_KERALA.map(d => (
-                            <option key={d} value={d}>{d}</option>
-                          ))}
-                        </select>
-                      </div>
-                      <div className="space-y-1">
-                        <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Grade</label>
-                        <select name="grade" value={aptitudeForm.grade} onChange={handleInputChange} className="w-full p-3 bg-white/70 border border-black/10 rounded-[4px] outline-none focus:border-brand cursor-pointer">
-                          <option value="">Select Grade</option>
-                          {['Class 8', 'Class 9', 'Class 10', 'Class 11', 'Class 12', 'Graduate', 'Other'].map(g => (
-                            <option key={g} value={g}>{g}</option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-                    <div className="flex justify-end pt-2">
-                      <button type="button" onClick={() => handleTabChange('school')} className="px-5 py-2.5 bg-black hover:bg-zinc-800 text-white font-bold text-[10px] uppercase tracking-wider rounded-[4px] transition cursor-pointer flex items-center gap-1.5">
-                        <span>Next Tab</span>
-                        <ArrowRight className="w-3.5 h-3.5" />
+                      <button
+                        type="button"
+                        onClick={copyManually}
+                        className="flex items-center gap-1.5 px-4 py-2 bg-white border border-black/10 hover:border-black rounded-xl text-[10px] uppercase font-bold transition cursor-pointer"
+                      >
+                        <Copy className="w-3.5 h-3.5" /> Copy Code
                       </button>
                     </div>
+
+                    <a
+                      href="https://cigicareer.com/cdat-registration/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-2 w-full px-6 py-3.5 bg-black hover:bg-zinc-800 text-white font-extrabold text-xs uppercase tracking-widest rounded-xl transition cursor-pointer shadow-md"
+                    >
+                      <span>Proceed to CIGI Website</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </a>
                   </div>
                 )}
 
-                {/* TAB 2: SCHOOL DETAILS */}
-                {activeTab === 'school' && (
-                  <div className="space-y-4 animate-in fade-in duration-200">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div className="space-y-1 md:col-span-2">
-                        <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">School Name</label>
-                        <input type="text" name="schoolName" placeholder="Name of the school" value={aptitudeForm.schoolName} onChange={handleInputChange} className="w-full p-3 bg-white/70 border border-black/10 rounded-[4px] outline-none focus:border-brand" />
-                      </div>
-                      <div className="space-y-1">
-                        <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">School State</label>
-                        <input type="text" name="schoolState" value={aptitudeForm.schoolState} onChange={handleInputChange} className="w-full p-3 bg-white/70 border border-black/10 rounded-[4px] outline-none focus:border-brand" />
-                      </div>
-                      <div className="space-y-1">
-                        <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">School District</label>
-                        <select name="schoolDistrict" value={aptitudeForm.schoolDistrict} onChange={handleInputChange} className="w-full p-3 bg-white/70 border border-black/10 rounded-[4px] outline-none focus:border-brand cursor-pointer">
-                          <option value="">Select District</option>
-                          {DISTRICTS_KERALA.map(d => (
-                            <option key={d} value={d}>{d}</option>
-                          ))}
-                        </select>
-                      </div>
-                      <div className="space-y-1">
-                        <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold mb-1">Medium</label>
-                        <div className="flex gap-4 pt-1">
-                          {['English', 'Malayalam', 'Other'].map(m => (
-                            <label key={m} className="flex items-center gap-1.5 text-xs text-black cursor-pointer">
-                              <input type="radio" name="medium" value={m} checked={aptitudeForm.medium === m} onChange={handleInputChange} className="w-3.5 h-3.5 accent-black" />
-                              <span>{m}</span>
-                            </label>
-                          ))}
-                        </div>
-                      </div>
-                      <div className="space-y-1">
-                        <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold mb-1">Board</label>
-                        <div className="flex gap-4 pt-1">
-                          {['Kerala-State', 'CBSE', 'ICSE', 'Other'].map(b => (
-                            <label key={b} className="flex items-center gap-1.5 text-xs text-black cursor-pointer">
-                              <input type="radio" name="board" value={b} checked={aptitudeForm.board === b} onChange={handleInputChange} className="w-3.5 h-3.5 accent-black" />
-                              <span>{b}</span>
-                            </label>
-                          ))}
-                        </div>
-                      </div>
-                      <div className="space-y-1 md:col-span-3">
-                        <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Career Interests</label>
-                        <input type="text" name="careerInterests" placeholder="You can give more than one profession" value={aptitudeForm.careerInterests} onChange={handleInputChange} className="w-full p-3 bg-white/70 border border-black/10 rounded-[4px] outline-none focus:border-brand" />
-                      </div>
-                      <div className="space-y-1">
-                        <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Special Talents</label>
-                        <input type="text" name="specialTalents" placeholder="music, painting, cricket, athletics, etc." value={aptitudeForm.specialTalents} onChange={handleInputChange} className="w-full p-3 bg-white/70 border border-black/10 rounded-[4px] outline-none focus:border-brand" />
-                      </div>
-                      <div className="space-y-1 md:col-span-2">
-                        <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Achievements</label>
-                        <input type="text" name="achievements" placeholder="Recognition in School / District / State Level" value={aptitudeForm.achievements} onChange={handleInputChange} className="w-full p-3 bg-white/70 border border-black/10 rounded-[4px] outline-none focus:border-brand" />
-                      </div>
-                    </div>
-                    <div className="flex justify-between pt-2">
-                      <button type="button" onClick={() => handleTabChange('personal')} className="px-5 py-2.5 bg-white border border-gray-250 text-gray-700 hover:border-black hover:text-black font-bold text-[10px] uppercase tracking-wider rounded-[4px] transition cursor-pointer flex items-center gap-1.5">
-                        <ArrowLeft className="w-3.5 h-3.5" />
-                        <span>Previous</span>
-                      </button>
-                      <button type="button" onClick={() => handleTabChange('parents')} className="px-5 py-2.5 bg-black hover:bg-zinc-800 text-white font-bold text-[10px] uppercase tracking-wider rounded-[4px] transition cursor-pointer flex items-center gap-1.5">
-                        <span>Next Tab</span>
-                        <ArrowRight className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {/* TAB 3: PARENTS DETAILS (Batch section removed) */}
-                {activeTab === 'parents' && (
-                  <div className="space-y-4 animate-in fade-in duration-200">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div className="space-y-1">
-                        <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Guardian Name</label>
-                        <input type="text" name="guardianName" placeholder="name of parent or guardian" value={aptitudeForm.guardianName} onChange={handleInputChange} className="w-full p-3 bg-white/70 border border-black/10 rounded-[4px] outline-none focus:border-brand" />
-                      </div>
-                      <div className="space-y-1">
-                        <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Relationship</label>
-                        <select name="guardianRelationship" value={aptitudeForm.guardianRelationship} onChange={handleInputChange} className="w-full p-3 bg-white/70 border border-black/10 rounded-[4px] outline-none focus:border-brand cursor-pointer">
-                          <option value="Father">Father</option>
-                          <option value="Mother">Mother</option>
-                          <option value="Uncle">Uncle</option>
-                          <option value="Aunt">Aunt</option>
-                          <option value="Other">Other</option>
-                        </select>
-                      </div>
-                      <div className="space-y-1">
-                        <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Guardian Phone</label>
-                        <input type="tel" name="guardianPhone" placeholder="Guardian mobile number" value={aptitudeForm.guardianPhone} onChange={handleInputChange} className="w-full p-3 bg-white/70 border border-black/10 rounded-[4px] outline-none focus:border-brand" />
-                      </div>
-                      <div className="space-y-1">
-                        <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Father's Education</label>
-                        <input type="text" name="fatherQualification" placeholder="Qualification of Father" value={aptitudeForm.fatherQualification} onChange={handleInputChange} className="w-full p-3 bg-white/70 border border-black/10 rounded-[4px] outline-none focus:border-brand" />
-                      </div>
-                      <div className="space-y-1">
-                        <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Mother's Education</label>
-                        <input type="text" name="motherQualification" placeholder="Qualification of Mother" value={aptitudeForm.motherQualification} onChange={handleInputChange} className="w-full p-3 bg-white/70 border border-black/10 rounded-[4px] outline-none focus:border-brand" />
-                      </div>
-                      <div className="space-y-1">
-                        <label className="text-black/50 uppercase tracking-wider block text-[9px] font-extrabold">Father's Occupation</label>
-                        <input type="text" name="fatherOccupation" placeholder="Occupation of Father" value={aptitudeForm.fatherOccupation} onChange={handleInputChange} className="w-full p-3 bg-white/70 border border-black/10 rounded-[4px] outline-none focus:border-brand" />
-                      </div>
-                    </div>
-                    <div className="flex flex-col sm:flex-row gap-3 pt-2 justify-between items-stretch sm:items-center">
-                      <button type="button" onClick={() => handleTabChange('school')} className="px-5 py-2.5 bg-white border border-gray-250 text-gray-700 hover:border-black hover:text-black font-bold text-[10px] uppercase tracking-wider rounded-[4px] transition cursor-pointer flex items-center justify-center gap-1.5 w-full sm:w-auto">
-                        <ArrowLeft className="w-3.5 h-3.5" />
-                        <span>Previous</span>
-                      </button>
-                      <button type="submit" className="px-8 py-3 bg-brand hover:bg-brand-dark text-black font-bold text-[10px] uppercase tracking-wider rounded-[4px] transition cursor-pointer flex items-center justify-center gap-1.5 w-full sm:w-auto">
-                        <span>Submit & Register on CIGI</span>
-                        <ArrowRight className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                <div className="pt-4 border-t border-black/[0.05]">
-                  <p className="text-[9px] text-black/45 font-semibold">
-                    <Info className="w-3.5 h-3.5 inline mr-1" /> Saves entered details and navigates directly to CIGI Registration Portal.
+                {copyMessage && (
+                  <p className={`mt-2 text-[10px] font-bold uppercase tracking-wider font-mono ${copyMessage.includes('copied') || copyMessage.includes('generated') ? 'text-emerald-600' : 'text-rose-600'}`}>
+                    {copyMessage}
                   </p>
-                </div>
+                )}
               </form>
             </div>
-          )}
+          </div>
         </div>
       </div>
     </section>

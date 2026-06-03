@@ -43,14 +43,14 @@ export default function Hero({ setView, navigateToSection }) {
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center lg:justify-start gap-4 pt-2 w-full">
             <button
               onClick={handleBookNowClick}
-              className="px-8 py-4 bg-brand hover:bg-brand-dark hover:scale-[1.02] active:scale-[0.98] text-xs font-black uppercase tracking-widest transition-all duration-300 cursor-pointer rounded-[4px] shadow-md text-black flex items-center justify-center gap-2 border border-black/5 w-full sm:w-auto"
+              className="px-8 py-4 bg-brand hover:bg-brand-dark hover:scale-[1.02] active:scale-[0.98] text-xs font-black uppercase tracking-widest transition-all duration-300 cursor-pointer rounded-xl shadow-md text-black flex items-center justify-center gap-2 border border-black/5 w-full sm:w-auto"
             >
               <span>Book a Session</span>
               <ArrowRight className="w-4 h-4" />
             </button>
             <button
               onClick={() => navigateToSection('services')}
-              className="px-8 py-4 bg-white/70 hover:bg-white border border-black/10 hover:border-black text-black hover:scale-[1.02] active:scale-[0.98] text-xs font-black uppercase tracking-widest transition-all duration-300 cursor-pointer rounded-[4px] shadow-xs w-full sm:w-auto text-center"
+              className="px-8 py-4 bg-white/70 hover:bg-white border border-black/10 hover:border-black text-black hover:scale-[1.02] active:scale-[0.98] text-xs font-black uppercase tracking-widest transition-all duration-300 cursor-pointer rounded-xl shadow-xs w-full sm:w-auto text-center"
             >
               Explore Services
             </button>
@@ -78,7 +78,7 @@ export default function Hero({ setView, navigateToSection }) {
         <div className="hidden lg:flex lg:col-span-6 relative items-center justify-center fade-in-up group" style={{ animationDelay: '0.2s' }}>
 
           {/* Main Visual Frame */}
-          <div className="w-full aspect-[4/3] md:aspect-[16/11] rounded-[4px] overflow-hidden shadow-2xl border-4 border-white bg-white relative z-10">
+          <div className="w-full aspect-[4/3] md:aspect-[16/11] rounded-xl overflow-hidden shadow-2xl border-4 border-white bg-white relative z-10">
             <img
               src="/children-learning.png"
               alt="Immersive mentoring storytelling visual"
@@ -88,7 +88,7 @@ export default function Hero({ setView, navigateToSection }) {
             <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
 
             {/* Overlay Text Box Labels */}
-            <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-md border border-black/10 px-4 py-2 rounded-[4px] shadow-lg z-20 pointer-events-none">
+            <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-md border border-black/10 px-4 py-2 rounded-xl shadow-lg z-20 pointer-events-none">
               <span className="text-[10px] font-extrabold uppercase tracking-widest text-black">
                 Therapy | Career Counselling | CDAT
               </span>
@@ -96,8 +96,8 @@ export default function Hero({ setView, navigateToSection }) {
           </div>
 
           {/* Floating UI Card 1: Counselling */}
-          <div className="absolute -top-6 -left-6 bg-white/95 backdrop-blur-md border border-black/[0.04] p-4 rounded-[4px] shadow-xl hidden lg:flex items-center gap-3.5 max-w-[220px] z-20 pointer-events-none float-slow">
-            <div className="w-9 h-9 rounded-[4px] bg-brand flex items-center justify-center text-black shadow-inner">
+          <div className="absolute -top-6 -left-6 bg-white/95 backdrop-blur-md border border-black/[0.04] p-4 rounded-xl shadow-xl hidden lg:flex items-center gap-3.5 max-w-[220px] z-20 pointer-events-none float-slow">
+            <div className="w-9 h-9 rounded-xl bg-brand flex items-center justify-center text-black shadow-inner">
               <HeartPulse className="w-4 h-4" />
             </div>
             <div>
@@ -107,8 +107,8 @@ export default function Hero({ setView, navigateToSection }) {
           </div>
 
           {/* Floating UI Card 2: Career Mapping */}
-          <div className="absolute -bottom-6 -right-6 bg-white/95 backdrop-blur-md border border-black/[0.04] p-4 rounded-[4px] shadow-xl hidden lg:flex items-center gap-3.5 max-w-[220px] z-20 pointer-events-none float-fast">
-            <div className="w-9 h-9 rounded-[4px] bg-black flex items-center justify-center text-white shadow-md">
+          <div className="absolute -bottom-6 -right-6 bg-white/95 backdrop-blur-md border border-black/[0.04] p-4 rounded-xl shadow-xl hidden lg:flex items-center gap-3.5 max-w-[220px] z-20 pointer-events-none float-fast">
+            <div className="w-9 h-9 rounded-xl bg-black flex items-center justify-center text-white shadow-md">
               <Compass className="w-4 h-4" />
             </div>
             <div>
@@ -118,7 +118,7 @@ export default function Hero({ setView, navigateToSection }) {
           </div>
 
           {/* Floating UI Card 3: Trust Badge */}
-          <div className="absolute top-1/2 -right-8 transform -translate-y-1/2 bg-white/95 backdrop-blur-md border border-black/[0.04] px-4 py-2.5 rounded-[4px] shadow-lg hidden lg:flex items-center gap-2 z-20 pointer-events-none float-slow">
+          <div className="absolute top-1/2 -right-8 transform -translate-y-1/2 bg-white/95 backdrop-blur-md border border-black/[0.04] px-4 py-2.5 rounded-xl shadow-lg hidden lg:flex items-center gap-2 z-20 pointer-events-none float-slow">
             <ShieldCheck className="w-4 h-4 text-emerald-600" />
             <span className="text-[9px] font-black uppercase tracking-wider text-black">RCI Certified Mentors</span>
           </div>
