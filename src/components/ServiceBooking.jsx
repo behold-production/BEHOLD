@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   Globe, MapPin, Building, Calendar, Clock, User,
-  CreditCard, CheckCircle2, Sparkles, Bell, ArrowRight, Info, Lock, Eye, EyeOff
+  CreditCard, Bell, ArrowRight, Info, Lock, Eye, EyeOff
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -296,7 +296,6 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
               <div className="bg-zinc-50 border border-zinc-200 p-4 sm:p-5 rounded-lg space-y-4 animate-in fade-in duration-300">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-200 pb-3">
                   <div className="flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-brand shrink-0" />
                     <h3 className="font-bold uppercase tracking-wider text-xs text-zinc-900">
                       Session Flow: {bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Counselling'} ({bookingMode.replace('_', ' ')})
                     </h3>
@@ -361,7 +360,6 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
             {isSuccess ? (
               <div className="p-5 sm:p-8 bg-zinc-50 border border-zinc-200 text-center rounded-lg space-y-4 max-w-xl mx-auto animate-in fade-in duration-500">
-                <CheckCircle2 className="w-12 h-12 text-zinc-900 mx-auto" />
                 <h3 className="text-lg font-bold uppercase text-zinc-900">Session Successfully Booked!</h3>
                 <p className="text-xs text-zinc-650 max-w-md mx-auto leading-relaxed">
                   Thank you, <strong>{bookingForm.name}</strong>. Your <strong>{bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Counselling'}</strong> session (1 Hour) is scheduled on <strong>{selectedDate}</strong> at <strong>{selectedTime}</strong> via <strong>{bookingMode}</strong> with <strong>{selectedAdvisor?.name}</strong>.
@@ -540,7 +538,6 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
                     {isAutofilled && (
                       <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg text-[10px] flex items-center gap-1.5">
-                        <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
                         Details auto-filled from your Student Profile.
                       </div>
                     )}

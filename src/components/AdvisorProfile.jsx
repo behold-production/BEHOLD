@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { ArrowLeft, Clock, Globe, Award, BookOpen, CheckCircle2, Calendar, MapPin, Sparkles, Heart } from 'lucide-react';
+import { ArrowLeft, Clock, Globe, Award, BookOpen, Calendar, MapPin, Heart } from 'lucide-react';
 
 const ADVISORS_DB = {
   't1': { name: 'Josina Joseph', role: 'Consultant Psychologist', specialties: ['Mental Health Concerns', 'Anger & Emotional Regulation'], hours: 6000, lang: 'Malayalam', price: 1500, nextAvailable: '15 mins', education: 'MSc Psychology, PG Diploma in Counselling', bio: 'Josina is a compassionate consultant psychologist with over 6000+ hours of clinical experience. She specializes in helping individuals navigate complex emotional landscapes, develop healthier coping mechanisms, and overcome deep-seated anger issues. Her approach is rooted in empathy and evidence-based therapeutic practices.', type: 'counselling' },
@@ -82,8 +82,8 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                 <div className="w-px h-8 bg-zinc-200"></div>
                 <div className="flex flex-col">
                   <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider mb-1">Session Fee</span>
-                  <span className="flex items-center gap-1.5 text-xs sm:text-sm font-extrabold text-zinc-900">
-                    <Sparkles className="w-4 h-4 text-brand" /> ₹{advisor.price.toLocaleString('en-IN')} / hr
+                  <span className="text-xs sm:text-sm font-extrabold text-zinc-900">
+                    ₹{advisor.price.toLocaleString('en-IN')} / hr
                   </span>
                 </div>
               </div>
@@ -115,8 +115,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
               </div>
               <div className="flex flex-wrap gap-3">
                 {advisor.specialties.map((spec, i) => (
-                  <div key={i} className="flex items-center gap-2 px-4 py-2 bg-zinc-50 border border-zinc-200 rounded-lg">
-                    <CheckCircle2 className="w-4 h-4 text-brand" />
+                  <div key={i} className="px-4 py-2 bg-zinc-50 border border-zinc-200 rounded-lg">
                     <span className="text-xs font-bold text-zinc-900">{spec}</span>
                   </div>
                 ))}

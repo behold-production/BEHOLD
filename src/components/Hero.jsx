@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Sparkles, Compass, ShieldCheck, HeartPulse, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, Compass, HeartPulse } from 'lucide-react';
 
 export default function Hero({ setView, navigateToSection }) {
   const handleBookNowClick = () => {
@@ -67,21 +67,22 @@ export default function Hero({ setView, navigateToSection }) {
         <div className="flex lg:col-span-6 relative items-center justify-center fade-in-up group w-full px-2 sm:px-4 lg:px-0 mt-6 lg:mt-0" style={{ animationDelay: '0.2s' }}>
 
           {/* Main Visual Frame */}
-          <div className="w-full aspect-[4/3] md:aspect-[16/11] rounded-lg overflow-hidden shadow-2xl border-4 border-white bg-white relative z-10">
+          <div className="w-full aspect-[4/3] md:aspect-[16/11] rounded-lg overflow-hidden shadow-2xl border-4 border-white bg-black relative z-10">
             <img
               src="/children-learning.png"
               alt="Immersive mentoring storytelling visual"
               className="w-full h-full object-cover grayscale-15 contrast-105 group-hover:scale-103 transition-transform duration-700"
             />
+            {/* Foreground image overlay */}
+            <img
+              src="/front.png"
+              alt="Storytelling visual overlay"
+              className="absolute inset-0 w-full h-full object-cover z-20 pointer-events-none"
+            />
+            {/* Black semi-transparent opacity overlay (now over the foreground image) */}
+            <div className="absolute inset-0 bg-black/70 z-30 pointer-events-none" />
             {/* Visual Soft Dark Gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
-
-            {/* Overlay Text Box Labels */}
-            <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-md border border-zinc-200 px-4 py-2 rounded-lg shadow-lg z-20 pointer-events-none">
-              <span className="text-[10px] font-extrabold uppercase tracking-widest text-zinc-900">
-                Therapy | Career Counselling | CDAT
-              </span>
-            </div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none z-35" />
           </div>
 
           {/* Floating UI Card 1: Counselling */}
@@ -106,11 +107,7 @@ export default function Hero({ setView, navigateToSection }) {
             </div>
           </div>
 
-          {/* Floating UI Card 3: Trust Badge */}
-          <div className="absolute top-1/2 -right-8 transform -translate-y-1/2 bg-white/90 backdrop-blur-md border border-zinc-100 px-4 py-2.5 rounded-lg shadow-lg hidden lg:flex items-center gap-2 z-20 pointer-events-none float-slow">
-            <ShieldCheck className="w-4 h-4 text-emerald-600" />
-            <span className="text-[9px] font-black uppercase tracking-wider text-zinc-900">RCI Certified Mentors</span>
-          </div>
+
 
         </div>
 

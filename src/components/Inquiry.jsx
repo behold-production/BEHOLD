@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, Loader2, Sparkles } from 'lucide-react';
+import { ArrowRight, Loader2 } from 'lucide-react';
 
 export default function Inquiry({ testProfile }) {
   const [formData, setFormData] = useState({
@@ -93,7 +93,7 @@ export default function Inquiry({ testProfile }) {
             
             {testProfile && (
               <div className="p-4 bg-brand/10 border border-brand/40 text-zinc-900 rounded-lg text-xs font-semibold flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-brand animate-pulse" /> Pre-filled with diagnostic test scores ({testProfile.dominantDomain} profile).
+                Pre-filled with diagnostic test scores ({testProfile.dominantDomain} profile).
               </div>
             )}
 

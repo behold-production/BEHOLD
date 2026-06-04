@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Compass, HeartHandshake, Users, GraduationCap, CheckCircle2, Heart
+  Compass, HeartHandshake, Users, GraduationCap, Target, Heart
 } from 'lucide-react';
 
 const PILLARS = [
@@ -25,7 +25,7 @@ const PILLARS = [
     desc: 'Rigorous stream mapping and aptitude evaluations matching university pathways with individual natural talents.'
   },
   {
-    icon: CheckCircle2,
+    icon: Target,
     title: 'Goal Tracking',
     desc: 'Continuous checks and developmental reviews ensuring students stay oriented toward their long-term developmental milestones.'
   },

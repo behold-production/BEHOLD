@@ -56,7 +56,16 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth }) {
       <header className="sticky top-0 w-full bg-white/80 backdrop-blur-lg z-50 border-b border-zinc-200/50 text-zinc-900 transition-all shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
           {/* Left Column: Logo & Nav Links */}
-          <div className="flex items-center space-x-12">
+          <div className="flex items-center space-x-3.5 md:space-x-12">
+            {/* Hamburger Menu Toggle on Left of Logo for Mobile */}
+            <button
+              id="mobile-menu-toggle"
+              className="md:hidden text-zinc-900 hover:text-zinc-650 transition p-1 cursor-pointer"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+
             <span 
               onClick={handleLogoClick}
               className="font-header font-black text-xl tracking-tighter cursor-pointer text-zinc-900 hover:text-brand transition duration-300"
@@ -174,8 +183,8 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth }) {
             </button>
           </div>
 
-          {/* Mobile Actions (Avatar & Hamburger Menu) */}
-          <div className="flex items-center space-x-3.5 md:hidden relative">
+          {/* Mobile Actions (Avatar only) */}
+          <div className="flex items-center md:hidden relative">
             <div className="relative">
               {user ? (
                 <>
@@ -220,14 +229,6 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth }) {
                 </button>
               )}
             </div>
-
-            <button
-              id="mobile-menu-toggle"
-              className="text-zinc-900 hover:text-zinc-650 transition p-1 cursor-pointer"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
           </div>
         </div>
       </header>
@@ -241,8 +242,8 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth }) {
       )}
 
       {/* Mobile Side Drawer - Glassmorphism UI */}
-      <div className={`fixed top-0 right-0 bottom-0 w-[300px] max-w-[85vw] bg-white/95 backdrop-blur-md z-50 md:hidden shadow-2xl transition-all duration-300 ease-in-out transform flex flex-col p-5 border-l border-zinc-200/50 ${
-        isMenuOpen ? 'translate-x-0 opacity-100 visible' : 'translate-x-full opacity-0 invisible pointer-events-none'
+      <div className={`fixed top-0 left-0 bottom-0 w-[300px] max-w-[85vw] bg-white/95 backdrop-blur-md z-50 md:hidden shadow-2xl transition-all duration-300 ease-in-out transform flex flex-col p-5 border-r border-zinc-200/50 ${
+        isMenuOpen ? 'translate-x-0 opacity-100 visible' : '-translate-x-full opacity-0 invisible pointer-events-none'
       }`}>
         {/* Drawer Header */}
         <div className="flex items-center justify-between pb-4 border-b border-zinc-150 mb-5">

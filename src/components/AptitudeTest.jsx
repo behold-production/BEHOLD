@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import {
-  CheckCircle2,
   ArrowRight,
-  BrainCircuit,
+  Brain,
+  Puzzle,
   BookOpen,
   UserCheck,
   RotateCcw,
   Award,
   ArrowUpRight,
-  Sparkles,
+  Lightbulb,
   Heart
 } from 'lucide-react';
 
@@ -183,12 +183,12 @@ const TEST_QUESTIONS = [
 const DOMAIN_DETAILS = {
   Aptitude: {
     title: "General Cognitive Aptitude",
-    icon: <BrainCircuit className="w-8 h-8 text-zinc-900" />,
+    icon: <Brain className="w-8 h-8 text-zinc-900" />,
     desc: "You have a strong capacity for general cognitive problem-solving, mathematical tracking, and deductive reasoning under time-bounded scenarios."
   },
   Logical: {
     title: "Logical & Pattern Reasoning",
-    icon: <BrainCircuit className="w-8 h-8 text-zinc-900" />,
+    icon: <Puzzle className="w-8 h-8 text-zinc-900" />,
     desc: "You possess a powerful ability to analyze sequential data, identify underlying formulas, and evaluate structured arguments objectively."
   },
   Emotional: {
@@ -213,7 +213,7 @@ const DOMAIN_DETAILS = {
   },
   Creativity: {
     title: "Lateral & Creative Thinking",
-    icon: <Sparkles className="w-8 h-8 text-zinc-900" />,
+    icon: <Lightbulb className="w-8 h-8 text-zinc-900" />,
     desc: "You excel at visual layouts, abstract brainstorming, and finding multiple alternative uses for ordinary systems. You reject copy-paste designs."
   },
   Leadership: {
@@ -439,7 +439,7 @@ export default function AptitudeTest({ onFinishTest }) {
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-6 sm:pb-8 border-b border-zinc-100 mb-6 sm:mb-10">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 bg-zinc-900 text-brand rounded-md flex items-center justify-center shadow-md">
-                  <CheckCircle2 className="w-6 h-6" />
+                  <Brain className="w-6 h-6" />
                 </div>
                 <div>
                   <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-zinc-50 border border-zinc-200 text-zinc-900 text-[9px] font-extrabold uppercase tracking-wider mb-1">
@@ -545,7 +545,7 @@ export default function AptitudeTest({ onFinishTest }) {
                       <ArrowRight className="w-4 h-4 text-zinc-900" />
                     </button>
                     <p className="text-[9px] text-zinc-450 text-center mt-3 font-semibold flex items-center justify-center gap-1">
-                      <Sparkles className="w-3.5 h-3.5 text-zinc-900 animate-pulse" /> Schedules with a State Coordinator.
+                      Schedules with a State Coordinator.
                     </p>
                   </div>
                 </div>
