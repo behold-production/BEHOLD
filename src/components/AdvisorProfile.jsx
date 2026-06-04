@@ -1,21 +1,70 @@
 import React, { useEffect } from 'react';
-import { ArrowLeft, Clock, Globe, Award, BookOpen, Calendar, MapPin, Heart } from 'lucide-react';
-
-const ADVISORS_DB = {
-  't1': { name: 'Josina Joseph', role: 'Consultant Psychologist', specialties: ['Mental Health Concerns', 'Anger & Emotional Regulation'], hours: 6000, lang: 'Malayalam', price: 1500, nextAvailable: '15 mins', education: 'MSc Psychology, PG Diploma in Counselling', bio: 'Josina is a compassionate consultant psychologist with over 6000+ hours of clinical experience. She specializes in helping individuals navigate complex emotional landscapes, develop healthier coping mechanisms, and overcome deep-seated anger issues. Her approach is rooted in empathy and evidence-based therapeutic practices.', type: 'counselling' },
-  't2': { name: 'Muhammed Niyas S H', role: 'Consultant Psychologist', specialties: ['Anxiety Stress & Panic', 'Depression & Mood Concerns', 'Relationship'], hours: 1000, lang: 'Malayalam', price: 1250, nextAvailable: 'Today at 7:00 PM', education: 'MPhil Clinical Psychology', bio: 'Muhammed specializes in cognitive behavioral approaches to managing severe anxiety and depressive disorders. He has a keen focus on relationship dynamics, helping couples and individuals find harmony and understanding in their interpersonal connections.', type: 'counselling' },
-  't3': { name: 'Jahnavi Navami Rajesh', role: 'Clinical Psychologist', specialties: ['Relationship & Marital Issues', 'Anxiety Stress & Panic'], hours: 250, lang: 'Malayalam', price: 1000, nextAvailable: 'Today at 7:00 PM', education: 'MA Clinical Psychology', bio: 'Jahnavi is dedicated to fostering emotional resilience. She creates a warm, non-judgmental space for clients struggling with panic attacks and relationship stressors, guiding them towards a more centered and peaceful life.', type: 'counselling' },
-  't4': { name: 'Hana Anvar M P', role: 'Career Counsellor', specialties: ['Work Career & Academic Concerns', 'Anger & Emotional'], hours: 400, lang: 'Malayalam', price: 1000, nextAvailable: 'Today at 7:00 PM', education: 'MSc Applied Psychology', bio: 'With a strong background in academic and career counseling, Hana helps young adults and professionals overcome burnout, navigate career transitions, and manage the intense emotions that often accompany high-pressure environments.', type: 'counselling' },
-  't5': { name: 'Surbinas Rahman V P', role: 'Psychiatrist', specialties: ['Anxiety & Panic', 'Depression & Mood Concerns', 'Relationship & Marital'], hours: 3000, lang: 'Malayalam', price: 2000, nextAvailable: 'Today at 10:00 PM', education: 'MA Psychology, CBT Certified', bio: 'Surbinas brings a wealth of experience in treating mood disorders and complex relationship conflicts. His therapeutic style is collaborative and solution-focused, aiming to empower clients with practical tools for long-term mental wellbeing.', type: 'counselling' },
-  't6': { name: 'Mary Santra Tomy', role: 'Consultant Psychologist', specialties: ['Relationship & Marital Issues', 'Self-Esteem & Personal Growth'], hours: 4000, lang: 'Malayalam', price: 1000, nextAvailable: 'Tomorrow at 12:00 AM', education: 'MSc Counselling Psychology', bio: 'Mary focuses on empowering individuals by rebuilding self-esteem and fostering deep personal growth. She is highly sought after for her expertise in marital counseling, helping couples rebuild trust and improve communication.', type: 'counselling' }
-};
+import { ArrowLeft, Clock, Globe, Award, BookOpen, Calendar, MapPin, Heart, GraduationCap } from 'lucide-react';
 
 export default function AdvisorProfile({ advisorId, onBack, onBook }) {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [advisorId]);
 
-  const advisor = ADVISORS_DB[advisorId];
+  const getDynamicAdvisorDetails = (id) => {
+    const baseAdvisors = [
+      { id: 't1', name: 'Josina Joseph', role: 'Consultant Psychologist', specialties: ['Mental Health Concerns', 'Anger & Emotional Regulation'], hours: 6000, lang: 'Malayalam', price: 1500, nextAvailable: '15 mins', education: 'MSc Psychology, PG Diploma in Counselling', bio: 'Josina is a compassionate consultant psychologist with over 6000+ hours of clinical experience. She specializes in helping individuals navigate complex emotional landscapes, develop healthier coping mechanisms, and overcome deep-seated anger issues. Her approach is rooted in empathy and evidence-based therapeutic practices.', type: 'counselling' },
+      { id: 't2', name: 'Muhammed Niyas S H', role: 'Consultant Psychologist', specialties: ['Anxiety Stress & Panic', 'Depression & Mood Concerns', 'Relationship'], hours: 1000, lang: 'Malayalam', price: 1250, nextAvailable: 'Today at 7:00 PM', education: 'MPhil Clinical Psychology', bio: 'Muhammed specializes in cognitive behavioral approaches to managing severe anxiety and depressive disorders. He has a keen focus on relationship dynamics, helping couples and individuals find harmony and understanding in their interpersonal connections.', type: 'counselling' },
+      { id: 't3', name: 'Jahnavi Navami Rajesh', role: 'Clinical Psychologist', specialties: ['Relationship & Marital Issues', 'Anxiety Stress & Panic'], hours: 250, lang: 'Malayalam', price: 1000, nextAvailable: 'Today at 7:00 PM', education: 'MA Clinical Psychology', bio: 'Jahnavi is dedicated to fostering emotional resilience. She creates a warm, non-judgmental space for clients struggling with panic attacks and relationship stressors, guiding them towards a more centered and peaceful life.', type: 'counselling' },
+      { id: 't4', name: 'Hana Anvar M P', role: 'Career Counsellor', specialties: ['Work Career & Academic Concerns', 'Anger & Emotional'], hours: 400, lang: 'Malayalam', price: 1000, nextAvailable: 'Today at 7:00 PM', education: 'MSc Applied Psychology', bio: 'With a strong background in academic and career counseling, Hana helps young adults and professionals overcome burnout, navigate career transitions, and manage the intense emotions that often accompany high-pressure environments.', type: 'counselling' },
+      { id: 't5', name: 'Surbinas Rahman V P', role: 'Psychiatrist', specialties: ['Anxiety & Panic', 'Depression & Mood Concerns', 'Relationship & Marital'], hours: 3000, lang: 'Malayalam', price: 2000, nextAvailable: 'Today at 10:00 PM', education: 'MA Psychology, CBT Certified', bio: 'Surbinas brings a wealth of experience in treating mood disorders and complex relationship conflicts. His therapeutic style is collaborative and solution-focused, aiming to empower clients with practical tools for long-term mental wellbeing.', type: 'counselling' },
+      { id: 't6', name: 'Mary Santra Tomy', role: 'Consultant Psychologist', specialties: ['Relationship & Marital Issues', 'Self-Esteem & Personal Growth'], hours: 4000, lang: 'Malayalam', price: 1000, nextAvailable: 'Tomorrow at 12:00 AM', education: 'MSc Counselling Psychology', bio: 'Mary focuses on empowering individuals by rebuilding self-esteem and fostering deep personal growth. She is highly sought after for her expertise in marital counseling, helping couples rebuild trust and improve communication.', type: 'counselling' }
+    ];
+
+    const foundBase = baseAdvisors.find(a => a.id === id);
+    if (foundBase) return foundBase;
+
+    try {
+      const users = JSON.parse(localStorage.getItem('behold_users_db') || '[]');
+      const psy = users.find(u => u.id === id && u.role === 'PSYCHOLOGIST');
+      if (psy) {
+        const savedProfile = localStorage.getItem(`behold_advisor_profile_${psy.id}`);
+        let profile = {
+          name: psy.name,
+          role: 'Consultant Psychologist',
+          education: 'MPhil Clinical Psychology',
+          specialties: 'Anxiety Stress & Panic, Depression & Mood Concerns, Relationship',
+          price: 1250,
+          lang: 'Malayalam, English',
+          bio: 'Dedicated consultant psychologist.'
+        };
+        
+        if (savedProfile) {
+          try {
+            profile = { ...profile, ...JSON.parse(savedProfile) };
+          } catch (e) {}
+        }
+        
+        const specialtiesArray = typeof profile.specialties === 'string'
+          ? profile.specialties.split(',').map(s => s.trim()).filter(Boolean)
+          : profile.specialties || [];
+
+        return {
+          id: psy.id,
+          name: profile.name || psy.name,
+          role: profile.role || 'Consultant Psychologist',
+          specialties: specialtiesArray,
+          hours: 0,
+          lang: profile.lang || 'Malayalam, English',
+          price: Number(profile.price) || 1250,
+          nextAvailable: 'Available Today',
+          education: profile.education || 'MPhil Clinical Psychology',
+          bio: profile.bio || 'Dedicated consultant psychologist.',
+          type: 'counselling'
+        };
+      }
+    } catch (e) {
+      console.error("Failed to resolve dynamic advisor profile details", e);
+    }
+    return null;
+  };
+
+  const advisor = getDynamicAdvisorDetails(advisorId);
 
   if (!advisor) {
     return (
@@ -129,8 +178,8 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                 <h3 className="text-sm sm:text-lg font-black uppercase tracking-wide">Qualifications</h3>
               </div>
               <div className="flex items-start gap-4 p-4 border border-zinc-200 rounded-lg bg-white">
-                <div className="w-10 h-10 rounded-lg bg-zinc-50 flex items-center justify-center shrink-0">
-                  <span className="text-lg">🎓</span>
+                <div className="w-10 h-10 rounded-lg bg-zinc-50 flex items-center justify-center shrink-0 text-zinc-600">
+                  <GraduationCap className="w-5 h-5" />
                 </div>
                 <div>
                   <h4 className="font-bold text-xs sm:text-sm text-zinc-900">{advisor.education}</h4>
@@ -153,7 +202,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
               <div className="p-3.5 sm:p-4 bg-zinc-50 border border-zinc-200 rounded-lg space-y-3">
                 <div className="flex justify-between items-center text-xs sm:text-sm">
                   <span className="text-zinc-600 font-semibold">Next Available</span>
-                  <span className="font-extrabold text-zinc-900 bg-brand/20 px-2 py-0.5 rounded-md text-[10px] sm:text-xs">{advisor.nextAvailable}</span>
+                  <span className="font-extrabold text-brand bg-brand-light border border-brand/20 px-2 py-0.5 rounded-md text-[10px] sm:text-xs">{advisor.nextAvailable}</span>
                 </div>
                 <div className="w-full h-px bg-zinc-200"></div>
                 <div className="flex justify-between items-center text-xs sm:text-sm">

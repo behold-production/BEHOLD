@@ -51,16 +51,30 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth }) {
     setIsMenuOpen(false);
   };
 
+  const handleProfileClick = () => {
+    setShowDropdown(false);
+    setIsMenuOpen(false);
+    if (user) {
+      if (user.role === 'ADMIN') {
+        window.location.hash = '#/admin';
+      } else if (user.role === 'PSYCHOLOGIST') {
+        window.location.hash = '#/counsellor';
+      } else {
+        window.location.hash = '#/profile';
+      }
+    }
+  };
+
   return (
     <>
       <header className="sticky top-0 w-full bg-white/80 backdrop-blur-lg z-50 border-b border-zinc-200/50 text-zinc-900 transition-all shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
           {/* Left Column: Logo & Nav Links */}
-          <div className="flex items-center space-x-3.5 md:space-x-12">
+          <div className="flex items-center space-x-3.5 lg:space-x-12">
             {/* Hamburger Menu Toggle on Left of Logo for Mobile */}
             <button
               id="mobile-menu-toggle"
-              className="md:hidden text-zinc-900 hover:text-zinc-650 transition p-1 cursor-pointer"
+              className="lg:hidden text-zinc-900 hover:text-zinc-650 transition p-1 cursor-pointer"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -74,7 +88,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth }) {
               BEHOLD<span className="text-brand font-black">.</span>
             </span>
             
-            <nav className="hidden md:flex items-center space-x-8 text-xs font-semibold tracking-wider text-zinc-500">
+            <nav className="hidden lg:flex items-center space-x-8 text-xs font-semibold tracking-wider text-zinc-500">
               <button 
                 onClick={handleLogoClick}
                 className={`transition-all duration-300 cursor-pointer pb-1 relative uppercase ${
@@ -126,12 +140,12 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth }) {
           </div>
 
           {/* Right Column: Actions */}
-          <div className="hidden md:flex items-center space-x-4 relative">
+          <div className="hidden lg:flex items-center space-x-4 relative">
             {user ? (
               <div className="relative">
                 <button 
                   onClick={() => setShowDropdown(!showDropdown)}
-                  className="w-10 h-10 rounded-full overflow-hidden bg-brand text-zinc-950 font-black flex items-center justify-center uppercase tracking-widest text-sm shadow-xs border border-zinc-200/50 hover:scale-105 transition-transform cursor-pointer"
+                  className="w-10 h-10 rounded-full overflow-hidden bg-brand/10 text-brand-dark font-black flex items-center justify-center uppercase tracking-widest text-sm shadow-xs border border-brand/20 hover:scale-105 transition-transform cursor-pointer"
                 >
                   {user.image ? (
                     <img src={user.image} alt={user.name} className="w-full h-full object-cover" />
@@ -147,7 +161,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth }) {
                       <p className="text-[10px] text-zinc-400 truncate mt-0.5">{user.email}</p>
                     </div>
                     <button
-                      onClick={() => { setShowDropdown(false); window.location.hash = '#/profile'; }}
+                      onClick={handleProfileClick}
                       className="w-full text-left px-4 py-2.5 text-xs font-semibold text-zinc-650 hover:bg-zinc-50 hover:text-zinc-950 transition-colors flex items-center gap-2 cursor-pointer"
                     >
                       <User className="w-3.5 h-3.5 text-zinc-400" /> Your Profile
@@ -184,13 +198,13 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth }) {
           </div>
 
           {/* Mobile Actions (Avatar only) */}
-          <div className="flex items-center md:hidden relative">
+          <div className="flex items-center lg:hidden relative">
             <div className="relative">
               {user ? (
                 <>
                   <button
                     onClick={() => setShowDropdown(!showDropdown)}
-                    className="w-8 h-8 rounded-full overflow-hidden bg-brand text-zinc-950 font-black flex items-center justify-center uppercase tracking-widest text-[11px] shadow-xs border border-zinc-200/50 cursor-pointer"
+                    className="w-8 h-8 rounded-full overflow-hidden bg-brand/10 text-brand-dark font-black flex items-center justify-center uppercase tracking-widest text-[11px] shadow-xs border border-brand/20 cursor-pointer"
                   >
                     {user.image ? (
                       <img src={user.image} alt={user.name} className="w-full h-full object-cover" />
@@ -205,7 +219,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth }) {
                         <p className="text-[10px] text-zinc-400 truncate mt-0.5">{user.email}</p>
                       </div>
                       <button
-                        onClick={() => { setShowDropdown(false); window.location.hash = '#/profile'; }}
+                        onClick={handleProfileClick}
                         className="w-full text-left px-4 py-2.5 text-xs font-semibold text-zinc-650 hover:bg-zinc-50 hover:text-zinc-950 transition-colors flex items-center gap-2 cursor-pointer"
                       >
                         <User className="w-3.5 h-3.5 text-zinc-400" /> Your Profile
@@ -222,7 +236,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth }) {
               ) : (
                 <button
                   onClick={onOpenAuth}
-                  className="w-8 h-8 rounded-full bg-brand text-zinc-950 flex items-center justify-center shadow-xs border border-zinc-200/50 hover:scale-105 transition-transform cursor-pointer"
+                  className="w-8 h-8 rounded-full bg-brand text-zinc-950 flex items-center justify-center shadow-xs border border-brand/20 hover:scale-105 transition-transform cursor-pointer"
                   title="Sign In"
                 >
                   <User className="w-4 h-4" />
@@ -236,13 +250,13 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth }) {
       {/* Backdrop overlay */}
       {isMenuOpen && (
         <div 
-          className="fixed inset-0 bg-zinc-950/40 backdrop-blur-xs z-40 md:hidden animate-in fade-in duration-300"
+          className="fixed inset-0 bg-zinc-950/40 backdrop-blur-xs z-40 lg:hidden animate-in fade-in duration-300"
           onClick={() => setIsMenuOpen(false)}
         />
       )}
 
       {/* Mobile Side Drawer - Glassmorphism UI */}
-      <div className={`fixed top-0 left-0 bottom-0 w-[300px] max-w-[85vw] bg-white/95 backdrop-blur-md z-50 md:hidden shadow-2xl transition-all duration-300 ease-in-out transform flex flex-col p-5 border-r border-zinc-200/50 ${
+      <div className={`fixed top-0 left-0 bottom-0 w-[300px] max-w-[85vw] bg-white/95 backdrop-blur-md z-50 lg:hidden shadow-2xl transition-all duration-300 ease-in-out transform flex flex-col p-5 border-r border-zinc-200/50 ${
         isMenuOpen ? 'translate-x-0 opacity-100 visible' : '-translate-x-full opacity-0 invisible pointer-events-none'
       }`}>
         {/* Drawer Header */}
@@ -325,7 +339,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth }) {
           {user ? (
             <div className="bg-zinc-50 p-3 rounded-lg border border-zinc-200/60 flex flex-col gap-3">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-brand text-zinc-950 font-black flex items-center justify-center text-xs shrink-0 shadow-inner">
+                <div className="w-9 h-9 rounded-full bg-brand/10 text-brand-dark font-black flex items-center justify-center text-xs shrink-0 shadow-inner border border-brand/20">
                   {user.name.charAt(0).toUpperCase()}
                 </div>
                 <div className="min-w-0 flex-1">
@@ -336,7 +350,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth }) {
               
               <div className="grid grid-cols-2 gap-2">
                 <button
-                  onClick={() => { window.location.hash = '#/profile'; setIsMenuOpen(false); }}
+                  onClick={handleProfileClick}
                   className="py-2 text-[10px] font-bold text-zinc-700 bg-white border border-zinc-200 hover:border-zinc-900 rounded-md transition-colors text-center cursor-pointer uppercase tracking-wider"
                 >
                   Profile
@@ -352,7 +366,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth }) {
           ) : (
             <button
               onClick={() => { onOpenAuth(); setIsMenuOpen(false); }}
-              className="w-full py-3 bg-brand hover:bg-brand-dark text-zinc-900 font-extrabold text-xs uppercase tracking-widest rounded-lg text-center transition cursor-pointer shadow-xs"
+              className="w-full py-3 bg-brand hover:bg-brand-dark text-zinc-950 font-extrabold text-xs uppercase tracking-widest rounded-lg text-center transition cursor-pointer shadow-xs"
             >
               Sign In to Account
             </button>

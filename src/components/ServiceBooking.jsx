@@ -53,18 +53,6 @@ const CAREER_FLOW = {
   ]
 };
 
-const ADVISORS = [
-  { id: 't1', name: 'Josina Joseph', role: 'Consultant Psychologist', availability: 'Available Today', type: 'counselling' },
-  { id: 't2', name: 'Muhammed Niyas S H', role: 'Consultant Psychologist', availability: 'Available Today', type: 'counselling' },
-  { id: 't3', name: 'Jahnavi Navami Rajesh', role: 'Consultant Psychologist', availability: 'Available Today', type: 'counselling' },
-  { id: 't4', name: 'Hana Anvar M P', role: 'Consultant Psychologist', availability: 'Available Today', type: 'counselling' },
-  { id: 't5', name: 'Surbinas Rahman V P', role: 'Consultant Psychologist', availability: 'Available Today', type: 'counselling' },
-  { id: 't6', name: 'Mary Santra Tomy', role: 'Consultant Psychologist', availability: 'Available Tomorrow', type: 'counselling' },
-  // Career Coaches (keeping original since they weren't in the image)
-  { id: 'career_1', name: 'Dr. Anjali Menon', role: 'Senior Career Coach', availability: 'Available Today', type: 'career' },
-  { id: 'career_2', name: 'Prof. Mathew Joseph', role: 'Higher Education Advisor', availability: 'Available Tomorrow', type: 'career' }
-];
-
 export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedAdvisor, onOpenAuth }) {
   const [bookingService, setBookingService] = useState('counselling'); // counselling, career
   const [bookingMode, setBookingMode] = useState('ONLINE'); // ONLINE, DOOR_STEP, OFFLINE
@@ -78,6 +66,58 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
   const [selectedTime, setSelectedTime] = useState('');
   const [selectedAdvisor, setSelectedAdvisor] = useState(null);
   const [advisorConfirmed, setAdvisorConfirmed] = useState(false);
+  const [advisors, setAdvisors] = useState([]);
+
+  useEffect(() => {
+    const getDynamicAdvisorsForBooking = () => {
+      const baseAdvisors = [
+        { id: 't1', name: 'Josina Joseph', role: 'Consultant Psychologist', availability: 'Available Today', type: 'counselling' },
+        { id: 't2', name: 'Muhammed Niyas S H', role: 'Consultant Psychologist', availability: 'Available Today', type: 'counselling' },
+        { id: 't3', name: 'Jahnavi Navami Rajesh', role: 'Consultant Psychologist', availability: 'Available Today', type: 'counselling' },
+        { id: 't4', name: 'Hana Anvar M P', role: 'Consultant Psychologist', availability: 'Available Today', type: 'counselling' },
+        { id: 't5', name: 'Surbinas Rahman V P', role: 'Consultant Psychologist', availability: 'Available Today', type: 'counselling' },
+        { id: 't6', name: 'Mary Santra Tomy', role: 'Consultant Psychologist', availability: 'Available Tomorrow', type: 'counselling' },
+        { id: 'career_1', name: 'Dr. Anjali Menon', role: 'Senior Career Coach', availability: 'Available Today', type: 'career' },
+        { id: 'career_2', name: 'Prof. Mathew Joseph', role: 'Higher Education Advisor', availability: 'Available Tomorrow', type: 'career' }
+      ];
+
+      try {
+        const users = JSON.parse(localStorage.getItem('behold_users_db') || '[]');
+        const psychologists = users.filter(u => u.role === 'PSYCHOLOGIST');
+        
+        psychologists.forEach(psy => {
+          if (baseAdvisors.some(a => a.id === psy.id || a.name.toLowerCase() === psy.name.toLowerCase())) {
+            return;
+          }
+          
+          const savedProfile = localStorage.getItem(`behold_advisor_profile_${psy.id}`);
+          let profile = {
+            name: psy.name,
+            role: 'Consultant Psychologist'
+          };
+          
+          if (savedProfile) {
+            try {
+              profile = { ...profile, ...JSON.parse(savedProfile) };
+            } catch (e) {}
+          }
+          
+          baseAdvisors.push({
+            id: psy.id,
+            name: profile.name || psy.name,
+            role: profile.role || 'Consultant Psychologist',
+            availability: 'Available Today',
+            type: 'counselling'
+          });
+        });
+      } catch (e) {
+        console.error("Failed to load dynamic advisors in booking", e);
+      }
+      return baseAdvisors;
+    };
+
+    setAdvisors(getDynamicAdvisorsForBooking());
+  }, []);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -144,8 +184,8 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
   // Handle preselected advisor redirecting from landing page
   useEffect(() => {
-    if (preselectedAdvisorId) {
-      const found = ADVISORS.find(a => a.id === preselectedAdvisorId);
+    if (preselectedAdvisorId && advisors.length > 0) {
+      const found = advisors.find(a => a.id === preselectedAdvisorId);
       if (found) {
         setBookingService(found.type); // Dynamically set based on advisor type (counselling or career)
         setSelectedAdvisor(found);
@@ -171,7 +211,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
         clearPreselectedAdvisor();
       }
     }
-  }, [preselectedAdvisorId, clearPreselectedAdvisor]);
+  }, [preselectedAdvisorId, clearPreselectedAdvisor, advisors]);
 
   // Reset advisor if service type changes to avoid invalid combinations
   useEffect(() => {
@@ -274,13 +314,13 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
             </div>
             <button
               onClick={onOpenAuth}
-              className="relative z-10 px-8 py-3.5 bg-zinc-900 hover:bg-zinc-800 text-white font-extrabold text-xs uppercase tracking-widest rounded-lg transition-all cursor-pointer shadow-md"
+              className="relative z-10 px-8 py-3.5 bg-gradient-brand hover:opacity-95 text-white font-extrabold text-xs uppercase tracking-widest rounded-lg transition-all cursor-pointer shadow-md border-none"
             >
               Sign In to Continue
             </button>
           </div>
         ) : (
-          <div id="booking-console" className="border border-brand p-3.5 sm:p-8 bg-white space-y-6 sm:space-y-8 rounded-lg">
+          <div id="booking-console" className="border border-zinc-200/80 p-3.5 sm:p-8 bg-white/70 backdrop-blur-md space-y-6 sm:space-y-8 rounded-xl shadow-xs">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-100 pb-4">
               <h2 className="text-lg sm:text-xl font-bold uppercase tracking-wide text-zinc-900">
                 Configure Your Session
@@ -332,7 +372,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                             isCompleted
                               ? 'bg-zinc-900 border-zinc-900 text-white'
                               : isActive
-                                ? 'bg-brand border-brand text-zinc-900 shadow-xs ring-2 ring-brand/10'
+                                ? 'bg-brand border-brand text-zinc-955 shadow-xs ring-2 ring-brand/10 font-black'
                                 : 'bg-white border-zinc-200 text-zinc-400'
                           }`}>
                             {isCompleted ? '✓' : idx + 1}
@@ -344,7 +384,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                           )}
                         </div>
                         <div className="flex flex-col">
-                          <span className={`text-[9px] font-bold uppercase tracking-wider ${isActive ? 'text-brand' : isCompleted ? 'text-zinc-900' : 'text-zinc-400'}`}>
+                          <span className={`text-[9px] font-bold uppercase tracking-wider ${isActive ? 'text-brand-dark' : isCompleted ? 'text-zinc-900' : 'text-zinc-400'}`}>
                             {idx === 0 ? 'Schedule' : idx === 1 ? 'Advisor' : idx === 2 ? 'Details' : idx === 3 ? 'Reminders' : 'Session'}
                           </span>
                           <span className={`text-[10px] font-light leading-tight transition-colors duration-300 mt-0.5 ${isActive ? 'text-zinc-900 font-normal' : 'text-zinc-650'}`}>
@@ -408,7 +448,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                       <div className="space-y-2">
                         <label className="text-zinc-500 uppercase tracking-wide flex items-center justify-between gap-1 w-full text-[10px] font-bold">
                           <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> Time Slot</span>
-                          <span className="text-[9px] font-extrabold text-zinc-900 bg-brand px-2 py-0.5 rounded tracking-widest uppercase">1 hour session</span>
+                          <span className="text-[9px] font-extrabold text-brand-dark bg-brand-light border border-brand/20 px-2 py-0.5 rounded tracking-widest uppercase font-mono">1 hour session</span>
                         </label>
                         <div className="grid grid-cols-2 gap-2 mt-1">
                           {['09:30 AM', '11:00 AM', '02:00 PM', '04:00 PM'].map(time => (
@@ -421,7 +461,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                               }}
                               className={`py-2 text-xs font-bold rounded border transition-colors cursor-pointer ${
                                 selectedTime === time 
-                                  ? 'bg-brand border-brand text-zinc-900 shadow-sm ring-1 ring-brand' 
+                                  ? 'bg-gradient-brand text-zinc-955 shadow-sm border-none font-black' 
                                   : 'bg-white border-zinc-200 text-zinc-650 hover:border-brand/50'
                               }`}
                             >
@@ -459,8 +499,8 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                               key={m}
                               onClick={() => setBookingMode(m)}
                               className={`py-2 px-1 sm:py-2.5 text-[8px] min-[370px]:text-[10px] uppercase font-bold border rounded-lg transition cursor-pointer ${bookingMode === m
-                                ? 'bg-brand text-zinc-900 border-brand'
-                                : 'bg-white text-zinc-600 border-zinc-200 hover:border-brand hover:text-brand'
+                                ? 'bg-gradient-brand text-zinc-955 border-none shadow-xs font-black'
+                                : 'bg-white text-zinc-600 border-zinc-200 hover:border-brand/40 hover:text-brand-dark'
                                 }`}
                             >
                               {m.replace('_', ' ')}
@@ -475,7 +515,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                   <div className="space-y-3">
                     <label className="text-zinc-500 uppercase tracking-wide block font-semibold">3. Select Advisor</label>
                     <div className="space-y-2">
-                      {ADVISORS.filter(advisor => advisor.type === bookingService).map((advisor) => (
+                      {advisors.filter(advisor => advisor.type === bookingService).map((advisor) => (
                         <div
                           key={advisor.id}
                           onClick={() => {
@@ -519,8 +559,8 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                             }
                           }}
                           className={`px-3 py-1 rounded-lg text-[10px] font-bold transition cursor-pointer ${advisorConfirmed
-                            ? 'bg-brand/10 border border-brand/35 text-zinc-900'
-                            : 'bg-brand text-zinc-900 hover:bg-brand-dark shadow-sm'
+                            ? 'bg-brand/10 border border-brand/20 text-brand-dark font-extrabold'
+                            : 'bg-gradient-brand text-zinc-955 shadow-sm hover:opacity-95 border-none font-black'
                             }`}
                         >
                           {advisorConfirmed ? '✓ Confirmed' : 'Confirm'}
@@ -593,10 +633,10 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full py-3.5 bg-brand hover:bg-brand-dark text-zinc-900 font-bold text-sm uppercase tracking-wider rounded-lg transition flex items-center justify-center gap-2 cursor-pointer shadow-sm border border-zinc-900/5"
+                      className="w-full py-3.5 bg-gradient-brand hover:opacity-95 text-zinc-955 font-bold text-sm uppercase tracking-wider rounded-lg transition flex items-center justify-center gap-2 cursor-pointer shadow-sm border-none"
                     >
                       {isSubmitting ? (
-                        <div className="w-4 h-4 border-2 border-zinc-900/30 border-t-zinc-900 rounded-full animate-spin"></div>
+                        <div className="w-4 h-4 border-2 border-zinc-955/25 border-t-zinc-955 rounded-full animate-spin"></div>
                       ) : (
                         <>
                           <span>

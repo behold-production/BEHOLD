@@ -28,7 +28,7 @@ export default function CdatSection({ setView }) {
   const handleGenerateCode = (e) => {
     e.preventDefault();
     if (!groupRegName.trim() || !groupRegPhone.trim() || !groupRegEmail.trim()) {
-      setCopyMessage("⚠️ Please fill in all fields.");
+      setCopyMessage("Please fill in all fields.");
       return;
     }
 
@@ -50,13 +50,13 @@ export default function CdatSection({ setView }) {
     profileData.groupCode = HARDCODED_CODE;
     localStorage.setItem('behold_student_profile', JSON.stringify(profileData));
 
-    setCopyMessage("🎉 Code generated! Please copy the code below to proceed.");
+    setCopyMessage("Code generated! Please copy the code below to proceed.");
   };
 
   const copyManually = () => {
     if (generatedCode) {
       navigator.clipboard.writeText(generatedCode).then(() => {
-        setCopyMessage("🎉 Code copied to clipboard! You can now register on CIGI.");
+        setCopyMessage("Code copied to clipboard! You can now register on CIGI.");
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
       });
@@ -66,7 +66,7 @@ export default function CdatSection({ setView }) {
   return (
     <section id="cdat" className="max-w-7xl mx-auto px-4 sm:px-6 py-8 text-zinc-900 text-left relative overflow-hidden">
       {/* Background radial soft light */}
-      <div className="absolute top-1/2 left-1/4 w-[350px] h-[350px] bg-brand/5 rounded-lg glow-glow pointer-events-none" />
+      <div className="absolute top-1/2 left-1/4 w-[350px] h-[350px] bg-brand-accent/5 rounded-lg glow-glow pointer-events-none" />
 
       {/* CDAT CARD */}
       <div
@@ -76,10 +76,10 @@ export default function CdatSection({ setView }) {
         <div className="space-y-6">
           <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
             <div className="space-y-2">
-              <span className="text-[9px] bg-brand text-zinc-900 px-3 py-1 rounded-md uppercase tracking-widest font-black font-mono">
+              <span className="text-[9px] bg-brand-light text-brand-dark px-3 py-1 rounded-md uppercase tracking-widest font-extrabold border border-brand/20">
                 scientific strengths mapping
               </span>
-              <h3 className="text-2xl md:text-3xl font-header font-black uppercase tracking-wide text-zinc-900 mt-1 group-hover:text-brand transition-colors duration-500">
+              <h3 className="text-2xl md:text-3xl font-header font-black uppercase tracking-wide text-zinc-900 mt-1 group-hover:text-brand-dark transition-colors duration-500">
                 CIGI Differential Aptitude Test (CDAT)
               </h3>
             </div>
@@ -146,17 +146,17 @@ export default function CdatSection({ setView }) {
                   <div className="pt-1">
                     <button
                       type="submit"
-                      className="px-6 py-3 bg-brand hover:bg-brand-dark text-zinc-900 font-extrabold text-[10px] uppercase tracking-wider rounded-lg transition cursor-pointer shadow-xs border border-zinc-900/5 w-full sm:w-auto"
+                      className="px-6 py-3 bg-gradient-brand hover:opacity-95 text-zinc-955 font-extrabold text-[10px] uppercase tracking-wider rounded-lg transition cursor-pointer shadow-sm border-none w-full sm:w-auto"
                     >
                       Generate Group Code
                     </button>
                   </div>
                 ) : (
                   <div className="pt-2 space-y-4 animate-in fade-in duration-300">
-                    <div className="p-4 border border-brand/40 bg-brand/10 rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="p-4 border border-brand/20 bg-brand-light rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                       <div>
-                        <span className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold block mb-1">Your Group Code</span>
-                        <span className="text-lg font-mono font-black tracking-widest text-zinc-900">{generatedCode}</span>
+                        <span className="text-[10px] uppercase tracking-widest text-brand-dark/70 font-bold block mb-1">Your Group Code</span>
+                        <span className="text-lg font-mono font-black tracking-widest text-brand-dark">{generatedCode}</span>
                       </div>
                       <button
                         type="button"

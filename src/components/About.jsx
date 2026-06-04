@@ -1,36 +1,27 @@
 import React from 'react';
-import {
-  Compass, HeartHandshake, Users, GraduationCap, Target, Heart
-} from 'lucide-react';
 
 const PILLARS = [
   {
-    icon: Compass,
     title: 'Extended Mentorship',
     desc: 'We support students across academic quarters, mapping milestones that translate assessment reports into real higher education achievements.'
   },
   {
-    icon: HeartHandshake,
     title: 'Doorstep & Online Counseling',
     desc: 'By visiting students directly inside their homes or providing virtual sessions, we alleviate clinical barriers and ensure complete emotional privacy.'
   },
   {
-    icon: Users,
     title: 'Personalized School Programs',
     desc: 'Conducting in-school orientations, student alignments, and focus workshops to configure healthy learning environments.'
   },
   {
-    icon: GraduationCap,
     title: 'CDAT & Career Roadmaps',
     desc: 'Rigorous stream mapping and aptitude evaluations matching university pathways with individual natural talents.'
   },
   {
-    icon: Target,
     title: 'Goal Tracking',
     desc: 'Continuous checks and developmental reviews ensuring students stay oriented toward their long-term developmental milestones.'
   },
   {
-    icon: Heart,
     title: 'Parent Guidance',
     desc: 'Aligning family environments to reduce academic friction, stream-selection conflicts, and stress.'
   }
@@ -62,18 +53,18 @@ export default function About() {
         {/* 6-Card Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {PILLARS.map((pillar, idx) => {
-            const Icon = pillar.icon;
             return (
               <div
                 key={idx}
-                className="bg-white hover:bg-zinc-50 border border-zinc-200 rounded-lg p-5 sm:p-6 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between group"
+                className="bg-white hover:bg-zinc-50 border border-zinc-200 rounded-lg p-5 sm:p-6 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between group font-sans"
               >
                 <div className="space-y-4 sm:space-y-6">
-                  <div className="w-10 h-10 rounded-md bg-zinc-100 text-zinc-900 flex items-center justify-center transition-all duration-300 group-hover:scale-105 group-hover:bg-zinc-900 group-hover:text-brand">
-                    <Icon className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
-                  </div>
+                  {/* Typographic numbers instead of generic icons */}
+                  <span className="font-header font-black text-2xl sm:text-3xl text-zinc-300 group-hover:text-brand transition-colors duration-300">
+                    {`0${idx + 1}`}
+                  </span>
                   <div className="space-y-1.5 sm:space-y-2">
-                    <h4 className="font-header font-bold text-xs uppercase tracking-wider text-zinc-900 group-hover:text-brand transition-colors duration-300">
+                    <h4 className="font-header font-bold text-xs uppercase tracking-wider text-zinc-900 group-hover:text-brand-dark transition-colors duration-300">
                       {pillar.title}
                     </h4>
                     <p className="text-zinc-550 font-sans text-[11px] sm:text-[12px] font-light leading-relaxed">

@@ -1,23 +1,59 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronDown, HelpCircle } from 'lucide-react';
-
-const FAQS = [
-  {
-    question: "What is the advantage of hiring a consultant instead of doing it in-house?",
-    answer: "Professional counselling and mentorship provide students with scientifically backed assessments, unbiased guidance, emotional support, and expert career planning that schools and parents may not always be able to offer consistently."
-  },
-  {
-    question: "What kind of deliverables are to be expected?",
-    answer: "Students receive detailed aptitude reports, career recommendations, counselling sessions, mentorship support, progress tracking, and personalized growth strategies."
-  },
-  {
-    question: "How long will the project take and how long until results can be measured?",
-    answer: "Student growth and clarity begin from the early counselling stages, while long-term confidence, decision-making ability, and emotional development continue progressively through mentorship and guidance."
-  }
-];
 
 export default function Faq() {
   const [openIndex, setOpenIndex] = useState(null);
+  const [faqs, setFaqs] = useState([]);
+
+  useEffect(() => {
+    const loadFaqs = () => {
+      const defaultFaqs = [
+        {
+          question: "What is the advantage of hiring a consultant instead of doing it in-house?",
+          answer: "Professional counselling and mentorship provide students with scientifically backed assessments, unbiased guidance, emotional support, and expert career planning that schools and parents may not always be able to offer consistently."
+        },
+        {
+          question: "What kind of deliverables are to be expected?",
+          answer: "Students receive detailed aptitude reports, career recommendations, counselling sessions, mentorship support, progress tracking, and personalized growth strategies."
+        },
+        {
+          question: "How long will the project take and how long until results can be measured?",
+          answer: "Student growth and clarity begin from the early counselling stages, while long-term confidence, decision-making ability, and emotional development continue progressively through mentorship and guidance."
+        }
+      ];
+
+      const stored = localStorage.getItem('behold_faqs');
+      if (stored) {
+        try {
+          setFaqs(JSON.parse(stored));
+        } catch (e) {
+          setFaqs(defaultFaqs);
+        }
+      } else {
+        localStorage.setItem('behold_faqs', JSON.stringify(defaultFaqs));
+        setFaqs(defaultFaqs);
+      }
+    };
+
+    loadFaqs();
+
+    const handleStorageChange = () => {
+      const stored = localStorage.getItem('behold_faqs');
+      if (stored) {
+        try {
+          setFaqs(JSON.parse(stored));
+        } catch (e) {}
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('behold_faqs_updated', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('behold_faqs_updated', handleStorageChange);
+    };
+  }, []);
 
   const toggleFaq = (index) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -43,7 +79,7 @@ export default function Faq() {
 
       {/* Accordion List */}
       <div className="space-y-4 sm:space-y-6">
-        {FAQS.map((faq, idx) => {
+        {faqs.map((faq, idx) => {
           const isOpen = openIndex === idx;
           return (
             <div 

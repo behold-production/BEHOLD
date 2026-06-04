@@ -13,16 +13,70 @@ export default function Services({ setView, onBookTherapist }) {
     setShowAll(false);
   }, [searchTerm, activeFilter, sortBy]);
 
-  const ADVISORS_DB = [
-    { id: 't1', name: 'Josina Joseph', role: 'Consultant Psychologist', specialties: ['Mental Health Concerns', 'Anger & Emotional Regulation'], hours: 6000, lang: 'Malayalam', price: 1500, nextAvailable: '15 mins' },
-    { id: 't2', name: 'Muhammed Niyas S H', role: 'Consultant Psychologist', specialties: ['Anxiety Stress & Panic', 'Depression & Mood Concerns', 'Relationship'], hours: 1000, lang: 'Malayalam', price: 1250, nextAvailable: 'Today at 7:00 PM' },
-    { id: 't3', name: 'Jahnavi Navami Rajesh', role: 'Clinical Psychologist', specialties: ['Relationship & Marital Issues', 'Anxiety Stress & Panic'], hours: 250, lang: 'Malayalam', price: 1000, nextAvailable: 'Today at 7:00 PM' },
-    { id: 't4', name: 'Hana Anvar M P', role: 'Career Counsellor', specialties: ['Work Career & Academic Concerns', 'Anger & Emotional'], hours: 400, lang: 'Malayalam', price: 1000, nextAvailable: 'Today at 7:00 PM' },
-    { id: 't5', name: 'Surbinas Rahman V P', role: 'Psychiatrist', specialties: ['Anxiety & Panic', 'Depression & Mood Concerns', 'Relationship & Marital'], hours: 3000, lang: 'Malayalam', price: 2000, nextAvailable: 'Today at 10:00 PM' },
-    { id: 't6', name: 'Mary Santra Tomy', role: 'Consultant Psychologist', specialties: ['Relationship & Marital Issues', 'Self-Esteem & Personal Growth'], hours: 4000, lang: 'Malayalam', price: 1000, nextAvailable: 'Tomorrow at 12:00 AM' }
-  ];
+  const [advisors, setAdvisors] = useState([]);
 
-  const filteredAndSortedAdvisors = ADVISORS_DB.filter(adv => {
+  useEffect(() => {
+    const getDynamicAdvisors = () => {
+      const baseAdvisors = [
+        { id: 't1', name: 'Josina Joseph', role: 'Consultant Psychologist', specialties: ['Mental Health Concerns', 'Anger & Emotional Regulation'], hours: 6000, lang: 'Malayalam', price: 1500, nextAvailable: '15 mins' },
+        { id: 't2', name: 'Muhammed Niyas S H', role: 'Consultant Psychologist', specialties: ['Anxiety Stress & Panic', 'Depression & Mood Concerns', 'Relationship'], hours: 1000, lang: 'Malayalam', price: 1250, nextAvailable: 'Today at 7:00 PM' },
+        { id: 't3', name: 'Jahnavi Navami Rajesh', role: 'Clinical Psychologist', specialties: ['Relationship & Marital Issues', 'Anxiety Stress & Panic'], hours: 250, lang: 'Malayalam', price: 1000, nextAvailable: 'Today at 7:00 PM' },
+        { id: 't4', name: 'Hana Anvar M P', role: 'Career Counsellor', specialties: ['Work Career & Academic Concerns', 'Anger & Emotional'], hours: 400, lang: 'Malayalam', price: 1000, nextAvailable: 'Today at 7:00 PM' },
+        { id: 't5', name: 'Surbinas Rahman V P', role: 'Psychiatrist', specialties: ['Anxiety & Panic', 'Depression & Mood Concerns', 'Relationship & Marital'], hours: 3000, lang: 'Malayalam', price: 2000, nextAvailable: 'Today at 10:00 PM' },
+        { id: 't6', name: 'Mary Santra Tomy', role: 'Consultant Psychologist', specialties: ['Relationship & Marital Issues', 'Self-Esteem & Personal Growth'], hours: 4000, lang: 'Malayalam', price: 1000, nextAvailable: 'Tomorrow at 12:00 AM' }
+      ];
+
+      try {
+        const users = JSON.parse(localStorage.getItem('behold_users_db') || '[]');
+        const psychologists = users.filter(u => u.role === 'PSYCHOLOGIST');
+        
+        psychologists.forEach(psy => {
+          if (baseAdvisors.some(a => a.id === psy.id || a.name.toLowerCase() === psy.name.toLowerCase())) {
+            return;
+          }
+          
+          const savedProfile = localStorage.getItem(`behold_advisor_profile_${psy.id}`);
+          let profile = {
+            name: psy.name,
+            role: 'Consultant Psychologist',
+            education: 'MPhil Clinical Psychology',
+            specialties: 'Anxiety Stress & Panic, Depression & Mood Concerns, Relationship',
+            price: 1250,
+            lang: 'Malayalam, English',
+            bio: ''
+          };
+          
+          if (savedProfile) {
+            try {
+              profile = { ...profile, ...JSON.parse(savedProfile) };
+            } catch (e) {}
+          }
+          
+          const specialtiesArray = typeof profile.specialties === 'string'
+            ? profile.specialties.split(',').map(s => s.trim()).filter(Boolean)
+            : profile.specialties || [];
+            
+          baseAdvisors.push({
+            id: psy.id,
+            name: profile.name || psy.name,
+            role: profile.role || 'Consultant Psychologist',
+            specialties: specialtiesArray,
+            hours: 0,
+            lang: profile.lang || 'Malayalam, English',
+            price: Number(profile.price) || 1250,
+            nextAvailable: 'Available Today'
+          });
+        });
+      } catch (e) {
+        console.error("Failed to load dynamic advisors", e);
+      }
+      return baseAdvisors;
+    };
+
+    setAdvisors(getDynamicAdvisors());
+  }, []);
+
+  const filteredAndSortedAdvisors = advisors.filter(adv => {
     // Search by name or specialty
     const searchLower = searchTerm.toLowerCase();
     const matchesSearch = 
@@ -43,7 +97,7 @@ export default function Services({ setView, onBookTherapist }) {
   return (
     <section id="services" className="max-w-7xl mx-auto px-4 sm:px-6 py-12 text-zinc-900 text-left relative overflow-hidden">
       {/* Background radial soft light */}
-      <div className="absolute top-1/2 left-1/4 w-[350px] h-[350px] bg-brand/5 rounded-lg glow-glow pointer-events-none" />
+      <div className="absolute top-1/2 left-1/4 w-[350px] h-[350px] bg-brand-accent/5 rounded-lg glow-glow pointer-events-none" />
 
       {/* DUAL COUPLING ROW */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-stretch w-full">
@@ -84,7 +138,7 @@ export default function Services({ setView, onBookTherapist }) {
               }
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className="px-6 py-3 bg-white/80 hover:bg-zinc-900 hover:text-white border border-zinc-200 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer w-full sm:w-auto text-center shadow-xs hover:shadow-md text-zinc-900"
+            className="px-6 py-3 bg-white hover:bg-gradient-brand hover:text-zinc-950 hover:border-transparent border border-zinc-200 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer w-full sm:w-auto text-center shadow-xs hover:shadow-md text-zinc-800"
           >
             Book a Career Guidance Session
           </button>
@@ -126,7 +180,7 @@ export default function Services({ setView, onBookTherapist }) {
               }
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className="px-6 py-3 bg-white/80 hover:bg-zinc-900 hover:text-white border border-zinc-200 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer w-full sm:w-auto text-center shadow-xs hover:shadow-md text-zinc-900"
+            className="px-6 py-3 bg-white hover:bg-gradient-brand hover:text-zinc-950 hover:border-transparent border border-zinc-200 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer w-full sm:w-auto text-center shadow-xs hover:shadow-md text-zinc-800"
           >
             Talk to a Counsellor →
           </button>
@@ -137,7 +191,7 @@ export default function Services({ setView, onBookTherapist }) {
       {/* OUR EXPERTS SECTION */}
       <div id="our-experts" className="mt-12 md:mt-16 space-y-8">
         <div className="text-center space-y-2">
-          <span className="text-[10px] bg-zinc-900 text-white px-3.5 py-1 rounded-md uppercase tracking-wider font-extrabold w-fit mx-auto block">
+          <span className="text-[10px] bg-brand-light text-brand-dark border border-brand/20 px-3.5 py-1 rounded-md uppercase tracking-wider font-extrabold w-fit mx-auto block">
             our experts
           </span>
           <h2 className="text-2xl md:text-3xl font-header font-black uppercase tracking-wide text-zinc-900">
@@ -162,16 +216,16 @@ export default function Services({ setView, onBookTherapist }) {
             <Search className="w-4 h-4 text-zinc-400 absolute left-3.5 top-3 sm:top-4" />
           </div>
 
-          {/* Filter Tabs - wrapped so they don't scroll off-screen on mobile */}
-          <div className="flex flex-wrap gap-1.5 sm:gap-2 w-full flex-1">
+          {/* Filter Tabs - scrollable horizontally on mobile */}
+          <div className="flex flex-row overflow-x-auto scrollbar-none snap-x gap-1.5 sm:gap-2 w-full flex-1 pb-1 shrink-0">
             {['All', 'Consultant Psychologist', 'Clinical Psychologist', 'Psychiatrist', 'Career Counsellor'].map(filter => (
               <button 
                 key={filter}
                 onClick={() => setActiveFilter(filter)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 border rounded-lg text-[10px] sm:text-xs font-bold whitespace-nowrap shadow-xs transition-all duration-300 cursor-pointer ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 border rounded-lg text-[10px] sm:text-xs font-bold whitespace-nowrap shadow-xs transition-all duration-300 cursor-pointer shrink-0 snap-start ${
                   activeFilter === filter 
-                    ? 'border-brand bg-brand/10 text-zinc-900 shadow-xs shadow-brand/10' 
-                    : 'border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300 hover:text-zinc-900'
+                    ? 'border-brand/40 bg-brand/10 text-brand-dark shadow-xs shadow-brand/10' 
+                    : 'border-zinc-200 bg-white text-zinc-650 hover:border-zinc-300 hover:text-zinc-900'
                 }`}
               >
                 {filter === 'All' ? 'All Roles' : filter}
@@ -228,7 +282,7 @@ export default function Services({ setView, onBookTherapist }) {
               >
                 {/* Profile Card Header */}
                 <div className="p-4.5 sm:p-6 flex items-start gap-4 border-b border-zinc-100 bg-gradient-to-br from-white to-zinc-50/50">
-                  <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg bg-brand/10 border border-brand/20 text-zinc-900 flex items-center justify-center font-black text-lg sm:text-xl shadow-inner shrink-0 group-hover:scale-105 transition-transform duration-300">
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg bg-brand/10 border border-brand/20 text-brand-dark flex items-center justify-center font-black text-lg sm:text-xl shadow-inner shrink-0 group-hover:scale-105 transition-transform duration-300">
                     {advisor.name.charAt(0)}
                   </div>
                   <div className="flex flex-col text-left space-y-1.5 flex-1 min-w-0">
@@ -298,7 +352,7 @@ export default function Services({ setView, onBookTherapist }) {
                         }
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                       }}
-                      className="flex-1 py-2.5 sm:py-3 bg-brand hover:bg-brand-dark hover:scale-[1.01] text-zinc-900 rounded-lg text-[9px] font-black tracking-widest uppercase transition-all duration-200 cursor-pointer active:scale-95 shadow-xs"
+                      className="flex-1 py-2.5 sm:py-3 bg-gradient-brand hover:opacity-95 hover:scale-[1.01] text-zinc-950 rounded-lg text-[9px] font-black tracking-widest uppercase transition-all duration-200 cursor-pointer active:scale-95 shadow-xs border-none"
                     >
                       Book Now
                     </button>
@@ -312,11 +366,11 @@ export default function Services({ setView, onBookTherapist }) {
             {(showAll ? filteredAndSortedAdvisors : filteredAndSortedAdvisors.slice(0, 3)).map(advisor => (
               <div 
                 key={advisor.id}
-                className="bg-white/80 backdrop-blur-md border border-zinc-200 rounded-lg shadow-xs hover:shadow-xl hover:border-brand/40 transition-all duration-300 flex flex-col md:flex-row items-stretch overflow-hidden group"
+                className="bg-white/80 backdrop-blur-md border border-zinc-200 rounded-lg shadow-xs hover:shadow-xl hover:border-brand/40 transition-all duration-300 flex flex-col lg:flex-row items-stretch overflow-hidden group"
               >
                 {/* Left Column: Avatar & Name */}
-                <div className="p-4.5 sm:p-6 flex items-center gap-4 bg-gradient-to-br from-white to-zinc-50/50 border-b md:border-b-0 md:border-r border-zinc-100 flex-1 md:flex-initial md:basis-1/4 shrink-0">
-                  <div className="w-12 h-12 rounded-lg bg-brand/10 border border-brand/20 text-zinc-900 flex items-center justify-center font-black text-lg shadow-inner shrink-0 group-hover:scale-105 transition-transform duration-300">
+                <div className="p-4.5 sm:p-6 flex items-center gap-4 bg-gradient-to-br from-white to-zinc-50/50 border-b lg:border-b-0 lg:border-r border-zinc-100 flex-1 lg:flex-initial lg:basis-1/4 shrink-0">
+                  <div className="w-12 h-12 rounded-lg bg-brand/10 border border-brand/20 text-brand-dark flex items-center justify-center font-black text-lg shadow-inner shrink-0 group-hover:scale-105 transition-transform duration-300">
                     {advisor.name.charAt(0)}
                   </div>
                   <div className="flex flex-col text-left space-y-1.5 min-w-0">
@@ -330,7 +384,7 @@ export default function Services({ setView, onBookTherapist }) {
                 </div>
 
                 {/* Middle Column: Specialties */}
-                <div className="p-4.5 sm:p-6 flex-[2] flex flex-col justify-center border-b md:border-b-0 md:border-r border-zinc-100 bg-white">
+                <div className="p-4.5 sm:p-6 flex-[2] flex flex-col justify-center border-b lg:border-b-0 lg:border-r border-zinc-100 bg-white">
                   <span className="text-[8px] uppercase tracking-wider font-bold text-zinc-400 mb-2 block text-left">Specialities</span>
                   <div className="flex flex-wrap gap-1.5">
                     {advisor.specialties.map((spec, i) => (
@@ -345,7 +399,7 @@ export default function Services({ setView, onBookTherapist }) {
                 </div>
 
                 {/* Stats & Info Panel */}
-                <div className="grid grid-cols-3 gap-2 p-4.5 sm:p-6 bg-zinc-50/20 flex-1 md:flex-initial md:basis-1/5 shrink-0 items-center justify-center border-b md:border-b-0 md:border-r border-zinc-100">
+                <div className="grid grid-cols-3 gap-2 p-4.5 sm:p-6 bg-zinc-50/20 flex-1 lg:flex-initial lg:basis-1/5 shrink-0 items-center justify-center border-b lg:border-b-0 lg:border-r border-zinc-100">
                   <div className="flex flex-col items-center justify-center text-center">
                     <span className="font-black text-zinc-900 text-xs sm:text-[13px] tracking-tight">{advisor.hours.toLocaleString()}+</span>
                     <span className="text-[8px] text-zinc-455 font-bold uppercase tracking-wider mt-0.5">Therapy hrs</span>
@@ -361,16 +415,16 @@ export default function Services({ setView, onBookTherapist }) {
                 </div>
 
                 {/* Right Column: Actions */}
-                <div className="p-4.5 sm:p-6 bg-white flex-1 md:flex-initial md:basis-1/5 shrink-0 flex flex-col justify-center space-y-3.5 mt-auto md:mt-0">
-                  <div className="flex items-center justify-between md:justify-center gap-2 text-xs">
-                    <span className="text-[9px] text-zinc-400 font-bold uppercase tracking-wider md:hidden">Availability</span>
+                <div className="p-4.5 sm:p-6 bg-white flex-1 lg:flex-initial lg:basis-1/5 shrink-0 flex flex-col justify-center space-y-3.5 mt-auto lg:mt-0">
+                  <div className="flex items-center justify-between lg:justify-center gap-2 text-xs">
+                    <span className="text-[9px] text-zinc-400 font-bold uppercase tracking-wider lg:hidden">Availability</span>
                     <div className="flex items-center gap-1.5">
                       <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
                       <span className="font-bold text-zinc-700 text-[10px]">{advisor.nextAvailable}</span>
                     </div>
                   </div>
                   
-                  <div className="flex md:flex-col gap-2 w-full">
+                  <div className="flex lg:flex-col gap-2 w-full">
                     <button 
                       onClick={() => window.location.hash = `#/advisor/${advisor.id}`}
                       className="flex-1 py-2 sm:py-2.5 border border-zinc-200 hover:border-zinc-900 rounded-lg text-[9px] font-black text-zinc-900 uppercase tracking-widest transition-all duration-200 cursor-pointer active:scale-95 text-center bg-white"
@@ -386,7 +440,7 @@ export default function Services({ setView, onBookTherapist }) {
                         }
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                       }}
-                      className="flex-1 py-2 sm:py-2.5 bg-brand hover:bg-brand-dark hover:scale-[1.01] text-zinc-900 rounded-lg text-[9px] font-black tracking-widest uppercase transition-all duration-200 cursor-pointer active:scale-95 shadow-xs"
+                      className="flex-1 py-2 sm:py-2.5 bg-gradient-brand hover:opacity-95 hover:scale-[1.01] text-zinc-955 rounded-lg text-[9px] font-black tracking-widest uppercase transition-all duration-200 cursor-pointer active:scale-95 shadow-xs border-none"
                     >
                       Book Now
                     </button>

@@ -14,7 +14,7 @@ export default function Hero({ setView, navigateToSection }) {
     >
       {/* Background Soft Glows (Desktop only) */}
       <div className="hidden lg:block absolute top-1/4 left-1/3 w-[300px] h-[300px] bg-brand/20 rounded-full glow-glow pointer-events-none" />
-      <div className="hidden lg:block absolute bottom-1/3 right-1/4 w-[400px] h-[400px] bg-brand/10 rounded-full glow-glow pointer-events-none" />
+      <div className="hidden lg:block absolute bottom-1/3 right-1/4 w-[400px] h-[400px] bg-brand-accent/15 rounded-full glow-glow pointer-events-none" />
 
       {/* Cinematic Background Image (Mobile only) */}
       <div className="absolute inset-0 block lg:hidden pointer-events-none z-0 bg-black">
@@ -39,20 +39,20 @@ export default function Hero({ setView, navigateToSection }) {
       <div className="max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1680px] mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 xl:gap-16 2xl:gap-24 items-center relative z-10">
 
         {/* Left Column: Heading and CTAs */}
-        <div className="lg:col-span-6 flex flex-col justify-between lg:justify-start min-h-[calc(100vh-140px)] lg:min-h-0 space-y-8 lg:space-y-5 fade-in-up text-center lg:text-left items-center lg:items-start w-full">
+        <div className="lg:col-span-6 flex flex-col justify-between lg:justify-start min-h-0 lg:min-h-[485px] space-y-8 lg:space-y-5 fade-in-up text-center lg:text-left items-center lg:items-start w-full">
 
           {/* Main Title */}
           <div className="space-y-6 flex-1 flex flex-col justify-center items-center lg:items-start mt-4 lg:mt-8">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-header font-black tracking-tight text-white lg:text-zinc-900 leading-[1.1] uppercase">
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-header font-black tracking-tight text-white lg:text-zinc-900 leading-[1.1] uppercase pb-0">
               Bridging You <br />
               To Your <span className="relative inline-block whitespace-nowrap">
-                True Growth.
-                <svg className="absolute left-0 -bottom-2 w-full h-[8px] text-brand pointer-events-none" viewBox="0 0 100 10" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <span className="text-gradient">True Growth.</span>
+                <svg className="absolute left-0 -bottom-2 w-full h-[8px] text-brand-accent pointer-events-none" viewBox="0 0 100 10" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M2 8C35 3 70 3 98 8" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
                 </svg>
               </span>
             </h1>
-            <p className="text-zinc-200 lg:text-zinc-600 font-sans text-base sm:text-lg lg:text-base xl:text-lg 2xl:text-xl font-light max-w-lg xl:max-w-xl 2xl:max-w-2xl leading-relaxed pb-4 sm:pb-8">
+            <p className="text-zinc-200 lg:text-zinc-600 font-sans text-sm sm:text-base lg:text-base xl:text-lg 2xl:text-xl font-light max-w-lg xl:max-w-xl 2xl:max-w-2xl leading-relaxed pb-4 sm:pb-8">
               Professional psychological counseling, aptitude assessment, and career mentorship designed to help individuals thrive with confidence and purpose.
             </p>
           </div>
@@ -68,7 +68,7 @@ export default function Hero({ setView, navigateToSection }) {
             </button>
             <button
               onClick={() => navigateToSection('services')}
-              className="px-8 py-4 bg-white/10 hover:bg-white/20 border border-white/15 hover:border-white text-white lg:bg-white/70 lg:hover:bg-white lg:border-zinc-200 lg:hover:border-zinc-900 lg:text-zinc-900 hover:scale-[1.02] active:scale-[0.98] text-xs font-black uppercase tracking-widest transition-all duration-300 cursor-pointer rounded-lg shadow-sm w-full sm:w-auto text-center"
+              className="px-8 py-4 bg-white/10 hover:bg-white/20 border border-white/15 hover:border-white text-white lg:bg-white/70 lg:hover:bg-white lg:border-zinc-200 lg:hover:border-brand lg:text-zinc-900 lg:hover:text-brand hover:scale-[1.02] active:scale-[0.98] text-xs font-black uppercase tracking-widest transition-all duration-300 cursor-pointer rounded-lg shadow-sm w-full sm:w-auto text-center"
             >
               Explore Services
             </button>
@@ -106,8 +106,8 @@ export default function Hero({ setView, navigateToSection }) {
           </div>
 
           {/* Floating UI Card 1: Counselling */}
-          <div className="absolute -top-6 -left-6 bg-white/90 backdrop-blur-md border border-zinc-100 p-4 rounded-lg shadow-xl hidden lg:flex items-center gap-3.5 max-w-[220px] z-20 pointer-events-none float-slow">
-            <div className="w-9 h-9 rounded-lg bg-brand flex items-center justify-center text-zinc-900 shadow-inner">
+          <div className="absolute -top-6 -left-6 bg-white/95 backdrop-blur-md border border-zinc-200/60 p-4 rounded-xl shadow-xl hidden lg:flex items-center gap-3.5 max-w-[220px] z-20 pointer-events-none float-slow">
+            <div className="w-9 h-9 rounded-lg bg-brand flex items-center justify-center text-zinc-900 shadow-inner shrink-0">
               <HeartPulse className="w-4 h-4" />
             </div>
             <div>
@@ -117,8 +117,8 @@ export default function Hero({ setView, navigateToSection }) {
           </div>
 
           {/* Floating UI Card 2: Career Mapping */}
-          <div className="absolute -bottom-6 -right-6 bg-white/90 backdrop-blur-md border border-zinc-100 p-4 rounded-lg shadow-xl hidden lg:flex items-center gap-3.5 max-w-[220px] z-20 pointer-events-none float-fast">
-            <div className="w-9 h-9 rounded-lg bg-zinc-900 flex items-center justify-center text-white shadow-md">
+          <div className="absolute -bottom-6 -right-6 bg-white/95 backdrop-blur-md border border-zinc-200/60 p-4 rounded-xl shadow-xl hidden lg:flex items-center gap-3.5 max-w-[220px] z-20 pointer-events-none float-fast">
+            <div className="w-9 h-9 rounded-lg bg-zinc-900 flex items-center justify-center text-white shadow-md shrink-0">
               <Compass className="w-4 h-4" />
             </div>
             <div>

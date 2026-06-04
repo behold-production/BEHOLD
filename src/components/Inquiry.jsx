@@ -40,7 +40,7 @@ export default function Inquiry({ testProfile }) {
     } else if (formData.name.trim().length < 3) {
       errors.name = "Full name must be at least 3 characters";
     }
-    
+
     if (!formData.email.trim()) {
       errors.email = "Email is required";
     } else {
@@ -63,6 +63,23 @@ export default function Inquiry({ testProfile }) {
     setIsSubmitting(true);
     setSubmitStatus(null);
 
+    // Persist to local storage database
+    try {
+      const inquiries = JSON.parse(localStorage.getItem('behold_inquiries_db') || '[]');
+      const newInquiry = {
+        id: 'inq_' + Date.now(),
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        message: formData.message.trim(),
+        date: new Date().toISOString().split('T')[0],
+        status: 'PENDING'
+      };
+      inquiries.push(newInquiry);
+      localStorage.setItem('behold_inquiries_db', JSON.stringify(inquiries));
+    } catch (err) {
+      console.error("Failed to save inquiry", err);
+    }
+
     // Simulate API request delay
     setTimeout(() => {
       setIsSubmitting(false);
@@ -82,7 +99,7 @@ export default function Inquiry({ testProfile }) {
         <div className="bg-white rounded-lg overflow-hidden grid grid-cols-1 md:grid-cols-2 items-center border border-zinc-200/60 shadow-xs">
           <div className="p-5 sm:p-8 md:p-12 space-y-6">
             <div className="space-y-4 flex flex-col items-center md:items-start text-center md:text-left">
-              <span className="text-[10px] bg-zinc-900 text-white px-3.5 py-1 rounded-md uppercase tracking-wider font-extrabold w-fit block">
+              <span className="text-[10px] bg-brand-light text-brand-dark border border-brand/20 px-3.5 py-1 rounded-md uppercase tracking-wider font-extrabold w-fit block">
                 get in touch
               </span>
               <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-zinc-900 font-header uppercase leading-tight">Want to Know More</h2>
@@ -90,9 +107,9 @@ export default function Inquiry({ testProfile }) {
                 Submit your request to align parents, students, and coordinators for assessments and counselling sessions.
               </p>
             </div>
-            
+
             {testProfile && (
-              <div className="p-4 bg-brand/10 border border-brand/40 text-zinc-900 rounded-lg text-xs font-semibold flex items-center gap-2">
+              <div className="p-4 bg-brand-light border border-brand/20 text-brand-dark rounded-lg text-xs font-semibold flex items-center gap-2">
                 Pre-filled with diagnostic test scores ({testProfile.dominantDomain} profile).
               </div>
             )}
@@ -143,11 +160,11 @@ export default function Inquiry({ testProfile }) {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-3 bg-brand hover:bg-brand-dark text-zinc-900 font-bold text-xs uppercase tracking-wider rounded-lg transition-all duration-300 hover:scale-[1.01] active:scale-[0.98] cursor-pointer flex items-center justify-center gap-2 shadow-sm border border-zinc-900/5"
+                className="w-full py-3 bg-gradient-brand hover:opacity-95 text-zinc-955 font-bold text-xs uppercase tracking-wider rounded-lg transition-all duration-300 hover:scale-[1.01] active:scale-[0.98] cursor-pointer flex items-center justify-center gap-2 shadow-md shadow-brand/20 border-none"
               >
                 {isSubmitting ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin text-zinc-900" />
+                    <Loader2 className="w-4 h-4 animate-spin text-zinc-955" />
                     <span>Sending...</span>
                   </>
                 ) : (
@@ -165,7 +182,7 @@ export default function Inquiry({ testProfile }) {
               )}
             </form>
           </div>
-          
+
           <div className="h-full min-h-[320px] bg-zinc-100 hidden md:block">
             <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=600&q=80" alt="Students meeting" className="w-full h-full object-cover grayscale-[10%] contrast-[105%]" />
           </div>
@@ -175,16 +192,16 @@ export default function Inquiry({ testProfile }) {
       {/* 4. Stay Informed & Community */}
       <section className="max-w-xl mx-auto text-center px-4 sm:px-6 py-10 lg:py-16 space-y-6 flex flex-col items-center">
         <span className="text-[10px] bg-zinc-900 text-white px-3.5 py-1 rounded-md uppercase tracking-wider font-extrabold w-fit block">
-          📢 Stay Informed
+          Stay Informed
         </span>
         <div className="pt-2">
-          <a 
-            href="https://wa.me/919497174011" 
-            target="_blank" 
-            rel="noopener noreferrer" 
+          <a
+            href="https://wa.me/919497174011"
+            target="_blank"
+            rel="noopener noreferrer"
             className="text-xs font-bold uppercase tracking-widest text-zinc-900 hover:text-white transition flex items-center gap-1.5 border border-zinc-200 px-6 py-3.5 rounded-lg bg-white hover:bg-zinc-900"
           >
-            <span>🔗 Connect with Our Community</span>
+            <span>Connect with Our Community</span>
           </a>
         </div>
       </section>

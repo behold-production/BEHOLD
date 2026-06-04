@@ -183,42 +183,42 @@ const TEST_QUESTIONS = [
 const DOMAIN_DETAILS = {
   Aptitude: {
     title: "General Cognitive Aptitude",
-    icon: <Brain className="w-8 h-8 text-zinc-900" />,
+    icon: <Brain className="w-8 h-8 text-brand-dark" />,
     desc: "You have a strong capacity for general cognitive problem-solving, mathematical tracking, and deductive reasoning under time-bounded scenarios."
   },
   Logical: {
     title: "Logical & Pattern Reasoning",
-    icon: <Puzzle className="w-8 h-8 text-zinc-900" />,
+    icon: <Puzzle className="w-8 h-8 text-brand-dark" />,
     desc: "You possess a powerful ability to analyze sequential data, identify underlying formulas, and evaluate structured arguments objectively."
   },
   Emotional: {
     title: "Emotional & Intrapersonal Intelligence",
-    icon: <Heart className="w-8 h-8 text-zinc-900" />,
+    icon: <Heart className="w-8 h-8 text-brand-dark" />,
     desc: "You possess high self-awareness, active empathy, emotional regulation, and deep understanding of human psychological motivation models."
   },
   Career: {
     title: "Career Interests & Direction",
-    icon: <BookOpen className="w-8 h-8 text-zinc-900" />,
+    icon: <BookOpen className="w-8 h-8 text-brand-dark" />,
     desc: "You have a highly defined interest profile in modern industrial and operational sectors, showing clear paths towards system planning and coaching."
   },
   Personality: {
     title: "Self-Direction & Personality Alignment",
-    icon: <UserCheck className="w-8 h-8 text-zinc-900" />,
+    icon: <UserCheck className="w-8 h-8 text-brand-dark" />,
     desc: "You excel at identifying personal values, managing focus quarters, and establishing productive study environments with high self-discipline."
   },
   Communication: {
     title: "Verbal & Communication Flow",
-    icon: <BookOpen className="w-8 h-8 text-zinc-900" />,
+    icon: <BookOpen className="w-8 h-8 text-brand-dark" />,
     desc: "You possess strong skills in speech articulation, conflict mediation, and clarifying complex technical systems for diverse audiences."
   },
   Creativity: {
     title: "Lateral & Creative Thinking",
-    icon: <Lightbulb className="w-8 h-8 text-zinc-900" />,
+    icon: <Lightbulb className="w-8 h-8 text-brand-dark" />,
     desc: "You excel at visual layouts, abstract brainstorming, and finding multiple alternative uses for ordinary systems. You reject copy-paste designs."
   },
   Leadership: {
     title: "Leadership & Milestones Direction",
-    icon: <Award className="w-8 h-8 text-zinc-900" />,
+    icon: <Award className="w-8 h-8 text-brand-dark" />,
     desc: "You naturally coordinate group roles, structure consensus votes, establish milestone tracking, and maintain motivational energy for team delivery."
   }
 };
@@ -392,7 +392,7 @@ export default function AptitudeTest({ onFinishTest }) {
               {/* Progress Bar Container */}
               <div className="h-1.5 w-full bg-zinc-100 rounded-md overflow-hidden">
                 <div
-                  className="h-full bg-brand transition-all duration-500 ease-out"
+                  className="h-full bg-gradient-brand transition-all duration-500 ease-out"
                   style={{ width: `${((currentQuestion + 1) / shuffledQuestions.length) * 100}%` }}
                 ></div>
               </div>
@@ -422,7 +422,7 @@ export default function AptitudeTest({ onFinishTest }) {
                       {opt.text}
                     </span>
                     <div className="w-4 h-4 rounded-md border border-zinc-200 group-hover:border-brand group-hover:bg-brand transition-all duration-200 flex items-center justify-center shrink-0 ml-4">
-                      <div className="w-1.5 h-1.5 rounded-sm bg-zinc-900 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                      <div className="w-1.5 h-1.5 rounded-sm bg-white opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     </div>
                   </button>
                 ))}
@@ -438,7 +438,7 @@ export default function AptitudeTest({ onFinishTest }) {
             {/* Header Shield */}
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-6 sm:pb-8 border-b border-zinc-100 mb-6 sm:mb-10">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-zinc-900 text-brand rounded-md flex items-center justify-center shadow-md">
+                <div className="w-12 h-12 bg-zinc-950 text-brand rounded-xl flex items-center justify-center shadow-md shrink-0">
                   <Brain className="w-6 h-6" />
                 </div>
                 <div>
@@ -498,7 +498,7 @@ export default function AptitudeTest({ onFinishTest }) {
                           </div>
                           <div className="h-2 w-full bg-zinc-100 rounded-md overflow-hidden">
                             <div
-                              className="h-full bg-brand rounded-md transition-all duration-1000 ease-out"
+                              className="h-full bg-gradient-brand rounded-md transition-all duration-1000 ease-out"
                               style={{ width: `${pct}%` }}
                             ></div>
                           </div>
@@ -539,10 +539,10 @@ export default function AptitudeTest({ onFinishTest }) {
                     <button
                       id="btn-results-consult"
                       onClick={() => onFinishTest(dominantDomain, scorePercentages)}
-                      className="w-full py-3.5 sm:py-4 bg-brand hover:bg-brand-dark border border-zinc-900/5 text-zinc-900 font-extrabold text-xs uppercase tracking-widest rounded-lg transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm hover:scale-[1.02] active:scale-[0.98]"
+                      className="w-full py-3.5 sm:py-4 bg-brand hover:bg-brand-dark text-zinc-955 font-extrabold text-xs uppercase tracking-widest rounded-lg transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm hover:scale-[1.02] active:scale-[0.98] border-none"
                     >
                       <span>Claim Free Mentoring</span>
-                      <ArrowRight className="w-4 h-4 text-zinc-900" />
+                      <ArrowRight className="w-4 h-4 text-zinc-955" />
                     </button>
                     <p className="text-[9px] text-zinc-450 text-center mt-3 font-semibold flex items-center justify-center gap-1">
                       Schedules with a State Coordinator.
