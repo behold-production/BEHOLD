@@ -13,6 +13,7 @@ import StudentProfile from './components/StudentProfile';
 import AptitudeTest from './components/AptitudeTest';
 import AuthModals from './components/AuthModals';
 import AdvisorProfile from './components/AdvisorProfile';
+import { useAuth } from './context/AuthContext';
 
 export default function App() {
   const [view, setView] = useState('landing'); // 'landing', 'test', 'booking', 'profile'
@@ -21,6 +22,17 @@ export default function App() {
   const [bookingAdvisor, setBookingAdvisor] = useState(null);
   const [pendingScrollSection, setPendingScrollSection] = useState(null);
   const [viewingAdvisorId, setViewingAdvisorId] = useState(null);
+  const [pendingRedirect, setPendingRedirect] = useState(false);
+
+  const { user } = useAuth();
+
+  // Monitor user state for pending redirect to booking
+  useEffect(() => {
+    if (user && pendingRedirect) {
+      setPendingRedirect(false);
+      window.location.hash = '#/booking';
+    }
+  }, [user, pendingRedirect]);
 
   // Hash-based Routing Listener
   useEffect(() => {
@@ -30,11 +42,22 @@ export default function App() {
         setView('test');
         setTimeout(() => window.scrollTo(0, 0), 10);
       } else if (hash === '#/booking') {
-        setView('booking');
-        setTimeout(() => window.scrollTo(0, 0), 10);
+        if (user) {
+          setView('booking');
+          setTimeout(() => window.scrollTo(0, 0), 10);
+        } else {
+          setPendingRedirect(true);
+          window.location.hash = '#/';
+          setIsAuthModalOpen(true);
+        }
       } else if (hash === '#/profile') {
-        setView('profile');
-        setTimeout(() => window.scrollTo(0, 0), 10);
+        if (user) {
+          setView('profile');
+          setTimeout(() => window.scrollTo(0, 0), 10);
+        } else {
+          window.location.hash = '#/';
+          setIsAuthModalOpen(true);
+        }
       } else if (hash.startsWith('#/advisor/')) {
         const id = hash.split('#/advisor/')[1];
         setViewingAdvisorId(id);
@@ -52,7 +75,7 @@ export default function App() {
     return () => {
       window.removeEventListener('hashchange', handleHashChange);
     };
-  }, []);
+  }, [user]);
 
   // Handle pending scrolls once the landing view is mounted
   useEffect(() => {
@@ -122,7 +145,7 @@ export default function App() {
 
   return (
     <div
-      className="font-sans antialiased selection:bg-gray-200 min-h-screen relative text-black bg-[#f3f3f3]"
+      className="font-sans antialiased selection:bg-brand/30 min-h-screen relative text-zinc-900 bg-zinc-50"
     >
       <AuthModals isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
 

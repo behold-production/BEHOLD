@@ -11,7 +11,7 @@ const PILLARS = [
   },
   {
     icon: HeartHandshake,
-    title: 'Doorstep & Online Counselling',
+    title: 'Doorstep & Online Counseling',
     desc: 'By visiting students directly inside their homes or providing virtual sessions, we alleviate clinical barriers and ensure complete emotional privacy.'
   },
   {
@@ -38,45 +38,45 @@ const PILLARS = [
 
 export default function About() {
   return (
-    <section id="about" className="py-12 md:py-24 px-4 sm:px-6 text-black text-left grid-bg relative overflow-hidden">
+    <section id="about" className="py-8 md:py-24 px-4 sm:px-6 text-zinc-900 text-left grid-bg relative overflow-hidden">
 
       {/* Glow Effects */}
-      <div className="absolute bottom-10 left-10 w-[300px] h-[300px] bg-brand/10 rounded-full glow-glow pointer-events-none" />
-      <div className="absolute top-10 right-10 w-[300px] h-[300px] bg-brand/10 rounded-full glow-glow pointer-events-none" />
+      <div className="absolute bottom-10 left-10 w-[300px] h-[300px] bg-brand/10 rounded-lg glow-glow pointer-events-none" />
+      <div className="absolute top-10 right-10 w-[300px] h-[300px] bg-brand/10 rounded-lg glow-glow pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto space-y-12 md:space-y-24">
+      <div className="max-w-7xl mx-auto space-y-8 md:space-y-20">
 
         {/* Header Column */}
-        <div className="max-w-3xl mx-auto text-center space-y-4">
-          <span className="text-[10px] bg-black text-white px-3.5 py-1 rounded-xl uppercase tracking-wider font-extrabold w-fit mx-auto block">
+        <div className="max-w-3xl mx-auto text-center space-y-3.5">
+          <span className="text-[10px] bg-zinc-900 text-white px-3.5 py-1 rounded-md uppercase tracking-wider font-extrabold w-fit mx-auto block">
             Why Us & What We Offer
           </span>
-          <h2 className="text-3xl md:text-5xl font-header font-black tracking-tight text-gray-900 leading-[1.1] uppercase">
+          <h2 className="text-3xl md:text-5xl font-header font-black tracking-tight text-zinc-900 leading-[1.1] uppercase">
             Why Choose Us & What We Offer
           </h2>
-          <p className="text-black/60 font-sans text-sm md:text-base font-light leading-relaxed">
+          <p className="text-zinc-600 font-sans text-sm md:text-base font-light leading-relaxed">
             At BEHOLD, we go beyond traditional career guidance by offering extended mentorship, doorstep psychological counselling, and personalized career support directly within schools and student spaces.
           </p>
         </div>
 
         {/* 6-Card Grid */}
-        <div className="flex overflow-x-auto md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 pb-4 snap-x snap-mandatory scrollbar-none scroll-smooth">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {PILLARS.map((pillar, idx) => {
             const Icon = pillar.icon;
             return (
               <div
                 key={idx}
-                className="min-w-[280px] sm:min-w-[320px] md:min-w-0 snap-center shrink-0 bg-white hover:bg-white/95 border border-black/5 rounded-xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between group"
+                className="bg-white hover:bg-zinc-50 border border-zinc-200 rounded-lg p-5 sm:p-6 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between group"
               >
-                <div className="space-y-6">
-                  <div className="w-10 h-10 rounded-xl bg-black/5 text-black flex items-center justify-center transition-all duration-300 group-hover:scale-105 group-hover:bg-black group-hover:text-brand">
+                <div className="space-y-4 sm:space-y-6">
+                  <div className="w-10 h-10 rounded-md bg-zinc-100 text-zinc-900 flex items-center justify-center transition-all duration-300 group-hover:scale-105 group-hover:bg-zinc-900 group-hover:text-brand">
                     <Icon className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
                   </div>
-                  <div className="space-y-2">
-                    <h4 className="font-header font-bold text-xs uppercase tracking-wider text-black group-hover:text-brand transition-colors duration-300">
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <h4 className="font-header font-bold text-xs uppercase tracking-wider text-zinc-900 group-hover:text-brand transition-colors duration-300">
                       {pillar.title}
                     </h4>
-                    <p className="text-black/55 font-sans text-[11px] font-light leading-relaxed">
+                    <p className="text-zinc-550 font-sans text-[11px] sm:text-[12px] font-light leading-relaxed">
                       {pillar.desc}
                     </p>
                   </div>
@@ -93,7 +93,7 @@ export default function About() {
               window.location.hash = '#/booking';
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className="px-8 py-4 bg-black hover:bg-zinc-800 text-white font-bold text-xs uppercase tracking-widest rounded-xl transition-all duration-200 cursor-pointer shadow-sm w-full sm:w-auto text-center"
+            className="px-8 py-4 bg-zinc-900 hover:bg-zinc-800 text-white font-bold text-xs uppercase tracking-widest rounded-lg transition-all duration-200 cursor-pointer shadow-sm w-full sm:w-auto text-center"
           >
             Get Started with Behold
           </button>

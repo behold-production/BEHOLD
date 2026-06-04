@@ -8,6 +8,7 @@ export default function CdatSection({ setView }) {
 
   const [generatedCode, setGeneratedCode] = useState(null);
   const [copyMessage, setCopyMessage] = useState('');
+  const [copied, setCopied] = useState(false);
 
   // Auto-fill from local storage if available
   useEffect(() => {
@@ -49,71 +50,66 @@ export default function CdatSection({ setView }) {
     profileData.groupCode = HARDCODED_CODE;
     localStorage.setItem('behold_student_profile', JSON.stringify(profileData));
 
-    // Copy to clipboard
-    navigator.clipboard.writeText(HARDCODED_CODE).then(() => {
-      setCopyMessage("🎉 Code copied to clipboard! You can now register on CIGI.");
-    }).catch(() => {
-      setCopyMessage("🎉 Code generated! Please copy it manually.");
-    });
+    setCopyMessage("🎉 Code generated! Please copy the code below to proceed.");
   };
 
   const copyManually = () => {
     if (generatedCode) {
       navigator.clipboard.writeText(generatedCode).then(() => {
         setCopyMessage("🎉 Code copied to clipboard! You can now register on CIGI.");
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
       });
     }
   };
 
   return (
-    <section id="cdat" className="max-w-7xl mx-auto px-4 sm:px-6 py-12 text-black text-left relative overflow-hidden">
+    <section id="cdat" className="max-w-7xl mx-auto px-4 sm:px-6 py-8 text-zinc-900 text-left relative overflow-hidden">
       {/* Background radial soft light */}
-      <div className="absolute top-1/2 left-1/4 w-[350px] h-[350px] bg-brand/5 rounded-xl glow-glow pointer-events-none" />
+      <div className="absolute top-1/2 left-1/4 w-[350px] h-[350px] bg-brand/5 rounded-lg glow-glow pointer-events-none" />
 
       {/* CDAT CARD */}
       <div
         id="card-aptitude"
-        className="card-luxury card-luxury-hover p-5 sm:p-8 md:p-14 flex flex-col justify-between space-y-8 select-none border border-black/5 group"
+        className="card-luxury card-luxury-hover p-5 sm:p-8 md:p-14 flex flex-col justify-between space-y-8 select-none border border-zinc-200/60 group rounded-lg"
       >
         <div className="space-y-6">
           <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
             <div className="space-y-2">
-              <span className="text-[9px] bg-brand text-black px-3 py-1 rounded-xl uppercase tracking-widest font-black font-mono">
+              <span className="text-[9px] bg-brand text-zinc-900 px-3 py-1 rounded-md uppercase tracking-widest font-black font-mono">
                 scientific strengths mapping
               </span>
-              <h3 className="text-2xl md:text-3xl font-header font-black uppercase tracking-wide text-black mt-1 group-hover:text-brand transition-colors duration-500">
+              <h3 className="text-2xl md:text-3xl font-header font-black uppercase tracking-wide text-zinc-900 mt-1 group-hover:text-brand transition-colors duration-500">
                 CIGI Differential Aptitude Test (CDAT)
               </h3>
             </div>
 
             <button
               onClick={() => window.location.hash = '#/sample-test'}
-              className="px-6 py-3.5 bg-black hover:bg-zinc-800 text-white font-bold text-xs uppercase tracking-widest rounded-xl transition cursor-pointer shadow-sm text-center shrink-0 w-full md:w-auto"
+              className="px-6 py-3.5 bg-zinc-900 hover:bg-zinc-800 text-white font-bold text-xs uppercase tracking-widest rounded-lg transition cursor-pointer shadow-sm text-center shrink-0 w-full md:w-auto"
             >
               Sample Test
             </button>
           </div>
 
-          <p className="text-black/60 font-sans text-sm md:text-base font-light leading-relaxed max-w-4xl">
-            BEHOLD’s aptitude assessments help students discover their natural strengths, learning styles, interests, and hidden talents through scientifically designed evaluation methods. The assessment provides clear insights into suitable academic and career paths, helping students make informed future decisions with confidence.
+          <p className="text-zinc-650 font-sans text-sm md:text-base font-light leading-relaxed max-w-4xl">
+            C-DAT (CIGI-Differential Aptitude Test). This standardized tool effectively identifies the inherent capacities of high school and higher secondary students. C-DAT has guided many students from various states in India and abroad towards suitable academic and career paths.
           </p>
-
-
         </div>
 
-        <div className="pt-6 border-t border-black/[0.05]">
+        <div className="pt-6 border-t border-zinc-200">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             <div className="lg:col-span-5 space-y-2">
-              <h4 className="text-sm font-header font-black uppercase tracking-wider text-black">
+              <h4 className="text-sm font-header font-black uppercase tracking-wider text-zinc-900">
                 Registration & Group Code
               </h4>
-              <p className="text-black/60 font-sans text-xs md:text-sm font-light leading-relaxed">
+              <p className="text-zinc-600 font-sans text-xs md:text-sm font-light leading-relaxed">
                 Enter your details below to generate your group access code. Once generated and copied, proceed to the CIGI registration portal to complete your registration.
               </p>
             </div>
             <div className="lg:col-span-7">
-              <form onSubmit={handleGenerateCode} className="space-y-4 bg-white/50 border border-black/5 p-4 sm:p-5 rounded-xl">
-                <div className="text-[10px] font-extrabold uppercase tracking-wider text-black/60 mb-2">
+              <form onSubmit={handleGenerateCode} className="space-y-4 bg-white/40 backdrop-blur-md border border-zinc-200/50 p-4 sm:p-5 rounded-lg">
+                <div className="text-[10px] font-extrabold uppercase tracking-wider text-zinc-500 mb-2">
                   Generate Your Access Code
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
@@ -123,7 +119,7 @@ export default function CdatSection({ setView }) {
                       placeholder="Full Name"
                       value={groupRegName}
                       onChange={(e) => setGroupRegName(e.target.value)}
-                      className="w-full px-4 py-3 rounded-xl bg-white border border-black/10 text-black text-xs font-semibold placeholder-black/35 outline-none focus:border-brand transition"
+                      className="w-full px-4 py-3 rounded-lg bg-white border border-zinc-200 text-zinc-900 text-xs font-semibold placeholder-zinc-400 outline-none focus:border-brand transition"
                     />
                   </div>
                   <div>
@@ -132,7 +128,7 @@ export default function CdatSection({ setView }) {
                       placeholder="Phone Number"
                       value={groupRegPhone}
                       onChange={(e) => setGroupRegPhone(e.target.value)}
-                      className="w-full px-4 py-3 rounded-xl bg-white border border-black/10 text-black text-xs font-semibold placeholder-black/35 outline-none focus:border-brand transition"
+                      className="w-full px-4 py-3 rounded-lg bg-white border border-zinc-200 text-zinc-900 text-xs font-semibold placeholder-zinc-400 outline-none focus:border-brand transition"
                     />
                   </div>
                   <div className="sm:col-span-2">
@@ -141,7 +137,7 @@ export default function CdatSection({ setView }) {
                       placeholder="Email Address"
                       value={groupRegEmail}
                       onChange={(e) => setGroupRegEmail(e.target.value)}
-                      className="w-full px-4 py-3 rounded-xl bg-white border border-black/10 text-black text-xs font-semibold placeholder-black/35 outline-none focus:border-brand transition"
+                      className="w-full px-4 py-3 rounded-lg bg-white border border-zinc-200 text-zinc-900 text-xs font-semibold placeholder-zinc-400 outline-none focus:border-brand transition"
                     />
                   </div>
                 </div>
@@ -150,24 +146,35 @@ export default function CdatSection({ setView }) {
                   <div className="pt-1">
                     <button
                       type="submit"
-                      className="px-6 py-3 bg-brand hover:bg-brand-dark text-black font-extrabold text-[10px] uppercase tracking-wider rounded-xl transition cursor-pointer shadow-xs border border-black/5 w-full sm:w-auto"
+                      className="px-6 py-3 bg-brand hover:bg-brand-dark text-zinc-900 font-extrabold text-[10px] uppercase tracking-wider rounded-lg transition cursor-pointer shadow-xs border border-zinc-900/5 w-full sm:w-auto"
                     >
                       Generate Group Code
                     </button>
                   </div>
                 ) : (
                   <div className="pt-2 space-y-4 animate-in fade-in duration-300">
-                    <div className="p-4 border border-brand/40 bg-brand/10 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="p-4 border border-brand/40 bg-brand/10 rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                       <div>
-                        <span className="text-[10px] uppercase tracking-widest text-black/60 font-bold block mb-1">Your Group Code</span>
-                        <span className="text-lg font-mono font-black tracking-widest text-black">{generatedCode}</span>
+                        <span className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold block mb-1">Your Group Code</span>
+                        <span className="text-lg font-mono font-black tracking-widest text-zinc-900">{generatedCode}</span>
                       </div>
                       <button
                         type="button"
                         onClick={copyManually}
-                        className="flex items-center gap-1.5 px-4 py-2 bg-white border border-black/10 hover:border-black rounded-xl text-[10px] uppercase font-bold transition cursor-pointer"
+                        className={`flex items-center gap-1.5 px-4 py-2 border rounded-lg text-[10px] uppercase font-bold transition cursor-pointer ${copied
+                            ? 'bg-emerald-50 border-emerald-300 text-emerald-700'
+                            : 'bg-white border-zinc-200 hover:border-zinc-900 text-zinc-900'
+                          }`}
                       >
-                        <Copy className="w-3.5 h-3.5" /> Copy Code
+                        {copied ? (
+                          <>
+                            <Check className="w-3.5 h-3.5 text-emerald-600" /> Copied!
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-3.5 h-3.5" /> Copy Code
+                          </>
+                        )}
                       </button>
                     </div>
 
@@ -175,7 +182,7 @@ export default function CdatSection({ setView }) {
                       href="https://cigicareer.com/cdat-registration/"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2 w-full px-6 py-3.5 bg-black hover:bg-zinc-800 text-white font-extrabold text-xs uppercase tracking-widest rounded-xl transition cursor-pointer shadow-md"
+                      className="flex items-center justify-center gap-2 w-full px-6 py-3.5 bg-zinc-900 hover:bg-zinc-800 text-white font-extrabold text-xs uppercase tracking-widest rounded-lg transition cursor-pointer shadow-md"
                     >
                       <span>Proceed to CIGI Website</span>
                       <ArrowRight className="w-4 h-4" />

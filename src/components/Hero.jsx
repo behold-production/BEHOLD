@@ -10,75 +10,64 @@ export default function Hero({ setView, navigateToSection }) {
   return (
     <section
       id="home"
-      className="relative w-full py-10 lg:py-24 px-4 sm:px-6 text-black text-left grid-bg overflow-hidden flex flex-col items-center justify-center min-h-[60vh] lg:min-h-[90vh] select-none"
+      className="relative w-full py-8 lg:py-24 px-4 sm:px-6 text-zinc-900 text-left grid-bg overflow-hidden flex flex-col items-center justify-center min-h-[60vh] lg:min-h-[90vh] select-none"
     >
       {/* Background Soft Glows */}
       <div className="absolute top-1/4 left-1/3 w-[300px] h-[300px] bg-brand/20 rounded-full glow-glow pointer-events-none" />
       <div className="absolute bottom-1/3 right-1/4 w-[400px] h-[400px] bg-brand/10 rounded-full glow-glow pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
+      <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
 
         {/* Left Column: Heading and CTAs */}
-        <div className="lg:col-span-6 space-y-6 fade-in-up text-center lg:text-left flex flex-col items-center lg:items-start">
-
-
+        <div className="lg:col-span-6 space-y-5 fade-in-up text-center lg:text-left flex flex-col items-center lg:items-start">
 
           {/* Main Title */}
-          <div className="space-y-8 mt-16">
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-header font-black tracking-tight text-black leading-[1.05] uppercase">
-              Guiding You <br />
-              Towards <span className="relative inline-block whitespace-nowrap">
-                What's Next.
+          <div className="space-y-6 mt-8 sm:mt-16">
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-header font-black tracking-tight text-zinc-900 leading-[1.1] uppercase">
+              Bridging You <br />
+              To Your <span className="relative inline-block whitespace-nowrap">
+                True Growth.
                 <svg className="absolute left-0 -bottom-2 w-full h-[8px] text-brand pointer-events-none" viewBox="0 0 100 10" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M2 8C35 3 70 3 98 8" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
                 </svg>
               </span>
             </h1>
-            <p className="text-black/60 font-sans text-xs sm:text-sm md:text-base font-light max-w-lg leading-relaxed pb-8">
-              Guidance, counselling, and mentorship for life's important decisions - helping individuals move forward with clarity and confidence.
+            <p className="text-zinc-600 font-sans text-sm md:text-base font-light max-w-lg leading-relaxed pb-4 sm:pb-8">
+              Professional psychological counseling, aptitude assessment, and career mentorship designed to help individuals thrive with confidence and purpose.
             </p>
           </div>
 
           {/* CTAs */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center lg:justify-start gap-4 pt-2 w-full">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center lg:justify-start gap-3.5 sm:gap-4 pt-2 w-full">
             <button
               onClick={handleBookNowClick}
-              className="px-8 py-4 bg-brand hover:bg-brand-dark hover:scale-[1.02] active:scale-[0.98] text-xs font-black uppercase tracking-widest transition-all duration-300 cursor-pointer rounded-xl shadow-md text-black flex items-center justify-center gap-2 border border-black/5 w-full sm:w-auto"
+              className="px-8 py-4 bg-brand hover:bg-brand-dark hover:scale-[1.02] active:scale-[0.98] text-xs font-black uppercase tracking-widest transition-all duration-300 cursor-pointer rounded-lg shadow-md text-zinc-900 flex items-center justify-center gap-2 border border-zinc-900/5 w-full sm:w-auto"
             >
               <span>Book a Session</span>
               <ArrowRight className="w-4 h-4" />
             </button>
             <button
               onClick={() => navigateToSection('services')}
-              className="px-8 py-4 bg-white/70 hover:bg-white border border-black/10 hover:border-black text-black hover:scale-[1.02] active:scale-[0.98] text-xs font-black uppercase tracking-widest transition-all duration-300 cursor-pointer rounded-xl shadow-xs w-full sm:w-auto text-center"
+              className="px-8 py-4 bg-white/70 hover:bg-white border border-zinc-200 hover:border-zinc-900 text-zinc-900 hover:scale-[1.02] active:scale-[0.98] text-xs font-black uppercase tracking-widest transition-all duration-300 cursor-pointer rounded-lg shadow-sm w-full sm:w-auto text-center"
             >
               Explore Services
             </button>
           </div>
 
           {/* Highlighted Points to Read (Replaced old quick stats) */}
-          <div className="flex flex-col sm:flex-row sm:flex-wrap gap-x-6 gap-y-3 pt-6 border-t border-black/[0.05] w-full text-[10px] font-bold uppercase tracking-wider text-black/60 justify-center lg:justify-start">
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span>Behold Lifetime Mentoring</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span>Online & Offline</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span>School & Doorstep Service</span>
-            </div>
+          <div className="flex flex-row flex-wrap items-center justify-center lg:justify-between gap-x-4 sm:gap-x-6 gap-y-2 sm:gap-y-3 pt-4 sm:pt-6 border-t border-zinc-200 w-full max-w-lg text-[11px] font-bold tracking-wider text-zinc-500">
+            <span>Professional Support</span>
+            <span>Online and offline</span>
+            <span>Door step service</span>
           </div>
 
         </div>
 
         {/* Right Column: Cinematic Image with Floating Visuals */}
-        <div className="hidden lg:flex lg:col-span-6 relative items-center justify-center fade-in-up group" style={{ animationDelay: '0.2s' }}>
+        <div className="flex lg:col-span-6 relative items-center justify-center fade-in-up group w-full px-2 sm:px-4 lg:px-0 mt-6 lg:mt-0" style={{ animationDelay: '0.2s' }}>
 
           {/* Main Visual Frame */}
-          <div className="w-full aspect-[4/3] md:aspect-[16/11] rounded-xl overflow-hidden shadow-2xl border-4 border-white bg-white relative z-10">
+          <div className="w-full aspect-[4/3] md:aspect-[16/11] rounded-lg overflow-hidden shadow-2xl border-4 border-white bg-white relative z-10">
             <img
               src="/children-learning.png"
               alt="Immersive mentoring storytelling visual"
@@ -88,39 +77,39 @@ export default function Hero({ setView, navigateToSection }) {
             <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
 
             {/* Overlay Text Box Labels */}
-            <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-md border border-black/10 px-4 py-2 rounded-xl shadow-lg z-20 pointer-events-none">
-              <span className="text-[10px] font-extrabold uppercase tracking-widest text-black">
+            <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-md border border-zinc-200 px-4 py-2 rounded-lg shadow-lg z-20 pointer-events-none">
+              <span className="text-[10px] font-extrabold uppercase tracking-widest text-zinc-900">
                 Therapy | Career Counselling | CDAT
               </span>
             </div>
           </div>
 
           {/* Floating UI Card 1: Counselling */}
-          <div className="absolute -top-6 -left-6 bg-white/95 backdrop-blur-md border border-black/[0.04] p-4 rounded-xl shadow-xl hidden lg:flex items-center gap-3.5 max-w-[220px] z-20 pointer-events-none float-slow">
-            <div className="w-9 h-9 rounded-xl bg-brand flex items-center justify-center text-black shadow-inner">
+          <div className="absolute -top-6 -left-6 bg-white/90 backdrop-blur-md border border-zinc-100 p-4 rounded-lg shadow-xl hidden lg:flex items-center gap-3.5 max-w-[220px] z-20 pointer-events-none float-slow">
+            <div className="w-9 h-9 rounded-lg bg-brand flex items-center justify-center text-zinc-900 shadow-inner">
               <HeartPulse className="w-4 h-4" />
             </div>
             <div>
-              <p className="text-[10px] font-extrabold uppercase tracking-wide text-black">Personal Care</p>
-              <p className="text-[9px] font-light text-black/55 mt-0.5">Emotional & stress guidance</p>
+              <p className="text-[10px] font-extrabold uppercase tracking-wide text-zinc-900">Personal Care</p>
+              <p className="text-[9px] font-light text-zinc-500 mt-0.5">Emotional & stress guidance</p>
             </div>
           </div>
 
           {/* Floating UI Card 2: Career Mapping */}
-          <div className="absolute -bottom-6 -right-6 bg-white/95 backdrop-blur-md border border-black/[0.04] p-4 rounded-xl shadow-xl hidden lg:flex items-center gap-3.5 max-w-[220px] z-20 pointer-events-none float-fast">
-            <div className="w-9 h-9 rounded-xl bg-black flex items-center justify-center text-white shadow-md">
+          <div className="absolute -bottom-6 -right-6 bg-white/90 backdrop-blur-md border border-zinc-100 p-4 rounded-lg shadow-xl hidden lg:flex items-center gap-3.5 max-w-[220px] z-20 pointer-events-none float-fast">
+            <div className="w-9 h-9 rounded-lg bg-zinc-900 flex items-center justify-center text-white shadow-md">
               <Compass className="w-4 h-4" />
             </div>
             <div>
-              <p className="text-[10px] font-extrabold uppercase tracking-wide text-black">Scientific CDAT</p>
-              <p className="text-[9px] font-light text-black/55 mt-0.5">Custom stream roadmaps</p>
+              <p className="text-[10px] font-extrabold uppercase tracking-wide text-zinc-900">Scientific CDAT</p>
+              <p className="text-[9px] font-light text-zinc-500 mt-0.5">Custom stream roadmaps</p>
             </div>
           </div>
 
           {/* Floating UI Card 3: Trust Badge */}
-          <div className="absolute top-1/2 -right-8 transform -translate-y-1/2 bg-white/95 backdrop-blur-md border border-black/[0.04] px-4 py-2.5 rounded-xl shadow-lg hidden lg:flex items-center gap-2 z-20 pointer-events-none float-slow">
+          <div className="absolute top-1/2 -right-8 transform -translate-y-1/2 bg-white/90 backdrop-blur-md border border-zinc-100 px-4 py-2.5 rounded-lg shadow-lg hidden lg:flex items-center gap-2 z-20 pointer-events-none float-slow">
             <ShieldCheck className="w-4 h-4 text-emerald-600" />
-            <span className="text-[9px] font-black uppercase tracking-wider text-black">RCI Certified Mentors</span>
+            <span className="text-[9px] font-black uppercase tracking-wider text-zinc-900">RCI Certified Mentors</span>
           </div>
 
         </div>

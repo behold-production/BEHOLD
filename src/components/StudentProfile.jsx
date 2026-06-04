@@ -1,79 +1,99 @@
 import React, { useState, useEffect } from 'react';
-import { User, Phone, Mail, CheckCircle2, ChevronRight, BookOpen, Heart, Award, ShieldAlert } from 'lucide-react';
+import {
+  User, Phone, Mail, CheckCircle2, ChevronRight, BookOpen, Heart, Award, ShieldAlert,
+  LayoutDashboard, Calendar, History, BarChart3, Sparkles, Clock, ExternalLink, Lock
+} from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 const INITIAL_STATE = {
   name: '',
   email: '',
-  confirmEmail: '',
-  dob: '',
-  gender: 'Male',
   phone: '',
-  whatsapp: '',
-  country: 'India',
-  phoneCode: '0091',
-  homeDistrict: '',
-  grade: '',
-  schoolCountry: 'India',
-  schoolState: 'Kerala',
-  schoolDistrict: '',
   schoolName: '',
-  medium: 'English',
-  board: 'Kerala-State',
-  careerInterests: '',
-  specialTalents: '',
-  achievements: '',
-  fatherQualification: '',
-  motherQualification: '',
-  fatherOccupation: '',
-  motherOccupation: '',
+  grade: '',
   guardianName: '',
-  guardianRelationship: 'Father',
   guardianPhone: '',
-  preferredBatch: '',
   groupCode: ''
 };
-
-const DISTRICTS_KERALA = [
-  'Alappuzha', 'Ernakulam', 'Idukki', 'Kannur', 'Kasaragod',
-  'Kollam', 'Kottayam', 'Kozhikode', 'Malappuram', 'Palakkad',
-  'Pathanamthitta', 'Thiruvananthapuram', 'Thrissur', 'Wayanad'
-];
 
 export default function StudentProfile({ setView }) {
   const [profile, setProfile] = useState(INITIAL_STATE);
   const [isSaved, setIsSaved] = useState(false);
   const [errors, setErrors] = useState({});
-  const [activeTab, setActiveTab] = useState('personal'); // personal, school, interests, parents
+
+  // Dashboard Tab Selection
+  const [currentSection, setCurrentSection] = useState('overview'); // overview, details, booked, completed, results
+
+  const [bookedSessions, setBookedSessions] = useState([]);
+  const [testProfile, setTestProfile] = useState(null);
+  const { user } = useAuth();
 
   // History tracking popstate listener
   useEffect(() => {
     // Set initial state on mount if it's profile view
-    window.history.replaceState({ component: 'profile', tab: 'personal' }, '');
+    window.history.replaceState({ component: 'profile', section: 'overview' }, '');
 
     const handlePopState = (e) => {
-      if (e.state && e.state.component === 'profile' && e.state.tab) {
-        setActiveTab(e.state.tab);
+      if (e.state && e.state.component === 'profile') {
+        if (e.state.section) setCurrentSection(e.state.section);
       }
     };
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
-  const handleTabChange = (tabId) => {
-    setActiveTab(tabId);
-    window.history.pushState({ component: 'profile', tab: tabId }, '');
+  const handleSectionChange = (sectionId) => {
+    setCurrentSection(sectionId);
+    window.history.pushState({ component: 'profile', section: sectionId }, '');
   };
 
+  // Load profile from localStorage
   useEffect(() => {
     const saved = localStorage.getItem('behold_student_profile');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        // Merge saved data with initial state to avoid missing fields if version changes
         setProfile(prev => ({ ...INITIAL_STATE, ...parsed }));
       } catch (e) {
         console.error("Error reading student profile from localStorage", e);
       }
+    }
+  }, []);
+
+  // Load booked sessions from localStorage or seed mock session
+  useEffect(() => {
+    const stored = localStorage.getItem('behold_booked_sessions');
+    let list = [];
+    if (stored) {
+      try { list = JSON.parse(stored); } catch (e) { }
+    }
+
+    // Seed default upcoming session if none exists
+    if (list.length === 0) {
+      list = [
+        {
+          id: 'sb_mock_1',
+          service: 'counselling',
+          mode: 'ONLINE',
+          date: '2026-06-15',
+          time: '02:00 PM',
+          advisorName: 'Josina Joseph',
+          advisorRole: 'Consultant Psychologist',
+          status: 'CONFIRMED',
+          meetLink: 'https://meet.google.com/abc-defg-hij'
+        }
+      ];
+    }
+    setBookedSessions(list);
+  }, []);
+
+  // Load test profile (CDAT results) from localStorage
+  useEffect(() => {
+    const stored = localStorage.getItem('behold_test_profile');
+    if (stored) {
+      try {
+        setTestProfile(JSON.parse(stored));
+      } catch (e) { }
     }
   }, []);
 
@@ -96,11 +116,7 @@ export default function StudentProfile({ setView }) {
     } else if (profile.name.trim().length < 3) {
       err.name = "Name of Student must be at least 3 characters";
     }
-    
-    if (!profile.dob.trim()) {
-      err.dob = "Date of Birth is required";
-    }
-    
+
     if (!profile.email.trim()) {
       err.email = "Email is required";
     } else {
@@ -109,13 +125,7 @@ export default function StudentProfile({ setView }) {
         err.email = "Please enter a valid email address";
       }
     }
-    
-    if (!profile.confirmEmail.trim()) {
-      err.confirmEmail = "Please confirm your email";
-    } else if (profile.email !== profile.confirmEmail) {
-      err.confirmEmail = "Emails do not match";
-    }
-    
+
     if (!profile.phone.trim()) {
       err.phone = "Phone number is required";
     } else {
@@ -124,11 +134,11 @@ export default function StudentProfile({ setView }) {
         err.phone = "Please enter a valid phone number (e.g. 8086664001)";
       }
     }
-    
+
     if (!profile.guardianName.trim()) {
       err.guardianName = "Guardian Name is required";
     }
-    
+
     return err;
   };
 
@@ -137,247 +147,299 @@ export default function StudentProfile({ setView }) {
     const err = validate();
     if (Object.keys(err).length > 0) {
       setErrors(err);
-      // Automatically switch to the tab with errors
-      if (err.name || err.email || err.confirmEmail || err.phone || err.dob) {
-        setActiveTab('personal');
-      } else if (err.guardianName) {
-        setActiveTab('parents');
-      }
       return;
     }
 
-    localStorage.setItem('behold_student_profile', JSON.stringify(profile));
     setIsSaved(true);
     setTimeout(() => {
       setIsSaved(false);
-    }, 2000);
+    }, 3000);
   };
 
+  // Mock completed sessions (static for diagnostic logs timeline)
+  const completedSessions = [
+    {
+      id: 'sb_mock_c1',
+      service: 'counselling',
+      mode: 'OFFLINE',
+      date: '2026-05-10',
+      time: '11:00 AM',
+      advisorName: 'Muhammed Niyas S H',
+      advisorRole: 'Consultant Psychologist',
+      status: 'COMPLETED',
+      feedback: 'Completed CDAT baseline mapping. Student has strong cognitive scores and lateral creative thinking. Recommend focus stream: Applied Psychology, Design, or Software Engineering.'
+    }
+  ];
+
   return (
-    <div className="pt-24 pb-20 min-h-screen bg-white text-black font-sans text-left max-w-5xl mx-auto px-4 sm:px-6">
-      <div className="mb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-        <div>
-          <h2 className="text-3xl font-header font-black text-gray-900 uppercase tracking-wide">
-            Student Registration Profile
-          </h2>
-          <p className="text-gray-500 text-sm font-light mt-1">
-            Complete your full profiling details. These will be saved locally and used to auto-fill the CIGI CDAT registration form.
-          </p>
-        </div>
-        <button
-          onClick={() => setView('landing')}
-          className="bg-white border border-brand hover:bg-brand hover:text-white text-brand px-5 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition cursor-pointer"
-        >
-          Back to Home
-        </button>
-      </div>
+    <div className="pt-5 sm:pt-24 pb-12 sm:pb-20 min-h-screen bg-zinc-50 text-zinc-900 font-sans text-left relative overflow-hidden">
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      {/* Background Soft Glows */}
+      <div className="absolute top-1/4 left-1/3 w-[300px] h-[300px] bg-brand/10 rounded-full glow-glow pointer-events-none" />
+      <div className="absolute bottom-1/3 right-1/4 w-[300px] h-[300px] bg-brand/5 rounded-full glow-glow pointer-events-none" />
 
-        {/* Left Side: Navigation Tabs */}
-        <div className="lg:col-span-1 space-y-6">
-          <div className="flex flex-row overflow-x-auto lg:flex-col gap-2 pb-2 lg:pb-0 scrollbar-none snap-x w-full">
-            {[
-              { id: 'personal', label: '1. Personal Details', icon: User },
-              { id: 'school', label: '2. School Details', icon: BookOpen },
-              { id: 'interests', label: '3. Talents & Interests', icon: Award },
-              { id: 'parents', label: '4. Parents / Guardian', icon: Heart }
-            ].map(tab => {
-              const Icon = tab.icon;
-              const isActive = activeTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => handleTabChange(tab.id)}
-                  className={`flex items-center gap-3 p-3 rounded-xl border text-xs font-bold uppercase tracking-wider transition text-left cursor-pointer shrink-0 snap-start ${isActive
-                      ? 'bg-brand text-white border-brand'
-                      : 'bg-white text-gray-500 border-gray-200 hover:border-brand hover:text-brand'
-                    }`}
-                >
-                  <Icon className="w-4 h-4 shrink-0" />
-                  <span>{tab.label}</span>
-                </button>
-              );
-            })}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10 space-y-6 sm:space-y-8">
+
+        {/* Mobile Summary Cards - Visible only on mobile/tablet */}
+        <div className="lg:hidden grid grid-cols-2 sm:grid-cols-4 gap-3 bg-white p-4 rounded-lg border border-zinc-200 shadow-xs">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-full bg-brand/15 text-zinc-800 flex items-center justify-center font-bold text-xs shrink-0 border border-brand/20">
+              {profile.name ? profile.name[0].toUpperCase() : (user?.name ? user.name[0].toUpperCase() : 'S')}
+            </div>
+            <div className="min-w-0">
+              <span className="text-[8px] text-zinc-400 font-bold uppercase tracking-wider block">Student</span>
+              <p className="text-[10px] font-black text-zinc-900 truncate uppercase mt-0.5">{profile.name || user?.name || 'Student'}</p>
+            </div>
           </div>
 
-          <div className="hidden lg:block p-4 bg-gray-50 border border-gray-200 rounded-xl space-y-2">
-            <span className="text-[10px] uppercase font-bold tracking-wider text-gray-700 block flex items-center gap-1.5">
-              <ShieldAlert className="w-3.5 h-3.5 text-gray-800" /> Privacy Notice
-            </span>
-            <p className="text-[10px] text-gray-500 leading-relaxed">
-              Your profile is stored entirely on your local browser database (`localStorage`) and is not transmitted to our servers until you choose to submit/register.
-            </p>
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-full bg-zinc-50 border border-zinc-200 flex items-center justify-center text-zinc-900 shrink-0">
+              <Calendar className="w-4 h-4 text-brand" />
+            </div>
+            <div>
+              <span className="text-[8px] text-zinc-400 font-bold uppercase tracking-wider block">Booked Slots</span>
+              <p className="text-[10px] font-black text-zinc-900 mt-0.5">{bookedSessions.length} Upcoming</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-full bg-zinc-50 border border-zinc-200 flex items-center justify-center text-zinc-900 shrink-0">
+              <History className="w-4 h-4 text-brand" />
+            </div>
+            <div>
+              <span className="text-[8px] text-zinc-400 font-bold uppercase tracking-wider block">Completed</span>
+              <p className="text-[10px] font-black text-zinc-900 mt-0.5">{completedSessions.length} Sessions</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2.5 col-span-2 sm:col-span-1">
+            <div className="w-8 h-8 rounded-full bg-zinc-50 border border-zinc-200 flex items-center justify-center text-zinc-900 shrink-0">
+              <BarChart3 className="w-4 h-4 text-brand" />
+            </div>
+            <div className="min-w-0">
+              <span className="text-[8px] text-zinc-400 font-bold uppercase tracking-wider block">CDAT Profile</span>
+              <p className="text-[10px] font-black text-zinc-900 truncate mt-0.5 uppercase">
+                {testProfile ? testProfile.dominantDomain : 'Not Taken'}
+              </p>
+            </div>
           </div>
         </div>
 
-        {/* Right Side: Tab Forms */}
-        <div className="lg:col-span-3 border border-black p-5 sm:p-8 bg-white">
-          <form onSubmit={handleSave} className="space-y-8 text-xs font-medium">
+        {/* 3-Column Premium Dashboard Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
-            {/* TAB 1: PERSONAL DETAILS */}
-            {activeTab === 'personal' && (
+          {/* Left Column: Premium Sidebar Menu (col-span-3) */}
+          <div className="lg:col-span-3 space-y-4">
+
+            {/* Sidebar Navigation */}
+            <div className="bg-white p-4 rounded-lg border border-zinc-200 shadow-xs flex flex-row overflow-x-auto lg:flex-col gap-2 pb-2 lg:pb-4 scrollbar-none snap-x w-full">
+              {[
+                { id: 'overview', label: 'Overview', icon: LayoutDashboard },
+                { id: 'details', label: 'CIGI Profile Details', icon: User },
+                { id: 'booked', label: 'Booked Sessions', icon: Calendar },
+                { id: 'completed', label: 'Completed Timeline', icon: History },
+                { id: 'results', label: 'CDAT Test Results', icon: BarChart3 }
+              ].map(section => {
+                const Icon = section.icon;
+                const isActive = currentSection === section.id;
+                return (
+                  <button
+                    key={section.id}
+                    type="button"
+                    onClick={() => handleSectionChange(section.id)}
+                    className={`flex items-center gap-2.5 px-4 py-3 rounded-lg border text-[10px] sm:text-xs font-bold uppercase tracking-wider transition text-left cursor-pointer shrink-0 snap-start w-auto lg:w-full ${isActive
+                      ? 'bg-zinc-900 text-brand border-zinc-900 shadow-sm'
+                      : 'bg-white text-zinc-500 border-zinc-100 hover:border-zinc-300 hover:text-zinc-900'
+                      }`}
+                  >
+                    <Icon className="w-4 h-4 shrink-0" />
+                    <span>{section.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Privacy notice banner inside sidebar */}
+            <div className="hidden lg:block p-4 bg-zinc-50 border border-zinc-200 rounded-lg space-y-2">
+              <span className="text-[10px] uppercase font-bold tracking-wider text-zinc-700 flex items-center gap-1.5">
+                <ShieldAlert className="w-3.5 h-3.5 text-zinc-900" /> Secure Database
+              </span>
+              <p className="text-[10px] text-zinc-500 leading-relaxed">
+                All profile parameters are synced inside your local browser database (`localStorage`) for ultimate privacy control.
+              </p>
+            </div>
+          </div>
+
+          {/* Center Column: Dashboard Active Tab Workspace (col-span-5) */}
+          <div className="lg:col-span-5 bg-white border border-zinc-200 rounded-lg p-4.5 sm:p-6.5 shadow-xs">
+
+            {/* TAB 1: DASHBOARD OVERVIEW */}
+            {currentSection === 'overview' && (
               <div className="space-y-6 animate-in fade-in duration-200">
-                <h3 className="text-sm font-bold uppercase tracking-widest border-b border-gray-150 pb-2 text-gray-900">
-                  Section 1: Personal Details
-                </h3>
+                <div className="border-b border-zinc-100 pb-3 flex justify-between items-center">
+                  <h3 className="text-sm font-bold uppercase tracking-widest text-zinc-900">
+                    Dashboard Overview
+                  </h3>
+                  <span className="text-[9px] bg-brand/20 text-zinc-900 px-2 py-0.5 rounded font-bold uppercase tracking-wider font-mono">Status: Active</span>
+                </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Interactive Overview Widgets */}
+                <div className="grid grid-cols-1 gap-4">
+                  {/* Card 2: CDAT Aptitude Status */}
+                  <div className="bg-white border border-zinc-200 hover:border-zinc-300 p-4.5 rounded-lg transition-all shadow-xs flex flex-col justify-between relative overflow-hidden">
+                    <div className="flex items-start justify-between">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-1.5">
+                          <BarChart3 className="w-4 h-4 text-zinc-900" />
+                          <h4 className="font-header font-black text-xs uppercase tracking-wider text-zinc-900">CDAT Aptitude Status</h4>
+                        </div>
+                        <div className="text-[10px] text-zinc-500 font-medium">
+                          {testProfile ? (
+                            <span>Dominant: <span className="text-zinc-900 font-bold">{testProfile.dominantDomain}</span></span>
+                          ) : (
+                            <span>Assess your interest and matching domains.</span>
+                          )}
+                        </div>
+                      </div>
+                      <span className={`text-[8px] px-2 py-0.5 rounded font-black tracking-wider uppercase ${testProfile ? 'bg-emerald-50 border border-emerald-250 text-emerald-700' : 'bg-zinc-100 border border-zinc-200 text-zinc-500'}`}>
+                        {testProfile ? 'Completed' : 'Not Taken'}
+                      </span>
+                    </div>
+                    <div className="mt-4 pt-3 border-t border-zinc-100 flex justify-end gap-2">
+                      {testProfile ? (
+                        <button
+                          onClick={() => handleSectionChange('results')}
+                          className="text-[9px] font-black uppercase tracking-wider bg-zinc-900 hover:bg-zinc-800 text-brand px-3 py-1.5 rounded-lg cursor-pointer transition shadow-xs"
+                        >
+                          View Results
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => window.location.hash = '#/sample-test'}
+                          className="text-[9px] font-black uppercase tracking-wider bg-brand hover:bg-brand-dark text-zinc-900 px-3 py-1.5 rounded-lg cursor-pointer transition shadow-xs"
+                        >
+                          Start CDAT Test
+                        </button>
+                      )}
+                    </div>
+                  </div>
 
+                  {/* Card 3: Upcoming Consultation */}
+                  <div className="bg-white border border-zinc-200 hover:border-zinc-300 p-4.5 rounded-lg transition-all shadow-xs flex flex-col justify-between relative overflow-hidden">
+                    <div className="flex items-start justify-between">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-1.5">
+                          <Calendar className="w-4 h-4 text-zinc-900" />
+                          <h4 className="font-header font-black text-xs uppercase tracking-wider text-zinc-900">Career Consultations</h4>
+                        </div>
+                        <div className="text-[10px] text-zinc-500 font-medium">
+                          {bookedSessions.length > 0 ? (
+                            <span>Next: <span className="text-zinc-900 font-bold">{bookedSessions[0].date}</span> with {bookedSessions[0].advisorName}</span>
+                          ) : (
+                            <span>Schedule your dialogue with career counsellors.</span>
+                          )}
+                        </div>
+                      </div>
+                      <span className={`text-[8px] px-2 py-0.5 rounded font-black tracking-wider uppercase ${bookedSessions.length > 0 ? 'bg-emerald-50 border border-emerald-250 text-emerald-700' : 'bg-zinc-100 border border-zinc-200 text-zinc-500'}`}>
+                        {bookedSessions.length > 0 ? 'Scheduled' : 'No Bookings'}
+                      </span>
+                    </div>
+                    <div className="mt-4 pt-3 border-t border-zinc-100 flex justify-end gap-2">
+                      {bookedSessions.length > 0 ? (
+                        <button
+                          onClick={() => handleSectionChange('booked')}
+                          className="text-[9px] font-black uppercase tracking-wider bg-zinc-900 hover:bg-zinc-800 text-brand px-3 py-1.5 rounded-lg cursor-pointer transition shadow-xs"
+                        >
+                          View Sessions
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => window.location.hash = '#/booking'}
+                          className="text-[9px] font-black uppercase tracking-wider bg-brand hover:bg-brand-dark text-zinc-900 px-3 py-1.5 rounded-lg cursor-pointer transition shadow-xs"
+                        >
+                          Book Session
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* TAB 2: PROFILE DETAILS FORM */}
+            {currentSection === 'details' && (
+              <div className="space-y-6 animate-in fade-in duration-200 text-xs text-left">
+                <div className="border-b border-zinc-100 pb-3 flex justify-between items-center">
+                  <h3 className="text-sm font-bold uppercase tracking-widest text-zinc-900">
+                    CIGI Detailed Profile
+                  </h3>
+                  <span className="text-[10px] text-zinc-400 font-light">Verify Details</span>
+                </div>
+
+                <form onSubmit={handleSave} className="space-y-4 text-xs font-medium">
                   {/* Name of Student */}
                   <div className="space-y-1.5">
-                    <label className="text-gray-500 uppercase tracking-wider">Name of Student</label>
+                    <label className="text-zinc-500 uppercase tracking-wider font-bold">Name of Student</label>
                     <input
                       type="text"
                       name="name"
                       placeholder="Your full name"
                       value={profile.name}
                       onChange={handleChange}
-                      className={`w-full px-4 py-2.5 bg-white border text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition ${errors.name ? 'border-red-500' : 'border-gray-300 hover:border-gray-400'
-                        }`}
+                      className={`w-full px-4 py-2.5 bg-white border text-sm text-zinc-900 rounded-lg outline-none focus:border-brand transition ${errors.name ? 'border-red-500' : 'border-zinc-200 hover:border-gray-400'}`}
                     />
                     {errors.name && <p className="text-[10px] text-red-500 font-semibold">{errors.name}</p>}
                   </div>
 
-                  {/* Date of Birth */}
-                  <div className="space-y-1.5">
-                    <label className="text-gray-500 uppercase tracking-wider">Date of Birth</label>
-                    <input
-                      type="text"
-                      name="dob"
-                      placeholder="as 25-01-2006"
-                      value={profile.dob}
-                      onChange={handleChange}
-                      className={`w-full px-4 py-2.5 bg-white border text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition ${errors.dob ? 'border-red-500' : 'border-gray-300 hover:border-gray-400'
-                        }`}
-                    />
-                    {errors.dob && <p className="text-[10px] text-red-500 font-semibold">{errors.dob}</p>}
-                  </div>
-
                   {/* Email */}
                   <div className="space-y-1.5">
-                    <label className="text-gray-500 uppercase tracking-wider">Email</label>
+                    <label className="text-zinc-500 uppercase tracking-wider font-bold">Email Address</label>
                     <input
                       type="email"
                       name="email"
                       placeholder="name@email.com"
                       value={profile.email}
                       onChange={handleChange}
-                      className={`w-full px-4 py-2.5 bg-white border text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition ${errors.email ? 'border-red-500' : 'border-gray-300 hover:border-gray-400'
-                        }`}
+                      className={`w-full px-4 py-2.5 bg-white border text-sm text-zinc-900 rounded-lg outline-none focus:border-brand transition ${errors.email ? 'border-red-500' : 'border-zinc-200 hover:border-gray-400'}`}
                     />
                     {errors.email && <p className="text-[10px] text-red-500 font-semibold">{errors.email}</p>}
                   </div>
 
-                  {/* Confirm Email */}
+                  {/* Phone */}
                   <div className="space-y-1.5">
-                    <label className="text-gray-500 uppercase tracking-wider">Confirm Email</label>
+                    <label className="text-zinc-500 uppercase tracking-wider font-bold">Phone Number</label>
                     <input
-                      type="email"
-                      name="confirmEmail"
-                      placeholder="Re-enter email"
-                      value={profile.confirmEmail}
+                      type="tel"
+                      name="phone"
+                      placeholder="e.g. 8086664001"
+                      value={profile.phone}
                       onChange={handleChange}
-                      className={`w-full px-4 py-2.5 bg-white border text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition ${errors.confirmEmail ? 'border-red-500' : 'border-gray-300 hover:border-gray-400'
-                        }`}
+                      className={`w-full px-4 py-2.5 bg-white border text-sm text-zinc-900 rounded-lg outline-none focus:border-brand transition ${errors.phone ? 'border-red-500' : 'border-zinc-200 hover:border-gray-400'}`}
                     />
-                    {errors.confirmEmail && <p className="text-[10px] text-red-500 font-semibold">{errors.confirmEmail}</p>}
-                  </div>
-
-                  {/* Phone Code & Phone */}
-                  <div className="space-y-1.5">
-                    <label className="text-gray-500 uppercase tracking-wider">Phone</label>
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        name="phoneCode"
-                        value={profile.phoneCode}
-                        onChange={handleChange}
-                        className="w-20 px-3 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-xl outline-none text-center"
-                      />
-                      <input
-                        type="tel"
-                        name="phone"
-                        placeholder="e.g. 8086664001"
-                        value={profile.phone}
-                        onChange={handleChange}
-                        className={`flex-1 px-4 py-2.5 bg-white border text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition ${errors.phone ? 'border-red-500' : 'border-gray-300 hover:border-gray-400'
-                          }`}
-                      />
-                    </div>
                     {errors.phone && <p className="text-[10px] text-red-500 font-semibold">{errors.phone}</p>}
                   </div>
 
-                  {/* WhatsApp */}
+                  {/* School Name */}
                   <div className="space-y-1.5">
-                    <label className="text-gray-500 uppercase tracking-wider">WhatsApp Number</label>
-                    <input
-                      type="tel"
-                      name="whatsapp"
-                      placeholder="e.g. 8086664001"
-                      value={profile.whatsapp}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition"
-                    />
-                  </div>
-
-                  {/* Gender */}
-                  <div className="space-y-1.5">
-                    <label className="text-gray-500 uppercase tracking-wider">Gender</label>
-                    <div className="flex gap-4">
-                      {['Male', 'Female'].map(g => (
-                        <label key={g} className="flex items-center gap-2 text-sm text-gray-800 cursor-pointer">
-                          <input
-                            type="radio"
-                            name="gender"
-                            value={g}
-                            checked={profile.gender === g}
-                            onChange={handleChange}
-                            className="w-4 h-4 accent-black"
-                          />
-                          {g}
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Country */}
-                  <div className="space-y-1.5">
-                    <label className="text-gray-500 uppercase tracking-wider">Country</label>
+                    <label className="text-zinc-500 uppercase tracking-wider font-bold">School Name</label>
                     <input
                       type="text"
-                      name="country"
-                      value={profile.country}
+                      name="schoolName"
+                      placeholder="Name of your school"
+                      value={profile.schoolName}
                       onChange={handleChange}
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition"
+                      className="w-full px-4 py-2.5 bg-white border border-zinc-200 text-sm text-zinc-900 rounded-lg outline-none focus:border-brand transition"
                     />
-                  </div>
-
-                  {/* Home District */}
-                  <div className="space-y-1.5">
-                    <label className="text-gray-500 uppercase tracking-wider">Home District</label>
-                    <select
-                      name="homeDistrict"
-                      value={profile.homeDistrict}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition cursor-pointer"
-                    >
-                      <option value="">Select District</option>
-                      {DISTRICTS_KERALA.map(d => (
-                        <option key={d} value={d}>{d}</option>
-                      ))}
-                    </select>
                   </div>
 
                   {/* Grade */}
                   <div className="space-y-1.5">
-                    <label className="text-gray-500 uppercase tracking-wider">Grade (Class)</label>
+                    <label className="text-zinc-500 uppercase tracking-wider font-bold">Grade (Class)</label>
                     <select
                       name="grade"
                       value={profile.grade}
                       onChange={handleChange}
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition cursor-pointer"
+                      className="w-full px-4 py-2.5 bg-white border border-zinc-200 text-sm text-zinc-900 rounded-lg outline-none focus:border-brand transition cursor-pointer"
                     >
                       <option value="">Select Grade</option>
                       {['Class 8', 'Class 9', 'Class 10', 'Class 11', 'Class 12', 'Graduate', 'Other'].map(g => (
@@ -386,359 +448,423 @@ export default function StudentProfile({ setView }) {
                     </select>
                   </div>
 
-                  {/* Group Code */}
-                  <div className="space-y-1.5">
-                    <label className="text-gray-500 uppercase tracking-wider">Group / School Code (Optional)</label>
-                    <input
-                      type="text"
-                      name="groupCode"
-                      placeholder="e.g. CIGI-1002"
-                      value={profile.groupCode}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition"
-                    />
-                  </div>
-
-                </div>
-
-                <div className="flex justify-end pt-4">
-                  <button
-                    type="button"
-                    onClick={() => handleTabChange('school')}
-                    className="bg-brand text-white px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand-dark transition rounded-xl shadow-sm"
-                  >
-                    Next Section
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* TAB 2: SCHOOL DETAILS */}
-            {activeTab === 'school' && (
-              <div className="space-y-6 animate-in fade-in duration-200">
-                <h3 className="text-sm font-bold uppercase tracking-widest border-b border-gray-150 pb-2 text-gray-900">
-                  Section 2: School Details
-                </h3>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-                  {/* School Name */}
-                  <div className="space-y-1.5 md:col-span-2">
-                    <label className="text-gray-500 uppercase tracking-wider">School Name</label>
-                    <input
-                      type="text"
-                      name="schoolName"
-                      placeholder="Name of the school"
-                      value={profile.schoolName}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition"
-                    />
-                  </div>
-
-                  {/* School Country */}
-                  <div className="space-y-1.5">
-                    <label className="text-gray-500 uppercase tracking-wider">School Country</label>
-                    <input
-                      type="text"
-                      name="schoolCountry"
-                      value={profile.schoolCountry}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition"
-                    />
-                  </div>
-
-                  {/* School State */}
-                  <div className="space-y-1.5">
-                    <label className="text-gray-500 uppercase tracking-wider">School State</label>
-                    <input
-                      type="text"
-                      name="schoolState"
-                      value={profile.schoolState}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition"
-                    />
-                  </div>
-
-                  {/* School District */}
-                  <div className="space-y-1.5">
-                    <label className="text-gray-500 uppercase tracking-wider">School District</label>
-                    <select
-                      name="schoolDistrict"
-                      value={profile.schoolDistrict}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition cursor-pointer"
-                    >
-                      <option value="">Select District</option>
-                      {DISTRICTS_KERALA.map(d => (
-                        <option key={d} value={d}>{d}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Medium */}
-                  <div className="space-y-1.5">
-                    <label className="text-gray-500 uppercase tracking-wider">Medium of Instruction</label>
-                    <div className="flex gap-4">
-                      {['English', 'Malayalam', 'Other'].map(m => (
-                        <label key={m} className="flex items-center gap-2 text-sm text-gray-800 cursor-pointer">
-                          <input
-                            type="radio"
-                            name="medium"
-                            value={m}
-                            checked={profile.medium === m}
-                            onChange={handleChange}
-                            className="w-4 h-4 accent-black"
-                          />
-                          {m}
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Board */}
-                  <div className="space-y-1.5 md:col-span-2">
-                    <label className="text-gray-500 uppercase tracking-wider">Board of Education</label>
-                    <div className="flex flex-wrap gap-4">
-                      {['Kerala-State', 'CBSE', 'ICSE', 'IGCSE', 'Other'].map(b => (
-                        <label key={b} className="flex items-center gap-2 text-sm text-gray-800 cursor-pointer">
-                          <input
-                            type="radio"
-                            name="board"
-                            value={b}
-                            checked={profile.board === b}
-                            onChange={handleChange}
-                            className="w-4 h-4 accent-black"
-                          />
-                          {b}
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-
-                </div>
-
-                <div className="flex flex-col sm:flex-row gap-3 justify-between pt-4">
-                  <button
-                    type="button"
-                    onClick={() => handleTabChange('personal')}
-                    className="bg-white border border-brand text-brand px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand hover:text-white transition rounded-xl shadow-sm w-full sm:w-auto text-center"
-                  >
-                    Previous
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleTabChange('interests')}
-                    className="bg-brand text-white px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand-dark transition rounded-xl shadow-sm w-full sm:w-auto text-center"
-                  >
-                    Next Section
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* TAB 3: TALENTS & INTERESTS */}
-            {activeTab === 'interests' && (
-              <div className="space-y-6 animate-in fade-in duration-200">
-                <h3 className="text-sm font-bold uppercase tracking-widest border-b border-gray-150 pb-2 text-gray-900">
-                  Section 3: Talents & Interests
-                </h3>
-
-                <div className="space-y-6">
-
-                  {/* Career Interests */}
-                  <div className="space-y-1.5">
-                    <label className="text-gray-500 uppercase tracking-wider">Career Interests</label>
-                    <textarea
-                      name="careerInterests"
-                      placeholder="You can give more than one profession (e.g. Software Engineer, Architect, Designer)"
-                      value={profile.careerInterests}
-                      onChange={handleChange}
-                      rows="3"
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition"
-                    />
-                  </div>
-
-                  {/* Special Talents */}
-                  <div className="space-y-1.5">
-                    <label className="text-gray-500 uppercase tracking-wider">Special Talents</label>
-                    <input
-                      type="text"
-                      name="specialTalents"
-                      placeholder="music, painting, cricket, athletics, etc."
-                      value={profile.specialTalents}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition"
-                    />
-                  </div>
-
-                  {/* Achievements */}
-                  <div className="space-y-1.5">
-                    <label className="text-gray-500 uppercase tracking-wider">Your Achievements</label>
-                    <textarea
-                      name="achievements"
-                      placeholder="Recognition in School / District / State Level / Other Organizations"
-                      value={profile.achievements}
-                      onChange={handleChange}
-                      rows="3"
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition"
-                    />
-                  </div>
-
-                </div>
-
-                <div className="flex flex-col sm:flex-row gap-3 justify-between pt-4">
-                  <button
-                    type="button"
-                    onClick={() => handleTabChange('school')}
-                    className="bg-white border border-brand text-brand px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand hover:text-white transition rounded-xl shadow-sm w-full sm:w-auto text-center"
-                  >
-                    Previous
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleTabChange('parents')}
-                    className="bg-brand text-white px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand-dark transition rounded-xl shadow-sm w-full sm:w-auto text-center"
-                  >
-                    Next Section
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* TAB 4: PARENTS / GUARDIAN DETAILS */}
-            {activeTab === 'parents' && (
-              <div className="space-y-6 animate-in fade-in duration-200">
-                <h3 className="text-sm font-bold uppercase tracking-widest border-b border-gray-150 pb-2 text-gray-900">
-                  Section 4: Parents / Guardian Details
-                </h3>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-                  {/* Father Qualification */}
-                  <div className="space-y-1.5">
-                    <label className="text-gray-500 uppercase tracking-wider">Educational Qualification of Father</label>
-                    <input
-                      type="text"
-                      name="fatherQualification"
-                      placeholder="e.g. B.Tech, Tenth Class"
-                      value={profile.fatherQualification}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition"
-                    />
-                  </div>
-
-                  {/* Mother Qualification */}
-                  <div className="space-y-1.5">
-                    <label className="text-gray-500 uppercase tracking-wider">Educational Qualification of Mother</label>
-                    <input
-                      type="text"
-                      name="motherQualification"
-                      placeholder="e.g. M.Sc, Higher Secondary"
-                      value={profile.motherQualification}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition"
-                    />
-                  </div>
-
-                  {/* Father Occupation */}
-                  <div className="space-y-1.5">
-                    <label className="text-gray-500 uppercase tracking-wider">Occupation of Father</label>
-                    <input
-                      type="text"
-                      name="fatherOccupation"
-                      placeholder="e.g. Business, Teacher"
-                      value={profile.fatherOccupation}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition"
-                    />
-                  </div>
-
-                  {/* Mother Occupation */}
-                  <div className="space-y-1.5">
-                    <label className="text-gray-500 uppercase tracking-wider">Occupation of Mother</label>
-                    <input
-                      type="text"
-                      name="motherOccupation"
-                      placeholder="e.g. Homemaker, Govt Employee"
-                      value={profile.motherOccupation}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition"
-                    />
-                  </div>
-
                   {/* Guardian Name */}
                   <div className="space-y-1.5">
-                    <label className="text-gray-500 uppercase tracking-wider">Guardian Name</label>
+                    <label className="text-zinc-500 uppercase tracking-wider font-bold">Parent / Guardian Name</label>
                     <input
                       type="text"
                       name="guardianName"
-                      placeholder="name of parent or guardian"
+                      placeholder="Name of parent or guardian"
                       value={profile.guardianName}
                       onChange={handleChange}
-                      className={`w-full px-4 py-2.5 bg-white border text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition ${errors.guardianName ? 'border-red-500' : 'border-gray-300 hover:border-gray-400'
-                        }`}
+                      className={`w-full px-4 py-2.5 bg-white border text-sm text-zinc-900 rounded-lg outline-none focus:border-brand transition ${errors.guardianName ? 'border-red-500' : 'border-zinc-200 hover:border-gray-400'}`}
                     />
                     {errors.guardianName && <p className="text-[10px] text-red-500 font-semibold">{errors.guardianName}</p>}
                   </div>
 
-                  {/* Relationship */}
-                  <div className="space-y-1.5">
-                    <label className="text-gray-500 uppercase tracking-wider">Relationship</label>
-                    <select
-                      name="guardianRelationship"
-                      value={profile.guardianRelationship}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition cursor-pointer"
-                    >
-                      <option value="Father">Father</option>
-                      <option value="Mother">Mother</option>
-                      <option value="Uncle">Uncle</option>
-                      <option value="Aunt">Aunt</option>
-                      <option value="Other">Other</option>
-                    </select>
-                  </div>
-
                   {/* Guardian Phone */}
                   <div className="space-y-1.5">
-                    <label className="text-gray-500 uppercase tracking-wider">Guardian's Phone</label>
+                    <label className="text-zinc-500 uppercase tracking-wider font-bold">Guardian's Phone</label>
                     <input
                       type="tel"
                       name="guardianPhone"
                       placeholder="Guardian mobile number"
                       value={profile.guardianPhone}
                       onChange={handleChange}
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm text-gray-950 rounded-xl outline-none focus:border-brand transition"
+                      className="w-full px-4 py-2.5 bg-white border border-zinc-200 text-sm text-zinc-900 rounded-lg outline-none focus:border-brand transition"
                     />
                   </div>
 
+                  {/* Group Code */}
+                  <div className="space-y-1.5">
+                    <label className="text-zinc-500 uppercase tracking-wider font-bold">Group / School Code (Optional)</label>
+                    <input
+                      type="text"
+                      name="groupCode"
+                      placeholder="e.g. BEHOLD-CDAT-2026"
+                      value={profile.groupCode}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2.5 bg-white border border-zinc-200 text-sm text-zinc-900 rounded-lg outline-none focus:border-brand transition"
+                    />
+                  </div>
+
+                  <div className="pt-4 border-t border-zinc-100 flex justify-end">
+                    <button
+                      type="submit"
+                      className="bg-brand text-zinc-900 px-8 py-3.5 text-xs font-extrabold uppercase tracking-widest cursor-pointer hover:bg-brand-dark transition rounded-lg shadow-md w-full sm:w-auto text-center border border-zinc-900/5"
+                    >
+                      Save & Sync Profile
+                    </button>
+                  </div>
+
+                  {isSaved && (
+                    <div className="p-2 bg-emerald-50 border border-emerald-200 text-emerald-850 rounded-lg text-center font-bold text-xs flex items-center justify-center gap-2 animate-in fade-in duration-200">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 animate-bounce" />
+                      Profile Registered & Synchronized Locally!
+                    </div>
+                  )}
+                </form>
+              </div>
+            )}
+
+            {/* TAB 3: BOOKED SESSIONS */}
+            {currentSection === 'booked' && (
+              <div className="space-y-6 animate-in fade-in duration-200">
+                <div className="border-b border-zinc-100 pb-2 flex justify-between items-center">
+                  <h3 className="text-sm font-bold uppercase tracking-widest text-zinc-900">
+                    Booked Guidance Sessions
+                  </h3>
+                  <span className="text-[10px] text-zinc-400 font-light">Upcoming Slots</span>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-3 justify-between pt-4 border-t border-gray-100">
-                  <button
-                    type="button"
-                    onClick={() => handleTabChange('interests')}
-                    className="bg-white border border-brand text-brand px-5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand hover:text-white transition rounded-xl shadow-sm w-full sm:w-auto text-center"
-                  >
-                    Previous
-                  </button>
-                  <button
-                    type="submit"
-                    className="bg-brand text-white px-8 py-3 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-brand-dark transition rounded-xl shadow-md w-full sm:w-auto text-center"
-                  >
-                    Save & Sync Profile
-                  </button>
+                <div className="space-y-4">
+                  {bookedSessions.map((session, sIdx) => (
+                    <div key={session.id || sIdx} className="bg-gradient-to-br from-white to-zinc-50 border border-zinc-200 p-4 sm:p-5 rounded-lg shadow-xs space-y-4 flex flex-col justify-between">
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider ${session.status === 'CONFIRMED' ? 'bg-emerald-50 border border-emerald-200 text-emerald-700' : 'bg-zinc-100 text-zinc-650'
+                            }`}>
+                            {session.status}
+                          </span>
+                          <span className="text-[9px] bg-zinc-900 text-white px-2 py-0.5 rounded font-extrabold uppercase font-mono tracking-widest">
+                            {session.service === 'counselling' ? 'Therapy Slot' : 'Career Slot'}
+                          </span>
+                          <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider">{session.mode}</span>
+                        </div>
+                        <h4 className="font-header font-black text-base uppercase text-zinc-900">{session.advisorName}</h4>
+                        <p className="text-xs text-zinc-500">{session.advisorRole}</p>
+                        <p className="text-xs font-bold text-zinc-900 uppercase pt-1">📅 {session.date} at {session.time} (1 Hour Slot)</p>
+                      </div>
+
+                      <div className="flex flex-col sm:flex-row gap-2 w-full shrink-0 pt-2 border-t border-zinc-100">
+                        {session.mode === 'ONLINE' && session.meetLink && (
+                          <a
+                            href={session.meetLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex-1 flex items-center justify-center gap-1.5 px-4 py-2.5 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg text-[9px] font-black uppercase tracking-wider transition cursor-pointer shadow-sm text-center"
+                          >
+                            <span>Launch Room</span>
+                            <ExternalLink className="w-3.5 h-3.5 text-zinc-900" />
+                          </a>
+                        )}
+                        <button
+                          onClick={() => window.location.hash = `#/booking`}
+                          className="flex-1 px-4 py-2.5 border border-zinc-200 hover:border-zinc-900 rounded-lg text-[9px] font-black uppercase tracking-wider transition bg-white cursor-pointer"
+                        >
+                          Reschedule
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+
+                  {bookedSessions.length === 0 && (
+                    <div className="text-center py-12 bg-zinc-50 border border-zinc-100 rounded-lg">
+                      <p className="text-zinc-500 font-bold text-xs uppercase tracking-wider">No upcoming booked sessions scheduled.</p>
+                      <button
+                        onClick={() => window.location.hash = '#/booking'}
+                        className="mt-4 px-6 py-2.5 bg-brand text-zinc-900 font-black uppercase tracking-widest text-[9px] rounded-lg cursor-pointer"
+                      >
+                        Book a session now
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
 
-            {isSaved && (
-              <div className="p-3 bg-emerald-50 border border-emerald-250 text-emerald-800 rounded-xl text-center font-bold text-xs flex items-center justify-center gap-2 animate-in fade-in duration-200">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                Profile Registered & Synchronized Locally!
+            {/* TAB 4: COMPLETED SESSIONS */}
+            {currentSection === 'completed' && (
+              <div className="space-y-6 animate-in fade-in duration-200">
+                <div className="border-b border-zinc-100 pb-3 flex justify-between items-center">
+                  <h3 className="text-sm font-bold uppercase tracking-widest text-zinc-900">
+                    Completed Timeline & Feedback
+                  </h3>
+                  <span className="text-[10px] text-zinc-400 font-light">Past Sessions Archive</span>
+                </div>
+
+                <div className="space-y-4">
+                  {completedSessions.map((session, sIdx) => (
+                    <div key={session.id || sIdx} className="bg-white border border-zinc-200 p-4 sm:p-5 rounded-lg shadow-xs space-y-4 text-left">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-100 pb-3">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-[8px] bg-zinc-100 text-zinc-650 border border-zinc-200 px-2 py-0.5 rounded font-black tracking-widest">
+                              {session.status}
+                            </span>
+                            <span className="text-[10px] font-bold text-zinc-400 tracking-wider uppercase">{session.mode}</span>
+                          </div>
+                          <h4 className="font-header font-black text-sm uppercase text-zinc-900 mt-1.5">{session.advisorName}</h4>
+                          <p className="text-[10px] text-zinc-500 mt-0.5">{session.advisorRole}</p>
+                        </div>
+                        <span className="text-xs font-bold text-zinc-900 uppercase bg-zinc-50 px-2.5 py-1 rounded border border-zinc-200 shrink-0 self-start sm:self-auto">📅 {session.date}</span>
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <span className="text-[9px] uppercase tracking-wider font-black text-zinc-900/40 block">Therapist Summary Feedback Notes:</span>
+                        <p className="text-xs text-zinc-655 font-light leading-relaxed bg-zinc-50 p-3 rounded-lg border border-black/[0.02]">
+                          "{session.feedback}"
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
 
-          </form>
+            {/* TAB 5: CDAT TEST RESULTS */}
+            {currentSection === 'results' && (
+              <div className="space-y-6 animate-in fade-in duration-200 text-xs">
+                <div className="border-b border-zinc-100 pb-3 flex justify-between items-center">
+                  <h3 className="text-sm font-bold uppercase tracking-widest text-zinc-900">
+                    CDAT Diagnostic Profiling Results
+                  </h3>
+                  <span className="text-[10px] text-zinc-400 font-light">CIGI Certified Framework</span>
+                </div>
+
+                {testProfile ? (
+                  <div className="space-y-6 text-left">
+                    <div className="p-4 bg-brand/10 border border-brand/40 text-zinc-900 rounded-lg flex gap-3.5">
+                      <Sparkles className="w-5 h-5 text-brand mt-0.5 shrink-0" />
+                      <div>
+                        <h4 className="font-header font-black text-xs uppercase text-zinc-900 leading-tight">
+                          Dominant Cognitive Domain: {testProfile.dominantDomain}
+                        </h4>
+                        <p className="text-[10px] text-zinc-900/60 font-light mt-1 leading-relaxed">
+                          Your testing metrics show high scores and interest compatibility inside this category. Book a session with a State Coordinator to outline your exact high school streams map.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Chart Distributions */}
+                    <div className="space-y-4">
+                      <h4 className="font-bold text-xs uppercase tracking-wider text-zinc-900">Score Metrics Distribution</h4>
+                      <div className="grid grid-cols-1 gap-4">
+                        {Object.entries(testProfile.scores || {}).map(([key, pct]) => (
+                          <div key={key} className="space-y-1.5 bg-zinc-50/50 p-3 rounded-lg border border-zinc-200">
+                            <div className="flex justify-between text-[11px] font-bold text-zinc-900/65">
+                              <span>{key}</span>
+                              <span className="font-extrabold text-zinc-900">{pct}%</span>
+                            </div>
+                            <div className="h-2 w-full bg-zinc-100 rounded-lg overflow-hidden">
+                              <div
+                                className="h-full bg-brand rounded-lg"
+                                style={{ width: `${pct}%` }}
+                              ></div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Quick Button to Retake */}
+                    <div className="pt-2 flex justify-start border-t border-zinc-100">
+                      <button
+                        onClick={() => window.location.hash = '#/sample-test'}
+                        className="px-6 py-3 border border-zinc-200 hover:border-zinc-900 rounded-lg text-[9px] font-black tracking-widest uppercase transition bg-white cursor-pointer text-zinc-900"
+                      >
+                        Retake diagnostic profiling test
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-center py-12 bg-zinc-50 border border-zinc-200 rounded-lg space-y-4">
+                    <p className="text-zinc-500 font-bold text-xs uppercase tracking-wider">No CDAT testing history found for this account.</p>
+                    <button
+                      onClick={() => window.location.hash = '#/sample-test'}
+                      className="px-6 py-3 bg-brand text-zinc-900 font-extrabold tracking-widest uppercase text-[10px] rounded-lg cursor-pointer"
+                    >
+                      Take Sample Aptitude Test
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+
+          </div>
+
+          {/* Right Column: Persistent Dashboard Side Section (col-span-4) */}
+          <div className="lg:col-span-4 space-y-6">
+
+            {/* Student Profile Card Summary */}
+            <div className="bg-white border border-zinc-200 rounded-lg p-5 shadow-xs relative overflow-hidden text-left">
+              {/* Top border accent line */}
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-brand to-black" />
+
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-brand/20 to-brand/40 text-zinc-900 flex items-center justify-center font-bold text-base border border-brand/30 shadow-inner shrink-0">
+                  {profile.name ? profile.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : (user?.name ? user.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : 'ST')}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h4 className="font-header font-black text-xs sm:text-sm uppercase text-zinc-900 truncate">
+                    {profile.name || user?.name || 'Student Name'}
+                  </h4>
+                  <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider truncate mt-0.5">
+                    {profile.grade || 'Grade Not Synced'}
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-4 pt-3 border-t border-zinc-100 space-y-2.5 text-[11px] font-semibold text-zinc-700">
+                <div className="flex items-center gap-2">
+                  <Mail className="w-3.5 h-3.5 shrink-0 text-zinc-900/40" />
+                  <span className="truncate text-zinc-650">{profile.email || user?.email || 'No email synced'}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Phone className="w-3.5 h-3.5 shrink-0 text-zinc-900/40" />
+                  <span className="text-zinc-650">{profile.phone || 'No phone number'}</span>
+                </div>
+                {profile.schoolName && (
+                  <div className="flex items-start gap-2 pt-0.5">
+                    <BookOpen className="w-3.5 h-3.5 shrink-0 text-zinc-900/40 mt-0.5" />
+                    <span className="text-zinc-650 leading-tight">School: <strong className="text-zinc-900 font-bold">{profile.schoolName}</strong></span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Upcoming Slot Card Summary */}
+            <div className="bg-white border border-zinc-200 rounded-lg p-5 shadow-xs text-left relative overflow-hidden">
+              <div className="flex justify-between items-center border-b border-zinc-100 pb-2.5 mb-3">
+                <h5 className="text-[10px] font-bold uppercase tracking-widest text-zinc-900 flex items-center gap-1.5">
+                  <Calendar className="w-3.5 h-3.5 text-brand" /> Upcoming Session
+                </h5>
+                <span className="text-[9px] bg-brand/10 text-brand-dark px-2 py-0.5 rounded font-black tracking-wider uppercase font-mono">
+                  {bookedSessions.length} Active
+                </span>
+              </div>
+
+              {bookedSessions.length > 0 ? (
+                <div className="space-y-3">
+                  <div>
+                    <h6 className="font-header font-black text-xs uppercase text-zinc-900 truncate">
+                      {bookedSessions[0].advisorName}
+                    </h6>
+                    <p className="text-[9px] text-zinc-500 font-bold uppercase tracking-wider mt-0.5 truncate">
+                      {bookedSessions[0].advisorRole}
+                    </p>
+                  </div>
+                  <div className="bg-zinc-50 p-2.5 rounded-lg border border-zinc-200 text-[10px] font-semibold text-zinc-800 space-y-1.5">
+                    <div className="flex justify-between">
+                      <span className="text-zinc-400 font-bold uppercase">Date:</span>
+                      <span className="font-bold text-zinc-900">{bookedSessions[0].date}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-zinc-400 font-bold uppercase">Time:</span>
+                      <span className="font-bold text-zinc-900">{bookedSessions[0].time}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-zinc-400 font-bold uppercase">Mode:</span>
+                      <span className="text-brand-dark font-black uppercase">{bookedSessions[0].mode}</span>
+                    </div>
+                  </div>
+                  {bookedSessions[0].mode === 'ONLINE' && bookedSessions[0].meetLink && (
+                    <a
+                      href={bookedSessions[0].meetLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full flex items-center justify-center gap-1.5 py-2.5 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg text-[9px] font-black uppercase tracking-wider transition cursor-pointer text-center"
+                    >
+                      <span>Join Google Meet</span>
+                      <ExternalLink className="w-3 h-3 text-zinc-900" />
+                    </a>
+                  )}
+                </div>
+              ) : (
+                <div className="text-center py-4 space-y-2.5">
+                  <p className="text-[10px] text-zinc-500 font-medium">No sessions scheduled currently.</p>
+                  <button
+                    onClick={() => window.location.hash = '#/booking'}
+                    className="w-full text-[9px] bg-brand text-zinc-900 font-extrabold uppercase tracking-widest py-2 rounded-lg cursor-pointer hover:bg-brand-dark transition shadow-xs"
+                  >
+                    Schedule Booking
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Completed sessions feedback timeline summary */}
+            <div className="bg-white border border-zinc-200 rounded-lg p-5 shadow-xs text-left">
+              <div className="flex justify-between items-center border-b border-zinc-100 pb-2.5 mb-3">
+                <h5 className="text-[10px] font-bold uppercase tracking-widest text-zinc-900 flex items-center gap-1.5">
+                  <History className="w-3.5 h-3.5 text-brand" /> Completed Timeline
+                </h5>
+                <span className="text-[9px] bg-zinc-900 text-white px-2 py-0.5 rounded font-black tracking-wider uppercase font-mono">
+                  {completedSessions.length} Total
+                </span>
+              </div>
+
+              {completedSessions.length > 0 ? (
+                <div className="space-y-2.5">
+                  <div className="flex justify-between items-start gap-2">
+                    <div>
+                      <h6 className="font-header font-black text-xs uppercase text-zinc-900 truncate">{completedSessions[0].advisorName}</h6>
+                      <p className="text-[9px] text-zinc-400 font-bold uppercase tracking-wider mt-0.5">{completedSessions[0].advisorRole}</p>
+                    </div>
+                    <span className="text-[9px] font-bold text-zinc-500 uppercase whitespace-nowrap bg-zinc-50 border border-zinc-200 px-1.5 py-0.5 rounded">{completedSessions[0].date}</span>
+                  </div>
+                  <div className="bg-zinc-50 p-2.5 rounded-lg border border-black/[0.02] relative">
+                    <p className="text-[10px] text-zinc-650 font-light italic leading-relaxed line-clamp-3">
+                      "{completedSessions[0].feedback}"
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-[10px] text-zinc-500 font-medium text-center py-2">No completed sessions in archive.</p>
+              )}
+            </div>
+
+            {/* CDAT Results Summary */}
+            <div className="bg-white border border-zinc-200 rounded-lg p-5 shadow-xs text-left">
+              <div className="flex justify-between items-center border-b border-zinc-100 pb-2.5 mb-3">
+                <h5 className="text-[10px] font-bold uppercase tracking-widest text-zinc-900 flex items-center gap-1.5">
+                  <BarChart3 className="w-3.5 h-3.5 text-brand" /> CDAT Profile
+                </h5>
+              </div>
+
+              {testProfile ? (
+                <div className="space-y-3">
+                  <div className="bg-brand/10 p-2.5 rounded-lg border border-brand/20 text-center">
+                    <p className="text-[8px] text-brand-dark/80 uppercase font-black tracking-wider">Dominant Domain</p>
+                    <h6 className="font-header font-black text-xs uppercase text-brand-dark mt-0.5 truncate">
+                      {testProfile.dominantDomain}
+                    </h6>
+                  </div>
+
+                  <div className="space-y-2 pt-1">
+                    {Object.entries(testProfile.scores || {}).slice(0, 3).map(([key, pct]) => (
+                      <div key={key} className="space-y-1">
+                        <div className="flex justify-between text-[9px] font-bold text-zinc-900/60">
+                          <span className="truncate pr-1">{key}</span>
+                          <span>{pct}%</span>
+                        </div>
+                        <div className="h-1.5 w-full bg-black/5 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-brand"
+                            style={{ width: `${pct}%` }}
+                          ></div>
+                        </div>
+                      </div>
+                    ))}
+                    {Object.keys(testProfile.scores || {}).length > 3 && (
+                      <p className="text-[8px] text-zinc-400 font-bold uppercase tracking-wider text-right mt-1">+ {Object.keys(testProfile.scores).length - 3} more domains</p>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-3.5 space-y-2.5">
+                  <p className="text-[10px] text-zinc-500 font-medium">Aptitude Profile not yet created.</p>
+                  <button
+                    onClick={() => window.location.hash = '#/sample-test'}
+                    className="w-full text-[9px] bg-brand text-zinc-900 font-extrabold uppercase tracking-widest py-2.5 rounded-lg cursor-pointer hover:bg-brand-dark transition shadow-xs"
+                  >
+                    Take CDAT Test
+                  </button>
+                </div>
+              )}
+            </div>
+
+          </div>
         </div>
 
       </div>

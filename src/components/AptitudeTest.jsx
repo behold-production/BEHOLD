@@ -91,17 +91,6 @@ const TEST_QUESTIONS = [
     ]
   },
   {
-    id: 8,
-    question: "Which elective course would you enroll in just for fun?",
-    category: "Aptitude",
-    options: [
-      { text: "Discrete Mathematics or Symbolic Logic puzzles", weight: 5 },
-      { text: "Creative Writing, Rhetoric, and Public Speaking", weight: 4 },
-      { text: "Philosophy of the Self, Ethics, and Mindfulness", weight: 3 },
-      { text: "Data Visualizations and Graphic Layout design", weight: 2 }
-    ]
-  },
-  {
     id: 9,
     question: "When resolving an argument with a friend, you tend to:",
     category: "Emotional",
@@ -194,42 +183,42 @@ const TEST_QUESTIONS = [
 const DOMAIN_DETAILS = {
   Aptitude: {
     title: "General Cognitive Aptitude",
-    icon: <BrainCircuit className="w-8 h-8 text-black" />,
+    icon: <BrainCircuit className="w-8 h-8 text-zinc-900" />,
     desc: "You have a strong capacity for general cognitive problem-solving, mathematical tracking, and deductive reasoning under time-bounded scenarios."
   },
   Logical: {
     title: "Logical & Pattern Reasoning",
-    icon: <BrainCircuit className="w-8 h-8 text-black" />,
+    icon: <BrainCircuit className="w-8 h-8 text-zinc-900" />,
     desc: "You possess a powerful ability to analyze sequential data, identify underlying formulas, and evaluate structured arguments objectively."
   },
   Emotional: {
     title: "Emotional & Intrapersonal Intelligence",
-    icon: <Heart className="w-8 h-8 text-black" />,
+    icon: <Heart className="w-8 h-8 text-zinc-900" />,
     desc: "You possess high self-awareness, active empathy, emotional regulation, and deep understanding of human psychological motivation models."
   },
   Career: {
     title: "Career Interests & Direction",
-    icon: <BookOpen className="w-8 h-8 text-black" />,
+    icon: <BookOpen className="w-8 h-8 text-zinc-900" />,
     desc: "You have a highly defined interest profile in modern industrial and operational sectors, showing clear paths towards system planning and coaching."
   },
   Personality: {
     title: "Self-Direction & Personality Alignment",
-    icon: <UserCheck className="w-8 h-8 text-black" />,
+    icon: <UserCheck className="w-8 h-8 text-zinc-900" />,
     desc: "You excel at identifying personal values, managing focus quarters, and establishing productive study environments with high self-discipline."
   },
   Communication: {
     title: "Verbal & Communication Flow",
-    icon: <BookOpen className="w-8 h-8 text-black" />,
+    icon: <BookOpen className="w-8 h-8 text-zinc-900" />,
     desc: "You possess strong skills in speech articulation, conflict mediation, and clarifying complex technical systems for diverse audiences."
   },
   Creativity: {
     title: "Lateral & Creative Thinking",
-    icon: <Sparkles className="w-8 h-8 text-black" />,
+    icon: <Sparkles className="w-8 h-8 text-zinc-900" />,
     desc: "You excel at visual layouts, abstract brainstorming, and finding multiple alternative uses for ordinary systems. You reject copy-paste designs."
   },
   Leadership: {
     title: "Leadership & Milestones Direction",
-    icon: <Award className="w-8 h-8 text-black" />,
+    icon: <Award className="w-8 h-8 text-zinc-900" />,
     desc: "You naturally coordinate group roles, structure consensus votes, establish milestone tracking, and maintain motivational energy for team delivery."
   }
 };
@@ -305,7 +294,7 @@ export default function AptitudeTest({ onFinishTest }) {
     setIsAnimating(false);
   };
 
-  // Calculations for results panel (max score is 10 per category as we have 2 questions each with max weight 5)
+  // Calculations for results panel (max score is 10 per category)
   const scorePercentages = {
     Aptitude: Math.min(Math.round(((testScores.Aptitude || 0) / 10) * 100), 100),
     Logical: Math.min(Math.round(((testScores.Logical || 0) / 10) * 100), 100),
@@ -364,8 +353,8 @@ export default function AptitudeTest({ onFinishTest }) {
 
   if (shuffledQuestions.length === 0) {
     return (
-      <div className="pt-32 pb-20 min-h-screen bg-[#f3f3f3] text-black flex items-center justify-center font-sans">
-        <p className="text-sm font-semibold uppercase tracking-widest text-black/50 animate-pulse">Initializing quiz console...</p>
+      <div className="pt-32 pb-20 min-h-screen bg-zinc-50 text-zinc-900 flex items-center justify-center font-sans">
+        <p className="text-sm font-semibold uppercase tracking-widest text-zinc-400 animate-pulse">Initializing quiz console...</p>
       </div>
     );
   }
@@ -373,35 +362,35 @@ export default function AptitudeTest({ onFinishTest }) {
   const currentQObj = shuffledQuestions[currentQuestion];
 
   return (
-    <div className="pt-32 pb-20 min-h-screen bg-[#f3f3f3] text-black relative overflow-hidden font-sans border-b border-black/[0.03] text-left">
+    <div className="pt-20 sm:pt-32 pb-12 sm:pb-20 min-h-screen bg-zinc-50 text-zinc-900 relative overflow-hidden font-sans border-b border-zinc-200 text-left">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
 
         {!testFinished ? (
           /* Quiz Interface Card */
           <div
-            className={`card-luxury p-8 md:p-14 select-none border border-black/5 transition-all duration-300 ${
+            className={`card-luxury p-5 sm:p-8 md:p-14 select-none border border-zinc-200 bg-white rounded-lg transition-all duration-300 ${
               isAnimating ? 'opacity-0 scale-95 translate-y-2' : 'opacity-100 scale-100 translate-y-0'
             }`}
             id="quiz-card"
           >
             {/* Header / Progress bar */}
-            <div className="mb-12">
+            <div className="mb-8 sm:mb-12">
               <div className="flex flex-col sm:flex-row justify-between sm:items-end gap-4 mb-4">
                 <div>
-                  <h2 className="text-3xl font-header font-black text-gray-900 uppercase tracking-wide">
+                  <h2 className="text-2xl sm:text-3xl font-header font-black text-zinc-900 uppercase tracking-wide">
                     Aptitude Profiling
                   </h2>
-                  <p className="text-gray-500 font-sans text-xs font-light mt-1">
+                  <p className="text-zinc-550 font-sans text-xs font-light mt-1">
                     Discover your core cognitive affinities across 8 dimensions.
                   </p>
                 </div>
-                <span className="text-black font-header font-black text-lg self-start sm:self-auto">
-                  {currentQuestion + 1} <span className="text-gray-300">/</span> {shuffledQuestions.length}
+                <span className="text-zinc-900 font-header font-black text-sm sm:text-lg self-start sm:self-auto">
+                  {currentQuestion + 1} <span className="text-zinc-300">/</span> {shuffledQuestions.length}
                 </span>
               </div>
 
               {/* Progress Bar Container */}
-              <div className="h-1.5 w-full bg-black/5 rounded-xl overflow-hidden">
+              <div className="h-1.5 w-full bg-zinc-100 rounded-md overflow-hidden">
                 <div
                   className="h-full bg-brand transition-all duration-500 ease-out"
                   style={{ width: `${((currentQuestion + 1) / shuffledQuestions.length) * 100}%` }}
@@ -410,30 +399,30 @@ export default function AptitudeTest({ onFinishTest }) {
             </div>
 
             {/* Question Text */}
-            <div className="mb-10">
+            <div className="mb-6 sm:mb-10">
               <div className="flex gap-4 items-start mb-6">
-                <span className="flex items-center justify-center w-7 h-7 rounded-xl bg-black/5 text-black font-bold text-xs shrink-0 mt-0.5 font-mono">
+                <span className="flex items-center justify-center w-7 h-7 rounded-md bg-zinc-100 text-zinc-900 font-bold text-xs shrink-0 mt-0.5 font-mono">
                   Q
                 </span>
-                <h3 className="text-lg md:text-xl font-header font-bold text-gray-900 leading-snug">
+                <h3 className="text-base sm:text-lg md:text-xl font-header font-bold text-zinc-900 leading-snug">
                   {currentQObj.question}
                 </h3>
               </div>
 
               {/* Options Grid */}
-              <div className="grid gap-4 mt-8">
+              <div className="grid gap-3 sm:gap-4 mt-6 sm:mt-8">
                 {currentQObj.options.map((opt, i) => (
                   <button
                     key={i}
                     id={`opt-btn-${i}`}
                     onClick={() => handleAnswer(currentQObj.category, opt.weight)}
-                    className="w-full text-left p-5 rounded-xl border border-black/5 bg-white/60 hover:bg-white hover:border-brand/45 transition-all duration-200 flex items-center justify-between group cursor-pointer"
+                    className="w-full text-left p-4 sm:p-5 rounded-lg border border-zinc-200 bg-white/50 hover:bg-white hover:border-brand transition-all duration-200 flex items-center justify-between group cursor-pointer text-zinc-900"
                   >
-                    <span className="text-xs md:text-sm font-semibold text-gray-700 group-hover:text-black transition-colors">
+                    <span className="text-xs sm:text-sm font-semibold text-zinc-700 group-hover:text-zinc-900 transition-colors">
                       {opt.text}
                     </span>
-                    <div className="w-4 h-4 rounded-xl border border-black/10 group-hover:border-brand group-hover:bg-brand transition-all duration-200 flex items-center justify-center shrink-0 ml-4">
-                      <div className="w-1.5 h-1.5 rounded-xl bg-black opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div className="w-4 h-4 rounded-md border border-zinc-200 group-hover:border-brand group-hover:bg-brand transition-all duration-200 flex items-center justify-center shrink-0 ml-4">
+                      <div className="w-1.5 h-1.5 rounded-sm bg-zinc-900 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     </div>
                   </button>
                 ))}
@@ -443,20 +432,20 @@ export default function AptitudeTest({ onFinishTest }) {
         ) : (
           /* Results Panel */
           <div
-            className="card-luxury p-8 md:p-14 border border-black/5 relative overflow-hidden animate-in zoom-in-95 duration-500"
+            className="card-luxury p-5 sm:p-8 md:p-14 border border-zinc-200 bg-white rounded-lg relative overflow-hidden animate-in zoom-in-95 duration-500"
             id="results-panel"
           >
             {/* Header Shield */}
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-8 border-b border-black/[0.05] mb-10">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-6 sm:pb-8 border-b border-zinc-100 mb-6 sm:mb-10">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-black text-brand rounded-xl flex items-center justify-center shadow-md">
+                <div className="w-12 h-12 bg-zinc-900 text-brand rounded-md flex items-center justify-center shadow-md">
                   <CheckCircle2 className="w-6 h-6" />
                 </div>
                 <div>
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white/70 border border-black/5 text-black text-[9px] font-extrabold uppercase tracking-wider mb-1">
-                    <Award className="w-3.5 h-3.5 text-black" /> CIGI Framework Certified
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-zinc-50 border border-zinc-200 text-zinc-900 text-[9px] font-extrabold uppercase tracking-wider mb-1">
+                    <Award className="w-3.5 h-3.5 text-zinc-900" /> CIGI Framework Certified
                   </div>
-                  <h2 className="text-3xl font-header font-black text-gray-900 leading-none">
+                  <h2 className="text-2xl sm:text-3xl font-header font-black text-zinc-900 leading-none">
                     Assessment Completed
                   </h2>
                 </div>
@@ -464,7 +453,7 @@ export default function AptitudeTest({ onFinishTest }) {
               <button
                 id="btn-restart-test"
                 onClick={handleRestart}
-                className="px-5 py-2.5 bg-white border border-black/10 hover:border-black text-black rounded-xl font-bold text-xs uppercase tracking-wider transition-colors flex items-center gap-2 cursor-pointer shadow-xs"
+                className="px-5 py-2.5 bg-white border border-zinc-200 hover:border-zinc-900 text-zinc-900 rounded-lg font-bold text-xs uppercase tracking-wider transition-colors flex items-center gap-2 cursor-pointer shadow-xs w-full md:w-auto justify-center"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 <span>Retake Test</span>
@@ -472,29 +461,29 @@ export default function AptitudeTest({ onFinishTest }) {
             </div>
 
             {/* Main Strength Indicator */}
-            <div className="grid lg:grid-cols-12 gap-10">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10">
 
               {/* Left Column: Dominant Domain */}
               <div className="lg:col-span-7 space-y-6">
-                <h3 className="text-[10px] font-extrabold text-black/40 tracking-wider uppercase">
+                <h3 className="text-[10px] font-extrabold text-zinc-400 tracking-wider uppercase">
                   Your Dominant Affinity Profile
                 </h3>
 
-                <div className="p-6 rounded-xl border border-black/5 bg-white/70 flex gap-4 text-black shadow-xs">
+                <div className="p-5 sm:p-6 rounded-lg border border-zinc-200 bg-zinc-50/50 flex gap-4 text-zinc-900 shadow-xs">
                   <div className="shrink-0 mt-1">{dominantInfo.icon}</div>
                   <div>
-                    <h4 className="text-lg font-header font-black text-gray-900 leading-tight mb-2 uppercase">
+                    <h4 className="text-base sm:text-lg font-header font-black text-zinc-900 leading-tight mb-2 uppercase">
                       {dominantInfo.title}
                     </h4>
-                    <p className="text-black/60 text-xs font-light leading-relaxed">
+                    <p className="text-zinc-650 text-xs font-light leading-relaxed">
                       {dominantInfo.desc}
                     </p>
                   </div>
                 </div>
 
                 {/* Score breakdown charts */}
-                <div className="space-y-4 pt-4">
-                  <h4 className="font-header font-extrabold text-gray-900 text-xs uppercase tracking-wider">
+                <div className="space-y-4 pt-2 sm:pt-4">
+                  <h4 className="font-header font-extrabold text-zinc-900 text-xs uppercase tracking-wider">
                     Cognitive Distribution Metrics
                   </h4>
 
@@ -502,14 +491,14 @@ export default function AptitudeTest({ onFinishTest }) {
                     {CATEGORIES.map(({ key, label }) => {
                       const pct = scorePercentages[key];
                       return (
-                        <div key={key} className="space-y-1 bg-white/40 p-3 rounded-xl border border-black/[0.02]" id={`score-metric-${key.toLowerCase()}`}>
-                          <div className="flex justify-between text-[11px] font-bold text-black/60">
+                        <div key={key} className="space-y-1 bg-white p-3 rounded-lg border border-zinc-200" id={`score-metric-${key.toLowerCase()}`}>
+                          <div className="flex justify-between text-[11px] font-bold text-zinc-550">
                             <span>{label}</span>
-                            <span className="font-extrabold text-black">{pct}%</span>
+                            <span className="font-extrabold text-zinc-900">{pct}%</span>
                           </div>
-                          <div className="h-2 w-full bg-black/5 rounded-xl overflow-hidden">
+                          <div className="h-2 w-full bg-zinc-100 rounded-md overflow-hidden">
                             <div
-                              className="h-full bg-brand rounded-xl transition-all duration-1000 ease-out"
+                              className="h-full bg-brand rounded-md transition-all duration-1000 ease-out"
                               style={{ width: `${pct}%` }}
                             ></div>
                           </div>
@@ -522,23 +511,23 @@ export default function AptitudeTest({ onFinishTest }) {
 
               {/* Right Column: Recommendations */}
               <div className="lg:col-span-5 space-y-6">
-                <div className="p-6 bg-white/70 border border-black/5 rounded-xl space-y-6 shadow-xs">
-                  <h4 className="font-header font-extrabold text-gray-900 text-xs uppercase tracking-wider border-b border-black/[0.05] pb-3">
+                <div className="p-5 sm:p-6 bg-zinc-50/50 border border-zinc-200 rounded-lg space-y-6 shadow-xs">
+                  <h4 className="font-header font-extrabold text-zinc-900 text-xs uppercase tracking-wider border-b border-zinc-200 pb-3">
                     Recommended Pathways
                   </h4>
                   <ul className="space-y-3">
                     {recommendedCareers.map((item, cIdx) => (
                       <li
                         key={cIdx}
-                        className="flex flex-col bg-white p-4 rounded-xl border border-black/5 hover:border-black/20 hover:scale-[1.01] transition-all duration-200 group text-left"
+                        className="flex flex-col bg-white p-3 sm:p-4 rounded-lg border border-zinc-200 hover:border-zinc-400 hover:scale-[1.01] transition-all duration-200 group text-left"
                       >
                         <div className="flex justify-between items-center">
-                          <span className="text-xs font-extrabold text-black">
+                          <span className="text-xs font-extrabold text-zinc-900">
                             {item.career}
                           </span>
-                          <ArrowUpRight className="w-3.5 h-3.5 text-black/40 group-hover:text-black transition-colors" />
+                          <ArrowUpRight className="w-3.5 h-3.5 text-zinc-400 group-hover:text-zinc-900 transition-colors" />
                         </div>
-                        <span className="text-[10px] text-black/50 font-light mt-1 leading-relaxed">
+                        <span className="text-[10px] text-zinc-500 font-light mt-1 leading-relaxed">
                           {item.reason}
                         </span>
                       </li>
@@ -550,13 +539,13 @@ export default function AptitudeTest({ onFinishTest }) {
                     <button
                       id="btn-results-consult"
                       onClick={() => onFinishTest(dominantDomain, scorePercentages)}
-                      className="w-full py-4 bg-brand hover:bg-brand-dark border border-black/5 text-black font-extrabold text-xs uppercase tracking-widest rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm hover:scale-[1.02] active:scale-[0.98]"
+                      className="w-full py-3.5 sm:py-4 bg-brand hover:bg-brand-dark border border-zinc-900/5 text-zinc-900 font-extrabold text-xs uppercase tracking-widest rounded-lg transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm hover:scale-[1.02] active:scale-[0.98]"
                     >
                       <span>Claim Free Mentoring</span>
-                      <ArrowRight className="w-4 h-4" />
+                      <ArrowRight className="w-4 h-4 text-zinc-900" />
                     </button>
-                    <p className="text-[9px] text-black/45 text-center mt-3 font-semibold flex items-center justify-center gap-1">
-                      <Sparkles className="w-3.5 h-3.5 text-black" /> Schedules with a State Coordinator.
+                    <p className="text-[9px] text-zinc-450 text-center mt-3 font-semibold flex items-center justify-center gap-1">
+                      <Sparkles className="w-3.5 h-3.5 text-zinc-900 animate-pulse" /> Schedules with a State Coordinator.
                     </p>
                   </div>
                 </div>
