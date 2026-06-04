@@ -25,6 +25,7 @@ export default function StudentProfile({ setView }) {
   const [currentSection, setCurrentSection] = useState('overview'); // overview, details, booked, completed, results
 
   const [bookedSessions, setBookedSessions] = useState([]);
+  const [completedSessions, setCompletedSessions] = useState([]);
   const [testProfile, setTestProfile] = useState(null);
   const { user } = useAuth();
 
@@ -45,6 +46,12 @@ export default function StudentProfile({ setView }) {
   const handleSectionChange = (sectionId) => {
     setCurrentSection(sectionId);
     window.history.pushState({ component: 'profile', section: sectionId }, '');
+    if (sectionId === 'booked' || sectionId === 'overview') {
+      loadStudentBookings();
+    }
+    if (sectionId === 'completed' || sectionId === 'overview') {
+      loadCompletedSessions();
+    }
   };
 
   // Load profile from localStorage
@@ -60,32 +67,120 @@ export default function StudentProfile({ setView }) {
     }
   }, []);
 
-  // Load booked sessions from localStorage or seed mock session
-  useEffect(() => {
-    const stored = localStorage.getItem('behold_booked_sessions');
-    let list = [];
-    if (stored) {
-      try { list = JSON.parse(stored); } catch (e) { }
-    }
+  const loadStudentBookings = () => {
+    try {
+      const stored = localStorage.getItem('behold_booked_sessions');
+      let list = [];
+      if (stored) {
+        try { list = JSON.parse(stored); } catch (e) { }
+      }
 
-    // Seed default upcoming session if none exists
-    if (list.length === 0) {
-      list = [
-        {
-          id: 'sb_mock_1',
-          service: 'counselling',
-          mode: 'ONLINE',
-          date: '2026-06-15',
-          time: '02:00 PM',
-          advisorName: 'Josina Joseph',
-          advisorRole: 'Consultant Psychologist',
-          status: 'CONFIRMED',
-          meetLink: 'https://meet.google.com/abc-defg-hij'
-        }
-      ];
+      // Seed default upcoming sessions if none exists to maintain consistency
+      if (list.length === 0) {
+        list = [
+          {
+            id: 'sb_mock_1',
+            userId: 'u_student_1',
+            userName: 'Albin Siby',
+            email: 'student@behold.com',
+            phone: '8086664001',
+            service: 'counselling',
+            mode: 'ONLINE',
+            date: '2026-06-15',
+            time: '02:00 PM',
+            advisorName: 'Josina Joseph',
+            advisorRole: 'Consultant Psychologist',
+            status: 'CONFIRMED',
+            meetLink: 'https://meet.google.com/abc-defg-hij'
+          },
+          {
+            id: 'sb_mock_2',
+            userId: 'u_student_1',
+            userName: 'Albin Siby',
+            email: 'student@behold.com',
+            phone: '8086664001',
+            service: 'counselling',
+            mode: 'ONLINE',
+            date: new Date().toISOString().split('T')[0], // Today
+            time: '02:00 PM',
+            advisorName: 'Muhammed Niyas S H',
+            advisorRole: 'Consultant Psychologist',
+            status: 'CONFIRMED',
+            meetLink: ''
+          }
+        ];
+        localStorage.setItem('behold_booked_sessions', JSON.stringify(list));
+      }
+
+      const currentStudentId = user?.id || 'u_student_1';
+      const filtered = list.filter(b => b.userId === currentStudentId);
+      setBookedSessions(filtered);
+    } catch (err) {
+      console.error("Failed loading student bookings", err);
     }
-    setBookedSessions(list);
-  }, []);
+  };
+
+  const loadCompletedSessions = () => {
+    try {
+      const stored = localStorage.getItem('behold_booked_sessions');
+      let list = [];
+      if (stored) {
+        try { list = JSON.parse(stored); } catch (e) { }
+      }
+
+      // Filter completed sessions for this student
+      const currentStudentId = user?.id || 'u_student_1';
+      const completedList = list.filter(b => b.userId === currentStudentId && b.status === 'COMPLETED');
+      
+      // Seed default completed session if none exists to maintain the timeline display
+      if (completedList.length === 0) {
+        const defaultCompleted = [
+          {
+            id: 'sb_mock_c1',
+            userId: 'u_student_1',
+            userName: 'Albin Siby',
+            email: 'student@behold.com',
+            phone: '8086664001',
+            service: 'counselling',
+            mode: 'OFFLINE',
+            date: '2026-05-10',
+            time: '11:00 AM',
+            advisorName: 'Muhammed Niyas S H',
+            advisorRole: 'Consultant Psychologist',
+            status: 'COMPLETED',
+            feedback: 'Completed CDAT baseline mapping. Student has strong cognitive scores and lateral creative thinking. Recommend focus stream: Applied Psychology, Design, or Software Engineering.'
+          }
+        ];
+        
+        // Seed database only if mock c1 is not in list
+        if (!list.some(b => b.id === 'sb_mock_c1')) {
+          list.push(defaultCompleted[0]);
+          localStorage.setItem('behold_booked_sessions', JSON.stringify(list));
+        }
+        setCompletedSessions(defaultCompleted);
+      } else {
+        setCompletedSessions(completedList);
+      }
+    } catch (err) {
+      console.error("Failed loading completed sessions", err);
+    }
+  };
+
+  // Load booked & completed sessions from localStorage or seed mock sessions
+  useEffect(() => {
+    loadStudentBookings();
+    loadCompletedSessions();
+
+    const handleStorageChange = (e) => {
+      if (e.key === 'behold_booked_sessions') {
+        loadStudentBookings();
+        loadCompletedSessions();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, [user]);
 
   // Load test profile (CDAT results) from localStorage
   useEffect(() => {
@@ -156,20 +251,6 @@ export default function StudentProfile({ setView }) {
     }, 3000);
   };
 
-  // Mock completed sessions (static for diagnostic logs timeline)
-  const completedSessions = [
-    {
-      id: 'sb_mock_c1',
-      service: 'counselling',
-      mode: 'OFFLINE',
-      date: '2026-05-10',
-      time: '11:00 AM',
-      advisorName: 'Muhammed Niyas S H',
-      advisorRole: 'Consultant Psychologist',
-      status: 'COMPLETED',
-      feedback: 'Completed CDAT baseline mapping. Student has strong cognitive scores and lateral creative thinking. Recommend focus stream: Applied Psychology, Design, or Software Engineering.'
-    }
-  ];
 
   const getMeetLinkStatus = (session) => {
     if (!session.meetLink) return { status: 'NO_LINK', label: 'Waiting for Link' };
@@ -733,6 +814,13 @@ export default function StudentProfile({ setView }) {
                           </span>
                         </div>
                       </div>
+
+                      {session.mode === 'ONLINE' && !session.meetLink && (
+                        <div className="bg-amber-50 border border-amber-200 text-amber-800 text-[10px] p-2.5 rounded-lg flex items-center gap-1.5 font-medium">
+                          <ShieldAlert className="w-4 h-4 text-amber-600 shrink-0" />
+                          <span>Counsellor will add the Google Meet link soon.</span>
+                        </div>
+                      )}
 
                       <div className="flex flex-col sm:flex-row gap-2 w-full pt-4 border-t border-zinc-100">
                         {session.mode === 'ONLINE' && (() => {

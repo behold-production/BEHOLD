@@ -41,6 +41,9 @@ export default function PsychologistDashboard({ setView }) {
   // Input meeting link state per booking
   const [editingBookingId, setEditingBookingId] = useState(null);
   const [meetLinkInput, setMeetLinkInput] = useState('');
+  const [meetLinkError, setMeetLinkError] = useState('');
+  const [editingFeedbackId, setEditingFeedbackId] = useState(null);
+  const [feedbackInput, setFeedbackInput] = useState('');
 
   // Login form states
   const [loginEmail, setLoginEmail] = useState('');
@@ -72,67 +75,108 @@ export default function PsychologistDashboard({ setView }) {
     '09:30 AM', '11:00 AM', '02:00 PM', '04:00 PM'
   ]);
 
+  const loadBookingsData = () => {
+    try {
+      const advisorId = user?.id || 'u_psy_1';
+      
+      // Load profile
+      let advisorName = user?.name || 'Muhammed Niyas S H';
+      const savedProfile = localStorage.getItem(`behold_advisor_profile_${advisorId}`);
+      if (savedProfile) {
+        try {
+          const parsed = JSON.parse(savedProfile);
+          setProfile(parsed);
+          if (parsed.name) advisorName = parsed.name;
+        } catch (e) {}
+      } else {
+        setProfile(prev => ({
+          ...prev,
+          name: user?.name || 'Muhammed Niyas S H'
+        }));
+      }
+
+      // Load availability
+      const savedAvailability = localStorage.getItem(`behold_advisor_availability_${advisorId}`);
+      if (savedAvailability) {
+        try {
+          const parsed = JSON.parse(savedAvailability);
+          if (parsed.activeDays) setActiveDays(parsed.activeDays);
+          if (parsed.availableSlots) setAvailableSlots(parsed.availableSlots);
+        } catch (e) {}
+      }
+
+      // Load bookings
+      const stored = localStorage.getItem('behold_booked_sessions');
+      let list = [];
+      if (stored) {
+        try { list = JSON.parse(stored); } catch (e) {}
+      }
+      
+      // Seed standard booking if database is empty (consistent with StudentProfile)
+      if (list.length === 0) {
+        list = [
+          {
+            id: 'sb_mock_1',
+            userId: 'u_student_1',
+            userName: 'Albin Siby',
+            email: 'student@behold.com',
+            phone: '8086664001',
+            service: 'counselling',
+            mode: 'ONLINE',
+            date: '2026-06-15',
+            time: '02:00 PM',
+            advisorName: 'Josina Joseph',
+            advisorRole: 'Consultant Psychologist',
+            status: 'CONFIRMED',
+            meetLink: 'https://meet.google.com/abc-defg-hij'
+          },
+          {
+            id: 'sb_mock_2',
+            userId: 'u_student_1',
+            userName: 'Albin Siby',
+            email: 'student@behold.com',
+            phone: '8086664001',
+            service: 'counselling',
+            mode: 'ONLINE',
+            date: new Date().toISOString().split('T')[0], // Today
+            time: '02:00 PM',
+            advisorName: 'Muhammed Niyas S H',
+            advisorRole: 'Consultant Psychologist',
+            status: 'CONFIRMED',
+            meetLink: ''
+          }
+        ];
+        localStorage.setItem('behold_booked_sessions', JSON.stringify(list));
+      }
+      
+      // Filter bookings only for this advisor
+      const myBookings = list.filter(b => b.advisorName.toLowerCase().includes(advisorName.toLowerCase()));
+      setBookings(myBookings);
+    } catch (err) {
+      console.error("Failed loading counsellor bookings", err);
+    }
+  };
+
   // Load advisor details & bookings from localStorage
   useEffect(() => {
-    const advisorId = user?.id || 'u_psy_1';
-    
-    // Load profile
-    let advisorName = user?.name || 'Muhammed Niyas S H';
-    const savedProfile = localStorage.getItem(`behold_advisor_profile_${advisorId}`);
-    if (savedProfile) {
-      try {
-        const parsed = JSON.parse(savedProfile);
-        setProfile(parsed);
-        if (parsed.name) advisorName = parsed.name;
-      } catch (e) {}
-    } else {
-      setProfile(prev => ({
-        ...prev,
-        name: user?.name || 'Muhammed Niyas S H'
-      }));
-    }
+    loadBookingsData();
 
-    // Load availability
-    const savedAvailability = localStorage.getItem(`behold_advisor_availability_${advisorId}`);
-    if (savedAvailability) {
-      try {
-        const parsed = JSON.parse(savedAvailability);
-        if (parsed.activeDays) setActiveDays(parsed.activeDays);
-        if (parsed.availableSlots) setAvailableSlots(parsed.availableSlots);
-      } catch (e) {}
-    }
+    const handleStorageChange = (e) => {
+      if (e.key === 'behold_booked_sessions') {
+        loadBookingsData();
+      }
+    };
 
-    // Load bookings
-    const stored = localStorage.getItem('behold_booked_sessions');
-    let list = [];
-    if (stored) {
-      try { list = JSON.parse(stored); } catch (e) {}
-    }
-    
-    // Seed standard booking if database is empty
-    if (list.length === 0) {
-      list = [
-        {
-          id: 'sb_mock_1',
-          userId: 'u_student_1',
-          userName: 'Albin Siby',
-          service: 'counselling',
-          mode: 'ONLINE',
-          date: new Date().toISOString().split('T')[0], // Today
-          time: '02:00 PM',
-          advisorName: advisorName,
-          advisorRole: 'Consultant Psychologist',
-          status: 'CONFIRMED',
-          meetLink: ''
-        }
-      ];
-      localStorage.setItem('behold_booked_sessions', JSON.stringify(list));
-    }
-    
-    // Filter bookings only for this advisor
-    const myBookings = list.filter(b => b.advisorName.toLowerCase().includes(advisorName.toLowerCase()));
-    setBookings(myBookings);
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, [user]);
+
+  // Auto-refresh bookings when switching to bookings or overview tab
+  useEffect(() => {
+    if (currentSection === 'bookings' || currentSection === 'overview') {
+      loadBookingsData();
+    }
+  }, [currentSection]);
 
   // Onboarding Step Handlers
   const handleStepOneNext = (e) => {
@@ -278,35 +322,82 @@ export default function PsychologistDashboard({ setView }) {
   const startEditMeetLink = (booking) => {
     setEditingBookingId(booking.id);
     setMeetLinkInput(booking.meetLink || '');
+    setMeetLinkError('');
   };
 
   const saveMeetLink = (bookingId) => {
-    const stored = localStorage.getItem('behold_booked_sessions');
-    let allBookings = [];
-    if (stored) {
-      try { allBookings = JSON.parse(stored); } catch (e) {}
+    const trimmed = meetLinkInput.trim();
+    if (trimmed && !trimmed.startsWith('https://')) {
+      setMeetLinkError('Please enter a valid URL beginning with https://');
+      return;
     }
+    setMeetLinkError('');
 
-    const updatedAll = allBookings.map(b => {
-      if (b.id === bookingId) {
-        return { ...b, meetLink: meetLinkInput.trim() };
+    try {
+      const stored = localStorage.getItem('behold_booked_sessions');
+      let allBookings = [];
+      if (stored) {
+        try { allBookings = JSON.parse(stored); } catch (e) {}
       }
-      return b;
-    });
 
-    localStorage.setItem('behold_booked_sessions', JSON.stringify(updatedAll));
-    
-    let advisorName = user?.name || 'Muhammed Niyas S H';
-    const advisorId = user?.id || 'u_psy_1';
-    const savedProfile = localStorage.getItem(`behold_advisor_profile_${advisorId}`);
-    if (savedProfile) {
-      try {
-        const parsed = JSON.parse(savedProfile);
-        if (parsed.name) advisorName = parsed.name;
-      } catch (e) {}
+      const updatedAll = allBookings.map(b => {
+        if (b.id === bookingId) {
+          return { ...b, meetLink: trimmed };
+        }
+        return b;
+      });
+
+      localStorage.setItem('behold_booked_sessions', JSON.stringify(updatedAll));
+      loadBookingsData();
+      setEditingBookingId(null);
+    } catch (err) {
+      console.error("Failed to save Meet link", err);
     }
-    setBookings(updatedAll.filter(b => b.advisorName.toLowerCase().includes(advisorName.toLowerCase())));
-    setEditingBookingId(null);
+  };
+
+  const updateBookingStatus = (bookingId, newStatus) => {
+    try {
+      const stored = localStorage.getItem('behold_booked_sessions');
+      let allBookings = [];
+      if (stored) {
+        try { allBookings = JSON.parse(stored); } catch (e) {}
+      }
+
+      const updatedAll = allBookings.map(b => {
+        if (b.id === bookingId) {
+          return { ...b, status: newStatus };
+        }
+        return b;
+      });
+
+      localStorage.setItem('behold_booked_sessions', JSON.stringify(updatedAll));
+      loadBookingsData();
+    } catch (err) {
+      console.error("Failed to update booking status", err);
+    }
+  };
+
+  const saveFeedback = (bookingId) => {
+    try {
+      const stored = localStorage.getItem('behold_booked_sessions');
+      let allBookings = [];
+      if (stored) {
+        try { allBookings = JSON.parse(stored); } catch (e) {}
+      }
+
+      const updatedAll = allBookings.map(b => {
+        if (b.id === bookingId) {
+          return { ...b, feedback: feedbackInput.trim() };
+        }
+        return b;
+      });
+
+      localStorage.setItem('behold_booked_sessions', JSON.stringify(updatedAll));
+      loadBookingsData();
+      setEditingFeedbackId(null);
+    } catch (err) {
+      console.error("Failed to save feedback", err);
+    }
   };
 
   const toggleDay = (dayIndex) => {
@@ -787,26 +878,51 @@ export default function PsychologistDashboard({ setView }) {
                 {/* Next session card */}
                 <div className="bg-zinc-950 border border-zinc-850 rounded-xl p-5 relative overflow-hidden flex flex-col justify-between group min-h-[160px]">
                   <div className="space-y-3">
-                    <span className="text-[8px] bg-indigo-950 text-indigo-450 border border-indigo-900 px-2 py-0.5 rounded font-black uppercase tracking-wider">Next Client Session</span>
+                    <span className="text-[8px] bg-indigo-950 text-indigo-455 border border-indigo-900 px-2 py-0.5 rounded font-black uppercase tracking-wider">Next Client Session</span>
                     {bookings.length > 0 ? (
-                      <div className="space-y-1 pt-1">
+                      <div className="space-y-1.5 pt-1">
                         <h4 className="font-header font-black text-sm text-white uppercase">{bookings[0].userName}</h4>
                         <p className="text-[10px] text-zinc-400">Session Type: {bookings[0].service === 'counselling' ? 'Emotional Wellbeing' : 'Career Mapping'}</p>
-                        <div className="flex items-center gap-1.5 text-[10px] font-bold text-white pt-1">
+                        <div className="flex items-center gap-1.5 text-[10px] font-bold text-white">
                           <Clock className="w-3.5 h-3.5 text-zinc-500" />
                           <span>{bookings[0].date} at {bookings[0].time}</span>
                         </div>
+                        <div className="pt-1 flex items-center gap-2">
+                          <span className="text-[9px] uppercase tracking-wider font-extrabold text-zinc-500">Room Status:</span>
+                          {bookings[0].meetLink ? (
+                            <span className="text-[9px] font-bold text-emerald-400 flex items-center gap-1 uppercase tracking-wide">
+                              <Check className="w-3 h-3 text-emerald-400" /> Link Set
+                            </span>
+                          ) : (
+                            <span className="text-[9px] font-bold text-amber-500 flex items-center gap-1 uppercase tracking-wide">
+                              <AlertCircle className="w-3 h-3 text-amber-500" /> Missing Link
+                            </span>
+                          )}
+                        </div>
                       </div>
                     ) : (
-                      <p className="text-zinc-500 text-[10px] pt-1">No upcoming scheduled bookings.</p>
+                      <p className="text-zinc-505 text-[10px] pt-1">No upcoming scheduled bookings.</p>
                     )}
                   </div>
-                  <button 
-                    onClick={() => setCurrentSection('bookings')}
-                    className="w-fit text-[9px] font-black uppercase tracking-widest bg-brand text-zinc-950 hover:bg-brand-dark px-4 py-2 rounded-lg mt-4 cursor-pointer border-none"
-                  >
-                    {bookings.length > 0 && !bookings[0].meetLink ? 'Add Meet Link' : 'Manage Bookings'}
-                  </button>
+                  <div className="flex flex-wrap gap-2 mt-4">
+                    {bookings.length > 0 && bookings[0].meetLink && bookings[0].mode === 'ONLINE' && (
+                      <a 
+                        href={bookings[0].meetLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[9px] font-black uppercase tracking-widest bg-indigo-600 hover:bg-indigo-700 text-white px-3.5 py-2 rounded-lg cursor-pointer flex items-center gap-1.5 transition-colors duration-200"
+                      >
+                        <Video className="w-3.5 h-3.5 text-white" />
+                        <span>Join Meet</span>
+                      </a>
+                    )}
+                    <button 
+                      onClick={() => setCurrentSection('bookings')}
+                      className="text-[9px] font-black uppercase tracking-widest bg-brand text-zinc-950 hover:bg-brand-dark px-3.5 py-2 rounded-lg cursor-pointer border-none"
+                    >
+                      {bookings.length > 0 && !bookings[0].meetLink ? 'Set Meet Link' : 'Manage Bookings'}
+                    </button>
+                  </div>
                 </div>
 
                 {/* Pricing stats card */}
@@ -1021,13 +1137,21 @@ export default function PsychologistDashboard({ setView }) {
                   >
                     <div className="space-y-2">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider ${
-                          booking.status === 'CONFIRMED'
-                            ? 'bg-emerald-950/30 border border-emerald-900/40 text-emerald-455'
-                            : 'bg-zinc-900 border border-zinc-800 text-zinc-450'
-                        }`}>
-                          {booking.status}
-                        </span>
+                        <select
+                          value={booking.status || 'CONFIRMED'}
+                          onChange={(e) => updateBookingStatus(booking.id, e.target.value)}
+                          className={`px-2.5 py-1 border rounded outline-none text-[8.5px] font-black uppercase tracking-wider cursor-pointer transition-all ${
+                            booking.status === 'CONFIRMED'
+                              ? 'bg-emerald-955 border-emerald-900/40 text-emerald-455'
+                              : booking.status === 'COMPLETED'
+                              ? 'bg-indigo-955 border-indigo-900/40 text-indigo-400'
+                              : 'bg-rose-955 border-rose-900/40 text-rose-400'
+                          }`}
+                        >
+                          <option value="CONFIRMED" className="bg-zinc-950 text-emerald-400">CONFIRMED</option>
+                          <option value="COMPLETED" className="bg-zinc-950 text-indigo-400">COMPLETED</option>
+                          <option value="CANCELLED" className="bg-zinc-950 text-rose-400">CANCELLED</option>
+                        </select>
                         <span className="text-[9px] bg-zinc-900 text-white px-2 py-0.5 rounded font-extrabold uppercase font-mono tracking-widest">
                           {booking.service === 'counselling' ? 'Psychological Session' : 'Career Session'}
                         </span>
@@ -1060,42 +1184,118 @@ export default function PsychologistDashboard({ setView }) {
                           </span>
                         )}
                       </div>
+
+                      {/* Diagnostic Feedback Editor / Display */}
+                      {booking.status === 'COMPLETED' && (
+                        <div className="pt-3 mt-2 border-t border-zinc-900 space-y-2 w-full max-w-xl">
+                          <span className="text-[9px] uppercase tracking-wider font-extrabold text-zinc-505 block">Session Feedback & Diagnostic Notes:</span>
+                          
+                          {editingFeedbackId === booking.id ? (
+                            <div className="space-y-2">
+                              <textarea
+                                value={feedbackInput}
+                                onChange={(e) => setFeedbackInput(e.target.value)}
+                                placeholder="Enter session feedback, guidance notes, or key recommendations for the student..."
+                                rows={3}
+                                className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 text-white text-xs rounded-lg outline-none focus:border-brand resize-none"
+                              />
+                              <div className="flex gap-2">
+                                <button
+                                  type="button"
+                                  onClick={() => saveFeedback(booking.id)}
+                                  className="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded text-[8.5px] font-black uppercase tracking-widest cursor-pointer shadow-xs border-none"
+                                >
+                                  Save Feedback
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => setEditingFeedbackId(null)}
+                                  className="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-white rounded text-[8.5px] font-black uppercase tracking-widest cursor-pointer border-none"
+                                >
+                                  Cancel
+                                </button>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="space-y-2">
+                              {booking.feedback ? (
+                                <p className="text-[11px] text-zinc-300 bg-zinc-900/60 p-2.5 rounded-lg border border-zinc-850/50 italic leading-relaxed font-light">
+                                  "{booking.feedback}"
+                                </p>
+                              ) : (
+                                <p className="text-[10px] text-zinc-500 italic">No notes added yet.</p>
+                              )}
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setEditingFeedbackId(booking.id);
+                                  setFeedbackInput(booking.feedback || '');
+                                }}
+                                className="text-[9px] font-bold text-brand hover:underline uppercase tracking-wider flex items-center gap-1 cursor-pointer border-none bg-transparent p-0"
+                              >
+                                {booking.feedback ? 'Edit Feedback' : '+ Add Diagnostic Notes'}
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
 
                     {/* Google Meet Input logic */}
                     <div className="shrink-0 flex items-center gap-2">
                       {editingBookingId === booking.id ? (
-                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
-                          <input 
-                            type="text" 
-                            placeholder="https://meet.google.com/abc-defg-hij"
-                            value={meetLinkInput}
-                            onChange={(e) => setMeetLinkInput(e.target.value)}
-                            className="px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 text-white text-xs rounded-lg outline-none w-full sm:w-[240px] focus:border-brand"
-                          />
-                          <div className="flex gap-2">
-                            <button 
-                              onClick={() => saveMeetLink(booking.id)}
-                              className="px-3 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg text-[9px] font-black uppercase tracking-widest cursor-pointer shadow-xs border-none"
-                            >
-                              Save
-                            </button>
-                            <button 
-                              onClick={() => setEditingBookingId(null)}
-                              className="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-lg text-[9px] font-black uppercase tracking-widest cursor-pointer border-none"
-                            >
-                              Cancel
-                            </button>
+                        <div className="flex flex-col gap-1.5 w-full sm:w-auto">
+                          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
+                            <input 
+                              type="text" 
+                              placeholder="https://meet.google.com/abc-defg-hij"
+                              value={meetLinkInput}
+                              onChange={(e) => {
+                                setMeetLinkInput(e.target.value);
+                                setMeetLinkError('');
+                              }}
+                              className="px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 text-white text-xs rounded-lg outline-none w-full sm:w-[240px] focus:border-brand"
+                            />
+                            <div className="flex gap-2">
+                              <button 
+                                onClick={() => saveMeetLink(booking.id)}
+                                className="px-3 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg text-[9px] font-black uppercase tracking-widest cursor-pointer shadow-xs border-none"
+                              >
+                                Save
+                              </button>
+                              <button 
+                                onClick={() => setEditingBookingId(null)}
+                                className="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-lg text-[9px] font-black uppercase tracking-widest cursor-pointer border-none"
+                              >
+                                Cancel
+                              </button>
+                            </div>
                           </div>
+                          {meetLinkError && (
+                            <p className="text-[10px] text-rose-500 font-bold uppercase tracking-wide font-mono mt-0.5">{meetLinkError}</p>
+                          )}
                         </div>
                       ) : (
-                        <button
-                          onClick={() => startEditMeetLink(booking)}
-                          className="px-4.5 py-3 bg-brand hover:bg-brand-dark text-zinc-950 rounded-lg text-[9px] font-black uppercase tracking-widest transition cursor-pointer flex items-center gap-1 shadow-xs border-none font-sans"
-                        >
-                          <Video className="w-3.5 h-3.5 text-zinc-950" />
-                          <span>{booking.meetLink ? 'Edit Link' : 'Set Meet Link'}</span>
-                        </button>
+                        <div className="flex items-center gap-2">
+                          {booking.meetLink && booking.mode === 'ONLINE' && (
+                            <a
+                              href={booking.meetLink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-[9px] font-black uppercase tracking-widest transition cursor-pointer flex items-center gap-1.5 shadow-xs"
+                            >
+                              <Video className="w-3.5 h-3.5 text-white" />
+                              <span>Join Meet</span>
+                            </a>
+                          )}
+                          <button
+                            onClick={() => startEditMeetLink(booking)}
+                            className="px-4.5 py-3 bg-brand hover:bg-brand-dark text-zinc-950 rounded-lg text-[9px] font-black uppercase tracking-widest transition cursor-pointer flex items-center gap-1 shadow-xs border-none font-sans font-extrabold"
+                          >
+                            <Edit className="w-3.5 h-3.5 text-zinc-955" />
+                            <span>{booking.meetLink ? 'Edit Link' : 'Set Meet Link'}</span>
+                          </button>
+                        </div>
                       )}
                     </div>
                   </div>

@@ -60,8 +60,14 @@ export default function App() {
         setTimeout(() => window.scrollTo(0, 0), 10);
       } else if (hash === '#/booking') {
         if (user) {
-          setView('booking');
-          setTimeout(() => window.scrollTo(0, 0), 10);
+          if (user.role === 'USER') {
+            setView('booking');
+            setTimeout(() => window.scrollTo(0, 0), 10);
+          } else if (user.role === 'ADMIN') {
+            window.location.hash = '#/admin';
+          } else if (user.role === 'PSYCHOLOGIST') {
+            window.location.hash = '#/counsellor';
+          }
         } else {
           setPendingRedirect(true);
           window.location.hash = '#/';
@@ -82,11 +88,35 @@ export default function App() {
           setIsAuthModalOpen(true);
         }
       } else if (hash === '#/admin') {
-        setView('admin');
-        setTimeout(() => window.scrollTo(0, 0), 10);
+        if (user) {
+          if (user.role === 'ADMIN') {
+            setView('admin');
+            setTimeout(() => window.scrollTo(0, 0), 10);
+          } else if (user.role === 'PSYCHOLOGIST') {
+            window.location.hash = '#/counsellor';
+          } else {
+            window.location.hash = '#/profile';
+          }
+        } else {
+          // If guest, show admin login gate
+          setView('admin');
+          setTimeout(() => window.scrollTo(0, 0), 10);
+        }
       } else if (hash === '#/counsellor' || hash === '#/conceller') {
-        setView('counsellor');
-        setTimeout(() => window.scrollTo(0, 0), 10);
+        if (user) {
+          if (user.role === 'PSYCHOLOGIST') {
+            setView('counsellor');
+            setTimeout(() => window.scrollTo(0, 0), 10);
+          } else if (user.role === 'ADMIN') {
+            window.location.hash = '#/admin';
+          } else {
+            window.location.hash = '#/profile';
+          }
+        } else {
+          // If guest, show counsellor login gate
+          setView('counsellor');
+          setTimeout(() => window.scrollTo(0, 0), 10);
+        }
       } else if (hash.startsWith('#/advisor/')) {
         const id = hash.split('#/advisor/')[1];
         setViewingAdvisorId(id);

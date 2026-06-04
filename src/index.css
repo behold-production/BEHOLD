@@ -8,6 +8,16 @@
   --color-brand-dark: #00b4b4;
   --color-brand-light: #e6fbfb;
   --color-brand-accent: #0ea5e9;
+
+  /* Extended zinc palette – fills the gaps Tailwind v4 doesn't ship */
+  --color-zinc-450: #97979d;
+  --color-zinc-550: #6b6b72;
+  --color-zinc-650: #52525a;
+  --color-zinc-750: #3f3f47;
+  --color-zinc-850: #1f1f23;
+  --color-zinc-855: #1c1c20;
+  --color-zinc-950: #0e0e11;
+  --color-zinc-955: #0b0b0e;
 }
 
 /* Base Body Styles */

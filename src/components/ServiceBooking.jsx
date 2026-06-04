@@ -277,6 +277,37 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
     setIsSubmitting(true);
     setTimeout(() => {
+      // Persist the booking to localStorage
+      try {
+        const stored = localStorage.getItem('behold_booked_sessions');
+        let currentBookings = [];
+        if (stored) {
+          try { currentBookings = JSON.parse(stored); } catch (ex) {}
+        }
+
+        const newBooking = {
+          id: 'sb_' + Date.now(),
+          userId: user ? user.id : 'guest_' + Date.now(),
+          userName: bookingForm.name || (user ? user.name : 'Guest User'),
+          email: bookingForm.email || (user ? user.email : ''),
+          phone: bookingForm.phone || '',
+          service: bookingService,
+          mode: bookingMode,
+          date: selectedDate,
+          time: selectedTime,
+          advisorName: selectedAdvisor ? selectedAdvisor.name : 'Unknown Advisor',
+          advisorRole: selectedAdvisor ? selectedAdvisor.role : 'Consultant',
+          status: 'CONFIRMED',
+          meetLink: '',
+          created_at: new Date().toISOString()
+        };
+
+        currentBookings.unshift(newBooking);
+        localStorage.setItem('behold_booked_sessions', JSON.stringify(currentBookings));
+      } catch (ex) {
+        console.error("Failed to save booking to localStorage", ex);
+      }
+
       setIsSubmitting(false);
       setIsSuccess(true);
       handleStepChange('success');
