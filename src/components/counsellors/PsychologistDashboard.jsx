@@ -1,28 +1,40 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  User, Calendar, Clock, BookOpen, Link, ShieldAlert, Award, Globe, 
-  Edit, Check, Video, BarChart3, AlertCircle, Save, LogOut 
+import {
+  User, Calendar, Clock, BookOpen, Link, ShieldAlert, Award, Globe,
+  Edit, Video, BarChart3, AlertCircle, Save, LogOut,
+  X, ChevronRight, Mail, Shield, Menu
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import LogoutConfirmModal from '../LogoutConfirmModal';
 
 export default function PsychologistDashboard({ setView }) {
   const { user, login, register, logout } = useAuth();
   const [currentSection, setCurrentSection] = useState('overview'); // overview, profile, availability, bookings
-  
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isProfileDrawerOpen, setIsProfileDrawerOpen] = useState(false);
+  const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
+
+  const handleNavClick = (section) => {
+    setCurrentSection(section);
+    setIsMobileMenuOpen(false);
+  };
+
   // Profile state
   const [profile, setProfile] = useState({
-    name: user?.name || 'Muhammed Niyas S H',
+    name: user?.name || 'Counsellor Name',
     role: 'Consultant Psychologist',
     education: 'MPhil Clinical Psychology',
     specialties: 'Anxiety Stress & Panic, Depression & Mood Concerns, Relationship',
-    price: 1250,
-    lang: 'Malayalam, English',
-    bio: 'Muhammed specializes in cognitive behavioral approaches to managing severe anxiety and depressive disorders. He has a keen focus on relationship dynamics, helping couples and individuals find harmony and understanding in their interpersonal connections.'
+    price: 1200,
+    lang: 'English',
+    bio: 'Dedicated consultant psychologist specializing in helping clients navigate challenges and improve mental wellbeing.',
+    defaultMeetLink: '',
+    hours: 0
   });
-  
+
   const [isProfileSaved, setIsProfileSaved] = useState(false);
   const [bookings, setBookings] = useState([]);
-  
+
   // Availability state
   const [activeDays, setActiveDays] = useState({
     1: true, // Monday
@@ -36,8 +48,15 @@ export default function PsychologistDashboard({ setView }) {
   const [availableSlots, setAvailableSlots] = useState([
     '09:30 AM', '11:00 AM', '02:00 PM', '04:00 PM'
   ]);
+  const [allSlots, setAllSlots] = useState([
+    '09:30 AM', '11:00 AM', '02:00 PM', '04:00 PM'
+  ]);
+  const [customHour, setCustomHour] = useState('09');
+  const [customMinute, setCustomMinute] = useState('00');
+  const [customPeriod, setCustomPeriod] = useState('AM');
+  const [slotError, setSlotError] = useState('');
   const [isAvailabilitySaved, setIsAvailabilitySaved] = useState(false);
-  
+
   // Input meeting link state per booking
   const [editingBookingId, setEditingBookingId] = useState(null);
   const [meetLinkInput, setMeetLinkInput] = useState('');
@@ -54,7 +73,7 @@ export default function PsychologistDashboard({ setView }) {
   // Onboarding & Registration Gate states
   const [gateMode, setGateMode] = useState('login'); // 'login' or 'register'
   const [onboardingStep, setOnboardingStep] = useState(1); // 1, 2, or 3
-  
+
   // Registration Form States
   const [regForm, setRegForm] = useState({
     name: '',
@@ -65,7 +84,9 @@ export default function PsychologistDashboard({ setView }) {
     specialties: 'Anxiety Stress & Panic, Depression & Mood Concerns, Relationship',
     price: 1250,
     lang: 'Malayalam, English',
-    bio: 'Dedicated consultant psychologist specializing in mood and anxiety therapy.'
+    bio: 'Dedicated consultant psychologist specializing in mood and anxiety therapy.',
+    defaultMeetLink: '',
+    hours: 0
   });
   const [regError, setRegError] = useState('');
   const [regActiveDays, setRegActiveDays] = useState({
@@ -74,24 +95,57 @@ export default function PsychologistDashboard({ setView }) {
   const [regAvailableSlots, setRegAvailableSlots] = useState([
     '09:30 AM', '11:00 AM', '02:00 PM', '04:00 PM'
   ]);
+  const [regAllSlots, setRegAllSlots] = useState([
+    '09:30 AM', '11:00 AM', '02:00 PM', '04:00 PM'
+  ]);
+  const [regCustomHour, setRegCustomHour] = useState('09');
+  const [regCustomMinute, setRegCustomMinute] = useState('00');
+  const [regCustomPeriod, setRegCustomPeriod] = useState('AM');
+  const [regSlotError, setRegSlotError] = useState('');
+
+  const isSessionCompleted = (booking) => {
+    if (booking.status === 'CANCELLED') return false;
+    if (booking.status === 'COMPLETED') return true;
+    
+    if (booking.status === 'CONFIRMED') {
+      try {
+        const [year, month, day] = booking.date.split('-').map(Number);
+        const timeParts = booking.time.split(' ');
+        const [hoursStr, minutesStr] = timeParts[0].split(':');
+        let hours = Number(hoursStr);
+        const minutes = Number(minutesStr);
+        const meridiem = timeParts[1];
+        
+        if (meridiem === 'PM' && hours < 12) hours += 12;
+        if (meridiem === 'AM' && hours === 12) hours = 0;
+        
+        const sessionEnd = new Date(year, month - 1, day, hours + 1, minutes);
+        return new Date() > sessionEnd;
+      } catch (e) {
+        console.error("Error checking session completion", e);
+      }
+    }
+    return false;
+  };
 
   const loadBookingsData = () => {
     try {
-      const advisorId = user?.id || 'u_psy_1';
-      
+      const advisorId = user?.id || '';
+
       // Load profile
-      let advisorName = user?.name || 'Muhammed Niyas S H';
+      let advisorName = user?.name || 'Counsellor Name';
       const savedProfile = localStorage.getItem(`behold_advisor_profile_${advisorId}`);
       if (savedProfile) {
         try {
           const parsed = JSON.parse(savedProfile);
           setProfile(parsed);
           if (parsed.name) advisorName = parsed.name;
-        } catch (e) {}
+        } catch (e) { }
       } else {
         setProfile(prev => ({
           ...prev,
-          name: user?.name || 'Muhammed Niyas S H'
+          name: advisorName,
+          hours: 0
         }));
       }
 
@@ -101,56 +155,42 @@ export default function PsychologistDashboard({ setView }) {
         try {
           const parsed = JSON.parse(savedAvailability);
           if (parsed.activeDays) setActiveDays(parsed.activeDays);
-          if (parsed.availableSlots) setAvailableSlots(parsed.availableSlots);
-        } catch (e) {}
+          if (parsed.availableSlots) {
+            setAvailableSlots(parsed.availableSlots);
+            // Ensure any saved custom slot is also added to the list of displayed slots
+            setAllSlots(prev => {
+              const merged = [...prev];
+              parsed.availableSlots.forEach(slot => {
+                if (!merged.includes(slot)) {
+                  merged.push(slot);
+                }
+              });
+              return merged;
+            });
+          }
+        } catch (e) { }
       }
 
       // Load bookings
       const stored = localStorage.getItem('behold_booked_sessions');
       let list = [];
       if (stored) {
-        try { list = JSON.parse(stored); } catch (e) {}
+        try { list = JSON.parse(stored); } catch (e) { }
       }
-      
-      // Seed standard booking if database is empty (consistent with StudentProfile)
-      if (list.length === 0) {
-        list = [
-          {
-            id: 'sb_mock_1',
-            userId: 'u_student_1',
-            userName: 'Albin Siby',
-            email: 'student@behold.com',
-            phone: '8086664001',
-            service: 'counselling',
-            mode: 'ONLINE',
-            date: '2026-06-15',
-            time: '02:00 PM',
-            advisorName: 'Josina Joseph',
-            advisorRole: 'Consultant Psychologist',
-            status: 'CONFIRMED',
-            meetLink: 'https://meet.google.com/abc-defg-hij'
-          },
-          {
-            id: 'sb_mock_2',
-            userId: 'u_student_1',
-            userName: 'Albin Siby',
-            email: 'student@behold.com',
-            phone: '8086664001',
-            service: 'counselling',
-            mode: 'ONLINE',
-            date: new Date().toISOString().split('T')[0], // Today
-            time: '02:00 PM',
-            advisorName: 'Muhammed Niyas S H',
-            advisorRole: 'Consultant Psychologist',
-            status: 'CONFIRMED',
-            meetLink: ''
-          }
-        ];
-        localStorage.setItem('behold_booked_sessions', JSON.stringify(list));
+
+      // Filter out mock bookings to ensure clean slate
+      const cleanList = list.filter(b => b.id !== 'sb_mock_1' && b.id !== 'sb_mock_2' && b.id !== 'sb_mock_c1');
+      if (cleanList.length !== list.length) {
+        localStorage.setItem('behold_booked_sessions', JSON.stringify(cleanList));
+        list = cleanList;
       }
-      
+
       // Filter bookings only for this advisor
-      const myBookings = list.filter(b => b.advisorName.toLowerCase().includes(advisorName.toLowerCase()));
+      const myBookings = list.filter(b => {
+        const matchesId = b.advisorId === advisorId;
+        const matchesName = b.advisorName && b.advisorName.toLowerCase().includes(advisorName.toLowerCase());
+        return matchesId || matchesName;
+      });
       setBookings(myBookings);
     } catch (err) {
       console.error("Failed loading counsellor bookings", err);
@@ -162,13 +202,23 @@ export default function PsychologistDashboard({ setView }) {
     loadBookingsData();
 
     const handleStorageChange = (e) => {
-      if (e.key === 'behold_booked_sessions') {
+      const key = e.key || (e.detail && e.detail.key);
+      const advisorId = user?.id || '';
+      if (
+        key === 'behold_booked_sessions' ||
+        key === `behold_advisor_profile_${advisorId}` ||
+        key === `behold_advisor_availability_${advisorId}`
+      ) {
         loadBookingsData();
       }
     };
 
     window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
+    window.addEventListener('storage_update', handleStorageChange);
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('storage_update', handleStorageChange);
+    };
   }, [user]);
 
   // Auto-refresh bookings when switching to bookings or overview tab
@@ -234,9 +284,9 @@ export default function PsychologistDashboard({ setView }) {
 
     try {
       const registeredUser = await register(
-        regForm.name.trim(), 
-        regForm.email.trim(), 
-        regForm.password, 
+        regForm.name.trim(),
+        regForm.email.trim(),
+        regForm.password,
         'PSYCHOLOGIST'
       );
 
@@ -249,9 +299,37 @@ export default function PsychologistDashboard({ setView }) {
         specialties: regForm.specialties.trim(),
         price: Number(regForm.price) || 1200,
         lang: regForm.lang.trim(),
-        bio: regForm.bio.trim()
+        bio: regForm.bio.trim(),
+        defaultMeetLink: regForm.defaultMeetLink.trim(),
+        hours: Number(regForm.hours) || 0
       };
       localStorage.setItem(`behold_advisor_profile_${newId}`, JSON.stringify(newProfile));
+
+      // Propagate defaultMeetLink to pre-existing bookings
+      try {
+        const stored = localStorage.getItem('behold_booked_sessions');
+        if (stored) {
+          let allBookings = JSON.parse(stored);
+          let updated = false;
+          const newMeetLink = newProfile.defaultMeetLink;
+          allBookings = allBookings.map(b => {
+            const matchesId = b.advisorId === newId;
+            const matchesName = b.advisorName && newProfile.name && b.advisorName.toLowerCase().trim() === newProfile.name.toLowerCase().trim();
+            if (matchesId || matchesName) {
+              if (b.meetLink !== newMeetLink) {
+                updated = true;
+                return { ...b, meetLink: newMeetLink, advisorId: newId };
+              }
+            }
+            return b;
+          });
+          if (updated) {
+            localStorage.setItem('behold_booked_sessions', JSON.stringify(allBookings));
+          }
+        }
+      } catch (err) {
+        console.error("Failed to propagate meet link in onboarding:", err);
+      }
 
       localStorage.setItem(`behold_advisor_availability_${newId}`, JSON.stringify({
         activeDays: regActiveDays,
@@ -269,7 +347,9 @@ export default function PsychologistDashboard({ setView }) {
         specialties: 'Anxiety Stress & Panic, Depression & Mood Concerns, Relationship',
         price: 1250,
         lang: 'Malayalam, English',
-        bio: 'Dedicated consultant psychologist specializing in mood and anxiety therapy.'
+        bio: 'Dedicated consultant psychologist specializing in mood and anxiety therapy.',
+        defaultMeetLink: '',
+        hours: 0
       });
       setOnboardingStep(1);
       setGateMode('login');
@@ -304,24 +384,92 @@ export default function PsychologistDashboard({ setView }) {
 
   const handleProfileSave = (e) => {
     e.preventDefault();
-    const advisorId = user?.id || 'u_psy_1';
+    const advisorId = user?.id || 't2';
     localStorage.setItem(`behold_advisor_profile_${advisorId}`, JSON.stringify(profile));
+
+    // Propagate defaultMeetLink to all matching bookings
+    try {
+      const stored = localStorage.getItem('behold_booked_sessions');
+      if (stored) {
+        let allBookings = JSON.parse(stored);
+        let updated = false;
+        const newMeetLink = profile.defaultMeetLink || '';
+
+        allBookings = allBookings.map(b => {
+          const matchesId = b.advisorId === advisorId;
+          const matchesName = b.advisorName && profile.name && b.advisorName.toLowerCase().trim() === profile.name.toLowerCase().trim();
+          if (matchesId || matchesName) {
+            if (b.meetLink !== newMeetLink) {
+              updated = true;
+              return { ...b, meetLink: newMeetLink, advisorId };
+            }
+          }
+          return b;
+        });
+
+        if (updated) {
+          localStorage.setItem('behold_booked_sessions', JSON.stringify(allBookings));
+          // Update the local bookings state
+          const myBookings = allBookings.filter(b => {
+            const matchesId = b.advisorId === advisorId;
+            const matchesName = b.advisorName && profile.name && b.advisorName.toLowerCase().trim() === profile.name.toLowerCase().trim();
+            return matchesId || matchesName;
+          });
+          setBookings(myBookings);
+        }
+      }
+    } catch (err) {
+      console.error("Failed to propagate meet link updates:", err);
+    }
+
     setIsProfileSaved(true);
     setTimeout(() => setIsProfileSaved(false), 3000);
   };
 
   const handleAvailabilitySave = (e) => {
     e.preventDefault();
-    const advisorId = user?.id || 'u_psy_1';
+    const advisorId = user?.id || 't2';
     localStorage.setItem(`behold_advisor_availability_${advisorId}`, JSON.stringify({ activeDays, availableSlots }));
     setIsAvailabilitySaved(true);
     setTimeout(() => setIsAvailabilitySaved(false), 3000);
   };
 
+  const handleAddCustomSlot = () => {
+    setSlotError('');
+    const slotStr = `${customHour}:${customMinute} ${customPeriod}`;
+    if (allSlots.includes(slotStr)) {
+      setSlotError('This slot already exists.');
+      return;
+    }
+    setAllSlots(prev => [...prev, slotStr]);
+    setAvailableSlots(prev => [...prev, slotStr]); // Add and select it
+  };
+
+  const handleRemoveSlot = (slot) => {
+    setAllSlots(prev => prev.filter(s => s !== slot));
+    setAvailableSlots(prev => prev.filter(s => s !== slot));
+  };
+
+  const handleAddRegCustomSlot = () => {
+    setRegSlotError('');
+    const slotStr = `${regCustomHour}:${regCustomMinute} ${regCustomPeriod}`;
+    if (regAllSlots.includes(slotStr)) {
+      setRegSlotError('This slot already exists.');
+      return;
+    }
+    setRegAllSlots(prev => [...prev, slotStr]);
+    setRegAvailableSlots(prev => [...prev, slotStr]);
+  };
+
+  const handleRemoveRegSlot = (slot) => {
+    setRegAllSlots(prev => prev.filter(s => s !== slot));
+    setRegAvailableSlots(prev => prev.filter(s => s !== slot));
+  };
+
   // Google Meet Link editing
   const startEditMeetLink = (booking) => {
     setEditingBookingId(booking.id);
-    setMeetLinkInput(booking.meetLink || '');
+    setMeetLinkInput(booking.meetLink || profile.defaultMeetLink || '');
     setMeetLinkError('');
   };
 
@@ -337,7 +485,7 @@ export default function PsychologistDashboard({ setView }) {
       const stored = localStorage.getItem('behold_booked_sessions');
       let allBookings = [];
       if (stored) {
-        try { allBookings = JSON.parse(stored); } catch (e) {}
+        try { allBookings = JSON.parse(stored); } catch (e) { }
       }
 
       const updatedAll = allBookings.map(b => {
@@ -360,7 +508,7 @@ export default function PsychologistDashboard({ setView }) {
       const stored = localStorage.getItem('behold_booked_sessions');
       let allBookings = [];
       if (stored) {
-        try { allBookings = JSON.parse(stored); } catch (e) {}
+        try { allBookings = JSON.parse(stored); } catch (e) { }
       }
 
       const updatedAll = allBookings.map(b => {
@@ -382,7 +530,7 @@ export default function PsychologistDashboard({ setView }) {
       const stored = localStorage.getItem('behold_booked_sessions');
       let allBookings = [];
       if (stored) {
-        try { allBookings = JSON.parse(stored); } catch (e) {}
+        try { allBookings = JSON.parse(stored); } catch (e) { }
       }
 
       const updatedAll = allBookings.map(b => {
@@ -436,14 +584,14 @@ export default function PsychologistDashboard({ setView }) {
           <div className="bg-zinc-900 border border-zinc-800 p-6 sm:p-8 rounded-2xl shadow-2xl space-y-6">
             {/* Header Tabs */}
             <div className="flex border-b border-zinc-800 pb-1">
-              <button 
+              <button
                 type="button"
                 onClick={() => setGateMode('login')}
                 className={`flex-1 pb-3 text-[10px] uppercase tracking-widest font-black transition-colors ${gateMode === 'login' ? 'text-brand border-b-2 border-brand' : 'text-zinc-500 hover:text-zinc-400'}`}
               >
                 Sign In
               </button>
-              <button 
+              <button
                 type="button"
                 onClick={() => { setGateMode('register'); setOnboardingStep(1); setRegError(''); }}
                 className={`flex-1 pb-3 text-[10px] uppercase tracking-widest font-black transition-colors ${gateMode === 'register' ? 'text-brand border-b-2 border-brand' : 'text-zinc-500 hover:text-zinc-400'}`}
@@ -458,14 +606,14 @@ export default function PsychologistDashboard({ setView }) {
                   <h2 className="text-sm font-bold text-white uppercase tracking-wider">Counsellor Sign In</h2>
                   <p className="text-[10px] text-zinc-500 leading-none">Access schedules, update clinic slots, and edit video rooms.</p>
                 </div>
-                
+
                 <form onSubmit={handleCounsellorLogin} className="space-y-4">
                   <div className="space-y-1">
                     <label className="text-[9px] uppercase tracking-wider font-bold text-zinc-400">Email Address</label>
-                    <input 
+                    <input
                       type="email"
                       required
-                      placeholder="niyas@behold.com"
+                      placeholder="counsellor@example.com"
                       value={loginEmail}
                       onChange={(e) => setLoginEmail(e.target.value)}
                       className="w-full px-3.5 py-3 bg-zinc-950 border border-zinc-800 focus:border-indigo-500 rounded-lg text-xs text-white outline-none transition-colors"
@@ -474,7 +622,7 @@ export default function PsychologistDashboard({ setView }) {
 
                   <div className="space-y-1">
                     <label className="text-[9px] uppercase tracking-wider font-bold text-zinc-400">Password</label>
-                    <input 
+                    <input
                       type="password"
                       required
                       placeholder="••••••••"
@@ -514,7 +662,7 @@ export default function PsychologistDashboard({ setView }) {
                   <form onSubmit={handleStepOneNext} className="space-y-4">
                     <div className="space-y-1">
                       <label className="text-[9px] uppercase tracking-wider font-bold text-zinc-400">Full Name</label>
-                      <input 
+                      <input
                         type="text"
                         required
                         placeholder="e.g. Dr. Sandra Tomy"
@@ -526,10 +674,10 @@ export default function PsychologistDashboard({ setView }) {
 
                     <div className="space-y-1">
                       <label className="text-[9px] uppercase tracking-wider font-bold text-zinc-400">Email Address</label>
-                      <input 
+                      <input
                         type="email"
                         required
-                        placeholder="name@behold.com"
+                        placeholder="counsellor@example.com"
                         value={regForm.email}
                         onChange={(e) => setRegForm({ ...regForm, email: e.target.value })}
                         className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-indigo-500 rounded-lg text-xs text-white outline-none transition-colors"
@@ -539,7 +687,7 @@ export default function PsychologistDashboard({ setView }) {
                     <div className="grid grid-cols-2 gap-3">
                       <div className="space-y-1">
                         <label className="text-[9px] uppercase tracking-wider font-bold text-zinc-400">Password</label>
-                        <input 
+                        <input
                           type="password"
                           required
                           placeholder="••••••••"
@@ -550,7 +698,7 @@ export default function PsychologistDashboard({ setView }) {
                       </div>
                       <div className="space-y-1">
                         <label className="text-[9px] uppercase tracking-wider font-bold text-zinc-400">Confirm</label>
-                        <input 
+                        <input
                           type="password"
                           required
                           placeholder="••••••••"
@@ -579,7 +727,7 @@ export default function PsychologistDashboard({ setView }) {
                     <div className="grid grid-cols-2 gap-3">
                       <div className="space-y-1">
                         <label className="text-[9px] uppercase tracking-wider font-bold text-zinc-400">Education Details</label>
-                        <input 
+                        <input
                           type="text"
                           required
                           placeholder="e.g. PhD Clinical Psychology"
@@ -590,7 +738,7 @@ export default function PsychologistDashboard({ setView }) {
                       </div>
                       <div className="space-y-1">
                         <label className="text-[9px] uppercase tracking-wider font-bold text-zinc-400">Languages Spoken</label>
-                        <input 
+                        <input
                           type="text"
                           required
                           placeholder="Malayalam, English, Tamil"
@@ -603,7 +751,7 @@ export default function PsychologistDashboard({ setView }) {
 
                     <div className="space-y-1">
                       <label className="text-[9px] uppercase tracking-wider font-bold text-zinc-400">Hourly Session Fee (INR)</label>
-                      <input 
+                      <input
                         type="number"
                         required
                         placeholder="1200"
@@ -615,7 +763,7 @@ export default function PsychologistDashboard({ setView }) {
 
                     <div className="space-y-1">
                       <label className="text-[9px] uppercase tracking-wider font-bold text-zinc-400">Specialties (comma-separated)</label>
-                      <input 
+                      <input
                         type="text"
                         required
                         placeholder="Anxiety, Relationship Dynamics, Career Stress"
@@ -626,8 +774,19 @@ export default function PsychologistDashboard({ setView }) {
                     </div>
 
                     <div className="space-y-1">
+                      <label className="text-[9px] uppercase tracking-wider font-bold text-zinc-400">Default Google Meet Link (optional)</label>
+                      <input
+                        type="url"
+                        placeholder="https://meet.google.com/abc-defg-hij"
+                        value={regForm.defaultMeetLink}
+                        onChange={(e) => setRegForm({ ...regForm, defaultMeetLink: e.target.value })}
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-indigo-500 rounded-lg text-xs text-white outline-none transition-colors"
+                      />
+                    </div>
+
+                    <div className="space-y-1">
                       <label className="text-[9px] uppercase tracking-wider font-bold text-zinc-400">Professional Bio</label>
-                      <textarea 
+                      <textarea
                         rows={3}
                         required
                         placeholder="Describe your clinical expertise and background..."
@@ -671,11 +830,10 @@ export default function PsychologistDashboard({ setView }) {
                               key={day.index}
                               type="button"
                               onClick={() => toggleRegDay(day.index)}
-                              className={`px-3 py-1.5 border rounded-lg text-[9px] font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer ${
-                                active
-                                  ? 'bg-brand text-zinc-955 font-black border-none'
-                                  : 'bg-zinc-950 border-zinc-850 text-zinc-500 hover:border-zinc-750'
-                              }`}
+                              className={`px-3 py-1.5 border rounded-lg text-[9px] font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer ${active
+                                ? 'bg-brand text-zinc-955 font-black border-none'
+                                : 'bg-zinc-950 border-zinc-850 text-zinc-500 hover:border-zinc-750'
+                                }`}
                             >
                               {day.label.substring(0, 3)}
                             </button>
@@ -684,33 +842,90 @@ export default function PsychologistDashboard({ setView }) {
                       </div>
                     </div>
 
-                    <div className="space-y-2 border-t border-zinc-800 pt-3">
-                      <label className="text-zinc-400 uppercase tracking-wider font-bold text-[9px] block">Timing Slots</label>
-                      <div className="grid grid-cols-2 gap-2 text-center">
-                        {['09:30 AM', '11:00 AM', '02:00 PM', '04:00 PM'].map(slot => {
+                    <div className="space-y-2 border-t border-zinc-800 pt-3 text-left">
+                      <label className="text-zinc-400 uppercase tracking-wider font-bold text-[9px] block">Timing Slots (Active)</label>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-center">
+                        {regAllSlots.map(slot => {
                           const exists = regAvailableSlots.includes(slot);
                           return (
-                            <button
-                              key={slot}
-                              type="button"
-                              onClick={() => {
-                                if (exists) {
-                                  setRegAvailableSlots(prev => prev.filter(s => s !== slot));
-                                } else {
-                                  setRegAvailableSlots(prev => [...prev, slot]);
-                                }
-                              }}
-                              className={`py-2.5 border rounded-lg font-black transition cursor-pointer text-[10px] ${
-                                exists
+                            <div key={slot} className="flex items-center gap-1.5 w-full">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  if (exists) {
+                                    setRegAvailableSlots(prev => prev.filter(s => s !== slot));
+                                  } else {
+                                    setRegAvailableSlots(prev => [...prev, slot]);
+                                  }
+                                }}
+                                className={`flex-1 py-2.5 border rounded-lg font-black transition cursor-pointer text-[10px] ${exists
                                   ? 'bg-indigo-950/40 border-indigo-500 text-indigo-350'
                                   : 'bg-zinc-950 border-zinc-850 text-zinc-555'
-                              }`}
-                            >
-                              {slot}
-                            </button>
+                                  }`}
+                              >
+                                {slot}
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleRemoveRegSlot(slot)}
+                                className="px-2.5 py-2.5 bg-zinc-950 border border-zinc-850 hover:bg-rose-950/40 hover:border-rose-900 text-zinc-500 hover:text-rose-400 rounded-lg text-[9px] font-bold uppercase transition cursor-pointer shrink-0 font-header"
+                                title="Remove Slot"
+                              >
+                                Remove
+                              </button>
+                            </div>
                           );
                         })}
                       </div>
+                    </div>
+
+                    <div className="space-y-2 border-t border-zinc-800 pt-3 text-left">
+                      <label className="text-zinc-400 uppercase tracking-wider font-bold text-[9px] block">Add Custom Timing Slot</label>
+                      <div className="flex gap-1.5 items-end">
+                        <div className="flex-1 space-y-0.5">
+                          <label className="text-[7.5px] text-zinc-555 uppercase tracking-wider font-bold block">Hour</label>
+                          <select
+                            value={regCustomHour}
+                            onChange={(e) => setRegCustomHour(e.target.value)}
+                            className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-lg text-[10px] text-white outline-none focus:border-indigo-550 cursor-pointer"
+                          >
+                            {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map(h => (
+                              <option key={h} value={h}>{h}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="flex-1 space-y-0.5">
+                          <label className="text-[7.5px] text-zinc-555 uppercase tracking-wider font-bold block">Minute</label>
+                          <select
+                            value={regCustomMinute}
+                            onChange={(e) => setRegCustomMinute(e.target.value)}
+                            className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-lg text-[10px] text-white outline-none focus:border-indigo-550 cursor-pointer"
+                          >
+                            {['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55'].map(m => (
+                              <option key={m} value={m}>{m}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="flex-1 space-y-0.5">
+                          <label className="text-[7.5px] text-zinc-555 uppercase tracking-wider font-bold block">AM/PM</label>
+                          <select
+                            value={regCustomPeriod}
+                            onChange={(e) => setRegCustomPeriod(e.target.value)}
+                            className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-lg text-[10px] text-white outline-none focus:border-indigo-550 cursor-pointer"
+                          >
+                            <option value="AM">AM</option>
+                            <option value="PM">PM</option>
+                          </select>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={handleAddRegCustomSlot}
+                          className="bg-indigo-950 hover:bg-brand text-brand hover:text-zinc-955 px-3 py-1.5 text-[9px] font-bold uppercase tracking-wider rounded-lg transition-colors border border-indigo-800 hover:border-brand cursor-pointer shrink-0 h-[28.5px] flex items-center justify-center font-header"
+                        >
+                          Add Slot
+                        </button>
+                      </div>
+                      {regSlotError && <p className="text-[9px] text-rose-500 font-bold uppercase tracking-wide font-mono mt-1">{regSlotError}</p>}
                     </div>
 
                     {regError && (
@@ -745,39 +960,98 @@ export default function PsychologistDashboard({ setView }) {
 
   // --- 2. DEDICATED LOGGED-IN COUNSELLOR CONSOLE ---
   return (
-    <div className="min-h-screen bg-zinc-950 text-white font-sans text-left flex flex-col lg:flex-row relative overflow-hidden">
-      
+    <div className="min-h-screen bg-zinc-955 text-white font-sans text-left flex flex-col lg:flex-row relative overflow-hidden">
+
       {/* Background Soft Glows */}
       <div className="absolute top-1/4 left-1/3 w-[350px] h-[350px] bg-indigo-500/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-1/3 right-1/4 w-[350px] h-[350px] bg-brand-accent/5 rounded-full blur-3xl pointer-events-none" />
 
-      {/* Left Fixed Sidebar */}
-      <div className="w-full lg:w-64 bg-zinc-900 border-b lg:border-b-0 lg:border-r border-zinc-800 flex flex-col justify-between shrink-0 p-5 relative z-20">
-        <div className="space-y-6">
-          {/* Logo & Header */}
-          <div className="flex items-center gap-2 border-b border-zinc-800 pb-4">
-            <span className="font-header font-black text-lg tracking-tighter text-white">
+      {/* Mobile Top Navbar (Visible only on lg:hidden) */}
+      <div className="lg:hidden flex items-center justify-between bg-zinc-900 border-b border-zinc-800 px-5 py-4 w-full relative z-30">
+        <div className="flex items-center gap-3">
+          {/* Hamburger Menu Icon */}
+          <button
+            type="button"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="p-1.5 bg-zinc-955 border border-zinc-850 text-zinc-400 hover:text-white rounded-lg transition-colors cursor-pointer border-none"
+            title={isMobileMenuOpen ? "Close Navigation Menu" : "Open Navigation Menu"}
+          >
+            {isMobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+          </button>
+
+          <div className="flex items-center gap-1.5">
+            <span className="font-header font-black text-md tracking-tighter text-white">
               BEHOLD<span className="text-brand font-black">.</span>
             </span>
-            <span className="text-[8px] bg-indigo-950 border border-indigo-900 text-indigo-400 px-1.5 py-0.5 rounded font-black tracking-widest uppercase">
+            <span className="text-[7.5px] bg-zinc-850 border border-zinc-800 text-zinc-400 px-1 py-0.2 rounded font-black tracking-widest uppercase font-mono">
               CLINIC
             </span>
           </div>
+        </div>
 
-          {/* User profile details */}
-          <div className="flex items-center gap-3 bg-zinc-950/60 p-3 rounded-xl border border-zinc-850">
+        {/* Profile Icon / Trigger */}
+        <button
+          type="button"
+          onClick={() => setIsProfileDrawerOpen(true)}
+          className="w-8 h-8 rounded-lg bg-zinc-950 border border-zinc-800 text-zinc-400 hover:text-white hover:border-indigo-500/30 flex items-center justify-center shadow-md cursor-pointer hover:opacity-90 active:scale-95 transition-all shrink-0"
+          title="Open Profile Menu"
+        >
+          <User className="w-4 h-4 text-indigo-400" />
+        </button>
+      </div>
+
+      {/* Mobile Sidebar Backdrop (Overlay) */}
+      {isMobileMenuOpen && (
+        <div
+          className="lg:hidden fixed inset-0 z-40 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* 1. Left Fixed Sidebar (Drawer on Mobile, static on Desktop) */}
+      <div className={`fixed lg:static inset-y-0 left-0 z-50 w-64 lg:w-64 bg-zinc-900 border-r border-zinc-800 flex flex-col justify-between shrink-0 p-5 transition-transform duration-300 ease-in-out lg:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        } lg:flex`}>
+        <div className="space-y-6">
+          {/* Logo & Header */}
+          <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
+            <div className="flex items-center gap-2">
+              <span className="font-header font-black text-lg tracking-tighter text-white">
+                BEHOLD<span className="text-brand font-black">.</span>
+              </span>
+              <span className="text-[8px] bg-indigo-950 border border-indigo-900 text-indigo-400 px-1.5 py-0.5 rounded font-black tracking-widest uppercase">
+                CLINIC
+              </span>
+            </div>
+            {/* Close Button inside Drawer (Mobile Only) */}
+            <button
+              type="button"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="lg:hidden p-1 bg-zinc-955 border border-zinc-850 text-zinc-400 hover:text-white rounded-lg transition-colors cursor-pointer border-none"
+              title="Close Navigation Drawer"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+
+          {/* User profile details — click to open drawer */}
+          <button
+            type="button"
+            onClick={() => setIsProfileDrawerOpen(true)}
+            className="w-full flex items-center gap-3 bg-zinc-950/60 hover:bg-zinc-955 p-3 rounded-xl border border-zinc-850 hover:border-indigo-500/30 transition-all cursor-pointer text-left"
+          >
             <div className="w-10 h-10 rounded-lg bg-indigo-950 text-brand flex items-center justify-center font-header font-black text-xs border border-indigo-900 shrink-0">
-              {profile.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
+              {(profile?.name || '').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
             </div>
             <div className="min-w-0 flex-1">
-              <h4 className="text-xs font-bold text-white truncate leading-tight uppercase">
+              <h4 className="text-xs font-bold text-white truncate leading-tight uppercase font-header">
                 {profile.name}
               </h4>
-              <span className="text-[8px] text-zinc-550 font-black tracking-wider uppercase truncate block">
+              <span className="text-[8px] text-zinc-550 font-black tracking-wider uppercase truncate block font-mono">
                 {profile.education}
               </span>
             </div>
-          </div>
+            <ChevronRight className="w-3.5 h-3.5 text-zinc-600 shrink-0" />
+          </button>
 
           {/* Nav Links */}
           <nav className="flex flex-col gap-1">
@@ -792,12 +1066,11 @@ export default function PsychologistDashboard({ setView }) {
               return (
                 <button
                   key={sec.id}
-                  onClick={() => setCurrentSection(sec.id)}
-                  className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all text-left cursor-pointer border-none ${
-                    isActive
-                      ? 'bg-brand text-zinc-955 font-black shadow-sm'
-                      : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-850'
-                  }`}
+                  onClick={() => handleNavClick(sec.id)}
+                  className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all text-left cursor-pointer border-none ${isActive
+                    ? 'bg-brand text-zinc-955 font-black shadow-sm'
+                    : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-850'
+                    }`}
                 >
                   <Icon className="w-4 h-4 shrink-0" />
                   <span>{sec.label}</span>
@@ -813,16 +1086,13 @@ export default function PsychologistDashboard({ setView }) {
             <span className="text-[8px] uppercase font-black tracking-wider text-zinc-500 flex items-center gap-1">
               <ShieldAlert className="w-3.5 h-3.5 text-indigo-400" /> Psychologist Console
             </span>
-            <p className="text-[9px] text-zinc-500 leading-relaxed pt-1.5">
+            <p className="text-[9px] text-zinc-550 leading-relaxed pt-1.5">
               Updates to pricing or timing are synced immediately with public advisor slots listings.
             </p>
           </div>
-          <button 
-            onClick={() => {
-              logout();
-              window.location.hash = '#/';
-            }}
-            className="w-full py-2 border border-rose-900/50 hover:border-rose-600 text-rose-500 bg-rose-950/20 hover:bg-rose-900 hover:text-white font-bold text-[9px] uppercase tracking-widest rounded-lg flex items-center justify-center gap-1 transition-colors cursor-pointer"
+          <button
+            onClick={() => setIsLogoutConfirmOpen(true)}
+            className="w-full py-2 border border-rose-900/50 hover:border-rose-600 text-rose-500 bg-rose-955/20 hover:bg-rose-900 hover:text-white font-bold text-[9px] uppercase tracking-widest rounded-lg flex items-center justify-center gap-1 transition-colors cursor-pointer"
           >
             <LogOut className="w-3.5 h-3.5" /> Exit Console Mode
           </button>
@@ -831,11 +1101,11 @@ export default function PsychologistDashboard({ setView }) {
 
       {/* 2. Main Content Workspace */}
       <div className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-8 lg:p-10 space-y-6 relative z-10 text-left">
-        
+
         {/* Workspace Banner */}
         <div className="bg-zinc-900 border border-zinc-850 p-6 sm:p-8 rounded-2xl shadow-xl flex flex-col sm:flex-row justify-between items-center gap-4 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/5 rounded-full blur-2xl pointer-events-none" />
-          
+
           <div className="space-y-1 relative z-10 w-full sm:w-auto">
             <div className="flex flex-wrap items-center gap-2">
               <h1 className="text-xl sm:text-2xl font-header font-black tracking-wide uppercase">
@@ -852,20 +1122,20 @@ export default function PsychologistDashboard({ setView }) {
 
           {/* Quick Stats Grid */}
           <div className="grid grid-cols-2 gap-4 w-full sm:w-auto shrink-0 relative z-10 text-center">
-            <div className="bg-zinc-950 border border-zinc-850 px-5 py-2.5 rounded-xl">
+            <div className="bg-zinc-955 border border-zinc-850 px-5 py-2.5 rounded-xl">
               <span className="text-[8px] text-zinc-500 font-bold uppercase tracking-wider block">Upcoming Slots</span>
-              <p className="text-sm font-black text-brand mt-0.5">{bookings.filter(b => b.status === 'CONFIRMED' || b.status === 'PENDING').length} Bookings</p>
+              <p className="text-sm font-black text-brand mt-0.5">{bookings.filter(b => b.status === 'CONFIRMED' && !isSessionCompleted(b)).length} Bookings</p>
             </div>
-            <div className="bg-zinc-950 border border-zinc-850 px-5 py-2.5 rounded-xl">
+            <div className="bg-zinc-955 border border-zinc-850 px-5 py-2.5 rounded-xl">
               <span className="text-[8px] text-zinc-500 font-bold uppercase tracking-wider block">Hours Completed</span>
-              <p className="text-sm font-black text-brand mt-0.5">{bookings.filter(b => b.status === 'COMPLETED').length * 1 + 65}+ Hrs</p>
+              <p className="text-sm font-black text-brand mt-0.5">{bookings.filter(isSessionCompleted).length + Number(profile.hours || 0)}+ Hrs</p>
             </div>
           </div>
         </div>
 
         {/* WORKSPACE CONTENT ROUTER */}
         <div className="bg-zinc-900 border border-zinc-855 rounded-2xl p-5 sm:p-8 shadow-md">
-          
+
           {/* WORKSPACE 1: OVERVIEW */}
           {currentSection === 'overview' && (
             <div className="space-y-6 animate-in fade-in duration-200 text-xs">
@@ -890,8 +1160,8 @@ export default function PsychologistDashboard({ setView }) {
                         <div className="pt-1 flex items-center gap-2">
                           <span className="text-[9px] uppercase tracking-wider font-extrabold text-zinc-500">Room Status:</span>
                           {bookings[0].meetLink ? (
-                            <span className="text-[9px] font-bold text-emerald-400 flex items-center gap-1 uppercase tracking-wide">
-                              <Check className="w-3 h-3 text-emerald-400" /> Link Set
+                            <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-wide">
+                              Link Set
                             </span>
                           ) : (
                             <span className="text-[9px] font-bold text-amber-500 flex items-center gap-1 uppercase tracking-wide">
@@ -906,7 +1176,7 @@ export default function PsychologistDashboard({ setView }) {
                   </div>
                   <div className="flex flex-wrap gap-2 mt-4">
                     {bookings.length > 0 && bookings[0].meetLink && bookings[0].mode === 'ONLINE' && (
-                      <a 
+                      <a
                         href={bookings[0].meetLink}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -916,7 +1186,7 @@ export default function PsychologistDashboard({ setView }) {
                         <span>Join Meet</span>
                       </a>
                     )}
-                    <button 
+                    <button
                       onClick={() => setCurrentSection('bookings')}
                       className="text-[9px] font-black uppercase tracking-widest bg-brand text-zinc-950 hover:bg-brand-dark px-3.5 py-2 rounded-lg cursor-pointer border-none"
                     >
@@ -944,7 +1214,7 @@ export default function PsychologistDashboard({ setView }) {
                       </div>
                     </div>
                   </div>
-                  <button 
+                  <button
                     onClick={() => setCurrentSection('profile')}
                     className="w-fit text-[9px] font-black uppercase tracking-widest bg-zinc-900 text-white hover:bg-zinc-850 border border-zinc-800 px-4 py-2 rounded-lg mt-4 cursor-pointer"
                   >
@@ -966,8 +1236,8 @@ export default function PsychologistDashboard({ setView }) {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-left font-medium">
                 <div className="space-y-1.5">
                   <label className="text-zinc-450 uppercase tracking-wider font-bold">Display Name</label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     value={profile.name}
                     onChange={(e) => setProfile({ ...profile, name: e.target.value })}
                     className="w-full px-3.5 py-3 bg-zinc-950 border border-zinc-800 text-xs text-white rounded-lg outline-none focus:border-brand"
@@ -976,8 +1246,8 @@ export default function PsychologistDashboard({ setView }) {
 
                 <div className="space-y-1.5">
                   <label className="text-zinc-450 uppercase tracking-wider font-bold">Education Credentials</label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     value={profile.education}
                     onChange={(e) => setProfile({ ...profile, education: e.target.value })}
                     className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 text-xs text-white rounded-lg outline-none focus:border-brand"
@@ -986,8 +1256,8 @@ export default function PsychologistDashboard({ setView }) {
 
                 <div className="space-y-1.5">
                   <label className="text-zinc-455 uppercase tracking-wider font-bold">Session Fee (INR / Hour)</label>
-                  <input 
-                    type="number" 
+                  <input
+                    type="number"
                     value={profile.price}
                     onChange={(e) => setProfile({ ...profile, price: Number(e.target.value) })}
                     className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 text-xs text-white rounded-lg outline-none focus:border-brand"
@@ -996,18 +1266,28 @@ export default function PsychologistDashboard({ setView }) {
 
                 <div className="space-y-1.5">
                   <label className="text-zinc-455 uppercase tracking-wider font-bold">Languages Spoken</label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     value={profile.lang}
                     onChange={(e) => setProfile({ ...profile, lang: e.target.value })}
                     className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 text-xs text-white rounded-lg outline-none focus:border-brand"
                   />
                 </div>
 
+                <div className="space-y-1.5">
+                  <label className="text-zinc-455 uppercase tracking-wider font-bold">Baseline Therapy Hours Completed</label>
+                  <input
+                    type="number"
+                    value={profile.hours || 0}
+                    onChange={(e) => setProfile({ ...profile, hours: Number(e.target.value) })}
+                    className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 text-xs text-white rounded-lg outline-none focus:border-brand"
+                  />
+                </div>
+
                 <div className="sm:col-span-2 space-y-1.5">
                   <label className="text-zinc-455 uppercase tracking-wider font-bold">Specialties (comma-separated)</label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     value={profile.specialties}
                     onChange={(e) => setProfile({ ...profile, specialties: e.target.value })}
                     className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 text-xs text-white rounded-lg outline-none focus:border-brand"
@@ -1015,8 +1295,19 @@ export default function PsychologistDashboard({ setView }) {
                 </div>
 
                 <div className="sm:col-span-2 space-y-1.5">
+                  <label className="text-zinc-455 uppercase tracking-wider font-bold">Default Google Meet Link (optional)</label>
+                  <input
+                    type="url"
+                    placeholder="https://meet.google.com/abc-defg-hij"
+                    value={profile.defaultMeetLink || ''}
+                    onChange={(e) => setProfile({ ...profile, defaultMeetLink: e.target.value })}
+                    className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 text-xs text-white rounded-lg outline-none focus:border-brand"
+                  />
+                </div>
+
+                <div className="sm:col-span-2 space-y-1.5">
                   <label className="text-zinc-455 uppercase tracking-wider font-bold">Professional Biography</label>
-                  <textarea 
+                  <textarea
                     rows={5}
                     value={profile.bio}
                     onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
@@ -1027,8 +1318,8 @@ export default function PsychologistDashboard({ setView }) {
 
               <div className="pt-4 border-t border-zinc-800 flex items-center justify-between">
                 {isProfileSaved ? (
-                  <span className="text-[10px] text-emerald-500 font-bold uppercase tracking-wider flex items-center gap-1">
-                    <Check className="w-3.5 h-3.5 text-emerald-500" /> Changes Synced with public profiles!
+                  <span className="text-[10px] text-emerald-500 font-bold uppercase tracking-wider">
+                    Changes Synced with public profiles!
                   </span>
                 ) : <span />}
                 <button
@@ -1061,11 +1352,10 @@ export default function PsychologistDashboard({ setView }) {
                           key={day.index}
                           type="button"
                           onClick={() => toggleDay(day.index)}
-                          className={`px-4 py-2 border rounded-lg text-[10.5px] font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer ${
-                            active
-                              ? 'bg-gradient-brand border-none text-zinc-955 font-black'
-                              : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:border-zinc-650'
-                          }`}
+                          className={`px-4 py-2 border rounded-lg text-[10.5px] font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer ${active
+                            ? 'bg-gradient-brand border-none text-zinc-955 font-black'
+                            : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:border-zinc-650'
+                            }`}
                         >
                           {day.label}
                         </button>
@@ -1074,41 +1364,99 @@ export default function PsychologistDashboard({ setView }) {
                   </div>
                 </div>
 
-                {/* Standard Timings Checkbox */}
+                {/* Active Timings Checkbox */}
                 <div className="space-y-3 pt-3 border-t border-zinc-800">
                   <label className="text-zinc-400 uppercase tracking-wider font-bold block">Select Active Timing Slots</label>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    {['09:30 AM', '11:00 AM', '02:00 PM', '04:00 PM'].map(slot => {
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {allSlots.map(slot => {
                       const exists = availableSlots.includes(slot);
                       return (
-                        <button
-                          key={slot}
-                          type="button"
-                          onClick={() => {
-                            if (exists) {
-                              setAvailableSlots(prev => prev.filter(s => s !== slot));
-                            } else {
-                              setAvailableSlots(prev => [...prev, slot]);
-                            }
-                          }}
-                          className={`p-3 border rounded-lg text-center font-black transition cursor-pointer text-xs ${
-                            exists
+                        <div key={slot} className="flex items-center gap-2 w-full">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (exists) {
+                                setAvailableSlots(prev => prev.filter(s => s !== slot));
+                              } else {
+                                setAvailableSlots(prev => [...prev, slot]);
+                              }
+                            }}
+                            className={`flex-1 p-3 border rounded-lg text-center font-black transition cursor-pointer text-xs ${exists
                               ? 'bg-brand/10 border-brand text-brand-dark'
                               : 'bg-zinc-950 border-zinc-850 text-zinc-400'
-                          }`}
-                        >
-                          {slot}
-                        </button>
+                              }`}
+                          >
+                            {slot}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveSlot(slot)}
+                            className="px-3.5 py-3 bg-zinc-950 border border-zinc-850 hover:bg-rose-955/35 hover:border-rose-900 text-zinc-450 hover:text-rose-400 rounded-lg text-xs font-bold uppercase transition cursor-pointer shrink-0"
+                            title="Remove Slot"
+                          >
+                            Remove
+                          </button>
+                        </div>
                       );
                     })}
                   </div>
+                </div>
+
+                {/* Custom Timings Adder */}
+                <div className="space-y-3 pt-3 border-t border-zinc-800">
+                  <label className="text-zinc-400 uppercase tracking-wider font-bold block">Add Custom Timing Slot</label>
+                  <div className="flex gap-2 items-end max-w-sm">
+                    <div className="flex-1 space-y-1">
+                      <label className="text-[8px] text-zinc-550 uppercase tracking-wider font-bold block">Hour</label>
+                      <select
+                        value={customHour}
+                        onChange={(e) => setCustomHour(e.target.value)}
+                        className="w-full px-2.5 py-2 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+                      >
+                        {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map(h => (
+                          <option key={h} value={h}>{h}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="flex-1 space-y-1">
+                      <label className="text-[8px] text-zinc-550 uppercase tracking-wider font-bold block">Minute</label>
+                      <select
+                        value={customMinute}
+                        onChange={(e) => setCustomMinute(e.target.value)}
+                        className="w-full px-2.5 py-2 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+                      >
+                        {['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55'].map(m => (
+                          <option key={m} value={m}>{m}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="flex-1 space-y-1">
+                      <label className="text-[8px] text-zinc-550 uppercase tracking-wider font-bold block">AM/PM</label>
+                      <select
+                        value={customPeriod}
+                        onChange={(e) => setCustomPeriod(e.target.value)}
+                        className="w-full px-2.5 py-2 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+                      >
+                        <option value="AM">AM</option>
+                        <option value="PM">PM</option>
+                      </select>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleAddCustomSlot}
+                      className="bg-brand/10 hover:bg-brand text-brand hover:text-zinc-955 px-4 py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-colors border border-brand/30 hover:border-brand cursor-pointer shrink-0 h-[31.5px] flex items-center justify-center"
+                    >
+                      Add Slot
+                    </button>
+                  </div>
+                  {slotError && <p className="text-[9px] text-rose-500 font-bold uppercase tracking-wide font-mono mt-1">{slotError}</p>}
                 </div>
               </div>
 
               <div className="pt-6 border-t border-zinc-800 flex items-center justify-between">
                 {isAvailabilitySaved ? (
                   <span className="text-[10px] text-emerald-500 font-bold uppercase tracking-wider flex items-center gap-1">
-                    <Check className="w-3.5 h-3.5 text-emerald-500" /> Availability Matrix Synchronized!
+                    Availability Matrix Synchronized!
                   </span>
                 ) : <span />}
                 <button
@@ -1131,7 +1479,7 @@ export default function PsychologistDashboard({ setView }) {
 
               <div className="space-y-4">
                 {bookings.map((booking) => (
-                  <div 
+                  <div
                     key={booking.id}
                     className="bg-zinc-950 border border-zinc-850 rounded-xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-5 relative overflow-hidden"
                   >
@@ -1140,13 +1488,12 @@ export default function PsychologistDashboard({ setView }) {
                         <select
                           value={booking.status || 'CONFIRMED'}
                           onChange={(e) => updateBookingStatus(booking.id, e.target.value)}
-                          className={`px-2.5 py-1 border rounded outline-none text-[8.5px] font-black uppercase tracking-wider cursor-pointer transition-all ${
-                            booking.status === 'CONFIRMED'
-                              ? 'bg-emerald-955 border-emerald-900/40 text-emerald-455'
-                              : booking.status === 'COMPLETED'
+                          className={`px-2.5 py-1 border rounded outline-none text-[8.5px] font-black uppercase tracking-wider cursor-pointer transition-all ${booking.status === 'CONFIRMED'
+                            ? 'bg-emerald-955 border-emerald-900/40 text-emerald-455'
+                            : booking.status === 'COMPLETED'
                               ? 'bg-indigo-955 border-indigo-900/40 text-indigo-400'
                               : 'bg-rose-955 border-rose-900/40 text-rose-400'
-                          }`}
+                            }`}
                         >
                           <option value="CONFIRMED" className="bg-zinc-950 text-emerald-400">CONFIRMED</option>
                           <option value="COMPLETED" className="bg-zinc-950 text-indigo-400">COMPLETED</option>
@@ -1170,10 +1517,10 @@ export default function PsychologistDashboard({ setView }) {
                       <div className="pt-1.5 flex items-center gap-2 flex-wrap">
                         <span className="text-[9px] uppercase tracking-wider font-extrabold text-zinc-500">Meeting Room:</span>
                         {booking.meetLink ? (
-                          <a 
-                            href={booking.meetLink} 
-                            target="_blank" 
-                            rel="noopener noreferrer" 
+                          <a
+                            href={booking.meetLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="text-[10px] font-bold text-white hover:text-brand transition flex items-center gap-1.5 underline truncate max-w-[200px]"
                           >
                             <Link className="w-3.5 h-3.5 text-indigo-400 shrink-0" /> {booking.meetLink}
@@ -1189,7 +1536,7 @@ export default function PsychologistDashboard({ setView }) {
                       {booking.status === 'COMPLETED' && (
                         <div className="pt-3 mt-2 border-t border-zinc-900 space-y-2 w-full max-w-xl">
                           <span className="text-[9px] uppercase tracking-wider font-extrabold text-zinc-505 block">Session Feedback & Diagnostic Notes:</span>
-                          
+
                           {editingFeedbackId === booking.id ? (
                             <div className="space-y-2">
                               <textarea
@@ -1246,8 +1593,8 @@ export default function PsychologistDashboard({ setView }) {
                       {editingBookingId === booking.id ? (
                         <div className="flex flex-col gap-1.5 w-full sm:w-auto">
                           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
-                            <input 
-                              type="text" 
+                            <input
+                              type="text"
                               placeholder="https://meet.google.com/abc-defg-hij"
                               value={meetLinkInput}
                               onChange={(e) => {
@@ -1257,13 +1604,13 @@ export default function PsychologistDashboard({ setView }) {
                               className="px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 text-white text-xs rounded-lg outline-none w-full sm:w-[240px] focus:border-brand"
                             />
                             <div className="flex gap-2">
-                              <button 
+                              <button
                                 onClick={() => saveMeetLink(booking.id)}
                                 className="px-3 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg text-[9px] font-black uppercase tracking-widest cursor-pointer shadow-xs border-none"
                               >
                                 Save
                               </button>
-                              <button 
+                              <button
                                 onClick={() => setEditingBookingId(null)}
                                 className="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-lg text-[9px] font-black uppercase tracking-widest cursor-pointer border-none"
                               >
@@ -1313,6 +1660,131 @@ export default function PsychologistDashboard({ setView }) {
 
         </div>
       </div>
+
+      {/* ── COUNSELLOR PROFILE DRAWER ──────────────────────────────── */}
+      {isProfileDrawerOpen && (
+        <div className="fixed inset-0 z-[60] flex">
+          {/* Backdrop */}
+          <div
+            className="flex-1 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
+            onClick={() => setIsProfileDrawerOpen(false)}
+          />
+          {/* Drawer panel */}
+          <div className="w-80 bg-zinc-900 border-l border-zinc-800 h-full overflow-y-auto animate-in slide-in-from-right duration-300 flex flex-col">
+            {/* Header */}
+            <div className="flex items-center justify-between px-6 py-5 border-b border-zinc-800">
+              <div>
+                <h3 className="text-sm font-bold text-white uppercase tracking-wider font-header font-black">My Profile</h3>
+                <p className="text-[10px] text-zinc-500 mt-0.5">Clinical Staff Profile</p>
+              </div>
+              <button
+                onClick={() => setIsProfileDrawerOpen(false)}
+                className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition cursor-pointer border-none bg-transparent"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Avatar + Name */}
+            <div className="px-6 py-6 flex flex-col items-center text-center space-y-3 border-b border-zinc-800">
+              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-600 to-indigo-400 text-white flex items-center justify-center font-header font-black text-2xl shadow-xl">
+                {(profile?.name || '').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
+              </div>
+              <div>
+                <h2 className="text-base font-bold text-white uppercase tracking-wide font-header font-black">{profile.name}</h2>
+                <span className="inline-block mt-1 text-[9px] px-2.5 py-1 rounded-full font-black uppercase tracking-widest bg-indigo-950 border border-indigo-900 text-indigo-400 font-mono">
+                  Consultant Psychologist
+                </span>
+              </div>
+            </div>
+
+            {/* Profile Details */}
+            <div className="px-6 py-5 space-y-4 flex-1">
+              <p className="text-[9px] font-black uppercase tracking-widest text-zinc-500 font-mono">Professional Details</p>
+              <div className="bg-zinc-955/60 rounded-xl p-4 space-y-3 border border-zinc-800">
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center shrink-0 mt-0.5">
+                    <Mail className="w-3.5 h-3.5 text-indigo-400" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[8px] font-bold uppercase tracking-wider text-zinc-500 font-mono">Email Address</p>
+                    <p className="text-xs text-white font-semibold truncate">{user?.email}</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center shrink-0 mt-0.5">
+                    <Award className="w-3.5 h-3.5 text-indigo-400" />
+                  </div>
+                  <div>
+                    <p className="text-[8px] font-bold uppercase tracking-wider text-zinc-500 font-mono">Education</p>
+                    <p className="text-xs text-white font-semibold">{profile.education}</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center shrink-0 mt-0.5">
+                    <Shield className="w-3.5 h-3.5 text-indigo-400" />
+                  </div>
+                  <div>
+                    <p className="text-[8px] font-bold uppercase tracking-wider text-zinc-500 font-mono">Session Fee</p>
+                    <p className="text-xs text-white font-semibold">₹{profile.price} / Hour</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center shrink-0 mt-0.5">
+                    <Globe className="w-3.5 h-3.5 text-indigo-400" />
+                  </div>
+                  <div>
+                    <p className="text-[8px] font-bold uppercase tracking-wider text-zinc-500 font-mono">Languages</p>
+                    <p className="text-xs text-white font-semibold">{profile.lang}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Specialties */}
+              {profile.specialties && (
+                <div className="space-y-2">
+                  <p className="text-[9px] font-black uppercase tracking-widest text-zinc-500 font-mono">Specialties</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {profile.specialties.split(',').map((s, i) => (
+                      <span key={i} className="text-[9px] px-2 py-1 bg-indigo-955 border border-indigo-900 text-indigo-300 rounded-full font-semibold font-mono">
+                        {s.trim()}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Drawer Footer */}
+            <div className="px-6 py-5 border-t border-zinc-800 space-y-2">
+              <button
+                onClick={() => { handleNavClick('profile'); setIsProfileDrawerOpen(false); }}
+                className="w-full py-2.5 border border-zinc-700 hover:border-indigo-500 text-zinc-300 hover:text-white font-bold text-[9px] uppercase tracking-widest rounded-lg flex items-center justify-center gap-1.5 transition-colors cursor-pointer bg-zinc-900"
+              >
+                <Edit className="w-3.5 h-3.5 text-brand" /> Edit Profile
+              </button>
+              <button
+                onClick={() => { setIsProfileDrawerOpen(false); setIsLogoutConfirmOpen(true); }}
+                className="w-full py-2.5 border border-rose-900/50 hover:border-rose-600 text-rose-500 bg-rose-955/20 hover:bg-rose-900 hover:text-white font-bold text-[9px] uppercase tracking-widest rounded-lg flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+              >
+                <LogOut className="w-3.5 h-3.5" /> Sign Out
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── LOGOUT CONFIRMATION ─────────────────────────────────────── */}
+      <LogoutConfirmModal
+        isOpen={isLogoutConfirmOpen}
+        onConfirm={() => {
+          setIsLogoutConfirmOpen(false);
+          logout();
+          window.location.hash = '#/';
+        }}
+        onCancel={() => setIsLogoutConfirmOpen(false)}
+        theme="dark"
+      />
 
     </div>
   );

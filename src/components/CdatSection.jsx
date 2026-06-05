@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Check, ArrowRight, Copy } from 'lucide-react';
+import { ArrowRight, Copy } from 'lucide-react';
 
 export default function CdatSection({ setView }) {
   const [groupRegName, setGroupRegName] = useState('');
@@ -168,7 +168,7 @@ export default function CdatSection({ setView }) {
                       >
                         {copied ? (
                           <>
-                            <Check className="w-3.5 h-3.5 text-emerald-600" /> Copied!
+                            Copied!
                           </>
                         ) : (
                           <>

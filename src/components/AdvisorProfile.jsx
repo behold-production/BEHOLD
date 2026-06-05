@@ -7,61 +7,100 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
   }, [advisorId]);
 
   const getDynamicAdvisorDetails = (id) => {
-    const baseAdvisors = [
-      { id: 't1', name: 'Josina Joseph', role: 'Consultant Psychologist', specialties: ['Mental Health Concerns', 'Anger & Emotional Regulation'], hours: 6000, lang: 'Malayalam', price: 1500, nextAvailable: '15 mins', education: 'MSc Psychology, PG Diploma in Counselling', bio: 'Josina is a compassionate consultant psychologist with over 6000+ hours of clinical experience. She specializes in helping individuals navigate complex emotional landscapes, develop healthier coping mechanisms, and overcome deep-seated anger issues. Her approach is rooted in empathy and evidence-based therapeutic practices.', type: 'counselling' },
-      { id: 't2', name: 'Muhammed Niyas S H', role: 'Consultant Psychologist', specialties: ['Anxiety Stress & Panic', 'Depression & Mood Concerns', 'Relationship'], hours: 1000, lang: 'Malayalam', price: 1250, nextAvailable: 'Today at 7:00 PM', education: 'MPhil Clinical Psychology', bio: 'Muhammed specializes in cognitive behavioral approaches to managing severe anxiety and depressive disorders. He has a keen focus on relationship dynamics, helping couples and individuals find harmony and understanding in their interpersonal connections.', type: 'counselling' },
-      { id: 't3', name: 'Jahnavi Navami Rajesh', role: 'Clinical Psychologist', specialties: ['Relationship & Marital Issues', 'Anxiety Stress & Panic'], hours: 250, lang: 'Malayalam', price: 1000, nextAvailable: 'Today at 7:00 PM', education: 'MA Clinical Psychology', bio: 'Jahnavi is dedicated to fostering emotional resilience. She creates a warm, non-judgmental space for clients struggling with panic attacks and relationship stressors, guiding them towards a more centered and peaceful life.', type: 'counselling' },
-      { id: 't4', name: 'Hana Anvar M P', role: 'Career Counsellor', specialties: ['Work Career & Academic Concerns', 'Anger & Emotional'], hours: 400, lang: 'Malayalam', price: 1000, nextAvailable: 'Today at 7:00 PM', education: 'MSc Applied Psychology', bio: 'With a strong background in academic and career counseling, Hana helps young adults and professionals overcome burnout, navigate career transitions, and manage the intense emotions that often accompany high-pressure environments.', type: 'counselling' },
-      { id: 't5', name: 'Surbinas Rahman V P', role: 'Psychiatrist', specialties: ['Anxiety & Panic', 'Depression & Mood Concerns', 'Relationship & Marital'], hours: 3000, lang: 'Malayalam', price: 2000, nextAvailable: 'Today at 10:00 PM', education: 'MA Psychology, CBT Certified', bio: 'Surbinas brings a wealth of experience in treating mood disorders and complex relationship conflicts. His therapeutic style is collaborative and solution-focused, aiming to empower clients with practical tools for long-term mental wellbeing.', type: 'counselling' },
-      { id: 't6', name: 'Mary Santra Tomy', role: 'Consultant Psychologist', specialties: ['Relationship & Marital Issues', 'Self-Esteem & Personal Growth'], hours: 4000, lang: 'Malayalam', price: 1000, nextAvailable: 'Tomorrow at 12:00 AM', education: 'MSc Counselling Psychology', bio: 'Mary focuses on empowering individuals by rebuilding self-esteem and fostering deep personal growth. She is highly sought after for her expertise in marital counseling, helping couples rebuild trust and improve communication.', type: 'counselling' }
-    ];
-
-    const foundBase = baseAdvisors.find(a => a.id === id);
-    if (foundBase) return foundBase;
-
+    let foundAdvisor = null;
+    
+    // 1. Gather all registered psychologists
+    let registeredPsychologists = [];
     try {
       const users = JSON.parse(localStorage.getItem('behold_users_db') || '[]');
-      const psy = users.find(u => u.id === id && u.role === 'PSYCHOLOGIST');
-      if (psy) {
-        const savedProfile = localStorage.getItem(`behold_advisor_profile_${psy.id}`);
-        let profile = {
-          name: psy.name,
-          role: 'Consultant Psychologist',
-          education: 'MPhil Clinical Psychology',
-          specialties: 'Anxiety Stress & Panic, Depression & Mood Concerns, Relationship',
-          price: 1250,
-          lang: 'Malayalam, English',
-          bio: 'Dedicated consultant psychologist.'
-        };
-        
-        if (savedProfile) {
-          try {
-            profile = { ...profile, ...JSON.parse(savedProfile) };
-          } catch (e) {}
-        }
-        
-        const specialtiesArray = typeof profile.specialties === 'string'
-          ? profile.specialties.split(',').map(s => s.trim()).filter(Boolean)
-          : profile.specialties || [];
-
-        return {
-          id: psy.id,
-          name: profile.name || psy.name,
-          role: profile.role || 'Consultant Psychologist',
-          specialties: specialtiesArray,
-          hours: 0,
-          lang: profile.lang || 'Malayalam, English',
-          price: Number(profile.price) || 1250,
-          nextAvailable: 'Available Today',
-          education: profile.education || 'MPhil Clinical Psychology',
-          bio: profile.bio || 'Dedicated consultant psychologist.',
-          type: 'counselling'
-        };
-      }
+      registeredPsychologists = users.filter(u => u.role === 'PSYCHOLOGIST' && u.verified !== false);
     } catch (e) {
-      console.error("Failed to resolve dynamic advisor profile details", e);
+      console.error("Failed to load registered users", e);
     }
-    return null;
+
+    // 2. Find matching psychologist
+    const psy = registeredPsychologists.find(u => u.id === id);
+    if (psy) {
+      foundAdvisor = {
+        id: psy.id,
+        name: psy.name,
+        role: 'Consultant Psychologist',
+        specialties: ['Anxiety Stress & Panic', 'Depression & Mood Concerns', 'Relationship'],
+        hours: 0,
+        lang: 'English',
+        price: 1200,
+        nextAvailable: 'Available Today',
+        education: 'MPhil Clinical Psychology',
+        bio: 'Dedicated consultant psychologist.',
+        type: 'counselling'
+      };
+    }
+
+    // 3. Resolve profile details dynamically
+    if (foundAdvisor) {
+      const savedProfile = localStorage.getItem(`behold_advisor_profile_${foundAdvisor.id}`);
+      if (savedProfile) {
+        try {
+          const profile = JSON.parse(savedProfile);
+          const specialtiesArray = typeof profile.specialties === 'string'
+            ? profile.specialties.split(',').map(s => s.trim()).filter(Boolean)
+            : profile.specialties || foundAdvisor.specialties;
+
+          foundAdvisor.name = profile.name || foundAdvisor.name;
+          foundAdvisor.role = profile.role || foundAdvisor.role;
+          foundAdvisor.education = profile.education || foundAdvisor.education;
+          foundAdvisor.specialties = specialtiesArray;
+          foundAdvisor.price = (profile.price !== undefined && profile.price !== '') ? Number(profile.price) : foundAdvisor.price;
+          foundAdvisor.lang = profile.lang || foundAdvisor.lang;
+          foundAdvisor.bio = profile.bio || foundAdvisor.bio;
+          foundAdvisor.defaultMeetLink = profile.defaultMeetLink || '';
+          if (profile.hours !== undefined && profile.hours !== '') {
+            foundAdvisor.hours = Number(profile.hours);
+          }
+        } catch (e) {
+          console.error("Error parsing saved profile details", e);
+        }
+      }
+
+      // 4. Dynamically append completed booking hours to advisor hours
+      const isSessionCompleted = (booking) => {
+        if (booking.status === 'CANCELLED') return false;
+        if (booking.status === 'COMPLETED') return true;
+        
+        if (booking.status === 'CONFIRMED') {
+          try {
+            const [year, month, day] = booking.date.split('-').map(Number);
+            const timeParts = booking.time.split(' ');
+            const [hoursStr, minutesStr] = timeParts[0].split(':');
+            let hours = Number(hoursStr);
+            const minutes = Number(minutesStr);
+            const meridiem = timeParts[1];
+            
+            if (meridiem === 'PM' && hours < 12) hours += 12;
+            if (meridiem === 'AM' && hours === 12) hours = 0;
+            
+            const sessionEnd = new Date(year, month - 1, day, hours + 1, minutes);
+            return new Date() > sessionEnd;
+          } catch (e) {
+            console.error("Error checking session completion", e);
+          }
+        }
+        return false;
+      };
+
+      try {
+        const bookings = JSON.parse(localStorage.getItem('behold_booked_sessions') || '[]');
+        const completedCount = bookings.filter(b => 
+          (b.advisorId && b.advisorId === foundAdvisor.id) ||
+          (b.advisorName && b.advisorName.toLowerCase() === foundAdvisor.name.toLowerCase())
+        ).filter(isSessionCompleted).length;
+        foundAdvisor.hours += completedCount;
+      } catch (e) {
+        console.error("Failed to add booking hours to profile details", e);
+      }
+    }
+
+    return foundAdvisor;
   };
 
   const advisor = getDynamicAdvisorDetails(advisorId);

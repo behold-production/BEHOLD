@@ -70,53 +70,62 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
   useEffect(() => {
     const getDynamicAdvisorsForBooking = () => {
-      const baseAdvisors = [
-        { id: 't1', name: 'Josina Joseph', role: 'Consultant Psychologist', availability: 'Available Today', type: 'counselling' },
-        { id: 't2', name: 'Muhammed Niyas S H', role: 'Consultant Psychologist', availability: 'Available Today', type: 'counselling' },
-        { id: 't3', name: 'Jahnavi Navami Rajesh', role: 'Consultant Psychologist', availability: 'Available Today', type: 'counselling' },
-        { id: 't4', name: 'Hana Anvar M P', role: 'Consultant Psychologist', availability: 'Available Today', type: 'counselling' },
-        { id: 't5', name: 'Surbinas Rahman V P', role: 'Consultant Psychologist', availability: 'Available Today', type: 'counselling' },
-        { id: 't6', name: 'Mary Santra Tomy', role: 'Consultant Psychologist', availability: 'Available Tomorrow', type: 'counselling' },
-        { id: 'career_1', name: 'Dr. Anjali Menon', role: 'Senior Career Coach', availability: 'Available Today', type: 'career' },
-        { id: 'career_2', name: 'Prof. Mathew Joseph', role: 'Higher Education Advisor', availability: 'Available Tomorrow', type: 'career' }
-      ];
-
+      // 1. Gather all registered psychologists
+      let registeredPsychologists = [];
       try {
         const users = JSON.parse(localStorage.getItem('behold_users_db') || '[]');
-        const psychologists = users.filter(u => u.role === 'PSYCHOLOGIST');
-        
-        psychologists.forEach(psy => {
-          if (baseAdvisors.some(a => a.id === psy.id || a.name.toLowerCase() === psy.name.toLowerCase())) {
-            return;
-          }
-          
-          const savedProfile = localStorage.getItem(`behold_advisor_profile_${psy.id}`);
-          let profile = {
-            name: psy.name,
-            role: 'Consultant Psychologist'
-          };
-          
-          if (savedProfile) {
-            try {
-              profile = { ...profile, ...JSON.parse(savedProfile) };
-            } catch (e) {}
-          }
-          
-          baseAdvisors.push({
-            id: psy.id,
-            name: profile.name || psy.name,
-            role: profile.role || 'Consultant Psychologist',
-            availability: 'Available Today',
-            type: 'counselling'
-          });
-        });
+        registeredPsychologists = users.filter(u => u.role === 'PSYCHOLOGIST' && u.verified !== false);
       } catch (e) {
-        console.error("Failed to load dynamic advisors in booking", e);
+        console.error("Failed to load registered users in booking", e);
       }
-      return baseAdvisors;
+
+      // 2. Build dynamic advisors list
+      const resolvedAdvisors = registeredPsychologists.map(psy => {
+        const adv = {
+          id: psy.id,
+          name: psy.name,
+          role: 'Consultant Psychologist',
+          availability: 'Available Today',
+          type: 'counselling',
+          defaultMeetLink: '',
+          price: 1200
+        };
+
+        const savedProfile = localStorage.getItem(`behold_advisor_profile_${psy.id}`);
+        if (savedProfile) {
+          try {
+            const profile = JSON.parse(savedProfile);
+            return {
+              ...adv,
+              name: profile.name || adv.name,
+              role: profile.role || adv.role,
+              defaultMeetLink: profile.defaultMeetLink || adv.defaultMeetLink || '',
+              price: (profile.price !== undefined && profile.price !== '') ? Number(profile.price) : adv.price
+            };
+          } catch (e) {
+            console.error("Error parsing saved profile details in booking", e);
+          }
+        }
+        return adv;
+      });
+
+      return resolvedAdvisors;
     };
 
     setAdvisors(getDynamicAdvisorsForBooking());
+
+    const handleSync = (e) => {
+      const key = e.key || (e.detail && e.detail.key);
+      if (!key || key === 'behold_users_db' || key === 'behold_booked_sessions' || key.startsWith('behold_advisor_')) {
+        setAdvisors(getDynamicAdvisorsForBooking());
+      }
+    };
+    window.addEventListener('storage', handleSync);
+    window.addEventListener('storage_update', handleSync);
+    return () => {
+      window.removeEventListener('storage', handleSync);
+      window.removeEventListener('storage_update', handleSync);
+    };
   }, []);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -124,6 +133,97 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
   const [isAutofilled, setIsAutofilled] = useState(false);
   
   const { user } = useAuth();
+
+  const getAvailableSlotsForDate = (dateStr, serviceType) => {
+    const defaultSlots = ['09:30 AM', '11:00 AM', '02:00 PM', '04:00 PM'];
+    if (!dateStr) return defaultSlots;
+
+    try {
+      const dayOfWeek = new Date(dateStr).getDay(); // 0 to 6
+      // Load all advisors including dynamic ones
+      const users = JSON.parse(localStorage.getItem('behold_users_db') || '[]');
+      const psychologists = users.filter(u => u.role === 'PSYCHOLOGIST' && u.verified !== false);
+      const allAdvisorsList = psychologists.map(psy => {
+        const adv = {
+          id: psy.id,
+          name: psy.name,
+          type: 'counselling'
+        };
+        const savedProfile = localStorage.getItem(`behold_advisor_profile_${psy.id}`);
+        if (savedProfile) {
+          try {
+            const profile = JSON.parse(savedProfile);
+            adv.role = profile.role || 'Consultant Psychologist';
+            adv.price = (profile.price !== undefined && profile.price !== '') ? Number(profile.price) : 1200;
+          } catch (e) {}
+        }
+        return adv;
+      });
+
+      // Filter advisors matching serviceType
+      const matchingAdvisors = allAdvisorsList.filter(a => a.type === serviceType);
+
+      // Collect union of available slots
+      const activeSlotsSet = new Set();
+
+      matchingAdvisors.forEach(advisor => {
+        const savedAvailability = localStorage.getItem(`behold_advisor_availability_${advisor.id}`);
+        if (savedAvailability) {
+          try {
+            const parsed = JSON.parse(savedAvailability);
+            // Check if day is active
+            const dayActive = parsed.activeDays && parsed.activeDays[dayOfWeek];
+            if (dayActive && parsed.availableSlots && parsed.availableSlots.length > 0) {
+              parsed.availableSlots.forEach(slot => activeSlotsSet.add(slot));
+            }
+          } catch (e) {}
+        }
+      });
+
+      if (activeSlotsSet.size > 0) {
+        const list = Array.from(activeSlotsSet);
+        const parseTimeToMinutes = (timeStr) => {
+          const [time, meridiem] = timeStr.split(' ');
+          let [hours, minutes] = time.split(':').map(Number);
+          if (meridiem === 'PM' && hours !== 12) hours += 12;
+          if (meridiem === 'AM' && hours === 12) hours = 0;
+          return hours * 60 + minutes;
+        };
+        return list.sort((a, b) => parseTimeToMinutes(a) - parseTimeToMinutes(b));
+      }
+
+      return defaultSlots;
+    } catch (err) {
+      console.error("Error generating dynamic slots", err);
+      return defaultSlots;
+    }
+  };
+
+  const getAdvisorAvailabilityStatus = (advisorId, dateStr, timeStr) => {
+    if (!dateStr || !timeStr) return 'Available';
+    const dayOfWeek = new Date(dateStr).getDay();
+
+    const savedAvailability = localStorage.getItem(`behold_advisor_availability_${advisorId}`);
+    if (!savedAvailability) {
+      const defaultSlots = ['09:30 AM', '11:00 AM', '02:00 PM', '04:00 PM'];
+      const isWeekday = dayOfWeek >= 1 && dayOfWeek <= 5;
+      if (isWeekday && defaultSlots.includes(timeStr)) {
+        return 'Available';
+      }
+      return 'Unavailable';
+    }
+
+    try {
+      const parsed = JSON.parse(savedAvailability);
+      const isDayActive = parsed.activeDays && parsed.activeDays[dayOfWeek];
+      const isSlotActive = parsed.availableSlots && parsed.availableSlots.includes(timeStr);
+      if (isDayActive && isSlotActive) {
+        return 'Available';
+      }
+    } catch (e) {}
+
+    return 'Unavailable';
+  };
 
   // History tracking popstate listener
   useEffect(() => {
@@ -158,7 +258,9 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
   // Monitor date/time selections to push advisor selection step
   useEffect(() => {
-    if (selectedDate && selectedTime && !selectedAdvisor) {
+    if (selectedDate && selectedTime) {
+      setSelectedAdvisor(null);
+      setAdvisorConfirmed(false);
       handleStepChange('advisor');
     }
   }, [selectedDate, selectedTime]);
@@ -295,10 +397,11 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
           mode: bookingMode,
           date: selectedDate,
           time: selectedTime,
+          advisorId: selectedAdvisor ? selectedAdvisor.id : '',
           advisorName: selectedAdvisor ? selectedAdvisor.name : 'Unknown Advisor',
           advisorRole: selectedAdvisor ? selectedAdvisor.role : 'Consultant',
           status: 'CONFIRMED',
-          meetLink: '',
+          meetLink: selectedAdvisor ? (selectedAdvisor.defaultMeetLink || '') : '',
           created_at: new Date().toISOString()
         };
 
@@ -406,7 +509,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                 ? 'bg-brand border-brand text-zinc-955 shadow-xs ring-2 ring-brand/10 font-black'
                                 : 'bg-white border-zinc-200 text-zinc-400'
                           }`}>
-                            {isCompleted ? '✓' : idx + 1}
+                            {idx + 1}
                           </div>
                           {idx < 4 && (
                             <div className={`hidden lg:block h-0.5 w-full ml-2 transition-all duration-300 ${
@@ -482,7 +585,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                           <span className="text-[9px] font-extrabold text-brand-dark bg-brand-light border border-brand/20 px-2 py-0.5 rounded tracking-widest uppercase font-mono">1 hour session</span>
                         </label>
                         <div className="grid grid-cols-2 gap-2 mt-1">
-                          {['09:30 AM', '11:00 AM', '02:00 PM', '04:00 PM'].map(time => (
+                          {getAvailableSlotsForDate(selectedDate, bookingService).map(time => (
                             <button
                               key={time}
                               type="button"
@@ -490,9 +593,9 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                 setSelectedTime(time);
                                 if (errors.time) setErrors(prev => ({ ...prev, time: null }));
                               }}
-                              className={`py-2 text-xs font-bold rounded border transition-colors cursor-pointer ${
+                              className={`py-2 px-1 text-xs uppercase font-bold border rounded-lg transition cursor-pointer text-center ${
                                 selectedTime === time 
-                                  ? 'bg-gradient-brand text-zinc-955 shadow-sm border-none font-black' 
+                                  ? 'bg-gradient-brand text-zinc-955 border-none shadow-xs font-black scale-102' 
                                   : 'bg-white border-zinc-200 text-zinc-650 hover:border-brand/50'
                               }`}
                             >
@@ -546,58 +649,81 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                   <div className="space-y-3">
                     <label className="text-zinc-500 uppercase tracking-wide block font-semibold">3. Select Advisor</label>
                     <div className="space-y-2">
-                      {advisors.filter(advisor => advisor.type === bookingService).map((advisor) => (
-                        <div
-                          key={advisor.id}
-                          onClick={() => {
-                            setSelectedAdvisor(advisor);
-                            setAdvisorConfirmed(false);
-                            if (errors.advisor) {
-                              setErrors(prev => ({ ...prev, advisor: null }));
-                            }
-                          }}
-                          className={`p-3 border rounded-lg flex flex-wrap items-center justify-between gap-2.5 cursor-pointer transition ${selectedAdvisor?.id === advisor.id
-                            ? 'bg-brand/5 border-brand shadow-xs'
-                            : 'bg-white border-zinc-200 hover:border-brand/40 hover:bg-zinc-50'
-                            }`}
-                        >
-                          <div>
-                            <h4 className="font-bold text-zinc-900">{advisor.name}</h4>
-                            <p className="text-[10px] text-zinc-500">{advisor.role}</p>
+                      {advisors.filter(advisor => advisor.type === bookingService).map((advisor) => {
+                        const availabilityStatus = getAdvisorAvailabilityStatus(advisor.id, selectedDate, selectedTime);
+                        return (
+                          <div
+                            key={advisor.id}
+                            onClick={() => {
+                              setSelectedAdvisor(advisor);
+                              setAdvisorConfirmed(false);
+                              if (errors.advisor) {
+                                setErrors(prev => ({ ...prev, advisor: null }));
+                              }
+                            }}
+                            className={`p-3 border rounded-lg flex flex-wrap items-center justify-between gap-2.5 cursor-pointer transition ${selectedAdvisor?.id === advisor.id
+                              ? 'bg-brand/5 border-brand shadow-xs'
+                              : 'bg-white border-zinc-200 hover:border-brand/40 hover:bg-zinc-50'
+                              }`}
+                          >
+                            <div>
+                              <h4 className="font-bold text-zinc-900">{advisor.name}</h4>
+                              <p className="text-[10px] text-zinc-500">{advisor.role}</p>
+                            </div>
+                            {availabilityStatus === 'Available' ? (
+                              <span className="text-[9px] px-2 py-0.5 rounded bg-emerald-50 text-emerald-750 border border-emerald-200 font-black uppercase shrink-0">Available</span>
+                            ) : (
+                              <span className="text-[9px] px-2 py-0.5 rounded bg-rose-50 text-rose-650 border border-rose-200 font-bold uppercase shrink-0">Unavailable</span>
+                            )}
                           </div>
-                          <span className="text-[9px] px-2 py-0.5 rounded bg-zinc-100 text-zinc-900 border border-zinc-200 font-bold uppercase shrink-0">{advisor.availability}</span>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                     {errors.advisor && <p className="text-[10px] text-red-500 font-semibold">{errors.advisor}</p>}
 
                     {/* Confirm Toggle */}
-                    {selectedAdvisor && (
-                      <div className="p-3 bg-zinc-50 border border-zinc-200 rounded-lg flex items-center justify-between animate-in zoom-in-95 duration-200">
-                        <span className="text-[10px] text-zinc-600 font-semibold">
-                          Confirm <strong>{selectedAdvisor.name}</strong> for this session?
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const nextConfirmed = !advisorConfirmed;
-                            setAdvisorConfirmed(nextConfirmed);
-                            if (nextConfirmed) {
-                              handleStepChange('details');
-                              if (errors.confirm) {
-                                setErrors(prev => ({ ...prev, confirm: null }));
-                              }
-                            }
-                          }}
-                          className={`px-3 py-1 rounded-lg text-[10px] font-bold transition cursor-pointer ${advisorConfirmed
-                            ? 'bg-brand/10 border border-brand/20 text-brand-dark font-extrabold'
-                            : 'bg-gradient-brand text-zinc-955 shadow-sm hover:opacity-95 border-none font-black'
-                            }`}
-                        >
-                          {advisorConfirmed ? '✓ Confirmed' : 'Confirm'}
-                        </button>
-                      </div>
-                    )}
+                    {selectedAdvisor && (() => {
+                      const isSelectedAdvisorAvailable = getAdvisorAvailabilityStatus(selectedAdvisor.id, selectedDate, selectedTime) === 'Available';
+                      return (
+                        <div className="p-3 bg-zinc-50 border border-zinc-200 rounded-lg flex flex-col gap-2.5 animate-in zoom-in-95 duration-200 text-left">
+                          <div className="flex items-center justify-between w-full">
+                            <span className="text-[10px] text-zinc-600 font-semibold">
+                              Selected Advisor: <strong>{selectedAdvisor.name}</strong>
+                            </span>
+                            {isSelectedAdvisorAvailable ? (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const nextConfirmed = !advisorConfirmed;
+                                  setAdvisorConfirmed(nextConfirmed);
+                                  if (nextConfirmed) {
+                                    handleStepChange('details');
+                                    if (errors.confirm) {
+                                      setErrors(prev => ({ ...prev, confirm: null }));
+                                    }
+                                  }
+                                }}
+                                className={`px-3 py-1 rounded-lg text-[10px] font-bold transition cursor-pointer ${advisorConfirmed
+                                  ? 'bg-brand/10 border border-brand/20 text-brand-dark font-extrabold'
+                                  : 'bg-gradient-brand text-zinc-955 shadow-sm hover:opacity-95 border-none font-black'
+                                  }`}
+                              >
+                                {advisorConfirmed ? 'Confirmed' : 'Confirm'}
+                              </button>
+                            ) : (
+                              <span className="text-[9px] px-2.5 py-1 rounded bg-rose-50 border border-rose-200 text-rose-600 font-black uppercase tracking-wide shrink-0">
+                                Unavailable
+                              </span>
+                            )}
+                          </div>
+                          {!isSelectedAdvisorAvailable && (
+                            <div className="p-3 bg-rose-50/50 border border-rose-200/60 rounded-lg text-[10px] text-rose-900 font-medium">
+                              <strong>{selectedAdvisor.name}</strong> is not available at {selectedTime} on {selectedDate}. Please select another time slot or advisor to proceed.
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
                     {errors.confirm && <p className="text-[10px] text-red-500 font-semibold">{errors.confirm}</p>}
                   </div>
                 </div>

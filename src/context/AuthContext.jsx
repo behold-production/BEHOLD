@@ -10,29 +10,73 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const registeredUsers = JSON.parse(localStorage.getItem('behold_users_db') || '[]');
     
-    // Seed standard accounts
+    // Seed standard accounts (Super Admin only)
     const seedAccounts = [
-      { id: 'u_student_1', name: 'Albin Siby', email: 'student@behold.com', password: 'student123', role: 'USER' },
-      { id: 'u_psy_1', name: 'Muhammed Niyas S H', email: 'niyas@behold.com', password: 'niyas123', role: 'PSYCHOLOGIST' },
       { id: 'u_admin_1', name: 'Super Admin', email: 'admin@behold.com', password: 'admin123', role: 'ADMIN' }
     ];
 
     let dbUpdated = false;
+
+    // Remove stale seed accounts if present
+    const blacklistedEmails = [
+      'student@behold.com',
+      'josina@behold.com',
+      'niyas@behold.com',
+      'jahnavi@behold.com',
+      'hana@behold.com',
+      'surbinas@behold.com',
+      'mary@behold.com',
+      'anjali@behold.com',
+      'mathew@behold.com'
+    ];
+    let filteredUsers = registeredUsers.filter(u => !blacklistedEmails.includes(u.email));
+    if (filteredUsers.length !== registeredUsers.length) {
+      dbUpdated = true;
+    }
+    
+    // Update existing users in local storage if they are missing status/verified fields
+    let updatedUsers = filteredUsers.map(u => {
+      let modified = false;
+      if (u.role === 'USER' && !u.status) {
+        u.status = 'ACTIVE';
+        modified = true;
+      }
+      if (u.role === 'PSYCHOLOGIST' && u.verified === undefined) {
+        u.verified = true;
+        modified = true;
+      }
+      if (modified) dbUpdated = true;
+      return u;
+    });
+
     seedAccounts.forEach(account => {
-      if (!registeredUsers.some(u => u.email === account.email)) {
-        registeredUsers.push(account);
+      const existingIdx = updatedUsers.findIndex(u => u.email === account.email);
+      if (existingIdx !== -1) {
+        if (updatedUsers[existingIdx].id !== account.id) {
+          updatedUsers[existingIdx].id = account.id;
+          dbUpdated = true;
+        }
+      } else {
+        updatedUsers.push(account);
         dbUpdated = true;
       }
     });
 
     if (dbUpdated) {
-      localStorage.setItem('behold_users_db', JSON.stringify(registeredUsers));
+      localStorage.setItem('behold_users_db', JSON.stringify(updatedUsers));
     }
 
     const savedUser = localStorage.getItem('behold_auth_user');
     if (savedUser) {
       try {
-        setUser(JSON.parse(savedUser));
+        const parsedSavedUser = JSON.parse(savedUser);
+        // If the saved user was a blacklisted seed account, log them out
+        if (blacklistedEmails.includes(parsedSavedUser.email)) {
+          localStorage.removeItem('behold_auth_user');
+          setUser(null);
+        } else {
+          setUser(parsedSavedUser);
+        }
       } catch (e) {
         console.error("Failed to parse saved user", e);
       }
@@ -47,6 +91,10 @@ export function AuthProvider({ children }) {
         const foundUser = registeredUsers.find(u => u.email === email && u.password === password);
         
         if (foundUser) {
+          if (foundUser.status === 'SUSPENDED') {
+            reject(new Error("Your account has been suspended. Please contact support."));
+            return;
+          }
           const authData = { 
             name: foundUser.name, 
             email: foundUser.email, 
@@ -73,7 +121,16 @@ export function AuthProvider({ children }) {
           return;
         }
 
-        const newUser = { id: Date.now().toString(), name, email, password, role, permissions };
+        const newUser = { 
+          id: Date.now().toString(), 
+          name, 
+          email, 
+          password, 
+          role, 
+          permissions,
+          status: role === 'USER' ? 'ACTIVE' : undefined,
+          verified: role === 'PSYCHOLOGIST' ? true : undefined
+        };
         registeredUsers.push(newUser);
         localStorage.setItem('behold_users_db', JSON.stringify(registeredUsers));
 

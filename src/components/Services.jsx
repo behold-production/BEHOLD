@@ -17,60 +17,96 @@ export default function Services({ setView, onBookTherapist }) {
 
   useEffect(() => {
     const getDynamicAdvisors = () => {
-      const baseAdvisors = [
-        { id: 't1', name: 'Josina Joseph', role: 'Consultant Psychologist', specialties: ['Mental Health Concerns', 'Anger & Emotional Regulation'], hours: 6000, lang: 'Malayalam', price: 1500, nextAvailable: '15 mins' },
-        { id: 't2', name: 'Muhammed Niyas S H', role: 'Consultant Psychologist', specialties: ['Anxiety Stress & Panic', 'Depression & Mood Concerns', 'Relationship'], hours: 1000, lang: 'Malayalam', price: 1250, nextAvailable: 'Today at 7:00 PM' },
-        { id: 't3', name: 'Jahnavi Navami Rajesh', role: 'Clinical Psychologist', specialties: ['Relationship & Marital Issues', 'Anxiety Stress & Panic'], hours: 250, lang: 'Malayalam', price: 1000, nextAvailable: 'Today at 7:00 PM' },
-        { id: 't4', name: 'Hana Anvar M P', role: 'Career Counsellor', specialties: ['Work Career & Academic Concerns', 'Anger & Emotional'], hours: 400, lang: 'Malayalam', price: 1000, nextAvailable: 'Today at 7:00 PM' },
-        { id: 't5', name: 'Surbinas Rahman V P', role: 'Psychiatrist', specialties: ['Anxiety & Panic', 'Depression & Mood Concerns', 'Relationship & Marital'], hours: 3000, lang: 'Malayalam', price: 2000, nextAvailable: 'Today at 10:00 PM' },
-        { id: 't6', name: 'Mary Santra Tomy', role: 'Consultant Psychologist', specialties: ['Relationship & Marital Issues', 'Self-Esteem & Personal Growth'], hours: 4000, lang: 'Malayalam', price: 1000, nextAvailable: 'Tomorrow at 12:00 AM' }
-      ];
-
+      // 1. Gather all registered psychologists from behold_users_db
+      let registeredPsychologists = [];
       try {
         const users = JSON.parse(localStorage.getItem('behold_users_db') || '[]');
-        const psychologists = users.filter(u => u.role === 'PSYCHOLOGIST');
+        registeredPsychologists = users.filter(u => u.role === 'PSYCHOLOGIST' && u.verified !== false);
+      } catch (e) {
+        console.error("Failed to load registered users", e);
+      }
+
+      // 2. Build the final advisors list of newly registered psychologists
+      const baseAdvisors = registeredPsychologists.map(psy => {
+        return {
+          id: psy.id,
+          name: psy.name,
+          role: 'Consultant Psychologist',
+          specialties: ['Anxiety Stress & Panic', 'Depression & Mood Concerns', 'Relationship'],
+          hours: 0,
+          lang: 'English',
+          price: 1200,
+          nextAvailable: 'Available Today'
+        };
+      });
+
+      // 3. Resolve profile details for each advisor dynamically
+      const finalAdvisors = baseAdvisors.map(adv => {
+        const savedProfile = localStorage.getItem(`behold_advisor_profile_${adv.id}`);
+        if (savedProfile) {
+          try {
+            const profile = JSON.parse(savedProfile);
+            const specialtiesArray = typeof profile.specialties === 'string'
+              ? profile.specialties.split(',').map(s => s.trim()).filter(Boolean)
+              : profile.specialties || adv.specialties;
+
+            return {
+              ...adv,
+              name: profile.name || adv.name,
+              role: profile.role || adv.role,
+              specialties: specialtiesArray,
+              hours: profile.hours !== undefined && profile.hours !== '' ? Number(profile.hours) : adv.hours,
+              lang: profile.lang || adv.lang,
+              price: (profile.price !== undefined && profile.price !== '') ? Number(profile.price) : adv.price,
+              defaultMeetLink: profile.defaultMeetLink || ''
+            };
+          } catch (e) {
+            console.error("Error parsing profile for advisor", adv.id, e);
+          }
+        }
+        return { ...adv, defaultMeetLink: '' };
+      });
+
+      // 4. Dynamically append completed booking hours to advisor hours
+      const isSessionCompleted = (booking) => {
+        if (booking.status === 'CANCELLED') return false;
+        if (booking.status === 'COMPLETED') return true;
         
-        psychologists.forEach(psy => {
-          if (baseAdvisors.some(a => a.id === psy.id || a.name.toLowerCase() === psy.name.toLowerCase())) {
-            return;
-          }
-          
-          const savedProfile = localStorage.getItem(`behold_advisor_profile_${psy.id}`);
-          let profile = {
-            name: psy.name,
-            role: 'Consultant Psychologist',
-            education: 'MPhil Clinical Psychology',
-            specialties: 'Anxiety Stress & Panic, Depression & Mood Concerns, Relationship',
-            price: 1250,
-            lang: 'Malayalam, English',
-            bio: ''
-          };
-          
-          if (savedProfile) {
-            try {
-              profile = { ...profile, ...JSON.parse(savedProfile) };
-            } catch (e) {}
-          }
-          
-          const specialtiesArray = typeof profile.specialties === 'string'
-            ? profile.specialties.split(',').map(s => s.trim()).filter(Boolean)
-            : profile.specialties || [];
+        if (booking.status === 'CONFIRMED') {
+          try {
+            const [year, month, day] = booking.date.split('-').map(Number);
+            const timeParts = booking.time.split(' ');
+            const [hoursStr, minutesStr] = timeParts[0].split(':');
+            let hours = Number(hoursStr);
+            const minutes = Number(minutesStr);
+            const meridiem = timeParts[1];
             
-          baseAdvisors.push({
-            id: psy.id,
-            name: profile.name || psy.name,
-            role: profile.role || 'Consultant Psychologist',
-            specialties: specialtiesArray,
-            hours: 0,
-            lang: profile.lang || 'Malayalam, English',
-            price: Number(profile.price) || 1250,
-            nextAvailable: 'Available Today'
-          });
+            if (meridiem === 'PM' && hours < 12) hours += 12;
+            if (meridiem === 'AM' && hours === 12) hours = 0;
+            
+            const sessionEnd = new Date(year, month - 1, day, hours + 1, minutes);
+            return new Date() > sessionEnd;
+          } catch (e) {
+            console.error("Error checking session completion", e);
+          }
+        }
+        return false;
+      };
+
+      try {
+        const bookings = JSON.parse(localStorage.getItem('behold_booked_sessions') || '[]');
+        finalAdvisors.forEach(adv => {
+          const completedCount = bookings.filter(b => 
+            (b.advisorId && b.advisorId === adv.id) ||
+            (b.advisorName && b.advisorName.toLowerCase() === adv.name.toLowerCase())
+          ).filter(isSessionCompleted).length;
+          adv.hours = adv.hours + completedCount;
         });
       } catch (e) {
-        console.error("Failed to load dynamic advisors", e);
+        console.error("Failed to dynamically append booking hours to advisors", e);
       }
-      return baseAdvisors;
+
+      return finalAdvisors;
     };
 
     setAdvisors(getDynamicAdvisors());

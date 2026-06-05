@@ -67,6 +67,53 @@ export default function StudentProfile({ setView }) {
     }
   }, []);
 
+  const isSessionCompleted = (booking) => {
+    if (booking.status === 'CANCELLED') return false;
+    if (booking.status === 'COMPLETED') return true;
+    
+    if (booking.status === 'CONFIRMED') {
+      try {
+        const [year, month, day] = booking.date.split('-').map(Number);
+        const timeParts = booking.time.split(' ');
+        const [hoursStr, minutesStr] = timeParts[0].split(':');
+        let hours = Number(hoursStr);
+        const minutes = Number(minutesStr);
+        const meridiem = timeParts[1];
+        
+        if (meridiem === 'PM' && hours < 12) hours += 12;
+        if (meridiem === 'AM' && hours === 12) hours = 0;
+        
+        const sessionEnd = new Date(year, month - 1, day, hours + 1, minutes);
+        return new Date() > sessionEnd;
+      } catch (e) {
+        console.error("Error checking session completion", e);
+      }
+    }
+    return false;
+  };
+
+  const handleCancelSession = (sessionId) => {
+    try {
+      const stored = localStorage.getItem('behold_booked_sessions');
+      let list = [];
+      if (stored) {
+        try { list = JSON.parse(stored); } catch (e) { }
+      }
+      
+      const updated = list.map(b => {
+        if (b.id === sessionId) {
+          return { ...b, status: 'CANCELLED' };
+        }
+        return b;
+      });
+      
+      localStorage.setItem('behold_booked_sessions', JSON.stringify(updated));
+      loadStudentBookings();
+    } catch (err) {
+      console.error("Failed to cancel booking", err);
+    }
+  };
+
   const loadStudentBookings = () => {
     try {
       const stored = localStorage.getItem('behold_booked_sessions');
@@ -75,45 +122,15 @@ export default function StudentProfile({ setView }) {
         try { list = JSON.parse(stored); } catch (e) { }
       }
 
-      // Seed default upcoming sessions if none exists to maintain consistency
-      if (list.length === 0) {
-        list = [
-          {
-            id: 'sb_mock_1',
-            userId: 'u_student_1',
-            userName: 'Albin Siby',
-            email: 'student@behold.com',
-            phone: '8086664001',
-            service: 'counselling',
-            mode: 'ONLINE',
-            date: '2026-06-15',
-            time: '02:00 PM',
-            advisorName: 'Josina Joseph',
-            advisorRole: 'Consultant Psychologist',
-            status: 'CONFIRMED',
-            meetLink: 'https://meet.google.com/abc-defg-hij'
-          },
-          {
-            id: 'sb_mock_2',
-            userId: 'u_student_1',
-            userName: 'Albin Siby',
-            email: 'student@behold.com',
-            phone: '8086664001',
-            service: 'counselling',
-            mode: 'ONLINE',
-            date: new Date().toISOString().split('T')[0], // Today
-            time: '02:00 PM',
-            advisorName: 'Muhammed Niyas S H',
-            advisorRole: 'Consultant Psychologist',
-            status: 'CONFIRMED',
-            meetLink: ''
-          }
-        ];
-        localStorage.setItem('behold_booked_sessions', JSON.stringify(list));
+      // Filter out mock bookings to ensure clean slate
+      const cleanList = list.filter(b => b.id !== 'sb_mock_1' && b.id !== 'sb_mock_2' && b.id !== 'sb_mock_c1');
+      if (cleanList.length !== list.length) {
+        localStorage.setItem('behold_booked_sessions', JSON.stringify(cleanList));
+        list = cleanList;
       }
 
-      const currentStudentId = user?.id || 'u_student_1';
-      const filtered = list.filter(b => b.userId === currentStudentId);
+      const currentStudentId = user?.id || '';
+      const filtered = list.filter(b => b.userId === currentStudentId && b.status !== 'CANCELLED' && !isSessionCompleted(b));
       setBookedSessions(filtered);
     } catch (err) {
       console.error("Failed loading student bookings", err);
@@ -128,39 +145,17 @@ export default function StudentProfile({ setView }) {
         try { list = JSON.parse(stored); } catch (e) { }
       }
 
-      // Filter completed sessions for this student
-      const currentStudentId = user?.id || 'u_student_1';
-      const completedList = list.filter(b => b.userId === currentStudentId && b.status === 'COMPLETED');
-      
-      // Seed default completed session if none exists to maintain the timeline display
-      if (completedList.length === 0) {
-        const defaultCompleted = [
-          {
-            id: 'sb_mock_c1',
-            userId: 'u_student_1',
-            userName: 'Albin Siby',
-            email: 'student@behold.com',
-            phone: '8086664001',
-            service: 'counselling',
-            mode: 'OFFLINE',
-            date: '2026-05-10',
-            time: '11:00 AM',
-            advisorName: 'Muhammed Niyas S H',
-            advisorRole: 'Consultant Psychologist',
-            status: 'COMPLETED',
-            feedback: 'Completed CDAT baseline mapping. Student has strong cognitive scores and lateral creative thinking. Recommend focus stream: Applied Psychology, Design, or Software Engineering.'
-          }
-        ];
-        
-        // Seed database only if mock c1 is not in list
-        if (!list.some(b => b.id === 'sb_mock_c1')) {
-          list.push(defaultCompleted[0]);
-          localStorage.setItem('behold_booked_sessions', JSON.stringify(list));
-        }
-        setCompletedSessions(defaultCompleted);
-      } else {
-        setCompletedSessions(completedList);
+      // Filter out mock bookings to ensure clean slate
+      const cleanList = list.filter(b => b.id !== 'sb_mock_1' && b.id !== 'sb_mock_2' && b.id !== 'sb_mock_c1');
+      if (cleanList.length !== list.length) {
+        localStorage.setItem('behold_booked_sessions', JSON.stringify(cleanList));
+        list = cleanList;
       }
+
+      // Filter completed sessions for this student
+      const currentStudentId = user?.id || '';
+      const completedList = list.filter(b => b.userId === currentStudentId && isSessionCompleted(b));
+      setCompletedSessions(completedList);
     } catch (err) {
       console.error("Failed loading completed sessions", err);
     }
@@ -172,14 +167,19 @@ export default function StudentProfile({ setView }) {
     loadCompletedSessions();
 
     const handleStorageChange = (e) => {
-      if (e.key === 'behold_booked_sessions') {
+      const key = e.key || (e.detail && e.detail.key);
+      if (key === 'behold_booked_sessions') {
         loadStudentBookings();
         loadCompletedSessions();
       }
     };
 
     window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
+    window.addEventListener('storage_update', handleStorageChange);
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('storage_update', handleStorageChange);
+    };
   }, [user]);
 
   // Load test profile (CDAT results) from localStorage
@@ -831,7 +831,7 @@ export default function StudentProfile({ setView }) {
                                 href={meetStatus.link}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex-1 flex items-center justify-center gap-1.5 px-4 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 rounded-lg text-[9px] font-black tracking-widest transition cursor-pointer shadow-sm text-center border-none"
+                                className="flex-grow flex items-center justify-center gap-1.5 px-4 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 rounded-lg text-[9px] font-black tracking-widest transition cursor-pointer shadow-sm text-center border-none"
                               >
                                 <span>{meetStatus.label}</span>
                                 <ExternalLink className="w-3.5 h-3.5" />
@@ -841,7 +841,7 @@ export default function StudentProfile({ setView }) {
                             return (
                               <button
                                 disabled
-                                className="flex-1 flex items-center justify-center gap-1.5 px-4 py-2.5 bg-zinc-100 text-zinc-400 border border-zinc-200 rounded-lg text-[9px] font-bold uppercase tracking-widest cursor-not-allowed text-center"
+                                className="flex-grow flex items-center justify-center gap-1.5 px-4 py-2.5 bg-zinc-100 text-zinc-400 border border-zinc-200 rounded-lg text-[9px] font-bold uppercase tracking-widest cursor-not-allowed text-center"
                                 title={meetStatus.status === 'LOCKED' ? 'Meet link will be active 10 minutes before the scheduled time.' : 'This session has expired or link is pending.'}
                               >
                                 <span>{meetStatus.label}</span>
@@ -851,10 +851,18 @@ export default function StudentProfile({ setView }) {
                           }
                         })()}
                         <button
+                          type="button"
                           onClick={() => window.location.hash = `#/booking`}
-                          className="flex-1 px-4 py-2.5 border border-zinc-200 hover:border-zinc-900 rounded-lg text-[9px] font-black uppercase tracking-widest transition bg-white cursor-pointer text-zinc-900"
+                          className="px-4 py-2.5 border border-zinc-200 hover:border-zinc-900 rounded-lg text-[9px] font-black uppercase tracking-widest transition bg-white cursor-pointer text-zinc-900"
                         >
                           Reschedule
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleCancelSession(session.id)}
+                          className="px-4 py-2.5 bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-600 rounded-lg text-[9px] font-black uppercase tracking-widest transition cursor-pointer text-center"
+                        >
+                          Cancel
                         </button>
                       </div>
                     </div>

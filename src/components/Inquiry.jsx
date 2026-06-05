@@ -177,7 +177,7 @@ export default function Inquiry({ testProfile }) {
 
               {submitStatus === 'success' && (
                 <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg text-center font-bold text-xs">
-                  ✓ Request sent successfully! Our coordinator will contact you shortly.
+                  Request sent successfully! Our coordinator will contact you shortly.
                 </div>
               )}
             </form>
@@ -194,16 +194,28 @@ export default function Inquiry({ testProfile }) {
         <span className="text-[10px] bg-zinc-900 text-white px-3.5 py-1 rounded-md uppercase tracking-wider font-extrabold w-fit block">
           Stay Informed
         </span>
-        <div className="pt-2">
-          <a
-            href="https://wa.me/919497174011"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs font-bold uppercase tracking-widest text-zinc-900 hover:text-white transition flex items-center gap-1.5 border border-zinc-200 px-6 py-3.5 rounded-lg bg-white hover:bg-zinc-900"
-          >
-            <span>Connect with Our Community</span>
-          </a>
-        </div>
+        
+        {/* Load site settings dynamically */}
+        {(() => {
+          const settings = JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
+          const whatsappUrl = settings.whatsapp || "https://wa.me/919497174011";
+          const emailAddr = settings.contactEmail || "support@behold.com";
+          return (
+            <div className="pt-2 space-y-4">
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs font-bold uppercase tracking-widest text-zinc-900 hover:text-white transition flex items-center gap-1.5 border border-zinc-200 px-6 py-3.5 rounded-lg bg-white hover:bg-zinc-900 justify-center"
+              >
+                <span>Connect with Our Community</span>
+              </a>
+              <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider">
+                Or email us directly at: <a href={`mailto:${emailAddr}`} className="text-zinc-900 underline hover:text-brand transition">{emailAddr}</a>
+              </p>
+            </div>
+          );
+        })()}
       </section>
 
     </div>

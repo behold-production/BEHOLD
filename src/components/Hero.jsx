@@ -7,6 +7,31 @@ export default function Hero({ setView, navigateToSection }) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // Load site settings dynamically
+  const settings = JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
+  const rawTitle = settings.heroTitle || "Bridging You \nTo Your {True Growth.}";
+  const heroSub = settings.heroSub || "Professional psychological counseling, aptitude assessment, and career mentorship designed to help individuals thrive with confidence and purpose.";
+
+  const renderTitle = (text) => {
+    const match = text.match(/\{([^}]+)\}/);
+    if (match) {
+      const parts = text.split(match[0]);
+      return (
+        <span className="whitespace-pre-line">
+          {parts[0]}
+          <span className="relative inline-block whitespace-nowrap">
+            <span className="text-gradient">{match[1]}</span>
+            <svg className="absolute left-0 -bottom-2 w-full h-[8px] text-brand-accent pointer-events-none" viewBox="0 0 100 10" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 8C35 3 70 3 98 8" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
+            </svg>
+          </span>
+          {parts[1]}
+        </span>
+      );
+    }
+    return <span className="whitespace-pre-line">{text}</span>;
+  };
+
   return (
     <section
       id="home"
@@ -44,16 +69,10 @@ export default function Hero({ setView, navigateToSection }) {
           {/* Main Title */}
           <div className="space-y-6 flex-1 flex flex-col justify-center items-center lg:items-start mt-4 lg:mt-8">
             <h1 className="text-3xl sm:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-header font-black tracking-tight text-white lg:text-zinc-900 leading-[1.1] uppercase pb-0">
-              Bridging You <br />
-              To Your <span className="relative inline-block whitespace-nowrap">
-                <span className="text-gradient">True Growth.</span>
-                <svg className="absolute left-0 -bottom-2 w-full h-[8px] text-brand-accent pointer-events-none" viewBox="0 0 100 10" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M2 8C35 3 70 3 98 8" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
-                </svg>
-              </span>
+              {renderTitle(rawTitle)}
             </h1>
             <p className="text-zinc-200 lg:text-zinc-600 font-sans text-sm sm:text-base lg:text-base xl:text-lg 2xl:text-xl font-light max-w-lg xl:max-w-xl 2xl:max-w-2xl leading-relaxed pb-4 sm:pb-8">
-              Professional psychological counseling, aptitude assessment, and career mentorship designed to help individuals thrive with confidence and purpose.
+              {heroSub}
             </p>
           </div>
 
