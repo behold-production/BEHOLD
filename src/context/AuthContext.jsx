@@ -100,7 +100,8 @@ export function AuthProvider({ children }) {
             email: foundUser.email, 
             id: foundUser.id, 
             role: foundUser.role || 'USER', 
-            permissions: foundUser.permissions || null 
+            permissions: foundUser.permissions || null,
+            customRoleTitle: foundUser.customRoleTitle || null
           };
           setUser(authData);
           localStorage.setItem('behold_auth_user', JSON.stringify(authData));

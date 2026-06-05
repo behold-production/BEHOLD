@@ -32,7 +32,8 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
         nextAvailable: 'Available Today',
         education: 'MPhil Clinical Psychology',
         bio: 'Dedicated consultant psychologist.',
-        type: 'counselling'
+        type: 'counselling',
+        modes: ['ONLINE', 'OFFLINE', 'DOOR_STEP']
       };
     }
 
@@ -54,12 +55,29 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
           foundAdvisor.lang = profile.lang || foundAdvisor.lang;
           foundAdvisor.bio = profile.bio || foundAdvisor.bio;
           foundAdvisor.defaultMeetLink = profile.defaultMeetLink || '';
+          foundAdvisor.modes = profile.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP'];
           if (profile.hours !== undefined && profile.hours !== '') {
             foundAdvisor.hours = Number(profile.hours);
           }
         } catch (e) {
           console.error("Error parsing saved profile details", e);
         }
+      }
+
+      const savedAvailability = localStorage.getItem(`behold_advisor_availability_${foundAdvisor.id}`);
+      if (savedAvailability) {
+        try {
+          const parsed = JSON.parse(savedAvailability);
+          const daysMap = { 1: 'Mon', 2: 'Tue', 3: 'Wed', 4: 'Thu', 5: 'Fri', 6: 'Sat', 0: 'Sun' };
+          const activeDaysList = Object.keys(parsed.activeDays || {})
+            .filter(d => parsed.activeDays[d])
+            .map(d => daysMap[d]);
+          if (activeDaysList.length > 0) {
+            foundAdvisor.nextAvailable = `Available: ${activeDaysList.join(', ')}`;
+          } else {
+            foundAdvisor.nextAvailable = 'No Active Days';
+          }
+        } catch (e) {}
       }
 
       // 4. Dynamically append completed booking hours to advisor hours
@@ -144,7 +162,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                     Verified Expert
                   </span>
                   <span className="flex items-center gap-1 text-[10px] sm:text-[11px] font-bold text-zinc-500 uppercase">
-                    <MapPin className="w-3.5 h-3.5" /> Online & Doorstep
+                    <MapPin className="w-3.5 h-3.5" /> {advisor.modes ? advisor.modes.map(m => m === 'DOOR_STEP' ? 'Doorstep' : m.charAt(0) + m.slice(1).toLowerCase()).join(' & ') : 'Online & Doorstep'}
                   </span>
                 </div>
                 <h1 className="text-2xl sm:text-3xl md:text-5xl font-header font-black text-zinc-900 tracking-tight leading-none uppercase">

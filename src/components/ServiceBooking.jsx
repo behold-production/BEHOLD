@@ -88,7 +88,8 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
           availability: 'Available Today',
           type: 'counselling',
           defaultMeetLink: '',
-          price: 1200
+          price: 1200,
+          modes: ['ONLINE', 'OFFLINE', 'DOOR_STEP']
         };
 
         const savedProfile = localStorage.getItem(`behold_advisor_profile_${psy.id}`);
@@ -100,7 +101,8 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
               name: profile.name || adv.name,
               role: profile.role || adv.role,
               defaultMeetLink: profile.defaultMeetLink || adv.defaultMeetLink || '',
-              price: (profile.price !== undefined && profile.price !== '') ? Number(profile.price) : adv.price
+              price: (profile.price !== undefined && profile.price !== '') ? Number(profile.price) : adv.price,
+              modes: profile.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP']
             };
           } catch (e) {
             console.error("Error parsing saved profile details in booking", e);
@@ -140,6 +142,35 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
     try {
       const dayOfWeek = new Date(dateStr).getDay(); // 0 to 6
+
+      // If a specific advisor is selected, prioritize their schedule
+      if (selectedAdvisor) {
+        const savedAvailability = localStorage.getItem(`behold_advisor_availability_${selectedAdvisor.id}`);
+        if (savedAvailability) {
+          try {
+            const parsed = JSON.parse(savedAvailability);
+            const dayActive = parsed.activeDays && parsed.activeDays[dayOfWeek];
+            if (dayActive && parsed.availableSlots && parsed.availableSlots.length > 0) {
+              const list = [...parsed.availableSlots];
+              const parseTimeToMinutes = (timeStr) => {
+                const [time, meridiem] = timeStr.split(' ');
+                let [hours, minutes] = time.split(':').map(Number);
+                if (meridiem === 'PM' && hours !== 12) hours += 12;
+                if (meridiem === 'AM' && hours === 12) hours = 0;
+                return hours * 60 + minutes;
+              };
+              return list.sort((a, b) => parseTimeToMinutes(a) - parseTimeToMinutes(b));
+            }
+            return []; // No slots available for this advisor on this day
+          } catch (e) {
+            console.error("Error parsing advisor availability in booking", e);
+          }
+        }
+        // Fallback for default advisor schedule
+        const isWeekday = dayOfWeek >= 1 && dayOfWeek <= 5;
+        return isWeekday ? defaultSlots : [];
+      }
+
       // Load all advisors including dynamic ones
       const users = JSON.parse(localStorage.getItem('behold_users_db') || '[]');
       const psychologists = users.filter(u => u.role === 'PSYCHOLOGIST' && u.verified !== false);
@@ -292,6 +323,9 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
         setBookingService(found.type); // Dynamically set based on advisor type (counselling or career)
         setSelectedAdvisor(found);
         setAdvisorConfirmed(true);
+        if (found.modes && found.modes.length > 0 && !found.modes.includes(bookingMode)) {
+          setBookingMode(found.modes[0]);
+        }
         
         // Auto-scroll to the booking console form
         setTimeout(() => {
@@ -585,23 +619,29 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                           <span className="text-[9px] font-extrabold text-brand-dark bg-brand-light border border-brand/20 px-2 py-0.5 rounded tracking-widest uppercase font-mono">1 hour session</span>
                         </label>
                         <div className="grid grid-cols-2 gap-2 mt-1">
-                          {getAvailableSlotsForDate(selectedDate, bookingService).map(time => (
-                            <button
-                              key={time}
-                              type="button"
-                              onClick={() => {
-                                setSelectedTime(time);
-                                if (errors.time) setErrors(prev => ({ ...prev, time: null }));
-                              }}
-                              className={`py-2 px-1 text-xs uppercase font-bold border rounded-lg transition cursor-pointer text-center ${
-                                selectedTime === time 
-                                  ? 'bg-gradient-brand text-zinc-955 border-none shadow-xs font-black scale-102' 
-                                  : 'bg-white border-zinc-200 text-zinc-650 hover:border-brand/50'
-                              }`}
-                            >
-                              {time}
-                            </button>
-                          ))}
+                          {getAvailableSlotsForDate(selectedDate, bookingService).length > 0 ? (
+                            getAvailableSlotsForDate(selectedDate, bookingService).map(time => (
+                              <button
+                                key={time}
+                                type="button"
+                                onClick={() => {
+                                  setSelectedTime(time);
+                                  if (errors.time) setErrors(prev => ({ ...prev, time: null }));
+                                }}
+                                className={`py-2 px-1 text-xs uppercase font-bold border rounded-lg transition cursor-pointer text-center ${
+                                  selectedTime === time 
+                                    ? 'bg-gradient-brand text-zinc-955 border-none shadow-xs font-black scale-102' 
+                                    : 'bg-white border-zinc-200 text-zinc-650 hover:border-brand/50'
+                                }`}
+                              >
+                                {time}
+                              </button>
+                            ))
+                          ) : (
+                            <p className="text-[10px] text-rose-500 font-bold col-span-2 pt-2 text-center w-full">
+                              No slots available for this therapist on this date.
+                            </p>
+                          )}
                         </div>
                         {errors.time && <p className="text-[10px] text-red-500 font-semibold">{errors.time}</p>}
                       </div>
@@ -627,30 +667,62 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                       <div className="space-y-1">
                         <label className="text-zinc-500 uppercase tracking-wider block text-[10px] font-bold mb-1">Mode of Session</label>
                         <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
-                          {['ONLINE', 'DOOR_STEP', 'OFFLINE'].map((m) => (
-                            <button
-                              type="button"
-                              key={m}
-                              onClick={() => setBookingMode(m)}
-                              className={`py-2 px-1 sm:py-2.5 text-[8px] min-[370px]:text-[10px] uppercase font-bold border rounded-lg transition cursor-pointer ${bookingMode === m
-                                ? 'bg-gradient-brand text-zinc-955 border-none shadow-xs font-black'
-                                : 'bg-white text-zinc-600 border-zinc-200 hover:border-brand/40 hover:text-brand-dark'
+                          {['ONLINE', 'DOOR_STEP', 'OFFLINE'].map((m) => {
+                            const isSupported = !selectedAdvisor || (selectedAdvisor.modes && selectedAdvisor.modes.includes(m));
+                            return (
+                              <button
+                                type="button"
+                                key={m}
+                                disabled={!isSupported}
+                                onClick={() => setBookingMode(m)}
+                                className={`py-2 px-1 sm:py-2.5 text-[8px] min-[370px]:text-[10px] uppercase font-bold border rounded-lg transition cursor-pointer ${
+                                  !isSupported
+                                    ? 'bg-zinc-100 border-zinc-200 text-zinc-300 cursor-not-allowed opacity-40'
+                                    : bookingMode === m
+                                      ? 'bg-gradient-brand text-zinc-955 border-none shadow-xs font-black'
+                                      : 'bg-white text-zinc-600 border-zinc-200 hover:border-brand/40 hover:text-brand-dark'
                                 }`}
-                            >
-                              {m.replace('_', ' ')}
-                            </button>
-                          ))}
+                              >
+                                {m.replace('_', ' ')}
+                              </button>
+                            );
+                          })}
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  {/* Counsellor Profile Select */}
                   <div className="space-y-3">
                     <label className="text-zinc-500 uppercase tracking-wide block font-semibold">3. Select Advisor</label>
                     <div className="space-y-2">
-                      {advisors.filter(advisor => advisor.type === bookingService).map((advisor) => {
+                      {advisors
+                        .filter(advisor => advisor.type === bookingService)
+                        .filter(advisor => !advisor.modes || advisor.modes.includes(bookingMode))
+                        .map((advisor) => {
                         const availabilityStatus = getAdvisorAvailabilityStatus(advisor.id, selectedDate, selectedTime);
+                        
+                        // Get available slots for this specific advisor on the selected date
+                        let advisorSlotsOnDate = [];
+                        if (selectedDate) {
+                          const dayOfWeek = new Date(selectedDate).getDay();
+                          const savedAvailability = localStorage.getItem(`behold_advisor_availability_${advisor.id}`);
+                          if (savedAvailability) {
+                            try {
+                              const parsed = JSON.parse(savedAvailability);
+                              const dayActive = parsed.activeDays && parsed.activeDays[dayOfWeek];
+                              if (dayActive && parsed.availableSlots && parsed.availableSlots.length > 0) {
+                                advisorSlotsOnDate = [...parsed.availableSlots];
+                              }
+                            } catch (e) {}
+                          } else {
+                            // Default slots for weekdays
+                            const isWeekday = dayOfWeek >= 1 && dayOfWeek <= 5;
+                            if (isWeekday) {
+                              advisorSlotsOnDate = ['09:30 AM', '11:00 AM', '02:00 PM', '04:00 PM'];
+                            }
+                          }
+                        }
+
                         return (
                           <div
                             key={advisor.id}
@@ -659,6 +731,9 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                               setAdvisorConfirmed(false);
                               if (errors.advisor) {
                                 setErrors(prev => ({ ...prev, advisor: null }));
+                              }
+                              if (advisor.modes && advisor.modes.length > 0 && !advisor.modes.includes(bookingMode)) {
+                                setBookingMode(advisor.modes[0]);
                               }
                             }}
                             className={`p-3 border rounded-lg flex flex-wrap items-center justify-between gap-2.5 cursor-pointer transition ${selectedAdvisor?.id === advisor.id
@@ -669,6 +744,16 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                             <div>
                               <h4 className="font-bold text-zinc-900">{advisor.name}</h4>
                               <p className="text-[10px] text-zinc-500">{advisor.role}</p>
+                              {selectedDate && (
+                                <p className="text-[9.5px] text-zinc-500 mt-1.5 bg-zinc-50 border border-zinc-150 px-2 py-1 rounded inline-block">
+                                  <span className="font-semibold text-zinc-750">Available Slots:</span>{' '}
+                                  {advisorSlotsOnDate.length > 0 ? (
+                                    <span className="text-brand-dark font-bold">{advisorSlotsOnDate.join(', ')}</span>
+                                  ) : (
+                                    <span className="text-rose-500 font-bold">No slots active on this day</span>
+                                  )}
+                                </p>
+                              )}
                             </div>
                             {availabilityStatus === 'Available' ? (
                               <span className="text-[9px] px-2 py-0.5 rounded bg-emerald-50 text-emerald-750 border border-emerald-200 font-black uppercase shrink-0">Available</span>

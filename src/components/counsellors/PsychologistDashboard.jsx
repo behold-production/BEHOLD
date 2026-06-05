@@ -21,15 +21,16 @@ export default function PsychologistDashboard({ setView }) {
 
   // Profile state
   const [profile, setProfile] = useState({
-    name: user?.name || 'Counsellor Name',
+    name: user?.name || '',
     role: 'Consultant Psychologist',
-    education: 'MPhil Clinical Psychology',
-    specialties: 'Anxiety Stress & Panic, Depression & Mood Concerns, Relationship',
-    price: 1200,
-    lang: 'English',
-    bio: 'Dedicated consultant psychologist specializing in helping clients navigate challenges and improve mental wellbeing.',
+    education: '',
+    specialties: '',
+    price: '',
+    lang: '',
+    bio: '',
     defaultMeetLink: '',
-    hours: 0
+    hours: 0,
+    modes: ['ONLINE', 'OFFLINE', 'DOOR_STEP']
   });
 
   const [isProfileSaved, setIsProfileSaved] = useState(false);
@@ -80,13 +81,14 @@ export default function PsychologistDashboard({ setView }) {
     email: '',
     password: '',
     confirmPassword: '',
-    education: 'MPhil Clinical Psychology',
-    specialties: 'Anxiety Stress & Panic, Depression & Mood Concerns, Relationship',
-    price: 1250,
-    lang: 'Malayalam, English',
-    bio: 'Dedicated consultant psychologist specializing in mood and anxiety therapy.',
+    education: '',
+    specialties: '',
+    price: '',
+    lang: '',
+    bio: '',
     defaultMeetLink: '',
-    hours: 0
+    hours: 0,
+    modes: ['ONLINE', 'OFFLINE', 'DOOR_STEP']
   });
   const [regError, setRegError] = useState('');
   const [regActiveDays, setRegActiveDays] = useState({
@@ -102,6 +104,22 @@ export default function PsychologistDashboard({ setView }) {
   const [regCustomMinute, setRegCustomMinute] = useState('00');
   const [regCustomPeriod, setRegCustomPeriod] = useState('AM');
   const [regSlotError, setRegSlotError] = useState('');
+
+  // Availability time range state
+  const [fromHour, setFromHour] = useState('09');
+  const [fromMinute, setFromMinute] = useState('00');
+  const [fromPeriod, setFromPeriod] = useState('AM');
+  const [toHour, setToHour] = useState('05');
+  const [toMinute, setToMinute] = useState('00');
+  const [toPeriod, setToPeriod] = useState('PM');
+
+  // Registration onboarding time range state
+  const [regFromHour, setRegFromHour] = useState('09');
+  const [regFromMinute, setRegFromMinute] = useState('00');
+  const [regFromPeriod, setRegFromPeriod] = useState('AM');
+  const [regToHour, setRegToHour] = useState('05');
+  const [regToMinute, setRegToMinute] = useState('00');
+  const [regToPeriod, setRegToPeriod] = useState('PM');
 
   const isSessionCompleted = (booking) => {
     if (booking.status === 'CANCELLED') return false;
@@ -138,7 +156,10 @@ export default function PsychologistDashboard({ setView }) {
       if (savedProfile) {
         try {
           const parsed = JSON.parse(savedProfile);
-          setProfile(parsed);
+          setProfile({
+            ...parsed,
+            modes: parsed.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP']
+          });
           if (parsed.name) advisorName = parsed.name;
         } catch (e) { }
       } else {
@@ -269,6 +290,10 @@ export default function PsychologistDashboard({ setView }) {
       setRegError("Education, Specialties, and Bio are required.");
       return;
     }
+    if (!regForm.modes || regForm.modes.length === 0) {
+      setRegError("Please select at least one supported session mode.");
+      return;
+    }
     if (Number(regForm.price) <= 0) {
       setRegError("Hourly price must be greater than 0.");
       return;
@@ -301,7 +326,8 @@ export default function PsychologistDashboard({ setView }) {
         lang: regForm.lang.trim(),
         bio: regForm.bio.trim(),
         defaultMeetLink: regForm.defaultMeetLink.trim(),
-        hours: Number(regForm.hours) || 0
+        hours: Number(regForm.hours) || 0,
+        modes: regForm.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP']
       };
       localStorage.setItem(`behold_advisor_profile_${newId}`, JSON.stringify(newProfile));
 
@@ -343,13 +369,14 @@ export default function PsychologistDashboard({ setView }) {
         email: '',
         password: '',
         confirmPassword: '',
-        education: 'MPhil Clinical Psychology',
-        specialties: 'Anxiety Stress & Panic, Depression & Mood Concerns, Relationship',
-        price: 1250,
-        lang: 'Malayalam, English',
-        bio: 'Dedicated consultant psychologist specializing in mood and anxiety therapy.',
+        education: '',
+        specialties: '',
+        price: '',
+        lang: '',
+        bio: '',
         defaultMeetLink: '',
-        hours: 0
+        hours: 0,
+        modes: ['ONLINE', 'OFFLINE', 'DOOR_STEP']
       });
       setOnboardingStep(1);
       setGateMode('login');
@@ -432,6 +459,73 @@ export default function PsychologistDashboard({ setView }) {
     localStorage.setItem(`behold_advisor_availability_${advisorId}`, JSON.stringify({ activeDays, availableSlots }));
     setIsAvailabilitySaved(true);
     setTimeout(() => setIsAvailabilitySaved(false), 3000);
+  };
+
+  const parseTimeToMinutes = (timeStr) => {
+    const [time, period] = timeStr.split(' ');
+    let [hours, minutes] = time.split(':').map(Number);
+    if (period === 'PM' && hours !== 12) hours += 12;
+    if (period === 'AM' && hours === 12) hours = 0;
+    return hours * 60 + minutes;
+  };
+
+  const formatMinutesToTime = (minutes) => {
+    let hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    const period = hours >= 12 ? 'PM' : 'AM';
+    if (hours > 12) hours -= 12;
+    if (hours === 0) hours = 12;
+    const hourStr = String(hours).padStart(2, '0');
+    const minStr = String(mins).padStart(2, '0');
+    return `${hourStr}:${minStr} ${period}`;
+  };
+
+  const addTimeRangeSlots = (fromStr, toStr, isReg = false) => {
+    const fromMins = parseTimeToMinutes(fromStr);
+    const toMins = parseTimeToMinutes(toStr);
+    if (fromMins >= toMins) {
+      const err = 'Start time must be before end time.';
+      if (isReg) setRegSlotError(err); else setSlotError(err);
+      return;
+    }
+
+    const generated = [];
+    // Generate every 60 minutes (1 hour)
+    for (let m = fromMins; m <= toMins; m += 60) {
+      generated.push(formatMinutesToTime(m));
+    }
+
+    if (isReg) {
+      setRegAllSlots(prev => {
+        const merged = [...prev];
+        generated.forEach(slot => {
+          if (!merged.includes(slot)) merged.push(slot);
+        });
+        return merged;
+      });
+      setRegAvailableSlots(prev => {
+        const merged = [...prev];
+        generated.forEach(slot => {
+          if (!merged.includes(slot)) merged.push(slot);
+        });
+        return merged;
+      });
+    } else {
+      setAllSlots(prev => {
+        const merged = [...prev];
+        generated.forEach(slot => {
+          if (!merged.includes(slot)) merged.push(slot);
+        });
+        return merged;
+      });
+      setAvailableSlots(prev => {
+        const merged = [...prev];
+        generated.forEach(slot => {
+          if (!merged.includes(slot)) merged.push(slot);
+        });
+        return merged;
+      });
+    }
   };
 
   const handleAddCustomSlot = () => {
@@ -784,6 +878,34 @@ export default function PsychologistDashboard({ setView }) {
                       />
                     </div>
 
+                    <div className="space-y-2">
+                      <label className="text-[9px] uppercase tracking-wider font-bold text-zinc-400 block text-left">Supported Session Modes</label>
+                      <div className="flex gap-4 pt-0.5 justify-start text-left">
+                        {['ONLINE', 'OFFLINE', 'DOOR_STEP'].map(mode => {
+                          const isSelected = regForm.modes?.includes(mode);
+                          return (
+                            <label key={mode} className="flex items-center gap-1.5 cursor-pointer text-xs text-white select-none">
+                              <input
+                                type="checkbox"
+                                checked={isSelected}
+                                onChange={(e) => {
+                                  let nextModes = [...(regForm.modes || [])];
+                                  if (e.target.checked) {
+                                    if (!nextModes.includes(mode)) nextModes.push(mode);
+                                  } else {
+                                    nextModes = nextModes.filter(m => m !== mode);
+                                  }
+                                  setRegForm({ ...regForm, modes: nextModes });
+                                }}
+                                className="w-3.5 h-3.5 rounded border-zinc-850 bg-zinc-950 text-brand focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
+                              />
+                              <span>{mode === 'DOOR_STEP' ? 'Doorstep' : mode.charAt(0) + mode.slice(1).toLowerCase()}</span>
+                            </label>
+                          );
+                        })}
+                      </div>
+                    </div>
+
                     <div className="space-y-1">
                       <label className="text-[9px] uppercase tracking-wider font-bold text-zinc-400">Professional Bio</label>
                       <textarea
@@ -859,8 +981,8 @@ export default function PsychologistDashboard({ setView }) {
                                   }
                                 }}
                                 className={`flex-1 py-2.5 border rounded-lg font-black transition cursor-pointer text-[10px] ${exists
-                                  ? 'bg-indigo-950/40 border-indigo-500 text-indigo-350'
-                                  : 'bg-zinc-950 border-zinc-850 text-zinc-555'
+                                  ? 'bg-brand/10 border-brand text-brand'
+                                  : 'bg-zinc-950 border-zinc-850 text-zinc-400 hover:border-zinc-750'
                                   }`}
                               >
                                 {slot}
@@ -883,11 +1005,11 @@ export default function PsychologistDashboard({ setView }) {
                       <label className="text-zinc-400 uppercase tracking-wider font-bold text-[9px] block">Add Custom Timing Slot</label>
                       <div className="flex gap-1.5 items-end">
                         <div className="flex-1 space-y-0.5">
-                          <label className="text-[7.5px] text-zinc-555 uppercase tracking-wider font-bold block">Hour</label>
+                          <label className="text-[7.5px] text-zinc-400 uppercase tracking-wider font-bold block">Hour</label>
                           <select
                             value={regCustomHour}
                             onChange={(e) => setRegCustomHour(e.target.value)}
-                            className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-lg text-[10px] text-white outline-none focus:border-indigo-550 cursor-pointer"
+                            className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-lg text-[10px] text-white outline-none focus:border-brand cursor-pointer"
                           >
                             {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map(h => (
                               <option key={h} value={h}>{h}</option>
@@ -895,11 +1017,11 @@ export default function PsychologistDashboard({ setView }) {
                           </select>
                         </div>
                         <div className="flex-1 space-y-0.5">
-                          <label className="text-[7.5px] text-zinc-555 uppercase tracking-wider font-bold block">Minute</label>
+                          <label className="text-[7.5px] text-zinc-400 uppercase tracking-wider font-bold block">Minute</label>
                           <select
                             value={regCustomMinute}
                             onChange={(e) => setRegCustomMinute(e.target.value)}
-                            className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-lg text-[10px] text-white outline-none focus:border-indigo-550 cursor-pointer"
+                            className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-lg text-[10px] text-white outline-none focus:border-brand cursor-pointer"
                           >
                             {['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55'].map(m => (
                               <option key={m} value={m}>{m}</option>
@@ -907,11 +1029,11 @@ export default function PsychologistDashboard({ setView }) {
                           </select>
                         </div>
                         <div className="flex-1 space-y-0.5">
-                          <label className="text-[7.5px] text-zinc-555 uppercase tracking-wider font-bold block">AM/PM</label>
+                          <label className="text-[7.5px] text-zinc-400 uppercase tracking-wider font-bold block">AM/PM</label>
                           <select
                             value={regCustomPeriod}
                             onChange={(e) => setRegCustomPeriod(e.target.value)}
-                            className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-lg text-[10px] text-white outline-none focus:border-indigo-550 cursor-pointer"
+                            className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-lg text-[10px] text-white outline-none focus:border-brand cursor-pointer"
                           >
                             <option value="AM">AM</option>
                             <option value="PM">PM</option>
@@ -920,12 +1042,102 @@ export default function PsychologistDashboard({ setView }) {
                         <button
                           type="button"
                           onClick={handleAddRegCustomSlot}
-                          className="bg-indigo-950 hover:bg-brand text-brand hover:text-zinc-955 px-3 py-1.5 text-[9px] font-bold uppercase tracking-wider rounded-lg transition-colors border border-indigo-800 hover:border-brand cursor-pointer shrink-0 h-[28.5px] flex items-center justify-center font-header"
+                          className="bg-brand/10 hover:bg-brand text-brand hover:text-zinc-955 px-3 py-1.5 text-[9px] font-bold uppercase tracking-wider rounded-lg transition-colors border border-brand/30 hover:border-brand cursor-pointer shrink-0 h-[28.5px] flex items-center justify-center font-header"
                         >
                           Add Slot
                         </button>
                       </div>
                       {regSlotError && <p className="text-[9px] text-rose-500 font-bold uppercase tracking-wide font-mono mt-1">{regSlotError}</p>}
+                    </div>
+
+                    <div className="space-y-2 border-t border-zinc-800 pt-3 text-left">
+                      <label className="text-zinc-400 uppercase tracking-wider font-bold text-[9px] block">Add Custom Time Range (From / To)</label>
+                      <div className="flex flex-col gap-2">
+                        <div className="flex gap-1.5 items-end">
+                          <span className="text-[8.5px] text-zinc-550 font-bold pb-1.5 uppercase tracking-wide w-8 text-left">From:</span>
+                          <div className="flex-1 space-y-0.5">
+                            <select
+                              value={regFromHour}
+                              onChange={(e) => setRegFromHour(e.target.value)}
+                              className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-lg text-[10px] text-white outline-none focus:border-brand cursor-pointer"
+                            >
+                              {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map(h => (
+                                <option key={h} value={h}>{h}</option>
+                              ))}
+                            </select>
+                          </div>
+                          <div className="flex-1 space-y-0.5">
+                            <select
+                              value={regFromMinute}
+                              onChange={(e) => setRegFromMinute(e.target.value)}
+                              className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-lg text-[10px] text-white outline-none focus:border-brand cursor-pointer"
+                            >
+                              {['00', '15', '30', '45'].map(m => (
+                                <option key={m} value={m}>{m}</option>
+                              ))}
+                            </select>
+                          </div>
+                          <div className="flex-1 space-y-0.5">
+                            <select
+                              value={regFromPeriod}
+                              onChange={(e) => setRegFromPeriod(e.target.value)}
+                              className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-lg text-[10px] text-white outline-none focus:border-brand cursor-pointer"
+                            >
+                              <option value="AM">AM</option>
+                              <option value="PM">PM</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div className="flex gap-1.5 items-end">
+                          <span className="text-[8.5px] text-zinc-555 font-bold pb-1.5 uppercase tracking-wide w-8 text-left">To:</span>
+                          <div className="flex-1 space-y-0.5">
+                            <select
+                              value={regToHour}
+                              onChange={(e) => setRegToHour(e.target.value)}
+                              className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-lg text-[10px] text-white outline-none focus:border-brand cursor-pointer"
+                            >
+                              {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map(h => (
+                                <option key={h} value={h}>{h}</option>
+                              ))}
+                            </select>
+                          </div>
+                          <div className="flex-1 space-y-0.5">
+                            <select
+                              value={regToMinute}
+                              onChange={(e) => setRegToMinute(e.target.value)}
+                              className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-lg text-[10px] text-white outline-none focus:border-brand cursor-pointer"
+                            >
+                              {['00', '15', '30', '45'].map(m => (
+                                <option key={m} value={m}>{m}</option>
+                              ))}
+                            </select>
+                          </div>
+                          <div className="flex-1 space-y-0.5">
+                            <select
+                              value={regToPeriod}
+                              onChange={(e) => setRegToPeriod(e.target.value)}
+                              className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-lg text-[10px] text-white outline-none focus:border-brand cursor-pointer"
+                            >
+                              <option value="AM">AM</option>
+                              <option value="PM">PM</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setRegSlotError('');
+                            const fromStr = `${regFromHour}:${regFromMinute} ${regFromPeriod}`;
+                            const toStr = `${regToHour}:${regToMinute} ${regToPeriod}`;
+                            addTimeRangeSlots(fromStr, toStr, true);
+                          }}
+                          className="w-full mt-1 bg-brand/10 hover:bg-brand text-brand hover:text-zinc-955 py-2 text-[9px] font-bold uppercase tracking-wider rounded-lg transition-colors border border-brand/30 hover:border-brand cursor-pointer flex items-center justify-center font-header"
+                        >
+                          Generate Hourly Slots from Range
+                        </button>
+                      </div>
                     </div>
 
                     {regError && (
@@ -967,7 +1179,7 @@ export default function PsychologistDashboard({ setView }) {
       <div className="absolute bottom-1/3 right-1/4 w-[350px] h-[350px] bg-brand-accent/5 rounded-full blur-3xl pointer-events-none" />
 
       {/* Mobile Top Navbar (Visible only on lg:hidden) */}
-      <div className="lg:hidden flex items-center justify-between bg-zinc-900 border-b border-zinc-800 px-5 py-4 w-full relative z-30">
+      <div className="lg:hidden sticky top-0 z-30 flex items-center justify-between bg-zinc-900 border-b border-zinc-800 px-5 py-4 w-full">
         <div className="flex items-center gap-3">
           {/* Hamburger Menu Icon */}
           <button
@@ -1235,19 +1447,21 @@ export default function PsychologistDashboard({ setView }) {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-left font-medium">
                 <div className="space-y-1.5">
-                  <label className="text-zinc-450 uppercase tracking-wider font-bold">Display Name</label>
+                  <label className="text-zinc-455 uppercase tracking-wider font-bold">Display Name</label>
                   <input
                     type="text"
+                    placeholder="e.g. Dr. Sandra Tomy"
                     value={profile.name}
                     onChange={(e) => setProfile({ ...profile, name: e.target.value })}
-                    className="w-full px-3.5 py-3 bg-zinc-950 border border-zinc-800 text-xs text-white rounded-lg outline-none focus:border-brand"
+                    className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 text-xs text-white rounded-lg outline-none focus:border-brand"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-zinc-450 uppercase tracking-wider font-bold">Education Credentials</label>
+                  <label className="text-zinc-455 uppercase tracking-wider font-bold">Education Credentials</label>
                   <input
                     type="text"
+                    placeholder="e.g. PhD Clinical Psychology"
                     value={profile.education}
                     onChange={(e) => setProfile({ ...profile, education: e.target.value })}
                     className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 text-xs text-white rounded-lg outline-none focus:border-brand"
@@ -1258,6 +1472,7 @@ export default function PsychologistDashboard({ setView }) {
                   <label className="text-zinc-455 uppercase tracking-wider font-bold">Session Fee (INR / Hour)</label>
                   <input
                     type="number"
+                    placeholder="1200"
                     value={profile.price}
                     onChange={(e) => setProfile({ ...profile, price: Number(e.target.value) })}
                     className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 text-xs text-white rounded-lg outline-none focus:border-brand"
@@ -1268,6 +1483,7 @@ export default function PsychologistDashboard({ setView }) {
                   <label className="text-zinc-455 uppercase tracking-wider font-bold">Languages Spoken</label>
                   <input
                     type="text"
+                    placeholder="Malayalam, English, Tamil"
                     value={profile.lang}
                     onChange={(e) => setProfile({ ...profile, lang: e.target.value })}
                     className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 text-xs text-white rounded-lg outline-none focus:border-brand"
@@ -1278,6 +1494,7 @@ export default function PsychologistDashboard({ setView }) {
                   <label className="text-zinc-455 uppercase tracking-wider font-bold">Baseline Therapy Hours Completed</label>
                   <input
                     type="number"
+                    placeholder="0"
                     value={profile.hours || 0}
                     onChange={(e) => setProfile({ ...profile, hours: Number(e.target.value) })}
                     className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 text-xs text-white rounded-lg outline-none focus:border-brand"
@@ -1288,6 +1505,7 @@ export default function PsychologistDashboard({ setView }) {
                   <label className="text-zinc-455 uppercase tracking-wider font-bold">Specialties (comma-separated)</label>
                   <input
                     type="text"
+                    placeholder="Anxiety, Relationship Dynamics, Career Stress"
                     value={profile.specialties}
                     onChange={(e) => setProfile({ ...profile, specialties: e.target.value })}
                     className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 text-xs text-white rounded-lg outline-none focus:border-brand"
@@ -1306,9 +1524,38 @@ export default function PsychologistDashboard({ setView }) {
                 </div>
 
                 <div className="sm:col-span-2 space-y-1.5">
+                  <label className="text-zinc-455 uppercase tracking-wider font-bold block text-left">Supported Session Modes</label>
+                  <div className="flex gap-4 pt-1 justify-start text-left">
+                    {['ONLINE', 'OFFLINE', 'DOOR_STEP'].map(mode => {
+                      const isSelected = profile.modes?.includes(mode);
+                      return (
+                        <label key={mode} className="flex items-center gap-2 cursor-pointer text-xs text-white select-none">
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={(e) => {
+                              let nextModes = [...(profile.modes || [])];
+                              if (e.target.checked) {
+                                if (!nextModes.includes(mode)) nextModes.push(mode);
+                              } else {
+                                nextModes = nextModes.filter(m => m !== mode);
+                              }
+                              setProfile({ ...profile, modes: nextModes });
+                            }}
+                            className="w-4 h-4 rounded border-zinc-850 bg-zinc-950 text-brand focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
+                          />
+                          <span>{mode === 'DOOR_STEP' ? 'Doorstep' : mode.charAt(0) + mode.slice(1).toLowerCase()}</span>
+                        </label>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="sm:col-span-2 space-y-1.5">
                   <label className="text-zinc-455 uppercase tracking-wider font-bold">Professional Biography</label>
                   <textarea
                     rows={5}
+                    placeholder="Describe your clinical expertise and background..."
                     value={profile.bio}
                     onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
                     className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 text-xs text-white rounded-lg outline-none focus:border-brand resize-none"
@@ -1382,7 +1629,7 @@ export default function PsychologistDashboard({ setView }) {
                               }
                             }}
                             className={`flex-1 p-3 border rounded-lg text-center font-black transition cursor-pointer text-xs ${exists
-                              ? 'bg-brand/10 border-brand text-brand-dark'
+                              ? 'bg-brand/10 border-brand text-brand'
                               : 'bg-zinc-950 border-zinc-850 text-zinc-400'
                               }`}
                           >
@@ -1450,6 +1697,97 @@ export default function PsychologistDashboard({ setView }) {
                     </button>
                   </div>
                   {slotError && <p className="text-[9px] text-rose-500 font-bold uppercase tracking-wide font-mono mt-1">{slotError}</p>}
+                </div>
+
+                {/* Custom Time Range Adder */}
+                <div className="space-y-3 pt-3 border-t border-zinc-800">
+                  <label className="text-zinc-400 uppercase tracking-wider font-bold block">Add Custom Time Range (From / To)</label>
+                  <div className="flex flex-col gap-2 max-w-sm">
+                    <div className="flex gap-2 items-end">
+                      <span className="text-[10px] text-zinc-550 font-bold pb-2.5 uppercase tracking-wide w-10 text-left">From:</span>
+                      <div className="flex-1 space-y-1">
+                        <select
+                          value={fromHour}
+                          onChange={(e) => setFromHour(e.target.value)}
+                          className="w-full px-2.5 py-2 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+                        >
+                          {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map(h => (
+                            <option key={h} value={h}>{h}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="flex-1 space-y-1">
+                        <select
+                          value={fromMinute}
+                          onChange={(e) => setFromMinute(e.target.value)}
+                          className="w-full px-2.5 py-2 bg-zinc-955 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+                        >
+                          {['00', '15', '30', '45'].map(m => (
+                            <option key={m} value={m}>{m}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="flex-1 space-y-1">
+                        <select
+                          value={fromPeriod}
+                          onChange={(e) => setFromPeriod(e.target.value)}
+                          className="w-full px-2.5 py-2 bg-zinc-955 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+                        >
+                          <option value="AM">AM</option>
+                          <option value="PM">PM</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2 items-end">
+                      <span className="text-[10px] text-zinc-555 font-bold pb-2.5 uppercase tracking-wide w-10 text-left">To:</span>
+                      <div className="flex-1 space-y-1">
+                        <select
+                          value={toHour}
+                          onChange={(e) => setToHour(e.target.value)}
+                          className="w-full px-2.5 py-2 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+                        >
+                          {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map(h => (
+                            <option key={h} value={h}>{h}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="flex-1 space-y-1">
+                        <select
+                          value={toMinute}
+                          onChange={(e) => setToMinute(e.target.value)}
+                          className="w-full px-2.5 py-2 bg-zinc-955 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+                        >
+                          {['00', '15', '30', '45'].map(m => (
+                            <option key={m} value={m}>{m}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="flex-1 space-y-1">
+                        <select
+                          value={toPeriod}
+                          onChange={(e) => setToPeriod(e.target.value)}
+                          className="w-full px-2.5 py-2 bg-zinc-955 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+                        >
+                          <option value="AM">AM</option>
+                          <option value="PM">PM</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSlotError('');
+                        const fromStr = `${fromHour}:${fromMinute} ${fromPeriod}`;
+                        const toStr = `${toHour}:${toMinute} ${toPeriod}`;
+                        addTimeRangeSlots(fromStr, toStr, false);
+                      }}
+                      className="w-full mt-1 bg-brand/10 hover:bg-brand text-brand hover:text-zinc-955 py-2.5 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-colors border border-brand/30 hover:border-brand cursor-pointer flex items-center justify-center font-header"
+                    >
+                      Generate Hourly Slots from Range
+                    </button>
+                  </div>
                 </div>
               </div>
 
