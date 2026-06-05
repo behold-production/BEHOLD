@@ -439,7 +439,7 @@ export default function StudentProfile({ setView }) {
                         </button>
                       ) : (
                         <button
-                          onClick={() => window.location.hash = '#/sample-test'}
+                          onClick={() => window.spaNavigate('/sample-test')}
                           className="text-[9px] font-black uppercase tracking-widest bg-brand hover:bg-brand-dark text-zinc-955 px-3.5 py-1.5 rounded-lg cursor-pointer transition shadow-xs border-none"
                         >
                           Start Test
@@ -479,7 +479,7 @@ export default function StudentProfile({ setView }) {
                         </button>
                       ) : (
                         <button
-                          onClick={() => window.location.hash = '#/booking'}
+                          onClick={() => window.spaNavigate('/booking')}
                           className="text-[9px] font-black uppercase tracking-widest bg-brand hover:bg-brand-dark text-zinc-955 px-3.5 py-1.5 rounded-lg cursor-pointer transition shadow-xs border-none"
                         >
                           Book Slot
@@ -531,7 +531,7 @@ export default function StudentProfile({ setView }) {
                           <BarChart3 className="w-8 h-8 text-zinc-300 mx-auto" />
                           <p className="text-[10px] text-zinc-505 font-medium">Aptitude Profile not yet created.</p>
                           <button
-                            onClick={() => window.location.hash = '#/sample-test'}
+                            onClick={() => window.spaNavigate('/sample-test')}
                             className="w-full text-[9px] bg-brand hover:bg-brand-dark text-zinc-955 font-black uppercase tracking-widest py-2.5 rounded-lg cursor-pointer transition shadow-xs border-none"
                           >
                             Take CDAT Test
@@ -852,7 +852,7 @@ export default function StudentProfile({ setView }) {
                         })()}
                         <button
                           type="button"
-                          onClick={() => window.location.hash = `#/booking`}
+                          onClick={() => window.spaNavigate('/booking')}
                           className="px-4 py-2.5 border border-zinc-200 hover:border-zinc-900 rounded-lg text-[9px] font-black uppercase tracking-widest transition bg-white cursor-pointer text-zinc-900"
                         >
                           Reschedule
@@ -874,7 +874,7 @@ export default function StudentProfile({ setView }) {
                     <Calendar className="w-8 h-8 text-zinc-350 mx-auto" />
                     <p className="text-zinc-505 font-bold text-xs uppercase tracking-wider">No upcoming booked sessions scheduled.</p>
                     <button
-                      onClick={() => window.location.hash = '#/booking'}
+                      onClick={() => window.spaNavigate('/booking')}
                       className="px-6 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-black uppercase tracking-widest text-[9px] rounded-lg cursor-pointer border-none shadow-sm"
                     >
                       Book a session now
@@ -976,7 +976,7 @@ export default function StudentProfile({ setView }) {
                       </div>
 
                       <button
-                        onClick={() => window.location.hash = '#/sample-test'}
+                        onClick={() => window.spaNavigate('/sample-test')}
                         className="w-full py-3 border border-zinc-200 hover:border-zinc-900 rounded-lg text-[9px] font-black tracking-widest uppercase transition bg-white cursor-pointer text-zinc-900 text-center shadow-xs"
                       >
                         Retake diagnostic profiling
@@ -1008,7 +1008,7 @@ export default function StudentProfile({ setView }) {
                     <BarChart3 className="w-8 h-8 text-zinc-350 mx-auto" />
                     <p className="text-zinc-555 font-bold text-xs uppercase tracking-wider">No CDAT testing history found for this account.</p>
                     <button
-                      onClick={() => window.location.hash = '#/sample-test'}
+                      onClick={() => window.spaNavigate('/sample-test')}
                       className="px-6 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-extrabold tracking-widest uppercase text-[10px] rounded-lg cursor-pointer border-none shadow-sm"
                     >
                       Take Sample Aptitude Test

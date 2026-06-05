@@ -101,7 +101,7 @@ export default function AdminDashboard({ setView }) {
     service: 'counselling',
     mode: 'ONLINE',
     date: new Date().toISOString().split('T')[0],
-    time: '09:30 AM',
+    time: '',
     meetLink: '',
     status: 'CONFIRMED'
   });
@@ -216,8 +216,7 @@ export default function AdminDashboard({ setView }) {
   };
 
   const getAdvisorSlotsForBookingForm = () => {
-    const defaultSlots = ['09:30 AM', '11:00 AM', '02:00 PM', '04:00 PM'];
-    let slots = [...defaultSlots];
+    let slots = [];
     if (bookingForm.advisorId) {
       const saved = localStorage.getItem(`behold_advisor_availability_${bookingForm.advisorId}`);
       if (saved) {
@@ -603,8 +602,8 @@ export default function AdminDashboard({ setView }) {
     setBookingFormError('');
     setBookingFormSuccess('');
 
-    if (!bookingForm.userId || !bookingForm.advisorId || !bookingForm.date) {
-      setBookingFormError("Student, Psychologist and Date are required.");
+    if (!bookingForm.userId || !bookingForm.advisorId || !bookingForm.date || !bookingForm.time) {
+      setBookingFormError("Student, Psychologist, Date and Time Slot are required.");
       return;
     }
 
@@ -655,7 +654,7 @@ export default function AdminDashboard({ setView }) {
       service: 'counselling',
       mode: 'ONLINE',
       date: new Date().toISOString().split('T')[0],
-      time: '09:30 AM',
+      time: '',
       meetLink: '',
       status: 'CONFIRMED'
     });
@@ -678,7 +677,7 @@ export default function AdminDashboard({ setView }) {
       service: booking.service || 'counselling',
       mode: booking.mode || 'ONLINE',
       date: booking.date || '',
-      time: booking.time || '09:30 AM',
+      time: booking.time || '',
       meetLink: booking.meetLink || '',
       status: booking.status || 'CONFIRMED'
     });
@@ -693,8 +692,8 @@ export default function AdminDashboard({ setView }) {
     setBookingFormError('');
     setBookingFormSuccess('');
 
-    if (!bookingForm.date) {
-      setBookingFormError("Date is required.");
+    if (!bookingForm.date || !bookingForm.time) {
+      setBookingFormError("Date and Time Slot are required.");
       return;
     }
 
@@ -1697,10 +1696,22 @@ export default function AdminDashboard({ setView }) {
                       onClick={() => {
                         const firstStudent = usersDb.find(u => u.role === 'USER' || !u.role);
                         const firstPsy = usersDb.find(u => u.role === 'PSYCHOLOGIST');
+                        let firstSlot = '';
+                        if (firstPsy) {
+                          const saved = localStorage.getItem(`behold_advisor_availability_${firstPsy.id}`);
+                          if (saved) {
+                            try {
+                              const parsed = JSON.parse(saved);
+                              if (parsed.availableSlots && parsed.availableSlots.length > 0) {
+                                firstSlot = parsed.availableSlots[0];
+                              }
+                            } catch (err) {}
+                          }
+                        }
                         setBookingForm({
                           id: '', userId: firstStudent?.id || '', advisorId: firstPsy?.id || '',
                           service: 'counselling', mode: 'ONLINE',
-                          date: new Date().toISOString().split('T')[0], time: '09:30 AM',
+                          date: new Date().toISOString().split('T')[0], time: firstSlot,
                           meetLink: '', status: 'CONFIRMED'
                         });
                         setBookingFormError('');
@@ -2387,6 +2398,18 @@ export default function AdminDashboard({ setView }) {
                       onClick={() => {
                         const firstStudent = usersDb.find(u => u.role === 'USER' || !u.role);
                         const firstPsy = usersDb.find(u => u.role === 'PSYCHOLOGIST');
+                        let firstSlot = '';
+                        if (firstPsy) {
+                          const saved = localStorage.getItem(`behold_advisor_availability_${firstPsy.id}`);
+                          if (saved) {
+                            try {
+                              const parsed = JSON.parse(saved);
+                              if (parsed.availableSlots && parsed.availableSlots.length > 0) {
+                                firstSlot = parsed.availableSlots[0];
+                              }
+                            } catch (err) {}
+                          }
+                        }
                         setBookingForm({
                           id: '',
                           userId: firstStudent?.id || '',
@@ -2394,7 +2417,7 @@ export default function AdminDashboard({ setView }) {
                           service: 'counselling',
                           mode: 'ONLINE',
                           date: new Date().toISOString().split('T')[0],
-                          time: '09:30 AM',
+                          time: firstSlot,
                           meetLink: '',
                           status: 'CONFIRMED'
                         });
@@ -3326,7 +3349,20 @@ export default function AdminDashboard({ setView }) {
                   required
                   disabled={isEditBookingOpen}
                   value={bookingForm.advisorId}
-                  onChange={(e) => setBookingForm({ ...bookingForm, advisorId: e.target.value })}
+                  onChange={(e) => {
+                    const nextAdvisorId = e.target.value;
+                    const saved = localStorage.getItem(`behold_advisor_availability_${nextAdvisorId}`);
+                    let firstSlot = '';
+                    if (saved) {
+                      try {
+                        const parsed = JSON.parse(saved);
+                        if (parsed.availableSlots && parsed.availableSlots.length > 0) {
+                          firstSlot = parsed.availableSlots[0];
+                        }
+                      } catch (err) {}
+                    }
+                    setBookingForm({ ...bookingForm, advisorId: nextAdvisorId, time: firstSlot });
+                  }}
                   className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-xs text-white outline-none cursor-pointer"
                 >
                   <option value="" disabled>-- Select psychologist --</option>
@@ -3379,6 +3415,7 @@ export default function AdminDashboard({ setView }) {
                     onChange={(e) => setBookingForm({ ...bookingForm, time: e.target.value })}
                     className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-xs text-white outline-none cursor-pointer"
                   >
+                    <option value="" disabled>-- Select time slot --</option>
                     {getAdvisorSlotsForBookingForm().map(slot => (
                       <option key={slot} value={slot}>{slot}</option>
                     ))}
@@ -4193,7 +4230,7 @@ export default function AdminDashboard({ setView }) {
         onConfirm={() => {
           setIsLogoutConfirmOpen(false);
           logout();
-          window.location.hash = '#/';
+          window.spaNavigate('/');
         }}
         onCancel={() => setIsLogoutConfirmOpen(false)}
         theme="dark"

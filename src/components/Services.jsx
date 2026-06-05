@@ -170,7 +170,7 @@ export default function Services({ setView, onBookTherapist }) {
               if (onBookTherapist) {
                 onBookTherapist('career_1'); // Pre-select a career advisor
               } else {
-                window.location.hash = '#/booking';
+                window.spaNavigate('/booking');
               }
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
@@ -212,7 +212,7 @@ export default function Services({ setView, onBookTherapist }) {
               if (onBookTherapist) {
                 onBookTherapist('c3'); // Pre-select a personal counsellor
               } else {
-                window.location.hash = '#/booking';
+                window.spaNavigate('/booking');
               }
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
@@ -374,7 +374,7 @@ export default function Services({ setView, onBookTherapist }) {
                   
                   <div className="flex gap-2 w-full pt-1">
                     <button 
-                      onClick={() => window.location.hash = `#/advisor/${advisor.id}`}
+                      onClick={() => window.spaNavigate(`/advisor/${advisor.id}`)}
                       className="flex-1 py-2.5 sm:py-3 border border-zinc-200 hover:border-zinc-900 rounded-lg text-[9px] font-black text-zinc-900 uppercase tracking-widest transition-all duration-200 cursor-pointer active:scale-95 text-center bg-white"
                     >
                       Profile
@@ -384,7 +384,7 @@ export default function Services({ setView, onBookTherapist }) {
                         if (onBookTherapist) {
                           onBookTherapist(advisor.id);
                         } else {
-                          window.location.hash = '#/booking';
+                          window.spaNavigate('/booking');
                         }
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                       }}
@@ -462,7 +462,7 @@ export default function Services({ setView, onBookTherapist }) {
                   
                   <div className="flex lg:flex-col gap-2 w-full">
                     <button 
-                      onClick={() => window.location.hash = `#/advisor/${advisor.id}`}
+                      onClick={() => window.spaNavigate(`/advisor/${advisor.id}`)}
                       className="flex-1 py-2 sm:py-2.5 border border-zinc-200 hover:border-zinc-900 rounded-lg text-[9px] font-black text-zinc-900 uppercase tracking-widest transition-all duration-200 cursor-pointer active:scale-95 text-center bg-white"
                     >
                       Profile
@@ -472,7 +472,7 @@ export default function Services({ setView, onBookTherapist }) {
                         if (onBookTherapist) {
                           onBookTherapist(advisor.id);
                         } else {
-                          window.location.hash = '#/booking';
+                          window.spaNavigate('/booking');
                         }
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                       }}

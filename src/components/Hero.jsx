@@ -3,7 +3,7 @@ import { ArrowRight, Compass, HeartPulse } from 'lucide-react';
 
 export default function Hero({ setView, navigateToSection }) {
   const handleBookNowClick = () => {
-    window.location.hash = '#/booking';
+    window.spaNavigate('/booking');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 

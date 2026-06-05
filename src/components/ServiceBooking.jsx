@@ -137,8 +137,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
   const { user } = useAuth();
 
   const getAvailableSlotsForDate = (dateStr, serviceType) => {
-    const defaultSlots = ['09:30 AM', '11:00 AM', '02:00 PM', '04:00 PM'];
-    if (!dateStr) return defaultSlots;
+    if (!dateStr) return [];
 
     try {
       const dayOfWeek = new Date(dateStr).getDay(); // 0 to 6
@@ -166,9 +165,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
             console.error("Error parsing advisor availability in booking", e);
           }
         }
-        // Fallback for default advisor schedule
-        const isWeekday = dayOfWeek >= 1 && dayOfWeek <= 5;
-        return isWeekday ? defaultSlots : [];
+        return [];
       }
 
       // Load all advisors including dynamic ones
@@ -223,10 +220,10 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
         return list.sort((a, b) => parseTimeToMinutes(a) - parseTimeToMinutes(b));
       }
 
-      return defaultSlots;
+      return [];
     } catch (err) {
       console.error("Error generating dynamic slots", err);
-      return defaultSlots;
+      return [];
     }
   };
 
@@ -236,11 +233,6 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
     const savedAvailability = localStorage.getItem(`behold_advisor_availability_${advisorId}`);
     if (!savedAvailability) {
-      const defaultSlots = ['09:30 AM', '11:00 AM', '02:00 PM', '04:00 PM'];
-      const isWeekday = dayOfWeek >= 1 && dayOfWeek <= 5;
-      if (isWeekday && defaultSlots.includes(timeStr)) {
-        return 'Available';
-      }
       return 'Unavailable';
     }
 
@@ -714,12 +706,6 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                 advisorSlotsOnDate = [...parsed.availableSlots];
                               }
                             } catch (e) {}
-                          } else {
-                            // Default slots for weekdays
-                            const isWeekday = dayOfWeek >= 1 && dayOfWeek <= 5;
-                            if (isWeekday) {
-                              advisorSlotsOnDate = ['09:30 AM', '11:00 AM', '02:00 PM', '04:00 PM'];
-                            }
                           }
                         }
 

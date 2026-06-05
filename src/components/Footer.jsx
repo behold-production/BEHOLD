@@ -17,8 +17,8 @@ export default function Footer({ navigateToSection }) {
         
         <div className="flex flex-wrap justify-center gap-6 font-mono text-[10px] uppercase tracking-wider text-zinc-400">
           <button onClick={() => navigateToSection('services')} className="hover:text-brand transition cursor-pointer">Services</button>
-          <button onClick={() => window.location.hash = '#/booking'} className="hover:text-brand transition cursor-pointer">Booking</button>
-          <button onClick={() => window.location.hash = '#/sample-test'} className="hover:text-brand transition cursor-pointer">Sample Test</button>
+          <button onClick={() => window.spaNavigate('/booking')} className="hover:text-brand transition cursor-pointer">Booking</button>
+          <button onClick={() => window.spaNavigate('/sample-test')} className="hover:text-brand transition cursor-pointer">Sample Test</button>
           <button onClick={() => navigateToSection('inquiry')} className="hover:text-brand transition cursor-pointer">Contact</button>
         </div>
 

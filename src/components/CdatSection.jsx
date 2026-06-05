@@ -85,7 +85,7 @@ export default function CdatSection({ setView }) {
             </div>
 
             <button
-              onClick={() => window.location.hash = '#/sample-test'}
+              onClick={() => window.spaNavigate('/sample-test')}
               className="px-6 py-3.5 bg-zinc-900 hover:bg-zinc-800 text-white font-bold text-xs uppercase tracking-widest rounded-lg transition cursor-pointer shadow-sm text-center shrink-0 w-full md:w-auto"
             >
               Sample Test

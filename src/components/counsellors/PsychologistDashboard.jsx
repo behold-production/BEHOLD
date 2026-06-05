@@ -46,12 +46,8 @@ export default function PsychologistDashboard({ setView }) {
     6: false, // Saturday
     0: false  // Sunday
   });
-  const [availableSlots, setAvailableSlots] = useState([
-    '09:30 AM', '11:00 AM', '02:00 PM', '04:00 PM'
-  ]);
-  const [allSlots, setAllSlots] = useState([
-    '09:30 AM', '11:00 AM', '02:00 PM', '04:00 PM'
-  ]);
+  const [availableSlots, setAvailableSlots] = useState([]);
+  const [allSlots, setAllSlots] = useState([]);
   const [customHour, setCustomHour] = useState('09');
   const [customMinute, setCustomMinute] = useState('00');
   const [customPeriod, setCustomPeriod] = useState('AM');
@@ -64,6 +60,7 @@ export default function PsychologistDashboard({ setView }) {
   const [meetLinkError, setMeetLinkError] = useState('');
   const [editingFeedbackId, setEditingFeedbackId] = useState(null);
   const [feedbackInput, setFeedbackInput] = useState('');
+  const [activeBookingTab, setActiveBookingTab] = useState('CONFIRMED'); // CONFIRMED, COMPLETED, CANCELLED
 
   // Login form states
   const [loginEmail, setLoginEmail] = useState('');
@@ -94,12 +91,8 @@ export default function PsychologistDashboard({ setView }) {
   const [regActiveDays, setRegActiveDays] = useState({
     1: true, 2: true, 3: true, 4: true, 5: true, 6: false, 0: false
   });
-  const [regAvailableSlots, setRegAvailableSlots] = useState([
-    '09:30 AM', '11:00 AM', '02:00 PM', '04:00 PM'
-  ]);
-  const [regAllSlots, setRegAllSlots] = useState([
-    '09:30 AM', '11:00 AM', '02:00 PM', '04:00 PM'
-  ]);
+  const [regAvailableSlots, setRegAvailableSlots] = useState([]);
+  const [regAllSlots, setRegAllSlots] = useState([]);
   const [regCustomHour, setRegCustomHour] = useState('09');
   const [regCustomMinute, setRegCustomMinute] = useState('00');
   const [regCustomPeriod, setRegCustomPeriod] = useState('AM');
@@ -307,6 +300,12 @@ export default function PsychologistDashboard({ setView }) {
     setRegError('');
     setIsLoggingIn(true);
 
+    if (!regAvailableSlots || regAvailableSlots.length === 0) {
+      setRegError("Please configure at least one availability slot to complete registration.");
+      setIsLoggingIn(false);
+      return;
+    }
+
     try {
       const registeredUser = await register(
         regForm.name.trim(),
@@ -455,6 +454,11 @@ export default function PsychologistDashboard({ setView }) {
 
   const handleAvailabilitySave = (e) => {
     e.preventDefault();
+    setSlotError('');
+    if (!availableSlots || availableSlots.length === 0) {
+      setSlotError("Please configure at least one availability slot to save.");
+      return;
+    }
     const advisorId = user?.id || 't2';
     localStorage.setItem(`behold_advisor_availability_${advisorId}`, JSON.stringify({ activeDays, availableSlots }));
     setIsAvailabilitySaved(true);
@@ -982,7 +986,7 @@ export default function PsychologistDashboard({ setView }) {
                                 }}
                                 className={`flex-1 py-2.5 border rounded-lg font-black transition cursor-pointer text-[10px] ${exists
                                   ? 'bg-brand/10 border-brand text-brand'
-                                  : 'bg-zinc-950 border-zinc-850 text-zinc-400 hover:border-zinc-750'
+                                  : 'bg-zinc-955 border-zinc-850 text-zinc-400 hover:border-zinc-750'
                                   }`}
                               >
                                 {slot}
@@ -998,6 +1002,11 @@ export default function PsychologistDashboard({ setView }) {
                             </div>
                           );
                         })}
+                        {regAllSlots.length === 0 && (
+                          <div className="col-span-2 py-4 bg-zinc-955/40 border border-dashed border-zinc-850 rounded-xl text-zinc-500 italic text-[10px] text-center w-full">
+                            No timing slots configured. Use the controls below to add custom slots or generate from a time range.
+                          </div>
+                        )}
                       </div>
                     </div>
 
@@ -1630,7 +1639,7 @@ export default function PsychologistDashboard({ setView }) {
                             }}
                             className={`flex-1 p-3 border rounded-lg text-center font-black transition cursor-pointer text-xs ${exists
                               ? 'bg-brand/10 border-brand text-brand'
-                              : 'bg-zinc-950 border-zinc-850 text-zinc-400'
+                              : 'bg-zinc-955 border-zinc-850 text-zinc-400'
                               }`}
                           >
                             {slot}
@@ -1638,7 +1647,7 @@ export default function PsychologistDashboard({ setView }) {
                           <button
                             type="button"
                             onClick={() => handleRemoveSlot(slot)}
-                            className="px-3.5 py-3 bg-zinc-950 border border-zinc-850 hover:bg-rose-955/35 hover:border-rose-900 text-zinc-450 hover:text-rose-400 rounded-lg text-xs font-bold uppercase transition cursor-pointer shrink-0"
+                            className="px-3.5 py-3 bg-zinc-955 border border-zinc-850 hover:bg-rose-955/35 hover:border-rose-900 text-zinc-450 hover:text-rose-400 rounded-lg text-xs font-bold uppercase transition cursor-pointer shrink-0"
                             title="Remove Slot"
                           >
                             Remove
@@ -1646,6 +1655,11 @@ export default function PsychologistDashboard({ setView }) {
                         </div>
                       );
                     })}
+                    {allSlots.length === 0 && (
+                      <div className="col-span-2 py-4 bg-zinc-955/40 border border-dashed border-zinc-850 rounded-xl text-zinc-500 italic text-[10px] text-center w-full">
+                        No timing slots configured. Use the controls below to add custom slots or generate from a time range.
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -1796,6 +1810,10 @@ export default function PsychologistDashboard({ setView }) {
                   <span className="text-[10px] text-emerald-500 font-bold uppercase tracking-wider flex items-center gap-1">
                     Availability Matrix Synchronized!
                   </span>
+                ) : slotError ? (
+                  <span className="text-[10px] text-rose-500 font-bold uppercase tracking-wider font-mono">
+                    {slotError}
+                  </span>
                 ) : <span />}
                 <button
                   type="submit"
@@ -1807,194 +1825,240 @@ export default function PsychologistDashboard({ setView }) {
             </form>
           )}
 
-          {/* WORKSPACE 4: BOOKINGS & GOOGLE MEET LINK UPDATES */}
-          {currentSection === 'bookings' && (
-            <div className="space-y-6 animate-in fade-in duration-200 text-xs text-left">
-              <div className="border-b border-zinc-805 pb-3 flex justify-between items-center">
-                <h3 className="text-sm font-bold uppercase tracking-widest text-zinc-400">Student Booking Details & Rooms</h3>
-                <span className="text-[9px] bg-indigo-950/20 text-indigo-400 border border-indigo-900/30 px-2 py-0.5 rounded font-black tracking-wider uppercase font-mono">{bookings.length} Booked</span>
-              </div>
+                  {currentSection === 'bookings' && (() => {
+            const confirmedCount = bookings.filter(b => !b.status || b.status === 'CONFIRMED' || b.status === 'PENDING').length;
+            const completedCount = bookings.filter(b => b.status === 'COMPLETED').length;
+            const cancelledCount = bookings.filter(b => b.status === 'CANCELLED').length;
 
-              <div className="space-y-4">
-                {bookings.map((booking) => (
-                  <div
-                    key={booking.id}
-                    className="bg-zinc-950 border border-zinc-850 rounded-xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-5 relative overflow-hidden"
-                  >
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <select
-                          value={booking.status || 'CONFIRMED'}
-                          onChange={(e) => updateBookingStatus(booking.id, e.target.value)}
-                          className={`px-2.5 py-1 border rounded outline-none text-[8.5px] font-black uppercase tracking-wider cursor-pointer transition-all ${booking.status === 'CONFIRMED'
-                            ? 'bg-emerald-955 border-emerald-900/40 text-emerald-455'
-                            : booking.status === 'COMPLETED'
-                              ? 'bg-indigo-955 border-indigo-900/40 text-indigo-400'
-                              : 'bg-rose-955 border-rose-900/40 text-rose-400'
-                            }`}
-                        >
-                          <option value="CONFIRMED" className="bg-zinc-950 text-emerald-400">CONFIRMED</option>
-                          <option value="COMPLETED" className="bg-zinc-950 text-indigo-400">COMPLETED</option>
-                          <option value="CANCELLED" className="bg-zinc-950 text-rose-400">CANCELLED</option>
-                        </select>
-                        <span className="text-[9px] bg-zinc-900 text-white px-2 py-0.5 rounded font-extrabold uppercase font-mono tracking-widest">
-                          {booking.service === 'counselling' ? 'Psychological Session' : 'Career Session'}
+            const filteredBookings = bookings.filter(b => {
+              const status = b.status || 'CONFIRMED';
+              if (activeBookingTab === 'CONFIRMED') {
+                return status === 'CONFIRMED' || status === 'PENDING';
+              }
+              return status === activeBookingTab;
+            });
+
+            return (
+              <div className="space-y-6 animate-in fade-in duration-200 text-xs text-left">
+                <div className="border-b border-zinc-805 pb-3 flex justify-between items-center">
+                  <div>
+                    <h3 className="text-sm font-bold uppercase tracking-widest text-zinc-400">Student Booking Details & Rooms</h3>
+                    <p className="text-[10px] text-zinc-500 mt-1">Manage virtual consultations, update appointment statuses, and log clinic summaries.</p>
+                  </div>
+                  <span className="text-[9px] bg-indigo-950/20 text-indigo-400 border border-indigo-900/30 px-2 py-0.5 rounded font-black tracking-wider uppercase font-mono">{bookings.length} Total</span>
+                </div>
+
+                {/* Tab switcher */}
+                <div className="flex gap-2 p-1.5 bg-zinc-950/60 border border-zinc-850/50 rounded-xl max-w-md backdrop-blur-md">
+                  {[
+                    { id: 'CONFIRMED', label: 'Confirmed', count: confirmedCount },
+                    { id: 'COMPLETED', label: 'Completed', count: completedCount },
+                    { id: 'CANCELLED', label: 'Cancelled', count: cancelledCount }
+                  ].map(tab => {
+                    const isActive = activeBookingTab === tab.id;
+                    return (
+                      <button
+                        key={tab.id}
+                        type="button"
+                        onClick={() => setActiveBookingTab(tab.id)}
+                        className={`flex-1 py-2 rounded-lg text-[9.5px] font-black uppercase tracking-wider transition-all duration-300 cursor-pointer flex items-center justify-center gap-1.5 border ${
+                          isActive
+                            ? 'bg-brand text-zinc-955 border-brand font-black shadow-lg scale-102 shadow-brand/10'
+                            : 'bg-transparent border-transparent text-zinc-500 hover:text-zinc-300'
+                        }`}
+                      >
+                        <span>{tab.label}</span>
+                        <span className={`px-1.5 py-0.5 rounded text-[8.5px] font-mono ${isActive ? 'bg-zinc-955/20 text-zinc-955 font-bold' : 'bg-zinc-900 text-zinc-400 border border-zinc-800'}`}>
+                          {tab.count}
                         </span>
-                        <span className="text-[9px] text-zinc-500 font-bold uppercase tracking-wider">{booking.mode}</span>
-                      </div>
+                      </button>
+                    );
+                  })}
+                </div>
 
-                      <div className="space-y-0.5">
-                        <h4 className="font-header font-black text-sm uppercase text-white">{booking.userName}</h4>
-                        <div className="flex items-center gap-1.5 text-[10px] text-zinc-400 font-semibold">
-                          <Clock className="w-3.5 h-3.5 text-zinc-500" />
-                          <span>{booking.date} at {booking.time}</span>
-                        </div>
-                      </div>
-
-                      {/* Room link status block */}
-                      <div className="pt-1.5 flex items-center gap-2 flex-wrap">
-                        <span className="text-[9px] uppercase tracking-wider font-extrabold text-zinc-500">Meeting Room:</span>
-                        {booking.meetLink ? (
-                          <a
-                            href={booking.meetLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-[10px] font-bold text-white hover:text-brand transition flex items-center gap-1.5 underline truncate max-w-[200px]"
+                <div className="space-y-4">
+                  {filteredBookings.map((booking) => (
+                    <div
+                      key={booking.id}
+                      className="bg-zinc-955 border border-zinc-850 rounded-xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-5 relative overflow-hidden"
+                    >
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <select
+                            value={booking.status || 'CONFIRMED'}
+                            onChange={(e) => updateBookingStatus(booking.id, e.target.value)}
+                            className={`px-2.5 py-1 border rounded outline-none text-[8.5px] font-black uppercase tracking-wider cursor-pointer transition-all ${booking.status === 'CONFIRMED'
+                              ? 'bg-emerald-955 border-emerald-900/40 text-emerald-455'
+                              : booking.status === 'COMPLETED'
+                                ? 'bg-indigo-955 border-indigo-900/40 text-indigo-400'
+                                : 'bg-rose-955 border-rose-900/40 text-rose-400'
+                              }`}
                           >
-                            <Link className="w-3.5 h-3.5 text-indigo-400 shrink-0" /> {booking.meetLink}
-                          </a>
-                        ) : (
-                          <span className="text-[10.5px] font-semibold text-zinc-500 italic flex items-center gap-1">
-                            <AlertCircle className="w-3.5 h-3.5 text-amber-500" /> Link Missing. Access Locked.
+                            <option value="CONFIRMED" className="bg-zinc-950 text-emerald-400">CONFIRMED</option>
+                            <option value="COMPLETED" className="bg-zinc-950 text-indigo-400">COMPLETED</option>
+                            <option value="CANCELLED" className="bg-zinc-950 text-rose-400">CANCELLED</option>
+                          </select>
+                          <span className="text-[9px] bg-zinc-900 text-white px-2 py-0.5 rounded font-extrabold uppercase font-mono tracking-widest">
+                            {booking.service === 'counselling' ? 'Psychological Session' : 'Career Session'}
                           </span>
+                          <span className="text-[9px] text-zinc-500 font-bold uppercase tracking-wider">{booking.mode}</span>
+                        </div>
+
+                        <div className="space-y-0.5">
+                          <h4 className="font-header font-black text-sm uppercase text-white">{booking.userName}</h4>
+                          <div className="flex items-center gap-1.5 text-[10px] text-zinc-400 font-semibold">
+                            <Clock className="w-3.5 h-3.5 text-zinc-500" />
+                            <span>{booking.date} at {booking.time}</span>
+                          </div>
+                        </div>
+
+                        {/* Room link status block */}
+                        <div className="pt-1.5 flex items-center gap-2 flex-wrap">
+                          <span className="text-[9px] uppercase tracking-wider font-extrabold text-zinc-500">Meeting Room:</span>
+                          {booking.meetLink ? (
+                            <a
+                              href={booking.meetLink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-[10px] font-bold text-white hover:text-brand transition flex items-center gap-1.5 underline truncate max-w-[200px]"
+                            >
+                              <Link className="w-3.5 h-3.5 text-indigo-400 shrink-0" /> {booking.meetLink}
+                            </a>
+                          ) : (
+                            <span className="text-[10.5px] font-semibold text-zinc-500 italic flex items-center gap-1">
+                              <AlertCircle className="w-3.5 h-3.5 text-amber-500" /> Link Missing. Access Locked.
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Diagnostic Feedback Editor / Display */}
+                        {booking.status === 'COMPLETED' && (
+                          <div className="pt-3 mt-2 border-t border-zinc-900 space-y-2 w-full max-w-xl">
+                            <span className="text-[9px] uppercase tracking-wider font-extrabold text-zinc-505 block">Session Feedback & Diagnostic Notes:</span>
+
+                            {editingFeedbackId === booking.id ? (
+                              <div className="space-y-2">
+                                <textarea
+                                  value={feedbackInput}
+                                  onChange={(e) => setFeedbackInput(e.target.value)}
+                                  placeholder="Enter session feedback, guidance notes, or key recommendations for the student..."
+                                  rows={3}
+                                  className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 text-white text-xs rounded-lg outline-none focus:border-brand resize-none"
+                                />
+                                <div className="flex gap-2">
+                                  <button
+                                    type="button"
+                                    onClick={() => saveFeedback(booking.id)}
+                                    className="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded text-[8.5px] font-black uppercase tracking-widest cursor-pointer shadow-xs border-none"
+                                  >
+                                    Save Feedback
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => setEditingFeedbackId(null)}
+                                    className="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-white rounded text-[8.5px] font-black uppercase tracking-widest cursor-pointer border-none"
+                                  >
+                                    Cancel
+                                  </button>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="space-y-2">
+                                {booking.feedback ? (
+                                  <p className="text-[11px] text-zinc-300 bg-zinc-900/60 p-2.5 rounded-lg border border-zinc-850/50 italic leading-relaxed font-light">
+                                    "{booking.feedback}"
+                                  </p>
+                                ) : (
+                                  <p className="text-[10px] text-zinc-500 italic">No notes added yet.</p>
+                                )}
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setEditingFeedbackId(booking.id);
+                                    setFeedbackInput(booking.feedback || '');
+                                  }}
+                                  className="text-[9px] font-bold text-brand hover:underline uppercase tracking-wider flex items-center gap-1 cursor-pointer border-none bg-transparent p-0"
+                                >
+                                  {booking.feedback ? 'Edit Feedback' : '+ Add Diagnostic Notes'}
+                                </button>
+                              </div>
+                            )}
+                          </div>
                         )}
                       </div>
 
-                      {/* Diagnostic Feedback Editor / Display */}
-                      {booking.status === 'COMPLETED' && (
-                        <div className="pt-3 mt-2 border-t border-zinc-900 space-y-2 w-full max-w-xl">
-                          <span className="text-[9px] uppercase tracking-wider font-extrabold text-zinc-505 block">Session Feedback & Diagnostic Notes:</span>
-
-                          {editingFeedbackId === booking.id ? (
-                            <div className="space-y-2">
-                              <textarea
-                                value={feedbackInput}
-                                onChange={(e) => setFeedbackInput(e.target.value)}
-                                placeholder="Enter session feedback, guidance notes, or key recommendations for the student..."
-                                rows={3}
-                                className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 text-white text-xs rounded-lg outline-none focus:border-brand resize-none"
+                      {/* Google Meet Input logic */}
+                      <div className="shrink-0 flex items-center gap-2">
+                        {editingBookingId === booking.id ? (
+                          <div className="flex flex-col gap-1.5 w-full sm:w-auto">
+                            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
+                              <input
+                                type="text"
+                                placeholder="https://meet.google.com/abc-defg-hij"
+                                value={meetLinkInput}
+                                onChange={(e) => {
+                                  setMeetLinkInput(e.target.value);
+                                  setMeetLinkError('');
+                                }}
+                                className="px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 text-white text-xs rounded-lg outline-none w-full sm:w-[240px] focus:border-brand"
                               />
                               <div className="flex gap-2">
                                 <button
-                                  type="button"
-                                  onClick={() => saveFeedback(booking.id)}
-                                  className="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded text-[8.5px] font-black uppercase tracking-widest cursor-pointer shadow-xs border-none"
+                                  onClick={() => saveMeetLink(booking.id)}
+                                  className="px-3 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg text-[9px] font-black uppercase tracking-widest cursor-pointer shadow-xs border-none"
                                 >
-                                  Save Feedback
+                                  Save
                                 </button>
                                 <button
-                                  type="button"
-                                  onClick={() => setEditingFeedbackId(null)}
-                                  className="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-white rounded text-[8.5px] font-black uppercase tracking-widest cursor-pointer border-none"
+                                  onClick={() => setEditingBookingId(null)}
+                                  className="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-lg text-[9px] font-black uppercase tracking-widest cursor-pointer border-none"
                                 >
                                   Cancel
                                 </button>
                               </div>
                             </div>
-                          ) : (
-                            <div className="space-y-2">
-                              {booking.feedback ? (
-                                <p className="text-[11px] text-zinc-300 bg-zinc-900/60 p-2.5 rounded-lg border border-zinc-850/50 italic leading-relaxed font-light">
-                                  "{booking.feedback}"
-                                </p>
-                              ) : (
-                                <p className="text-[10px] text-zinc-500 italic">No notes added yet.</p>
-                              )}
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setEditingFeedbackId(booking.id);
-                                  setFeedbackInput(booking.feedback || '');
-                                }}
-                                className="text-[9px] font-bold text-brand hover:underline uppercase tracking-wider flex items-center gap-1 cursor-pointer border-none bg-transparent p-0"
-                              >
-                                {booking.feedback ? 'Edit Feedback' : '+ Add Diagnostic Notes'}
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Google Meet Input logic */}
-                    <div className="shrink-0 flex items-center gap-2">
-                      {editingBookingId === booking.id ? (
-                        <div className="flex flex-col gap-1.5 w-full sm:w-auto">
-                          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
-                            <input
-                              type="text"
-                              placeholder="https://meet.google.com/abc-defg-hij"
-                              value={meetLinkInput}
-                              onChange={(e) => {
-                                setMeetLinkInput(e.target.value);
-                                setMeetLinkError('');
-                              }}
-                              className="px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 text-white text-xs rounded-lg outline-none w-full sm:w-[240px] focus:border-brand"
-                            />
-                            <div className="flex gap-2">
-                              <button
-                                onClick={() => saveMeetLink(booking.id)}
-                                className="px-3 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg text-[9px] font-black uppercase tracking-widest cursor-pointer shadow-xs border-none"
-                              >
-                                Save
-                              </button>
-                              <button
-                                onClick={() => setEditingBookingId(null)}
-                                className="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-lg text-[9px] font-black uppercase tracking-widest cursor-pointer border-none"
-                              >
-                                Cancel
-                              </button>
-                            </div>
+                            {meetLinkError && (
+                              <p className="text-[10px] text-rose-500 font-bold uppercase tracking-wide font-mono mt-0.5">{meetLinkError}</p>
+                            )}
                           </div>
-                          {meetLinkError && (
-                            <p className="text-[10px] text-rose-500 font-bold uppercase tracking-wide font-mono mt-0.5">{meetLinkError}</p>
-                          )}
-                        </div>
-                      ) : (
-                        <div className="flex items-center gap-2">
-                          {booking.meetLink && booking.mode === 'ONLINE' && (
-                            <a
-                              href={booking.meetLink}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-[9px] font-black uppercase tracking-widest transition cursor-pointer flex items-center gap-1.5 shadow-xs"
+                        ) : (
+                          <div className="flex items-center gap-2">
+                            {booking.meetLink && booking.mode === 'ONLINE' && (
+                              <a
+                                href={booking.meetLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-[9px] font-black uppercase tracking-widest transition cursor-pointer flex items-center gap-1.5 shadow-xs"
+                              >
+                                <Video className="w-3.5 h-3.5 text-white" />
+                                <span>Join Meet</span>
+                              </a>
+                            )}
+                            <button
+                              onClick={() => startEditMeetLink(booking)}
+                              className="px-4.5 py-3 bg-brand hover:bg-brand-dark text-zinc-955 rounded-lg text-[9px] font-black uppercase tracking-widest transition cursor-pointer flex items-center gap-1 shadow-xs border-none font-sans font-extrabold"
                             >
-                              <Video className="w-3.5 h-3.5 text-white" />
-                              <span>Join Meet</span>
-                            </a>
-                          )}
-                          <button
-                            onClick={() => startEditMeetLink(booking)}
-                            className="px-4.5 py-3 bg-brand hover:bg-brand-dark text-zinc-950 rounded-lg text-[9px] font-black uppercase tracking-widest transition cursor-pointer flex items-center gap-1 shadow-xs border-none font-sans font-extrabold"
-                          >
-                            <Edit className="w-3.5 h-3.5 text-zinc-955" />
-                            <span>{booking.meetLink ? 'Edit Link' : 'Set Meet Link'}</span>
-                          </button>
-                        </div>
-                      )}
+                              <Edit className="w-3.5 h-3.5 text-zinc-955" />
+                              <span>{booking.meetLink ? 'Edit Link' : 'Set Meet Link'}</span>
+                            </button>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
 
-                {bookings.length === 0 && (
-                  <div className="text-center py-10 bg-zinc-950 border border-zinc-850 rounded-xl space-y-3">
-                    <Video className="w-8 h-8 text-zinc-650 mx-auto" />
-                    <p className="text-zinc-500 font-bold text-xs uppercase tracking-wider">No client bookings registered for your account yet.</p>
-                  </div>
-                )}
+                  {filteredBookings.length === 0 && (
+                    <div className="text-center py-12 bg-zinc-950 border border-zinc-850 rounded-xl space-y-3">
+                      <Video className="w-8 h-8 text-zinc-650 mx-auto" />
+                      <p className="text-zinc-500 font-bold text-xs uppercase tracking-wider">
+                        No {activeBookingTab.toLowerCase()} sessions registered for your account yet.
+                      </p>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          )}
+            );
+          })()}
 
         </div>
       </div>
@@ -2118,7 +2182,7 @@ export default function PsychologistDashboard({ setView }) {
         onConfirm={() => {
           setIsLogoutConfirmOpen(false);
           logout();
-          window.location.hash = '#/';
+          window.spaNavigate('/');
         }}
         onCancel={() => setIsLogoutConfirmOpen(false)}
         theme="dark"

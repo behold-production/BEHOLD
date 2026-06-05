@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Routes, Route, Navigate, useNavigate, useLocation, useParams } from 'react-router-dom';
 import { MessageCircle } from 'lucide-react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -17,154 +18,84 @@ import AuthModals from './components/AuthModals';
 import AdvisorProfile from './components/AdvisorProfile';
 import { useAuth } from './context/AuthContext';
 
+function AdvisorProfileWrapper({ handleBookTherapist, setPendingScrollSection }) {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  return (
+    <AdvisorProfile
+      advisorId={id}
+      onBack={() => {
+        navigate('/');
+        setPendingScrollSection('services');
+      }}
+      onBook={handleBookTherapist}
+    />
+  );
+}
+
 export default function App() {
-  const [view, setView] = useState('landing');
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [testProfile, setTestProfile] = useState(null);
   const [bookingAdvisor, setBookingAdvisor] = useState(null);
   const [pendingScrollSection, setPendingScrollSection] = useState(null);
-  const [viewingAdvisorId, setViewingAdvisorId] = useState(null);
   const [pendingRedirect, setPendingRedirect] = useState(false);
 
   const { user, isLoading } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   // Monitor user state for pending redirect to booking
   useEffect(() => {
     if (user && pendingRedirect) {
       setPendingRedirect(false);
-      window.location.hash = '#/booking';
+      navigate('/booking');
     }
-  }, [user, pendingRedirect]);
+  }, [user, pendingRedirect, navigate]);
 
-  // Auto-redirect based on role when user logs in or page loads
+  // Setup global SPA navigate helper for other components
+  useEffect(() => {
+    window.spaNavigate = (path) => {
+      navigate(path);
+    };
+  }, [navigate]);
+
+  // Role-based routing and redirection flow
   useEffect(() => {
     if (isLoading) return; // Wait for auth to resolve
 
+    const path = location.pathname;
+
     if (user) {
-      const hash = window.location.hash;
       if (user.role === 'ADMIN') {
-        // Admin anywhere except /admin → redirect
-        if (hash !== '#/admin') {
-          window.location.hash = '#/admin';
-        } else {
-          setView('admin');
+        if (path !== '/admin') {
+          navigate('/admin', { replace: true });
         }
       } else if (user.role === 'PSYCHOLOGIST') {
-        // Counsellor anywhere except /counsellor → redirect
-        if (hash !== '#/counsellor' && hash !== '#/conceller') {
-          window.location.hash = '#/counsellor';
-        } else {
-          setView('counsellor');
+        if (path !== '/counsellor' && path !== '/conceller') {
+          navigate('/counsellor', { replace: true });
         }
+      } else if (user.role === 'USER') {
+        // Students cannot visit /admin or /counsellor
+        if (path === '/admin' || path === '/counsellor' || path === '/conceller') {
+          navigate('/profile', { replace: true });
+        }
+      }
+    } else {
+      // Guests visiting restricted user paths: /booking, /profile
+      if (path === '/booking') {
+        setPendingRedirect(true);
+        navigate('/', { replace: true });
+        setIsAuthModalOpen(true);
+      } else if (path === '/profile') {
+        navigate('/', { replace: true });
+        setIsAuthModalOpen(true);
       }
     }
-  }, [user, isLoading]);
-
-  // Hash-based Routing — only runs after auth is resolved
-  useEffect(() => {
-    if (isLoading) return; // Don't route until we know who the user is
-
-    const handleHashChange = () => {
-      const hash = window.location.hash;
-
-      // ─── /sample-test ───────────────────────────────────────────────
-      if (hash === '#/sample-test') {
-        setView('test');
-        setTimeout(() => window.scrollTo(0, 0), 10);
-        return;
-      }
-
-      // ─── /booking ────────────────────────────────────────────────────
-      if (hash === '#/booking') {
-        if (!user) {
-          // Guest → show auth modal then redirect
-          setPendingRedirect(true);
-          window.location.hash = '#/';
-          setIsAuthModalOpen(true);
-        } else if (user.role === 'USER') {
-          setView('booking');
-          setTimeout(() => window.scrollTo(0, 0), 10);
-        } else if (user.role === 'ADMIN') {
-          window.location.hash = '#/admin';
-        } else if (user.role === 'PSYCHOLOGIST') {
-          window.location.hash = '#/counsellor';
-        }
-        return;
-      }
-
-      // ─── /profile ────────────────────────────────────────────────────
-      if (hash === '#/profile') {
-        if (!user) {
-          window.location.hash = '#/';
-          setIsAuthModalOpen(true);
-        } else if (user.role === 'ADMIN') {
-          window.location.hash = '#/admin';
-        } else if (user.role === 'PSYCHOLOGIST') {
-          window.location.hash = '#/counsellor';
-        } else {
-          setView('profile');
-          setTimeout(() => window.scrollTo(0, 0), 10);
-        }
-        return;
-      }
-
-      // ─── /admin ──────────────────────────────────────────────────────
-      if (hash === '#/admin') {
-        if (user && user.role === 'PSYCHOLOGIST') {
-          // Counsellor must not access admin
-          window.location.hash = '#/counsellor';
-        } else if (user && user.role === 'USER') {
-          // Student must not access admin
-          window.location.hash = '#/profile';
-        } else {
-          // null user (guest) or ADMIN → show admin dashboard (with its own login gate for guests)
-          setView('admin');
-          setTimeout(() => window.scrollTo(0, 0), 10);
-        }
-        return;
-      }
-
-      // ─── /counsellor ─────────────────────────────────────────────────
-      if (hash === '#/counsellor' || hash === '#/conceller') {
-        if (user && user.role === 'ADMIN') {
-          // Admin must not access counsellor portal
-          window.location.hash = '#/admin';
-        } else if (user && user.role === 'USER') {
-          // Student must not access counsellor portal
-          window.location.hash = '#/profile';
-        } else {
-          // null user (guest) or PSYCHOLOGIST → show counsellor dashboard (with its own login gate for guests)
-          setView('counsellor');
-          setTimeout(() => window.scrollTo(0, 0), 10);
-        }
-        return;
-      }
-
-      // ─── /advisor/:id ─────────────────────────────────────────────────
-      if (hash.startsWith('#/advisor/')) {
-        const id = hash.split('#/advisor/')[1];
-        setViewingAdvisorId(id);
-        setView('advisor');
-        setTimeout(() => window.scrollTo(0, 0), 10);
-        return;
-      }
-
-      // ─── default: landing ────────────────────────────────────────────
-      setView('landing');
-    };
-
-    window.addEventListener('hashchange', handleHashChange);
-    // Run on mount (after auth loaded)
-    handleHashChange();
-
-    return () => {
-      window.removeEventListener('hashchange', handleHashChange);
-    };
-  }, [user, isLoading]);
+  }, [user, isLoading, location.pathname, navigate]);
 
   // Handle pending scrolls once landing view is active
   useEffect(() => {
-    if (view === 'landing' && pendingScrollSection) {
+    if (location.pathname === '/' && pendingScrollSection) {
       if (pendingScrollSection === 'top') {
         window.scrollTo({ top: 0, behavior: 'smooth' });
         setPendingScrollSection(null);
@@ -189,11 +120,11 @@ export default function App() {
       };
       tryScroll();
     }
-  }, [view, pendingScrollSection]);
+  }, [location.pathname, pendingScrollSection]);
 
   const handleBookTherapist = (advisorId) => {
     setBookingAdvisor(advisorId);
-    window.location.hash = '#/booking';
+    navigate('/booking');
   };
 
   const handleFinishTest = (dominantDomain, scores) => {
@@ -220,16 +151,16 @@ export default function App() {
 
   const navigateToSection = (sectionId) => {
     if (sectionId === 'top') {
-      if (view === 'landing') {
+      if (location.pathname === '/') {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
         setPendingScrollSection('top');
-        window.location.hash = '#/';
+        navigate('/');
       }
       return;
     }
 
-    if (view === 'landing') {
+    if (location.pathname === '/') {
       const element = document.getElementById(sectionId);
       if (element) {
         const offset = 80;
@@ -239,80 +170,106 @@ export default function App() {
       }
     } else {
       setPendingScrollSection(sectionId);
-      window.location.hash = '#/';
+      navigate('/');
     }
   };
 
   // Show blank screen while auth is resolving to avoid flash
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
+      <div className="min-h-screen bg-zinc-955 flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-brand border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
+
+  const hideNavbarAndFooter = 
+    location.pathname === '/admin' || 
+    location.pathname === '/counsellor' || 
+    location.pathname === '/conceller';
 
   return (
     <div className="font-sans antialiased selection:bg-brand/30 min-h-screen relative text-zinc-900 bg-zinc-50">
       <AuthModals isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
 
       {/* Navbar — hidden on admin/counsellor full-screen dashboards */}
-      {view !== 'admin' && view !== 'counsellor' && (
-        <Navbar navigateToSection={navigateToSection} currentView={view} onOpenAuth={() => setIsAuthModalOpen(true)} />
+      {!hideNavbarAndFooter && (
+        <Navbar navigateToSection={navigateToSection} currentView={location.pathname} onOpenAuth={() => setIsAuthModalOpen(true)} />
       )}
 
-      {/* ── Landing ─────────────────────────────────────────────────── */}
-      {view === 'landing' && (
-        <main className="fade-in-up">
-          <Hero setView={setView} navigateToSection={navigateToSection} />
-          <CdatSection setView={setView} />
-          <Services setView={setView} onBookTherapist={handleBookTherapist} />
-          <About setView={setView} />
-          <Faq />
-          <Inquiry testProfile={testProfile} />
-        </main>
-      )}
+      <Routes>
+        {/* Landing Page */}
+        <Route path="/" element={
+          <main className="fade-in-up">
+            <Hero setView={() => {}} navigateToSection={navigateToSection} />
+            <CdatSection setView={() => {}} />
+            <Services setView={() => {}} onBookTherapist={handleBookTherapist} />
+            <About setView={() => {}} />
+            <Faq />
+            <Inquiry testProfile={testProfile} />
+          </main>
+        } />
 
-      {/* ── Aptitude Test ────────────────────────────────────────────── */}
-      {view === 'test' && (
-        <AptitudeTest onFinishTest={handleFinishTest} />
-      )}
+        {/* Aptitude Test */}
+        <Route path="/sample-test" element={
+          <AptitudeTest onFinishTest={handleFinishTest} />
+        } />
 
-      {/* ── Booking ──────────────────────────────────────────────────── */}
-      {view === 'booking' && user?.role === 'USER' && (
-        <ServiceBooking
-          preselectedAdvisorId={bookingAdvisor}
-          clearPreselectedAdvisor={() => setBookingAdvisor(null)}
-          onOpenAuth={() => setIsAuthModalOpen(true)}
-        />
-      )}
+        {/* Booking */}
+        <Route path="/booking" element={
+          user?.role === 'USER' ? (
+            <ServiceBooking
+              preselectedAdvisorId={bookingAdvisor}
+              clearPreselectedAdvisor={() => setBookingAdvisor(null)}
+              onOpenAuth={() => setIsAuthModalOpen(true)}
+            />
+          ) : (
+            <Navigate to="/" replace />
+          )
+        } />
 
-      {/* ── Student Profile ───────────────────────────────────────────── */}
-      {view === 'profile' && user?.role === 'USER' && (
-        <StudentProfile setView={setView} />
-      )}
+        {/* Student Profile */}
+        <Route path="/profile" element={
+          user?.role === 'USER' ? (
+            <StudentProfile setView={() => {}} />
+          ) : (
+            <Navigate to="/" replace />
+          )
+        } />
 
-      {/* ── Admin Dashboard ───────────────────────────────────────────── */}
-      {view === 'admin' && (
-        <AdminDashboard setView={setView} />
-      )}
+        {/* Admin Dashboard */}
+        <Route path="/admin" element={
+          user && user.role !== 'ADMIN' ? (
+            <Navigate to="/profile" replace />
+          ) : (
+            <AdminDashboard setView={() => {}} />
+          )
+        } />
 
-      {/* ── Counsellor Dashboard ──────────────────────────────────────── */}
-      {view === 'counsellor' && (
-        <PsychologistDashboard setView={setView} />
-      )}
+        {/* Counsellor Dashboard */}
+        <Route path="/counsellor" element={
+          user && user.role !== 'PSYCHOLOGIST' ? (
+            <Navigate to="/profile" replace />
+          ) : (
+            <PsychologistDashboard setView={() => {}} />
+          )
+        } />
+        <Route path="/conceller" element={<Navigate to="/counsellor" replace />} />
 
-      {/* ── Advisor Public Profile ────────────────────────────────────── */}
-      {view === 'advisor' && (
-        <AdvisorProfile
-          advisorId={viewingAdvisorId}
-          onBack={() => { window.location.hash = '#/'; setPendingScrollSection('services'); }}
-          onBook={handleBookTherapist}
-        />
-      )}
+        {/* Advisor Public Profile */}
+        <Route path="/advisor/:id" element={
+          <AdvisorProfileWrapper 
+            handleBookTherapist={handleBookTherapist} 
+            setPendingScrollSection={setPendingScrollSection}
+          />
+        } />
+
+        {/* Catch-all fallback */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
 
       {/* Floating WhatsApp Button */}
-      {view !== 'admin' && view !== 'counsellor' && (() => {
+      {!hideNavbarAndFooter && (() => {
         const settings = JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
         const whatsappUrl = settings.whatsapp || "https://wa.me/919497174011";
         return (
@@ -332,7 +289,7 @@ export default function App() {
       })()}
 
       {/* Footer */}
-      {view !== 'admin' && view !== 'counsellor' && (
+      {!hideNavbarAndFooter && (
         <Footer navigateToSection={navigateToSection} />
       )}
     </div>

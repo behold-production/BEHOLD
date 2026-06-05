@@ -11,7 +11,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth }) {
   const { user, logout } = useAuth();
 
   useEffect(() => {
-    if (currentView !== 'landing') {
+    if (currentView !== '/') {
       setActiveSection('');
       return;
     }
@@ -58,11 +58,11 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth }) {
     setIsMenuOpen(false);
     if (user) {
       if (user.role === 'ADMIN') {
-        window.location.hash = '#/admin';
+        window.spaNavigate('/admin');
       } else if (user.role === 'PSYCHOLOGIST') {
-        window.location.hash = '#/counsellor';
+        window.spaNavigate('/counsellor');
       } else {
-        window.location.hash = '#/profile';
+        window.spaNavigate('/profile');
       }
     }
   };
@@ -94,11 +94,11 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth }) {
               <button 
                 onClick={handleLogoClick}
                 className={`transition-all duration-300 cursor-pointer pb-1 relative uppercase ${
-                  currentView === 'landing' && (activeSection === 'home' || activeSection === 'cdat' || activeSection === '') ? 'text-zinc-950 font-bold' : 'hover:text-zinc-950'
+                  currentView === '/' && (activeSection === 'home' || activeSection === 'cdat' || activeSection === '') ? 'text-zinc-955 font-bold' : 'hover:text-zinc-950'
                 }`}
               >
                 Home
-                {currentView === 'landing' && (activeSection === 'home' || activeSection === 'cdat' || activeSection === '') && (
+                {currentView === '/' && (activeSection === 'home' || activeSection === 'cdat' || activeSection === '') && (
                   <span className="absolute bottom-0 left-0 w-full h-[2px] bg-brand" />
                 )}
               </button>
@@ -106,23 +106,23 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth }) {
               <button 
                 onClick={() => scrollToSection('services')}
                 className={`transition-all duration-300 cursor-pointer pb-1 relative uppercase ${
-                  activeSection === 'services' && currentView === 'landing' ? 'text-zinc-950 font-bold' : 'hover:text-zinc-950'
+                  activeSection === 'services' && currentView === '/' ? 'text-zinc-950 font-bold' : 'hover:text-zinc-950'
                 }`}
               >
                 Services
-                {activeSection === 'services' && currentView === 'landing' && (
+                {activeSection === 'services' && currentView === '/' && (
                   <span className="absolute bottom-0 left-0 w-full h-[2px] bg-brand" />
                 )}
               </button>
 
               <button 
-                onClick={() => window.location.hash = '#/sample-test'}
+                onClick={() => window.spaNavigate('/sample-test')}
                 className={`transition-all duration-300 cursor-pointer pb-1 relative uppercase ${
-                  currentView === 'test' ? 'text-zinc-950 font-bold' : 'hover:text-zinc-950'
+                  currentView === '/sample-test' ? 'text-zinc-950 font-bold' : 'hover:text-zinc-950'
                 }`}
               >
                 Sample Test
-                {currentView === 'test' && (
+                {currentView === '/sample-test' && (
                   <span className="absolute bottom-0 left-0 w-full h-[2px] bg-brand" />
                 )}
               </button>
@@ -130,11 +130,11 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth }) {
               <button 
                 onClick={() => scrollToSection('inquiry')}
                 className={`transition-all duration-300 cursor-pointer pb-1 relative uppercase ${
-                  activeSection === 'inquiry' && currentView === 'landing' ? 'text-zinc-950 font-bold' : 'hover:text-zinc-950'
+                  activeSection === 'inquiry' && currentView === '/' ? 'text-zinc-950 font-bold' : 'hover:text-zinc-950'
                 }`}
               >
                 Contact
-                {activeSection === 'inquiry' && currentView === 'landing' && (
+                {activeSection === 'inquiry' && currentView === '/' && (
                   <span className="absolute bottom-0 left-0 w-full h-[2px] bg-brand" />
                 )}
               </button>
@@ -187,11 +187,11 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth }) {
             )}
 
             <button 
-              onClick={() => window.location.hash = '#/booking'}
+              onClick={() => window.spaNavigate('/booking')}
               className={`px-5 py-2.5 text-xs font-bold rounded-lg border border-zinc-200/50 transition-all duration-300 cursor-pointer flex items-center gap-1.5 uppercase tracking-wider ${
-                currentView === 'booking' 
+                currentView === '/booking' 
                   ? 'bg-zinc-950 text-white' 
-                  : 'bg-brand hover:bg-brand-dark text-zinc-950 shadow-xs'
+                  : 'bg-brand hover:bg-brand-dark text-zinc-955 shadow-xs'
               }`}
             >
               <span>Book Session</span>
@@ -281,10 +281,10 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth }) {
         <div className="flex flex-col gap-2 overflow-y-auto flex-1">
           <button
             onClick={handleLogoClick}
-            className={`w-full text-left px-3.5 py-3 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-250 flex items-center justify-between cursor-pointer ${
-              currentView === 'landing' && (activeSection === 'home' || activeSection === 'cdat' || activeSection === '') 
-                ? 'bg-zinc-950 text-brand font-extrabold' 
-                : 'text-zinc-650 hover:text-zinc-950 hover:bg-zinc-50'
+            className={`w-full text-left px-3.5 py-3 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${
+              currentView === '/' && (activeSection === 'home' || activeSection === 'cdat' || activeSection === '') 
+                ? 'bg-brand/10 text-zinc-900 border-brand font-black' 
+                : 'text-zinc-650 hover:text-zinc-900 hover:bg-zinc-50 border-transparent'
             }`}
           >
             <span>Home</span>
@@ -292,21 +292,21 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth }) {
 
           <button
             onClick={() => scrollToSection('services')}
-            className={`w-full text-left px-3.5 py-3 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-255 flex items-center justify-between cursor-pointer ${
-              activeSection === 'services' && currentView === 'landing' 
-                ? 'bg-zinc-950 text-brand font-extrabold' 
-                : 'text-zinc-650 hover:text-zinc-950 hover:bg-zinc-50'
+            className={`w-full text-left px-3.5 py-3 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${
+              activeSection === 'services' && currentView === '/' 
+                ? 'bg-brand/10 text-zinc-900 border-brand font-black' 
+                : 'text-zinc-650 hover:text-zinc-900 hover:bg-zinc-50 border-transparent'
             }`}
           >
             <span>Services</span>
           </button>
 
           <button
-            onClick={() => { window.location.hash = '#/sample-test'; setIsMenuOpen(false); }}
-            className={`w-full text-left px-3.5 py-3 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-255 flex items-center justify-between cursor-pointer ${
-              currentView === 'test' 
-                ? 'bg-zinc-950 text-brand font-extrabold' 
-                : 'text-zinc-650 hover:text-zinc-950 hover:bg-zinc-50'
+            onClick={() => { window.spaNavigate('/sample-test'); setIsMenuOpen(false); }}
+            className={`w-full text-left px-3.5 py-3 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${
+              currentView === '/sample-test' 
+                ? 'bg-brand/10 text-zinc-900 border-brand font-black' 
+                : 'text-zinc-650 hover:text-zinc-900 hover:bg-zinc-50 border-transparent'
             }`}
           >
             <span>Sample Test</span>
@@ -314,21 +314,21 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth }) {
           
           <button
             onClick={() => scrollToSection('inquiry')}
-            className={`w-full text-left px-3.5 py-3 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-255 flex items-center justify-between cursor-pointer ${
-              activeSection === 'inquiry' && currentView === 'landing' 
-                ? 'bg-zinc-950 text-brand font-extrabold' 
-                : 'text-zinc-650 hover:text-zinc-950 hover:bg-zinc-50'
+            className={`w-full text-left px-3.5 py-3 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${
+              activeSection === 'inquiry' && currentView === '/' 
+                ? 'bg-brand/10 text-zinc-900 border-brand font-black' 
+                : 'text-zinc-650 hover:text-zinc-900 hover:bg-zinc-50 border-transparent'
             }`}
           >
             <span>Contact</span>
           </button>
 
           <button
-            onClick={() => { window.location.hash = '#/booking'; setIsMenuOpen(false); }}
-            className={`w-full text-left px-3.5 py-3 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-255 flex items-center justify-between cursor-pointer ${
-              currentView === 'booking' 
-                ? 'bg-zinc-950 text-brand font-extrabold' 
-                : 'text-zinc-650 hover:text-zinc-950 hover:bg-zinc-50'
+            onClick={() => { window.spaNavigate('/booking'); setIsMenuOpen(false); }}
+            className={`w-full text-left px-3.5 py-3 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${
+              currentView === '/booking' 
+                ? 'bg-brand/10 text-zinc-900 border-brand font-black' 
+                : 'text-zinc-650 hover:text-zinc-900 hover:bg-zinc-50 border-transparent'
             }`}
           >
             <span>Book Session</span>
