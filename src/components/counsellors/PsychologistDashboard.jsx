@@ -117,7 +117,7 @@ export default function PsychologistDashboard({ setView }) {
   const isSessionCompleted = (booking) => {
     if (booking.status === 'CANCELLED') return false;
     if (booking.status === 'COMPLETED') return true;
-    
+
     if (booking.status === 'CONFIRMED') {
       try {
         const [year, month, day] = booking.date.split('-').map(Number);
@@ -126,10 +126,10 @@ export default function PsychologistDashboard({ setView }) {
         let hours = Number(hoursStr);
         const minutes = Number(minutesStr);
         const meridiem = timeParts[1];
-        
+
         if (meridiem === 'PM' && hours < 12) hours += 12;
         if (meridiem === 'AM' && hours === 12) hours = 0;
-        
+
         const sessionEnd = new Date(year, month - 1, day, hours + 1, minutes);
         return new Date() > sessionEnd;
       } catch (e) {
@@ -1825,7 +1825,7 @@ export default function PsychologistDashboard({ setView }) {
             </form>
           )}
 
-                  {currentSection === 'bookings' && (() => {
+          {currentSection === 'bookings' && (() => {
             const confirmedCount = bookings.filter(b => !b.status || b.status === 'CONFIRMED' || b.status === 'PENDING').length;
             const completedCount = bookings.filter(b => b.status === 'COMPLETED').length;
             const cancelledCount = bookings.filter(b => b.status === 'CANCELLED').length;
@@ -1861,11 +1861,10 @@ export default function PsychologistDashboard({ setView }) {
                         key={tab.id}
                         type="button"
                         onClick={() => setActiveBookingTab(tab.id)}
-                        className={`flex-1 py-2 rounded-lg text-[9.5px] font-black uppercase tracking-wider transition-all duration-300 cursor-pointer flex items-center justify-center gap-1.5 border ${
-                          isActive
+                        className={`flex-1 py-2 rounded-lg text-[9.5px] font-black uppercase tracking-wider transition-all duration-300 cursor-pointer flex items-center justify-center gap-1.5 border ${isActive
                             ? 'bg-brand text-zinc-955 border-brand font-black shadow-lg scale-102 shadow-brand/10'
                             : 'bg-transparent border-transparent text-zinc-500 hover:text-zinc-300'
-                        }`}
+                          }`}
                       >
                         <span>{tab.label}</span>
                         <span className={`px-1.5 py-0.5 rounded text-[8.5px] font-mono ${isActive ? 'bg-zinc-955/20 text-zinc-955 font-bold' : 'bg-zinc-900 text-zinc-400 border border-zinc-800'}`}>

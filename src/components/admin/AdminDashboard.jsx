@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  User, ShieldAlert, Award, Trash, Check, Plus, Lock, 
+import {
+  User, ShieldAlert, Award, Trash, Check, Plus, Lock,
   Settings, KeyRound, BarChart3, LogOut, Search, ShieldCheck,
   Calendar, Clock, Link, AlertCircle, Edit, Video, UserPlus,
   MessageSquare, FileSpreadsheet, HelpCircle, X, ChevronRight, Mail, Shield, Menu
@@ -10,10 +10,10 @@ import LogoutConfirmModal from '../LogoutConfirmModal';
 
 export default function AdminDashboard({ setView }) {
   const { user, login, register, logout } = useAuth();
-  
+
   // Tab Section: default to overview or users if sub-admin
   const [currentSection, setCurrentSection] = useState('overview');
-  
+
   // List states
   const [usersDb, setUsersDb] = useState([]);
   const [bookingsDb, setBookingsDb] = useState([]);
@@ -32,7 +32,7 @@ export default function AdminDashboard({ setView }) {
   const [roleError, setRoleError] = useState('');
   const [roleSuccess, setRoleSuccess] = useState('');
   const [roleToDelete, setRoleToDelete] = useState(null);
-  
+
   // Search terms
   const [searchUser, setSearchUser] = useState('');
   const [searchPsy, setSearchPsy] = useState('');
@@ -175,7 +175,7 @@ export default function AdminDashboard({ setView }) {
           roles = filteredRoles;
           localStorage.setItem('behold_roles_db', JSON.stringify(roles));
         }
-      } catch (e) {}
+      } catch (e) { }
     } else {
       localStorage.setItem('behold_roles_db', JSON.stringify([]));
     }
@@ -225,7 +225,7 @@ export default function AdminDashboard({ setView }) {
           if (parsed.availableSlots && parsed.availableSlots.length > 0) {
             slots = [...parsed.availableSlots];
           }
-        } catch (e) {}
+        } catch (e) { }
       }
     }
     // Make sure current booking's time is always available in options to prevent empty selection
@@ -474,7 +474,7 @@ export default function AdminDashboard({ setView }) {
     if (saved) {
       try {
         profileDetails = { ...profileDetails, ...JSON.parse(saved) };
-      } catch (e) {}
+      } catch (e) { }
     }
 
     setPsyForm({
@@ -538,7 +538,7 @@ export default function AdminDashboard({ setView }) {
     if (saved) {
       try {
         existingProfile = JSON.parse(saved);
-      } catch (e) {}
+      } catch (e) { }
     }
 
     const updatedProfile = {
@@ -624,7 +624,7 @@ export default function AdminDashboard({ setView }) {
         const parsed = JSON.parse(saved);
         psyRole = parsed.role || psyRole;
         defaultMeetLink = parsed.defaultMeetLink || '';
-      } catch (err) {}
+      } catch (err) { }
     }
 
     const bookings = JSON.parse(localStorage.getItem('behold_booked_sessions') || '[]');
@@ -715,7 +715,7 @@ export default function AdminDashboard({ setView }) {
         try {
           const parsed = JSON.parse(saved);
           psyRole = parsed.role || psyRole;
-        } catch (err) {}
+        } catch (err) { }
       }
     }
 
@@ -883,7 +883,7 @@ export default function AdminDashboard({ setView }) {
         'ADMIN',
         permissionsArray
       );
-      
+
       // Update the user record in localStorage to include customRoleTitle
       const users = JSON.parse(localStorage.getItem('behold_users_db') || '[]');
       const index = users.findIndex(u => u.id === registeredUser.id);
@@ -893,7 +893,7 @@ export default function AdminDashboard({ setView }) {
       }
 
       setSubAdminSuccess(`Sub-admin account for ${subAdminForm.name} created successfully!`);
-      
+
       const defaultRole = rolesDb.length > 0 ? rolesDb[0] : null;
       setSubAdminForm({
         name: '',
@@ -944,17 +944,17 @@ export default function AdminDashboard({ setView }) {
   };
 
   // Filter listings
-  const studentsList = usersDb.filter(u => 
-    (u.role === 'USER' || !u.role) && 
+  const studentsList = usersDb.filter(u =>
+    (u.role === 'USER' || !u.role) &&
     (u.name.toLowerCase().includes(searchUser.toLowerCase()) || u.email.toLowerCase().includes(searchUser.toLowerCase()))
   );
 
-  const psychologistsList = usersDb.filter(u => 
-    u.role === 'PSYCHOLOGIST' && 
+  const psychologistsList = usersDb.filter(u =>
+    u.role === 'PSYCHOLOGIST' &&
     (u.name.toLowerCase().includes(searchPsy.toLowerCase()) || u.email.toLowerCase().includes(searchPsy.toLowerCase()))
   );
 
-  const subAdminsList = usersDb.filter(u => 
+  const subAdminsList = usersDb.filter(u =>
     u.role === 'ADMIN' && u.permissions // Only custom sub-admins
   );
 
@@ -1212,15 +1212,15 @@ export default function AdminDashboard({ setView }) {
   };
 
   // Filter inquiries
-  const filteredInquiries = inquiriesDb.filter(inq => 
-    inq.name.toLowerCase().includes(searchInquiry.toLowerCase()) || 
+  const filteredInquiries = inquiriesDb.filter(inq =>
+    inq.name.toLowerCase().includes(searchInquiry.toLowerCase()) ||
     inq.email.toLowerCase().includes(searchInquiry.toLowerCase()) ||
     inq.message.toLowerCase().includes(searchInquiry.toLowerCase())
   );
 
   // Filter test results
-  const filteredTestResults = testResultsDb.filter(res => 
-    res.studentName.toLowerCase().includes(searchTestResult.toLowerCase()) || 
+  const filteredTestResults = testResultsDb.filter(res =>
+    res.studentName.toLowerCase().includes(searchTestResult.toLowerCase()) ||
     res.studentEmail.toLowerCase().includes(searchTestResult.toLowerCase()) ||
     res.dominantDomain.toLowerCase().includes(searchTestResult.toLowerCase())
   );
@@ -1248,12 +1248,12 @@ export default function AdminDashboard({ setView }) {
               <h2 className="text-base font-bold text-white uppercase tracking-wider">Sign In to Dashboard</h2>
               <p className="text-[10px] text-zinc-500 leading-none">Security clearance required for system administration.</p>
             </div>
-            
+
             {/* Submit Button */}
             <form onSubmit={handleAdminLogin} className="space-y-4">
               <div className="space-y-1">
                 <label className="text-[9px] uppercase tracking-wider font-bold text-zinc-400">Email Address</label>
-                <input 
+                <input
                   type="email"
                   required
                   placeholder="admin@behold.com"
@@ -1265,7 +1265,7 @@ export default function AdminDashboard({ setView }) {
 
               <div className="space-y-1">
                 <label className="text-[9px] uppercase tracking-wider font-bold text-zinc-400">Password</label>
-                <input 
+                <input
                   type="password"
                   required
                   placeholder="••••••••"
@@ -1296,7 +1296,7 @@ export default function AdminDashboard({ setView }) {
   // --- DEDICATED LOGGED-IN ADMIN DASHBOARD UI ---
   return (
     <div className="min-h-screen bg-zinc-955 text-white font-sans text-left flex flex-col lg:flex-row relative overflow-hidden">
-      
+
       {/* Background Soft Glows */}
       <div className="absolute top-1/4 left-1/3 w-[350px] h-[350px] bg-brand/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-1/3 right-1/4 w-[350px] h-[350px] bg-brand-accent/5 rounded-full blur-3xl pointer-events-none" />
@@ -1305,7 +1305,7 @@ export default function AdminDashboard({ setView }) {
       <div className="lg:hidden sticky top-0 z-30 flex items-center justify-between bg-zinc-900 border-b border-zinc-805 px-5 py-4 w-full">
         <div className="flex items-center gap-3">
           {/* Hamburger Menu Icon */}
-          <button 
+          <button
             type="button"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="p-1.5 bg-zinc-950 border border-zinc-850 text-zinc-400 hover:text-white rounded-lg transition-colors cursor-pointer border-none"
@@ -1313,7 +1313,7 @@ export default function AdminDashboard({ setView }) {
           >
             {isMobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
           </button>
-          
+
           <div className="flex items-center gap-1.5">
             <span className="font-header font-black text-md tracking-tighter text-white">
               BEHOLD<span className="text-brand font-black">.</span>
@@ -1337,16 +1337,15 @@ export default function AdminDashboard({ setView }) {
 
       {/* Mobile Sidebar Backdrop (Overlay) */}
       {isMobileMenuOpen && (
-        <div 
+        <div
           className="lg:hidden fixed inset-0 z-40 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200"
           onClick={() => setIsMobileMenuOpen(false)}
         />
       )}
 
       {/* 1. Left Fixed Sidebar (Drawer on Mobile, static on Desktop) */}
-      <div className={`fixed lg:static inset-y-0 left-0 z-50 w-64 lg:w-64 bg-zinc-900 border-r border-zinc-800 flex flex-col justify-between shrink-0 p-5 transition-transform duration-300 ease-in-out lg:translate-x-0 ${
-        isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-      } lg:flex`}>
+      <div className={`fixed lg:static inset-y-0 left-0 z-50 w-64 lg:w-64 bg-zinc-900 border-r border-zinc-800 flex flex-col justify-between shrink-0 p-5 transition-transform duration-300 ease-in-out lg:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        } lg:flex`}>
         <div className="space-y-6">
           {/* Logo & Header */}
           <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
@@ -1399,11 +1398,10 @@ export default function AdminDashboard({ setView }) {
             {isSuperAdmin && (
               <button
                 onClick={() => handleNavClick('overview')}
-                className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all text-left cursor-pointer border-none ${
-                  currentSection === 'overview'
-                    ? 'bg-brand text-zinc-955 font-black'
-                    : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
-                }`}
+                className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all text-left cursor-pointer border-none ${currentSection === 'overview'
+                  ? 'bg-brand text-zinc-955 font-black'
+                  : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
+                  }`}
               >
                 <BarChart3 className="w-4 h-4 font-bold" />
                 <span>Overview</span>
@@ -1413,11 +1411,10 @@ export default function AdminDashboard({ setView }) {
             {hasUserPermission && (
               <button
                 onClick={() => handleNavClick('users')}
-                className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all text-left cursor-pointer border-none ${
-                  currentSection === 'users'
-                    ? 'bg-brand text-zinc-950 font-black'
-                    : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
-                }`}
+                className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all text-left cursor-pointer border-none ${currentSection === 'users'
+                  ? 'bg-brand text-zinc-950 font-black'
+                  : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
+                  }`}
               >
                 <User className="w-4 h-4" />
                 <span>Student Database</span>
@@ -1427,11 +1424,10 @@ export default function AdminDashboard({ setView }) {
             {hasPsyPermission && (
               <button
                 onClick={() => handleNavClick('psychologists')}
-                className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all text-left cursor-pointer border-none ${
-                  currentSection === 'psychologists'
-                    ? 'bg-brand text-zinc-955 font-black'
-                    : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
-                }`}
+                className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all text-left cursor-pointer border-none ${currentSection === 'psychologists'
+                  ? 'bg-brand text-zinc-955 font-black'
+                  : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
+                  }`}
               >
                 <Award className="w-4 h-4" />
                 <span>Psychologists DB</span>
@@ -1441,11 +1437,10 @@ export default function AdminDashboard({ setView }) {
             {hasBookingPermission && (
               <button
                 onClick={() => handleNavClick('bookings')}
-                className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all text-left cursor-pointer border-none ${
-                  currentSection === 'bookings'
-                    ? 'bg-brand text-zinc-955 font-black'
-                    : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
-                }`}
+                className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all text-left cursor-pointer border-none ${currentSection === 'bookings'
+                  ? 'bg-brand text-zinc-955 font-black'
+                  : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
+                  }`}
               >
                 <Calendar className="w-4 h-4" />
                 <span>Client Bookings</span>
@@ -1456,11 +1451,10 @@ export default function AdminDashboard({ setView }) {
               <>
                 <button
                   onClick={() => handleNavClick('subadmins')}
-                  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all text-left cursor-pointer border-none ${
-                    currentSection === 'subadmins'
-                      ? 'bg-brand text-zinc-955 font-black'
-                      : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
-                  }`}
+                  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all text-left cursor-pointer border-none ${currentSection === 'subadmins'
+                    ? 'bg-brand text-zinc-955 font-black'
+                    : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
+                    }`}
                 >
                   <KeyRound className="w-4 h-4" />
                   <span>Roles & Scopes</span>
@@ -1468,11 +1462,10 @@ export default function AdminDashboard({ setView }) {
 
                 <button
                   onClick={() => handleNavClick('inquiries')}
-                  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all text-left cursor-pointer border-none ${
-                    currentSection === 'inquiries'
-                      ? 'bg-brand text-zinc-955 font-black'
-                      : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
-                  }`}
+                  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all text-left cursor-pointer border-none ${currentSection === 'inquiries'
+                    ? 'bg-brand text-zinc-955 font-black'
+                    : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
+                    }`}
                 >
                   <MessageSquare className="w-4 h-4" />
                   <span>Student Inquiries</span>
@@ -1480,11 +1473,10 @@ export default function AdminDashboard({ setView }) {
 
                 <button
                   onClick={() => handleNavClick('testresults')}
-                  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all text-left cursor-pointer border-none ${
-                    currentSection === 'testresults'
-                      ? 'bg-brand text-zinc-955 font-black'
-                      : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
-                  }`}
+                  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all text-left cursor-pointer border-none ${currentSection === 'testresults'
+                    ? 'bg-brand text-zinc-955 font-black'
+                    : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
+                    }`}
                 >
                   <FileSpreadsheet className="w-4 h-4" />
                   <span>Aptitude Results</span>
@@ -1492,11 +1484,10 @@ export default function AdminDashboard({ setView }) {
 
                 <button
                   onClick={() => handleNavClick('faqs')}
-                  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all text-left cursor-pointer border-none ${
-                    currentSection === 'faqs'
-                      ? 'bg-brand text-zinc-955 font-black'
-                      : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
-                  }`}
+                  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all text-left cursor-pointer border-none ${currentSection === 'faqs'
+                    ? 'bg-brand text-zinc-955 font-black'
+                    : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
+                    }`}
                 >
                   <HelpCircle className="w-4 h-4" />
                   <span>FAQ Manager</span>
@@ -1504,11 +1495,10 @@ export default function AdminDashboard({ setView }) {
 
                 <button
                   onClick={() => handleNavClick('analytics')}
-                  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all text-left cursor-pointer border-none ${
-                    currentSection === 'analytics'
-                      ? 'bg-brand text-zinc-955 font-black'
-                      : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
-                  }`}
+                  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all text-left cursor-pointer border-none ${currentSection === 'analytics'
+                    ? 'bg-brand text-zinc-955 font-black'
+                    : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
+                    }`}
                 >
                   <BarChart3 className="w-4 h-4" />
                   <span>Analytics Console</span>
@@ -1516,11 +1506,10 @@ export default function AdminDashboard({ setView }) {
 
                 <button
                   onClick={() => handleNavClick('settings')}
-                  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all text-left cursor-pointer border-none ${
-                    currentSection === 'settings'
-                      ? 'bg-brand text-zinc-955 font-black'
-                      : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
-                  }`}
+                  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all text-left cursor-pointer border-none ${currentSection === 'settings'
+                    ? 'bg-brand text-zinc-955 font-black'
+                    : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
+                    }`}
                 >
                   <Settings className="w-4 h-4" />
                   <span>Site Settings</span>
@@ -1540,7 +1529,7 @@ export default function AdminDashboard({ setView }) {
               Root access matches dynamically with sub-admin permission checklists.
             </p>
           </div>
-          <button 
+          <button
             onClick={() => setIsLogoutConfirmOpen(true)}
             className="w-full py-2 border border-rose-900/50 hover:border-rose-600 text-rose-500 bg-rose-950/20 hover:bg-rose-900 hover:text-white font-bold text-[9px] uppercase tracking-widest rounded-lg flex items-center justify-center gap-1 transition-colors cursor-pointer"
           >
@@ -1551,11 +1540,11 @@ export default function AdminDashboard({ setView }) {
 
       {/* 2. Main Content Workspace */}
       <div className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-8 lg:p-10 space-y-6 relative z-10 text-left">
-        
+
         {/* Workspace Banner */}
         <div className="bg-zinc-900 border border-zinc-850 p-6 sm:p-8 rounded-2xl shadow-xl flex flex-col sm:flex-row justify-between items-center gap-4 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-brand/5 rounded-full blur-2xl pointer-events-none" />
-          
+
           <div className="space-y-1 relative z-10 w-full sm:w-auto">
             <div className="flex flex-wrap items-center gap-2">
               <h1 className="text-xl sm:text-2xl font-header font-black tracking-wide uppercase">
@@ -1605,7 +1594,7 @@ export default function AdminDashboard({ setView }) {
                 if (savedProfile) {
                   try {
                     price = JSON.parse(savedProfile).price || price;
-                  } catch (e) {}
+                  } catch (e) { }
                 }
               }
               return acc + Number(price);
@@ -1705,7 +1694,7 @@ export default function AdminDashboard({ setView }) {
                               if (parsed.availableSlots && parsed.availableSlots.length > 0) {
                                 firstSlot = parsed.availableSlots[0];
                               }
-                            } catch (err) {}
+                            } catch (err) { }
                           }
                         }
                         setBookingForm({
@@ -1745,9 +1734,8 @@ export default function AdminDashboard({ setView }) {
                             </div>
                             <div className="text-right">
                               <span className="text-zinc-400 font-medium block">{b.date} • {b.time}</span>
-                              <span className={`text-[8px] px-1 rounded uppercase font-black ${
-                                b.status === 'CONFIRMED' ? 'bg-emerald-955/20 text-emerald-400' : 'bg-zinc-800 text-zinc-400'
-                              }`}>{b.status}</span>
+                              <span className={`text-[8px] px-1 rounded uppercase font-black ${b.status === 'CONFIRMED' ? 'bg-emerald-955/20 text-emerald-400' : 'bg-zinc-800 text-zinc-400'
+                                }`}>{b.status}</span>
                             </div>
                           </div>
                         ))}
@@ -1847,7 +1835,7 @@ export default function AdminDashboard({ setView }) {
                                 </button>
                               </td>
                               <td className="p-3 text-center">
-                                <button 
+                                <button
                                   onClick={() => handleDeleteUser(admin.id)}
                                   className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
                                   title="Delete sub-admin account"
@@ -1892,8 +1880,8 @@ export default function AdminDashboard({ setView }) {
                   </div>
                   <div className="flex items-center gap-3 w-full sm:w-auto">
                     <div className="relative w-full sm:max-w-[200px]">
-                      <input 
-                        type="text" 
+                      <input
+                        type="text"
                         placeholder="Search students..."
                         value={searchUser}
                         onChange={(e) => setSearchUser(e.target.value)}
@@ -1901,13 +1889,13 @@ export default function AdminDashboard({ setView }) {
                       />
                       <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-2.5" />
                     </div>
-                    <button 
+                    <button
                       onClick={handleExportStudentsCSV}
                       className="px-3 py-2 border border-zinc-800 hover:bg-zinc-850 hover:text-white text-zinc-400 text-xs font-bold rounded-lg transition-colors cursor-pointer uppercase shrink-0"
                     >
                       Export CSV
                     </button>
-                    <button 
+                    <button
                       onClick={() => {
                         setUserForm({ id: '', name: '', email: '', password: '' });
                         setUserFormError('');
@@ -1943,12 +1931,11 @@ export default function AdminDashboard({ setView }) {
                           <td className="p-3 text-center">
                             <button
                               onClick={() => handleToggleStudentStatus(student.id, student.status || 'ACTIVE')}
-                              className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider transition cursor-pointer border ${
-                                (student.status || 'ACTIVE') === 'ACTIVE'
-                                  ? 'bg-emerald-955/20 border-emerald-900/40 text-emerald-450 hover:bg-rose-955/20 hover:border-rose-900 hover:text-rose-500'
-                                  : 'bg-rose-955/20 border-rose-900/40 text-rose-500 hover:bg-emerald-955/20 hover:border-emerald-900 hover:text-emerald-450'
-                              }`}
-                              title={ (student.status || 'ACTIVE') === 'ACTIVE' ? "Click to Suspend Student" : "Click to Unsuspend Student" }
+                              className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider transition cursor-pointer border ${(student.status || 'ACTIVE') === 'ACTIVE'
+                                ? 'bg-emerald-955/20 border-emerald-900/40 text-emerald-450 hover:bg-rose-955/20 hover:border-rose-900 hover:text-rose-500'
+                                : 'bg-rose-955/20 border-rose-900/40 text-rose-500 hover:bg-emerald-955/20 hover:border-emerald-900 hover:text-emerald-450'
+                                }`}
+                              title={(student.status || 'ACTIVE') === 'ACTIVE' ? "Click to Suspend Student" : "Click to Unsuspend Student"}
                             >
                               {student.status || 'ACTIVE'}
                             </button>
@@ -1957,20 +1944,20 @@ export default function AdminDashboard({ setView }) {
                             {bookingsDb.filter(b => b.userId === student.id).length} Booked
                           </td>
                           <td className="p-3 text-center flex items-center justify-center gap-2">
-                            <button 
+                            <button
                               onClick={() => setViewingStudent(student)}
                               className="px-2.5 py-1 bg-zinc-900 text-brand hover:text-white rounded border border-zinc-800 hover:bg-zinc-850 transition cursor-pointer text-[8px] font-black uppercase tracking-wider"
                             >
                               Details
                             </button>
-                            <button 
+                            <button
                               onClick={() => handleOpenEditUser(student)}
                               className="p-1.5 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"
                               title="Edit Student"
                             >
                               <Edit className="w-3.5 h-3.5" />
                             </button>
-                            <button 
+                            <button
                               onClick={() => handleDeleteUser(student.id)}
                               className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
                               title="Delete Student"
@@ -2002,8 +1989,8 @@ export default function AdminDashboard({ setView }) {
                 </div>
                 <div className="flex items-center gap-3 w-full sm:w-auto">
                   <div className="relative w-full sm:max-w-[200px]">
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       placeholder="Search advisors..."
                       value={searchPsy}
                       onChange={(e) => setSearchPsy(e.target.value)}
@@ -2011,7 +1998,7 @@ export default function AdminDashboard({ setView }) {
                     />
                     <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-2.5" />
                   </div>
-                  <button 
+                  <button
                     onClick={() => {
                       setPsyForm({
                         id: '',
@@ -2056,18 +2043,17 @@ export default function AdminDashboard({ setView }) {
                         <td className="p-3 text-center">
                           <button
                             onClick={() => handleTogglePsyVerification(psy.id, psy.verified)}
-                            className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded border text-[9px] font-black uppercase font-mono transition cursor-pointer ${
-                              psy.verified
-                                ? 'bg-emerald-955/20 border-emerald-900/40 text-emerald-450 hover:bg-rose-955/20 hover:border-rose-900 hover:text-rose-500'
-                                : 'bg-amber-955/20 border-amber-900/40 text-amber-500 hover:bg-emerald-955/20 hover:border-emerald-900/40 hover:text-emerald-450'
-                            }`}
+                            className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded border text-[9px] font-black uppercase font-mono transition cursor-pointer ${psy.verified
+                              ? 'bg-emerald-955/20 border-emerald-900/40 text-emerald-450 hover:bg-rose-955/20 hover:border-rose-900 hover:text-rose-500'
+                              : 'bg-amber-955/20 border-amber-900/40 text-amber-500 hover:bg-emerald-955/20 hover:border-emerald-900/40 hover:text-emerald-450'
+                              }`}
                             title={psy.verified ? "Click to Mark Unverified" : "Click to Verify Advisor"}
                           >
                             {psy.verified ? 'Verified' : 'Unverified'}
                           </button>
                         </td>
                         <td className="p-3 text-center flex items-center justify-center gap-2">
-                          <button 
+                          <button
                             onClick={() => setViewingPsychologist(psy)}
                             className="px-2.5 py-1 bg-zinc-900 text-brand hover:text-white rounded border border-zinc-800 hover:bg-zinc-850 transition cursor-pointer text-[8px] font-black uppercase tracking-wider"
                           >
@@ -2081,14 +2067,14 @@ export default function AdminDashboard({ setView }) {
                           >
                             Preview
                           </a>
-                          <button 
+                          <button
                             onClick={() => handleOpenEditPsy(psy)}
                             className="p-1.5 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"
                             title="Edit Psychologist"
                           >
                             <Edit className="w-3.5 h-3.5" />
                           </button>
-                          <button 
+                          <button
                             onClick={() => handleDeletePsy(psy.id)}
                             className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
                             title="Remove Psychologist"
@@ -2108,7 +2094,7 @@ export default function AdminDashboard({ setView }) {
               </div>
             </div>
           )}
-                 {/* TAB 4: SUB-ADMIN CREATOR & ROLES */}
+          {/* TAB 4: SUB-ADMIN CREATOR & ROLES */}
           {currentSection === 'subadmins' && isSuperAdmin && (
             <div className="space-y-6 animate-in fade-in duration-200 text-xs">
               <div className="border-b border-zinc-805 pb-3">
@@ -2127,8 +2113,8 @@ export default function AdminDashboard({ setView }) {
                   <div className="space-y-3">
                     <div className="space-y-1">
                       <label className="text-zinc-400 font-bold uppercase text-[9px] tracking-wider">Role Title Name</label>
-                      <input 
-                        type="text" 
+                      <input
+                        type="text"
                         required
                         placeholder="e.g. Admissions Lead"
                         value={newRoleName}
@@ -2227,8 +2213,8 @@ export default function AdminDashboard({ setView }) {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                     <div className="space-y-1">
                       <label className="text-zinc-400 font-bold uppercase text-[9px] tracking-wider">Staff Name</label>
-                      <input 
-                        type="text" 
+                      <input
+                        type="text"
                         required
                         placeholder="e.g. Sandra Tomy"
                         value={subAdminForm.name}
@@ -2236,10 +2222,10 @@ export default function AdminDashboard({ setView }) {
                         className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none"
                       />
                     </div>
-                    
+
                     <div className="space-y-1">
                       <label className="text-zinc-400 font-bold uppercase text-[9px] tracking-wider">Role Title</label>
-                      <select 
+                      <select
                         value={subAdminForm.roleName}
                         onChange={(e) => handleRoleChangeInForm(e.target.value)}
                         disabled={rolesDb.length === 0}
@@ -2257,8 +2243,8 @@ export default function AdminDashboard({ setView }) {
 
                     <div className="sm:col-span-2 space-y-1">
                       <label className="text-zinc-400 font-bold uppercase text-[9px] tracking-wider">Email Address</label>
-                      <input 
-                        type="email" 
+                      <input
+                        type="email"
                         required
                         placeholder="staff@example.com"
                         value={subAdminForm.email}
@@ -2269,8 +2255,8 @@ export default function AdminDashboard({ setView }) {
 
                     <div className="sm:col-span-2 space-y-1">
                       <label className="text-zinc-400 font-bold uppercase text-[9px] tracking-wider">Password</label>
-                      <input 
-                        type="password" 
+                      <input
+                        type="password"
                         required
                         placeholder="••••••••"
                         value={subAdminForm.password}
@@ -2313,49 +2299,43 @@ export default function AdminDashboard({ setView }) {
                   ) : (
                     <div className="space-y-3">
                       <p className="text-[9px] uppercase tracking-wider text-zinc-500 font-bold font-mono">Inherited Scopes for {subAdminForm.roleName}</p>
-                      
+
                       <div className="space-y-2.5">
                         {/* MANAGE_USERS */}
-                        <div className={`p-3 border rounded-xl flex items-center justify-between transition-colors duration-200 ${
-                          selectedPermissions.MANAGE_USERS ? 'border-brand/30 bg-brand/5 text-white' : 'border-zinc-900 bg-zinc-950/20 text-zinc-500'
-                        }`}>
+                        <div className={`p-3 border rounded-xl flex items-center justify-between transition-colors duration-200 ${selectedPermissions.MANAGE_USERS ? 'border-brand/30 bg-brand/5 text-white' : 'border-zinc-900 bg-zinc-950/20 text-zinc-500'
+                          }`}>
                           <div className="text-xs">
                             <span className="font-bold block">Manage Students</span>
                             <span className="text-[9.5px] text-zinc-500 leading-tight block mt-0.5">List, search, delete student directory.</span>
                           </div>
-                          <div className={`w-4 h-4 rounded-full border transition flex items-center justify-center shrink-0 ml-2 ${
-                            selectedPermissions.MANAGE_USERS ? 'border-brand bg-brand text-zinc-955' : 'border-zinc-800 text-zinc-800'
-                          }`}>
+                          <div className={`w-4 h-4 rounded-full border transition flex items-center justify-center shrink-0 ml-2 ${selectedPermissions.MANAGE_USERS ? 'border-brand bg-brand text-zinc-955' : 'border-zinc-800 text-zinc-800'
+                            }`}>
                             {selectedPermissions.MANAGE_USERS && <Check className="w-3 h-3 stroke-[3]" />}
                           </div>
                         </div>
 
                         {/* MANAGE_PSYCHOLOGISTS */}
-                        <div className={`p-3 border rounded-xl flex items-center justify-between transition-colors duration-200 ${
-                          selectedPermissions.MANAGE_PSYCHOLOGISTS ? 'border-brand/30 bg-brand/5 text-white' : 'border-zinc-900 bg-zinc-950/20 text-zinc-500'
-                        }`}>
+                        <div className={`p-3 border rounded-xl flex items-center justify-between transition-colors duration-200 ${selectedPermissions.MANAGE_PSYCHOLOGISTS ? 'border-brand/30 bg-brand/5 text-white' : 'border-zinc-900 bg-zinc-950/20 text-zinc-500'
+                          }`}>
                           <div className="text-xs">
                             <span className="font-bold block">Manage Psychologists</span>
                             <span className="text-[9.5px] text-zinc-500 leading-tight block mt-0.5">Configure credentials, verify/unverify accounts.</span>
                           </div>
-                          <div className={`w-4 h-4 rounded-full border transition flex items-center justify-center shrink-0 ml-2 ${
-                            selectedPermissions.MANAGE_PSYCHOLOGISTS ? 'border-brand bg-brand text-zinc-955' : 'border-zinc-800 text-zinc-800'
-                          }`}>
+                          <div className={`w-4 h-4 rounded-full border transition flex items-center justify-center shrink-0 ml-2 ${selectedPermissions.MANAGE_PSYCHOLOGISTS ? 'border-brand bg-brand text-zinc-955' : 'border-zinc-800 text-zinc-800'
+                            }`}>
                             {selectedPermissions.MANAGE_PSYCHOLOGISTS && <Check className="w-3 h-3 stroke-[3]" />}
                           </div>
                         </div>
 
                         {/* MANAGE_BOOKINGS */}
-                        <div className={`p-3 border rounded-xl flex items-center justify-between transition-colors duration-200 ${
-                          selectedPermissions.MANAGE_BOOKINGS ? 'border-brand/30 bg-brand/5 text-white' : 'border-zinc-900 bg-zinc-950/20 text-zinc-500'
-                        }`}>
+                        <div className={`p-3 border rounded-xl flex items-center justify-between transition-colors duration-200 ${selectedPermissions.MANAGE_BOOKINGS ? 'border-brand/30 bg-brand/5 text-white' : 'border-zinc-900 bg-zinc-950/20 text-zinc-500'
+                          }`}>
                           <div className="text-xs">
                             <span className="font-bold block">Manage Bookings</span>
                             <span className="text-[9.5px] text-zinc-555 leading-tight block mt-0.5">Monitor and reschedule session bookings.</span>
                           </div>
-                          <div className={`w-4 h-4 rounded-full border transition flex items-center justify-center shrink-0 ml-2 ${
-                            selectedPermissions.MANAGE_BOOKINGS ? 'border-brand bg-brand text-zinc-955' : 'border-zinc-800 text-zinc-800'
-                          }`}>
+                          <div className={`w-4 h-4 rounded-full border transition flex items-center justify-center shrink-0 ml-2 ${selectedPermissions.MANAGE_BOOKINGS ? 'border-brand bg-brand text-zinc-955' : 'border-zinc-800 text-zinc-800'
+                            }`}>
                             {selectedPermissions.MANAGE_BOOKINGS && <Check className="w-3 h-3 stroke-[3]" />}
                           </div>
                         </div>
@@ -2367,11 +2347,11 @@ export default function AdminDashboard({ setView }) {
             </div>
           )}
 
-                   {currentSection === 'bookings' && hasBookingPermission && (() => {
+          {currentSection === 'bookings' && hasBookingPermission && (() => {
             const filteredBookings = bookingsDb.filter(b => {
-              const matchesSearch = b.userName.toLowerCase().includes(searchBooking.toLowerCase()) || 
-                                    (b.advisorName && b.advisorName.toLowerCase().includes(searchBooking.toLowerCase())) ||
-                                    (b.status && b.status.toLowerCase().includes(searchBooking.toLowerCase()));
+              const matchesSearch = b.userName.toLowerCase().includes(searchBooking.toLowerCase()) ||
+                (b.advisorName && b.advisorName.toLowerCase().includes(searchBooking.toLowerCase())) ||
+                (b.status && b.status.toLowerCase().includes(searchBooking.toLowerCase()));
               if (bookingStatusFilter === 'ALL') return matchesSearch;
               return matchesSearch && b.status === bookingStatusFilter;
             });
@@ -2385,8 +2365,8 @@ export default function AdminDashboard({ setView }) {
                   </div>
                   <div className="flex items-center gap-3 w-full sm:w-auto">
                     <div className="relative w-full sm:max-w-[200px]">
-                      <input 
-                        type="text" 
+                      <input
+                        type="text"
                         placeholder="Search bookings..."
                         value={searchBooking}
                         onChange={(e) => setSearchBooking(e.target.value)}
@@ -2394,7 +2374,7 @@ export default function AdminDashboard({ setView }) {
                       />
                       <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-2.5" />
                     </div>
-                    <button 
+                    <button
                       onClick={() => {
                         const firstStudent = usersDb.find(u => u.role === 'USER' || !u.role);
                         const firstPsy = usersDb.find(u => u.role === 'PSYCHOLOGIST');
@@ -2407,7 +2387,7 @@ export default function AdminDashboard({ setView }) {
                               if (parsed.availableSlots && parsed.availableSlots.length > 0) {
                                 firstSlot = parsed.availableSlots[0];
                               }
-                            } catch (err) {}
+                            } catch (err) { }
                           }
                         }
                         setBookingForm({
@@ -2439,11 +2419,10 @@ export default function AdminDashboard({ setView }) {
                       <button
                         key={status}
                         onClick={() => { setBookingStatusFilter(status); setSelectedBookingIds([]); }}
-                        className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-wider transition cursor-pointer border ${
-                          bookingStatusFilter === status
-                            ? 'bg-brand text-zinc-955 border-brand font-black'
-                            : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white'
-                        }`}
+                        className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-wider transition cursor-pointer border ${bookingStatusFilter === status
+                          ? 'bg-brand text-zinc-955 border-brand font-black'
+                          : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white'
+                          }`}
                       >
                         {status} ({
                           status === 'ALL'
@@ -2466,7 +2445,7 @@ export default function AdminDashboard({ setView }) {
                           if (savedProfile) {
                             try {
                               price = JSON.parse(savedProfile).price || price;
-                            } catch (e) {}
+                            } catch (e) { }
                           }
                         }
                         return acc + Number(price);
@@ -2566,10 +2545,10 @@ export default function AdminDashboard({ setView }) {
                           </td>
                           <td className="p-3">
                             {booking.meetLink ? (
-                              <a 
-                                href={booking.meetLink} 
-                                target="_blank" 
-                                rel="noopener noreferrer" 
+                              <a
+                                href={booking.meetLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 className="text-brand hover:underline font-bold inline-flex items-center gap-1 text-[10px]"
                               >
                                 <Link className="w-3 h-3" /> Virtual Room
@@ -2579,27 +2558,26 @@ export default function AdminDashboard({ setView }) {
                             )}
                           </td>
                           <td className="p-3 text-center">
-                            <span className={`inline-flex items-center px-2 py-0.5 rounded text-[8px] font-black uppercase font-mono tracking-wider ${
-                              booking.status === 'CONFIRMED'
-                                ? 'bg-emerald-950/30 border border-emerald-900/40 text-emerald-450'
-                                : booking.status === 'COMPLETED'
+                            <span className={`inline-flex items-center px-2 py-0.5 rounded text-[8px] font-black uppercase font-mono tracking-wider ${booking.status === 'CONFIRMED'
+                              ? 'bg-emerald-950/30 border border-emerald-900/40 text-emerald-450'
+                              : booking.status === 'COMPLETED'
                                 ? 'bg-indigo-950/30 border border-indigo-900/40 text-indigo-400'
                                 : booking.status === 'CANCELLED'
-                                ? 'bg-rose-955/30 border border-rose-900/40 text-rose-500'
-                                : 'bg-zinc-900 border border-zinc-800 text-zinc-450'
-                            }`}>
+                                  ? 'bg-rose-955/30 border border-rose-900/40 text-rose-500'
+                                  : 'bg-zinc-900 border border-zinc-800 text-zinc-450'
+                              }`}>
                               {booking.status}
                             </span>
                           </td>
                           <td className="p-3 text-center flex items-center justify-center gap-2">
-                            <button 
+                            <button
                               onClick={() => handleOpenEditBooking(booking)}
                               className="p-1.5 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"
                               title="Edit / Reschedule"
                             >
                               <Edit className="w-3.5 h-3.5" />
                             </button>
-                            <button 
+                            <button
                               onClick={() => handleDeleteBooking(booking.id)}
                               className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
                               title="Cancel Booking"
@@ -2639,8 +2617,8 @@ export default function AdminDashboard({ setView }) {
                     </button>
                   )}
                   <div className="relative w-full sm:max-w-[200px]">
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       placeholder="Search messages..."
                       value={searchInquiry}
                       onChange={(e) => setSearchInquiry(e.target.value)}
@@ -2653,17 +2631,16 @@ export default function AdminDashboard({ setView }) {
 
               <div className="space-y-4">
                 {filteredInquiries.map((inq) => (
-                  <div 
+                  <div
                     key={inq.id}
                     className="bg-zinc-955 border border-zinc-850 rounded-xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-5 relative overflow-hidden"
                   >
                     <div className="space-y-2 flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider ${
-                          inq.status === 'RESOLVED'
-                            ? 'bg-emerald-955/20 border border-emerald-900/40 text-emerald-450'
-                            : 'bg-amber-955/20 border border-amber-900/40 text-amber-500'
-                        }`}>
+                        <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider ${inq.status === 'RESOLVED'
+                          ? 'bg-emerald-955/20 border border-emerald-900/40 text-emerald-450'
+                          : 'bg-amber-955/20 border border-amber-900/40 text-amber-500'
+                          }`}>
                           {inq.status || 'PENDING'}
                         </span>
                         <span className="text-[9px] text-zinc-500 font-bold uppercase tracking-wider">{inq.date}</span>
@@ -2682,8 +2659,8 @@ export default function AdminDashboard({ setView }) {
                       <div className="pt-3 border-t border-zinc-900 mt-2 space-y-2">
                         <span className="text-[8px] uppercase tracking-wider font-bold text-zinc-500 block">Internal Staff Notes</span>
                         <div className="flex gap-2">
-                          <input 
-                            type="text" 
+                          <input
+                            type="text"
                             placeholder="Add diagnostic notes or followup details..."
                             defaultValue={inq.note || ''}
                             id={`note-${inq.id}`}
@@ -2705,11 +2682,10 @@ export default function AdminDashboard({ setView }) {
                     <div className="shrink-0 flex items-center gap-2 self-end md:self-center">
                       <button
                         onClick={() => handleResolveInquiry(inq.id)}
-                        className={`px-4.5 py-2.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition cursor-pointer flex items-center gap-1 border border-zinc-800 ${
-                          inq.status === 'RESOLVED'
-                            ? 'bg-zinc-900 text-zinc-400 hover:text-white'
-                            : 'bg-brand hover:bg-brand-dark text-zinc-955'
-                        }`}
+                        className={`px-4.5 py-2.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition cursor-pointer flex items-center gap-1 border border-zinc-800 ${inq.status === 'RESOLVED'
+                          ? 'bg-zinc-900 text-zinc-400 hover:text-white'
+                          : 'bg-brand hover:bg-brand-dark text-zinc-955'
+                          }`}
                       >
                         <Check className="w-3.5 h-3.5" />
                         <span>{inq.status === 'RESOLVED' ? 'Re-open' : 'Mark Resolved'}</span>
@@ -2743,8 +2719,8 @@ export default function AdminDashboard({ setView }) {
                   <p className="text-[10px] text-zinc-500 font-medium pt-1">Monitor student diagnostic assessment outcomes and profiles</p>
                 </div>
                 <div className="relative w-full sm:max-w-[240px]">
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     placeholder="Search results..."
                     value={searchTestResult}
                     onChange={(e) => setSearchTestResult(e.target.value)}
@@ -2756,7 +2732,7 @@ export default function AdminDashboard({ setView }) {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 {filteredTestResults.map((res) => (
-                  <div 
+                  <div
                     key={res.id}
                     className="bg-zinc-950 border border-zinc-850 rounded-xl p-5 space-y-4 relative overflow-hidden flex flex-col justify-between"
                   >
@@ -2798,9 +2774,9 @@ export default function AdminDashboard({ setView }) {
                                 <span className="text-brand font-mono">{val}%</span>
                               </div>
                               <div className="w-full bg-zinc-900 h-2 rounded-full overflow-hidden border border-zinc-850">
-                                <div 
-                                  className="bg-brand h-full rounded-full transition-all duration-500" 
-                                  style={{ width: `${val}%` }} 
+                                <div
+                                  className="bg-brand h-full rounded-full transition-all duration-500"
+                                  style={{ width: `${val}%` }}
                                 />
                               </div>
                             </div>
@@ -2829,7 +2805,7 @@ export default function AdminDashboard({ setView }) {
                   <h3 className="text-sm font-bold uppercase tracking-widest text-white font-header">Frequently Asked Questions (FAQ)</h3>
                   <p className="text-[10px] text-zinc-500 font-medium pt-1">Manage standard questions displayed on the landing page</p>
                 </div>
-                <button 
+                <button
                   onClick={() => {
                     setFaqForm({ index: -1, question: '', answer: '' });
                     setFaqFormError('');
@@ -2844,7 +2820,7 @@ export default function AdminDashboard({ setView }) {
 
               <div className="space-y-4">
                 {faqsDb.map((faq, index) => (
-                  <div 
+                  <div
                     key={index}
                     className="bg-zinc-950 border border-zinc-850 rounded-xl p-5 flex flex-col sm:flex-row sm:items-start justify-between gap-5"
                   >
@@ -2859,14 +2835,14 @@ export default function AdminDashboard({ setView }) {
                     </div>
 
                     <div className="shrink-0 flex items-center gap-2 self-end sm:self-start">
-                      <button 
+                      <button
                         onClick={() => handleOpenEditFaq(faq, index)}
                         className="p-2 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"
                         title="Edit FAQ"
                       >
                         <Edit className="w-3.5 h-3.5" />
                       </button>
-                      <button 
+                      <button
                         onClick={() => handleDeleteFaq(index)}
                         className="p-2 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
                         title="Delete FAQ"
@@ -2906,7 +2882,7 @@ export default function AdminDashboard({ setView }) {
                     className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none"
                     placeholder="e.g. Bridging You To Your {True Growth.}"
                   />
-                  <span className="text-[8.5px] text-zinc-550 block font-medium">Use curly braces `{}` around words you want highlighted with the neon gradient.</span>
+                  <span className="text-[8.5px] text-zinc-550 block font-medium">Use curly braces `{ }` around words you want highlighted with the neon gradient.</span>
                 </div>
 
                 <div className="space-y-1">
@@ -2982,7 +2958,7 @@ export default function AdminDashboard({ setView }) {
               acc[b.service] = (acc[b.service] || 0) + 1;
               return acc;
             }, { counselling: 0, career: 0 });
-            
+
             const maxBookings = sortedMonths.length > 0 ? Math.max(...sortedMonths.map(m => m[1])) : 1;
 
             return (
@@ -3002,8 +2978,8 @@ export default function AdminDashboard({ setView }) {
                         return (
                           <div key={month} className="flex-1 flex flex-col items-center gap-2 h-full justify-end group">
                             <span className="text-[8.5px] text-brand font-black opacity-0 group-hover:opacity-100 transition-opacity font-mono">{count} Booking(s)</span>
-                            <div 
-                              className="w-full bg-brand/15 hover:bg-brand border border-brand/30 hover:border-brand rounded-t transition-all duration-500 relative" 
+                            <div
+                              className="w-full bg-brand/15 hover:bg-brand border border-brand/30 hover:border-brand rounded-t transition-all duration-500 relative"
                               style={{ height: `${pct}%`, minHeight: '6%' }}
                             >
                               <div className="absolute inset-0 bg-gradient-to-t from-transparent to-white/10 pointer-events-none" />
@@ -3053,7 +3029,7 @@ export default function AdminDashboard({ setView }) {
                         {sortedAdvisors.map(([name, count], idx) => (
                           <div key={name} className="flex items-center justify-between p-2 bg-zinc-900/40 rounded border border-zinc-855">
                             <div className="flex items-center gap-2">
-                              <span className="w-5 h-5 rounded bg-zinc-900 border border-zinc-800 text-brand text-[8px] font-black flex items-center justify-center font-mono">#{idx+1}</span>
+                              <span className="w-5 h-5 rounded bg-zinc-900 border border-zinc-800 text-brand text-[8px] font-black flex items-center justify-center font-mono">#{idx + 1}</span>
                               <span className="font-bold text-white uppercase truncate max-w-[120px]">{name}</span>
                             </div>
                             <span className="text-brand font-black uppercase font-mono text-[9px]">{count} Sessions</span>
@@ -3076,7 +3052,7 @@ export default function AdminDashboard({ setView }) {
       {/* 1. STUDENT ADD / EDIT MODAL */}
       {(isAddUserOpen || isEditUserOpen) && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div 
+          <div
             className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
             onClick={() => { setIsAddUserOpen(false); setIsEditUserOpen(false); }}
           />
@@ -3093,8 +3069,8 @@ export default function AdminDashboard({ setView }) {
             <form onSubmit={isAddUserOpen ? handleCreateUser : handleUpdateUser} className="space-y-4 font-medium">
               <div className="space-y-1">
                 <label className="text-[9px] uppercase tracking-wider font-bold text-zinc-400">Full Name</label>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   required
                   placeholder="e.g. John Doe"
                   value={userForm.name}
@@ -3105,8 +3081,8 @@ export default function AdminDashboard({ setView }) {
 
               <div className="space-y-1">
                 <label className="text-[9px] uppercase tracking-wider font-bold text-zinc-400">Email Address</label>
-                <input 
-                  type="email" 
+                <input
+                  type="email"
                   required
                   placeholder="john@example.com"
                   value={userForm.email}
@@ -3119,8 +3095,8 @@ export default function AdminDashboard({ setView }) {
                 <label className="text-[9px] uppercase tracking-wider font-bold text-zinc-400">
                   Password {isEditUserOpen && <span className="text-zinc-500 lowercase font-normal">(leave blank to keep unchanged)</span>}
                 </label>
-                <input 
-                  type="password" 
+                <input
+                  type="password"
                   required={isAddUserOpen}
                   placeholder={isEditUserOpen ? "••••••••" : "Enter password"}
                   value={userForm.password}
@@ -3160,7 +3136,7 @@ export default function AdminDashboard({ setView }) {
       {/* 2. PSYCHOLOGIST ADD / EDIT MODAL */}
       {(isAddPsyOpen || isEditPsyOpen) && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div 
+          <div
             className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
             onClick={() => { setIsAddPsyOpen(false); setIsEditPsyOpen(false); }}
           />
@@ -3178,8 +3154,8 @@ export default function AdminDashboard({ setView }) {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 <div className="space-y-1">
                   <label className="text-[9px] uppercase tracking-wider font-bold text-zinc-400">Full Name</label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     required
                     placeholder="e.g. Dr. Sandra Tomy"
                     value={psyForm.name}
@@ -3190,8 +3166,8 @@ export default function AdminDashboard({ setView }) {
 
                 <div className="space-y-1">
                   <label className="text-[9px] uppercase tracking-wider font-bold text-zinc-400">Email Address</label>
-                  <input 
-                    type="email" 
+                  <input
+                    type="email"
                     required
                     placeholder="counsellor@example.com"
                     value={psyForm.email}
@@ -3204,8 +3180,8 @@ export default function AdminDashboard({ setView }) {
                   <label className="text-[9px] uppercase tracking-wider font-bold text-zinc-400">
                     Password {isEditPsyOpen && <span className="text-zinc-500 lowercase font-normal">(blank keeps same)</span>}
                   </label>
-                  <input 
-                    type="password" 
+                  <input
+                    type="password"
                     required={isAddPsyOpen}
                     placeholder={isEditPsyOpen ? "••••••••" : "Enter password"}
                     value={psyForm.password}
@@ -3216,8 +3192,8 @@ export default function AdminDashboard({ setView }) {
 
                 <div className="space-y-1">
                   <label className="text-[9px] uppercase tracking-wider font-bold text-zinc-400">Education qualifications</label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     placeholder="e.g. MPhil Clinical Psychology"
                     value={psyForm.education}
                     onChange={(e) => setPsyForm({ ...psyForm, education: e.target.value })}
@@ -3227,8 +3203,8 @@ export default function AdminDashboard({ setView }) {
 
                 <div className="space-y-1">
                   <label className="text-[9px] uppercase tracking-wider font-bold text-zinc-400">Hourly price (INR)</label>
-                  <input 
-                    type="number" 
+                  <input
+                    type="number"
                     placeholder="e.g. 1250"
                     value={psyForm.price}
                     onChange={(e) => setPsyForm({ ...psyForm, price: e.target.value })}
@@ -3238,8 +3214,8 @@ export default function AdminDashboard({ setView }) {
 
                 <div className="space-y-1">
                   <label className="text-[9px] uppercase tracking-wider font-bold text-zinc-400">Languages Spoken</label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     placeholder="e.g. Malayalam, English"
                     value={psyForm.lang}
                     onChange={(e) => setPsyForm({ ...psyForm, lang: e.target.value })}
@@ -3249,8 +3225,8 @@ export default function AdminDashboard({ setView }) {
 
                 <div className="sm:col-span-2 space-y-1">
                   <label className="text-[9px] uppercase tracking-wider font-bold text-zinc-400">Default Google Meet Link (optional)</label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     placeholder="https://meet.google.com/abc-defg-hij"
                     value={psyForm.defaultMeetLink}
                     onChange={(e) => setPsyForm({ ...psyForm, defaultMeetLink: e.target.value })}
@@ -3260,8 +3236,8 @@ export default function AdminDashboard({ setView }) {
 
                 <div className="sm:col-span-2 space-y-1">
                   <label className="text-[9px] uppercase tracking-wider font-bold text-zinc-400">Specialties (comma-separated)</label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     placeholder="Anxiety, Stress Management, Mood Disorders"
                     value={psyForm.specialties}
                     onChange={(e) => setPsyForm({ ...psyForm, specialties: e.target.value })}
@@ -3271,7 +3247,7 @@ export default function AdminDashboard({ setView }) {
 
                 <div className="sm:col-span-2 space-y-1">
                   <label className="text-[9px] uppercase tracking-wider font-bold text-zinc-400">Professional Bio</label>
-                  <textarea 
+                  <textarea
                     rows={4}
                     placeholder="Write clinical experience details..."
                     value={psyForm.bio}
@@ -3312,7 +3288,7 @@ export default function AdminDashboard({ setView }) {
       {/* 3. BOOKING ADD / EDIT MODAL */}
       {(isAddBookingOpen || isEditBookingOpen) && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div 
+          <div
             className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
             onClick={() => { setIsAddBookingOpen(false); setIsEditBookingOpen(false); }}
           />
@@ -3329,7 +3305,7 @@ export default function AdminDashboard({ setView }) {
             <form onSubmit={isAddBookingOpen ? handleCreateBooking : handleUpdateBooking} className="space-y-4 font-medium">
               <div className="space-y-1">
                 <label className="text-[9px] uppercase tracking-wider font-bold text-zinc-400">Select Student</label>
-                <select 
+                <select
                   required
                   disabled={isEditBookingOpen}
                   value={bookingForm.userId}
@@ -3345,7 +3321,7 @@ export default function AdminDashboard({ setView }) {
 
               <div className="space-y-1">
                 <label className="text-[9px] uppercase tracking-wider font-bold text-zinc-400">Select Psychologist</label>
-                <select 
+                <select
                   required
                   disabled={isEditBookingOpen}
                   value={bookingForm.advisorId}
@@ -3359,7 +3335,7 @@ export default function AdminDashboard({ setView }) {
                         if (parsed.availableSlots && parsed.availableSlots.length > 0) {
                           firstSlot = parsed.availableSlots[0];
                         }
-                      } catch (err) {}
+                      } catch (err) { }
                     }
                     setBookingForm({ ...bookingForm, advisorId: nextAdvisorId, time: firstSlot });
                   }}
@@ -3375,7 +3351,7 @@ export default function AdminDashboard({ setView }) {
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1">
                   <label className="text-[9px] uppercase tracking-wider font-bold text-zinc-400">Service Category</label>
-                  <select 
+                  <select
                     value={bookingForm.service}
                     onChange={(e) => setBookingForm({ ...bookingForm, service: e.target.value })}
                     className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-xs text-white outline-none cursor-pointer"
@@ -3387,7 +3363,7 @@ export default function AdminDashboard({ setView }) {
 
                 <div className="space-y-1">
                   <label className="text-[9px] uppercase tracking-wider font-bold text-zinc-400">Mode</label>
-                  <select 
+                  <select
                     value={bookingForm.mode}
                     onChange={(e) => setBookingForm({ ...bookingForm, mode: e.target.value })}
                     className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-xs text-white outline-none cursor-pointer"
@@ -3399,8 +3375,8 @@ export default function AdminDashboard({ setView }) {
 
                 <div className="space-y-1">
                   <label className="text-[9px] uppercase tracking-wider font-bold text-zinc-400">Booking Date</label>
-                  <input 
-                    type="date" 
+                  <input
+                    type="date"
                     required
                     value={bookingForm.date}
                     onChange={(e) => setBookingForm({ ...bookingForm, date: e.target.value })}
@@ -3410,7 +3386,7 @@ export default function AdminDashboard({ setView }) {
 
                 <div className="space-y-1">
                   <label className="text-[9px] uppercase tracking-wider font-bold text-zinc-400">Time Slot</label>
-                  <select 
+                  <select
                     value={bookingForm.time}
                     onChange={(e) => setBookingForm({ ...bookingForm, time: e.target.value })}
                     className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-xs text-white outline-none cursor-pointer"
@@ -3426,8 +3402,8 @@ export default function AdminDashboard({ setView }) {
               <div className="grid grid-cols-1 gap-3">
                 <div className="space-y-1">
                   <label className="text-[9px] uppercase tracking-wider font-bold text-zinc-400">Meeting Room URL (Optional)</label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     placeholder="https://meet.google.com/abc-def-ghi"
                     value={bookingForm.meetLink}
                     onChange={(e) => setBookingForm({ ...bookingForm, meetLink: e.target.value })}
@@ -3437,7 +3413,7 @@ export default function AdminDashboard({ setView }) {
 
                 <div className="space-y-1">
                   <label className="text-[9px] uppercase tracking-wider font-bold text-zinc-400">Booking Status</label>
-                  <select 
+                  <select
                     value={bookingForm.status}
                     onChange={(e) => setBookingForm({ ...bookingForm, status: e.target.value })}
                     className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-xs text-white outline-none cursor-pointer"
@@ -3481,7 +3457,7 @@ export default function AdminDashboard({ setView }) {
       {/* 4. FAQ ADD / EDIT MODAL */}
       {(isAddFaqOpen || isEditFaqOpen) && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div 
+          <div
             className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
             onClick={() => { setIsAddFaqOpen(false); setIsEditFaqOpen(false); }}
           />
@@ -3498,8 +3474,8 @@ export default function AdminDashboard({ setView }) {
             <form onSubmit={isAddFaqOpen ? handleCreateFaq : handleUpdateFaq} className="space-y-4 font-medium">
               <div className="space-y-1">
                 <label className="text-[9px] uppercase tracking-wider font-bold text-zinc-400">FAQ Question</label>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   required
                   placeholder="e.g. How does the aptitude assessment work?"
                   value={faqForm.question}
@@ -3510,7 +3486,7 @@ export default function AdminDashboard({ setView }) {
 
               <div className="space-y-1">
                 <label className="text-[9px] uppercase tracking-wider font-bold text-zinc-400">Detailed Answer</label>
-                <textarea 
+                <textarea
                   rows={5}
                   required
                   placeholder="Provide a detailed, helpful answer..."
@@ -3551,7 +3527,7 @@ export default function AdminDashboard({ setView }) {
       {/* 5. STUDENT VIEW DETAILS MODAL */}
       {viewingStudent && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div 
+          <div
             className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
             onClick={() => setViewingStudent(null)}
           />
@@ -3563,7 +3539,7 @@ export default function AdminDashboard({ setView }) {
                 </h3>
                 <p className="text-[10px] text-zinc-500 mt-1">Registry records, booking history, and diagnostic aptitude profiles.</p>
               </div>
-              <button 
+              <button
                 onClick={() => setViewingStudent(null)}
                 className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition cursor-pointer border-none"
               >
@@ -3590,11 +3566,10 @@ export default function AdminDashboard({ setView }) {
                   </div>
                   <div>
                     <span className="text-zinc-500 block text-[9px] uppercase">Account Status</span>
-                    <span className={`inline-block mt-0.5 px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider ${
-                      (viewingStudent.status || 'ACTIVE') === 'ACTIVE'
-                        ? 'bg-emerald-955/20 border border-emerald-900/30 text-emerald-450'
-                        : 'bg-rose-955/20 border border-rose-900/30 text-rose-500'
-                    }`}>
+                    <span className={`inline-block mt-0.5 px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider ${(viewingStudent.status || 'ACTIVE') === 'ACTIVE'
+                      ? 'bg-emerald-955/20 border border-emerald-900/30 text-emerald-450'
+                      : 'bg-rose-955/20 border border-rose-900/30 text-rose-500'
+                      }`}>
                       {viewingStudent.status || 'ACTIVE'}
                     </span>
                   </div>
@@ -3668,12 +3643,11 @@ export default function AdminDashboard({ setView }) {
                               {b.service === 'counselling' ? 'Wellbeing' : 'Career Mapping'} ({b.mode})
                             </td>
                             <td className="p-2.5 text-center">
-                              <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider ${
-                                b.status === 'CONFIRMED' ? 'bg-indigo-950/20 border border-indigo-900/30 text-indigo-400' :
+                              <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider ${b.status === 'CONFIRMED' ? 'bg-indigo-950/20 border border-indigo-900/30 text-indigo-400' :
                                 b.status === 'COMPLETED' ? 'bg-emerald-955/20 border border-emerald-900/30 text-emerald-450' :
-                                b.status === 'CANCELLED' ? 'bg-rose-955/20 border border-rose-900/30 text-rose-500' :
-                                'bg-zinc-800 border border-zinc-700 text-zinc-400'
-                              }`}>
+                                  b.status === 'CANCELLED' ? 'bg-rose-955/20 border border-rose-900/30 text-rose-500' :
+                                    'bg-zinc-800 border border-zinc-700 text-zinc-400'
+                                }`}>
                                 {b.status}
                               </span>
                             </td>
@@ -3724,9 +3698,9 @@ export default function AdminDashboard({ setView }) {
                                 <span className="text-brand font-mono">{val}%</span>
                               </div>
                               <div className="w-full bg-zinc-900 h-1.5 rounded-full overflow-hidden border border-zinc-850">
-                                <div 
-                                  className="bg-brand h-full rounded-full transition-all duration-500" 
-                                  style={{ width: `${val}%` }} 
+                                <div
+                                  className="bg-brand h-full rounded-full transition-all duration-500"
+                                  style={{ width: `${val}%` }}
                                 />
                               </div>
                             </div>
@@ -3754,7 +3728,7 @@ export default function AdminDashboard({ setView }) {
       {/* 6. PSYCHOLOGIST VIEW DETAILS MODAL */}
       {viewingPsychologist && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div 
+          <div
             className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
             onClick={() => setViewingPsychologist(null)}
           />
@@ -3766,7 +3740,7 @@ export default function AdminDashboard({ setView }) {
                 </h3>
                 <p className="text-[10px] text-zinc-500 mt-1">Credentials, availability, rates, and booking history logs.</p>
               </div>
-              <button 
+              <button
                 onClick={() => setViewingPsychologist(null)}
                 className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition cursor-pointer border-none"
               >
@@ -3812,11 +3786,10 @@ export default function AdminDashboard({ setView }) {
                           <span className="font-medium text-zinc-300">{lang}</span>
                         </div>
                         <div className="flex gap-2 items-center pt-1">
-                          <span className={`px-2.5 py-0.5 rounded text-[8px] font-black uppercase tracking-wider ${
-                            viewingPsychologist.verified
-                              ? 'bg-emerald-955/20 border border-emerald-900/30 text-emerald-450'
-                              : 'bg-amber-955/20 border border-amber-900/30 text-amber-500'
-                          }`}>
+                          <span className={`px-2.5 py-0.5 rounded text-[8px] font-black uppercase tracking-wider ${viewingPsychologist.verified
+                            ? 'bg-emerald-955/20 border border-emerald-900/30 text-emerald-450'
+                            : 'bg-amber-955/20 border border-amber-900/30 text-amber-500'
+                            }`}>
                             {viewingPsychologist.verified ? 'Verified' : 'Pending Verification'}
                           </span>
                           <a
@@ -3846,8 +3819,8 @@ export default function AdminDashboard({ setView }) {
                         <span className="text-[9px] uppercase tracking-wider font-black text-zinc-500 block font-mono">Areas of Expertise</span>
                         <div className="flex flex-wrap gap-1.5 pt-1">
                           {specialties.split(',').map(spec => (
-                            <span 
-                              key={spec.trim()} 
+                            <span
+                              key={spec.trim()}
                               className="px-2.5 py-0.5 rounded-full bg-zinc-900 border border-zinc-800 text-[8.5px] font-bold text-zinc-400 uppercase tracking-wide"
                             >
                               {spec.trim()}
@@ -3903,12 +3876,11 @@ export default function AdminDashboard({ setView }) {
                                     {b.service === 'counselling' ? 'Wellbeing' : 'Career'} ({b.mode})
                                   </td>
                                   <td className="p-2.5 text-center">
-                                    <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider ${
-                                      b.status === 'CONFIRMED' ? 'bg-indigo-950/20 border border-indigo-900/30 text-indigo-400' :
+                                    <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider ${b.status === 'CONFIRMED' ? 'bg-indigo-950/20 border border-indigo-900/30 text-indigo-400' :
                                       b.status === 'COMPLETED' ? 'bg-emerald-955/20 border border-emerald-900/30 text-emerald-450' :
-                                      b.status === 'CANCELLED' ? 'bg-rose-955/20 border border-rose-900/30 text-rose-500' :
-                                      'bg-zinc-800 border border-zinc-700 text-zinc-400'
-                                    }`}>
+                                        b.status === 'CANCELLED' ? 'bg-rose-955/20 border border-rose-900/30 text-rose-500' :
+                                          'bg-zinc-800 border border-zinc-700 text-zinc-400'
+                                      }`}>
                                       {b.status}
                                     </span>
                                   </td>
@@ -3941,7 +3913,7 @@ export default function AdminDashboard({ setView }) {
         const { cleanName, roleTitle } = parseStaffDetails(editingSubAdmin);
         return (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <div 
+            <div
               className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
               onClick={() => setEditingSubAdmin(null)}
             />
@@ -3958,12 +3930,12 @@ export default function AdminDashboard({ setView }) {
               <form onSubmit={handleSaveSubAdminPermissions} className="space-y-5 font-medium">
                 <div className="space-y-3">
                   <label className="text-[9px] uppercase tracking-wider font-bold text-zinc-400">Assigned Scopes</label>
-                  
+
                   <div className="space-y-2.5">
                     {/* MANAGE_USERS */}
                     <label className="flex items-start gap-3 p-3 bg-zinc-950/60 hover:bg-zinc-950 border border-zinc-850 rounded-xl cursor-pointer transition-colors select-none">
-                      <input 
-                        type="checkbox" 
+                      <input
+                        type="checkbox"
                         checked={editPermissions.MANAGE_USERS}
                         onChange={(e) => setEditPermissions({ ...editPermissions, MANAGE_USERS: e.target.checked })}
                         className="mt-0.5 accent-brand rounded cursor-pointer"
@@ -3978,8 +3950,8 @@ export default function AdminDashboard({ setView }) {
 
                     {/* MANAGE_PSYCHOLOGISTS */}
                     <label className="flex items-start gap-3 p-3 bg-zinc-950/60 hover:bg-zinc-950 border border-zinc-850 rounded-xl cursor-pointer transition-colors select-none">
-                      <input 
-                        type="checkbox" 
+                      <input
+                        type="checkbox"
                         checked={editPermissions.MANAGE_PSYCHOLOGISTS}
                         onChange={(e) => setEditPermissions({ ...editPermissions, MANAGE_PSYCHOLOGISTS: e.target.checked })}
                         className="mt-0.5 accent-brand rounded cursor-pointer"
@@ -3994,8 +3966,8 @@ export default function AdminDashboard({ setView }) {
 
                     {/* MANAGE_BOOKINGS */}
                     <label className="flex items-start gap-3 p-3 bg-zinc-950/60 hover:bg-zinc-950 border border-zinc-850 rounded-xl cursor-pointer transition-colors select-none">
-                      <input 
-                        type="checkbox" 
+                      <input
+                        type="checkbox"
                         checked={editPermissions.MANAGE_BOOKINGS}
                         onChange={(e) => setEditPermissions({ ...editPermissions, MANAGE_BOOKINGS: e.target.checked })}
                         className="mt-0.5 accent-brand rounded cursor-pointer"
@@ -4073,11 +4045,10 @@ export default function AdminDashboard({ setView }) {
                   </div>
                   <div>
                     <h2 className="text-base font-bold text-white uppercase tracking-wide font-header">{cleanName}</h2>
-                    <span className={`inline-block mt-1 text-[9px] px-2.5 py-1 rounded-full font-black uppercase tracking-widest ${
-                      isSuperAdmin
-                        ? 'bg-brand/15 border border-brand/30 text-brand'
-                        : 'bg-zinc-800 border border-zinc-700 text-zinc-400'
-                    }`}>
+                    <span className={`inline-block mt-1 text-[9px] px-2.5 py-1 rounded-full font-black uppercase tracking-widest ${isSuperAdmin
+                      ? 'bg-brand/15 border border-brand/30 text-brand'
+                      : 'bg-zinc-800 border border-zinc-700 text-zinc-400'
+                      }`}>
                       {isSuperAdmin ? '⭐ Super Admin' : `🔐 ${roleTitle || 'Sub Admin'}`}
                     </span>
                   </div>
@@ -4182,7 +4153,7 @@ export default function AdminDashboard({ setView }) {
       {/* ── ROLE DELETION CONFIRMATION ──────────────────────────────── */}
       {roleToDelete && (
         <div className="fixed inset-0 z-[70] flex items-center justify-center p-4">
-          <div 
+          <div
             className="absolute inset-0 bg-zinc-955/80 backdrop-blur-sm animate-in fade-in duration-300"
             onClick={() => setRoleToDelete(null)}
           />
