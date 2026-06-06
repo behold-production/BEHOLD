@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useNavigate, useLocation, useParams } from 'react-router-dom';
-import { MessageCircle } from 'lucide-react';
+import { MessageCircle, X } from 'lucide-react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import CdatSection from './components/CdatSection';
@@ -39,6 +39,48 @@ export default function App() {
   const [bookingAdvisor, setBookingAdvisor] = useState(null);
   const [pendingScrollSection, setPendingScrollSection] = useState(null);
   const [pendingRedirect, setPendingRedirect] = useState(false);
+
+  // Expanded site settings sync state
+  const [siteSettings, setSiteSettings] = useState({
+    siteName: 'BEHOLD',
+    siteCopyright: '© BEHOLD Ltd., 2026. All rights reserved.',
+    showBanner: false,
+    bannerNotice: '',
+    termsOfUse: '',
+    privacyPolicy: '',
+    whatsapp: 'https://wa.me/919497174011',
+    contactEmail: 'support@behold.com'
+  });
+  const [activeDocType, setActiveDocType] = useState(null); // 'terms' or 'privacy'
+
+  const loadSettings = () => {
+    try {
+      const stored = localStorage.getItem('behold_site_settings');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        setSiteSettings(prev => ({
+          ...prev,
+          ...parsed
+        }));
+      }
+    } catch (e) { }
+  };
+
+  useEffect(() => {
+    loadSettings();
+    const handleStorageChange = (e) => {
+      const key = e.key || (e.detail && e.detail.key);
+      if (key === 'behold_site_settings' || !key) {
+        loadSettings();
+      }
+    };
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('storage_update', handleStorageChange);
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('storage_update', handleStorageChange);
+    };
+  }, []);
 
   const { user, isLoading } = useAuth();
   const navigate = useNavigate();
@@ -138,7 +180,10 @@ export default function App() {
         studentEmail: user ? user.email : 'anonymous@behold.com',
         dominantDomain,
         scores,
-        date: new Date().toISOString().split('T')[0]
+        date: (() => {
+          const d = new Date();
+          return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        })()
       };
       results.push(newResult);
       localStorage.setItem('behold_test_results_db', JSON.stringify(results));
@@ -190,23 +235,37 @@ export default function App() {
 
   return (
     <div className="font-sans antialiased selection:bg-brand/30 min-h-screen relative text-zinc-900 bg-zinc-50">
+      
+      {/* Top Banner Notice Alert */}
+      {!hideNavbarAndFooter && siteSettings.showBanner && siteSettings.bannerNotice && (
+        <div className="w-full bg-zinc-950 text-zinc-300 text-[10px] sm:text-xs font-bold py-2.5 px-4 text-center border-b border-zinc-900 relative z-50 flex items-center justify-center gap-2 tracking-wide uppercase font-mono shadow-md animate-in slide-in-from-top duration-300">
+          <span className="inline-block w-2.5 h-2.5 rounded-full bg-brand animate-pulse" />
+          <span>{siteSettings.bannerNotice}</span>
+        </div>
+      )}
+
       <AuthModals isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
 
-      {/* Navbar — hidden on admin/counsellor full-screen dashboards */}
+      {/* Navbar — hidden on admin/counsellor dashboards */}
       {!hideNavbarAndFooter && (
-        <Navbar navigateToSection={navigateToSection} currentView={location.pathname} onOpenAuth={() => setIsAuthModalOpen(true)} />
+        <Navbar 
+          navigateToSection={navigateToSection} 
+          currentView={location.pathname} 
+          onOpenAuth={() => setIsAuthModalOpen(true)}
+          siteName={siteSettings.siteName}
+        />
       )}
 
       <Routes>
         {/* Landing Page */}
         <Route path="/" element={
           <main className="fade-in-up">
-            <Hero setView={() => { }} navigateToSection={navigateToSection} />
+            <Hero setView={() => { }} navigateToSection={navigateToSection} siteSettings={siteSettings} />
             <CdatSection setView={() => { }} />
             <Services setView={() => { }} onBookTherapist={handleBookTherapist} />
             <About setView={() => { }} />
             <Faq />
-            <Inquiry testProfile={testProfile} />
+            <Inquiry testProfile={testProfile} siteSettings={siteSettings} />
           </main>
         } />
 
@@ -270,8 +329,7 @@ export default function App() {
 
       {/* Floating WhatsApp Button */}
       {!hideNavbarAndFooter && (() => {
-        const settings = JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
-        const whatsappUrl = settings.whatsapp || "https://wa.me/919497174011";
+        const whatsappUrl = siteSettings.whatsapp || "https://wa.me/919497174011";
         return (
           <a
             href={whatsappUrl}
@@ -290,7 +348,50 @@ export default function App() {
 
       {/* Footer */}
       {!hideNavbarAndFooter && (
-        <Footer navigateToSection={navigateToSection} />
+        <Footer 
+          navigateToSection={navigateToSection} 
+          siteName={siteSettings.siteName}
+          siteCopyright={siteSettings.siteCopyright}
+          onOpenDocs={(docType) => setActiveDocType(docType)}
+        />
+      )}
+
+      {/* Terms & Privacy Documents Modal */}
+      {activeDocType && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-2xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
+            
+            {/* Modal Header */}
+            <div className="px-6 py-4 border-b border-zinc-800 flex justify-between items-center bg-zinc-950/40">
+              <h3 className="text-sm font-bold uppercase tracking-widest text-white font-header flex items-center gap-2">
+                <span>{activeDocType === 'terms' ? 'Terms & Conditions' : 'Privacy Policy'}</span>
+                <span className="text-[7.5px] bg-zinc-800 border border-zinc-700 text-zinc-400 px-1.5 py-0.5 rounded font-black tracking-widest uppercase font-mono">DOC</span>
+              </h3>
+              <button
+                onClick={() => setActiveDocType(null)}
+                className="p-1 bg-zinc-950 border border-zinc-850 hover:border-zinc-700 text-zinc-400 hover:text-white rounded-lg transition-all cursor-pointer border-none shadow-sm flex items-center justify-center"
+                title="Close modal"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 overflow-y-auto text-left text-zinc-300 text-xs font-semibold leading-relaxed whitespace-pre-wrap font-sans max-h-[60vh] custom-scrollbar">
+              {activeDocType === 'terms' ? siteSettings.termsOfUse : siteSettings.privacyPolicy}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="px-6 py-4 border-t border-zinc-800 flex justify-end bg-zinc-955">
+              <button
+                onClick={() => setActiveDocType(null)}
+                className="px-5 py-2.5 bg-zinc-800 hover:bg-zinc-750 text-white hover:text-brand font-black text-[9px] uppercase tracking-widest rounded-lg cursor-pointer transition border-none shadow-md"
+              >
+                Close Document
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

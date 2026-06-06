@@ -100,6 +100,12 @@ export default function StudentProfile({ setView }) {
         try { list = JSON.parse(stored); } catch (e) { }
       }
       
+      const session = list.find(b => b.id === sessionId);
+      if (session && isSessionCompleted(session)) {
+        alert("Cannot cancel a session that is already in the past or completed.");
+        return;
+      }
+      
       const updated = list.map(b => {
         if (b.id === sessionId) {
           return { ...b, status: 'CANCELLED' };
@@ -130,7 +136,12 @@ export default function StudentProfile({ setView }) {
       }
 
       const currentStudentId = user?.id || '';
-      const filtered = list.filter(b => b.userId === currentStudentId && b.status !== 'CANCELLED' && !isSessionCompleted(b));
+      const filtered = list.filter(b => b.userId === currentStudentId && b.status !== 'CANCELLED' && !isSessionCompleted(b))
+        .sort((a, b) => {
+          if (a.status === 'PENDING' && b.status !== 'PENDING') return -1;
+          if (a.status !== 'PENDING' && b.status === 'PENDING') return 1;
+          return a.date.localeCompare(b.date);
+        });
       setBookedSessions(filtered);
     } catch (err) {
       console.error("Failed loading student bookings", err);
@@ -154,7 +165,8 @@ export default function StudentProfile({ setView }) {
 
       // Filter completed sessions for this student
       const currentStudentId = user?.id || '';
-      const completedList = list.filter(b => b.userId === currentStudentId && isSessionCompleted(b));
+      const completedList = list.filter(b => b.userId === currentStudentId && isSessionCompleted(b))
+        .sort((a, b) => b.date.localeCompare(a.date));
       setCompletedSessions(completedList);
     } catch (err) {
       console.error("Failed loading completed sessions", err);

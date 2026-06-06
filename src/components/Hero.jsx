@@ -1,14 +1,14 @@
 import React from 'react';
 import { ArrowRight, Compass, HeartPulse } from 'lucide-react';
 
-export default function Hero({ setView, navigateToSection }) {
+export default function Hero({ setView, navigateToSection, siteSettings }) {
   const handleBookNowClick = () => {
     window.spaNavigate('/booking');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   // Load site settings dynamically
-  const settings = JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
+  const settings = siteSettings || {};
   const rawTitle = settings.heroTitle || "Bridging You \nTo Your {True Growth.}";
   const heroSub = settings.heroSub || "Professional psychological counseling, aptitude assessment, and career mentorship designed to help individuals thrive with confidence and purpose.";
 

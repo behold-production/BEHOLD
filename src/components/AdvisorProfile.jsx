@@ -13,7 +13,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
     let registeredPsychologists = [];
     try {
       const users = JSON.parse(localStorage.getItem('behold_users_db') || '[]');
-      registeredPsychologists = users.filter(u => u.role === 'PSYCHOLOGIST' && u.verified !== false);
+      registeredPsychologists = users.filter(u => u.role === 'PSYCHOLOGIST' && u.role !== 'ADMIN' && u.email !== 'admin@behold.com' && u.verified !== false);
     } catch (e) {
       console.error("Failed to load registered users", e);
     }

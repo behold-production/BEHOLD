@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowRight, Loader2 } from 'lucide-react';
 
-export default function Inquiry({ testProfile }) {
+export default function Inquiry({ testProfile, siteSettings }) {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -71,7 +71,10 @@ export default function Inquiry({ testProfile }) {
         name: formData.name.trim(),
         email: formData.email.trim(),
         message: formData.message.trim(),
-        date: new Date().toISOString().split('T')[0],
+        date: (() => {
+          const d = new Date();
+          return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        })(),
         status: 'PENDING'
       };
       inquiries.push(newInquiry);
@@ -197,7 +200,7 @@ export default function Inquiry({ testProfile }) {
         
         {/* Load site settings dynamically */}
         {(() => {
-          const settings = JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
+          const settings = siteSettings || {};
           const whatsappUrl = settings.whatsapp || "https://wa.me/919497174011";
           const emailAddr = settings.contactEmail || "support@behold.com";
           return (

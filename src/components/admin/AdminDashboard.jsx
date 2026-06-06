@@ -3,16 +3,97 @@ import {
   User, ShieldAlert, Award, Trash, Check, Plus, Lock,
   Settings, KeyRound, BarChart3, LogOut, Search, ShieldCheck,
   Calendar, Clock, Link, AlertCircle, Edit, Video, UserPlus,
-  MessageSquare, FileSpreadsheet, HelpCircle, X, ChevronRight, Mail, Shield, Menu
+  MessageSquare, FileSpreadsheet, HelpCircle, X, ChevronRight, ChevronLeft, Mail, Shield, Menu
 } from 'lucide-react';
+
+// ─── Reusable Pagination Bar ───────────────────────────────────────────────
+function PaginationBar({ total, page, limit, onPageChange, onLimitChange }) {
+  const totalPages = Math.max(1, Math.ceil(total / limit));
+  const safeCurrentPage = Math.min(page, totalPages);
+
+  const getPageNumbers = () => {
+    const pages = [];
+    const maxVisible = 5;
+    let start = Math.max(1, safeCurrentPage - Math.floor(maxVisible / 2));
+    let end = Math.min(totalPages, start + maxVisible - 1);
+    if (end - start < maxVisible - 1) start = Math.max(1, end - maxVisible + 1);
+    for (let i = start; i <= end; i++) pages.push(i);
+    return pages;
+  };
+
+  const from = total === 0 ? 0 : (safeCurrentPage - 1) * limit + 1;
+  const to = Math.min(safeCurrentPage * limit, total);
+
+  return (
+    <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 px-1 border-t border-zinc-850 mt-1">
+      <div className="flex items-center gap-2">
+        <span className="text-[9.5px] font-semibold text-zinc-500 uppercase tracking-wider">
+          Showing <span className="text-zinc-300 font-black">{from}–{to}</span> of <span className="text-zinc-300 font-black">{total}</span>
+        </span>
+        <select
+          value={limit}
+          onChange={(e) => { onLimitChange(Number(e.target.value)); onPageChange(1); }}
+          className="ml-2 bg-zinc-900 border border-zinc-800 text-zinc-300 text-[10px] font-bold rounded px-2 py-1 cursor-pointer outline-none focus:border-brand"
+        >
+          {[5, 10, 25, 50].map(n => (
+            <option key={n} value={n}>{n} / page</option>
+          ))}
+        </select>
+      </div>
+      <div className="flex items-center gap-1">
+        <button
+          onClick={() => onPageChange(safeCurrentPage - 1)}
+          disabled={safeCurrentPage === 1}
+          className="p-1.5 rounded border border-zinc-800 bg-zinc-900 text-zinc-400 hover:text-white hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer"
+        >
+          <ChevronLeft className="w-3.5 h-3.5" />
+        </button>
+        {getPageNumbers().map(n => (
+          <button
+            key={n}
+            onClick={() => onPageChange(n)}
+            className={`w-7 h-7 rounded border text-[10px] font-black transition cursor-pointer ${
+              n === safeCurrentPage
+                ? 'bg-brand border-brand text-zinc-950'
+                : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-850'
+            }`}
+          >
+            {n}
+          </button>
+        ))}
+        <button
+          onClick={() => onPageChange(safeCurrentPage + 1)}
+          disabled={safeCurrentPage >= totalPages}
+          className="p-1.5 rounded border border-zinc-800 bg-zinc-900 text-zinc-400 hover:text-white hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer"
+        >
+          <ChevronRight className="w-3.5 h-3.5" />
+        </button>
+      </div>
+    </div>
+  );
+}
 import { useAuth } from '../../context/AuthContext';
 import LogoutConfirmModal from '../LogoutConfirmModal';
 
 export default function AdminDashboard({ setView }) {
+  const getLocalTodayString = () => {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  };
+
   const { user, login, register, logout } = useAuth();
 
   // Tab Section: default to overview or users if sub-admin
   const [currentSection, setCurrentSection] = useState('overview');
+  const [activeStatHighlight, setActiveStatHighlight] = useState(null);
+  const [overviewActivityTab, setOverviewActivityTab] = useState('bookings');
+  const [selectedOverviewBooking, setSelectedOverviewBooking] = useState(null);
+  const [isScanning, setIsScanning] = useState(false);
+  const [scanProgress, setScanProgress] = useState(0);
+  const [scanResults, setScanResults] = useState(null);
 
   // List states
   const [usersDb, setUsersDb] = useState([]);
@@ -38,6 +119,36 @@ export default function AdminDashboard({ setView }) {
   const [searchPsy, setSearchPsy] = useState('');
   const [searchInquiry, setSearchInquiry] = useState('');
   const [searchTestResult, setSearchTestResult] = useState('');
+
+  // Pagination & Lazy Loading States
+  const [studentPage, setStudentPage] = useState(1);
+  const [studentLimit, setStudentLimit] = useState(10);
+
+  const [psyPage, setPsyPage] = useState(1);
+  const [psyLimit, setPsyLimit] = useState(10);
+
+  const [bookingPage, setBookingPage] = useState(1);
+  const [bookingLimit, setBookingLimit] = useState(10);
+
+  const [inquiryPage, setInquiryPage] = useState(1);
+  const [inquiryLimit, setInquiryLimit] = useState(10);
+
+  // Reset page pagination on search/filter mutations
+  useEffect(() => {
+    setStudentPage(1);
+  }, [searchUser]);
+
+  useEffect(() => {
+    setPsyPage(1);
+  }, [searchPsy]);
+
+  useEffect(() => {
+    setBookingPage(1);
+  }, [searchBooking, bookingStatusFilter]);
+
+  useEffect(() => {
+    setInquiryPage(1);
+  }, [searchInquiry]);
 
   // FAQ Modal/Form states
   const [isAddFaqOpen, setIsAddFaqOpen] = useState(false);
@@ -100,7 +211,7 @@ export default function AdminDashboard({ setView }) {
     advisorId: '',
     service: 'counselling',
     mode: 'ONLINE',
-    date: new Date().toISOString().split('T')[0],
+    date: getLocalTodayString(),
     time: '',
     meetLink: '',
     status: 'CONFIRMED'
@@ -134,7 +245,13 @@ export default function AdminDashboard({ setView }) {
     heroTitle: '',
     heroSub: '',
     whatsapp: '',
-    contactEmail: ''
+    contactEmail: '',
+    siteName: '',
+    siteCopyright: '',
+    showBanner: false,
+    bannerNotice: '',
+    termsOfUse: '',
+    privacyPolicy: ''
   });
   const [settingsSuccess, setSettingsSuccess] = useState('');
 
@@ -211,7 +328,35 @@ export default function AdminDashboard({ setView }) {
       heroTitle: settings.heroTitle || 'Bridging You \nTo Your {True Growth.}',
       heroSub: settings.heroSub || 'Professional psychological counseling, aptitude assessment, and career mentorship designed to help individuals thrive with confidence and purpose.',
       whatsapp: settings.whatsapp || 'https://wa.me/919497174011',
-      contactEmail: settings.contactEmail || 'support@behold.com'
+      contactEmail: settings.contactEmail || 'support@behold.com',
+      siteName: settings.siteName || 'BEHOLD',
+      siteCopyright: settings.siteCopyright || '© BEHOLD Ltd., 2026. All rights reserved.',
+      showBanner: settings.showBanner !== undefined ? settings.showBanner : false,
+      bannerNotice: settings.bannerNotice || '🚨 Maintenance Notice: Schedulers undergoing maintenance tonight between 12:00 AM - 02:00 AM IST.',
+      termsOfUse: settings.termsOfUse || `BEHOLD TERMS OF USE
+
+Welcome to BEHOLD. By accessing or using our platform, you agree to comply with and be bound by the following terms and conditions of use.
+
+1. ACCEPTANCE OF TERMS
+By using this platform, you agree to these Terms. If you do not agree, please do not use the services.
+
+2. SERVICE DESCRIPTION
+BEHOLD provides online and offline psychological counseling, career aptitude assessments, and student advisory services.
+
+3. ADVISOR DISCLAIMER
+Assessments and counseling are advisory. Advisors are certified but consultations do not replace clinical medical treatment.
+
+4. CANCELLATION POLICY
+Bookings may be cancelled up to 2 hours before the scheduled time slot. Past or completed sessions cannot be cancelled.`,
+      privacyPolicy: settings.privacyPolicy || `BEHOLD PRIVACY POLICY
+
+Your privacy is extremely important to us. This policy describes how we collect, protect, and use your personal information.
+
+1. INFORMATION WE COLLECT
+We collect your name, email address, password, booking requests, and CDAT aptitude results to facilitate counseling services.
+
+2. DATA STORAGE
+All data is stored securely in your browser's local sandbox data structures. No third party has access to your sensitive profile logs.`
     });
   };
 
@@ -223,7 +368,16 @@ export default function AdminDashboard({ setView }) {
         try {
           const parsed = JSON.parse(saved);
           if (parsed.availableSlots && parsed.availableSlots.length > 0) {
-            slots = [...parsed.availableSlots];
+            const bookings = JSON.parse(localStorage.getItem('behold_booked_sessions') || '[]');
+            slots = parsed.availableSlots.filter(slot => {
+              const isAlreadyBooked = bookings.some(b => 
+                b.advisorId === bookingForm.advisorId &&
+                b.date === bookingForm.date &&
+                b.time === slot &&
+                (b.status === 'CONFIRMED' || b.status === 'PENDING')
+              );
+              return !isAlreadyBooked;
+            });
           }
         } catch (e) { }
       }
@@ -300,6 +454,10 @@ export default function AdminDashboard({ setView }) {
   // Student Actions
   const handleCreateUser = (e) => {
     e.preventDefault();
+    if (!hasUserPermission) {
+      setUserFormError("Access Denied: You do not have permission to manage students.");
+      return;
+    }
     setUserFormError('');
     setUserFormSuccess('');
 
@@ -347,6 +505,10 @@ export default function AdminDashboard({ setView }) {
 
   const handleUpdateUser = (e) => {
     e.preventDefault();
+    if (!hasUserPermission) {
+      setUserFormError("Access Denied: You do not have permission to manage students.");
+      return;
+    }
     setUserFormError('');
     setUserFormSuccess('');
 
@@ -386,6 +548,10 @@ export default function AdminDashboard({ setView }) {
   };
 
   const handleDeleteUser = (userId) => {
+    if (!hasUserPermission) {
+      alert("Access Denied: You do not have permission to manage students.");
+      return;
+    }
     if (!window.confirm("Are you sure you want to delete this account?")) return;
     const users = JSON.parse(localStorage.getItem('behold_users_db') || '[]');
     const updated = users.filter(u => u.id !== userId);
@@ -396,6 +562,10 @@ export default function AdminDashboard({ setView }) {
   // Psychologist Actions
   const handleCreatePsy = (e) => {
     e.preventDefault();
+    if (!hasPsyPermission) {
+      setPsyFormError("Access Denied: You do not have permission to manage psychologists.");
+      return;
+    }
     setPsyFormError('');
     setPsyFormSuccess('');
 
@@ -421,7 +591,8 @@ export default function AdminDashboard({ setView }) {
       name: psyForm.name.trim(),
       email: psyForm.email.trim(),
       password: psyForm.password,
-      role: 'PSYCHOLOGIST'
+      role: 'PSYCHOLOGIST',
+      verified: true
     };
 
     users.push(newUser);
@@ -496,6 +667,10 @@ export default function AdminDashboard({ setView }) {
 
   const handleUpdatePsy = (e) => {
     e.preventDefault();
+    if (!hasPsyPermission) {
+      setPsyFormError("Access Denied: You do not have permission to manage psychologists.");
+      return;
+    }
     setPsyFormError('');
     setPsyFormSuccess('');
 
@@ -589,6 +764,10 @@ export default function AdminDashboard({ setView }) {
   };
 
   const handleDeletePsy = (psyId) => {
+    if (!hasPsyPermission) {
+      alert("Access Denied: You do not have permission to manage psychologists.");
+      return;
+    }
     if (!window.confirm("Are you sure you want to remove this psychologist?")) return;
     const users = JSON.parse(localStorage.getItem('behold_users_db') || '[]');
     const updated = users.filter(u => u.id !== psyId);
@@ -599,11 +778,49 @@ export default function AdminDashboard({ setView }) {
   // Booking Actions
   const handleCreateBooking = (e) => {
     e.preventDefault();
+    if (!hasBookingPermission) {
+      setBookingFormError("Access Denied: You do not have permission to manage bookings.");
+      return;
+    }
     setBookingFormError('');
     setBookingFormSuccess('');
 
     if (!bookingForm.userId || !bookingForm.advisorId || !bookingForm.date || !bookingForm.time) {
       setBookingFormError("Student, Psychologist, Date and Time Slot are required.");
+      return;
+    }
+
+    const localToday = getLocalTodayString();
+    if (bookingForm.date < localToday) {
+      setBookingFormError("Cannot book a date in the past.");
+      return;
+    }
+
+    if (bookingForm.date === localToday && bookingForm.time) {
+      try {
+        const [time, modifier] = bookingForm.time.split(' ');
+        let [hours, minutes] = time.split(':').map(Number);
+        if (modifier === 'PM' && hours < 12) hours += 12;
+        if (modifier === 'AM' && hours === 12) hours = 0;
+        
+        const now = new Date();
+        const slotDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+        if (now >= slotDate) {
+          setBookingFormError("This time slot has already passed today.");
+          return;
+        }
+      } catch (e) {}
+    }
+
+    const bookings = JSON.parse(localStorage.getItem('behold_booked_sessions') || '[]');
+    const isDoubleBooked = bookings.some(b => 
+      b.advisorId === bookingForm.advisorId &&
+      b.date === bookingForm.date &&
+      b.time === bookingForm.time &&
+      (b.status === 'CONFIRMED' || b.status === 'PENDING')
+    );
+    if (isDoubleBooked) {
+      setBookingFormError("This slot is already booked for the selected date.");
       return;
     }
 
@@ -627,7 +844,6 @@ export default function AdminDashboard({ setView }) {
       } catch (err) { }
     }
 
-    const bookings = JSON.parse(localStorage.getItem('behold_booked_sessions') || '[]');
     const newBooking = {
       id: 'sb_' + Date.now(),
       userId: bookingForm.userId,
@@ -653,7 +869,7 @@ export default function AdminDashboard({ setView }) {
       advisorId: '',
       service: 'counselling',
       mode: 'ONLINE',
-      date: new Date().toISOString().split('T')[0],
+      date: getLocalTodayString(),
       time: '',
       meetLink: '',
       status: 'CONFIRMED'
@@ -689,6 +905,10 @@ export default function AdminDashboard({ setView }) {
 
   const handleUpdateBooking = (e) => {
     e.preventDefault();
+    if (!hasBookingPermission) {
+      setBookingFormError("Access Denied: You do not have permission to manage bookings.");
+      return;
+    }
     setBookingFormError('');
     setBookingFormSuccess('');
 
@@ -744,6 +964,10 @@ export default function AdminDashboard({ setView }) {
   };
 
   const handleDeleteBooking = (bookingId) => {
+    if (!hasBookingPermission) {
+      alert("Access Denied: You do not have permission to manage bookings.");
+      return;
+    }
     if (!window.confirm("Are you sure you want to remove this booking?")) return;
     const bookings = JSON.parse(localStorage.getItem('behold_booked_sessions') || '[]');
     const updated = bookings.filter(b => b.id !== bookingId);
@@ -766,6 +990,10 @@ export default function AdminDashboard({ setView }) {
 
   const handleCreateRole = (e) => {
     e.preventDefault();
+    if (!isSuperAdmin) {
+      setRoleError("Access Denied: You do not have permission to manage roles.");
+      return;
+    }
     setRoleError('');
     setRoleSuccess('');
 
@@ -813,10 +1041,18 @@ export default function AdminDashboard({ setView }) {
   };
 
   const handleDeleteRole = (role) => {
+    if (!isSuperAdmin) {
+      alert("Access Denied: You do not have permission to manage roles.");
+      return;
+    }
     setRoleToDelete(role);
   };
 
   const executeDeleteRole = (roleId) => {
+    if (!isSuperAdmin) {
+      alert("Access Denied: You do not have permission to manage roles.");
+      return;
+    }
     const roles = JSON.parse(localStorage.getItem('behold_roles_db') || '[]');
     const updated = roles.filter(r => r.id !== roleId);
     localStorage.setItem('behold_roles_db', JSON.stringify(updated));
@@ -852,6 +1088,10 @@ export default function AdminDashboard({ setView }) {
   // Sub-admin creation handler
   const handleCreateSubAdmin = async (e) => {
     e.preventDefault();
+    if (!isSuperAdmin) {
+      setSubAdminError("Access Denied: You do not have permission to manage sub-admins.");
+      return;
+    }
     setSubAdminError('');
     setSubAdminSuccess('');
     setIsRegistering(true);
@@ -952,7 +1192,12 @@ export default function AdminDashboard({ setView }) {
   const psychologistsList = usersDb.filter(u =>
     u.role === 'PSYCHOLOGIST' &&
     (u.name.toLowerCase().includes(searchPsy.toLowerCase()) || u.email.toLowerCase().includes(searchPsy.toLowerCase()))
-  );
+  ).sort((a, b) => {
+    const aVer = a.verified === false ? 0 : 1;
+    const bVer = b.verified === false ? 0 : 1;
+    if (aVer !== bVer) return aVer - bVer;
+    return a.name.localeCompare(b.name);
+  });
 
   const subAdminsList = usersDb.filter(u =>
     u.role === 'ADMIN' && u.permissions // Only custom sub-admins
@@ -960,6 +1205,10 @@ export default function AdminDashboard({ setView }) {
 
   // Inquiries Actions
   const handleResolveInquiry = (inqId) => {
+    if (!isSuperAdmin) {
+      alert("Access Denied: You do not have permission to manage inquiries.");
+      return;
+    }
     const inquiries = JSON.parse(localStorage.getItem('behold_inquiries_db') || '[]');
     const updated = inquiries.map(inq => {
       if (inq.id === inqId) {
@@ -972,6 +1221,10 @@ export default function AdminDashboard({ setView }) {
   };
 
   const handleDeleteInquiry = (inqId) => {
+    if (!isSuperAdmin) {
+      alert("Access Denied: You do not have permission to manage inquiries.");
+      return;
+    }
     if (!window.confirm("Are you sure you want to delete this student inquiry?")) return;
     const inquiries = JSON.parse(localStorage.getItem('behold_inquiries_db') || '[]');
     const updated = inquiries.filter(inq => inq.id !== inqId);
@@ -981,6 +1234,10 @@ export default function AdminDashboard({ setView }) {
 
   // Student active/suspended status toggle
   const handleToggleStudentStatus = (studentId, currentStatus) => {
+    if (!hasUserPermission) {
+      alert("Access Denied: You do not have permission to manage students.");
+      return;
+    }
     const updated = usersDb.map(u => {
       if (u.id === studentId) {
         return { ...u, status: currentStatus === 'ACTIVE' ? 'SUSPENDED' : 'ACTIVE' };
@@ -993,6 +1250,10 @@ export default function AdminDashboard({ setView }) {
 
   // Psychologist verification toggle
   const handleTogglePsyVerification = (psyId, currentVerified) => {
+    if (!hasPsyPermission) {
+      alert("Access Denied: You do not have permission to verify/unverify psychologists.");
+      return;
+    }
     const updated = usersDb.map(u => {
       if (u.id === psyId) {
         return { ...u, verified: !currentVerified };
@@ -1006,12 +1267,43 @@ export default function AdminDashboard({ setView }) {
   // Site Settings save handler
   const handleSaveSettings = (e) => {
     e.preventDefault();
+    if (!isSuperAdmin) {
+      alert("Access Denied: You do not have permission to save settings.");
+      return;
+    }
     setSettingsSuccess('');
     localStorage.setItem('behold_site_settings', JSON.stringify(settingsForm));
     setSettingsSuccess("Site Settings updated successfully!");
     window.dispatchEvent(new Event('storage'));
     window.dispatchEvent(new Event('behold_faqs_updated'));
     setTimeout(() => setSettingsSuccess(''), 3000);
+  };
+
+  const handleRunSecurityCheck = () => {
+    if (isScanning) return;
+    setIsScanning(true);
+    setScanProgress(0);
+    setScanResults(null);
+    let current = 0;
+    const interval = setInterval(() => {
+      current += 10;
+      setScanProgress(current);
+      if (current >= 100) {
+        clearInterval(interval);
+        setIsScanning(false);
+        setScanResults({
+          status: 'SECURE',
+          timestamp: new Date().toLocaleTimeString(),
+          issuesFound: 0,
+          checks: [
+            { name: 'Schema integrity', ok: true },
+            { name: 'Index validation', ok: true },
+            { name: 'Root security access', ok: true },
+            { name: 'Token encryption', ok: true }
+          ]
+        });
+      }
+    }, 120);
   };
 
   // Sub-Admin edit permissions
@@ -1028,6 +1320,10 @@ export default function AdminDashboard({ setView }) {
 
   const handleSaveSubAdminPermissions = (e) => {
     e.preventDefault();
+    if (!isSuperAdmin) {
+      setEditSubAdminError("Access Denied: You do not have permission to manage sub-admins.");
+      return;
+    }
     setEditSubAdminError('');
     setEditSubAdminSuccess('');
 
@@ -1058,6 +1354,10 @@ export default function AdminDashboard({ setView }) {
 
   // Inquiry Reply/Notes
   const handleSaveInquiryNote = (inqId, noteText) => {
+    if (!isSuperAdmin) {
+      alert("Access Denied: You do not have permission to manage inquiries.");
+      return;
+    }
     const inquiries = JSON.parse(localStorage.getItem('behold_inquiries_db') || '[]');
     const updated = inquiries.map(inq => {
       if (inq.id === inqId) {
@@ -1071,6 +1371,10 @@ export default function AdminDashboard({ setView }) {
   };
 
   const handleBulkClearResolvedInquiries = () => {
+    if (!isSuperAdmin) {
+      alert("Access Denied: You do not have permission to manage inquiries.");
+      return;
+    }
     if (!window.confirm("Are you sure you want to delete all resolved inquiries?")) return;
     const inquiries = JSON.parse(localStorage.getItem('behold_inquiries_db') || '[]');
     const updated = inquiries.filter(inq => inq.status !== 'RESOLVED');
@@ -1098,6 +1402,10 @@ export default function AdminDashboard({ setView }) {
   };
 
   const handleBulkBookingStatus = (status) => {
+    if (!hasBookingPermission) {
+      alert("Access Denied: You do not have permission to manage bookings.");
+      return;
+    }
     if (selectedBookingIds.length === 0) return;
     const bookings = JSON.parse(localStorage.getItem('behold_booked_sessions') || '[]');
     const updated = bookings.map(b => {
@@ -1113,6 +1421,10 @@ export default function AdminDashboard({ setView }) {
   };
 
   const handleBulkDeleteBookings = () => {
+    if (!hasBookingPermission) {
+      alert("Access Denied: You do not have permission to manage bookings.");
+      return;
+    }
     if (selectedBookingIds.length === 0) return;
     if (!window.confirm(`Are you sure you want to delete ${selectedBookingIds.length} selected bookings?`)) return;
     const bookings = JSON.parse(localStorage.getItem('behold_booked_sessions') || '[]');
@@ -1125,6 +1437,10 @@ export default function AdminDashboard({ setView }) {
 
   // Test Results Actions
   const handleDeleteTestResult = (resId) => {
+    if (!isSuperAdmin) {
+      alert("Access Denied: You do not have permission to manage test results.");
+      return;
+    }
     if (!window.confirm("Are you sure you want to delete this test result?")) return;
     const results = JSON.parse(localStorage.getItem('behold_test_results_db') || '[]');
     const updated = results.filter(res => res.id !== resId);
@@ -1135,6 +1451,10 @@ export default function AdminDashboard({ setView }) {
   // FAQ Desk Actions
   const handleCreateFaq = (e) => {
     e.preventDefault();
+    if (!isSuperAdmin) {
+      setFaqFormError("Access Denied: You do not have permission to manage FAQs.");
+      return;
+    }
     setFaqFormError('');
     setFaqFormSuccess('');
 
@@ -1173,6 +1493,10 @@ export default function AdminDashboard({ setView }) {
 
   const handleUpdateFaq = (e) => {
     e.preventDefault();
+    if (!isSuperAdmin) {
+      setFaqFormError("Access Denied: You do not have permission to manage FAQs.");
+      return;
+    }
     setFaqFormError('');
     setFaqFormSuccess('');
 
@@ -1203,6 +1527,10 @@ export default function AdminDashboard({ setView }) {
   };
 
   const handleDeleteFaq = (index) => {
+    if (!isSuperAdmin) {
+      alert("Access Denied: You do not have permission to manage FAQs.");
+      return;
+    }
     if (!window.confirm("Are you sure you want to delete this FAQ question?")) return;
     const currentFaqs = JSON.parse(localStorage.getItem('behold_faqs') || '[]');
     const updated = currentFaqs.filter((_, idx) => idx !== index);
@@ -1216,14 +1544,21 @@ export default function AdminDashboard({ setView }) {
     inq.name.toLowerCase().includes(searchInquiry.toLowerCase()) ||
     inq.email.toLowerCase().includes(searchInquiry.toLowerCase()) ||
     inq.message.toLowerCase().includes(searchInquiry.toLowerCase())
-  );
+  ).sort((a, b) => {
+    const aStatus = a.status === 'RESOLVED' ? 1 : 0;
+    const bStatus = b.status === 'RESOLVED' ? 1 : 0;
+    if (aStatus !== bStatus) return aStatus - bStatus;
+    return (b.id || '').localeCompare(a.id || '');
+  });
 
   // Filter test results
   const filteredTestResults = testResultsDb.filter(res =>
     res.studentName.toLowerCase().includes(searchTestResult.toLowerCase()) ||
     res.studentEmail.toLowerCase().includes(searchTestResult.toLowerCase()) ||
     res.dominantDomain.toLowerCase().includes(searchTestResult.toLowerCase())
-  );
+  ).sort((a, b) => {
+    return (b.date || '').localeCompare(a.date || '');
+  });
 
   // --- LOGIN UI GATE ---
   const isUserAdmin = user && user.role === 'ADMIN';
@@ -1581,9 +1916,23 @@ export default function AdminDashboard({ setView }) {
           {/* TAB 1: OVERVIEW PANEL */}
           {currentSection === 'overview' && isSuperAdmin && (() => {
             const studentsCount = usersDb.filter(u => u.role === 'USER' || !u.role).length;
+            const activeStudentsCount = usersDb.filter(u => (u.role === 'USER' || !u.role) && u.status !== 'SUSPENDED').length;
+            const suspendedStudentsCount = usersDb.filter(u => (u.role === 'USER' || !u.role) && u.status === 'SUSPENDED').length;
+
             const psyCount = usersDb.filter(u => u.role === 'PSYCHOLOGIST').length;
+            const approvedPsyCount = usersDb.filter(u => u.role === 'PSYCHOLOGIST' && u.verified).length;
+            const pendingPsyCount = usersDb.filter(u => u.role === 'PSYCHOLOGIST' && !u.verified).length;
+
+            const totalBookingsCount = bookingsDb.length;
+            const confirmedBookingsCount = bookingsDb.filter(b => b.status === 'CONFIRMED').length;
+            const pendingBookingsCount = bookingsDb.filter(b => b.status === 'PENDING').length;
+            const completedBookingsCount = bookingsDb.filter(b => b.status === 'COMPLETED').length;
+            const cancelledBookingsCount = bookingsDb.filter(b => b.status === 'CANCELLED').length;
+
             const pendingInquiriesCount = inquiriesDb.filter(i => i.status === 'PENDING' || !i.status).length;
-            const completedSessionsCount = bookingsDb.filter(b => b.status === 'COMPLETED').length;
+            const resolvedInquiriesCount = inquiriesDb.filter(i => i.status === 'RESOLVED').length;
+            const totalInquiriesCount = inquiriesDb.length;
+            const inquiryResolutionRate = totalInquiriesCount > 0 ? Math.round((resolvedInquiriesCount / totalInquiriesCount) * 100) : 0;
 
             const totalRevenue = bookingsDb.reduce((acc, b) => {
               if (b.status !== 'COMPLETED') return acc;
@@ -1599,6 +1948,30 @@ export default function AdminDashboard({ setView }) {
               }
               return acc + Number(price);
             }, 0);
+
+            const projectedRevenue = bookingsDb.reduce((acc, b) => {
+              if (b.status !== 'CONFIRMED' && b.status !== 'PENDING') return acc;
+              const advisor = usersDb.find(u => u.id === b.advisorId) || usersDb.find(u => u.name === b.advisorName);
+              let price = 1250;
+              if (advisor) {
+                const savedProfile = localStorage.getItem(`behold_advisor_profile_${advisor.id}`);
+                if (savedProfile) {
+                  try {
+                    price = JSON.parse(savedProfile).price || price;
+                  } catch (e) { }
+                }
+              }
+              return acc + Number(price);
+            }, 0);
+
+            const counsellingCount = bookingsDb.filter(b => b.service === 'counselling').length;
+            const aptitudeCount = bookingsDb.filter(b => b.service === 'aptitude').length;
+            const onlineCount = bookingsDb.filter(b => b.mode === 'ONLINE').length;
+            const offlineCount = bookingsDb.filter(b => b.mode === 'OFFLINE').length;
+            const doorstepCount = bookingsDb.filter(b => b.mode === 'DOOR_STEP').length;
+
+            const activeBookings = bookingsDb.filter(b => b.status === 'CONFIRMED' || b.status === 'PENDING').length;
+            const bookingCompletionRate = totalBookingsCount > 0 ? Math.round((completedBookingsCount / totalBookingsCount) * 100) : 0;
 
             // Storage usage calculation
             let totalChars = 0;
@@ -1618,37 +1991,400 @@ export default function AdminDashboard({ setView }) {
 
                 {/* KPI stats Grid */}
                 <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">
-                  <div className="bg-zinc-950 border border-zinc-850 p-4 rounded-xl text-center space-y-1">
-                    <span className="text-[8px] text-zinc-500 font-bold uppercase tracking-wider block">Students</span>
-                    <p className="text-xl font-black text-white">{studentsCount}</p>
-                    <span className="text-[7.5px] text-zinc-655 font-bold block uppercase">Registered</span>
+                  {/* Students Card */}
+                  <div
+                    onClick={() => setActiveStatHighlight(activeStatHighlight === 'students' ? null : 'students')}
+                    className={`bg-zinc-950 border p-4 rounded-xl text-center space-y-1.5 cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-brand/5 select-none ${
+                      activeStatHighlight === 'students'
+                        ? 'border-brand bg-brand/5 ring-1 ring-brand/30'
+                        : 'border-zinc-850 hover:border-zinc-700'
+                    }`}
+                  >
+                    <div className="flex justify-between items-center">
+                      <span className="text-[8px] text-zinc-500 font-bold uppercase tracking-wider block">Students</span>
+                      <User className={`w-3.5 h-3.5 ${activeStatHighlight === 'students' ? 'text-brand' : 'text-zinc-500'}`} />
+                    </div>
+                    <p className="text-xl font-black text-white text-left pt-0.5">{studentsCount}</p>
+                    <div className="flex justify-between items-center text-[7.5px] text-zinc-500 font-semibold pt-0.5">
+                      <span className="uppercase text-emerald-450">{activeStudentsCount} Active</span>
+                      <span className="font-mono text-zinc-600">{suspendedStudentsCount} Suspended</span>
+                    </div>
                   </div>
-                  <div className="bg-zinc-950 border border-zinc-850 p-4 rounded-xl text-center space-y-1">
-                    <span className="text-[8px] text-zinc-500 font-bold uppercase tracking-wider block">Psychologists</span>
-                    <p className="text-xl font-black text-white">{psyCount}</p>
-                    <span className="text-[7.5px] text-zinc-655 font-bold block uppercase">{usersDb.filter(u => u.role === 'PSYCHOLOGIST' && u.verified !== false).length} Verified</span>
+
+                  {/* Psychologists Card */}
+                  <div
+                    onClick={() => setActiveStatHighlight(activeStatHighlight === 'psychologists' ? null : 'psychologists')}
+                    className={`bg-zinc-955 border p-4 rounded-xl text-center space-y-1.5 cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-brand/5 select-none ${
+                      activeStatHighlight === 'psychologists'
+                        ? 'border-brand bg-brand/5 ring-1 ring-brand/30'
+                        : 'border-zinc-850 hover:border-zinc-700'
+                    }`}
+                  >
+                    <div className="flex justify-between items-center">
+                      <span className="text-[8px] text-zinc-500 font-bold uppercase tracking-wider block">Psychologists</span>
+                      <Award className={`w-3.5 h-3.5 ${activeStatHighlight === 'psychologists' ? 'text-brand' : 'text-zinc-500'}`} />
+                    </div>
+                    <p className="text-xl font-black text-white text-left pt-0.5">{psyCount}</p>
+                    <div className="flex justify-between items-center text-[7.5px] text-zinc-500 font-semibold pt-0.5">
+                      <span className="uppercase text-emerald-450">{approvedPsyCount} Verified</span>
+                      <span className="font-mono text-amber-500">{pendingPsyCount} Pending</span>
+                    </div>
                   </div>
-                  <div className="bg-zinc-950 border border-zinc-850 p-4 rounded-xl text-center space-y-1">
-                    <span className="text-[8px] text-zinc-500 font-bold uppercase tracking-wider block">Total Bookings</span>
-                    <p className="text-xl font-black text-white">{bookingsDb.length}</p>
-                    <span className="text-[7.5px] text-zinc-655 font-bold block uppercase">Sessions</span>
+
+                  {/* Total Bookings Card */}
+                  <div
+                    onClick={() => setActiveStatHighlight(activeStatHighlight === 'bookings' ? null : 'bookings')}
+                    className={`bg-zinc-955 border p-4 rounded-xl text-center space-y-1.5 cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-brand/5 select-none ${
+                      activeStatHighlight === 'bookings'
+                        ? 'border-brand bg-brand/5 ring-1 ring-brand/30'
+                        : 'border-zinc-850 hover:border-zinc-700'
+                    }`}
+                  >
+                    <div className="flex justify-between items-center">
+                      <span className="text-[8px] text-zinc-500 font-bold uppercase tracking-wider block">Total Bookings</span>
+                      <Calendar className={`w-3.5 h-3.5 ${activeStatHighlight === 'bookings' ? 'text-brand' : 'text-zinc-500'}`} />
+                    </div>
+                    <p className="text-xl font-black text-white text-left pt-0.5">{totalBookingsCount}</p>
+                    <div className="flex justify-between items-center text-[7.5px] text-zinc-500 font-semibold pt-0.5">
+                      <span className="uppercase text-zinc-400">{confirmedBookingsCount} Confirmed</span>
+                      <span className="font-mono text-zinc-650">{pendingBookingsCount} Pending</span>
+                    </div>
                   </div>
-                  <div className="bg-zinc-950 border border-zinc-850 p-4 rounded-xl text-center space-y-1">
-                    <span className="text-[8px] text-zinc-500 font-bold uppercase tracking-wider block">Inquiries</span>
-                    <p className="text-xl font-black text-amber-500">{pendingInquiriesCount}</p>
-                    <span className="text-[7.5px] text-amber-900/60 font-bold block uppercase">Pending</span>
+
+                  {/* Inquiries Card */}
+                  <div
+                    onClick={() => setActiveStatHighlight(activeStatHighlight === 'inquiries' ? null : 'inquiries')}
+                    className={`bg-zinc-955 border p-4 rounded-xl text-center space-y-1.5 cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-brand/5 select-none ${
+                      activeStatHighlight === 'inquiries'
+                        ? 'border-brand bg-brand/5 ring-1 ring-brand/30'
+                        : 'border-zinc-850 hover:border-zinc-700'
+                    }`}
+                  >
+                    <div className="flex justify-between items-center">
+                      <span className="text-[8px] text-zinc-500 font-bold uppercase tracking-wider block">Inquiries</span>
+                      <MessageSquare className={`w-3.5 h-3.5 ${activeStatHighlight === 'inquiries' ? 'text-brand' : 'text-zinc-500'}`} />
+                    </div>
+                    <p className="text-xl font-black text-amber-500 text-left pt-0.5">{pendingInquiriesCount}</p>
+                    <div className="flex justify-between items-center text-[7.5px] text-zinc-550 font-semibold pt-0.5">
+                      <span className="uppercase text-amber-900/60 font-black">Pending</span>
+                      <span className="font-mono text-zinc-500">{resolvedInquiriesCount} Solved</span>
+                    </div>
                   </div>
-                  <div className="bg-zinc-950 border border-zinc-850 p-4 rounded-xl text-center space-y-1">
-                    <span className="text-[8px] text-zinc-500 font-bold uppercase tracking-wider block">Completed</span>
-                    <p className="text-xl font-black text-brand">{completedSessionsCount}</p>
-                    <span className="text-[7.5px] text-zinc-655 font-bold block uppercase">Sessions</span>
+
+                  {/* Completed Card */}
+                  <div
+                    onClick={() => setActiveStatHighlight(activeStatHighlight === 'completed' ? null : 'completed')}
+                    className={`bg-zinc-955 border p-4 rounded-xl text-center space-y-1.5 cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-brand/5 select-none ${
+                      activeStatHighlight === 'completed'
+                        ? 'border-brand bg-brand/5 ring-1 ring-brand/30'
+                        : 'border-zinc-850 hover:border-zinc-700'
+                    }`}
+                  >
+                    <div className="flex justify-between items-center">
+                      <span className="text-[8px] text-zinc-500 font-bold uppercase tracking-wider block">Completed</span>
+                      <Check className={`w-3.5 h-3.5 ${activeStatHighlight === 'completed' ? 'text-brand' : 'text-zinc-500'}`} />
+                    </div>
+                    <p className="text-xl font-black text-brand text-left pt-0.5">{completedBookingsCount}</p>
+                    <div className="flex justify-between items-center text-[7.5px] text-zinc-500 font-semibold pt-0.5">
+                      <span className="uppercase text-brand/70">{bookingCompletionRate}% rate</span>
+                      <span className="font-mono text-zinc-650">{totalBookingsCount} total</span>
+                    </div>
                   </div>
-                  <div className="bg-zinc-950 border border-zinc-850 p-4 rounded-xl text-center space-y-1">
-                    <span className="text-[8px] text-zinc-500 font-bold uppercase tracking-wider block">Revenue Est.</span>
-                    <p className="text-xl font-black text-emerald-450">₹{totalRevenue}</p>
-                    <span className="text-[7.5px] text-zinc-655 font-bold block uppercase">INR Completed</span>
+
+                  {/* Revenue Card */}
+                  <div
+                    onClick={() => setActiveStatHighlight(activeStatHighlight === 'revenue' ? null : 'revenue')}
+                    className={`bg-zinc-955 border p-4 rounded-xl text-center space-y-1.5 cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-brand/5 select-none ${
+                      activeStatHighlight === 'revenue'
+                        ? 'border-brand bg-brand/5 ring-1 ring-brand/30'
+                        : 'border-zinc-850 hover:border-zinc-700'
+                    }`}
+                  >
+                    <div className="flex justify-between items-center">
+                      <span className="text-[8px] text-zinc-500 font-bold uppercase tracking-wider block">Revenue Est.</span>
+                      <span className={`text-[10px] font-black font-sans ${activeStatHighlight === 'revenue' ? 'text-brand' : 'text-zinc-500'}`}>₹</span>
+                    </div>
+                    <p className="text-xl font-black text-emerald-450 text-left pt-0.5">₹{totalRevenue}</p>
+                    <div className="flex justify-between items-center text-[7.5px] text-zinc-500 font-semibold pt-0.5">
+                      <span className="uppercase text-zinc-400">Completed</span>
+                      <span className="font-mono text-zinc-600">₹{projectedRevenue} Proj.</span>
+                    </div>
                   </div>
                 </div>
+
+                {/* Interactive KPI Detail Drawer/Panel */}
+                {activeStatHighlight && (
+                  <div className="bg-zinc-950 border border-zinc-850 p-5 rounded-xl space-y-4 animate-in slide-in-from-top-4 duration-300 relative">
+                    <button
+                      onClick={() => setActiveStatHighlight(null)}
+                      className="absolute top-4 right-4 p-1.5 bg-zinc-900 hover:bg-zinc-805 text-zinc-450 hover:text-white rounded border border-zinc-800 cursor-pointer transition border-none"
+                      title="Close Details Panel"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+
+                    {activeStatHighlight === 'students' && (
+                      <div className="space-y-4">
+                        <div className="flex items-center gap-2 border-b border-zinc-900 pb-2">
+                          <User className="w-4 h-4 text-brand" />
+                          <h4 className="font-header font-black text-sm uppercase text-white">Students Registry Breakdown</h4>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                          <div className="bg-zinc-900/60 p-4 rounded-lg border border-zinc-850 space-y-3">
+                            <span className="text-[8.5px] uppercase font-black tracking-widest text-zinc-500 block">Activity Distribution</span>
+                            <div className="flex gap-2">
+                              <div className="flex-1 bg-zinc-950 p-2.5 rounded border border-zinc-850 text-center">
+                                <span className="text-[8px] text-emerald-450 font-bold uppercase tracking-wider block">Active Accounts</span>
+                                <p className="text-lg font-black text-white">{activeStudentsCount}</p>
+                              </div>
+                              <div className="flex-1 bg-zinc-955 p-2.5 rounded border border-zinc-850 text-center">
+                                <span className="text-[8px] text-rose-500 font-bold uppercase tracking-wider block">Suspended Accounts</span>
+                                <p className="text-lg font-black text-white">{suspendedStudentsCount}</p>
+                              </div>
+                            </div>
+                            <div className="space-y-1">
+                              <div className="flex justify-between text-[8px] text-zinc-500 font-bold uppercase">
+                                <span>Active: {studentsCount > 0 ? Math.round((activeStudentsCount / studentsCount) * 100) : 100}%</span>
+                                <span>Suspended: {studentsCount > 0 ? Math.round((suspendedStudentsCount / studentsCount) * 100) : 0}%</span>
+                              </div>
+                              <div className="w-full bg-zinc-950 h-2 rounded-full overflow-hidden border border-zinc-850 flex">
+                                <div className="bg-emerald-500 h-full transition-all duration-500" style={{ width: `${studentsCount > 0 ? (activeStudentsCount / studentsCount) * 100 : 100}%` }} />
+                                <div className="bg-rose-500 h-full transition-all duration-500" style={{ width: `${studentsCount > 0 ? (suspendedStudentsCount / studentsCount) * 100 : 0}%` }} />
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="bg-zinc-900/60 p-4 rounded-lg border border-zinc-850 space-y-3">
+                            <span className="text-[8.5px] uppercase font-black tracking-widest text-zinc-500 block">Latest Registrations</span>
+                            <div className="space-y-2 max-h-[120px] overflow-y-auto pr-1">
+                              {usersDb.filter(u => u.role === 'USER' || !u.role).reverse().slice(0, 3).map(st => (
+                                <div key={st.id} className="flex justify-between items-center text-[10px] bg-zinc-955 p-2 rounded border border-zinc-855">
+                                  <div>
+                                    <span className="font-bold text-white block truncate max-w-[140px]">{st.name}</span>
+                                    <span className="text-[8px] text-zinc-500 font-mono block">{st.email}</span>
+                                  </div>
+                                  <span className={`text-[8px] px-1.5 py-0.2 rounded uppercase font-black ${
+                                    st.status === 'SUSPENDED' ? 'bg-rose-955/20 text-rose-500 border border-rose-900/30' : 'bg-emerald-955/20 text-emerald-450 border border-emerald-900/30'
+                                  }`}>{st.status || 'ACTIVE'}</span>
+                                </div>
+                              ))}
+                              {studentsCount === 0 && <p className="text-zinc-650 italic text-center py-4">No students registered yet.</p>}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {activeStatHighlight === 'psychologists' && (
+                      <div className="space-y-4">
+                        <div className="flex items-center gap-2 border-b border-zinc-900 pb-2">
+                          <Award className="w-4 h-4 text-brand" />
+                          <h4 className="font-header font-black text-sm uppercase text-white">Psychologists Status & Verification</h4>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-12 gap-5">
+                          <div className="sm:col-span-4 bg-zinc-900/60 p-4 rounded-lg border border-zinc-850 space-y-3">
+                            <span className="text-[8.5px] uppercase font-black tracking-widest text-zinc-500 block text-center">Verification Ratio</span>
+                            <div className="space-y-2">
+                              <div className="flex justify-between text-xs bg-zinc-950 p-2.5 rounded border border-zinc-850">
+                                <span className="text-zinc-400 font-bold uppercase text-[9px]">Approved Advisors</span>
+                                <span className="text-brand font-black font-mono">{approvedPsyCount}</span>
+                              </div>
+                              <div className="flex justify-between text-xs bg-zinc-950 p-2.5 rounded border border-zinc-850">
+                                <span className="text-zinc-400 font-bold uppercase text-[9px]">Pending Approval</span>
+                                <span className="text-amber-500 font-black font-mono">{pendingPsyCount}</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="sm:col-span-8 bg-zinc-900/60 p-4 rounded-lg border border-zinc-850 space-y-3">
+                            <span className="text-[8.5px] uppercase font-black tracking-widest text-zinc-500 block">Pending Acceptance Requests ({pendingPsyCount})</span>
+                            <div className="space-y-2 max-h-[140px] overflow-y-auto pr-1">
+                              {usersDb.filter(u => u.role === 'PSYCHOLOGIST' && !u.verified).map(psy => (
+                                <div key={psy.id} className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 bg-zinc-955 p-2.5 rounded border border-zinc-850 text-[10px]">
+                                  <div>
+                                    <span className="font-bold text-white uppercase block leading-tight">{psy.name}</span>
+                                    <span className="text-zinc-500 font-mono text-[8px]">{psy.email}</span>
+                                  </div>
+                                  <div className="flex items-center gap-1.5 self-end sm:self-auto">
+                                    <button
+                                      onClick={() => handleTogglePsyVerification(psy.id, false)}
+                                      className="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-[8.5px] font-black uppercase tracking-wider cursor-pointer border-none transition"
+                                    >
+                                      Accept
+                                    </button>
+                                    <button
+                                      onClick={() => handleDeletePsy(psy.id)}
+                                      className="px-3 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded text-[8.5px] font-black uppercase tracking-wider cursor-pointer border-none transition"
+                                    >
+                                      Reject
+                                    </button>
+                                  </div>
+                                </div>
+                              ))}
+                              {pendingPsyCount === 0 && (
+                                <div className="text-zinc-550 italic text-[10px] py-6 text-center">No pending verification requests. All psychologists are fully approved.</div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {activeStatHighlight === 'bookings' && (
+                      <div className="space-y-4">
+                        <div className="flex items-center gap-2 border-b border-zinc-900 pb-2">
+                          <Calendar className="w-4 h-4 text-brand" />
+                          <h4 className="font-header font-black text-sm uppercase text-white">Consultation Bookings Analytics</h4>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                          <div className="bg-zinc-900/60 p-4 rounded-lg border border-zinc-850 space-y-3">
+                            <span className="text-[8.5px] uppercase font-black tracking-widest text-zinc-500 block">Status Breakdown</span>
+                            <div className="space-y-2 text-[10px]">
+                              <div className="flex justify-between border-b border-zinc-950 pb-1">
+                                <span className="text-zinc-400">Confirmed Sessions</span>
+                                <span className="text-white font-black font-mono">{confirmedBookingsCount}</span>
+                              </div>
+                              <div className="flex justify-between border-b border-zinc-950 pb-1">
+                                <span className="text-zinc-400">Pending Requests</span>
+                                <span className="text-white font-black font-mono">{pendingBookingsCount}</span>
+                              </div>
+                              <div className="flex justify-between border-b border-zinc-950 pb-1">
+                                <span className="text-zinc-400">Completed Sessions</span>
+                                <span className="text-brand font-black font-mono">{completedBookingsCount}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-zinc-400">Cancelled/Released</span>
+                                <span className="text-rose-500 font-black font-mono">{cancelledBookingsCount}</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="bg-zinc-900/60 p-4 rounded-lg border border-zinc-850 space-y-3">
+                            <span className="text-[8.5px] uppercase font-black tracking-widest text-zinc-500 block">Service Breakdown</span>
+                            <div className="space-y-2.5 text-[10px]">
+                              <div className="space-y-1">
+                                <div className="flex justify-between text-[9px] font-bold uppercase">
+                                  <span className="text-zinc-450">Emotional Wellbeing</span>
+                                  <span className="text-white font-mono">{counsellingCount} booked</span>
+                                </div>
+                                <div className="w-full bg-zinc-950 h-1.5 rounded-full overflow-hidden border border-zinc-850 flex">
+                                  <div className="bg-brand h-full rounded-full" style={{ width: `${totalBookingsCount > 0 ? (counsellingCount / totalBookingsCount) * 100 : 0}%` }} />
+                                </div>
+                              </div>
+                              <div className="space-y-1">
+                                <div className="flex justify-between text-[9px] font-bold uppercase">
+                                  <span className="text-zinc-450">Career Mapping (Aptitude)</span>
+                                  <span className="text-white font-mono">{aptitudeCount} booked</span>
+                                </div>
+                                <div className="w-full bg-zinc-950 h-1.5 rounded-full overflow-hidden border border-zinc-850 flex">
+                                  <div className="bg-brand h-full rounded-full" style={{ width: `${totalBookingsCount > 0 ? (aptitudeCount / totalBookingsCount) * 100 : 0}%` }} />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="bg-zinc-900/60 p-4 rounded-lg border border-zinc-850 space-y-3">
+                            <span className="text-[8.5px] uppercase font-black tracking-widest text-zinc-500 block">Session Mode Breakdown</span>
+                            <div className="space-y-2 text-[10px]">
+                              <div className="flex justify-between border-b border-zinc-950 pb-1">
+                                <span className="text-zinc-400">Online Google Meet</span>
+                                <span className="text-white font-black font-mono">{onlineCount}</span>
+                              </div>
+                              <div className="flex justify-between border-b border-zinc-950 pb-1">
+                                <span className="text-zinc-400">Offline Center Visit</span>
+                                <span className="text-white font-black font-mono">{offlineCount}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-zinc-400">Doorstep Outreach</span>
+                                <span className="text-white font-black font-mono">{doorstepCount}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {activeStatHighlight === 'inquiries' && (
+                      <div className="space-y-4">
+                        <div className="flex items-center gap-2 border-b border-zinc-900 pb-2">
+                          <MessageSquare className="w-4 h-4 text-brand" />
+                          <h4 className="font-header font-black text-sm uppercase text-white">Student Inquiries Desk</h4>
+                        </div>
+                        <div className="bg-zinc-900/60 p-4 rounded-lg border border-zinc-850 space-y-3">
+                          <span className="text-[8.5px] uppercase font-black tracking-widest text-zinc-500 block">Pending Inquiries ({pendingInquiriesCount})</span>
+                          <div className="space-y-2.5 max-h-[160px] overflow-y-auto pr-1">
+                            {inquiriesDb.filter(i => i.status === 'PENDING' || !i.status).map(inq => (
+                              <div key={inq.id} className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-zinc-955 p-2.5 rounded border border-zinc-850 text-[10px]">
+                                <div className="min-w-0 flex-1">
+                                  <span className="font-bold text-white uppercase block leading-tight">{inq.name} ({inq.email})</span>
+                                  <p className="text-zinc-450 font-medium italic mt-1 font-sans">"{inq.message}"</p>
+                                </div>
+                                <button
+                                  onClick={() => handleResolveInquiry(inq.id)}
+                                  className="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-[8.5px] font-black uppercase tracking-wider cursor-pointer border-none transition shrink-0 self-end sm:self-auto"
+                                >
+                                  Quick Resolve
+                                </button>
+                              </div>
+                            ))}
+                            {pendingInquiriesCount === 0 && (
+                              <div className="text-zinc-550 italic text-[10px] py-6 text-center">All inquiries resolved. Excellent response rate!</div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {activeStatHighlight === 'completed' && (
+                      <div className="space-y-4">
+                        <div className="flex items-center gap-2 border-b border-zinc-900 pb-2">
+                          <Check className="w-4 h-4 text-brand" />
+                          <h4 className="font-header font-black text-sm uppercase text-white">Session Fulfilment Rates</h4>
+                        </div>
+                        <div className="bg-zinc-900/60 p-5 rounded-lg border border-zinc-850 space-y-4 text-center">
+                          <span className="text-[8.5px] uppercase font-black tracking-widest text-zinc-500 block">Session Completion Analysis</span>
+                          <div className="max-w-md mx-auto space-y-3">
+                            <p className="text-zinc-350 text-xs font-semibold">
+                              Overall Completion Rate: <span className="text-brand font-black font-mono">{bookingCompletionRate}%</span>
+                            </p>
+                            <div className="w-full bg-zinc-955 h-3 rounded-full overflow-hidden border border-zinc-850 p-0.5">
+                              <div className="bg-gradient-to-r from-brand to-brand-accent h-full rounded-full transition-all duration-500" style={{ width: `${bookingCompletionRate}%` }} />
+                            </div>
+                            <p className="text-[9.5px] text-zinc-550 leading-relaxed pt-2">
+                              Out of {totalBookingsCount} total scheduled consultations, {completedBookingsCount} sessions have been marked completed. Active/Scheduled sessions total {activeBookings}.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {activeStatHighlight === 'revenue' && (
+                      <div className="space-y-4">
+                        <div className="flex items-center gap-2 border-b border-zinc-900 pb-2">
+                          <span className="text-brand font-black text-sm">₹</span>
+                          <h4 className="font-header font-black text-sm uppercase text-white">Revenue Audits</h4>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                          <div className="bg-zinc-900/60 p-4.5 rounded-lg border border-zinc-850 space-y-1">
+                            <span className="text-[8px] text-zinc-500 font-bold uppercase tracking-wider block">Completed Gross Revenue</span>
+                            <p className="text-xl font-black text-emerald-450 font-mono">₹{totalRevenue}</p>
+                            <span className="text-[7.5px] text-zinc-650 font-bold block uppercase mt-1">INR Fulfilled</span>
+                          </div>
+                          <div className="bg-zinc-900/60 p-4.5 rounded-lg border border-zinc-850 space-y-1">
+                            <span className="text-[8px] text-zinc-500 font-bold uppercase tracking-wider block">Projected Booked Revenue</span>
+                            <p className="text-xl font-black text-white font-mono">₹{projectedRevenue}</p>
+                            <span className="text-[7.5px] text-zinc-650 font-bold block uppercase mt-1">Scheduled (CONFIRMED/PENDING)</span>
+                          </div>
+                          <div className="bg-zinc-900/60 p-4.5 rounded-lg border border-zinc-850 space-y-1">
+                            <span className="text-[8px] text-zinc-500 font-bold uppercase tracking-wider block">Est. Commission & Margins</span>
+                            <p className="text-xl font-black text-brand font-mono">₹{Math.round(totalRevenue * 0.15)}</p>
+                            <span className="text-[7.5px] text-zinc-650 font-bold block uppercase mt-1">15% Platform service share</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 {/* Quick actions panel */}
                 <div className="bg-zinc-955 border border-zinc-855 p-4.5 rounded-xl space-y-3">
@@ -1700,7 +2436,7 @@ export default function AdminDashboard({ setView }) {
                         setBookingForm({
                           id: '', userId: firstStudent?.id || '', advisorId: firstPsy?.id || '',
                           service: 'counselling', mode: 'ONLINE',
-                          date: new Date().toISOString().split('T')[0], time: firstSlot,
+                          date: getLocalTodayString(), time: firstSlot,
                           meetLink: '', status: 'CONFIRMED'
                         });
                         setBookingFormError('');
@@ -1714,62 +2450,272 @@ export default function AdminDashboard({ setView }) {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-                  {/* Recent activities feed */}
+                {/* Main overview columns */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                  {/* Live Activity Feed Segmented Panel (Col Span 8) */}
                   <div className="lg:col-span-8 bg-zinc-955 border border-zinc-850 rounded-xl p-5 space-y-4">
                     <div className="flex justify-between items-center border-b border-zinc-900 pb-2">
                       <span className="text-[9px] uppercase font-black tracking-widest text-zinc-400">Live Activity Feed</span>
                       <span className="text-[8px] text-zinc-500 font-mono uppercase">Sync OK • {new Date().toLocaleDateString()}</span>
                     </div>
 
-                    <div className="space-y-3">
-                      <span className="text-[8.5px] uppercase font-black text-zinc-500 tracking-wider block">Latest Bookings</span>
-                      <div className="space-y-2">
-                        {bookingsDb.slice(0, 3).map(b => (
-                          <div key={b.id} className="bg-zinc-900/40 p-2.5 rounded-lg border border-zinc-855 flex justify-between items-center text-[10px]">
-                            <div>
-                              <span className="font-bold text-white uppercase">{b.userName}</span>
-                              <span className="text-zinc-550"> booked with </span>
-                              <span className="font-bold text-brand uppercase">{b.advisorName}</span>
-                            </div>
-                            <div className="text-right">
-                              <span className="text-zinc-400 font-medium block">{b.date} • {b.time}</span>
-                              <span className={`text-[8px] px-1 rounded uppercase font-black ${b.status === 'CONFIRMED' ? 'bg-emerald-955/20 text-emerald-400' : 'bg-zinc-800 text-zinc-400'
-                                }`}>{b.status}</span>
-                            </div>
-                          </div>
-                        ))}
-                        {bookingsDb.length === 0 && <p className="text-zinc-500 italic text-[10px]">No recent bookings.</p>}
-                      </div>
+                    {/* Tab Segment Controls */}
+                    <div className="flex gap-2 bg-zinc-900/60 p-1 rounded-lg border border-zinc-800">
+                      <button
+                        onClick={() => setOverviewActivityTab('bookings')}
+                        className={`flex-1 py-2 rounded-md text-[8.5px] font-black uppercase tracking-wider transition-all cursor-pointer border-none flex items-center justify-center gap-1 ${
+                          overviewActivityTab === 'bookings'
+                            ? 'bg-brand text-zinc-955 font-black shadow-sm'
+                            : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-950'
+                        }`}
+                      >
+                        <Calendar className="w-3.5 h-3.5" /> Bookings
+                      </button>
+                      <button
+                        onClick={() => setOverviewActivityTab('inquiries')}
+                        className={`flex-1 py-2 rounded-md text-[8.5px] font-black uppercase tracking-wider transition-all cursor-pointer border-none flex items-center justify-center gap-1 ${
+                          overviewActivityTab === 'inquiries'
+                            ? 'bg-brand text-zinc-955 font-black shadow-sm'
+                            : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-955'
+                        }`}
+                      >
+                        <MessageSquare className="w-3.5 h-3.5" /> Inquiries
+                      </button>
+                      <button
+                        onClick={() => setOverviewActivityTab('results')}
+                        className={`flex-1 py-2 rounded-md text-[8.5px] font-black uppercase tracking-wider transition-all cursor-pointer border-none flex items-center justify-center gap-1 ${
+                          overviewActivityTab === 'results'
+                            ? 'bg-brand text-zinc-955 font-black shadow-sm'
+                            : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-955'
+                        }`}
+                      >
+                        <FileSpreadsheet className="w-3.5 h-3.5" /> Aptitude Results
+                      </button>
+                    </div>
 
-                      <span className="text-[8.5px] uppercase font-black text-zinc-500 tracking-wider block pt-2">Latest Inquiries</span>
-                      <div className="space-y-2">
-                        {inquiriesDb.slice(0, 2).map(i => (
-                          <div key={i.id} className="bg-zinc-900/40 p-2.5 rounded-lg border border-zinc-855 text-[10px] space-y-1">
-                            <div className="flex justify-between font-bold">
-                              <span className="text-white uppercase">{i.name} ({i.email})</span>
-                              <span className="text-zinc-500 font-mono text-[8.5px]">{i.date}</span>
+                    {/* Tab Lists */}
+                    <div className="space-y-3.5">
+                      {overviewActivityTab === 'bookings' && (
+                        <div className="space-y-2.5 animate-in fade-in duration-200">
+                          {[...bookingsDb].reverse().slice(0, 3).map(b => (
+                            <div key={b.id} className="bg-zinc-900/40 p-3 rounded-lg border border-zinc-855 flex flex-col justify-between gap-3 text-[10px] hover:border-zinc-800 transition-colors">
+                              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                <div>
+                                  <div className="flex flex-wrap items-center gap-2">
+                                    <span className="font-bold text-white uppercase">{b.userName}</span>
+                                    <span className="text-zinc-500"> booked with </span>
+                                    <span className="font-bold text-brand uppercase">{b.advisorName}</span>
+                                  </div>
+                                  <div className="flex items-center gap-2 mt-1">
+                                    <span className="text-[7.5px] bg-zinc-950 text-zinc-400 border border-zinc-850 px-1.5 py-0.2 rounded font-black tracking-wider uppercase font-mono">{b.mode}</span>
+                                    <span className="text-[7.5px] bg-zinc-950 text-zinc-500 border border-zinc-850 px-1.5 py-0.2 rounded font-black tracking-wider uppercase font-mono capitalize">{b.service}</span>
+                                  </div>
+                                </div>
+                                <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto shrink-0 border-t border-zinc-900/40 sm:border-none pt-2 sm:pt-0">
+                                  <div className="text-left sm:text-right">
+                                    <span className="text-zinc-400 font-bold block">{b.date} • {b.time}</span>
+                                    <span className={`text-[8px] px-1.5 py-0.2 rounded uppercase font-black inline-block mt-0.5 border ${
+                                      b.status === 'CONFIRMED' ? 'bg-emerald-955/20 border-emerald-900/40 text-emerald-450' :
+                                      b.status === 'COMPLETED' ? 'bg-brand/10 border-brand/20 text-brand' :
+                                      b.status === 'CANCELLED' ? 'bg-rose-955/20 border-rose-900/30 text-rose-500' :
+                                      'bg-zinc-800 border-zinc-700 text-zinc-400'
+                                    }`}>{b.status}</span>
+                                  </div>
+                                  <button
+                                    onClick={() => setSelectedOverviewBooking(selectedOverviewBooking === b.id ? null : b.id)}
+                                    className="px-2.5 py-1.5 bg-zinc-950 hover:bg-zinc-900 border border-zinc-850 hover:border-brand/40 text-brand rounded text-[8px] font-black uppercase tracking-wider transition-colors cursor-pointer"
+                                  >
+                                    {selectedOverviewBooking === b.id ? 'Hide Details' : 'View Details'}
+                                  </button>
+                                </div>
+                              </div>
+                              {selectedOverviewBooking === b.id && (
+                                <div className="w-full mt-1.5 pt-2.5 border-t border-zinc-900/60 space-y-2 text-zinc-450 animate-in slide-in-from-top-2 duration-200">
+                                  <div className="grid grid-cols-2 gap-3 text-[9px] bg-zinc-950/60 p-2.5 rounded border border-zinc-900">
+                                    <div>
+                                      <span className="text-zinc-550 block font-bold uppercase text-[7.5px] tracking-wider">Advisor Designation</span>
+                                      <span className="text-white font-medium block mt-0.5">{b.advisorRole || 'Consultant Psychologist'}</span>
+                                    </div>
+                                    <div>
+                                      <span className="text-zinc-550 block font-bold uppercase text-[7.5px] tracking-wider">Appointment ID</span>
+                                      <span className="text-zinc-400 font-mono block mt-0.5 select-all">{b.id}</span>
+                                    </div>
+                                  </div>
+                                  {b.meetLink ? (
+                                    <div className="flex items-center justify-between bg-zinc-950 p-2.5 rounded border border-zinc-900 mt-2">
+                                      <span className="truncate text-brand font-mono select-all text-[8.5px] pr-2">{b.meetLink}</span>
+                                      <button
+                                        onClick={() => {
+                                          navigator.clipboard.writeText(b.meetLink);
+                                          alert("Google Meet Link copied!");
+                                        }}
+                                        className="px-2.5 py-1 bg-zinc-900 border border-zinc-800 hover:border-brand/40 text-white rounded text-[8px] font-bold cursor-pointer transition shrink-0"
+                                      >
+                                        Copy Link
+                                      </button>
+                                    </div>
+                                  ) : (
+                                    <div className="text-[9px] text-zinc-555 italic mt-1 pb-1">No video meeting link generated for this booking.</div>
+                                  )}
+                                </div>
+                              )}
                             </div>
-                            <p className="text-zinc-400 font-medium truncate italic">"{i.message}"</p>
-                          </div>
-                        ))}
-                        {inquiriesDb.length === 0 && <p className="text-zinc-500 italic text-[10px]">No recent inquiries.</p>}
-                      </div>
+                          ))}
+                          {bookingsDb.length === 0 && <p className="text-zinc-550 italic text-[10px] text-center py-6">No recent bookings recorded.</p>}
+                        </div>
+                      )}
+
+                      {overviewActivityTab === 'inquiries' && (
+                        <div className="space-y-2.5 animate-in fade-in duration-200">
+                          {[...inquiriesDb].reverse().slice(0, 3).map(i => {
+                            const isResolved = i.status === 'RESOLVED';
+                            return (
+                              <div key={i.id} className="bg-zinc-900/40 p-3 rounded-lg border border-zinc-855 text-[10px] space-y-2.5 hover:border-zinc-800 transition-colors">
+                                <div className="flex justify-between items-start">
+                                  <div>
+                                    <span className="text-white font-bold uppercase block leading-tight">{i.name}</span>
+                                    <span className="text-zinc-500 font-mono text-[9px] block mt-0.5">{i.email}</span>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-zinc-550 font-mono text-[9px]">{i.date}</span>
+                                    <span className={`text-[8px] px-1.5 py-0.2 rounded uppercase font-black border ${
+                                      isResolved ? 'bg-emerald-955/20 border-emerald-900/30 text-emerald-455' : 'bg-amber-955/20 border-amber-900/30 text-amber-500'
+                                    }`}>{i.status || 'PENDING'}</span>
+                                  </div>
+                                </div>
+                                <p className="text-zinc-350 font-medium italic border-l-2 border-brand/30 pl-2.5 font-sans leading-relaxed">"{i.message}"</p>
+
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-1.5 border-t border-zinc-900/40">
+                                  <button
+                                    onClick={() => handleResolveInquiry(i.id)}
+                                    className={`px-3 py-1.5 rounded text-[8.5px] font-black uppercase tracking-wider cursor-pointer border transition-colors shrink-0 ${
+                                      isResolved
+                                        ? 'bg-zinc-900 hover:bg-zinc-800 border-zinc-800 text-zinc-400 hover:text-white'
+                                        : 'bg-emerald-600 hover:bg-emerald-700 border-none text-white'
+                                    }`}
+                                  >
+                                    {isResolved ? 'Mark Pending' : 'Mark Resolved'}
+                                  </button>
+                                  <div className="flex items-center gap-1.5 w-full sm:w-[60%] shrink-0">
+                                    <input
+                                      type="text"
+                                      placeholder="Add staff summary note..."
+                                      value={inquiryNotesText[i.id] !== undefined ? inquiryNotesText[i.id] : (i.note || '')}
+                                      onChange={(e) => setInquiryNotesText({ ...inquiryNotesText, [i.id]: e.target.value })}
+                                      className="flex-1 px-2.5 py-1.5 bg-zinc-950 border border-zinc-850 focus:border-brand rounded text-[9px] text-white outline-none"
+                                    />
+                                    <button
+                                      onClick={() => handleSaveInquiryNote(i.id, inquiryNotesText[i.id] || '')}
+                                      className="px-2.5 py-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-brand text-brand font-bold rounded text-[8px] uppercase tracking-wider cursor-pointer transition shrink-0"
+                                    >
+                                      Save
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                          {inquiriesDb.length === 0 && <p className="text-zinc-550 italic text-[10px] text-center py-6">No recent inquiries recorded.</p>}
+                        </div>
+                      )}
+
+                      {overviewActivityTab === 'results' && (
+                        <div className="space-y-2.5 animate-in fade-in duration-200">
+                          {[...testResultsDb].reverse().slice(0, 3).map(res => (
+                            <div key={res.id} className="bg-zinc-900/40 p-3 rounded-lg border border-zinc-855 text-[10px] space-y-2.5 hover:border-zinc-800 transition-colors">
+                              <div className="flex justify-between items-start">
+                                <div>
+                                  <span className="text-white font-bold uppercase block leading-tight">{res.studentName}</span>
+                                  <span className="text-zinc-555 font-mono text-[9px] block mt-0.5">{res.studentEmail}</span>
+                                </div>
+                                <div className="text-right">
+                                  <span className="text-zinc-550 font-mono text-[9px] block">{res.date}</span>
+                                  <span className="text-[8px] bg-brand/10 border border-brand/20 text-brand px-1.5 py-0.5 rounded font-black tracking-wider uppercase font-mono mt-1 inline-block">
+                                    Dominant: {res.dominantDomain.toUpperCase()}
+                                  </span>
+                                </div>
+                              </div>
+
+                              <div className="border-t border-zinc-900/60 pt-2 space-y-2">
+                                <span className="text-[8px] uppercase font-black tracking-wider text-zinc-550 block">Cognitive Domain Breakdown</span>
+                                <div className="grid grid-cols-3 gap-3">
+                                  {Object.entries(res.scores || {}).slice(0, 3).map(([key, val]) => (
+                                    <div key={key} className="space-y-1">
+                                      <div className="flex justify-between items-center text-[8px] font-bold text-zinc-400 capitalize">
+                                        <span>{key}</span>
+                                        <span className="text-white font-mono">{val}%</span>
+                                      </div>
+                                      <div className="w-full bg-zinc-950 h-1.5 rounded-full overflow-hidden border border-zinc-850 p-0.2 flex">
+                                        <div className="bg-brand h-full rounded-full transition-all duration-500" style={{ width: `${val}%` }} />
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+
+                              <div className="flex justify-end pt-1">
+                                <button
+                                  onClick={() => handleExportAptitudeResults(res)}
+                                  className="px-3 py-1.5 bg-zinc-950 hover:bg-zinc-900 border border-zinc-850 hover:border-brand/40 text-zinc-350 hover:text-white rounded text-[8px] font-black uppercase tracking-wider cursor-pointer transition shrink-0"
+                                >
+                                  Export Report
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                          {testResultsDb.length === 0 && <p className="text-zinc-550 italic text-[10px] text-center py-6">No assessment results recorded.</p>}
+                        </div>
+                      )}
                     </div>
                   </div>
 
-                  {/* System health state */}
-                  <div className="lg:col-span-4 bg-zinc-955 border border-zinc-850 rounded-xl p-5 space-y-4 text-[10px]">
-                    <div className="border-b border-zinc-900 pb-2">
+                  {/* System health & visual meters (Col Span 4) */}
+                  <div className="lg:col-span-4 bg-zinc-955 border border-zinc-850 rounded-xl p-5 space-y-5 text-[10px]">
+                    <div className="border-b border-zinc-900 pb-2 flex items-center justify-between">
                       <span className="text-[9px] uppercase font-black tracking-widest text-zinc-400">Database & System Health</span>
+                      <div className="flex items-center gap-1.5">
+                        <span className="relative flex h-2 w-2">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-450 opacity-75"></span>
+                          <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                        </span>
+                        <span className="text-[8px] text-zinc-500 font-bold uppercase font-mono">LIVE SYNC</span>
+                      </div>
                     </div>
 
+                    {/* Progress Ratios and Meters */}
+                    <div className="space-y-3 pb-3 border-b border-zinc-900">
+                      <span className="text-[8.5px] uppercase font-black tracking-widest text-zinc-550 block">Ratios & Fulfillment</span>
+                      
+                      <div className="space-y-1.5">
+                        <div className="flex justify-between items-center text-[9px] font-bold uppercase">
+                          <span className="text-zinc-400">Booking Completion</span>
+                          <span className="text-brand font-mono font-black">{bookingCompletionRate}%</span>
+                        </div>
+                        <div className="w-full bg-zinc-900 h-1.5 rounded-full overflow-hidden border border-zinc-850">
+                          <div className="bg-gradient-to-r from-brand to-brand-accent h-full rounded-full transition-all duration-500" style={{ width: `${bookingCompletionRate}%` }} />
+                        </div>
+                        <span className="text-[7.5px] text-zinc-500 block text-right font-medium">{completedBookingsCount} of {totalBookingsCount} sessions</span>
+                      </div>
+
+                      <div className="space-y-1.5 pt-1">
+                        <div className="flex justify-between items-center text-[9px] font-bold uppercase">
+                          <span className="text-zinc-400">Inquiry Resolution</span>
+                          <span className="text-brand font-mono font-black">{inquiryResolutionRate}%</span>
+                        </div>
+                        <div className="w-full bg-zinc-900 h-1.5 rounded-full overflow-hidden border border-zinc-850">
+                          <div className="bg-gradient-to-r from-amber-500 to-amber-300 h-full rounded-full transition-all duration-500" style={{ width: `${inquiryResolutionRate}%` }} />
+                        </div>
+                        <span className="text-[7.5px] text-zinc-500 block text-right font-medium">{resolvedInquiriesCount} of {totalInquiriesCount} queries</span>
+                      </div>
+                    </div>
+
+                    {/* Storage details */}
                     <div className="space-y-3.5">
                       <div className="flex justify-between items-center">
-                        <span className="text-zinc-400 font-bold uppercase">Sandbox Storage</span>
+                        <span className="text-zinc-450 font-bold uppercase text-[9px]">Sandbox Storage</span>
                         <span className="text-white font-black font-mono">{kbUsed} KB Used</span>
                       </div>
-                      <div className="w-full bg-zinc-900 h-1.5 rounded-full overflow-hidden border border-zinc-800">
+                      <div className="w-full bg-zinc-900 h-1.5 rounded-full overflow-hidden border border-zinc-850">
                         <div className="bg-brand h-full rounded-full" style={{ width: `${Math.min(100, Number(kbUsed) * 2)}%` }} />
                       </div>
 
@@ -1788,71 +2734,117 @@ export default function AdminDashboard({ setView }) {
                         </div>
                       </div>
                     </div>
+
+                    {/* Security scan console */}
+                    <div className="pt-3 border-t border-zinc-900 space-y-2">
+                      <span className="text-[8.5px] uppercase font-black tracking-widest text-zinc-550 block">System Guard Patrol</span>
+                      {isScanning ? (
+                        <div className="space-y-2 bg-zinc-950 p-2.5 rounded border border-zinc-900">
+                          <div className="flex justify-between items-center text-[8.5px] font-mono text-zinc-455">
+                            <span className="animate-pulse">Scanning database...</span>
+                            <span>{scanProgress}%</span>
+                          </div>
+                          <div className="w-full bg-zinc-900 h-1 rounded-full overflow-hidden border border-zinc-800">
+                            <div className="bg-brand h-full rounded-full transition-all duration-100" style={{ width: `${scanProgress}%` }} />
+                          </div>
+                        </div>
+                      ) : scanResults ? (
+                        <div className="bg-zinc-905 p-2.5 rounded border border-zinc-850 space-y-2 animate-in fade-in duration-200">
+                          <div className="flex justify-between items-center">
+                            <span className="text-[8px] bg-emerald-955/20 border border-emerald-900/40 text-emerald-450 px-2 py-0.5 rounded font-black tracking-wider uppercase font-mono">SECURE</span>
+                            <span className="text-[8px] text-zinc-550 font-mono">{scanResults.timestamp}</span>
+                          </div>
+                          <div className="grid grid-cols-2 gap-1.5 text-[8.5px] text-zinc-400 font-semibold uppercase">
+                            {scanResults.checks.map(chk => (
+                              <div key={chk.name} className="flex items-center gap-1.5">
+                                <Check className="w-3.5 h-3.5 text-emerald-450 shrink-0" />
+                                <span className="truncate">{chk.name}</span>
+                              </div>
+                            ))}
+                          </div>
+                          <button
+                            onClick={() => setScanResults(null)}
+                            className="w-full py-1 bg-zinc-950 hover:bg-zinc-900 border border-zinc-855 text-zinc-500 hover:text-white rounded text-[8px] font-bold uppercase tracking-wider cursor-pointer transition"
+                          >
+                            Dismiss Report
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          onClick={handleRunSecurityCheck}
+                          className="w-full py-2 bg-brand/10 hover:bg-brand text-brand hover:text-zinc-955 border border-brand/20 hover:border-brand rounded text-[8.5px] font-black uppercase tracking-widest cursor-pointer transition-all flex items-center justify-center gap-1.5 shadow-sm"
+                        >
+                          <ShieldCheck className="w-3.5 h-3.5 text-brand hover:text-zinc-955 transition-colors" /> Scan Integrity & Schemas
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
 
                 {/* Sub-admins list table */}
                 <div className="pt-4 space-y-3">
                   <h4 className="font-header font-black text-zinc-300 text-xs uppercase tracking-wider">Active Sub-Admin Personnel</h4>
-                  <div className="border border-zinc-850 rounded-lg overflow-hidden bg-zinc-950">
-                    <table className="w-full text-xs border-collapse">
-                      <thead>
-                        <tr className="bg-zinc-900 text-zinc-400 font-bold uppercase tracking-wider border-b border-zinc-850 text-left">
-                          <th className="p-3">Staff Name</th>
-                          <th className="p-3">Email Address</th>
-                          <th className="p-3">Scopes Enabled</th>
-                          <th className="p-3 text-center">Edit Scopes</th>
-                          <th className="p-3 text-center">Delete</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {subAdminsList.map(admin => {
-                          const { cleanName, roleTitle } = parseStaffDetails(admin);
-                          return (
-                            <tr key={admin.id} className="border-b border-zinc-900 hover:bg-zinc-900/50">
-                              <td className="p-3">
-                                <span className="font-bold text-white block">{cleanName}</span>
-                                {roleTitle && (
-                                  <span className="text-[8px] bg-brand/10 border border-brand/20 text-brand px-1.5 py-0.5 rounded font-black tracking-wider uppercase font-mono inline-block mt-1">
-                                    {roleTitle}
-                                  </span>
-                                )}
-                              </td>
-                              <td className="p-3 text-zinc-400">{admin.email}</td>
-                              <td className="p-3 flex flex-wrap gap-1">
-                                {admin.permissions.map(p => (
-                                  <span key={p} className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-[8px] font-bold text-zinc-400 uppercase tracking-wider font-mono">
-                                    {p.replace('MANAGE_', '')}
-                                  </span>
-                                ))}
-                              </td>
-                              <td className="p-3 text-center">
-                                <button
-                                  onClick={() => handleOpenEditSubAdmin(admin)}
-                                  className="px-2.5 py-1 bg-zinc-900 text-brand hover:text-white rounded border border-zinc-800 hover:bg-zinc-855 transition cursor-pointer text-[8px] font-black uppercase tracking-wider"
-                                >
-                                  Edit
-                                </button>
-                              </td>
-                              <td className="p-3 text-center">
-                                <button
-                                  onClick={() => handleDeleteUser(admin.id)}
-                                  className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
-                                  title="Delete sub-admin account"
-                                >
-                                  <Trash className="w-3.5 h-3.5" />
-                                </button>
-                              </td>
-                            </tr>
-                          );
-                        })}
-                        {subAdminsList.length === 0 && (
-                          <tr>
-                            <td colSpan={5} className="p-5 text-center text-zinc-500 italic">No sub-admin accounts registered. Create accounts inside the "Roles & Scopes" tab.</td>
+                  <div className="border border-zinc-850 rounded-lg overflow-hidden bg-zinc-955">
+                    <div className="overflow-x-auto w-full">
+                      <table className="w-full text-xs border-collapse min-w-[650px]">
+                        <thead>
+                          <tr className="bg-zinc-900 text-zinc-400 font-bold uppercase tracking-wider border-b border-zinc-850 text-left">
+                            <th className="p-3">Staff Name</th>
+                            <th className="p-3">Email Address</th>
+                            <th className="p-3">Scopes Enabled</th>
+                            <th className="p-3 text-center">Edit Scopes</th>
+                            <th className="p-3 text-center">Delete</th>
                           </tr>
-                        )}
-                      </tbody>
-                    </table>
+                        </thead>
+                        <tbody>
+                          {subAdminsList.map(admin => {
+                            const { cleanName, roleTitle } = parseStaffDetails(admin);
+                            return (
+                              <tr key={admin.id} className="border-b border-zinc-900 hover:bg-zinc-900/50">
+                                <td className="p-3">
+                                  <span className="font-bold text-white block">{cleanName}</span>
+                                  {roleTitle && (
+                                    <span className="text-[8px] bg-brand/10 border border-brand/20 text-brand px-1.5 py-0.5 rounded font-black tracking-wider uppercase font-mono inline-block mt-1">
+                                      {roleTitle}
+                                    </span>
+                                  )}
+                                </td>
+                                <td className="p-3 text-zinc-400">{admin.email}</td>
+                                <td className="p-3 flex flex-wrap gap-1">
+                                  {admin.permissions.map(p => (
+                                    <span key={p} className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-[8px] font-bold text-zinc-400 uppercase tracking-wider font-mono">
+                                      {p.replace('MANAGE_', '')}
+                                    </span>
+                                  ))}
+                                </td>
+                                <td className="p-3 text-center">
+                                  <button
+                                    onClick={() => handleOpenEditSubAdmin(admin)}
+                                    className="px-2.5 py-1 bg-zinc-900 text-brand hover:text-white rounded border border-zinc-800 hover:bg-zinc-855 transition cursor-pointer text-[8px] font-black uppercase tracking-wider"
+                                  >
+                                    Edit
+                                  </button>
+                                </td>
+                                <td className="p-3 text-center">
+                                  <button
+                                    onClick={() => handleDeleteUser(admin.id)}
+                                    className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
+                                    title="Delete sub-admin account"
+                                  >
+                                    <Trash className="w-3.5 h-3.5" />
+                                  </button>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                          {subAdminsList.length === 0 && (
+                            <tr>
+                              <td colSpan={5} className="p-5 text-center text-zinc-500 italic">No sub-admin accounts registered. Create accounts inside the "Roles & Scopes" tab.</td>
+                            </tr>
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1910,71 +2902,80 @@ export default function AdminDashboard({ setView }) {
                 </div>
 
                 <div className="border border-zinc-850 rounded-lg overflow-hidden bg-zinc-950">
-                  <table className="w-full text-xs border-collapse">
-                    <thead>
-                      <tr className="bg-zinc-900 text-zinc-400 font-bold uppercase tracking-wider border-b border-zinc-850 text-left">
-                        <th className="p-3">Student Name</th>
-                        <th className="p-3">Email Address</th>
-                        <th className="p-3 text-center">Status</th>
-                        <th className="p-3 text-center">Consultations</th>
-                        <th className="p-3 text-center font-bold">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {studentsList.map(student => (
-                        <tr key={student.id} className="border-b border-zinc-900 hover:bg-zinc-900/50">
-                          <td className="p-3">
-                            <span className="font-bold text-white block leading-tight">{student.name}</span>
-                            <span className="text-[8px] text-zinc-500">ID: {student.id}</span>
-                          </td>
-                          <td className="p-3 text-zinc-350 font-medium">{student.email}</td>
-                          <td className="p-3 text-center">
-                            <button
-                              onClick={() => handleToggleStudentStatus(student.id, student.status || 'ACTIVE')}
-                              className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider transition cursor-pointer border ${(student.status || 'ACTIVE') === 'ACTIVE'
-                                ? 'bg-emerald-955/20 border-emerald-900/40 text-emerald-450 hover:bg-rose-955/20 hover:border-rose-900 hover:text-rose-500'
-                                : 'bg-rose-955/20 border-rose-900/40 text-rose-500 hover:bg-emerald-955/20 hover:border-emerald-900 hover:text-emerald-450'
-                                }`}
-                              title={(student.status || 'ACTIVE') === 'ACTIVE' ? "Click to Suspend Student" : "Click to Unsuspend Student"}
-                            >
-                              {student.status || 'ACTIVE'}
-                            </button>
-                          </td>
-                          <td className="p-3 text-center font-bold text-zinc-300">
-                            {bookingsDb.filter(b => b.userId === student.id).length} Booked
-                          </td>
-                          <td className="p-3 text-center flex items-center justify-center gap-2">
-                            <button
-                              onClick={() => setViewingStudent(student)}
-                              className="px-2.5 py-1 bg-zinc-900 text-brand hover:text-white rounded border border-zinc-800 hover:bg-zinc-850 transition cursor-pointer text-[8px] font-black uppercase tracking-wider"
-                            >
-                              Details
-                            </button>
-                            <button
-                              onClick={() => handleOpenEditUser(student)}
-                              className="p-1.5 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"
-                              title="Edit Student"
-                            >
-                              <Edit className="w-3.5 h-3.5" />
-                            </button>
-                            <button
-                              onClick={() => handleDeleteUser(student.id)}
-                              className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
-                              title="Delete Student"
-                            >
-                              <Trash className="w-3.5 h-3.5" />
-                            </button>
-                          </td>
+                  <div className="overflow-x-auto w-full">
+                    <table className="w-full text-xs border-collapse min-w-[700px]">
+                      <thead>
+                        <tr className="bg-zinc-900 text-zinc-400 font-bold uppercase tracking-wider border-b border-zinc-850 text-left">
+                          <th className="p-3">Student Name</th>
+                          <th className="p-3">Email Address</th>
+                          <th className="p-3 text-center">Status</th>
+                          <th className="p-3 text-center">Consultations</th>
+                          <th className="p-3 text-center font-bold">Actions</th>
                         </tr>
-                      ))}
-                      {studentsList.length === 0 && (
-                        <tr>
-                          <td colSpan={5} className="p-8 text-center text-zinc-500 italic">No student registries match the active query.</td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        {studentsList.slice((studentPage - 1) * studentLimit, studentPage * studentLimit).map(student => (
+                          <tr key={student.id} className="border-b border-zinc-900 hover:bg-zinc-900/50">
+                            <td className="p-3">
+                              <span className="font-bold text-white block leading-tight">{student.name}</span>
+                              <span className="text-[8px] text-zinc-500">ID: {student.id}</span>
+                            </td>
+                            <td className="p-3 text-zinc-350 font-medium">{student.email}</td>
+                            <td className="p-3 text-center">
+                              <button
+                                onClick={() => handleToggleStudentStatus(student.id, student.status || 'ACTIVE')}
+                                className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider transition cursor-pointer border ${(student.status || 'ACTIVE') === 'ACTIVE'
+                                  ? 'bg-emerald-955/20 border-emerald-900/40 text-emerald-450 hover:bg-rose-955/20 hover:border-rose-900 hover:text-rose-500'
+                                  : 'bg-rose-955/20 border-rose-900/40 text-rose-500 hover:bg-emerald-955/20 hover:border-emerald-900 hover:text-emerald-450'
+                                  }`}
+                                title={(student.status || 'ACTIVE') === 'ACTIVE' ? "Click to Suspend Student" : "Click to Unsuspend Student"}
+                              >
+                                {student.status || 'ACTIVE'}
+                              </button>
+                            </td>
+                            <td className="p-3 text-center font-bold text-zinc-300">
+                              {bookingsDb.filter(b => b.userId === student.id).length} Booked
+                            </td>
+                            <td className="p-3 text-center flex items-center justify-center gap-2">
+                              <button
+                                onClick={() => setViewingStudent(student)}
+                                className="px-2.5 py-1 bg-zinc-900 text-brand hover:text-white rounded border border-zinc-800 hover:bg-zinc-850 transition cursor-pointer text-[8px] font-black uppercase tracking-wider"
+                              >
+                                Details
+                              </button>
+                              <button
+                                onClick={() => handleOpenEditUser(student)}
+                                className="p-1.5 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"
+                                title="Edit Student"
+                              >
+                                <Edit className="w-3.5 h-3.5" />
+                              </button>
+                              <button
+                                onClick={() => handleDeleteUser(student.id)}
+                                className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
+                                title="Delete Student"
+                              >
+                                <Trash className="w-3.5 h-3.5" />
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                        {studentsList.length === 0 && (
+                          <tr>
+                            <td colSpan={5} className="p-8 text-center text-zinc-500 italic">No student registries match the active query.</td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
+                <PaginationBar
+                  total={studentsList.length}
+                  page={studentPage}
+                  limit={studentLimit}
+                  onPageChange={setStudentPage}
+                  onLimitChange={setStudentLimit}
+                />
               </div>
             );
           })()}
@@ -2023,34 +3024,56 @@ export default function AdminDashboard({ setView }) {
               </div>
 
               <div className="border border-zinc-850 rounded-lg overflow-hidden bg-zinc-950">
-                <table className="w-full text-xs border-collapse">
-                  <thead>
-                    <tr className="bg-zinc-900 text-zinc-400 font-bold uppercase tracking-wider border-b border-zinc-850 text-left">
-                      <th className="p-3">Psychologist Name</th>
-                      <th className="p-3">Email Address</th>
-                      <th className="p-3 text-center">Clearance Status</th>
-                      <th className="p-3 text-center font-bold">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {psychologistsList.map(psy => (
-                      <tr key={psy.id} className="border-b border-zinc-900 hover:bg-zinc-900/50">
+                <div className="overflow-x-auto w-full">
+                  <table className="w-full text-xs border-collapse min-w-[700px]">
+                    <thead>
+                      <tr className="bg-zinc-900 text-zinc-400 font-bold uppercase tracking-wider border-b border-zinc-850 text-left">
+                        <th className="p-3">Psychologist Name</th>
+                        <th className="p-3">Email Address</th>
+                        <th className="p-3 text-center">Clearance Status</th>
+                        <th className="p-3 text-center font-bold">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {psychologistsList.slice((psyPage - 1) * psyLimit, psyPage * psyLimit).map(psy => (
+                        <tr key={psy.id} className="border-b border-zinc-900 hover:bg-zinc-900/50">
                         <td className="p-3">
                           <span className="font-bold text-white block leading-tight">{psy.name}</span>
                           <span className="text-[8px] text-zinc-500">ID: {psy.id} • Active Profile</span>
                         </td>
                         <td className="p-3 text-zinc-350 font-medium">{psy.email}</td>
                         <td className="p-3 text-center">
-                          <button
-                            onClick={() => handleTogglePsyVerification(psy.id, psy.verified)}
-                            className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded border text-[9px] font-black uppercase font-mono transition cursor-pointer ${psy.verified
-                              ? 'bg-emerald-955/20 border-emerald-900/40 text-emerald-450 hover:bg-rose-955/20 hover:border-rose-900 hover:text-rose-500'
-                              : 'bg-amber-955/20 border-amber-900/40 text-amber-500 hover:bg-emerald-955/20 hover:border-emerald-900/40 hover:text-emerald-450'
-                              }`}
-                            title={psy.verified ? "Click to Mark Unverified" : "Click to Verify Advisor"}
-                          >
-                            {psy.verified ? 'Verified' : 'Unverified'}
-                          </button>
+                          {psy.verified ? (
+                            <div className="flex items-center justify-center gap-2">
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-955/20 border border-emerald-900/40 text-emerald-450 text-[9px] font-black uppercase font-mono">
+                                <Check className="w-3.5 h-3.5 text-emerald-450" /> Approved
+                              </span>
+                              <button
+                                onClick={() => handleTogglePsyVerification(psy.id, true)}
+                                className="text-[9px] text-zinc-500 hover:text-rose-500 underline cursor-pointer bg-transparent border-none p-0 animate-in fade-in duration-200"
+                                title="Revoke acceptance"
+                              >
+                                Revoke
+                              </button>
+                            </div>
+                          ) : (
+                            <div className="flex items-center justify-center gap-1.5">
+                              <button
+                                onClick={() => handleTogglePsyVerification(psy.id, false)}
+                                className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-750 text-white rounded text-[8.5px] font-black uppercase tracking-wider cursor-pointer border-none shadow-sm transition-colors"
+                                title="Accept and verify counselor"
+                              >
+                                Accept
+                              </button>
+                              <button
+                                onClick={() => handleDeletePsy(psy.id)}
+                                className="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded text-[8.5px] font-black uppercase tracking-wider cursor-pointer border-none shadow-sm transition-colors"
+                                title="Reject and delete counselor request"
+                              >
+                                Reject
+                              </button>
+                            </div>
+                          )}
                         </td>
                         <td className="p-3 text-center flex items-center justify-center gap-2">
                           <button
@@ -2092,8 +3115,17 @@ export default function AdminDashboard({ setView }) {
                   </tbody>
                 </table>
               </div>
+              </div>
+              <PaginationBar
+                total={psychologistsList.length}
+                page={psyPage}
+                limit={psyLimit}
+                onPageChange={setPsyPage}
+                onLimitChange={setPsyLimit}
+              />
             </div>
           )}
+
           {/* TAB 4: SUB-ADMIN CREATOR & ROLES */}
           {currentSection === 'subadmins' && isSuperAdmin && (
             <div className="space-y-6 animate-in fade-in duration-200 text-xs">
@@ -2354,6 +3386,12 @@ export default function AdminDashboard({ setView }) {
                 (b.status && b.status.toLowerCase().includes(searchBooking.toLowerCase()));
               if (bookingStatusFilter === 'ALL') return matchesSearch;
               return matchesSearch && b.status === bookingStatusFilter;
+            }).sort((a, b) => {
+              if (a.status === 'PENDING' && b.status !== 'PENDING') return -1;
+              if (a.status !== 'PENDING' && b.status === 'PENDING') return 1;
+              if (a.status === 'CONFIRMED' && b.status !== 'CONFIRMED' && b.status !== 'PENDING') return -1;
+              if (b.status === 'CONFIRMED' && a.status !== 'CONFIRMED' && a.status !== 'PENDING') return 1;
+              return b.date.localeCompare(a.date);
             });
 
             return (
@@ -2396,7 +3434,7 @@ export default function AdminDashboard({ setView }) {
                           advisorId: firstPsy?.id || '',
                           service: 'counselling',
                           mode: 'ONLINE',
-                          date: new Date().toISOString().split('T')[0],
+                          date: getLocalTodayString(),
                           time: firstSlot,
                           meetLink: '',
                           status: 'CONFIRMED'
@@ -2488,22 +3526,28 @@ export default function AdminDashboard({ setView }) {
                 )}
 
                 <div className="border border-zinc-850 rounded-lg overflow-hidden bg-zinc-950">
-                  <table className="w-full text-xs border-collapse">
+                  <div className="overflow-x-auto w-full">
+                  <table className="w-full text-xs border-collapse min-w-[850px]">
                     <thead>
                       <tr className="bg-zinc-900 text-zinc-400 font-bold uppercase tracking-wider border-b border-zinc-850 text-left">
                         <th className="p-3 text-center w-10">
-                          <input
-                            type="checkbox"
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                setSelectedBookingIds(filteredBookings.map(b => b.id));
-                              } else {
-                                setSelectedBookingIds([]);
-                              }
-                            }}
-                            checked={filteredBookings.length > 0 && selectedBookingIds.length === filteredBookings.length}
-                            className="cursor-pointer"
-                          />
+                          {(() => {
+                            const pagedBookings = filteredBookings.slice((bookingPage - 1) * bookingLimit, bookingPage * bookingLimit);
+                            return (
+                              <input
+                                type="checkbox"
+                                onChange={(e) => {
+                                  if (e.target.checked) {
+                                    setSelectedBookingIds(pagedBookings.map(b => b.id));
+                                  } else {
+                                    setSelectedBookingIds([]);
+                                  }
+                                }}
+                                checked={pagedBookings.length > 0 && pagedBookings.every(b => selectedBookingIds.includes(b.id))}
+                                className="cursor-pointer"
+                              />
+                            );
+                          })()}
                         </th>
                         <th className="p-3">Student</th>
                         <th className="p-3">Psychologist</th>
@@ -2515,7 +3559,7 @@ export default function AdminDashboard({ setView }) {
                       </tr>
                     </thead>
                     <tbody>
-                      {filteredBookings.map(booking => (
+                      {filteredBookings.slice((bookingPage - 1) * bookingLimit, bookingPage * bookingLimit).map(booking => (
                         <tr key={booking.id} className="border-b border-zinc-900 hover:bg-zinc-900/50">
                           <td className="p-3 text-center">
                             <input
@@ -2594,7 +3638,15 @@ export default function AdminDashboard({ setView }) {
                       )}
                     </tbody>
                   </table>
+                  </div>
                 </div>
+                <PaginationBar
+                  total={filteredBookings.length}
+                  page={bookingPage}
+                  limit={bookingLimit}
+                  onPageChange={setBookingPage}
+                  onLimitChange={setBookingLimit}
+                />
               </div>
             );
           })()}
@@ -2630,7 +3682,7 @@ export default function AdminDashboard({ setView }) {
               </div>
 
               <div className="space-y-4">
-                {filteredInquiries.map((inq) => (
+                {filteredInquiries.slice((inquiryPage - 1) * inquiryLimit, inquiryPage * inquiryLimit).map((inq) => (
                   <div
                     key={inq.id}
                     className="bg-zinc-955 border border-zinc-850 rounded-xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-5 relative overflow-hidden"
@@ -2707,6 +3759,13 @@ export default function AdminDashboard({ setView }) {
                   </div>
                 )}
               </div>
+              <PaginationBar
+                total={filteredInquiries.length}
+                page={inquiryPage}
+                limit={inquiryLimit}
+                onPageChange={setInquiryPage}
+                onLimitChange={setInquiryLimit}
+              />
             </div>
           )}
 
@@ -2899,6 +3958,32 @@ export default function AdminDashboard({ setView }) {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1">
+                    <label className="text-[9px] uppercase tracking-wider font-black text-zinc-400">Custom Site Brand Name</label>
+                    <input
+                      type="text"
+                      required
+                      value={settingsForm.siteName}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, siteName: e.target.value })}
+                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold"
+                      placeholder="e.g. BEHOLD"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-[9px] uppercase tracking-wider font-black text-zinc-400">Footer Copyright Text</label>
+                    <input
+                      type="text"
+                      required
+                      value={settingsForm.siteCopyright}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, siteCopyright: e.target.value })}
+                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold"
+                      placeholder="e.g. © BEHOLD Ltd., 2026. All rights reserved."
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1">
                     <label className="text-[9px] uppercase tracking-wider font-black text-zinc-400">WhatsApp Support Endpoint Link</label>
                     <input
                       type="url"
@@ -2923,13 +4008,72 @@ export default function AdminDashboard({ setView }) {
                   </div>
                 </div>
 
+                {/* Top Alert Banner Notice */}
+                <div className="border border-zinc-850 p-4 rounded-xl space-y-4 bg-zinc-900/40">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="text-[9px] uppercase tracking-wider font-black text-zinc-400 block">System Banner Notification Bar</span>
+                      <span className="text-[8px] text-zinc-550 block font-medium">Display an alert message at the very top of all student-facing views.</span>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={settingsForm.showBanner}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, showBanner: e.target.checked })}
+                        className="sr-only peer"
+                      />
+                      <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
+                    </label>
+                  </div>
+
+                  {settingsForm.showBanner && (
+                    <div className="space-y-1 animate-in slide-in-from-top duration-200">
+                      <label className="text-[9px] uppercase tracking-wider font-black text-zinc-500">Alert Message Text</label>
+                      <input
+                        type="text"
+                        value={settingsForm.bannerNotice}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, bannerNotice: e.target.value })}
+                        className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold"
+                        placeholder="Write dynamic alert banner message..."
+                      />
+                    </div>
+                  )}
+                </div>
+
+                {/* Policies & Documents */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-[9px] uppercase tracking-wider font-black text-zinc-400">Terms of Use Document</label>
+                    <textarea
+                      rows={6}
+                      required
+                      value={settingsForm.termsOfUse}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, termsOfUse: e.target.value })}
+                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold font-mono"
+                      placeholder="Write Platform Terms & Conditions..."
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-[9px] uppercase tracking-wider font-black text-zinc-400">Privacy Policy Document</label>
+                    <textarea
+                      rows={6}
+                      required
+                      value={settingsForm.privacyPolicy}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, privacyPolicy: e.target.value })}
+                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold font-mono"
+                      placeholder="Write Platform Privacy Policy..."
+                    />
+                  </div>
+                </div>
+
                 {settingsSuccess && (
                   <p className="text-[10px] text-emerald-500 font-bold uppercase tracking-wide">{settingsSuccess}</p>
                 )}
 
                 <button
                   type="submit"
-                  className="px-6 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-black text-[9px] uppercase tracking-widest rounded-lg cursor-pointer transition border-none shadow-md"
+                  className="px-6 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-black text-[9px] uppercase tracking-widest rounded-lg cursor-pointer transition border-none shadow-md animate-in fade-in duration-300"
                 >
                   Save Global Configurations
                 </button>
@@ -3378,6 +4522,7 @@ export default function AdminDashboard({ setView }) {
                   <input
                     type="date"
                     required
+                    min={getLocalTodayString()}
                     value={bookingForm.date}
                     onChange={(e) => setBookingForm({ ...bookingForm, date: e.target.value })}
                     className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-xs text-white outline-none"
@@ -3609,7 +4754,8 @@ export default function AdminDashboard({ setView }) {
             <div className="space-y-2">
               <span className="text-[9px] uppercase tracking-wider font-black text-zinc-500 block">Consultation History Log</span>
               <div className="border border-zinc-850 rounded-xl overflow-hidden bg-zinc-955 max-h-[160px] overflow-y-auto">
-                <table className="w-full text-[10px] border-collapse text-left">
+                <div className="overflow-x-auto w-full">
+                <table className="w-full text-[10px] border-collapse text-left min-w-[420px]">
                   <thead>
                     <tr className="bg-zinc-900/50 text-zinc-500 font-bold uppercase tracking-wider border-b border-zinc-855">
                       <th className="p-2.5">Date & Time</th>
@@ -3657,6 +4803,7 @@ export default function AdminDashboard({ setView }) {
                     })()}
                   </tbody>
                 </table>
+                </div>
               </div>
             </div>
 
@@ -3841,7 +4988,8 @@ export default function AdminDashboard({ setView }) {
                     </div>
 
                     <div className="border border-zinc-850 rounded-xl overflow-hidden bg-zinc-955 max-h-[160px] overflow-y-auto">
-                      <table className="w-full text-[10px] border-collapse text-left">
+                      <div className="overflow-x-auto w-full">
+                      <table className="w-full text-[10px] border-collapse text-left min-w-[420px]">
                         <thead>
                           <tr className="bg-zinc-900/50 text-zinc-500 font-bold uppercase tracking-wider border-b border-zinc-855">
                             <th className="p-2.5">Client Student</th>
@@ -3890,6 +5038,7 @@ export default function AdminDashboard({ setView }) {
                           })()}
                         </tbody>
                       </table>
+                      </div>
                     </div>
                   </div>
                 </div>

@@ -9,6 +9,17 @@ import LogoutConfirmModal from '../LogoutConfirmModal';
 
 export default function PsychologistDashboard({ setView }) {
   const { user, login, register, logout } = useAuth();
+
+  const isCounsellorVerified = () => {
+    try {
+      const users = JSON.parse(localStorage.getItem('behold_users_db') || '[]');
+      const currentUser = users.find(u => u.id === user?.id);
+      return currentUser ? currentUser.verified !== false : true;
+    } catch (e) {
+      return true;
+    }
+  };
+
   const [currentSection, setCurrentSection] = useState('overview'); // overview, profile, availability, bookings
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileDrawerOpen, setIsProfileDrawerOpen] = useState(false);
@@ -204,6 +215,12 @@ export default function PsychologistDashboard({ setView }) {
         const matchesId = b.advisorId === advisorId;
         const matchesName = b.advisorName && b.advisorName.toLowerCase().includes(advisorName.toLowerCase());
         return matchesId || matchesName;
+      }).sort((a, b) => {
+        if (a.status === 'PENDING' && b.status !== 'PENDING') return -1;
+        if (a.status !== 'PENDING' && b.status === 'PENDING') return 1;
+        if (a.status === 'CONFIRMED' && b.status !== 'CONFIRMED' && b.status !== 'PENDING') return -1;
+        if (b.status === 'CONFIRMED' && a.status !== 'CONFIRMED' && a.status !== 'PENDING') return 1;
+        return b.date.localeCompare(a.date);
       });
       setBookings(myBookings);
     } catch (err) {
@@ -1354,6 +1371,17 @@ export default function PsychologistDashboard({ setView }) {
           </div>
         </div>
 
+        {/* Verification Status Alert Banner */}
+        {!isCounsellorVerified() && (
+          <div className="bg-amber-955/20 border border-amber-900/60 p-4 rounded-xl flex items-center gap-3 text-amber-300 text-xs animate-in slide-in-from-top duration-300">
+            <ShieldAlert className="w-5 h-5 text-amber-450 shrink-0" />
+            <div>
+              <span className="font-bold uppercase tracking-wider block mb-0.5">Account Pending Verification</span>
+              Your consultant profile is registered but pending admin acceptance. It will not be shown on the public Experts directory or Booking engine until verified by an administrator.
+            </div>
+          </div>
+        )}
+
         {/* WORKSPACE CONTENT ROUTER */}
         <div className="bg-zinc-900 border border-zinc-855 rounded-2xl p-5 sm:p-8 shadow-md">
 
@@ -1862,8 +1890,8 @@ export default function PsychologistDashboard({ setView }) {
                         type="button"
                         onClick={() => setActiveBookingTab(tab.id)}
                         className={`flex-1 py-2 rounded-lg text-[9.5px] font-black uppercase tracking-wider transition-all duration-300 cursor-pointer flex items-center justify-center gap-1.5 border ${isActive
-                            ? 'bg-brand text-zinc-955 border-brand font-black shadow-lg scale-102 shadow-brand/10'
-                            : 'bg-transparent border-transparent text-zinc-500 hover:text-zinc-300'
+                          ? 'bg-brand text-zinc-955 border-brand font-black shadow-lg scale-102 shadow-brand/10'
+                          : 'bg-transparent border-transparent text-zinc-500 hover:text-zinc-300'
                           }`}
                       >
                         <span>{tab.label}</span>

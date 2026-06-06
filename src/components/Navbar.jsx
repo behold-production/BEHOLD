@@ -3,7 +3,7 @@ import { Menu, X, ArrowUpRight, User, LogOut } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import LogoutConfirmModal from './LogoutConfirmModal';
 
-export default function Navbar({ navigateToSection, currentView, onOpenAuth }) {
+export default function Navbar({ navigateToSection, currentView, onOpenAuth, siteName }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
@@ -87,7 +87,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth }) {
               className="font-header font-black text-xl tracking-tighter cursor-pointer text-zinc-900 hover:text-brand transition duration-300"
               id="nav-logo"
             >
-              BEHOLD<span className="text-brand font-black">.</span>
+              {siteName || 'BEHOLD'}<span className="text-brand font-black">.</span>
             </span>
 
             <nav className="hidden lg:flex items-center space-x-8 text-xs font-semibold tracking-wider text-zinc-500">
@@ -185,8 +185,8 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth }) {
             <button
               onClick={() => window.spaNavigate('/booking')}
               className={`px-5 py-2.5 text-xs font-bold rounded-lg border border-zinc-200/50 transition-all duration-300 cursor-pointer flex items-center gap-1.5 uppercase tracking-wider ${currentView === '/booking'
-                  ? 'bg-zinc-950 text-white'
-                  : 'bg-brand hover:bg-brand-dark text-zinc-955 shadow-xs'
+                ? 'bg-zinc-950 text-white'
+                : 'bg-brand hover:bg-brand-dark text-zinc-955 shadow-xs'
                 }`}
             >
               <span>Book Session</span>
@@ -261,7 +261,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth }) {
             onClick={() => { setIsMenuOpen(false); handleLogoClick(); }}
             className="font-header font-black text-lg tracking-tighter cursor-pointer text-zinc-900 hover:text-brand transition duration-300"
           >
-            BEHOLD<span className="text-brand font-black">.</span>
+            {siteName || 'BEHOLD'}<span className="text-brand font-black">.</span>
           </span>
           <button
             onClick={() => setIsMenuOpen(false)}
@@ -276,8 +276,8 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth }) {
           <button
             onClick={handleLogoClick}
             className={`w-full text-left px-3.5 py-3 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${currentView === '/' && (activeSection === 'home' || activeSection === 'cdat' || activeSection === '')
-                ? 'bg-brand/10 text-zinc-900 border-brand font-black'
-                : 'text-zinc-650 hover:text-zinc-900 hover:bg-zinc-50 border-transparent'
+              ? 'bg-brand/10 text-zinc-900 border-brand font-black'
+              : 'text-zinc-650 hover:text-zinc-900 hover:bg-zinc-50 border-transparent'
               }`}
           >
             <span>Home</span>
@@ -286,8 +286,8 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth }) {
           <button
             onClick={() => scrollToSection('services')}
             className={`w-full text-left px-3.5 py-3 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${activeSection === 'services' && currentView === '/'
-                ? 'bg-brand/10 text-zinc-900 border-brand font-black'
-                : 'text-zinc-650 hover:text-zinc-900 hover:bg-zinc-50 border-transparent'
+              ? 'bg-brand/10 text-zinc-900 border-brand font-black'
+              : 'text-zinc-650 hover:text-zinc-900 hover:bg-zinc-50 border-transparent'
               }`}
           >
             <span>Services</span>
@@ -296,8 +296,8 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth }) {
           <button
             onClick={() => { window.spaNavigate('/sample-test'); setIsMenuOpen(false); }}
             className={`w-full text-left px-3.5 py-3 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${currentView === '/sample-test'
-                ? 'bg-brand/10 text-zinc-900 border-brand font-black'
-                : 'text-zinc-650 hover:text-zinc-900 hover:bg-zinc-50 border-transparent'
+              ? 'bg-brand/10 text-zinc-900 border-brand font-black'
+              : 'text-zinc-650 hover:text-zinc-900 hover:bg-zinc-50 border-transparent'
               }`}
           >
             <span>Sample Test</span>
@@ -306,8 +306,8 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth }) {
           <button
             onClick={() => scrollToSection('inquiry')}
             className={`w-full text-left px-3.5 py-3 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${activeSection === 'inquiry' && currentView === '/'
-                ? 'bg-brand/10 text-zinc-900 border-brand font-black'
-                : 'text-zinc-650 hover:text-zinc-900 hover:bg-zinc-50 border-transparent'
+              ? 'bg-brand/10 text-zinc-900 border-brand font-black'
+              : 'text-zinc-650 hover:text-zinc-900 hover:bg-zinc-50 border-transparent'
               }`}
           >
             <span>Contact</span>
@@ -316,8 +316,8 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth }) {
           <button
             onClick={() => { window.spaNavigate('/booking'); setIsMenuOpen(false); }}
             className={`w-full text-left px-3.5 py-3 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${currentView === '/booking'
-                ? 'bg-brand/10 text-zinc-900 border-brand font-black'
-                : 'text-zinc-650 hover:text-zinc-900 hover:bg-zinc-50 border-transparent'
+              ? 'bg-brand/10 text-zinc-900 border-brand font-black'
+              : 'text-zinc-650 hover:text-zinc-900 hover:bg-zinc-50 border-transparent'
               }`}
           >
             <span>Book Session</span>

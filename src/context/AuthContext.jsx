@@ -52,10 +52,16 @@ export function AuthProvider({ children }) {
     seedAccounts.forEach(account => {
       const existingIdx = updatedUsers.findIndex(u => u.email === account.email);
       if (existingIdx !== -1) {
+        let modified = false;
         if (updatedUsers[existingIdx].id !== account.id) {
           updatedUsers[existingIdx].id = account.id;
-          dbUpdated = true;
+          modified = true;
         }
+        if (updatedUsers[existingIdx].role !== account.role) {
+          updatedUsers[existingIdx].role = account.role;
+          modified = true;
+        }
+        if (modified) dbUpdated = true;
       } else {
         updatedUsers.push(account);
         dbUpdated = true;
@@ -130,7 +136,7 @@ export function AuthProvider({ children }) {
           role, 
           permissions,
           status: role === 'USER' ? 'ACTIVE' : undefined,
-          verified: role === 'PSYCHOLOGIST' ? true : undefined
+          verified: role === 'PSYCHOLOGIST' ? false : undefined
         };
         registeredUsers.push(newUser);
         localStorage.setItem('behold_users_db', JSON.stringify(registeredUsers));
