@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 export default function AuthModals({ isOpen, onClose }) {
   const [mode, setMode] = useState('login'); // 'login' or 'register'
   const { login, register } = useAuth();
-  
+
   const [formData, setFormData] = useState({ name: '', email: '', password: '', confirmPassword: '' });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -35,7 +35,7 @@ export default function AuthModals({ isOpen, onClose }) {
 
     try {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      
+
       if (mode === 'login') {
         if (!formData.email.trim() || !formData.password) throw new Error("Please fill in all fields");
         if (!emailRegex.test(formData.email)) throw new Error("Please enter a valid email address");
@@ -58,14 +58,14 @@ export default function AuthModals({ isOpen, onClose }) {
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       {/* Backdrop */}
-      <div 
+      <div
         className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm animate-in fade-in duration-300"
         onClick={onClose}
       />
-      
+
       {/* Modal Content */}
       <div className="relative w-full max-w-md bg-white rounded-lg shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 border border-zinc-200">
-        
+
         {/* Header */}
         <div className="flex justify-between items-center p-6 border-b border-zinc-100">
           <div>
@@ -76,7 +76,7 @@ export default function AuthModals({ isOpen, onClose }) {
               {mode === 'login' ? 'Enter your details to sign in.' : 'Join BEHOLD and book your sessions.'}
             </p>
           </div>
-          <button 
+          <button
             type="button"
             onClick={onClose}
             className="p-2 bg-zinc-50 hover:bg-zinc-100 rounded-full transition-colors cursor-pointer"
@@ -87,14 +87,14 @@ export default function AuthModals({ isOpen, onClose }) {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          
+
           {mode === 'register' && (
             <div className="space-y-1">
               <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 block">Full Name</label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
@@ -109,12 +109,12 @@ export default function AuthModals({ isOpen, onClose }) {
             <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 block">Email Address</label>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
-              <input 
-                type="email" 
+              <input
+                type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                placeholder="name@example.com"
+                placeholder="enter your mail id"
                 className="w-full pl-10 pr-4 py-3 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 focus:bg-white focus:border-brand focus:ring-1 focus:ring-brand outline-none transition-all"
               />
             </div>
@@ -124,8 +124,8 @@ export default function AuthModals({ isOpen, onClose }) {
             <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 block">Password</label>
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
-              <input 
-                type={showPassword ? 'text' : 'password'} 
+              <input
+                type={showPassword ? 'text' : 'password'}
                 name="password"
                 value={formData.password}
                 onChange={handleInputChange}
@@ -147,8 +147,8 @@ export default function AuthModals({ isOpen, onClose }) {
               <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 block">Confirm Password</label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
-                <input 
-                  type={showPassword ? 'text' : 'password'} 
+                <input
+                  type={showPassword ? 'text' : 'password'}
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
@@ -166,7 +166,7 @@ export default function AuthModals({ isOpen, onClose }) {
           )}
 
           <div className="pt-2">
-            <button 
+            <button
               type="submit"
               disabled={isLoading}
               className="w-full py-3.5 bg-zinc-900 hover:bg-zinc-800 text-white font-extrabold text-xs uppercase tracking-widest rounded-lg transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-sm"
@@ -188,7 +188,7 @@ export default function AuthModals({ isOpen, onClose }) {
         <div className="p-6 bg-zinc-50 border-t border-zinc-100 text-center">
           <p className="text-xs text-zinc-650 font-medium">
             {mode === 'login' ? "Don't have an account? " : "Already have an account? "}
-            <button 
+            <button
               type="button"
               onClick={() => setMode(mode === 'login' ? 'register' : 'login')}
               className="font-bold text-zinc-900 hover:text-brand transition-colors underline cursor-pointer"

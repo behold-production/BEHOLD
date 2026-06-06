@@ -52,11 +52,10 @@ function PaginationBar({ total, page, limit, onPageChange, onLimitChange }) {
           <button
             key={n}
             onClick={() => onPageChange(n)}
-            className={`w-7 h-7 rounded border text-[10px] font-black transition cursor-pointer ${
-              n === safeCurrentPage
-                ? 'bg-brand border-brand text-zinc-950'
-                : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-850'
-            }`}
+            className={`w-7 h-7 rounded border text-[10px] font-black transition cursor-pointer ${n === safeCurrentPage
+              ? 'bg-brand border-brand text-zinc-950'
+              : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-850'
+              }`}
           >
             {n}
           </button>
@@ -370,7 +369,7 @@ All data is stored securely in your browser's local sandbox data structures. No 
           if (parsed.availableSlots && parsed.availableSlots.length > 0) {
             const bookings = JSON.parse(localStorage.getItem('behold_booked_sessions') || '[]');
             slots = parsed.availableSlots.filter(slot => {
-              const isAlreadyBooked = bookings.some(b => 
+              const isAlreadyBooked = bookings.some(b =>
                 b.advisorId === bookingForm.advisorId &&
                 b.date === bookingForm.date &&
                 b.time === slot &&
@@ -802,18 +801,18 @@ All data is stored securely in your browser's local sandbox data structures. No 
         let [hours, minutes] = time.split(':').map(Number);
         if (modifier === 'PM' && hours < 12) hours += 12;
         if (modifier === 'AM' && hours === 12) hours = 0;
-        
+
         const now = new Date();
         const slotDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
         if (now >= slotDate) {
           setBookingFormError("This time slot has already passed today.");
           return;
         }
-      } catch (e) {}
+      } catch (e) { }
     }
 
     const bookings = JSON.parse(localStorage.getItem('behold_booked_sessions') || '[]');
-    const isDoubleBooked = bookings.some(b => 
+    const isDoubleBooked = bookings.some(b =>
       b.advisorId === bookingForm.advisorId &&
       b.date === bookingForm.date &&
       b.time === bookingForm.time &&
@@ -1591,7 +1590,7 @@ All data is stored securely in your browser's local sandbox data structures. No 
                 <input
                   type="email"
                   required
-                  placeholder="admin@behold.com"
+                  placeholder="enter your mail id"
                   value={loginEmail}
                   onChange={(e) => setLoginEmail(e.target.value)}
                   className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-xs text-white outline-none transition-colors"
@@ -1994,11 +1993,10 @@ All data is stored securely in your browser's local sandbox data structures. No 
                   {/* Students Card */}
                   <div
                     onClick={() => setActiveStatHighlight(activeStatHighlight === 'students' ? null : 'students')}
-                    className={`bg-zinc-950 border p-4 rounded-xl text-center space-y-1.5 cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-brand/5 select-none ${
-                      activeStatHighlight === 'students'
-                        ? 'border-brand bg-brand/5 ring-1 ring-brand/30'
-                        : 'border-zinc-850 hover:border-zinc-700'
-                    }`}
+                    className={`bg-zinc-950 border p-4 rounded-xl text-center space-y-1.5 cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-brand/5 select-none ${activeStatHighlight === 'students'
+                      ? 'border-brand bg-brand/5 ring-1 ring-brand/30'
+                      : 'border-zinc-850 hover:border-zinc-700'
+                      }`}
                   >
                     <div className="flex justify-between items-center">
                       <span className="text-[8px] text-zinc-500 font-bold uppercase tracking-wider block">Students</span>
@@ -2014,11 +2012,10 @@ All data is stored securely in your browser's local sandbox data structures. No 
                   {/* Psychologists Card */}
                   <div
                     onClick={() => setActiveStatHighlight(activeStatHighlight === 'psychologists' ? null : 'psychologists')}
-                    className={`bg-zinc-955 border p-4 rounded-xl text-center space-y-1.5 cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-brand/5 select-none ${
-                      activeStatHighlight === 'psychologists'
-                        ? 'border-brand bg-brand/5 ring-1 ring-brand/30'
-                        : 'border-zinc-850 hover:border-zinc-700'
-                    }`}
+                    className={`bg-zinc-955 border p-4 rounded-xl text-center space-y-1.5 cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-brand/5 select-none ${activeStatHighlight === 'psychologists'
+                      ? 'border-brand bg-brand/5 ring-1 ring-brand/30'
+                      : 'border-zinc-850 hover:border-zinc-700'
+                      }`}
                   >
                     <div className="flex justify-between items-center">
                       <span className="text-[8px] text-zinc-500 font-bold uppercase tracking-wider block">Psychologists</span>
@@ -2034,11 +2031,10 @@ All data is stored securely in your browser's local sandbox data structures. No 
                   {/* Total Bookings Card */}
                   <div
                     onClick={() => setActiveStatHighlight(activeStatHighlight === 'bookings' ? null : 'bookings')}
-                    className={`bg-zinc-955 border p-4 rounded-xl text-center space-y-1.5 cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-brand/5 select-none ${
-                      activeStatHighlight === 'bookings'
-                        ? 'border-brand bg-brand/5 ring-1 ring-brand/30'
-                        : 'border-zinc-850 hover:border-zinc-700'
-                    }`}
+                    className={`bg-zinc-955 border p-4 rounded-xl text-center space-y-1.5 cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-brand/5 select-none ${activeStatHighlight === 'bookings'
+                      ? 'border-brand bg-brand/5 ring-1 ring-brand/30'
+                      : 'border-zinc-850 hover:border-zinc-700'
+                      }`}
                   >
                     <div className="flex justify-between items-center">
                       <span className="text-[8px] text-zinc-500 font-bold uppercase tracking-wider block">Total Bookings</span>
@@ -2054,11 +2050,10 @@ All data is stored securely in your browser's local sandbox data structures. No 
                   {/* Inquiries Card */}
                   <div
                     onClick={() => setActiveStatHighlight(activeStatHighlight === 'inquiries' ? null : 'inquiries')}
-                    className={`bg-zinc-955 border p-4 rounded-xl text-center space-y-1.5 cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-brand/5 select-none ${
-                      activeStatHighlight === 'inquiries'
-                        ? 'border-brand bg-brand/5 ring-1 ring-brand/30'
-                        : 'border-zinc-850 hover:border-zinc-700'
-                    }`}
+                    className={`bg-zinc-955 border p-4 rounded-xl text-center space-y-1.5 cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-brand/5 select-none ${activeStatHighlight === 'inquiries'
+                      ? 'border-brand bg-brand/5 ring-1 ring-brand/30'
+                      : 'border-zinc-850 hover:border-zinc-700'
+                      }`}
                   >
                     <div className="flex justify-between items-center">
                       <span className="text-[8px] text-zinc-500 font-bold uppercase tracking-wider block">Inquiries</span>
@@ -2074,11 +2069,10 @@ All data is stored securely in your browser's local sandbox data structures. No 
                   {/* Completed Card */}
                   <div
                     onClick={() => setActiveStatHighlight(activeStatHighlight === 'completed' ? null : 'completed')}
-                    className={`bg-zinc-955 border p-4 rounded-xl text-center space-y-1.5 cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-brand/5 select-none ${
-                      activeStatHighlight === 'completed'
-                        ? 'border-brand bg-brand/5 ring-1 ring-brand/30'
-                        : 'border-zinc-850 hover:border-zinc-700'
-                    }`}
+                    className={`bg-zinc-955 border p-4 rounded-xl text-center space-y-1.5 cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-brand/5 select-none ${activeStatHighlight === 'completed'
+                      ? 'border-brand bg-brand/5 ring-1 ring-brand/30'
+                      : 'border-zinc-850 hover:border-zinc-700'
+                      }`}
                   >
                     <div className="flex justify-between items-center">
                       <span className="text-[8px] text-zinc-500 font-bold uppercase tracking-wider block">Completed</span>
@@ -2094,11 +2088,10 @@ All data is stored securely in your browser's local sandbox data structures. No 
                   {/* Revenue Card */}
                   <div
                     onClick={() => setActiveStatHighlight(activeStatHighlight === 'revenue' ? null : 'revenue')}
-                    className={`bg-zinc-955 border p-4 rounded-xl text-center space-y-1.5 cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-brand/5 select-none ${
-                      activeStatHighlight === 'revenue'
-                        ? 'border-brand bg-brand/5 ring-1 ring-brand/30'
-                        : 'border-zinc-850 hover:border-zinc-700'
-                    }`}
+                    className={`bg-zinc-955 border p-4 rounded-xl text-center space-y-1.5 cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-brand/5 select-none ${activeStatHighlight === 'revenue'
+                      ? 'border-brand bg-brand/5 ring-1 ring-brand/30'
+                      : 'border-zinc-850 hover:border-zinc-700'
+                      }`}
                   >
                     <div className="flex justify-between items-center">
                       <span className="text-[8px] text-zinc-500 font-bold uppercase tracking-wider block">Revenue Est.</span>
@@ -2163,9 +2156,8 @@ All data is stored securely in your browser's local sandbox data structures. No 
                                     <span className="font-bold text-white block truncate max-w-[140px]">{st.name}</span>
                                     <span className="text-[8px] text-zinc-500 font-mono block">{st.email}</span>
                                   </div>
-                                  <span className={`text-[8px] px-1.5 py-0.2 rounded uppercase font-black ${
-                                    st.status === 'SUSPENDED' ? 'bg-rose-955/20 text-rose-500 border border-rose-900/30' : 'bg-emerald-955/20 text-emerald-450 border border-emerald-900/30'
-                                  }`}>{st.status || 'ACTIVE'}</span>
+                                  <span className={`text-[8px] px-1.5 py-0.2 rounded uppercase font-black ${st.status === 'SUSPENDED' ? 'bg-rose-955/20 text-rose-500 border border-rose-900/30' : 'bg-emerald-955/20 text-emerald-450 border border-emerald-900/30'
+                                    }`}>{st.status || 'ACTIVE'}</span>
                                 </div>
                               ))}
                               {studentsCount === 0 && <p className="text-zinc-650 italic text-center py-4">No students registered yet.</p>}
@@ -2463,31 +2455,28 @@ All data is stored securely in your browser's local sandbox data structures. No 
                     <div className="flex gap-2 bg-zinc-900/60 p-1 rounded-lg border border-zinc-800">
                       <button
                         onClick={() => setOverviewActivityTab('bookings')}
-                        className={`flex-1 py-2 rounded-md text-[8.5px] font-black uppercase tracking-wider transition-all cursor-pointer border-none flex items-center justify-center gap-1 ${
-                          overviewActivityTab === 'bookings'
-                            ? 'bg-brand text-zinc-955 font-black shadow-sm'
-                            : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-950'
-                        }`}
+                        className={`flex-1 py-2 rounded-md text-[8.5px] font-black uppercase tracking-wider transition-all cursor-pointer border-none flex items-center justify-center gap-1 ${overviewActivityTab === 'bookings'
+                          ? 'bg-brand text-zinc-955 font-black shadow-sm'
+                          : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-950'
+                          }`}
                       >
                         <Calendar className="w-3.5 h-3.5" /> Bookings
                       </button>
                       <button
                         onClick={() => setOverviewActivityTab('inquiries')}
-                        className={`flex-1 py-2 rounded-md text-[8.5px] font-black uppercase tracking-wider transition-all cursor-pointer border-none flex items-center justify-center gap-1 ${
-                          overviewActivityTab === 'inquiries'
-                            ? 'bg-brand text-zinc-955 font-black shadow-sm'
-                            : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-955'
-                        }`}
+                        className={`flex-1 py-2 rounded-md text-[8.5px] font-black uppercase tracking-wider transition-all cursor-pointer border-none flex items-center justify-center gap-1 ${overviewActivityTab === 'inquiries'
+                          ? 'bg-brand text-zinc-955 font-black shadow-sm'
+                          : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-955'
+                          }`}
                       >
                         <MessageSquare className="w-3.5 h-3.5" /> Inquiries
                       </button>
                       <button
                         onClick={() => setOverviewActivityTab('results')}
-                        className={`flex-1 py-2 rounded-md text-[8.5px] font-black uppercase tracking-wider transition-all cursor-pointer border-none flex items-center justify-center gap-1 ${
-                          overviewActivityTab === 'results'
-                            ? 'bg-brand text-zinc-955 font-black shadow-sm'
-                            : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-955'
-                        }`}
+                        className={`flex-1 py-2 rounded-md text-[8.5px] font-black uppercase tracking-wider transition-all cursor-pointer border-none flex items-center justify-center gap-1 ${overviewActivityTab === 'results'
+                          ? 'bg-brand text-zinc-955 font-black shadow-sm'
+                          : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-955'
+                          }`}
                       >
                         <FileSpreadsheet className="w-3.5 h-3.5" /> Aptitude Results
                       </button>
@@ -2514,12 +2503,11 @@ All data is stored securely in your browser's local sandbox data structures. No 
                                 <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto shrink-0 border-t border-zinc-900/40 sm:border-none pt-2 sm:pt-0">
                                   <div className="text-left sm:text-right">
                                     <span className="text-zinc-400 font-bold block">{b.date} • {b.time}</span>
-                                    <span className={`text-[8px] px-1.5 py-0.2 rounded uppercase font-black inline-block mt-0.5 border ${
-                                      b.status === 'CONFIRMED' ? 'bg-emerald-955/20 border-emerald-900/40 text-emerald-450' :
+                                    <span className={`text-[8px] px-1.5 py-0.2 rounded uppercase font-black inline-block mt-0.5 border ${b.status === 'CONFIRMED' ? 'bg-emerald-955/20 border-emerald-900/40 text-emerald-450' :
                                       b.status === 'COMPLETED' ? 'bg-brand/10 border-brand/20 text-brand' :
-                                      b.status === 'CANCELLED' ? 'bg-rose-955/20 border-rose-900/30 text-rose-500' :
-                                      'bg-zinc-800 border-zinc-700 text-zinc-400'
-                                    }`}>{b.status}</span>
+                                        b.status === 'CANCELLED' ? 'bg-rose-955/20 border-rose-900/30 text-rose-500' :
+                                          'bg-zinc-800 border-zinc-700 text-zinc-400'
+                                      }`}>{b.status}</span>
                                   </div>
                                   <button
                                     onClick={() => setSelectedOverviewBooking(selectedOverviewBooking === b.id ? null : b.id)}
@@ -2578,9 +2566,8 @@ All data is stored securely in your browser's local sandbox data structures. No 
                                   </div>
                                   <div className="flex items-center gap-2">
                                     <span className="text-zinc-550 font-mono text-[9px]">{i.date}</span>
-                                    <span className={`text-[8px] px-1.5 py-0.2 rounded uppercase font-black border ${
-                                      isResolved ? 'bg-emerald-955/20 border-emerald-900/30 text-emerald-455' : 'bg-amber-955/20 border-amber-900/30 text-amber-500'
-                                    }`}>{i.status || 'PENDING'}</span>
+                                    <span className={`text-[8px] px-1.5 py-0.2 rounded uppercase font-black border ${isResolved ? 'bg-emerald-955/20 border-emerald-900/30 text-emerald-455' : 'bg-amber-955/20 border-amber-900/30 text-amber-500'
+                                      }`}>{i.status || 'PENDING'}</span>
                                   </div>
                                 </div>
                                 <p className="text-zinc-350 font-medium italic border-l-2 border-brand/30 pl-2.5 font-sans leading-relaxed">"{i.message}"</p>
@@ -2588,11 +2575,10 @@ All data is stored securely in your browser's local sandbox data structures. No 
                                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-1.5 border-t border-zinc-900/40">
                                   <button
                                     onClick={() => handleResolveInquiry(i.id)}
-                                    className={`px-3 py-1.5 rounded text-[8.5px] font-black uppercase tracking-wider cursor-pointer border transition-colors shrink-0 ${
-                                      isResolved
-                                        ? 'bg-zinc-900 hover:bg-zinc-800 border-zinc-800 text-zinc-400 hover:text-white'
-                                        : 'bg-emerald-600 hover:bg-emerald-700 border-none text-white'
-                                    }`}
+                                    className={`px-3 py-1.5 rounded text-[8.5px] font-black uppercase tracking-wider cursor-pointer border transition-colors shrink-0 ${isResolved
+                                      ? 'bg-zinc-900 hover:bg-zinc-800 border-zinc-800 text-zinc-400 hover:text-white'
+                                      : 'bg-emerald-600 hover:bg-emerald-700 border-none text-white'
+                                      }`}
                                   >
                                     {isResolved ? 'Mark Pending' : 'Mark Resolved'}
                                   </button>
@@ -2685,7 +2671,7 @@ All data is stored securely in your browser's local sandbox data structures. No 
                     {/* Progress Ratios and Meters */}
                     <div className="space-y-3 pb-3 border-b border-zinc-900">
                       <span className="text-[8.5px] uppercase font-black tracking-widest text-zinc-550 block">Ratios & Fulfillment</span>
-                      
+
                       <div className="space-y-1.5">
                         <div className="flex justify-between items-center text-[9px] font-bold uppercase">
                           <span className="text-zinc-400">Booking Completion</span>
@@ -3037,84 +3023,84 @@ All data is stored securely in your browser's local sandbox data structures. No 
                     <tbody>
                       {psychologistsList.slice((psyPage - 1) * psyLimit, psyPage * psyLimit).map(psy => (
                         <tr key={psy.id} className="border-b border-zinc-900 hover:bg-zinc-900/50">
-                        <td className="p-3">
-                          <span className="font-bold text-white block leading-tight">{psy.name}</span>
-                          <span className="text-[8px] text-zinc-500">ID: {psy.id} • Active Profile</span>
-                        </td>
-                        <td className="p-3 text-zinc-350 font-medium">{psy.email}</td>
-                        <td className="p-3 text-center">
-                          {psy.verified ? (
-                            <div className="flex items-center justify-center gap-2">
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-955/20 border border-emerald-900/40 text-emerald-450 text-[9px] font-black uppercase font-mono">
-                                <Check className="w-3.5 h-3.5 text-emerald-450" /> Approved
-                              </span>
-                              <button
-                                onClick={() => handleTogglePsyVerification(psy.id, true)}
-                                className="text-[9px] text-zinc-500 hover:text-rose-500 underline cursor-pointer bg-transparent border-none p-0 animate-in fade-in duration-200"
-                                title="Revoke acceptance"
-                              >
-                                Revoke
-                              </button>
-                            </div>
-                          ) : (
-                            <div className="flex items-center justify-center gap-1.5">
-                              <button
-                                onClick={() => handleTogglePsyVerification(psy.id, false)}
-                                className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-750 text-white rounded text-[8.5px] font-black uppercase tracking-wider cursor-pointer border-none shadow-sm transition-colors"
-                                title="Accept and verify counselor"
-                              >
-                                Accept
-                              </button>
-                              <button
-                                onClick={() => handleDeletePsy(psy.id)}
-                                className="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded text-[8.5px] font-black uppercase tracking-wider cursor-pointer border-none shadow-sm transition-colors"
-                                title="Reject and delete counselor request"
-                              >
-                                Reject
-                              </button>
-                            </div>
-                          )}
-                        </td>
-                        <td className="p-3 text-center flex items-center justify-center gap-2">
-                          <button
-                            onClick={() => setViewingPsychologist(psy)}
-                            className="px-2.5 py-1 bg-zinc-900 text-brand hover:text-white rounded border border-zinc-800 hover:bg-zinc-850 transition cursor-pointer text-[8px] font-black uppercase tracking-wider"
-                          >
-                            Details
-                          </button>
-                          <a
-                            href={`#/advisor/${psy.id}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="px-2.5 py-1 bg-zinc-900 text-brand hover:text-white rounded border border-zinc-800 hover:bg-zinc-850 transition cursor-pointer text-[8px] font-black uppercase tracking-wider inline-block text-center"
-                          >
-                            Preview
-                          </a>
-                          <button
-                            onClick={() => handleOpenEditPsy(psy)}
-                            className="p-1.5 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"
-                            title="Edit Psychologist"
-                          >
-                            <Edit className="w-3.5 h-3.5" />
-                          </button>
-                          <button
-                            onClick={() => handleDeletePsy(psy.id)}
-                            className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
-                            title="Remove Psychologist"
-                          >
-                            <Trash className="w-3.5 h-3.5" />
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                    {psychologistsList.length === 0 && (
-                      <tr>
-                        <td colSpan={4} className="p-8 text-center text-zinc-500 italic">No psychologist registries match the active query.</td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
+                          <td className="p-3">
+                            <span className="font-bold text-white block leading-tight">{psy.name}</span>
+                            <span className="text-[8px] text-zinc-500">ID: {psy.id} • Active Profile</span>
+                          </td>
+                          <td className="p-3 text-zinc-350 font-medium">{psy.email}</td>
+                          <td className="p-3 text-center">
+                            {psy.verified ? (
+                              <div className="flex items-center justify-center gap-2">
+                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-955/20 border border-emerald-900/40 text-emerald-450 text-[9px] font-black uppercase font-mono">
+                                  <Check className="w-3.5 h-3.5 text-emerald-450" /> Approved
+                                </span>
+                                <button
+                                  onClick={() => handleTogglePsyVerification(psy.id, true)}
+                                  className="text-[9px] text-zinc-500 hover:text-rose-500 underline cursor-pointer bg-transparent border-none p-0 animate-in fade-in duration-200"
+                                  title="Revoke acceptance"
+                                >
+                                  Revoke
+                                </button>
+                              </div>
+                            ) : (
+                              <div className="flex items-center justify-center gap-1.5">
+                                <button
+                                  onClick={() => handleTogglePsyVerification(psy.id, false)}
+                                  className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-750 text-white rounded text-[8.5px] font-black uppercase tracking-wider cursor-pointer border-none shadow-sm transition-colors"
+                                  title="Accept and verify counselor"
+                                >
+                                  Accept
+                                </button>
+                                <button
+                                  onClick={() => handleDeletePsy(psy.id)}
+                                  className="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded text-[8.5px] font-black uppercase tracking-wider cursor-pointer border-none shadow-sm transition-colors"
+                                  title="Reject and delete counselor request"
+                                >
+                                  Reject
+                                </button>
+                              </div>
+                            )}
+                          </td>
+                          <td className="p-3 text-center flex items-center justify-center gap-2">
+                            <button
+                              onClick={() => setViewingPsychologist(psy)}
+                              className="px-2.5 py-1 bg-zinc-900 text-brand hover:text-white rounded border border-zinc-800 hover:bg-zinc-850 transition cursor-pointer text-[8px] font-black uppercase tracking-wider"
+                            >
+                              Details
+                            </button>
+                            <a
+                              href={`#/advisor/${psy.id}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="px-2.5 py-1 bg-zinc-900 text-brand hover:text-white rounded border border-zinc-800 hover:bg-zinc-850 transition cursor-pointer text-[8px] font-black uppercase tracking-wider inline-block text-center"
+                            >
+                              Preview
+                            </a>
+                            <button
+                              onClick={() => handleOpenEditPsy(psy)}
+                              className="p-1.5 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"
+                              title="Edit Psychologist"
+                            >
+                              <Edit className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              onClick={() => handleDeletePsy(psy.id)}
+                              className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
+                              title="Remove Psychologist"
+                            >
+                              <Trash className="w-3.5 h-3.5" />
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                      {psychologistsList.length === 0 && (
+                        <tr>
+                          <td colSpan={4} className="p-8 text-center text-zinc-500 italic">No psychologist registries match the active query.</td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
               </div>
               <PaginationBar
                 total={psychologistsList.length}
@@ -3527,117 +3513,117 @@ All data is stored securely in your browser's local sandbox data structures. No 
 
                 <div className="border border-zinc-850 rounded-lg overflow-hidden bg-zinc-950">
                   <div className="overflow-x-auto w-full">
-                  <table className="w-full text-xs border-collapse min-w-[850px]">
-                    <thead>
-                      <tr className="bg-zinc-900 text-zinc-400 font-bold uppercase tracking-wider border-b border-zinc-850 text-left">
-                        <th className="p-3 text-center w-10">
-                          {(() => {
-                            const pagedBookings = filteredBookings.slice((bookingPage - 1) * bookingLimit, bookingPage * bookingLimit);
-                            return (
+                    <table className="w-full text-xs border-collapse min-w-[850px]">
+                      <thead>
+                        <tr className="bg-zinc-900 text-zinc-400 font-bold uppercase tracking-wider border-b border-zinc-850 text-left">
+                          <th className="p-3 text-center w-10">
+                            {(() => {
+                              const pagedBookings = filteredBookings.slice((bookingPage - 1) * bookingLimit, bookingPage * bookingLimit);
+                              return (
+                                <input
+                                  type="checkbox"
+                                  onChange={(e) => {
+                                    if (e.target.checked) {
+                                      setSelectedBookingIds(pagedBookings.map(b => b.id));
+                                    } else {
+                                      setSelectedBookingIds([]);
+                                    }
+                                  }}
+                                  checked={pagedBookings.length > 0 && pagedBookings.every(b => selectedBookingIds.includes(b.id))}
+                                  className="cursor-pointer"
+                                />
+                              );
+                            })()}
+                          </th>
+                          <th className="p-3">Student</th>
+                          <th className="p-3">Psychologist</th>
+                          <th className="p-3">Service / Mode</th>
+                          <th className="p-3">Schedule</th>
+                          <th className="p-3">Meeting Room</th>
+                          <th className="p-3 text-center">Status</th>
+                          <th className="p-3 text-center font-bold">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {filteredBookings.slice((bookingPage - 1) * bookingLimit, bookingPage * bookingLimit).map(booking => (
+                          <tr key={booking.id} className="border-b border-zinc-900 hover:bg-zinc-900/50">
+                            <td className="p-3 text-center">
                               <input
                                 type="checkbox"
-                                onChange={(e) => {
-                                  if (e.target.checked) {
-                                    setSelectedBookingIds(pagedBookings.map(b => b.id));
-                                  } else {
-                                    setSelectedBookingIds([]);
-                                  }
-                                }}
-                                checked={pagedBookings.length > 0 && pagedBookings.every(b => selectedBookingIds.includes(b.id))}
+                                checked={selectedBookingIds.includes(booking.id)}
+                                onChange={() => handleToggleSelectBooking(booking.id)}
                                 className="cursor-pointer"
                               />
-                            );
-                          })()}
-                        </th>
-                        <th className="p-3">Student</th>
-                        <th className="p-3">Psychologist</th>
-                        <th className="p-3">Service / Mode</th>
-                        <th className="p-3">Schedule</th>
-                        <th className="p-3">Meeting Room</th>
-                        <th className="p-3 text-center">Status</th>
-                        <th className="p-3 text-center font-bold">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filteredBookings.slice((bookingPage - 1) * bookingLimit, bookingPage * bookingLimit).map(booking => (
-                        <tr key={booking.id} className="border-b border-zinc-900 hover:bg-zinc-900/50">
-                          <td className="p-3 text-center">
-                            <input
-                              type="checkbox"
-                              checked={selectedBookingIds.includes(booking.id)}
-                              onChange={() => handleToggleSelectBooking(booking.id)}
-                              className="cursor-pointer"
-                            />
-                          </td>
-                          <td className="p-3">
-                            <span className="font-bold text-white block leading-tight">{booking.userName}</span>
-                            <span className="text-[8px] text-zinc-500">ID: {booking.userId}</span>
-                          </td>
-                          <td className="p-3">
-                            <span className="font-bold text-white block leading-tight">{booking.advisorName}</span>
-                            <span className="text-[8px] text-zinc-500">{booking.advisorRole}</span>
-                          </td>
-                          <td className="p-3">
-                            <span className="font-semibold block uppercase text-white leading-tight">
-                              {booking.service === 'counselling' ? 'Emotional Wellbeing' : 'Career Mapping'}
-                            </span>
-                            <span className="text-[8px] text-zinc-550 font-bold uppercase">{booking.mode}</span>
-                          </td>
-                          <td className="p-3 font-semibold text-zinc-300">
-                            <span className="block">{booking.date}</span>
-                            <span className="text-[9px] text-zinc-500 font-bold">{booking.time}</span>
-                          </td>
-                          <td className="p-3">
-                            {booking.meetLink ? (
-                              <a
-                                href={booking.meetLink}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-brand hover:underline font-bold inline-flex items-center gap-1 text-[10px]"
+                            </td>
+                            <td className="p-3">
+                              <span className="font-bold text-white block leading-tight">{booking.userName}</span>
+                              <span className="text-[8px] text-zinc-500">ID: {booking.userId}</span>
+                            </td>
+                            <td className="p-3">
+                              <span className="font-bold text-white block leading-tight">{booking.advisorName}</span>
+                              <span className="text-[8px] text-zinc-500">{booking.advisorRole}</span>
+                            </td>
+                            <td className="p-3">
+                              <span className="font-semibold block uppercase text-white leading-tight">
+                                {booking.service === 'counselling' ? 'Emotional Wellbeing' : 'Career Mapping'}
+                              </span>
+                              <span className="text-[8px] text-zinc-550 font-bold uppercase">{booking.mode}</span>
+                            </td>
+                            <td className="p-3 font-semibold text-zinc-300">
+                              <span className="block">{booking.date}</span>
+                              <span className="text-[9px] text-zinc-500 font-bold">{booking.time}</span>
+                            </td>
+                            <td className="p-3">
+                              {booking.meetLink ? (
+                                <a
+                                  href={booking.meetLink}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-brand hover:underline font-bold inline-flex items-center gap-1 text-[10px]"
+                                >
+                                  <Link className="w-3 h-3" /> Virtual Room
+                                </a>
+                              ) : (
+                                <span className="text-zinc-550 italic text-[10px]">No Link Set</span>
+                              )}
+                            </td>
+                            <td className="p-3 text-center">
+                              <span className={`inline-flex items-center px-2 py-0.5 rounded text-[8px] font-black uppercase font-mono tracking-wider ${booking.status === 'CONFIRMED'
+                                ? 'bg-emerald-950/30 border border-emerald-900/40 text-emerald-450'
+                                : booking.status === 'COMPLETED'
+                                  ? 'bg-indigo-950/30 border border-indigo-900/40 text-indigo-400'
+                                  : booking.status === 'CANCELLED'
+                                    ? 'bg-rose-955/30 border border-rose-900/40 text-rose-500'
+                                    : 'bg-zinc-900 border border-zinc-800 text-zinc-450'
+                                }`}>
+                                {booking.status}
+                              </span>
+                            </td>
+                            <td className="p-3 text-center flex items-center justify-center gap-2">
+                              <button
+                                onClick={() => handleOpenEditBooking(booking)}
+                                className="p-1.5 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"
+                                title="Edit / Reschedule"
                               >
-                                <Link className="w-3 h-3" /> Virtual Room
-                              </a>
-                            ) : (
-                              <span className="text-zinc-550 italic text-[10px]">No Link Set</span>
-                            )}
-                          </td>
-                          <td className="p-3 text-center">
-                            <span className={`inline-flex items-center px-2 py-0.5 rounded text-[8px] font-black uppercase font-mono tracking-wider ${booking.status === 'CONFIRMED'
-                              ? 'bg-emerald-950/30 border border-emerald-900/40 text-emerald-450'
-                              : booking.status === 'COMPLETED'
-                                ? 'bg-indigo-950/30 border border-indigo-900/40 text-indigo-400'
-                                : booking.status === 'CANCELLED'
-                                  ? 'bg-rose-955/30 border border-rose-900/40 text-rose-500'
-                                  : 'bg-zinc-900 border border-zinc-800 text-zinc-450'
-                              }`}>
-                              {booking.status}
-                            </span>
-                          </td>
-                          <td className="p-3 text-center flex items-center justify-center gap-2">
-                            <button
-                              onClick={() => handleOpenEditBooking(booking)}
-                              className="p-1.5 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"
-                              title="Edit / Reschedule"
-                            >
-                              <Edit className="w-3.5 h-3.5" />
-                            </button>
-                            <button
-                              onClick={() => handleDeleteBooking(booking.id)}
-                              className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
-                              title="Cancel Booking"
-                            >
-                              <Trash className="w-3.5 h-3.5" />
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                      {filteredBookings.length === 0 && (
-                        <tr>
-                          <td colSpan={8} className="p-8 text-center text-zinc-500 italic">No bookings scheduled in the system matching the active filters.</td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
+                                <Edit className="w-3.5 h-3.5" />
+                              </button>
+                              <button
+                                onClick={() => handleDeleteBooking(booking.id)}
+                                className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
+                                title="Cancel Booking"
+                              >
+                                <Trash className="w-3.5 h-3.5" />
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                        {filteredBookings.length === 0 && (
+                          <tr>
+                            <td colSpan={8} className="p-8 text-center text-zinc-500 italic">No bookings scheduled in the system matching the active filters.</td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
                 <PaginationBar
@@ -4755,54 +4741,54 @@ All data is stored securely in your browser's local sandbox data structures. No 
               <span className="text-[9px] uppercase tracking-wider font-black text-zinc-500 block">Consultation History Log</span>
               <div className="border border-zinc-850 rounded-xl overflow-hidden bg-zinc-955 max-h-[160px] overflow-y-auto">
                 <div className="overflow-x-auto w-full">
-                <table className="w-full text-[10px] border-collapse text-left min-w-[420px]">
-                  <thead>
-                    <tr className="bg-zinc-900/50 text-zinc-500 font-bold uppercase tracking-wider border-b border-zinc-855">
-                      <th className="p-2.5">Date & Time</th>
-                      <th className="p-2.5">Advisor</th>
-                      <th className="p-2.5">Service Type</th>
-                      <th className="p-2.5 text-center">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {(() => {
-                      const studentBookings = bookingsDb.filter(b => b.userId === viewingStudent.id);
-                      if (studentBookings.length === 0) {
-                        return (
-                          <tr>
-                            <td colSpan={4} className="p-4 text-center text-zinc-600 italic">No consult history for this student.</td>
-                          </tr>
-                        );
-                      }
-                      return studentBookings.map(b => {
-                        const psychologist = usersDb.find(u => u.id === b.advisorId);
-                        return (
-                          <tr key={b.id} className="border-b border-zinc-900/60 hover:bg-zinc-900/30">
-                            <td className="p-2.5">
-                              <span className="text-white block font-semibold">{b.date}</span>
-                              <span className="text-zinc-500 text-[8.5px]">{b.time}</span>
-                            </td>
-                            <td className="p-2.5 text-zinc-300 font-medium">
-                              {psychologist ? psychologist.name : 'Unknown Advisor'}
-                            </td>
-                            <td className="p-2.5 text-zinc-400 capitalize font-medium">
-                              {b.service === 'counselling' ? 'Wellbeing' : 'Career Mapping'} ({b.mode})
-                            </td>
-                            <td className="p-2.5 text-center">
-                              <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider ${b.status === 'CONFIRMED' ? 'bg-indigo-950/20 border border-indigo-900/30 text-indigo-400' :
-                                b.status === 'COMPLETED' ? 'bg-emerald-955/20 border border-emerald-900/30 text-emerald-450' :
-                                  b.status === 'CANCELLED' ? 'bg-rose-955/20 border border-rose-900/30 text-rose-500' :
-                                    'bg-zinc-800 border border-zinc-700 text-zinc-400'
-                                }`}>
-                                {b.status}
-                              </span>
-                            </td>
-                          </tr>
-                        );
-                      });
-                    })()}
-                  </tbody>
-                </table>
+                  <table className="w-full text-[10px] border-collapse text-left min-w-[420px]">
+                    <thead>
+                      <tr className="bg-zinc-900/50 text-zinc-500 font-bold uppercase tracking-wider border-b border-zinc-855">
+                        <th className="p-2.5">Date & Time</th>
+                        <th className="p-2.5">Advisor</th>
+                        <th className="p-2.5">Service Type</th>
+                        <th className="p-2.5 text-center">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {(() => {
+                        const studentBookings = bookingsDb.filter(b => b.userId === viewingStudent.id);
+                        if (studentBookings.length === 0) {
+                          return (
+                            <tr>
+                              <td colSpan={4} className="p-4 text-center text-zinc-600 italic">No consult history for this student.</td>
+                            </tr>
+                          );
+                        }
+                        return studentBookings.map(b => {
+                          const psychologist = usersDb.find(u => u.id === b.advisorId);
+                          return (
+                            <tr key={b.id} className="border-b border-zinc-900/60 hover:bg-zinc-900/30">
+                              <td className="p-2.5">
+                                <span className="text-white block font-semibold">{b.date}</span>
+                                <span className="text-zinc-500 text-[8.5px]">{b.time}</span>
+                              </td>
+                              <td className="p-2.5 text-zinc-300 font-medium">
+                                {psychologist ? psychologist.name : 'Unknown Advisor'}
+                              </td>
+                              <td className="p-2.5 text-zinc-400 capitalize font-medium">
+                                {b.service === 'counselling' ? 'Wellbeing' : 'Career Mapping'} ({b.mode})
+                              </td>
+                              <td className="p-2.5 text-center">
+                                <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider ${b.status === 'CONFIRMED' ? 'bg-indigo-950/20 border border-indigo-900/30 text-indigo-400' :
+                                  b.status === 'COMPLETED' ? 'bg-emerald-955/20 border border-emerald-900/30 text-emerald-450' :
+                                    b.status === 'CANCELLED' ? 'bg-rose-955/20 border border-rose-900/30 text-rose-500' :
+                                      'bg-zinc-800 border border-zinc-700 text-zinc-400'
+                                  }`}>
+                                  {b.status}
+                                </span>
+                              </td>
+                            </tr>
+                          );
+                        });
+                      })()}
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
@@ -4989,55 +4975,55 @@ All data is stored securely in your browser's local sandbox data structures. No 
 
                     <div className="border border-zinc-850 rounded-xl overflow-hidden bg-zinc-955 max-h-[160px] overflow-y-auto">
                       <div className="overflow-x-auto w-full">
-                      <table className="w-full text-[10px] border-collapse text-left min-w-[420px]">
-                        <thead>
-                          <tr className="bg-zinc-900/50 text-zinc-500 font-bold uppercase tracking-wider border-b border-zinc-855">
-                            <th className="p-2.5">Client Student</th>
-                            <th className="p-2.5">Date & Time</th>
-                            <th className="p-2.5">Type & Mode</th>
-                            <th className="p-2.5 text-center">Status</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {(() => {
-                            const psyBookings = bookingsDb.filter(b => b.advisorId === viewingPsychologist.id || (b.advisorName && b.advisorName.toLowerCase() === viewingPsychologist.name.toLowerCase()));
-                            if (psyBookings.length === 0) {
-                              return (
-                                <tr>
-                                  <td colSpan={4} className="p-4 text-center text-zinc-650 italic">No scheduled slot logs.</td>
-                                </tr>
-                              );
-                            }
-                            return psyBookings.map(b => {
-                              const student = usersDb.find(u => u.id === b.userId);
-                              return (
-                                <tr key={b.id} className="border-b border-zinc-900/60 hover:bg-zinc-900/30">
-                                  <td className="p-2.5">
-                                    <span className="text-white block font-semibold">{student ? student.name : 'Unknown Student'}</span>
-                                    <span className="text-zinc-500 text-[8.5px] truncate block max-w-[150px]">{student ? student.email : ''}</span>
-                                  </td>
-                                  <td className="p-2.5">
-                                    <span className="text-zinc-300 block font-semibold">{b.date}</span>
-                                    <span className="text-zinc-500 text-[8.5px]">{b.time}</span>
-                                  </td>
-                                  <td className="p-2.5 text-zinc-400 capitalize font-medium">
-                                    {b.service === 'counselling' ? 'Wellbeing' : 'Career'} ({b.mode})
-                                  </td>
-                                  <td className="p-2.5 text-center">
-                                    <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider ${b.status === 'CONFIRMED' ? 'bg-indigo-950/20 border border-indigo-900/30 text-indigo-400' :
-                                      b.status === 'COMPLETED' ? 'bg-emerald-955/20 border border-emerald-900/30 text-emerald-450' :
-                                        b.status === 'CANCELLED' ? 'bg-rose-955/20 border border-rose-900/30 text-rose-500' :
-                                          'bg-zinc-800 border border-zinc-700 text-zinc-400'
-                                      }`}>
-                                      {b.status}
-                                    </span>
-                                  </td>
-                                </tr>
-                              );
-                            });
-                          })()}
-                        </tbody>
-                      </table>
+                        <table className="w-full text-[10px] border-collapse text-left min-w-[420px]">
+                          <thead>
+                            <tr className="bg-zinc-900/50 text-zinc-500 font-bold uppercase tracking-wider border-b border-zinc-855">
+                              <th className="p-2.5">Client Student</th>
+                              <th className="p-2.5">Date & Time</th>
+                              <th className="p-2.5">Type & Mode</th>
+                              <th className="p-2.5 text-center">Status</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {(() => {
+                              const psyBookings = bookingsDb.filter(b => b.advisorId === viewingPsychologist.id || (b.advisorName && b.advisorName.toLowerCase() === viewingPsychologist.name.toLowerCase()));
+                              if (psyBookings.length === 0) {
+                                return (
+                                  <tr>
+                                    <td colSpan={4} className="p-4 text-center text-zinc-650 italic">No scheduled slot logs.</td>
+                                  </tr>
+                                );
+                              }
+                              return psyBookings.map(b => {
+                                const student = usersDb.find(u => u.id === b.userId);
+                                return (
+                                  <tr key={b.id} className="border-b border-zinc-900/60 hover:bg-zinc-900/30">
+                                    <td className="p-2.5">
+                                      <span className="text-white block font-semibold">{student ? student.name : 'Unknown Student'}</span>
+                                      <span className="text-zinc-500 text-[8.5px] truncate block max-w-[150px]">{student ? student.email : ''}</span>
+                                    </td>
+                                    <td className="p-2.5">
+                                      <span className="text-zinc-300 block font-semibold">{b.date}</span>
+                                      <span className="text-zinc-500 text-[8.5px]">{b.time}</span>
+                                    </td>
+                                    <td className="p-2.5 text-zinc-400 capitalize font-medium">
+                                      {b.service === 'counselling' ? 'Wellbeing' : 'Career'} ({b.mode})
+                                    </td>
+                                    <td className="p-2.5 text-center">
+                                      <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider ${b.status === 'CONFIRMED' ? 'bg-indigo-950/20 border border-indigo-900/30 text-indigo-400' :
+                                        b.status === 'COMPLETED' ? 'bg-emerald-955/20 border border-emerald-900/30 text-emerald-450' :
+                                          b.status === 'CANCELLED' ? 'bg-rose-955/20 border border-rose-900/30 text-rose-500' :
+                                            'bg-zinc-800 border border-zinc-700 text-zinc-400'
+                                        }`}>
+                                        {b.status}
+                                      </span>
+                                    </td>
+                                  </tr>
+                                );
+                              });
+                            })()}
+                          </tbody>
+                        </table>
                       </div>
                     </div>
                   </div>
