@@ -118,6 +118,8 @@ export default function AdminDashboard({ setView }) {
   const [searchPsy, setSearchPsy] = useState('');
   const [searchInquiry, setSearchInquiry] = useState('');
   const [searchTestResult, setSearchTestResult] = useState('');
+  const [searchBooking, setSearchBooking] = useState('');
+  const [bookingStatusFilter, setBookingStatusFilter] = useState('ALL');
 
   // Pagination & Lazy Loading States
   const [studentPage, setStudentPage] = useState(1);
@@ -218,8 +220,6 @@ export default function AdminDashboard({ setView }) {
   const [bookingFormError, setBookingFormError] = useState('');
   const [bookingFormSuccess, setBookingFormSuccess] = useState('');
 
-  const [searchBooking, setSearchBooking] = useState('');
-
   // View modals states
   const [viewingStudent, setViewingStudent] = useState(null);
   const [viewingPsychologist, setViewingPsychologist] = useState(null);
@@ -236,7 +236,6 @@ export default function AdminDashboard({ setView }) {
   const [editSubAdminSuccess, setEditSubAdminSuccess] = useState('');
 
   // Bookings enhancements
-  const [bookingStatusFilter, setBookingStatusFilter] = useState('ALL');
   const [selectedBookingIds, setSelectedBookingIds] = useState([]);
 
   // Site Settings state
@@ -1590,7 +1589,7 @@ All data is stored securely in your browser's local sandbox data structures. No 
                 <input
                   type="email"
                   required
-                  placeholder="enter your mail id"
+                  placeholder="Enter Your Email Id"
                   value={loginEmail}
                   onChange={(e) => setLoginEmail(e.target.value)}
                   className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-xs text-white outline-none transition-colors"
@@ -1612,7 +1611,6 @@ All data is stored securely in your browser's local sandbox data structures. No 
               {loginError && (
                 <p className="text-[10px] text-rose-500 font-bold uppercase tracking-wide font-mono">{loginError}</p>
               )}
-
               <button
                 type="submit"
                 disabled={isLoggingIn}
@@ -1621,6 +1619,12 @@ All data is stored securely in your browser's local sandbox data structures. No 
                 {isLoggingIn ? 'Verifying Credentials...' : 'Enter Admin Console'}
               </button>
             </form>
+            <a
+              href="/"
+              className="text-zinc-500 hover:text-zinc-300 text-[10px] uppercase font-bold tracking-wider transition-colors block text-center mt-2 cursor-pointer no-underline"
+            >
+              ← Back to Main Site
+            </a>
           </div>
         </div>
       </div>

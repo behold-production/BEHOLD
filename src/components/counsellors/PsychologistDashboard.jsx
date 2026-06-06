@@ -728,7 +728,7 @@ export default function PsychologistDashboard({ setView }) {
                     <input
                       type="email"
                       required
-                      placeholder="counsellor@example.com"
+                      placeholder="enter your mail id"
                       value={loginEmail}
                       onChange={(e) => setLoginEmail(e.target.value)}
                       className="w-full px-3.5 py-3 bg-zinc-950 border border-zinc-800 focus:border-indigo-500 rounded-lg text-xs text-white outline-none transition-colors"

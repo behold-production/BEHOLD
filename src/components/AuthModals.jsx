@@ -114,7 +114,7 @@ export default function AuthModals({ isOpen, onClose }) {
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                placeholder="enter your mail id"
+                placeholder="Enter Your Email Id"
                 className="w-full pl-10 pr-4 py-3 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 focus:bg-white focus:border-brand focus:ring-1 focus:ring-brand outline-none transition-all"
               />
             </div>

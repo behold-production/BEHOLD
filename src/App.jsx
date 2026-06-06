@@ -109,16 +109,15 @@ export default function App() {
 
     if (user) {
       if (user.role === 'ADMIN') {
-        if (path !== '/admin') {
-          navigate('/admin', { replace: true });
-        }
+        // Admins can browse any page and are not force-redirected
       } else if (user.role === 'PSYCHOLOGIST') {
-        if (path !== '/counsellor' && path !== '/conceller') {
-          navigate('/counsellor', { replace: true });
+        // Psychologists can browse any page but cannot visit student profile page
+        if (path === '/profile') {
+          navigate('/', { replace: true });
         }
       } else if (user.role === 'USER') {
-        // Students cannot visit /admin or /counsellor
-        if (path === '/admin' || path === '/counsellor' || path === '/conceller') {
+        // Students cannot visit /counsellor or /conceller
+        if (path === '/counsellor' || path === '/conceller') {
           navigate('/profile', { replace: true });
         }
       }
@@ -298,11 +297,7 @@ export default function App() {
 
         {/* Admin Dashboard */}
         <Route path="/admin" element={
-          user && user.role !== 'ADMIN' ? (
-            <Navigate to="/profile" replace />
-          ) : (
-            <AdminDashboard setView={() => { }} />
-          )
+          <AdminDashboard setView={() => { }} />
         } />
 
         {/* Counsellor Dashboard */}
