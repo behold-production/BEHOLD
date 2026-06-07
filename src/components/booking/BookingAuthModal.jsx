@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { X, Mail, Lock, User, ArrowRight, AlertCircle, CheckCircle, Sparkles, Phone } from 'lucide-react';
+import { X, Mail, Lock, User, ArrowRight, AlertCircle, CheckCircle, Zap, Phone, UserPlus } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -161,7 +161,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
               {mode === 'login' ? (
                 <Lock className="w-5 h-5 text-brand" />
               ) : (
-                <Sparkles className="w-5 h-5 text-brand" />
+                <UserPlus className="w-5 h-5 text-brand" />
               )}
             </div>
             <div className="min-w-0">
@@ -351,7 +351,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
             </span>
             <span className="text-zinc-200 select-none" aria-hidden="true">|</span>
             <span className="flex items-center gap-1 text-[10px] text-zinc-500 font-bold uppercase tracking-wide">
-              <Sparkles className="w-3 h-3" /> Instant
+              <Zap className="w-3 h-3" /> Instant
             </span>
           </div>
         </div>

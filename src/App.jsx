@@ -286,7 +286,7 @@ export default function App() {
         {/* Student Profile */}
         <Route path="/profile" element={
           user?.role === 'USER' ? (
-            <StudentProfile setView={() => { }} />
+            <StudentProfile />
           ) : (
             <Navigate to="/" replace />
           )

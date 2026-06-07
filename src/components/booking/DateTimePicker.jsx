@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { ChevronLeft, ChevronRight, Sun, Cloud, Moon, Clock, MapPin, Sparkles } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Sun, Cloud, Moon, Clock, MapPin, Calendar } from 'lucide-react';
 
 const WEEKDAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const MONTH_LABELS = [
@@ -222,32 +222,32 @@ export default function DateTimePicker({
   return (
     <div className="space-y-5">
       {/* Quick-jump chips */}
-      <div className="flex flex-wrap gap-2">
+      <div className="flex gap-2 overflow-x-auto snap-x snap-mandatory scrollbar-none -mx-1 px-1 sm:mx-0 sm:px-0 sm:flex-wrap">
         <button
           type="button"
           onClick={goToToday}
-          className="px-3.5 min-h-[36px] bg-white border border-zinc-200 hover:border-brand/40 hover:bg-brand/5 rounded-full text-[11px] font-extrabold uppercase tracking-wider text-zinc-700 transition cursor-pointer flex items-center"
+          className="snap-start shrink-0 px-3.5 min-h-[40px] sm:min-h-[36px] bg-white border border-zinc-200 hover:border-brand/40 hover:bg-brand/5 rounded-full text-[11px] font-extrabold uppercase tracking-wider text-zinc-700 transition cursor-pointer flex items-center"
         >
           Today
         </button>
         <button
           type="button"
           onClick={goToTomorrow}
-          className="px-3.5 min-h-[36px] bg-white border border-zinc-200 hover:border-brand/40 hover:bg-brand/5 rounded-full text-[11px] font-extrabold uppercase tracking-wider text-zinc-700 transition cursor-pointer flex items-center"
+          className="snap-start shrink-0 px-3.5 min-h-[40px] sm:min-h-[36px] bg-white border border-zinc-200 hover:border-brand/40 hover:bg-brand/5 rounded-full text-[11px] font-extrabold uppercase tracking-wider text-zinc-700 transition cursor-pointer flex items-center"
         >
           Tomorrow
         </button>
         <button
           type="button"
           onClick={goToWeekend}
-          className="px-3.5 min-h-[36px] bg-white border border-zinc-200 hover:border-brand/40 hover:bg-brand/5 rounded-full text-[11px] font-extrabold uppercase tracking-wider text-zinc-700 transition cursor-pointer flex items-center"
+          className="snap-start shrink-0 px-3.5 min-h-[40px] sm:min-h-[36px] bg-white border border-zinc-200 hover:border-brand/40 hover:bg-brand/5 rounded-full text-[11px] font-extrabold uppercase tracking-wider text-zinc-700 transition cursor-pointer flex items-center"
         >
           This Weekend
         </button>
         <button
           type="button"
           onClick={goToNextWeek}
-          className="px-3.5 min-h-[36px] bg-white border border-zinc-200 hover:border-brand/40 hover:bg-brand/5 rounded-full text-[11px] font-extrabold uppercase tracking-wider text-zinc-700 transition cursor-pointer flex items-center"
+          className="snap-start shrink-0 px-3.5 min-h-[40px] sm:min-h-[36px] bg-white border border-zinc-200 hover:border-brand/40 hover:bg-brand/5 rounded-full text-[11px] font-extrabold uppercase tracking-wider text-zinc-700 transition cursor-pointer flex items-center"
         >
           Next Week
         </button>
@@ -256,18 +256,18 @@ export default function DateTimePicker({
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
         {/* Calendar */}
         <div className="lg:col-span-7 bg-white border border-zinc-200 rounded-xl p-4 sm:p-5 shadow-xs">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-3 sm:mb-4">
             <button
               type="button"
               onClick={goToPrevMonth}
               disabled={isPrevDisabled}
-              className="w-10 h-10 rounded-lg bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 text-zinc-600 hover:text-zinc-900 flex items-center justify-center transition disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+              className="w-11 h-11 sm:w-10 sm:h-10 rounded-xl sm:rounded-lg bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 text-zinc-600 hover:text-zinc-900 flex items-center justify-center transition disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
               aria-label="Previous month"
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft className="w-5 h-5 sm:w-4 sm:h-4" />
             </button>
             <div className="text-center">
-              <div className="text-sm sm:text-base font-extrabold text-zinc-900 uppercase tracking-wide">
+              <div className="text-xs sm:text-base font-extrabold text-zinc-900 uppercase tracking-wide truncate max-w-[140px] sm:max-w-none">
                 {MONTH_LABELS[viewMonth]}
               </div>
               <div className="text-[10px] text-zinc-500 font-bold tracking-widest uppercase">
@@ -277,10 +277,10 @@ export default function DateTimePicker({
             <button
               type="button"
               onClick={goToNextMonth}
-              className="w-10 h-10 rounded-lg bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 text-zinc-600 hover:text-zinc-900 flex items-center justify-center transition cursor-pointer"
+              className="w-11 h-11 sm:w-10 sm:h-10 rounded-xl sm:rounded-lg bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 text-zinc-600 hover:text-zinc-900 flex items-center justify-center transition cursor-pointer"
               aria-label="Next month"
             >
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="w-5 h-5 sm:w-4 sm:h-4" />
             </button>
           </div>
 
@@ -299,7 +299,7 @@ export default function DateTimePicker({
               }
               const meta = getDayMeta(cell);
               const isSelected = selectedDate === cell.dateStr;
-              const baseClasses = 'aspect-square min-h-[44px] sm:min-h-0 rounded-lg flex flex-col items-center justify-center text-xs font-bold transition-all duration-200 border';
+              const baseClasses = 'min-h-[44px] sm:min-h-[48px] w-full rounded-lg flex flex-col items-center justify-center text-xs sm:text-sm font-bold transition-all duration-200 border';
               let stateClasses = 'bg-zinc-50 border-zinc-100 text-zinc-300 cursor-not-allowed';
               if (!meta.isPast) {
                 if (isSelected) {
@@ -395,7 +395,7 @@ export default function DateTimePicker({
                         <span>{meta.label}</span>
                         <span className="text-zinc-400">({items.length})</span>
                       </div>
-                      <div className="grid grid-cols-2 gap-1.5">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
                         {items.map(time => {
                           const isSelected = selectedTime === time;
                           return (
@@ -434,7 +434,7 @@ export default function DateTimePicker({
           ) : (
             <div className="py-10 text-center space-y-2">
               <div className="w-12 h-12 mx-auto rounded-full bg-zinc-50 border border-zinc-100 flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-zinc-400" />
+                <Calendar className="w-5 h-5 text-zinc-400" />
               </div>
               <p className="text-[11px] font-extrabold text-zinc-500 uppercase tracking-wider">
                 Pick a Date First

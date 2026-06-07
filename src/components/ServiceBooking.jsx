@@ -170,6 +170,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
   const [selectedBank, setSelectedBank] = useState('SBI');
   const [copiedMeet, setCopiedMeet] = useState(false);
   const [copiedReceipt, setCopiedReceipt] = useState(false);
+  const [showSummary, setShowSummary] = useState(false);
 
   const getAvailableSlotsForDate = (dateStr, serviceType) => {
     if (!dateStr) return [];
@@ -715,13 +716,13 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
     }
 
     setIsProcessingPayment(true);
-    setPaymentStepText("Initializing secure transaction gateway...");
+    setPaymentStepText("Processing your payment...");
     
     setTimeout(() => {
-      setPaymentStepText("Authorizing funds with your banking provider...");
+      setPaymentStepText("Confirming with your bank...");
       
       setTimeout(() => {
-        setPaymentStepText("Payment successful! Completing session scheduling...");
+        setPaymentStepText("Payment confirmed! Finalizing booking...");
         
         setTimeout(() => {
           try {
@@ -783,85 +784,98 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
         {/* Header */}
         <div className="text-center flex flex-col items-center space-y-4">
           <span className="text-[10px] bg-zinc-900 text-white px-3.5 py-1 rounded-md uppercase tracking-wider font-extrabold w-fit block">
-            booking engine
+            book a session
           </span>
           <h1 className="text-2xl sm:text-3xl md:text-5xl font-header font-black tracking-tight leading-none text-zinc-900 uppercase">
-            Session Booking
+            Book Your Session
           </h1>
           <p className="text-zinc-650 max-w-xl mx-auto text-xs sm:text-sm md:text-base leading-relaxed font-light">
-            Select your service, choose your preferred mode, and configure your session details below.
+            Choose your service, pick a date and time, and confirm with a real advisor — it only takes a few minutes.
           </p>
         </div>
 
-        {/* BOOKING CONSOLE */}
+        {/* BOOKING FORM */}
         <div id="booking-console" className="border border-zinc-200/80 p-4 sm:p-8 bg-white/70 backdrop-blur-md space-y-6 sm:space-y-8 rounded-xl shadow-xs">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-100 pb-4">
             <h2 className="text-lg sm:text-xl font-bold uppercase tracking-wide text-zinc-900">
-              Configure Your Session
+              Your Booking
             </h2>
-            <div className="flex items-center gap-1.5 text-[10px] text-zinc-600 bg-zinc-50 px-3 py-1.5 rounded border border-zinc-200">
-              <Info className="w-3.5 h-3.5 text-brand shrink-0" />
-              <span>Step-by-step guidance is dynamic based on your selections below.</span>
-            </div>
           </div>
 
-          {/* Interactive Dynamic 5-Step Stepper */}
-          {bookingStep !== 'success' && (
-            <div className="bg-zinc-50 border border-zinc-200 p-4 sm:p-5 rounded-lg space-y-4 animate-in fade-in duration-300">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-200 pb-3">
-                <div className="flex items-center gap-2">
-                  <h3 className="font-bold uppercase tracking-wider text-xs text-zinc-900">
-                    Session Flow: {bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Counselling'} ({bookingMode.replace('_', ' ')})
-                  </h3>
+          {/* Step Progress */}
+          {bookingStep !== 'success' && (() => {
+            const stepMapping = { config: 0, advisor: 1, details: 2, payment: 3, success: 4 };
+            const currentStepIdx = stepMapping[bookingStep] || 0;
+            const stepLabels = ['Schedule', 'Advisor', 'Account', 'Payment', 'Session'];
+            return (
+            <div className="bg-zinc-50 border border-zinc-200 p-3 sm:p-5 rounded-lg space-y-3 animate-in fade-in duration-300">
+              {/* Mobile: compact progress bar */}
+              <div className="flex sm:hidden items-center gap-2">
+                <div className="flex items-center gap-1.5 flex-1 min-w-0">
+                  <span className="text-[11px] font-black text-zinc-900 shrink-0">
+                    Step {currentStepIdx + 1} of 4
+                  </span>
+                  <div className="h-1.5 flex-1 bg-zinc-200 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-zinc-900 rounded-full transition-all duration-500"
+                      style={{ width: `${(currentStepIdx / 4) * 100}%` }}
+                    />
+                  </div>
                 </div>
-                <span className="text-[10px] text-zinc-400 font-light">Interactive Booking Guide</span>
+                <span className="text-[11px] font-bold text-brand-dark truncate">
+                  {stepLabels[currentStepIdx]}
+                </span>
               </div>
 
-              <div className="flex overflow-x-auto snap-x scrollbar-none gap-3 sm:gap-4 pb-2 -mx-1 px-1 lg:grid lg:grid-cols-5 lg:gap-6 w-full">
-                {activeSteps.map((step, idx) => {
-                  const stepMapping = {
-                    config: 0,
-                    advisor: 1,
-                    details: 2,
-                    payment: 3,
-                    success: 4
-                  };
-                  const currentStepIdx = stepMapping[bookingStep] || 0;
-                  const isCompleted = idx < currentStepIdx;
-                  const isActive = idx === currentStepIdx;
+              {/* Desktop/tablet: full stepper */}
+              <div className="hidden sm:block">
+                <div className="flex items-center justify-between gap-2 border-b border-zinc-200 pb-3">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-bold uppercase tracking-wider text-xs text-zinc-900">
+                      {bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Counselling'} &middot; {bookingMode === 'ONLINE' ? 'Video Call' : bookingMode === 'DOOR_STEP' ? 'Home Visit' : 'At Center'}
+                    </h3>
+                  </div>
+                </div>
 
-                  return (
-                    <div key={idx} className="flex lg:flex-col items-start gap-3 lg:gap-2 relative shrink-0 snap-start w-[210px] sm:w-[240px] lg:w-auto">
-                      <div className="flex items-center lg:w-full">
-                        <div className={`flex items-center justify-center w-7 h-7 rounded-full font-bold text-[11px] border transition-all duration-300 shrink-0 ${
-                          isCompleted
-                            ? 'bg-zinc-900 border-zinc-900 text-white'
-                            : isActive
-                              ? 'bg-brand border-brand text-zinc-900 shadow-xs ring-2 ring-brand/10 font-black'
-                              : 'bg-white border-zinc-200 text-zinc-400'
-                        }`}>
-                          {isCompleted ? <Check className="w-3.5 h-3.5" /> : idx + 1}
+                <div className="flex overflow-x-auto snap-x scrollbar-none gap-3 lg:gap-4 pb-2 mt-3 lg:grid lg:grid-cols-5 lg:gap-6 w-full">
+                  {activeSteps.map((step, idx) => {
+                    const isCompleted = idx < currentStepIdx;
+                    const isActive = idx === currentStepIdx;
+
+                    return (
+                      <div key={idx} className="flex lg:flex-col items-start gap-3 lg:gap-2 relative shrink-0 snap-start w-[200px] sm:w-[220px] lg:w-auto">
+                        <div className="flex items-center lg:w-full">
+                          <div className={`flex items-center justify-center w-8 h-8 rounded-full font-bold text-[11px] border transition-all duration-300 shrink-0 ${
+                            isCompleted
+                              ? 'bg-zinc-900 border-zinc-900 text-white'
+                              : isActive
+                                ? 'bg-brand border-brand text-zinc-900 shadow-xs ring-2 ring-brand/10 font-black'
+                                : 'bg-white border-zinc-200 text-zinc-400'
+                          }`}>
+                            {isCompleted ? <Check className="w-3.5 h-3.5" /> : idx + 1}
+                          </div>
+                          {idx < 4 && (
+                            <div className={`hidden lg:block h-0.5 w-full ml-2 transition-all duration-300 ${
+                              isCompleted ? 'bg-zinc-900' : 'bg-zinc-200'
+                            }`} />
+                          )}
                         </div>
-                        {idx < 4 && (
-                          <div className={`hidden lg:block h-0.5 w-full ml-2 transition-all duration-300 ${
-                            isCompleted ? 'bg-zinc-900' : 'bg-zinc-200'
-                          }`} />
-                        )}
+                        <div className="flex flex-col text-left min-w-0">
+                          <span className={`text-[10px] font-bold uppercase tracking-wider ${isActive ? 'text-brand-dark' : isCompleted ? 'text-zinc-900' : 'text-zinc-400'}`}>
+                            {stepLabels[idx]}
+                          </span>
+                          <span className={`text-[11px] font-light leading-snug transition-colors duration-300 mt-0.5 ${isActive ? 'text-zinc-900 font-normal' : 'text-zinc-650'}`}>
+                            {step}
+                          </span>
+                        </div>
                       </div>
-                      <div className="flex flex-col text-left min-w-0">
-                        <span className={`text-[10px] font-bold uppercase tracking-wider ${isActive ? 'text-brand-dark' : isCompleted ? 'text-zinc-900' : 'text-zinc-400'}`}>
-                          {idx === 0 ? '1. Schedule' : idx === 1 ? '2. Advisor' : idx === 2 ? '3. Account' : idx === 3 ? '4. Payment' : '5. Session'}
-                        </span>
-                        <span className={`text-[11px] font-light leading-snug transition-colors duration-300 mt-0.5 ${isActive ? 'text-zinc-900 font-normal' : 'text-zinc-650'}`}>
-                          {step}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
             </div>
-          )}
+            );
+          })()}
 
           {bookingStep === 'success' ? (
             /* STEP 5: Success & Confirmation View */
@@ -874,30 +888,30 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                   session confirmed
                 </span>
                 <h3 className="text-xl sm:text-2xl font-black uppercase text-zinc-900 tracking-wide mt-2">
-                  Session Successfully Scheduled!
+                  You're All Set!
                 </h3>
                 <p className="text-xs text-zinc-600 max-w-md mx-auto leading-relaxed">
-                  Thank you, <strong>{bookingForm.name || 'Student'}</strong>. Your payment was successfully authorized. Your 1-hour session is reserved on the date and time below.
+                  Thank you, <strong>{bookingForm.name || 'Student'}</strong>. Your payment is confirmed and your session is booked. Here's your booking summary:
                 </p>
               </div>
 
               {/* Invoice & Meeting Card */}
               <div className="bg-white border border-zinc-200/80 rounded-xl p-5 text-left space-y-4 shadow-xs">
                 <h4 className="text-xs font-extrabold uppercase tracking-widest text-zinc-400 border-b border-zinc-100 pb-2">
-                  Booking Receipt & Details
+                  Booking Confirmation
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                   <div>
-                    <span className="text-zinc-400 block font-light">Service Specialist</span>
+                    <span className="text-zinc-400 block font-light">Advisor</span>
                     <span className="font-bold text-zinc-800">{selectedAdvisor?.name || 'Assigned Advisor'}</span>
                     <span className="text-[10px] text-zinc-500 block">{selectedAdvisor?.role || 'Consultant Psychologist'}</span>
                   </div>
                   <div>
-                    <span className="text-zinc-400 block font-light">Service Type</span>
+                    <span className="text-zinc-400 block font-light">Service</span>
                     <span className="font-semibold text-zinc-800 uppercase">
                       {bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Counselling'}
                     </span>
-                    <span className="text-[10px] text-zinc-500 block">Session Mode: {bookingMode.replace('_', ' ')}</span>
+                    <span className="text-[10px] text-zinc-500 block">Mode: {bookingMode === 'ONLINE' ? 'Video Call' : bookingMode === 'DOOR_STEP' ? 'Home Visit' : 'At Center'}</span>
                   </div>
                   <div>
                     <span className="text-zinc-400 block font-light">Date & Time Slot</span>
@@ -909,9 +923,9 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                     </span>
                   </div>
                   <div>
-                    <span className="text-zinc-400 block font-light">Payment Method</span>
+                    <span className="text-zinc-400 block font-light">Payment</span>
                     <span className="font-semibold text-zinc-800 uppercase flex items-center gap-1.5">
-                      <CreditCard className="w-3.5 h-3.5 text-zinc-400" /> {paymentMethod === 'card' ? 'Credit/Debit Card' : paymentMethod === 'upi' ? 'UPI Secure Pay' : 'Net Banking'}
+                      <CreditCard className="w-3.5 h-3.5 text-zinc-400" /> {paymentMethod === 'card' ? 'Card' : paymentMethod === 'upi' ? 'UPI' : 'Net Banking'}
                     </span>
                     <span className="text-[10px] text-zinc-500 block">Amount Paid: ₹{(selectedAdvisor?.price || 1200) + Math.round((selectedAdvisor?.price || 1200) * 0.18) - appliedDiscount}</span>
                   </div>
@@ -984,7 +998,7 @@ Status: CONFIRMED
                   ) : (
                     <>
                       <Copy className="w-4 h-4" />
-                      <span>Copy Booking Receipt</span>
+                      <span>Copy Receipt</span>
                     </>
                   )}
                 </button>
@@ -1018,16 +1032,17 @@ Status: CONFIRMED
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
               
               {/* Left Column: Active Step Form Panel */}
-              <div className="lg:col-span-8 bg-white border border-zinc-200/85 p-5 sm:p-7 rounded-xl space-y-6 shadow-xs text-left min-h-[380px] relative">
+              <div className="lg:col-span-8 bg-white border border-zinc-200/85 p-4 sm:p-7 rounded-xl space-y-6 shadow-xs text-left min-h-[380px] relative">
                 
                 {/* STEP 1: Schedule Configuration */}
                 {bookingStep === 'config' && (
                   <div className="space-y-6 animate-in fade-in duration-300">
                     <div className="border-b border-zinc-100 pb-3">
-                      <h3 className="text-sm font-extrabold uppercase tracking-wider text-zinc-850">
-                        Step 1: Choose Service, Mode & Date
+                      <h3 className="text-sm font-extrabold uppercase tracking-wider text-zinc-850 flex items-center gap-2">
+                        <span className="w-6 h-6 rounded-full bg-zinc-900 text-white text-[10px] flex items-center justify-center shrink-0 font-black">1</span>
+                        Choose Service, Date & Time
                       </h3>
-                      <p className="text-[10px] text-zinc-500">Specify what, how, and when you'd like to schedule your guidance session.</p>
+                      <p className="text-[10px] text-zinc-500 mt-1">Tell us what kind of guidance you need, your preferred mode, and when to schedule.</p>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -1047,19 +1062,27 @@ Status: CONFIRMED
                       {/* Mode of Session Select */}
                       <div className="space-y-1">
                         <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide block">Session Mode</label>
-                        <div className="grid grid-cols-3 gap-1.5">
-                          {['ONLINE', 'DOOR_STEP', 'OFFLINE'].map((m) => (
+                        <div className="flex sm:grid sm:grid-cols-3 gap-2 overflow-x-auto snap-x snap-mandatory scrollbar-none -mx-1 px-1 sm:mx-0 sm:px-0">
+                          {[
+                            { id: 'ONLINE', label: 'Online', desc: 'Video call', icon: '📹' },
+                            { id: 'DOOR_STEP', label: 'Doorstep', desc: 'Home visit', icon: '🏠' },
+                            { id: 'OFFLINE', label: 'Offline', desc: 'At center', icon: '📍' }
+                          ].map((m) => (
                             <button
                               type="button"
-                              key={m}
-                              onClick={() => setBookingMode(m)}
-                              className={`py-2.5 px-1 text-[10px] uppercase font-extrabold border rounded-lg transition cursor-pointer text-center min-h-[40px] flex items-center justify-center leading-tight ${
-                                bookingMode === m
-                                  ? 'bg-gradient-brand text-zinc-900 border-none shadow-xs font-black'
+                              key={m.id}
+                              onClick={() => setBookingMode(m.id)}
+                              className={`snap-start shrink-0 sm:shrink sm:w-auto flex sm:flex-col items-center sm:items-center gap-2 sm:gap-1 px-4 sm:px-2 py-3 sm:py-2.5 text-[11px] sm:text-[10px] uppercase font-extrabold border rounded-xl sm:rounded-lg transition cursor-pointer text-left sm:text-center min-h-[48px] sm:min-h-[44px] leading-tight ${
+                                bookingMode === m.id
+                                  ? 'bg-brand/10 text-brand-dark border-brand/30 shadow-xs font-black'
                                   : 'bg-white text-zinc-600 border-zinc-200 hover:border-brand/40 hover:text-brand-dark'
                               }`}
                             >
-                              {m.replace('_', ' ')}
+                              <span className="text-base sm:text-sm shrink-0">{m.icon}</span>
+                              <span className="flex flex-col sm:items-center">
+                                <span>{m.label}</span>
+                                <span className="text-[9px] font-normal normal-case text-zinc-400 hidden sm:block">{m.desc}</span>
+                              </span>
                             </button>
                           ))}
                         </div>
@@ -1103,10 +1126,11 @@ Status: CONFIRMED
                 {bookingStep === 'advisor' && (
                   <div className="space-y-6 animate-in fade-in duration-300">
                     <div className="border-b border-zinc-100 pb-3">
-                      <h3 className="text-sm font-extrabold uppercase tracking-wider text-zinc-850">
-                        Step 2: Select Specialist Advisor
+                      <h3 className="text-sm font-extrabold uppercase tracking-wider text-zinc-850 flex items-center gap-2">
+                        <span className="w-6 h-6 rounded-full bg-zinc-900 text-white text-[10px] flex items-center justify-center shrink-0 font-black">2</span>
+                        Choose Your Advisor
                       </h3>
-                      <p className="text-[10px] text-zinc-500">Pick the best therapist or consultant matching your session parameters.</p>
+                      <p className="text-[10px] text-zinc-500 mt-1">Pick the best specialist available for your selected date and time.</p>
                     </div>
 
                     <div className="space-y-3">
@@ -1145,35 +1169,37 @@ Status: CONFIRMED
                                   setBookingMode(advisor.modes[0]);
                                 }
                               }}
-                              className={`p-3.5 border rounded-lg flex flex-wrap items-center justify-between gap-3 cursor-pointer transition ${
+                              className={`p-4 border rounded-xl cursor-pointer transition active:scale-[0.98] ${
                                 selectedAdvisor?.id === advisor.id
-                                  ? 'bg-brand/5 border-brand shadow-xs'
+                                  ? 'bg-brand/5 border-brand shadow-sm ring-1 ring-brand/10'
                                   : 'bg-white border-zinc-200 hover:border-brand/40 hover:bg-zinc-50'
                               }`}
                             >
-                              <div className="space-y-1.5 text-left">
-                                <h4 className="font-extrabold text-zinc-900 text-xs sm:text-sm">{advisor.name}</h4>
-                                <p className="text-[10px] text-zinc-500 font-medium">{advisor.role}</p>
-                                {selectedDate && (
-                                  <div className="text-[9.5px] text-zinc-500 bg-zinc-50 border border-zinc-150 px-2 py-1 rounded inline-block">
-                                    <span className="font-bold text-zinc-700">Available Slots:</span>{' '}
-                                    {advisorSlotsOnDate.length > 0 ? (
-                                      <span className="text-brand-dark font-extrabold font-mono">{advisorSlotsOnDate.join(', ')}</span>
-                                    ) : (
-                                      <span className="text-rose-500 font-bold">No slots active on this day</span>
-                                    )}
-                                  </div>
-                                )}
-                              </div>
-                              <div className="flex items-center gap-3 shrink-0">
-                                <span className="text-xs font-extrabold text-zinc-900">₹{advisor.price}</span>
-                                {availabilityStatus === 'Available' ? (
-                                   <span className="text-[9px] px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 font-black uppercase tracking-wide shrink-0">Available</span>
-                                 ) : availabilityStatus === 'Booked' ? (
-                                   <span className="text-[9px] px-2 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200 font-bold uppercase shrink-0">Already Booked</span>
-                                 ) : (
-                                   <span className="text-[9px] px-2 py-0.5 rounded bg-rose-50 text-rose-650 border border-rose-200 font-bold uppercase shrink-0">Unavailable</span>
-                                 )}
+                              <div className="flex items-start justify-between gap-3">
+                                <div className="space-y-1.5 text-left min-w-0 flex-1">
+                                  <h4 className="font-extrabold text-zinc-900 text-sm sm:text-base leading-tight">{advisor.name}</h4>
+                                  <p className="text-[11px] sm:text-xs text-zinc-500 font-medium">{advisor.role}</p>
+                                  {selectedDate && (
+                                    <div className="text-[10px] text-zinc-500 bg-zinc-50 border border-zinc-150 px-2.5 py-1.5 rounded-lg inline-block">
+                                      <span className="font-bold text-zinc-700">Slots:</span>{' '}
+                                      {advisorSlotsOnDate.length > 0 ? (
+                                        <span className="text-brand-dark font-extrabold font-mono text-[10px]">{advisorSlotsOnDate.join(', ')}</span>
+                                      ) : (
+                                        <span className="text-rose-500 font-bold text-[10px]">No slots on this day</span>
+                                      )}
+                                    </div>
+                                  )}
+                                </div>
+                                <div className="flex flex-col items-end gap-2 shrink-0">
+                                  <span className="text-sm font-black text-zinc-900">₹{advisor.price}</span>
+                                  {availabilityStatus === 'Available' ? (
+                                     <span className="text-[10px] px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200 font-black uppercase tracking-wide">Available</span>
+                                   ) : availabilityStatus === 'Booked' ? (
+                                     <span className="text-[10px] px-2.5 py-1 rounded-lg bg-amber-50 text-amber-700 border border-amber-200 font-bold uppercase">Booked</span>
+                                   ) : (
+                                     <span className="text-[10px] px-2.5 py-1 rounded-lg bg-rose-50 text-rose-650 border border-rose-200 font-bold uppercase">Unavailable</span>
+                                   )}
+                                </div>
                               </div>
                             </div>
                           );
@@ -1188,7 +1214,7 @@ Status: CONFIRMED
                         <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-lg flex flex-col gap-3 animate-in zoom-in-95 duration-200 text-left">
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 w-full">
                             <span className="text-[10px] text-zinc-700 font-bold uppercase tracking-wide">
-                              Selected Specialist: <strong className="text-zinc-900">{selectedAdvisor.name}</strong>
+                              Selected Advisor: <strong className="text-zinc-900">{selectedAdvisor.name}</strong>
                             </span>
                             {isSelectedAdvisorAvailable ? (
                               <button
@@ -1252,12 +1278,13 @@ Status: CONFIRMED
                 {bookingStep === 'details' && (
                   <div className="space-y-6 animate-in fade-in duration-300">
                     <div className="border-b border-zinc-100 pb-3">
-                      <h3 className="text-sm font-extrabold uppercase tracking-wider text-zinc-850">
-                        Step 3: Student Profile &amp; Account
+                      <h3 className="text-sm font-extrabold uppercase tracking-wider text-zinc-850 flex items-center gap-2">
+                        <span className="w-6 h-6 rounded-full bg-zinc-900 text-white text-[10px] flex items-center justify-center shrink-0 font-black">3</span>
+                        Your Details & Account
                       </h3>
-                      <p className="text-[10px] text-zinc-500 mt-0.5">
+                      <p className="text-[10px] text-zinc-500 mt-1">
                         {user
-                          ? 'You are signed in. Confirm your details and continue to secure payment.'
+                          ? 'Signed in. Confirm your details, then proceed to payment.'
                           : 'Fill your details, then sign in or create a free account to continue.'}
                       </p>
                     </div>
@@ -1387,17 +1414,18 @@ Status: CONFIRMED
                       <div className="absolute inset-0 bg-white/95 backdrop-blur-sm z-50 rounded-xl flex flex-col items-center justify-center p-6 text-center space-y-4 animate-in fade-in duration-200">
                         <div className="w-12 h-12 border-4 border-zinc-900/10 border-t-brand rounded-full animate-spin"></div>
                         <div className="space-y-1.5">
-                          <h4 className="text-xs font-extrabold uppercase tracking-wider text-zinc-900">Secure Payment Checkout</h4>
+                          <h4 className="text-xs font-extrabold uppercase tracking-wider text-zinc-900">Processing Payment</h4>
                           <p className="text-[10px] font-semibold text-zinc-500 animate-pulse">{paymentStepText}</p>
                         </div>
                       </div>
                     )}
 
                     <div className="border-b border-zinc-100 pb-3">
-                      <h3 className="text-sm font-extrabold uppercase tracking-wider text-zinc-850">
-                        Step 4: Secure Checkout Payment Portal
+                      <h3 className="text-sm font-extrabold uppercase tracking-wider text-zinc-850 flex items-center gap-2">
+                        <span className="w-6 h-6 rounded-full bg-zinc-900 text-white text-[10px] flex items-center justify-center shrink-0 font-black">4</span>
+                        Payment & Confirm
                       </h3>
-                      <p className="text-[10px] text-zinc-500">Authorize your session booking fee through our SSL-encrypted transaction processor.</p>
+                      <p className="text-[10px] text-zinc-500 mt-1">Choose payment method, apply any promo codes, and confirm your booking.</p>
                     </div>
 
                     {/* Invoice ledger (shown on payment panel directly) */}
@@ -1435,54 +1463,35 @@ Status: CONFIRMED
                       {/* Payment Methods tabs selector */}
                       <div className="space-y-2 text-left">
                         <label className="text-[10px] font-bold text-zinc-550 uppercase tracking-wide block">Select Payment Method</label>
-                        <div className="grid grid-cols-3 gap-2">
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setPaymentMethod('card');
-                              setErrors({});
-                            }}
-                            className={`py-3 px-1 border rounded-lg transition cursor-pointer text-center flex flex-col items-center justify-center gap-1.5 ${
-                              paymentMethod === 'card'
-                                ? 'bg-zinc-900 border-zinc-900 text-white font-extrabold shadow-sm'
-                                : 'bg-white text-zinc-600 border-zinc-200 hover:border-brand/40'
-                            }`}
-                          >
-                            <CreditCard className="w-4 h-4 shrink-0" />
-                            <span className="text-[8.5px] uppercase tracking-wider">Card Pay</span>
-                          </button>
-                          
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setPaymentMethod('upi');
-                              setErrors({});
-                            }}
-                            className={`py-3 px-1 border rounded-lg transition cursor-pointer text-center flex flex-col items-center justify-center gap-1.5 ${
-                              paymentMethod === 'upi'
-                                ? 'bg-zinc-900 border-zinc-900 text-white font-extrabold shadow-sm'
-                                : 'bg-white text-zinc-600 border-zinc-200 hover:border-brand/40'
-                            }`}
-                          >
-                            <QrCode className="w-4 h-4 shrink-0" />
-                            <span className="text-[8.5px] uppercase tracking-wider">UPI / QR Code</span>
-                          </button>
-
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setPaymentMethod('netbanking');
-                              setErrors({});
-                            }}
-                            className={`py-3 px-1 border rounded-lg transition cursor-pointer text-center flex flex-col items-center justify-center gap-1.5 ${
-                              paymentMethod === 'netbanking'
-                                ? 'bg-zinc-900 border-zinc-900 text-white font-extrabold shadow-sm'
-                                : 'bg-white text-zinc-600 border-zinc-200 hover:border-brand/40'
-                            }`}
-                          >
-                            <Building2 className="w-4 h-4 shrink-0" />
-                            <span className="text-[8.5px] uppercase tracking-wider">Net Banking</span>
-                          </button>
+                        <div className="flex sm:grid sm:grid-cols-3 gap-2.5 overflow-x-auto snap-x snap-mandatory scrollbar-none -mx-1 px-1 sm:mx-0 sm:px-0">
+                          {[
+                            { id: 'card', label: 'Card Pay', icon: CreditCard, desc: 'Credit/Debit' },
+                            { id: 'upi', label: 'UPI / QR', icon: QrCode, desc: 'Instant Pay' },
+                            { id: 'netbanking', label: 'Net Banking', icon: Building2, desc: 'Bank Portal' }
+                          ].map((m) => {
+                            const Icon = m.icon;
+                            return (
+                              <button
+                                key={m.id}
+                                type="button"
+                                onClick={() => {
+                                  setPaymentMethod(m.id);
+                                  setErrors({});
+                                }}
+                                className={`snap-start shrink-0 sm:shink flex items-center gap-3 sm:flex-col sm:gap-1 px-4 sm:px-2 py-3 border rounded-xl sm:rounded-lg transition cursor-pointer text-left sm:text-center sm:justify-center min-h-[48px] sm:min-h-[44px] ${
+                                  paymentMethod === m.id
+                                    ? 'bg-zinc-900 border-zinc-900 text-white font-extrabold shadow-sm'
+                                    : 'bg-white text-zinc-600 border-zinc-200 hover:border-brand/40'
+                                }`}
+                              >
+                                <Icon className="w-5 h-5 shrink-0" />
+                                <div className="flex flex-col sm:items-center">
+                                  <span className="text-xs sm:text-[10px] uppercase tracking-wider font-bold">{m.label}</span>
+                                  <span className="text-[9px] text-zinc-400 hidden sm:block font-normal normal-case">{m.desc}</span>
+                                </div>
+                              </button>
+                            );
+                          })}
                         </div>
                       </div>
 
@@ -1492,7 +1501,7 @@ Status: CONFIRMED
                         {/* CARD CHECKOUT FORM */}
                         {paymentMethod === 'card' && (
                           <div className="space-y-3.5 animate-in fade-in duration-300 text-left">
-                            <span className="text-[9.5px] text-zinc-400 block tracking-wider uppercase font-extrabold">Credit/Debit Card Details</span>
+                            <span className="text-[9.5px] text-zinc-400 block tracking-wider uppercase font-extrabold">Card Details</span>
                             
                             <div className="space-y-1">
                               <label className="text-[10px] font-bold text-zinc-550 block">Cardholder Name</label>
@@ -1581,10 +1590,10 @@ Status: CONFIRMED
                         {/* UPI CHECKOUT FORM */}
                         {paymentMethod === 'upi' && (
                           <div className="space-y-4 animate-in fade-in duration-300 text-left">
-                            <span className="text-[9.5px] text-zinc-400 block tracking-wider uppercase font-extrabold">UPI ID / Scan QR Code</span>
+                            <span className="text-[9.5px] text-zinc-400 block tracking-wider uppercase font-extrabold">UPI Payment</span>
                             
                             <div className="space-y-1">
-                              <label className="text-[10px] font-bold text-zinc-550 block">Enter UPI Address</label>
+                              <label className="text-[10px] font-bold text-zinc-550 block">Enter UPI ID</label>
                               <input
                                 type="text"
                                 value={upiAddress}
@@ -1627,13 +1636,10 @@ Status: CONFIRMED
                                 </svg>
                               </div>
                               <div className="space-y-1 text-center sm:text-left">
-                                <h5 className="text-[10px] font-black uppercase text-zinc-800 tracking-wider">Instant Scan QR code</h5>
+                                <h5 className="text-[10px] font-black uppercase text-zinc-800 tracking-wider">Scan QR Code</h5>
                                 <p className="text-[9.5px] text-zinc-550 leading-relaxed font-light">
-                                  Point your device camera at this screen inside BHIM, GooglePay, Paytm, or PhonePe apps to authorize the session booking instantly.
+                                  Open BHIM, GooglePay, Paytm, or PhonePe and scan this code to pay.
                                 </p>
-                                <span className="text-[8px] bg-brand-light text-brand-dark px-2 py-0.5 rounded border border-brand/20 font-bold tracking-widest inline-block uppercase mt-1">
-                                  SSL SECURED GATEWAY
-                                </span>
                               </div>
                             </div>
                           </div>
@@ -1642,7 +1648,7 @@ Status: CONFIRMED
                         {/* NET BANKING CHECKOUT FORM */}
                         {paymentMethod === 'netbanking' && (
                           <div className="space-y-3.5 animate-in fade-in duration-300 text-left">
-                            <span className="text-[9.5px] text-zinc-400 block tracking-wider uppercase font-extrabold">Net Banking Credentials</span>
+                            <span className="text-[9.5px] text-zinc-400 block tracking-wider uppercase font-extrabold">Net Banking</span>
                             
                             <div className="space-y-1">
                               <label className="text-[10px] font-bold text-zinc-555 block">Select Bank Partner</label>
@@ -1691,9 +1697,32 @@ Status: CONFIRMED
               </div>
 
               {/* Right Column: Dynamic Booking Sidebar Summary */}
-              <div className="lg:col-span-4 bg-zinc-50 border border-zinc-200 p-4 sm:p-5 rounded-xl space-y-5 lg:sticky lg:top-20 text-left shadow-xs">
+              <div className="lg:col-span-4 lg:sticky lg:top-20 text-left">
+                {/* Mobile toggle */}
+                <button
+                  type="button"
+                  onClick={() => setShowSummary(!showSummary)}
+                  className="flex lg:hidden items-center justify-between w-full bg-zinc-50 border border-zinc-200 p-3 rounded-xl text-left shadow-xs mb-3 hover:bg-zinc-100 transition cursor-pointer"
+                >
+                  <span className="text-xs font-black uppercase tracking-wider text-zinc-850 flex items-center gap-2">
+                    <span>Booking Summary</span>
+                    {selectedAdvisor && (
+                      <span className="text-[9px] bg-brand/10 text-brand-dark px-2 py-0.5 rounded font-bold">
+                        {bookingService === 'counselling' ? 'Counselling' : 'Career'}
+                      </span>
+                    )}
+                  </span>
+                  <svg
+                    className={`w-4 h-4 text-zinc-400 transition-transform duration-200 ${showSummary ? 'rotate-180' : ''}`}
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+
+                <div className={`bg-zinc-50 border border-zinc-200 p-4 sm:p-5 rounded-xl space-y-5 shadow-xs ${showSummary ? 'block' : 'hidden'} lg:block`}>
                 <div>
-                  <h3 className="text-xs font-black uppercase tracking-wider text-zinc-850 border-b border-zinc-200 pb-2">
+                  <h3 className="text-xs font-black uppercase tracking-wider text-zinc-850 border-b border-zinc-200 pb-2 hidden lg:block">
                     Booking Summary
                   </h3>
                 </div>
@@ -1701,7 +1730,7 @@ Status: CONFIRMED
                 <div className="space-y-4 text-xs font-semibold">
                   {/* Service type & Mode */}
                   <div>
-                    <span className="text-[9.5px] text-zinc-400 uppercase tracking-wide block font-semibold mb-0.5">Selected Service & Mode</span>
+                    <span className="text-[9.5px] text-zinc-400 uppercase tracking-wide block font-semibold mb-0.5">Service & Mode</span>
                     <span className="font-bold text-zinc-800 flex items-center gap-1.5 text-left">
                       <Globe className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
                       {bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Counselling'}
@@ -1713,7 +1742,7 @@ Status: CONFIRMED
 
                   {/* Date & Time Slot */}
                   <div>
-                    <span className="text-[9.5px] text-zinc-400 uppercase tracking-wide block font-semibold mb-0.5">Date & Time Slot</span>
+                    <span className="text-[9.5px] text-zinc-400 uppercase tracking-wide block font-semibold mb-0.5">Date & Time</span>
                     {selectedDate && selectedTime ? (
                       <div className="space-y-1 bg-white border border-zinc-150 p-2 rounded-lg text-left">
                         <span className="font-bold text-zinc-800 flex items-center gap-1.5">
@@ -1732,7 +1761,7 @@ Status: CONFIRMED
 
                   {/* Selected Advisor */}
                   <div>
-                    <span className="text-[9.5px] text-zinc-400 uppercase tracking-wide block font-semibold mb-0.5">Assigned Specialist</span>
+                    <span className="text-[9.5px] text-zinc-400 uppercase tracking-wide block font-semibold mb-0.5">Advisor</span>
                     {selectedAdvisor ? (
                       <div className="bg-white border border-zinc-150 p-2.5 rounded-lg text-left">
                         <span className="font-bold text-zinc-800 block text-xs">{selectedAdvisor.name}</span>
@@ -1773,14 +1802,15 @@ Status: CONFIRMED
                     </div>
                   </div>
 
-                  {/* Guaranteed badge */}
+                  {/* Security badge */}
                   <div className="pt-4 border-t border-zinc-200 flex items-center justify-center gap-1.5 text-[9px] font-bold text-zinc-400 uppercase text-center w-full">
                     <Lock className="w-3.5 h-3.5 text-zinc-350" />
-                    <span>256-Bit SSL Secure Checkout</span>
+                    <span>SSL Secure Checkout</span>
                   </div>
 
                 </div>
 
+              </div>
               </div>
 
             </div>
