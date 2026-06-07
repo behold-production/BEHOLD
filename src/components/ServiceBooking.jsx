@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
-  Globe, MapPin, Building, Calendar, Clock, User,
-  CreditCard, Bell, ArrowRight, Info, Lock, Eye, EyeOff,
-  CheckCircle, Copy, Check, QrCode, Sparkles, Ticket, Building2, AlertCircle
+  Globe, Calendar, Clock, User,
+  CreditCard, Bell, ArrowRight, Info, Lock,
+  CheckCircle, Copy, Check, QrCode, Ticket, Building2
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import DateTimePicker from './booking/DateTimePicker';
+import BookingAuthModal from './booking/BookingAuthModal';
+
+const BOOKING_DRAFT_KEY = 'behold_booking_draft';
 
 const COUNSELLING_FLOW = {
   online: [
@@ -76,6 +80,8 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
   const [selectedAdvisor, setSelectedAdvisor] = useState(null);
   const [advisorConfirmed, setAdvisorConfirmed] = useState(false);
   const [advisors, setAdvisors] = useState([]);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const justAuthenticatedRef = useRef(false);
 
   useEffect(() => {
     const getDynamicAdvisorsForBooking = () => {
@@ -146,10 +152,6 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
   const { user, login, register } = useAuth();
   
   const [bookingStep, setBookingStep] = useState('config'); // 'config' | 'advisor' | 'details' | 'payment' | 'success'
-  const [authFormMode, setAuthFormMode] = useState('login'); // 'login' | 'register'
-  const [authPassword, setAuthPassword] = useState('');
-  const [authConfirmPassword, setAuthConfirmPassword] = useState('');
-  const [authError, setAuthError] = useState('');
 
   // Payment checkout states
   const [paymentMethod, setPaymentMethod] = useState('card'); // 'card' | 'upi' | 'netbanking'
@@ -376,14 +378,41 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
   // Autofill form from Auth user
   useEffect(() => {
     if (user) {
-      setBookingForm(prev => ({ ...prev, name: user.name, email: user.email }));
+      setBookingForm(prev => {
+        const merged = {
+          name: prev.name && prev.name.trim().length > 0 ? prev.name : user.name,
+          email: user.email,
+          phone: prev.phone || '',
+          groupCode: prev.groupCode || ''
+        };
+        try {
+          localStorage.setItem('behold_student_profile', JSON.stringify({
+            name: merged.name,
+            email: merged.email,
+            phone: merged.phone
+          }));
+        } catch (e) { /* ignore */ }
+        return merged;
+      });
       setIsAutofilled(true);
+
+      if (justAuthenticatedRef.current) {
+        justAuthenticatedRef.current = false;
+        setShowAuthModal(false);
+        setIsSubmitting(false);
+        setTimeout(() => handleStepChange('payment'), 150);
+      }
     } else {
       const saved = localStorage.getItem('behold_student_profile');
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
-          setBookingForm(parsed);
+          setBookingForm(prev => ({
+            ...prev,
+            name: prev.name || parsed.name || '',
+            email: prev.email || parsed.email || '',
+            phone: prev.phone || parsed.phone || ''
+          }));
           setIsAutofilled(true);
         } catch (e) {
           console.error("Error reading student profile", e);
@@ -391,6 +420,51 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
       }
     }
   }, [user]);
+
+  // Restore booking draft from session storage (date, time, advisor, mode, service)
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem(BOOKING_DRAFT_KEY);
+      if (raw) {
+        const draft = JSON.parse(raw);
+        if (draft.bookingService) setBookingService(draft.bookingService);
+        if (draft.bookingMode) setBookingMode(draft.bookingMode);
+        if (draft.selectedDate) setSelectedDate(draft.selectedDate);
+        if (draft.selectedTime) setSelectedTime(draft.selectedTime);
+        if (typeof draft.advisorConfirmed === 'boolean') setAdvisorConfirmed(draft.advisorConfirmed);
+        if (draft.bookingForm) {
+          setBookingForm(prev => ({ ...prev, ...draft.bookingForm }));
+        }
+      }
+    } catch (e) { /* ignore */ }
+  }, []);
+
+  // Persist booking draft whenever core selections change
+  useEffect(() => {
+    try {
+      const draft = {
+        bookingService,
+        bookingMode,
+        selectedDate,
+        selectedTime,
+        selectedAdvisorId: selectedAdvisor ? selectedAdvisor.id : null,
+        advisorConfirmed,
+        bookingForm
+      };
+      sessionStorage.setItem(BOOKING_DRAFT_KEY, JSON.stringify(draft));
+    } catch (e) { /* ignore */ }
+  }, [bookingService, bookingMode, selectedDate, selectedTime, selectedAdvisor, advisorConfirmed, bookingForm]);
+
+  useEffect(() => {
+    if (preselectedAdvisorId) {
+      try {
+        const raw = sessionStorage.getItem(BOOKING_DRAFT_KEY);
+        const draft = raw ? JSON.parse(raw) : {};
+        draft.selectedAdvisorId = preselectedAdvisorId;
+        sessionStorage.setItem(BOOKING_DRAFT_KEY, JSON.stringify(draft));
+      } catch (e) { /* ignore */ }
+    }
+  }, [preselectedAdvisorId]);
 
   // Handle preselected advisor redirecting from landing page
   useEffect(() => {
@@ -438,7 +512,13 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
     const { name, value } = e.target;
     setBookingForm(prev => {
       const updated = { ...prev, [name]: value };
-      localStorage.setItem('behold_student_profile', JSON.stringify(updated));
+      try {
+        localStorage.setItem('behold_student_profile', JSON.stringify({
+          name: updated.name,
+          email: updated.email,
+          phone: updated.phone
+        }));
+      } catch (e) { /* ignore */ }
       return updated;
     });
     setIsAutofilled(false);
@@ -509,104 +589,78 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
   const handleProceedToPayment = async (e) => {
     if (e && e.preventDefault) e.preventDefault();
-    setAuthError('');
-    setErrors({});
-    
     const baseErrors = {};
 
-    // Validate details depending on state
-    if (!user && authFormMode === 'login') {
-      // ONLY validate Email and Password
-      if (!bookingForm.email.trim()) {
-        baseErrors.email = "Email is required";
-      } else {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(bookingForm.email)) {
-          baseErrors.email = "Please enter a valid email address";
-        }
-      }
-      if (!authPassword) {
-        setAuthError("Password is required");
-        return;
-      }
-      
-      if (Object.keys(baseErrors).length > 0) {
-        setErrors(baseErrors);
-        return;
-      }
+    if (!bookingForm.name.trim()) baseErrors.name = 'Name is required';
+    else if (bookingForm.name.trim().length < 3) baseErrors.name = 'Name must be at least 3 characters';
 
-      setIsSubmitting(true);
-      try {
-        await login(bookingForm.email.trim(), authPassword);
-      } catch (err) {
-        setAuthError(err.message || "Authentication failed.");
-        setIsSubmitting(false);
-        return;
-      }
-      setIsSubmitting(false);
+    if (!bookingForm.phone.trim()) {
+      baseErrors.phone = 'Phone number is required';
     } else {
-      // Validate everything for register or already logged-in user
-      if (!bookingForm.name.trim()) baseErrors.name = "Name is required";
-      else if (bookingForm.name.trim().length < 3) baseErrors.name = "Name must be at least 3 characters";
-
-      if (!bookingForm.phone.trim()) {
-        baseErrors.phone = "Phone number is required";
-      } else {
-        const phoneRegex = /^(\+?\d{1,4}[- ]?)?[6-9]\d{9}$/;
-        if (!phoneRegex.test(bookingForm.phone)) {
-          baseErrors.phone = "Please enter a valid 10-digit phone number";
-        }
-      }
-
-      if (!bookingForm.email.trim()) {
-        baseErrors.email = "Email is required";
-      } else {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(bookingForm.email)) {
-          baseErrors.email = "Please enter a valid email address";
-        }
-      }
-
-      if (!selectedDate) baseErrors.date = "Please select a date";
-      if (!selectedTime) baseErrors.time = "Please select a time slot";
-      if (!selectedAdvisor) baseErrors.advisor = "Please select an advisor";
-      if (!advisorConfirmed) baseErrors.confirm = "Please confirm the advisor selection";
-
-      if (Object.keys(baseErrors).length > 0) {
-        setErrors(baseErrors);
-        return;
-      }
-
-      // If anonymous registering
-      if (!user) {
-        if (!authPassword) {
-          setAuthError("Password is required");
-          return;
-        }
-        if (authPassword.length < 6) {
-          setAuthError("Password must be at least 6 characters");
-          return;
-        }
-        if (authPassword !== authConfirmPassword) {
-          setAuthError("Passwords do not match");
-          return;
-        }
-
-        setIsSubmitting(true);
-        try {
-          await register(bookingForm.name.trim(), bookingForm.email.trim(), authPassword, 'USER');
-        } catch (err) {
-          setAuthError(err.message || "Registration failed.");
-          setIsSubmitting(false);
-          return;
-        }
-        setIsSubmitting(false);
+      const phoneRegex = /^(\+?\d{1,4}[- ]?)?[6-9]\d{9}$/;
+      if (!phoneRegex.test(bookingForm.phone)) {
+        baseErrors.phone = 'Please enter a valid 10-digit phone number';
       }
     }
 
-    // Advance to payment step
+    if (!bookingForm.email.trim()) {
+      baseErrors.email = 'Email is required';
+    } else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(bookingForm.email)) {
+        baseErrors.email = 'Please enter a valid email address';
+      }
+    }
+
+    if (!selectedDate) baseErrors.date = 'Please select a date';
+    if (!selectedTime) baseErrors.time = 'Please select a time slot';
+    if (!selectedAdvisor) baseErrors.advisor = 'Please select an advisor';
+    if (!advisorConfirmed) baseErrors.confirm = 'Please confirm the advisor selection';
+
+    if (Object.keys(baseErrors).length > 0) {
+      setErrors(baseErrors);
+      const firstErrorField = ['name', 'phone', 'email', 'date', 'time', 'advisor', 'confirm'].find(
+        (k) => baseErrors[k]
+      );
+      if (firstErrorField) {
+        const el = document.getElementsByName(firstErrorField)[0] || document.getElementById('booking-console');
+        if (el && el.scrollIntoView) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }
+      return;
+    }
+
+    try {
+      const draft = {
+        bookingService,
+        bookingMode,
+        selectedDate,
+        selectedTime,
+        selectedAdvisorId: selectedAdvisor ? selectedAdvisor.id : null,
+        advisorConfirmed,
+        bookingForm
+      };
+      sessionStorage.setItem(BOOKING_DRAFT_KEY, JSON.stringify(draft));
+      localStorage.setItem('behold_student_profile', JSON.stringify({
+        name: bookingForm.name.trim(),
+        email: bookingForm.email.trim(),
+        phone: bookingForm.phone.trim()
+      }));
+    } catch (e) { /* ignore */ }
+
+    if (!user) {
+      justAuthenticatedRef.current = true;
+      setShowAuthModal(true);
+      return;
+    }
+
     setErrors({});
     handleStepChange('payment');
+  };
+
+  const handleAuthSuccess = (authData) => {
+    justAuthenticatedRef.current = true;
   };
 
   const handleApplyCoupon = () => {
@@ -951,6 +1005,7 @@ Status: CONFIRMED
                     setCardCvv('');
                     setUpiAddress('');
                     setBookingStep('config');
+                    try { sessionStorage.removeItem(BOOKING_DRAFT_KEY); } catch (e) { /* ignore */ }
                   }}
                   className="px-6 py-3 bg-zinc-900 text-white hover:bg-zinc-800 text-xs font-semibold uppercase tracking-wider rounded-lg transition cursor-pointer w-full sm:w-auto text-center border-none shadow-md"
                 >
@@ -1011,67 +1066,23 @@ Status: CONFIRMED
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 p-4 bg-zinc-50 border border-zinc-200 rounded-lg">
-                      {/* Date Select */}
-                      <div className="space-y-1.5">
-                        <label className="text-[10px] font-extrabold text-zinc-500 uppercase tracking-wide flex items-center gap-1.5">
-                          <Calendar className="w-3.5 h-3.5" /> Select Date
-                        </label>
-                        <input
-                          type="date"
-                          min={getLocalTodayString()}
-                          value={selectedDate}
-                          onChange={(e) => {
-                            setSelectedDate(e.target.value);
-                            setSelectedTime('');
-                            if (errors.date) {
-                              setErrors(prev => ({ ...prev, date: null }));
-                            }
-                          }}
-                          className="w-full px-3.5 py-2 bg-white border border-zinc-200 rounded-lg text-xs font-semibold text-zinc-800 focus:border-brand focus:ring-1 focus:ring-brand outline-none"
-                        />
-                        {errors.date && <p className="text-[9.5px] text-rose-500 font-semibold">{errors.date}</p>}
-                      </div>
-
-                      {/* Slots Select */}
-                      <div className="space-y-1.5 text-left">
-                        <label className="text-[10px] font-extrabold text-zinc-500 uppercase tracking-wide flex items-center justify-between gap-1 w-full">
-                          <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" /> Time Slot</span>
-                          <span className="text-[8.5px] font-extrabold text-brand-dark bg-brand-light border border-brand/20 px-2 py-0.5 rounded tracking-widest uppercase font-mono">1 Hour</span>
-                        </label>
-                        <div className="grid grid-cols-2 gap-1.5">
-                          {selectedDate ? (
-                            getAvailableSlotsForDate(selectedDate, bookingService).length > 0 ? (
-                              getAvailableSlotsForDate(selectedDate, bookingService).map(time => (
-                                <button
-                                  key={time}
-                                  type="button"
-                                  onClick={() => {
-                                    setSelectedTime(time);
-                                    if (errors.time) setErrors(prev => ({ ...prev, time: null }));
-                                  }}
-                                  className={`py-2 px-1 text-[10px] uppercase font-bold border rounded-lg transition cursor-pointer text-center ${
-                                    selectedTime === time
-                                      ? 'bg-gradient-brand text-zinc-955 border-none shadow-xs font-black'
-                                      : 'bg-white border-zinc-200 text-zinc-650 hover:border-brand/40'
-                                  }`}
-                                >
-                                  {time}
-                                </button>
-                              ))
-                            ) : (
-                              <p className="text-[9.5px] text-rose-500 font-bold col-span-2 py-2 text-center w-full">
-                                No available slots on this day.
-                              </p>
-                            )
-                          ) : (
-                            <p className="text-[9.5px] text-zinc-400 font-medium col-span-2 py-2 text-center w-full italic">
-                              Please select a date first.
-                            </p>
-                          )}
-                        </div>
-                        {errors.time && <p className="text-[9.5px] text-rose-500 font-semibold">{errors.time}</p>}
-                      </div>
+                    <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-lg">
+                      <DateTimePicker
+                        selectedDate={selectedDate}
+                        selectedTime={selectedTime}
+                        onDateChange={(d) => {
+                          setSelectedDate(d);
+                          setSelectedTime('');
+                          if (errors.date) setErrors(prev => ({ ...prev, date: null }));
+                        }}
+                        onTimeChange={(t) => {
+                          setSelectedTime(t);
+                          if (errors.time) setErrors(prev => ({ ...prev, time: null }));
+                        }}
+                        getAvailableSlotsForDate={(date) => getAvailableSlotsForDate(date, bookingService)}
+                        errors={errors}
+                        selectedMode={bookingMode}
+                      />
                     </div>
 
                     {/* Navigation */}
@@ -1237,307 +1248,130 @@ Status: CONFIRMED
                   </div>
                 )}
 
-                {/* STEP 3: Account Details & Inline Auth Gate */}
+                {/* STEP 3: Student Profile & Auth Trigger */}
                 {bookingStep === 'details' && (
-                  <div className="space-y-0 animate-in fade-in duration-300">
-                    <div className="border-b border-zinc-100 pb-3 mb-6">
+                  <div className="space-y-6 animate-in fade-in duration-300">
+                    <div className="border-b border-zinc-100 pb-3">
                       <h3 className="text-sm font-extrabold uppercase tracking-wider text-zinc-850">
-                        Step 3: Account &amp; Authentication
+                        Step 3: Student Profile &amp; Account
                       </h3>
                       <p className="text-[10px] text-zinc-500 mt-0.5">
                         {user
-                          ? 'Confirm your details and proceed to secure checkout.'
-                          : 'Sign in or create a free account to continue with your booking.'
-                        }
+                          ? 'You are signed in. Confirm your details and continue to secure payment.'
+                          : 'Fill your details, then sign in or create a free account to continue.'}
                       </p>
                     </div>
 
-                    {/* If user is already logged in — show compact verified profile */}
-                    {user ? (
-                      <div className="space-y-5">
-                        {/* Verified User Banner */}
-                        <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center gap-3 animate-in fade-in duration-300">
-                          <div className="w-10 h-10 rounded-full bg-emerald-100 border border-emerald-200 flex items-center justify-center shrink-0">
-                            <User className="w-5 h-5 text-emerald-600" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <span className="text-xs font-extrabold text-emerald-800 block truncate">{user.name}</span>
-                            <span className="text-[10px] text-emerald-600 font-mono truncate block">{user.email}</span>
-                          </div>
-                          <span className="shrink-0 flex items-center gap-1 text-[9px] font-black uppercase tracking-wider bg-emerald-100 border border-emerald-300 text-emerald-700 px-2 py-1 rounded-lg">
-                            <CheckCircle className="w-3 h-3" /> Authenticated
-                          </span>
+                    {user && (
+                      <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center gap-3 animate-in fade-in duration-300">
+                        <div className="w-10 h-10 rounded-full bg-emerald-100 border border-emerald-200 flex items-center justify-center shrink-0">
+                          <User className="w-5 h-5 text-emerald-600" />
                         </div>
-
-                        {/* Contact Details Form (auto-filled) */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          <div className="space-y-1 text-left">
-                            <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide block">Full Name</label>
-                            <input
-                              type="text"
-                              name="name"
-                              value={bookingForm.name}
-                              onChange={handleInputChange}
-                              placeholder="Your full name"
-                              className="w-full px-3.5 py-2.5 bg-white border border-zinc-200 rounded-lg text-xs font-medium text-zinc-850 outline-none focus:border-brand transition"
-                            />
-                            {errors.name && <p className="text-[9.5px] text-rose-500 font-bold">{errors.name}</p>}
-                          </div>
-                          <div className="space-y-1 text-left">
-                            <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide block">WhatsApp / Mobile</label>
-                            <input
-                              type="tel"
-                              name="phone"
-                              value={bookingForm.phone}
-                              onChange={handleInputChange}
-                              placeholder="e.g. 9876543210"
-                              className="w-full px-3.5 py-2.5 bg-white border border-zinc-200 rounded-lg text-xs font-medium text-zinc-850 outline-none focus:border-brand transition"
-                            />
-                            {errors.phone && <p className="text-[9.5px] text-rose-500 font-bold">{errors.phone}</p>}
-                          </div>
-                          <div className="space-y-1 sm:col-span-2 text-left">
-                            <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide block">Email Address</label>
-                            <input
-                              type="email"
-                              name="email"
-                              value={bookingForm.email}
-                              disabled
-                              className="w-full px-3.5 py-2.5 bg-zinc-50 border border-zinc-200 rounded-lg text-xs font-medium text-zinc-500 outline-none cursor-not-allowed"
-                            />
-                          </div>
+                        <div className="flex-1 min-w-0">
+                          <span className="text-xs font-extrabold text-emerald-800 block truncate">{user.name}</span>
+                          <span className="text-[10px] text-emerald-600 font-mono truncate block">{user.email}</span>
                         </div>
-
-                        {/* Notification note */}
-                        <div className="flex gap-3 bg-zinc-50 border border-zinc-200 p-3 rounded-lg text-[10px] text-zinc-500 items-start text-left">
-                          <Bell className="w-4 h-4 text-zinc-400 shrink-0 mt-0.5" />
-                          <div>
-                            <span className="text-zinc-800 font-semibold block">Notification Reminders</span>
-                            Live session reminders will be sent to your verified email &amp; WhatsApp number.
-                          </div>
-                        </div>
-
-                        {/* Navigation */}
-                        <div className="flex items-center justify-between pt-4 border-t border-zinc-200">
-                          <button
-                            type="button"
-                            onClick={() => handleStepChange('advisor')}
-                            className="px-5 py-2.5 bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 font-bold uppercase tracking-wider text-[10px] rounded-lg transition cursor-pointer"
-                          >
-                            ← Back to Advisor
-                          </button>
-                          <button
-                            type="button"
-                            onClick={handleProceedToPayment}
-                            disabled={isSubmitting}
-                            className="px-6 py-3 bg-gradient-brand text-zinc-955 font-extrabold uppercase tracking-wider text-[10px] rounded-lg transition flex items-center justify-center gap-2 cursor-pointer shadow-sm border-none disabled:opacity-50"
-                          >
-                            {isSubmitting ? (
-                              <div className="w-4 h-4 border-2 border-zinc-955/25 border-t-zinc-955 rounded-full animate-spin" />
-                            ) : (
-                              <>
-                                <span>Proceed to Payment</span>
-                                <ArrowRight className="w-3.5 h-3.5" />
-                              </>
-                            )}
-                          </button>
-                        </div>
+                        <span className="shrink-0 flex items-center gap-1 text-[9px] font-black uppercase tracking-wider bg-emerald-100 border border-emerald-300 text-emerald-700 px-2 py-1 rounded-lg">
+                          <CheckCircle className="w-3 h-3" /> Authenticated
+                        </span>
                       </div>
-                    ) : (
-                      /* ─── GUEST: Beautiful Full Auth Gate ─── */
-                      <div className="space-y-5">
+                    )}
 
-                        {/* Hero auth card */}
-                        <div className="relative overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="space-y-1 text-left">
+                        <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide block">Full Name</label>
+                        <input
+                          type="text"
+                          name="name"
+                          value={bookingForm.name}
+                          onChange={handleInputChange}
+                          placeholder="Your full name"
+                          className={`w-full px-3.5 py-2.5 bg-white border rounded-lg text-xs font-medium text-zinc-850 outline-none focus:border-brand transition ${
+                            errors.name ? 'border-rose-300' : 'border-zinc-200'
+                          }`}
+                        />
+                        {errors.name && <p className="text-[9.5px] text-rose-500 font-bold">{errors.name}</p>}
+                      </div>
+                      <div className="space-y-1 text-left">
+                        <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide block">WhatsApp / Mobile</label>
+                        <input
+                          type="tel"
+                          name="phone"
+                          value={bookingForm.phone}
+                          onChange={handleInputChange}
+                          placeholder="e.g. 9876543210"
+                          className={`w-full px-3.5 py-2.5 bg-white border rounded-lg text-xs font-medium text-zinc-850 outline-none focus:border-brand transition ${
+                            errors.phone ? 'border-rose-300' : 'border-zinc-200'
+                          }`}
+                        />
+                        {errors.phone && <p className="text-[9.5px] text-rose-500 font-bold">{errors.phone}</p>}
+                      </div>
+                      <div className="space-y-1 sm:col-span-2 text-left">
+                        <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide block">
+                          Email Address {user && <span className="text-emerald-600 normal-case font-bold">(verified)</span>}
+                        </label>
+                        <input
+                          type="email"
+                          name="email"
+                          value={bookingForm.email}
+                          onChange={handleInputChange}
+                          disabled={!!user}
+                          placeholder="you@example.com"
+                          className={`w-full px-3.5 py-2.5 border rounded-lg text-xs font-medium outline-none transition ${
+                            user
+                              ? 'bg-zinc-50 border-zinc-200 text-zinc-500 cursor-not-allowed'
+                              : `bg-white text-zinc-850 ${errors.email ? 'border-rose-300 focus:border-rose-400' : 'border-zinc-200 focus:border-brand'}`
+                          }`}
+                        />
+                        {errors.email && !user && <p className="text-[9.5px] text-rose-500 font-bold">{errors.email}</p>}
+                      </div>
+                    </div>
 
-                          {/* Decorative gradient top strip */}
-                          <div className="h-1 w-full bg-gradient-to-r from-brand via-brand-accent to-brand" />
-
-                          <div className="p-6 sm:p-8 space-y-6">
-
-                            {/* Header row */}
-                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                              <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-xl bg-zinc-900 flex items-center justify-center shrink-0">
-                                  <Lock className="w-5 h-5 text-brand" />
-                                </div>
-                                <div>
-                                  <h4 className="text-sm font-black uppercase tracking-wide text-zinc-900">
-                                    {authFormMode === 'login' ? 'Welcome Back' : 'Create Account'}
-                                  </h4>
-                                  <p className="text-[10px] text-zinc-500 font-light mt-0.5">
-                                    {authFormMode === 'login'
-                                      ? 'Sign in to link this booking to your profile'
-                                      : 'Register free — takes under 30 seconds'
-                                    }
-                                  </p>
-                                </div>
-                              </div>
-
-                              {/* Tab toggle */}
-                              <div className="flex rounded-xl border border-zinc-200 bg-zinc-50 p-1 text-[9.5px] font-black uppercase shrink-0 self-start sm:self-auto">
-                                <button
-                                  type="button"
-                                  onClick={() => { setAuthFormMode('login'); setAuthError(''); }}
-                                  className={`px-4 py-2 rounded-lg cursor-pointer transition-all duration-200 tracking-wider ${authFormMode === 'login'
-                                    ? 'bg-zinc-900 text-white shadow-sm'
-                                    : 'text-zinc-500 hover:text-zinc-700'
-                                  }`}
-                                >
-                                  Sign In
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() => { setAuthFormMode('register'); setAuthError(''); }}
-                                  className={`px-4 py-2 rounded-lg cursor-pointer transition-all duration-200 tracking-wider ${authFormMode === 'register'
-                                    ? 'bg-zinc-900 text-white shadow-sm'
-                                    : 'text-zinc-500 hover:text-zinc-700'
-                                  }`}
-                                >
-                                  Register
-                                </button>
-                              </div>
-                            </div>
-
-                            {/* REGISTER fields: Name + Phone (login hides these) */}
-                            {authFormMode === 'register' && (
-                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2 duration-200">
-                                <div className="space-y-1.5 text-left">
-                                  <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide block">Full Name</label>
-                                  <input
-                                    type="text"
-                                    name="name"
-                                    value={bookingForm.name}
-                                    onChange={handleInputChange}
-                                    placeholder="Your full legal name"
-                                    className="w-full px-3.5 py-2.5 bg-zinc-50 border border-zinc-200 rounded-lg text-xs font-medium text-zinc-850 outline-none focus:border-brand focus:bg-white transition"
-                                  />
-                                  {errors.name && <p className="text-[9px] text-rose-500 font-bold">{errors.name}</p>}
-                                </div>
-                                <div className="space-y-1.5 text-left">
-                                  <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide block">Mobile / WhatsApp</label>
-                                  <input
-                                    type="tel"
-                                    name="phone"
-                                    value={bookingForm.phone}
-                                    onChange={handleInputChange}
-                                    placeholder="e.g. 9876543210"
-                                    className="w-full px-3.5 py-2.5 bg-zinc-50 border border-zinc-200 rounded-lg text-xs font-medium text-zinc-850 outline-none focus:border-brand focus:bg-white transition"
-                                  />
-                                  {errors.phone && <p className="text-[9px] text-rose-500 font-bold">{errors.phone}</p>}
-                                </div>
-                              </div>
-                            )}
-
-                            {/* Email + Password row */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                              <div className={`space-y-1.5 text-left ${authFormMode === 'login' ? 'sm:col-span-1' : ''}`}>
-                                <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide block">Email Address</label>
-                                <input
-                                  type="email"
-                                  name="email"
-                                  value={bookingForm.email}
-                                  onChange={handleInputChange}
-                                  placeholder="you@example.com"
-                                  className="w-full px-3.5 py-2.5 bg-zinc-50 border border-zinc-200 rounded-lg text-xs font-medium text-zinc-850 outline-none focus:border-brand focus:bg-white transition"
-                                />
-                                {errors.email && <p className="text-[9px] text-rose-500 font-bold">{errors.email}</p>}
-                              </div>
-
-                              <div className="space-y-1.5 text-left">
-                                <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide block">Password</label>
-                                <input
-                                  type="password"
-                                  value={authPassword}
-                                  onChange={(e) => setAuthPassword(e.target.value)}
-                                  placeholder="••••••••"
-                                  className="w-full px-3.5 py-2.5 bg-zinc-50 border border-zinc-200 rounded-lg text-xs font-semibold text-zinc-850 outline-none focus:border-brand focus:bg-white transition"
-                                />
-                              </div>
-
-                              {/* Confirm password for register */}
-                              {authFormMode === 'register' && (
-                                <div className="space-y-1.5 text-left sm:col-span-2 animate-in fade-in duration-200">
-                                  <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide block">Confirm Password</label>
-                                  <input
-                                    type="password"
-                                    value={authConfirmPassword}
-                                    onChange={(e) => setAuthConfirmPassword(e.target.value)}
-                                    placeholder="••••••••"
-                                    className="w-full px-3.5 py-2.5 bg-zinc-50 border border-zinc-200 rounded-lg text-xs font-semibold text-zinc-850 outline-none focus:border-brand focus:bg-white transition"
-                                  />
-                                </div>
-                              )}
-                            </div>
-
-                            {/* Auth error banner */}
-                            {authError && (
-                              <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl text-[9.5px] font-bold flex items-start gap-2 animate-in fade-in duration-200">
-                                <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-rose-500" />
-                                <span>{authError}</span>
-                              </div>
-                            )}
-
-                            {/* Toggle link */}
-                            <div className="text-center">
-                              <button
-                                type="button"
-                                onClick={() => { setAuthFormMode(authFormMode === 'login' ? 'register' : 'login'); setAuthError(''); }}
-                                className="text-[10px] font-bold text-brand-dark hover:underline bg-transparent border-none cursor-pointer"
-                              >
-                                {authFormMode === 'login'
-                                  ? "Don't have an account? Register for free →"
-                                  : 'Already have a profile? Sign in →'
-                                }
-                              </button>
-                            </div>
-
-                            {/* Security badges */}
-                            <div className="flex flex-wrap items-center justify-center gap-3 pt-2 border-t border-zinc-100">
-                              <span className="flex items-center gap-1 text-[8.5px] text-zinc-400 font-bold uppercase tracking-wide">
-                                <Lock className="w-3 h-3 text-zinc-350" /> SSL Encrypted
-                              </span>
-                              <span className="text-zinc-200 select-none">|</span>
-                              <span className="flex items-center gap-1 text-[8.5px] text-zinc-400 font-bold uppercase tracking-wide">
-                                <CheckCircle className="w-3 h-3 text-zinc-350" /> No spam ever
-                              </span>
-                              <span className="text-zinc-200 select-none">|</span>
-                              <span className="flex items-center gap-1 text-[8.5px] text-zinc-400 font-bold uppercase tracking-wide">
-                                <Sparkles className="w-3 h-3 text-zinc-350" /> Instant access
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Navigation */}
-                        <div className="flex items-center justify-between pt-2">
-                          <button
-                            type="button"
-                            onClick={() => handleStepChange('advisor')}
-                            className="px-5 py-2.5 bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 font-bold uppercase tracking-wider text-[10px] rounded-lg transition cursor-pointer"
-                          >
-                            ← Back to Advisor
-                          </button>
-                          <button
-                            type="button"
-                            onClick={handleProceedToPayment}
-                            disabled={isSubmitting}
-                            className="px-6 py-3 bg-gradient-brand text-zinc-955 font-extrabold uppercase tracking-wider text-[10px] rounded-lg transition flex items-center justify-center gap-2 cursor-pointer shadow-sm border-none disabled:opacity-50 min-w-[180px]"
-                          >
-                            {isSubmitting ? (
-                              <div className="flex items-center gap-2">
-                                <div className="w-4 h-4 border-2 border-zinc-955/25 border-t-zinc-955 rounded-full animate-spin" />
-                                <span>{authFormMode === 'login' ? 'Signing in...' : 'Creating account...'}</span>
-                              </div>
-                            ) : (
-                              <>
-                                <span>{authFormMode === 'login' ? 'Login & Continue' : 'Register & Continue'}</span>
-                                <ArrowRight className="w-3.5 h-3.5" />
-                              </>
-                            )}
-                          </button>
+                    {!user && (
+                      <div className="flex gap-3 bg-zinc-50 border border-zinc-200 p-3 rounded-lg text-[10px] text-zinc-500 items-start text-left">
+                        <Lock className="w-4 h-4 text-zinc-400 shrink-0 mt-0.5" />
+                        <div>
+                          <span className="text-zinc-800 font-semibold block">Account Required to Continue</span>
+                          You'll be asked to sign in or create a free account when you click "Proceed to Payment" — your booking details are saved automatically.
                         </div>
                       </div>
                     )}
+
+                    {user && (
+                      <div className="flex gap-3 bg-zinc-50 border border-zinc-200 p-3 rounded-lg text-[10px] text-zinc-500 items-start text-left">
+                        <Bell className="w-4 h-4 text-zinc-400 shrink-0 mt-0.5" />
+                        <div>
+                          <span className="text-zinc-800 font-semibold block">Notification Reminders</span>
+                          Live session reminders will be sent to your verified email &amp; WhatsApp number.
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="flex items-center justify-between pt-4 border-t border-zinc-200">
+                      <button
+                        type="button"
+                        onClick={() => handleStepChange('advisor')}
+                        className="px-5 py-2.5 bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 font-bold uppercase tracking-wider text-[10px] rounded-lg transition cursor-pointer"
+                      >
+                        ← Back to Advisor
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleProceedToPayment}
+                        disabled={isSubmitting}
+                        className="px-6 py-3 bg-gradient-brand text-zinc-955 font-extrabold uppercase tracking-wider text-[10px] rounded-lg transition flex items-center justify-center gap-2 cursor-pointer shadow-md border-none disabled:opacity-50"
+                      >
+                        {isSubmitting ? (
+                          <div className="w-4 h-4 border-2 border-zinc-955/30 border-t-zinc-955 rounded-full animate-spin" />
+                        ) : (
+                          <>
+                            {!user && <Lock className="w-3.5 h-3.5" />}
+                            <span>Proceed to Payment</span>
+                            <ArrowRight className="w-3.5 h-3.5" />
+                          </>
+                        )}
+                      </button>
+                    </div>
                   </div>
                 )}
 
@@ -1952,6 +1786,18 @@ Status: CONFIRMED
           )}
 
         </div>
+
+        <BookingAuthModal
+          isOpen={showAuthModal}
+          onClose={() => {
+            setShowAuthModal(false);
+            justAuthenticatedRef.current = false;
+            setIsSubmitting(false);
+          }}
+          onSuccess={handleAuthSuccess}
+          bookingForm={bookingForm}
+          setBookingForm={setBookingForm}
+        />
 
       </div>
     </div>

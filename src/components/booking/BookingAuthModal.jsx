@@ -1,0 +1,341 @@
+import { useState, useEffect } from 'react';
+import { X, Mail, Lock, User, ArrowRight, AlertCircle, CheckCircle, Sparkles, Phone } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const phoneRegex = /^(\+?\d{1,4}[- ]?)?[6-9]\d{9}$/;
+
+export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingForm, setBookingForm }) {
+  const { user, login, register } = useAuth();
+  const [mode, setMode] = useState('login');
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    password: '',
+    confirmPassword: ''
+  });
+  const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    setForm({
+      name: bookingForm?.name || '',
+      email: bookingForm?.email || '',
+      phone: bookingForm?.phone || '',
+      password: '',
+      confirmPassword: ''
+    });
+    setError('');
+    setFieldErrors({});
+    setMode('login');
+  }, [isOpen, bookingForm]);
+
+  if (!isOpen) return null;
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+    if (fieldErrors[name]) {
+      setFieldErrors((prev) => ({ ...prev, [name]: null }));
+    }
+    if (error) setError('');
+  };
+
+  const validate = () => {
+    const err = {};
+    if (mode === 'register') {
+      if (!form.name.trim()) err.name = 'Full name is required';
+      else if (form.name.trim().length < 3) err.name = 'Name must be at least 3 characters';
+
+      if (!form.phone.trim()) err.phone = 'Phone number is required';
+      else if (!phoneRegex.test(form.phone.trim())) err.phone = 'Please enter a valid 10-digit phone number';
+    }
+
+    if (!form.email.trim()) err.email = 'Email is required';
+    else if (!emailRegex.test(form.email.trim())) err.email = 'Please enter a valid email address';
+
+    if (!form.password) err.password = 'Password is required';
+    else if (form.password.length < 6) err.password = 'Password must be at least 6 characters';
+
+    if (mode === 'register' && form.password !== form.confirmPassword) {
+      err.confirmPassword = 'Passwords do not match';
+    }
+
+    return err;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+
+    const err = validate();
+    if (Object.keys(err).length > 0) {
+      setFieldErrors(err);
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      let authData;
+      if (mode === 'login') {
+        authData = await login(form.email.trim(), form.password);
+      } else {
+        authData = await register(form.name.trim(), form.email.trim(), form.password, 'USER');
+      }
+
+      if (setBookingForm) {
+        setBookingForm((prev) => ({
+          ...prev,
+          name: mode === 'register' ? form.name.trim() : (prev.name || authData.name),
+          email: form.email.trim(),
+          phone: mode === 'register' ? form.phone.trim() : prev.phone
+        }));
+      }
+
+      try {
+        localStorage.setItem('behold_student_profile', JSON.stringify({
+          name: mode === 'register' ? form.name.trim() : (bookingForm?.name || authData.name),
+          email: form.email.trim(),
+          phone: mode === 'register' ? form.phone.trim() : (bookingForm?.phone || '')
+        }));
+        window.dispatchEvent(new CustomEvent('storage_update', { detail: { key: 'behold_student_profile' } }));
+      } catch (_) { /* ignore */ }
+
+      if (onSuccess) onSuccess(authData);
+    } catch (err) {
+      setError(err.message || 'Authentication failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const switchMode = (newMode) => {
+    setMode(newMode);
+    setError('');
+    setFieldErrors({});
+  };
+
+  return (
+    <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-in fade-in duration-200">
+      <div
+        className="relative w-full max-w-md bg-white border border-zinc-200 rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="h-1.5 w-full bg-gradient-to-r from-brand via-brand-accent to-brand" />
+
+        <button
+          type="button"
+          onClick={onClose}
+          className="absolute top-3 right-3 z-10 p-1.5 rounded-lg bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 text-zinc-500 hover:text-zinc-900 transition cursor-pointer"
+          aria-label="Close"
+        >
+          <X className="w-4 h-4" />
+        </button>
+
+        <div className="p-6 sm:p-8 space-y-5">
+          <div className="flex items-center gap-3">
+            <div className="w-11 h-11 rounded-xl bg-zinc-900 flex items-center justify-center shrink-0">
+              {mode === 'login' ? (
+                <Lock className="w-5 h-5 text-brand" />
+              ) : (
+                <Sparkles className="w-5 h-5 text-brand" />
+              )}
+            </div>
+            <div>
+              <h3 className="text-base font-black uppercase tracking-wide text-zinc-900">
+                {mode === 'login' ? 'Sign In to Continue' : 'Create Your Account'}
+              </h3>
+              <p className="text-[11px] text-zinc-500 font-light mt-0.5">
+                {mode === 'login'
+                  ? 'Sign in to link this booking to your profile'
+                  : 'Quick free registration — under 30 seconds'}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex rounded-xl border border-zinc-200 bg-zinc-50 p-1 text-[10px] font-black uppercase">
+            <button
+              type="button"
+              onClick={() => switchMode('login')}
+              className={`flex-1 px-3 py-2 rounded-lg cursor-pointer transition-all duration-200 tracking-wider ${
+                mode === 'login'
+                  ? 'bg-zinc-900 text-white shadow-sm'
+                  : 'text-zinc-500 hover:text-zinc-700'
+              }`}
+            >
+              Sign In
+            </button>
+            <button
+              type="button"
+              onClick={() => switchMode('register')}
+              className={`flex-1 px-3 py-2 rounded-lg cursor-pointer transition-all duration-200 tracking-wider ${
+                mode === 'register'
+                  ? 'bg-zinc-900 text-white shadow-sm'
+                  : 'text-zinc-500 hover:text-zinc-700'
+              }`}
+            >
+              Register
+            </button>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-3.5">
+            {mode === 'register' && (
+              <>
+                <div className="space-y-1.5 text-left">
+                  <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide block">Full Name</label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-400" />
+                    <input
+                      type="text"
+                      name="name"
+                      value={form.name}
+                      onChange={handleChange}
+                      placeholder="Your full legal name"
+                      autoComplete="name"
+                      className={`w-full pl-9 pr-3 py-2.5 bg-zinc-50 border rounded-lg text-xs font-medium text-zinc-850 outline-none focus:bg-white transition ${
+                        fieldErrors.name ? 'border-rose-300 focus:border-rose-400' : 'border-zinc-200 focus:border-brand'
+                      }`}
+                    />
+                  </div>
+                  {fieldErrors.name && <p className="text-[9.5px] text-rose-500 font-bold">{fieldErrors.name}</p>}
+                </div>
+
+                <div className="space-y-1.5 text-left">
+                  <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide block">Mobile / WhatsApp</label>
+                  <div className="relative">
+                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-400" />
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={form.phone}
+                      onChange={handleChange}
+                      placeholder="e.g. 9876543210"
+                      autoComplete="tel"
+                      className={`w-full pl-9 pr-3 py-2.5 bg-zinc-50 border rounded-lg text-xs font-medium text-zinc-850 outline-none focus:bg-white transition ${
+                        fieldErrors.phone ? 'border-rose-300 focus:border-rose-400' : 'border-zinc-200 focus:border-brand'
+                      }`}
+                    />
+                  </div>
+                  {fieldErrors.phone && <p className="text-[9.5px] text-rose-500 font-bold">{fieldErrors.phone}</p>}
+                </div>
+              </>
+            )}
+
+            <div className="space-y-1.5 text-left">
+              <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide block">Email Address</label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-400" />
+                <input
+                  type="email"
+                  name="email"
+                  value={form.email}
+                  onChange={handleChange}
+                  placeholder="you@example.com"
+                  autoComplete="email"
+                  className={`w-full pl-9 pr-3 py-2.5 bg-zinc-50 border rounded-lg text-xs font-medium text-zinc-850 outline-none focus:bg-white transition ${
+                    fieldErrors.email ? 'border-rose-300 focus:border-rose-400' : 'border-zinc-200 focus:border-brand'
+                  }`}
+                />
+              </div>
+              {fieldErrors.email && <p className="text-[9.5px] text-rose-500 font-bold">{fieldErrors.email}</p>}
+            </div>
+
+            <div className="space-y-1.5 text-left">
+              <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide block">Password</label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-400" />
+                <input
+                  type="password"
+                  name="password"
+                  value={form.password}
+                  onChange={handleChange}
+                  placeholder="••••••••"
+                  autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
+                  className={`w-full pl-9 pr-3 py-2.5 bg-zinc-50 border rounded-lg text-xs font-semibold text-zinc-850 outline-none focus:bg-white transition ${
+                    fieldErrors.password ? 'border-rose-300 focus:border-rose-400' : 'border-zinc-200 focus:border-brand'
+                  }`}
+                />
+              </div>
+              {fieldErrors.password && <p className="text-[9.5px] text-rose-500 font-bold">{fieldErrors.password}</p>}
+            </div>
+
+            {mode === 'register' && (
+              <div className="space-y-1.5 text-left">
+                <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide block">Confirm Password</label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-400" />
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    value={form.confirmPassword}
+                    onChange={handleChange}
+                    placeholder="••••••••"
+                    autoComplete="new-password"
+                    className={`w-full pl-9 pr-3 py-2.5 bg-zinc-50 border rounded-lg text-xs font-semibold text-zinc-850 outline-none focus:bg-white transition ${
+                      fieldErrors.confirmPassword ? 'border-rose-300 focus:border-rose-400' : 'border-zinc-200 focus:border-brand'
+                    }`}
+                  />
+                </div>
+                {fieldErrors.confirmPassword && <p className="text-[9.5px] text-rose-500 font-bold">{fieldErrors.confirmPassword}</p>}
+              </div>
+            )}
+
+            {error && (
+              <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl text-[10px] font-bold flex items-start gap-2 animate-in fade-in duration-200">
+                <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-rose-500" />
+                <span>{error}</span>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full px-6 py-3 bg-gradient-brand text-zinc-955 font-black uppercase tracking-wider text-[10px] rounded-lg transition flex items-center justify-center gap-2 cursor-pointer shadow-md border-none disabled:opacity-60 min-h-[42px]"
+            >
+              {isLoading ? (
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 border-2 border-zinc-955/30 border-t-zinc-955 rounded-full animate-spin" />
+                  <span>{mode === 'login' ? 'Signing in...' : 'Creating account...'}</span>
+                </div>
+              ) : (
+                <>
+                  <span>{mode === 'login' ? 'Login & Continue' : 'Register & Continue'}</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </>
+              )}
+            </button>
+          </form>
+
+          <div className="text-center">
+            <button
+              type="button"
+              onClick={() => switchMode(mode === 'login' ? 'register' : 'login')}
+              className="text-[10px] font-bold text-brand-dark hover:underline bg-transparent border-none cursor-pointer"
+            >
+              {mode === 'login'
+                ? "Don't have an account? Register for free →"
+                : 'Already have an account? Sign in →'}
+            </button>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-3 border-t border-zinc-100">
+            <span className="flex items-center gap-1 text-[8.5px] text-zinc-400 font-bold uppercase tracking-wide">
+              <Lock className="w-3 h-3" /> SSL Encrypted
+            </span>
+            <span className="text-zinc-200 select-none">|</span>
+            <span className="flex items-center gap-1 text-[8.5px] text-zinc-400 font-bold uppercase tracking-wide">
+              <CheckCircle className="w-3 h-3" /> No spam
+            </span>
+            <span className="text-zinc-200 select-none">|</span>
+            <span className="flex items-center gap-1 text-[8.5px] text-zinc-400 font-bold uppercase tracking-wide">
+              <Sparkles className="w-3 h-3" /> Instant
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

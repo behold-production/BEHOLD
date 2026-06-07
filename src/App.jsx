@@ -122,12 +122,9 @@ export default function App() {
         }
       }
     } else {
-      // Guests visiting restricted user paths: /booking, /profile
-      if (path === '/booking') {
-        setPendingRedirect(true);
-        navigate('/', { replace: true });
-        setIsAuthModalOpen(true);
-      } else if (path === '/profile') {
+      // Guests visiting restricted user paths: /profile
+      // Note: /booking is open to guests — auth is triggered later at "Proceed to Payment"
+      if (path === '/profile') {
         navigate('/', { replace: true });
         setIsAuthModalOpen(true);
       }
@@ -273,9 +270,9 @@ export default function App() {
           <AptitudeTest onFinishTest={handleFinishTest} />
         } />
 
-        {/* Booking */}
+        {/* Booking — open to guests; auth is enforced inside at "Proceed to Payment" */}
         <Route path="/booking" element={
-          user?.role === 'USER' ? (
+          !user || user.role === 'USER' ? (
             <ServiceBooking
               preselectedAdvisorId={bookingAdvisor}
               clearPreselectedAdvisor={() => setBookingAdvisor(null)}
