@@ -344,17 +344,17 @@ export default function StudentProfile({ setView }) {
           <div className="grid grid-cols-3 gap-2 sm:gap-4 w-full md:w-auto shrink-0 relative z-10">
             <div className="bg-white/5 backdrop-blur-xs border border-white/10 p-3 rounded-xl flex flex-col items-center justify-center text-center w-full min-w-[90px] hover:border-brand/40 transition-colors">
               <Calendar className="w-4 h-4 text-brand mb-1.5" />
-              <span className="text-[9px] text-zinc-400 font-bold uppercase tracking-wider">Booked</span>
+              <span className="text-[10px] text-zinc-300 font-bold uppercase tracking-wider">Booked</span>
               <p className="text-xs font-black text-white mt-0.5">{bookedSessions.length} Slots</p>
             </div>
             <div className="bg-white/5 backdrop-blur-xs border border-white/10 p-3 rounded-xl flex flex-col items-center justify-center text-center w-full min-w-[90px] hover:border-brand/40 transition-colors">
               <History className="w-4 h-4 text-brand mb-1.5" />
-              <span className="text-[9px] text-zinc-400 font-bold uppercase tracking-wider">Completed</span>
+              <span className="text-[10px] text-zinc-300 font-bold uppercase tracking-wider">Completed</span>
               <p className="text-xs font-black text-white mt-0.5">{completedSessions.length} Slots</p>
             </div>
             <div className="bg-white/5 backdrop-blur-xs border border-white/10 p-3 rounded-xl flex flex-col items-center justify-center text-center w-full min-w-[90px] hover:border-brand/40 transition-colors col-span-1">
               <BarChart3 className="w-4 h-4 text-brand mb-1.5" />
-              <span className="text-[9px] text-zinc-400 font-bold uppercase tracking-wider">CDAT</span>
+              <span className="text-[10px] text-zinc-300 font-bold uppercase tracking-wider">CDAT</span>
               <p className="text-xs font-black text-white mt-0.5 truncate max-w-[80px]">{testProfile ? testProfile.dominantDomain : 'Not Taken'}</p>
             </div>
           </div>
@@ -382,12 +382,12 @@ export default function StudentProfile({ setView }) {
                     key={section.id}
                     type="button"
                     onClick={() => handleSectionChange(section.id)}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-lg text-[9px] min-[400px]:text-[10px] font-bold uppercase tracking-wider transition-all duration-300 text-left cursor-pointer shrink-0 snap-start ${isActive
+                    className={`flex items-center gap-2 px-3 min-h-[44px] rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all duration-300 text-left cursor-pointer shrink-0 snap-start ${isActive
                       ? 'bg-brand text-zinc-955 shadow-xs font-black'
-                      : 'text-zinc-505 hover:text-zinc-900 hover:bg-zinc-200/40'
+                      : 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-200/40'
                       }`}
                   >
-                    <Icon className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-zinc-955' : 'text-zinc-450'}`} />
+                    <Icon className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-zinc-955' : 'text-zinc-500'}`} />
                     <span>{section.label}</span>
                   </button>
                 );
@@ -399,7 +399,7 @@ export default function StudentProfile({ setView }) {
               <span className="text-[10px] uppercase font-black tracking-wider text-zinc-700 flex items-center gap-1.5">
                 <ShieldAlert className="w-4 h-4 text-brand-dark" /> Secure Database
               </span>
-              <p className="text-[10px] text-zinc-505 leading-relaxed font-light">
+              <p className="text-[11px] text-zinc-600 leading-relaxed font-light">
                 All profile parameters are synced inside your local browser database (`localStorage`) for ultimate privacy control.
               </p>
             </div>
@@ -412,10 +412,10 @@ export default function StudentProfile({ setView }) {
             {currentSection === 'overview' && (
               <div className="space-y-6 animate-in fade-in duration-200">
                 <div className="border-b border-zinc-100 pb-3 flex justify-between items-center text-left">
-                  <h3 className="text-xs font-bold uppercase tracking-widest text-zinc-900">
+                  <h3 className="text-sm sm:text-base font-bold uppercase tracking-widest text-zinc-900">
                     Dashboard Overview
                   </h3>
-                  <span className="text-[9px] bg-brand-light text-brand-dark border border-brand/20 px-2 py-0.5 rounded font-black tracking-wider uppercase font-mono">Status: Active</span>
+                  <span className="text-[10px] bg-brand-light text-brand-dark border border-brand/20 px-2 py-0.5 rounded font-black tracking-wider uppercase font-mono">Status: Active</span>
                 </div>
 
                 {/* Primary Action statuses */}
@@ -425,14 +425,14 @@ export default function StudentProfile({ setView }) {
                     <div className="absolute top-0 right-0 w-20 h-20 bg-brand/5 rounded-full blur-xl pointer-events-none" />
                     <div className="space-y-2.5">
                       <div className="flex items-center justify-between">
-                        <span className={`text-[8px] px-2 py-0.5 rounded font-black tracking-wider uppercase ${testProfile ? 'bg-emerald-50 border border-emerald-250 text-emerald-700' : 'bg-zinc-100 border border-zinc-200 text-zinc-505'}`}>
+                        <span className={`text-[10px] px-2 py-0.5 rounded font-black tracking-wider uppercase ${testProfile ? 'bg-emerald-50 border border-emerald-250 text-emerald-700' : 'bg-zinc-100 border border-zinc-200 text-zinc-600'}`}>
                           {testProfile ? 'Completed' : 'Not Taken'}
                         </span>
                         <BarChart3 className="w-4 h-4 text-zinc-400 group-hover:text-brand-dark transition-colors" />
                       </div>
                       <div className="space-y-1">
-                        <h4 className="font-header font-black text-xs uppercase tracking-wider text-zinc-900">CDAT Aptitude Test</h4>
-                        <p className="text-[10px] text-zinc-505 font-medium leading-relaxed">
+                        <h4 className="font-header font-black text-sm uppercase tracking-wider text-zinc-900">CDAT Aptitude Test</h4>
+                        <p className="text-[11px] text-zinc-600 font-medium leading-relaxed">
                           {testProfile ? (
                             <span>Dominant Domain: <strong className="text-zinc-900 font-bold">{testProfile.dominantDomain}</strong></span>
                           ) : (
@@ -444,15 +444,17 @@ export default function StudentProfile({ setView }) {
                     <div className="mt-4 pt-3 border-t border-zinc-100 flex justify-end">
                       {testProfile ? (
                         <button
+                          type="button"
                           onClick={() => handleSectionChange('results')}
-                          className="text-[9px] font-black uppercase tracking-widest bg-zinc-900 hover:bg-zinc-800 text-brand px-3.5 py-1.5 rounded-lg cursor-pointer transition shadow-xs border-none"
+                          className="min-h-[36px] text-[10px] font-black uppercase tracking-widest bg-zinc-900 hover:bg-zinc-800 text-brand px-3.5 py-2 rounded-lg cursor-pointer transition shadow-xs border-none flex items-center"
                         >
                           View Results
                         </button>
                       ) : (
                         <button
+                          type="button"
                           onClick={() => window.spaNavigate('/sample-test')}
-                          className="text-[9px] font-black uppercase tracking-widest bg-brand hover:bg-brand-dark text-zinc-955 px-3.5 py-1.5 rounded-lg cursor-pointer transition shadow-xs border-none"
+                          className="min-h-[36px] text-[10px] font-black uppercase tracking-widest bg-brand hover:bg-brand-dark text-zinc-955 px-3.5 py-2 rounded-lg cursor-pointer transition shadow-xs border-none flex items-center"
                         >
                           Start Test
                         </button>
@@ -465,14 +467,14 @@ export default function StudentProfile({ setView }) {
                     <div className="absolute top-0 right-0 w-20 h-20 bg-brand/5 rounded-full blur-xl pointer-events-none" />
                     <div className="space-y-2.5">
                       <div className="flex items-center justify-between">
-                        <span className={`text-[8px] px-2 py-0.5 rounded font-black tracking-wider uppercase ${bookedSessions.length > 0 ? 'bg-emerald-50 border border-emerald-250 text-emerald-700' : 'bg-zinc-100 border border-zinc-200 text-zinc-505'}`}>
+                        <span className={`text-[10px] px-2 py-0.5 rounded font-black tracking-wider uppercase ${bookedSessions.length > 0 ? 'bg-emerald-50 border border-emerald-250 text-emerald-700' : 'bg-zinc-100 border border-zinc-200 text-zinc-600'}`}>
                           {bookedSessions.length > 0 ? 'Scheduled' : 'No Bookings'}
                         </span>
                         <Calendar className="w-4 h-4 text-zinc-400 group-hover:text-brand-dark transition-colors" />
                       </div>
                       <div className="space-y-1">
-                        <h4 className="font-header font-black text-xs uppercase tracking-wider text-zinc-900">Career Consultations</h4>
-                        <p className="text-[10px] text-zinc-505 font-medium leading-relaxed truncate">
+                        <h4 className="font-header font-black text-sm uppercase tracking-wider text-zinc-900">Career Consultations</h4>
+                        <p className="text-[11px] text-zinc-600 font-medium leading-relaxed truncate">
                           {bookedSessions.length > 0 ? (
                             <span>Next: <strong className="text-zinc-900 font-bold">{bookedSessions[0].date}</strong> with {bookedSessions[0].advisorName}</span>
                           ) : (
@@ -484,15 +486,17 @@ export default function StudentProfile({ setView }) {
                     <div className="mt-4 pt-3 border-t border-zinc-100 flex justify-end">
                       {bookedSessions.length > 0 ? (
                         <button
+                          type="button"
                           onClick={() => handleSectionChange('booked')}
-                          className="text-[9px] font-black uppercase tracking-widest bg-zinc-900 hover:bg-zinc-800 text-brand px-3.5 py-1.5 rounded-lg cursor-pointer transition shadow-xs border-none"
+                          className="min-h-[36px] text-[10px] font-black uppercase tracking-widest bg-zinc-900 hover:bg-zinc-800 text-brand px-3.5 py-2 rounded-lg cursor-pointer transition shadow-xs border-none flex items-center"
                         >
                           View Bookings
                         </button>
                       ) : (
                         <button
+                          type="button"
                           onClick={() => window.spaNavigate('/booking')}
-                          className="text-[9px] font-black uppercase tracking-widest bg-brand hover:bg-brand-dark text-zinc-955 px-3.5 py-1.5 rounded-lg cursor-pointer transition shadow-xs border-none"
+                          className="min-h-[36px] text-[10px] font-black uppercase tracking-widest bg-brand hover:bg-brand-dark text-zinc-955 px-3.5 py-2 rounded-lg cursor-pointer transition shadow-xs border-none flex items-center"
                         >
                           Book Slot
                         </button>
@@ -515,8 +519,8 @@ export default function StudentProfile({ setView }) {
                       {testProfile ? (
                         <div className="space-y-4">
                           <div className="bg-brand-light border border-brand/20 p-2.5 rounded-lg text-center">
-                            <p className="text-[8px] text-brand-dark font-black tracking-wider uppercase">Dominant Domain</p>
-                            <h6 className="font-header font-black text-xs uppercase text-zinc-900 mt-0.5 truncate">
+                            <p className="text-[10px] text-brand-dark font-black tracking-wider uppercase">Dominant Domain</p>
+                            <h6 className="font-header font-black text-sm uppercase text-zinc-900 mt-0.5 truncate">
                               {testProfile.dominantDomain}
                             </h6>
                           </div>
@@ -524,7 +528,7 @@ export default function StudentProfile({ setView }) {
                           <div className="space-y-2.5 pt-1">
                             {Object.entries(testProfile.scores || {}).slice(0, 3).map(([key, pct]) => (
                               <div key={key} className="space-y-1">
-                                <div className="flex justify-between text-[9px] font-bold text-zinc-650">
+                                <div className="flex justify-between text-[10px] font-bold text-zinc-650">
                                   <span className="truncate pr-1">{key}</span>
                                   <span className="font-bold text-zinc-900">{pct}%</span>
                                 </div>
@@ -541,10 +545,11 @@ export default function StudentProfile({ setView }) {
                       ) : (
                         <div className="text-center py-5 space-y-3">
                           <BarChart3 className="w-8 h-8 text-zinc-300 mx-auto" />
-                          <p className="text-[10px] text-zinc-505 font-medium">Aptitude Profile not yet created.</p>
+                          <p className="text-[11px] text-zinc-600 font-medium">Aptitude Profile not yet created.</p>
                           <button
+                            type="button"
                             onClick={() => window.spaNavigate('/sample-test')}
-                            className="w-full text-[9px] bg-brand hover:bg-brand-dark text-zinc-955 font-black uppercase tracking-widest py-2.5 rounded-lg cursor-pointer transition shadow-xs border-none"
+                            className="min-h-[44px] w-full text-[10px] bg-brand hover:bg-brand-dark text-zinc-955 font-black uppercase tracking-widest py-2.5 rounded-lg cursor-pointer transition shadow-xs border-none"
                           >
                             Take CDAT Test
                           </button>
@@ -554,8 +559,9 @@ export default function StudentProfile({ setView }) {
                     {testProfile && (
                       <div className="mt-4 pt-3 border-t border-zinc-100 flex justify-end">
                         <button
+                          type="button"
                           onClick={() => handleSectionChange('results')}
-                          className="text-[9px] font-black uppercase tracking-wider bg-white border border-zinc-200 hover:border-zinc-900 text-zinc-900 px-3.5 py-1.5 rounded-lg cursor-pointer transition shadow-xs"
+                          className="min-h-[36px] text-[10px] font-black uppercase tracking-wider bg-white border border-zinc-200 hover:border-zinc-900 text-zinc-900 px-3.5 py-2 rounded-lg cursor-pointer transition shadow-xs flex items-center"
                         >
                           View Full Results
                         </button>
@@ -570,7 +576,7 @@ export default function StudentProfile({ setView }) {
                         <h5 className="text-[10px] font-bold uppercase tracking-widest text-zinc-900 flex items-center gap-1.5">
                           <History className="w-3.5 h-3.5 text-brand-dark" /> Completed Activities
                         </h5>
-                        <span className="text-[9px] bg-brand-light text-brand-dark border border-brand/20 px-2 py-0.5 rounded font-black tracking-wider uppercase font-mono">
+                        <span className="text-[10px] bg-brand-light text-brand-dark border border-brand/20 px-2 py-0.5 rounded font-black tracking-wider uppercase font-mono">
                           {completedSessions.length} Total
                         </span>
                       </div>
@@ -588,15 +594,15 @@ export default function StudentProfile({ setView }) {
                                   <h6 className="font-header font-black text-[11px] uppercase text-zinc-900 truncate">
                                     {session.advisorName}
                                   </h6>
-                                  <span className="text-[8px] font-bold text-zinc-550 uppercase whitespace-nowrap bg-zinc-100 px-1.5 py-0.5 rounded shrink-0">
+                                  <span className="text-[10px] font-bold text-zinc-600 uppercase whitespace-nowrap bg-zinc-100 px-1.5 py-0.5 rounded shrink-0">
                                     {session.date}
                                   </span>
                                 </div>
-                                <p className="text-[9px] text-zinc-400 font-bold uppercase tracking-wider text-left">
+                                <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider text-left">
                                   {session.advisorRole}
                                 </p>
                                 <div className="bg-zinc-50 p-2.5 rounded-lg border border-zinc-200/40 relative">
-                                  <p className="text-[9.5px] text-zinc-650 font-light italic leading-relaxed line-clamp-2">
+                                  <p className="text-[10px] text-zinc-650 font-light italic leading-relaxed line-clamp-2">
                                     "{session.feedback}"
                                   </p>
                                 </div>
@@ -605,14 +611,15 @@ export default function StudentProfile({ setView }) {
                           ))}
                         </div>
                       ) : (
-                        <p className="text-[10px] text-zinc-505 font-medium text-center py-6">No completed sessions in archive.</p>
+                        <p className="text-[11px] text-zinc-600 font-medium text-center py-6">No completed sessions in archive.</p>
                       )}
                     </div>
                     {completedSessions.length > 0 && (
                       <div className="mt-4 pt-3 border-t border-zinc-100 flex justify-end">
                         <button
+                          type="button"
                           onClick={() => handleSectionChange('completed')}
-                          className="text-[9px] font-black uppercase tracking-wider bg-white border border-zinc-200 hover:border-zinc-950 text-zinc-900 px-3.5 py-1.5 rounded-lg cursor-pointer transition shadow-xs"
+                          className="min-h-[36px] text-[10px] font-black uppercase tracking-wider bg-white border border-zinc-200 hover:border-zinc-950 text-zinc-900 px-3.5 py-2 rounded-lg cursor-pointer transition shadow-xs flex items-center"
                         >
                           View Full Timeline
                         </button>
@@ -627,89 +634,96 @@ export default function StudentProfile({ setView }) {
             {currentSection === 'details' && (
               <div className="space-y-6 animate-in fade-in duration-200 text-xs text-left">
                 <div className="border-b border-zinc-100 pb-3 flex justify-between items-center">
-                  <h3 className="text-sm font-bold uppercase tracking-widest text-zinc-900">
+                  <h3 className="text-sm sm:text-base font-bold uppercase tracking-widest text-zinc-900">
                     CIGI Detailed Profile
                   </h3>
-                  <span className="text-[10px] text-zinc-400 font-light">Verify Details</span>
+                  <span className="text-[10px] text-zinc-500 font-medium">Verify Details</span>
                 </div>
 
                 <form onSubmit={handleSave} className="space-y-6 text-xs font-medium">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-left">
                     {/* Name of Student */}
                     <div className="space-y-1.5">
-                      <label className="text-zinc-500 uppercase tracking-wider font-bold">Name of Student</label>
+                      <label htmlFor="sp-name" className="text-[10px] text-zinc-500 uppercase tracking-wider font-bold block">Name of Student</label>
                       <input
+                        id="sp-name"
                         type="text"
                         name="name"
                         placeholder="Your full name"
                         value={profile.name}
                         onChange={handleChange}
-                        className={`w-full px-3.5 py-3 bg-white border text-xs text-zinc-900 rounded-lg outline-none transition-all ${
-                          errors.name 
-                            ? 'border-red-550 focus:border-red-550 focus:ring-red-200' 
+                        className={`w-full min-h-[44px] px-3.5 py-3 bg-white border text-xs text-zinc-900 rounded-lg outline-none transition-all ${
+                          errors.name
+                            ? 'border-red-500 focus:border-red-500 focus:ring-red-200'
                             : 'border-zinc-200 focus:border-brand focus:ring-1 focus:ring-brand'
                         }`}
                       />
-                      {errors.name && <p className="text-[10px] text-red-500 font-semibold">{errors.name}</p>}
+                      {errors.name && <p className="text-[11px] text-red-500 font-semibold" role="alert">{errors.name}</p>}
                     </div>
 
                     {/* Email */}
                     <div className="space-y-1.5">
-                      <label className="text-zinc-500 uppercase tracking-wider font-bold">Email Address</label>
+                      <label htmlFor="sp-email" className="text-[10px] text-zinc-500 uppercase tracking-wider font-bold block">Email Address</label>
                       <input
+                        id="sp-email"
                         type="email"
                         name="email"
                         placeholder="name@email.com"
                         value={profile.email}
                         onChange={handleChange}
-                        className={`w-full px-3.5 py-3 bg-white border text-xs text-zinc-900 rounded-lg outline-none transition-all ${
-                          errors.email 
-                            ? 'border-red-550 focus:border-red-550 focus:ring-red-200' 
+                        autoComplete="email"
+                        className={`w-full min-h-[44px] px-3.5 py-3 bg-white border text-xs text-zinc-900 rounded-lg outline-none transition-all ${
+                          errors.email
+                            ? 'border-red-500 focus:border-red-500 focus:ring-red-200'
                             : 'border-zinc-200 focus:border-brand focus:ring-1 focus:ring-brand'
                         }`}
                       />
-                      {errors.email && <p className="text-[10px] text-red-500 font-semibold">{errors.email}</p>}
+                      {errors.email && <p className="text-[11px] text-red-500 font-semibold" role="alert">{errors.email}</p>}
                     </div>
 
                     {/* Phone */}
                     <div className="space-y-1.5">
-                      <label className="text-zinc-500 uppercase tracking-wider font-bold">Phone Number</label>
+                      <label htmlFor="sp-phone" className="text-[10px] text-zinc-500 uppercase tracking-wider font-bold block">Phone Number</label>
                       <input
+                        id="sp-phone"
                         type="tel"
                         name="phone"
                         placeholder="e.g. 8086664001"
                         value={profile.phone}
                         onChange={handleChange}
-                        className={`w-full px-3.5 py-3 bg-white border text-xs text-zinc-900 rounded-lg outline-none transition-all ${
-                          errors.phone 
-                            ? 'border-red-550 focus:border-red-550 focus:ring-red-200' 
+                        autoComplete="tel"
+                        className={`w-full min-h-[44px] px-3.5 py-3 bg-white border text-xs text-zinc-900 rounded-lg outline-none transition-all ${
+                          errors.phone
+                            ? 'border-red-500 focus:border-red-500 focus:ring-red-200'
                             : 'border-zinc-200 focus:border-brand focus:ring-1 focus:ring-brand'
                         }`}
                       />
-                      {errors.phone && <p className="text-[10px] text-red-500 font-semibold">{errors.phone}</p>}
+                      {errors.phone && <p className="text-[11px] text-red-500 font-semibold" role="alert">{errors.phone}</p>}
                     </div>
 
                     {/* School Name */}
                     <div className="space-y-1.5">
-                      <label className="text-zinc-500 uppercase tracking-wider font-bold">School Name</label>
+                      <label htmlFor="sp-school" className="text-[10px] text-zinc-500 uppercase tracking-wider font-bold block">School Name</label>
                       <input
+                        id="sp-school"
                         type="text"
                         name="schoolName"
                         placeholder="Name of your school"
                         value={profile.schoolName}
                         onChange={handleChange}
-                        className="w-full px-3.5 py-3 bg-white border border-zinc-200 text-xs text-zinc-900 rounded-lg outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all"
+                        className="w-full min-h-[44px] px-3.5 py-3 bg-white border border-zinc-200 text-xs text-zinc-900 rounded-lg outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all"
                       />
                     </div>
 
                     {/* Grade */}
                     <div className="space-y-1.5">
-                      <label className="text-zinc-500 uppercase tracking-wider font-bold">Grade (Class)</label>
+                      <label htmlFor="sp-grade" className="text-[10px] text-zinc-500 uppercase tracking-wider font-bold block">Grade (Class)</label>
                       <select
+                        id="sp-grade"
                         name="grade"
                         value={profile.grade}
                         onChange={handleChange}
-                        className="w-full px-3.5 py-3 bg-white border border-zinc-200 text-xs text-zinc-900 rounded-lg outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all cursor-pointer"
+                        className="w-full min-h-[44px] px-3.5 py-3 bg-white border border-zinc-200 text-xs text-zinc-900 rounded-lg outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all cursor-pointer"
                       >
                         <option value="">Select Grade</option>
                         {['Class 8', 'Class 9', 'Class 10', 'Class 11', 'Class 12', 'Graduate', 'Other'].map(g => (
@@ -720,45 +734,48 @@ export default function StudentProfile({ setView }) {
 
                     {/* Guardian Name */}
                     <div className="space-y-1.5">
-                      <label className="text-zinc-500 uppercase tracking-wider font-bold">Parent / Guardian Name</label>
+                      <label htmlFor="sp-guardian-name" className="text-[10px] text-zinc-500 uppercase tracking-wider font-bold block">Parent / Guardian Name</label>
                       <input
+                        id="sp-guardian-name"
                         type="text"
                         name="guardianName"
                         placeholder="Name of parent or guardian"
                         value={profile.guardianName}
                         onChange={handleChange}
-                        className={`w-full px-3.5 py-3 bg-white border text-xs text-zinc-900 rounded-lg outline-none transition-all ${
-                          errors.guardianName 
-                            ? 'border-red-550 focus:border-red-550 focus:ring-red-200' 
+                        className={`w-full min-h-[44px] px-3.5 py-3 bg-white border text-xs text-zinc-900 rounded-lg outline-none transition-all ${
+                          errors.guardianName
+                            ? 'border-red-500 focus:border-red-500 focus:ring-red-200'
                             : 'border-zinc-200 focus:border-brand focus:ring-1 focus:ring-brand'
                         }`}
                       />
-                      {errors.guardianName && <p className="text-[10px] text-red-500 font-semibold">{errors.guardianName}</p>}
+                      {errors.guardianName && <p className="text-[11px] text-red-500 font-semibold" role="alert">{errors.guardianName}</p>}
                     </div>
 
                     {/* Guardian Phone */}
                     <div className="space-y-1.5">
-                      <label className="text-zinc-500 uppercase tracking-wider font-bold">Guardian's Phone</label>
+                      <label htmlFor="sp-guardian-phone" className="text-[10px] text-zinc-500 uppercase tracking-wider font-bold block">Guardian's Phone</label>
                       <input
+                        id="sp-guardian-phone"
                         type="tel"
                         name="guardianPhone"
                         placeholder="Guardian mobile number"
                         value={profile.guardianPhone}
                         onChange={handleChange}
-                        className="w-full px-3.5 py-3 bg-white border border-zinc-200 text-xs text-zinc-900 rounded-lg outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all"
+                        className="w-full min-h-[44px] px-3.5 py-3 bg-white border border-zinc-200 text-xs text-zinc-900 rounded-lg outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all"
                       />
                     </div>
 
                     {/* Group Code */}
                     <div className="space-y-1.5">
-                      <label className="text-zinc-500 uppercase tracking-wider font-bold">Group / School Code (Optional)</label>
+                      <label htmlFor="sp-group-code" className="text-[10px] text-zinc-500 uppercase tracking-wider font-bold block">Group / School Code (Optional)</label>
                       <input
+                        id="sp-group-code"
                         type="text"
                         name="groupCode"
                         placeholder="e.g. BEHOLD-CDAT-2026"
                         value={profile.groupCode}
                         onChange={handleChange}
-                        className="w-full px-3.5 py-3 bg-white border border-zinc-200 text-xs text-zinc-900 rounded-lg outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all"
+                        className="w-full min-h-[44px] px-3.5 py-3 bg-white border border-zinc-200 text-xs text-zinc-900 rounded-lg outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all"
                       />
                     </div>
                   </div>
@@ -766,14 +783,14 @@ export default function StudentProfile({ setView }) {
                   <div className="pt-4 border-t border-zinc-100 flex justify-end">
                     <button
                       type="submit"
-                      className="bg-brand hover:bg-brand-dark text-zinc-950 px-8 py-3.5 text-[10px] font-black uppercase tracking-widest cursor-pointer transition rounded-lg shadow-sm w-full sm:w-auto text-center border-none"
+                      className="min-h-[48px] bg-brand hover:bg-brand-dark text-zinc-950 px-8 py-3.5 text-[10px] font-black uppercase tracking-widest cursor-pointer transition rounded-lg shadow-sm w-full sm:w-auto text-center border-none"
                     >
                       Save & Sync Profile
                     </button>
                   </div>
 
                   {isSaved && (
-                    <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-850 rounded-lg text-center font-bold text-xs flex items-center justify-center gap-2 animate-in fade-in duration-200">
+                    <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-lg text-center font-bold text-xs flex items-center justify-center gap-2 animate-in fade-in duration-200" role="status">
                       Profile Registered & Synchronized Locally!
                     </div>
                   )}
@@ -785,40 +802,40 @@ export default function StudentProfile({ setView }) {
             {currentSection === 'booked' && (
               <div className="space-y-6 animate-in fade-in duration-200 text-left">
                 <div className="border-b border-zinc-100 pb-3 flex justify-between items-center">
-                  <h3 className="text-sm font-bold uppercase tracking-widest text-zinc-900">
+                  <h3 className="text-sm sm:text-base font-bold uppercase tracking-widest text-zinc-900">
                     Booked Guidance Sessions
                   </h3>
-                  <span className="text-[9px] bg-brand-light text-brand-dark border border-brand/20 px-2 py-0.5 rounded font-black tracking-wider uppercase font-mono">
+                  <span className="text-[10px] bg-brand-light text-brand-dark border border-brand/20 px-2 py-0.5 rounded font-black tracking-wider uppercase font-mono">
                     Upcoming
                   </span>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   {bookedSessions.map((session, sIdx) => (
-                    <div 
-                      key={session.id || sIdx} 
+                    <div
+                      key={session.id || sIdx}
                       className="bg-white border border-zinc-200/80 rounded-xl p-5 sm:p-6 shadow-xs hover:shadow-md hover:border-brand/35 transition-all duration-300 flex flex-col justify-between space-y-5"
                     >
                       <div className="space-y-3.5">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider ${
-                            session.status === 'CONFIRMED' 
-                              ? 'bg-emerald-50 border border-emerald-250 text-emerald-700' 
+                          <span className={`px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider ${
+                            session.status === 'CONFIRMED'
+                              ? 'bg-emerald-50 border border-emerald-250 text-emerald-700'
                               : 'bg-zinc-100 border border-zinc-200 text-zinc-650'
                           }`}>
                             {session.status}
                           </span>
-                          <span className="text-[9px] bg-zinc-900 text-white px-2 py-0.5 rounded font-extrabold uppercase font-mono tracking-widest">
+                          <span className="text-[10px] bg-zinc-900 text-white px-2 py-0.5 rounded font-extrabold uppercase font-mono tracking-widest">
                             {session.service === 'counselling' ? 'Psychological Slot' : 'Career Slot'}
                           </span>
-                          <span className="text-[9px] text-zinc-400 font-bold uppercase tracking-wider">{session.mode}</span>
+                          <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider">{session.mode}</span>
                         </div>
-                        
+
                         <div className="space-y-1">
                           <h4 className="font-header font-black text-sm uppercase text-zinc-900 truncate">{session.advisorName}</h4>
-                          <p className="text-[10px] text-zinc-505 font-medium truncate">{session.advisorRole}</p>
+                          <p className="text-[11px] text-zinc-600 font-medium truncate">{session.advisorRole}</p>
                         </div>
-                        
+
                         <div className="bg-brand-light/50 border border-brand/10 p-3 rounded-lg flex items-center gap-2">
                           <Calendar className="w-4 h-4 text-brand-dark shrink-0" />
                           <span className="text-xs font-bold text-brand-dark uppercase tracking-wide">
@@ -828,7 +845,7 @@ export default function StudentProfile({ setView }) {
                       </div>
 
                       {session.mode === 'ONLINE' && !session.meetLink && (
-                        <div className="bg-amber-50 border border-amber-200 text-amber-800 text-[10px] p-2.5 rounded-lg flex items-center gap-1.5 font-medium">
+                        <div className="bg-amber-50 border border-amber-200 text-amber-800 text-[11px] p-2.5 rounded-lg flex items-center gap-1.5 font-medium">
                           <ShieldAlert className="w-4 h-4 text-amber-600 shrink-0" />
                           <span>Counsellor will add the Google Meet link soon.</span>
                         </div>
@@ -843,7 +860,7 @@ export default function StudentProfile({ setView }) {
                                 href={meetStatus.link}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex-grow flex items-center justify-center gap-1.5 px-4 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 rounded-lg text-[9px] font-black tracking-widest transition cursor-pointer shadow-sm text-center border-none"
+                                className="flex-grow min-h-[44px] flex items-center justify-center gap-1.5 px-4 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 rounded-lg text-[10px] font-black tracking-widest transition cursor-pointer shadow-sm text-center border-none"
                               >
                                 <span>{meetStatus.label}</span>
                                 <ExternalLink className="w-3.5 h-3.5" />
@@ -852,12 +869,13 @@ export default function StudentProfile({ setView }) {
                           } else {
                             return (
                               <button
+                                type="button"
                                 disabled
-                                className="flex-grow flex items-center justify-center gap-1.5 px-4 py-2.5 bg-zinc-100 text-zinc-400 border border-zinc-200 rounded-lg text-[9px] font-bold uppercase tracking-widest cursor-not-allowed text-center"
+                                className="flex-grow min-h-[44px] flex items-center justify-center gap-1.5 px-4 py-2.5 bg-zinc-100 text-zinc-400 border border-zinc-200 rounded-lg text-[10px] font-bold uppercase tracking-widest cursor-not-allowed text-center"
                                 title={meetStatus.status === 'LOCKED' ? 'Meet link will be active 10 minutes before the scheduled time.' : 'This session has expired or link is pending.'}
                               >
                                 <span>{meetStatus.label}</span>
-                                <Lock className="w-3 h-3 text-zinc-350 shrink-0" />
+                                <Lock className="w-3 h-3 text-zinc-400 shrink-0" />
                               </button>
                             );
                           }
@@ -865,14 +883,14 @@ export default function StudentProfile({ setView }) {
                         <button
                           type="button"
                           onClick={() => window.spaNavigate('/booking')}
-                          className="px-4 py-2.5 border border-zinc-200 hover:border-zinc-900 rounded-lg text-[9px] font-black uppercase tracking-widest transition bg-white cursor-pointer text-zinc-900"
+                          className="min-h-[44px] px-4 py-2.5 border border-zinc-200 hover:border-zinc-900 rounded-lg text-[10px] font-black uppercase tracking-widest transition bg-white cursor-pointer text-zinc-900 flex items-center justify-center"
                         >
                           Reschedule
                         </button>
                         <button
                           type="button"
                           onClick={() => handleCancelSession(session.id)}
-                          className="px-4 py-2.5 bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-600 rounded-lg text-[9px] font-black uppercase tracking-widest transition cursor-pointer text-center"
+                          className="min-h-[44px] px-4 py-2.5 bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-600 rounded-lg text-[10px] font-black uppercase tracking-widest transition cursor-pointer text-center flex items-center justify-center"
                         >
                           Cancel
                         </button>
@@ -883,11 +901,12 @@ export default function StudentProfile({ setView }) {
 
                 {bookedSessions.length === 0 && (
                   <div className="text-center py-12 bg-zinc-50 border border-zinc-200 rounded-xl space-y-4">
-                    <Calendar className="w-8 h-8 text-zinc-350 mx-auto" />
-                    <p className="text-zinc-505 font-bold text-xs uppercase tracking-wider">No upcoming booked sessions scheduled.</p>
+                    <Calendar className="w-8 h-8 text-zinc-400 mx-auto" />
+                    <p className="text-zinc-600 font-bold text-xs uppercase tracking-wider">No upcoming booked sessions scheduled.</p>
                     <button
+                      type="button"
                       onClick={() => window.spaNavigate('/booking')}
-                      className="px-6 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-black uppercase tracking-widest text-[9px] rounded-lg cursor-pointer border-none shadow-sm"
+                      className="min-h-[44px] px-6 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-black uppercase tracking-widest text-[10px] rounded-lg cursor-pointer border-none shadow-sm"
                     >
                       Book a session now
                     </button>
@@ -900,10 +919,10 @@ export default function StudentProfile({ setView }) {
             {currentSection === 'completed' && (
               <div className="space-y-8 animate-in fade-in duration-200 text-left">
                 <div className="border-b border-zinc-100 pb-3 flex justify-between items-center">
-                  <h3 className="text-sm font-bold uppercase tracking-widest text-zinc-900">
+                  <h3 className="text-sm sm:text-base font-bold uppercase tracking-widest text-zinc-900">
                     Completed Timeline & Feedback
                   </h3>
-                  <span className="text-[9px] bg-brand-light text-brand-dark border border-brand/20 px-2 py-0.5 rounded font-black tracking-wider uppercase font-mono">
+                  <span className="text-[10px] bg-brand-light text-brand-dark border border-brand/20 px-2 py-0.5 rounded font-black tracking-wider uppercase font-mono">
                     Archive
                   </span>
                 </div>
@@ -920,30 +939,30 @@ export default function StudentProfile({ setView }) {
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-zinc-100 pb-3">
                           <div className="space-y-1">
                             <div className="flex items-center gap-2 flex-wrap">
-                              <span className="text-[8px] bg-brand-light text-brand-dark border border-brand/20 px-2 py-0.5 rounded font-black tracking-widest uppercase">
+                              <span className="text-[10px] bg-brand-light text-brand-dark border border-brand/20 px-2 py-0.5 rounded font-black tracking-widest uppercase">
                                 {session.status}
                               </span>
-                              <span className="text-[9px] font-bold text-zinc-400 tracking-wider uppercase">{session.mode} SESSION</span>
+                              <span className="text-[10px] font-bold text-zinc-500 tracking-wider uppercase">{session.mode} SESSION</span>
                             </div>
                             <h4 className="font-header font-black text-sm uppercase text-zinc-900 mt-1">
                               {session.advisorName}
                             </h4>
-                            <p className="text-[10px] text-zinc-505 font-medium">
+                            <p className="text-[11px] text-zinc-600 font-medium">
                               {session.advisorRole}
                             </p>
                           </div>
-                          
+
                           <div className="flex items-center gap-1.5 text-[11px] font-bold text-zinc-900 uppercase bg-zinc-50 border border-zinc-200/60 px-2.5 py-1 rounded-md w-fit h-fit">
-                            <Clock className="w-3.5 h-3.5 text-zinc-400" />
+                            <Clock className="w-3.5 h-3.5 text-zinc-500" />
                             <span>{session.date} at {session.time}</span>
                           </div>
                         </div>
 
                         <div className="space-y-2">
-                          <span className="text-[9px] uppercase tracking-wider font-extrabold text-zinc-400 block">Feedback & Action Plan:</span>
+                          <span className="text-[10px] uppercase tracking-wider font-extrabold text-zinc-500 block">Feedback & Action Plan:</span>
                           <div className="relative bg-zinc-50/50 p-4 rounded-xl border border-zinc-200/40">
                             {/* Visual double quote accent watermark */}
-                            <span className="absolute right-4 top-2 text-zinc-200/60 font-serif text-5xl leading-none select-none">”</span>
+                            <span className="absolute right-4 top-2 text-zinc-200/60 font-serif text-5xl leading-none select-none" aria-hidden="true">”</span>
                             <p className="text-xs text-zinc-650 font-light italic leading-relaxed relative z-10 pr-6">
                               "{session.feedback}"
                             </p>
@@ -960,10 +979,10 @@ export default function StudentProfile({ setView }) {
             {currentSection === 'results' && (
               <div className="space-y-6 animate-in fade-in duration-200 text-xs text-left">
                 <div className="border-b border-zinc-100 pb-3 flex justify-between items-center">
-                  <h3 className="text-sm font-bold uppercase tracking-widest text-zinc-900">
+                  <h3 className="text-sm sm:text-base font-bold uppercase tracking-widest text-zinc-900">
                     CDAT Diagnostic Results
                   </h3>
-                  <span className="text-[9px] bg-brand-light text-brand-dark border border-brand/20 px-2 py-0.5 rounded font-black tracking-wider uppercase font-mono">
+                  <span className="text-[10px] bg-brand-light text-brand-dark border border-brand/20 px-2 py-0.5 rounded font-black tracking-wider uppercase font-mono">
                     CIGI Framework
                   </span>
                 </div>
@@ -973,7 +992,7 @@ export default function StudentProfile({ setView }) {
                     <div className="md:col-span-5 space-y-4">
                       <div className="p-5 bg-brand-light border border-brand/20 text-zinc-900 rounded-xl space-y-3 shadow-xs relative overflow-hidden">
                         <div className="absolute top-0 right-0 w-24 h-24 bg-brand/10 rounded-full blur-xl pointer-events-none" />
-                        <span className="text-[8px] bg-brand/20 text-brand-dark border border-brand/35 px-2 py-0.5 rounded font-black tracking-wider uppercase font-mono w-fit block">
+                        <span className="text-[10px] bg-brand/20 text-brand-dark border border-brand/35 px-2 py-0.5 rounded font-black tracking-wider uppercase font-mono w-fit block">
                           Primary Outcome
                         </span>
                         <h4 className="font-header font-black text-sm uppercase text-brand-dark leading-tight pt-1">
@@ -982,25 +1001,26 @@ export default function StudentProfile({ setView }) {
                         <p className="text-base font-black text-zinc-900 uppercase">
                           {testProfile.dominantDomain}
                         </p>
-                        <p className="text-[10px] text-zinc-600 font-light leading-relaxed">
+                        <p className="text-[11px] text-zinc-600 font-light leading-relaxed">
                           Your testing metrics show high scores and interest compatibility inside this category. Book a session with a State Coordinator to outline your exact high school streams map.
                         </p>
                       </div>
 
                       <button
+                        type="button"
                         onClick={() => window.spaNavigate('/sample-test')}
-                        className="w-full py-3 border border-zinc-200 hover:border-zinc-900 rounded-lg text-[9px] font-black tracking-widest uppercase transition bg-white cursor-pointer text-zinc-900 text-center shadow-xs"
+                        className="min-h-[44px] w-full py-3 border border-zinc-200 hover:border-zinc-900 rounded-lg text-[10px] font-black tracking-widest uppercase transition bg-white cursor-pointer text-zinc-900 text-center shadow-xs"
                       >
                         Retake diagnostic profiling
                       </button>
                     </div>
 
                     <div className="md:col-span-7 space-y-4">
-                      <h4 className="font-bold text-xs uppercase tracking-wider text-zinc-900">Score Metrics Distribution</h4>
+                      <h4 className="font-bold text-sm uppercase tracking-wider text-zinc-900">Score Metrics Distribution</h4>
                       <div className="grid grid-cols-1 gap-3">
                         {Object.entries(testProfile.scores || {}).map(([key, pct]) => (
                           <div key={key} className="space-y-1.5 bg-zinc-50/50 p-3.5 rounded-lg border border-zinc-200/60">
-                            <div className="flex justify-between text-[10.5px] font-bold text-zinc-755">
+                            <div className="flex justify-between text-[11px] font-bold text-zinc-700">
                               <span>{key}</span>
                               <span className="font-extrabold text-zinc-900">{pct}%</span>
                             </div>
@@ -1017,11 +1037,12 @@ export default function StudentProfile({ setView }) {
                   </div>
                 ) : (
                   <div className="text-center py-12 bg-zinc-50 border border-zinc-200 rounded-xl space-y-4">
-                    <BarChart3 className="w-8 h-8 text-zinc-350 mx-auto" />
-                    <p className="text-zinc-555 font-bold text-xs uppercase tracking-wider">No CDAT testing history found for this account.</p>
+                    <BarChart3 className="w-8 h-8 text-zinc-400 mx-auto" />
+                    <p className="text-zinc-600 font-bold text-xs uppercase tracking-wider">No CDAT testing history found for this account.</p>
                     <button
+                      type="button"
                       onClick={() => window.spaNavigate('/sample-test')}
-                      className="px-6 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-extrabold tracking-widest uppercase text-[10px] rounded-lg cursor-pointer border-none shadow-sm"
+                      className="min-h-[44px] px-6 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-extrabold tracking-widest uppercase text-[10px] rounded-lg cursor-pointer border-none shadow-sm"
                     >
                       Take Sample Aptitude Test
                     </button>

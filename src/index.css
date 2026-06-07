@@ -10,14 +10,49 @@
   --color-brand-accent: #0ea5e9;
 
   /* Extended zinc palette – fills the gaps Tailwind v4 doesn't ship */
+  --color-zinc-150: #ececef;
+  --color-zinc-250: #d8d8dc;
+  --color-zinc-350: #b3b3b8;
   --color-zinc-450: #97979d;
+  --color-zinc-505: #82828a;
   --color-zinc-550: #6b6b72;
+  --color-zinc-555: #686870;
   --color-zinc-650: #52525a;
+  --color-zinc-655: #50505a;
   --color-zinc-750: #3f3f47;
+  --color-zinc-755: #3b3b43;
   --color-zinc-850: #1f1f23;
   --color-zinc-855: #1c1c20;
   --color-zinc-950: #0e0e11;
   --color-zinc-955: #0b0b0e;
+
+  /* Extended rose / emerald / amber palette for status badges */
+  --color-rose-150: #ffe2e8;
+  --color-rose-450: #f96988;
+  --color-rose-650: #cd2750;
+  --color-rose-955: #260208;
+  --color-emerald-450: #2bbf8d;
+  --color-emerald-650: #06966a;
+  --color-emerald-955: #021a11;
+  --color-amber-450: #facc40;
+}
+
+/* Touch target helper – guarantees 44×44px minimum for buttons/inputs on mobile */
+@utility min-touch {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Reduced-motion preference handling */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Base Body Styles */
@@ -25,10 +60,23 @@ html, body {
   max-width: 100%;
   overflow-x: clip;
 }
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px; /* keep sections clear of the sticky navbar */
+  -webkit-text-size-adjust: 100%;
+}
 body {
   background-color: #fafafa;
   color: #18181b;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Prevent layout shift when modal/drawer locks body scroll */
+body.no-scroll {
+  overflow: hidden;
+  touch-action: none;
 }
 
 /* Custom Scrollbar */
@@ -49,10 +97,7 @@ body {
   background: #a5f3fc;
 }
 
-/* Smooth Scrolling */
-html {
-  scroll-behavior: smooth;
-}
+/* Smooth Scrolling handled in base block above */
 
 /* Luxury Card Base Utility */
 @utility card-luxury {

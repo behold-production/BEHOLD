@@ -120,7 +120,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
             <form onSubmit={handleSubmit} className="space-y-4 text-xs">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label htmlFor="name-input" className="font-bold text-zinc-500 uppercase tracking-wide">Full Name</label>
+                  <label htmlFor="name-input" className="font-bold text-zinc-500 uppercase tracking-wide text-[10px]">Full Name</label>
                   <input
                     type="text"
                     name="name"
@@ -128,12 +128,13 @@ export default function Inquiry({ testProfile, siteSettings }) {
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="Student Name"
-                    className="w-full px-4 py-3 bg-white border border-zinc-200 rounded-lg text-sm outline-none focus:border-brand transition text-zinc-900"
+                    autoComplete="name"
+                    className="w-full px-4 py-3 min-h-[44px] bg-white border border-zinc-200 rounded-lg text-sm outline-none focus:border-brand transition text-zinc-900"
                   />
-                  {formErrors.name && <p className="text-red-500 font-bold">{formErrors.name}</p>}
+                  {formErrors.name && <p className="text-red-500 font-bold text-[11px] mt-0.5" role="alert">{formErrors.name}</p>}
                 </div>
                 <div className="space-y-1">
-                  <label htmlFor="email-input" className="font-bold text-zinc-500 uppercase tracking-wide">Email Address</label>
+                  <label htmlFor="email-input" className="font-bold text-zinc-500 uppercase tracking-wide text-[10px]">Email Address</label>
                   <input
                     type="email"
                     name="email"
@@ -141,14 +142,15 @@ export default function Inquiry({ testProfile, siteSettings }) {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="name@email.com"
-                    className="w-full px-4 py-3 bg-white border border-zinc-200 rounded-lg text-sm outline-none focus:border-brand transition text-zinc-900"
+                    autoComplete="email"
+                    className="w-full px-4 py-3 min-h-[44px] bg-white border border-zinc-200 rounded-lg text-sm outline-none focus:border-brand transition text-zinc-900"
                   />
-                  {formErrors.email && <p className="text-red-500 font-bold">{formErrors.email}</p>}
+                  {formErrors.email && <p className="text-red-500 font-bold text-[11px] mt-0.5" role="alert">{formErrors.email}</p>}
                 </div>
               </div>
 
               <div className="space-y-1">
-                <label htmlFor="message-textarea" className="font-bold text-zinc-500 uppercase tracking-wide">Your Message</label>
+                <label htmlFor="message-textarea" className="font-bold text-zinc-500 uppercase tracking-wide text-[10px]">Your Message</label>
                 <textarea
                   rows={4}
                   name="message"
@@ -163,7 +165,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-3 bg-gradient-brand hover:opacity-95 text-zinc-955 font-bold text-xs uppercase tracking-wider rounded-lg transition-all duration-300 hover:scale-[1.01] active:scale-[0.98] cursor-pointer flex items-center justify-center gap-2 shadow-md shadow-brand/20 border-none"
+                className="min-h-[48px] w-full py-3 bg-gradient-brand hover:opacity-95 text-zinc-955 font-bold text-xs uppercase tracking-wider rounded-lg transition-all duration-300 hover:scale-[1.01] active:scale-[0.98] cursor-pointer flex items-center justify-center gap-2 shadow-md shadow-brand/20 border-none"
               >
                 {isSubmitting ? (
                   <>
@@ -179,7 +181,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
               </button>
 
               {submitStatus === 'success' && (
-                <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg text-center font-bold text-xs">
+                <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg text-center font-bold text-[11px]" role="status">
                   Request sent successfully! Our coordinator will contact you shortly.
                 </div>
               )}
@@ -209,12 +211,12 @@ export default function Inquiry({ testProfile, siteSettings }) {
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs font-bold uppercase tracking-widest text-zinc-900 hover:text-white transition flex items-center gap-1.5 border border-zinc-200 px-6 py-3.5 rounded-lg bg-white hover:bg-zinc-900 justify-center"
+                className="min-h-[48px] text-xs font-bold uppercase tracking-widest text-zinc-900 hover:text-white transition flex items-center gap-1.5 border border-zinc-200 px-6 py-3.5 rounded-lg bg-white hover:bg-zinc-900 justify-center"
               >
                 <span>Connect with Our Community</span>
               </a>
-              <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider">
-                Or email us directly at: <a href={`mailto:${emailAddr}`} className="text-zinc-900 underline hover:text-brand transition">{emailAddr}</a>
+              <p className="text-[11px] text-zinc-500 font-bold uppercase tracking-wider">
+                Or email us directly at: <a href={`mailto:${emailAddr}`} className="text-zinc-900 underline hover:text-brand transition break-all">{emailAddr}</a>
               </p>
             </div>
           );

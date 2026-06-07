@@ -87,8 +87,9 @@ export default function Faq() {
               className="bg-white border border-zinc-200 rounded-lg p-4 sm:p-6 md:p-8 shadow-xs hover:shadow-md transition-all duration-500"
             >
               <button
+                type="button"
                 onClick={() => toggleFaq(idx)}
-                className="w-full text-left font-medium text-zinc-900 flex items-start justify-between hover:text-zinc-900 transition cursor-pointer focus:outline-none"
+                className="w-full min-h-[44px] text-left font-medium text-zinc-900 flex items-start justify-between hover:text-zinc-900 transition cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 rounded-md"
                 aria-expanded={isOpen}
               >
                 <div className="flex items-start gap-3 sm:gap-4">

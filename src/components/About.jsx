@@ -80,11 +80,12 @@ export default function About() {
         {/* CTA Button */}
         <div className="pt-4 flex justify-center w-full">
           <button
+            type="button"
             onClick={() => {
               window.spaNavigate('/booking');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className="px-8 py-4 bg-zinc-900 hover:bg-zinc-800 text-white font-bold text-xs uppercase tracking-widest rounded-lg transition-all duration-200 cursor-pointer shadow-sm w-full sm:w-auto text-center"
+            className="min-h-[48px] px-8 py-4 bg-zinc-900 hover:bg-zinc-800 text-white font-bold text-xs uppercase tracking-widest rounded-lg transition-all duration-200 cursor-pointer shadow-sm w-full sm:w-auto text-center"
           >
             Get Started with Behold
           </button>

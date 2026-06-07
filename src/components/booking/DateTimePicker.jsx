@@ -226,28 +226,28 @@ export default function DateTimePicker({
         <button
           type="button"
           onClick={goToToday}
-          className="px-3.5 py-1.5 bg-white border border-zinc-200 hover:border-brand/40 hover:bg-brand/5 rounded-full text-[10px] font-extrabold uppercase tracking-wider text-zinc-700 transition cursor-pointer"
+          className="px-3.5 min-h-[36px] bg-white border border-zinc-200 hover:border-brand/40 hover:bg-brand/5 rounded-full text-[11px] font-extrabold uppercase tracking-wider text-zinc-700 transition cursor-pointer flex items-center"
         >
           Today
         </button>
         <button
           type="button"
           onClick={goToTomorrow}
-          className="px-3.5 py-1.5 bg-white border border-zinc-200 hover:border-brand/40 hover:bg-brand/5 rounded-full text-[10px] font-extrabold uppercase tracking-wider text-zinc-700 transition cursor-pointer"
+          className="px-3.5 min-h-[36px] bg-white border border-zinc-200 hover:border-brand/40 hover:bg-brand/5 rounded-full text-[11px] font-extrabold uppercase tracking-wider text-zinc-700 transition cursor-pointer flex items-center"
         >
           Tomorrow
         </button>
         <button
           type="button"
           onClick={goToWeekend}
-          className="px-3.5 py-1.5 bg-white border border-zinc-200 hover:border-brand/40 hover:bg-brand/5 rounded-full text-[10px] font-extrabold uppercase tracking-wider text-zinc-700 transition cursor-pointer"
+          className="px-3.5 min-h-[36px] bg-white border border-zinc-200 hover:border-brand/40 hover:bg-brand/5 rounded-full text-[11px] font-extrabold uppercase tracking-wider text-zinc-700 transition cursor-pointer flex items-center"
         >
           This Weekend
         </button>
         <button
           type="button"
           onClick={goToNextWeek}
-          className="px-3.5 py-1.5 bg-white border border-zinc-200 hover:border-brand/40 hover:bg-brand/5 rounded-full text-[10px] font-extrabold uppercase tracking-wider text-zinc-700 transition cursor-pointer"
+          className="px-3.5 min-h-[36px] bg-white border border-zinc-200 hover:border-brand/40 hover:bg-brand/5 rounded-full text-[11px] font-extrabold uppercase tracking-wider text-zinc-700 transition cursor-pointer flex items-center"
         >
           Next Week
         </button>
@@ -261,7 +261,7 @@ export default function DateTimePicker({
               type="button"
               onClick={goToPrevMonth}
               disabled={isPrevDisabled}
-              className="w-8 h-8 rounded-lg bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 text-zinc-600 hover:text-zinc-900 flex items-center justify-center transition disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+              className="w-10 h-10 rounded-lg bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 text-zinc-600 hover:text-zinc-900 flex items-center justify-center transition disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
               aria-label="Previous month"
             >
               <ChevronLeft className="w-4 h-4" />
@@ -270,14 +270,14 @@ export default function DateTimePicker({
               <div className="text-sm sm:text-base font-extrabold text-zinc-900 uppercase tracking-wide">
                 {MONTH_LABELS[viewMonth]}
               </div>
-              <div className="text-[10px] text-zinc-400 font-bold tracking-widest uppercase">
+              <div className="text-[10px] text-zinc-500 font-bold tracking-widest uppercase">
                 {viewYear}
               </div>
             </div>
             <button
               type="button"
               onClick={goToNextMonth}
-              className="w-8 h-8 rounded-lg bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 text-zinc-600 hover:text-zinc-900 flex items-center justify-center transition cursor-pointer"
+              className="w-10 h-10 rounded-lg bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 text-zinc-600 hover:text-zinc-900 flex items-center justify-center transition cursor-pointer"
               aria-label="Next month"
             >
               <ChevronRight className="w-4 h-4" />
@@ -286,20 +286,20 @@ export default function DateTimePicker({
 
           <div className="grid grid-cols-7 gap-1 mb-1.5">
             {WEEKDAY_LABELS.map(d => (
-              <div key={d} className="text-center text-[9px] font-extrabold uppercase tracking-wider text-zinc-400 py-1">
+              <div key={d} className="text-center text-[10px] font-extrabold uppercase tracking-wider text-zinc-500 py-1">
                 {d}
               </div>
             ))}
           </div>
 
-          <div className="grid grid-cols-7 gap-1">
+          <div className="grid grid-cols-7 gap-1 sm:gap-1.5">
             {cells.map((cell, idx) => {
               if (!cell) {
                 return <div key={`empty-${idx}`} className="aspect-square" />;
               }
               const meta = getDayMeta(cell);
               const isSelected = selectedDate === cell.dateStr;
-              const baseClasses = 'aspect-square rounded-lg flex flex-col items-center justify-center text-xs font-bold transition-all duration-200 border';
+              const baseClasses = 'aspect-square min-h-[44px] sm:min-h-0 rounded-lg flex flex-col items-center justify-center text-xs font-bold transition-all duration-200 border';
               let stateClasses = 'bg-zinc-50 border-zinc-100 text-zinc-300 cursor-not-allowed';
               if (!meta.isPast) {
                 if (isSelected) {
@@ -350,7 +350,7 @@ export default function DateTimePicker({
             })}
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 pt-4 mt-3 border-t border-zinc-100 text-[9px] font-bold uppercase tracking-wider text-zinc-500">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 pt-4 mt-3 border-t border-zinc-100 text-[10px] font-bold uppercase tracking-wider text-zinc-600">
             <span className="flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> 3+ slots
             </span>
@@ -371,18 +371,18 @@ export default function DateTimePicker({
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-1.5">
               <Clock className="w-3.5 h-3.5 text-zinc-500" />
-              <span className="text-[10px] font-extrabold uppercase tracking-wider text-zinc-700">
+              <span className="text-[11px] font-extrabold uppercase tracking-wider text-zinc-700">
                 Available Time Slots
               </span>
             </div>
-            <span className="text-[8.5px] font-extrabold text-brand-dark bg-brand-light border border-brand/20 px-2 py-0.5 rounded tracking-widest uppercase font-mono">
+            <span className="text-[10px] font-extrabold text-brand-dark bg-brand-light border border-brand/20 px-2 py-0.5 rounded tracking-widest uppercase font-mono">
               1 Hour
             </span>
           </div>
 
           {selectedDate ? (
             slotsForSelectedDate.length > 0 ? (
-              <div className="space-y-4 max-h-[320px] overflow-y-auto pr-1">
+              <div className="space-y-4 max-h-[320px] sm:max-h-[420px] overflow-y-auto pr-1">
                 {['morning', 'afternoon', 'evening'].map(bucket => {
                   const items = groupedSlots[bucket];
                   if (!items || items.length === 0) return null;
@@ -390,7 +390,7 @@ export default function DateTimePicker({
                   const Icon = meta.icon;
                   return (
                     <div key={bucket} className="space-y-2">
-                      <div className={`flex items-center gap-1.5 text-[9px] font-extrabold uppercase tracking-wider ${meta.color}`}>
+                      <div className={`flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-wider ${meta.color}`}>
                         <Icon className="w-3 h-3" />
                         <span>{meta.label}</span>
                         <span className="text-zinc-400">({items.length})</span>
@@ -403,7 +403,7 @@ export default function DateTimePicker({
                               key={time}
                               type="button"
                               onClick={() => onTimeChange(time)}
-                              className={`py-2 px-2 text-[10px] uppercase font-bold border rounded-lg transition cursor-pointer text-center ${
+                              className={`min-h-[44px] py-2.5 px-2 text-[11px] uppercase font-bold border rounded-lg transition cursor-pointer text-center ${
                                 isSelected
                                   ? 'bg-gradient-brand text-zinc-955 border-transparent shadow-xs font-black ring-1 ring-brand/40'
                                   : 'bg-white border-zinc-200 text-zinc-700 hover:border-brand/40 hover:bg-brand/5'
@@ -423,10 +423,10 @@ export default function DateTimePicker({
                 <div className="w-12 h-12 mx-auto rounded-full bg-rose-50 border border-rose-100 flex items-center justify-center">
                   <Clock className="w-5 h-5 text-rose-500" />
                 </div>
-                <p className="text-[10px] font-extrabold text-rose-600 uppercase tracking-wider">
+                <p className="text-[11px] font-extrabold text-rose-600 uppercase tracking-wider">
                   No Slots Available
                 </p>
-                <p className="text-[10px] text-zinc-500 leading-relaxed px-4">
+                <p className="text-[11px] text-zinc-500 leading-relaxed px-4">
                   No advisors have availability on {formatHumanDate(selectedDate)}. Try a different day.
                 </p>
               </div>
@@ -436,10 +436,10 @@ export default function DateTimePicker({
               <div className="w-12 h-12 mx-auto rounded-full bg-zinc-50 border border-zinc-100 flex items-center justify-center">
                 <Sparkles className="w-5 h-5 text-zinc-400" />
               </div>
-              <p className="text-[10px] font-extrabold text-zinc-500 uppercase tracking-wider">
+              <p className="text-[11px] font-extrabold text-zinc-500 uppercase tracking-wider">
                 Pick a Date First
               </p>
-              <p className="text-[10px] text-zinc-400 leading-relaxed px-4">
+              <p className="text-[11px] text-zinc-400 leading-relaxed px-4">
                 Select a day on the calendar to see available 1-hour time slots.
               </p>
             </div>
@@ -455,13 +455,13 @@ export default function DateTimePicker({
               <MapPin className="w-4 h-4" />
             </div>
             <div>
-              <div className="text-[9px] font-extrabold uppercase tracking-widest text-brand-dark">
+              <div className="text-[10px] font-extrabold uppercase tracking-widest text-brand-dark">
                 Your Selection
               </div>
               <div className="text-xs sm:text-sm font-extrabold text-zinc-900 mt-0.5">
                 {formatHumanDate(selectedDate)}
               </div>
-              <div className="text-[10px] text-zinc-600 font-mono mt-0.5">
+              <div className="text-[11px] text-zinc-600 font-mono mt-0.5">
                 {selectedTime
                   ? `${selectedTime} • ${bookingModeLabel(selectedMode)}`
                   : 'No time slot picked yet'}
@@ -472,7 +472,7 @@ export default function DateTimePicker({
             <button
               type="button"
               onClick={() => onTimeChange('')}
-              className="text-[9px] font-extrabold uppercase tracking-wider text-zinc-500 hover:text-rose-600 transition cursor-pointer self-start sm:self-auto"
+              className="min-h-[36px] px-3 inline-flex items-center text-[10px] font-extrabold uppercase tracking-wider text-zinc-500 hover:text-rose-600 transition cursor-pointer self-start sm:self-auto"
             >
               Clear Time
             </button>
@@ -482,8 +482,8 @@ export default function DateTimePicker({
 
       {(errors.date || errors.time) && (
         <div className="space-y-1">
-          {errors.date && <p className="text-[10px] text-rose-500 font-bold">{errors.date}</p>}
-          {errors.time && <p className="text-[10px] text-rose-500 font-bold">{errors.time}</p>}
+          {errors.date && <p className="text-[11px] text-rose-500 font-bold" role="alert">{errors.date}</p>}
+          {errors.time && <p className="text-[11px] text-rose-500 font-bold" role="alert">{errors.time}</p>}
         </div>
       )}
     </div>

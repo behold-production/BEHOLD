@@ -817,7 +817,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                 <span className="text-[10px] text-zinc-400 font-light">Interactive Booking Guide</span>
               </div>
 
-              <div className="flex overflow-x-auto snap-x scrollbar-none gap-4 pb-2 lg:grid lg:grid-cols-5 lg:gap-6 w-full">
+              <div className="flex overflow-x-auto snap-x scrollbar-none gap-3 sm:gap-4 pb-2 -mx-1 px-1 lg:grid lg:grid-cols-5 lg:gap-6 w-full">
                 {activeSteps.map((step, idx) => {
                   const stepMapping = {
                     config: 0,
@@ -831,13 +831,13 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                   const isActive = idx === currentStepIdx;
 
                   return (
-                    <div key={idx} className="flex lg:flex-col items-start gap-3 lg:gap-2 relative shrink-0 snap-start w-[240px] lg:w-auto">
+                    <div key={idx} className="flex lg:flex-col items-start gap-3 lg:gap-2 relative shrink-0 snap-start w-[210px] sm:w-[240px] lg:w-auto">
                       <div className="flex items-center lg:w-full">
-                        <div className={`flex items-center justify-center w-6 h-6 rounded-full font-bold text-[10px] border transition-all duration-300 shrink-0 ${
+                        <div className={`flex items-center justify-center w-7 h-7 rounded-full font-bold text-[11px] border transition-all duration-300 shrink-0 ${
                           isCompleted
                             ? 'bg-zinc-900 border-zinc-900 text-white'
                             : isActive
-                              ? 'bg-brand border-brand text-zinc-955 shadow-xs ring-2 ring-brand/10 font-black'
+                              ? 'bg-brand border-brand text-zinc-900 shadow-xs ring-2 ring-brand/10 font-black'
                               : 'bg-white border-zinc-200 text-zinc-400'
                         }`}>
                           {isCompleted ? <Check className="w-3.5 h-3.5" /> : idx + 1}
@@ -848,11 +848,11 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                           }`} />
                         )}
                       </div>
-                      <div className="flex flex-col text-left">
-                        <span className={`text-[9px] font-bold uppercase tracking-wider ${isActive ? 'text-brand-dark' : isCompleted ? 'text-zinc-900' : 'text-zinc-400'}`}>
+                      <div className="flex flex-col text-left min-w-0">
+                        <span className={`text-[10px] font-bold uppercase tracking-wider ${isActive ? 'text-brand-dark' : isCompleted ? 'text-zinc-900' : 'text-zinc-400'}`}>
                           {idx === 0 ? '1. Schedule' : idx === 1 ? '2. Advisor' : idx === 2 ? '3. Account' : idx === 3 ? '4. Payment' : '5. Session'}
                         </span>
-                        <span className={`text-[10px] font-light leading-tight transition-colors duration-300 mt-0.5 ${isActive ? 'text-zinc-900 font-normal' : 'text-zinc-650'}`}>
+                        <span className={`text-[11px] font-light leading-snug transition-colors duration-300 mt-0.5 ${isActive ? 'text-zinc-900 font-normal' : 'text-zinc-650'}`}>
                           {step}
                         </span>
                       </div>
@@ -935,7 +935,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                         setCopiedMeet(true);
                         setTimeout(() => setCopiedMeet(false), 2000);
                       }}
-                      className="px-4 py-2 bg-zinc-900 text-white text-[10px] font-bold uppercase tracking-wider rounded-lg hover:bg-zinc-800 transition cursor-pointer flex items-center gap-1.5 border-none shadow-xs"
+                      className="px-4 py-2.5 min-h-[40px] bg-zinc-900 text-white text-[11px] font-bold uppercase tracking-wider rounded-lg hover:bg-zinc-800 transition cursor-pointer flex items-center justify-center gap-1.5 border-none shadow-xs whitespace-nowrap"
                     >
                       {copiedMeet ? (
                         <>
@@ -1053,9 +1053,9 @@ Status: CONFIRMED
                               type="button"
                               key={m}
                               onClick={() => setBookingMode(m)}
-                              className={`py-2 text-[9px] uppercase font-extrabold border rounded-lg transition cursor-pointer text-center ${
+                              className={`py-2.5 px-1 text-[10px] uppercase font-extrabold border rounded-lg transition cursor-pointer text-center min-h-[40px] flex items-center justify-center leading-tight ${
                                 bookingMode === m
-                                  ? 'bg-gradient-brand text-zinc-955 border-none shadow-xs font-black'
+                                  ? 'bg-gradient-brand text-zinc-900 border-none shadow-xs font-black'
                                   : 'bg-white text-zinc-600 border-zinc-200 hover:border-brand/40 hover:text-brand-dark'
                               }`}
                             >
@@ -1086,12 +1086,12 @@ Status: CONFIRMED
                     </div>
 
                     {/* Navigation */}
-                    <div className="flex justify-end pt-4 border-t border-zinc-150 mt-4">
+                    <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-4 border-t border-zinc-200 mt-4">
                       <button
                         type="button"
                         disabled={!selectedDate || !selectedTime}
                         onClick={() => handleStepChange('advisor')}
-                        className="px-6 py-3 bg-zinc-900 text-white font-bold uppercase tracking-wider text-xs rounded-lg transition hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center gap-2 border-none shadow-xs"
+                        className="px-6 py-3 min-h-[48px] bg-zinc-900 text-white font-bold uppercase tracking-wider text-[11px] rounded-lg transition hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2 border-none shadow-xs w-full sm:w-auto"
                       >
                         Choose Advisor <ArrowRight className="w-4 h-4" />
                       </button>
@@ -1228,11 +1228,11 @@ Status: CONFIRMED
                     {errors.confirm && <p className="text-[10px] text-rose-500 font-semibold mt-1">{errors.confirm}</p>}
 
                     {/* Navigation */}
-                    <div className="flex items-center justify-between pt-4 border-t border-zinc-150 mt-4">
+                    <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-4 border-t border-zinc-200 mt-4">
                       <button
                         type="button"
                         onClick={() => handleStepChange('config')}
-                        className="px-5 py-2.5 bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 font-bold uppercase tracking-wider text-[10px] rounded-lg transition cursor-pointer"
+                        className="px-5 py-3 min-h-[44px] bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 font-bold uppercase tracking-wider text-[11px] rounded-lg transition cursor-pointer w-full sm:w-auto text-center"
                       >
                         ← Change Schedule
                       </button>
@@ -1240,7 +1240,7 @@ Status: CONFIRMED
                         type="button"
                         disabled={!selectedAdvisor || !advisorConfirmed}
                         onClick={() => handleStepChange('details')}
-                        className="px-5 py-2.5 bg-zinc-900 text-white font-bold uppercase tracking-wider text-[10px] rounded-lg transition hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center gap-1.5 border-none shadow-xs"
+                        className="px-5 py-3 min-h-[44px] bg-zinc-900 text-white font-bold uppercase tracking-wider text-[11px] rounded-lg transition hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-1.5 border-none shadow-xs w-full sm:w-auto"
                       >
                         Account Details <ArrowRight className="w-3.5 h-3.5" />
                       </button>
@@ -1347,11 +1347,12 @@ Status: CONFIRMED
                       </div>
                     )}
 
-                    <div className="flex items-center justify-between pt-4 border-t border-zinc-200">
+                    {/* Navigation */}
+                    <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-4 border-t border-zinc-200 mt-4">
                       <button
                         type="button"
                         onClick={() => handleStepChange('advisor')}
-                        className="px-5 py-2.5 bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 font-bold uppercase tracking-wider text-[10px] rounded-lg transition cursor-pointer"
+                        className="px-5 py-3 min-h-[44px] bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 font-bold uppercase tracking-wider text-[11px] rounded-lg transition cursor-pointer w-full sm:w-auto text-center"
                       >
                         ← Back to Advisor
                       </button>
@@ -1359,10 +1360,10 @@ Status: CONFIRMED
                         type="button"
                         onClick={handleProceedToPayment}
                         disabled={isSubmitting}
-                        className="px-6 py-3 bg-gradient-brand text-zinc-955 font-extrabold uppercase tracking-wider text-[10px] rounded-lg transition flex items-center justify-center gap-2 cursor-pointer shadow-md border-none disabled:opacity-50"
+                        className="px-6 py-3 min-h-[48px] bg-gradient-brand text-zinc-900 font-extrabold uppercase tracking-wider text-[11px] rounded-lg transition flex items-center justify-center gap-2 cursor-pointer shadow-md border-none disabled:opacity-50 w-full sm:w-auto"
                       >
                         {isSubmitting ? (
-                          <div className="w-4 h-4 border-2 border-zinc-955/30 border-t-zinc-955 rounded-full animate-spin" />
+                          <div className="w-4 h-4 border-2 border-zinc-900/30 border-t-zinc-900 rounded-full animate-spin" />
                         ) : (
                           <>
                             {!user && <Lock className="w-3.5 h-3.5" />}
@@ -1666,21 +1667,21 @@ Status: CONFIRMED
                       </div>
 
                       {/* Navigation and Checkout triggers */}
-                      <div className="flex items-center justify-between pt-4 border-t border-zinc-200 mt-6">
+                      <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-4 border-t border-zinc-200 mt-6">
                         <button
                           type="button"
                           onClick={() => handleStepChange('details')}
-                          className="px-5 py-2.5 bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 font-bold uppercase tracking-wider text-[10px] rounded-lg transition cursor-pointer"
+                          className="px-5 py-3 min-h-[44px] bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 font-bold uppercase tracking-wider text-[11px] rounded-lg transition cursor-pointer w-full sm:w-auto text-center"
                         >
                           ← Back to Details
                         </button>
-                        
+
                         <button
                           type="submit"
-                          className="px-6 py-3 bg-gradient-brand text-zinc-955 font-black uppercase tracking-wider text-[10px] rounded-lg transition flex items-center justify-center gap-1.5 cursor-pointer shadow-md border-none"
+                          className="px-6 py-3 min-h-[48px] bg-gradient-brand text-zinc-900 font-black uppercase tracking-wider text-[11px] rounded-lg transition flex items-center justify-center gap-2 cursor-pointer shadow-md border-none w-full sm:w-auto"
                         >
-                          <Lock className="w-3.5 h-3.5" />
-                          <span>Pay ₹{(selectedAdvisor?.price || 1200) + Math.round((selectedAdvisor?.price || 1200) * 0.18) - appliedDiscount} Securely</span>
+                          <Lock className="w-3.5 h-3.5 shrink-0" />
+                          <span className="truncate">Pay ₹{(selectedAdvisor?.price || 1200) + Math.round((selectedAdvisor?.price || 1200) * 0.18) - appliedDiscount} Securely</span>
                         </button>
                       </div>
 
@@ -1690,7 +1691,7 @@ Status: CONFIRMED
               </div>
 
               {/* Right Column: Dynamic Booking Sidebar Summary */}
-              <div className="lg:col-span-4 bg-zinc-50 border border-zinc-200 p-4 sm:p-5 rounded-xl space-y-5 sticky top-24 text-left shadow-xs">
+              <div className="lg:col-span-4 bg-zinc-50 border border-zinc-200 p-4 sm:p-5 rounded-xl space-y-5 lg:sticky lg:top-20 text-left shadow-xs">
                 <div>
                   <h3 className="text-xs font-black uppercase tracking-wider text-zinc-850 border-b border-zinc-200 pb-2">
                     Booking Summary

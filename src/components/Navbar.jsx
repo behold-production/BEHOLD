@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Menu, X, ArrowUpRight, User, LogOut } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Menu, X, ArrowUpRight, User, LogOut, ChevronRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import LogoutConfirmModal from './LogoutConfirmModal';
 
@@ -9,6 +9,8 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
   const [showDropdown, setShowDropdown] = useState(false);
   const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
   const { user, logout } = useAuth();
+  const desktopDropdownRef = useRef(null);
+  const mobileDropdownRef = useRef(null);
 
   useEffect(() => {
     if (currentView !== '/') {
@@ -43,6 +45,37 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
     };
   }, [currentView]);
 
+  // Body scroll lock while the mobile drawer is open
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.classList.add('no-scroll');
+    } else {
+      document.body.classList.remove('no-scroll');
+    }
+    return () => document.body.classList.remove('no-scroll');
+  }, [isMenuOpen]);
+
+  // Close mobile drawer & dropdown automatically when route changes
+  useEffect(() => {
+    setIsMenuOpen(false);
+    setShowDropdown(false);
+  }, [currentView]);
+
+  // Close dropdown when clicking outside of it
+  useEffect(() => {
+    if (!showDropdown) return;
+    const handleClickOutside = (e) => {
+      if (
+        desktopDropdownRef.current && !desktopDropdownRef.current.contains(e.target) &&
+        mobileDropdownRef.current && !mobileDropdownRef.current.contains(e.target)
+      ) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showDropdown]);
+
   const scrollToSection = (id) => {
     navigateToSection(id);
     setIsMenuOpen(false);
@@ -69,14 +102,17 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
 
   return (
     <>
-      <header className="sticky top-0 w-full bg-white/80 backdrop-blur-lg z-50 border-b border-zinc-200/50 text-zinc-900 transition-all shadow-xs">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+      <header className="sticky top-0 w-full bg-white/85 backdrop-blur-lg z-50 border-b border-zinc-200/60 text-zinc-900 transition-all shadow-xs">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3">
           {/* Left Column: Logo & Nav Links */}
-          <div className="flex items-center space-x-3.5 lg:space-x-12">
+          <div className="flex items-center gap-2 sm:gap-3 lg:gap-12 min-w-0">
             {/* Hamburger Menu Toggle on Left of Logo for Mobile */}
             <button
               id="mobile-menu-toggle"
-              className="lg:hidden text-zinc-900 hover:text-zinc-650 transition p-1 cursor-pointer"
+              type="button"
+              aria-label={isMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+              aria-expanded={isMenuOpen}
+              className="lg:hidden text-zinc-900 hover:text-brand-dark hover:bg-zinc-50 transition rounded-lg w-11 h-11 -ml-2 flex items-center justify-center cursor-pointer"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -84,16 +120,16 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
 
             <span
               onClick={handleLogoClick}
-              className="font-header font-black text-xl tracking-tighter cursor-pointer text-zinc-900 hover:text-brand transition duration-300"
+              className="font-header font-black text-lg sm:text-xl tracking-tighter cursor-pointer text-zinc-900 hover:text-brand transition duration-300 select-none truncate"
               id="nav-logo"
             >
               {siteName || 'BEHOLD'}<span className="text-brand font-black">.</span>
             </span>
 
-            <nav className="hidden lg:flex items-center space-x-8 text-xs font-semibold tracking-wider text-zinc-500">
+            <nav className="hidden lg:flex items-center gap-8 text-xs font-semibold tracking-wider text-zinc-500">
               <button
                 onClick={handleLogoClick}
-                className={`transition-all duration-300 cursor-pointer pb-1 relative uppercase ${currentView === '/' && (activeSection === 'home' || activeSection === 'cdat' || activeSection === '') ? 'text-zinc-955 font-bold' : 'hover:text-zinc-950'
+                className={`transition-all duration-300 cursor-pointer pb-1 relative uppercase ${currentView === '/' && (activeSection === 'home' || activeSection === 'cdat' || activeSection === '') ? 'text-zinc-900 font-bold' : 'hover:text-zinc-900'
                   }`}
               >
                 Home
@@ -104,7 +140,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
 
               <button
                 onClick={() => scrollToSection('services')}
-                className={`transition-all duration-300 cursor-pointer pb-1 relative uppercase ${activeSection === 'services' && currentView === '/' ? 'text-zinc-950 font-bold' : 'hover:text-zinc-950'
+                className={`transition-all duration-300 cursor-pointer pb-1 relative uppercase ${activeSection === 'services' && currentView === '/' ? 'text-zinc-900 font-bold' : 'hover:text-zinc-900'
                   }`}
               >
                 Services
@@ -115,7 +151,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
 
               <button
                 onClick={() => window.spaNavigate('/sample-test')}
-                className={`transition-all duration-300 cursor-pointer pb-1 relative uppercase ${currentView === '/sample-test' ? 'text-zinc-950 font-bold' : 'hover:text-zinc-950'
+                className={`transition-all duration-300 cursor-pointer pb-1 relative uppercase ${currentView === '/sample-test' ? 'text-zinc-900 font-bold' : 'hover:text-zinc-900'
                   }`}
               >
                 Sample Test
@@ -126,7 +162,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
 
               <button
                 onClick={() => scrollToSection('inquiry')}
-                className={`transition-all duration-300 cursor-pointer pb-1 relative uppercase ${activeSection === 'inquiry' && currentView === '/' ? 'text-zinc-950 font-bold' : 'hover:text-zinc-950'
+                className={`transition-all duration-300 cursor-pointer pb-1 relative uppercase ${activeSection === 'inquiry' && currentView === '/' ? 'text-zinc-900 font-bold' : 'hover:text-zinc-900'
                   }`}
               >
                 Contact
@@ -138,11 +174,14 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
           </div>
 
           {/* Right Column: Actions */}
-          <div className="hidden lg:flex items-center space-x-4 relative">
+          <div className="hidden lg:flex items-center gap-3 relative">
             {user ? (
-              <div className="relative">
+              <div className="relative" ref={desktopDropdownRef}>
                 <button
+                  type="button"
                   onClick={() => setShowDropdown(!showDropdown)}
+                  aria-label="Account menu"
+                  aria-expanded={showDropdown}
                   className="w-10 h-10 rounded-full overflow-hidden bg-brand/10 text-brand-dark font-black flex items-center justify-center uppercase tracking-widest text-sm shadow-xs border border-brand/20 hover:scale-105 transition-transform cursor-pointer"
                 >
                   {user.image ? (
@@ -153,40 +192,44 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                 </button>
 
                 {showDropdown && (
-                  <div className="absolute top-full right-0 mt-3 w-48 bg-white border border-zinc-200/50 shadow-xl rounded-lg overflow-hidden py-1 z-50 animate-in fade-in zoom-in-95 duration-200">
+                  <div className="absolute top-full right-0 mt-3 w-52 bg-white border border-zinc-200 shadow-xl rounded-lg overflow-hidden py-1 z-50 animate-in fade-in zoom-in-95 duration-200">
                     <div className="px-4 py-3 border-b border-zinc-150">
                       <p className="text-xs font-bold text-zinc-900 truncate">{user.name}</p>
-                      <p className="text-[10px] text-zinc-400 truncate mt-0.5">{user.email}</p>
+                      <p className="text-[11px] text-zinc-500 truncate mt-0.5">{user.email}</p>
                     </div>
                     <button
+                      type="button"
                       onClick={handleProfileClick}
-                      className="w-full text-left px-4 py-2.5 text-xs font-semibold text-zinc-650 hover:bg-zinc-50 hover:text-zinc-950 transition-colors flex items-center gap-2 cursor-pointer"
+                      className="w-full text-left px-4 py-3 text-xs font-semibold text-zinc-650 hover:bg-zinc-50 hover:text-zinc-900 transition-colors flex items-center gap-2 cursor-pointer"
                     >
                       <User className="w-3.5 h-3.5 text-zinc-400" /> Your Profile
                     </button>
                     <button
+                      type="button"
                       onClick={() => { setShowDropdown(false); setIsLogoutConfirmOpen(true); }}
-                      className="w-full text-left px-4 py-2.5 text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-colors flex items-center gap-2 cursor-pointer"
+                      className="w-full text-left px-4 py-3 text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-colors flex items-center gap-2 cursor-pointer"
                     >
-                      <LogOut className="w-3.5 h-3.5 text-rose-450" /> Sign Out
+                      <LogOut className="w-3.5 h-3.5 text-rose-500" /> Sign Out
                     </button>
                   </div>
                 )}
               </div>
             ) : (
               <button
+                type="button"
                 onClick={onOpenAuth}
-                className="px-4 py-2 text-xs font-bold text-zinc-900 hover:text-brand transition-colors cursor-pointer uppercase tracking-wider"
+                className="px-4 h-10 text-xs font-bold text-zinc-900 hover:text-brand transition-colors cursor-pointer uppercase tracking-wider rounded-lg hover:bg-zinc-50 flex items-center"
               >
                 Sign In
               </button>
             )}
 
             <button
+              type="button"
               onClick={() => window.spaNavigate('/booking')}
-              className={`px-5 py-2.5 text-xs font-bold rounded-lg border border-zinc-200/50 transition-all duration-300 cursor-pointer flex items-center gap-1.5 uppercase tracking-wider ${currentView === '/booking'
-                ? 'bg-zinc-950 text-white'
-                : 'bg-brand hover:bg-brand-dark text-zinc-955 shadow-xs'
+              className={`px-5 h-10 text-xs font-bold rounded-lg border transition-all duration-300 cursor-pointer flex items-center gap-1.5 uppercase tracking-wider ${currentView === '/booking'
+                ? 'bg-zinc-950 text-white border-zinc-950'
+                : 'bg-brand hover:bg-brand-dark text-zinc-900 shadow-xs border-brand/30'
                 }`}
             >
               <span>Book Session</span>
@@ -196,12 +239,15 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
 
           {/* Mobile Actions (Avatar only) */}
           <div className="flex items-center lg:hidden relative">
-            <div className="relative">
+            <div className="relative" ref={mobileDropdownRef}>
               {user ? (
                 <>
                   <button
+                    type="button"
                     onClick={() => setShowDropdown(!showDropdown)}
-                    className="w-8 h-8 rounded-full overflow-hidden bg-brand/10 text-brand-dark font-black flex items-center justify-center uppercase tracking-widest text-[11px] shadow-xs border border-brand/20 cursor-pointer"
+                    aria-label="Account menu"
+                    aria-expanded={showDropdown}
+                    className="w-10 h-10 rounded-full overflow-hidden bg-brand/10 text-brand-dark font-black flex items-center justify-center uppercase tracking-widest text-xs shadow-xs border border-brand/20 cursor-pointer"
                   >
                     {user.image ? (
                       <img src={user.image} alt={user.name} className="w-full h-full object-cover" />
@@ -210,31 +256,35 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                     )}
                   </button>
                   {showDropdown && (
-                    <div className="absolute top-full right-0 mt-3 w-48 bg-white border border-zinc-200/50 shadow-xl rounded-lg overflow-hidden py-1 z-50 animate-in fade-in zoom-in-95 duration-200">
+                    <div className="absolute top-full right-0 mt-3 w-52 bg-white border border-zinc-200 shadow-xl rounded-lg overflow-hidden py-1 z-50 animate-in fade-in zoom-in-95 duration-200">
                       <div className="px-4 py-3 border-b border-zinc-150">
                         <p className="text-xs font-bold text-zinc-900 truncate">{user.name}</p>
-                        <p className="text-[10px] text-zinc-400 truncate mt-0.5">{user.email}</p>
+                        <p className="text-[11px] text-zinc-500 truncate mt-0.5">{user.email}</p>
                       </div>
                       <button
+                        type="button"
                         onClick={handleProfileClick}
-                        className="w-full text-left px-4 py-2.5 text-xs font-semibold text-zinc-650 hover:bg-zinc-50 hover:text-zinc-950 transition-colors flex items-center gap-2 cursor-pointer"
+                        className="w-full text-left px-4 py-3 text-xs font-semibold text-zinc-650 hover:bg-zinc-50 hover:text-zinc-900 transition-colors flex items-center gap-2 cursor-pointer"
                       >
                         <User className="w-3.5 h-3.5 text-zinc-400" /> Your Profile
                       </button>
                       <button
+                        type="button"
                         onClick={() => { setShowDropdown(false); setIsLogoutConfirmOpen(true); }}
-                        className="w-full text-left px-4 py-2.5 text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-colors flex items-center gap-2 cursor-pointer"
+                        className="w-full text-left px-4 py-3 text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-colors flex items-center gap-2 cursor-pointer"
                       >
-                        <LogOut className="w-3.5 h-3.5 text-rose-450" /> Sign Out
+                        <LogOut className="w-3.5 h-3.5 text-rose-500" /> Sign Out
                       </button>
                     </div>
                   )}
                 </>
               ) : (
                 <button
+                  type="button"
                   onClick={onOpenAuth}
-                  className="w-8 h-8 rounded-full bg-brand text-zinc-950 flex items-center justify-center shadow-xs border border-brand/20 hover:scale-105 transition-transform cursor-pointer"
+                  className="w-10 h-10 rounded-full bg-brand text-zinc-900 flex items-center justify-center shadow-xs border border-brand/30 hover:scale-105 transition-transform cursor-pointer"
                   title="Sign In"
+                  aria-label="Sign In"
                 >
                   <User className="w-4 h-4" />
                 </button>
@@ -247,14 +297,18 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
       {/* Backdrop overlay */}
       {isMenuOpen && (
         <div
-          className="fixed inset-0 bg-zinc-950/40 backdrop-blur-xs z-40 lg:hidden animate-in fade-in duration-300"
+          className="fixed inset-0 bg-zinc-950/50 backdrop-blur-xs z-40 lg:hidden animate-in fade-in duration-300"
           onClick={() => setIsMenuOpen(false)}
         />
       )}
 
       {/* Mobile Side Drawer - Glassmorphism UI */}
-      <div className={`fixed top-0 left-0 bottom-0 w-[300px] max-w-[85vw] bg-white/95 backdrop-blur-md z-50 lg:hidden shadow-2xl transition-all duration-300 ease-in-out transform flex flex-col p-5 border-r border-zinc-200/50 ${isMenuOpen ? 'translate-x-0 opacity-100 visible' : '-translate-x-full opacity-0 invisible pointer-events-none'
-        }`}>
+      <aside
+        id="mobile-drawer"
+        aria-hidden={!isMenuOpen}
+        className={`fixed top-0 left-0 bottom-0 w-[300px] max-w-[85vw] bg-white z-50 lg:hidden shadow-2xl transition-all duration-300 ease-in-out transform flex flex-col p-5 border-r border-zinc-200 ${isMenuOpen ? 'translate-x-0 opacity-100 visible' : '-translate-x-full opacity-0 invisible pointer-events-none'
+          }`}
+      >
         {/* Drawer Header */}
         <div className="flex items-center justify-between pb-4 border-b border-zinc-150 mb-5">
           <span
@@ -264,8 +318,10 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
             {siteName || 'BEHOLD'}<span className="text-brand font-black">.</span>
           </span>
           <button
+            type="button"
             onClick={() => setIsMenuOpen(false)}
-            className="p-1.5 hover:bg-zinc-100 rounded-lg transition-colors cursor-pointer"
+            aria-label="Close navigation menu"
+            className="w-10 h-10 flex items-center justify-center hover:bg-zinc-100 rounded-lg transition-colors cursor-pointer"
           >
             <X className="w-5 h-5 text-zinc-900" />
           </button>
@@ -274,48 +330,57 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
         {/* Drawer Navigation Links */}
         <div className="flex flex-col gap-2 overflow-y-auto flex-1">
           <button
+            type="button"
             onClick={handleLogoClick}
-            className={`w-full text-left px-3.5 py-3 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${currentView === '/' && (activeSection === 'home' || activeSection === 'cdat' || activeSection === '')
+            className={`w-full text-left px-3.5 py-3.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${currentView === '/' && (activeSection === 'home' || activeSection === 'cdat' || activeSection === '')
               ? 'bg-brand/10 text-zinc-900 border-brand font-black'
               : 'text-zinc-650 hover:text-zinc-900 hover:bg-zinc-50 border-transparent'
               }`}
           >
             <span>Home</span>
+            <ChevronRight className="w-3.5 h-3.5 opacity-40" />
           </button>
 
           <button
+            type="button"
             onClick={() => scrollToSection('services')}
-            className={`w-full text-left px-3.5 py-3 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${activeSection === 'services' && currentView === '/'
+            className={`w-full text-left px-3.5 py-3.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${activeSection === 'services' && currentView === '/'
               ? 'bg-brand/10 text-zinc-900 border-brand font-black'
               : 'text-zinc-650 hover:text-zinc-900 hover:bg-zinc-50 border-transparent'
               }`}
           >
             <span>Services</span>
+            <ChevronRight className="w-3.5 h-3.5 opacity-40" />
           </button>
 
           <button
+            type="button"
             onClick={() => { window.spaNavigate('/sample-test'); setIsMenuOpen(false); }}
-            className={`w-full text-left px-3.5 py-3 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${currentView === '/sample-test'
+            className={`w-full text-left px-3.5 py-3.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${currentView === '/sample-test'
               ? 'bg-brand/10 text-zinc-900 border-brand font-black'
               : 'text-zinc-650 hover:text-zinc-900 hover:bg-zinc-50 border-transparent'
               }`}
           >
             <span>Sample Test</span>
+            <ChevronRight className="w-3.5 h-3.5 opacity-40" />
           </button>
 
           <button
+            type="button"
             onClick={() => scrollToSection('inquiry')}
-            className={`w-full text-left px-3.5 py-3 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${activeSection === 'inquiry' && currentView === '/'
+            className={`w-full text-left px-3.5 py-3.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${activeSection === 'inquiry' && currentView === '/'
               ? 'bg-brand/10 text-zinc-900 border-brand font-black'
               : 'text-zinc-650 hover:text-zinc-900 hover:bg-zinc-50 border-transparent'
               }`}
           >
             <span>Contact</span>
+            <ChevronRight className="w-3.5 h-3.5 opacity-40" />
           </button>
 
           <button
+            type="button"
             onClick={() => { window.spaNavigate('/booking'); setIsMenuOpen(false); }}
-            className={`w-full text-left px-3.5 py-3 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${currentView === '/booking'
+            className={`w-full text-left px-3.5 py-3.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${currentView === '/booking'
               ? 'bg-brand/10 text-zinc-900 border-brand font-black'
               : 'text-zinc-650 hover:text-zinc-900 hover:bg-zinc-50 border-transparent'
               }`}
@@ -328,27 +393,29 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
         {/* Drawer Footer: User Profile Widget */}
         <div className="pt-4 border-t border-zinc-150 mt-auto">
           {user ? (
-            <div className="bg-zinc-50 p-3 rounded-lg border border-zinc-200/60 flex flex-col gap-3">
+            <div className="bg-zinc-50 p-3 rounded-lg border border-zinc-200 flex flex-col gap-3">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-full bg-brand/10 text-brand-dark font-black flex items-center justify-center text-xs shrink-0 shadow-inner border border-brand/20">
                   {user.name.charAt(0).toUpperCase()}
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="text-xs font-bold text-zinc-900 truncate leading-tight">{user.name}</p>
-                  <p className="text-[10px] text-zinc-400 truncate mt-0.5 leading-none">{user.email}</p>
+                  <p className="text-[11px] text-zinc-500 truncate mt-0.5 leading-none">{user.email}</p>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-2">
                 <button
+                  type="button"
                   onClick={handleProfileClick}
-                  className="py-2 text-[10px] font-bold text-zinc-700 bg-white border border-zinc-200 hover:border-zinc-900 rounded-md transition-colors text-center cursor-pointer uppercase tracking-wider"
+                  className="py-2.5 text-[11px] font-bold text-zinc-700 bg-white border border-zinc-200 hover:border-zinc-900 rounded-md transition-colors text-center cursor-pointer uppercase tracking-wider min-h-[40px]"
                 >
                   Profile
                 </button>
                 <button
+                  type="button"
                   onClick={() => { setIsLogoutConfirmOpen(true); setIsMenuOpen(false); }}
-                  className="py-2 text-[10px] font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 rounded-md transition-colors text-center cursor-pointer uppercase tracking-wider flex items-center justify-center gap-1"
+                  className="py-2.5 text-[11px] font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 rounded-md transition-colors text-center cursor-pointer uppercase tracking-wider flex items-center justify-center gap-1 min-h-[40px]"
                 >
                   <LogOut className="w-3 h-3" /> Sign Out
                 </button>
@@ -356,14 +423,15 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
             </div>
           ) : (
             <button
+              type="button"
               onClick={() => { onOpenAuth(); setIsMenuOpen(false); }}
-              className="w-full py-3 bg-brand hover:bg-brand-dark text-zinc-950 font-extrabold text-xs uppercase tracking-widest rounded-lg text-center transition cursor-pointer shadow-xs"
+              className="w-full py-3.5 bg-brand hover:bg-brand-dark text-zinc-900 font-extrabold text-xs uppercase tracking-widest rounded-lg text-center transition cursor-pointer shadow-xs"
             >
               Sign In to Account
             </button>
           )}
         </div>
-      </div>
+      </aside>
 
       {/* Logout Confirmation Modal */}
       <LogoutConfirmModal

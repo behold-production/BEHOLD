@@ -33,6 +33,20 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
     setMode('login');
   }, [isOpen, bookingForm]);
 
+  // Body scroll lock + Esc to close
+  useEffect(() => {
+    if (!isOpen) return;
+    document.body.classList.add('no-scroll');
+    const handleEsc = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', handleEsc);
+    return () => {
+      document.body.classList.remove('no-scroll');
+      document.removeEventListener('keydown', handleEsc);
+    };
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const handleChange = (e) => {
@@ -119,9 +133,15 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
   };
 
   return (
-    <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-in fade-in duration-200">
+    <div
+      className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-in fade-in duration-200"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="booking-auth-modal-title"
+      onClick={onClose}
+    >
       <div
-        className="relative w-full max-w-md bg-white border border-zinc-200 rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200"
+        className="relative w-full max-w-md my-auto bg-white border border-zinc-200 rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="h-1.5 w-full bg-gradient-to-r from-brand via-brand-accent to-brand" />
@@ -129,14 +149,14 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-3 right-3 z-10 p-1.5 rounded-lg bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 text-zinc-500 hover:text-zinc-900 transition cursor-pointer"
-          aria-label="Close"
+          className="absolute top-3 right-3 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 text-zinc-500 hover:text-zinc-900 transition cursor-pointer"
+          aria-label="Close sign in dialog"
         >
           <X className="w-4 h-4" />
         </button>
 
         <div className="p-6 sm:p-8 space-y-5">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 pr-10">
             <div className="w-11 h-11 rounded-xl bg-zinc-900 flex items-center justify-center shrink-0">
               {mode === 'login' ? (
                 <Lock className="w-5 h-5 text-brand" />
@@ -144,11 +164,11 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                 <Sparkles className="w-5 h-5 text-brand" />
               )}
             </div>
-            <div>
-              <h3 className="text-base font-black uppercase tracking-wide text-zinc-900">
+            <div className="min-w-0">
+              <h3 id="booking-auth-modal-title" className="text-base sm:text-lg font-black uppercase tracking-wide text-zinc-900 leading-tight">
                 {mode === 'login' ? 'Sign In to Continue' : 'Create Your Account'}
               </h3>
-              <p className="text-[11px] text-zinc-500 font-light mt-0.5">
+              <p className="text-[11px] text-zinc-500 font-medium mt-1">
                 {mode === 'login'
                   ? 'Sign in to link this booking to your profile'
                   : 'Quick free registration — under 30 seconds'}
@@ -160,7 +180,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
             <button
               type="button"
               onClick={() => switchMode('login')}
-              className={`flex-1 px-3 py-2 rounded-lg cursor-pointer transition-all duration-200 tracking-wider ${
+              className={`flex-1 px-3 min-h-[40px] rounded-lg cursor-pointer transition-all duration-200 tracking-wider flex items-center justify-center ${
                 mode === 'login'
                   ? 'bg-zinc-900 text-white shadow-sm'
                   : 'text-zinc-500 hover:text-zinc-700'
@@ -171,7 +191,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
             <button
               type="button"
               onClick={() => switchMode('register')}
-              className={`flex-1 px-3 py-2 rounded-lg cursor-pointer transition-all duration-200 tracking-wider ${
+              className={`flex-1 px-3 min-h-[40px] rounded-lg cursor-pointer transition-all duration-200 tracking-wider flex items-center justify-center ${
                 mode === 'register'
                   ? 'bg-zinc-900 text-white shadow-sm'
                   : 'text-zinc-500 hover:text-zinc-700'
@@ -195,12 +215,12 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                       onChange={handleChange}
                       placeholder="Your full legal name"
                       autoComplete="name"
-                      className={`w-full pl-9 pr-3 py-2.5 bg-zinc-50 border rounded-lg text-xs font-medium text-zinc-850 outline-none focus:bg-white transition ${
+                      className={`w-full pl-9 pr-3 py-2.5 min-h-[44px] bg-zinc-50 border rounded-lg text-xs font-medium text-zinc-850 outline-none focus:bg-white transition ${
                         fieldErrors.name ? 'border-rose-300 focus:border-rose-400' : 'border-zinc-200 focus:border-brand'
                       }`}
                     />
                   </div>
-                  {fieldErrors.name && <p className="text-[9.5px] text-rose-500 font-bold">{fieldErrors.name}</p>}
+                  {fieldErrors.name && <p className="text-[11px] text-rose-500 font-bold">{fieldErrors.name}</p>}
                 </div>
 
                 <div className="space-y-1.5 text-left">
@@ -214,12 +234,12 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                       onChange={handleChange}
                       placeholder="e.g. 9876543210"
                       autoComplete="tel"
-                      className={`w-full pl-9 pr-3 py-2.5 bg-zinc-50 border rounded-lg text-xs font-medium text-zinc-850 outline-none focus:bg-white transition ${
+                      className={`w-full pl-9 pr-3 py-2.5 min-h-[44px] bg-zinc-50 border rounded-lg text-xs font-medium text-zinc-850 outline-none focus:bg-white transition ${
                         fieldErrors.phone ? 'border-rose-300 focus:border-rose-400' : 'border-zinc-200 focus:border-brand'
                       }`}
                     />
                   </div>
-                  {fieldErrors.phone && <p className="text-[9.5px] text-rose-500 font-bold">{fieldErrors.phone}</p>}
+                  {fieldErrors.phone && <p className="text-[11px] text-rose-500 font-bold">{fieldErrors.phone}</p>}
                 </div>
               </>
             )}
@@ -235,12 +255,12 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                   onChange={handleChange}
                   placeholder="you@example.com"
                   autoComplete="email"
-                  className={`w-full pl-9 pr-3 py-2.5 bg-zinc-50 border rounded-lg text-xs font-medium text-zinc-850 outline-none focus:bg-white transition ${
+                  className={`w-full pl-9 pr-3 py-2.5 min-h-[44px] bg-zinc-50 border rounded-lg text-xs font-medium text-zinc-850 outline-none focus:bg-white transition ${
                     fieldErrors.email ? 'border-rose-300 focus:border-rose-400' : 'border-zinc-200 focus:border-brand'
                   }`}
                 />
               </div>
-              {fieldErrors.email && <p className="text-[9.5px] text-rose-500 font-bold">{fieldErrors.email}</p>}
+              {fieldErrors.email && <p className="text-[11px] text-rose-500 font-bold">{fieldErrors.email}</p>}
             </div>
 
             <div className="space-y-1.5 text-left">
@@ -254,12 +274,12 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                   onChange={handleChange}
                   placeholder="••••••••"
                   autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
-                  className={`w-full pl-9 pr-3 py-2.5 bg-zinc-50 border rounded-lg text-xs font-semibold text-zinc-850 outline-none focus:bg-white transition ${
+                  className={`w-full pl-9 pr-3 py-2.5 min-h-[44px] bg-zinc-50 border rounded-lg text-xs font-semibold text-zinc-850 outline-none focus:bg-white transition ${
                     fieldErrors.password ? 'border-rose-300 focus:border-rose-400' : 'border-zinc-200 focus:border-brand'
                   }`}
                 />
               </div>
-              {fieldErrors.password && <p className="text-[9.5px] text-rose-500 font-bold">{fieldErrors.password}</p>}
+              {fieldErrors.password && <p className="text-[11px] text-rose-500 font-bold">{fieldErrors.password}</p>}
             </div>
 
             {mode === 'register' && (
@@ -274,17 +294,17 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                     onChange={handleChange}
                     placeholder="••••••••"
                     autoComplete="new-password"
-                    className={`w-full pl-9 pr-3 py-2.5 bg-zinc-50 border rounded-lg text-xs font-semibold text-zinc-850 outline-none focus:bg-white transition ${
+                    className={`w-full pl-9 pr-3 py-2.5 min-h-[44px] bg-zinc-50 border rounded-lg text-xs font-semibold text-zinc-850 outline-none focus:bg-white transition ${
                       fieldErrors.confirmPassword ? 'border-rose-300 focus:border-rose-400' : 'border-zinc-200 focus:border-brand'
                     }`}
                   />
                 </div>
-                {fieldErrors.confirmPassword && <p className="text-[9.5px] text-rose-500 font-bold">{fieldErrors.confirmPassword}</p>}
+                {fieldErrors.confirmPassword && <p className="text-[11px] text-rose-500 font-bold">{fieldErrors.confirmPassword}</p>}
               </div>
             )}
 
             {error && (
-              <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl text-[10px] font-bold flex items-start gap-2 animate-in fade-in duration-200">
+              <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl text-[11px] font-bold flex items-start gap-2 animate-in fade-in duration-200" role="alert">
                 <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-rose-500" />
                 <span>{error}</span>
               </div>
@@ -293,7 +313,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full px-6 py-3 bg-gradient-brand text-zinc-955 font-black uppercase tracking-wider text-[10px] rounded-lg transition flex items-center justify-center gap-2 cursor-pointer shadow-md border-none disabled:opacity-60 min-h-[42px]"
+              className="w-full px-6 py-3 min-h-[48px] bg-gradient-brand text-zinc-955 font-black uppercase tracking-wider text-[11px] rounded-lg transition flex items-center justify-center gap-2 cursor-pointer shadow-md border-none disabled:opacity-60"
             >
               {isLoading ? (
                 <div className="flex items-center gap-2">
@@ -313,7 +333,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
             <button
               type="button"
               onClick={() => switchMode(mode === 'login' ? 'register' : 'login')}
-              className="text-[10px] font-bold text-brand-dark hover:underline bg-transparent border-none cursor-pointer"
+              className="text-[11px] font-bold text-brand-dark hover:underline bg-transparent border-none cursor-pointer py-2 min-h-[36px]"
             >
               {mode === 'login'
                 ? "Don't have an account? Register for free →"
@@ -321,16 +341,16 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
             </button>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-3 pt-3 border-t border-zinc-100">
-            <span className="flex items-center gap-1 text-[8.5px] text-zinc-400 font-bold uppercase tracking-wide">
+          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 pt-3 border-t border-zinc-100">
+            <span className="flex items-center gap-1 text-[10px] text-zinc-500 font-bold uppercase tracking-wide">
               <Lock className="w-3 h-3" /> SSL Encrypted
             </span>
-            <span className="text-zinc-200 select-none">|</span>
-            <span className="flex items-center gap-1 text-[8.5px] text-zinc-400 font-bold uppercase tracking-wide">
+            <span className="text-zinc-200 select-none" aria-hidden="true">|</span>
+            <span className="flex items-center gap-1 text-[10px] text-zinc-500 font-bold uppercase tracking-wide">
               <CheckCircle className="w-3 h-3" /> No spam
             </span>
-            <span className="text-zinc-200 select-none">|</span>
-            <span className="flex items-center gap-1 text-[8.5px] text-zinc-400 font-bold uppercase tracking-wide">
+            <span className="text-zinc-200 select-none" aria-hidden="true">|</span>
+            <span className="flex items-center gap-1 text-[10px] text-zinc-500 font-bold uppercase tracking-wide">
               <Sparkles className="w-3 h-3" /> Instant
             </span>
           </div>

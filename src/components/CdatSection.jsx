@@ -85,8 +85,9 @@ export default function CdatSection({ setView }) {
             </div>
 
             <button
+              type="button"
               onClick={() => window.spaNavigate('/sample-test')}
-              className="px-6 py-3.5 bg-zinc-900 hover:bg-zinc-800 text-white font-bold text-xs uppercase tracking-widest rounded-lg transition cursor-pointer shadow-sm text-center shrink-0 w-full md:w-auto"
+              className="min-h-[48px] px-6 py-3.5 bg-zinc-900 hover:bg-zinc-800 text-white font-bold text-xs uppercase tracking-widest rounded-lg transition cursor-pointer shadow-sm text-center shrink-0 w-full md:w-auto"
             >
               Sample Test
             </button>
@@ -114,30 +115,36 @@ export default function CdatSection({ setView }) {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                   <div>
+                    <label htmlFor="cdat-name" className="sr-only">Full Name</label>
                     <input
+                      id="cdat-name"
                       type="text"
                       placeholder="Full Name"
                       value={groupRegName}
                       onChange={(e) => setGroupRegName(e.target.value)}
-                      className="w-full px-4 py-3 rounded-lg bg-white border border-zinc-200 text-zinc-900 text-xs font-semibold placeholder-zinc-400 outline-none focus:border-brand transition"
+                      className="w-full px-4 py-3 min-h-[44px] rounded-lg bg-white border border-zinc-200 text-zinc-900 text-xs font-semibold placeholder-zinc-400 outline-none focus:border-brand transition"
                     />
                   </div>
                   <div>
+                    <label htmlFor="cdat-phone" className="sr-only">Phone Number</label>
                     <input
+                      id="cdat-phone"
                       type="tel"
                       placeholder="Phone Number"
                       value={groupRegPhone}
                       onChange={(e) => setGroupRegPhone(e.target.value)}
-                      className="w-full px-4 py-3 rounded-lg bg-white border border-zinc-200 text-zinc-900 text-xs font-semibold placeholder-zinc-400 outline-none focus:border-brand transition"
+                      className="w-full px-4 py-3 min-h-[44px] rounded-lg bg-white border border-zinc-200 text-zinc-900 text-xs font-semibold placeholder-zinc-400 outline-none focus:border-brand transition"
                     />
                   </div>
                   <div className="sm:col-span-2">
+                    <label htmlFor="cdat-email" className="sr-only">Email Address</label>
                     <input
+                      id="cdat-email"
                       type="email"
                       placeholder="Email Address"
                       value={groupRegEmail}
                       onChange={(e) => setGroupRegEmail(e.target.value)}
-                      className="w-full px-4 py-3 rounded-lg bg-white border border-zinc-200 text-zinc-900 text-xs font-semibold placeholder-zinc-400 outline-none focus:border-brand transition"
+                      className="w-full px-4 py-3 min-h-[44px] rounded-lg bg-white border border-zinc-200 text-zinc-900 text-xs font-semibold placeholder-zinc-400 outline-none focus:border-brand transition"
                     />
                   </div>
                 </div>
@@ -146,7 +153,7 @@ export default function CdatSection({ setView }) {
                   <div className="pt-1">
                     <button
                       type="submit"
-                      className="px-6 py-3 bg-gradient-brand hover:opacity-95 text-zinc-955 font-extrabold text-[10px] uppercase tracking-wider rounded-lg transition cursor-pointer shadow-sm border-none w-full sm:w-auto"
+                      className="min-h-[48px] px-6 py-3 bg-gradient-brand hover:opacity-95 text-zinc-955 font-extrabold text-[10px] uppercase tracking-wider rounded-lg transition cursor-pointer shadow-sm border-none w-full sm:w-auto"
                     >
                       Generate Group Code
                     </button>
@@ -161,7 +168,7 @@ export default function CdatSection({ setView }) {
                       <button
                         type="button"
                         onClick={copyManually}
-                        className={`flex items-center gap-1.5 px-4 py-2 border rounded-lg text-[10px] uppercase font-bold transition cursor-pointer ${copied
+                        className={`min-h-[40px] flex items-center justify-center gap-1.5 px-4 py-2 border rounded-lg text-[10px] uppercase font-bold transition cursor-pointer ${copied
                             ? 'bg-emerald-50 border-emerald-300 text-emerald-700'
                             : 'bg-white border-zinc-200 hover:border-zinc-900 text-zinc-900'
                           }`}
@@ -182,7 +189,7 @@ export default function CdatSection({ setView }) {
                       href="https://cigicareer.com/cdat-registration/"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2 w-full px-6 py-3.5 bg-zinc-900 hover:bg-zinc-800 text-white font-extrabold text-xs uppercase tracking-widest rounded-lg transition cursor-pointer shadow-md"
+                      className="min-h-[48px] flex items-center justify-center gap-2 w-full px-6 py-3.5 bg-zinc-900 hover:bg-zinc-800 text-white font-extrabold text-xs uppercase tracking-widest rounded-lg transition cursor-pointer shadow-md"
                     >
                       <span>Proceed to CIGI Website</span>
                       <ArrowRight className="w-4 h-4" />
@@ -191,7 +198,10 @@ export default function CdatSection({ setView }) {
                 )}
 
                 {copyMessage && (
-                  <p className={`mt-2 text-[10px] font-bold uppercase tracking-wider font-mono ${copyMessage.includes('copied') || copyMessage.includes('generated') ? 'text-emerald-600' : 'text-rose-600'}`}>
+                  <p
+                    className={`mt-2 text-[11px] font-bold uppercase tracking-wider font-mono ${copyMessage.includes('copied') || copyMessage.includes('generated') ? 'text-emerald-600' : 'text-rose-600'}`}
+                    role={copyMessage.includes('Please') ? 'alert' : 'status'}
+                  >
                     {copyMessage}
                   </p>
                 )}
