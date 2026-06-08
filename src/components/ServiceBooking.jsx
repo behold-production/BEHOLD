@@ -1,9 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {
-  Globe, Calendar, Clock, User,
-  CreditCard, Bell, ArrowRight, Info, Lock,
-  CheckCircle, Copy, Check, QrCode, Ticket, Building2
-} from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import DateTimePicker from './booking/DateTimePicker';
 import BookingAuthModal from './booking/BookingAuthModal';
@@ -852,7 +847,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                 ? 'bg-brand border-brand text-zinc-900 shadow-xs ring-2 ring-brand/10 font-black'
                                 : 'bg-white border-zinc-200 text-zinc-400'
                           }`}>
-                            {isCompleted ? <Check className="w-3.5 h-3.5" /> : idx + 1}
+                            {isCompleted ? '✓' : idx + 1}
                           </div>
                           {idx < 4 && (
                             <div className={`hidden lg:block h-0.5 w-full ml-2 transition-all duration-300 ${
@@ -880,8 +875,8 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
           {bookingStep === 'success' ? (
             /* STEP 5: Success & Confirmation View */
             <div className="p-6 sm:p-10 bg-zinc-50 border border-zinc-200 rounded-xl max-w-2xl mx-auto animate-in fade-in duration-500 space-y-6 text-center">
-              <div className="w-16 h-16 bg-emerald-50 border border-emerald-200 rounded-full flex items-center justify-center mx-auto text-emerald-650 shadow-sm">
-                <CheckCircle className="w-10 h-10" />
+              <div className="w-16 h-16 bg-emerald-50 border border-emerald-200 rounded-full flex items-center justify-center mx-auto text-emerald-650 shadow-sm text-2xl font-black">
+                ✓
               </div>
               <div className="space-y-2">
                 <span className="text-[10px] bg-emerald-100 text-emerald-800 border border-emerald-200 px-3 py-1 rounded-md uppercase tracking-wider font-extrabold w-fit mx-auto block">
@@ -915,17 +910,17 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                   </div>
                   <div>
                     <span className="text-zinc-400 block font-light">Date & Time Slot</span>
-                    <span className="font-bold text-zinc-800 flex items-center gap-1">
-                      <Calendar className="w-3.5 h-3.5 text-zinc-400" /> {selectedDate}
+                    <span className="font-bold text-zinc-800 block">
+                      {selectedDate}
                     </span>
-                    <span className="text-[10px] text-zinc-500 font-mono block mt-0.5 flex items-center gap-1">
-                      <Clock className="w-3.5 h-3.5 text-zinc-400" /> {selectedTime}
+                    <span className="text-[10px] text-zinc-500 font-mono block mt-0.5">
+                      {selectedTime}
                     </span>
                   </div>
                   <div>
                     <span className="text-zinc-400 block font-light">Payment</span>
-                    <span className="font-semibold text-zinc-800 uppercase flex items-center gap-1.5">
-                      <CreditCard className="w-3.5 h-3.5 text-zinc-400" /> {paymentMethod === 'card' ? 'Card' : paymentMethod === 'upi' ? 'UPI' : 'Net Banking'}
+                    <span className="font-semibold text-zinc-800 uppercase block">
+                      {paymentMethod === 'card' ? 'Card' : paymentMethod === 'upi' ? 'UPI' : 'Net Banking'}
                     </span>
                     <span className="text-[10px] text-zinc-500 block">Amount Paid: ₹{(selectedAdvisor?.price || 1200) + Math.round((selectedAdvisor?.price || 1200) * 0.18) - appliedDiscount}</span>
                   </div>
@@ -949,19 +944,9 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                         setCopiedMeet(true);
                         setTimeout(() => setCopiedMeet(false), 2000);
                       }}
-                      className="px-4 py-2.5 min-h-[40px] bg-zinc-900 text-white text-[11px] font-bold uppercase tracking-wider rounded-lg hover:bg-zinc-800 transition cursor-pointer flex items-center justify-center gap-1.5 border-none shadow-xs whitespace-nowrap"
+                      className="px-4 py-2.5 min-h-[40px] bg-zinc-900 text-white text-[11px] font-bold uppercase tracking-wider rounded-lg hover:bg-zinc-800 transition cursor-pointer flex items-center justify-center border-none shadow-xs whitespace-nowrap"
                     >
-                      {copiedMeet ? (
-                        <>
-                          <Check className="w-3 h-3 text-emerald-400" />
-                          <span>Copied!</span>
-                        </>
-                      ) : (
-                        <>
-                          <Copy className="w-3 h-3" />
-                          <span>Copy Link</span>
-                        </>
-                      )}
+                      {copiedMeet ? 'Copied!' : 'Copy Link'}
                     </button>
                   </div>
                 )}
@@ -988,19 +973,9 @@ Status: CONFIRMED
                     setCopiedReceipt(true);
                     setTimeout(() => setCopiedReceipt(false), 2000);
                   }}
-                  className="px-6 py-3 bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 text-xs font-semibold uppercase tracking-wider rounded-lg transition cursor-pointer flex items-center gap-1.5 w-full sm:w-auto justify-center"
+                  className="px-6 py-3 bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 text-xs font-semibold uppercase tracking-wider rounded-lg transition cursor-pointer w-full sm:w-auto justify-center"
                 >
-                  {copiedReceipt ? (
-                    <>
-                      <Check className="w-4 h-4 text-emerald-500" />
-                      <span>Receipt Copied!</span>
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="w-4 h-4" />
-                      <span>Copy Receipt</span>
-                    </>
-                  )}
+                  {copiedReceipt ? 'Receipt Copied!' : 'Copy Receipt'}
                 </button>
 
                 <button
@@ -1048,40 +1023,54 @@ Status: CONFIRMED
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {/* Service Type Selection */}
                       <div className="space-y-1">
-                        <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide block">Service Type</label>
-                        <select
-                          value={bookingService}
-                          onChange={(e) => setBookingService(e.target.value)}
-                          className="w-full px-4 py-2.5 bg-white border border-zinc-200 rounded-lg text-xs font-semibold text-zinc-800 outline-none focus:border-brand focus:ring-1 focus:ring-brand transition cursor-pointer"
-                        >
-                          <option value="counselling">Psychological Counselling</option>
-                          <option value="career">Career Counselling</option>
-                        </select>
+                        <label className="text-[10px] font-bold text-zinc-550 uppercase tracking-wide block">Service Type</label>
+                        <div className="grid grid-cols-2 gap-2 w-full">
+                          {[
+                            { id: 'counselling', label: 'Psychological' },
+                            { id: 'career', label: 'Career' }
+                          ].map((s) => (
+                            <button
+                              type="button"
+                              key={s.id}
+                              onClick={() => setBookingService(s.id)}
+                              className={`px-3 py-3 text-[11px] uppercase font-black border rounded-xl transition cursor-pointer text-center min-h-[56px] leading-tight ${
+                                bookingService === s.id
+                                  ? 'bg-zinc-900 border-zinc-900 text-white shadow-xs font-black'
+                                  : 'bg-white text-zinc-600 border-zinc-200 hover:border-brand/40 hover:text-brand-dark'
+                              }`}
+                            >
+                              <span className="flex flex-col items-center">
+                                <span>{s.label}</span>
+                                <span className="text-[9px] font-normal normal-case text-zinc-400">
+                                  {s.id === 'counselling' ? 'Counselling' : 'Guidance'}
+                                </span>
+                              </span>
+                            </button>
+                          ))}
+                        </div>
                       </div>
-
                       {/* Mode of Session Select */}
                       <div className="space-y-1">
-                        <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide block">Session Mode</label>
-                        <div className="flex sm:grid sm:grid-cols-3 gap-2 overflow-x-auto snap-x snap-mandatory scrollbar-none -mx-1 px-1 sm:mx-0 sm:px-0">
+                        <label className="text-[10px] font-bold text-zinc-550 uppercase tracking-wide block">Session Mode</label>
+                        <div className="grid grid-cols-3 gap-2 w-full">
                           {[
-                            { id: 'ONLINE', label: 'Online', desc: 'Video call', icon: '📹' },
-                            { id: 'DOOR_STEP', label: 'Doorstep', desc: 'Home visit', icon: '🏠' },
-                            { id: 'OFFLINE', label: 'Offline', desc: 'At center', icon: '📍' }
+                            { id: 'ONLINE', label: 'Online', desc: 'Video call' },
+                            { id: 'DOOR_STEP', label: 'Doorstep', desc: 'Home visit' },
+                            { id: 'OFFLINE', label: 'Offline', desc: 'At center' }
                           ].map((m) => (
                             <button
                               type="button"
                               key={m.id}
                               onClick={() => setBookingMode(m.id)}
-                              className={`snap-start shrink-0 sm:shrink sm:w-auto flex sm:flex-col items-center sm:items-center gap-2 sm:gap-1 px-4 sm:px-2 py-3 sm:py-2.5 text-[11px] sm:text-[10px] uppercase font-extrabold border rounded-xl sm:rounded-lg transition cursor-pointer text-left sm:text-center min-h-[48px] sm:min-h-[44px] leading-tight ${
+                              className={`flex flex-col items-center justify-center gap-1 px-2 py-3.5 text-[10px] uppercase font-extrabold border rounded-xl transition cursor-pointer text-center min-h-[56px] leading-tight ${
                                 bookingMode === m.id
                                   ? 'bg-brand/10 text-brand-dark border-brand/30 shadow-xs font-black'
                                   : 'bg-white text-zinc-600 border-zinc-200 hover:border-brand/40 hover:text-brand-dark'
                               }`}
                             >
-                              <span className="text-base sm:text-sm shrink-0">{m.icon}</span>
-                              <span className="flex flex-col sm:items-center">
+                              <span className="flex flex-col items-center">
                                 <span>{m.label}</span>
-                                <span className="text-[9px] font-normal normal-case text-zinc-400 hidden sm:block">{m.desc}</span>
+                                <span className="text-[9px] font-normal normal-case text-zinc-400">{m.desc}</span>
                               </span>
                             </button>
                           ))}
@@ -1114,9 +1103,9 @@ Status: CONFIRMED
                         type="button"
                         disabled={!selectedDate || !selectedTime}
                         onClick={() => handleStepChange('advisor')}
-                        className="px-6 py-3 min-h-[48px] bg-zinc-900 text-white font-bold uppercase tracking-wider text-[11px] rounded-lg transition hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2 border-none shadow-xs w-full sm:w-auto"
+                        className="px-6 py-3 min-h-[48px] bg-zinc-900 text-white font-bold uppercase tracking-wider text-[11px] rounded-lg transition hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center border-none shadow-xs w-full sm:w-auto"
                       >
-                        Choose Advisor <ArrowRight className="w-4 h-4" />
+                        Choose Advisor →
                       </button>
                     </div>
                   </div>
@@ -1161,13 +1150,20 @@ Status: CONFIRMED
                               key={advisor.id}
                               onClick={() => {
                                 setSelectedAdvisor(advisor);
-                                setAdvisorConfirmed(false);
+                                setAdvisorConfirmed(true);
                                 if (errors.advisor) {
                                   setErrors(prev => ({ ...prev, advisor: null }));
+                                }
+                                if (errors.confirm) {
+                                  setErrors(prev => ({ ...prev, confirm: null }));
                                 }
                                 if (advisor.modes && advisor.modes.length > 0 && !advisor.modes.includes(bookingMode)) {
                                   setBookingMode(advisor.modes[0]);
                                 }
+                                // Auto advance to details step for smoother mobile UX flow
+                                setTimeout(() => {
+                                  handleStepChange('details');
+                                }, 300);
                               }}
                               className={`p-4 border rounded-xl cursor-pointer transition active:scale-[0.98] ${
                                 selectedAdvisor?.id === advisor.id
@@ -1266,9 +1262,9 @@ Status: CONFIRMED
                         type="button"
                         disabled={!selectedAdvisor || !advisorConfirmed}
                         onClick={() => handleStepChange('details')}
-                        className="px-5 py-3 min-h-[44px] bg-zinc-900 text-white font-bold uppercase tracking-wider text-[11px] rounded-lg transition hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-1.5 border-none shadow-xs w-full sm:w-auto"
+                        className="px-5 py-3 min-h-[44px] bg-zinc-900 text-white font-bold uppercase tracking-wider text-[11px] rounded-lg transition hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center border-none shadow-xs w-full sm:w-auto"
                       >
-                        Account Details <ArrowRight className="w-3.5 h-3.5" />
+                        Account Details →
                       </button>
                     </div>
                   </div>
@@ -1290,16 +1286,13 @@ Status: CONFIRMED
                     </div>
 
                     {user && (
-                      <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center gap-3 animate-in fade-in duration-300">
-                        <div className="w-10 h-10 rounded-full bg-emerald-100 border border-emerald-200 flex items-center justify-center shrink-0">
-                          <User className="w-5 h-5 text-emerald-600" />
-                        </div>
+                      <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center justify-between gap-3 animate-in fade-in duration-300">
                         <div className="flex-1 min-w-0">
                           <span className="text-xs font-extrabold text-emerald-800 block truncate">{user.name}</span>
                           <span className="text-[10px] text-emerald-600 font-mono truncate block">{user.email}</span>
                         </div>
-                        <span className="shrink-0 flex items-center gap-1 text-[9px] font-black uppercase tracking-wider bg-emerald-100 border border-emerald-300 text-emerald-700 px-2 py-1 rounded-lg">
-                          <CheckCircle className="w-3 h-3" /> Authenticated
+                        <span className="shrink-0 text-[9px] font-black uppercase tracking-wider bg-emerald-100 border border-emerald-300 text-emerald-700 px-2.5 py-1 rounded-lg">
+                          ✓ Authenticated
                         </span>
                       </div>
                     )}
@@ -1355,22 +1348,16 @@ Status: CONFIRMED
                     </div>
 
                     {!user && (
-                      <div className="flex gap-3 bg-zinc-50 border border-zinc-200 p-3 rounded-lg text-[10px] text-zinc-500 items-start text-left">
-                        <Lock className="w-4 h-4 text-zinc-400 shrink-0 mt-0.5" />
-                        <div>
-                          <span className="text-zinc-800 font-semibold block">Account Required to Continue</span>
-                          You'll be asked to sign in or create a free account when you click "Proceed to Payment" — your booking details are saved automatically.
-                        </div>
+                      <div className="bg-zinc-50 border border-zinc-200 p-3 rounded-lg text-[10px] text-zinc-500 text-left">
+                        <span className="text-zinc-800 font-semibold block">Account Required to Continue</span>
+                        You'll be asked to sign in or create a free account when you click "Proceed to Payment" — your booking details are saved automatically.
                       </div>
                     )}
 
                     {user && (
-                      <div className="flex gap-3 bg-zinc-50 border border-zinc-200 p-3 rounded-lg text-[10px] text-zinc-500 items-start text-left">
-                        <Bell className="w-4 h-4 text-zinc-400 shrink-0 mt-0.5" />
-                        <div>
-                          <span className="text-zinc-800 font-semibold block">Notification Reminders</span>
-                          Live session reminders will be sent to your verified email &amp; WhatsApp number.
-                        </div>
+                      <div className="bg-zinc-50 border border-zinc-200 p-3 rounded-lg text-[10px] text-zinc-500 text-left">
+                        <span className="text-zinc-800 font-semibold block">Notification Reminders</span>
+                        Live session reminders will be sent to your verified email &amp; WhatsApp number.
                       </div>
                     )}
 
@@ -1387,16 +1374,12 @@ Status: CONFIRMED
                         type="button"
                         onClick={handleProceedToPayment}
                         disabled={isSubmitting}
-                        className="px-6 py-3 min-h-[48px] bg-gradient-brand text-zinc-900 font-extrabold uppercase tracking-wider text-[11px] rounded-lg transition flex items-center justify-center gap-2 cursor-pointer shadow-md border-none disabled:opacity-50 w-full sm:w-auto"
+                        className="px-6 py-3 min-h-[48px] bg-gradient-brand text-zinc-900 font-extrabold uppercase tracking-wider text-[11px] rounded-lg transition flex items-center justify-center cursor-pointer shadow-md border-none disabled:opacity-50 w-full sm:w-auto"
                       >
                         {isSubmitting ? (
                           <div className="w-4 h-4 border-2 border-zinc-900/30 border-t-zinc-900 rounded-full animate-spin" />
                         ) : (
-                          <>
-                            {!user && <Lock className="w-3.5 h-3.5" />}
-                            <span>Proceed to Payment</span>
-                            <ArrowRight className="w-3.5 h-3.5" />
-                          </>
+                          <span>Proceed to Payment →</span>
                         )}
                       </button>
                     </div>
@@ -1430,8 +1413,8 @@ Status: CONFIRMED
 
                     {/* Invoice ledger (shown on payment panel directly) */}
                     <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-lg space-y-3 text-left">
-                      <h4 className="text-[10px] font-extrabold uppercase tracking-wider text-zinc-650 flex items-center gap-1.5">
-                        <Ticket className="w-3.5 h-3.5 text-zinc-500" /> Apply Promotional Coupon
+                      <h4 className="text-[10px] font-extrabold uppercase tracking-wider text-zinc-650">
+                        Apply Promotional Coupon
                       </h4>
                       <div className="flex gap-2">
                         <input
@@ -1463,13 +1446,12 @@ Status: CONFIRMED
                       {/* Payment Methods tabs selector */}
                       <div className="space-y-2 text-left">
                         <label className="text-[10px] font-bold text-zinc-550 uppercase tracking-wide block">Select Payment Method</label>
-                        <div className="flex sm:grid sm:grid-cols-3 gap-2.5 overflow-x-auto snap-x snap-mandatory scrollbar-none -mx-1 px-1 sm:mx-0 sm:px-0">
+                        <div className="grid grid-cols-3 gap-2 w-full">
                           {[
-                            { id: 'card', label: 'Card Pay', icon: CreditCard, desc: 'Credit/Debit' },
-                            { id: 'upi', label: 'UPI / QR', icon: QrCode, desc: 'Instant Pay' },
-                            { id: 'netbanking', label: 'Net Banking', icon: Building2, desc: 'Bank Portal' }
+                            { id: 'card', label: 'Card Pay', desc: 'Credit/Debit' },
+                            { id: 'upi', label: 'UPI / QR', desc: 'Instant Pay' },
+                            { id: 'netbanking', label: 'Net Banking', desc: 'Bank Portal' }
                           ].map((m) => {
-                            const Icon = m.icon;
                             return (
                               <button
                                 key={m.id}
@@ -1478,16 +1460,15 @@ Status: CONFIRMED
                                   setPaymentMethod(m.id);
                                   setErrors({});
                                 }}
-                                className={`snap-start shrink-0 sm:shink flex items-center gap-3 sm:flex-col sm:gap-1 px-4 sm:px-2 py-3 border rounded-xl sm:rounded-lg transition cursor-pointer text-left sm:text-center sm:justify-center min-h-[48px] sm:min-h-[44px] ${
+                                className={`flex flex-col items-center justify-center gap-1 p-2 border rounded-xl transition cursor-pointer text-center min-h-[56px] leading-tight ${
                                   paymentMethod === m.id
                                     ? 'bg-zinc-900 border-zinc-900 text-white font-extrabold shadow-sm'
                                     : 'bg-white text-zinc-600 border-zinc-200 hover:border-brand/40'
                                 }`}
                               >
-                                <Icon className="w-5 h-5 shrink-0" />
-                                <div className="flex flex-col sm:items-center">
+                                <div className="flex flex-col items-center">
                                   <span className="text-xs sm:text-[10px] uppercase tracking-wider font-bold">{m.label}</span>
-                                  <span className="text-[9px] text-zinc-400 hidden sm:block font-normal normal-case">{m.desc}</span>
+                                  <span className="text-[9px] text-zinc-400 font-normal normal-case">{m.desc}</span>
                                 </div>
                               </button>
                             );
@@ -1684,9 +1665,8 @@ Status: CONFIRMED
 
                         <button
                           type="submit"
-                          className="px-6 py-3 min-h-[48px] bg-gradient-brand text-zinc-900 font-black uppercase tracking-wider text-[11px] rounded-lg transition flex items-center justify-center gap-2 cursor-pointer shadow-md border-none w-full sm:w-auto"
+                          className="px-6 py-3 min-h-[48px] bg-gradient-brand text-zinc-900 font-black uppercase tracking-wider text-[11px] rounded-lg transition flex items-center justify-center cursor-pointer shadow-md border-none w-full sm:w-auto"
                         >
-                          <Lock className="w-3.5 h-3.5 shrink-0" />
                           <span className="truncate">Pay ₹{(selectedAdvisor?.price || 1200) + Math.round((selectedAdvisor?.price || 1200) * 0.18) - appliedDiscount} Securely</span>
                         </button>
                       </div>
@@ -1731,8 +1711,7 @@ Status: CONFIRMED
                   {/* Service type & Mode */}
                   <div>
                     <span className="text-[9.5px] text-zinc-400 uppercase tracking-wide block font-semibold mb-0.5">Service & Mode</span>
-                    <span className="font-bold text-zinc-800 flex items-center gap-1.5 text-left">
-                      <Globe className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
+                    <span className="font-bold text-zinc-800 block text-left">
                       {bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Counselling'}
                     </span>
                     <span className="text-[10px] text-zinc-500 font-semibold uppercase block mt-0.5 bg-white border border-zinc-150 rounded px-2 py-0.5 w-fit">
@@ -1745,12 +1724,10 @@ Status: CONFIRMED
                     <span className="text-[9.5px] text-zinc-400 uppercase tracking-wide block font-semibold mb-0.5">Date & Time</span>
                     {selectedDate && selectedTime ? (
                       <div className="space-y-1 bg-white border border-zinc-150 p-2 rounded-lg text-left">
-                        <span className="font-bold text-zinc-800 flex items-center gap-1.5">
-                          <Calendar className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
+                        <span className="font-bold text-zinc-800 block">
                           {selectedDate}
                         </span>
-                        <span className="text-[10px] text-zinc-500 font-mono flex items-center gap-1.5">
-                          <Clock className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
+                        <span className="text-[10px] text-zinc-500 font-mono block">
                           {selectedTime}
                         </span>
                       </div>
@@ -1803,8 +1780,7 @@ Status: CONFIRMED
                   </div>
 
                   {/* Security badge */}
-                  <div className="pt-4 border-t border-zinc-200 flex items-center justify-center gap-1.5 text-[9px] font-bold text-zinc-400 uppercase text-center w-full">
-                    <Lock className="w-3.5 h-3.5 text-zinc-350" />
+                  <div className="pt-4 border-t border-zinc-200 text-[9px] font-bold text-zinc-400 uppercase text-center w-full">
                     <span>SSL Secure Checkout</span>
                   </div>
 

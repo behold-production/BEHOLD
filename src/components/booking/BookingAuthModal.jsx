@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { X, Mail, Lock, User, ArrowRight, AlertCircle, CheckCircle, Zap, Phone, UserPlus } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -149,21 +148,14 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-3 right-3 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 text-zinc-500 hover:text-zinc-900 transition cursor-pointer"
+          className="absolute top-3 right-3 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 text-zinc-500 hover:text-zinc-900 transition cursor-pointer font-bold text-base"
           aria-label="Close sign in dialog"
         >
-          <X className="w-4 h-4" />
+          ✕
         </button>
 
-        <div className="p-6 sm:p-8 space-y-5">
-          <div className="flex items-center gap-3 pr-10">
-            <div className="w-11 h-11 rounded-xl bg-zinc-900 flex items-center justify-center shrink-0">
-              {mode === 'login' ? (
-                <Lock className="w-5 h-5 text-brand" />
-              ) : (
-                <UserPlus className="w-5 h-5 text-brand" />
-              )}
-            </div>
+        <div className="p-5 sm:p-8 space-y-4">
+          <div className="flex items-center gap-3 pr-10 text-left font-sans">
             <div className="min-w-0">
               <h3 id="booking-auth-modal-title" className="text-base sm:text-lg font-black uppercase tracking-wide text-zinc-900 leading-tight">
                 {mode === 'login' ? 'Sign In to Continue' : 'Create Your Account'}
@@ -206,39 +198,33 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
               <>
                 <div className="space-y-1.5 text-left">
                   <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide block">Full Name</label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-400" />
-                    <input
-                      type="text"
-                      name="name"
-                      value={form.name}
-                      onChange={handleChange}
-                      placeholder="Your full legal name"
-                      autoComplete="name"
-                      className={`w-full pl-9 pr-3 py-2.5 min-h-[44px] bg-zinc-50 border rounded-lg text-xs font-medium text-zinc-850 outline-none focus:bg-white transition ${
-                        fieldErrors.name ? 'border-rose-300 focus:border-rose-400' : 'border-zinc-200 focus:border-brand'
-                      }`}
-                    />
-                  </div>
+                  <input
+                    type="text"
+                    name="name"
+                    value={form.name}
+                    onChange={handleChange}
+                    placeholder="Your full legal name"
+                    autoComplete="name"
+                    className={`w-full px-3.5 py-2.5 min-h-[44px] bg-zinc-50 border rounded-lg text-xs font-medium text-zinc-850 outline-none focus:bg-white transition ${
+                      fieldErrors.name ? 'border-rose-300 focus:border-rose-400' : 'border-zinc-200 focus:border-brand'
+                    }`}
+                  />
                   {fieldErrors.name && <p className="text-[11px] text-rose-500 font-bold">{fieldErrors.name}</p>}
                 </div>
 
                 <div className="space-y-1.5 text-left">
                   <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide block">Mobile / WhatsApp</label>
-                  <div className="relative">
-                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-400" />
-                    <input
-                      type="tel"
-                      name="phone"
-                      value={form.phone}
-                      onChange={handleChange}
-                      placeholder="e.g. 9876543210"
-                      autoComplete="tel"
-                      className={`w-full pl-9 pr-3 py-2.5 min-h-[44px] bg-zinc-50 border rounded-lg text-xs font-medium text-zinc-850 outline-none focus:bg-white transition ${
-                        fieldErrors.phone ? 'border-rose-300 focus:border-rose-400' : 'border-zinc-200 focus:border-brand'
-                      }`}
-                    />
-                  </div>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={form.phone}
+                    onChange={handleChange}
+                    placeholder="e.g. 9876543210"
+                    autoComplete="tel"
+                    className={`w-full px-3.5 py-2.5 min-h-[44px] bg-zinc-50 border rounded-lg text-xs font-medium text-zinc-850 outline-none focus:bg-white transition ${
+                      fieldErrors.phone ? 'border-rose-300 focus:border-rose-400' : 'border-zinc-200 focus:border-brand'
+                    }`}
+                  />
                   {fieldErrors.phone && <p className="text-[11px] text-rose-500 font-bold">{fieldErrors.phone}</p>}
                 </div>
               </>
@@ -246,66 +232,56 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
 
             <div className="space-y-1.5 text-left">
               <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide block">Email Address</label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-400" />
-                <input
-                  type="email"
-                  name="email"
-                  value={form.email}
-                  onChange={handleChange}
-                  placeholder="you@example.com"
-                  autoComplete="email"
-                  className={`w-full pl-9 pr-3 py-2.5 min-h-[44px] bg-zinc-50 border rounded-lg text-xs font-medium text-zinc-850 outline-none focus:bg-white transition ${
-                    fieldErrors.email ? 'border-rose-300 focus:border-rose-400' : 'border-zinc-200 focus:border-brand'
-                  }`}
-                />
-              </div>
+              <input
+                type="email"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
+                placeholder="you@example.com"
+                autoComplete="email"
+                className={`w-full px-3.5 py-2.5 min-h-[44px] bg-zinc-50 border rounded-lg text-xs font-medium text-zinc-850 outline-none focus:bg-white transition ${
+                  fieldErrors.email ? 'border-rose-300 focus:border-rose-400' : 'border-zinc-200 focus:border-brand'
+                }`}
+              />
               {fieldErrors.email && <p className="text-[11px] text-rose-500 font-bold">{fieldErrors.email}</p>}
             </div>
 
             <div className="space-y-1.5 text-left">
               <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide block">Password</label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-400" />
-                <input
-                  type="password"
-                  name="password"
-                  value={form.password}
-                  onChange={handleChange}
-                  placeholder="••••••••"
-                  autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
-                  className={`w-full pl-9 pr-3 py-2.5 min-h-[44px] bg-zinc-50 border rounded-lg text-xs font-semibold text-zinc-850 outline-none focus:bg-white transition ${
-                    fieldErrors.password ? 'border-rose-300 focus:border-rose-400' : 'border-zinc-200 focus:border-brand'
-                  }`}
-                />
-              </div>
+              <input
+                type="password"
+                name="password"
+                value={form.password}
+                onChange={handleChange}
+                placeholder="••••••••"
+                autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
+                className={`w-full px-3.5 py-2.5 min-h-[44px] bg-zinc-50 border rounded-lg text-xs font-semibold text-zinc-850 outline-none focus:bg-white transition ${
+                  fieldErrors.password ? 'border-rose-300 focus:border-rose-400' : 'border-zinc-200 focus:border-brand'
+                }`}
+              />
               {fieldErrors.password && <p className="text-[11px] text-rose-500 font-bold">{fieldErrors.password}</p>}
             </div>
 
             {mode === 'register' && (
               <div className="space-y-1.5 text-left">
                 <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide block">Confirm Password</label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-400" />
-                  <input
-                    type="password"
-                    name="confirmPassword"
-                    value={form.confirmPassword}
-                    onChange={handleChange}
-                    placeholder="••••••••"
-                    autoComplete="new-password"
-                    className={`w-full pl-9 pr-3 py-2.5 min-h-[44px] bg-zinc-50 border rounded-lg text-xs font-semibold text-zinc-850 outline-none focus:bg-white transition ${
-                      fieldErrors.confirmPassword ? 'border-rose-300 focus:border-rose-400' : 'border-zinc-200 focus:border-brand'
-                    }`}
-                  />
-                </div>
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  value={form.confirmPassword}
+                  onChange={handleChange}
+                  placeholder="••••••••"
+                  autoComplete="new-password"
+                  className={`w-full px-3.5 py-2.5 min-h-[44px] bg-zinc-50 border rounded-lg text-xs font-semibold text-zinc-850 outline-none focus:bg-white transition ${
+                    fieldErrors.confirmPassword ? 'border-rose-300 focus:border-rose-400' : 'border-zinc-200 focus:border-brand'
+                  }`}
+                />
                 {fieldErrors.confirmPassword && <p className="text-[11px] text-rose-500 font-bold">{fieldErrors.confirmPassword}</p>}
               </div>
             )}
 
             {error && (
-              <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl text-[11px] font-bold flex items-start gap-2 animate-in fade-in duration-200" role="alert">
-                <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-rose-500" />
+              <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl text-[11px] font-bold animate-in fade-in duration-200 text-left" role="alert">
                 <span>{error}</span>
               </div>
             )}
@@ -313,18 +289,15 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full px-6 py-3 min-h-[48px] bg-gradient-brand text-zinc-955 font-black uppercase tracking-wider text-[11px] rounded-lg transition flex items-center justify-center gap-2 cursor-pointer shadow-md border-none disabled:opacity-60"
+              className="w-full px-6 py-3 min-h-[48px] bg-gradient-brand text-zinc-955 font-black uppercase tracking-wider text-[11px] rounded-lg transition flex items-center justify-center cursor-pointer shadow-md border-none disabled:opacity-60"
             >
               {isLoading ? (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 justify-center">
                   <div className="w-4 h-4 border-2 border-zinc-955/30 border-t-zinc-955 rounded-full animate-spin" />
                   <span>{mode === 'login' ? 'Signing in...' : 'Creating account...'}</span>
                 </div>
               ) : (
-                <>
-                  <span>{mode === 'login' ? 'Login & Continue' : 'Register & Continue'}</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </>
+                <span>{mode === 'login' ? 'Login & Continue' : 'Register & Continue'} →</span>
               )}
             </button>
           </form>
@@ -342,16 +315,16 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 pt-3 border-t border-zinc-100">
-            <span className="flex items-center gap-1 text-[10px] text-zinc-500 font-bold uppercase tracking-wide">
-              <Lock className="w-3 h-3" /> SSL Encrypted
+            <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-wide">
+              SSL Encrypted
             </span>
             <span className="text-zinc-200 select-none" aria-hidden="true">|</span>
-            <span className="flex items-center gap-1 text-[10px] text-zinc-500 font-bold uppercase tracking-wide">
-              <CheckCircle className="w-3 h-3" /> No spam
+            <span className="text-[10px] text-zinc-550 font-bold uppercase tracking-wide">
+              No spam
             </span>
             <span className="text-zinc-200 select-none" aria-hidden="true">|</span>
-            <span className="flex items-center gap-1 text-[10px] text-zinc-500 font-bold uppercase tracking-wide">
-              <Zap className="w-3 h-3" /> Instant
+            <span className="text-[10px] text-zinc-550 font-bold uppercase tracking-wide">
+              Instant
             </span>
           </div>
         </div>

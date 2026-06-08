@@ -15,11 +15,11 @@ const INITIAL_STATE = {
 };
 
 const TABS = [
-  { id: 'overview', label: 'Overview', short: 'Home', icon: LayoutDashboard, accent: 'from-brand to-brand-accent' },
-  { id: 'details', label: 'My Profile', short: 'Profile', icon: User, accent: 'from-indigo-500 to-purple-500' },
-  { id: 'booked', label: 'Upcoming', short: 'Upcoming', icon: Calendar, accent: 'from-amber-500 to-orange-500' },
-  { id: 'completed', label: 'Timeline', short: 'Timeline', icon: History, accent: 'from-emerald-500 to-teal-500' },
-  { id: 'results', label: 'CDAT Results', short: 'Results', icon: BarChart3, accent: 'from-rose-500 to-pink-500' }
+  { id: 'overview', label: 'Overview', short: 'Home', icon: LayoutDashboard },
+  { id: 'details', label: 'My Profile', short: 'Profile', icon: User },
+  { id: 'booked', label: 'Upcoming', short: 'Upcoming', icon: Calendar },
+  { id: 'completed', label: 'Timeline', short: 'Timeline', icon: History },
+  { id: 'results', label: 'CDAT Results', short: 'Results', icon: BarChart3 },
 ];
 
 const CAREER_SUGGESTIONS = {
@@ -29,20 +29,7 @@ const CAREER_SUGGESTIONS = {
   'Spatial Reasoning': ['Architecture', 'Graphic Design', 'UI/UX', 'Game Design'],
   'Mechanical Reasoning': ['Mechanical Engineering', 'Robotics', 'Automotive', 'Aerospace'],
   'Abstract Reasoning': ['Research', 'Philosophy', 'Psychology', 'Innovation Management'],
-  'Clerical Speed': ['Administration', 'Banking', 'Government Services', 'Operations']
-};
-
-const STATUS_STYLES = {
-  emerald: { bg: 'bg-emerald-100', text: 'text-emerald-700', dot: 'bg-emerald-500' },
-  amber:   { bg: 'bg-amber-100',   text: 'text-amber-700',   dot: 'bg-amber-500' },
-  zinc:    { bg: 'bg-zinc-100',    text: 'text-zinc-600',    dot: 'bg-zinc-400' },
-  rose:    { bg: 'bg-rose-100',    text: 'text-rose-700',    dot: 'bg-rose-500' }
-};
-
-const KPI_STYLES = {
-  emerald: { bg: 'bg-emerald-100', text: 'text-emerald-700' },
-  brand:   { bg: 'bg-brand-light', text: 'text-brand-dark' },
-  amber:   { bg: 'bg-amber-100',   text: 'text-amber-700' }
+  'Clerical Speed': ['Administration', 'Banking', 'Government Services', 'Operations'],
 };
 
 function getGreeting() {
@@ -119,7 +106,7 @@ const getMeetLinkStatus = (session) => {
       const mins = Math.round(diffMinutes);
       return { status: 'LOCKED', label: mins > 60 ? `Opens in ${Math.round(mins / 60)}h` : `Opens in ${mins}m`, color: 'zinc' };
     }
-    return { status: 'EXPIRED', label: 'Session Ended', color: 'rose' };
+    return { status: 'EXPIRED', label: 'Session Ended', color: 'zinc' };
   } catch {
     return { status: 'AVAILABLE', label: 'Join Now', link: session.meetLink, color: 'emerald' };
   }
@@ -131,9 +118,7 @@ export default function StudentProfile() {
       const saved = localStorage.getItem('behold_student_profile');
       if (!saved) return INITIAL_STATE;
       return { ...INITIAL_STATE, ...JSON.parse(saved) };
-    } catch {
-      return INITIAL_STATE;
-    }
+    } catch { return INITIAL_STATE; }
   });
   const [isSaved, setIsSaved] = useState(false);
   const [errors, setErrors] = useState({});
@@ -292,116 +277,91 @@ export default function StudentProfile() {
     total: bookedSessions.length + completedSessions.length,
     completed: completedSessions.length,
     upcoming: bookedSessions.length,
-    hours: completedSessions.length
+    hours: completedSessions.length,
   };
 
-  // ─── Sub-components ──────────────────────────────────────────────
+  // ─── Hero Header ─────────────────────────────────────────────────────
 
   const HeroHeader = () => {
     const totalProgress = Math.min(100, completion + (testProfile ? 15 : 0) + (stats.completed > 0 ? 10 : 0));
     return (
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-zinc-900 via-zinc-950 to-black text-white shadow-2xl border border-zinc-800">
-        {/* Decorative gradients */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-brand/20 rounded-full blur-3xl pointer-events-none -mr-24 -mt-24" />
-        <div className="absolute bottom-0 left-0 w-72 h-72 bg-brand-accent/15 rounded-full blur-3xl pointer-events-none -ml-16 -mb-16" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(0,209,209,0.08),transparent_50%)]" />
+      <div className="bg-white border border-zinc-200 rounded-2xl shadow-sm overflow-hidden">
+        {/* Top accent strip */}
+        <div className="h-1 bg-brand w-full" />
 
-        <div className="relative z-10 p-5 sm:p-8 lg:p-10">
-          <div className="flex flex-col lg:flex-row items-center lg:items-start gap-6 lg:gap-8">
-            {/* Avatar with completion ring */}
+        <div className="p-5 sm:p-7">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5">
+            {/* Avatar */}
             <div className="relative shrink-0">
-              <div className="relative w-24 h-24 sm:w-28 sm:h-28">
-                <svg className="absolute inset-0 -rotate-90 w-full h-full" viewBox="0 0 100 100">
-                  <circle cx="50" cy="50" r="46" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="4" />
-                  <circle
-                    cx="50" cy="50" r="46" fill="none"
-                    stroke="url(#avatarGrad)"
-                    strokeWidth="4"
-                    strokeLinecap="round"
-                    strokeDasharray={`${2 * Math.PI * 46}`}
-                    strokeDashoffset={`${2 * Math.PI * 46 * (1 - totalProgress / 100)}`}
-                    className="transition-all duration-700"
-                  />
-                  <defs>
-                    <linearGradient id="avatarGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#00D1D1" />
-                      <stop offset="100%" stopColor="#0ea5e9" />
-                    </linearGradient>
-                  </defs>
-                </svg>
-                <div className="absolute inset-1.5 rounded-full bg-gradient-to-br from-brand to-brand-accent flex items-center justify-center text-zinc-950 font-black text-2xl sm:text-3xl shadow-inner">
-                  {getInitials(profile.name, user?.name)}
-                </div>
-                <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-emerald-500 border-4 border-zinc-950 flex items-center justify-center shadow-lg">
-                  <Check className="w-3 h-3 text-white" strokeWidth={3} />
-                </div>
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-zinc-100 border border-zinc-200 flex items-center justify-center text-zinc-700 font-black text-xl sm:text-2xl">
+                {getInitials(profile.name, user?.name)}
+              </div>
+              <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center">
+                <Check className="w-2.5 h-2.5 text-white" strokeWidth={3} />
               </div>
             </div>
 
-            {/* Name & meta */}
-            <div className="flex-1 text-center lg:text-left min-w-0">
-              <p className="text-[11px] sm:text-xs font-bold text-brand-light tracking-widest uppercase mb-1.5 flex items-center gap-2 justify-center lg:justify-start">
-                <Sun className="w-3.5 h-3.5" /> {greeting}
+            {/* Info */}
+            <div className="flex-1 text-center sm:text-left min-w-0">
+              <p className="text-xs text-zinc-400 font-medium mb-0.5 flex items-center gap-1.5 justify-center sm:justify-start">
+                <Sun className="w-3 h-3" /> {greeting}
               </p>
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-header font-black tracking-tight uppercase leading-tight">
+              <h1 className="text-xl sm:text-2xl font-bold text-zinc-900 tracking-tight">
                 {displayName}
               </h1>
-              <div className="mt-2 flex flex-wrap items-center gap-2 justify-center lg:justify-start text-xs text-zinc-400">
+              <div className="mt-1.5 flex flex-wrap items-center gap-2 justify-center sm:justify-start text-xs text-zinc-500">
                 {profile.grade && (
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/5 border border-white/10">
-                    <GraduationCap className="w-3.5 h-3.5 text-brand" /> {profile.grade}
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-600">
+                    <GraduationCap className="w-3 h-3" /> {profile.grade}
                   </span>
                 )}
                 {profile.schoolName && (
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/5 border border-white/10">
-                    <BookOpen className="w-3.5 h-3.5 text-brand" />
-                    <span className="truncate max-w-[200px]">{profile.schoolName}</span>
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-600 max-w-[180px] truncate">
+                    <BookOpen className="w-3 h-3 shrink-0" />
+                    <span className="truncate">{profile.schoolName}</span>
                   </span>
                 )}
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-brand/15 border border-brand/30 text-brand">
-                  <Shield className="w-3.5 h-3.5" /> Verified Student
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-600">
+                  <Shield className="w-3 h-3" /> Verified
                 </span>
               </div>
-              <div className="mt-4 flex flex-wrap items-center gap-3.5 justify-center lg:justify-start text-[11px] sm:text-xs text-zinc-400">
-                <span className="flex items-center gap-1.5 truncate">
-                  <Mail className="w-3.5 h-3.5 text-brand shrink-0" />
-                  <span className="truncate max-w-[200px]">{profile.email || user?.email || 'Add email'}</span>
+              <div className="mt-2 flex flex-wrap items-center gap-3 justify-center sm:justify-start text-xs text-zinc-500">
+                <span className="flex items-center gap-1 truncate">
+                  <Mail className="w-3 h-3 shrink-0" />
+                  <span className="truncate max-w-[180px]">{profile.email || user?.email || 'Add email'}</span>
                 </span>
                 {profile.phone && (
-                  <span className="flex items-center gap-1.5">
-                    <Phone className="w-3.5 h-3.5 text-brand" /> {profile.phone}
+                  <span className="flex items-center gap-1">
+                    <Phone className="w-3 h-3" /> {profile.phone}
                   </span>
                 )}
               </div>
-              {/* Profile completion bar */}
-              <div className="mt-4 max-w-md mx-auto lg:mx-0">
-                <div className="flex justify-between items-center mb-1.5">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Profile completion</span>
-                  <span className="text-xs font-black text-brand">{totalProgress}%</span>
+
+              {/* Profile progress */}
+              <div className="mt-3 max-w-xs">
+                <div className="flex justify-between items-center mb-1">
+                  <span className="text-[10px] text-zinc-400 font-medium uppercase tracking-wider">Profile completion</span>
+                  <span className="text-[10px] font-semibold text-zinc-600">{totalProgress}%</span>
                 </div>
-                <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                <div className="h-1 w-full bg-zinc-100 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-brand to-brand-accent rounded-full transition-all duration-700 shadow-[0_0_12px_rgba(0,209,209,0.5)]"
+                    className="h-full bg-brand rounded-full transition-all duration-700"
                     style={{ width: `${totalProgress}%` }}
                   />
                 </div>
               </div>
             </div>
 
-            {/* Stat tiles */}
-            <div className="grid grid-cols-3 gap-2 sm:gap-3 w-full lg:w-auto lg:max-w-xs shrink-0">
+            {/* Stats */}
+            <div className="flex sm:flex-col gap-3 shrink-0">
               {[
-                { icon: CalendarDays, label: 'Upcoming', value: stats.upcoming, color: 'text-amber-400' },
-                { icon: CheckCircle2, label: 'Completed', value: stats.completed, color: 'text-emerald-400' },
-                { icon: Clock, label: 'Hours', value: `${stats.hours}h`, color: 'text-brand-light' }
+                { label: 'Upcoming', value: stats.upcoming },
+                { label: 'Completed', value: stats.completed },
+                { label: 'Hours', value: `${stats.hours}h` },
               ].map((s, i) => (
-                <div
-                  key={i}
-                  className="group bg-white/5 backdrop-blur-md border border-white/10 hover:border-brand/40 p-3 sm:p-4 rounded-2xl flex flex-col items-center justify-center text-center transition-all duration-300 hover:bg-white/10 hover:-translate-y-0.5"
-                >
-                  <s.icon className={`w-4 h-4 ${s.color} mb-1.5 group-hover:scale-110 transition-transform`} />
-                  <span className="text-base sm:text-xl font-black text-white">{s.value}</span>
-                  <span className="text-[9px] sm:text-[10px] text-zinc-400 font-bold uppercase tracking-wider mt-0.5">{s.label}</span>
+                <div key={i} className="text-center px-4 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl min-w-[72px]">
+                  <p className="text-base font-bold text-zinc-900">{s.value}</p>
+                  <p className="text-[10px] text-zinc-500 font-medium uppercase tracking-wider">{s.label}</p>
                 </div>
               ))}
             </div>
@@ -411,88 +371,84 @@ export default function StudentProfile() {
     );
   };
 
+  // ─── Sidebar Nav ─────────────────────────────────────────────────────
+
   const SidebarNav = () => (
     <>
       {/* Desktop sidebar */}
-      <nav className="hidden lg:flex flex-col gap-1.5 p-2 bg-white border border-zinc-200 rounded-2xl shadow-sm sticky top-24">
+      <nav className="hidden lg:flex flex-col gap-0.5 p-1.5 bg-white border border-zinc-200 rounded-xl shadow-sm sticky top-24">
         {TABS.map(tab => {
           const Icon = tab.icon;
           const isActive = currentSection === tab.id;
           const badge =
             tab.id === 'booked' ? bookedSessions.length :
-            tab.id === 'completed' ? completedSessions.length :
-            tab.id === 'results' && !testProfile ? '!' : null;
+              tab.id === 'completed' ? completedSessions.length :
+                tab.id === 'results' && !testProfile ? '!' : null;
           return (
             <button
               key={tab.id}
               type="button"
               onClick={() => handleSectionChange(tab.id)}
-              className={`relative flex items-center gap-3 px-3.5 min-h-[48px] rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-200 group cursor-pointer ${
-                isActive
-                  ? `bg-gradient-to-r ${tab.accent} text-white shadow-md`
-                  : 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900'
-              }`}
+              className={`relative flex items-center gap-2.5 px-3 min-h-[44px] rounded-lg text-sm font-medium transition-all duration-150 group cursor-pointer ${isActive
+                ? 'bg-zinc-900 text-white'
+                : 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900'
+                }`}
             >
-              <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-zinc-500 group-hover:text-brand'}`} />
+              <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-zinc-400 group-hover:text-zinc-600'}`} />
               <span className="flex-1 text-left">{tab.label}</span>
               {badge !== null && badge !== 0 && (
-                <span className={`text-[10px] font-black px-1.5 min-w-[20px] h-5 rounded-full flex items-center justify-center ${
-                  isActive
-                    ? 'bg-white/20 text-white'
-                    : tab.id === 'results' && !testProfile
-                      ? 'bg-amber-100 text-amber-700'
-                      : 'bg-brand-light text-brand-dark'
-                }`}>
+                <span className={`text-[10px] font-semibold px-1.5 min-w-[20px] h-5 rounded-full flex items-center justify-center ${isActive
+                  ? 'bg-white/20 text-white'
+                  : tab.id === 'results' && !testProfile
+                    ? 'bg-amber-100 text-amber-700'
+                    : 'bg-zinc-100 text-zinc-600'
+                  }`}>
                   {badge}
                 </span>
               )}
-              {isActive && <ChevronRight className="w-4 h-4 text-white/80" />}
             </button>
           );
         })}
 
-        <div className="mt-3 p-3 bg-gradient-to-br from-brand-light/50 to-brand-accent/10 border border-brand/20 rounded-xl">
-          <div className="flex items-center gap-2 mb-1.5">
-            <div className="w-7 h-7 rounded-lg bg-brand/20 flex items-center justify-center">
-              <Bell className="w-3.5 h-3.5 text-brand-dark" />
-            </div>
-            <span className="text-[10px] font-black uppercase tracking-wider text-zinc-800">Need help?</span>
+        <div className="mt-2 mx-1 p-3 bg-zinc-50 border border-zinc-200 rounded-lg">
+          <div className="flex items-center gap-2 mb-1">
+            <Bell className="w-3.5 h-3.5 text-zinc-400" />
+            <span className="text-xs font-semibold text-zinc-700">Need help?</span>
           </div>
-          <p className="text-[10px] text-zinc-600 leading-relaxed">
-            Your data is stored locally on your device. Reach out to your coordinator for any support.
+          <p className="text-[11px] text-zinc-500 leading-relaxed">
+            Data stored locally. Contact your coordinator for support.
           </p>
         </div>
       </nav>
 
       {/* Mobile bottom tab bar */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-zinc-200 shadow-[0_-4px_20px_rgba(0,0,0,0.06)]">
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-zinc-200">
         <div className="grid grid-cols-5 max-w-2xl mx-auto">
           {TABS.map(tab => {
             const Icon = tab.icon;
             const isActive = currentSection === tab.id;
             const badge =
               tab.id === 'booked' ? bookedSessions.length :
-              tab.id === 'completed' ? completedSessions.length : null;
+                tab.id === 'completed' ? completedSessions.length : null;
             return (
               <button
                 key={tab.id}
                 type="button"
                 onClick={() => handleSectionChange(tab.id)}
-                className={`relative flex flex-col items-center justify-center gap-1 min-h-[60px] py-2 px-1 transition-colors ${
-                  isActive ? 'text-brand-dark' : 'text-zinc-500'
-                }`}
+                className={`relative flex flex-col items-center justify-center gap-1 min-h-[60px] py-2 px-1 transition-colors ${isActive ? 'text-zinc-900' : 'text-zinc-400'
+                  }`}
               >
                 <div className="relative">
                   <Icon className="w-5 h-5" />
                   {badge !== null && badge > 0 && (
-                    <span className="absolute -top-1.5 -right-2 text-[9px] font-black px-1.5 min-w-[16px] h-4 rounded-full bg-brand text-zinc-950 flex items-center justify-center">
+                    <span className="absolute -top-1.5 -right-2 text-[9px] font-bold px-1 min-w-[14px] h-3.5 rounded-full bg-zinc-900 text-white flex items-center justify-center">
                       {badge}
                     </span>
                   )}
                 </div>
-                <span className="text-[9px] font-bold uppercase tracking-wider truncate max-w-full">{tab.short}</span>
+                <span className="text-[9px] font-medium uppercase tracking-wide truncate max-w-full">{tab.short}</span>
                 {isActive && (
-                  <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-brand rounded-full" />
+                  <span className="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-0.5 bg-zinc-900 rounded-full" />
                 )}
               </button>
             );
@@ -502,7 +458,7 @@ export default function StudentProfile() {
     </>
   );
 
-  // ─── Tab: Overview ────────────────────────────────────────────────
+  // ─── Tab: Overview ───────────────────────────────────────────────────
 
   const OverviewTab = () => {
     const [, setNow] = useState(new Date());
@@ -512,267 +468,230 @@ export default function StudentProfile() {
     }, []);
 
     return (
-      <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
-        {/* Greeting + Quick actions */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+      <div className="space-y-5">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h2 className="text-xl sm:text-2xl font-header font-black text-zinc-900 tracking-tight">
-              Welcome back, <span className="text-brand-dark">{displayName.split(' ')[0]}</span>
-            </h2>
-            <p className="text-sm text-zinc-500 mt-1">
-              {nextSession ? 'Your next session is around the corner.' : 'Ready to take the next step in your journey?'}
+            <h2 className="text-lg font-bold text-zinc-900">Overview</h2>
+            <p className="text-sm text-zinc-500 mt-0.5">
+              {nextSession ? 'Your next session is coming up.' : 'Ready to start your journey?'}
             </p>
           </div>
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={() => window.spaNavigate('/booking')}
-              className="inline-flex items-center gap-2 min-h-[44px] px-5 py-2.5 bg-gradient-to-r from-brand to-brand-accent text-zinc-950 text-xs font-black uppercase tracking-widest rounded-xl shadow-md shadow-brand/20 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all border-none"
-            >
-              <Plus className="w-4 h-4" strokeWidth={2.5} /> Book New
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={() => window.spaNavigate('/booking')}
+            className="inline-flex items-center gap-1.5 min-h-[40px] px-4 py-2 bg-zinc-900 text-white text-xs font-semibold rounded-lg hover:bg-zinc-800 transition-colors border-none"
+          >
+            <Plus className="w-3.5 h-3.5" /> Book Session
+          </button>
         </div>
 
-        {/* Next session hero card */}
+        {/* Next session card */}
         {nextSession ? (
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-zinc-900 to-zinc-800 p-5 sm:p-6 text-white">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-brand/20 rounded-full blur-3xl" />
-            <div className="absolute -bottom-12 -left-12 w-48 h-48 bg-brand-accent/20 rounded-full blur-3xl" />
-            <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-5">
-              <div className="flex items-start gap-4">
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-brand to-brand-accent text-zinc-950 flex items-center justify-center shrink-0 shadow-lg">
-                  {nextSession.mode === 'ONLINE' ? <Video className="w-6 h-6" /> : <MapPin className="w-6 h-6" />}
+          <div className="bg-zinc-900 rounded-xl p-5 text-white">
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400 mb-3 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Next Session
+            </p>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
+                  {nextSession.mode === 'ONLINE' ? <Video className="w-5 h-5 text-white" /> : <MapPin className="w-5 h-5 text-white" />}
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-brand-light mb-1 flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Next session
+                  <p className="font-semibold text-white text-base">{nextSession.advisorName}</p>
+                  <p className="text-xs text-zinc-400 mt-0.5">
+                    {nextSession.advisorRole || 'Consultation'} · {nextSession.mode === 'ONLINE' ? 'Online' : 'In-Person'}
                   </p>
-                  <h3 className="text-lg sm:text-xl font-header font-black uppercase tracking-wide leading-tight">
-                    {nextSession.advisorName}
-                  </h3>
-                  <p className="text-xs text-zinc-300 mt-1">
-                    {nextSession.advisorRole || 'Consultation'} • {nextSession.mode === 'ONLINE' ? 'Online' : 'In-Person'}
-                  </p>
-                  <div className="mt-2 flex flex-wrap items-center gap-2 text-xs">
-                    <span className="px-2.5 py-1 rounded-md bg-white/10 border border-white/15 font-bold inline-flex items-center gap-1.5">
+                  <div className="flex items-center gap-2 mt-2 text-xs text-zinc-400">
+                    <span className="flex items-center gap-1">
                       <Calendar className="w-3.5 h-3.5" /> {nextSession.date}
                     </span>
-                    <span className="px-2.5 py-1 rounded-md bg-white/10 border border-white/15 font-bold inline-flex items-center gap-1.5">
+                    <span>·</span>
+                    <span className="flex items-center gap-1">
                       <Clock className="w-3.5 h-3.5" /> {nextSession.time}
                     </span>
                   </div>
                 </div>
               </div>
-              <div className="flex flex-col items-end gap-2 shrink-0">
+              <div className="flex items-center gap-3 shrink-0">
                 {(() => {
                   const cd = formatCountdown(nextSession.date, nextSession.time);
                   return (
-                    <>
-                      <div className="text-right">
-                        <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Starts in</p>
-                        <p className={`text-2xl sm:text-3xl font-black tabular-nums ${cd.urgent ? 'text-amber-300' : 'text-white'}`}>
-                          {cd.text}
-                        </p>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => handleSectionChange('booked')}
-                        className="min-h-[40px] px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/15 rounded-lg text-xs font-bold uppercase tracking-wider transition flex items-center gap-1.5 cursor-pointer"
-                      >
-                        Details <ArrowUpRight className="w-3.5 h-3.5" />
-                      </button>
-                    </>
+                    <div className="text-right">
+                      <p className="text-[10px] text-zinc-500 font-medium">Starts in</p>
+                      <p className={`text-xl font-bold ${cd.urgent ? 'text-amber-400' : 'text-white'}`}>{cd.text}</p>
+                    </div>
                   );
                 })()}
+                <button
+                  type="button"
+                  onClick={() => handleSectionChange('booked')}
+                  className="min-h-[36px] px-3 py-1.5 bg-white/10 hover:bg-white/15 border border-white/10 rounded-lg text-xs font-medium transition flex items-center gap-1 cursor-pointer text-white"
+                >
+                  View <ChevronRight className="w-3.5 h-3.5" />
+                </button>
               </div>
             </div>
           </div>
         ) : (
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-brand/5 via-white to-brand-accent/5 border-2 border-dashed border-brand/30 p-6 sm:p-8 text-center">
-            <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-brand to-brand-accent text-zinc-950 flex items-center justify-center mb-4 shadow-lg">
-              <CalendarDays className="w-7 h-7" />
+          <div className="bg-zinc-50 border border-dashed border-zinc-300 rounded-xl p-6 text-center">
+            <div className="w-12 h-12 mx-auto rounded-xl bg-zinc-200 flex items-center justify-center mb-3">
+              <CalendarDays className="w-6 h-6 text-zinc-500" />
             </div>
-            <h3 className="text-lg sm:text-xl font-header font-black text-zinc-900">No upcoming sessions</h3>
-            <p className="text-sm text-zinc-500 mt-1 max-w-md mx-auto">
-              Schedule a session with one of our certified professionals to start your journey.
+            <p className="text-sm font-semibold text-zinc-700">No upcoming sessions</p>
+            <p className="text-xs text-zinc-500 mt-1">
+              Schedule a session with one of our certified professionals.
             </p>
             <button
               type="button"
               onClick={() => window.spaNavigate('/booking')}
-              className="mt-4 inline-flex items-center gap-2 min-h-[48px] px-6 py-3 bg-gradient-to-r from-brand to-brand-accent text-zinc-950 text-xs font-black uppercase tracking-widest rounded-xl shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all border-none"
+              className="mt-4 inline-flex items-center gap-1.5 min-h-[40px] px-5 py-2 bg-zinc-900 text-white text-xs font-semibold rounded-lg hover:bg-zinc-800 transition-colors border-none"
             >
-              <Plus className="w-4 h-4" strokeWidth={2.5} /> Book Your First Session
+              <Plus className="w-3.5 h-3.5" /> Book a Session
             </button>
           </div>
         )}
 
-        {/* KPI cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        {/* Stats row */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[
-            { icon: Calendar, label: 'Booked', value: stats.upcoming, color: 'from-amber-400 to-orange-500', trend: 'Upcoming sessions' },
-            { icon: CheckCircle2, label: 'Completed', value: stats.completed, color: 'from-emerald-400 to-teal-500', trend: 'Lifetime sessions' },
-            { icon: BarChart3, label: 'CDAT', value: testProfile ? 'Done' : 'Pending', color: 'from-rose-400 to-pink-500', trend: testProfile ? 'Profile ready' : 'Not taken yet' },
-            { icon: Trophy, label: 'Hours', value: `${stats.hours}h`, color: 'from-indigo-400 to-purple-500', trend: 'Coaching time' }
+            { icon: Calendar, label: 'Upcoming', value: stats.upcoming, sub: 'sessions' },
+            { icon: CheckCircle2, label: 'Completed', value: stats.completed, sub: 'lifetime' },
+            { icon: BarChart3, label: 'CDAT', value: testProfile ? 'Done' : 'Pending', sub: testProfile ? 'profile ready' : 'not taken' },
+            { icon: Clock, label: 'Hours', value: `${stats.hours}h`, sub: 'coached' },
           ].map((kpi, i) => {
             const Icon = kpi.icon;
             return (
-              <div
-                key={i}
-                className="group relative overflow-hidden bg-white border border-zinc-200 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300"
-              >
-                <div className={`absolute -top-8 -right-8 w-24 h-24 rounded-full bg-gradient-to-br ${kpi.color} opacity-10 group-hover:opacity-20 blur-xl transition-opacity`} />
-                <div className={`relative inline-flex w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br ${kpi.color} text-white items-center justify-center mb-3 shadow-md`}>
-                  <Icon className="w-5 h-5" />
+              <div key={i} className="bg-white border border-zinc-200 rounded-xl p-4 hover:border-zinc-300 transition-colors">
+                <div className="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center mb-2.5">
+                  <Icon className="w-4 h-4 text-zinc-600" />
                 </div>
-                <p className="text-xs text-zinc-500 font-bold uppercase tracking-wider">{kpi.label}</p>
-                <p className="text-xl sm:text-2xl font-black text-zinc-900 mt-0.5">{kpi.value}</p>
-                <p className="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider mt-1">{kpi.trend}</p>
+                <p className="text-xs text-zinc-500 font-medium">{kpi.label}</p>
+                <p className="text-xl font-bold text-zinc-900 mt-0.5">{kpi.value}</p>
+                <p className="text-[10px] text-zinc-400 mt-0.5 uppercase tracking-wider">{kpi.sub}</p>
               </div>
             );
           })}
         </div>
 
-        {/* Action cards row */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+        {/* Action cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* CDAT card */}
-          <div className="group relative overflow-hidden bg-white border border-zinc-200 rounded-2xl p-5 sm:p-6 shadow-sm hover:shadow-lg hover:border-rose-200 transition-all duration-300">
-            <div className="absolute -top-12 -right-12 w-40 h-40 bg-rose-100 rounded-full blur-2xl opacity-50 group-hover:opacity-80 transition-opacity" />
-            <div className="relative">
-              <div className="flex items-start justify-between mb-4">
-                <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${testProfile ? 'from-emerald-400 to-teal-500' : 'from-rose-400 to-pink-500'} text-white flex items-center justify-center shadow-md`}>
-                  <BarChart3 className="w-5 h-5" />
-                </div>
-                <span className={`text-[10px] px-2.5 py-1 rounded-full font-black uppercase tracking-wider ${testProfile ? 'bg-emerald-100 text-emerald-700' : 'bg-zinc-100 text-zinc-600'}`}>
-                  {testProfile ? 'Completed' : 'Not taken'}
-                </span>
+          <div className="bg-white border border-zinc-200 rounded-xl p-5 hover:border-zinc-300 transition-colors">
+            <div className="flex items-start justify-between mb-3">
+              <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center">
+                <BarChart3 className="w-5 h-5 text-zinc-600" />
               </div>
-              <h4 className="font-header font-black text-base sm:text-lg text-zinc-900 uppercase tracking-wide">Aptitude Test</h4>
-              {testProfile ? (
-                <p className="text-xs sm:text-sm text-zinc-500 mt-1">
-                  Your dominant domain is <strong className="text-zinc-900">{testProfile.dominantDomain}</strong>. Review your full profile for career insights.
-                </p>
-              ) : (
-                <p className="text-xs sm:text-sm text-zinc-500 mt-1">
-                  Map your natural strengths across 7 key domains. Takes about 15 minutes.
-                </p>
-              )}
-              <button
-                type="button"
-                onClick={() => testProfile ? handleSectionChange('results') : window.spaNavigate('/sample-test')}
-                className={`mt-4 w-full min-h-[44px] inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
-                  testProfile
-                    ? 'bg-zinc-900 hover:bg-zinc-800 text-brand'
-                    : 'bg-gradient-to-r from-rose-500 to-pink-500 hover:scale-[1.02] text-white shadow-md shadow-rose-500/20'
-                } border-none`}
-              >
-                {testProfile ? 'View Full Results' : 'Start Test Now'}
-                <ArrowUpRight className="w-3.5 h-3.5" />
-              </button>
+              <span className={`text-[10px] px-2 py-0.5 rounded-md font-semibold uppercase tracking-wider ${testProfile ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-zinc-100 text-zinc-500'
+                }`}>
+                {testProfile ? 'Completed' : 'Pending'}
+              </span>
             </div>
+            <h4 className="font-semibold text-zinc-900 text-sm">Aptitude Test</h4>
+            <p className="text-xs text-zinc-500 mt-1">
+              {testProfile
+                ? `Your dominant domain is ${testProfile.dominantDomain}.`
+                : 'Map your natural strengths across 7 key domains. ~15 minutes.'}
+            </p>
+            <button
+              type="button"
+              onClick={() => testProfile ? handleSectionChange('results') : window.spaNavigate('/sample-test')}
+              className="mt-4 w-full min-h-[40px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg text-xs font-semibold transition-colors border-none"
+            >
+              {testProfile ? 'View Results' : 'Start Test'}
+              <ArrowUpRight className="w-3.5 h-3.5" />
+            </button>
           </div>
 
-          {/* Book consult card */}
-          <div className="group relative overflow-hidden bg-white border border-zinc-200 rounded-2xl p-5 sm:p-6 shadow-sm hover:shadow-lg hover:border-amber-200 transition-all duration-300">
-            <div className="absolute -top-12 -right-12 w-40 h-40 bg-amber-100 rounded-full blur-2xl opacity-50 group-hover:opacity-80 transition-opacity" />
-            <div className="relative">
-              <div className="flex items-start justify-between mb-4">
-                <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${bookedSessions.length > 0 ? 'from-emerald-400 to-teal-500' : 'from-amber-400 to-orange-500'} text-white flex items-center justify-center shadow-md`}>
-                  <Briefcase className="w-5 h-5" />
-                </div>
-                <span className={`text-[10px] px-2.5 py-1 rounded-full font-black uppercase tracking-wider ${bookedSessions.length > 0 ? 'bg-emerald-100 text-emerald-700' : 'bg-zinc-100 text-zinc-600'}`}>
-                  {bookedSessions.length > 0 ? `${bookedSessions.length} scheduled` : 'No bookings'}
-                </span>
+          {/* Consultation card */}
+          <div className="bg-white border border-zinc-200 rounded-xl p-5 hover:border-zinc-300 transition-colors">
+            <div className="flex items-start justify-between mb-3">
+              <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center">
+                <Briefcase className="w-5 h-5 text-zinc-600" />
               </div>
-              <h4 className="font-header font-black text-base sm:text-lg text-zinc-900 uppercase tracking-wide">Expert Consultation</h4>
-              {bookedSessions.length > 0 ? (
-                <p className="text-xs sm:text-sm text-zinc-500 mt-1">
-                  Your next session is with <strong className="text-zinc-900">{bookedSessions[0].advisorName}</strong> on {bookedSessions[0].date}.
-                </p>
-              ) : (
-                <p className="text-xs sm:text-sm text-zinc-500 mt-1">
-                  Connect 1-on-1 with our certified psychologists and career counsellors.
-                </p>
-              )}
-              <button
-                type="button"
-                onClick={() => bookedSessions.length > 0 ? handleSectionChange('booked') : window.spaNavigate('/booking')}
-                className={`mt-4 w-full min-h-[44px] inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
-                  bookedSessions.length > 0
-                    ? 'bg-zinc-900 hover:bg-zinc-800 text-brand'
-                    : 'bg-gradient-to-r from-amber-500 to-orange-500 hover:scale-[1.02] text-white shadow-md shadow-amber-500/20'
-                } border-none`}
-              >
-                {bookedSessions.length > 0 ? 'View Bookings' : 'Book a Session'}
-                <ArrowUpRight className="w-3.5 h-3.5" />
-              </button>
+              <span className={`text-[10px] px-2 py-0.5 rounded-md font-semibold uppercase tracking-wider ${bookedSessions.length > 0 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-zinc-100 text-zinc-500'
+                }`}>
+                {bookedSessions.length > 0 ? `${bookedSessions.length} scheduled` : 'None'}
+              </span>
             </div>
+            <h4 className="font-semibold text-zinc-900 text-sm">Expert Consultation</h4>
+            <p className="text-xs text-zinc-500 mt-1">
+              {bookedSessions.length > 0
+                ? `Next session with ${bookedSessions[0].advisorName} on ${bookedSessions[0].date}.`
+                : 'Connect 1-on-1 with certified psychologists and career counsellors.'}
+            </p>
+            <button
+              type="button"
+              onClick={() => bookedSessions.length > 0 ? handleSectionChange('booked') : window.spaNavigate('/booking')}
+              className="mt-4 w-full min-h-[40px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg text-xs font-semibold transition-colors border-none"
+            >
+              {bookedSessions.length > 0 ? 'View Bookings' : 'Book a Session'}
+              <ArrowUpRight className="w-3.5 h-3.5" />
+            </button>
           </div>
         </div>
 
-        {/* Bottom: Timeline strip + Achievements */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5">
+        {/* Recent activity + Achievements */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           {/* Recent activity */}
-          <div className="lg:col-span-2 bg-white border border-zinc-200 rounded-2xl p-5 sm:p-6 shadow-sm">
+          <div className="lg:col-span-2 bg-white border border-zinc-200 rounded-xl p-5">
             <div className="flex items-center justify-between mb-4">
-              <h4 className="font-header font-black text-sm sm:text-base uppercase tracking-wide text-zinc-900 flex items-center gap-2">
-                <Activity className="w-4 h-4 text-brand" /> Recent Activity
+              <h4 className="text-sm font-semibold text-zinc-900 flex items-center gap-2">
+                <Activity className="w-4 h-4 text-zinc-400" /> Recent Activity
               </h4>
               <button
                 type="button"
                 onClick={() => handleSectionChange('completed')}
-                className="text-[10px] font-bold uppercase tracking-widest text-brand-dark hover:text-brand transition-colors cursor-pointer"
+                className="text-xs text-zinc-500 hover:text-zinc-900 transition-colors"
               >
                 View all →
               </button>
             </div>
             {completedSessions.length > 0 ? (
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {completedSessions.slice(0, 3).map((s, i) => (
-                  <div key={i} className="flex items-start gap-3 p-3 rounded-xl bg-zinc-50/50 hover:bg-zinc-50 border border-transparent hover:border-zinc-200 transition-all">
-                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 text-white flex items-center justify-center shrink-0 shadow-sm">
-                      <Award className="w-4 h-4" />
+                  <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-zinc-50 border border-zinc-100 hover:border-zinc-200 transition-colors">
+                    <div className="w-8 h-8 rounded-lg bg-white border border-zinc-200 flex items-center justify-center shrink-0">
+                      <Award className="w-4 h-4 text-zinc-500" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-bold text-zinc-900 truncate">{s.advisorName}</p>
-                      <p className="text-[11px] text-zinc-500 mt-0.5">{s.advisorRole || 'Consultation'} • {s.date}</p>
+                      <p className="text-sm font-medium text-zinc-900 truncate">{s.advisorName}</p>
+                      <p className="text-xs text-zinc-400 mt-0.5">{s.advisorRole || 'Consultation'} · {s.date}</p>
                     </div>
-                    <ChevronRight className="w-4 h-4 text-zinc-400 shrink-0 mt-2" />
+                    <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
                   </div>
                 ))}
               </div>
             ) : (
               <div className="text-center py-8 text-zinc-400">
-                <History className="w-10 h-10 mx-auto mb-2 opacity-50" />
-                <p className="text-xs font-semibold">Your completed sessions will appear here.</p>
+                <History className="w-8 h-8 mx-auto mb-2 opacity-40" />
+                <p className="text-xs">Completed sessions will appear here.</p>
               </div>
             )}
           </div>
 
           {/* Achievements */}
-          <div className="bg-gradient-to-br from-zinc-900 to-zinc-800 rounded-2xl p-5 sm:p-6 text-white shadow-md relative overflow-hidden">
-            <div className="absolute -top-8 -right-8 w-32 h-32 bg-brand/20 rounded-full blur-2xl" />
-            <h4 className="font-header font-black text-sm sm:text-base uppercase tracking-wide flex items-center gap-2 mb-4">
-              <Trophy className="w-4 h-4 text-amber-300" /> Achievements
+          <div className="bg-white border border-zinc-200 rounded-xl p-5">
+            <h4 className="text-sm font-semibold text-zinc-900 flex items-center gap-2 mb-4">
+              <Trophy className="w-4 h-4 text-zinc-400" /> Achievements
             </h4>
             <div className="space-y-2.5">
               {[
                 { icon: User, label: 'Profile Created', done: !!profile.name },
-                { icon: Mail, label: 'Email Verified', done: !!profile.email },
+                { icon: Mail, label: 'Email Added', done: !!profile.email },
                 { icon: Phone, label: 'Phone Added', done: !!profile.phone },
                 { icon: Calendar, label: 'First Booking', done: stats.total > 0 },
                 { icon: BarChart3, label: 'CDAT Completed', done: !!testProfile },
-                { icon: Award, label: '5 Sessions Done', done: stats.completed >= 5 }
+                { icon: Award, label: '5 Sessions Done', done: stats.completed >= 5 },
               ].map((a, i) => {
                 const Icon = a.icon;
                 return (
-                  <div key={i} className={`flex items-center gap-2.5 text-xs ${a.done ? 'text-white' : 'text-zinc-500'}`}>
-                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${
-                      a.done ? 'bg-gradient-to-br from-brand to-brand-accent text-zinc-950' : 'bg-white/5 border border-white/10'
-                    }`}>
-                      {a.done ? <Check className="w-3.5 h-3.5" strokeWidth={3} /> : <Icon className="w-3.5 h-3.5" />}
+                  <div key={i} className={`flex items-center gap-2.5 text-xs ${a.done ? 'text-zinc-900' : 'text-zinc-400'}`}>
+                    <div className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 ${a.done ? 'bg-zinc-900 text-white' : 'bg-zinc-100'
+                      }`}>
+                      {a.done ? <Check className="w-3 h-3" strokeWidth={2.5} /> : <Icon className="w-3 h-3" />}
                     </div>
-                    <span className="font-semibold">{a.label}</span>
+                    <span className={`font-medium ${a.done ? '' : 'line-through opacity-60'}`}>{a.label}</span>
                   </div>
                 );
               })}
@@ -783,87 +702,87 @@ export default function StudentProfile() {
     );
   };
 
-  // ─── Tab: Profile Details ─────────────────────────────────────────
+  // ─── Tab: Profile Details ────────────────────────────────────────────
 
   const ProfileDetailsTab = () => {
     const sections = [
       {
         title: 'Personal Info',
         icon: User,
+        hint: 'Used for booking and contact',
         fields: [
           { name: 'name', label: 'Full Name', type: 'text', placeholder: 'Your full name', required: true, icon: User },
           { name: 'email', label: 'Email Address', type: 'email', placeholder: 'name@email.com', required: true, icon: Mail, autoComplete: 'email' },
-          { name: 'phone', label: 'Phone Number', type: 'tel', placeholder: 'e.g. 8086664001', required: true, icon: Phone, autoComplete: 'tel' }
-        ]
+          { name: 'phone', label: 'Phone Number', type: 'tel', placeholder: 'e.g. 8086664001', required: true, icon: Phone, autoComplete: 'tel' },
+        ],
       },
       {
         title: 'Academic',
         icon: GraduationCap,
+        hint: 'Optional but recommended',
         fields: [
           { name: 'schoolName', label: 'School Name', type: 'text', placeholder: 'Name of your school', required: false, icon: BookOpen },
-          { name: 'grade', label: 'Grade (Class)', type: 'select', options: ['', 'Class 8', 'Class 9', 'Class 10', 'Class 11', 'Class 12', 'Graduate', 'Other'], required: false, icon: Hash },
-          { name: 'groupCode', label: 'Group / School Code', type: 'text', placeholder: 'e.g. BEHOLD-CDAT-2026', required: false, icon: Hash }
-        ]
+          { name: 'grade', label: 'Grade / Class', type: 'select', options: ['', 'Class 8', 'Class 9', 'Class 10', 'Class 11', 'Class 12', 'Graduate', 'Other'], required: false, icon: Hash },
+          { name: 'groupCode', label: 'Group / School Code', type: 'text', placeholder: 'e.g. BEHOLD-CDAT-2026', required: false, icon: Hash },
+        ],
       },
       {
         title: 'Guardian',
         icon: Users,
+        hint: 'For students under 18',
         fields: [
           { name: 'guardianName', label: 'Parent / Guardian Name', type: 'text', placeholder: 'Name of parent or guardian', required: true, icon: User },
-          { name: 'guardianPhone', label: 'Guardian Phone', type: 'tel', placeholder: 'Guardian mobile number', required: false, icon: Phone, autoComplete: 'tel' }
-        ]
-      }
+          { name: 'guardianPhone', label: 'Guardian Phone', type: 'tel', placeholder: 'Guardian mobile number', required: false, icon: Phone, autoComplete: 'tel' },
+        ],
+      },
     ];
 
     return (
-      <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
+      <div className="space-y-5">
+        {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
-            <h2 className="text-xl sm:text-2xl font-header font-black text-zinc-900 tracking-tight">My Profile</h2>
-            <p className="text-sm text-zinc-500 mt-1">Keep your details up to date for the best guidance experience.</p>
+            <h2 className="text-lg font-bold text-zinc-900">My Profile</h2>
+            <p className="text-sm text-zinc-500 mt-0.5">Keep your details up to date.</p>
           </div>
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-50 border border-zinc-200 text-zinc-500 text-xs font-medium">
             <Shield className="w-3.5 h-3.5" /> Stored locally on your device
           </div>
         </div>
 
-        {/* Progress card */}
-        <div className="relative overflow-hidden bg-gradient-to-r from-brand-light/40 to-brand-accent/10 border border-brand/20 rounded-2xl p-5">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
+        {/* Progress */}
+        <div className="bg-white border border-zinc-200 rounded-xl p-4">
+          <div className="flex items-center justify-between mb-2">
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-brand-dark">Profile Strength</p>
-              <p className="text-sm text-zinc-700 mt-0.5">
-                {completion < 50 ? 'A complete profile helps us serve you better.' :
-                 completion < 100 ? 'Almost there! Fill in remaining fields.' :
-                 'Your profile is complete. Great job!'}
+              <p className="text-xs font-semibold text-zinc-700">Profile Strength</p>
+              <p className="text-xs text-zinc-500 mt-0.5">
+                {completion < 50 ? 'Fill in more fields to strengthen your profile.' :
+                  completion < 100 ? 'Almost complete — just a few more fields.' :
+                    'Your profile is complete!'}
               </p>
             </div>
-            <div className="text-2xl sm:text-3xl font-black text-brand-dark tabular-nums">{completion}%</div>
+            <span className="text-xl font-bold text-zinc-900">{completion}%</span>
           </div>
-          <div className="h-2 w-full bg-white rounded-full overflow-hidden shadow-inner">
+          <div className="h-1.5 w-full bg-zinc-100 rounded-full overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-brand to-brand-accent rounded-full transition-all duration-700 shadow-[0_0_10px_rgba(0,209,209,0.4)]"
+              className="h-full bg-zinc-900 rounded-full transition-all duration-700"
               style={{ width: `${completion}%` }}
             />
           </div>
         </div>
 
-        <form onSubmit={handleSave} className="space-y-5">
+        <form onSubmit={handleSave} className="space-y-4">
           {sections.map((section, sIdx) => {
             const SIcon = section.icon;
             return (
-              <div key={sIdx} className="bg-white border border-zinc-200 rounded-2xl p-5 sm:p-6 shadow-sm hover:shadow-md transition-shadow">
-                <div className="flex items-center gap-3 mb-5">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand/10 to-brand-accent/10 text-brand-dark flex items-center justify-center">
-                    <SIcon className="w-5 h-5" />
+              <div key={sIdx} className="bg-white border border-zinc-200 rounded-xl p-5">
+                <div className="flex items-center gap-2.5 mb-4 pb-3 border-b border-zinc-100">
+                  <div className="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center">
+                    <SIcon className="w-4 h-4 text-zinc-600" />
                   </div>
                   <div>
-                    <h3 className="font-header font-black text-base text-zinc-900 uppercase tracking-wide">{section.title}</h3>
-                    <p className="text-[11px] text-zinc-500">
-                      {section.title === 'Personal Info' && 'Used for booking and contact'}
-                      {section.title === 'Academic' && 'Optional but recommended'}
-                      {section.title === 'Guardian' && 'For students under 18'}
-                    </p>
+                    <h3 className="text-sm font-semibold text-zinc-900">{section.title}</h3>
+                    <p className="text-xs text-zinc-400">{section.hint}</p>
                   </div>
                 </div>
 
@@ -874,15 +793,14 @@ export default function StudentProfile() {
                     const hasValue = !!profile[field.name];
                     return (
                       <div key={field.name} className="space-y-1.5">
-                        <label htmlFor={`sp-${field.name}`} className="text-[10px] text-zinc-500 uppercase tracking-wider font-bold block flex items-center gap-1">
+                        <label htmlFor={`sp-${field.name}`} className="text-xs text-zinc-600 font-medium block flex items-center gap-1">
                           {field.label}
                           {field.required && <span className="text-rose-500">*</span>}
                         </label>
-                        <div className="relative group">
+                        <div className="relative">
                           {FIcon && (
-                            <FIcon className={`absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${
-                              hasError ? 'text-rose-400' : hasValue ? 'text-brand' : 'text-zinc-400 group-focus-within:text-brand'
-                            }`} />
+                            <FIcon className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${hasError ? 'text-rose-400' : hasValue ? 'text-zinc-600' : 'text-zinc-300'
+                              }`} />
                           )}
                           {field.type === 'select' ? (
                             <select
@@ -890,9 +808,10 @@ export default function StudentProfile() {
                               name={field.name}
                               value={profile[field.name]}
                               onChange={handleChange}
-                              className={`w-full min-h-[48px] pl-11 pr-10 py-3 bg-white border text-sm text-zinc-900 rounded-xl outline-none transition-all appearance-none cursor-pointer ${
-                                hasError ? 'border-rose-300 focus:border-rose-500' : 'border-zinc-200 focus:border-brand focus:ring-2 focus:ring-brand/15'
-                              }`}
+                              className={`w-full min-h-[44px] pl-10 pr-9 py-2.5 bg-white border text-sm text-zinc-900 rounded-lg outline-none transition-all appearance-none cursor-pointer ${hasError
+                                ? 'border-rose-300 focus:border-rose-400 focus:ring-2 focus:ring-rose-100'
+                                : 'border-zinc-200 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-100'
+                                }`}
                             >
                               {field.options.map((o, i) => (
                                 <option key={i} value={o}>{o || 'Select ' + field.label}</option>
@@ -907,28 +826,29 @@ export default function StudentProfile() {
                               onChange={handleChange}
                               placeholder={field.placeholder}
                               autoComplete={field.autoComplete}
-                              className={`w-full min-h-[48px] pl-11 pr-10 py-3 bg-white border text-sm text-zinc-900 rounded-xl outline-none transition-all ${
-                                hasError ? 'border-rose-300 focus:border-rose-500' : 'border-zinc-200 focus:border-brand focus:ring-2 focus:ring-brand/15'
-                              }`}
+                              className={`w-full min-h-[44px] pl-10 pr-9 py-2.5 bg-white border text-sm text-zinc-900 rounded-lg outline-none transition-all ${hasError
+                                ? 'border-rose-300 focus:border-rose-400 focus:ring-2 focus:ring-rose-100'
+                                : 'border-zinc-200 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-100'
+                                }`}
                             />
                           )}
                           {hasValue && !hasError && (
-                            <div className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center">
-                              <Check className="w-3 h-3 text-emerald-600" strokeWidth={3} />
+                            <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                              <Check className="w-3.5 h-3.5 text-emerald-500" strokeWidth={2.5} />
                             </div>
                           )}
                           {hasError && (
-                            <div className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-rose-100 flex items-center justify-center">
-                              <AlertCircle className="w-3 h-3 text-rose-600" />
+                            <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                              <AlertCircle className="w-3.5 h-3.5 text-rose-400" />
                             </div>
                           )}
                         </div>
                         {hasError ? (
-                          <p className="text-[11px] text-rose-500 font-semibold flex items-center gap-1" role="alert">
+                          <p className="text-xs text-rose-500 flex items-center gap-1" role="alert">
                             <AlertCircle className="w-3 h-3" /> {errors[field.name]}
                           </p>
                         ) : (
-                          <p className="text-[10px] text-zinc-400">{field.required ? 'Required field' : 'Optional'}</p>
+                          <p className="text-[10px] text-zinc-400">{field.required ? 'Required' : 'Optional'}</p>
                         )}
                       </div>
                     );
@@ -938,78 +858,78 @@ export default function StudentProfile() {
             );
           })}
 
-          <div className="sticky bottom-16 lg:bottom-0 z-30 flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 p-4 bg-white border border-zinc-200 rounded-2xl shadow-lg">
+          <div className="sticky bottom-16 lg:bottom-0 z-30 flex items-center justify-end gap-2 p-3 bg-white border border-zinc-200 rounded-xl shadow-sm">
             <button
               type="button"
               onClick={() => setErrors({})}
-              className="min-h-[48px] px-5 py-3 border border-zinc-200 hover:border-zinc-900 rounded-xl text-xs font-bold uppercase tracking-widest text-zinc-700 transition bg-white"
+              className="min-h-[40px] px-4 py-2 border border-zinc-200 hover:border-zinc-300 rounded-lg text-xs font-medium text-zinc-600 hover:text-zinc-900 transition-colors bg-white"
             >
               Discard
             </button>
             <button
               type="submit"
-              className="min-h-[48px] inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-brand to-brand-accent text-zinc-950 text-xs font-black uppercase tracking-widest rounded-xl shadow-md shadow-brand/20 hover:shadow-lg hover:scale-[1.01] active:scale-[0.99] transition-all border-none"
+              className="min-h-[40px] inline-flex items-center gap-1.5 px-5 py-2 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-semibold rounded-lg transition-colors border-none"
             >
-              <Save className="w-4 h-4" /> Save Changes
+              <Save className="w-3.5 h-3.5" /> Save Changes
             </button>
           </div>
         </form>
 
         {isSaved && (
-          <div className="fixed bottom-24 lg:bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-5 py-3 bg-emerald-500 text-white rounded-2xl shadow-2xl shadow-emerald-500/30 animate-in slide-in-from-bottom-4" role="status">
-            <CheckCircle2 className="w-5 h-5" />
-            <span className="text-sm font-bold">Profile saved successfully!</span>
+          <div className="fixed bottom-24 lg:bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-4 py-2.5 bg-zinc-900 text-white rounded-xl shadow-xl" role="status">
+            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+            <span className="text-sm font-medium">Profile saved successfully!</span>
           </div>
         )}
       </div>
     );
   };
 
-  // ─── Tab: Booked Sessions ─────────────────────────────────────────
+  // ─── Tab: Booked Sessions ────────────────────────────────────────────
 
   const BookedSessionsTab = () => {
     const filterChips = [
       { id: 'all', label: 'All', count: bookedSessions.length },
       { id: 'online', label: 'Online', count: bookedSessions.filter(s => s.mode === 'ONLINE').length },
       { id: 'offline', label: 'In-Person', count: bookedSessions.filter(s => s.mode !== 'ONLINE').length },
-      { id: 'pending', label: 'Pending', count: bookedSessions.filter(s => s.status === 'PENDING').length }
+      { id: 'pending', label: 'Pending', count: bookedSessions.filter(s => s.status === 'PENDING').length },
     ];
 
     return (
-      <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+      <div className="space-y-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h2 className="text-xl sm:text-2xl font-header font-black text-zinc-900 tracking-tight">Upcoming Sessions</h2>
-            <p className="text-sm text-zinc-500 mt-1">{bookedSessions.length} session{bookedSessions.length !== 1 ? 's' : ''} on your calendar.</p>
+            <h2 className="text-lg font-bold text-zinc-900">Upcoming Sessions</h2>
+            <p className="text-sm text-zinc-500 mt-0.5">
+              {bookedSessions.length} session{bookedSessions.length !== 1 ? 's' : ''} scheduled.
+            </p>
           </div>
           <button
             type="button"
             onClick={() => window.spaNavigate('/booking')}
-            className="inline-flex items-center gap-2 min-h-[44px] px-5 py-2.5 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-black uppercase tracking-widest rounded-xl transition-all border-none"
+            className="inline-flex items-center gap-1.5 min-h-[40px] px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-semibold rounded-lg transition-colors border-none"
           >
-            <Plus className="w-4 h-4" strokeWidth={2.5} /> New Booking
+            <Plus className="w-3.5 h-3.5" /> New Booking
           </button>
         </div>
 
-        {/* Filter chips */}
+        {/* Filters */}
         {bookedSessions.length > 0 && (
-          <div className="flex gap-2 overflow-x-auto scrollbar-none snap-x pb-1">
+          <div className="flex gap-2 overflow-x-auto scrollbar-none pb-0.5">
             {filterChips.map(chip => (
               <button
                 key={chip.id}
                 type="button"
                 onClick={() => setSessionFilter(chip.id)}
-                className={`shrink-0 snap-start inline-flex items-center gap-1.5 px-4 min-h-[40px] rounded-full text-xs font-bold uppercase tracking-wider transition-all border ${
-                  sessionFilter === chip.id
-                    ? 'bg-zinc-900 text-white border-zinc-900 shadow-md'
-                    : 'bg-white text-zinc-600 border-zinc-200 hover:border-zinc-300 hover:text-zinc-900'
-                }`}
+                className={`shrink-0 inline-flex items-center gap-1.5 px-3 min-h-[36px] rounded-lg text-xs font-medium transition-all border ${sessionFilter === chip.id
+                  ? 'bg-zinc-900 text-white border-zinc-900'
+                  : 'bg-white text-zinc-600 border-zinc-200 hover:border-zinc-300'
+                  }`}
               >
                 {chip.label}
                 {chip.count > 0 && (
-                  <span className={`text-[9px] font-black px-1.5 min-w-[18px] h-4 rounded-full flex items-center justify-center ${
-                    sessionFilter === chip.id ? 'bg-white/20' : 'bg-zinc-100'
-                  }`}>
+                  <span className={`text-[10px] font-semibold px-1.5 min-w-[18px] h-4 rounded-full flex items-center justify-center ${sessionFilter === chip.id ? 'bg-white/20' : 'bg-zinc-100 text-zinc-600'
+                    }`}>
                     {chip.count}
                   </span>
                 )}
@@ -1022,73 +942,66 @@ export default function StudentProfile() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {filteredBooked.map((session, idx) => {
               const meetStatus = getMeetLinkStatus(session);
-              const statusKey = session.status === 'CONFIRMED' ? 'emerald' : session.status === 'PENDING' ? 'amber' : 'zinc';
-              const statusStyle = STATUS_STYLES[statusKey];
               const cd = formatCountdown(session.date, session.time);
+              const isConfirmed = session.status === 'CONFIRMED';
               return (
                 <div
                   key={session.id || idx}
-                  className={`group relative bg-white border-2 rounded-2xl p-5 sm:p-6 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden ${
-                    session.status === 'CONFIRMED' ? 'border-emerald-200 hover:border-emerald-300' : 'border-amber-200 hover:border-amber-300'
-                  }`}
+                  className="bg-white border border-zinc-200 rounded-xl p-5 hover:border-zinc-300 transition-colors"
                 >
-                  <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${
-                    session.status === 'CONFIRMED' ? 'from-emerald-400 to-teal-500' : 'from-amber-400 to-orange-500'
-                  }`} />
-
+                  {/* Status indicator */}
                   <div className="flex items-start justify-between gap-3 mb-4">
-                    <div className="flex items-center gap-3">
-                      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${
-                        session.mode === 'ONLINE' ? 'bg-gradient-to-br from-indigo-400 to-purple-500' : 'bg-gradient-to-br from-amber-400 to-orange-500'
-                      } text-white shadow-md`}>
-                        {session.mode === 'ONLINE' ? <Video className="w-5 h-5" /> : <MapPin className="w-5 h-5" />}
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center shrink-0">
+                        {session.mode === 'ONLINE' ? <Video className="w-5 h-5 text-zinc-600" /> : <MapPin className="w-5 h-5 text-zinc-600" />}
                       </div>
                       <div>
-                        <span className={`inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-black uppercase tracking-wider ${statusStyle.bg} ${statusStyle.text}`}>
-                          <span className={`w-1.5 h-1.5 rounded-full ${statusStyle.dot} ${session.status === 'CONFIRMED' ? 'animate-pulse' : ''}`} />
+                        <span className={`inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md font-semibold uppercase tracking-wider ${isConfirmed
+                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                          : 'bg-amber-50 text-amber-700 border border-amber-200'
+                          }`}>
+                          <span className={`w-1.5 h-1.5 rounded-full ${isConfirmed ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
                           {session.status}
                         </span>
-                        <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider mt-1.5">
-                          {session.service === 'counselling' ? 'Psychological' : 'Career'} • {session.mode}
+                        <p className="text-[10px] text-zinc-400 font-medium mt-1">
+                          {session.service === 'counselling' ? 'Psychological' : 'Career'} · {session.mode}
                         </p>
                       </div>
                     </div>
                     <div className="text-right shrink-0">
-                      <p className="text-[9px] font-bold uppercase tracking-widest text-zinc-400">In</p>
-                      <p className={`text-base font-black tabular-nums ${cd.urgent ? 'text-amber-600' : 'text-zinc-900'}`}>{cd.text}</p>
+                      <p className="text-[10px] text-zinc-400">In</p>
+                      <p className={`text-sm font-bold ${cd.urgent ? 'text-amber-600' : 'text-zinc-900'}`}>{cd.text}</p>
                     </div>
                   </div>
 
-                  <h4 className="font-header font-black text-base uppercase tracking-wide text-zinc-900 truncate">
-                    {session.advisorName}
-                  </h4>
-                  <p className="text-xs text-zinc-500 mt-0.5 truncate">{session.advisorRole || 'Consultation'}</p>
+                  <p className="font-semibold text-zinc-900 text-base">{session.advisorName}</p>
+                  <p className="text-xs text-zinc-500 mt-0.5">{session.advisorRole || 'Consultation'}</p>
 
-                  <div className="mt-4 grid grid-cols-2 gap-2">
-                    <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-zinc-50 border border-zinc-200/60">
-                      <Calendar className="w-3.5 h-3.5 text-zinc-500 shrink-0" />
-                      <span className="text-xs font-bold text-zinc-700 truncate">{session.date}</span>
+                  <div className="mt-3 grid grid-cols-2 gap-2">
+                    <div className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-zinc-50 border border-zinc-100 text-xs text-zinc-600">
+                      <Calendar className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
+                      <span className="font-medium truncate">{session.date}</span>
                     </div>
-                    <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-zinc-50 border border-zinc-200/60">
-                      <Clock className="w-3.5 h-3.5 text-zinc-500 shrink-0" />
-                      <span className="text-xs font-bold text-zinc-700 truncate">{session.time}</span>
+                    <div className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-zinc-50 border border-zinc-100 text-xs text-zinc-600">
+                      <Clock className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
+                      <span className="font-medium truncate">{session.time}</span>
                     </div>
                   </div>
 
                   {session.mode === 'ONLINE' && !session.meetLink && (
-                    <div className="mt-3 p-2.5 bg-amber-50 border border-amber-200 text-amber-800 text-xs rounded-lg flex items-center gap-2">
-                      <AlertCircle className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                    <div className="mt-3 p-2.5 bg-amber-50 border border-amber-200 text-amber-700 text-xs rounded-lg flex items-center gap-2">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                       <span>Meet link pending from counsellor.</span>
                     </div>
                   )}
 
-                  <div className="mt-5 pt-4 border-t border-zinc-100 flex flex-wrap gap-2">
+                  <div className="mt-4 pt-3 border-t border-zinc-100 flex flex-wrap gap-2">
                     {session.mode === 'ONLINE' && meetStatus.status === 'AVAILABLE' ? (
                       <a
                         href={meetStatus.link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex-1 min-h-[44px] inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-gradient-to-r from-brand to-brand-accent text-zinc-950 rounded-xl text-xs font-black uppercase tracking-widest shadow-md shadow-brand/20 hover:scale-[1.01] transition-transform"
+                        className="flex-1 min-h-[40px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg text-xs font-semibold transition-colors"
                       >
                         <Video className="w-3.5 h-3.5" /> Join Now
                         <ExternalLink className="w-3 h-3" />
@@ -1098,14 +1011,14 @@ export default function StudentProfile() {
                         type="button"
                         disabled
                         title={meetStatus.status === 'LOCKED' ? 'Link activates 10 min before session' : 'Session has ended'}
-                        className="flex-1 min-h-[44px] inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-zinc-100 text-zinc-500 border border-zinc-200 rounded-xl text-xs font-bold uppercase tracking-widest cursor-not-allowed"
+                        className="flex-1 min-h-[40px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-zinc-100 text-zinc-400 border border-zinc-200 rounded-lg text-xs font-medium cursor-not-allowed"
                       >
                         <Lock className="w-3.5 h-3.5" /> {meetStatus.label}
                       </button>
                     ) : (
                       <button
                         type="button"
-                        className="flex-1 min-h-[44px] inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-zinc-100 text-zinc-700 border border-zinc-200 rounded-xl text-xs font-bold uppercase tracking-widest"
+                        className="flex-1 min-h-[40px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-zinc-100 text-zinc-700 border border-zinc-200 rounded-lg text-xs font-medium hover:border-zinc-300 transition-colors"
                       >
                         <MapPin className="w-3.5 h-3.5" /> View Location
                       </button>
@@ -1113,16 +1026,14 @@ export default function StudentProfile() {
                     <button
                       type="button"
                       onClick={() => window.spaNavigate('/booking')}
-                      className="min-h-[44px] inline-flex items-center justify-center gap-1.5 px-3 py-2.5 border border-zinc-200 hover:border-zinc-900 rounded-xl text-xs font-bold uppercase tracking-widest text-zinc-700 hover:text-zinc-900 transition bg-white"
+                      className="min-h-[40px] inline-flex items-center justify-center gap-1.5 px-3 py-2 border border-zinc-200 hover:border-zinc-300 rounded-lg text-xs font-medium text-zinc-600 hover:text-zinc-900 transition-colors bg-white"
                     >
                       <RefreshCw className="w-3.5 h-3.5" /> Reschedule
                     </button>
                     <button
                       type="button"
-                      onClick={() => {
-                        if (window.confirm('Cancel this session? This cannot be undone.')) handleCancelSession(session.id);
-                      }}
-                      className="min-h-[44px] inline-flex items-center justify-center gap-1.5 px-3 py-2.5 bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-600 rounded-xl text-xs font-bold uppercase tracking-widest transition"
+                      onClick={() => { if (window.confirm('Cancel this session?')) handleCancelSession(session.id); }}
+                      className="min-h-[40px] inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-white border border-zinc-200 hover:border-rose-200 hover:bg-rose-50 text-zinc-500 hover:text-rose-600 rounded-lg text-xs font-medium transition-colors"
                     >
                       <XIcon className="w-3.5 h-3.5" /> Cancel
                     </button>
@@ -1132,22 +1043,22 @@ export default function StudentProfile() {
             })}
           </div>
         ) : (
-          <div className="relative overflow-hidden bg-gradient-to-br from-brand-light/30 to-brand-accent/10 border-2 border-dashed border-brand/30 rounded-2xl p-8 sm:p-12 text-center">
-            <div className="w-20 h-20 mx-auto rounded-3xl bg-gradient-to-br from-brand to-brand-accent text-zinc-950 flex items-center justify-center mb-4 shadow-lg">
-              <CalendarDays className="w-9 h-9" />
+          <div className="bg-zinc-50 border border-dashed border-zinc-300 rounded-xl p-8 text-center">
+            <div className="w-12 h-12 mx-auto rounded-xl bg-zinc-200 flex items-center justify-center mb-3">
+              <CalendarDays className="w-6 h-6 text-zinc-500" />
             </div>
-            <h3 className="text-lg sm:text-xl font-header font-black text-zinc-900">No sessions yet</h3>
-            <p className="text-sm text-zinc-500 mt-1 max-w-sm mx-auto">
+            <p className="text-sm font-semibold text-zinc-700">No sessions found</p>
+            <p className="text-xs text-zinc-500 mt-1">
               {sessionFilter === 'all'
-                ? 'Book a session with one of our experts to start your journey.'
-                : `No ${sessionFilter} sessions scheduled. Try a different filter.`}
+                ? 'Book a session with one of our experts.'
+                : `No ${sessionFilter} sessions scheduled.`}
             </p>
             <button
               type="button"
               onClick={() => window.spaNavigate('/booking')}
-              className="mt-5 inline-flex items-center gap-2 min-h-[48px] px-6 py-3 bg-gradient-to-r from-brand to-brand-accent text-zinc-950 text-xs font-black uppercase tracking-widest rounded-xl shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all border-none"
+              className="mt-4 inline-flex items-center gap-1.5 min-h-[40px] px-5 py-2 bg-zinc-900 text-white text-xs font-semibold rounded-lg hover:bg-zinc-800 transition-colors border-none"
             >
-              <Plus className="w-4 h-4" strokeWidth={2.5} /> Book a Session
+              <Plus className="w-3.5 h-3.5" /> Book a Session
             </button>
           </div>
         )}
@@ -1155,33 +1066,33 @@ export default function StudentProfile() {
     );
   };
 
-  // ─── Tab: Completed Timeline ──────────────────────────────────────
+  // ─── Tab: Completed Timeline ─────────────────────────────────────────
 
   const CompletedTab = () => {
-    const avgRating = 4.8; // Placeholder
     return (
-      <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
+      <div className="space-y-5">
         <div>
-          <h2 className="text-xl sm:text-2xl font-header font-black text-zinc-900 tracking-tight">Timeline & Feedback</h2>
-          <p className="text-sm text-zinc-500 mt-1">Your journey with our experts — celebrate your progress.</p>
+          <h2 className="text-lg font-bold text-zinc-900">Timeline</h2>
+          <p className="text-sm text-zinc-500 mt-0.5">Your journey with our experts.</p>
         </div>
 
-        {/* Stats summary */}
-        <div className="grid grid-cols-3 gap-3 sm:gap-4">
+        {/* Stats */}
+        <div className="grid grid-cols-3 gap-3">
           {[
-            { label: 'Total Sessions', value: completedSessions.length, icon: CheckCircle2, color: 'emerald' },
-            { label: 'Hours Coached', value: `${completedSessions.length}h`, icon: Clock, color: 'brand' },
-            { label: 'Avg. Rating', value: avgRating, icon: Star, color: 'amber', suffix: '/5' }
+            { label: 'Total Sessions', value: completedSessions.length, icon: CheckCircle2 },
+            { label: 'Hours Coached', value: `${completedSessions.length}h`, icon: Clock },
+            { label: 'Avg. Rating', value: '4.8', icon: Star, suffix: '/5' },
           ].map((s, i) => {
             const Icon = s.icon;
-            const style = KPI_STYLES[s.color] || KPI_STYLES.brand;
             return (
-              <div key={i} className="bg-white border border-zinc-200 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md transition-shadow">
-                <div className={`w-10 h-10 rounded-xl ${style.bg} ${style.text} flex items-center justify-center mb-2`}>
-                  <Icon className="w-5 h-5" />
+              <div key={i} className="bg-white border border-zinc-200 rounded-xl p-4">
+                <div className="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center mb-2">
+                  <Icon className="w-4 h-4 text-zinc-600" />
                 </div>
-                <p className="text-xl sm:text-2xl font-black text-zinc-900">{s.value}{s.suffix && <span className="text-sm text-zinc-500 font-bold">{s.suffix}</span>}</p>
-                <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider mt-0.5">{s.label}</p>
+                <p className="text-lg font-bold text-zinc-900">
+                  {s.value}{s.suffix && <span className="text-sm text-zinc-400 font-medium">{s.suffix}</span>}
+                </p>
+                <p className="text-[10px] text-zinc-500 font-medium uppercase tracking-wider mt-0.5">{s.label}</p>
               </div>
             );
           })}
@@ -1189,57 +1100,50 @@ export default function StudentProfile() {
 
         {completedSessions.length > 0 ? (
           <div className="relative">
-            <div className="absolute left-5 sm:left-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-brand via-brand-accent to-brand/30" />
-            <div className="space-y-6">
+            <div className="absolute left-4 top-0 bottom-0 w-px bg-zinc-200" />
+            <div className="space-y-4">
               {completedSessions.map((session, sIdx) => (
-                <div key={session.id || sIdx} className="relative pl-12 sm:pl-16">
-                  <div className="absolute left-0 top-3 w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-brand to-brand-accent text-zinc-950 flex items-center justify-center shadow-lg shadow-brand/30 ring-4 ring-white">
-                    <Award className="w-4 h-4 sm:w-5 sm:h-5" />
+                <div key={session.id || sIdx} className="relative pl-12">
+                  <div className="absolute left-0 top-3 w-8 h-8 rounded-lg bg-white border border-zinc-200 flex items-center justify-center shadow-sm">
+                    <Award className="w-4 h-4 text-zinc-500" />
                   </div>
-                  <div className="bg-white border border-zinc-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow">
-                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-3">
-                      <div className="min-w-0">
+                  <div className="bg-white border border-zinc-200 rounded-xl p-4 hover:border-zinc-300 transition-colors">
+                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-2">
+                      <div>
                         <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 font-black uppercase tracking-wider">
+                          <span className="text-[10px] px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold uppercase tracking-wider">
                             {session.status}
                           </span>
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-500">
-                            {session.mode} SESSION
-                          </span>
+                          <span className="text-[10px] text-zinc-400 font-medium uppercase tracking-wider">{session.mode}</span>
                           <div className="flex items-center gap-0.5">
                             {[1, 2, 3, 4, 5].map(n => (
-                              <Star key={n} className={`w-3 h-3 ${n <= 5 ? 'fill-amber-400 text-amber-400' : 'text-zinc-200'}`} />
+                              <Star key={n} className="w-3 h-3 fill-amber-400 text-amber-400" />
                             ))}
                           </div>
                         </div>
-                        <h4 className="font-header font-black text-base uppercase tracking-wide text-zinc-900">
-                          {session.advisorName}
-                        </h4>
+                        <p className="font-semibold text-zinc-900">{session.advisorName}</p>
                         <p className="text-xs text-zinc-500 mt-0.5">{session.advisorRole || 'Consultation'}</p>
                       </div>
-                      <div className="flex items-center gap-1.5 text-xs text-zinc-600 bg-zinc-50 border border-zinc-200 px-3 py-1.5 rounded-lg shrink-0 w-fit">
-                        <Clock className="w-3.5 h-3.5" />
-                        <span className="font-bold">{session.date}</span>
-                        <span className="text-zinc-400">•</span>
-                        <span className="font-semibold">{session.time}</span>
+                      <div className="flex items-center gap-1.5 text-xs text-zinc-500 bg-zinc-50 border border-zinc-200 px-2.5 py-1.5 rounded-lg shrink-0 w-fit">
+                        <Clock className="w-3.5 h-3.5 text-zinc-400" />
+                        <span className="font-medium">{session.date}</span>
+                        <span className="text-zinc-300">·</span>
+                        <span>{session.time}</span>
                       </div>
                     </div>
 
                     {session.feedback && (
-                      <div className="relative bg-gradient-to-br from-brand-light/40 to-brand-accent/10 border border-brand/15 rounded-xl p-4 mt-3">
-                        <MessageCircle className="absolute top-3 right-3 w-4 h-4 text-brand/30" />
-                        <p className="text-[10px] font-black uppercase tracking-widest text-brand-dark mb-1.5">Counsellor Feedback</p>
-                        <p className="text-sm text-zinc-700 italic leading-relaxed">"{session.feedback}"</p>
+                      <div className="mt-3 p-3 bg-zinc-50 border border-zinc-200 rounded-lg">
+                        <p className="text-[10px] font-semibold text-zinc-500 uppercase tracking-wider mb-1.5">Counsellor Feedback</p>
+                        <p className="text-xs text-zinc-600 italic leading-relaxed">"{session.feedback}"</p>
                       </div>
                     )}
 
                     <div className="mt-3 flex items-center justify-between">
-                      <span className="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider">
-                        Session #{completedSessions.length - sIdx}
-                      </span>
+                      <span className="text-[11px] text-zinc-400">Session #{completedSessions.length - sIdx}</span>
                       <button
                         type="button"
-                        className="inline-flex items-center gap-1 text-[11px] font-bold text-brand-dark hover:text-brand transition-colors"
+                        className="inline-flex items-center gap-1 text-xs font-medium text-zinc-500 hover:text-zinc-900 transition-colors"
                         title="Download certificate"
                       >
                         <Download className="w-3.5 h-3.5" /> Certificate
@@ -1251,20 +1155,18 @@ export default function StudentProfile() {
             </div>
           </div>
         ) : (
-          <div className="relative overflow-hidden bg-gradient-to-br from-emerald-50 to-teal-50 border-2 border-dashed border-emerald-200 rounded-2xl p-8 sm:p-12 text-center">
-            <div className="w-20 h-20 mx-auto rounded-3xl bg-gradient-to-br from-emerald-400 to-teal-500 text-white flex items-center justify-center mb-4 shadow-lg">
-              <Trophy className="w-9 h-9" />
+          <div className="bg-zinc-50 border border-dashed border-zinc-300 rounded-xl p-8 text-center">
+            <div className="w-12 h-12 mx-auto rounded-xl bg-zinc-200 flex items-center justify-center mb-3">
+              <Trophy className="w-6 h-6 text-zinc-500" />
             </div>
-            <h3 className="text-lg sm:text-xl font-header font-black text-zinc-900">No completed sessions yet</h3>
-            <p className="text-sm text-zinc-500 mt-1 max-w-sm mx-auto">
-              Once you finish your first session, it will appear here with the counsellor's feedback.
-            </p>
+            <p className="text-sm font-semibold text-zinc-700">No completed sessions yet</p>
+            <p className="text-xs text-zinc-500 mt-1">Finished sessions will appear here with counsellor feedback.</p>
             <button
               type="button"
               onClick={() => window.spaNavigate('/booking')}
-              className="mt-5 inline-flex items-center gap-2 min-h-[48px] px-6 py-3 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-black uppercase tracking-widest rounded-xl shadow-md transition-all border-none"
+              className="mt-4 inline-flex items-center gap-1.5 min-h-[40px] px-5 py-2 bg-zinc-900 text-white text-xs font-semibold rounded-lg hover:bg-zinc-800 transition-colors border-none"
             >
-              <Plus className="w-4 h-4" strokeWidth={2.5} /> Book First Session
+              <Plus className="w-3.5 h-3.5" /> Book First Session
             </button>
           </div>
         )}
@@ -1272,30 +1174,30 @@ export default function StudentProfile() {
     );
   };
 
-  // ─── Tab: CDAT Results ────────────────────────────────────────────
+  // ─── Tab: CDAT Results ───────────────────────────────────────────────
 
   const ResultsTab = () => {
     if (!testProfile) {
       return (
-        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
+        <div className="space-y-5">
           <div>
-            <h2 className="text-xl sm:text-2xl font-header font-black text-zinc-900 tracking-tight">CDAT Test Results</h2>
-            <p className="text-sm text-zinc-500 mt-1">Discover your dominant strengths across 7 key domains.</p>
+            <h2 className="text-lg font-bold text-zinc-900">CDAT Results</h2>
+            <p className="text-sm text-zinc-500 mt-0.5">Discover your dominant strengths across 7 key domains.</p>
           </div>
-          <div className="relative overflow-hidden bg-gradient-to-br from-rose-50 to-pink-50 border-2 border-dashed border-rose-200 rounded-2xl p-8 sm:p-12 text-center">
-            <div className="w-20 h-20 mx-auto rounded-3xl bg-gradient-to-br from-rose-400 to-pink-500 text-white flex items-center justify-center mb-4 shadow-lg">
-              <BarChart3 className="w-9 h-9" />
+          <div className="bg-zinc-50 border border-dashed border-zinc-300 rounded-xl p-8 text-center">
+            <div className="w-12 h-12 mx-auto rounded-xl bg-zinc-200 flex items-center justify-center mb-3">
+              <BarChart3 className="w-6 h-6 text-zinc-500" />
             </div>
-            <h3 className="text-lg sm:text-xl font-header font-black text-zinc-900">No test history yet</h3>
-            <p className="text-sm text-zinc-500 mt-1 max-w-sm mx-auto">
+            <p className="text-sm font-semibold text-zinc-700">No test history yet</p>
+            <p className="text-xs text-zinc-500 mt-1 max-w-sm mx-auto">
               Take the CIGI Differential Aptitude Test to unlock personalized career insights.
             </p>
             <button
               type="button"
               onClick={() => window.spaNavigate('/sample-test')}
-              className="mt-5 inline-flex items-center gap-2 min-h-[48px] px-6 py-3 bg-gradient-to-r from-rose-500 to-pink-500 text-white text-xs font-black uppercase tracking-widest rounded-xl shadow-md shadow-rose-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all border-none"
+              className="mt-4 inline-flex items-center gap-1.5 min-h-[40px] px-5 py-2 bg-zinc-900 text-white text-xs font-semibold rounded-lg hover:bg-zinc-800 transition-colors border-none"
             >
-              <Target className="w-4 h-4" /> Take CDAT Test
+              <Target className="w-3.5 h-3.5" /> Take CDAT Test
             </button>
           </div>
         </div>
@@ -1306,65 +1208,33 @@ export default function StudentProfile() {
     const topDomain = testProfile.dominantDomain;
 
     return (
-      <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
+      <div className="space-y-5">
         <div>
-          <h2 className="text-xl sm:text-2xl font-header font-black text-zinc-900 tracking-tight">Your CDAT Profile</h2>
-          <p className="text-sm text-zinc-500 mt-1">Detailed breakdown of your strengths across all domains.</p>
+          <h2 className="text-lg font-bold text-zinc-900">Your CDAT Profile</h2>
+          <p className="text-sm text-zinc-500 mt-0.5">Detailed breakdown of your strengths across all domains.</p>
         </div>
 
-        {/* Hero card with dominant domain */}
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-rose-500 via-pink-500 to-rose-600 text-white p-6 sm:p-8 shadow-xl">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-48 h-48 bg-black/10 rounded-full blur-3xl" />
-          <div className="relative grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-            <div>
-              <span className="inline-flex items-center gap-1.5 text-[10px] px-2.5 py-1 rounded-full bg-white/20 border border-white/30 text-white font-black uppercase tracking-widest mb-3">
-                <Star className="w-3 h-3" /> Primary Outcome
-              </span>
-              <p className="text-[11px] font-bold uppercase tracking-widest text-rose-100">Your Dominant Domain</p>
-              <h3 className="text-3xl sm:text-4xl font-header font-black uppercase tracking-tight mt-1 leading-tight">
-                {topDomain}
-              </h3>
-              <p className="text-sm text-rose-100 mt-3 max-w-md">
-                You scored highest in this domain. Career paths aligned with this strength tend to be a great fit.
-              </p>
+        {/* Dominant domain card */}
+        <div className="bg-zinc-900 rounded-xl p-6 text-white">
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400 mb-3 flex items-center gap-1.5">
+            <Star className="w-3 h-3 text-amber-400" /> Primary Outcome
+          </p>
+          <p className="text-xs text-zinc-400 font-medium mb-1">Your Dominant Domain</p>
+          <h3 className="text-2xl font-bold text-white">{topDomain}</h3>
+          <p className="text-sm text-zinc-400 mt-2 max-w-md">
+            You scored highest in this domain. Career paths aligned with this strength tend to be a great fit.
+          </p>
+          {scores[0] && (
+            <div className="mt-4 inline-flex items-center gap-2 px-3 py-2 bg-white/10 border border-white/10 rounded-lg text-sm font-bold">
+              Top Score: {scores[0][1]}%
             </div>
-            <div className="flex justify-center md:justify-end">
-              <div className="relative w-44 h-44 sm:w-52 sm:h-52">
-                <svg viewBox="0 0 200 200" className="w-full h-full -rotate-90">
-                  <circle cx="100" cy="100" r="80" fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth="14" />
-                  {scores.slice(0, 3).map(([key, pct], i) => {
-                    const colors = ['#ffffff', '#fecdd3', '#ffe4e6'];
-                    const offsets = [0, ...scores.slice(0, 2).map(([, p]) => p)];
-                    const cumOffset = offsets.slice(0, i).reduce((a, b) => a + b, 0);
-                    const circumference = 2 * Math.PI * 80;
-                    return (
-                      <circle
-                        key={key}
-                        cx="100" cy="100" r="80"
-                        fill="none"
-                        stroke={colors[i]}
-                        strokeWidth="14"
-                        strokeDasharray={`${(pct / 100) * circumference} ${circumference}`}
-                        strokeDashoffset={-((cumOffset / 100) * circumference)}
-                        className="transition-all duration-1000"
-                      />
-                    );
-                  })}
-                </svg>
-                <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-rose-100">Top Score</p>
-                  <p className="text-4xl font-black">{scores[0]?.[1] || 0}%</p>
-                </div>
-              </div>
-            </div>
-          </div>
+          )}
         </div>
 
-        {/* All scores */}
-        <div className="bg-white border border-zinc-200 rounded-2xl p-5 sm:p-6 shadow-sm">
-          <h4 className="font-header font-black text-sm sm:text-base uppercase tracking-wide text-zinc-900 mb-5 flex items-center gap-2">
-            <Target className="w-4 h-4 text-brand" /> Score Distribution
+        {/* Score distribution */}
+        <div className="bg-white border border-zinc-200 rounded-xl p-5">
+          <h4 className="text-sm font-semibold text-zinc-900 mb-4 flex items-center gap-2">
+            <Target className="w-4 h-4 text-zinc-400" /> Score Distribution
           </h4>
           <div className="space-y-4">
             {scores.map(([key, pct]) => {
@@ -1372,19 +1242,16 @@ export default function StudentProfile() {
               return (
                 <div key={key} className="space-y-1.5">
                   <div className="flex items-center justify-between text-sm">
-                    <span className={`font-bold flex items-center gap-1.5 ${isTop ? 'text-brand-dark' : 'text-zinc-700'}`}>
+                    <span className={`font-medium flex items-center gap-1.5 ${isTop ? 'text-zinc-900' : 'text-zinc-600'}`}>
                       {isTop && <Trophy className="w-3.5 h-3.5 text-amber-500" />}
                       {key}
                     </span>
-                    <span className={`font-black tabular-nums ${isTop ? 'text-brand-dark' : 'text-zinc-900'}`}>{pct}%</span>
+                    <span className={`font-semibold tabular-nums ${isTop ? 'text-zinc-900' : 'text-zinc-500'}`}>{pct}%</span>
                   </div>
-                  <div className="h-2.5 w-full bg-zinc-100 rounded-full overflow-hidden">
+                  <div className="h-2 w-full bg-zinc-100 rounded-full overflow-hidden">
                     <div
-                      className={`h-full rounded-full transition-all duration-1000 ${
-                        isTop
-                          ? 'bg-gradient-to-r from-brand to-brand-accent shadow-[0_0_10px_rgba(0,209,209,0.4)]'
-                          : 'bg-gradient-to-r from-zinc-300 to-zinc-400'
-                      }`}
+                      className={`h-full rounded-full transition-all duration-1000 ${isTop ? 'bg-zinc-900' : 'bg-zinc-300'
+                        }`}
                       style={{ width: `${pct}%` }}
                     />
                   </div>
@@ -1396,28 +1263,27 @@ export default function StudentProfile() {
 
         {/* Career suggestions */}
         {topDomain && CAREER_SUGGESTIONS[topDomain] && (
-          <div className="bg-gradient-to-br from-brand-light/30 to-brand-accent/10 border border-brand/20 rounded-2xl p-5 sm:p-6">
-            <h4 className="font-header font-black text-sm sm:text-base uppercase tracking-wide text-zinc-900 mb-1 flex items-center gap-2">
-              <Briefcase className="w-4 h-4 text-brand" /> Suggested Career Paths
+          <div className="bg-white border border-zinc-200 rounded-xl p-5">
+            <h4 className="text-sm font-semibold text-zinc-900 mb-1 flex items-center gap-2">
+              <Briefcase className="w-4 h-4 text-zinc-400" /> Suggested Career Paths
             </h4>
-            <p className="text-xs text-zinc-500 mb-4">Based on your top domain — explore these to find your fit.</p>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
+            <p className="text-xs text-zinc-500 mb-4">Based on your top domain.</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {CAREER_SUGGESTIONS[topDomain].map((career, i) => (
-                <div key={i} className="group bg-white border border-zinc-200 rounded-xl p-3 sm:p-4 hover:border-brand/40 hover:shadow-md transition-all cursor-pointer">
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-brand/10 to-brand-accent/10 text-brand-dark flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
-                    <Target className="w-4 h-4" />
+                <div key={i} className="group bg-zinc-50 border border-zinc-200 rounded-lg p-3 hover:border-zinc-300 transition-colors cursor-pointer">
+                  <div className="w-7 h-7 rounded-md bg-zinc-200 flex items-center justify-center mb-2">
+                    <Target className="w-3.5 h-3.5 text-zinc-600" />
                   </div>
-                  <p className="text-xs sm:text-sm font-bold text-zinc-900 leading-tight">{career}</p>
+                  <p className="text-xs font-medium text-zinc-800 leading-tight">{career}</p>
                 </div>
               ))}
             </div>
             <button
               type="button"
               onClick={() => window.spaNavigate('/booking')}
-              className="mt-5 w-full sm:w-auto inline-flex items-center justify-center gap-2 min-h-[48px] px-6 py-3 bg-gradient-to-r from-brand to-brand-accent text-zinc-950 text-xs font-black uppercase tracking-widest rounded-xl shadow-md shadow-brand/20 hover:scale-[1.01] transition-transform border-none"
+              className="mt-4 w-full sm:w-auto inline-flex items-center justify-center gap-1.5 min-h-[40px] px-5 py-2 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-semibold rounded-lg transition-colors border-none"
             >
-              <MessageCircle className="w-4 h-4" /> Discuss with a Counsellor
-              <ArrowUpRight className="w-3.5 h-3.5" />
+              <MessageCircle className="w-3.5 h-3.5" /> Discuss with a Counsellor
             </button>
           </div>
         )}
@@ -1426,7 +1292,7 @@ export default function StudentProfile() {
           <button
             type="button"
             onClick={() => window.spaNavigate('/sample-test')}
-            className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-zinc-500 hover:text-zinc-900 transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs font-medium text-zinc-500 hover:text-zinc-900 transition-colors"
           >
             <RefreshCw className="w-3.5 h-3.5" /> Retake diagnostic test
           </button>
@@ -1435,18 +1301,14 @@ export default function StudentProfile() {
     );
   };
 
-  // ─── Render ───────────────────────────────────────────────────────
+  // ─── Render ──────────────────────────────────────────────────────────
 
   return (
-    <div className="pt-5 sm:pt-20 pb-24 lg:pb-12 min-h-screen bg-gradient-to-br from-zinc-50 via-white to-brand-light/20 text-zinc-900 font-sans text-left relative overflow-x-hidden">
-      {/* Soft background glows */}
-      <div className="absolute top-1/4 -left-20 w-96 h-96 bg-brand/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-1/3 -right-20 w-96 h-96 bg-brand-accent/5 rounded-full blur-3xl pointer-events-none" />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10 space-y-6 sm:space-y-8">
+    <div className="pt-5 sm:pt-20 pb-24 lg:pb-12 min-h-screen bg-zinc-50 text-zinc-900 font-sans text-left">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-5 sm:space-y-6">
         <HeroHeader />
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
           <aside className="lg:col-span-3">
             <SidebarNav />
           </aside>
