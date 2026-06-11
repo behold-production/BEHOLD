@@ -139,7 +139,7 @@ export default function Services({ setView, onBookTherapist }) {
       {/* DUAL COUPLING ROW */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-stretch w-full">
 
-        {/* SERVICE 2: CAREER COUNSELLING */}
+        {/* SERVICE 2: CAREER MENTORING */}
         <div
           id="card-career"
           className="card-luxury card-luxury-hover p-6 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none border border-zinc-200/60 min-h-[300px] md:min-h-[360px] group rounded-lg"
@@ -148,7 +148,7 @@ export default function Services({ setView, onBookTherapist }) {
             <div className="flex justify-between items-start">
               <div className="space-y-2">
                 <span className="inline-block text-[9px] bg-zinc-900 text-white px-2.5 py-0.5 rounded-md uppercase tracking-widest font-black font-mono">
-                  Career Counselling
+                  Career Mentoring
                 </span>
                 <h3 className="text-xl md:text-2xl font-header font-black uppercase tracking-wide text-zinc-900 mt-1 group-hover:text-brand transition-colors duration-500">
                   Career Clarity & Direction
@@ -178,7 +178,7 @@ export default function Services({ setView, onBookTherapist }) {
             }}
             className="min-h-[44px] px-6 py-3 bg-white hover:bg-gradient-brand hover:text-zinc-950 hover:border-transparent border border-zinc-200 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer w-full sm:w-auto text-center shadow-xs hover:shadow-md text-zinc-800"
           >
-            Book a Career Guidance Session
+            Book a Career Mentoring Session
           </button>
         </div>
 
@@ -257,7 +257,7 @@ export default function Services({ setView, onBookTherapist }) {
 
           {/* Filter Tabs - scrollable horizontally on mobile */}
           <div className="flex flex-row overflow-x-auto scrollbar-none snap-x gap-1.5 sm:gap-2 w-full flex-1 pb-1 shrink-0">
-            {['All', 'Consultant Psychologist', 'Clinical Psychologist', 'Psychiatrist', 'Career Counsellor'].map(filter => (
+            {['All', 'Consultant Psychologist', 'Clinical Psychologist', 'Psychiatrist', 'Career Mentor'].map(filter => (
               <button
                 key={filter}
                 type="button"

@@ -618,7 +618,7 @@ export default function StudentProfile() {
             <p className="text-xs text-zinc-500 mt-1">
               {bookedSessions.length > 0
                 ? `Next session with ${bookedSessions[0].advisorName} on ${bookedSessions[0].date}.`
-                : 'Connect 1-on-1 with certified psychologists and career counsellors.'}
+                : 'Connect 1-on-1 with certified psychologists and career mentors.'}
             </p>
             <button
               type="button"
@@ -897,277 +897,309 @@ export default function StudentProfile() {
 
     return (
       <div className="space-y-5">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <h2 className="text-lg font-bold text-zinc-900">Upcoming Sessions</h2>
-            <p className="text-sm text-zinc-500 mt-0.5">
-              {bookedSessions.length} session{bookedSessions.length !== 1 ? 's' : ''} scheduled.
-            </p>
+        {/* Sub-tab Navigation Bar */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-200 pb-1.5">
+          <div className="flex gap-4">
+            <button
+              type="button"
+              onClick={() => setSessionSubTab('upcoming')}
+              className={`pb-2 text-sm font-semibold border-b-2 transition-all relative cursor-pointer ${
+                sessionSubTab === 'upcoming' 
+                  ? 'border-zinc-900 text-zinc-900 font-bold' 
+                  : 'border-transparent text-zinc-400 hover:text-zinc-600'
+              }`}
+            >
+              Upcoming Sessions
+              {bookedSessions.length > 0 && (
+                <span className={`ml-1.5 text-[9px] font-bold px-1.5 py-0.5 rounded-full ${
+                  sessionSubTab === 'upcoming' ? 'bg-zinc-900 text-white' : 'bg-zinc-100 text-zinc-500'
+                }`}>
+                  {bookedSessions.length}
+                </span>
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={() => setSessionSubTab('history')}
+              className={`pb-2 text-sm font-semibold border-b-2 transition-all relative cursor-pointer ${
+                sessionSubTab === 'history' 
+                  ? 'border-zinc-900 text-zinc-900 font-bold' 
+                  : 'border-transparent text-zinc-400 hover:text-zinc-600'
+              }`}
+            >
+              History & Timeline
+              {completedSessions.length > 0 && (
+                <span className={`ml-1.5 text-[9px] font-bold px-1.5 py-0.5 rounded-full ${
+                  sessionSubTab === 'history' ? 'bg-zinc-900 text-white' : 'bg-zinc-100 text-zinc-500'
+                }`}>
+                  {completedSessions.length}
+                </span>
+              )}
+            </button>
           </div>
-          <button
-            type="button"
-            onClick={() => window.spaNavigate('/booking')}
-            className="inline-flex items-center gap-1.5 min-h-[40px] px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-semibold rounded-lg transition-colors border-none"
-          >
-            <Plus className="w-3.5 h-3.5" /> New Booking
-          </button>
-        </div>
-
-        {/* Filters */}
-        {bookedSessions.length > 0 && (
-          <div className="flex gap-2 overflow-x-auto scrollbar-none pb-0.5">
-            {filterChips.map(chip => (
-              <button
-                key={chip.id}
-                type="button"
-                onClick={() => setSessionFilter(chip.id)}
-                className={`shrink-0 inline-flex items-center gap-1.5 px-3 min-h-[36px] rounded-lg text-xs font-medium transition-all border ${sessionFilter === chip.id
-                  ? 'bg-zinc-900 text-white border-zinc-900'
-                  : 'bg-white text-zinc-600 border-zinc-200 hover:border-zinc-300'
-                  }`}
-              >
-                {chip.label}
-                {chip.count > 0 && (
-                  <span className={`text-[10px] font-semibold px-1.5 min-w-[18px] h-4 rounded-full flex items-center justify-center ${sessionFilter === chip.id ? 'bg-white/20' : 'bg-zinc-100 text-zinc-600'
-                    }`}>
-                    {chip.count}
-                  </span>
-                )}
-              </button>
-            ))}
-          </div>
-        )}
-
-        {filteredBooked.length > 0 ? (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {filteredBooked.map((session, idx) => {
-              const meetStatus = getMeetLinkStatus(session);
-              const cd = formatCountdown(session.date, session.time);
-              const isConfirmed = session.status === 'CONFIRMED';
-              return (
-                <div
-                  key={session.id || idx}
-                  className="bg-white border border-zinc-200 rounded-xl p-5 hover:border-zinc-300 transition-colors"
-                >
-                  {/* Status indicator */}
-                  <div className="flex items-start justify-between gap-3 mb-4">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center shrink-0">
-                        {session.mode === 'ONLINE' ? <Video className="w-5 h-5 text-zinc-600" /> : <MapPin className="w-5 h-5 text-zinc-600" />}
-                      </div>
-                      <div>
-                        <span className={`inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md font-semibold uppercase tracking-wider ${isConfirmed
-                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                          : 'bg-amber-50 text-amber-700 border border-amber-200'
-                          }`}>
-                          <span className={`w-1.5 h-1.5 rounded-full ${isConfirmed ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
-                          {session.status}
-                        </span>
-                        <p className="text-[10px] text-zinc-400 font-medium mt-1">
-                          {session.service === 'counselling' ? 'Psychological' : 'Career'} · {session.mode}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="text-right shrink-0">
-                      <p className="text-[10px] text-zinc-400">In</p>
-                      <p className={`text-sm font-bold ${cd.urgent ? 'text-amber-600' : 'text-zinc-900'}`}>{cd.text}</p>
-                    </div>
-                  </div>
-
-                  <p className="font-semibold text-zinc-900 text-base">{session.advisorName}</p>
-                  <p className="text-xs text-zinc-500 mt-0.5">{session.advisorRole || 'Consultation'}</p>
-
-                  <div className="mt-3 grid grid-cols-2 gap-2">
-                    <div className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-zinc-50 border border-zinc-100 text-xs text-zinc-600">
-                      <Calendar className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
-                      <span className="font-medium truncate">{session.date}</span>
-                    </div>
-                    <div className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-zinc-50 border border-zinc-100 text-xs text-zinc-600">
-                      <Clock className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
-                      <span className="font-medium truncate">{session.time}</span>
-                    </div>
-                  </div>
-
-                  {session.mode === 'ONLINE' && !session.meetLink && (
-                    <div className="mt-3 p-2.5 bg-amber-50 border border-amber-200 text-amber-700 text-xs rounded-lg flex items-center gap-2">
-                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                      <span>Meet link pending from counsellor.</span>
-                    </div>
-                  )}
-
-                  <div className="mt-4 pt-3 border-t border-zinc-100 flex flex-wrap gap-2">
-                    {session.mode === 'ONLINE' && meetStatus.status === 'AVAILABLE' ? (
-                      <a
-                        href={meetStatus.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-1 min-h-[40px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg text-xs font-semibold transition-colors"
-                      >
-                        <Video className="w-3.5 h-3.5" /> Join Now
-                        <ExternalLink className="w-3 h-3" />
-                      </a>
-                    ) : session.mode === 'ONLINE' ? (
-                      <button
-                        type="button"
-                        disabled
-                        title={meetStatus.status === 'LOCKED' ? 'Link activates 10 min before session' : 'Session has ended'}
-                        className="flex-1 min-h-[40px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-zinc-100 text-zinc-400 border border-zinc-200 rounded-lg text-xs font-medium cursor-not-allowed"
-                      >
-                        <Lock className="w-3.5 h-3.5" /> {meetStatus.label}
-                      </button>
-                    ) : (
-                      <button
-                        type="button"
-                        className="flex-1 min-h-[40px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-zinc-100 text-zinc-700 border border-zinc-200 rounded-lg text-xs font-medium hover:border-zinc-300 transition-colors"
-                      >
-                        <MapPin className="w-3.5 h-3.5" /> View Location
-                      </button>
-                    )}
-                    <button
-                      type="button"
-                      onClick={() => window.spaNavigate('/booking')}
-                      className="min-h-[40px] inline-flex items-center justify-center gap-1.5 px-3 py-2 border border-zinc-200 hover:border-zinc-300 rounded-lg text-xs font-medium text-zinc-600 hover:text-zinc-900 transition-colors bg-white"
-                    >
-                      <RefreshCw className="w-3.5 h-3.5" /> Reschedule
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => { if (window.confirm('Cancel this session?')) handleCancelSession(session.id); }}
-                      className="min-h-[40px] inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-white border border-zinc-200 hover:border-rose-200 hover:bg-rose-50 text-zinc-500 hover:text-rose-600 rounded-lg text-xs font-medium transition-colors"
-                    >
-                      <XIcon className="w-3.5 h-3.5" /> Cancel
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="bg-zinc-50 border border-dashed border-zinc-300 rounded-xl p-8 text-center">
-            <div className="w-12 h-12 mx-auto rounded-xl bg-zinc-200 flex items-center justify-center mb-3">
-              <CalendarDays className="w-6 h-6 text-zinc-500" />
-            </div>
-            <p className="text-sm font-semibold text-zinc-700">No sessions found</p>
-            <p className="text-xs text-zinc-500 mt-1">
-              {sessionFilter === 'all'
-                ? 'Book a session with one of our experts.'
-                : `No ${sessionFilter} sessions scheduled.`}
-            </p>
+          
+          {sessionSubTab === 'upcoming' && (
             <button
               type="button"
               onClick={() => window.spaNavigate('/booking')}
-              className="mt-4 inline-flex items-center gap-1.5 min-h-[40px] px-5 py-2 bg-zinc-900 text-white text-xs font-semibold rounded-lg hover:bg-zinc-800 transition-colors border-none"
+              className="inline-flex items-center gap-1.5 min-h-[36px] px-3.5 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-semibold rounded-lg transition-colors border-none sm:self-center"
             >
-              <Plus className="w-3.5 h-3.5" /> Book a Session
+              <Plus className="w-3.5 h-3.5" /> New Booking
             </button>
-          </div>
-        )}
-      </div>
-    );
-  };
-
-  // ─── Tab: Completed Timeline ─────────────────────────────────────────
-
-  const CompletedTab = () => {
-    return (
-      <div className="space-y-5">
-        <div>
-          <h2 className="text-lg font-bold text-zinc-900">Timeline</h2>
-          <p className="text-sm text-zinc-500 mt-0.5">Your journey with our experts.</p>
+          )}
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-3 gap-3">
-          {[
-            { label: 'Total Sessions', value: completedSessions.length, icon: CheckCircle2 },
-            { label: 'Hours Coached', value: `${completedSessions.length}h`, icon: Clock },
-            { label: 'Avg. Rating', value: '4.8', icon: Star, suffix: '/5' },
-          ].map((s, i) => {
-            const Icon = s.icon;
-            return (
-              <div key={i} className="bg-white border border-zinc-200 rounded-xl p-4">
-                <div className="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center mb-2">
-                  <Icon className="w-4 h-4 text-zinc-600" />
-                </div>
-                <p className="text-lg font-bold text-zinc-900">
-                  {s.value}{s.suffix && <span className="text-sm text-zinc-400 font-medium">{s.suffix}</span>}
-                </p>
-                <p className="text-[10px] text-zinc-500 font-medium uppercase tracking-wider mt-0.5">{s.label}</p>
+        {sessionSubTab === 'upcoming' ? (
+          <div className="space-y-4">
+            {/* Filters */}
+            {bookedSessions.length > 0 && (
+              <div className="flex gap-2 overflow-x-auto scrollbar-none pb-0.5">
+                {filterChips.map(chip => (
+                  <button
+                    key={chip.id}
+                    type="button"
+                    onClick={() => setSessionFilter(chip.id)}
+                    className={`shrink-0 inline-flex items-center gap-1.5 px-3 min-h-[32px] rounded-lg text-xs font-medium transition-all border ${
+                      sessionFilter === chip.id
+                        ? 'bg-zinc-900 text-white border-zinc-900'
+                        : 'bg-white text-zinc-600 border-zinc-200 hover:border-zinc-300'
+                    }`}
+                  >
+                    {chip.label}
+                    {chip.count > 0 && (
+                      <span className={`text-[10px] font-semibold px-1.5 min-w-[18px] h-4 rounded-full flex items-center justify-center ${
+                        sessionFilter === chip.id ? 'bg-white/20' : 'bg-zinc-100 text-zinc-600'
+                      }`}>
+                        {chip.count}
+                      </span>
+                    )}
+                  </button>
+                ))}
               </div>
-            );
-          })}
-        </div>
+            )}
 
-        {completedSessions.length > 0 ? (
-          <div className="relative">
-            <div className="absolute left-4 top-0 bottom-0 w-px bg-zinc-200" />
-            <div className="space-y-4">
-              {completedSessions.map((session, sIdx) => (
-                <div key={session.id || sIdx} className="relative pl-12">
-                  <div className="absolute left-0 top-3 w-8 h-8 rounded-lg bg-white border border-zinc-200 flex items-center justify-center shadow-sm">
-                    <Award className="w-4 h-4 text-zinc-500" />
-                  </div>
-                  <div className="bg-white border border-zinc-200 rounded-xl p-4 hover:border-zinc-300 transition-colors">
-                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-2">
-                      <div>
-                        <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                          <span className="text-[10px] px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold uppercase tracking-wider">
-                            {session.status}
-                          </span>
-                          <span className="text-[10px] text-zinc-400 font-medium uppercase tracking-wider">{session.mode}</span>
-                          <div className="flex items-center gap-0.5">
-                            {[1, 2, 3, 4, 5].map(n => (
-                              <Star key={n} className="w-3 h-3 fill-amber-400 text-amber-400" />
-                            ))}
+            {filteredBooked.length > 0 ? (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                {filteredBooked.map((session, idx) => {
+                  const meetStatus = getMeetLinkStatus(session);
+                  const cd = formatCountdown(session.date, session.time);
+                  const isConfirmed = session.status === 'CONFIRMED';
+                  return (
+                    <div
+                      key={session.id || idx}
+                      className="bg-white border border-zinc-200 rounded-xl p-5 hover:border-zinc-300 transition-colors text-left"
+                    >
+                      {/* Status indicator */}
+                      <div className="flex items-start justify-between gap-3 mb-4">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center shrink-0">
+                            {session.mode === 'ONLINE' ? <Video className="w-5 h-5 text-zinc-600" /> : <MapPin className="w-5 h-5 text-zinc-600" />}
+                          </div>
+                          <div>
+                            <span className={`inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md font-semibold uppercase tracking-wider ${
+                              isConfirmed
+                                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                : 'bg-amber-50 text-amber-700 border border-amber-200'
+                            }`}>
+                              <span className={`w-1.5 h-1.5 rounded-full ${isConfirmed ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
+                              {session.status}
+                            </span>
+                            <p className="text-[10px] text-zinc-400 font-medium mt-1">
+                              {session.service === 'counselling' ? 'Psychological' : 'Career'} · {session.mode}
+                            </p>
                           </div>
                         </div>
-                        <p className="font-semibold text-zinc-900">{session.advisorName}</p>
-                        <p className="text-xs text-zinc-500 mt-0.5">{session.advisorRole || 'Consultation'}</p>
+                        <div className="text-right shrink-0">
+                          <p className="text-[10px] text-zinc-400">In</p>
+                          <p className={`text-sm font-bold ${cd.urgent ? 'text-amber-600' : 'text-zinc-900'}`}>{cd.text}</p>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-1.5 text-xs text-zinc-500 bg-zinc-50 border border-zinc-200 px-2.5 py-1.5 rounded-lg shrink-0 w-fit">
-                        <Clock className="w-3.5 h-3.5 text-zinc-400" />
-                        <span className="font-medium">{session.date}</span>
-                        <span className="text-zinc-300">·</span>
-                        <span>{session.time}</span>
+
+                      <p className="font-semibold text-zinc-900 text-base">{session.advisorName}</p>
+                      <p className="text-xs text-zinc-500 mt-0.5">{session.advisorRole || 'Consultation'}</p>
+
+                      <div className="mt-3 grid grid-cols-2 gap-2">
+                        <div className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-zinc-50 border border-zinc-100 text-xs text-zinc-600">
+                          <Calendar className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
+                          <span className="font-medium truncate">{session.date}</span>
+                        </div>
+                        <div className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-zinc-50 border border-zinc-100 text-xs text-zinc-600">
+                          <Clock className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
+                          <span className="font-medium truncate">{session.time}</span>
+                        </div>
+                      </div>
+
+                      {session.mode === 'ONLINE' && !session.meetLink && (
+                        <div className="mt-3 p-2.5 bg-amber-50 border border-amber-200 text-amber-700 text-xs rounded-lg flex items-center gap-2">
+                          <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                          <span>Meet link pending from counsellor.</span>
+                        </div>
+                      )}
+
+                      <div className="mt-4 pt-3 border-t border-zinc-100 flex flex-wrap gap-2">
+                        {session.mode === 'ONLINE' && meetStatus.status === 'AVAILABLE' ? (
+                          <a
+                            href={meetStatus.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex-1 min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg text-xs font-semibold transition-colors"
+                          >
+                            <Video className="w-3.5 h-3.5" /> Join Now
+                            <ExternalLink className="w-3 h-3" />
+                          </a>
+                        ) : session.mode === 'ONLINE' ? (
+                          <button
+                            type="button"
+                            disabled
+                            title={meetStatus.status === 'LOCKED' ? 'Link activates 10 min before session' : 'Session has ended'}
+                            className="flex-1 min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-zinc-100 text-zinc-400 border border-zinc-200 rounded-lg text-xs font-medium cursor-not-allowed"
+                          >
+                            <Lock className="w-3.5 h-3.5" /> {meetStatus.label}
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            className="flex-1 min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-zinc-100 text-zinc-700 border border-zinc-200 rounded-lg text-xs font-medium hover:border-zinc-300 transition-colors"
+                          >
+                            <MapPin className="w-3.5 h-3.5" /> View Location
+                          </button>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => window.spaNavigate('/booking')}
+                          className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 border border-zinc-200 hover:border-zinc-300 rounded-lg text-xs font-medium text-zinc-600 hover:text-zinc-900 transition-colors bg-white"
+                        >
+                          <RefreshCw className="w-3.5 h-3.5" /> Reschedule
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => { if (window.confirm('Cancel this session?')) handleCancelSession(session.id); }}
+                          className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-white border border-zinc-200 hover:border-rose-200 hover:bg-rose-50 text-zinc-500 hover:text-rose-600 rounded-lg text-xs font-medium transition-colors"
+                        >
+                          <XIcon className="w-3.5 h-3.5" /> Cancel
+                        </button>
                       </div>
                     </div>
-
-                    {session.feedback && (
-                      <div className="mt-3 p-3 bg-zinc-50 border border-zinc-200 rounded-lg">
-                        <p className="text-[10px] font-semibold text-zinc-500 uppercase tracking-wider mb-1.5">Counsellor Feedback</p>
-                        <p className="text-xs text-zinc-600 italic leading-relaxed">"{session.feedback}"</p>
-                      </div>
-                    )}
-
-                    <div className="mt-3 flex items-center justify-between">
-                      <span className="text-[11px] text-zinc-400">Session #{completedSessions.length - sIdx}</span>
-                      <button
-                        type="button"
-                        className="inline-flex items-center gap-1 text-xs font-medium text-zinc-500 hover:text-zinc-900 transition-colors"
-                        title="Download certificate"
-                      >
-                        <Download className="w-3.5 h-3.5" /> Certificate
-                      </button>
-                    </div>
-                  </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="bg-zinc-50 border border-dashed border-zinc-300 rounded-xl p-8 text-center">
+                <div className="w-12 h-12 mx-auto rounded-xl bg-zinc-200 flex items-center justify-center mb-3">
+                  <CalendarDays className="w-6 h-6 text-zinc-500" />
                 </div>
-              ))}
-            </div>
+                <p className="text-sm font-semibold text-zinc-700">No sessions found</p>
+                <p className="text-xs text-zinc-500 mt-1">
+                  {sessionFilter === 'all'
+                    ? 'Book a session with one of our experts.'
+                    : `No ${sessionFilter} sessions scheduled.`}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => window.spaNavigate('/booking')}
+                  className="mt-4 inline-flex items-center gap-1.5 min-h-[36px] px-5 py-2 bg-zinc-900 text-white text-xs font-semibold rounded-lg hover:bg-zinc-800 transition-colors border-none"
+                >
+                  <Plus className="w-3.5 h-3.5" /> Book a Session
+                </button>
+              </div>
+            )}
           </div>
         ) : (
-          <div className="bg-zinc-50 border border-dashed border-zinc-300 rounded-xl p-8 text-center">
-            <div className="w-12 h-12 mx-auto rounded-xl bg-zinc-200 flex items-center justify-center mb-3">
-              <Trophy className="w-6 h-6 text-zinc-500" />
+          <div className="space-y-5">
+            {/* Completed sessions Stats */}
+            <div className="grid grid-cols-3 gap-3">
+              {[
+                { label: 'Total Sessions', value: completedSessions.length, icon: CheckCircle2 },
+                { label: 'Hours Coached', value: `${completedSessions.length}h`, icon: Clock },
+                { label: 'Avg. Rating', value: '4.8', icon: Star, suffix: '/5' },
+              ].map((s, i) => {
+                const Icon = s.icon;
+                return (
+                  <div key={i} className="bg-white border border-zinc-200 rounded-xl p-4 text-left">
+                    <div className="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center mb-2">
+                      <Icon className="w-4 h-4 text-zinc-600" />
+                    </div>
+                    <p className="text-lg font-bold text-zinc-900">
+                      {s.value}{s.suffix && <span className="text-sm text-zinc-400 font-medium">{s.suffix}</span>}
+                    </p>
+                    <p className="text-[10px] text-zinc-500 font-semibold uppercase tracking-wider mt-0.5">{s.label}</p>
+                  </div>
+                );
+              })}
             </div>
-            <p className="text-sm font-semibold text-zinc-700">No completed sessions yet</p>
-            <p className="text-xs text-zinc-500 mt-1">Finished sessions will appear here with counsellor feedback.</p>
-            <button
-              type="button"
-              onClick={() => window.spaNavigate('/booking')}
-              className="mt-4 inline-flex items-center gap-1.5 min-h-[40px] px-5 py-2 bg-zinc-900 text-white text-xs font-semibold rounded-lg hover:bg-zinc-800 transition-colors border-none"
-            >
-              <Plus className="w-3.5 h-3.5" /> Book First Session
-            </button>
+
+            {completedSessions.length > 0 ? (
+              <div className="relative">
+                <div className="absolute left-4 top-0 bottom-0 w-px bg-zinc-200" />
+                <div className="space-y-4">
+                  {completedSessions.map((session, sIdx) => (
+                    <div key={session.id || sIdx} className="relative pl-12 text-left">
+                      <div className="absolute left-0 top-3 w-8 h-8 rounded-lg bg-white border border-zinc-200 flex items-center justify-center shadow-sm">
+                        <Award className="w-4 h-4 text-zinc-500" />
+                      </div>
+                      <div className="bg-white border border-zinc-200 rounded-xl p-4 hover:border-zinc-300 transition-colors">
+                        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-2">
+                          <div>
+                            <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                              <span className="text-[10px] px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold uppercase tracking-wider">
+                                {session.status}
+                              </span>
+                              <span className="text-[10px] text-zinc-400 font-medium uppercase tracking-wider">{session.mode}</span>
+                              <div className="flex items-center gap-0.5">
+                                {[1, 2, 3, 4, 5].map(n => (
+                                  <Star key={n} className="w-3 h-3 fill-amber-400 text-amber-400" />
+                                ))}
+                              </div>
+                            </div>
+                            <p className="font-semibold text-zinc-900">{session.advisorName}</p>
+                            <p className="text-xs text-zinc-500 mt-0.5">{session.advisorRole || 'Consultation'}</p>
+                          </div>
+                          <div className="flex items-center gap-1.5 text-xs text-zinc-500 bg-zinc-50 border border-zinc-200 px-2.5 py-1.5 rounded-lg shrink-0 w-fit">
+                            <Clock className="w-3.5 h-3.5 text-zinc-400" />
+                            <span className="font-medium">{session.date}</span>
+                            <span className="text-zinc-300">·</span>
+                            <span>{session.time}</span>
+                          </div>
+                        </div>
+
+                        {session.feedback && (
+                          <div className="mt-3 p-3 bg-zinc-50 border border-zinc-200 rounded-lg">
+                            <p className="text-[10px] font-semibold text-zinc-500 uppercase tracking-wider mb-1.5">Counsellor Feedback</p>
+                            <p className="text-xs text-zinc-600 italic leading-relaxed">"{session.feedback}"</p>
+                          </div>
+                        )}
+
+                        <div className="mt-3 flex items-center justify-between">
+                          <span className="text-[11px] text-zinc-400">Session #{completedSessions.length - sIdx}</span>
+                          <button
+                            type="button"
+                            className="inline-flex items-center gap-1 text-xs font-medium text-zinc-500 hover:text-zinc-900 transition-colors"
+                            title="Download certificate"
+                          >
+                            <Download className="w-3.5 h-3.5" /> Certificate
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="bg-zinc-50 border border-dashed border-zinc-300 rounded-xl p-8 text-center">
+                <div className="w-12 h-12 mx-auto rounded-xl bg-zinc-200 flex items-center justify-center mb-3">
+                  <Trophy className="w-6 h-6 text-zinc-500" />
+                </div>
+                <p className="text-sm font-semibold text-zinc-700">No completed sessions yet</p>
+                <p className="text-xs text-zinc-500 mt-1">Finished sessions will appear here with counsellor feedback.</p>
+                <button
+                  type="button"
+                  onClick={() => window.spaNavigate('/booking')}
+                  className="mt-4 inline-flex items-center gap-1.5 min-h-[36px] px-5 py-2 bg-zinc-900 text-white text-xs font-semibold rounded-lg hover:bg-zinc-800 transition-colors border-none"
+                >
+                  <Plus className="w-3.5 h-3.5" /> Book First Session
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -1317,7 +1349,6 @@ export default function StudentProfile() {
             {currentSection === 'overview' && <OverviewTab />}
             {currentSection === 'details' && <ProfileDetailsTab />}
             {currentSection === 'booked' && <BookedSessionsTab />}
-            {currentSection === 'completed' && <CompletedTab />}
             {currentSection === 'results' && <ResultsTab />}
           </main>
         </div>

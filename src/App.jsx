@@ -320,7 +320,7 @@ export default function App() {
       </Routes>
 
       {/* Floating WhatsApp Button */}
-      {!hideNavbarAndFooter && (() => {
+      {!hideNavbarAndFooter && !location.pathname.startsWith('/profile') && (() => {
         const whatsappUrl = siteSettings.whatsapp || "https://wa.me/919497174011";
         return (
           <a

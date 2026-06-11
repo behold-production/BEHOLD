@@ -297,7 +297,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                   <span>{mode === 'login' ? 'Signing in...' : 'Creating account...'}</span>
                 </div>
               ) : (
-                <span>{mode === 'login' ? 'Login & Continue' : 'Register & Continue'} →</span>
+                <span>{mode === 'login' ? 'Login & Continue' : 'Register & Continue'}</span>
               )}
             </button>
           </form>
@@ -309,8 +309,8 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
               className="text-[11px] font-bold text-brand-dark hover:underline bg-transparent border-none cursor-pointer py-2 min-h-[36px]"
             >
               {mode === 'login'
-                ? "Don't have an account? Register for free →"
-                : 'Already have an account? Sign in →'}
+                ? "Don't have an account? Register for free"
+                : 'Already have an account? Sign in'}
             </button>
           </div>
 

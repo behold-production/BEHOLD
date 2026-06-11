@@ -69,47 +69,45 @@ export default function CdatSection({ setView }) {
       <div className="absolute top-1/2 left-1/4 w-[350px] h-[350px] bg-brand-accent/5 rounded-lg glow-glow pointer-events-none" />
 
       {/* CDAT CARD */}
+      {/* CDAT CARD */}
       <div
         id="card-aptitude"
-        className="card-luxury card-luxury-hover p-5 sm:p-8 md:p-14 flex flex-col justify-between space-y-8 select-none border border-zinc-200/60 group rounded-lg"
+        className="card-luxury card-luxury-hover p-5 sm:p-8 md:p-14 flex flex-col space-y-8 select-none border border-zinc-200/60 group rounded-lg"
       >
-        <div className="space-y-6">
-          <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
-            <div className="space-y-2">
-              <span className="text-[9px] bg-brand-light text-brand-dark px-3 py-1 rounded-md uppercase tracking-widest font-extrabold border border-brand/20">
-                scientific strengths mapping
-              </span>
-              <h3 className="text-2xl md:text-3xl font-header font-black uppercase tracking-wide text-zinc-900 mt-1 group-hover:text-brand-dark transition-colors duration-500">
-                CIGI Differential Aptitude Test (CDAT)
-              </h3>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => window.spaNavigate('/sample-test')}
-              className="min-h-[48px] px-6 py-3.5 bg-zinc-900 hover:bg-zinc-800 text-white font-bold text-xs uppercase tracking-widest rounded-lg transition cursor-pointer shadow-sm text-center shrink-0 w-full md:w-auto"
-            >
-              Sample Test
-            </button>
-          </div>
-
-          <p className="text-zinc-650 font-sans text-sm md:text-base font-light leading-relaxed max-w-4xl">
+        {/* TOP: CIGI Differential Aptitude Test (CDAT) */}
+        <div className="space-y-3 max-w-4xl text-left">
+          <span className="inline-block text-[9px] bg-zinc-100 text-zinc-550 border border-zinc-200 px-3 py-1 rounded-md uppercase tracking-widest font-extrabold font-mono">
+            scientific strengths mapping
+          </span>
+          <h3 className="text-2xl md:text-3xl font-header font-black uppercase tracking-wide text-zinc-900 mt-1 group-hover:text-brand transition-colors duration-500">
+            CIGI Differential Aptitude Test (CDAT)
+          </h3>
+          <p className="text-zinc-650 font-sans text-sm md:text-base font-light leading-relaxed">
             C-DAT (CIGI-Differential Aptitude Test). This standardized tool effectively identifies the inherent capacities of high school and higher secondary students. C-DAT has guided many students from various states in India and abroad towards suitable academic and career paths.
           </p>
         </div>
 
-        <div className="pt-6 border-t border-zinc-200">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            <div className="lg:col-span-5 space-y-2">
-              <h4 className="text-sm font-header font-black uppercase tracking-wider text-zinc-900">
+        {/* MIDDLE: Registration & Group Code */}
+        <div className="pt-6 border-t border-zinc-200 space-y-6">
+          <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
+            <div className="space-y-2">
+              <span className="inline-block text-[9px] bg-brand-light text-brand-dark px-3 py-1 rounded-md uppercase tracking-widest font-extrabold border border-brand/20">
+                school & institution access
+              </span>
+              <h4 className="text-xl md:text-2xl font-header font-black uppercase tracking-wide text-zinc-900 mt-1">
                 Registration & Group Code
               </h4>
-              <p className="text-zinc-600 font-sans text-xs md:text-sm font-light leading-relaxed">
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start pt-2">
+            <div className="lg:col-span-5 space-y-2">
+              <p className="text-zinc-650 font-sans text-sm md:text-base font-light leading-relaxed">
                 Enter your details below to generate your group access code. Once generated and copied, proceed to the CIGI registration portal to complete your registration.
               </p>
             </div>
-            <div className="lg:col-span-7">
-              <form onSubmit={handleGenerateCode} className="space-y-4 bg-white/40 backdrop-blur-md border border-zinc-200/50 p-4 sm:p-5 rounded-lg">
+            <div className="lg:col-span-7 w-full">
+              <form onSubmit={handleGenerateCode} className="space-y-4 bg-white/40 backdrop-blur-md border border-zinc-200/50 p-4 sm:p-5 rounded-lg w-full">
                 <div className="text-[10px] font-extrabold uppercase tracking-wider text-zinc-500 mb-2">
                   Generate Your Access Code
                 </div>
@@ -208,6 +206,25 @@ export default function CdatSection({ setView }) {
               </form>
             </div>
           </div>
+        </div>
+
+        {/* BOTTOM: Sample Test */}
+        <div className="pt-6 border-t border-zinc-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <span className="text-[10px] font-bold text-zinc-450 uppercase tracking-wide block">
+              Try a demo of our scientific assessment
+            </span>
+            <p className="text-xs text-zinc-550 font-light leading-relaxed">
+              Experience the type of questions asked in the C-DAT exam with our simplified sample test.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => window.spaNavigate('/sample-test')}
+            className="min-h-[48px] px-8 py-3.5 bg-zinc-900 hover:bg-zinc-800 text-white font-bold text-xs uppercase tracking-widest rounded-lg transition cursor-pointer shadow-sm text-center shrink-0 w-full sm:w-auto flex items-center justify-center border-none"
+          >
+            Sample Test
+          </button>
         </div>
       </div>
     </section>

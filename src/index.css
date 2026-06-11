@@ -35,6 +35,17 @@
   --color-emerald-650: #06966a;
   --color-emerald-955: #021a11;
   --color-amber-450: #facc40;
+
+  /* Subtly increased responsive base font sizes */
+  --text-xs: 0.8rem;
+  --text-sm: 0.925rem;
+  --text-base: 1.05rem;
+  --text-lg: 1.2rem;
+  --text-xl: 1.35rem;
+  --text-2xl: 1.6rem;
+  --text-3xl: 2.0rem;
+  --text-4xl: 2.4rem;
+  --text-5xl: 3.25rem;
 }
 
 /* Touch target helper – guarantees 44×44px minimum for buttons/inputs on mobile */

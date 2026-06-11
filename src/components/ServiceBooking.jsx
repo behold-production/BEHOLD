@@ -362,13 +362,10 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
     window.history.pushState({ component: 'booking', step: newStep }, '');
   };
 
-  // Monitor date/time selections to push advisor selection step
+  // Selected advisor reset when date/time changes
   useEffect(() => {
-    if (selectedDate && selectedTime) {
-      setSelectedAdvisor(null);
-      setAdvisorConfirmed(false);
-      handleStepChange('advisor');
-    }
+    setSelectedAdvisor(null);
+    setAdvisorConfirmed(false);
   }, [selectedDate, selectedTime]);
 
   // Autofill form from Auth user
@@ -790,7 +787,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
         </div>
 
         {/* BOOKING FORM */}
-        <div id="booking-console" className="border border-zinc-200/80 p-4 sm:p-8 bg-white/70 backdrop-blur-md space-y-6 sm:space-y-8 rounded-xl shadow-xs">
+        <div id="booking-console" className="border-0 sm:border border-zinc-200/80 p-0 sm:p-8 bg-transparent sm:bg-white/70 backdrop-blur-none sm:backdrop-blur-md space-y-6 sm:space-y-8 rounded-none sm:rounded-xl shadow-none sm:shadow-xs">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-100 pb-4">
             <h2 className="text-lg sm:text-xl font-bold uppercase tracking-wide text-zinc-900">
               Your Booking
@@ -827,7 +824,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                 <div className="flex items-center justify-between gap-2 border-b border-zinc-200 pb-3">
                   <div className="flex items-center gap-2">
                     <h3 className="font-bold uppercase tracking-wider text-xs text-zinc-900">
-                      {bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Counselling'} &middot; {bookingMode === 'ONLINE' ? 'Video Call' : bookingMode === 'DOOR_STEP' ? 'Home Visit' : 'At Center'}
+                      {bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring'} &middot; {bookingMode === 'ONLINE' ? 'Video Call' : bookingMode === 'DOOR_STEP' ? 'Home Visit' : 'At Center'}
                     </h3>
                   </div>
                 </div>
@@ -874,7 +871,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
           {bookingStep === 'success' ? (
             /* STEP 5: Success & Confirmation View */
-            <div className="p-6 sm:p-10 bg-zinc-50 border border-zinc-200 rounded-xl max-w-2xl mx-auto animate-in fade-in duration-500 space-y-6 text-center">
+            <div className="p-4 sm:p-10 bg-transparent sm:bg-zinc-50 border-0 sm:border border-zinc-200 rounded-none sm:rounded-xl max-w-2xl mx-auto animate-in fade-in duration-500 space-y-6 text-center">
               <div className="w-16 h-16 bg-emerald-50 border border-emerald-200 rounded-full flex items-center justify-center mx-auto text-emerald-650 shadow-sm text-2xl font-black">
                 ✓
               </div>
@@ -904,7 +901,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                   <div>
                     <span className="text-zinc-400 block font-light">Service</span>
                     <span className="font-semibold text-zinc-800 uppercase">
-                      {bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Counselling'}
+                      {bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring'}
                     </span>
                     <span className="text-[10px] text-zinc-500 block">Mode: {bookingMode === 'ONLINE' ? 'Video Call' : bookingMode === 'DOOR_STEP' ? 'Home Visit' : 'At Center'}</span>
                   </div>
@@ -962,7 +959,7 @@ Booking ID: sb_${Date.now()}
 Student Name: ${bookingForm.name || 'Student'}
 Email: ${bookingForm.email}
 Phone: ${bookingForm.phone}
-Service: ${bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Counselling'}
+Service: ${bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring'}
 Advisor: ${selectedAdvisor?.name || 'Assigned Advisor'} (${selectedAdvisor?.role || 'Consultant Psychologist'})
 Date & Time: ${selectedDate} at ${selectedTime}
 Mode: ${bookingMode.replace('_', ' ')}
@@ -1007,7 +1004,7 @@ Status: CONFIRMED
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
               
               {/* Left Column: Active Step Form Panel */}
-              <div className="lg:col-span-8 bg-white border border-zinc-200/85 p-4 sm:p-7 rounded-xl space-y-6 shadow-xs text-left min-h-[380px] relative">
+              <div className="lg:col-span-8 lg:bg-white bg-transparent border-0 lg:border border-zinc-200/85 p-0 sm:p-4 lg:p-7 rounded-none lg:rounded-xl space-y-6 shadow-none lg:shadow-xs text-left min-h-[380px] relative">
                 
                 {/* STEP 1: Schedule Configuration */}
                 {bookingStep === 'config' && (
@@ -1042,7 +1039,7 @@ Status: CONFIRMED
                               <span className="flex flex-col items-center">
                                 <span>{s.label}</span>
                                 <span className="text-[9px] font-normal normal-case text-zinc-400">
-                                  {s.id === 'counselling' ? 'Counselling' : 'Guidance'}
+                                  {s.id === 'counselling' ? 'Counselling' : 'Mentoring'}
                                 </span>
                               </span>
                             </button>
@@ -1105,7 +1102,7 @@ Status: CONFIRMED
                         onClick={() => handleStepChange('advisor')}
                         className="px-6 py-3 min-h-[48px] bg-zinc-900 text-white font-bold uppercase tracking-wider text-[11px] rounded-lg transition hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center border-none shadow-xs w-full sm:w-auto"
                       >
-                        Choose Advisor →
+                        Choose Advisor
                       </button>
                     </div>
                   </div>
@@ -1160,10 +1157,6 @@ Status: CONFIRMED
                                 if (advisor.modes && advisor.modes.length > 0 && !advisor.modes.includes(bookingMode)) {
                                   setBookingMode(advisor.modes[0]);
                                 }
-                                // Auto advance to details step for smoother mobile UX flow
-                                setTimeout(() => {
-                                  handleStepChange('details');
-                                }, 300);
                               }}
                               className={`p-4 border rounded-xl cursor-pointer transition active:scale-[0.98] ${
                                 selectedAdvisor?.id === advisor.id
@@ -1219,7 +1212,6 @@ Status: CONFIRMED
                                   const nextConfirmed = !advisorConfirmed;
                                   setAdvisorConfirmed(nextConfirmed);
                                   if (nextConfirmed) {
-                                    handleStepChange('details');
                                     if (errors.confirm) {
                                       setErrors(prev => ({ ...prev, confirm: null }));
                                     }
@@ -1256,7 +1248,7 @@ Status: CONFIRMED
                         onClick={() => handleStepChange('config')}
                         className="px-5 py-3 min-h-[44px] bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 font-bold uppercase tracking-wider text-[11px] rounded-lg transition cursor-pointer w-full sm:w-auto text-center"
                       >
-                        ← Change Schedule
+                        Change Schedule
                       </button>
                       <button
                         type="button"
@@ -1264,7 +1256,7 @@ Status: CONFIRMED
                         onClick={() => handleStepChange('details')}
                         className="px-5 py-3 min-h-[44px] bg-zinc-900 text-white font-bold uppercase tracking-wider text-[11px] rounded-lg transition hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center border-none shadow-xs w-full sm:w-auto"
                       >
-                        Account Details →
+                        Account Details
                       </button>
                     </div>
                   </div>
@@ -1368,7 +1360,7 @@ Status: CONFIRMED
                         onClick={() => handleStepChange('advisor')}
                         className="px-5 py-3 min-h-[44px] bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 font-bold uppercase tracking-wider text-[11px] rounded-lg transition cursor-pointer w-full sm:w-auto text-center"
                       >
-                        ← Back to Advisor
+                        Back to Advisor
                       </button>
                       <button
                         type="button"
@@ -1379,7 +1371,7 @@ Status: CONFIRMED
                         {isSubmitting ? (
                           <div className="w-4 h-4 border-2 border-zinc-900/30 border-t-zinc-900 rounded-full animate-spin" />
                         ) : (
-                          <span>Proceed to Payment →</span>
+                          <span>Proceed to Payment</span>
                         )}
                       </button>
                     </div>
@@ -1660,7 +1652,7 @@ Status: CONFIRMED
                           onClick={() => handleStepChange('details')}
                           className="px-5 py-3 min-h-[44px] bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 font-bold uppercase tracking-wider text-[11px] rounded-lg transition cursor-pointer w-full sm:w-auto text-center"
                         >
-                          ← Back to Details
+                          Back to Details
                         </button>
 
                         <button
@@ -1700,7 +1692,7 @@ Status: CONFIRMED
                   </svg>
                 </button>
 
-                <div className={`bg-zinc-50 border border-zinc-200 p-4 sm:p-5 rounded-xl space-y-5 shadow-xs ${showSummary ? 'block' : 'hidden'} lg:block`}>
+                <div className={`bg-transparent lg:bg-zinc-50 border-0 lg:border border-zinc-200 p-0 lg:p-5 rounded-none lg:rounded-xl space-y-5 shadow-none lg:shadow-xs ${showSummary ? 'block' : 'hidden'} lg:block`}>
                 <div>
                   <h3 className="text-xs font-black uppercase tracking-wider text-zinc-850 border-b border-zinc-200 pb-2 hidden lg:block">
                     Booking Summary
@@ -1712,7 +1704,7 @@ Status: CONFIRMED
                   <div>
                     <span className="text-[9.5px] text-zinc-400 uppercase tracking-wide block font-semibold mb-0.5">Service & Mode</span>
                     <span className="font-bold text-zinc-800 block text-left">
-                      {bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Counselling'}
+                      {bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring'}
                     </span>
                     <span className="text-[10px] text-zinc-500 font-semibold uppercase block mt-0.5 bg-white border border-zinc-150 rounded px-2 py-0.5 w-fit">
                       {bookingMode.replace('_', ' ')}
