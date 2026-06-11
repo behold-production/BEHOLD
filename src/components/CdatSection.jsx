@@ -9,6 +9,7 @@ export default function CdatSection({ setView }) {
   const [generatedCode, setGeneratedCode] = useState(null);
   const [copyMessage, setCopyMessage] = useState('');
   const [copied, setCopied] = useState(false);
+  const [hasCopied, setHasCopied] = useState(false);
 
   // Auto-fill from local storage if available
   useEffect(() => {
@@ -34,6 +35,7 @@ export default function CdatSection({ setView }) {
 
     const HARDCODED_CODE = "BEHOLD-CDAT-2026";
     setGeneratedCode(HARDCODED_CODE);
+    setHasCopied(false);
 
     // Save to local storage
     const saved = localStorage.getItem('behold_student_profile');
@@ -58,6 +60,7 @@ export default function CdatSection({ setView }) {
       navigator.clipboard.writeText(generatedCode).then(() => {
         setCopyMessage("Code copied to clipboard! You can now register on CIGI.");
         setCopied(true);
+        setHasCopied(true);
         setTimeout(() => setCopied(false), 2000);
       });
     }
@@ -153,7 +156,7 @@ export default function CdatSection({ setView }) {
                       type="submit"
                       className="min-h-[48px] px-6 py-3 bg-gradient-brand hover:opacity-95 text-zinc-955 font-extrabold text-[10px] uppercase tracking-wider rounded-lg transition cursor-pointer shadow-sm border-none w-full sm:w-auto"
                     >
-                      Generate Group Code
+                      Generate Group Code for Your Aptitude
                     </button>
                   </div>
                 ) : (
@@ -183,15 +186,28 @@ export default function CdatSection({ setView }) {
                       </button>
                     </div>
 
-                    <a
-                      href="https://cigicareer.com/cdat-registration/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="min-h-[48px] flex items-center justify-center gap-2 w-full px-6 py-3.5 bg-zinc-900 hover:bg-zinc-800 text-white font-extrabold text-xs uppercase tracking-widest rounded-lg transition cursor-pointer shadow-md"
+                    <button
+                      type="button"
+                      disabled={!hasCopied}
+                      onClick={() => {
+                        if (hasCopied) {
+                          window.open("https://cigicareer.com/cdat-registration/", "_blank", "noopener,noreferrer");
+                        }
+                      }}
+                      className={`min-h-[48px] flex items-center justify-center gap-2 w-full px-6 py-3.5 font-extrabold text-xs uppercase tracking-widest rounded-lg transition shadow-md ${
+                        hasCopied
+                          ? 'bg-zinc-900 hover:bg-zinc-800 text-white cursor-pointer border-none'
+                          : 'bg-zinc-200 text-zinc-400 cursor-not-allowed border border-zinc-300'
+                      }`}
                     >
                       <span>Proceed to CIGI Website</span>
                       <ArrowRight className="w-4 h-4" />
-                    </a>
+                    </button>
+                    {!hasCopied && (
+                      <p className="text-[10px] text-zinc-550 font-bold text-center mt-1 uppercase tracking-wide">
+                        Please copy the code first to proceed to CIGI registration.
+                      </p>
+                    )}
                   </div>
                 )}
 

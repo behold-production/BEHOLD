@@ -17,8 +17,7 @@ const INITIAL_STATE = {
 const TABS = [
   { id: 'overview', label: 'Overview', short: 'Home', icon: LayoutDashboard },
   { id: 'details', label: 'My Profile', short: 'Profile', icon: User },
-  { id: 'booked', label: 'Upcoming', short: 'Upcoming', icon: Calendar },
-  { id: 'completed', label: 'Timeline', short: 'Timeline', icon: History },
+  { id: 'booked', label: 'My Sessions', short: 'Sessions', icon: Calendar },
   { id: 'results', label: 'CDAT Results', short: 'Results', icon: BarChart3 },
 ];
 
@@ -132,6 +131,7 @@ export default function StudentProfile() {
     } catch { return null; }
   });
   const [sessionFilter, setSessionFilter] = useState('all');
+  const [sessionSubTab, setSessionSubTab] = useState('upcoming');
   const { user } = useAuth();
 
   const completion = useMemo(() => calculateCompletion(profile), [profile]);
@@ -382,8 +382,7 @@ export default function StudentProfile() {
           const isActive = currentSection === tab.id;
           const badge =
             tab.id === 'booked' ? bookedSessions.length :
-              tab.id === 'completed' ? completedSessions.length :
-                tab.id === 'results' && !testProfile ? '!' : null;
+              tab.id === 'results' && !testProfile ? '!' : null;
           return (
             <button
               key={tab.id}
@@ -423,13 +422,12 @@ export default function StudentProfile() {
 
       {/* Mobile bottom tab bar */}
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-zinc-200">
-        <div className="grid grid-cols-5 max-w-2xl mx-auto">
+        <div className="grid grid-cols-4 max-w-2xl mx-auto">
           {TABS.map(tab => {
             const Icon = tab.icon;
             const isActive = currentSection === tab.id;
             const badge =
-              tab.id === 'booked' ? bookedSessions.length :
-                tab.id === 'completed' ? completedSessions.length : null;
+              tab.id === 'booked' ? bookedSessions.length : null;
             return (
               <button
                 key={tab.id}
@@ -525,7 +523,7 @@ export default function StudentProfile() {
                 })()}
                 <button
                   type="button"
-                  onClick={() => handleSectionChange('booked')}
+                  onClick={() => { handleSectionChange('booked'); setSessionSubTab('upcoming'); }}
                   className="min-h-[36px] px-3 py-1.5 bg-white/10 hover:bg-white/15 border border-white/10 rounded-lg text-xs font-medium transition flex items-center gap-1 cursor-pointer text-white"
                 >
                   View <ChevronRight className="w-3.5 h-3.5" />
@@ -622,7 +620,14 @@ export default function StudentProfile() {
             </p>
             <button
               type="button"
-              onClick={() => bookedSessions.length > 0 ? handleSectionChange('booked') : window.spaNavigate('/booking')}
+              onClick={() => {
+                if (bookedSessions.length > 0) {
+                  handleSectionChange('booked');
+                  setSessionSubTab('upcoming');
+                } else {
+                  window.spaNavigate('/booking');
+                }
+              }}
               className="mt-4 w-full min-h-[40px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg text-xs font-semibold transition-colors border-none"
             >
               {bookedSessions.length > 0 ? 'View Bookings' : 'Book a Session'}
@@ -641,7 +646,7 @@ export default function StudentProfile() {
               </h4>
               <button
                 type="button"
-                onClick={() => handleSectionChange('completed')}
+                onClick={() => { handleSectionChange('booked'); setSessionSubTab('history'); }}
                 className="text-xs text-zinc-500 hover:text-zinc-900 transition-colors"
               >
                 View all →
