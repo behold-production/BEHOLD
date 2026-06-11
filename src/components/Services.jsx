@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, LayoutGrid, List } from 'lucide-react';
+import ApiService from '../services/api';
 
 export default function Services({ setView, onBookTherapist }) {
   const [searchTerm, setSearchTerm] = useState('');
@@ -16,101 +17,34 @@ export default function Services({ setView, onBookTherapist }) {
   const [advisors, setAdvisors] = useState([]);
 
   useEffect(() => {
-    const getDynamicAdvisors = () => {
-      // 1. Gather all registered psychologists from behold_users_db
-      let registeredPsychologists = [];
+    const fetchCounsellors = async () => {
       try {
-        const users = JSON.parse(localStorage.getItem('behold_users_db') || '[]');
-        registeredPsychologists = users.filter(u => u.role === 'PSYCHOLOGIST' && u.role !== 'ADMIN' && u.email !== 'admin@behold.com' && u.verified !== false)
-          .sort((a, b) => a.name.localeCompare(b.name));
-      } catch (e) {
-        console.error("Failed to load registered users", e);
-      }
-
-      // 2. Build the final advisors list of newly registered psychologists
-      const baseAdvisors = registeredPsychologists.map(psy => {
-        return {
-          id: psy.id,
-          name: psy.name,
-          role: 'Consultant Psychologist',
-          specialties: ['Anxiety Stress & Panic', 'Depression & Mood Concerns', 'Relationship'],
-          hours: 0,
-          lang: 'English',
-          price: 1200,
-          nextAvailable: 'Available Today'
-        };
-      });
-
-      // 3. Resolve profile details for each advisor dynamically
-      const finalAdvisors = baseAdvisors.map(adv => {
-        const savedProfile = localStorage.getItem(`behold_advisor_profile_${adv.id}`);
-        if (savedProfile) {
-          try {
-            const profile = JSON.parse(savedProfile);
-            const specialtiesArray = typeof profile.specialties === 'string'
-              ? profile.specialties.split(',').map(s => s.trim()).filter(Boolean)
-              : profile.specialties || adv.specialties;
-
+        const res = await ApiService.getCounsellors();
+        if (res.success && res.data) {
+          const mapped = res.data.map(c => {
+            // Map Mongoose/backend fields to expected keys in the UI cards
             return {
-              ...adv,
-              name: profile.name || adv.name,
-              role: profile.role || adv.role,
-              specialties: specialtiesArray,
-              hours: profile.hours !== undefined && profile.hours !== '' ? Number(profile.hours) : adv.hours,
-              lang: profile.lang || adv.lang,
-              price: (profile.price !== undefined && profile.price !== '') ? Number(profile.price) : adv.price,
-              defaultMeetLink: profile.defaultMeetLink || ''
+              id: c.id,
+              name: c.name,
+              role: c.experience ? 'Senior Psychologist' : 'Consultant Psychologist',
+              specialties: c.specialties && c.specialties.length > 0 
+                ? c.specialties 
+                : ['Anxiety Stress & Panic', 'Depression & Mood Concerns', 'Relationship'],
+              hours: c.reviewCount || 0,
+              lang: 'English, Malayalam',
+              price: 1200,
+              nextAvailable: 'Available Today',
+              rating: c.rating || 5.0
             };
-          } catch (e) {
-            console.error("Error parsing profile for advisor", adv.id, e);
-          }
+          });
+          setAdvisors(mapped);
         }
-        return { ...adv, defaultMeetLink: '' };
-      });
-
-      // 4. Dynamically append completed booking hours to advisor hours
-      const isSessionCompleted = (booking) => {
-        if (booking.status === 'CANCELLED') return false;
-        if (booking.status === 'COMPLETED') return true;
-        
-        if (booking.status === 'CONFIRMED') {
-          try {
-            const [year, month, day] = booking.date.split('-').map(Number);
-            const timeParts = booking.time.split(' ');
-            const [hoursStr, minutesStr] = timeParts[0].split(':');
-            let hours = Number(hoursStr);
-            const minutes = Number(minutesStr);
-            const meridiem = timeParts[1];
-            
-            if (meridiem === 'PM' && hours < 12) hours += 12;
-            if (meridiem === 'AM' && hours === 12) hours = 0;
-            
-            const sessionEnd = new Date(year, month - 1, day, hours + 1, minutes);
-            return new Date() > sessionEnd;
-          } catch (e) {
-            console.error("Error checking session completion", e);
-          }
-        }
-        return false;
-      };
-
-      try {
-        const bookings = JSON.parse(localStorage.getItem('behold_booked_sessions') || '[]');
-        finalAdvisors.forEach(adv => {
-          const completedCount = bookings.filter(b => 
-            (b.advisorId && b.advisorId === adv.id) ||
-            (b.advisorName && b.advisorName.toLowerCase() === adv.name.toLowerCase())
-          ).filter(isSessionCompleted).length;
-          adv.hours = adv.hours + completedCount;
-        });
-      } catch (e) {
-        console.error("Failed to dynamically append booking hours to advisors", e);
+      } catch (err) {
+        console.error("Failed to load counsellors from backend", err);
       }
-
-      return finalAdvisors;
     };
 
-    setAdvisors(getDynamicAdvisors());
+    fetchCounsellors();
   }, []);
 
   const filteredAndSortedAdvisors = advisors.filter(adv => {

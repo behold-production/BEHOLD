@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Menu, X, ArrowUpRight, User, LogOut, ChevronRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import LogoutConfirmModal from './LogoutConfirmModal';
@@ -9,6 +10,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
   const [showDropdown, setShowDropdown] = useState(false);
   const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const desktopDropdownRef = useRef(null);
   const mobileDropdownRef = useRef(null);
 
@@ -91,11 +93,11 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
     setIsMenuOpen(false);
     if (user) {
       if (user.role === 'ADMIN') {
-        window.spaNavigate('/admin');
+        navigate('/admin');
       } else if (user.role === 'PSYCHOLOGIST') {
-        window.spaNavigate('/counsellor');
+        navigate('/counsellor');
       } else {
-        window.spaNavigate('/profile');
+        navigate('/profile');
       }
     }
   };
@@ -150,7 +152,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
               </button>
 
               <button
-                onClick={() => window.spaNavigate('/sample-test')}
+                onClick={() => navigate('/sample-test')}
                 className={`transition-all duration-300 cursor-pointer pb-1 relative uppercase ${currentView === '/sample-test' ? 'text-zinc-900 font-bold' : 'hover:text-zinc-900'
                   }`}
               >
@@ -226,14 +228,13 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
 
             <button
               type="button"
-              onClick={() => window.spaNavigate('/booking')}
+              onClick={() => navigate('/booking')}
               className={`px-5 h-10 text-xs font-bold rounded-lg border transition-all duration-300 cursor-pointer flex items-center gap-1.5 uppercase tracking-wider ${currentView === '/booking'
                 ? 'bg-zinc-950 text-white border-zinc-950'
                 : 'bg-brand hover:bg-brand-dark text-zinc-900 shadow-xs border-brand/30'
                 }`}
             >
               <span>Book Session</span>
-              <ArrowUpRight className="w-3.5 h-3.5" />
             </button>
           </div>
 
@@ -338,7 +339,6 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
               }`}
           >
             <span>Home</span>
-            <ChevronRight className="w-3.5 h-3.5 opacity-40" />
           </button>
 
           <button
@@ -350,19 +350,17 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
               }`}
           >
             <span>Services</span>
-            <ChevronRight className="w-3.5 h-3.5 opacity-40" />
           </button>
 
           <button
             type="button"
-            onClick={() => { window.spaNavigate('/sample-test'); setIsMenuOpen(false); }}
+            onClick={() => { navigate('/sample-test'); setIsMenuOpen(false); }}
             className={`w-full text-left px-3.5 py-3.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${currentView === '/sample-test'
               ? 'bg-brand/10 text-zinc-900 border-brand font-black'
               : 'text-zinc-650 hover:text-zinc-900 hover:bg-zinc-50 border-transparent'
               }`}
           >
             <span>Sample Test</span>
-            <ChevronRight className="w-3.5 h-3.5 opacity-40" />
           </button>
 
           <button
@@ -374,19 +372,17 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
               }`}
           >
             <span>Contact</span>
-            <ChevronRight className="w-3.5 h-3.5 opacity-40" />
           </button>
 
           <button
             type="button"
-            onClick={() => { window.spaNavigate('/booking'); setIsMenuOpen(false); }}
+            onClick={() => { navigate('/booking'); setIsMenuOpen(false); }}
             className={`w-full text-left px-3.5 py-3.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${currentView === '/booking'
               ? 'bg-brand/10 text-zinc-900 border-brand font-black'
               : 'text-zinc-650 hover:text-zinc-900 hover:bg-zinc-50 border-transparent'
               }`}
           >
             <span>Book Session</span>
-            <ArrowUpRight className="w-4 h-4" />
           </button>
         </div>
 

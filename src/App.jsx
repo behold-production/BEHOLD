@@ -17,6 +17,7 @@ import AptitudeTest from './components/AptitudeTest';
 import AuthModals from './components/AuthModals';
 import AdvisorProfile from './components/AdvisorProfile';
 import { useAuth } from './context/AuthContext';
+import ApiService from './services/api';
 
 function AdvisorProfileWrapper({ handleBookTherapist, setPendingScrollSection }) {
   const { id } = useParams();
@@ -86,18 +87,10 @@ export default function App() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Monitor user state for pending redirect to booking
-  useEffect(() => {
-    if (user && pendingRedirect) {
-      setPendingRedirect(false);
-      navigate('/booking');
-    }
-  }, [user, pendingRedirect, navigate]);
-
-  // Setup global SPA navigate helper for other components
+  // Setup global SPA navigate helper for legacy or external components
   useEffect(() => {
     window.spaNavigate = (path) => {
-      navigate(path);
+      if (path) navigate(path);
     };
   }, [navigate]);
 
@@ -108,24 +101,21 @@ export default function App() {
     const path = location.pathname;
 
     if (user) {
-      if (user.role === 'ADMIN') {
+      const userRole = user?.role?.toUpperCase();
+      if (userRole === 'ADMIN') {
         // Admins can browse any page and are not force-redirected
-      } else if (user.role === 'PSYCHOLOGIST') {
-        // Psychologists can browse any page but cannot visit student profile page
+      } else if (userRole === 'PSYCHOLOGIST' || userRole === 'COUNSELLOR') {
         if (path === '/profile') {
-          navigate('/', { replace: true });
+          navigate('/');
         }
-      } else if (user.role === 'USER') {
-        // Students cannot visit /counsellor or /conceller
+      } else if (userRole === 'USER') {
         if (path === '/counsellor' || path === '/conceller') {
-          navigate('/profile', { replace: true });
+          navigate('/profile');
         }
       }
     } else {
-      // Guests visiting restricted user paths: /profile
-      // Note: /booking is open to guests — auth is triggered later at "Proceed to Payment"
       if (path === '/profile') {
-        navigate('/', { replace: true });
+        navigate('/');
         setIsAuthModalOpen(true);
       }
     }
@@ -165,13 +155,12 @@ export default function App() {
     navigate('/booking');
   };
 
-  const handleFinishTest = (dominantDomain, scores) => {
+  const handleFinishTest = async (dominantDomain, scores) => {
     setTestProfile({ dominantDomain, scores });
 
     try {
-      const results = JSON.parse(localStorage.getItem('behold_test_results_db') || '[]');
-      const newResult = {
-        id: 'res_' + Date.now(),
+      await ApiService.saveTestResult({
+        userId: user ? user.id : 'guest',
         studentName: user ? user.name : 'Anonymous Student',
         studentEmail: user ? user.email : 'anonymous@behold.com',
         dominantDomain,
@@ -180,9 +169,7 @@ export default function App() {
           const d = new Date();
           return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
         })()
-      };
-      results.push(newResult);
-      localStorage.setItem('behold_test_results_db', JSON.stringify(results));
+      });
     } catch (err) {
       console.error('Failed to save test results', err);
     }
@@ -191,24 +178,28 @@ export default function App() {
   };
 
   const navigateToSection = (sectionId) => {
+    // Handle navigation to the booking page if requested as a section
+    if (sectionId === 'booking' || sectionId === '/booking') {
+      navigate('/booking');
+      return;
+    }
+
     if (sectionId === 'top') {
       if (location.pathname === '/') {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
-        setPendingScrollSection('top');
         navigate('/');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
       return;
     }
 
-    if (location.pathname === '/') {
-      const element = document.getElementById(sectionId);
-      if (element) {
-        const offset = 80;
-        const bodyRect = document.body.getBoundingClientRect().top;
-        const elementRect = element.getBoundingClientRect().top;
-        window.scrollTo({ top: elementRect - bodyRect - offset, behavior: 'smooth' });
-      }
+    const element = document.getElementById(sectionId);
+    if (location.pathname === '/' && element) {
+      const offset = 80;
+      const bodyRect = document.body.getBoundingClientRect().top;
+      const elementRect = element.getBoundingClientRect().top;
+      window.scrollTo({ top: elementRect - bodyRect - offset, behavior: 'smooth' });
     } else {
       setPendingScrollSection(sectionId);
       navigate('/');
@@ -231,7 +222,7 @@ export default function App() {
 
   return (
     <div className="font-sans antialiased selection:bg-brand/30 min-h-screen relative text-zinc-900 bg-zinc-50">
-      
+
       {/* Top Banner Notice Alert */}
       {!hideNavbarAndFooter && siteSettings.showBanner && siteSettings.bannerNotice && (
         <div className="w-full bg-zinc-950 text-zinc-300 text-[10px] sm:text-xs font-bold py-2.5 px-4 text-center border-b border-zinc-900 relative z-50 flex items-center justify-center gap-2 tracking-wide uppercase font-mono shadow-md animate-in slide-in-from-top duration-300">
@@ -244,9 +235,9 @@ export default function App() {
 
       {/* Navbar — hidden on admin/counsellor dashboards */}
       {!hideNavbarAndFooter && (
-        <Navbar 
-          navigateToSection={navigateToSection} 
-          currentView={location.pathname} 
+        <Navbar
+          navigateToSection={navigateToSection}
+          currentView={location.pathname}
           onOpenAuth={() => setIsAuthModalOpen(true)}
           siteName={siteSettings.siteName}
         />
@@ -272,20 +263,16 @@ export default function App() {
 
         {/* Booking — open to guests; auth is enforced inside at "Proceed to Payment" */}
         <Route path="/booking" element={
-          !user || user.role === 'USER' ? (
-            <ServiceBooking
-              preselectedAdvisorId={bookingAdvisor}
-              clearPreselectedAdvisor={() => setBookingAdvisor(null)}
-              onOpenAuth={() => setIsAuthModalOpen(true)}
-            />
-          ) : (
-            <Navigate to="/" replace />
-          )
+          <ServiceBooking
+            preselectedAdvisorId={bookingAdvisor}
+            clearPreselectedAdvisor={() => setBookingAdvisor(null)}
+            onOpenAuth={() => setIsAuthModalOpen(true)}
+          />
         } />
 
         {/* Student Profile */}
         <Route path="/profile" element={
-          user?.role === 'USER' ? (
+          user?.role?.toUpperCase() === 'USER' ? (
             <StudentProfile />
           ) : (
             <Navigate to="/" replace />
@@ -299,10 +286,10 @@ export default function App() {
 
         {/* Counsellor Dashboard */}
         <Route path="/counsellor" element={
-          user && user.role !== 'PSYCHOLOGIST' ? (
-            <Navigate to="/profile" replace />
-          ) : (
+          user && (user?.role?.toUpperCase() === 'PSYCHOLOGIST' || user?.role?.toUpperCase() === 'COUNSELLOR') ? (
             <PsychologistDashboard setView={() => { }} />
+          ) : (
+            <Navigate to="/profile" replace />
           )
         } />
         <Route path="/conceller" element={<Navigate to="/counsellor" replace />} />
@@ -340,8 +327,8 @@ export default function App() {
 
       {/* Footer */}
       {!hideNavbarAndFooter && (
-        <Footer 
-          navigateToSection={navigateToSection} 
+        <Footer
+          navigateToSection={navigateToSection}
           siteName={siteSettings.siteName}
           siteCopyright={siteSettings.siteCopyright}
           onOpenDocs={(docType) => setActiveDocType(docType)}
@@ -352,7 +339,7 @@ export default function App() {
       {activeDocType && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
           <div className="bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-2xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
-            
+
             {/* Modal Header */}
             <div className="px-6 py-4 border-b border-zinc-800 flex justify-between items-center bg-zinc-950/40">
               <h3 className="text-sm font-bold uppercase tracking-widest text-white font-header flex items-center gap-2">

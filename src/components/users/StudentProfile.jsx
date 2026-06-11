@@ -1,4 +1,5 @@
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   User, Phone, Mail, BookOpen, Award, LayoutDashboard, Calendar,
   History, BarChart3, Clock, ExternalLink, Lock, Check, Sun,
@@ -8,6 +9,7 @@ import {
   CheckCircle2, AlertCircle, Hash, Activity
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import ApiService from '../../services/api';
 
 const INITIAL_STATE = {
   name: '', email: '', phone: '', schoolName: '', grade: '',
@@ -112,16 +114,10 @@ const getMeetLinkStatus = (session) => {
 };
 
 export default function StudentProfile() {
-  const [profile, setProfile] = useState(() => {
-    try {
-      const saved = localStorage.getItem('behold_student_profile');
-      if (!saved) return INITIAL_STATE;
-      return { ...INITIAL_STATE, ...JSON.parse(saved) };
-    } catch { return INITIAL_STATE; }
-  });
+  const [profile, setProfile] = useState(INITIAL_STATE);
   const [isSaved, setIsSaved] = useState(false);
   const [errors, setErrors] = useState({});
-  const [currentSection, setCurrentSection] = useState('overview');
+  const [isLoading, setIsLoading] = useState(true);
   const [bookedSessions, setBookedSessions] = useState([]);
   const [completedSessions, setCompletedSessions] = useState([]);
   const [testProfile] = useState(() => {
@@ -132,100 +128,58 @@ export default function StudentProfile() {
   });
   const [sessionFilter, setSessionFilter] = useState('all');
   const [sessionSubTab, setSessionSubTab] = useState('upcoming');
-  const { user } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const currentSection = useMemo(() => searchParams.get('tab') || 'overview', [searchParams]);
 
   const completion = useMemo(() => calculateCompletion(profile), [profile]);
   const greeting = useMemo(() => getGreeting(), []);
   const displayName = profile.name || user?.name || 'Student';
 
   useEffect(() => {
-    window.history.replaceState({ component: 'profile', section: 'overview' }, '');
-    const handlePopState = (e) => {
-      if (e.state && e.state.component === 'profile' && e.state.section) {
-        setCurrentSection(e.state.section);
+    const fetchData = async () => {
+      try {
+        const [profileRes, sessionsRes] = await Promise.all([
+          ApiService.getProfile(),
+          ApiService.getSessions()
+        ]);
+
+        if (profileRes.success && profileRes.data) {
+          const data = { ...INITIAL_STATE, ...profileRes.data };
+          Object.keys(INITIAL_STATE).forEach(key => {
+            if (data[key] === null) data[key] = '';
+          });
+          setProfile(data);
+        }
+
+        if (sessionsRes.success && Array.isArray(sessionsRes.data)) {
+          const list = sessionsRes.data;
+          setBookedSessions(list.filter(b => b.status !== 'CANCELLED' && b.status !== 'COMPLETED' && !isSessionCompleted(b)));
+          setCompletedSessions(list.filter(b => b.status === 'COMPLETED' || isSessionCompleted(b)));
+        }
+      } catch (err) {
+        console.error('Failed to load student dashboard info:', err);
+      } finally {
+        setIsLoading(false);
       }
     };
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, []);
 
-  const loadStudentBookings = () => {
-    try {
-      const stored = localStorage.getItem('behold_booked_sessions');
-      let list = stored ? JSON.parse(stored) : [];
-      const cleanList = list.filter(b => !['sb_mock_1', 'sb_mock_2', 'sb_mock_c1'].includes(b.id));
-      if (cleanList.length !== list.length) {
-        localStorage.setItem('behold_booked_sessions', JSON.stringify(cleanList));
-        list = cleanList;
-      }
-      const currentStudentId = user?.id || '';
-      const filtered = list
-        .filter(b => b.userId === currentStudentId && b.status !== 'CANCELLED' && !isSessionCompleted(b))
-        .sort((a, b) => {
-          if (a.status === 'PENDING' && b.status !== 'PENDING') return -1;
-          if (a.status !== 'PENDING' && b.status === 'PENDING') return 1;
-          return a.date.localeCompare(b.date);
-        });
-      setBookedSessions(filtered);
-    } catch { /* noop */ }
-  };
-
-  const loadCompletedSessions = () => {
-    try {
-      const stored = localStorage.getItem('behold_booked_sessions');
-      let list = stored ? JSON.parse(stored) : [];
-      const cleanList = list.filter(b => !['sb_mock_1', 'sb_mock_2', 'sb_mock_c1'].includes(b.id));
-      if (cleanList.length !== list.length) {
-        localStorage.setItem('behold_booked_sessions', JSON.stringify(cleanList));
-        list = cleanList;
-      }
-      const currentStudentId = user?.id || '';
-      const completedList = list
-        .filter(b => b.userId === currentStudentId && isSessionCompleted(b))
-        .sort((a, b) => b.date.localeCompare(a.date));
-      setCompletedSessions(completedList);
-    } catch { /* noop */ }
-  };
-
-  const loadBookingsRef = useRef(loadStudentBookings);
-  const loadCompletedRef = useRef(loadCompletedSessions);
-
-  useEffect(() => {
-    loadBookingsRef.current = loadStudentBookings;
-    loadCompletedRef.current = loadCompletedSessions;
-  });
-
-  useEffect(() => {
-    loadBookingsRef.current();
-    loadCompletedRef.current();
-    const handleStorageChange = (e) => {
-      const key = e.key || (e.detail && e.detail.key);
-      if (key === 'behold_booked_sessions' || !key) {
-        loadBookingsRef.current();
-        loadCompletedRef.current();
-      }
-    };
-    window.addEventListener('storage', handleStorageChange);
-    window.addEventListener('storage_update', handleStorageChange);
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('storage_update', handleStorageChange);
-    };
-  }, [user]);
+    if (user && !authLoading) {
+      setIsLoading(true);
+      fetchData();
+    }
+  }, [user, authLoading]);
 
   const handleSectionChange = (sectionId) => {
-    setCurrentSection(sectionId);
-    window.history.pushState({ component: 'profile', section: sectionId }, '');
+    setSearchParams({ tab: sectionId });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setProfile(prev => {
-      const updated = { ...prev, [name]: value };
-      localStorage.setItem('behold_student_profile', JSON.stringify(updated));
-      return updated;
-    });
+    setProfile(prev => ({ ...prev, [name]: value }));
     if (errors[name]) setErrors(prev => ({ ...prev, [name]: null }));
   };
 
@@ -241,27 +195,38 @@ export default function StudentProfile() {
     return err;
   };
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
     const err = validate();
     if (Object.keys(err).length > 0) { setErrors(err); return; }
-    setIsSaved(true);
-    setTimeout(() => setIsSaved(false), 3000);
+    try {
+      await ApiService.updateProfile(profile);
+      setIsSaved(true);
+      setTimeout(() => setIsSaved(false), 3000);
+    } catch (error) {
+      alert(error.message || 'Failed to update profile');
+    }
   };
 
-  const handleCancelSession = (sessionId) => {
+  const handleCancelSession = async (sessionId) => {
     try {
-      const stored = localStorage.getItem('behold_booked_sessions');
-      const list = stored ? JSON.parse(stored) : [];
-      const session = list.find(b => b.id === sessionId);
+      const session = bookedSessions.find(b => b.id === sessionId);
       if (session && isSessionCompleted(session)) {
         alert('Cannot cancel a session that is already in the past or completed.');
         return;
       }
-      const updated = list.map(b => b.id === sessionId ? { ...b, status: 'CANCELLED' } : b);
-      localStorage.setItem('behold_booked_sessions', JSON.stringify(updated));
-      loadStudentBookings();
-    } catch { /* noop */ }
+      await ApiService.cancelAppointment(sessionId);
+
+      // Reload sessions list
+      const sessionsRes = await ApiService.getSessions();
+      if (sessionsRes.success && Array.isArray(sessionsRes.data)) {
+        const list = sessionsRes.data;
+        setBookedSessions(list.filter(b => b.status !== 'CANCELLED' && b.status !== 'COMPLETED' && !isSessionCompleted(b)));
+        setCompletedSessions(list.filter(b => b.status === 'COMPLETED' || isSessionCompleted(b)));
+      }
+    } catch (error) {
+      alert(error.message || 'Failed to cancel session');
+    }
   };
 
   const filteredBooked = useMemo(() => {
@@ -477,7 +442,7 @@ export default function StudentProfile() {
           </div>
           <button
             type="button"
-            onClick={() => window.spaNavigate('/booking')}
+            onClick={() => navigate('/booking')}
             className="inline-flex items-center gap-1.5 min-h-[40px] px-4 py-2 bg-zinc-900 text-white text-xs font-semibold rounded-lg hover:bg-zinc-800 transition-colors border-none"
           >
             <Plus className="w-3.5 h-3.5" /> Book Session
@@ -526,7 +491,7 @@ export default function StudentProfile() {
                   onClick={() => { handleSectionChange('booked'); setSessionSubTab('upcoming'); }}
                   className="min-h-[36px] px-3 py-1.5 bg-white/10 hover:bg-white/15 border border-white/10 rounded-lg text-xs font-medium transition flex items-center gap-1 cursor-pointer text-white"
                 >
-                  View <ChevronRight className="w-3.5 h-3.5" />
+                  View
                 </button>
               </div>
             </div>
@@ -542,7 +507,7 @@ export default function StudentProfile() {
             </p>
             <button
               type="button"
-              onClick={() => window.spaNavigate('/booking')}
+              onClick={() => navigate('/booking')}
               className="mt-4 inline-flex items-center gap-1.5 min-h-[40px] px-5 py-2 bg-zinc-900 text-white text-xs font-semibold rounded-lg hover:bg-zinc-800 transition-colors border-none"
             >
               <Plus className="w-3.5 h-3.5" /> Book a Session
@@ -593,11 +558,10 @@ export default function StudentProfile() {
             </p>
             <button
               type="button"
-              onClick={() => testProfile ? handleSectionChange('results') : window.spaNavigate('/sample-test')}
+              onClick={() => testProfile ? handleSectionChange('results') : navigate('/sample-test')}
               className="mt-4 w-full min-h-[40px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg text-xs font-semibold transition-colors border-none"
             >
               {testProfile ? 'View Results' : 'Start Test'}
-              <ArrowUpRight className="w-3.5 h-3.5" />
             </button>
           </div>
 
@@ -625,13 +589,12 @@ export default function StudentProfile() {
                   handleSectionChange('booked');
                   setSessionSubTab('upcoming');
                 } else {
-                  window.spaNavigate('/booking');
+                  navigate('/booking');
                 }
               }}
               className="mt-4 w-full min-h-[40px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg text-xs font-semibold transition-colors border-none"
             >
               {bookedSessions.length > 0 ? 'View Bookings' : 'Book a Session'}
-              <ArrowUpRight className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
@@ -893,12 +856,12 @@ export default function StudentProfile() {
   // ─── Tab: Booked Sessions ────────────────────────────────────────────
 
   const BookedSessionsTab = () => {
-    const filterChips = [
+    const filterChips = useMemo(() => [
       { id: 'all', label: 'All', count: bookedSessions.length },
       { id: 'online', label: 'Online', count: bookedSessions.filter(s => s.mode === 'ONLINE').length },
       { id: 'offline', label: 'In-Person', count: bookedSessions.filter(s => s.mode !== 'ONLINE').length },
       { id: 'pending', label: 'Pending', count: bookedSessions.filter(s => s.status === 'PENDING').length },
-    ];
+    ], [bookedSessions]);
 
     return (
       <div className="space-y-5">
@@ -908,17 +871,15 @@ export default function StudentProfile() {
             <button
               type="button"
               onClick={() => setSessionSubTab('upcoming')}
-              className={`pb-2 text-sm font-semibold border-b-2 transition-all relative cursor-pointer ${
-                sessionSubTab === 'upcoming' 
-                  ? 'border-zinc-900 text-zinc-900 font-bold' 
-                  : 'border-transparent text-zinc-400 hover:text-zinc-600'
-              }`}
+              className={`pb-2 text-sm font-semibold border-b-2 transition-all relative cursor-pointer ${sessionSubTab === 'upcoming'
+                ? 'border-zinc-900 text-zinc-900 font-bold'
+                : 'border-transparent text-zinc-400 hover:text-zinc-600'
+                }`}
             >
               Upcoming Sessions
               {bookedSessions.length > 0 && (
-                <span className={`ml-1.5 text-[9px] font-bold px-1.5 py-0.5 rounded-full ${
-                  sessionSubTab === 'upcoming' ? 'bg-zinc-900 text-white' : 'bg-zinc-100 text-zinc-500'
-                }`}>
+                <span className={`ml-1.5 text-[9px] font-bold px-1.5 py-0.5 rounded-full ${sessionSubTab === 'upcoming' ? 'bg-zinc-900 text-white' : 'bg-zinc-100 text-zinc-500'
+                  }`}>
                   {bookedSessions.length}
                 </span>
               )}
@@ -926,27 +887,25 @@ export default function StudentProfile() {
             <button
               type="button"
               onClick={() => setSessionSubTab('history')}
-              className={`pb-2 text-sm font-semibold border-b-2 transition-all relative cursor-pointer ${
-                sessionSubTab === 'history' 
-                  ? 'border-zinc-900 text-zinc-900 font-bold' 
-                  : 'border-transparent text-zinc-400 hover:text-zinc-600'
-              }`}
+              className={`pb-2 text-sm font-semibold border-b-2 transition-all relative cursor-pointer ${sessionSubTab === 'history'
+                ? 'border-zinc-900 text-zinc-900 font-bold'
+                : 'border-transparent text-zinc-400 hover:text-zinc-600'
+                }`}
             >
               History & Timeline
               {completedSessions.length > 0 && (
-                <span className={`ml-1.5 text-[9px] font-bold px-1.5 py-0.5 rounded-full ${
-                  sessionSubTab === 'history' ? 'bg-zinc-900 text-white' : 'bg-zinc-100 text-zinc-500'
-                }`}>
+                <span className={`ml-1.5 text-[9px] font-bold px-1.5 py-0.5 rounded-full ${sessionSubTab === 'history' ? 'bg-zinc-900 text-white' : 'bg-zinc-100 text-zinc-500'
+                  }`}>
                   {completedSessions.length}
                 </span>
               )}
             </button>
           </div>
-          
+
           {sessionSubTab === 'upcoming' && (
             <button
               type="button"
-              onClick={() => window.spaNavigate('/booking')}
+              onClick={() => navigate('/booking')}
               className="inline-flex items-center gap-1.5 min-h-[36px] px-3.5 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-semibold rounded-lg transition-colors border-none sm:self-center"
             >
               <Plus className="w-3.5 h-3.5" /> New Booking
@@ -964,17 +923,15 @@ export default function StudentProfile() {
                     key={chip.id}
                     type="button"
                     onClick={() => setSessionFilter(chip.id)}
-                    className={`shrink-0 inline-flex items-center gap-1.5 px-3 min-h-[32px] rounded-lg text-xs font-medium transition-all border ${
-                      sessionFilter === chip.id
-                        ? 'bg-zinc-900 text-white border-zinc-900'
-                        : 'bg-white text-zinc-600 border-zinc-200 hover:border-zinc-300'
-                    }`}
+                    className={`shrink-0 inline-flex items-center gap-1.5 px-3 min-h-[32px] rounded-lg text-xs font-medium transition-all border ${sessionFilter === chip.id
+                      ? 'bg-zinc-900 text-white border-zinc-900'
+                      : 'bg-white text-zinc-600 border-zinc-200 hover:border-zinc-300'
+                      }`}
                   >
                     {chip.label}
                     {chip.count > 0 && (
-                      <span className={`text-[10px] font-semibold px-1.5 min-w-[18px] h-4 rounded-full flex items-center justify-center ${
-                        sessionFilter === chip.id ? 'bg-white/20' : 'bg-zinc-100 text-zinc-600'
-                      }`}>
+                      <span className={`text-[10px] font-semibold px-1.5 min-w-[18px] h-4 rounded-full flex items-center justify-center ${sessionFilter === chip.id ? 'bg-white/20' : 'bg-zinc-100 text-zinc-600'
+                        }`}>
                         {chip.count}
                       </span>
                     )}
@@ -1001,11 +958,10 @@ export default function StudentProfile() {
                             {session.mode === 'ONLINE' ? <Video className="w-5 h-5 text-zinc-600" /> : <MapPin className="w-5 h-5 text-zinc-600" />}
                           </div>
                           <div>
-                            <span className={`inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md font-semibold uppercase tracking-wider ${
-                              isConfirmed
-                                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                                : 'bg-amber-50 text-amber-700 border border-amber-200'
-                            }`}>
+                            <span className={`inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md font-semibold uppercase tracking-wider ${isConfirmed
+                              ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                              : 'bg-amber-50 text-amber-700 border border-amber-200'
+                              }`}>
                               <span className={`w-1.5 h-1.5 rounded-full ${isConfirmed ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
                               {session.status}
                             </span>
@@ -1071,7 +1027,7 @@ export default function StudentProfile() {
                         )}
                         <button
                           type="button"
-                          onClick={() => window.spaNavigate('/booking')}
+                          onClick={() => navigate('/booking')}
                           className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 border border-zinc-200 hover:border-zinc-300 rounded-lg text-xs font-medium text-zinc-600 hover:text-zinc-900 transition-colors bg-white"
                         >
                           <RefreshCw className="w-3.5 h-3.5" /> Reschedule
@@ -1101,7 +1057,7 @@ export default function StudentProfile() {
                 </p>
                 <button
                   type="button"
-                  onClick={() => window.spaNavigate('/booking')}
+                  onClick={() => navigate('/booking')}
                   className="mt-4 inline-flex items-center gap-1.5 min-h-[36px] px-5 py-2 bg-zinc-900 text-white text-xs font-semibold rounded-lg hover:bg-zinc-800 transition-colors border-none"
                 >
                   <Plus className="w-3.5 h-3.5" /> Book a Session
@@ -1198,7 +1154,7 @@ export default function StudentProfile() {
                 <p className="text-xs text-zinc-500 mt-1">Finished sessions will appear here with counsellor feedback.</p>
                 <button
                   type="button"
-                  onClick={() => window.spaNavigate('/booking')}
+                  onClick={() => navigate('/booking')}
                   className="mt-4 inline-flex items-center gap-1.5 min-h-[36px] px-5 py-2 bg-zinc-900 text-white text-xs font-semibold rounded-lg hover:bg-zinc-800 transition-colors border-none"
                 >
                   <Plus className="w-3.5 h-3.5" /> Book First Session
@@ -1231,7 +1187,7 @@ export default function StudentProfile() {
             </p>
             <button
               type="button"
-              onClick={() => window.spaNavigate('/sample-test')}
+              onClick={() => navigate('/sample-test')}
               className="mt-4 inline-flex items-center gap-1.5 min-h-[40px] px-5 py-2 bg-zinc-900 text-white text-xs font-semibold rounded-lg hover:bg-zinc-800 transition-colors border-none"
             >
               <Target className="w-3.5 h-3.5" /> Take CDAT Test
@@ -1317,7 +1273,7 @@ export default function StudentProfile() {
             </div>
             <button
               type="button"
-              onClick={() => window.spaNavigate('/booking')}
+              onClick={() => navigate('/booking')}
               className="mt-4 w-full sm:w-auto inline-flex items-center justify-center gap-1.5 min-h-[40px] px-5 py-2 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-semibold rounded-lg transition-colors border-none"
             >
               <MessageCircle className="w-3.5 h-3.5" /> Discuss with a Counsellor
@@ -1328,7 +1284,7 @@ export default function StudentProfile() {
         <div className="text-center">
           <button
             type="button"
-            onClick={() => window.spaNavigate('/sample-test')}
+            onClick={() => navigate('/sample-test')}
             className="inline-flex items-center gap-1.5 text-xs font-medium text-zinc-500 hover:text-zinc-900 transition-colors"
           >
             <RefreshCw className="w-3.5 h-3.5" /> Retake diagnostic test
@@ -1343,6 +1299,13 @@ export default function StudentProfile() {
   return (
     <div className="pt-5 sm:pt-20 pb-24 lg:pb-12 min-h-screen bg-zinc-50 text-zinc-900 font-sans text-left">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-5 sm:space-y-6">
+        {isLoading && (
+          <div className="fixed inset-0 z-[100] bg-white/60 backdrop-blur-[2px] flex flex-col items-center justify-center">
+            <RefreshCw className="w-8 h-8 text-zinc-900 animate-spin mb-4" />
+            <p className="text-sm font-semibold text-zinc-900">Loading your profile...</p>
+          </div>
+        )}
+
         <HeroHeader />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">

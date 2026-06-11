@@ -6,18 +6,13 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import LogoutConfirmModal from '../LogoutConfirmModal';
+import ApiService from '../../services/api';
 
 export default function PsychologistDashboard({ setView }) {
   const { user, login, register, logout } = useAuth();
 
   const isCounsellorVerified = () => {
-    try {
-      const users = JSON.parse(localStorage.getItem('behold_users_db') || '[]');
-      const currentUser = users.find(u => u.id === user?.id);
-      return currentUser ? currentUser.verified !== false : true;
-    } catch (e) {
-      return true;
-    }
+    return user ? user.isVerified !== false : true;
   };
 
   const [currentSection, setCurrentSection] = useState('overview'); // overview, profile, availability, bookings
@@ -150,42 +145,41 @@ export default function PsychologistDashboard({ setView }) {
     return false;
   };
 
-  const loadBookingsData = () => {
+  const loadBookingsData = async () => {
     try {
-      const advisorId = user?.id || '';
+      if (!user) return;
+      const advisorId = user.id;
 
       // Load profile
-      let advisorName = user?.name || 'Counsellor Name';
-      const savedProfile = localStorage.getItem(`behold_advisor_profile_${advisorId}`);
-      if (savedProfile) {
-        try {
-          const parsed = JSON.parse(savedProfile);
-          setProfile({
-            ...parsed,
-            modes: parsed.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP']
-          });
-          if (parsed.name) advisorName = parsed.name;
-        } catch (e) { }
-      } else {
-        setProfile(prev => ({
-          ...prev,
-          name: advisorName,
-          hours: 0
-        }));
-      }
+      const profileRes = await ApiService.getCounsellorProfile();
+      if (profileRes.success && profileRes.data) {
+        const c = profileRes.data;
+        const specialtiesStr = c.specialties
+          ? (Array.isArray(c.specialties) ? c.specialties.join(', ') : c.specialties)
+          : '';
+        setProfile({
+          name: c.name || user.name || '',
+          role: 'Consultant Psychologist',
+          education: c.education || '',
+          specialties: specialtiesStr,
+          price: c.price !== undefined ? c.price : 1200,
+          lang: c.lang || 'English, Malayalam',
+          bio: c.bio || '',
+          defaultMeetLink: c.defaultMeetLink || '',
+          hours: c.hours || 0,
+          modes: c.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP']
+        });
 
-      // Load availability
-      const savedAvailability = localStorage.getItem(`behold_advisor_availability_${advisorId}`);
-      if (savedAvailability) {
-        try {
-          const parsed = JSON.parse(savedAvailability);
-          if (parsed.activeDays) setActiveDays(parsed.activeDays);
-          if (parsed.availableSlots) {
-            setAvailableSlots(parsed.availableSlots);
-            // Ensure any saved custom slot is also added to the list of displayed slots
+        // Load availability
+        if (c.availability) {
+          const avail = c.availability;
+          if (avail.activeDays) setActiveDays(avail.activeDays);
+          if (avail.availableSlots) {
+            setAvailableSlots(avail.availableSlots);
+            // Ensure slots are added to the list of displayed slots
             setAllSlots(prev => {
               const merged = [...prev];
-              parsed.availableSlots.forEach(slot => {
+              avail.availableSlots.forEach(slot => {
                 if (!merged.includes(slot)) {
                   merged.push(slot);
                 }
@@ -193,63 +187,43 @@ export default function PsychologistDashboard({ setView }) {
               return merged;
             });
           }
-        } catch (e) { }
+        }
       }
 
       // Load bookings
-      const stored = localStorage.getItem('behold_booked_sessions');
-      let list = [];
-      if (stored) {
-        try { list = JSON.parse(stored); } catch (e) { }
+      const bookingsRes = await ApiService.getAppointments();
+      if (bookingsRes.success && bookingsRes.data) {
+        const list = bookingsRes.data;
+        const myBookings = list.map(b => ({
+          id: b.id,
+          userId: b.userId,
+          userName: b.studentName || 'Student Name',
+          advisorId: b.counsellorId,
+          advisorName: b.counsellorName || user.name,
+          date: b.date,
+          time: b.time,
+          mode: b.mode,
+          status: b.status,
+          meetLink: b.meetLink || '',
+          feedback: b.feedback || '',
+          service: b.service || 'counselling'
+        })).sort((a, b) => {
+          if (a.status === 'PENDING' && b.status !== 'PENDING') return -1;
+          if (a.status !== 'PENDING' && b.status === 'PENDING') return 1;
+          if (a.status === 'CONFIRMED' && b.status !== 'CONFIRMED' && b.status !== 'PENDING') return -1;
+          if (b.status === 'CONFIRMED' && a.status !== 'CONFIRMED' && a.status !== 'PENDING') return 1;
+          return b.date.localeCompare(a.date);
+        });
+        setBookings(myBookings);
       }
-
-      // Filter out mock bookings to ensure clean slate
-      const cleanList = list.filter(b => b.id !== 'sb_mock_1' && b.id !== 'sb_mock_2' && b.id !== 'sb_mock_c1');
-      if (cleanList.length !== list.length) {
-        localStorage.setItem('behold_booked_sessions', JSON.stringify(cleanList));
-        list = cleanList;
-      }
-
-      // Filter bookings only for this advisor
-      const myBookings = list.filter(b => {
-        const matchesId = b.advisorId === advisorId;
-        const matchesName = b.advisorName && b.advisorName.toLowerCase().includes(advisorName.toLowerCase());
-        return matchesId || matchesName;
-      }).sort((a, b) => {
-        if (a.status === 'PENDING' && b.status !== 'PENDING') return -1;
-        if (a.status !== 'PENDING' && b.status === 'PENDING') return 1;
-        if (a.status === 'CONFIRMED' && b.status !== 'CONFIRMED' && b.status !== 'PENDING') return -1;
-        if (b.status === 'CONFIRMED' && a.status !== 'CONFIRMED' && a.status !== 'PENDING') return 1;
-        return b.date.localeCompare(a.date);
-      });
-      setBookings(myBookings);
     } catch (err) {
-      console.error("Failed loading counsellor bookings", err);
+      console.error("Failed loading counsellor profile & bookings from API", err);
     }
   };
 
-  // Load advisor details & bookings from localStorage
+  // Load advisor details & bookings from API
   useEffect(() => {
     loadBookingsData();
-
-    const handleStorageChange = (e) => {
-      const key = e.key || (e.detail && e.detail.key);
-      const advisorId = user?.id || '';
-      if (
-        key === 'behold_booked_sessions' ||
-        key === `behold_advisor_profile_${advisorId}` ||
-        key === `behold_advisor_availability_${advisorId}`
-      ) {
-        loadBookingsData();
-      }
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-    window.addEventListener('storage_update', handleStorageChange);
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('storage_update', handleStorageChange);
-    };
   }, [user]);
 
   // Auto-refresh bookings when switching to bookings or overview tab
@@ -324,20 +298,22 @@ export default function PsychologistDashboard({ setView }) {
     }
 
     try {
-      const registeredUser = await register(
+      await register(
         regForm.name.trim(),
         regForm.email.trim(),
         regForm.password,
         'PSYCHOLOGIST'
       );
 
-      const newId = registeredUser.id;
+      // Convert specialties string to array
+      const specialtiesArr = regForm.specialties
+        ? regForm.specialties.split(',').map(s => s.trim()).filter(Boolean)
+        : [];
 
-      const newProfile = {
+      const newProfilePayload = {
         name: regForm.name.trim(),
-        role: 'Consultant Psychologist',
         education: regForm.education.trim(),
-        specialties: regForm.specialties.trim(),
+        specialties: specialtiesArr,
         price: Number(regForm.price) || 1200,
         lang: regForm.lang.trim(),
         bio: regForm.bio.trim(),
@@ -345,38 +321,13 @@ export default function PsychologistDashboard({ setView }) {
         hours: Number(regForm.hours) || 0,
         modes: regForm.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP']
       };
-      localStorage.setItem(`behold_advisor_profile_${newId}`, JSON.stringify(newProfile));
 
-      // Propagate defaultMeetLink to pre-existing bookings
-      try {
-        const stored = localStorage.getItem('behold_booked_sessions');
-        if (stored) {
-          let allBookings = JSON.parse(stored);
-          let updated = false;
-          const newMeetLink = newProfile.defaultMeetLink;
-          allBookings = allBookings.map(b => {
-            const matchesId = b.advisorId === newId;
-            const matchesName = b.advisorName && newProfile.name && b.advisorName.toLowerCase().trim() === newProfile.name.toLowerCase().trim();
-            if (matchesId || matchesName) {
-              if (b.meetLink !== newMeetLink) {
-                updated = true;
-                return { ...b, meetLink: newMeetLink, advisorId: newId };
-              }
-            }
-            return b;
-          });
-          if (updated) {
-            localStorage.setItem('behold_booked_sessions', JSON.stringify(allBookings));
-          }
-        }
-      } catch (err) {
-        console.error("Failed to propagate meet link in onboarding:", err);
-      }
-
-      localStorage.setItem(`behold_advisor_availability_${newId}`, JSON.stringify({
+      // Call API updates
+      await ApiService.updateCounsellorProfile(newProfilePayload);
+      await ApiService.updateAvailability({
         activeDays: regActiveDays,
         availableSlots: regAvailableSlots
-      }));
+      });
 
       await login(regForm.email.trim(), regForm.password);
 
@@ -425,61 +376,55 @@ export default function PsychologistDashboard({ setView }) {
     }
   };
 
-  const handleProfileSave = (e) => {
+  const handleProfileSave = async (e) => {
     e.preventDefault();
-    const advisorId = user?.id || 't2';
-    localStorage.setItem(`behold_advisor_profile_${advisorId}`, JSON.stringify(profile));
-
-    // Propagate defaultMeetLink to all matching bookings
     try {
-      const stored = localStorage.getItem('behold_booked_sessions');
-      if (stored) {
-        let allBookings = JSON.parse(stored);
-        let updated = false;
-        const newMeetLink = profile.defaultMeetLink || '';
+      const specialtiesArr = profile.specialties
+        ? profile.specialties.split(',').map(s => s.trim()).filter(Boolean)
+        : [];
 
-        allBookings = allBookings.map(b => {
-          const matchesId = b.advisorId === advisorId;
-          const matchesName = b.advisorName && profile.name && b.advisorName.toLowerCase().trim() === profile.name.toLowerCase().trim();
-          if (matchesId || matchesName) {
-            if (b.meetLink !== newMeetLink) {
-              updated = true;
-              return { ...b, meetLink: newMeetLink, advisorId };
-            }
-          }
-          return b;
-        });
+      const payload = {
+        name: profile.name,
+        education: profile.education,
+        specialties: specialtiesArr,
+        price: Number(profile.price) || 1200,
+        lang: profile.lang,
+        bio: profile.bio,
+        defaultMeetLink: profile.defaultMeetLink,
+        hours: Number(profile.hours) || 0,
+        modes: profile.modes
+      };
 
-        if (updated) {
-          localStorage.setItem('behold_booked_sessions', JSON.stringify(allBookings));
-          // Update the local bookings state
-          const myBookings = allBookings.filter(b => {
-            const matchesId = b.advisorId === advisorId;
-            const matchesName = b.advisorName && profile.name && b.advisorName.toLowerCase().trim() === profile.name.toLowerCase().trim();
-            return matchesId || matchesName;
-          });
-          setBookings(myBookings);
-        }
+      const res = await ApiService.updateCounsellorProfile(payload);
+      if (res.success) {
+        setIsProfileSaved(true);
+        setTimeout(() => setIsProfileSaved(false), 3000);
+        await loadBookingsData();
       }
     } catch (err) {
-      console.error("Failed to propagate meet link updates:", err);
+      console.error("Failed to save counsellor profile via API", err);
     }
-
-    setIsProfileSaved(true);
-    setTimeout(() => setIsProfileSaved(false), 3000);
   };
 
-  const handleAvailabilitySave = (e) => {
+  const handleAvailabilitySave = async (e) => {
     e.preventDefault();
     setSlotError('');
     if (!availableSlots || availableSlots.length === 0) {
       setSlotError("Please configure at least one availability slot to save.");
       return;
     }
-    const advisorId = user?.id || 't2';
-    localStorage.setItem(`behold_advisor_availability_${advisorId}`, JSON.stringify({ activeDays, availableSlots }));
-    setIsAvailabilitySaved(true);
-    setTimeout(() => setIsAvailabilitySaved(false), 3000);
+    try {
+      const payload = { activeDays, availableSlots };
+      const res = await ApiService.updateAvailability(payload);
+      if (res.success) {
+        setIsAvailabilitySaved(true);
+        setTimeout(() => setIsAvailabilitySaved(false), 3000);
+        await loadBookingsData();
+      }
+    } catch (err) {
+      console.error("Failed to save counsellor availability via API", err);
+      setSlotError(err.message || "Failed to save availability.");
+    }
   };
 
   const parseTimeToMinutes = (timeStr) => {
@@ -588,7 +533,7 @@ export default function PsychologistDashboard({ setView }) {
     setMeetLinkError('');
   };
 
-  const saveMeetLink = (bookingId) => {
+  const saveMeetLink = async (bookingId) => {
     const trimmed = meetLinkInput.trim();
     if (trimmed && !trimmed.startsWith('https://')) {
       setMeetLinkError('Please enter a valid URL beginning with https://');
@@ -597,69 +542,49 @@ export default function PsychologistDashboard({ setView }) {
     setMeetLinkError('');
 
     try {
-      const stored = localStorage.getItem('behold_booked_sessions');
-      let allBookings = [];
-      if (stored) {
-        try { allBookings = JSON.parse(stored); } catch (e) { }
+      const res = await ApiService.updateAppointmentMeetLink(bookingId, trimmed);
+      if (res.success) {
+        await loadBookingsData();
+        setEditingBookingId(null);
+      } else {
+        setMeetLinkError(res.message || 'Failed to update meeting link');
       }
-
-      const updatedAll = allBookings.map(b => {
-        if (b.id === bookingId) {
-          return { ...b, meetLink: trimmed };
-        }
-        return b;
-      });
-
-      localStorage.setItem('behold_booked_sessions', JSON.stringify(updatedAll));
-      loadBookingsData();
-      setEditingBookingId(null);
     } catch (err) {
       console.error("Failed to save Meet link", err);
+      setMeetLinkError(err.message || 'Failed to update meeting link');
     }
   };
 
-  const updateBookingStatus = (bookingId, newStatus) => {
+  const updateBookingStatus = async (bookingId, newStatus) => {
     try {
-      const stored = localStorage.getItem('behold_booked_sessions');
-      let allBookings = [];
-      if (stored) {
-        try { allBookings = JSON.parse(stored); } catch (e) { }
+      let res;
+      if (newStatus === 'CONFIRMED' || newStatus === 'APPROVED') {
+        res = await ApiService.approveAppointment(bookingId);
+      } else if (newStatus === 'CANCELLED') {
+        res = await ApiService.cancelAppointment(bookingId);
+      } else if (newStatus === 'COMPLETED') {
+        res = await ApiService.completeAppointment(bookingId);
+      } else if (newStatus === 'REJECTED') {
+        res = await ApiService.rejectAppointment(bookingId, 'Declined by counsellor');
       }
 
-      const updatedAll = allBookings.map(b => {
-        if (b.id === bookingId) {
-          return { ...b, status: newStatus };
-        }
-        return b;
-      });
-
-      localStorage.setItem('behold_booked_sessions', JSON.stringify(updatedAll));
-      loadBookingsData();
+      if (res && res.success) {
+        await loadBookingsData();
+      }
     } catch (err) {
-      console.error("Failed to update booking status", err);
+      console.error("Failed to update booking status via API", err);
     }
   };
 
-  const saveFeedback = (bookingId) => {
+  const saveFeedback = async (bookingId) => {
     try {
-      const stored = localStorage.getItem('behold_booked_sessions');
-      let allBookings = [];
-      if (stored) {
-        try { allBookings = JSON.parse(stored); } catch (e) { }
+      const res = await ApiService.updateAppointmentFeedback(bookingId, feedbackInput.trim());
+      if (res.success) {
+        await loadBookingsData();
+        setEditingFeedbackId(null);
       }
-
-      const updatedAll = allBookings.map(b => {
-        if (b.id === bookingId) {
-          return { ...b, feedback: feedbackInput.trim() };
-        }
-        return b;
-      });
-
-      localStorage.setItem('behold_booked_sessions', JSON.stringify(updatedAll));
-      loadBookingsData();
-      setEditingFeedbackId(null);
     } catch (err) {
-      console.error("Failed to save feedback", err);
+      console.error("Failed to save feedback via API", err);
     }
   };
 
@@ -677,8 +602,8 @@ export default function PsychologistDashboard({ setView }) {
     { label: 'Sunday', index: 0 }
   ];
 
-  // Check role authorization
-  const isCounsellor = user && user.role === 'PSYCHOLOGIST';
+  // --- LOGIN GATE UI ---
+  const isCounsellor = user && (user?.role?.toUpperCase() === 'PSYCHOLOGIST' || user?.role?.toUpperCase() === 'COUNSELLOR');
 
   // --- 1. COUNSELLOR PORTAL LOGIN GATE ---
   if (!isCounsellor) {
@@ -1288,7 +1213,6 @@ export default function PsychologistDashboard({ setView }) {
                 {profile.education}
               </span>
             </div>
-            <ChevronRight className="w-3.5 h-3.5 text-zinc-600 shrink-0" />
           </button>
 
           {/* Nav Links */}

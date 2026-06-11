@@ -44,9 +44,9 @@ function PaginationBar({ total, page, limit, onPageChange, onLimitChange }) {
         <button
           onClick={() => onPageChange(safeCurrentPage - 1)}
           disabled={safeCurrentPage === 1}
-          className="p-1.5 rounded border border-zinc-800 bg-zinc-900 text-zinc-400 hover:text-white hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer"
+          className="px-2 py-1.5 rounded border border-zinc-800 bg-zinc-900 text-[10px] font-bold uppercase tracking-wider text-zinc-400 hover:text-white hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer"
         >
-          <ChevronLeft className="w-3.5 h-3.5" />
+          Prev
         </button>
         {getPageNumbers().map(n => (
           <button
@@ -63,9 +63,9 @@ function PaginationBar({ total, page, limit, onPageChange, onLimitChange }) {
         <button
           onClick={() => onPageChange(safeCurrentPage + 1)}
           disabled={safeCurrentPage >= totalPages}
-          className="p-1.5 rounded border border-zinc-800 bg-zinc-900 text-zinc-400 hover:text-white hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer"
+          className="px-2 py-1.5 rounded border border-zinc-800 bg-zinc-900 text-[10px] font-bold uppercase tracking-wider text-zinc-400 hover:text-white hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer"
         >
-          <ChevronRight className="w-3.5 h-3.5" />
+          Next
         </button>
       </div>
     </div>
@@ -73,6 +73,7 @@ function PaginationBar({ total, page, limit, onPageChange, onLimitChange }) {
 }
 import { useAuth } from '../../context/AuthContext';
 import LogoutConfirmModal from '../LogoutConfirmModal';
+import ApiService from '../../services/api';
 
 export default function AdminDashboard({ setView }) {
   const getLocalTodayString = () => {
@@ -260,127 +261,143 @@ export default function AdminDashboard({ setView }) {
   const [isProfileDrawerOpen, setIsProfileDrawerOpen] = useState(false);
   const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
 
-  // Load database lists
-  const reloadData = () => {
-    const users = JSON.parse(localStorage.getItem('behold_users_db') || '[]');
-    setUsersDb(users);
+  const reloadData = async () => {
+    if (!user || user?.role?.toUpperCase() !== 'ADMIN') return;
+    try {
+      const [
+        usersRes,
+        counsellorsRes,
+        bookingsRes,
+        inquiriesRes,
+        testResultsRes,
+        faqsRes,
+        rolesRes,
+        settingsRes
+      ] = await Promise.all([
+        ApiService.getAdminUsers(),
+        ApiService.getAdminCounsellors(),
+        ApiService.getAdminAppointments(),
+        ApiService.getAdminInquiries(),
+        ApiService.getTestResults(),
+        ApiService.getAdminFaqs(),
+        ApiService.getRoles(),
+        ApiService.getAdminSettings()
+      ]);
 
-    const bookings = JSON.parse(localStorage.getItem('behold_booked_sessions') || '[]');
-    setBookingsDb(bookings);
+      if (usersRes.success && counsellorsRes.success) {
+        const cleanCounsellors = (counsellorsRes.data || []).map(c => ({
+          ...c,
+          role: 'PSYCHOLOGIST',
+          verified: c.isVerified
+        }));
+        const combinedUsers = [
+          ...(usersRes.data || []).map(u => ({ ...u, role: u.role ? u.role.toUpperCase() : 'USER' })),
+          ...cleanCounsellors
+        ];
+        setUsersDb(combinedUsers);
+      }
 
-    const inquiries = JSON.parse(localStorage.getItem('behold_inquiries_db') || '[]');
-    setInquiriesDb(inquiries);
+      if (bookingsRes.success && bookingsRes.data) {
+        const cleanBookings = bookingsRes.data.map(b => ({
+          ...b,
+          userName: b.studentName,
+          advisorId: b.counsellorId || b.advisorId,
+          advisorName: b.counsellorName || b.advisorName,
+          advisorRole: b.advisorRole || 'Consultant Psychologist'
+        }));
+        setBookingsDb(cleanBookings);
+      }
 
-    const testResults = JSON.parse(localStorage.getItem('behold_test_results_db') || '[]');
-    setTestResultsDb(testResults);
+      if (inquiriesRes.success && inquiriesRes.data) {
+        setInquiriesDb(inquiriesRes.data);
+      }
 
-    const faqs = JSON.parse(localStorage.getItem('behold_faqs') || '[]');
-    setFaqsDb(faqs);
+      if (testResultsRes.success && testResultsRes.data) {
+        setTestResultsDb(testResultsRes.data);
+      }
 
-    // Load roles
-    let roles = [];
-    const storedRoles = localStorage.getItem('behold_roles_db');
-    if (storedRoles) {
-      try {
-        roles = JSON.parse(storedRoles);
-        // Clean up legacy hardcoded system roles from local storage automatically
-        const systemIds = ['role_hr', 'role_state', 'role_scheduler', 'role_finance'];
-        const filteredRoles = roles.filter(r => !systemIds.includes(r.id));
-        if (filteredRoles.length !== roles.length) {
-          roles = filteredRoles;
-          localStorage.setItem('behold_roles_db', JSON.stringify(roles));
+      if (faqsRes.success && faqsRes.data) {
+        setFaqsDb(faqsRes.data);
+      }
+
+      if (rolesRes.success && rolesRes.data) {
+        const roles = rolesRes.data;
+        setRolesDb(roles);
+        if (roles.length > 0) {
+          setSubAdminForm(prev => {
+            const currentRoleExists = roles.some(r => r.name === prev.roleName);
+            if (!prev.roleName || !currentRoleExists) {
+              const defaultRole = roles[0];
+              const nextPerms = {
+                MANAGE_USERS: defaultRole.permissions.includes('MANAGE_USERS'),
+                MANAGE_PSYCHOLOGISTS: defaultRole.permissions.includes('MANAGE_PSYCHOLOGISTS'),
+                MANAGE_BOOKINGS: defaultRole.permissions.includes('MANAGE_BOOKINGS')
+              };
+              setTimeout(() => setSelectedPermissions(nextPerms), 0);
+              return { ...prev, roleName: defaultRole.name };
+            }
+            return prev;
+          });
+        } else {
+          setSubAdminForm(prev => ({ ...prev, roleName: '' }));
+          setTimeout(() => setSelectedPermissions({
+            MANAGE_USERS: false,
+            MANAGE_PSYCHOLOGISTS: false,
+            MANAGE_BOOKINGS: false
+          }), 0);
         }
-      } catch (e) { }
-    } else {
-      localStorage.setItem('behold_roles_db', JSON.stringify([]));
+      }
+
+      if (settingsRes.success && settingsRes.data) {
+        const settings = settingsRes.data;
+        setSettingsForm({
+          heroTitle: settings.heroTitle || 'Bridging You \nTo Your {True Growth.}',
+          heroSub: settings.heroSub || 'Professional psychological counseling, aptitude assessment, and career mentorship designed to help individuals thrive with confidence and purpose.',
+          whatsapp: settings.whatsapp || 'https://wa.me/919497174011',
+          contactEmail: settings.contactEmail || 'support@behold.com',
+          siteName: settings.siteName || 'BEHOLD',
+          siteCopyright: settings.siteCopyright || '© BEHOLD Ltd., 2026. All rights reserved.',
+          showBanner: settings.showBanner !== undefined ? settings.showBanner : false,
+          bannerNotice: settings.bannerNotice || '🚨 Maintenance Notice: Schedulers undergoing maintenance tonight between 12:00 AM - 02:00 AM IST.',
+          termsOfUse: settings.termsOfUse || '',
+          privacyPolicy: settings.privacyPolicy || ''
+        });
+      }
+    } catch (error) {
+      console.error("Error reloading admin dashboard data:", error);
     }
-    setRolesDb(roles);
-
-    // Dynamic role sync in the registration form
-    if (roles.length > 0) {
-      setSubAdminForm(prev => {
-        const currentRoleExists = roles.some(r => r.name === prev.roleName);
-        if (!prev.roleName || !currentRoleExists) {
-          const defaultRole = roles[0];
-          const nextPerms = {
-            MANAGE_USERS: defaultRole.permissions.includes('MANAGE_USERS'),
-            MANAGE_PSYCHOLOGISTS: defaultRole.permissions.includes('MANAGE_PSYCHOLOGISTS'),
-            MANAGE_BOOKINGS: defaultRole.permissions.includes('MANAGE_BOOKINGS')
-          };
-          setTimeout(() => setSelectedPermissions(nextPerms), 0);
-          return { ...prev, roleName: defaultRole.name };
-        }
-        return prev;
-      });
-    } else {
-      setSubAdminForm(prev => ({ ...prev, roleName: '' }));
-      setTimeout(() => setSelectedPermissions({
-        MANAGE_USERS: false,
-        MANAGE_PSYCHOLOGISTS: false,
-        MANAGE_BOOKINGS: false
-      }), 0);
-    }
-
-    const settings = JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
-    setSettingsForm({
-      heroTitle: settings.heroTitle || 'Bridging You \nTo Your {True Growth.}',
-      heroSub: settings.heroSub || 'Professional psychological counseling, aptitude assessment, and career mentorship designed to help individuals thrive with confidence and purpose.',
-      whatsapp: settings.whatsapp || 'https://wa.me/919497174011',
-      contactEmail: settings.contactEmail || 'support@behold.com',
-      siteName: settings.siteName || 'BEHOLD',
-      siteCopyright: settings.siteCopyright || '© BEHOLD Ltd., 2026. All rights reserved.',
-      showBanner: settings.showBanner !== undefined ? settings.showBanner : false,
-      bannerNotice: settings.bannerNotice || '🚨 Maintenance Notice: Schedulers undergoing maintenance tonight between 12:00 AM - 02:00 AM IST.',
-      termsOfUse: settings.termsOfUse || `BEHOLD TERMS OF USE
-
-Welcome to BEHOLD. By accessing or using our platform, you agree to comply with and be bound by the following terms and conditions of use.
-
-1. ACCEPTANCE OF TERMS
-By using this platform, you agree to these Terms. If you do not agree, please do not use the services.
-
-2. SERVICE DESCRIPTION
-BEHOLD provides online and offline psychological counseling, career aptitude assessments, and student advisory services.
-
-3. ADVISOR DISCLAIMER
-Assessments and counseling are advisory. Advisors are certified but consultations do not replace clinical medical treatment.
-
-4. CANCELLATION POLICY
-Bookings may be cancelled up to 2 hours before the scheduled time slot. Past or completed sessions cannot be cancelled.`,
-      privacyPolicy: settings.privacyPolicy || `BEHOLD PRIVACY POLICY
-
-Your privacy is extremely important to us. This policy describes how we collect, protect, and use your personal information.
-
-1. INFORMATION WE COLLECT
-We collect your name, email address, password, booking requests, and CDAT aptitude results to facilitate counseling services.
-
-2. DATA STORAGE
-All data is stored securely in your browser's local sandbox data structures. No third party has access to your sensitive profile logs.`
-    });
   };
 
   const getAdvisorSlotsForBookingForm = () => {
     let slots = [];
     if (bookingForm.advisorId) {
-      const saved = localStorage.getItem(`behold_advisor_availability_${bookingForm.advisorId}`);
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          if (parsed.availableSlots && parsed.availableSlots.length > 0) {
-            const bookings = JSON.parse(localStorage.getItem('behold_booked_sessions') || '[]');
-            slots = parsed.availableSlots.filter(slot => {
-              const isAlreadyBooked = bookings.some(b =>
-                b.advisorId === bookingForm.advisorId &&
-                b.date === bookingForm.date &&
-                b.time === slot &&
-                (b.status === 'CONFIRMED' || b.status === 'PENDING')
-              );
-              return !isAlreadyBooked;
-            });
-          }
-        } catch (e) { }
+      const psy = usersDb.find(u => u.id === bookingForm.advisorId);
+      if (psy && psy.availability) {
+        if (psy.availability.availableSlots) {
+          slots = psy.availability.availableSlots;
+        } else if (Array.isArray(psy.availability)) {
+          slots = psy.availability;
+        } else {
+          const bookingDate = new Date(bookingForm.date);
+          const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+          const dayName = days[bookingDate.getDay()];
+          slots = psy.availability[dayName] || [];
+        }
       }
     }
-    // Make sure current booking's time is always available in options to prevent empty selection
+
+    if (slots.length > 0) {
+      slots = slots.filter(slot => {
+        const isAlreadyBooked = bookingsDb.some(b =>
+          b.advisorId === bookingForm.advisorId &&
+          b.date === bookingForm.date &&
+          b.time === slot &&
+          (b.status === 'CONFIRMED' || b.status === 'PENDING')
+        );
+        return !isAlreadyBooked;
+      });
+    }
+
     if (bookingForm.time && !slots.includes(bookingForm.time)) {
       slots.push(bookingForm.time);
     }
@@ -389,27 +406,17 @@ All data is stored securely in your browser's local sandbox data structures. No 
 
   useEffect(() => {
     reloadData();
-
-    const handleSync = () => {
-      reloadData();
-    };
-    window.addEventListener('storage', handleSync);
-    window.addEventListener('storage_update', handleSync);
-    return () => {
-      window.removeEventListener('storage', handleSync);
-      window.removeEventListener('storage_update', handleSync);
-    };
   }, [user]);
 
   // Determine sub-admin permissions
-  const isSuperAdmin = user?.role === 'ADMIN' && !user?.permissions;
+  const isSuperAdmin = user?.role?.toUpperCase() === 'ADMIN' && !user?.permissions;
   const hasUserPermission = isSuperAdmin || (user?.permissions && user.permissions.includes('MANAGE_USERS'));
   const hasPsyPermission = isSuperAdmin || (user?.permissions && user.permissions.includes('MANAGE_PSYCHOLOGISTS'));
   const hasBookingPermission = isSuperAdmin || (user?.permissions && user.permissions.includes('MANAGE_BOOKINGS'));
 
   // Automatically switch tab if sub-admin doesn't have permission for Overview
   useEffect(() => {
-    if (user && user.role === 'ADMIN') {
+    if (user && user?.role?.toUpperCase() === 'ADMIN') {
       if (!isSuperAdmin) {
         if (hasUserPermission) {
           setCurrentSection('users');
@@ -438,7 +445,7 @@ All data is stored securely in your browser's local sandbox data structures. No 
     setIsLoggingIn(true);
     try {
       const loggedInUser = await login(loginEmail, loginPassword);
-      if (loggedInUser.role !== 'ADMIN') {
+      if (loggedInUser?.role?.toUpperCase() !== 'ADMIN') {
         logout();
         setLoginError('Access Denied: Account does not have Administrator privileges.');
       }
@@ -450,7 +457,7 @@ All data is stored securely in your browser's local sandbox data structures. No 
   };
 
   // Student Actions
-  const handleCreateUser = (e) => {
+  const handleCreateUser = async (e) => {
     e.preventDefault();
     if (!hasUserPermission) {
       setUserFormError("Access Denied: You do not have permission to manage students.");
@@ -464,29 +471,22 @@ All data is stored securely in your browser's local sandbox data structures. No 
       return;
     }
 
-    const users = JSON.parse(localStorage.getItem('behold_users_db') || '[]');
-    if (users.some(u => u.email === userForm.email)) {
-      setUserFormError("Email is already registered.");
-      return;
+    try {
+      await ApiService.createAdminUser(
+        userForm.name.trim(),
+        userForm.email.trim(),
+        userForm.password
+      );
+      setUserFormSuccess("Student created successfully!");
+      setUserForm({ id: '', name: '', email: '', password: '' });
+      reloadData();
+      setTimeout(() => {
+        setIsAddUserOpen(false);
+        setUserFormSuccess('');
+      }, 1500);
+    } catch (err) {
+      setUserFormError(err.message || "Failed to create user.");
     }
-
-    const newUser = {
-      id: 'u_student_' + Date.now(),
-      name: userForm.name.trim(),
-      email: userForm.email.trim(),
-      password: userForm.password,
-      role: 'USER'
-    };
-
-    users.push(newUser);
-    localStorage.setItem('behold_users_db', JSON.stringify(users));
-    setUserFormSuccess("Student created successfully!");
-    setUserForm({ id: '', name: '', email: '', password: '' });
-    reloadData();
-    setTimeout(() => {
-      setIsAddUserOpen(false);
-      setUserFormSuccess('');
-    }, 1500);
   };
 
   const handleOpenEditUser = (student) => {
@@ -501,7 +501,7 @@ All data is stored securely in your browser's local sandbox data structures. No 
     setIsEditUserOpen(true);
   };
 
-  const handleUpdateUser = (e) => {
+  const handleUpdateUser = async (e) => {
     e.preventDefault();
     if (!hasUserPermission) {
       setUserFormError("Access Denied: You do not have permission to manage students.");
@@ -515,50 +515,40 @@ All data is stored securely in your browser's local sandbox data structures. No 
       return;
     }
 
-    const users = JSON.parse(localStorage.getItem('behold_users_db') || '[]');
-    const index = users.findIndex(u => u.id === userForm.id);
-    if (index === -1) {
-      setUserFormError("User not found.");
-      return;
+    try {
+      await ApiService.updateAdminUser(
+        userForm.id,
+        userForm.name.trim(),
+        userForm.email.trim(),
+        userForm.password || undefined
+      );
+      setUserFormSuccess("Student details updated!");
+      reloadData();
+      setTimeout(() => {
+        setIsEditUserOpen(false);
+        setUserFormSuccess('');
+      }, 1500);
+    } catch (err) {
+      setUserFormError(err.message || "Failed to update user.");
     }
-
-    if (users.some((u, i) => u.email === userForm.email && i !== index)) {
-      setUserFormError("Email is already registered by another user.");
-      return;
-    }
-
-    users[index] = {
-      ...users[index],
-      name: userForm.name.trim(),
-      email: userForm.email.trim()
-    };
-    if (userForm.password) {
-      users[index].password = userForm.password;
-    }
-
-    localStorage.setItem('behold_users_db', JSON.stringify(users));
-    setUserFormSuccess("Student details updated!");
-    reloadData();
-    setTimeout(() => {
-      setIsEditUserOpen(false);
-      setUserFormSuccess('');
-    }, 1500);
   };
 
-  const handleDeleteUser = (userId) => {
+  const handleDeleteUser = async (userId) => {
     if (!hasUserPermission) {
       alert("Access Denied: You do not have permission to manage students.");
       return;
     }
     if (!window.confirm("Are you sure you want to delete this account?")) return;
-    const users = JSON.parse(localStorage.getItem('behold_users_db') || '[]');
-    const updated = users.filter(u => u.id !== userId);
-    localStorage.setItem('behold_users_db', JSON.stringify(updated));
-    reloadData();
+    try {
+      await ApiService.deleteAdminUser(userId);
+      reloadData();
+    } catch (err) {
+      alert(err.message || "Failed to delete user.");
+    }
   };
 
   // Psychologist Actions
-  const handleCreatePsy = (e) => {
+  const handleCreatePsy = async (e) => {
     e.preventDefault();
     if (!hasPsyPermission) {
       setPsyFormError("Access Denied: You do not have permission to manage psychologists.");
@@ -577,93 +567,60 @@ All data is stored securely in your browser's local sandbox data structures. No 
       return;
     }
 
-    const users = JSON.parse(localStorage.getItem('behold_users_db') || '[]');
-    if (users.some(u => u.email === psyForm.email)) {
-      setPsyFormError("Email is already registered.");
-      return;
+    try {
+      await ApiService.createAdminCounsellor({
+        name: psyForm.name.trim(),
+        email: psyForm.email.trim(),
+        password: psyForm.password,
+        education: psyForm.education,
+        specialties: psyForm.specialties,
+        price: psyForm.price,
+        lang: psyForm.lang,
+        bio: psyForm.bio,
+        defaultMeetLink: psyForm.defaultMeetLink
+      });
+      setPsyFormSuccess("Psychologist added successfully!");
+      setPsyForm({
+        id: '',
+        name: '',
+        email: '',
+        password: '',
+        education: '',
+        specialties: '',
+        price: '',
+        lang: '',
+        bio: '',
+        defaultMeetLink: ''
+      });
+      reloadData();
+      setTimeout(() => {
+        setIsAddPsyOpen(false);
+        setPsyFormSuccess('');
+      }, 1500);
+    } catch (err) {
+      setPsyFormError(err.message || "Failed to add psychologist.");
     }
-
-    const psyId = 'u_psy_' + Date.now();
-    const newUser = {
-      id: psyId,
-      name: psyForm.name.trim(),
-      email: psyForm.email.trim(),
-      password: psyForm.password,
-      role: 'PSYCHOLOGIST',
-      verified: true
-    };
-
-    users.push(newUser);
-    localStorage.setItem('behold_users_db', JSON.stringify(users));
-
-    // Save profile details
-    const newProfile = {
-      name: psyForm.name.trim(),
-      role: 'Consultant Psychologist',
-      education: psyForm.education || 'MPhil Clinical Psychology',
-      specialties: psyForm.specialties || 'Anxiety, Depression',
-      price: Number(psyForm.price) || 1200,
-      lang: psyForm.lang || 'English',
-      bio: psyForm.bio || '',
-      defaultMeetLink: psyForm.defaultMeetLink || '',
-      modes: ['ONLINE', 'OFFLINE', 'DOOR_STEP']
-    };
-    localStorage.setItem(`behold_advisor_profile_${psyId}`, JSON.stringify(newProfile));
-
-    setPsyFormSuccess("Psychologist added successfully!");
-    setPsyForm({
-      id: '',
-      name: '',
-      email: '',
-      password: '',
-      education: '',
-      specialties: '',
-      price: '',
-      lang: '',
-      bio: '',
-      defaultMeetLink: ''
-    });
-    reloadData();
-    setTimeout(() => {
-      setIsAddPsyOpen(false);
-      setPsyFormSuccess('');
-    }, 1500);
   };
 
   const handleOpenEditPsy = (psy) => {
-    const saved = localStorage.getItem(`behold_advisor_profile_${psy.id}`);
-    let profileDetails = {
-      education: '',
-      specialties: '',
-      price: '',
-      lang: '',
-      bio: '',
-      defaultMeetLink: ''
-    };
-    if (saved) {
-      try {
-        profileDetails = { ...profileDetails, ...JSON.parse(saved) };
-      } catch (e) { }
-    }
-
     setPsyForm({
       id: psy.id,
       name: psy.name,
       email: psy.email,
-      password: psy.password || '',
-      education: profileDetails.education || '',
-      specialties: profileDetails.specialties || '',
-      price: profileDetails.price || 1200,
-      lang: profileDetails.lang || '',
-      bio: profileDetails.bio || '',
-      defaultMeetLink: profileDetails.defaultMeetLink || ''
+      password: '',
+      education: psy.education || '',
+      specialties: Array.isArray(psy.specialties) ? psy.specialties.join(', ') : psy.specialties || '',
+      price: psy.price || 1200,
+      lang: psy.lang || '',
+      bio: psy.experience || psy.bio || '',
+      defaultMeetLink: psy.defaultMeetLink || ''
     });
     setPsyFormError('');
     setPsyFormSuccess('');
     setIsEditPsyOpen(true);
   };
 
-  const handleUpdatePsy = (e) => {
+  const handleUpdatePsy = async (e) => {
     e.preventDefault();
     if (!hasPsyPermission) {
       setPsyFormError("Access Denied: You do not have permission to manage psychologists.");
@@ -682,99 +639,45 @@ All data is stored securely in your browser's local sandbox data structures. No 
       return;
     }
 
-    const users = JSON.parse(localStorage.getItem('behold_users_db') || '[]');
-    const index = users.findIndex(u => u.id === psyForm.id);
-    if (index === -1) {
-      setPsyFormError("Psychologist not found.");
-      return;
-    }
-
-    if (users.some((u, i) => u.email === psyForm.email && i !== index)) {
-      setPsyFormError("Email is already registered by another account.");
-      return;
-    }
-
-    users[index] = {
-      ...users[index],
-      name: psyForm.name.trim(),
-      email: psyForm.email.trim()
-    };
-    if (psyForm.password) {
-      users[index].password = psyForm.password;
-    }
-
-    localStorage.setItem('behold_users_db', JSON.stringify(users));
-
-    // Save profile details
-    let existingProfile = {};
-    const saved = localStorage.getItem(`behold_advisor_profile_${psyForm.id}`);
-    if (saved) {
-      try {
-        existingProfile = JSON.parse(saved);
-      } catch (e) { }
-    }
-
-    const updatedProfile = {
-      ...existingProfile,
-      name: psyForm.name.trim(),
-      role: 'Consultant Psychologist',
-      education: psyForm.education,
-      specialties: psyForm.specialties,
-      price: Number(psyForm.price) || 1200,
-      lang: psyForm.lang,
-      bio: psyForm.bio,
-      defaultMeetLink: psyForm.defaultMeetLink || ''
-    };
-    localStorage.setItem(`behold_advisor_profile_${psyForm.id}`, JSON.stringify(updatedProfile));
-
-    // Propagate defaultMeetLink to all matching bookings
     try {
-      const stored = localStorage.getItem('behold_booked_sessions');
-      if (stored) {
-        let bookings = JSON.parse(stored);
-        let updated = false;
-        const newMeetLink = psyForm.defaultMeetLink || '';
-        const updatedBookings = bookings.map(b => {
-          const matchesId = b.advisorId === psyForm.id;
-          const matchesName = b.advisorName && psyForm.name && b.advisorName.toLowerCase().trim() === psyForm.name.toLowerCase().trim();
-          if (matchesId || matchesName) {
-            if (b.meetLink !== newMeetLink) {
-              updated = true;
-              return { ...b, meetLink: newMeetLink, advisorId: psyForm.id };
-            }
-          }
-          return b;
-        });
-        if (updated) {
-          localStorage.setItem('behold_booked_sessions', JSON.stringify(updatedBookings));
-        }
-      }
-    } catch (e) {
-      console.error("Admin failed to propagate meet link update:", e);
+      await ApiService.updateAdminCounsellor(psyForm.id, {
+        name: psyForm.name.trim(),
+        email: psyForm.email.trim(),
+        password: psyForm.password || undefined,
+        education: psyForm.education,
+        specialties: psyForm.specialties,
+        price: psyForm.price,
+        lang: psyForm.lang,
+        bio: psyForm.bio,
+        defaultMeetLink: psyForm.defaultMeetLink
+      });
+      setPsyFormSuccess("Psychologist details updated!");
+      reloadData();
+      setTimeout(() => {
+        setIsEditPsyOpen(false);
+        setPsyFormSuccess('');
+      }, 1500);
+    } catch (err) {
+      setPsyFormError(err.message || "Failed to update psychologist.");
     }
-
-    setPsyFormSuccess("Psychologist details updated!");
-    reloadData();
-    setTimeout(() => {
-      setIsEditPsyOpen(false);
-      setPsyFormSuccess('');
-    }, 1500);
   };
 
-  const handleDeletePsy = (psyId) => {
+  const handleDeletePsy = async (psyId) => {
     if (!hasPsyPermission) {
       alert("Access Denied: You do not have permission to manage psychologists.");
       return;
     }
     if (!window.confirm("Are you sure you want to remove this psychologist?")) return;
-    const users = JSON.parse(localStorage.getItem('behold_users_db') || '[]');
-    const updated = users.filter(u => u.id !== psyId);
-    localStorage.setItem('behold_users_db', JSON.stringify(updated));
-    reloadData();
+    try {
+      await ApiService.deleteAdminCounsellor(psyId);
+      reloadData();
+    } catch (err) {
+      alert(err.message || "Failed to delete psychologist.");
+    }
   };
 
   // Booking Actions
-  const handleCreateBooking = (e) => {
+  const handleCreateBooking = async (e) => {
     e.preventDefault();
     if (!hasBookingPermission) {
       setBookingFormError("Access Denied: You do not have permission to manage bookings.");
@@ -810,79 +713,62 @@ All data is stored securely in your browser's local sandbox data structures. No 
       } catch (e) { }
     }
 
-    const bookings = JSON.parse(localStorage.getItem('behold_booked_sessions') || '[]');
-    const isDoubleBooked = bookings.some(b =>
+    const isDoubleBooked = bookingsDb.some(b =>
       b.advisorId === bookingForm.advisorId &&
       b.date === bookingForm.date &&
       b.time === bookingForm.time &&
-      (b.status === 'CONFIRMED' || b.status === 'PENDING')
+      (b.status === 'CONFIRMED' || b.status === 'PENDING' || b.status === 'APPROVED')
     );
     if (isDoubleBooked) {
       setBookingFormError("This slot is already booked for the selected date.");
       return;
     }
 
-    const students = JSON.parse(localStorage.getItem('behold_users_db') || '[]');
-    const student = students.find(u => u.id === bookingForm.userId);
-    const psy = students.find(u => u.id === bookingForm.advisorId);
+    const student = usersDb.find(u => u.id === bookingForm.userId);
+    const psy = usersDb.find(u => u.id === bookingForm.advisorId);
 
     if (!student || !psy) {
       setBookingFormError("Student or Psychologist record invalid.");
       return;
     }
 
-    const saved = localStorage.getItem(`behold_advisor_profile_${psy.id}`);
-    let psyRole = 'Consultant Psychologist';
-    let defaultMeetLink = '';
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        psyRole = parsed.role || psyRole;
-        defaultMeetLink = parsed.defaultMeetLink || '';
-      } catch (err) { }
+    try {
+      await ApiService.createAdminAppointment({
+        userId: bookingForm.userId,
+        advisorId: bookingForm.advisorId,
+        service: bookingForm.service,
+        mode: bookingForm.mode,
+        date: bookingForm.date,
+        time: bookingForm.time,
+        meetLink: bookingForm.meetLink.trim() || psy.defaultMeetLink || '',
+        status: bookingForm.status || 'CONFIRMED'
+      });
+
+      setBookingFormSuccess("Appointment scheduled successfully!");
+      setBookingForm({
+        id: '',
+        userId: '',
+        advisorId: '',
+        service: 'counselling',
+        mode: 'ONLINE',
+        date: getLocalTodayString(),
+        time: '',
+        meetLink: '',
+        status: 'CONFIRMED'
+      });
+      reloadData();
+      setTimeout(() => {
+        setIsAddBookingOpen(false);
+        setBookingFormSuccess('');
+      }, 1500);
+    } catch (err) {
+      setBookingFormError(err.message || "Failed to create booking.");
     }
-
-    const newBooking = {
-      id: 'sb_' + Date.now(),
-      userId: bookingForm.userId,
-      userName: student.name,
-      service: bookingForm.service,
-      mode: bookingForm.mode,
-      date: bookingForm.date,
-      time: bookingForm.time,
-      advisorId: bookingForm.advisorId,
-      advisorName: psy.name,
-      advisorRole: psyRole,
-      status: bookingForm.status || 'CONFIRMED',
-      meetLink: bookingForm.meetLink.trim() || defaultMeetLink
-    };
-
-    bookings.push(newBooking);
-    localStorage.setItem('behold_booked_sessions', JSON.stringify(bookings));
-
-    setBookingFormSuccess("Appointment scheduled successfully!");
-    setBookingForm({
-      id: '',
-      userId: '',
-      advisorId: '',
-      service: 'counselling',
-      mode: 'ONLINE',
-      date: getLocalTodayString(),
-      time: '',
-      meetLink: '',
-      status: 'CONFIRMED'
-    });
-    reloadData();
-    setTimeout(() => {
-      setIsAddBookingOpen(false);
-      setBookingFormSuccess('');
-    }, 1500);
   };
 
   const handleOpenEditBooking = (booking) => {
-    const students = JSON.parse(localStorage.getItem('behold_users_db') || '[]');
-    const studentUser = students.find(u => u.name === booking.userName && (u.role === 'USER' || !u.role));
-    const advisorUser = students.find(u => u.name === booking.advisorName && u.role === 'PSYCHOLOGIST');
+    const studentUser = usersDb.find(u => u.name === booking.userName && (u.role === 'USER' || !u.role));
+    const advisorUser = usersDb.find(u => u.name === booking.advisorName && u.role === 'PSYCHOLOGIST');
 
     setBookingForm({
       id: booking.id,
@@ -901,7 +787,7 @@ All data is stored securely in your browser's local sandbox data structures. No 
     setIsEditBookingOpen(true);
   };
 
-  const handleUpdateBooking = (e) => {
+  const handleUpdateBooking = async (e) => {
     e.preventDefault();
     if (!hasBookingPermission) {
       setBookingFormError("Access Denied: You do not have permission to manage bookings.");
@@ -915,62 +801,41 @@ All data is stored securely in your browser's local sandbox data structures. No 
       return;
     }
 
-    const bookings = JSON.parse(localStorage.getItem('behold_booked_sessions') || '[]');
-    const index = bookings.findIndex(b => b.id === bookingForm.id);
-    if (index === -1) {
-      setBookingFormError("Booking not found.");
-      return;
+    try {
+      await ApiService.updateAdminAppointment(bookingForm.id, {
+        userId: bookingForm.userId,
+        advisorId: bookingForm.advisorId,
+        service: bookingForm.service,
+        mode: bookingForm.mode,
+        date: bookingForm.date,
+        time: bookingForm.time,
+        meetLink: bookingForm.meetLink.trim(),
+        status: bookingForm.status
+      });
+
+      setBookingFormSuccess("Appointment details updated!");
+      reloadData();
+      setTimeout(() => {
+        setIsEditBookingOpen(false);
+        setBookingFormSuccess('');
+      }, 1500);
+    } catch (err) {
+      setBookingFormError(err.message || "Failed to update booking.");
     }
-
-    const students = JSON.parse(localStorage.getItem('behold_users_db') || '[]');
-    const student = students.find(u => u.id === bookingForm.userId);
-    const psy = students.find(u => u.id === bookingForm.advisorId);
-
-    let psyRole = 'Consultant Psychologist';
-    if (psy) {
-      const saved = localStorage.getItem(`behold_advisor_profile_${psy.id}`);
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          psyRole = parsed.role || psyRole;
-        } catch (err) { }
-      }
-    }
-
-    bookings[index] = {
-      ...bookings[index],
-      userId: bookingForm.userId || bookings[index].userId,
-      userName: student ? student.name : bookings[index].userName,
-      advisorId: bookingForm.advisorId || bookings[index].advisorId || '',
-      advisorName: psy ? psy.name : bookings[index].advisorName,
-      advisorRole: psy ? psyRole : bookings[index].advisorRole,
-      service: bookingForm.service,
-      mode: bookingForm.mode,
-      date: bookingForm.date,
-      time: bookingForm.time,
-      meetLink: bookingForm.meetLink.trim(),
-      status: bookingForm.status
-    };
-
-    localStorage.setItem('behold_booked_sessions', JSON.stringify(bookings));
-    setBookingFormSuccess("Appointment details updated!");
-    reloadData();
-    setTimeout(() => {
-      setIsEditBookingOpen(false);
-      setBookingFormSuccess('');
-    }, 1500);
   };
 
-  const handleDeleteBooking = (bookingId) => {
+  const handleDeleteBooking = async (bookingId) => {
     if (!hasBookingPermission) {
       alert("Access Denied: You do not have permission to manage bookings.");
       return;
     }
     if (!window.confirm("Are you sure you want to remove this booking?")) return;
-    const bookings = JSON.parse(localStorage.getItem('behold_booked_sessions') || '[]');
-    const updated = bookings.filter(b => b.id !== bookingId);
-    localStorage.setItem('behold_booked_sessions', JSON.stringify(updated));
-    reloadData();
+    try {
+      await ApiService.deleteAdminAppointment(bookingId);
+      reloadData();
+    } catch (err) {
+      alert(err.message || "Failed to delete booking.");
+    }
   };
 
   const handleRoleChangeInForm = (roleName) => {
@@ -1114,21 +979,14 @@ All data is stored securely in your browser's local sandbox data structures. No 
     }
 
     try {
-      const registeredUser = await register(
+      await ApiService.createAdminUser(
         subAdminForm.name.trim(),
         subAdminForm.email.trim(),
         subAdminForm.password,
         'ADMIN',
-        permissionsArray
+        permissionsArray,
+        subAdminForm.roleName
       );
-
-      // Update the user record in localStorage to include customRoleTitle
-      const users = JSON.parse(localStorage.getItem('behold_users_db') || '[]');
-      const index = users.findIndex(u => u.id === registeredUser.id);
-      if (index !== -1) {
-        users[index].customRoleTitle = subAdminForm.roleName;
-        localStorage.setItem('behold_users_db', JSON.stringify(users));
-      }
 
       setSubAdminSuccess(`Sub-admin account for ${subAdminForm.name} created successfully!`);
 
@@ -1202,79 +1060,90 @@ All data is stored securely in your browser's local sandbox data structures. No 
   );
 
   // Inquiries Actions
-  const handleResolveInquiry = (inqId) => {
+  const handleResolveInquiry = async (inqId) => {
     if (!isSuperAdmin) {
       alert("Access Denied: You do not have permission to manage inquiries.");
       return;
     }
-    const inquiries = JSON.parse(localStorage.getItem('behold_inquiries_db') || '[]');
-    const updated = inquiries.map(inq => {
-      if (inq.id === inqId) {
-        return { ...inq, status: inq.status === 'RESOLVED' ? 'PENDING' : 'RESOLVED' };
-      }
-      return inq;
-    });
-    localStorage.setItem('behold_inquiries_db', JSON.stringify(updated));
-    reloadData();
+    try {
+      await ApiService.resolveInquiry(inqId);
+      reloadData();
+    } catch (err) {
+      alert(err.message || "Failed to update inquiry.");
+    }
   };
 
-  const handleDeleteInquiry = (inqId) => {
+  const handleDeleteInquiry = async (inqId) => {
     if (!isSuperAdmin) {
       alert("Access Denied: You do not have permission to manage inquiries.");
       return;
     }
     if (!window.confirm("Are you sure you want to delete this student inquiry?")) return;
-    const inquiries = JSON.parse(localStorage.getItem('behold_inquiries_db') || '[]');
-    const updated = inquiries.filter(inq => inq.id !== inqId);
-    localStorage.setItem('behold_inquiries_db', JSON.stringify(updated));
-    reloadData();
+    try {
+      await ApiService.deleteInquiry(inqId);
+      reloadData();
+    } catch (err) {
+      alert(err.message || "Failed to delete inquiry.");
+    }
   };
 
   // Student active/suspended status toggle
-  const handleToggleStudentStatus = (studentId, currentStatus) => {
+  const handleToggleStudentStatus = async (studentId, currentStatus) => {
     if (!hasUserPermission) {
       alert("Access Denied: You do not have permission to manage students.");
       return;
     }
-    const updated = usersDb.map(u => {
-      if (u.id === studentId) {
-        return { ...u, status: currentStatus === 'ACTIVE' ? 'SUSPENDED' : 'ACTIVE' };
-      }
-      return u;
-    });
-    localStorage.setItem('behold_users_db', JSON.stringify(updated));
-    reloadData();
+    const student = usersDb.find(u => u.id === studentId);
+    if (!student) return;
+    const newStatus = currentStatus === 'ACTIVE' ? 'SUSPENDED' : 'ACTIVE';
+    try {
+      await ApiService.updateAdminUser(
+        studentId,
+        student.name,
+        student.email,
+        undefined,
+        student.role,
+        student.permissions,
+        student.customRoleTitle,
+        newStatus
+      );
+      reloadData();
+    } catch (err) {
+      alert(err.message || "Failed to update status.");
+    }
   };
 
   // Psychologist verification toggle
-  const handleTogglePsyVerification = (psyId, currentVerified) => {
+  const handleTogglePsyVerification = async (psyId, currentVerified) => {
     if (!hasPsyPermission) {
       alert("Access Denied: You do not have permission to verify/unverify psychologists.");
       return;
     }
-    const updated = usersDb.map(u => {
-      if (u.id === psyId) {
-        return { ...u, verified: !currentVerified };
-      }
-      return u;
-    });
-    localStorage.setItem('behold_users_db', JSON.stringify(updated));
-    reloadData();
+    try {
+      await ApiService.verifyCounsellor(psyId, !currentVerified);
+      reloadData();
+    } catch (err) {
+      alert(err.message || "Failed to toggle verification.");
+    }
   };
 
   // Site Settings save handler
-  const handleSaveSettings = (e) => {
+  const handleSaveSettings = async (e) => {
     e.preventDefault();
     if (!isSuperAdmin) {
       alert("Access Denied: You do not have permission to save settings.");
       return;
     }
     setSettingsSuccess('');
-    localStorage.setItem('behold_site_settings', JSON.stringify(settingsForm));
-    setSettingsSuccess("Site Settings updated successfully!");
-    window.dispatchEvent(new Event('storage'));
-    window.dispatchEvent(new Event('behold_faqs_updated'));
-    setTimeout(() => setSettingsSuccess(''), 3000);
+    try {
+      await ApiService.updateAdminSettings(settingsForm);
+      setSettingsSuccess("Site Settings updated successfully!");
+      window.dispatchEvent(new Event('behold_faqs_updated'));
+      setTimeout(() => setSettingsSuccess(''), 3000);
+      reloadData();
+    } catch (err) {
+      alert(err.message || "Failed to save settings.");
+    }
   };
 
   const handleRunSecurityCheck = () => {
@@ -1316,7 +1185,7 @@ All data is stored securely in your browser's local sandbox data structures. No 
     });
   };
 
-  const handleSaveSubAdminPermissions = (e) => {
+  const handleSaveSubAdminPermissions = async (e) => {
     e.preventDefault();
     if (!isSuperAdmin) {
       setEditSubAdminError("Access Denied: You do not have permission to manage sub-admins.");
@@ -1335,49 +1204,54 @@ All data is stored securely in your browser's local sandbox data structures. No 
       return;
     }
 
-    const updated = usersDb.map(u => {
-      if (u.id === editingSubAdmin.id) {
-        return { ...u, permissions: permsArray };
-      }
-      return u;
-    });
-    localStorage.setItem('behold_users_db', JSON.stringify(updated));
-    setEditSubAdminSuccess("Permissions updated successfully!");
-    reloadData();
-    setTimeout(() => {
-      setEditingSubAdmin(null);
-      setEditSubAdminSuccess('');
-    }, 1500);
+    try {
+      await ApiService.updateAdminUser(
+        editingSubAdmin.id,
+        editingSubAdmin.name,
+        editingSubAdmin.email,
+        undefined,
+        'ADMIN',
+        permsArray,
+        editingSubAdmin.customRoleTitle
+      );
+      setEditSubAdminSuccess("Permissions updated successfully!");
+      reloadData();
+      setTimeout(() => {
+        setEditingSubAdmin(null);
+        setEditSubAdminSuccess('');
+      }, 1500);
+    } catch (err) {
+      setEditSubAdminError(err.message || "Failed to save permissions.");
+    }
   };
 
   // Inquiry Reply/Notes
-  const handleSaveInquiryNote = (inqId, noteText) => {
+  const handleSaveInquiryNote = async (inqId, noteText) => {
     if (!isSuperAdmin) {
       alert("Access Denied: You do not have permission to manage inquiries.");
       return;
     }
-    const inquiries = JSON.parse(localStorage.getItem('behold_inquiries_db') || '[]');
-    const updated = inquiries.map(inq => {
-      if (inq.id === inqId) {
-        return { ...inq, note: noteText };
-      }
-      return inq;
-    });
-    localStorage.setItem('behold_inquiries_db', JSON.stringify(updated));
-    reloadData();
-    alert("Internal note updated!");
+    try {
+      await ApiService.saveInquiryNote(inqId, noteText);
+      reloadData();
+      alert("Internal note updated!");
+    } catch (err) {
+      alert(err.message || "Failed to update inquiry note.");
+    }
   };
 
-  const handleBulkClearResolvedInquiries = () => {
+  const handleBulkClearResolvedInquiries = async () => {
     if (!isSuperAdmin) {
       alert("Access Denied: You do not have permission to manage inquiries.");
       return;
     }
     if (!window.confirm("Are you sure you want to delete all resolved inquiries?")) return;
-    const inquiries = JSON.parse(localStorage.getItem('behold_inquiries_db') || '[]');
-    const updated = inquiries.filter(inq => inq.status !== 'RESOLVED');
-    localStorage.setItem('behold_inquiries_db', JSON.stringify(updated));
-    reloadData();
+    try {
+      await ApiService.clearResolvedInquiries();
+      reloadData();
+    } catch (err) {
+      alert(err.message || "Failed to clear resolved inquiries.");
+    }
   };
 
   // Aptitude results export
@@ -1399,55 +1273,60 @@ All data is stored securely in your browser's local sandbox data structures. No 
     );
   };
 
-  const handleBulkBookingStatus = (status) => {
+  const handleBulkBookingStatus = async (status) => {
     if (!hasBookingPermission) {
       alert("Access Denied: You do not have permission to manage bookings.");
       return;
     }
     if (selectedBookingIds.length === 0) return;
-    const bookings = JSON.parse(localStorage.getItem('behold_booked_sessions') || '[]');
-    const updated = bookings.map(b => {
-      if (selectedBookingIds.includes(b.id)) {
-        return { ...b, status };
-      }
-      return b;
-    });
-    localStorage.setItem('behold_booked_sessions', JSON.stringify(updated));
-    setSelectedBookingIds([]);
-    reloadData();
-    alert(`Selected bookings updated to ${status}!`);
+    try {
+      await Promise.all(
+        selectedBookingIds.map(id => ApiService.updateAdminAppointment(id, { status }))
+      );
+      setSelectedBookingIds([]);
+      reloadData();
+      alert(`Selected bookings updated to ${status}!`);
+    } catch (err) {
+      alert(err.message || "Failed to update bookings.");
+    }
   };
 
-  const handleBulkDeleteBookings = () => {
+  const handleBulkDeleteBookings = async () => {
     if (!hasBookingPermission) {
       alert("Access Denied: You do not have permission to manage bookings.");
       return;
     }
     if (selectedBookingIds.length === 0) return;
     if (!window.confirm(`Are you sure you want to delete ${selectedBookingIds.length} selected bookings?`)) return;
-    const bookings = JSON.parse(localStorage.getItem('behold_booked_sessions') || '[]');
-    const updated = bookings.filter(b => !selectedBookingIds.includes(b.id));
-    localStorage.setItem('behold_booked_sessions', JSON.stringify(updated));
-    setSelectedBookingIds([]);
-    reloadData();
-    alert("Selected bookings deleted!");
+    try {
+      await Promise.all(
+        selectedBookingIds.map(id => ApiService.deleteAdminAppointment(id))
+      );
+      setSelectedBookingIds([]);
+      reloadData();
+      alert("Selected bookings deleted!");
+    } catch (err) {
+      alert(err.message || "Failed to delete bookings.");
+    }
   };
 
   // Test Results Actions
-  const handleDeleteTestResult = (resId) => {
+  const handleDeleteTestResult = async (resId) => {
     if (!isSuperAdmin) {
       alert("Access Denied: You do not have permission to manage test results.");
       return;
     }
     if (!window.confirm("Are you sure you want to delete this test result?")) return;
-    const results = JSON.parse(localStorage.getItem('behold_test_results_db') || '[]');
-    const updated = results.filter(res => res.id !== resId);
-    localStorage.setItem('behold_test_results_db', JSON.stringify(updated));
-    reloadData();
+    try {
+      await ApiService.deleteTestResult(resId);
+      reloadData();
+    } catch (err) {
+      alert(err.message || "Failed to delete test result.");
+    }
   };
 
   // FAQ Desk Actions
-  const handleCreateFaq = (e) => {
+  const handleCreateFaq = async (e) => {
     e.preventDefault();
     if (!isSuperAdmin) {
       setFaqFormError("Access Denied: You do not have permission to manage FAQs.");
@@ -1461,21 +1340,18 @@ All data is stored securely in your browser's local sandbox data structures. No 
       return;
     }
 
-    const currentFaqs = JSON.parse(localStorage.getItem('behold_faqs') || '[]');
-    currentFaqs.push({
-      question: faqForm.question.trim(),
-      answer: faqForm.answer.trim()
-    });
-
-    localStorage.setItem('behold_faqs', JSON.stringify(currentFaqs));
-    window.dispatchEvent(new Event('behold_faqs_updated'));
-    setFaqFormSuccess("FAQ added successfully!");
-    setFaqForm({ index: -1, question: '', answer: '' });
-    reloadData();
-    setTimeout(() => {
-      setIsAddFaqOpen(false);
-      setFaqFormSuccess('');
-    }, 1500);
+    try {
+      await ApiService.createFaq(faqForm.question.trim(), faqForm.answer.trim());
+      setFaqFormSuccess("FAQ added successfully!");
+      setFaqForm({ index: -1, question: '', answer: '' });
+      reloadData();
+      setTimeout(() => {
+        setIsAddFaqOpen(false);
+        setFaqFormSuccess('');
+      }, 1500);
+    } catch (err) {
+      setFaqFormError(err.message || "Failed to add FAQ.");
+    }
   };
 
   const handleOpenEditFaq = (faq, index) => {
@@ -1489,7 +1365,7 @@ All data is stored securely in your browser's local sandbox data structures. No 
     setIsEditFaqOpen(true);
   };
 
-  const handleUpdateFaq = (e) => {
+  const handleUpdateFaq = async (e) => {
     e.preventDefault();
     if (!isSuperAdmin) {
       setFaqFormError("Access Denied: You do not have permission to manage FAQs.");
@@ -1503,38 +1379,38 @@ All data is stored securely in your browser's local sandbox data structures. No 
       return;
     }
 
-    const currentFaqs = JSON.parse(localStorage.getItem('behold_faqs') || '[]');
-    if (faqForm.index < 0 || faqForm.index >= currentFaqs.length) {
-      setFaqFormError("FAQ record not found.");
-      return;
+    try {
+      const faqToUpdate = faqsDb[faqForm.index];
+      if (!faqToUpdate) {
+        setFaqFormError("FAQ record not found.");
+        return;
+      }
+      await ApiService.updateFaq(faqToUpdate.id, faqForm.question.trim(), faqForm.answer.trim());
+      setFaqFormSuccess("FAQ updated successfully!");
+      reloadData();
+      setTimeout(() => {
+        setIsEditFaqOpen(false);
+        setFaqFormSuccess('');
+      }, 1500);
+    } catch (err) {
+      setFaqFormError(err.message || "Failed to update FAQ.");
     }
-
-    currentFaqs[faqForm.index] = {
-      question: faqForm.question.trim(),
-      answer: faqForm.answer.trim()
-    };
-
-    localStorage.setItem('behold_faqs', JSON.stringify(currentFaqs));
-    window.dispatchEvent(new Event('behold_faqs_updated'));
-    setFaqFormSuccess("FAQ updated successfully!");
-    reloadData();
-    setTimeout(() => {
-      setIsEditFaqOpen(false);
-      setFaqFormSuccess('');
-    }, 1500);
   };
 
-  const handleDeleteFaq = (index) => {
+  const handleDeleteFaq = async (index) => {
     if (!isSuperAdmin) {
       alert("Access Denied: You do not have permission to manage FAQs.");
       return;
     }
     if (!window.confirm("Are you sure you want to delete this FAQ question?")) return;
-    const currentFaqs = JSON.parse(localStorage.getItem('behold_faqs') || '[]');
-    const updated = currentFaqs.filter((_, idx) => idx !== index);
-    localStorage.setItem('behold_faqs', JSON.stringify(updated));
-    window.dispatchEvent(new Event('behold_faqs_updated'));
-    reloadData();
+    try {
+      const faqToDelete = faqsDb[index];
+      if (!faqToDelete) return;
+      await ApiService.deleteFaq(faqToDelete.id);
+      reloadData();
+    } catch (err) {
+      alert(err.message || "Failed to delete FAQ.");
+    }
   };
 
   // Filter inquiries
@@ -1559,7 +1435,7 @@ All data is stored securely in your browser's local sandbox data structures. No 
   });
 
   // --- LOGIN UI GATE ---
-  const isUserAdmin = user && user.role === 'ADMIN';
+  const isUserAdmin = user && user?.role?.toUpperCase() === 'ADMIN';
 
   if (!isUserAdmin) {
     return (
@@ -1726,7 +1602,6 @@ All data is stored securely in your browser's local sandbox data structures. No 
                     {isSuperAdmin ? 'SUPER ADMIN' : (roleTitle || 'SUB ADMIN')}
                   </span>
                 </div>
-                <ChevronRight className="w-3.5 h-3.5 text-zinc-600 shrink-0" />
               </button>
             );
           })()}

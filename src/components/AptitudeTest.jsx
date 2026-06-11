@@ -525,7 +525,6 @@ export default function AptitudeTest({ onFinishTest }) {
                           <span className="text-xs font-extrabold text-zinc-900">
                             {item.career}
                           </span>
-                          <ArrowUpRight className="w-3.5 h-3.5 text-zinc-400 group-hover:text-zinc-900 transition-colors" />
                         </div>
                         <span className="text-[10px] text-zinc-500 font-light mt-1 leading-relaxed">
                           {item.reason}
@@ -542,7 +541,6 @@ export default function AptitudeTest({ onFinishTest }) {
                       className="w-full py-3.5 sm:py-4 bg-brand hover:bg-brand-dark text-zinc-955 font-extrabold text-xs uppercase tracking-widest rounded-lg transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm hover:scale-[1.02] active:scale-[0.98] border-none"
                     >
                       <span>Claim Free Mentoring</span>
-                      <ArrowRight className="w-4 h-4 text-zinc-955" />
                     </button>
                     <p className="text-[9px] text-zinc-450 text-center mt-3 font-semibold flex items-center justify-center gap-1">
                       Schedules with a State Coordinator.

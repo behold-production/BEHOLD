@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
+import ApiService from '../services/api';
 import DateTimePicker from './booking/DateTimePicker';
 import BookingAuthModal from './booking/BookingAuthModal';
 
@@ -76,75 +77,48 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
   const [advisorConfirmed, setAdvisorConfirmed] = useState(false);
   const [advisors, setAdvisors] = useState([]);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showNoCounsellorsModal, setShowNoCounsellorsModal] = useState(false);
   const justAuthenticatedRef = useRef(false);
 
+  const [existingAppointments, setExistingAppointments] = useState([]);
+  const { user, login, register } = useAuth();
+
   useEffect(() => {
-    const getDynamicAdvisorsForBooking = () => {
-      // 1. Gather all registered psychologists
-      let registeredPsychologists = [];
+    const initBookingData = async () => {
       try {
-        const users = JSON.parse(localStorage.getItem('behold_users_db') || '[]');
-        registeredPsychologists = users.filter(u => u.role === 'PSYCHOLOGIST' && u.role !== 'ADMIN' && u.email !== 'admin@behold.com' && u.verified !== false)
-          .sort((a, b) => a.name.localeCompare(b.name));
-      } catch (e) {
-        console.error("Failed to load registered users in booking", e);
-      }
-
-      // 2. Build dynamic advisors list
-      const resolvedAdvisors = registeredPsychologists.map(psy => {
-        const adv = {
-          id: psy.id,
-          name: psy.name,
-          role: 'Consultant Psychologist',
-          availability: 'Available Today',
-          type: 'counselling',
-          defaultMeetLink: '',
-          price: 1200,
-          modes: ['ONLINE', 'OFFLINE', 'DOOR_STEP']
-        };
-
-        const savedProfile = localStorage.getItem(`behold_advisor_profile_${psy.id}`);
-        if (savedProfile) {
-          try {
-            const profile = JSON.parse(savedProfile);
+        const res = await ApiService.getCounsellors();
+        if (res.success && res.data) {
+          const resolved = res.data.map(c => {
             return {
-              ...adv,
-              name: profile.name || adv.name,
-              role: profile.role || adv.role,
-              defaultMeetLink: profile.defaultMeetLink || adv.defaultMeetLink || '',
-              price: (profile.price !== undefined && profile.price !== '') ? Number(profile.price) : adv.price,
-              modes: profile.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP']
+              id: c.id,
+              name: c.name,
+              role: c.experience ? 'Senior Psychologist' : 'Consultant Psychologist',
+              availability: 'Available Today',
+              type: 'counselling',
+              defaultMeetLink: '',
+              price: 1200,
+              modes: ['ONLINE', 'OFFLINE'],
+              availabilitySlots: c.availability || {}
             };
-          } catch (e) {
-            console.error("Error parsing saved profile details in booking", e);
-          }
+          });
+          setAdvisors(resolved);
         }
-        return adv;
-      });
 
-      return resolvedAdvisors;
-    };
-
-    setAdvisors(getDynamicAdvisorsForBooking());
-
-    const handleSync = (e) => {
-      const key = e.key || (e.detail && e.detail.key);
-      if (!key || key === 'behold_users_db' || key === 'behold_booked_sessions' || key.startsWith('behold_advisor_')) {
-        setAdvisors(getDynamicAdvisorsForBooking());
+        const apptsRes = await ApiService.getAppointments();
+        if (apptsRes.success && apptsRes.data) {
+          setExistingAppointments(apptsRes.data);
+        }
+      } catch (err) {
+        console.error('Failed to load booking details:', err);
       }
     };
-    window.addEventListener('storage', handleSync);
-    window.addEventListener('storage_update', handleSync);
-    return () => {
-      window.removeEventListener('storage', handleSync);
-      window.removeEventListener('storage_update', handleSync);
-    };
-  }, []);
+
+    initBookingData();
+  }, [user]);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isAutofilled, setIsAutofilled] = useState(false);
-  const { user, login, register } = useAuth();
   
   const [bookingStep, setBookingStep] = useState('config'); // 'config' | 'advisor' | 'details' | 'payment' | 'success'
 
@@ -191,26 +165,21 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
       // If a specific advisor is selected, prioritize their schedule
       if (selectedAdvisor) {
-        const savedAvailability = localStorage.getItem(`behold_advisor_availability_${selectedAdvisor.id}`);
-        if (savedAvailability) {
+        const parsed = selectedAdvisor.availabilitySlots;
+        if (parsed) {
           try {
-            const parsed = JSON.parse(savedAvailability);
             const dayActive = parsed.activeDays && parsed.activeDays[dayOfWeek];
             if (dayActive && parsed.availableSlots && parsed.availableSlots.length > 0) {
-              const storedBookings = localStorage.getItem('behold_booked_sessions');
-              let bookings = [];
-              if (storedBookings) {
-                try { bookings = JSON.parse(storedBookings); } catch (ex) {}
-              }
+              const bookings = existingAppointments;
               const list = parsed.availableSlots.filter(slot => {
                 if (dateStr === todayStr && isSlotInPast(slot)) {
                   return false;
                 }
                 return !bookings.some(b => 
-                  b.advisorId === selectedAdvisor.id && 
+                  b.counsellorId === selectedAdvisor.id && 
                   b.date === dateStr && 
                   b.time === slot && 
-                  (b.status === 'CONFIRMED' || b.status === 'PENDING')
+                  (b.status === 'APPROVED' || b.status === 'PENDING')
                 );
               });
               const parseTimeToMinutes = (timeStr) => {
@@ -222,7 +191,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
               };
               return list.sort((a, b) => parseTimeToMinutes(a) - parseTimeToMinutes(b));
             }
-            return []; // No slots available for this advisor on this day
+            return [];
           } catch (e) {
             console.error("Error parsing advisor availability in booking", e);
           }
@@ -230,56 +199,26 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
         return [];
       }
 
-      // Load all advisors including dynamic ones
-      const users = JSON.parse(localStorage.getItem('behold_users_db') || '[]');
-      const psychologists = users.filter(u => u.role === 'PSYCHOLOGIST' && u.role !== 'ADMIN' && u.email !== 'admin@behold.com' && u.verified !== false)
-        .sort((a, b) => a.name.localeCompare(b.name));
-      const allAdvisorsList = psychologists.map(psy => {
-        const adv = {
-          id: psy.id,
-          name: psy.name,
-          type: 'counselling'
-        };
-        const savedProfile = localStorage.getItem(`behold_advisor_profile_${psy.id}`);
-        if (savedProfile) {
-          try {
-            const profile = JSON.parse(savedProfile);
-            adv.role = profile.role || 'Consultant Psychologist';
-            adv.price = (profile.price !== undefined && profile.price !== '') ? Number(profile.price) : 1200;
-          } catch (e) {}
-        }
-        return adv;
-      });
-
-      // Filter advisors matching serviceType
-      const matchingAdvisors = allAdvisorsList.filter(a => a.type === serviceType);
-
-      // Collect union of available slots
+      // Collect union of available slots across matching advisors
       const activeSlotsSet = new Set();
+      const matchingAdvisors = advisors.filter(a => a.type === serviceType);
 
       matchingAdvisors.forEach(advisor => {
-        const savedAvailability = localStorage.getItem(`behold_advisor_availability_${advisor.id}`);
-        if (savedAvailability) {
+        const parsed = advisor.availabilitySlots;
+        if (parsed) {
           try {
-            const parsed = JSON.parse(savedAvailability);
-            // Check if day is active
             const dayActive = parsed.activeDays && parsed.activeDays[dayOfWeek];
             if (dayActive && parsed.availableSlots && parsed.availableSlots.length > 0) {
-              const storedBookings = localStorage.getItem('behold_booked_sessions');
-              let bookings = [];
-              if (storedBookings) {
-                try { bookings = JSON.parse(storedBookings); } catch (ex) {}
-              }
-              
+              const bookings = existingAppointments;
               parsed.availableSlots.forEach(slot => {
                 if (dateStr === todayStr && isSlotInPast(slot)) {
                   return;
                 }
                 const isBooked = bookings.some(b => 
-                  b.advisorId === advisor.id && 
+                  b.counsellorId === advisor.id && 
                   b.date === dateStr && 
                   b.time === slot && 
-                  (b.status === 'CONFIRMED' || b.status === 'PENDING')
+                  (b.status === 'APPROVED' || b.status === 'PENDING')
                 );
                 if (!isBooked) {
                   activeSlotsSet.add(slot);
@@ -313,28 +252,25 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
     if (!dateStr || !timeStr) return 'Available';
     const dayOfWeek = new Date(dateStr).getDay();
 
-    const savedAvailability = localStorage.getItem(`behold_advisor_availability_${advisorId}`);
-    if (!savedAvailability) {
+    const advisor = advisors.find(a => a.id === advisorId);
+    if (!advisor || !advisor.availabilitySlots) {
       return 'Unavailable';
     }
 
     try {
-      const parsed = JSON.parse(savedAvailability);
+      const parsed = advisor.availabilitySlots;
       const isDayActive = parsed.activeDays && parsed.activeDays[dayOfWeek];
       const isSlotActive = parsed.availableSlots && parsed.availableSlots.includes(timeStr);
       if (isDayActive && isSlotActive) {
-        const storedBookings = localStorage.getItem('behold_booked_sessions');
-        if (storedBookings) {
-          const bookings = JSON.parse(storedBookings);
-          const isAlreadyBooked = bookings.some(b => 
-            b.advisorId === advisorId && 
-            b.date === dateStr && 
-            b.time === timeStr && 
-            (b.status === 'CONFIRMED' || b.status === 'PENDING')
-          );
-          if (isAlreadyBooked) {
-            return 'Booked';
-          }
+        const bookings = existingAppointments;
+        const isAlreadyBooked = bookings.some(b => 
+          b.counsellorId === advisorId && 
+          b.date === dateStr && 
+          b.time === timeStr && 
+          (b.status === 'APPROVED' || b.status === 'PENDING')
+        );
+        if (isAlreadyBooked) {
+          return 'Booked';
         }
         return 'Available';
       }
@@ -358,6 +294,15 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
   }, []);
 
   const handleStepChange = (newStep) => {
+    if (newStep === 'advisor') {
+      const matchingAdvisors = advisors.filter(
+        advisor => advisor.type === bookingService && (!advisor.modes || advisor.modes.includes(bookingMode))
+      );
+      if (matchingAdvisors.length === 0) {
+        setShowNoCounsellorsModal(true);
+        return;
+      }
+    }
     setBookingStep(newStep);
     window.history.pushState({ component: 'booking', step: newStep }, '');
   };
@@ -716,51 +661,22 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
       setTimeout(() => {
         setPaymentStepText("Payment confirmed! Finalizing booking...");
         
-        setTimeout(() => {
+        setTimeout(async () => {
           try {
-            const stored = localStorage.getItem('behold_booked_sessions');
-            let currentBookings = [];
-            if (stored) {
-              try { currentBookings = JSON.parse(stored); } catch (ex) {}
-            }
-
-            const basePrice = selectedAdvisor ? selectedAdvisor.price : 1200;
-            const gstAmount = Math.round(basePrice * 0.18);
-            const finalTotal = basePrice + gstAmount - appliedDiscount;
-
-            const newBooking = {
-              id: 'sb_' + Date.now(),
-              userId: user ? user.id : 'guest_' + Date.now(),
-              userName: bookingForm.name || (user ? user.name : 'Guest User'),
-              email: bookingForm.email || (user ? user.email : ''),
-              phone: bookingForm.phone || '',
-              service: bookingService,
-              mode: bookingMode,
-              date: selectedDate,
-              time: selectedTime,
-              advisorId: selectedAdvisor ? selectedAdvisor.id : '',
-              advisorName: selectedAdvisor ? selectedAdvisor.name : 'Unknown Advisor',
-              advisorRole: selectedAdvisor ? selectedAdvisor.role : 'Consultant',
-              status: 'CONFIRMED',
-              meetLink: selectedAdvisor ? (selectedAdvisor.defaultMeetLink || '') : '',
-              paymentDetails: {
-                method: paymentMethod.toUpperCase(),
-                amountPaid: finalTotal,
-                transactionId: 'txn_' + Math.random().toString(36).substring(2, 11).toUpperCase(),
-                couponUsed: appliedDiscount > 0 ? couponInput.toUpperCase() : null
-              },
-              created_at: new Date().toISOString()
-            };
-
-            currentBookings.unshift(newBooking);
-            localStorage.setItem('behold_booked_sessions', JSON.stringify(currentBookings));
-          } catch (ex) {
-            console.error("Failed to save booking to local storage", ex);
+            await ApiService.bookAppointment(
+              selectedAdvisor ? selectedAdvisor.id : '',
+              selectedDate,
+              selectedTime,
+              bookingMode,
+              bookingService
+            );
+            setIsProcessingPayment(false);
+            setIsSuccess(true);
+            handleStepChange('success');
+          } catch (err) {
+            alert(err.message || 'Failed to finalize booking');
+            setIsProcessingPayment(false);
           }
-
-          setIsProcessingPayment(false);
-          setIsSuccess(true);
-          handleStepChange('success');
         }, 1200);
       }, 1200);
     }, 1200);
@@ -1797,6 +1713,31 @@ Status: CONFIRMED
           bookingForm={bookingForm}
           setBookingForm={setBookingForm}
         />
+
+        {showNoCounsellorsModal && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
+            <div className="bg-white border border-zinc-200 rounded-2xl w-full max-w-sm p-6 shadow-2xl space-y-4 text-center animate-in zoom-in-95 duration-200">
+              <div className="w-12 h-12 bg-amber-50 border border-amber-250 rounded-full flex items-center justify-center mx-auto text-amber-600 shadow-sm text-xl font-bold font-mono">
+                !
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-base font-black uppercase text-zinc-900 tracking-wide">
+                  No Counsellors Found
+                </h3>
+                <p className="text-xs text-zinc-500 leading-relaxed font-sans font-light">
+                  There are no counsellors available matching your selected service type or mode. Please adjust your session preferences and try again.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowNoCounsellorsModal(false)}
+                className="w-full py-2.5 bg-zinc-900 hover:bg-zinc-800 text-white font-bold text-xs uppercase tracking-widest rounded-lg cursor-pointer transition border-none shadow-md"
+              >
+                OK
+              </button>
+            </div>
+          </div>
+        )}
 
       </div>
     </div>

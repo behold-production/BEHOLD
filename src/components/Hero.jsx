@@ -86,7 +86,6 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
               className="px-8 py-4 min-h-[52px] bg-brand hover:bg-brand-dark hover:scale-[1.02] active:scale-[0.98] text-xs font-black uppercase tracking-widest transition-all duration-300 cursor-pointer rounded-lg shadow-md text-zinc-900 flex items-center justify-center gap-2 border border-zinc-900/5 w-full sm:w-auto"
             >
               <span>Book a Session</span>
-              <ArrowRight className="w-4 h-4" />
             </button>
             <button
               type="button"

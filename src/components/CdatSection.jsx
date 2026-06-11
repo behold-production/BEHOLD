@@ -201,7 +201,6 @@ export default function CdatSection({ setView }) {
                       }`}
                     >
                       <span>Proceed to CIGI Website</span>
-                      <ArrowRight className="w-4 h-4" />
                     </button>
                     {!hasCopied && (
                       <p className="text-[10px] text-zinc-550 font-bold text-center mt-1 uppercase tracking-wide">

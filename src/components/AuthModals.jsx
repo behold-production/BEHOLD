@@ -197,7 +197,6 @@ export default function AuthModals({ isOpen, onClose }) {
               ) : (
                 <>
                   <span>{mode === 'login' ? 'Sign In' : 'Sign Up'}</span>
-                  <ArrowRight className="w-4 h-4" />
                 </>
               )}
             </button>

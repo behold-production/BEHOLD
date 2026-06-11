@@ -1,0 +1,11 @@
+[
+  {
+    "id": "admin_1781175531382",
+    "name": "System Admin",
+    "email": "admin@behold.com",
+    "password": "$2a$10$9Im7HG.LODJbXAwFo30QIeLgV2puQDjHrx9OmjCjZ4iPjJ7KwQx1K",
+    "role": "admin",
+    "createdAt": "2026-06-11T10:58:51.382Z",
+    "updatedAt": "2026-06-11T10:58:51.384Z"
+  }
+]

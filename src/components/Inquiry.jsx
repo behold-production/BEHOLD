@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowRight, Loader2 } from 'lucide-react';
+import ApiService from '../services/api';
 
 export default function Inquiry({ testProfile, siteSettings }) {
   const [formData, setFormData] = useState({
@@ -52,7 +53,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
     return errors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const errors = validateForm();
     if (Object.keys(errors).length > 0) {
@@ -63,36 +64,24 @@ export default function Inquiry({ testProfile, siteSettings }) {
     setIsSubmitting(true);
     setSubmitStatus(null);
 
-    // Persist to local storage database
     try {
-      const inquiries = JSON.parse(localStorage.getItem('behold_inquiries_db') || '[]');
-      const newInquiry = {
-        id: 'inq_' + Date.now(),
-        name: formData.name.trim(),
-        email: formData.email.trim(),
-        message: formData.message.trim(),
-        date: (() => {
-          const d = new Date();
-          return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-        })(),
-        status: 'PENDING'
-      };
-      inquiries.push(newInquiry);
-      localStorage.setItem('behold_inquiries_db', JSON.stringify(inquiries));
-    } catch (err) {
-      console.error("Failed to save inquiry", err);
-    }
-
-    // Simulate API request delay
-    setTimeout(() => {
-      setIsSubmitting(false);
+      await ApiService.submitInquiry(
+        formData.name.trim(),
+        formData.email.trim(),
+        formData.message.trim()
+      );
       setSubmitStatus('success');
       setFormData({
         name: '',
         email: '',
         message: ''
       });
-    }, 1500);
+    } catch (err) {
+      console.error("Failed to save inquiry", err);
+      setFormErrors({ submit: err.message || "Failed to submit request" });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -175,7 +164,6 @@ export default function Inquiry({ testProfile, siteSettings }) {
                 ) : (
                   <>
                     <span>Send Request</span>
-                    <ArrowRight className="w-4 h-4" />
                   </>
                 )}
               </button>
