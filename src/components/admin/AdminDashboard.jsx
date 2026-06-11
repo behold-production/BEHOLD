@@ -393,7 +393,8 @@ export default function AdminDashboard({ setView }) {
           showBanner: settings.showBanner !== undefined ? settings.showBanner : false,
           bannerNotice: settings.bannerNotice || '🚨 Maintenance Notice: Schedulers undergoing maintenance tonight between 12:00 AM - 02:00 AM IST.',
           termsOfUse: settings.termsOfUse || '',
-          privacyPolicy: settings.privacyPolicy || ''
+          privacyPolicy: settings.privacyPolicy || '',
+          enablePsychology: settings.enablePsychology !== undefined ? settings.enablePsychology : true
         });
       }
     } catch (error) {
@@ -4154,6 +4155,25 @@ export default function AdminDashboard({ setView }) {
                       />
                     </div>
                   )}
+                </div>
+
+                {/* Feature Toggles */}
+                <div className="border border-zinc-850 p-4 rounded-xl space-y-4 bg-zinc-900/40">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="text-[13.5px] uppercase tracking-wider font-black text-brand block">Enable Psychology & Booking Services</span>
+                      <span className="text-[13px] text-zinc-550 block font-medium mt-1">If disabled, the site will only display Aptitude Test features. Psychologists and booking sections will be hidden from the public website.</span>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={settingsForm.enablePsychology}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, enablePsychology: e.target.checked })}
+                        className="sr-only peer"
+                      />
+                      <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
+                    </label>
+                  </div>
                 </div>
 
                 {/* Policies & Documents */}

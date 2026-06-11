@@ -50,7 +50,8 @@ export default function App() {
     termsOfUse: '',
     privacyPolicy: '',
     whatsapp: 'https://wa.me/919497174011',
-    contactEmail: 'support@behold.com'
+    contactEmail: 'support@behold.com',
+    enablePsychology: true
   });
   const [activeDocType, setActiveDocType] = useState(null); // 'terms' or 'privacy'
 
@@ -69,6 +70,24 @@ export default function App() {
 
   useEffect(() => {
     loadSettings();
+
+    const fetchGlobalSettings = async () => {
+      try {
+        const res = await ApiService.getSettings();
+        if (res.success && res.data) {
+          const parsed = res.data;
+          setSiteSettings(prev => ({
+            ...prev,
+            ...parsed
+          }));
+          localStorage.setItem('behold_site_settings', JSON.stringify(parsed));
+        }
+      } catch (err) {
+        console.error('Failed to fetch global settings', err);
+      }
+    };
+    fetchGlobalSettings();
+
     const handleStorageChange = (e) => {
       const key = e.key || (e.detail && e.detail.key);
       if (key === 'behold_site_settings' || !key) {
@@ -249,7 +268,7 @@ export default function App() {
           <main className="fade-in-up">
             <Hero setView={() => { }} navigateToSection={navigateToSection} siteSettings={siteSettings} />
             <CdatSection setView={() => { }} />
-            <Services setView={() => { }} onBookTherapist={handleBookTherapist} />
+            {siteSettings.enablePsychology !== false && <Services setView={() => { }} onBookTherapist={handleBookTherapist} />}
             <About setView={() => { }} />
             <Faq />
             <Inquiry testProfile={testProfile} siteSettings={siteSettings} />
@@ -286,11 +305,7 @@ export default function App() {
 
         {/* Counsellor Dashboard */}
         <Route path="/counsellor" element={
-          user && (user?.role?.toUpperCase() === 'PSYCHOLOGIST' || user?.role?.toUpperCase() === 'COUNSELLOR') ? (
-            <PsychologistDashboard setView={() => { }} />
-          ) : (
-            <Navigate to="/profile" replace />
-          )
+          <PsychologistDashboard setView={() => { }} />
         } />
         <Route path="/conceller" element={<Navigate to="/counsellor" replace />} />
 
