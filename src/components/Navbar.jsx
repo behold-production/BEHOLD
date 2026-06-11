@@ -4,7 +4,7 @@ import { Menu, X, ArrowUpRight, User, LogOut, ChevronRight } from 'lucide-react'
 import { useAuth } from '../context/AuthContext';
 import LogoutConfirmModal from './LogoutConfirmModal';
 
-export default function Navbar({ navigateToSection, currentView, onOpenAuth, siteName }) {
+export default function Navbar({ navigateToSection, currentView, onOpenAuth, siteName, siteSettings = {} }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
@@ -141,16 +141,18 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                 )}
               </button>
 
-              <button
-                onClick={() => scrollToSection('services')}
-                className={`transition-all duration-300 cursor-pointer pb-1 relative uppercase ${activeSection === 'services' && currentView === '/' ? 'text-zinc-900 font-bold' : 'hover:text-zinc-900'
-                  }`}
-              >
-                Services
-                {activeSection === 'services' && currentView === '/' && (
-                  <span className="absolute bottom-0 left-0 w-full h-[2px] bg-brand" />
-                )}
-              </button>
+              {siteSettings.enablePsychology !== false && (
+                <button
+                  onClick={() => scrollToSection('services')}
+                  className={`transition-all duration-300 cursor-pointer pb-1 relative uppercase ${activeSection === 'services' && currentView === '/' ? 'text-zinc-900 font-bold' : 'hover:text-zinc-900'
+                    }`}
+                >
+                  Services
+                  {activeSection === 'services' && currentView === '/' && (
+                    <span className="absolute bottom-0 left-0 w-full h-[2px] bg-brand" />
+                  )}
+                </button>
+              )}
 
               <button
                 onClick={() => navigate('/sample-test')}
@@ -342,16 +344,18 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
             <span>Home</span>
           </button>
 
-          <button
-            type="button"
-            onClick={() => scrollToSection('services')}
-            className={`w-full text-left px-3.5 py-3.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${activeSection === 'services' && currentView === '/'
-              ? 'bg-brand/10 text-zinc-900 border-brand font-black'
-              : 'text-zinc-650 hover:text-zinc-900 hover:bg-zinc-50 border-transparent'
-              }`}
-          >
-            <span>Services</span>
-          </button>
+          {siteSettings.enablePsychology !== false && (
+            <button
+              type="button"
+              onClick={() => scrollToSection('services')}
+              className={`w-full text-left px-3.5 py-3.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${activeSection === 'services' && currentView === '/'
+                ? 'bg-brand/10 text-zinc-900 border-brand font-black'
+                : 'text-zinc-650 hover:text-zinc-900 hover:bg-zinc-50 border-transparent'
+                }`}
+            >
+              <span>Services</span>
+            </button>
+          )}
 
           <button
             type="button"

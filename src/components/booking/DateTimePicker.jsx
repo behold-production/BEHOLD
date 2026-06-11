@@ -160,6 +160,23 @@ export default function DateTimePicker({
     }
   };
 
+  const tomorrowStr = useMemo(() => {
+    const d = new Date(today);
+    d.setDate(d.getDate() + 1);
+    return toLocalDateString(d);
+  }, [today]);
+
+  const weekendStr = useMemo(() => {
+    const d = getNextWeekdayDate(6, today);
+    return toLocalDateString(d);
+  }, [today]);
+
+  const nextWeekStr = useMemo(() => {
+    const d = new Date(today);
+    d.setDate(d.getDate() + 7);
+    return toLocalDateString(d);
+  }, [today]);
+
   const goToToday = () => {
     setViewYear(today.getFullYear());
     setViewMonth(today.getMonth());
@@ -170,7 +187,6 @@ export default function DateTimePicker({
   const goToTomorrow = () => {
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
-    const tomorrowStr = toLocalDateString(tomorrow);
     setViewYear(tomorrow.getFullYear());
     setViewMonth(tomorrow.getMonth());
     onDateChange(tomorrowStr);
@@ -179,20 +195,18 @@ export default function DateTimePicker({
 
   const goToWeekend = () => {
     const sat = getNextWeekdayDate(6, today);
-    const satStr = toLocalDateString(sat);
     setViewYear(sat.getFullYear());
     setViewMonth(sat.getMonth());
-    onDateChange(satStr);
+    onDateChange(weekendStr);
     onTimeChange('');
   };
 
   const goToNextWeek = () => {
     const next = new Date(today);
     next.setDate(next.getDate() + 7);
-    const nextStr = toLocalDateString(next);
     setViewYear(next.getFullYear());
     setViewMonth(next.getMonth());
-    onDateChange(nextStr);
+    onDateChange(nextWeekStr);
     onTimeChange('');
   };
 
@@ -218,6 +232,15 @@ export default function DateTimePicker({
     return viewMonth <= today.getMonth();
   })();
 
+  const getChipClass = (targetStr) => {
+    const isSelected = selectedDate === targetStr;
+    const base = "snap-start shrink-0 px-3.5 min-h-[40px] sm:min-h-[36px] rounded-full text-[11px] font-extrabold uppercase tracking-wider transition cursor-pointer flex items-center border";
+    if (isSelected) {
+      return `${base} bg-brand border-brand text-zinc-900 shadow-md ring-2 ring-brand/30 scale-105`;
+    }
+    return `${base} bg-white border-zinc-200 text-zinc-700 hover:border-brand/40 hover:bg-brand/5`;
+  };
+
   return (
     <div className="space-y-5">
       {/* Quick-jump chips */}
@@ -225,28 +248,28 @@ export default function DateTimePicker({
         <button
           type="button"
           onClick={goToToday}
-          className="snap-start shrink-0 px-3.5 min-h-[40px] sm:min-h-[36px] bg-white border border-zinc-200 hover:border-brand/40 hover:bg-brand/5 rounded-full text-[11px] font-extrabold uppercase tracking-wider text-zinc-700 transition cursor-pointer flex items-center"
+          className={getChipClass(todayStr)}
         >
           Today
         </button>
         <button
           type="button"
           onClick={goToTomorrow}
-          className="snap-start shrink-0 px-3.5 min-h-[40px] sm:min-h-[36px] bg-white border border-zinc-200 hover:border-brand/40 hover:bg-brand/5 rounded-full text-[11px] font-extrabold uppercase tracking-wider text-zinc-700 transition cursor-pointer flex items-center"
+          className={getChipClass(tomorrowStr)}
         >
           Tomorrow
         </button>
         <button
           type="button"
           onClick={goToWeekend}
-          className="snap-start shrink-0 px-3.5 min-h-[40px] sm:min-h-[36px] bg-white border border-zinc-200 hover:border-brand/40 hover:bg-brand/5 rounded-full text-[11px] font-extrabold uppercase tracking-wider text-zinc-700 transition cursor-pointer flex items-center"
+          className={getChipClass(weekendStr)}
         >
           This Weekend
         </button>
         <button
           type="button"
           onClick={goToNextWeek}
-          className="snap-start shrink-0 px-3.5 min-h-[40px] sm:min-h-[36px] bg-white border border-zinc-200 hover:border-brand/40 hover:bg-brand/5 rounded-full text-[11px] font-extrabold uppercase tracking-wider text-zinc-700 transition cursor-pointer flex items-center"
+          className={getChipClass(nextWeekStr)}
         >
           Next Week
         </button>

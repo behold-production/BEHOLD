@@ -80,19 +80,21 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
 
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center lg:justify-start gap-3 sm:gap-4 pt-2 w-full mt-auto">
+            {settings.enablePsychology !== false && (
+              <button
+                type="button"
+                onClick={handleBookNowClick}
+                className="px-8 py-4 min-h-[52px] bg-brand hover:bg-brand-dark hover:scale-[1.02] active:scale-[0.98] text-xs font-black uppercase tracking-widest transition-all duration-300 cursor-pointer rounded-lg shadow-md text-zinc-900 flex items-center justify-center gap-2 border border-zinc-900/5 w-full sm:w-auto"
+              >
+                <span>Book a Session</span>
+              </button>
+            )}
             <button
               type="button"
-              onClick={handleBookNowClick}
-              className="px-8 py-4 min-h-[52px] bg-brand hover:bg-brand-dark hover:scale-[1.02] active:scale-[0.98] text-xs font-black uppercase tracking-widest transition-all duration-300 cursor-pointer rounded-lg shadow-md text-zinc-900 flex items-center justify-center gap-2 border border-zinc-900/5 w-full sm:w-auto"
-            >
-              <span>Book a Session</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => navigateToSection('services')}
+              onClick={() => navigateToSection(settings.enablePsychology !== false ? 'services' : 'cdat')}
               className="px-8 py-4 min-h-[52px] bg-white/10 hover:bg-white/20 border border-white/15 hover:border-white text-white lg:bg-white/70 lg:hover:bg-white lg:border-zinc-200 lg:hover:border-brand lg:text-zinc-900 lg:hover:text-brand hover:scale-[1.02] active:scale-[0.98] text-xs font-black uppercase tracking-widest transition-all duration-300 cursor-pointer rounded-lg shadow-sm w-full sm:w-auto text-center"
             >
-              Explore Services
+              {settings.enablePsychology !== false ? 'Explore Services' : 'Discover CDAT'}
             </button>
           </div>
 
@@ -129,15 +131,29 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
           </div>
 
           {/* Floating UI Card 1: Counselling */}
-          <div className="absolute -top-6 -left-6 bg-white/95 backdrop-blur-md border border-zinc-200/60 p-4 rounded-xl shadow-xl hidden lg:flex items-center gap-3.5 max-w-[220px] z-20 pointer-events-none float-slow">
-            <div className="w-9 h-9 rounded-lg bg-brand flex items-center justify-center text-zinc-900 shadow-inner shrink-0">
-              <HeartPulse className="w-4 h-4" />
+          {settings.enablePsychology !== false && (
+            <div className="absolute -top-6 -left-6 bg-white/95 backdrop-blur-md border border-zinc-200/60 p-4 rounded-xl shadow-xl hidden lg:flex items-center gap-3.5 max-w-[220px] z-20 pointer-events-none float-slow">
+              <div className="w-9 h-9 rounded-lg bg-brand flex items-center justify-center text-zinc-900 shadow-inner shrink-0">
+                <HeartPulse className="w-4 h-4" />
+              </div>
+              <div>
+                <p className="text-[10px] font-extrabold uppercase tracking-wide text-zinc-900">Personal Care</p>
+                <p className="text-[9px] font-light text-zinc-500 mt-0.5">Emotional & stress guidance</p>
+              </div>
             </div>
-            <div>
-              <p className="text-[10px] font-extrabold uppercase tracking-wide text-zinc-900">Personal Care</p>
-              <p className="text-[9px] font-light text-zinc-500 mt-0.5">Emotional & stress guidance</p>
+          )}
+
+          {/* Top Right Floating Stat */}
+          {settings.enablePsychology !== false && (
+            <div className="absolute top-1/4 -right-12 bg-white/95 backdrop-blur-md p-3.5 rounded-xl border border-zinc-200/60 shadow-xl hidden xl:flex flex-col items-center gap-1.5 z-20 float-fast pointer-events-none" style={{ animationDelay: '2s' }}>
+              <div className="flex -space-x-2">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className={`w-7 h-7 rounded-full border-2 border-white bg-zinc-${900 - (i * 100)}`} />
+                ))}
+              </div>
+              <p className="text-[9px] font-black uppercase tracking-wider text-zinc-900 mt-1">15+ Expert<br />Counsellors</p>
             </div>
-          </div>
+          )}
 
           {/* Floating UI Card 2: Career Mapping */}
           <div className="absolute -bottom-6 -right-6 bg-white/95 backdrop-blur-md border border-zinc-200/60 p-4 rounded-xl shadow-xl hidden lg:flex items-center gap-3.5 max-w-[220px] z-20 pointer-events-none float-fast">

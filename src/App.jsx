@@ -259,6 +259,7 @@ export default function App() {
           currentView={location.pathname}
           onOpenAuth={() => setIsAuthModalOpen(true)}
           siteName={siteSettings.siteName}
+          siteSettings={siteSettings}
         />
       )}
 
