@@ -92,9 +92,10 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
     setShowDropdown(false);
     setIsMenuOpen(false);
     if (user) {
-      if (user.role === 'ADMIN') {
+      const role = user.role?.toUpperCase();
+      if (role === 'ADMIN') {
         navigate('/admin');
-      } else if (user.role === 'PSYCHOLOGIST') {
+      } else if (role === 'PSYCHOLOGIST' || role === 'COUNSELLOR') {
         navigate('/counsellor');
       } else {
         navigate('/profile');

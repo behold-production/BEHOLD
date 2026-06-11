@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { X, Mail, Lock, User, ArrowRight, Loader2, Eye, EyeOff } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 export default function AuthModals({ isOpen, onClose }) {
   const [mode, setMode] = useState('login'); // 'login' or 'register'
   const { login, register } = useAuth();
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({ name: '', email: '', password: '', confirmPassword: '' });
   const [error, setError] = useState('');
@@ -50,18 +52,28 @@ export default function AuthModals({ isOpen, onClose }) {
     try {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+      let loggedUser = null;
+
       if (mode === 'login') {
         if (!formData.email.trim() || !formData.password) throw new Error("Please fill in all fields");
         if (!emailRegex.test(formData.email)) throw new Error("Please enter a valid email address");
-        await login(formData.email, formData.password);
+        loggedUser = await login(formData.email, formData.password);
       } else {
         if (!formData.name.trim() || !formData.email.trim() || !formData.password || !formData.confirmPassword) throw new Error("Please fill in all fields");
         if (!emailRegex.test(formData.email)) throw new Error("Please enter a valid email address");
         if (formData.password.length < 6) throw new Error("Password must be at least 6 characters");
         if (formData.password !== formData.confirmPassword) throw new Error("Passwords do not match");
-        await register(formData.name, formData.email, formData.password);
+        loggedUser = await register(formData.name, formData.email, formData.password);
       }
+      
       onClose();
+      
+      if (loggedUser) {
+        const role = loggedUser.role?.toUpperCase();
+        if (role === 'ADMIN') navigate('/admin');
+        else if (role === 'PSYCHOLOGIST' || role === 'COUNSELLOR') navigate('/counsellor');
+        else navigate('/profile');
+      }
     } catch (err) {
       setError(err.message);
     } finally {

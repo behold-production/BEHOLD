@@ -1349,15 +1349,14 @@ export default function PsychologistDashboard({ setView }) {
                   </div>
                   <div className="flex flex-wrap gap-2 mt-4">
                     {bookings.length > 0 && bookings[0].meetLink && bookings[0].mode === 'ONLINE' && (
-                      <a
-                        href={bookings[0].meetLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-[13.5px] font-black uppercase tracking-widest bg-indigo-600 hover:bg-indigo-700 text-white px-3.5 py-2 rounded-lg cursor-pointer flex items-center gap-1.5 transition-colors duration-200"
+                      <button
+                        type="button"
+                        onClick={() => window.open(bookings[0].meetLink, '_blank')}
+                        className="text-[13.5px] font-black uppercase tracking-widest bg-indigo-600 hover:bg-indigo-700 text-white px-3.5 py-2 rounded-lg cursor-pointer flex items-center gap-1.5 transition-colors duration-200 border-none"
                       >
                         <Video className="w-3.5 h-3.5 text-white" />
                         <span>Join Meet</span>
-                      </a>
+                      </button>
                     )}
                     <button
                       onClick={() => setCurrentSection('bookings')}
@@ -1867,14 +1866,13 @@ export default function PsychologistDashboard({ setView }) {
                         <div className="pt-1.5 flex items-center gap-2 flex-wrap">
                           <span className="text-[13.5px] uppercase tracking-wider font-extrabold text-zinc-500">Meeting Room:</span>
                           {booking.meetLink ? (
-                            <a
-                              href={booking.meetLink}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-[14px] font-bold text-white hover:text-brand transition flex items-center gap-1.5 underline truncate max-w-[200px]"
+                            <button
+                              type="button"
+                              onClick={() => window.open(booking.meetLink, '_blank')}
+                              className="text-[14px] font-bold text-white hover:text-brand transition flex items-center gap-1.5 cursor-pointer bg-transparent border-none p-0 underline"
                             >
-                              <Link className="w-3.5 h-3.5 text-indigo-400 shrink-0" /> {booking.meetLink}
-                            </a>
+                              <Link className="w-3.5 h-3.5 text-indigo-400 shrink-0" /> Join Meet
+                            </button>
                           ) : (
                             <span className="text-[12px] font-semibold text-zinc-500 italic flex items-center gap-1">
                               <AlertCircle className="w-3.5 h-3.5 text-amber-500" /> Link Missing. Access Locked.

@@ -621,6 +621,60 @@ const AdminController = {
     } catch (error) {
       next(error);
     }
+  },
+
+  // Aptitude Questions Management
+  async getAptitudeQuestions(req, res, next) {
+    try {
+      const questions = await StorageService.findAll('aptitudequestions');
+      res.status(200).json({ success: true, data: questions });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async createAptitudeQuestion(req, res, next) {
+    try {
+      const { question, category, options, isActive } = req.body;
+      if (!question || !category || !options || options.length === 0) {
+        return res.status(400).json({ success: false, message: 'Question, category, and options are required' });
+      }
+      const newQuestion = await StorageService.create('aptitudequestions', {
+        question, category, options, isActive: isActive !== false
+      });
+      res.status(201).json({ success: true, message: 'Aptitude question created successfully', data: newQuestion });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async updateAptitudeQuestion(req, res, next) {
+    try {
+      const { id } = req.params;
+      const { question, category, options, isActive } = req.body;
+      const updates = {};
+      if (question !== undefined) updates.question = question;
+      if (category !== undefined) updates.category = category;
+      if (options !== undefined) updates.options = options;
+      if (isActive !== undefined) updates.isActive = isActive;
+      
+      const updated = await StorageService.update('aptitudequestions', id, updates);
+      if (!updated) return res.status(404).json({ success: false, message: 'Aptitude question not found' });
+      res.status(200).json({ success: true, message: 'Aptitude question updated successfully', data: updated });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async deleteAptitudeQuestion(req, res, next) {
+    try {
+      const { id } = req.params;
+      const deleted = await StorageService.delete('aptitudequestions', id);
+      if (!deleted) return res.status(404).json({ success: false, message: 'Aptitude question not found' });
+      res.status(200).json({ success: true, message: 'Aptitude question deleted successfully' });
+    } catch (error) {
+      next(error);
+    }
   }
 };
 

@@ -21,6 +21,26 @@ const SessionController = {
             const isAuthorized = req.user.id === s.userId || req.user.id === s.counsellorId || req.user.role === 'admin';
             if (!isAuthorized) {
               meetLink = '';
+            } else if (req.user.role === 'user') {
+              try {
+                let [hours, minutes] = s.time.split(' ')[0].split(':').map(Number);
+                const modifier = s.time.split(' ')[1];
+                if (modifier === 'PM' && hours < 12) hours += 12;
+                if (modifier === 'AM' && hours === 12) hours = 0;
+                
+                const [year, month, day] = s.date.split('-').map(Number);
+                const sessionTime = new Date(year, month - 1, day, hours, minutes);
+                const now = new Date();
+                
+                const diffMinutes = (sessionTime - now) / 60000;
+                
+                // Hide link if more than 10 mins before, or more than 60 mins after
+                if (diffMinutes > 10 || diffMinutes < -60) {
+                  meetLink = 'LOCKED';
+                }
+              } catch (e) {
+                meetLink = 'LOCKED';
+              }
             }
           }
 

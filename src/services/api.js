@@ -452,6 +452,36 @@ const ApiService = {
     return await request(`/admin/roles/${id}`, {
       method: 'DELETE'
     });
+  },
+
+  // Public Aptitude Questions
+  async getPublicAptitudeQuestions() {
+    return await request('/public/aptitude-questions');
+  },
+
+  // Admin Aptitude Questions Management
+  async getAdminAptitudeQuestions() {
+    return await request('/admin/aptitude-questions');
+  },
+
+  async createAptitudeQuestion(questionData) {
+    return await request('/admin/aptitude-questions', {
+      method: 'POST',
+      body: JSON.stringify(questionData)
+    });
+  },
+
+  async updateAptitudeQuestion(id, questionData) {
+    return await request(`/admin/aptitude-questions/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(questionData)
+    });
+  },
+
+  async deleteAptitudeQuestion(id) {
+    return await request(`/admin/aptitude-questions/${id}`, {
+      method: 'DELETE'
+    });
   }
 };
 

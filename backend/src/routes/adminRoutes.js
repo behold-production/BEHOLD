@@ -53,4 +53,10 @@ router.delete('/roles/:id', AdminController.deleteRole);
 router.get('/test-results', AdminController.getTestResults);
 router.delete('/test-results/:id', AdminController.deleteTestResult);
 
+// Aptitude Questions management
+router.get('/aptitude-questions', AdminController.getAptitudeQuestions);
+router.post('/aptitude-questions', AdminController.createAptitudeQuestion);
+router.put('/aptitude-questions/:id', AdminController.updateAptitudeQuestion);
+router.delete('/aptitude-questions/:id', AdminController.deleteAptitudeQuestion);
+
 module.exports = router;

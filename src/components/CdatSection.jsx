@@ -212,8 +212,8 @@ export default function CdatSection({ setView }) {
 
                 {copyMessage && (
                   <p
-                    className={`mt-2 text-[11px] font-bold uppercase tracking-wider font-mono ${copyMessage.includes('copied') || copyMessage.includes('generated') ? 'text-emerald-600' : 'text-rose-600'}`}
-                    role={copyMessage.includes('Please') ? 'alert' : 'status'}
+                    className="mt-2 text-[11px] font-bold tracking-wider font-mono text-rose-600"
+                    role="alert"
                   >
                     {copyMessage}
                   </p>

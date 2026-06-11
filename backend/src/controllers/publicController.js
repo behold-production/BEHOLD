@@ -104,6 +104,54 @@ const PublicController = {
     } catch (error) {
       next(error);
     }
+  },
+
+  // Get active Aptitude Questions (seeds defaults if empty)
+  async getAptitudeQuestions(req, res, next) {
+    try {
+      let questions = await StorageService.findAll('aptitudequestions', { isActive: true });
+      if (questions.length === 0) {
+        const defaultQuestions = [
+          {
+            question: "How do you prefer to solve a complex puzzle?",
+            category: "Logical",
+            options: [
+              { text: "Analyzing patterns and breaking them down systematically", weight: 5 },
+              { text: "Visualizing the completed picture in my mind's eye", weight: 3 },
+              { text: "Talking it through with someone else to generate ideas", weight: 2 },
+              { text: "Trial and error until the pieces fit together", weight: 1 }
+            ]
+          },
+          {
+            question: "Which of these activities sounds most exciting to you?",
+            category: "Career",
+            options: [
+              { text: "Coding a logic-based math game or grid puzzle", weight: 5 },
+              { text: "Writing a persuasive short story, essay, or poem", weight: 4 },
+              { text: "Designing an architectural or interior floor plan", weight: 3 },
+              { text: "Leading a lively group debate on social issues", weight: 2 }
+            ]
+          },
+          {
+            question: "When learning something new, you prefer:",
+            category: "Personality",
+            options: [
+              { text: "Reflecting in private on how it applies to your personal goals", weight: 5 },
+              { text: "Drawing visual diagrams, color-coded mindmaps, or charts", weight: 4 },
+              { text: "Following a structured, step-by-step programming manual", weight: 3 },
+              { text: "Practicing the skill immediately in a collaborative group", weight: 2 }
+            ]
+          }
+        ];
+        for (const q of defaultQuestions) {
+          await StorageService.create('aptitudequestions', { ...q, isActive: true });
+        }
+        questions = await StorageService.findAll('aptitudequestions', { isActive: true });
+      }
+      res.status(200).json({ success: true, data: questions });
+    } catch (error) {
+      next(error);
+    }
   }
 };
 

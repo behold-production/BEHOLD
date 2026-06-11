@@ -101,6 +101,7 @@ export default function AdminDashboard({ setView }) {
   const [inquiriesDb, setInquiriesDb] = useState([]);
   const [testResultsDb, setTestResultsDb] = useState([]);
   const [faqsDb, setFaqsDb] = useState([]);
+  const [aptitudeQuestionsDb, setAptitudeQuestionsDb] = useState([]);
   const [rolesDb, setRolesDb] = useState([]);
 
   // Custom role title manager states
@@ -120,6 +121,7 @@ export default function AdminDashboard({ setView }) {
   const [searchInquiry, setSearchInquiry] = useState('');
   const [searchTestResult, setSearchTestResult] = useState('');
   const [searchBooking, setSearchBooking] = useState('');
+  const [searchAptitude, setSearchAptitude] = useState('');
   const [bookingStatusFilter, setBookingStatusFilter] = useState('ALL');
 
   // Pagination & Lazy Loading States
@@ -134,6 +136,9 @@ export default function AdminDashboard({ setView }) {
 
   const [inquiryPage, setInquiryPage] = useState(1);
   const [inquiryLimit, setInquiryLimit] = useState(10);
+
+  const [aptitudePage, setAptitudePage] = useState(1);
+  const [aptitudeLimit, setAptitudeLimit] = useState(10);
 
   // Reset page pagination on search/filter mutations
   useEffect(() => {
@@ -152,12 +157,34 @@ export default function AdminDashboard({ setView }) {
     setInquiryPage(1);
   }, [searchInquiry]);
 
+  useEffect(() => {
+    setAptitudePage(1);
+  }, [searchAptitude]);
+
   // FAQ Modal/Form states
   const [isAddFaqOpen, setIsAddFaqOpen] = useState(false);
   const [isEditFaqOpen, setIsEditFaqOpen] = useState(false);
   const [faqForm, setFaqForm] = useState({ index: -1, question: '', answer: '' });
   const [faqFormError, setFaqFormError] = useState('');
   const [faqFormSuccess, setFaqFormSuccess] = useState('');
+
+  // Aptitude Form states
+  const [isAddAptitudeOpen, setIsAddAptitudeOpen] = useState(false);
+  const [isEditAptitudeOpen, setIsEditAptitudeOpen] = useState(false);
+  const [aptitudeForm, setAptitudeForm] = useState({ 
+    id: '', 
+    question: '', 
+    category: 'Logical', 
+    options: [
+      { text: '', weight: 1 },
+      { text: '', weight: 1 },
+      { text: '', weight: 1 },
+      { text: '', weight: 1 }
+    ],
+    isActive: true 
+  });
+  const [aptitudeFormError, setAptitudeFormError] = useState('');
+  const [aptitudeFormSuccess, setAptitudeFormSuccess] = useState('');
 
   // Login Gate form states
   const [loginEmail, setLoginEmail] = useState('');
@@ -272,7 +299,8 @@ export default function AdminDashboard({ setView }) {
         testResultsRes,
         faqsRes,
         rolesRes,
-        settingsRes
+        settingsRes,
+        aptitudeRes
       ] = await Promise.all([
         ApiService.getAdminUsers(),
         ApiService.getAdminCounsellors(),
@@ -281,7 +309,8 @@ export default function AdminDashboard({ setView }) {
         ApiService.getTestResults(),
         ApiService.getAdminFaqs(),
         ApiService.getRoles(),
-        ApiService.getAdminSettings()
+        ApiService.getAdminSettings(),
+        ApiService.getAdminAptitudeQuestions()
       ]);
 
       if (usersRes.success && counsellorsRes.success) {
@@ -318,6 +347,10 @@ export default function AdminDashboard({ setView }) {
 
       if (faqsRes.success && faqsRes.data) {
         setFaqsDb(faqsRes.data);
+      }
+
+      if (aptitudeRes && aptitudeRes.success && aptitudeRes.data) {
+        setAptitudeQuestionsDb(aptitudeRes.data);
       }
 
       if (rolesRes.success && rolesRes.data) {
@@ -544,6 +577,103 @@ export default function AdminDashboard({ setView }) {
       reloadData();
     } catch (err) {
       alert(err.message || "Failed to delete user.");
+    }
+  };
+
+  // Aptitude Questions Actions
+  const handleCreateAptitudeQuestion = async (e) => {
+    e.preventDefault();
+    if (!isSuperAdmin) {
+      setAptitudeFormError("Access Denied: Only super admins can manage tests.");
+      return;
+    }
+    setAptitudeFormError('');
+    setAptitudeFormSuccess('');
+
+    if (!aptitudeForm.question.trim() || !aptitudeForm.category) {
+      setAptitudeFormError("Question and category are required.");
+      return;
+    }
+
+    try {
+      await ApiService.createAptitudeQuestion({
+        question: aptitudeForm.question,
+        category: aptitudeForm.category,
+        options: aptitudeForm.options,
+        isActive: aptitudeForm.isActive
+      });
+      setAptitudeFormSuccess("Question created successfully!");
+      reloadData();
+      setTimeout(() => {
+        setIsAddAptitudeOpen(false);
+        setAptitudeFormSuccess('');
+      }, 1500);
+    } catch (err) {
+      setAptitudeFormError(err.message || "Failed to create question.");
+    }
+  };
+
+  const handleOpenEditAptitudeQuestion = (q) => {
+    setAptitudeForm({
+      id: q.id,
+      question: q.question,
+      category: q.category,
+      options: q.options || [
+        { text: '', weight: 1 },
+        { text: '', weight: 1 },
+        { text: '', weight: 1 },
+        { text: '', weight: 1 }
+      ],
+      isActive: q.isActive !== undefined ? q.isActive : true
+    });
+    setAptitudeFormError('');
+    setAptitudeFormSuccess('');
+    setIsEditAptitudeOpen(true);
+  };
+
+  const handleUpdateAptitudeQuestion = async (e) => {
+    e.preventDefault();
+    if (!isSuperAdmin) {
+      setAptitudeFormError("Access Denied: Only super admins can manage tests.");
+      return;
+    }
+    setAptitudeFormError('');
+    setAptitudeFormSuccess('');
+
+    if (!aptitudeForm.question.trim() || !aptitudeForm.category) {
+      setAptitudeFormError("Question and category are required.");
+      return;
+    }
+
+    try {
+      await ApiService.updateAptitudeQuestion(aptitudeForm.id, {
+        question: aptitudeForm.question,
+        category: aptitudeForm.category,
+        options: aptitudeForm.options,
+        isActive: aptitudeForm.isActive
+      });
+      setAptitudeFormSuccess("Question updated!");
+      reloadData();
+      setTimeout(() => {
+        setIsEditAptitudeOpen(false);
+        setAptitudeFormSuccess('');
+      }, 1500);
+    } catch (err) {
+      setAptitudeFormError(err.message || "Failed to update question.");
+    }
+  };
+
+  const handleDeleteAptitudeQuestion = async (id) => {
+    if (!isSuperAdmin) {
+      alert("Access Denied: Only super admins can manage tests.");
+      return;
+    }
+    if (!window.confirm("Delete this question?")) return;
+    try {
+      await ApiService.deleteAptitudeQuestion(id);
+      reloadData();
+    } catch (err) {
+      alert(err.message || "Failed to delete question.");
     }
   };
 
@@ -1693,6 +1823,17 @@ export default function AdminDashboard({ setView }) {
                 >
                   <FileSpreadsheet className="w-4 h-4" />
                   <span>Aptitude Results</span>
+                </button>
+
+                <button
+                  onClick={() => handleNavClick('aptitude')}
+                  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[14px] font-bold uppercase tracking-wider transition-all text-left cursor-pointer border-none ${currentSection === 'aptitude'
+                    ? 'bg-brand text-zinc-955 font-black'
+                    : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
+                    }`}
+                >
+                  <Brain className="w-4 h-4" />
+                  <span>Aptitude Questions</span>
                 </button>
 
                 <button
@@ -3721,6 +3862,116 @@ export default function AdminDashboard({ setView }) {
             </div>
           )}
 
+          {/* TAB: APTITUDE QUESTIONS MANAGER */}
+          {currentSection === 'aptitude' && isSuperAdmin && (
+            <div className="space-y-6 animate-in fade-in duration-200 text-sm">
+              <div className="border-b border-zinc-800 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <h3 className="text-sm font-bold uppercase tracking-widest text-white font-header">Aptitude Questions</h3>
+                  <p className="text-[14px] text-zinc-500 font-medium pt-1">Manage assessment questions and cognitive profiles</p>
+                </div>
+                <button
+                  onClick={() => {
+                    setAptitudeForm({
+                      id: '',
+                      question: '',
+                      category: 'Logical',
+                      options: [
+                        { text: '', weight: 1 },
+                        { text: '', weight: 1 },
+                        { text: '', weight: 1 },
+                        { text: '', weight: 1 }
+                      ],
+                      isActive: true
+                    });
+                    setAptitudeFormError('');
+                    setAptitudeFormSuccess('');
+                    setIsAddAptitudeOpen(true);
+                  }}
+                  className="px-4 py-2 bg-brand hover:bg-brand-dark text-zinc-955 text-sm font-bold rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 uppercase shrink-0 border-none"
+                >
+                  <Plus className="w-3.5 h-3.5 text-zinc-955" /> Add Question
+                </button>
+              </div>
+
+              <div className="bg-zinc-955 border border-zinc-850 p-4 rounded-xl flex items-center gap-3">
+                <Search className="w-4 h-4 text-zinc-500 shrink-0" />
+                <input
+                  type="text"
+                  placeholder="Search questions by text or category..."
+                  value={searchAptitude}
+                  onChange={(e) => setSearchAptitude(e.target.value)}
+                  className="w-full bg-transparent border-none text-[14px] text-white outline-none placeholder-zinc-550"
+                />
+              </div>
+
+              <div className="space-y-4">
+                {aptitudeQuestionsDb
+                  .filter(q => (q.question + q.category).toLowerCase().includes(searchAptitude.toLowerCase()))
+                  .slice((aptitudePage - 1) * aptitudeLimit, aptitudePage * aptitudeLimit)
+                  .map((q, index) => (
+                  <div
+                    key={q.id || index}
+                    className="bg-zinc-950 border border-zinc-850 rounded-xl p-5 flex flex-col sm:flex-row sm:items-start justify-between gap-5"
+                  >
+                    <div className="space-y-2 flex-1 min-w-0">
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className="w-5 h-5 rounded bg-zinc-900 border border-zinc-800 text-[14px] text-brand flex items-center justify-center font-bold shrink-0">{((aptitudePage - 1) * aptitudeLimit) + index + 1}</span>
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800">{q.category}</span>
+                        {!q.isActive && <span className="text-[10px] font-bold uppercase tracking-wider text-rose-500 bg-rose-955/20 px-2 py-0.5 rounded border border-rose-900/30">Disabled</span>}
+                      </div>
+                      <h4 className="font-header font-black text-sm uppercase text-white mb-3">
+                        {q.question}
+                      </h4>
+                      <ul className="space-y-1.5 pl-2 mt-2 border-l border-zinc-850">
+                        {q.options?.map((opt, oIdx) => (
+                          <li key={oIdx} className="text-[12px] text-zinc-400 font-medium leading-relaxed pl-3 font-sans flex items-center justify-between group">
+                            <span>{opt.text}</span>
+                            <span className="text-[10px] font-mono text-zinc-600 bg-zinc-900 px-1.5 rounded opacity-0 group-hover:opacity-100 transition-opacity">Weight: {opt.weight}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div className="shrink-0 flex items-center gap-2 self-end sm:self-start">
+                      <button
+                        onClick={() => handleOpenEditAptitudeQuestion(q)}
+                        className="p-2 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"
+                        title="Edit Question"
+                      >
+                        <Edit className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteAptitudeQuestion(q.id)}
+                        className="p-2 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
+                        title="Delete Question"
+                      >
+                        <Trash className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+
+                {aptitudeQuestionsDb.filter(q => (q.question + q.category).toLowerCase().includes(searchAptitude.toLowerCase())).length === 0 && (
+                  <div className="text-center py-10 bg-zinc-955 border border-zinc-850 rounded-xl space-y-3">
+                    <Brain className="w-8 h-8 text-zinc-650 mx-auto" />
+                    <p className="text-zinc-500 font-bold text-sm uppercase tracking-wider">No Questions Found.</p>
+                  </div>
+                )}
+                
+                {aptitudeQuestionsDb.filter(q => (q.question + q.category).toLowerCase().includes(searchAptitude.toLowerCase())).length > 0 && (
+                  <PaginationBar
+                    total={aptitudeQuestionsDb.filter(q => (q.question + q.category).toLowerCase().includes(searchAptitude.toLowerCase())).length}
+                    page={aptitudePage}
+                    limit={aptitudeLimit}
+                    onPageChange={setAptitudePage}
+                    onLimitChange={setAptitudeLimit}
+                  />
+                )}
+              </div>
+            </div>
+          )}
+
           {/* TAB: FAQ DESK MANAGER */}
           {currentSection === 'faqs' && isSuperAdmin && (
             <div className="space-y-6 animate-in fade-in duration-200 text-sm">
@@ -4527,6 +4778,135 @@ export default function AdminDashboard({ setView }) {
                   className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-black text-[13.5px] uppercase tracking-widest rounded-lg cursor-pointer transition border-none shadow-md"
                 >
                   {isAddFaqOpen ? 'Create FAQ' : 'Save Changes'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* 4.5 APTITUDE QUESTION ADD / EDIT MODAL */}
+      {(isAddAptitudeOpen || isEditAptitudeOpen) && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
+            onClick={() => { setIsAddAptitudeOpen(false); setIsEditAptitudeOpen(false); }}
+          />
+          <div className="relative w-full max-w-xl bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
+            <div>
+              <h3 className="text-base font-bold text-white uppercase tracking-wider font-header flex items-center gap-2">
+                <Brain className="w-5 h-5 text-brand" />
+                {isAddAptitudeOpen ? 'Create Aptitude Question' : 'Update Aptitude Question'}
+              </h3>
+              <p className="text-[14px] text-zinc-500 leading-none mt-1">
+                {isAddAptitudeOpen ? 'Add a new question to the assessment database.' : 'Modify the selected question details.'}
+              </p>
+            </div>
+
+            <form onSubmit={isAddAptitudeOpen ? handleCreateAptitudeQuestion : handleUpdateAptitudeQuestion} className="space-y-5 font-medium">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-[13.5px] uppercase tracking-wider font-bold text-zinc-400">Category / Domain</label>
+                  <select
+                    value={aptitudeForm.category}
+                    onChange={(e) => setAptitudeForm({ ...aptitudeForm, category: e.target.value })}
+                    className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                  >
+                    <option value="Logical">Logical</option>
+                    <option value="Verbal">Verbal</option>
+                    <option value="Numerical">Numerical</option>
+                    <option value="Spatial">Spatial</option>
+                    <option value="Abstract">Abstract</option>
+                  </select>
+                </div>
+                <div className="space-y-1 flex flex-col justify-end">
+                  <label className="flex items-center gap-2 cursor-pointer bg-zinc-955 border border-zinc-850 p-3 rounded-lg">
+                    <input
+                      type="checkbox"
+                      checked={aptitudeForm.isActive}
+                      onChange={(e) => setAptitudeForm({ ...aptitudeForm, isActive: e.target.checked })}
+                      className="w-4 h-4 text-brand bg-zinc-900 border-zinc-800 rounded focus:ring-brand focus:ring-2"
+                    />
+                    <span className="text-[13.5px] uppercase tracking-wider font-bold text-zinc-400">Active</span>
+                  </label>
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[13.5px] uppercase tracking-wider font-bold text-zinc-400">Question Text</label>
+                <textarea
+                  rows={3}
+                  required
+                  placeholder="e.g. Which number comes next in the sequence?"
+                  value={aptitudeForm.question}
+                  onChange={(e) => setAptitudeForm({ ...aptitudeForm, question: e.target.value })}
+                  className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors resize-none"
+                />
+              </div>
+
+              <div className="space-y-3 pt-2">
+                <label className="text-[13.5px] uppercase tracking-wider font-bold text-zinc-400 flex items-center justify-between">
+                  <span>Answer Options</span>
+                  <span className="text-xs text-zinc-500 font-normal normal-case">Assign higher weights to correct answers.</span>
+                </label>
+                
+                {aptitudeForm.options.map((opt, idx) => (
+                  <div key={idx} className="flex items-start gap-3">
+                    <div className="w-8 h-10 shrink-0 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center justify-center font-bold text-zinc-500 text-sm">
+                      {String.fromCharCode(65 + idx)}
+                    </div>
+                    <input
+                      type="text"
+                      required
+                      placeholder={`Option ${idx + 1}`}
+                      value={opt.text}
+                      onChange={(e) => {
+                        const newOpts = [...aptitudeForm.options];
+                        newOpts[idx].text = e.target.value;
+                        setAptitudeForm({ ...aptitudeForm, options: newOpts });
+                      }}
+                      className="flex-1 px-3.5 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                    />
+                    <input
+                      type="number"
+                      required
+                      min="0"
+                      step="1"
+                      placeholder="Weight"
+                      value={opt.weight}
+                      onChange={(e) => {
+                        const newOpts = [...aptitudeForm.options];
+                        newOpts[idx].weight = Number(e.target.value) || 0;
+                        setAptitudeForm({ ...aptitudeForm, options: newOpts });
+                      }}
+                      className="w-20 px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors font-mono"
+                      title="Weight (Score value)"
+                    />
+                  </div>
+                ))}
+              </div>
+
+              {aptitudeFormError && (
+                <p className="text-[14px] text-rose-500 font-bold uppercase tracking-wide font-mono">{aptitudeFormError}</p>
+              )}
+
+              {aptitudeFormSuccess && (
+                <p className="text-[14px] text-emerald-500 font-bold uppercase tracking-wide">{aptitudeFormSuccess}</p>
+              )}
+
+              <div className="flex gap-3 pt-4 border-t border-zinc-800">
+                <button
+                  type="button"
+                  onClick={() => { setIsAddAptitudeOpen(false); setIsEditAptitudeOpen(false); }}
+                  className="flex-1 py-3 border border-zinc-800 hover:bg-zinc-850 text-white font-bold text-[13.5px] uppercase tracking-widest rounded-lg cursor-pointer transition text-center"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-black text-[13.5px] uppercase tracking-widest rounded-lg cursor-pointer transition border-none shadow-md"
+                >
+                  {isAddAptitudeOpen ? 'Create Question' : 'Save Changes'}
                 </button>
               </div>
             </form>

@@ -12,173 +12,7 @@ import {
   Heart
 } from 'lucide-react';
 
-const TEST_QUESTIONS = [
-  {
-    id: 1,
-    question: "How do you prefer to solve a complex puzzle?",
-    category: "Logical",
-    options: [
-      { text: "Analyzing patterns and breaking them down systematically", weight: 5 },
-      { text: "Visualizing the completed picture in my mind's eye", weight: 3 },
-      { text: "Talking it through with someone else to generate ideas", weight: 2 },
-      { text: "Trial and error until the pieces fit together", weight: 1 }
-    ]
-  },
-  {
-    id: 2,
-    question: "Which of these activities sounds most exciting to you?",
-    category: "Career",
-    options: [
-      { text: "Coding a logic-based math game or grid puzzle", weight: 5 },
-      { text: "Writing a persuasive short story, essay, or poem", weight: 4 },
-      { text: "Designing an architectural or interior floor plan", weight: 3 },
-      { text: "Leading a lively group debate on social issues", weight: 2 }
-    ]
-  },
-  {
-    id: 3,
-    question: "When learning something new, you prefer:",
-    category: "Personality",
-    options: [
-      { text: "Reflecting in private on how it applies to your personal goals", weight: 5 },
-      { text: "Drawing visual diagrams, color-coded mindmaps, or charts", weight: 4 },
-      { text: "Following a structured, step-by-step programming manual", weight: 3 },
-      { text: "Practicing the skill immediately in a collaborative group", weight: 2 }
-    ]
-  },
-  {
-    id: 4,
-    question: "Which of the following describes your ideal workspace?",
-    category: "Personality",
-    options: [
-      { text: "A quiet, private study where I can concentrate deeply alone", weight: 5 },
-      { text: "A structured office with checklists, files, and project trackers", weight: 4 },
-      { text: "A collaborative workspace with boards for group debate", weight: 3 },
-      { text: "An artistic studio surrounded by draft papers and sketches", weight: 2 }
-    ]
-  },
-  {
-    id: 5,
-    question: "If you were to write a blog post, what would it be about?",
-    category: "Communication",
-    options: [
-      { text: "A personal reflection on lessons learned from failure", weight: 5 },
-      { text: "A fictional story filled with rich dialogue and wordplay", weight: 4 },
-      { text: "A commentary on a recent public debate or speech", weight: 3 },
-      { text: "A guide explaining how a complex logic formula works", weight: 2 }
-    ]
-  },
-  {
-    id: 6,
-    question: "When presented with a debate, what is your first reaction?",
-    category: "Communication",
-    options: [
-      { text: "To mediate the conversation and write down points of agreement", weight: 5 },
-      { text: "To reflect on my own internal feelings and moral stand first", weight: 4 },
-      { text: "To analyze the persuasive power, vocabulary, and flow of speech", weight: 3 },
-      { text: "To construct structured logical counter-arguments to disprove errors", weight: 2 }
-    ]
-  },
-  {
-    id: 7,
-    question: "How do you keep track of your daily tasks and homework?",
-    category: "Logical",
-    options: [
-      { text: "A highly structured, color-coded spreadsheet or calendar app", weight: 5 },
-      { text: "A reflective personal journal or diary describing my feelings", weight: 4 },
-      { text: "A simple note containing a narrative description of the day", weight: 3 },
-      { text: "I go with the flow and address issues as they arise in groups", weight: 1 }
-    ]
-  },
-  {
-    id: 9,
-    question: "When resolving an argument with a friend, you tend to:",
-    category: "Emotional",
-    options: [
-      { text: "Reflect privately on my own behavior and hidden biases first", weight: 5 },
-      { text: "Analyze the facts and chronology objectively to find the root cause", weight: 4 },
-      { text: "Sit down and explain my feelings clearly using precise words", weight: 3 },
-      { text: "Let it cool down naturally without overthinking it", weight: 2 }
-    ]
-  },
-  {
-    id: 10,
-    question: "You have 3 boxes: one contains only apples, one contains oranges, and one both. All labels are incorrect. How many fruits must you draw to label all boxes correctly?",
-    category: "Aptitude",
-    options: [
-      { text: "Only 1 fruit from the box labeled 'Apples & Oranges'", weight: 5 },
-      { text: "At least 2 fruits from different boxes", weight: 3 },
-      { text: "It is mathematically impossible without opening all", weight: 1 },
-      { text: "Draw 1 from each box", weight: 2 }
-    ]
-  },
-  {
-    id: 11,
-    question: "A group member is quiet and seems frustrated during a session. How do you handle this?",
-    category: "Emotional",
-    options: [
-      { text: "Speak with them privately after the meeting to see if they want to share", weight: 5 },
-      { text: "Ask them directly in front of the group to share what is bothering them", weight: 2 },
-      { text: "Ignore it and focus on completing the task with active members", weight: 1 },
-      { text: "Assign them a direct task so they are forced to participate", weight: 3 }
-    ]
-  },
-  {
-    id: 12,
-    question: "What kind of project would you find most satisfying to deliver?",
-    category: "Career",
-    options: [
-      { text: "A successful community drive or charity event that helps people", weight: 5 },
-      { text: "A functional, well-designed application or physical prototype", weight: 4 },
-      { text: "A detailed research report analyzing future trends and data", weight: 4 },
-      { text: "An organized project roadmap and budget sheet for a client", weight: 3 }
-    ]
-  },
-  {
-    id: 13,
-    question: "You are given a brick. How many alternative uses can you brainstorm for it in 1 minute?",
-    category: "Creativity",
-    options: [
-      { text: "10+ creative uses (e.g., paperweight, doorstop, artistic sculpture, paint grinding)", weight: 5 },
-      { text: "5-9 functional uses (e.g., support block, garden border)", weight: 4 },
-      { text: "2-4 standard uses (e.g., building a wall, throwing)", weight: 2 },
-      { text: "I only see it as a construction material", weight: 1 }
-    ]
-  },
-  {
-    id: 14,
-    question: "When designing the visual layout of a page or poster, you start by:",
-    category: "Creativity",
-    options: [
-      { text: "Sketching multiple abstract layouts to see what feels most unique", weight: 5 },
-      { text: "Aligning components systematically using a strict grid layout", weight: 4 },
-      { text: "Copying an existing design that I know works well", weight: 2 },
-      { text: "Focusing on the text first and adding colors at the end", weight: 3 }
-    ]
-  },
-  {
-    id: 15,
-    question: "Your team is divided between two approaches for a project. How do you lead them to a decision?",
-    category: "Leadership",
-    options: [
-      { text: "Facilitate a structured vote after evaluating the pros and cons of both", weight: 5 },
-      { text: "Choose the option that I personally believe is best to keep moving forward", weight: 2 },
-      { text: "Let the group continue debating until a consensus emerges naturally", weight: 2 },
-      { text: "Divide the project into two parts so both groups do it their way", weight: 1 }
-    ]
-  },
-  {
-    id: 16,
-    question: "When taking on a group assignment, you naturally tend to:",
-    category: "Leadership",
-    options: [
-      { text: "Coordinate milestones, assign roles, and keep everyone aligned on the goal", weight: 5 },
-      { text: "Focus deeply on completing my own assigned tasks to high standards", weight: 3 },
-      { text: "Support others by offering help and resolving conflicts", weight: 4 },
-      { text: "Follow instructions and let others set the direction", weight: 2 }
-    ]
-  }
-];
+import ApiService from '../services/api';
 
 const DOMAIN_DETAILS = {
   Aptitude: {
@@ -235,6 +69,8 @@ const CATEGORIES = [
 ];
 
 export default function AptitudeTest({ onFinishTest }) {
+  const [dbQuestions, setDbQuestions] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [shuffledQuestions, setShuffledQuestions] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [testFinished, setTestFinished] = useState(false);
@@ -251,10 +87,22 @@ export default function AptitudeTest({ onFinishTest }) {
     Leadership: 0
   });
 
-  // Randomize questions order on initial load
   useEffect(() => {
-    const shuffled = [...TEST_QUESTIONS].sort(() => Math.random() - 0.5);
-    setShuffledQuestions(shuffled);
+    async function loadQuestions() {
+      try {
+        const res = await ApiService.getPublicAptitudeQuestions();
+        if (res.success && res.data) {
+          setDbQuestions(res.data);
+          const shuffled = [...res.data].sort(() => 0.5 - Math.random());
+          setShuffledQuestions(shuffled);
+        }
+      } catch (error) {
+        console.error("Failed to load aptitude questions:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadQuestions();
   }, []);
 
   const handleAnswer = (category, weight) => {
@@ -288,7 +136,7 @@ export default function AptitudeTest({ onFinishTest }) {
       Creativity: 0,
       Leadership: 0
     });
-    const reshuffled = [...TEST_QUESTIONS].sort(() => Math.random() - 0.5);
+    const reshuffled = [...dbQuestions].sort(() => Math.random() - 0.5);
     setShuffledQuestions(reshuffled);
     setTestFinished(false);
     setIsAnimating(false);
@@ -351,7 +199,7 @@ export default function AptitudeTest({ onFinishTest }) {
 
   const recommendedCareers = generateCareers(scorePercentages);
 
-  if (shuffledQuestions.length === 0) {
+  if (isLoading || shuffledQuestions.length === 0) {
     return (
       <div className="pt-32 pb-20 min-h-screen bg-zinc-50 text-zinc-900 flex items-center justify-center font-sans">
         <p className="text-sm font-semibold uppercase tracking-widest text-zinc-400 animate-pulse">Initializing quiz console...</p>
@@ -360,6 +208,7 @@ export default function AptitudeTest({ onFinishTest }) {
   }
 
   const currentQObj = shuffledQuestions[currentQuestion];
+  if (!currentQObj) return null;
 
   return (
     <div className="pt-20 sm:pt-32 pb-12 sm:pb-20 min-h-screen bg-zinc-50 text-zinc-900 relative overflow-hidden font-sans border-b border-zinc-200 text-left">
@@ -393,7 +242,7 @@ export default function AptitudeTest({ onFinishTest }) {
               <div className="h-1.5 w-full bg-zinc-100 rounded-md overflow-hidden">
                 <div
                   className="h-full bg-gradient-brand transition-all duration-500 ease-out"
-                  style={{ width: `${((currentQuestion + 1) / shuffledQuestions.length) * 100}%` }}
+                  style={{ width: `${((currentQuestion + 1) / dbQuestions.length) * 100}%` }}
                 ></div>
               </div>
             </div>
