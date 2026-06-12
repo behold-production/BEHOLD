@@ -6,19 +6,36 @@ const StorageService = require('./src/services/storageService');
 const PORT = process.env.PORT || 5000;
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/behold_aspire';
 
-console.log('[Database] Connecting to MongoDB...');
-mongoose.connect(MONGODB_URI)
-  .then(async () => {
-    console.log('[Database] MongoDB Connected successfully.');
-    
-    // Seed system admin
-    await StorageService.seedDefaultAdmin();
+// Cache MongoDB connection for Vercel serverless (reuse across invocations)
+let isConnected = false;
 
-    app.listen(PORT, () => {
-      console.log(`[Server] Behold Aspire backend running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
-    });
-  })
-  .catch(err => {
+async function connectDB() {
+  if (isConnected) return;
+  console.log('[Database] Connecting to MongoDB...');
+  await mongoose.connect(MONGODB_URI);
+  isConnected = true;
+  console.log('[Database] MongoDB Connected successfully.');
+  await StorageService.seedDefaultAdmin();
+}
+
+// On Vercel (serverless), module.exports = app is required.
+// For local dev with node/nodemon, we call app.listen().
+if (process.env.VERCEL) {
+  // Vercel serverless — connect on each cold start, export app
+  connectDB().catch(err => {
     console.error('[Database] Failed to connect to MongoDB:', err.message);
-    process.exit(1);
   });
+  module.exports = app;
+} else {
+  // Local development — connect then start listening
+  connectDB()
+    .then(() => {
+      app.listen(PORT, () => {
+        console.log(`[Server] Behold Aspire backend running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
+      });
+    })
+    .catch(err => {
+      console.error('[Database] Failed to connect to MongoDB:', err.message);
+      process.exit(1);
+    });
+}
