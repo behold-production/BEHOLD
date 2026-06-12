@@ -1,5 +1,17 @@
 const BASE_URL = 'http://localhost:5000/api';
 
+let isRefreshing = false;
+let refreshSubscribers = [];
+
+function subscribeTokenRefresh(cb) {
+  refreshSubscribers.push(cb);
+}
+
+function onRefreshed(token) {
+  refreshSubscribers.forEach(cb => cb(token));
+  refreshSubscribers = [];
+}
+
 async function request(endpoint, options = {}) {
   const token = localStorage.getItem('behold_token');
   const headers = {
@@ -8,10 +20,15 @@ async function request(endpoint, options = {}) {
     ...(options.headers || {})
   };
 
-  const response = await fetch(`${BASE_URL}${endpoint}`, {
-    ...options,
-    headers
-  });
+  let response;
+  try {
+    response = await fetch(`${BASE_URL}${endpoint}`, {
+      ...options,
+      headers
+    });
+  } catch (err) {
+    throw new Error('Network error occurred. Please verify your connection.');
+  }
 
   const text = await response.text();
   let data;
@@ -19,6 +36,64 @@ async function request(endpoint, options = {}) {
     data = text ? JSON.parse(text) : {};
   } catch (err) {
     data = { success: false, message: 'Invalid response format from server' };
+  }
+
+  // Handle expired token transparently
+  if (response.status === 401 && data.message === 'Access Token Expired') {
+    const refreshToken = localStorage.getItem('behold_refresh_token');
+    if (!refreshToken) {
+      // Clear token, user must login
+      localStorage.removeItem('behold_token');
+      localStorage.removeItem('behold_refresh_token');
+      localStorage.removeItem('behold_auth_user');
+      if (window.spaNavigate) window.spaNavigate('/');
+      throw new Error('Session expired. Please log in again.');
+    }
+
+    if (!isRefreshing) {
+      isRefreshing = true;
+      try {
+        const refreshResponse = await fetch(`${BASE_URL}/auth/refresh-token`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ refreshToken })
+        });
+        const refreshResult = await refreshResponse.json();
+        if (refreshResult.success && refreshResult.data && refreshResult.data.accessToken) {
+          localStorage.setItem('behold_token', refreshResult.data.accessToken);
+          if (refreshResult.data.refreshToken) {
+            localStorage.setItem('behold_refresh_token', refreshResult.data.refreshToken);
+          }
+          isRefreshing = false;
+          onRefreshed(refreshResult.data.accessToken);
+        } else {
+          isRefreshing = false;
+          localStorage.removeItem('behold_token');
+          localStorage.removeItem('behold_refresh_token');
+          localStorage.removeItem('behold_auth_user');
+          if (window.spaNavigate) window.spaNavigate('/');
+          throw new Error('Session expired. Please log in again.');
+        }
+      } catch (err) {
+        isRefreshing = false;
+        localStorage.removeItem('behold_token');
+        localStorage.removeItem('behold_refresh_token');
+        localStorage.removeItem('behold_auth_user');
+        if (window.spaNavigate) window.spaNavigate('/');
+        throw err;
+      }
+    }
+
+    // Queue requests while refreshing
+    return new Promise((resolve, reject) => {
+      subscribeTokenRefresh((newToken) => {
+        const retryHeaders = {
+          ...headers,
+          'Authorization': `Bearer ${newToken}`
+        };
+        request(endpoint, { ...options, headers: retryHeaders }).then(resolve).catch(reject);
+      });
+    });
   }
 
   if (!response.ok) {
@@ -357,6 +432,10 @@ const ApiService = {
       method: 'POST',
       body: JSON.stringify(testResultData)
     });
+  },
+
+  async getMyTestResults() {
+    return await request('/users/test-results');
   },
 
   async getTestResults() {

@@ -120,12 +120,7 @@ export default function StudentProfile() {
   const [isLoading, setIsLoading] = useState(true);
   const [bookedSessions, setBookedSessions] = useState([]);
   const [completedSessions, setCompletedSessions] = useState([]);
-  const [testProfile] = useState(() => {
-    try {
-      const stored = localStorage.getItem('behold_test_profile');
-      return stored ? JSON.parse(stored) : null;
-    } catch { return null; }
-  });
+  const [testProfile, setTestProfile] = useState(null);
   const [sessionFilter, setSessionFilter] = useState('all');
   const [sessionSubTab, setSessionSubTab] = useState('upcoming');
   const { user, isLoading: authLoading } = useAuth();
@@ -141,9 +136,10 @@ export default function StudentProfile() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [profileRes, sessionsRes] = await Promise.all([
+        const [profileRes, sessionsRes, testRes] = await Promise.all([
           ApiService.getProfile(),
-          ApiService.getSessions()
+          ApiService.getSessions(),
+          ApiService.getMyTestResults()
         ]);
 
         if (profileRes.success && profileRes.data) {
@@ -158,6 +154,18 @@ export default function StudentProfile() {
           const list = sessionsRes.data;
           setBookedSessions(list.filter(b => b.status !== 'CANCELLED' && b.status !== 'COMPLETED' && !isSessionCompleted(b)));
           setCompletedSessions(list.filter(b => b.status === 'COMPLETED' || isSessionCompleted(b)));
+        }
+
+        if (testRes && testRes.success && Array.isArray(testRes.data) && testRes.data.length > 0) {
+          // Get the latest test result
+          const sorted = [...testRes.data].sort((a, b) => b.date.localeCompare(a.date));
+          setTestProfile(sorted[0]);
+        } else {
+          // Fallback to local storage if no database record exists
+          try {
+            const stored = localStorage.getItem('behold_test_profile');
+            if (stored) setTestProfile(JSON.parse(stored));
+          } catch (_) {}
         }
       } catch (err) {
         console.error('Failed to load student dashboard info:', err);
@@ -380,7 +388,7 @@ export default function StudentProfile() {
             <span className="text-xs font-semibold text-zinc-700">Need help?</span>
           </div>
           <p className="text-[11px] text-zinc-500 leading-relaxed">
-            Data stored locally. Contact your coordinator for support.
+            Data securely synced in Cloud. Contact your coordinator for support.
           </p>
         </div>
       </nav>
@@ -714,7 +722,7 @@ export default function StudentProfile() {
             <p className="text-sm text-zinc-500 mt-0.5">Keep your details up to date.</p>
           </div>
           <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-50 border border-zinc-200 text-zinc-500 text-xs font-medium">
-            <Shield className="w-3.5 h-3.5" /> Stored locally on your device
+            <Shield className="w-3.5 h-3.5" /> Saved securely in Cloud Database
           </div>
         </div>
 

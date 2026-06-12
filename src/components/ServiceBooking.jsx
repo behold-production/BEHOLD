@@ -55,6 +55,8 @@ const CAREER_FLOW = {
 };
 
 export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedAdvisor, onOpenAuth }) {
+  const { user, login, register } = useAuth();
+  
   const getLocalTodayString = () => {
     const today = new Date();
     const yyyy = today.getFullYear();
@@ -81,7 +83,6 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
   const justAuthenticatedRef = useRef(false);
 
   const [existingAppointments, setExistingAppointments] = useState([]);
-  const { user, login, register } = useAuth();
 
   useEffect(() => {
     const initBookingData = async () => {
@@ -90,14 +91,14 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
         if (res.success && res.data) {
           const resolved = res.data.map(c => {
             return {
-              id: c.id,
+              id: c.id || c._id,
               name: c.name,
               role: c.experience ? 'Senior Psychologist' : 'Consultant Psychologist',
               availability: 'Available Today',
-              type: 'counselling',
-              defaultMeetLink: '',
-              price: 1200,
-              modes: ['ONLINE', 'OFFLINE'],
+              type: c.type || 'counselling',
+              defaultMeetLink: c.defaultMeetLink || '',
+              price: Number(c.price) || 1200,
+              modes: Array.isArray(c.modes) ? c.modes : ['ONLINE', 'OFFLINE'],
               availabilitySlots: c.availability || {}
             };
           });
@@ -323,13 +324,6 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
           phone: prev.phone || '',
           groupCode: prev.groupCode || ''
         };
-        try {
-          localStorage.setItem('behold_student_profile', JSON.stringify({
-            name: merged.name,
-            email: merged.email,
-            phone: merged.phone
-          }));
-        } catch (e) { /* ignore */ }
         return merged;
       });
       setIsAutofilled(true);
@@ -339,22 +333,6 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
         setShowAuthModal(false);
         setIsSubmitting(false);
         setTimeout(() => handleStepChange('payment'), 150);
-      }
-    } else {
-      const saved = localStorage.getItem('behold_student_profile');
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          setBookingForm(prev => ({
-            ...prev,
-            name: prev.name || parsed.name || '',
-            email: prev.email || parsed.email || '',
-            phone: prev.phone || parsed.phone || ''
-          }));
-          setIsAutofilled(true);
-        } catch (e) {
-          console.error("Error reading student profile", e);
-        }
       }
     }
   }, [user]);
@@ -450,13 +428,6 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
     const { name, value } = e.target;
     setBookingForm(prev => {
       const updated = { ...prev, [name]: value };
-      try {
-        localStorage.setItem('behold_student_profile', JSON.stringify({
-          name: updated.name,
-          email: updated.email,
-          phone: updated.phone
-        }));
-      } catch (e) { /* ignore */ }
       return updated;
     });
     setIsAutofilled(false);
@@ -580,11 +551,6 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
         bookingForm
       };
       sessionStorage.setItem(BOOKING_DRAFT_KEY, JSON.stringify(draft));
-      localStorage.setItem('behold_student_profile', JSON.stringify({
-        name: bookingForm.name.trim(),
-        email: bookingForm.email.trim(),
-        phone: bookingForm.phone.trim()
-      }));
     } catch (e) { /* ignore */ }
 
     if (!user) {
@@ -1046,16 +1012,13 @@ Status: CONFIRMED
                           let advisorSlotsOnDate = [];
                           if (selectedDate) {
                             const dayOfWeek = new Date(selectedDate).getDay();
-                            const savedAvailability = localStorage.getItem(`behold_advisor_availability_${advisor.id}`);
-                            if (savedAvailability) {
-                              try {
-                                const parsed = JSON.parse(savedAvailability);
-                                const dayActive = parsed.activeDays && parsed.activeDays[dayOfWeek];
-                                if (dayActive && parsed.availableSlots && parsed.availableSlots.length > 0) {
-                                  advisorSlotsOnDate = [...parsed.availableSlots];
-                                }
-                              } catch (e) {}
-                            }
+                            try {
+                              const parsed = advisor.availabilitySlots;
+                              const dayActive = parsed.activeDays && parsed.activeDays[dayOfWeek];
+                              if (dayActive && parsed.availableSlots && parsed.availableSlots.length > 0) {
+                                advisorSlotsOnDate = [...parsed.availableSlots];
+                              }
+                            } catch (e) {}
                           }
 
                           return (

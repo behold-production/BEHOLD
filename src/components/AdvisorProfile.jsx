@@ -1,127 +1,68 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ArrowLeft, Clock, Globe, Award, BookOpen, Calendar, MapPin, Heart, GraduationCap } from 'lucide-react';
+import ApiService from '../services/api';
 
 export default function AdvisorProfile({ advisorId, onBack, onBook }) {
+  const [advisor, setAdvisor] = useState(null);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [advisorId]);
 
-  const getDynamicAdvisorDetails = (id) => {
-    let foundAdvisor = null;
-    
-    // 1. Gather all registered psychologists
-    let registeredPsychologists = [];
-    try {
-      const users = JSON.parse(localStorage.getItem('behold_users_db') || '[]');
-      registeredPsychologists = users.filter(u => u.role === 'PSYCHOLOGIST' && u.role !== 'ADMIN' && u.email !== 'admin@behold.com' && u.verified !== false);
-    } catch (e) {
-      console.error("Failed to load registered users", e);
-    }
-
-    // 2. Find matching psychologist
-    const psy = registeredPsychologists.find(u => u.id === id);
-    if (psy) {
-      foundAdvisor = {
-        id: psy.id,
-        name: psy.name,
-        role: 'Consultant Psychologist',
-        specialties: ['Anxiety Stress & Panic', 'Depression & Mood Concerns', 'Relationship'],
-        hours: 0,
-        lang: 'English',
-        price: 1200,
-        nextAvailable: 'Available Today',
-        education: 'MPhil Clinical Psychology',
-        bio: 'Dedicated consultant psychologist.',
-        type: 'counselling',
-        modes: ['ONLINE', 'OFFLINE', 'DOOR_STEP']
-      };
-    }
-
-    // 3. Resolve profile details dynamically
-    if (foundAdvisor) {
-      const savedProfile = localStorage.getItem(`behold_advisor_profile_${foundAdvisor.id}`);
-      if (savedProfile) {
-        try {
-          const profile = JSON.parse(savedProfile);
-          const specialtiesArray = typeof profile.specialties === 'string'
-            ? profile.specialties.split(',').map(s => s.trim()).filter(Boolean)
-            : profile.specialties || foundAdvisor.specialties;
-
-          foundAdvisor.name = profile.name || foundAdvisor.name;
-          foundAdvisor.role = profile.role || foundAdvisor.role;
-          foundAdvisor.education = profile.education || foundAdvisor.education;
-          foundAdvisor.specialties = specialtiesArray;
-          foundAdvisor.price = (profile.price !== undefined && profile.price !== '') ? Number(profile.price) : foundAdvisor.price;
-          foundAdvisor.lang = profile.lang || foundAdvisor.lang;
-          foundAdvisor.bio = profile.bio || foundAdvisor.bio;
-          foundAdvisor.defaultMeetLink = profile.defaultMeetLink || '';
-          foundAdvisor.modes = profile.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP'];
-          if (profile.hours !== undefined && profile.hours !== '') {
-            foundAdvisor.hours = Number(profile.hours);
-          }
-        } catch (e) {
-          console.error("Error parsing saved profile details", e);
-        }
-      }
-
-      const savedAvailability = localStorage.getItem(`behold_advisor_availability_${foundAdvisor.id}`);
-      if (savedAvailability) {
-        try {
-          const parsed = JSON.parse(savedAvailability);
-          const daysMap = { 1: 'Mon', 2: 'Tue', 3: 'Wed', 4: 'Thu', 5: 'Fri', 6: 'Sat', 0: 'Sun' };
-          const activeDaysList = Object.keys(parsed.activeDays || {})
-            .filter(d => parsed.activeDays[d])
-            .map(d => daysMap[d]);
-          if (activeDaysList.length > 0) {
-            foundAdvisor.nextAvailable = `Available: ${activeDaysList.join(', ')}`;
-          } else {
-            foundAdvisor.nextAvailable = 'No Active Days';
-          }
-        } catch (e) {}
-      }
-
-      // 4. Dynamically append completed booking hours to advisor hours
-      const isSessionCompleted = (booking) => {
-        if (booking.status === 'CANCELLED') return false;
-        if (booking.status === 'COMPLETED') return true;
-        
-        if (booking.status === 'CONFIRMED') {
-          try {
-            const [year, month, day] = booking.date.split('-').map(Number);
-            const timeParts = booking.time.split(' ');
-            const [hoursStr, minutesStr] = timeParts[0].split(':');
-            let hours = Number(hoursStr);
-            const minutes = Number(minutesStr);
-            const meridiem = timeParts[1];
-            
-            if (meridiem === 'PM' && hours < 12) hours += 12;
-            if (meridiem === 'AM' && hours === 12) hours = 0;
-            
-            const sessionEnd = new Date(year, month - 1, day, hours + 1, minutes);
-            return new Date() > sessionEnd;
-          } catch (e) {
-            console.error("Error checking session completion", e);
-          }
-        }
-        return false;
-      };
-
+  useEffect(() => {
+    const fetchAdvisor = async () => {
       try {
-        const bookings = JSON.parse(localStorage.getItem('behold_booked_sessions') || '[]');
-        const completedCount = bookings.filter(b => 
-          (b.advisorId && b.advisorId === foundAdvisor.id) ||
-          (b.advisorName && b.advisorName.toLowerCase() === foundAdvisor.name.toLowerCase())
-        ).filter(isSessionCompleted).length;
-        foundAdvisor.hours += completedCount;
-      } catch (e) {
-        console.error("Failed to add booking hours to profile details", e);
+        setLoading(true);
+        const res = await ApiService.getCounsellorDetails(advisorId);
+        if (res.success && res.data) {
+          const psy = res.data;
+          
+          let nextAvailable = 'No Active Days';
+          if (psy.availability && psy.availability.activeDays) {
+            const daysMap = { 1: 'Mon', 2: 'Tue', 3: 'Wed', 4: 'Thu', 5: 'Fri', 6: 'Sat', 0: 'Sun' };
+            const activeDaysList = Object.keys(psy.availability.activeDays)
+              .filter(d => psy.availability.activeDays[d])
+              .map(d => daysMap[d]);
+            if (activeDaysList.length > 0) {
+              nextAvailable = `Available: ${activeDaysList.join(', ')}`;
+            }
+          }
+
+          setAdvisor({
+            id: psy._id || psy.id,
+            name: psy.name,
+            role: 'Consultant Psychologist',
+            specialties: Array.isArray(psy.specialties) ? psy.specialties : ['Anxiety Stress & Panic', 'Depression & Mood Concerns', 'Relationship'],
+            hours: psy.completedHours || 0, // Mock hours
+            lang: psy.lang || 'English',
+            price: Number(psy.price) || 1200,
+            nextAvailable: nextAvailable,
+            education: psy.education || 'MPhil Clinical Psychology',
+            bio: psy.experience || 'Dedicated consultant psychologist.',
+            type: 'counselling',
+            modes: psy.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP']
+          });
+        }
+      } catch (err) {
+        console.error("Failed to load advisor details", err);
+      } finally {
+        setLoading(false);
       }
+    };
+
+    if (advisorId) {
+      fetchAdvisor();
     }
+  }, [advisorId]);
 
-    return foundAdvisor;
-  };
-
-  const advisor = getDynamicAdvisorDetails(advisorId);
+  if (loading) {
+    return (
+      <div className="min-h-screen pt-32 pb-20 bg-zinc-50 flex items-center justify-center px-4">
+        <p className="text-zinc-600 font-bold">Loading therapist profile...</p>
+      </div>
+    );
+  }
 
   if (!advisor) {
     return (

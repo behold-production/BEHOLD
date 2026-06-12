@@ -158,6 +158,32 @@ const UserController = {
     } catch (error) {
       next(error);
     }
+  },
+
+  // Get student's own test results
+  async getMyTestResults(req, res, next) {
+    try {
+      const userId = req.user.id;
+      const user = await StorageService.findById('users', userId);
+      if (!user) {
+        return res.status(404).json({ success: false, message: 'User not found' });
+      }
+
+      const results = await StorageService.findAll('testresults', {
+        $or: [
+          { userId: userId },
+          { studentEmail: user.email.toLowerCase() }
+        ]
+      });
+
+      res.status(200).json({
+        success: true,
+        message: 'Test results retrieved successfully',
+        data: results
+      });
+    } catch (error) {
+      next(error);
+    }
   }
 };
 

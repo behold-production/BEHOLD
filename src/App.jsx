@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { Routes, Route, Navigate, useNavigate, useLocation, useParams } from 'react-router-dom';
 import { MessageCircle, X } from 'lucide-react';
 import Navbar from './components/Navbar';
@@ -8,14 +8,15 @@ import Services from './components/Services';
 import About from './components/About';
 import Faq from './components/Faq';
 import Inquiry from './components/Inquiry';
-import ServiceBooking from './components/ServiceBooking';
 import Footer from './components/Footer';
-import StudentProfile from './components/users/StudentProfile';
-import PsychologistDashboard from './components/counsellors/PsychologistDashboard';
-import AdminDashboard from './components/admin/AdminDashboard';
-import AptitudeTest from './components/AptitudeTest';
 import AuthModals from './components/AuthModals';
-import AdvisorProfile from './components/AdvisorProfile';
+const ServiceBooking = lazy(() => import('./components/ServiceBooking'));
+const AdvisorProfile = lazy(() => import('./components/AdvisorProfile'));
+const StudentProfile = lazy(() => import('./components/users/StudentProfile'));
+const PsychologistDashboard = lazy(() => import('./components/counsellors/PsychologistDashboard'));
+const AdminDashboard = lazy(() => import('./components/admin/AdminDashboard'));
+const AptitudeTest = lazy(() => import('./components/AptitudeTest'));
+
 import { useAuth } from './context/AuthContext';
 import ApiService from './services/api';
 
@@ -124,11 +125,11 @@ export default function App() {
       if (userRole === 'ADMIN') {
         // Admins can browse any page and are not force-redirected
       } else if (userRole === 'PSYCHOLOGIST' || userRole === 'COUNSELLOR') {
-        if (path === '/profile') {
-          navigate('/');
+        if (path !== '/counsellor' && path !== '/conceller') {
+          navigate('/counsellor', { replace: true });
         }
       } else if (userRole === 'USER') {
-        if (path === '/counsellor' || path === '/conceller') {
+        if (path === '/counsellor' || path === '/conceller' || path.startsWith('/admin')) {
           navigate('/profile');
         }
       }
@@ -263,7 +264,12 @@ export default function App() {
         />
       )}
 
-      <Routes>
+      <Suspense fallback={
+        <div className="min-h-screen bg-zinc-955 flex items-center justify-center">
+          <div className="w-8 h-8 border-2 border-brand border-t-transparent rounded-full animate-spin" />
+        </div>
+      }>
+        <Routes>
         {/* Landing Page */}
         <Route path="/" element={
           <main className="fade-in-up">
@@ -320,7 +326,8 @@ export default function App() {
 
         {/* Catch-all fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+        </Routes>
+      </Suspense>
 
       {/* Floating WhatsApp Button */}
       {!hideNavbarAndFooter && !location.pathname.startsWith('/profile') && (() => {
