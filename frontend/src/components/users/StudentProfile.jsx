@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   User, Phone, Mail, BookOpen, Award, LayoutDashboard, Calendar,
@@ -118,11 +118,12 @@ export default function StudentProfile() {
   const [profile, setProfile] = useState(INITIAL_STATE);
   // Form state: what inputs bind to — NEVER reset by background fetches
   const [formData, setFormData] = useState(INITIAL_STATE);
-  const [formLoaded, setFormLoaded] = useState(false);
+  // useRef (not useState) so the effect always sees the current value without stale closure
+  const formLoadedRef = useRef(false);
   const [isSaved, setIsSaved] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [errors, setErrors] = useState({});
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [bookedSessions, setBookedSessions] = useState([]);
   const [completedSessions, setCompletedSessions] = useState([]);
   const [testProfile, setTestProfile] = useState(null);
@@ -156,10 +157,10 @@ export default function StudentProfile() {
           });
           // Always update server-truth profile
           setProfile(data);
-          // Only seed the form once — never overwrite in-progress user typing
-          if (!formLoaded) {
+          // useRef check — always current, no stale closure
+          if (!formLoadedRef.current) {
+            formLoadedRef.current = true;
             setFormData(data);
-            setFormLoaded(true);
           }
         }
 
@@ -170,11 +171,9 @@ export default function StudentProfile() {
         }
 
         if (testRes && testRes.success && Array.isArray(testRes.data) && testRes.data.length > 0) {
-          // Get the latest test result
           const sorted = [...testRes.data].sort((a, b) => b.date.localeCompare(a.date));
           setTestProfile(sorted[0]);
         } else {
-          // Fallback to local storage if no database record exists
           try {
             const stored = localStorage.getItem('behold_test_profile');
             if (stored) setTestProfile(JSON.parse(stored));
@@ -190,6 +189,9 @@ export default function StudentProfile() {
     if (user && !authLoading) {
       setIsLoading(true);
       fetchData();
+    } else if (!authLoading && !user) {
+      // Not logged in — stop the spinner
+      setIsLoading(false);
     }
   }, [user, authLoading]);
 
@@ -1338,7 +1340,7 @@ export default function StudentProfile() {
   return (
     <div className="pt-5 sm:pt-20 pb-24 lg:pb-12 min-h-screen bg-zinc-50 text-zinc-900 font-sans text-left">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-5 sm:space-y-6">
-        {isLoading ? (
+        {(isLoading || authLoading) ? (
           <div className="animate-pulse space-y-5 sm:space-y-6">
             {/* Skeleton Hero Header */}
             <div className="bg-white rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-center sm:items-start gap-6 border border-zinc-200">
