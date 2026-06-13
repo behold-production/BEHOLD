@@ -1438,123 +1438,123 @@ export default function PsychologistDashboard({ setView }) {
                     const ep = editProfile || profile;
                     const setEp = (updater) => setEditProfile(prev => ({ ...(prev || profile), ...updater }));
                     return (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-left font-medium">
-                    <div className="space-y-1.5">
-                      <label className="text-zinc-455 capitalize  font-bold">Display Name</label>
-                      <input
-                        type="text"
-                        placeholder="e.g. Dr. Sandra Tomy"
-                        value={ep.name || ''}
-                        onChange={(e) => setEp({ name: e.target.value })}
-                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand"
-                      />
-                    </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-left font-medium">
+                        <div className="space-y-1.5">
+                          <label className="text-zinc-455 capitalize  font-bold">Display Name</label>
+                          <input
+                            type="text"
+                            placeholder="e.g. Dr. Sandra Tomy"
+                            value={ep.name || ''}
+                            onChange={(e) => setEp({ name: e.target.value })}
+                            className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand"
+                          />
+                        </div>
 
-                    <div className="space-y-1.5">
-                      <label className="text-zinc-455 capitalize  font-bold">Education Credentials</label>
-                      <input
-                        type="text"
-                        placeholder="e.g. PhD Clinical Psychology"
-                        value={ep.education || ''}
-                        onChange={(e) => setEp({ education: e.target.value })}
-                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand"
-                      />
-                    </div>
+                        <div className="space-y-1.5">
+                          <label className="text-zinc-455 capitalize  font-bold">Education Credentials</label>
+                          <input
+                            type="text"
+                            placeholder="e.g. PhD Clinical Psychology"
+                            value={ep.education || ''}
+                            onChange={(e) => setEp({ education: e.target.value })}
+                            className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand"
+                          />
+                        </div>
 
-                    <div className="space-y-1.5">
-                      <label className="text-zinc-455 capitalize  font-bold">Session Fee (INR / Hour)</label>
-                      <input
-                        type="number"
-                        placeholder="1200"
-                        value={ep.price || ''}
-                        onChange={(e) => setEp({ price: Number(e.target.value) })}
-                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand"
-                      />
-                    </div>
+                        <div className="space-y-1.5">
+                          <label className="text-zinc-455 capitalize  font-bold">Session Fee (INR / Hour)</label>
+                          <input
+                            type="number"
+                            placeholder="1200"
+                            value={ep.price || ''}
+                            onChange={(e) => setEp({ price: Number(e.target.value) })}
+                            className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand"
+                          />
+                        </div>
 
-                    <div className="space-y-1.5">
-                      <label className="text-zinc-455 capitalize  font-bold">Languages Spoken</label>
-                      <input
-                        type="text"
-                        placeholder="Malayalam, English, Tamil"
-                        value={ep.lang || ''}
-                        onChange={(e) => setEp({ lang: e.target.value })}
-                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand"
-                      />
-                    </div>
+                        <div className="space-y-1.5">
+                          <label className="text-zinc-455 capitalize  font-bold">Languages Spoken</label>
+                          <input
+                            type="text"
+                            placeholder="Malayalam, English, Tamil"
+                            value={ep.lang || ''}
+                            onChange={(e) => setEp({ lang: e.target.value })}
+                            className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand"
+                          />
+                        </div>
 
-                    <div className="space-y-1.5">
-                      <label className="text-zinc-455 capitalize  font-bold">Baseline Therapy Hours Completed</label>
-                      <input
-                        type="number"
-                        placeholder="0"
-                        value={ep.hours || 0}
-                        onChange={(e) => setEp({ hours: Number(e.target.value) })}
-                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand"
-                      />
-                    </div>
+                        <div className="space-y-1.5">
+                          <label className="text-zinc-455 capitalize  font-bold">Baseline Therapy Hours Completed</label>
+                          <input
+                            type="number"
+                            placeholder="0"
+                            value={ep.hours || 0}
+                            onChange={(e) => setEp({ hours: Number(e.target.value) })}
+                            className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand"
+                          />
+                        </div>
 
-                    <div className="sm:col-span-2 space-y-1.5">
-                      <label className="text-zinc-455 capitalize  font-bold">Specialties (comma-separated)</label>
-                      <input
-                        type="text"
-                        placeholder="Anxiety, Relationship Dynamics, Career Stress"
-                        value={ep.specialties || ''}
-                        onChange={(e) => setEp({ specialties: e.target.value })}
-                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand"
-                      />
-                    </div>
+                        <div className="sm:col-span-2 space-y-1.5">
+                          <label className="text-zinc-455 capitalize  font-bold">Specialties (comma-separated)</label>
+                          <input
+                            type="text"
+                            placeholder="Anxiety, Relationship Dynamics, Career Stress"
+                            value={ep.specialties || ''}
+                            onChange={(e) => setEp({ specialties: e.target.value })}
+                            className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand"
+                          />
+                        </div>
 
-                    <div className="sm:col-span-2 space-y-1.5">
-                      <label className="text-zinc-455 capitalize  font-bold">Default Google Meet Link (optional)</label>
-                      <input
-                        type="url"
-                        placeholder="https://meet.google.com/abc-defg-hij"
-                        value={ep.defaultMeetLink || ''}
-                        onChange={(e) => setEp({ defaultMeetLink: e.target.value })}
-                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand"
-                      />
-                    </div>
+                        <div className="sm:col-span-2 space-y-1.5">
+                          <label className="text-zinc-455 capitalize  font-bold">Default Google Meet Link (optional)</label>
+                          <input
+                            type="url"
+                            placeholder="https://meet.google.com/abc-defg-hij"
+                            value={ep.defaultMeetLink || ''}
+                            onChange={(e) => setEp({ defaultMeetLink: e.target.value })}
+                            className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand"
+                          />
+                        </div>
 
-                    <div className="sm:col-span-2 space-y-1.5">
-                      <label className="text-zinc-455 capitalize  font-bold block text-left">Supported Session Modes</label>
-                      <div className="flex gap-4 pt-1 justify-start text-left">
-                        {['ONLINE', 'OFFLINE', 'DOOR_STEP'].map(mode => {
-                          const isSelected = ep.modes?.includes(mode);
-                          return (
-                            <label key={mode} className="flex items-center gap-2 cursor-pointer text-sm text-white select-none">
-                              <input
-                                type="checkbox"
-                                checked={isSelected}
-                                onChange={(e) => {
-                                  let nextModes = [...(ep.modes || [])];
-                                  if (e.target.checked) {
-                                    if (!nextModes.includes(mode)) nextModes.push(mode);
-                                  } else {
-                                    nextModes = nextModes.filter(m => m !== mode);
-                                  }
-                                  setEp({ modes: nextModes });
-                                }}
-                                className="w-4 h-4 rounded border-zinc-850 bg-zinc-950 text-brand focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
-                              />
-                              <span>{mode === 'DOOR_STEP' ? 'Doorstep' : mode.charAt(0) + mode.slice(1).toLowerCase()}</span>
-                            </label>
-                          );
-                        })}
+                        <div className="sm:col-span-2 space-y-1.5">
+                          <label className="text-zinc-455 capitalize  font-bold block text-left">Supported Session Modes</label>
+                          <div className="flex gap-4 pt-1 justify-start text-left">
+                            {['ONLINE', 'OFFLINE', 'DOOR_STEP'].map(mode => {
+                              const isSelected = ep.modes?.includes(mode);
+                              return (
+                                <label key={mode} className="flex items-center gap-2 cursor-pointer text-sm text-white select-none">
+                                  <input
+                                    type="checkbox"
+                                    checked={isSelected}
+                                    onChange={(e) => {
+                                      let nextModes = [...(ep.modes || [])];
+                                      if (e.target.checked) {
+                                        if (!nextModes.includes(mode)) nextModes.push(mode);
+                                      } else {
+                                        nextModes = nextModes.filter(m => m !== mode);
+                                      }
+                                      setEp({ modes: nextModes });
+                                    }}
+                                    className="w-4 h-4 rounded border-zinc-850 bg-zinc-950 text-brand focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
+                                  />
+                                  <span>{mode === 'DOOR_STEP' ? 'Doorstep' : mode.charAt(0) + mode.slice(1).toLowerCase()}</span>
+                                </label>
+                              );
+                            })}
+                          </div>
+                        </div>
+
+                        <div className="sm:col-span-2 space-y-1.5">
+                          <label className="text-zinc-455 capitalize  font-bold">Professional Biography</label>
+                          <textarea
+                            rows={5}
+                            placeholder="Describe your clinical expertise and background..."
+                            value={ep.bio || ''}
+                            onChange={(e) => setEp({ bio: e.target.value })}
+                            className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand resize-none"
+                          />
+                        </div>
                       </div>
-                    </div>
-
-                    <div className="sm:col-span-2 space-y-1.5">
-                      <label className="text-zinc-455 capitalize  font-bold">Professional Biography</label>
-                      <textarea
-                        rows={5}
-                        placeholder="Describe your clinical expertise and background..."
-                        value={ep.bio || ''}
-                        onChange={(e) => setEp({ bio: e.target.value })}
-                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand resize-none"
-                      />
-                    </div>
-                  </div>
                     );
                   })()}
 

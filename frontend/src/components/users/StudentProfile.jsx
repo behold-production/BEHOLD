@@ -114,8 +114,13 @@ const getMeetLinkStatus = (session) => {
 };
 
 export default function StudentProfile() {
+  // Server-truth: used for header display, completion bar, avatar
   const [profile, setProfile] = useState(INITIAL_STATE);
+  // Form state: what inputs bind to — NEVER reset by background fetches
+  const [formData, setFormData] = useState(INITIAL_STATE);
+  const [formLoaded, setFormLoaded] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [bookedSessions, setBookedSessions] = useState([]);
@@ -129,8 +134,10 @@ export default function StudentProfile() {
 
   const currentSection = useMemo(() => searchParams.get('tab') || 'overview', [searchParams]);
 
-  const completion = useMemo(() => calculateCompletion(profile), [profile]);
+  // Completion bar reflects live formData so users see real-time profile strength
+  const completion = useMemo(() => calculateCompletion(formData), [formData]);
   const greeting = useMemo(() => getGreeting(), []);
+  // displayName from saved profile (header doesn't change until Save is clicked)
   const displayName = profile.name || user?.name || 'Student';
 
   useEffect(() => {
@@ -147,7 +154,13 @@ export default function StudentProfile() {
           Object.keys(INITIAL_STATE).forEach(key => {
             if (data[key] === null) data[key] = '';
           });
+          // Always update server-truth profile
           setProfile(data);
+          // Only seed the form once — never overwrite in-progress user typing
+          if (!formLoaded) {
+            setFormData(data);
+            setFormLoaded(true);
+          }
         }
 
         if (sessionsRes.success && Array.isArray(sessionsRes.data)) {
@@ -185,21 +198,28 @@ export default function StudentProfile() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // Form input handler — only touches formData, never profile
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setProfile(prev => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: value }));
     if (errors[name]) setErrors(prev => ({ ...prev, [name]: null }));
+  };
+
+  // Discard — revert form to last saved server state
+  const handleDiscard = () => {
+    setFormData({ ...profile });
+    setErrors({});
   };
 
   const validate = () => {
     const err = {};
-    if (!profile.name.trim()) err.name = 'Required';
-    else if (profile.name.trim().length < 3) err.name = 'Min 3 characters';
-    if (!profile.email.trim()) err.email = 'Required';
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(profile.email)) err.email = 'Invalid email';
-    if (!profile.phone.trim()) err.phone = 'Required';
-    else if (!/^(\+?\d{1,4}[- ]?)?[6-9]\d{9}$/.test(profile.phone.trim())) err.phone = 'Invalid phone';
-    if (!profile.guardianName.trim()) err.guardianName = 'Required';
+    if (!formData.name.trim()) err.name = 'Required';
+    else if (formData.name.trim().length < 3) err.name = 'Min 3 characters';
+    if (!formData.email.trim()) err.email = 'Required';
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) err.email = 'Invalid email';
+    if (!formData.phone.trim()) err.phone = 'Required';
+    else if (!/^(\+?\d{1,4}[- ]?)?[6-9]\d{9}$/.test(formData.phone.trim())) err.phone = 'Invalid phone';
+    if (!formData.guardianName.trim()) err.guardianName = 'Required';
     return err;
   };
 
@@ -207,12 +227,18 @@ export default function StudentProfile() {
     e.preventDefault();
     const err = validate();
     if (Object.keys(err).length > 0) { setErrors(err); return; }
+    setIsSaving(true);
     try {
-      await ApiService.updateProfile(profile);
+      await ApiService.updateProfile(formData);
+      // Sync saved form back to server-truth profile
+      setProfile({ ...formData });
       setIsSaved(true);
       setTimeout(() => setIsSaved(false), 3000);
     } catch (error) {
-      alert(error.message || 'Failed to update profile');
+      const errMsg = error.message || 'Failed to update profile';
+      import('react-hot-toast').then(mod => mod.toast.error(errMsg));
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -766,7 +792,7 @@ export default function StudentProfile() {
                   {section.fields.map(field => {
                     const FIcon = field.icon;
                     const hasError = !!errors[field.name];
-                    const hasValue = !!profile[field.name];
+                    const hasValue = !!formData[field.name];
                     return (
                       <div key={field.name} className="space-y-1.5">
                         <label htmlFor={`sp-${field.name}`} className="text-xs text-zinc-600 font-medium block flex items-center gap-1">
@@ -782,7 +808,7 @@ export default function StudentProfile() {
                             <select
                               id={`sp-${field.name}`}
                               name={field.name}
-                              value={profile[field.name]}
+                              value={formData[field.name]}
                               onChange={handleChange}
                               className={`w-full min-h-[44px] pl-10 pr-9 py-2.5 bg-white border text-sm text-zinc-900 rounded-lg outline-none transition-all appearance-none cursor-pointer ${hasError
                                 ? 'border-rose-300 focus:border-rose-400 focus:ring-2 focus:ring-rose-100'
@@ -798,7 +824,7 @@ export default function StudentProfile() {
                               id={`sp-${field.name}`}
                               type={field.type}
                               name={field.name}
-                              value={profile[field.name]}
+                              value={formData[field.name]}
                               onChange={handleChange}
                               placeholder={field.placeholder}
                               autoComplete={field.autoComplete}
@@ -837,16 +863,22 @@ export default function StudentProfile() {
           <div className="sticky bottom-16 lg:bottom-0 z-30 flex items-center justify-end gap-2 p-3 bg-white border border-zinc-200 rounded-xl shadow-sm">
             <button
               type="button"
-              onClick={() => setErrors({})}
-              className="min-h-[40px] px-4 py-2 border border-zinc-200 hover:border-zinc-300 rounded-lg text-xs font-medium text-zinc-600 hover:text-zinc-900 transition-colors bg-white"
+              onClick={handleDiscard}
+              disabled={isSaving}
+              className="min-h-[40px] px-4 py-2 border border-zinc-200 hover:border-zinc-300 rounded-lg text-xs font-medium text-zinc-600 hover:text-zinc-900 transition-colors bg-white disabled:opacity-50"
             >
               Discard
             </button>
             <button
               type="submit"
-              className="min-h-[40px] inline-flex items-center gap-1.5 px-5 py-2 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-semibold rounded-lg transition-colors border-none"
+              disabled={isSaving}
+              className="min-h-[40px] inline-flex items-center gap-1.5 px-5 py-2 bg-zinc-900 hover:bg-zinc-800 disabled:bg-zinc-500 text-white text-xs font-semibold rounded-lg transition-colors border-none"
             >
-              <Save className="w-3.5 h-3.5" /> Save Changes
+              {isSaving ? (
+                <><span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />Saving...</>
+              ) : (
+                <><Save className="w-3.5 h-3.5" />Save Changes</>
+              )}
             </button>
           </div>
         </form>
