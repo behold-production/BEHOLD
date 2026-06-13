@@ -101,7 +101,7 @@ export default function LogoutConfirmModal({ isOpen, onConfirm, onCancel, theme 
             <button
               type="button"
               onClick={onConfirm}
-              className="min-h-[44px] flex-1 py-2.5 rounded-xl text-xs font-black capitalize  transition cursor-pointer border-none bg-rose-600 hover:bg-rose-700 text-white flex items-center justify-center gap-1.5 shadow-md"
+              className="min-h-[44px] flex-1 py-2.5 rounded-xl text-xs font-bold capitalize  transition cursor-pointer border-none bg-rose-600 hover:bg-rose-700 text-white flex items-center justify-center gap-1.5 shadow-md"
             >
               <LogOut className="w-3.5 h-3.5" />
               Sign Out

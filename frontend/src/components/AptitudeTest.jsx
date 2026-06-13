@@ -226,14 +226,14 @@ export default function AptitudeTest({ onFinishTest }) {
             <div className="mb-8 sm:mb-12">
               <div className="flex flex-col sm:flex-row justify-between sm:items-end gap-4 mb-4">
                 <div>
-                  <h2 className="text-2xl sm:text-3xl font-header font-black text-zinc-900 capitalize tracking-wide">
+                  <h2 className="text-2xl sm:text-3xl font-header font-bold text-zinc-900 capitalize tracking-wide">
                     Aptitude Profiling
                   </h2>
                   <p className="text-zinc-550 font-sans text-xs font-light mt-1">
                     Discover your core cognitive affinities across 8 dimensions.
                   </p>
                 </div>
-                <span className="text-zinc-900 font-header font-black text-sm sm:text-lg self-start sm:self-auto">
+                <span className="text-zinc-900 font-header font-bold text-sm sm:text-lg self-start sm:self-auto">
                   {currentQuestion + 1} <span className="text-zinc-300">/</span> {shuffledQuestions.length}
                 </span>
               </div>
@@ -291,10 +291,10 @@ export default function AptitudeTest({ onFinishTest }) {
                   <Brain className="w-6 h-6" />
                 </div>
                 <div>
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-zinc-50 border border-zinc-200 text-zinc-900 text-xs font-extrabold capitalize  mb-1">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-zinc-50 border border-zinc-200 text-zinc-900 text-xs font-semibold capitalize  mb-1">
                     <Award className="w-3.5 h-3.5 text-zinc-900" /> CIGI Framework Certified
                   </div>
-                  <h2 className="text-2xl sm:text-3xl font-header font-black text-zinc-900 leading-none">
+                  <h2 className="text-2xl sm:text-3xl font-header font-bold text-zinc-900 leading-none">
                     Assessment Completed
                   </h2>
                 </div>
@@ -314,14 +314,14 @@ export default function AptitudeTest({ onFinishTest }) {
 
               {/* Left Column: Dominant Domain */}
               <div className="lg:col-span-7 space-y-6">
-                <h3 className="text-xs font-extrabold text-zinc-400  capitalize">
+                <h3 className="text-xs font-semibold text-zinc-400  capitalize">
                   Your Dominant Affinity Profile
                 </h3>
 
                 <div className="p-5 sm:p-6 rounded-lg border border-zinc-200 bg-zinc-50/50 flex gap-4 text-zinc-900 shadow-xs">
                   <div className="shrink-0 mt-1">{dominantInfo.icon}</div>
                   <div>
-                    <h4 className="text-base sm:text-lg font-header font-black text-zinc-900 leading-tight mb-2 capitalize">
+                    <h4 className="text-base sm:text-lg font-header font-bold text-zinc-900 leading-tight mb-2 capitalize">
                       {dominantInfo.title}
                     </h4>
                     <p className="text-zinc-650 text-xs font-light leading-relaxed">
@@ -332,7 +332,7 @@ export default function AptitudeTest({ onFinishTest }) {
 
                 {/* Score breakdown charts */}
                 <div className="space-y-4 pt-2 sm:pt-4">
-                  <h4 className="font-header font-extrabold text-zinc-900 text-xs capitalize ">
+                  <h4 className="font-header font-semibold text-zinc-900 text-xs capitalize ">
                     Cognitive Distribution Metrics
                   </h4>
 
@@ -343,7 +343,7 @@ export default function AptitudeTest({ onFinishTest }) {
                         <div key={key} className="space-y-1 bg-white p-3 rounded-lg border border-zinc-200" id={`score-metric-${key.toLowerCase()}`}>
                           <div className="flex justify-between text-xs font-bold text-zinc-550">
                             <span>{label}</span>
-                            <span className="font-extrabold text-zinc-900">{pct}%</span>
+                            <span className="font-semibold text-zinc-900">{pct}%</span>
                           </div>
                           <div className="h-2 w-full bg-zinc-100 rounded-md overflow-hidden">
                             <div
@@ -361,7 +361,7 @@ export default function AptitudeTest({ onFinishTest }) {
               {/* Right Column: Recommendations */}
               <div className="lg:col-span-5 space-y-6">
                 <div className="p-5 sm:p-6 bg-zinc-50/50 border border-zinc-200 rounded-lg space-y-6 shadow-xs">
-                  <h4 className="font-header font-extrabold text-zinc-900 text-xs capitalize  border-b border-zinc-200 pb-3">
+                  <h4 className="font-header font-semibold text-zinc-900 text-xs capitalize  border-b border-zinc-200 pb-3">
                     Recommended Pathways
                   </h4>
                   <ul className="space-y-3">
@@ -371,7 +371,7 @@ export default function AptitudeTest({ onFinishTest }) {
                         className="flex flex-col bg-white p-3 sm:p-4 rounded-lg border border-zinc-200 hover:border-zinc-400 hover:scale-[1.01] transition-all duration-200 group text-left"
                       >
                         <div className="flex justify-between items-center">
-                          <span className="text-xs font-extrabold text-zinc-900">
+                          <span className="text-xs font-semibold text-zinc-900">
                             {item.career}
                           </span>
                         </div>
@@ -387,7 +387,7 @@ export default function AptitudeTest({ onFinishTest }) {
                     <button
                       id="btn-results-consult"
                       onClick={() => onFinishTest(dominantDomain, scorePercentages)}
-                      className="w-full py-3.5 sm:py-4 bg-brand hover:bg-brand-dark text-zinc-955 font-extrabold text-xs capitalize  rounded-lg transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm hover:scale-[1.02] active:scale-[0.98] border-none"
+                      className="w-full py-3.5 sm:py-4 bg-brand hover:bg-brand-dark text-zinc-955 font-semibold text-xs capitalize  rounded-lg transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm hover:scale-[1.02] active:scale-[0.98] border-none"
                     >
                       <span>Claim Free Mentoring</span>
                     </button>

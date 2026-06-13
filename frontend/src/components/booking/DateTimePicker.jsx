@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const WEEKDAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const MONTH_LABELS = [
@@ -234,7 +235,7 @@ export default function DateTimePicker({
 
   const getChipClass = (targetStr) => {
     const isSelected = selectedDate === targetStr;
-    const base = "snap-start shrink-0 px-3.5 min-h-[40px] sm:min-h-[36px] rounded-full text-xs font-extrabold capitalize  transition cursor-pointer flex items-center border";
+    const base = "snap-start shrink-0 px-3.5 min-h-[40px] sm:min-h-[36px] rounded-full text-xs font-semibold capitalize  transition cursor-pointer flex items-center border";
     if (isSelected) {
       return `${base} bg-brand border-brand text-zinc-900 shadow-md ring-2 ring-brand/30 scale-105`;
     }
@@ -286,10 +287,10 @@ export default function DateTimePicker({
               className="w-11 h-11 sm:w-10 sm:h-10 rounded-xl sm:rounded-lg bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 text-zinc-600 hover:text-zinc-900 flex items-center justify-center transition disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer font-bold text-base"
               aria-label="Previous month"
             >
-              ←
+              <ChevronLeft className="w-5 h-5" />
             </button>
             <div className="text-center">
-              <div className="text-xs sm:text-base font-extrabold text-zinc-900 capitalize tracking-wide truncate max-w-[140px] sm:max-w-none">
+              <div className="text-xs sm:text-base font-semibold text-zinc-900 capitalize tracking-wide truncate max-w-[140px] sm:max-w-none">
                 {MONTH_LABELS[viewMonth]}
               </div>
               <div className="text-xs text-zinc-500 font-bold  capitalize">
@@ -302,13 +303,13 @@ export default function DateTimePicker({
               className="w-11 h-11 sm:w-10 sm:h-10 rounded-xl sm:rounded-lg bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 text-zinc-600 hover:text-zinc-900 flex items-center justify-center transition cursor-pointer font-bold text-base"
               aria-label="Next month"
             >
-              →
+              <ChevronRight className="w-5 h-5" />
             </button>
           </div>
 
           <div className="grid grid-cols-7 gap-1 mb-1.5">
             {WEEKDAY_LABELS.map(d => (
-              <div key={d} className="text-center text-xs font-extrabold capitalize  text-zinc-500 py-1">
+              <div key={d} className="text-center text-xs font-semibold capitalize  text-zinc-500 py-1">
                 {d}
               </div>
             ))}
@@ -325,7 +326,7 @@ export default function DateTimePicker({
               let stateClasses = 'bg-zinc-50 border-zinc-100 text-zinc-300 cursor-not-allowed';
               if (!meta.isPast) {
                 if (isSelected) {
-                  stateClasses = 'bg-gradient-brand border-transparent text-zinc-955 font-black shadow-md ring-2 ring-brand/30 scale-105 cursor-pointer';
+                  stateClasses = 'bg-gradient-brand border-transparent text-zinc-955 font-bold shadow-md ring-2 ring-brand/30 scale-105 cursor-pointer';
                 } else if (meta.isAvailable) {
                   stateClasses = 'bg-white border-zinc-200 text-zinc-800 hover:border-brand/50 hover:bg-brand/5 cursor-pointer';
                 } else {
@@ -392,11 +393,11 @@ export default function DateTimePicker({
         <div className="lg:col-span-5 bg-white border border-zinc-200 rounded-xl p-4 sm:p-5 shadow-xs">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-1.5">
-              <span className="text-xs font-extrabold capitalize  text-zinc-700">
+              <span className="text-xs font-semibold capitalize  text-zinc-700">
                 Available Time Slots
               </span>
             </div>
-            <span className="text-xs font-extrabold text-brand-dark bg-brand-light border border-brand/20 px-2 py-0.5 rounded  capitalize ">
+            <span className="text-xs font-semibold text-brand-dark bg-brand-light border border-brand/20 px-2 py-0.5 rounded  capitalize ">
               1 Hour
             </span>
           </div>
@@ -410,7 +411,7 @@ export default function DateTimePicker({
                   const meta = BUCKET_META[bucket];
                   return (
                     <div key={bucket} className="space-y-2">
-                      <div className={`flex items-center gap-1.5 text-xs font-extrabold capitalize  ${meta.color}`}>
+                      <div className={`flex items-center gap-1.5 text-xs font-semibold capitalize  ${meta.color}`}>
                         <span>{meta.label}</span>
                         <span className="text-zinc-400">({items.length})</span>
                       </div>
@@ -424,7 +425,7 @@ export default function DateTimePicker({
                               onClick={() => onTimeChange(time)}
                               className={`min-h-[48px] py-2.5 px-2 text-xs capitalize font-bold border rounded-lg transition cursor-pointer text-center ${
                                 isSelected
-                                  ? 'bg-gradient-brand text-zinc-955 border-transparent shadow-xs font-black ring-1 ring-brand/40'
+                                  ? 'bg-gradient-brand text-zinc-955 border-transparent shadow-xs font-bold ring-1 ring-brand/40'
                                   : 'bg-white border-zinc-200 text-zinc-700 hover:border-brand/40 hover:bg-brand/5'
                               }`}
                             >
@@ -439,7 +440,7 @@ export default function DateTimePicker({
               </div>
             ) : (
               <div className="py-8 text-center space-y-2">
-                <p className="text-xs font-extrabold text-rose-600 capitalize ">
+                <p className="text-xs font-semibold text-rose-600 capitalize ">
                   No Slots Available
                 </p>
                 <p className="text-xs text-zinc-500 leading-relaxed px-4">
@@ -449,7 +450,7 @@ export default function DateTimePicker({
             )
           ) : (
             <div className="py-10 text-center space-y-2">
-              <p className="text-xs font-extrabold text-zinc-500 capitalize ">
+              <p className="text-xs font-semibold text-zinc-500 capitalize ">
                 Pick a Date First
               </p>
               <p className="text-xs text-zinc-400 leading-relaxed px-4">
@@ -465,10 +466,10 @@ export default function DateTimePicker({
         <div className="bg-gradient-to-br from-brand/8 via-white to-brand-accent/8 border border-brand/20 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-in slide-in-from-top-2 duration-300">
           <div className="flex items-start gap-3 text-left">
             <div>
-              <div className="text-xs font-extrabold capitalize  text-brand-dark">
+              <div className="text-xs font-semibold capitalize  text-brand-dark">
                 Your Selection
               </div>
-              <div className="text-xs sm:text-sm font-extrabold text-zinc-900 mt-0.5">
+              <div className="text-xs sm:text-sm font-semibold text-zinc-900 mt-0.5">
                 {formatHumanDate(selectedDate)}
               </div>
               <div className="text-xs text-zinc-600  mt-0.5">
@@ -482,7 +483,7 @@ export default function DateTimePicker({
             <button
               type="button"
               onClick={() => onTimeChange('')}
-              className="min-h-[36px] px-3 inline-flex items-center text-xs font-extrabold capitalize  text-zinc-500 hover:text-rose-600 transition cursor-pointer self-start sm:self-auto"
+              className="min-h-[36px] px-3 inline-flex items-center text-xs font-semibold capitalize  text-zinc-500 hover:text-rose-600 transition cursor-pointer self-start sm:self-auto"
             >
               Clear Time
             </button>

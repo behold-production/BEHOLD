@@ -657,7 +657,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
         {/* Header */}
         <div className="text-center flex flex-col items-center space-y-4">
-          <span className="text-xs bg-zinc-900 text-white px-3.5 py-1 rounded-md capitalize  font-extrabold w-fit block">
+          <span className="text-xs bg-zinc-900 text-white px-3.5 py-1 rounded-md capitalize  font-semibold w-fit block">
             book a session
           </span>
           <h1 className="text-2xl sm:text-3xl md:text-5xl font-header font-black tracking-tight leading-none text-zinc-900 capitalize">
@@ -686,7 +686,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
               {/* Mobile: compact progress bar */}
               <div className="flex sm:hidden items-center gap-2">
                 <div className="flex items-center gap-1.5 flex-1 min-w-0">
-                  <span className="text-xs font-black text-zinc-900 shrink-0">
+                  <span className="text-xs font-bold text-zinc-900 shrink-0">
                     Step {currentStepIdx + 1} of 4
                   </span>
                   <div className="h-1.5 flex-1 bg-zinc-200 rounded-full overflow-hidden">
@@ -723,7 +723,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                             isCompleted
                               ? 'bg-zinc-900 border-zinc-900 text-white'
                               : isActive
-                                ? 'bg-brand border-brand text-zinc-900 shadow-xs ring-2 ring-brand/10 font-black'
+                                ? 'bg-brand border-brand text-zinc-900 shadow-xs ring-2 ring-brand/10 font-bold'
                                 : 'bg-white border-zinc-200 text-zinc-400'
                           }`}>
                             {isCompleted ? '✓' : idx + 1}
@@ -754,14 +754,14 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
           {bookingStep === 'success' ? (
             /* STEP 5: Success & Confirmation View */
             <div className="p-4 sm:p-10 bg-transparent sm:bg-zinc-50 border-0 sm:border border-zinc-200 rounded-none sm:rounded-xl max-w-2xl mx-auto animate-in fade-in duration-500 space-y-6 text-center">
-              <div className="w-16 h-16 bg-emerald-50 border border-emerald-200 rounded-full flex items-center justify-center mx-auto text-emerald-650 shadow-sm text-2xl font-black">
+              <div className="w-16 h-16 bg-emerald-50 border border-emerald-200 rounded-full flex items-center justify-center mx-auto text-emerald-650 shadow-sm text-2xl font-bold">
                 ✓
               </div>
               <div className="space-y-2">
-                <span className="text-xs bg-emerald-100 text-emerald-800 border border-emerald-200 px-3 py-1 rounded-md capitalize  font-extrabold w-fit mx-auto block">
+                <span className="text-xs bg-emerald-100 text-emerald-800 border border-emerald-200 px-3 py-1 rounded-md capitalize  font-semibold w-fit mx-auto block">
                   session confirmed
                 </span>
-                <h3 className="text-xl sm:text-2xl font-black capitalize text-zinc-900 tracking-wide mt-2">
+                <h3 className="text-xl sm:text-2xl font-bold capitalize text-zinc-900 tracking-wide mt-2">
                   You're All Set!
                 </h3>
                 <p className="text-xs text-zinc-600 max-w-md mx-auto leading-relaxed">
@@ -771,7 +771,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
               {/* Invoice & Meeting Card */}
               <div className="bg-white border border-zinc-200/80 rounded-xl p-5 text-left space-y-4 shadow-xs">
-                <h4 className="text-xs font-extrabold capitalize  text-zinc-400 border-b border-zinc-100 pb-2">
+                <h4 className="text-xs font-semibold capitalize  text-zinc-400 border-b border-zinc-100 pb-2">
                   Booking Confirmation
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
@@ -892,8 +892,8 @@ Status: CONFIRMED
                 {bookingStep === 'config' && (
                   <div className="space-y-6 animate-in fade-in duration-300">
                     <div className="border-b border-zinc-100 pb-3">
-                      <h3 className="text-sm font-extrabold capitalize  text-zinc-850 flex items-center gap-2">
-                        <span className="w-6 h-6 rounded-full bg-zinc-900 text-white text-xs flex items-center justify-center shrink-0 font-black">1</span>
+                      <h3 className="text-sm font-semibold capitalize  text-zinc-850 flex items-center gap-2">
+                        <span className="w-6 h-6 rounded-full bg-zinc-900 text-white text-xs flex items-center justify-center shrink-0 font-bold">1</span>
                         Choose Service, Date & Time
                       </h3>
                       <p className="text-xs text-zinc-500 mt-1">Tell us what kind of guidance you need, your preferred mode, and when to schedule.</p>
@@ -912,9 +912,9 @@ Status: CONFIRMED
                               type="button"
                               key={s.id}
                               onClick={() => setBookingService(s.id)}
-                              className={`px-3 py-3 text-xs capitalize font-black border rounded-xl transition cursor-pointer text-center min-h-[56px] leading-tight ${
+                              className={`px-3 py-3 text-xs capitalize font-bold border rounded-xl transition cursor-pointer text-center min-h-[56px] leading-tight ${
                                 bookingService === s.id
-                                  ? 'bg-zinc-900 border-zinc-900 text-white shadow-xs font-black'
+                                  ? 'bg-zinc-900 border-zinc-900 text-white shadow-xs font-bold'
                                   : 'bg-white text-zinc-600 border-zinc-200 hover:border-brand/40 hover:text-brand-dark'
                               }`}
                             >
@@ -941,9 +941,9 @@ Status: CONFIRMED
                               type="button"
                               key={m.id}
                               onClick={() => setBookingMode(m.id)}
-                              className={`flex flex-col items-center justify-center gap-1 px-2 py-3.5 text-xs capitalize font-extrabold border rounded-xl transition cursor-pointer text-center min-h-[56px] leading-tight ${
+                              className={`flex flex-col items-center justify-center gap-1 px-2 py-3.5 text-xs capitalize font-semibold border rounded-xl transition cursor-pointer text-center min-h-[56px] leading-tight ${
                                 bookingMode === m.id
-                                  ? 'bg-brand/10 text-brand-dark border-brand/30 shadow-xs font-black'
+                                  ? 'bg-brand/10 text-brand-dark border-brand/30 shadow-xs font-bold'
                                   : 'bg-white text-zinc-600 border-zinc-200 hover:border-brand/40 hover:text-brand-dark'
                               }`}
                             >
@@ -994,8 +994,8 @@ Status: CONFIRMED
                 {bookingStep === 'advisor' && (
                   <div className="space-y-6 animate-in fade-in duration-300">
                     <div className="border-b border-zinc-100 pb-3">
-                      <h3 className="text-sm font-extrabold capitalize  text-zinc-850 flex items-center gap-2">
-                        <span className="w-6 h-6 rounded-full bg-zinc-900 text-white text-xs flex items-center justify-center shrink-0 font-black">2</span>
+                      <h3 className="text-sm font-semibold capitalize  text-zinc-850 flex items-center gap-2">
+                        <span className="w-6 h-6 rounded-full bg-zinc-900 text-white text-xs flex items-center justify-center shrink-0 font-bold">2</span>
                         Choose Your Advisor
                       </h3>
                       <p className="text-xs text-zinc-500 mt-1">Pick the best specialist available for your selected date and time.</p>
@@ -1045,13 +1045,13 @@ Status: CONFIRMED
                             >
                               <div className="flex items-start justify-between gap-3">
                                 <div className="space-y-1.5 text-left min-w-0 flex-1">
-                                  <h4 className="font-extrabold text-zinc-900 text-sm sm:text-base leading-tight">{advisor.name}</h4>
+                                  <h4 className="font-semibold text-zinc-900 text-sm sm:text-base leading-tight">{advisor.name}</h4>
                                   <p className="text-xs sm:text-xs text-zinc-500 font-medium">{advisor.role}</p>
                                   {selectedDate && (
                                     <div className="text-xs text-zinc-500 bg-zinc-50 border border-zinc-150 px-2.5 py-1.5 rounded-lg inline-block">
                                       <span className="font-bold text-zinc-700">Slots:</span>{' '}
                                       {advisorSlotsOnDate.length > 0 ? (
-                                        <span className="text-brand-dark font-extrabold  text-xs">{advisorSlotsOnDate.join(', ')}</span>
+                                        <span className="text-brand-dark font-semibold  text-xs">{advisorSlotsOnDate.join(', ')}</span>
                                       ) : (
                                         <span className="text-rose-500 font-bold text-xs">No slots on this day</span>
                                       )}
@@ -1059,9 +1059,9 @@ Status: CONFIRMED
                                   )}
                                 </div>
                                 <div className="flex flex-col items-end gap-2 shrink-0">
-                                  <span className="text-sm font-black text-zinc-900">₹{advisor.price}</span>
+                                  <span className="text-sm font-bold text-zinc-900">₹{advisor.price}</span>
                                   {availabilityStatus === 'Available' ? (
-                                     <span className="text-xs px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200 font-black capitalize tracking-wide">Available</span>
+                                     <span className="text-xs px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold capitalize tracking-wide">Available</span>
                                    ) : availabilityStatus === 'Booked' ? (
                                      <span className="text-xs px-2.5 py-1 rounded-lg bg-amber-50 text-amber-700 border border-amber-200 font-bold capitalize">Booked</span>
                                    ) : (
@@ -1098,14 +1098,14 @@ Status: CONFIRMED
                                 }}
                                 className={`px-4 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer border-none ${
                                   advisorConfirmed
-                                    ? 'bg-brand/10 text-brand-dark font-extrabold border border-brand/20'
-                                    : 'bg-gradient-brand text-zinc-955 shadow-sm hover:opacity-95 font-black'
+                                    ? 'bg-brand/10 text-brand-dark font-semibold border border-brand/20'
+                                    : 'bg-gradient-brand text-zinc-955 shadow-sm hover:opacity-95 font-bold'
                                 }`}
                               >
                                 {advisorConfirmed ? 'Confirmed' : 'Confirm Advisor'}
                               </button>
                             ) : (
-                              <span className="text-xs px-2.5 py-1 rounded bg-rose-50 border border-rose-200 text-rose-600 font-black capitalize tracking-wide shrink-0">
+                              <span className="text-xs px-2.5 py-1 rounded bg-rose-50 border border-rose-200 text-rose-600 font-bold capitalize tracking-wide shrink-0">
                                 Unavailable
                               </span>
                             )}
@@ -1145,8 +1145,8 @@ Status: CONFIRMED
                 {bookingStep === 'details' && (
                   <div className="space-y-6 animate-in fade-in duration-300">
                     <div className="border-b border-zinc-100 pb-3">
-                      <h3 className="text-sm font-extrabold capitalize  text-zinc-850 flex items-center gap-2">
-                        <span className="w-6 h-6 rounded-full bg-zinc-900 text-white text-xs flex items-center justify-center shrink-0 font-black">3</span>
+                      <h3 className="text-sm font-semibold capitalize  text-zinc-850 flex items-center gap-2">
+                        <span className="w-6 h-6 rounded-full bg-zinc-900 text-white text-xs flex items-center justify-center shrink-0 font-bold">3</span>
                         Your Details & Account
                       </h3>
                       <p className="text-xs text-zinc-500 mt-1">
@@ -1159,10 +1159,10 @@ Status: CONFIRMED
                     {user && (
                       <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center justify-between gap-3 animate-in fade-in duration-300">
                         <div className="flex-1 min-w-0">
-                          <span className="text-xs font-extrabold text-emerald-800 block truncate">{user.name}</span>
+                          <span className="text-xs font-semibold text-emerald-800 block truncate">{user.name}</span>
                           <span className="text-xs text-emerald-600  truncate block">{user.email}</span>
                         </div>
-                        <span className="shrink-0 text-xs font-black capitalize  bg-emerald-100 border border-emerald-300 text-emerald-700 px-2.5 py-1 rounded-lg">
+                        <span className="shrink-0 text-xs font-bold capitalize  bg-emerald-100 border border-emerald-300 text-emerald-700 px-2.5 py-1 rounded-lg">
                           ✓ Authenticated
                         </span>
                       </div>
@@ -1245,7 +1245,7 @@ Status: CONFIRMED
                         type="button"
                         onClick={handleProceedToPayment}
                         disabled={isSubmitting}
-                        className="px-6 py-3 min-h-[48px] bg-gradient-brand text-zinc-900 font-extrabold capitalize  text-xs rounded-lg transition flex items-center justify-center cursor-pointer shadow-md border-none disabled:opacity-50 w-full sm:w-auto"
+                        className="px-6 py-3 min-h-[48px] bg-gradient-brand text-zinc-900 font-semibold capitalize  text-xs rounded-lg transition flex items-center justify-center cursor-pointer shadow-md border-none disabled:opacity-50 w-full sm:w-auto"
                       >
                         {isSubmitting ? (
                           <div className="w-4 h-4 border-2 border-zinc-900/30 border-t-zinc-900 rounded-full animate-spin" />
@@ -1268,15 +1268,15 @@ Status: CONFIRMED
                       <div className="absolute inset-0 bg-white/95 backdrop-blur-sm z-50 rounded-xl flex flex-col items-center justify-center p-6 text-center space-y-4 animate-in fade-in duration-200">
                         <div className="w-12 h-12 border-4 border-zinc-900/10 border-t-brand rounded-full animate-spin"></div>
                         <div className="space-y-1.5">
-                          <h4 className="text-xs font-extrabold capitalize  text-zinc-900">Processing Payment</h4>
+                          <h4 className="text-xs font-semibold capitalize  text-zinc-900">Processing Payment</h4>
                           <p className="text-xs font-semibold text-zinc-500 animate-pulse">{paymentStepText}</p>
                         </div>
                       </div>
                     )}
 
                     <div className="border-b border-zinc-100 pb-3">
-                      <h3 className="text-sm font-extrabold capitalize  text-zinc-850 flex items-center gap-2">
-                        <span className="w-6 h-6 rounded-full bg-zinc-900 text-white text-xs flex items-center justify-center shrink-0 font-black">4</span>
+                      <h3 className="text-sm font-semibold capitalize  text-zinc-850 flex items-center gap-2">
+                        <span className="w-6 h-6 rounded-full bg-zinc-900 text-white text-xs flex items-center justify-center shrink-0 font-bold">4</span>
                         Payment & Confirm
                       </h3>
                       <p className="text-xs text-zinc-500 mt-1">Choose payment method, apply any promo codes, and confirm your booking.</p>
@@ -1284,7 +1284,7 @@ Status: CONFIRMED
 
                     {/* Invoice ledger (shown on payment panel directly) */}
                     <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-lg space-y-3 text-left">
-                      <h4 className="text-xs font-extrabold capitalize  text-zinc-650">
+                      <h4 className="text-xs font-semibold capitalize  text-zinc-650">
                         Apply Promotional Coupon
                       </h4>
                       <div className="flex gap-2">
@@ -1333,7 +1333,7 @@ Status: CONFIRMED
                                 }}
                                 className={`flex flex-col items-center justify-center gap-1 p-2 border rounded-xl transition cursor-pointer text-center min-h-[56px] leading-tight ${
                                   paymentMethod === m.id
-                                    ? 'bg-zinc-900 border-zinc-900 text-white font-extrabold shadow-sm'
+                                    ? 'bg-zinc-900 border-zinc-900 text-white font-semibold shadow-sm'
                                     : 'bg-white text-zinc-600 border-zinc-200 hover:border-brand/40'
                                 }`}
                               >
@@ -1353,7 +1353,7 @@ Status: CONFIRMED
                         {/* CARD CHECKOUT FORM */}
                         {paymentMethod === 'card' && (
                           <div className="space-y-3.5 animate-in fade-in duration-300 text-left">
-                            <span className="text-[9.5px] text-zinc-400 block  capitalize font-extrabold">Card Details</span>
+                            <span className="text-[9.5px] text-zinc-400 block  capitalize font-semibold">Card Details</span>
                             
                             <div className="space-y-1">
                               <label className="text-xs font-bold text-zinc-550 block">Cardholder Name</label>
@@ -1442,7 +1442,7 @@ Status: CONFIRMED
                         {/* UPI CHECKOUT FORM */}
                         {paymentMethod === 'upi' && (
                           <div className="space-y-4 animate-in fade-in duration-300 text-left">
-                            <span className="text-[9.5px] text-zinc-400 block  capitalize font-extrabold">UPI Payment</span>
+                            <span className="text-[9.5px] text-zinc-400 block  capitalize font-semibold">UPI Payment</span>
                             
                             <div className="space-y-1">
                               <label className="text-xs font-bold text-zinc-550 block">Enter UPI ID</label>
@@ -1488,7 +1488,7 @@ Status: CONFIRMED
                                 </svg>
                               </div>
                               <div className="space-y-1 text-center sm:text-left">
-                                <h5 className="text-xs font-black capitalize text-zinc-800 ">Scan QR Code</h5>
+                                <h5 className="text-xs font-bold capitalize text-zinc-800 ">Scan QR Code</h5>
                                 <p className="text-[9.5px] text-zinc-550 leading-relaxed font-light">
                                   Open BHIM, GooglePay, Paytm, or PhonePe and scan this code to pay.
                                 </p>
@@ -1500,7 +1500,7 @@ Status: CONFIRMED
                         {/* NET BANKING CHECKOUT FORM */}
                         {paymentMethod === 'netbanking' && (
                           <div className="space-y-3.5 animate-in fade-in duration-300 text-left">
-                            <span className="text-[9.5px] text-zinc-400 block  capitalize font-extrabold">Net Banking</span>
+                            <span className="text-[9.5px] text-zinc-400 block  capitalize font-semibold">Net Banking</span>
                             
                             <div className="space-y-1">
                               <label className="text-xs font-bold text-zinc-555 block">Select Bank Partner</label>
@@ -1536,7 +1536,7 @@ Status: CONFIRMED
 
                         <button
                           type="submit"
-                          className="px-6 py-3 min-h-[48px] bg-gradient-brand text-zinc-900 font-black capitalize  text-xs rounded-lg transition flex items-center justify-center cursor-pointer shadow-md border-none w-full sm:w-auto"
+                          className="px-6 py-3 min-h-[48px] bg-gradient-brand text-zinc-900 font-bold capitalize  text-xs rounded-lg transition flex items-center justify-center cursor-pointer shadow-md border-none w-full sm:w-auto"
                         >
                           <span className="truncate">Pay ₹{(selectedAdvisor?.price || 1200) + Math.round((selectedAdvisor?.price || 1200) * 0.18) - appliedDiscount} Securely</span>
                         </button>
@@ -1555,7 +1555,7 @@ Status: CONFIRMED
                   onClick={() => setShowSummary(!showSummary)}
                   className="flex lg:hidden items-center justify-between w-full bg-zinc-50 border border-zinc-200 p-3 rounded-xl text-left shadow-xs mb-3 hover:bg-zinc-100 transition cursor-pointer"
                 >
-                  <span className="text-xs font-black capitalize  text-zinc-850 flex items-center gap-2">
+                  <span className="text-xs font-bold capitalize  text-zinc-850 flex items-center gap-2">
                     <span>Booking Summary</span>
                     {selectedAdvisor && (
                       <span className="text-xs bg-brand/10 text-brand-dark px-2 py-0.5 rounded font-bold">
@@ -1573,7 +1573,7 @@ Status: CONFIRMED
 
                 <div className={`bg-transparent lg:bg-zinc-50 border-0 lg:border border-zinc-200 p-0 lg:p-5 rounded-none lg:rounded-xl space-y-5 shadow-none lg:shadow-xs ${showSummary ? 'block' : 'hidden'} lg:block`}>
                 <div>
-                  <h3 className="text-xs font-black capitalize  text-zinc-850 border-b border-zinc-200 pb-2 hidden lg:block">
+                  <h3 className="text-xs font-bold capitalize  text-zinc-850 border-b border-zinc-200 pb-2 hidden lg:block">
                     Booking Summary
                   </h3>
                 </div>
@@ -1684,7 +1684,7 @@ Status: CONFIRMED
                 !
               </div>
               <div className="space-y-1">
-                <h3 className="text-base font-black capitalize text-zinc-900 tracking-wide">
+                <h3 className="text-base font-bold capitalize text-zinc-900 tracking-wide">
                   No Counsellors Found
                 </h3>
                 <p className="text-xs text-zinc-500 leading-relaxed font-sans font-light">

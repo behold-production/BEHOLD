@@ -39,7 +39,7 @@ export default function About() {
 
         {/* Header Column */}
         <div className="max-w-3xl mx-auto text-center space-y-3.5">
-          <span className="text-xs bg-zinc-900 text-white px-3.5 py-1 rounded-md capitalize  font-extrabold w-fit mx-auto block">
+          <span className="text-xs bg-zinc-900 text-white px-3.5 py-1 rounded-md capitalize  font-semibold w-fit mx-auto block">
             Why Us & What We Offer
           </span>
           <h2 className="text-3xl md:text-5xl font-header font-black tracking-tight text-zinc-900 leading-[1.1] capitalize">
@@ -60,7 +60,7 @@ export default function About() {
               >
                 <div className="space-y-4 sm:space-y-6">
                   {/* Typographic numbers instead of generic icons */}
-                  <span className="font-header font-black text-2xl sm:text-3xl text-zinc-300 group-hover:text-brand transition-colors duration-300">
+                  <span className="font-header font-bold text-2xl sm:text-3xl text-zinc-300 group-hover:text-brand transition-colors duration-300">
                     {`0${idx + 1}`}
                   </span>
                   <div className="space-y-1.5 sm:space-y-2">

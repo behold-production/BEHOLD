@@ -28,7 +28,7 @@ function PaginationBar({ total, page, limit, onPageChange, onLimitChange }) {
  <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 px-1 border-t border-zinc-850 mt-1">
  <div className="flex items-center gap-2">
  <span className="text-sm font-semibold text-zinc-500 capitalize ">
- Showing <span className="text-zinc-300 font-black">{from}–{to}</span> of <span className="text-zinc-300 font-black">{total}</span>
+ Showing <span className="text-zinc-300 font-bold">{from}–{to}</span> of <span className="text-zinc-300 font-bold">{total}</span>
  </span>
  <select
  value={limit}
@@ -52,7 +52,7 @@ function PaginationBar({ total, page, limit, onPageChange, onLimitChange }) {
  <button
  key={n}
  onClick={() => onPageChange(n)}
- className={`w-7 h-7 rounded border text-sm font-black transition cursor-pointer ${n === safeCurrentPage
+ className={`w-7 h-7 rounded border text-sm font-bold transition cursor-pointer ${n === safeCurrentPage
  ? 'bg-brand border-brand text-zinc-950'
  : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-850'
  }`}
@@ -84,7 +84,7 @@ export default function AdminDashboard({ setView }) {
  return `${yyyy}-${mm}-${dd}`;
  };
 
- const { user, login, register, logout } = useAuth();
+ const { user, login, register, logout, isLoading } = useAuth();
 
  // Tab Section: default to overview or users if sub-admin
  const [currentSection, setCurrentSection] = useState('overview');
@@ -278,7 +278,8 @@ export default function AdminDashboard({ setView }) {
  showBanner: false,
  bannerNotice: '',
  termsOfUse: '',
- privacyPolicy: ''
+ privacyPolicy: '',
+ cdatGroupCode: ''
  });
  const [settingsSuccess, setSettingsSuccess] = useState('');
 
@@ -395,6 +396,7 @@ export default function AdminDashboard({ setView }) {
  bannerNotice: settings.bannerNotice || '🚨 Maintenance Notice: Schedulers undergoing maintenance tonight between 12:00 AM - 02:00 AM IST.',
  termsOfUse: settings.termsOfUse || '',
  privacyPolicy: settings.privacyPolicy || '',
+ cdatGroupCode: settings.cdatGroupCode || 'cdat@behold',
  enablePsychology: settings.enablePsychology !== undefined ? settings.enablePsychology : true
  });
  }
@@ -415,7 +417,7 @@ export default function AdminDashboard({ setView }) {
  } else {
  const bookingDate = new Date(bookingForm.date);
  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
- const dayName = days[bookingDate.getDay()];
+ const dayName = bookingDate.getDay();
  slots = psy.availability[dayName] || [];
  }
  }
@@ -1564,6 +1566,14 @@ export default function AdminDashboard({ setView }) {
  // --- LOGIN UI GATE ---
  const isUserAdmin = user && user?.role?.toUpperCase() === 'ADMIN';
 
+ if (isLoading) {
+  return (
+    <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
+      <div className="animate-spin w-8 h-8 border-2 border-brand border-t-transparent rounded-full"></div>
+    </div>
+  );
+ }
+
  if (!isUserAdmin) {
  return (
  <div className="min-h-screen bg-zinc-950 flex items-center justify-center p-4 relative overflow-hidden ">
@@ -1573,10 +1583,10 @@ export default function AdminDashboard({ setView }) {
 
  <div className="max-w-md w-full relative z-10 space-y-6">
  <div className="text-center space-y-2">
- <h1 className="text-3xl font-header font-black tracking-tighter text-white">
- BEHOLD<span className="text-brand font-black">.</span>
+ <h1 className="text-3xl font-header font-bold tracking-tighter text-white">
+ BEHOLD<span className="text-brand font-bold">.</span>
  </h1>
- <p className="text-sm text-zinc-500 capitalize  font-black">ADMINISTRATOR CONTROL GATE</p>
+ <p className="text-sm text-zinc-500 capitalize  font-bold">ADMINISTRATOR CONTROL GATE</p>
  </div>
 
  <div className="bg-zinc-900 border border-zinc-800 p-6 sm:p-8 rounded-2xl shadow-2xl space-y-6 text-left">
@@ -1617,17 +1627,11 @@ export default function AdminDashboard({ setView }) {
  <button
  type="submit"
  disabled={isLoggingIn}
- className="w-full py-3 bg-brand hover:bg-brand-dark text-zinc-950 font-black text-sm capitalize  rounded-lg cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1"
+ className="w-full py-3 bg-brand hover:bg-brand-dark text-zinc-950 font-bold text-sm capitalize  rounded-lg cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1"
  >
  {isLoggingIn ? 'Verifying Credentials...' : 'Enter Admin Console'}
  </button>
  </form>
- <a
- href="/"
- className="text-zinc-500 hover:text-zinc-300 text-sm capitalize font-bold  transition-colors block text-center mt-2 cursor-pointer no-underline"
- >
- ← Back to Main Site
- </a>
  </div>
  </div>
  </div>
@@ -1656,10 +1660,10 @@ export default function AdminDashboard({ setView }) {
  </button>
 
  <div className="flex items-center gap-1.5">
- <span className="font-header font-black text-md tracking-tighter text-white">
- BEHOLD<span className="text-brand font-black">.</span>
+ <span className="font-header font-bold text-base tracking-tighter text-white">
+ BEHOLD<span className="text-brand font-bold">.</span>
  </span>
- <span className="text-xs bg-zinc-800 border border-zinc-700 text-zinc-400 px-1 py-0.2 rounded font-black  capitalize ">
+ <span className="text-xs bg-zinc-800 border border-zinc-700 text-zinc-400 px-1 py-0.2 rounded font-bold  capitalize ">
  CONSOLE
  </span>
  </div>
@@ -1691,10 +1695,10 @@ export default function AdminDashboard({ setView }) {
  {/* Logo & Header */}
  <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
  <div className="flex items-center gap-2">
- <span className="font-header font-black text-lg tracking-tighter text-white">
- BEHOLD<span className="text-brand font-black">.</span>
+ <span className="font-header font-bold text-lg tracking-tighter text-white">
+ BEHOLD<span className="text-brand font-bold">.</span>
  </span>
- <span className="text-sm bg-zinc-800 border border-zinc-700 text-zinc-400 px-1.5 py-0.5 rounded font-black  capitalize">
+ <span className="text-sm bg-zinc-800 border border-zinc-700 text-zinc-400 px-1.5 py-0.5 rounded font-bold  capitalize">
  CONSOLE
  </span>
  </div>
@@ -1718,14 +1722,14 @@ export default function AdminDashboard({ setView }) {
  onClick={() => setIsProfileDrawerOpen(true)}
  className="w-full flex items-center gap-3 bg-zinc-955/60 hover:bg-zinc-950 p-3 rounded-xl border border-zinc-850 hover:border-brand/30 transition-all cursor-pointer text-left"
  >
- <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-brand to-brand-accent text-zinc-955 flex items-center justify-center font-header font-black text-sm shrink-0">
+ <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-brand to-brand-accent text-zinc-955 flex items-center justify-center font-header font-bold text-sm shrink-0">
  {(cleanName || '').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
  </div>
  <div className="min-w-0 flex-1">
  <h4 className="text-sm font-bold text-white truncate leading-tight capitalize">
  {cleanName}
  </h4>
- <span className="text-sm text-zinc-500 font-black  capitalize">
+ <span className="text-sm text-zinc-500 font-bold  capitalize">
  {isSuperAdmin ? 'SUPER ADMIN' : (roleTitle || 'SUB ADMIN')}
  </span>
  </div>
@@ -1739,7 +1743,7 @@ export default function AdminDashboard({ setView }) {
  <button
  onClick={() => handleNavClick('overview')}
  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-bold capitalize  transition-all text-left cursor-pointer border-none ${currentSection === 'overview'
- ? 'bg-brand text-zinc-955 font-black'
+ ? 'bg-brand text-zinc-955 font-bold'
  : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
  }`}
  >
@@ -1752,7 +1756,7 @@ export default function AdminDashboard({ setView }) {
  <button
  onClick={() => handleNavClick('users')}
  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-bold capitalize  transition-all text-left cursor-pointer border-none ${currentSection === 'users'
- ? 'bg-brand text-zinc-950 font-black'
+ ? 'bg-brand text-zinc-950 font-bold'
  : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
  }`}
  >
@@ -1765,7 +1769,7 @@ export default function AdminDashboard({ setView }) {
  <button
  onClick={() => handleNavClick('psychologists')}
  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-bold capitalize  transition-all text-left cursor-pointer border-none ${currentSection === 'psychologists'
- ? 'bg-brand text-zinc-955 font-black'
+ ? 'bg-brand text-zinc-955 font-bold'
  : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
  }`}
  >
@@ -1778,7 +1782,7 @@ export default function AdminDashboard({ setView }) {
  <button
  onClick={() => handleNavClick('bookings')}
  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-bold capitalize  transition-all text-left cursor-pointer border-none ${currentSection === 'bookings'
- ? 'bg-brand text-zinc-955 font-black'
+ ? 'bg-brand text-zinc-955 font-bold'
  : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
  }`}
  >
@@ -1792,7 +1796,7 @@ export default function AdminDashboard({ setView }) {
  <button
  onClick={() => handleNavClick('subadmins')}
  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-bold capitalize  transition-all text-left cursor-pointer border-none ${currentSection === 'subadmins'
- ? 'bg-brand text-zinc-955 font-black'
+ ? 'bg-brand text-zinc-955 font-bold'
  : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
  }`}
  >
@@ -1803,7 +1807,7 @@ export default function AdminDashboard({ setView }) {
  <button
  onClick={() => handleNavClick('inquiries')}
  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-bold capitalize  transition-all text-left cursor-pointer border-none ${currentSection === 'inquiries'
- ? 'bg-brand text-zinc-955 font-black'
+ ? 'bg-brand text-zinc-955 font-bold'
  : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
  }`}
  >
@@ -1814,7 +1818,7 @@ export default function AdminDashboard({ setView }) {
  <button
  onClick={() => handleNavClick('testresults')}
  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-bold capitalize  transition-all text-left cursor-pointer border-none ${currentSection === 'testresults'
- ? 'bg-brand text-zinc-955 font-black'
+ ? 'bg-brand text-zinc-955 font-bold'
  : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
  }`}
  >
@@ -1825,7 +1829,7 @@ export default function AdminDashboard({ setView }) {
  <button
  onClick={() => handleNavClick('aptitude')}
  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-bold capitalize  transition-all text-left cursor-pointer border-none ${currentSection === 'aptitude'
- ? 'bg-brand text-zinc-955 font-black'
+ ? 'bg-brand text-zinc-955 font-bold'
  : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
  }`}
  >
@@ -1836,7 +1840,7 @@ export default function AdminDashboard({ setView }) {
  <button
  onClick={() => handleNavClick('faqs')}
  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-bold capitalize  transition-all text-left cursor-pointer border-none ${currentSection === 'faqs'
- ? 'bg-brand text-zinc-955 font-black'
+ ? 'bg-brand text-zinc-955 font-bold'
  : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
  }`}
  >
@@ -1847,7 +1851,7 @@ export default function AdminDashboard({ setView }) {
  <button
  onClick={() => handleNavClick('analytics')}
  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-bold capitalize  transition-all text-left cursor-pointer border-none ${currentSection === 'analytics'
- ? 'bg-brand text-zinc-955 font-black'
+ ? 'bg-brand text-zinc-955 font-bold'
  : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
  }`}
  >
@@ -1858,7 +1862,7 @@ export default function AdminDashboard({ setView }) {
  <button
  onClick={() => handleNavClick('settings')}
  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-bold capitalize  transition-all text-left cursor-pointer border-none ${currentSection === 'settings'
- ? 'bg-brand text-zinc-955 font-black'
+ ? 'bg-brand text-zinc-955 font-bold'
  : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
  }`}
  >
@@ -1873,7 +1877,7 @@ export default function AdminDashboard({ setView }) {
  {/* Sidebar Footer */}
  <div className="space-y-4 pt-4 border-t border-zinc-800 mt-6 lg:mt-0">
  <div className="bg-zinc-950/40 p-3 rounded-lg border border-zinc-850">
- <span className="text-sm capitalize font-black  text-zinc-500 flex items-center gap-1">
+ <span className="text-sm capitalize font-bold  text-zinc-500 flex items-center gap-1">
  <ShieldAlert className="w-3.5 h-3.5 text-brand" /> System Guard
  </span>
  <p className="text-sm text-zinc-500 leading-relaxed pt-1.5">
@@ -1898,10 +1902,10 @@ export default function AdminDashboard({ setView }) {
 
  <div className="space-y-1 relative z-10 w-full sm:w-auto">
  <div className="flex flex-wrap items-center gap-2">
- <h1 className="text-xl sm:text-2xl font-header font-black tracking-wide capitalize">
+ <h1 className="text-xl sm:text-2xl font-header font-bold tracking-wide capitalize">
  {user.name}
  </h1>
- <span className="text-sm bg-brand text-zinc-955 px-2 py-0.5 rounded font-black  capitalize ">
+ <span className="text-sm bg-brand text-zinc-955 px-2 py-0.5 rounded font-bold  capitalize ">
  {isSuperAdmin ? 'ROOT SECURITY LEVEL' : 'HR DEPT CLEARANCE'}
  </span>
  </div>
@@ -1914,15 +1918,15 @@ export default function AdminDashboard({ setView }) {
  <div className="grid grid-cols-3 gap-2 sm:gap-4 w-full sm:w-auto shrink-0 relative z-10 text-center">
  <div className="bg-zinc-950 border border-zinc-850 px-3.5 py-2.5 rounded-xl min-w-[75px]">
  <span className="text-sm text-zinc-500 font-bold capitalize  block">Students</span>
- <p className="text-sm font-black text-brand mt-0.5">{studentsList.length}</p>
+ <p className="text-sm font-bold text-brand mt-0.5">{studentsList.length}</p>
  </div>
  <div className="bg-zinc-950 border border-zinc-850 px-3.5 py-2.5 rounded-xl min-w-[75px]">
  <span className="text-sm text-zinc-500 font-bold capitalize  block">Advisors</span>
- <p className="text-sm font-black text-brand mt-0.5">{psychologistsList.length}</p>
+ <p className="text-sm font-bold text-brand mt-0.5">{psychologistsList.length}</p>
  </div>
  <div className="bg-zinc-950 border border-zinc-850 px-3.5 py-2.5 rounded-xl min-w-[75px]">
  <span className="text-sm text-zinc-500 font-bold capitalize  block">Bookings</span>
- <p className="text-sm font-black text-brand mt-0.5">{bookingsDb.length}</p>
+ <p className="text-sm font-bold text-brand mt-0.5">{bookingsDb.length}</p>
  </div>
  </div>
  </div>
@@ -1992,7 +1996,7 @@ export default function AdminDashboard({ setView }) {
  <div className="space-y-6 animate-in fade-in duration-200 text-sm">
  <div className="border-b border-zinc-800 pb-3 flex justify-between items-center">
  <h3 className="text-sm font-bold capitalize  text-zinc-400">Super Admin Command Center</h3>
- <span className="text-sm bg-brand/10 border border-brand/20 text-brand px-2 py-0.5 rounded font-black  capitalize ">SYSTEM ROOT</span>
+ <span className="text-sm bg-brand/10 border border-brand/20 text-brand px-2 py-0.5 rounded font-bold  capitalize ">SYSTEM ROOT</span>
  </div>
 
  {/* KPI stats Grid */}
@@ -2009,7 +2013,7 @@ export default function AdminDashboard({ setView }) {
  <span className="text-sm text-zinc-500 font-bold capitalize  block">Students</span>
  <User className={`w-3.5 h-3.5 ${activeStatHighlight === 'students' ? 'text-brand' : 'text-zinc-500'}`} />
  </div>
- <p className="text-xl font-black text-white text-left pt-0.5">{studentsCount}</p>
+ <p className="text-xl font-bold text-white text-left pt-0.5">{studentsCount}</p>
  <div className="flex justify-between items-center text-xs text-zinc-500 font-semibold pt-0.5">
  <span className="capitalize text-emerald-450">{activeStudentsCount} Active</span>
  <span className=" text-zinc-600">{suspendedStudentsCount} Suspended</span>
@@ -2028,7 +2032,7 @@ export default function AdminDashboard({ setView }) {
  <span className="text-sm text-zinc-500 font-bold capitalize  block">Psychologists</span>
  <Award className={`w-3.5 h-3.5 ${activeStatHighlight === 'psychologists' ? 'text-brand' : 'text-zinc-500'}`} />
  </div>
- <p className="text-xl font-black text-white text-left pt-0.5">{psyCount}</p>
+ <p className="text-xl font-bold text-white text-left pt-0.5">{psyCount}</p>
  <div className="flex justify-between items-center text-xs text-zinc-500 font-semibold pt-0.5">
  <span className="capitalize text-emerald-450">{approvedPsyCount} Verified</span>
  <span className=" text-amber-500">{pendingPsyCount} Pending</span>
@@ -2047,7 +2051,7 @@ export default function AdminDashboard({ setView }) {
  <span className="text-sm text-zinc-500 font-bold capitalize  block">Total Bookings</span>
  <Calendar className={`w-3.5 h-3.5 ${activeStatHighlight === 'bookings' ? 'text-brand' : 'text-zinc-500'}`} />
  </div>
- <p className="text-xl font-black text-white text-left pt-0.5">{totalBookingsCount}</p>
+ <p className="text-xl font-bold text-white text-left pt-0.5">{totalBookingsCount}</p>
  <div className="flex justify-between items-center text-xs text-zinc-500 font-semibold pt-0.5">
  <span className="capitalize text-zinc-400">{confirmedBookingsCount} Confirmed</span>
  <span className=" text-zinc-650">{pendingBookingsCount} Pending</span>
@@ -2066,9 +2070,9 @@ export default function AdminDashboard({ setView }) {
  <span className="text-sm text-zinc-500 font-bold capitalize  block">Inquiries</span>
  <MessageSquare className={`w-3.5 h-3.5 ${activeStatHighlight === 'inquiries' ? 'text-brand' : 'text-zinc-500'}`} />
  </div>
- <p className="text-xl font-black text-amber-500 text-left pt-0.5">{pendingInquiriesCount}</p>
+ <p className="text-xl font-bold text-amber-500 text-left pt-0.5">{pendingInquiriesCount}</p>
  <div className="flex justify-between items-center text-xs text-zinc-550 font-semibold pt-0.5">
- <span className="capitalize text-amber-900/60 font-black">Pending</span>
+ <span className="capitalize text-amber-900/60 font-bold">Pending</span>
  <span className=" text-zinc-500">{resolvedInquiriesCount} Solved</span>
  </div>
  </div>
@@ -2085,7 +2089,7 @@ export default function AdminDashboard({ setView }) {
  <span className="text-sm text-zinc-500 font-bold capitalize  block">Completed</span>
  <Check className={`w-3.5 h-3.5 ${activeStatHighlight === 'completed' ? 'text-brand' : 'text-zinc-500'}`} />
  </div>
- <p className="text-xl font-black text-brand text-left pt-0.5">{completedBookingsCount}</p>
+ <p className="text-xl font-bold text-brand text-left pt-0.5">{completedBookingsCount}</p>
  <div className="flex justify-between items-center text-xs text-zinc-500 font-semibold pt-0.5">
  <span className="capitalize text-brand/70">{bookingCompletionRate}% rate</span>
  <span className=" text-zinc-650">{totalBookingsCount} total</span>
@@ -2102,9 +2106,9 @@ export default function AdminDashboard({ setView }) {
  >
  <div className="flex justify-between items-center">
  <span className="text-sm text-zinc-500 font-bold capitalize  block">Revenue Est.</span>
- <span className={`text-sm font-black ${activeStatHighlight === 'revenue' ? 'text-brand' : 'text-zinc-500'}`}>₹</span>
+ <span className={`text-sm font-bold ${activeStatHighlight === 'revenue' ? 'text-brand' : 'text-zinc-500'}`}>₹</span>
  </div>
- <p className="text-xl font-black text-emerald-450 text-left pt-0.5">₹{totalRevenue}</p>
+ <p className="text-xl font-bold text-emerald-450 text-left pt-0.5">₹{totalRevenue}</p>
  <div className="flex justify-between items-center text-xs text-zinc-500 font-semibold pt-0.5">
  <span className="capitalize text-zinc-400">Completed</span>
  <span className=" text-zinc-600">₹{projectedRevenue} Proj.</span>
@@ -2127,19 +2131,19 @@ export default function AdminDashboard({ setView }) {
  <div className="space-y-4">
  <div className="flex items-center gap-2 border-b border-zinc-900 pb-2">
  <User className="w-4 h-4 text-brand" />
- <h4 className="font-header font-black text-sm capitalize text-white">Students Registry Breakdown</h4>
+ <h4 className="font-header font-bold text-sm capitalize text-white">Students Registry Breakdown</h4>
  </div>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
  <div className="bg-zinc-900/60 p-4 rounded-lg border border-zinc-850 space-y-3">
- <span className="text-sm capitalize font-black  text-zinc-500 block">Activity Distribution</span>
+ <span className="text-sm capitalize font-bold  text-zinc-500 block">Activity Distribution</span>
  <div className="flex gap-2">
  <div className="flex-1 bg-zinc-950 p-2.5 rounded border border-zinc-850 text-center">
  <span className="text-sm text-emerald-450 font-bold capitalize  block">Active Accounts</span>
- <p className="text-lg font-black text-white">{activeStudentsCount}</p>
+ <p className="text-lg font-bold text-white">{activeStudentsCount}</p>
  </div>
  <div className="flex-1 bg-zinc-955 p-2.5 rounded border border-zinc-850 text-center">
  <span className="text-sm text-rose-500 font-bold capitalize  block">Suspended Accounts</span>
- <p className="text-lg font-black text-white">{suspendedStudentsCount}</p>
+ <p className="text-lg font-bold text-white">{suspendedStudentsCount}</p>
  </div>
  </div>
  <div className="space-y-1">
@@ -2155,7 +2159,7 @@ export default function AdminDashboard({ setView }) {
  </div>
 
  <div className="bg-zinc-900/60 p-4 rounded-lg border border-zinc-850 space-y-3">
- <span className="text-sm capitalize font-black  text-zinc-500 block">Latest Registrations</span>
+ <span className="text-sm capitalize font-bold  text-zinc-500 block">Latest Registrations</span>
  <div className="space-y-2 max-h-[120px] overflow-y-auto pr-1">
  {usersDb.filter(u => u.role === 'USER' || !u.role).reverse().slice(0, 3).map(st => (
  <div key={st.id} className="flex justify-between items-center text-sm bg-zinc-955 p-2 rounded border border-zinc-855">
@@ -2163,7 +2167,7 @@ export default function AdminDashboard({ setView }) {
  <span className="font-bold text-white block truncate max-w-[140px]">{st.name}</span>
  <span className="text-sm text-zinc-500  block">{st.email}</span>
  </div>
- <span className={`text-sm px-1.5 py-0.2 rounded capitalize font-black ${st.status === 'SUSPENDED' ? 'bg-rose-955/20 text-rose-500 border border-rose-900/30' : 'bg-emerald-955/20 text-emerald-450 border border-emerald-900/30'
+ <span className={`text-sm px-1.5 py-0.2 rounded capitalize font-bold ${st.status === 'SUSPENDED' ? 'bg-rose-955/20 text-rose-500 border border-rose-900/30' : 'bg-emerald-955/20 text-emerald-450 border border-emerald-900/30'
  }`}>{st.status || 'ACTIVE'}</span>
  </div>
  ))}
@@ -2178,25 +2182,25 @@ export default function AdminDashboard({ setView }) {
  <div className="space-y-4">
  <div className="flex items-center gap-2 border-b border-zinc-900 pb-2">
  <Award className="w-4 h-4 text-brand" />
- <h4 className="font-header font-black text-sm capitalize text-white">Psychologists Status & Verification</h4>
+ <h4 className="font-header font-bold text-sm capitalize text-white">Psychologists Status & Verification</h4>
  </div>
  <div className="grid grid-cols-1 sm:grid-cols-12 gap-5">
  <div className="sm:col-span-4 bg-zinc-900/60 p-4 rounded-lg border border-zinc-850 space-y-3">
- <span className="text-sm capitalize font-black  text-zinc-500 block text-center">Verification Ratio</span>
+ <span className="text-sm capitalize font-bold  text-zinc-500 block text-center">Verification Ratio</span>
  <div className="space-y-2">
  <div className="flex justify-between text-sm bg-zinc-950 p-2.5 rounded border border-zinc-850">
  <span className="text-zinc-400 font-bold capitalize text-sm">Approved Advisors</span>
- <span className="text-brand font-black ">{approvedPsyCount}</span>
+ <span className="text-brand font-bold ">{approvedPsyCount}</span>
  </div>
  <div className="flex justify-between text-sm bg-zinc-950 p-2.5 rounded border border-zinc-850">
  <span className="text-zinc-400 font-bold capitalize text-sm">Pending Approval</span>
- <span className="text-amber-500 font-black ">{pendingPsyCount}</span>
+ <span className="text-amber-500 font-bold ">{pendingPsyCount}</span>
  </div>
  </div>
  </div>
 
  <div className="sm:col-span-8 bg-zinc-900/60 p-4 rounded-lg border border-zinc-850 space-y-3">
- <span className="text-sm capitalize font-black  text-zinc-500 block">Pending Acceptance Requests ({pendingPsyCount})</span>
+ <span className="text-sm capitalize font-bold  text-zinc-500 block">Pending Acceptance Requests ({pendingPsyCount})</span>
  <div className="space-y-2 max-h-[140px] overflow-y-auto pr-1">
  {usersDb.filter(u => u.role === 'PSYCHOLOGIST' && !u.verified).map(psy => (
  <div key={psy.id} className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 bg-zinc-955 p-2.5 rounded border border-zinc-850 text-sm">
@@ -2207,13 +2211,13 @@ export default function AdminDashboard({ setView }) {
  <div className="flex items-center gap-1.5 self-end sm:self-auto">
  <button
  onClick={() => handleTogglePsyVerification(psy.id, false)}
- className="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-sm font-black capitalize  cursor-pointer border-none transition"
+ className="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-sm font-bold capitalize  cursor-pointer border-none transition"
  >
  Accept
  </button>
  <button
  onClick={() => handleDeletePsy(psy.id)}
- className="px-3 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded text-sm font-black capitalize  cursor-pointer border-none transition"
+ className="px-3 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded text-sm font-bold capitalize  cursor-pointer border-none transition"
  >
  Reject
  </button>
@@ -2233,33 +2237,33 @@ export default function AdminDashboard({ setView }) {
  <div className="space-y-4">
  <div className="flex items-center gap-2 border-b border-zinc-900 pb-2">
  <Calendar className="w-4 h-4 text-brand" />
- <h4 className="font-header font-black text-sm capitalize text-white">Consultation Bookings Analytics</h4>
+ <h4 className="font-header font-bold text-sm capitalize text-white">Consultation Bookings Analytics</h4>
  </div>
  <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
  <div className="bg-zinc-900/60 p-4 rounded-lg border border-zinc-850 space-y-3">
- <span className="text-sm capitalize font-black  text-zinc-500 block">Status Breakdown</span>
+ <span className="text-sm capitalize font-bold  text-zinc-500 block">Status Breakdown</span>
  <div className="space-y-2 text-sm">
  <div className="flex justify-between border-b border-zinc-950 pb-1">
  <span className="text-zinc-400">Confirmed Sessions</span>
- <span className="text-white font-black ">{confirmedBookingsCount}</span>
+ <span className="text-white font-bold ">{confirmedBookingsCount}</span>
  </div>
  <div className="flex justify-between border-b border-zinc-950 pb-1">
  <span className="text-zinc-400">Pending Requests</span>
- <span className="text-white font-black ">{pendingBookingsCount}</span>
+ <span className="text-white font-bold ">{pendingBookingsCount}</span>
  </div>
  <div className="flex justify-between border-b border-zinc-950 pb-1">
  <span className="text-zinc-400">Completed Sessions</span>
- <span className="text-brand font-black ">{completedBookingsCount}</span>
+ <span className="text-brand font-bold ">{completedBookingsCount}</span>
  </div>
  <div className="flex justify-between">
  <span className="text-zinc-400">Cancelled/Released</span>
- <span className="text-rose-500 font-black ">{cancelledBookingsCount}</span>
+ <span className="text-rose-500 font-bold ">{cancelledBookingsCount}</span>
  </div>
  </div>
  </div>
 
  <div className="bg-zinc-900/60 p-4 rounded-lg border border-zinc-850 space-y-3">
- <span className="text-sm capitalize font-black  text-zinc-500 block">Service Breakdown</span>
+ <span className="text-sm capitalize font-bold  text-zinc-500 block">Service Breakdown</span>
  <div className="space-y-2.5 text-sm">
  <div className="space-y-1">
  <div className="flex justify-between text-sm font-bold capitalize">
@@ -2283,19 +2287,19 @@ export default function AdminDashboard({ setView }) {
  </div>
 
  <div className="bg-zinc-900/60 p-4 rounded-lg border border-zinc-850 space-y-3">
- <span className="text-sm capitalize font-black  text-zinc-500 block">Session Mode Breakdown</span>
+ <span className="text-sm capitalize font-bold  text-zinc-500 block">Session Mode Breakdown</span>
  <div className="space-y-2 text-sm">
  <div className="flex justify-between border-b border-zinc-950 pb-1">
  <span className="text-zinc-400">Online Google Meet</span>
- <span className="text-white font-black ">{onlineCount}</span>
+ <span className="text-white font-bold ">{onlineCount}</span>
  </div>
  <div className="flex justify-between border-b border-zinc-950 pb-1">
  <span className="text-zinc-400">Offline Center Visit</span>
- <span className="text-white font-black ">{offlineCount}</span>
+ <span className="text-white font-bold ">{offlineCount}</span>
  </div>
  <div className="flex justify-between">
  <span className="text-zinc-400">Doorstep Outreach</span>
- <span className="text-white font-black ">{doorstepCount}</span>
+ <span className="text-white font-bold ">{doorstepCount}</span>
  </div>
  </div>
  </div>
@@ -2307,10 +2311,10 @@ export default function AdminDashboard({ setView }) {
  <div className="space-y-4">
  <div className="flex items-center gap-2 border-b border-zinc-900 pb-2">
  <MessageSquare className="w-4 h-4 text-brand" />
- <h4 className="font-header font-black text-sm capitalize text-white">Student Inquiries Desk</h4>
+ <h4 className="font-header font-bold text-sm capitalize text-white">Student Inquiries Desk</h4>
  </div>
  <div className="bg-zinc-900/60 p-4 rounded-lg border border-zinc-850 space-y-3">
- <span className="text-sm capitalize font-black  text-zinc-500 block">Pending Inquiries ({pendingInquiriesCount})</span>
+ <span className="text-sm capitalize font-bold  text-zinc-500 block">Pending Inquiries ({pendingInquiriesCount})</span>
  <div className="space-y-2.5 max-h-[160px] overflow-y-auto pr-1">
  {inquiriesDb.filter(i => i.status === 'PENDING' || !i.status).map(inq => (
  <div key={inq.id} className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-zinc-955 p-2.5 rounded border border-zinc-850 text-sm">
@@ -2320,7 +2324,7 @@ export default function AdminDashboard({ setView }) {
  </div>
  <button
  onClick={() => handleResolveInquiry(inq.id)}
- className="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-sm font-black capitalize  cursor-pointer border-none transition shrink-0 self-end sm:self-auto"
+ className="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-sm font-bold capitalize  cursor-pointer border-none transition shrink-0 self-end sm:self-auto"
  >
  Quick Resolve
  </button>
@@ -2338,13 +2342,13 @@ export default function AdminDashboard({ setView }) {
  <div className="space-y-4">
  <div className="flex items-center gap-2 border-b border-zinc-900 pb-2">
  <Check className="w-4 h-4 text-brand" />
- <h4 className="font-header font-black text-sm capitalize text-white">Session Fulfilment Rates</h4>
+ <h4 className="font-header font-bold text-sm capitalize text-white">Session Fulfilment Rates</h4>
  </div>
  <div className="bg-zinc-900/60 p-5 rounded-lg border border-zinc-850 space-y-4 text-center">
- <span className="text-sm capitalize font-black  text-zinc-500 block">Session Completion Analysis</span>
+ <span className="text-sm capitalize font-bold  text-zinc-500 block">Session Completion Analysis</span>
  <div className="max-w-md mx-auto space-y-3">
  <p className="text-zinc-350 text-sm font-semibold">
- Overall Completion Rate: <span className="text-brand font-black ">{bookingCompletionRate}%</span>
+ Overall Completion Rate: <span className="text-brand font-bold ">{bookingCompletionRate}%</span>
  </p>
  <div className="w-full bg-zinc-955 h-3 rounded-full overflow-hidden border border-zinc-850 p-0.5">
  <div className="bg-gradient-to-r from-brand to-brand-accent h-full rounded-full transition-all duration-500" style={{ width: `${bookingCompletionRate}%` }} />
@@ -2360,23 +2364,23 @@ export default function AdminDashboard({ setView }) {
  {activeStatHighlight === 'revenue' && (
  <div className="space-y-4">
  <div className="flex items-center gap-2 border-b border-zinc-900 pb-2">
- <span className="text-brand font-black text-sm">₹</span>
- <h4 className="font-header font-black text-sm capitalize text-white">Revenue Audits</h4>
+ <span className="text-brand font-bold text-sm">₹</span>
+ <h4 className="font-header font-bold text-sm capitalize text-white">Revenue Audits</h4>
  </div>
  <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
  <div className="bg-zinc-900/60 p-4.5 rounded-lg border border-zinc-850 space-y-1">
  <span className="text-sm text-zinc-500 font-bold capitalize  block">Completed Gross Revenue</span>
- <p className="text-xl font-black text-emerald-450 ">₹{totalRevenue}</p>
+ <p className="text-xl font-bold text-emerald-450 ">₹{totalRevenue}</p>
  <span className="text-xs text-zinc-650 font-bold block capitalize mt-1">INR Fulfilled</span>
  </div>
  <div className="bg-zinc-900/60 p-4.5 rounded-lg border border-zinc-850 space-y-1">
  <span className="text-sm text-zinc-500 font-bold capitalize  block">Projected Booked Revenue</span>
- <p className="text-xl font-black text-white ">₹{projectedRevenue}</p>
+ <p className="text-xl font-bold text-white ">₹{projectedRevenue}</p>
  <span className="text-xs text-zinc-650 font-bold block capitalize mt-1">Scheduled (CONFIRMED/PENDING)</span>
  </div>
  <div className="bg-zinc-900/60 p-4.5 rounded-lg border border-zinc-850 space-y-1">
  <span className="text-sm text-zinc-500 font-bold capitalize  block">Est. Commission & Margins</span>
- <p className="text-xl font-black text-brand ">₹{Math.round(totalRevenue * 0.15)}</p>
+ <p className="text-xl font-bold text-brand ">₹{Math.round(totalRevenue * 0.15)}</p>
  <span className="text-xs text-zinc-650 font-bold block capitalize mt-1">15% Platform service share</span>
  </div>
  </div>
@@ -2387,7 +2391,7 @@ export default function AdminDashboard({ setView }) {
 
  {/* Quick actions panel */}
  <div className="bg-zinc-955 border border-zinc-855 p-4.5 rounded-xl space-y-3">
- <span className="text-sm capitalize font-black  text-zinc-500 block">Quick Action Gateways</span>
+ <span className="text-sm capitalize font-bold  text-zinc-500 block">Quick Action Gateways</span>
  <div className="flex flex-wrap gap-3">
  <button
  onClick={() => {
@@ -2396,7 +2400,7 @@ export default function AdminDashboard({ setView }) {
  setUserFormSuccess('');
  setIsAddUserOpen(true);
  }}
- className="px-4.5 py-2.5 bg-zinc-900 hover:bg-zinc-850 text-white rounded-lg border border-zinc-800 transition cursor-pointer text-sm font-black capitalize  flex items-center gap-1.5"
+ className="px-4.5 py-2.5 bg-zinc-900 hover:bg-zinc-850 text-white rounded-lg border border-zinc-800 transition cursor-pointer text-sm font-bold capitalize  flex items-center gap-1.5"
  >
  <UserPlus className="w-3.5 h-3.5 text-brand" /> Provision Student
  </button>
@@ -2412,7 +2416,7 @@ export default function AdminDashboard({ setView }) {
  setPsyFormSuccess('');
  setIsAddPsyOpen(true);
  }}
- className="px-4.5 py-2.5 bg-zinc-900 hover:bg-zinc-850 text-white rounded-lg border border-zinc-800 transition cursor-pointer text-sm font-black capitalize  flex items-center gap-1.5"
+ className="px-4.5 py-2.5 bg-zinc-900 hover:bg-zinc-850 text-white rounded-lg border border-zinc-800 transition cursor-pointer text-sm font-bold capitalize  flex items-center gap-1.5"
  >
  <Plus className="w-3.5 h-3.5 text-brand" /> Register Psychologist
  </button>
@@ -2434,7 +2438,7 @@ export default function AdminDashboard({ setView }) {
  setBookingFormSuccess('');
  setIsAddBookingOpen(true);
  }}
- className="px-4.5 py-2.5 bg-zinc-900 hover:bg-zinc-850 text-white rounded-lg border border-zinc-800 transition cursor-pointer text-sm font-black capitalize  flex items-center gap-1.5"
+ className="px-4.5 py-2.5 bg-zinc-900 hover:bg-zinc-850 text-white rounded-lg border border-zinc-800 transition cursor-pointer text-sm font-bold capitalize  flex items-center gap-1.5"
  >
  <Calendar className="w-3.5 h-3.5 text-brand" /> Schedule Booking
  </button>
@@ -2446,7 +2450,7 @@ export default function AdminDashboard({ setView }) {
  {/* Live Activity Feed Segmented Panel (Col Span 8) */}
  <div className="lg:col-span-8 bg-zinc-955 border border-zinc-850 rounded-xl p-5 space-y-4">
  <div className="flex justify-between items-center border-b border-zinc-900 pb-2">
- <span className="text-sm capitalize font-black  text-zinc-400">Live Activity Feed</span>
+ <span className="text-sm capitalize font-bold  text-zinc-400">Live Activity Feed</span>
  <span className="text-sm text-zinc-500  capitalize">Sync OK • {new Date().toLocaleDateString()}</span>
  </div>
 
@@ -2454,8 +2458,8 @@ export default function AdminDashboard({ setView }) {
  <div className="flex gap-2 bg-zinc-900/60 p-1 rounded-lg border border-zinc-800">
  <button
  onClick={() => setOverviewActivityTab('bookings')}
- className={`flex-1 py-2 rounded-md text-sm font-black capitalize  transition-all cursor-pointer border-none flex items-center justify-center gap-1 ${overviewActivityTab === 'bookings'
- ? 'bg-brand text-zinc-955 font-black shadow-sm'
+ className={`flex-1 py-2 rounded-md text-sm font-bold capitalize  transition-all cursor-pointer border-none flex items-center justify-center gap-1 ${overviewActivityTab === 'bookings'
+ ? 'bg-brand text-zinc-955 font-bold shadow-sm'
  : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-950'
  }`}
  >
@@ -2463,8 +2467,8 @@ export default function AdminDashboard({ setView }) {
  </button>
  <button
  onClick={() => setOverviewActivityTab('inquiries')}
- className={`flex-1 py-2 rounded-md text-sm font-black capitalize  transition-all cursor-pointer border-none flex items-center justify-center gap-1 ${overviewActivityTab === 'inquiries'
- ? 'bg-brand text-zinc-955 font-black shadow-sm'
+ className={`flex-1 py-2 rounded-md text-sm font-bold capitalize  transition-all cursor-pointer border-none flex items-center justify-center gap-1 ${overviewActivityTab === 'inquiries'
+ ? 'bg-brand text-zinc-955 font-bold shadow-sm'
  : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-955'
  }`}
  >
@@ -2472,8 +2476,8 @@ export default function AdminDashboard({ setView }) {
  </button>
  <button
  onClick={() => setOverviewActivityTab('results')}
- className={`flex-1 py-2 rounded-md text-sm font-black capitalize  transition-all cursor-pointer border-none flex items-center justify-center gap-1 ${overviewActivityTab === 'results'
- ? 'bg-brand text-zinc-955 font-black shadow-sm'
+ className={`flex-1 py-2 rounded-md text-sm font-bold capitalize  transition-all cursor-pointer border-none flex items-center justify-center gap-1 ${overviewActivityTab === 'results'
+ ? 'bg-brand text-zinc-955 font-bold shadow-sm'
  : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-955'
  }`}
  >
@@ -2495,14 +2499,14 @@ export default function AdminDashboard({ setView }) {
  <span className="font-bold text-brand capitalize">{b.advisorName}</span>
  </div>
  <div className="flex items-center gap-2 mt-1">
- <span className="text-xs bg-zinc-950 text-zinc-400 border border-zinc-850 px-1.5 py-0.2 rounded font-black  capitalize ">{b.mode}</span>
- <span className="text-xs bg-zinc-950 text-zinc-500 border border-zinc-850 px-1.5 py-0.2 rounded font-black  capitalize  capitalize">{b.service}</span>
+ <span className="text-xs bg-zinc-950 text-zinc-400 border border-zinc-850 px-1.5 py-0.2 rounded font-bold  capitalize ">{b.mode}</span>
+ <span className="text-xs bg-zinc-950 text-zinc-500 border border-zinc-850 px-1.5 py-0.2 rounded font-bold  capitalize  capitalize">{b.service}</span>
  </div>
  </div>
  <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto shrink-0 border-t border-zinc-900/40 sm:border-none pt-2 sm:pt-0">
  <div className="text-left sm:text-right">
  <span className="text-zinc-400 font-bold block">{b.date} • {b.time}</span>
- <span className={`text-sm px-1.5 py-0.2 rounded capitalize font-black inline-block mt-0.5 border ${b.status === 'CONFIRMED' ? 'bg-emerald-955/20 border-emerald-900/40 text-emerald-450' :
+ <span className={`text-sm px-1.5 py-0.2 rounded capitalize font-bold inline-block mt-0.5 border ${b.status === 'CONFIRMED' ? 'bg-emerald-955/20 border-emerald-900/40 text-emerald-450' :
  b.status === 'COMPLETED' ? 'bg-brand/10 border-brand/20 text-brand' :
  b.status === 'CANCELLED' ? 'bg-rose-955/20 border-rose-900/30 text-rose-500' :
  'bg-zinc-800 border-zinc-700 text-zinc-400'
@@ -2510,7 +2514,7 @@ export default function AdminDashboard({ setView }) {
  </div>
  <button
  onClick={() => setSelectedOverviewBooking(selectedOverviewBooking === b.id ? null : b.id)}
- className="px-2.5 py-1.5 bg-zinc-950 hover:bg-zinc-900 border border-zinc-850 hover:border-brand/40 text-brand rounded text-sm font-black capitalize  transition-colors cursor-pointer"
+ className="px-2.5 py-1.5 bg-zinc-950 hover:bg-zinc-900 border border-zinc-850 hover:border-brand/40 text-brand rounded text-sm font-bold capitalize  transition-colors cursor-pointer"
  >
  {selectedOverviewBooking === b.id ? 'Hide Details' : 'View Details'}
  </button>
@@ -2565,7 +2569,7 @@ export default function AdminDashboard({ setView }) {
  </div>
  <div className="flex items-center gap-2">
  <span className="text-zinc-550  text-sm">{i.date}</span>
- <span className={`text-sm px-1.5 py-0.2 rounded capitalize font-black border ${isResolved ? 'bg-emerald-955/20 border-emerald-900/30 text-emerald-455' : 'bg-amber-955/20 border-amber-900/30 text-amber-500'
+ <span className={`text-sm px-1.5 py-0.2 rounded capitalize font-bold border ${isResolved ? 'bg-emerald-955/20 border-emerald-900/30 text-emerald-455' : 'bg-amber-955/20 border-amber-900/30 text-amber-500'
  }`}>{i.status || 'PENDING'}</span>
  </div>
  </div>
@@ -2574,7 +2578,7 @@ export default function AdminDashboard({ setView }) {
  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-1.5 border-t border-zinc-900/40">
  <button
  onClick={() => handleResolveInquiry(i.id)}
- className={`px-3 py-1.5 rounded text-sm font-black capitalize  cursor-pointer border transition-colors shrink-0 ${isResolved
+ className={`px-3 py-1.5 rounded text-sm font-bold capitalize  cursor-pointer border transition-colors shrink-0 ${isResolved
  ? 'bg-zinc-900 hover:bg-zinc-800 border-zinc-800 text-zinc-400 hover:text-white'
  : 'bg-emerald-600 hover:bg-emerald-700 border-none text-white'
  }`}
@@ -2615,14 +2619,14 @@ export default function AdminDashboard({ setView }) {
  </div>
  <div className="text-right">
  <span className="text-zinc-550  text-sm block">{res.date}</span>
- <span className="text-sm bg-brand/10 border border-brand/20 text-brand px-1.5 py-0.5 rounded font-black  capitalize  mt-1 inline-block">
+ <span className="text-sm bg-brand/10 border border-brand/20 text-brand px-1.5 py-0.5 rounded font-bold  capitalize  mt-1 inline-block">
  Dominant: {res.dominantDomain.toUpperCase()}
  </span>
  </div>
  </div>
 
  <div className="border-t border-zinc-900/60 pt-2 space-y-2">
- <span className="text-sm capitalize font-black  text-zinc-550 block">Cognitive Domain Breakdown</span>
+ <span className="text-sm capitalize font-bold  text-zinc-550 block">Cognitive Domain Breakdown</span>
  <div className="grid grid-cols-3 gap-3">
  {Object.entries(res.scores || {}).slice(0, 3).map(([key, val]) => (
  <div key={key} className="space-y-1">
@@ -2641,7 +2645,7 @@ export default function AdminDashboard({ setView }) {
  <div className="flex justify-end pt-1">
  <button
  onClick={() => handleExportAptitudeResults(res)}
- className="px-3 py-1.5 bg-zinc-950 hover:bg-zinc-900 border border-zinc-850 hover:border-brand/40 text-zinc-350 hover:text-white rounded text-sm font-black capitalize  cursor-pointer transition shrink-0"
+ className="px-3 py-1.5 bg-zinc-950 hover:bg-zinc-900 border border-zinc-850 hover:border-brand/40 text-zinc-350 hover:text-white rounded text-sm font-bold capitalize  cursor-pointer transition shrink-0"
  >
  Export Report
  </button>
@@ -2657,7 +2661,7 @@ export default function AdminDashboard({ setView }) {
  {/* System health & visual meters (Col Span 4) */}
  <div className="lg:col-span-4 bg-zinc-955 border border-zinc-850 rounded-xl p-5 space-y-5 text-sm">
  <div className="border-b border-zinc-900 pb-2 flex items-center justify-between">
- <span className="text-sm capitalize font-black  text-zinc-400">Database & System Health</span>
+ <span className="text-sm capitalize font-bold  text-zinc-400">Database & System Health</span>
  <div className="flex items-center gap-1.5">
  <span className="relative flex h-2 w-2">
  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-450 opacity-75"></span>
@@ -2669,12 +2673,12 @@ export default function AdminDashboard({ setView }) {
 
  {/* Progress Ratios and Meters */}
  <div className="space-y-3 pb-3 border-b border-zinc-900">
- <span className="text-sm capitalize font-black  text-zinc-550 block">Ratios & Fulfillment</span>
+ <span className="text-sm capitalize font-bold  text-zinc-550 block">Ratios & Fulfillment</span>
 
  <div className="space-y-1.5">
  <div className="flex justify-between items-center text-sm font-bold capitalize">
  <span className="text-zinc-400">Booking Completion</span>
- <span className="text-brand  font-black">{bookingCompletionRate}%</span>
+ <span className="text-brand  font-bold">{bookingCompletionRate}%</span>
  </div>
  <div className="w-full bg-zinc-900 h-1.5 rounded-full overflow-hidden border border-zinc-850">
  <div className="bg-gradient-to-r from-brand to-brand-accent h-full rounded-full transition-all duration-500" style={{ width: `${bookingCompletionRate}%` }} />
@@ -2685,7 +2689,7 @@ export default function AdminDashboard({ setView }) {
  <div className="space-y-1.5 pt-1">
  <div className="flex justify-between items-center text-sm font-bold capitalize">
  <span className="text-zinc-400">Inquiry Resolution</span>
- <span className="text-brand  font-black">{inquiryResolutionRate}%</span>
+ <span className="text-brand  font-bold">{inquiryResolutionRate}%</span>
  </div>
  <div className="w-full bg-zinc-900 h-1.5 rounded-full overflow-hidden border border-zinc-850">
  <div className="bg-gradient-to-r from-amber-500 to-amber-300 h-full rounded-full transition-all duration-500" style={{ width: `${inquiryResolutionRate}%` }} />
@@ -2698,7 +2702,7 @@ export default function AdminDashboard({ setView }) {
  <div className="space-y-3.5">
  <div className="flex justify-between items-center">
  <span className="text-zinc-450 font-bold capitalize text-sm">Sandbox Storage</span>
- <span className="text-white font-black ">{kbUsed} KB Used</span>
+ <span className="text-white font-bold ">{kbUsed} KB Used</span>
  </div>
  <div className="w-full bg-zinc-900 h-1.5 rounded-full overflow-hidden border border-zinc-850">
  <div className="bg-brand h-full rounded-full" style={{ width: `${Math.min(100, Number(kbUsed) * 2)}%` }} />
@@ -2722,7 +2726,7 @@ export default function AdminDashboard({ setView }) {
 
  {/* Security scan console */}
  <div className="pt-3 border-t border-zinc-900 space-y-2">
- <span className="text-sm capitalize font-black  text-zinc-550 block">System Guard Patrol</span>
+ <span className="text-sm capitalize font-bold  text-zinc-550 block">System Guard Patrol</span>
  {isScanning ? (
  <div className="space-y-2 bg-zinc-950 p-2.5 rounded border border-zinc-900">
  <div className="flex justify-between items-center text-sm  text-zinc-455">
@@ -2736,7 +2740,7 @@ export default function AdminDashboard({ setView }) {
  ) : scanResults ? (
  <div className="bg-zinc-905 p-2.5 rounded border border-zinc-850 space-y-2 animate-in fade-in duration-200">
  <div className="flex justify-between items-center">
- <span className="text-sm bg-emerald-955/20 border border-emerald-900/40 text-emerald-450 px-2 py-0.5 rounded font-black  capitalize ">SECURE</span>
+ <span className="text-sm bg-emerald-955/20 border border-emerald-900/40 text-emerald-450 px-2 py-0.5 rounded font-bold  capitalize ">SECURE</span>
  <span className="text-sm text-zinc-550 ">{scanResults.timestamp}</span>
  </div>
  <div className="grid grid-cols-2 gap-1.5 text-sm text-zinc-400 font-semibold capitalize">
@@ -2757,7 +2761,7 @@ export default function AdminDashboard({ setView }) {
  ) : (
  <button
  onClick={handleRunSecurityCheck}
- className="w-full py-2 bg-brand/10 hover:bg-brand text-brand hover:text-zinc-955 border border-brand/20 hover:border-brand rounded text-sm font-black capitalize  cursor-pointer transition-all flex items-center justify-center gap-1.5 shadow-sm"
+ className="w-full py-2 bg-brand/10 hover:bg-brand text-brand hover:text-zinc-955 border border-brand/20 hover:border-brand rounded text-sm font-bold capitalize  cursor-pointer transition-all flex items-center justify-center gap-1.5 shadow-sm"
  >
  <ShieldCheck className="w-3.5 h-3.5 text-brand hover:text-zinc-955 transition-colors" /> Scan Integrity & Schemas
  </button>
@@ -2768,7 +2772,7 @@ export default function AdminDashboard({ setView }) {
 
  {/* Sub-admins list table */}
  <div className="pt-4 space-y-3">
- <h4 className="font-header font-black text-zinc-300 text-sm capitalize ">Active Sub-Admin Personnel</h4>
+ <h4 className="font-header font-bold text-zinc-300 text-sm capitalize ">Active Sub-Admin Personnel</h4>
  <div className="border border-zinc-850 rounded-lg overflow-hidden bg-zinc-955">
  <div className="overflow-x-auto w-full">
  <table className="w-full text-sm border-collapse min-w-[650px]">
@@ -2789,7 +2793,7 @@ export default function AdminDashboard({ setView }) {
  <td className="p-3">
  <span className="font-bold text-white block">{cleanName}</span>
  {roleTitle && (
- <span className="text-sm bg-brand/10 border border-brand/20 text-brand px-1.5 py-0.5 rounded font-black  capitalize  inline-block mt-1">
+ <span className="text-sm bg-brand/10 border border-brand/20 text-brand px-1.5 py-0.5 rounded font-bold  capitalize  inline-block mt-1">
  {roleTitle}
  </span>
  )}
@@ -2805,7 +2809,7 @@ export default function AdminDashboard({ setView }) {
  <td className="p-3 text-center">
  <button
  onClick={() => handleOpenEditSubAdmin(admin)}
- className="px-2.5 py-1 bg-zinc-900 text-brand hover:text-white rounded border border-zinc-800 hover:bg-zinc-855 transition cursor-pointer text-sm font-black capitalize "
+ className="px-2.5 py-1 bg-zinc-900 text-brand hover:text-white rounded border border-zinc-800 hover:bg-zinc-855 transition cursor-pointer text-sm font-bold capitalize "
  >
  Edit
  </button>
@@ -2909,7 +2913,7 @@ export default function AdminDashboard({ setView }) {
  <td className="p-3 text-center">
  <button
  onClick={() => handleToggleStudentStatus(student.id, student.status || 'ACTIVE')}
- className={`px-2 py-0.5 rounded text-sm font-black capitalize  transition cursor-pointer border ${(student.status || 'ACTIVE') === 'ACTIVE'
+ className={`px-2 py-0.5 rounded text-sm font-bold capitalize  transition cursor-pointer border ${(student.status || 'ACTIVE') === 'ACTIVE'
  ? 'bg-emerald-955/20 border-emerald-900/40 text-emerald-450 hover:bg-rose-955/20 hover:border-rose-900 hover:text-rose-500'
  : 'bg-rose-955/20 border-rose-900/40 text-rose-500 hover:bg-emerald-955/20 hover:border-emerald-900 hover:text-emerald-450'
  }`}
@@ -2924,7 +2928,7 @@ export default function AdminDashboard({ setView }) {
  <td className="p-3 text-center flex items-center justify-center gap-2">
  <button
  onClick={() => setViewingStudent(student)}
- className="px-2.5 py-1 bg-zinc-900 text-brand hover:text-white rounded border border-zinc-800 hover:bg-zinc-850 transition cursor-pointer text-sm font-black capitalize "
+ className="px-2.5 py-1 bg-zinc-900 text-brand hover:text-white rounded border border-zinc-800 hover:bg-zinc-850 transition cursor-pointer text-sm font-bold capitalize "
  >
  Details
  </button>
@@ -3030,7 +3034,7 @@ export default function AdminDashboard({ setView }) {
  <td className="p-3 text-center">
  {psy.verified ? (
  <div className="flex items-center justify-center gap-2">
- <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-955/20 border border-emerald-900/40 text-emerald-450 text-sm font-black capitalize ">
+ <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-955/20 border border-emerald-900/40 text-emerald-450 text-sm font-bold capitalize ">
  <Check className="w-3.5 h-3.5 text-emerald-450" /> Approved
  </span>
  <button
@@ -3045,14 +3049,14 @@ export default function AdminDashboard({ setView }) {
  <div className="flex items-center justify-center gap-1.5">
  <button
  onClick={() => handleTogglePsyVerification(psy.id, false)}
- className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-750 text-white rounded text-sm font-black capitalize  cursor-pointer border-none shadow-sm transition-colors"
+ className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-750 text-white rounded text-sm font-bold capitalize  cursor-pointer border-none shadow-sm transition-colors"
  title="Accept and verify counselor"
  >
  Accept
  </button>
  <button
  onClick={() => handleDeletePsy(psy.id)}
- className="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded text-sm font-black capitalize  cursor-pointer border-none shadow-sm transition-colors"
+ className="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded text-sm font-bold capitalize  cursor-pointer border-none shadow-sm transition-colors"
  title="Reject and delete counselor request"
  >
  Reject
@@ -3063,7 +3067,7 @@ export default function AdminDashboard({ setView }) {
  <td className="p-3 text-center flex items-center justify-center gap-2">
  <button
  onClick={() => setViewingPsychologist(psy)}
- className="px-2.5 py-1 bg-zinc-900 text-brand hover:text-white rounded border border-zinc-800 hover:bg-zinc-850 transition cursor-pointer text-sm font-black capitalize "
+ className="px-2.5 py-1 bg-zinc-900 text-brand hover:text-white rounded border border-zinc-800 hover:bg-zinc-850 transition cursor-pointer text-sm font-bold capitalize "
  >
  Details
  </button>
@@ -3071,7 +3075,7 @@ export default function AdminDashboard({ setView }) {
  href={`#/advisor/${psy.id}`}
  target="_blank"
  rel="noopener noreferrer"
- className="px-2.5 py-1 bg-zinc-900 text-brand hover:text-white rounded border border-zinc-800 hover:bg-zinc-850 transition cursor-pointer text-sm font-black capitalize  inline-block text-center"
+ className="px-2.5 py-1 bg-zinc-900 text-brand hover:text-white rounded border border-zinc-800 hover:bg-zinc-850 transition cursor-pointer text-sm font-bold capitalize  inline-block text-center"
  >
  Preview
  </a>
@@ -3167,7 +3171,7 @@ export default function AdminDashboard({ setView }) {
 
  <button
  type="submit"
- className="w-full py-2.5 bg-brand/10 hover:bg-brand text-brand hover:text-zinc-955 font-black text-sm capitalize  rounded-lg cursor-pointer transition border border-brand/20 hover:border-brand flex items-center justify-center gap-1"
+ className="w-full py-2.5 bg-brand/10 hover:bg-brand text-brand hover:text-zinc-955 font-bold text-sm capitalize  rounded-lg cursor-pointer transition border border-brand/20 hover:border-brand flex items-center justify-center gap-1"
  >
  <Plus className="w-3.5 h-3.5" /> Save Custom Role
  </button>
@@ -3188,7 +3192,7 @@ export default function AdminDashboard({ setView }) {
  <div className="flex justify-between items-start gap-1">
  <span className="font-bold text-white capitalize text-xs truncate">{role.name}</span>
  {isProtected ? (
- <span className="text-xs text-zinc-550 border border-zinc-800 bg-zinc-950 px-1 py-0.2 rounded capitalize font-black  shrink-0">System</span>
+ <span className="text-xs text-zinc-550 border border-zinc-800 bg-zinc-950 px-1 py-0.2 rounded capitalize font-bold  shrink-0">System</span>
  ) : (
  <button
  type="button"
@@ -3294,7 +3298,7 @@ export default function AdminDashboard({ setView }) {
  <button
  type="submit"
  disabled={isRegistering}
- className="w-full py-3 bg-brand hover:bg-brand-dark text-zinc-950 font-black text-sm capitalize  rounded-lg cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1"
+ className="w-full py-3 bg-brand hover:bg-brand-dark text-zinc-950 font-bold text-sm capitalize  rounded-lg cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1"
  >
  <Plus className="w-3.5 h-3.5 text-zinc-950" /> Register Sub-Admin Profile
  </button>
@@ -3434,8 +3438,8 @@ export default function AdminDashboard({ setView }) {
  <button
  key={status}
  onClick={() => { setBookingStatusFilter(status); setSelectedBookingIds([]); }}
- className={`px-3 py-1.5 rounded-lg text-sm font-black capitalize  transition cursor-pointer border ${bookingStatusFilter === status
- ? 'bg-brand text-zinc-955 border-brand font-black'
+ className={`px-3 py-1.5 rounded-lg text-sm font-bold capitalize  transition cursor-pointer border ${bookingStatusFilter === status
+ ? 'bg-brand text-zinc-955 border-brand font-bold'
  : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white'
  }`}
  >
@@ -3450,7 +3454,7 @@ export default function AdminDashboard({ setView }) {
 
  <div className="bg-zinc-900 px-4 py-2 rounded-lg border border-zinc-800 text-right">
  <span className="text-sm text-zinc-500 font-bold capitalize  block">Estimated Revenue</span>
- <span className="text-sm font-black text-emerald-450">₹{
+ <span className="text-sm font-bold text-emerald-450">₹{
  filteredBookings.reduce((acc, b) => {
  if (b.status !== 'COMPLETED') return acc;
  const advisor = usersDb.find(u => u.id === b.advisorId) || usersDb.find(u => u.name === b.advisorName);
@@ -3467,7 +3471,7 @@ export default function AdminDashboard({ setView }) {
  {/* Bulk Actions Panel */}
  {selectedBookingIds.length > 0 && (
  <div className="flex items-center gap-3 bg-zinc-900/60 p-3 rounded-lg border border-zinc-800 animate-in slide-in-from-top duration-200">
- <span className="text-sm font-black capitalize  text-brand ">{selectedBookingIds.length} Selected</span>
+ <span className="text-sm font-bold capitalize  text-brand ">{selectedBookingIds.length} Selected</span>
  <div className="flex items-center gap-2">
  <button
  onClick={() => handleBulkBookingStatus('CONFIRMED')}
@@ -3574,7 +3578,7 @@ export default function AdminDashboard({ setView }) {
  )}
  </td>
  <td className="p-3 text-center">
- <span className={`inline-flex items-center px-2 py-0.5 rounded text-sm font-black capitalize   ${booking.status === 'CONFIRMED'
+ <span className={`inline-flex items-center px-2 py-0.5 rounded text-sm font-bold capitalize   ${booking.status === 'CONFIRMED'
  ? 'bg-emerald-950/30 border border-emerald-900/40 text-emerald-450'
  : booking.status === 'COMPLETED'
  ? 'bg-indigo-950/30 border border-indigo-900/40 text-indigo-400'
@@ -3635,7 +3639,7 @@ export default function AdminDashboard({ setView }) {
  {inquiriesDb.some(i => i.status === 'RESOLVED') && (
  <button
  onClick={handleBulkClearResolvedInquiries}
- className="px-3.5 py-2 bg-rose-955/20 hover:bg-rose-900 hover:text-white text-rose-500 rounded-lg border border-rose-900/30 transition cursor-pointer text-sm font-black capitalize  shrink-0"
+ className="px-3.5 py-2 bg-rose-955/20 hover:bg-rose-900 hover:text-white text-rose-500 rounded-lg border border-rose-900/30 transition cursor-pointer text-sm font-bold capitalize  shrink-0"
  >
  Clear Resolved
  </button>
@@ -3661,7 +3665,7 @@ export default function AdminDashboard({ setView }) {
  >
  <div className="space-y-2 flex-1 min-w-0">
  <div className="flex items-center gap-2 flex-wrap">
- <span className={`px-2 py-0.5 rounded text-sm font-black capitalize  ${inq.status === 'RESOLVED'
+ <span className={`px-2 py-0.5 rounded text-sm font-bold capitalize  ${inq.status === 'RESOLVED'
  ? 'bg-emerald-955/20 border border-emerald-900/40 text-emerald-450'
  : 'bg-amber-955/20 border border-amber-900/40 text-amber-500'
  }`}>
@@ -3671,7 +3675,7 @@ export default function AdminDashboard({ setView }) {
  </div>
 
  <div className="space-y-0.5">
- <h4 className="font-header font-black text-sm capitalize text-white truncate">{inq.name}</h4>
+ <h4 className="font-header font-bold text-sm capitalize text-white truncate">{inq.name}</h4>
  <p className="text-sm text-brand font-semibold ">{inq.email}</p>
  </div>
 
@@ -3695,7 +3699,7 @@ export default function AdminDashboard({ setView }) {
  const noteVal = document.getElementById(`note-${inq.id}`).value;
  handleSaveInquiryNote(inq.id, noteVal);
  }}
- className="px-3 py-1.5 bg-zinc-900 border border-zinc-800 text-sm text-zinc-300 hover:text-brand hover:border-brand rounded font-black capitalize transition cursor-pointer"
+ className="px-3 py-1.5 bg-zinc-900 border border-zinc-800 text-sm text-zinc-300 hover:text-brand hover:border-brand rounded font-bold capitalize transition cursor-pointer"
  >
  Save Note
  </button>
@@ -3706,7 +3710,7 @@ export default function AdminDashboard({ setView }) {
  <div className="shrink-0 flex items-center gap-2 self-end md:self-center">
  <button
  onClick={() => handleResolveInquiry(inq.id)}
- className={`px-4.5 py-2.5 rounded-lg text-sm font-black capitalize  transition cursor-pointer flex items-center gap-1 border border-zinc-800 ${inq.status === 'RESOLVED'
+ className={`px-4.5 py-2.5 rounded-lg text-sm font-bold capitalize  transition cursor-pointer flex items-center gap-1 border border-zinc-800 ${inq.status === 'RESOLVED'
  ? 'bg-zinc-900 text-zinc-400 hover:text-white'
  : 'bg-brand hover:bg-brand-dark text-zinc-955'
  }`}
@@ -3716,7 +3720,7 @@ export default function AdminDashboard({ setView }) {
  </button>
  <button
  onClick={() => handleDeleteInquiry(inq.id)}
- className="px-3 py-2.5 bg-rose-955/20 hover:bg-rose-900 hover:text-white text-rose-500 rounded-lg border border-rose-900/30 transition cursor-pointer text-sm font-black capitalize "
+ className="px-3 py-2.5 bg-rose-955/20 hover:bg-rose-900 hover:text-white text-rose-500 rounded-lg border border-rose-900/30 transition cursor-pointer text-sm font-bold capitalize "
  >
  <Trash className="w-3.5 h-3.5" />
  </button>
@@ -3770,16 +3774,16 @@ export default function AdminDashboard({ setView }) {
  <div className="space-y-3">
  <div className="flex justify-between items-start">
  <div className="space-y-1">
- <span className="text-sm bg-brand text-zinc-955 px-2 py-0.5 rounded font-black capitalize  ">
+ <span className="text-sm bg-brand text-zinc-955 px-2 py-0.5 rounded font-bold capitalize  ">
  Dominant: {res.dominantDomain}
  </span>
- <h4 className="font-header font-black text-sm capitalize text-white truncate pt-1">{res.studentName}</h4>
+ <h4 className="font-header font-bold text-sm capitalize text-white truncate pt-1">{res.studentName}</h4>
  <span className="text-sm text-zinc-550 block font-medium truncate leading-none">{res.studentEmail}</span>
  </div>
  <div className="flex items-center gap-1.5 shrink-0">
  <button
  onClick={() => handleExportAptitudeResults(res)}
- className="px-2.5 py-1 bg-zinc-900 border border-zinc-800 hover:text-brand rounded font-black capitalize transition text-sm  shrink-0 cursor-pointer"
+ className="px-2.5 py-1 bg-zinc-900 border border-zinc-800 hover:text-brand rounded font-bold capitalize transition text-sm  shrink-0 cursor-pointer"
  title="Export Diagnostic Log"
  >
  Copy Report
@@ -3886,7 +3890,7 @@ export default function AdminDashboard({ setView }) {
  <span className="text-xs font-bold capitalize  text-zinc-500 bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800">{q.category}</span>
  {!q.isActive && <span className="text-xs font-bold capitalize  text-rose-500 bg-rose-955/20 px-2 py-0.5 rounded border border-rose-900/30">Disabled</span>}
  </div>
- <h4 className="font-header font-black text-sm capitalize text-white mb-3">
+ <h4 className="font-header font-bold text-sm capitalize text-white mb-3">
  {q.question}
  </h4>
  <ul className="space-y-1.5 pl-2 mt-2 border-l border-zinc-850">
@@ -3966,7 +3970,7 @@ export default function AdminDashboard({ setView }) {
  className="bg-zinc-950 border border-zinc-850 rounded-xl p-5 flex flex-col sm:flex-row sm:items-start justify-between gap-5"
  >
  <div className="space-y-2 flex-1 min-w-0">
- <h4 className="font-header font-black text-sm capitalize text-white flex items-center gap-2">
+ <h4 className="font-header font-bold text-sm capitalize text-white flex items-center gap-2">
  <span className="w-5 h-5 rounded bg-zinc-900 border border-zinc-800 text-sm text-brand flex items-center justify-center font-bold shrink-0">{index + 1}</span>
  <span>{faq.question}</span>
  </h4>
@@ -4014,7 +4018,7 @@ export default function AdminDashboard({ setView }) {
 
  <form onSubmit={handleSaveSettings} className="bg-zinc-955 border border-zinc-850 p-6 rounded-xl space-y-5">
  <div className="space-y-1">
- <label className="text-sm capitalize  font-black text-zinc-400">Hero Section Heading</label>
+ <label className="text-sm capitalize  font-bold text-zinc-400">Hero Section Heading</label>
  <input
  type="text"
  required
@@ -4027,7 +4031,7 @@ export default function AdminDashboard({ setView }) {
  </div>
 
  <div className="space-y-1">
- <label className="text-sm capitalize  font-black text-zinc-400">Hero Section Subtitle</label>
+ <label className="text-sm capitalize  font-bold text-zinc-400">Hero Section Subtitle</label>
  <textarea
  rows={3}
  required
@@ -4040,7 +4044,7 @@ export default function AdminDashboard({ setView }) {
 
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
  <div className="space-y-1">
- <label className="text-sm capitalize  font-black text-zinc-400">Custom Site Brand Name</label>
+ <label className="text-sm capitalize  font-bold text-zinc-400">Custom Site Brand Name</label>
  <input
  type="text"
  required
@@ -4052,7 +4056,7 @@ export default function AdminDashboard({ setView }) {
  </div>
 
  <div className="space-y-1">
- <label className="text-sm capitalize  font-black text-zinc-400">Footer Copyright Text</label>
+ <label className="text-sm capitalize  font-bold text-zinc-400">Footer Copyright Text</label>
  <input
  type="text"
  required
@@ -4066,7 +4070,7 @@ export default function AdminDashboard({ setView }) {
 
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
  <div className="space-y-1">
- <label className="text-sm capitalize  font-black text-zinc-400">WhatsApp Support Endpoint Link</label>
+ <label className="text-sm capitalize  font-bold text-zinc-400">WhatsApp Support Endpoint Link</label>
  <input
  type="url"
  required
@@ -4078,7 +4082,7 @@ export default function AdminDashboard({ setView }) {
  </div>
 
  <div className="space-y-1">
- <label className="text-sm capitalize  font-black text-zinc-400">Contact Support Email Address</label>
+ <label className="text-sm capitalize  font-bold text-zinc-400">Contact Support Email Address</label>
  <input
  type="email"
  required
@@ -4094,7 +4098,7 @@ export default function AdminDashboard({ setView }) {
  <div className="border border-zinc-850 p-4 rounded-xl space-y-4 bg-zinc-900/40">
  <div className="flex items-center justify-between">
  <div>
- <span className="text-sm capitalize  font-black text-zinc-400 block">System Banner Notification Bar</span>
+ <span className="text-sm capitalize  font-bold text-zinc-400 block">System Banner Notification Bar</span>
  <span className="text-sm text-zinc-550 block font-medium">Display an alert message at the very top of all student-facing views.</span>
  </div>
  <label className="relative inline-flex items-center cursor-pointer">
@@ -4110,7 +4114,7 @@ export default function AdminDashboard({ setView }) {
 
  {settingsForm.showBanner && (
  <div className="space-y-1 animate-in slide-in-from-top duration-200">
- <label className="text-sm capitalize  font-black text-zinc-500">Alert Message Text</label>
+ <label className="text-sm capitalize  font-bold text-zinc-500">Alert Message Text</label>
  <input
  type="text"
  value={settingsForm.bannerNotice}
@@ -4126,7 +4130,7 @@ export default function AdminDashboard({ setView }) {
  <div className="border border-zinc-850 p-4 rounded-xl space-y-4 bg-zinc-900/40">
  <div className="flex items-center justify-between">
  <div>
- <span className="text-sm capitalize  font-black text-brand block">Enable Psychology & Booking Services</span>
+ <span className="text-sm capitalize  font-bold text-brand block">Enable Psychology & Booking Services</span>
  <span className="text-sm text-zinc-550 block font-medium mt-1">If disabled, the site will only display Aptitude Test features. Psychologists and booking sections will be hidden from the public website.</span>
  </div>
  <label className="relative inline-flex items-center cursor-pointer">
@@ -4144,7 +4148,7 @@ export default function AdminDashboard({ setView }) {
  {/* Policies & Documents */}
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
  <div className="space-y-1">
- <label className="text-sm capitalize  font-black text-zinc-400">Terms of Use Document</label>
+ <label className="text-sm capitalize  font-bold text-zinc-400">Terms of Use Document</label>
  <textarea
  rows={6}
  required
@@ -4156,7 +4160,7 @@ export default function AdminDashboard({ setView }) {
  </div>
 
  <div className="space-y-1">
- <label className="text-sm capitalize  font-black text-zinc-400">Privacy Policy Document</label>
+ <label className="text-sm capitalize  font-bold text-zinc-400">Privacy Policy Document</label>
  <textarea
  rows={6}
  required
@@ -4164,6 +4168,18 @@ export default function AdminDashboard({ setView }) {
  onChange={(e) => setSettingsForm({ ...settingsForm, privacyPolicy: e.target.value })}
  className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold "
  placeholder="Write Platform Privacy Policy..."
+ />
+ </div>
+
+ <div className="space-y-1">
+ <label className="text-sm capitalize font-bold text-zinc-400">CDAT Default Group Code</label>
+ <input
+ type="text"
+ required
+ value={settingsForm.cdatGroupCode}
+ onChange={(e) => setSettingsForm({ ...settingsForm, cdatGroupCode: e.target.value })}
+ className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
+ placeholder="e.g. cdat@behold"
  />
  </div>
  </div>
@@ -4174,7 +4190,7 @@ export default function AdminDashboard({ setView }) {
 
  <button
  type="submit"
- className="px-6 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-black text-sm capitalize  rounded-lg cursor-pointer transition border-none shadow-md animate-in fade-in duration-300"
+ className="px-6 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize  rounded-lg cursor-pointer transition border-none shadow-md animate-in fade-in duration-300"
  >
  Save Global Configurations
  </button>
@@ -4216,13 +4232,13 @@ export default function AdminDashboard({ setView }) {
  <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
  {/* Monthly bookings vertical chart */}
  <div className="lg:col-span-8 bg-zinc-955 border border-zinc-850 rounded-xl p-5 space-y-4">
- <span className="text-sm capitalize font-black  text-zinc-400 block border-b border-zinc-900 pb-2">Monthly Booking Volumes</span>
+ <span className="text-sm capitalize font-bold  text-zinc-400 block border-b border-zinc-900 pb-2">Monthly Booking Volumes</span>
  <div className="h-48 flex items-end justify-between gap-4 pt-6 px-4">
  {sortedMonths.map(([month, count]) => {
  const pct = ((count / maxBookings) * 100).toFixed(0);
  return (
  <div key={month} className="flex-1 flex flex-col items-center gap-2 h-full justify-end group">
- <span className="text-sm text-brand font-black opacity-0 group-hover:opacity-100 transition-opacity ">{count} Booking(s)</span>
+ <span className="text-sm text-brand font-bold opacity-0 group-hover:opacity-100 transition-opacity ">{count} Booking(s)</span>
  <div
  className="w-full bg-brand/15 hover:bg-brand border border-brand/30 hover:border-brand rounded-t transition-all duration-500 relative"
  style={{ height: `${pct}%`, minHeight: '6%' }}
@@ -4243,7 +4259,7 @@ export default function AdminDashboard({ setView }) {
  <div className="lg:col-span-4 space-y-4">
  {/* Service Type Breakdown */}
  <div className="bg-zinc-955 border border-zinc-850 rounded-xl p-5 space-y-3">
- <span className="text-sm capitalize font-black  text-zinc-400 block border-b border-zinc-900 pb-2">Service Breakdown</span>
+ <span className="text-sm capitalize font-bold  text-zinc-400 block border-b border-zinc-900 pb-2">Service Breakdown</span>
  <div className="space-y-3 text-sm">
  <div className="space-y-1">
  <div className="flex justify-between font-bold">
@@ -4269,15 +4285,15 @@ export default function AdminDashboard({ setView }) {
 
  {/* Top psychologist list */}
  <div className="bg-zinc-955 border border-zinc-850 rounded-xl p-5 space-y-3">
- <span className="text-sm capitalize font-black  text-zinc-400 block border-b border-zinc-900 pb-2">Top Performers (Completed)</span>
+ <span className="text-sm capitalize font-bold  text-zinc-400 block border-b border-zinc-900 pb-2">Top Performers (Completed)</span>
  <div className="space-y-2 text-sm">
  {sortedAdvisors.map(([name, count], idx) => (
  <div key={name} className="flex items-center justify-between p-2 bg-zinc-900/40 rounded border border-zinc-855">
  <div className="flex items-center gap-2">
- <span className="w-5 h-5 rounded bg-zinc-900 border border-zinc-800 text-brand text-sm font-black flex items-center justify-center ">#{idx + 1}</span>
+ <span className="w-5 h-5 rounded bg-zinc-900 border border-zinc-800 text-brand text-sm font-bold flex items-center justify-center ">#{idx + 1}</span>
  <span className="font-bold text-white capitalize truncate max-w-[120px]">{name}</span>
  </div>
- <span className="text-brand font-black capitalize  text-sm">{count} Sessions</span>
+ <span className="text-brand font-bold capitalize  text-sm">{count} Sessions</span>
  </div>
  ))}
  {sortedAdvisors.length === 0 && (
@@ -4368,7 +4384,7 @@ export default function AdminDashboard({ setView }) {
  </button>
  <button
  type="submit"
- className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-950 font-black text-sm capitalize  rounded-lg cursor-pointer transition border-none shadow-md"
+ className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-950 font-bold text-sm capitalize  rounded-lg cursor-pointer transition border-none shadow-md"
  >
  {isAddUserOpen ? 'Create Account' : 'Save Changes'}
  </button>
@@ -4520,7 +4536,7 @@ export default function AdminDashboard({ setView }) {
  </button>
  <button
  type="submit"
- className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-black text-sm capitalize  rounded-lg cursor-pointer transition border-none shadow-md"
+ className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize  rounded-lg cursor-pointer transition border-none shadow-md"
  >
  {isAddPsyOpen ? 'Save Psychologist' : 'Update Details'}
  </button>
@@ -4685,7 +4701,7 @@ export default function AdminDashboard({ setView }) {
  </button>
  <button
  type="submit"
- className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-black text-sm capitalize  rounded-lg cursor-pointer transition border-none shadow-md"
+ className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize  rounded-lg cursor-pointer transition border-none shadow-md"
  >
  {isAddBookingOpen ? 'Confirm Slot' : 'Update Appointment'}
  </button>
@@ -4755,7 +4771,7 @@ export default function AdminDashboard({ setView }) {
  </button>
  <button
  type="submit"
- className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-black text-sm capitalize  rounded-lg cursor-pointer transition border-none shadow-md"
+ className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize  rounded-lg cursor-pointer transition border-none shadow-md"
  >
  {isAddFaqOpen ? 'Create FAQ' : 'Save Changes'}
  </button>
@@ -4884,7 +4900,7 @@ export default function AdminDashboard({ setView }) {
  </button>
  <button
  type="submit"
- className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-black text-sm capitalize  rounded-lg cursor-pointer transition border-none shadow-md"
+ className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize  rounded-lg cursor-pointer transition border-none shadow-md"
  >
  {isAddAptitudeOpen ? 'Create Question' : 'Save Changes'}
  </button>
@@ -4920,7 +4936,7 @@ export default function AdminDashboard({ setView }) {
  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
  {/* Account details */}
  <div className="bg-zinc-955 border border-zinc-850 rounded-xl p-4 space-y-3">
- <span className="text-sm capitalize  font-black text-zinc-500 block">Registry Metadata</span>
+ <span className="text-sm capitalize  font-bold text-zinc-500 block">Registry Metadata</span>
  <div className="space-y-2.5 text-sm">
  <div>
  <span className="text-zinc-500 block text-sm capitalize">Account ID</span>
@@ -4936,7 +4952,7 @@ export default function AdminDashboard({ setView }) {
  </div>
  <div>
  <span className="text-zinc-500 block text-sm capitalize">Account Status</span>
- <span className={`inline-block mt-0.5 px-2 py-0.5 rounded text-sm font-black capitalize  ${(viewingStudent.status || 'ACTIVE') === 'ACTIVE'
+ <span className={`inline-block mt-0.5 px-2 py-0.5 rounded text-sm font-bold capitalize  ${(viewingStudent.status || 'ACTIVE') === 'ACTIVE'
  ? 'bg-emerald-955/20 border border-emerald-900/30 text-emerald-450'
  : 'bg-rose-955/20 border border-rose-900/30 text-rose-500'
  }`}>
@@ -4949,16 +4965,16 @@ export default function AdminDashboard({ setView }) {
  {/* Consultation Stats */}
  <div className="bg-zinc-955 border border-zinc-850 rounded-xl p-4 flex flex-col justify-between">
  <div>
- <span className="text-sm capitalize  font-black text-zinc-500 block mb-3">Consultation Summary</span>
+ <span className="text-sm capitalize  font-bold text-zinc-500 block mb-3">Consultation Summary</span>
  <div className="grid grid-cols-2 gap-2 text-center">
  <div className="bg-zinc-900 rounded-lg p-3 border border-zinc-850">
- <p className="text-xl font-black text-brand">
+ <p className="text-xl font-bold text-brand">
  {bookingsDb.filter(b => b.userId === viewingStudent.id).length}
  </p>
  <p className="text-sm text-zinc-500 font-bold capitalize  mt-0.5">Total Bookings</p>
  </div>
  <div className="bg-zinc-900 rounded-lg p-3 border border-zinc-850">
- <p className="text-xl font-black text-emerald-400">
+ <p className="text-xl font-bold text-emerald-400">
  {bookingsDb.filter(b => b.userId === viewingStudent.id && b.status === 'COMPLETED').length}
  </p>
  <p className="text-sm text-zinc-500 font-bold capitalize  mt-0.5">Completed</p>
@@ -4977,7 +4993,7 @@ export default function AdminDashboard({ setView }) {
 
  {/* Booking History List */}
  <div className="space-y-2">
- <span className="text-sm capitalize  font-black text-zinc-500 block">Consultation History Log</span>
+ <span className="text-sm capitalize  font-bold text-zinc-500 block">Consultation History Log</span>
  <div className="border border-zinc-850 rounded-xl overflow-hidden bg-zinc-955 max-h-[160px] overflow-y-auto">
  <div className="overflow-x-auto w-full">
  <table className="w-full text-sm border-collapse text-left min-w-[420px]">
@@ -5014,7 +5030,7 @@ export default function AdminDashboard({ setView }) {
  {b.service === 'counselling' ? 'Wellbeing' : 'Career Mapping'} ({b.mode})
  </td>
  <td className="p-2.5 text-center">
- <span className={`px-2 py-0.5 rounded text-sm font-black capitalize  ${b.status === 'CONFIRMED' ? 'bg-indigo-950/20 border border-indigo-900/30 text-indigo-400' :
+ <span className={`px-2 py-0.5 rounded text-sm font-bold capitalize  ${b.status === 'CONFIRMED' ? 'bg-indigo-950/20 border border-indigo-900/30 text-indigo-400' :
  b.status === 'COMPLETED' ? 'bg-emerald-955/20 border border-emerald-900/30 text-emerald-450' :
  b.status === 'CANCELLED' ? 'bg-rose-955/20 border border-rose-900/30 text-rose-500' :
  'bg-zinc-800 border border-zinc-700 text-zinc-400'
@@ -5034,7 +5050,7 @@ export default function AdminDashboard({ setView }) {
 
  {/* Aptitude Results Details */}
  <div className="space-y-3">
- <span className="text-sm capitalize  font-black text-zinc-500 block">Diagnostic Aptitude Reports</span>
+ <span className="text-sm capitalize  font-bold text-zinc-500 block">Diagnostic Aptitude Reports</span>
  {(() => {
  const studentTests = testResultsDb.filter(res => res.studentEmail?.toLowerCase() === viewingStudent.email?.toLowerCase());
  if (studentTests.length === 0) {
@@ -5050,14 +5066,14 @@ export default function AdminDashboard({ setView }) {
  <div key={res.id} className="bg-zinc-955 border border-zinc-850 rounded-xl p-4 space-y-3">
  <div className="flex justify-between items-center pb-2 border-b border-zinc-900">
  <div>
- <span className="text-sm bg-brand text-zinc-955 px-2 py-0.5 rounded font-black capitalize  ">
+ <span className="text-sm bg-brand text-zinc-955 px-2 py-0.5 rounded font-bold capitalize  ">
  Dominant: {res.dominantDomain}
  </span>
  <span className="text-zinc-500 text-sm font-bold block mt-1 capitalize ">Date Completed: {res.date}</span>
  </div>
  <button
  onClick={() => handleExportAptitudeResults(res)}
- className="px-2.5 py-1 bg-zinc-900 border border-zinc-800 hover:text-brand rounded font-black capitalize text-sm  cursor-pointer border-none"
+ className="px-2.5 py-1 bg-zinc-900 border border-zinc-800 hover:text-brand rounded font-bold capitalize text-sm  cursor-pointer border-none"
  >
  Copy Report
  </button>
@@ -5133,7 +5149,7 @@ export default function AdminDashboard({ setView }) {
  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
  {/* Professional Info */}
  <div className="bg-zinc-955 border border-zinc-850 rounded-xl p-4 space-y-3.5 text-sm">
- <span className="text-sm capitalize  font-black text-zinc-500 block ">Advisor Credentials</span>
+ <span className="text-sm capitalize  font-bold text-zinc-500 block ">Advisor Credentials</span>
  <div className="space-y-2.5">
  <div>
  <span className="text-zinc-500 block text-sm capitalize">Full Name</span>
@@ -5149,14 +5165,14 @@ export default function AdminDashboard({ setView }) {
  </div>
  <div>
  <span className="text-zinc-500 block text-sm capitalize">Consultation Fee</span>
- <span className="font-black text-brand">₹{price} / hour</span>
+ <span className="font-bold text-brand">₹{price} / hour</span>
  </div>
  <div>
  <span className="text-zinc-500 block text-sm capitalize">Languages Spoken</span>
  <span className="font-medium text-zinc-300">{lang}</span>
  </div>
  <div className="flex gap-2 items-center pt-1">
- <span className={`px-2.5 py-0.5 rounded text-sm font-black capitalize  ${viewingPsychologist.verified
+ <span className={`px-2.5 py-0.5 rounded text-sm font-bold capitalize  ${viewingPsychologist.verified
  ? 'bg-emerald-955/20 border border-emerald-900/30 text-emerald-450'
  : 'bg-amber-955/20 border border-amber-900/30 text-amber-500'
  }`}>
@@ -5166,7 +5182,7 @@ export default function AdminDashboard({ setView }) {
  href={`#/advisor/${viewingPsychologist.id}`}
  target="_blank"
  rel="noopener noreferrer"
- className="px-2.5 py-0.5 bg-zinc-900 border border-zinc-800 hover:text-brand rounded text-sm font-black capitalize  transition"
+ className="px-2.5 py-0.5 bg-zinc-900 border border-zinc-800 hover:text-brand rounded text-sm font-bold capitalize  transition"
  >
  Preview Profile
  </a>
@@ -5178,7 +5194,7 @@ export default function AdminDashboard({ setView }) {
  <div className="space-y-4">
  {/* Bio */}
  <div className="bg-zinc-955 border border-zinc-850 rounded-xl p-4 space-y-2 text-sm">
- <span className="text-sm capitalize  font-black text-zinc-500 block ">Therapist Bio</span>
+ <span className="text-sm capitalize  font-bold text-zinc-500 block ">Therapist Bio</span>
  <p className="text-zinc-300 leading-relaxed italic text-[12.5px]">
  "{bio}"
  </p>
@@ -5186,7 +5202,7 @@ export default function AdminDashboard({ setView }) {
 
  {/* Specialties List */}
  <div className="bg-zinc-955 border border-zinc-850 rounded-xl p-4 space-y-2">
- <span className="text-sm capitalize  font-black text-zinc-500 block ">Areas of Expertise</span>
+ <span className="text-sm capitalize  font-bold text-zinc-500 block ">Areas of Expertise</span>
  <div className="flex flex-wrap gap-1.5 pt-1">
  {specialties.split(',').map(spec => (
  <span
@@ -5204,7 +5220,7 @@ export default function AdminDashboard({ setView }) {
  {/* Consult bookings count */}
  <div className="space-y-2">
  <div className="flex justify-between items-center">
- <span className="text-sm capitalize  font-black text-zinc-500 block ">Consultation Schedule History</span>
+ <span className="text-sm capitalize  font-bold text-zinc-500 block ">Consultation Schedule History</span>
  <span className="text-sm text-brand font-bold capitalize  ">
  {bookingsDb.filter(b => b.advisorId === viewingPsychologist.id || (b.advisorName && b.advisorName.toLowerCase() === viewingPsychologist.name.toLowerCase())).length} consultations booked
  </span>
@@ -5247,7 +5263,7 @@ export default function AdminDashboard({ setView }) {
  {b.service === 'counselling' ? 'Wellbeing' : 'Career'} ({b.mode})
  </td>
  <td className="p-2.5 text-center">
- <span className={`px-2 py-0.5 rounded text-sm font-black capitalize  ${b.status === 'CONFIRMED' ? 'bg-indigo-950/20 border border-indigo-900/30 text-indigo-400' :
+ <span className={`px-2 py-0.5 rounded text-sm font-bold capitalize  ${b.status === 'CONFIRMED' ? 'bg-indigo-950/20 border border-indigo-900/30 text-indigo-400' :
  b.status === 'COMPLETED' ? 'bg-emerald-955/20 border border-emerald-900/30 text-emerald-450' :
  b.status === 'CANCELLED' ? 'bg-rose-955/20 border border-rose-900/30 text-rose-500' :
  'bg-zinc-800 border border-zinc-700 text-zinc-400'
@@ -5372,7 +5388,7 @@ export default function AdminDashboard({ setView }) {
  </button>
  <button
  type="submit"
- className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-black text-sm capitalize  rounded-lg cursor-pointer transition border-none shadow-md"
+ className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize  rounded-lg cursor-pointer transition border-none shadow-md"
  >
  Save Scopes
  </button>
@@ -5412,12 +5428,12 @@ export default function AdminDashboard({ setView }) {
  const { cleanName, roleTitle } = parseStaffDetails(user);
  return (
  <div className="px-6 py-6 flex flex-col items-center text-center space-y-3 border-b border-zinc-800">
- <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-brand to-brand-accent text-zinc-955 flex items-center justify-center font-header font-black text-2xl shadow-xl">
+ <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-brand to-brand-accent text-zinc-955 flex items-center justify-center font-header font-bold text-2xl shadow-xl">
  {(cleanName || '').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
  </div>
  <div>
  <h2 className="text-base font-bold text-white capitalize tracking-wide font-header">{cleanName}</h2>
- <span className={`inline-block mt-1 text-sm px-2.5 py-1 rounded-full font-black capitalize  ${isSuperAdmin
+ <span className={`inline-block mt-1 text-sm px-2.5 py-1 rounded-full font-bold capitalize  ${isSuperAdmin
  ? 'bg-brand/15 border border-brand/30 text-brand'
  : 'bg-zinc-800 border border-zinc-700 text-zinc-400'
  }`}>
@@ -5431,7 +5447,7 @@ export default function AdminDashboard({ setView }) {
  {/* Profile Details */}
  <div className="px-6 py-5 space-y-4 flex-1">
  <div className="space-y-3">
- <p className="text-sm font-black capitalize  text-zinc-500">Account Information</p>
+ <p className="text-sm font-bold capitalize  text-zinc-500">Account Information</p>
 
  <div className="bg-zinc-950/60 rounded-xl p-4 space-y-3 border border-zinc-800">
  <div className="flex items-center gap-3">
@@ -5469,7 +5485,7 @@ export default function AdminDashboard({ setView }) {
  {/* Permissions (sub-admin) */}
  {!isSuperAdmin && user.permissions && (
  <div className="space-y-2">
- <p className="text-sm font-black capitalize  text-zinc-500">Assigned Permissions</p>
+ <p className="text-sm font-bold capitalize  text-zinc-500">Assigned Permissions</p>
  <div className="space-y-2">
  {user.permissions.map(p => (
  <div key={p} className="flex items-center gap-2 bg-zinc-950/60 rounded-lg px-3 py-2 border border-zinc-800">
@@ -5486,22 +5502,22 @@ export default function AdminDashboard({ setView }) {
  {/* Stats (super admin) */}
  {isSuperAdmin && (
  <div className="space-y-2">
- <p className="text-sm font-black capitalize  text-zinc-500">System Overview</p>
+ <p className="text-sm font-bold capitalize  text-zinc-500">System Overview</p>
  <div className="grid grid-cols-2 gap-2">
  <div className="bg-zinc-950/60 rounded-xl p-3 border border-zinc-800 text-center">
- <p className="text-lg font-black text-brand">{usersDb.filter(u => u.role === 'USER' || !u.role).length}</p>
+ <p className="text-lg font-bold text-brand">{usersDb.filter(u => u.role === 'USER' || !u.role).length}</p>
  <p className="text-sm text-zinc-500 font-bold capitalize ">Students</p>
  </div>
  <div className="bg-zinc-950/60 rounded-xl p-3 border border-zinc-800 text-center">
- <p className="text-lg font-black text-brand">{usersDb.filter(u => u.role === 'PSYCHOLOGIST').length}</p>
+ <p className="text-lg font-bold text-brand">{usersDb.filter(u => u.role === 'PSYCHOLOGIST').length}</p>
  <p className="text-sm text-zinc-500 font-bold capitalize ">Advisors</p>
  </div>
  <div className="bg-zinc-950/60 rounded-xl p-3 border border-zinc-800 text-center">
- <p className="text-lg font-black text-brand">{bookingsDb.length}</p>
+ <p className="text-lg font-bold text-brand">{bookingsDb.length}</p>
  <p className="text-sm text-zinc-500 font-bold capitalize ">Bookings</p>
  </div>
  <div className="bg-zinc-950/60 rounded-xl p-3 border border-zinc-800 text-center">
- <p className="text-lg font-black text-brand">{inquiriesDb.filter(i => i.status === 'PENDING' || !i.status).length}</p>
+ <p className="text-lg font-bold text-brand">{inquiriesDb.filter(i => i.status === 'PENDING' || !i.status).length}</p>
  <p className="text-sm text-zinc-500 font-bold capitalize ">Pending</p>
  </div>
  </div>
@@ -5558,7 +5574,7 @@ export default function AdminDashboard({ setView }) {
  <button
  type="button"
  onClick={() => executeDeleteRole(roleToDelete.id)}
- className="flex-1 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-black text-sm capitalize  rounded-lg cursor-pointer transition border-none shadow-md"
+ className="flex-1 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-sm capitalize  rounded-lg cursor-pointer transition border-none shadow-md"
  >
  Confirm Delete
  </button>

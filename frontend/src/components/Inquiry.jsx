@@ -91,10 +91,10 @@ export default function Inquiry({ testProfile, siteSettings }) {
         <div className="bg-white rounded-lg overflow-hidden grid grid-cols-1 md:grid-cols-2 items-center border border-zinc-200/60 shadow-xs">
           <div className="p-5 sm:p-8 md:p-12 space-y-6">
             <div className="space-y-4 flex flex-col items-center md:items-start text-center md:text-left">
-              <span className="text-xs bg-brand-light text-brand-dark border border-brand/20 px-3.5 py-1 rounded-md capitalize  font-extrabold w-fit block">
+              <span className="text-xs bg-brand-light text-brand-dark border border-brand/20 px-3.5 py-1 rounded-md capitalize  font-semibold w-fit block">
                 get in touch
               </span>
-              <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-zinc-900 font-header capitalize leading-tight">Want to Know More</h2>
+              <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-900 font-header capitalize leading-tight">Want to Know More</h2>
               <p className="text-zinc-600 font-light text-xs sm:text-sm max-w-sm font-sans">
                 Submit your request to align parents, students, and coordinators for assessments and counselling sessions.
               </p>
@@ -184,7 +184,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
 
       {/* 4. Stay Informed & Community */}
       <section className="max-w-xl mx-auto text-center px-4 sm:px-6 py-10 lg:py-16 space-y-6 flex flex-col items-center">
-        <span className="text-xs bg-zinc-900 text-white px-3.5 py-1 rounded-md capitalize  font-extrabold w-fit block">
+        <span className="text-xs bg-zinc-900 text-white px-3.5 py-1 rounded-md capitalize  font-semibold w-fit block">
           Stay Informed
         </span>
         

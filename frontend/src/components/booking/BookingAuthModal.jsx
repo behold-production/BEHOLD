@@ -157,7 +157,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
         <div className="p-5 sm:p-8 space-y-4">
           <div className="flex items-center gap-3 pr-10 text-left font-sans">
             <div className="min-w-0">
-              <h3 id="booking-auth-modal-title" className="text-base sm:text-lg font-black capitalize tracking-wide text-zinc-900 leading-tight">
+              <h3 id="booking-auth-modal-title" className="text-base sm:text-lg font-bold capitalize tracking-wide text-zinc-900 leading-tight">
                 {mode === 'login' ? 'Sign In to Continue' : 'Create Your Account'}
               </h3>
               <p className="text-xs text-zinc-500 font-medium mt-1">
@@ -168,7 +168,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
             </div>
           </div>
 
-          <div className="flex rounded-xl border border-zinc-200 bg-zinc-50 p-1 text-xs font-black capitalize">
+          <div className="flex rounded-xl border border-zinc-200 bg-zinc-50 p-1 text-xs font-bold capitalize">
             <button
               type="button"
               onClick={() => switchMode('login')}
@@ -289,7 +289,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full px-6 py-3 min-h-[48px] bg-gradient-brand text-zinc-955 font-black capitalize  text-xs rounded-lg transition flex items-center justify-center cursor-pointer shadow-md border-none disabled:opacity-60"
+              className="w-full px-6 py-3 min-h-[48px] bg-gradient-brand text-zinc-955 font-bold capitalize  text-xs rounded-lg transition flex items-center justify-center cursor-pointer shadow-md border-none disabled:opacity-60"
             >
               {isLoading ? (
                 <div className="flex items-center gap-2 justify-center">

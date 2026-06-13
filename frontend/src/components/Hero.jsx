@@ -38,8 +38,8 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
       className="relative w-full py-10 lg:py-24 px-4 sm:px-6 text-zinc-900 grid-bg overflow-hidden flex flex-col items-center justify-center min-h-[calc(100vh-72px)] select-none"
     >
       {/* Background Soft Glows (Desktop only) */}
-      <div className="hidden lg:block absolute top-1/4 left-1/3 w-[300px] h-[300px] bg-brand/20 rounded-full glow-glow pointer-events-none" />
-      <div className="hidden lg:block absolute bottom-1/3 right-1/4 w-[400px] h-[400px] bg-brand-accent/15 rounded-full glow-glow pointer-events-none" />
+      <div className="hidden lg:block absolute top-1/4 left-1/3 w-[400px] h-[400px] bg-gradient-to-r from-brand/20 to-brand-accent/20 rounded-full blur-[120px] pointer-events-none mix-blend-multiply" />
+      <div className="hidden lg:block absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-gradient-to-l from-brand-accent/15 to-brand/10 rounded-full blur-[120px] pointer-events-none mix-blend-multiply" />
 
       {/* Cinematic Background Image (Mobile only) */}
       <div className="absolute inset-0 block lg:hidden pointer-events-none z-0 bg-black">
@@ -79,20 +79,21 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
           </div>
 
           {/* CTAs */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center lg:justify-start gap-3 sm:gap-4 pt-2 w-full mt-auto">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center lg:justify-start gap-4 sm:gap-5 pt-4 w-full mt-auto">
             {settings.enablePsychology !== false && (
               <button
                 type="button"
                 onClick={handleBookNowClick}
-                className="px-8 py-4 min-h-[52px] bg-brand hover:bg-brand-dark hover:scale-[1.02] active:scale-[0.98] text-xs font-black capitalize  transition-all duration-300 cursor-pointer rounded-lg shadow-md text-zinc-900 flex items-center justify-center gap-2 border border-zinc-900/5 w-full sm:w-auto"
+                className="px-8 py-4 min-h-[56px] bg-brand hover:bg-brand-dark hover:scale-[1.02] active:scale-[0.98] text-sm font-bold tracking-wide text-zinc-900 transition-all duration-300 cursor-pointer rounded-xl shadow-md hover:shadow-lg flex items-center justify-center gap-2 border border-transparent w-full sm:w-auto"
               >
                 <span>Book a Session</span>
+                <ArrowRight className="w-4 h-4" />
               </button>
             )}
             <button
               type="button"
               onClick={() => navigateToSection(settings.enablePsychology !== false ? 'services' : 'cdat')}
-              className="px-8 py-4 min-h-[52px] bg-white/10 hover:bg-white/20 border border-white/15 hover:border-white text-white lg:bg-white/70 lg:hover:bg-white lg:border-zinc-200 lg:hover:border-brand lg:text-zinc-900 lg:hover:text-brand hover:scale-[1.02] active:scale-[0.98] text-xs font-black capitalize  transition-all duration-300 cursor-pointer rounded-lg shadow-sm w-full sm:w-auto text-center"
+              className="px-8 py-4 min-h-[56px] bg-white/10 hover:bg-white/20 border border-white/15 hover:border-white text-white lg:bg-white/60 lg:backdrop-blur-xl lg:hover:bg-white lg:border-zinc-200/80 lg:hover:border-brand/50 lg:text-zinc-900 lg:hover:text-brand-dark hover:scale-[1.02] active:scale-[0.98] text-sm font-bold tracking-wide transition-all duration-300 cursor-pointer rounded-xl shadow-sm hover:shadow-xl w-full sm:w-auto text-center"
             >
               {settings.enablePsychology !== false ? 'Explore Services' : 'Discover CDAT'}
             </button>
@@ -132,37 +133,27 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
 
           {/* Floating UI Card 1: Counselling */}
           {settings.enablePsychology !== false && (
-            <div className="absolute -top-6 -left-6 bg-white/95 backdrop-blur-md border border-zinc-200/60 p-4 rounded-xl shadow-xl hidden lg:flex items-center gap-3.5 max-w-[220px] z-20 pointer-events-none float-slow">
-              <div className="w-9 h-9 rounded-lg bg-brand flex items-center justify-center text-zinc-900 shadow-inner shrink-0">
-                <HeartPulse className="w-4 h-4" />
+            <div className="absolute -top-8 -left-8 bg-white/80 backdrop-blur-2xl border border-white/60 p-4 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] hidden lg:flex items-center gap-4 max-w-[240px] z-20 pointer-events-none float-slow">
+              <div className="w-10 h-10 rounded-xl bg-gradient-brand flex items-center justify-center text-zinc-900 shadow-sm shrink-0">
+                <HeartPulse className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-xs font-extrabold capitalize tracking-wide text-zinc-900">Personal Care</p>
-                <p className="text-xs font-light text-zinc-500 mt-0.5">Emotional & stress guidance</p>
+                <p className="text-sm font-bold tracking-tight text-zinc-900">Personal Care</p>
+                <p className="text-xs font-medium text-zinc-500 mt-0.5">Emotional & stress guidance</p>
               </div>
             </div>
           )}
 
-          {/* Top Right Floating Stat */}
-          {settings.enablePsychology !== false && (
-            <div className="absolute top-1/4 -right-12 bg-white/95 backdrop-blur-md p-3.5 rounded-xl border border-zinc-200/60 shadow-xl hidden xl:flex flex-col items-center gap-1.5 z-20 float-fast pointer-events-none" style={{ animationDelay: '2s' }}>
-              <div className="flex -space-x-2">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className={`w-7 h-7 rounded-full border-2 border-white bg-zinc-${900 - (i * 100)}`} />
-                ))}
-              </div>
-              <p className="text-xs font-black capitalize  text-zinc-900 mt-1">15+ Expert<br />Counsellors</p>
-            </div>
-          )}
+
 
           {/* Floating UI Card 2: Career Mapping */}
-          <div className="absolute -bottom-6 -right-6 bg-white/95 backdrop-blur-md border border-zinc-200/60 p-4 rounded-xl shadow-xl hidden lg:flex items-center gap-3.5 max-w-[220px] z-20 pointer-events-none float-fast">
-            <div className="w-9 h-9 rounded-lg bg-zinc-900 flex items-center justify-center text-white shadow-md shrink-0">
-              <Compass className="w-4 h-4" />
+          <div className="absolute -bottom-8 -right-8 bg-white/80 backdrop-blur-2xl border border-white/60 p-4 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] hidden lg:flex items-center gap-4 max-w-[240px] z-20 pointer-events-none float-fast">
+            <div className="w-10 h-10 rounded-xl bg-zinc-900 flex items-center justify-center text-white shadow-md shrink-0">
+              <Compass className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-xs font-extrabold capitalize tracking-wide text-zinc-900">Scientific CDAT</p>
-              <p className="text-xs font-light text-zinc-500 mt-0.5">Custom stream roadmaps</p>
+              <p className="text-sm font-bold tracking-tight text-zinc-900">Scientific CDAT</p>
+              <p className="text-xs font-medium text-zinc-500 mt-0.5">Custom stream roadmaps</p>
             </div>
           </div>
 

@@ -266,7 +266,7 @@ export default function StudentProfile() {
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5">
             {/* Avatar */}
             <div className="relative shrink-0">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-zinc-100 border border-zinc-200 flex items-center justify-center text-zinc-700 font-black text-xl sm:text-2xl">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-zinc-100 border border-zinc-200 flex items-center justify-center text-zinc-700 font-bold text-xl sm:text-2xl">
                 {getInitials(profile.name, user?.name)}
               </div>
               <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center">
@@ -618,9 +618,9 @@ export default function StudentProfile() {
               <button
                 type="button"
                 onClick={() => { handleSectionChange('booked'); setSessionSubTab('history'); }}
-                className="text-xs text-zinc-500 hover:text-zinc-900 transition-colors"
+                className="text-xs text-zinc-500 hover:text-zinc-900 transition-colors flex items-center gap-1"
               >
-                View all →
+                View all <ChevronRight className="w-3.5 h-3.5" />
               </button>
             </div>
             {completedSessions.length > 0 ? (

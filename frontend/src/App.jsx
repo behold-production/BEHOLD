@@ -123,19 +123,21 @@ export default function App() {
     if (user) {
       const userRole = user?.role?.toUpperCase();
       if (userRole === 'ADMIN') {
-        // Admins can browse any page and are not force-redirected
+        if (!path.startsWith('/admin')) {
+          navigate('/admin', { replace: true });
+        }
       } else if (userRole === 'PSYCHOLOGIST' || userRole === 'COUNSELLOR') {
         if (path !== '/counsellor' && path !== '/conceller') {
           navigate('/counsellor', { replace: true });
         }
       } else if (userRole === 'USER') {
         if (path === '/counsellor' || path === '/conceller' || path.startsWith('/admin')) {
-          navigate('/profile');
+          navigate('/profile', { replace: true });
         }
       }
     } else {
       if (path === '/profile') {
-        navigate('/');
+        navigate('/', { replace: true });
         setIsAuthModalOpen(true);
       }
     }
@@ -367,7 +369,7 @@ export default function App() {
             <div className="px-6 py-4 border-b border-zinc-800 flex justify-between items-center bg-zinc-950/40">
               <h3 className="text-sm font-bold capitalize  text-white font-header flex items-center gap-2">
                 <span>{activeDocType === 'terms' ? 'Terms & Conditions' : 'Privacy Policy'}</span>
-                <span className="text-[7.5px] bg-zinc-800 border border-zinc-700 text-zinc-400 px-1.5 py-0.5 rounded font-black  capitalize ">DOC</span>
+                <span className="text-[7.5px] bg-zinc-800 border border-zinc-700 text-zinc-400 px-1.5 py-0.5 rounded font-bold  capitalize ">DOC</span>
               </h3>
               <button
                 onClick={() => setActiveDocType(null)}
@@ -387,7 +389,7 @@ export default function App() {
             <div className="px-6 py-4 border-t border-zinc-800 flex justify-end bg-zinc-955">
               <button
                 onClick={() => setActiveDocType(null)}
-                className="px-5 py-2.5 bg-zinc-800 hover:bg-zinc-750 text-white hover:text-brand font-black text-xs capitalize  rounded-lg cursor-pointer transition border-none shadow-md"
+                className="px-5 py-2.5 bg-zinc-800 hover:bg-zinc-750 text-white hover:text-brand font-bold text-xs capitalize  rounded-lg cursor-pointer transition border-none shadow-md"
               >
                 Close Document
               </button>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, Copy } from 'lucide-react';
+import { ArrowRight, Copy, AlertCircle } from 'lucide-react';
 
 export default function CdatSection({ setView }) {
   const [groupRegName, setGroupRegName] = useState('');
@@ -10,6 +10,8 @@ export default function CdatSection({ setView }) {
   const [copyMessage, setCopyMessage] = useState('');
   const [copied, setCopied] = useState(false);
   const [hasCopied, setHasCopied] = useState(false);
+
+  const [fetchedGroupCode, setFetchedGroupCode] = useState('cdat@behold');
 
   // Auto-fill from local storage if available
   useEffect(() => {
@@ -24,6 +26,16 @@ export default function CdatSection({ setView }) {
         console.error("Error reading student profile", e);
       }
     }
+
+    // Fetch settings to get dynamic group code
+    fetch('http://localhost:5000/api/public/settings')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.data && data.data.cdatGroupCode) {
+          setFetchedGroupCode(data.data.cdatGroupCode);
+        }
+      })
+      .catch(err => console.error("Error fetching settings:", err));
   }, []);
 
   const handleGenerateCode = (e) => {
@@ -33,7 +45,7 @@ export default function CdatSection({ setView }) {
       return;
     }
 
-    const HARDCODED_CODE = "BEHOLD-CDAT-2026";
+    const HARDCODED_CODE = fetchedGroupCode;
     setGeneratedCode(HARDCODED_CODE);
     setHasCopied(false);
 
@@ -52,7 +64,7 @@ export default function CdatSection({ setView }) {
     profileData.groupCode = HARDCODED_CODE;
     localStorage.setItem('behold_student_profile', JSON.stringify(profileData));
 
-    setCopyMessage("Code generated! Please copy the code below to proceed.");
+    setCopyMessage("Please enter your group id on the dedicated column without fail");
   };
 
   const copyManually = () => {
@@ -67,51 +79,72 @@ export default function CdatSection({ setView }) {
   };
 
   return (
-    <section id="cdat" className="max-w-7xl mx-auto px-4 sm:px-6 py-8 text-zinc-900 text-left relative overflow-hidden">
-      {/* Background radial soft light */}
-      <div className="absolute top-1/2 left-1/4 w-[350px] h-[350px] bg-brand-accent/5 rounded-lg glow-glow pointer-events-none" />
+    <section id="cdat" className="max-w-7xl mx-auto px-4 sm:px-6 py-12 md:py-20 text-zinc-900 text-left relative">
+      {/* High-End Background Glows */}
+      <div className="absolute inset-0 bg-gradient-to-br from-brand/5 via-zinc-50/50 to-brand-accent/5 pointer-events-none rounded-[2.5rem]" />
+      <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-brand/10 rounded-full blur-[100px] pointer-events-none mix-blend-multiply" />
+      <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-brand-accent/10 rounded-full blur-[100px] pointer-events-none mix-blend-multiply" />
 
-      {/* CDAT CARD */}
       {/* CDAT CARD */}
       <div
         id="card-aptitude"
-        className="card-luxury card-luxury-hover p-5 sm:p-8 md:p-14 flex flex-col space-y-8 select-none border border-zinc-200/60 group rounded-lg"
+        className="relative bg-white/70 backdrop-blur-2xl shadow-[0_8px_40px_-12px_rgba(0,0,0,0.1)] border border-white/60 hover:border-brand/20 p-6 sm:p-10 md:p-16 flex flex-col space-y-10 select-none group rounded-[2rem] transition-all duration-700 overflow-hidden"
       >
+        {/* Decorative inner glow */}
+        <div className="absolute inset-0 bg-gradient-to-b from-white/60 to-transparent pointer-events-none" />
+
         {/* TOP: CIGI Differential Aptitude Test (CDAT) */}
-        <div className="space-y-3 max-w-4xl text-left">
-          <span className="inline-block text-xs bg-zinc-100 text-zinc-550 border border-zinc-200 px-3 py-1 rounded-md capitalize  font-extrabold ">
-            scientific strengths mapping
-          </span>
-          <h3 className="text-lg sm:text-2xl md:text-3xl font-header font-black capitalize tracking-wide text-zinc-900 mt-1 group-hover:text-brand transition-colors duration-500">
-            CIGI Differential Aptitude Test (CDAT)
-          </h3>
-          <p className="text-zinc-650 font-sans text-sm md:text-base font-light leading-relaxed">
-            C-DAT (CIGI-Differential Aptitude Test). This standardized tool effectively identifies the inherent capacities of high school and higher secondary students. C-DAT has guided many students from various states in India and abroad towards suitable academic and career paths.
-          </p>
+        <div className="relative z-10 flex flex-col lg:flex-row items-center lg:items-start justify-between gap-10 text-left w-full">
+
+          {/* Text Area */}
+          <div className="space-y-4 lg:max-w-2xl flex-1">
+            <span className="inline-flex items-center gap-1.5 text-xs bg-brand/10 text-brand-dark border border-brand/20 px-3.5 py-1.5 rounded-full capitalize font-bold shadow-sm">
+              <span className="w-1.5 h-1.5 rounded-full bg-brand-dark animate-pulse"></span>
+              Scientific Strengths Mapping
+            </span>
+            <h3 className="text-xl sm:text-3xl md:text-4xl font-header font-black capitalize tracking-tight text-zinc-900 mt-2 group-hover:text-brand-dark transition-colors duration-500">
+              CIGI Differential Aptitude Test (CDAT)
+            </h3>
+            <p className="text-zinc-650 font-sans text-sm md:text-base font-medium leading-relaxed">
+              C-DAT (CIGI-Differential Aptitude Test). This standardized tool effectively identifies the inherent capacities of high school and higher secondary students. C-DAT has guided many students from various states in India and abroad towards suitable academic and career paths.
+            </p>
+          </div>
+
+          {/* CIGI Logo (Background on Mobile, Right-Side on Desktop) */}
+          <div className="absolute top-[55%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none lg:pointer-events-auto lg:static lg:translate-x-0 lg:translate-y-0 w-full lg:w-auto flex justify-center lg:justify-end shrink-0 z-0 lg:z-10">
+            <div className="hidden lg:block absolute inset-0 bg-brand/5 blur-3xl rounded-full scale-150"></div>
+            <img
+              src="/CIGI.png"
+              alt="CIGI Differential Aptitude Test Logo"
+              className="w-full max-w-[280px] sm:max-w-[350px] lg:max-w-[220px] h-auto object-contain opacity-30 lg:opacity-95 lg:hover:opacity-100 lg:hover:scale-105 transition-all duration-500 mix-blend-multiply contrast-125 brightness-110"
+            />
+          </div>
         </div>
 
         {/* MIDDLE: Registration & Group Code */}
-        <div className="pt-6 border-t border-zinc-200 space-y-6">
+        <div className="relative z-10 pt-8 border-t border-zinc-200/80 space-y-8">
           <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
             <div className="space-y-2">
-              <span className="inline-block text-xs bg-brand-light text-brand-dark px-3 py-1 rounded-md capitalize  font-extrabold border border-brand/20">
-                school & institution access
+              <span className="inline-block text-[11px] bg-zinc-900 text-white px-3 py-1 rounded-md capitalize font-bold tracking-wide shadow-md">
+                School & Institution Access
               </span>
-              <h4 className="text-base sm:text-xl md:text-2xl font-header font-black capitalize tracking-wide text-zinc-900 mt-1">
+              <h4 className="text-lg sm:text-2xl font-header font-black capitalize tracking-tight text-zinc-900 mt-1">
                 Registration & Group Code
               </h4>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start pt-2">
-            <div className="lg:col-span-5 space-y-2">
-              <p className="text-zinc-650 font-sans text-sm md:text-base font-light leading-relaxed">
-                Enter your details below to generate your group access code. Once generated and copied, proceed to the CIGI registration portal to complete your registration.
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start pt-2">
+            <div className="lg:col-span-5 space-y-4">
+              <p className="text-zinc-650 font-sans text-sm md:text-base font-medium leading-relaxed">
+                Enter your details below to generate your unique group access code. Once generated and copied, proceed to the official CIGI registration portal to finalize your test access.
               </p>
             </div>
-            <div className="lg:col-span-7 w-full">
-              <form onSubmit={handleGenerateCode} className="space-y-4 bg-white/40 backdrop-blur-md border border-zinc-200/50 p-4 sm:p-5 rounded-lg w-full">
-                <div className="text-xs font-extrabold capitalize  text-zinc-500 mb-2">
+            <div className="lg:col-span-7 w-full relative">
+              <div className="absolute -inset-1 bg-gradient-to-r from-brand/20 to-brand-accent/20 rounded-3xl blur opacity-30 group-hover:opacity-60 transition duration-700"></div>
+              <form onSubmit={handleGenerateCode} className="relative space-y-5 bg-white/80 backdrop-blur-2xl border border-white shadow-xl shadow-zinc-200/50 p-6 sm:p-8 rounded-2xl w-full">
+                <div className="text-sm font-black capitalize text-zinc-800 mb-2 flex items-center gap-2">
+                  <ArrowRight className="w-4 h-4 text-brand" />
                   Generate Your Access Code
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
@@ -123,7 +156,7 @@ export default function CdatSection({ setView }) {
                       placeholder="Full Name"
                       value={groupRegName}
                       onChange={(e) => setGroupRegName(e.target.value)}
-                      className="w-full px-4 py-3 min-h-[44px] rounded-lg bg-white border border-zinc-200 text-zinc-900 text-xs font-semibold placeholder-zinc-400 outline-none focus:border-brand transition"
+                      className="w-full px-5 py-3.5 min-h-[48px] rounded-xl bg-zinc-50/50 backdrop-blur-sm border border-zinc-200/80 text-zinc-900 text-sm font-semibold placeholder-zinc-400 outline-none focus:border-brand focus:ring-4 focus:ring-brand/10 transition-all shadow-sm hover:bg-zinc-50"
                     />
                   </div>
                   <div>
@@ -134,7 +167,7 @@ export default function CdatSection({ setView }) {
                       placeholder="Phone Number"
                       value={groupRegPhone}
                       onChange={(e) => setGroupRegPhone(e.target.value)}
-                      className="w-full px-4 py-3 min-h-[44px] rounded-lg bg-white border border-zinc-200 text-zinc-900 text-xs font-semibold placeholder-zinc-400 outline-none focus:border-brand transition"
+                      className="w-full px-5 py-3.5 min-h-[48px] rounded-xl bg-zinc-50/50 backdrop-blur-sm border border-zinc-200/80 text-zinc-900 text-sm font-semibold placeholder-zinc-400 outline-none focus:border-brand focus:ring-4 focus:ring-brand/10 transition-all shadow-sm hover:bg-zinc-50"
                     />
                   </div>
                   <div className="sm:col-span-2">
@@ -145,42 +178,42 @@ export default function CdatSection({ setView }) {
                       placeholder="Email Address"
                       value={groupRegEmail}
                       onChange={(e) => setGroupRegEmail(e.target.value)}
-                      className="w-full px-4 py-3 min-h-[44px] rounded-lg bg-white border border-zinc-200 text-zinc-900 text-xs font-semibold placeholder-zinc-400 outline-none focus:border-brand transition"
+                      className="w-full px-5 py-3.5 min-h-[48px] rounded-xl bg-zinc-50/50 backdrop-blur-sm border border-zinc-200/80 text-zinc-900 text-sm font-semibold placeholder-zinc-400 outline-none focus:border-brand focus:ring-4 focus:ring-brand/10 transition-all shadow-sm hover:bg-zinc-50"
                     />
                   </div>
                 </div>
 
                 {!generatedCode ? (
-                  <div className="pt-1">
+                  <div className="pt-2">
                     <button
                       type="submit"
-                      className="min-h-[48px] px-6 py-3 bg-gradient-brand hover:opacity-95 text-zinc-955 font-black text-xs capitalize  rounded-lg transition cursor-pointer shadow-sm border-none w-full sm:w-auto"
+                      className="min-h-[52px] px-8 py-3.5 bg-gradient-brand hover:scale-[1.02] active:scale-[0.98] text-zinc-950 font-bold text-sm tracking-wide rounded-xl transition-all duration-300 shadow-sm hover:shadow-md w-full sm:w-auto border-none"
                     >
                       Generate Group Code
                     </button>
                   </div>
                 ) : (
-                  <div className="pt-2 space-y-4 animate-in fade-in duration-300">
-                    <div className="p-4 border border-brand/20 bg-brand-light rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="pt-2 space-y-4 animate-in fade-in zoom-in-95 duration-500">
+                    <div className="p-5 border border-brand/20 bg-gradient-to-r from-brand-light/50 to-brand-light/10 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-inner">
                       <div>
-                        <span className="text-xs capitalize  text-brand-dark/70 font-bold block mb-1">Your Group Code</span>
-                        <span className="text-lg  font-black  text-brand-dark">{generatedCode}</span>
+                        <span className="text-xs uppercase tracking-widest text-brand-dark/60 font-black block mb-1">Your Group Code</span>
+                        <span className="text-2xl font-black text-zinc-900 tracking-tight">{generatedCode}</span>
                       </div>
                       <button
                         type="button"
                         onClick={copyManually}
-                        className={`min-h-[40px] flex items-center justify-center gap-1.5 px-4 py-2 border rounded-lg text-xs capitalize font-bold transition cursor-pointer ${copied
-                            ? 'bg-emerald-50 border-emerald-300 text-emerald-700'
-                            : 'bg-white border-zinc-200 hover:border-zinc-900 text-zinc-900'
+                        className={`min-h-[44px] flex items-center justify-center gap-2 px-5 py-2.5 border rounded-xl text-sm font-bold transition-all duration-300 cursor-pointer shadow-sm ${copied
+                          ? 'bg-emerald-500 border-emerald-500 text-white shadow-emerald-500/25'
+                          : 'bg-white border-zinc-200 hover:border-brand/30 hover:bg-brand/5 text-zinc-900 hover:text-brand-dark'
                           }`}
                       >
                         {copied ? (
                           <>
-                            Copied!
+                            <span className="animate-in fade-in">Copied Successfully!</span>
                           </>
                         ) : (
                           <>
-                            <Copy className="w-3.5 h-3.5" /> Copy Code
+                            <Copy className="w-4 h-4" /> Copy Access Code
                           </>
                         )}
                       </button>
@@ -194,18 +227,19 @@ export default function CdatSection({ setView }) {
                           window.open("https://cigicareer.com/cdat-registration/", "_blank", "noopener,noreferrer");
                         }
                       }}
-                      className={`min-h-[48px] flex items-center justify-center gap-2 w-full px-6 py-3.5 font-extrabold text-xs capitalize  rounded-lg transition shadow-md ${
-                        hasCopied
-                          ? 'bg-zinc-900 hover:bg-zinc-800 text-white cursor-pointer border-none'
-                          : 'bg-zinc-200 text-zinc-400 cursor-not-allowed border border-zinc-300'
-                      }`}
+                      className={`relative overflow-hidden min-h-[52px] flex items-center justify-center gap-2 w-full px-8 py-3.5 font-bold text-sm tracking-wide rounded-xl transition-all duration-300 shadow-lg ${hasCopied
+                        ? 'bg-brand text-zinc-950 cursor-pointer border-none hover:scale-[1.01] hover:shadow-brand/20 active:scale-100'
+                        : 'bg-zinc-100/50 text-zinc-400 cursor-not-allowed border border-zinc-200 shadow-none'
+                        }`}
                     >
-                      <span>Proceed to CIGI Website</span>
+                      {hasCopied && <div className="absolute inset-0 bg-white/20 w-1/2 -skew-x-12 -translate-x-full animate-[shimmer_2s_infinite]"></div>}
+                      <span className="relative z-10">Proceed to Official Registration</span>
                     </button>
                     {!hasCopied && (
-                      <p className="text-xs text-zinc-550 font-bold text-center mt-1 capitalize tracking-wide">
-                        Please copy the code first to proceed to CIGI registration.
-                      </p>
+                      <div className="mt-4 p-3.5 bg-amber-50/80 border border-amber-200/60 text-amber-800 text-sm rounded-xl flex items-start sm:items-center gap-2.5 text-left animate-in fade-in slide-in-from-top-2 duration-500 shadow-sm backdrop-blur-sm">
+                        <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 sm:mt-0 text-amber-600" />
+                        <span className="font-semibold leading-relaxed">Action Required: Please copy your group code first to unlock the registration portal.</span>
+                      </div>
                     )}
                   </div>
                 )}

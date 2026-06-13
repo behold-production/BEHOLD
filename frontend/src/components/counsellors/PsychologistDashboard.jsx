@@ -9,7 +9,7 @@ import LogoutConfirmModal from '../LogoutConfirmModal';
 import ApiService from '../../services/api';
 
 export default function PsychologistDashboard({ setView }) {
- const { user, login, register, logout } = useAuth();
+ const { user, login, register, logout, isLoading } = useAuth();
 
  const isCounsellorVerified = () => {
  return user ? user.isVerified !== false : true;
@@ -598,6 +598,14 @@ export default function PsychologistDashboard({ setView }) {
  // --- LOGIN GATE UI ---
  const isCounsellor = user && (user?.role?.toUpperCase() === 'PSYCHOLOGIST' || user?.role?.toUpperCase() === 'COUNSELLOR');
 
+ if (isLoading) {
+    return (
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
+        <div className="animate-spin w-8 h-8 border-2 border-brand border-t-transparent rounded-full"></div>
+      </div>
+    );
+  }
+
  // --- 1. COUNSELLOR PORTAL LOGIN GATE ---
  if (!isCounsellor) {
  return (
@@ -608,10 +616,10 @@ export default function PsychologistDashboard({ setView }) {
 
  <div className="max-w-md w-full relative z-10 space-y-6">
  <div className="text-center space-y-2">
- <h1 className="text-3xl font-header font-black tracking-tighter text-white">
- BEHOLD<span className="text-brand font-black">.</span>
+ <h1 className="text-3xl font-header font-bold tracking-tighter text-white">
+ BEHOLD<span className="text-brand font-bold">.</span>
  </h1>
- <p className="text-sm text-indigo-400 capitalize  font-black">COUNSELLOR CENTRAL PORTAL</p>
+ <p className="text-sm text-indigo-400 capitalize  font-bold">COUNSELLOR CENTRAL PORTAL</p>
  </div>
 
  <div className="bg-zinc-900 border border-zinc-800 p-6 sm:p-8 rounded-2xl shadow-2xl space-y-6">
@@ -620,14 +628,14 @@ export default function PsychologistDashboard({ setView }) {
  <button
  type="button"
  onClick={() => setGateMode('login')}
- className={`flex-1 pb-3 text-sm capitalize  font-black transition-colors ${gateMode === 'login' ? 'text-brand border-b-2 border-brand' : 'text-zinc-500 hover:text-zinc-400'}`}
+ className={`flex-1 pb-3 text-sm capitalize  font-bold transition-colors ${gateMode === 'login' ? 'text-brand border-b-2 border-brand' : 'text-zinc-500 hover:text-zinc-400'}`}
  >
  Sign In
  </button>
  <button
  type="button"
  onClick={() => { setGateMode('register'); setOnboardingStep(1); setRegError(''); }}
- className={`flex-1 pb-3 text-sm capitalize  font-black transition-colors ${gateMode === 'register' ? 'text-brand border-b-2 border-brand' : 'text-zinc-500 hover:text-zinc-400'}`}
+ className={`flex-1 pb-3 text-sm capitalize  font-bold transition-colors ${gateMode === 'register' ? 'text-brand border-b-2 border-brand' : 'text-zinc-500 hover:text-zinc-400'}`}
  >
  Register Consultant
  </button>
@@ -672,7 +680,7 @@ export default function PsychologistDashboard({ setView }) {
  <button
  type="submit"
  disabled={isLoggingIn}
- className="w-full py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-black text-sm capitalize  rounded-lg cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1"
+ className="w-full py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize  rounded-lg cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1"
  >
  {isLoggingIn ? 'Connecting...' : 'Enter Consultant Desk'}
  </button>
@@ -683,11 +691,11 @@ export default function PsychologistDashboard({ setView }) {
  // REGISTRATION STEP-BY-STEP FLOW
  <div className="space-y-6">
  {/* Stepper Indicators */}
- <div className="flex flex-wrap items-center justify-center sm:justify-between gap-x-2 gap-y-2 text-sm md:text-base font-black capitalize  border-b border-zinc-850 pb-3 text-center">
+ <div className="flex flex-wrap items-center justify-center sm:justify-between gap-x-2 gap-y-2 text-sm md:text-base font-bold capitalize  border-b border-zinc-850 pb-3 text-center">
     <span className={`whitespace-nowrap ${onboardingStep === 1 ? "text-indigo-400" : "text-zinc-550"}`}>1. Account Details</span>
-    <span className="text-zinc-700 hidden sm:inline">→</span>
+    <ChevronRight className="w-4 h-4 text-zinc-700 hidden sm:inline" />
     <span className={`whitespace-nowrap ${onboardingStep === 2 ? "text-indigo-400" : "text-zinc-550"}`}>2. Qualifications</span>
-    <span className="text-zinc-700 hidden sm:inline">→</span>
+    <ChevronRight className="w-4 h-4 text-zinc-700 hidden sm:inline" />
     <span className={`whitespace-nowrap ${onboardingStep === 3 ? "text-indigo-400" : "text-zinc-550"}`}>3. Schedule</span>
  </div>
 
@@ -748,7 +756,7 @@ export default function PsychologistDashboard({ setView }) {
 
  <button
  type="submit"
- className="w-full py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-black text-sm capitalize  rounded-lg cursor-pointer transition border-none shadow-md"
+ className="w-full py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize  rounded-lg cursor-pointer transition border-none shadow-md"
  >
  Next: Clinical Details
  </button>
@@ -871,7 +879,7 @@ export default function PsychologistDashboard({ setView }) {
  </button>
  <button
  type="submit"
- className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-black text-sm capitalize  rounded-lg cursor-pointer transition border-none shadow-md"
+ className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize  rounded-lg cursor-pointer transition border-none shadow-md"
  >
  Next: Calendar
  </button>
@@ -892,7 +900,7 @@ export default function PsychologistDashboard({ setView }) {
  type="button"
  onClick={() => toggleRegDay(day.index)}
  className={`px-3 py-1.5 border rounded-lg text-sm font-bold capitalize  transition-all duration-200 cursor-pointer ${active
- ? 'bg-brand text-zinc-955 font-black border-none'
+ ? 'bg-brand text-zinc-955 font-bold border-none'
  : 'bg-zinc-950 border-zinc-850 text-zinc-500 hover:border-zinc-750'
  }`}
  >
@@ -919,7 +927,7 @@ export default function PsychologistDashboard({ setView }) {
  setRegAvailableSlots(prev => [...prev, slot]);
  }
  }}
- className={`flex-1 py-2.5 border rounded-lg font-black transition cursor-pointer text-sm ${exists
+ className={`flex-1 py-2.5 border rounded-lg font-bold transition cursor-pointer text-sm ${exists
  ? 'bg-brand/10 border-brand text-brand'
  : 'bg-zinc-955 border-zinc-850 text-zinc-400 hover:border-zinc-750'
  }`}
@@ -1099,7 +1107,7 @@ export default function PsychologistDashboard({ setView }) {
  <button
  type="submit"
  disabled={isLoggingIn}
- className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-black text-sm capitalize  rounded-lg cursor-pointer transition border-none shadow-md"
+ className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize  rounded-lg cursor-pointer transition border-none shadow-md"
  >
  {isLoggingIn ? 'Creating Profile...' : 'Complete & Launch'}
  </button>
@@ -1136,10 +1144,10 @@ export default function PsychologistDashboard({ setView }) {
  </button>
 
  <div className="flex items-center gap-1.5">
- <span className="font-header font-black text-md tracking-tighter text-white">
- BEHOLD<span className="text-brand font-black">.</span>
+ <span className="font-header font-bold text-base tracking-tighter text-white">
+ BEHOLD<span className="text-brand font-bold">.</span>
  </span>
- <span className="text-xs bg-zinc-850 border border-zinc-800 text-zinc-400 px-1 py-0.2 rounded font-black  capitalize ">
+ <span className="text-xs bg-zinc-850 border border-zinc-800 text-zinc-400 px-1 py-0.2 rounded font-bold  capitalize ">
  CLINIC
  </span>
  </div>
@@ -1171,10 +1179,10 @@ export default function PsychologistDashboard({ setView }) {
  {/* Logo & Header */}
  <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
  <div className="flex items-center gap-2">
- <span className="font-header font-black text-lg tracking-tighter text-white">
- BEHOLD<span className="text-brand font-black">.</span>
+ <span className="font-header font-bold text-lg tracking-tighter text-white">
+ BEHOLD<span className="text-brand font-bold">.</span>
  </span>
- <span className="text-sm bg-indigo-950 border border-indigo-900 text-indigo-400 px-1.5 py-0.5 rounded font-black  capitalize">
+ <span className="text-sm bg-indigo-950 border border-indigo-900 text-indigo-400 px-1.5 py-0.5 rounded font-bold  capitalize">
  CLINIC
  </span>
  </div>
@@ -1195,14 +1203,14 @@ export default function PsychologistDashboard({ setView }) {
  onClick={() => setIsProfileDrawerOpen(true)}
  className="w-full flex items-center gap-3 bg-zinc-950/60 hover:bg-zinc-955 p-3 rounded-xl border border-zinc-850 hover:border-indigo-500/30 transition-all cursor-pointer text-left"
  >
- <div className="w-10 h-10 rounded-lg bg-indigo-950 text-brand flex items-center justify-center font-header font-black text-sm border border-indigo-900 shrink-0">
+ <div className="w-10 h-10 rounded-lg bg-indigo-950 text-brand flex items-center justify-center font-header font-bold text-sm border border-indigo-900 shrink-0">
  {(profile?.name || '').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
  </div>
  <div className="min-w-0 flex-1">
  <h4 className="text-sm font-bold text-white truncate leading-tight capitalize font-header">
  {profile.name}
  </h4>
- <span className="text-sm text-zinc-550 font-black  capitalize truncate block ">
+ <span className="text-sm text-zinc-550 font-bold  capitalize truncate block ">
  {profile.education}
  </span>
  </div>
@@ -1223,7 +1231,7 @@ export default function PsychologistDashboard({ setView }) {
  key={sec.id}
  onClick={() => handleNavClick(sec.id)}
  className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-lg text-sm font-bold capitalize  transition-all text-left cursor-pointer border-none ${isActive
- ? 'bg-brand text-zinc-955 font-black shadow-sm'
+ ? 'bg-brand text-zinc-955 font-bold shadow-sm'
  : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-850'
  }`}
  >
@@ -1238,7 +1246,7 @@ export default function PsychologistDashboard({ setView }) {
  {/* Sidebar Footer */}
  <div className="space-y-4 pt-4 border-t border-zinc-800 mt-6 lg:mt-0">
  <div className="bg-zinc-955/40 p-3 rounded-lg border border-zinc-850">
- <span className="text-sm capitalize font-black  text-zinc-500 flex items-center gap-1">
+ <span className="text-sm capitalize font-bold  text-zinc-500 flex items-center gap-1">
  <ShieldAlert className="w-3.5 h-3.5 text-indigo-400" /> Psychologist Console
  </span>
  <p className="text-sm text-zinc-550 leading-relaxed pt-1.5">
@@ -1263,10 +1271,10 @@ export default function PsychologistDashboard({ setView }) {
 
  <div className="space-y-1 relative z-10 w-full sm:w-auto">
  <div className="flex flex-wrap items-center gap-2">
- <h1 className="text-xl sm:text-2xl font-header font-black tracking-wide capitalize">
+ <h1 className="text-xl sm:text-2xl font-header font-bold tracking-wide capitalize">
  {profile.name}
  </h1>
- <span className="text-sm bg-indigo-950 border border-indigo-900 text-indigo-400 px-2 py-0.5 rounded font-black  capitalize ">
+ <span className="text-sm bg-indigo-950 border border-indigo-900 text-indigo-400 px-2 py-0.5 rounded font-bold  capitalize ">
  CLINICAL STAFF
  </span>
  </div>
@@ -1279,11 +1287,11 @@ export default function PsychologistDashboard({ setView }) {
  <div className="grid grid-cols-2 gap-4 w-full sm:w-auto shrink-0 relative z-10 text-center">
  <div className="bg-zinc-955 border border-zinc-850 px-5 py-2.5 rounded-xl">
  <span className="text-sm text-zinc-500 font-bold capitalize  block">Upcoming Slots</span>
- <p className="text-sm font-black text-brand mt-0.5">{bookings.filter(b => b.status === 'CONFIRMED' && !isSessionCompleted(b)).length} Bookings</p>
+ <p className="text-sm font-bold text-brand mt-0.5">{bookings.filter(b => b.status === 'CONFIRMED' && !isSessionCompleted(b)).length} Bookings</p>
  </div>
  <div className="bg-zinc-955 border border-zinc-850 px-5 py-2.5 rounded-xl">
  <span className="text-sm text-zinc-500 font-bold capitalize  block">Hours Completed</span>
- <p className="text-sm font-black text-brand mt-0.5">{bookings.filter(isSessionCompleted).length + Number(profile.hours || 0)}+ Hrs</p>
+ <p className="text-sm font-bold text-brand mt-0.5">{bookings.filter(isSessionCompleted).length + Number(profile.hours || 0)}+ Hrs</p>
  </div>
  </div>
  </div>
@@ -1307,24 +1315,24 @@ export default function PsychologistDashboard({ setView }) {
  <div className="space-y-6 animate-in fade-in duration-200 text-sm">
  <div className="border-b border-zinc-800 pb-3 flex justify-between items-center">
  <h3 className="text-sm font-bold capitalize  text-zinc-400">Psychology Dashboard Overview</h3>
- <span className="text-sm bg-indigo-950/20 text-indigo-400 border border-indigo-900/30 px-2 py-0.5 rounded font-black  capitalize">Active Status</span>
+ <span className="text-sm bg-indigo-950/20 text-indigo-400 border border-indigo-900/30 px-2 py-0.5 rounded font-bold  capitalize">Active Status</span>
  </div>
 
  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
  {/* Next session card */}
  <div className="bg-zinc-950 border border-zinc-850 rounded-xl p-5 relative overflow-hidden flex flex-col justify-between group min-h-[160px]">
  <div className="space-y-3">
- <span className="text-sm bg-indigo-950 text-indigo-455 border border-indigo-900 px-2 py-0.5 rounded font-black capitalize ">Next Client Session</span>
+ <span className="text-sm bg-indigo-950 text-indigo-455 border border-indigo-900 px-2 py-0.5 rounded font-bold capitalize ">Next Client Session</span>
  {bookings.length > 0 ? (
  <div className="space-y-1.5 pt-1">
- <h4 className="font-header font-black text-sm text-white capitalize">{bookings[0].userName}</h4>
+ <h4 className="font-header font-bold text-sm text-white capitalize">{bookings[0].userName}</h4>
  <p className="text-sm text-zinc-400">Session Type: {bookings[0].service === 'counselling' ? 'Emotional Wellbeing' : 'Career Mapping'}</p>
  <div className="flex items-center gap-1.5 text-sm font-bold text-white">
  <Clock className="w-3.5 h-3.5 text-zinc-500" />
  <span>{bookings[0].date} at {bookings[0].time}</span>
  </div>
  <div className="pt-1 flex items-center gap-2">
- <span className="text-sm capitalize  font-extrabold text-zinc-500">Room Status:</span>
+ <span className="text-sm capitalize  font-semibold text-zinc-500">Room Status:</span>
  {bookings[0].meetLink ? (
  <span className="text-sm font-bold text-emerald-400 capitalize tracking-wide">
  Link Set
@@ -1345,7 +1353,7 @@ export default function PsychologistDashboard({ setView }) {
  <button
  type="button"
  onClick={() => window.open(bookings[0].meetLink, '_blank')}
- className="text-sm font-black capitalize  bg-indigo-600 hover:bg-indigo-700 text-white px-3.5 py-2 rounded-lg cursor-pointer flex items-center gap-1.5 transition-colors duration-200 border-none"
+ className="text-sm font-bold capitalize  bg-indigo-600 hover:bg-indigo-700 text-white px-3.5 py-2 rounded-lg cursor-pointer flex items-center gap-1.5 transition-colors duration-200 border-none"
  >
  <Video className="w-3.5 h-3.5 text-white" />
  <span>Join Meet</span>
@@ -1353,7 +1361,7 @@ export default function PsychologistDashboard({ setView }) {
  )}
  <button
  onClick={() => setCurrentSection('bookings')}
- className="text-sm font-black capitalize  bg-brand text-zinc-950 hover:bg-brand-dark px-3.5 py-2 rounded-lg cursor-pointer border-none"
+ className="text-sm font-bold capitalize  bg-brand text-zinc-950 hover:bg-brand-dark px-3.5 py-2 rounded-lg cursor-pointer border-none"
  >
  {bookings.length > 0 && !bookings[0].meetLink ? 'Set Meet Link' : 'Manage Bookings'}
  </button>
@@ -1381,7 +1389,7 @@ export default function PsychologistDashboard({ setView }) {
  </div>
  <button
  onClick={() => setCurrentSection('profile')}
- className="w-fit text-sm font-black capitalize  bg-zinc-900 text-white hover:bg-zinc-850 border border-zinc-800 px-4 py-2 rounded-lg mt-4 cursor-pointer"
+ className="w-fit text-sm font-bold capitalize  bg-zinc-900 text-white hover:bg-zinc-850 border border-zinc-800 px-4 py-2 rounded-lg mt-4 cursor-pointer"
  >
  Edit Profile Info
  </button>
@@ -1524,7 +1532,7 @@ export default function PsychologistDashboard({ setView }) {
  ) : <span />}
  <button
  type="submit"
- className="bg-brand hover:bg-brand-dark text-zinc-955 px-8 py-3 text-sm font-black capitalize  rounded-lg shadow-sm border-none cursor-pointer flex items-center gap-1.5"
+ className="bg-brand hover:bg-brand-dark text-zinc-955 px-8 py-3 text-sm font-bold capitalize  rounded-lg shadow-sm border-none cursor-pointer flex items-center gap-1.5"
  >
  <Save className="w-3.5 h-3.5" /> Save Changes
  </button>
@@ -1553,7 +1561,7 @@ export default function PsychologistDashboard({ setView }) {
  type="button"
  onClick={() => toggleDay(day.index)}
  className={`px-4 py-2 border rounded-lg text-xs font-bold capitalize  transition-all duration-300 cursor-pointer ${active
- ? 'bg-gradient-brand border-none text-zinc-955 font-black'
+ ? 'bg-gradient-brand border-none text-zinc-955 font-bold'
  : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:border-zinc-650'
  }`}
  >
@@ -1581,7 +1589,7 @@ export default function PsychologistDashboard({ setView }) {
  setAvailableSlots(prev => [...prev, slot]);
  }
  }}
- className={`flex-1 p-3 border rounded-lg text-center font-black transition cursor-pointer text-sm ${exists
+ className={`flex-1 p-3 border rounded-lg text-center font-bold transition cursor-pointer text-sm ${exists
  ? 'bg-brand/10 border-brand text-brand'
  : 'bg-zinc-955 border-zinc-850 text-zinc-400'
  }`}
@@ -1761,7 +1769,7 @@ export default function PsychologistDashboard({ setView }) {
  ) : <span />}
  <button
  type="submit"
- className="bg-brand hover:bg-brand-dark text-zinc-955 px-8 py-3 text-sm font-black capitalize  rounded-lg shadow-sm border-none cursor-pointer flex items-center gap-1.5"
+ className="bg-brand hover:bg-brand-dark text-zinc-955 px-8 py-3 text-sm font-bold capitalize  rounded-lg shadow-sm border-none cursor-pointer flex items-center gap-1.5"
  >
  <Save className="w-3.5 h-3.5" /> Save Slots Matrix
  </button>
@@ -1789,7 +1797,7 @@ export default function PsychologistDashboard({ setView }) {
  <h3 className="text-sm font-bold capitalize  text-zinc-400">Student Booking Details & Rooms</h3>
  <p className="text-sm text-zinc-500 mt-1">Manage virtual consultations, update appointment statuses, and log clinic summaries.</p>
  </div>
- <span className="text-sm bg-indigo-950/20 text-indigo-400 border border-indigo-900/30 px-2 py-0.5 rounded font-black  capitalize ">{bookings.length} Total</span>
+ <span className="text-sm bg-indigo-950/20 text-indigo-400 border border-indigo-900/30 px-2 py-0.5 rounded font-bold  capitalize ">{bookings.length} Total</span>
  </div>
 
  {/* Tab switcher */}
@@ -1805,8 +1813,8 @@ export default function PsychologistDashboard({ setView }) {
  key={tab.id}
  type="button"
  onClick={() => setActiveBookingTab(tab.id)}
- className={`flex-1 py-2 rounded-lg text-sm font-black capitalize  transition-all duration-300 cursor-pointer flex items-center justify-center gap-1.5 border ${isActive
- ? 'bg-brand text-zinc-955 border-brand font-black shadow-lg scale-102 shadow-brand/10'
+ className={`flex-1 py-2 rounded-lg text-sm font-bold capitalize  transition-all duration-300 cursor-pointer flex items-center justify-center gap-1.5 border ${isActive
+ ? 'bg-brand text-zinc-955 border-brand font-bold shadow-lg scale-102 shadow-brand/10'
  : 'bg-transparent border-transparent text-zinc-500 hover:text-zinc-300'
  }`}
  >
@@ -1830,7 +1838,7 @@ export default function PsychologistDashboard({ setView }) {
  <select
  value={booking.status || 'CONFIRMED'}
  onChange={(e) => updateBookingStatus(booking.id, e.target.value)}
- className={`px-2.5 py-1 border rounded outline-none text-sm font-black capitalize  cursor-pointer transition-all ${booking.status === 'CONFIRMED'
+ className={`px-2.5 py-1 border rounded outline-none text-sm font-bold capitalize  cursor-pointer transition-all ${booking.status === 'CONFIRMED'
  ? 'bg-emerald-955 border-emerald-900/40 text-emerald-455'
  : booking.status === 'COMPLETED'
  ? 'bg-indigo-955 border-indigo-900/40 text-indigo-400'
@@ -1841,14 +1849,14 @@ export default function PsychologistDashboard({ setView }) {
  <option value="COMPLETED" className="bg-zinc-950 text-indigo-400">COMPLETED</option>
  <option value="CANCELLED" className="bg-zinc-950 text-rose-400">CANCELLED</option>
  </select>
- <span className="text-sm bg-zinc-900 text-white px-2 py-0.5 rounded font-extrabold capitalize  ">
+ <span className="text-sm bg-zinc-900 text-white px-2 py-0.5 rounded font-semibold capitalize  ">
  {booking.service === 'counselling' ? 'Psychological Session' : 'Career Session'}
  </span>
  <span className="text-sm text-zinc-500 font-bold capitalize ">{booking.mode}</span>
  </div>
 
  <div className="space-y-0.5">
- <h4 className="font-header font-black text-sm capitalize text-white">{booking.userName}</h4>
+ <h4 className="font-header font-bold text-sm capitalize text-white">{booking.userName}</h4>
  <div className="flex items-center gap-1.5 text-sm text-zinc-400 font-semibold">
  <Clock className="w-3.5 h-3.5 text-zinc-500" />
  <span>{booking.date} at {booking.time}</span>
@@ -1857,7 +1865,7 @@ export default function PsychologistDashboard({ setView }) {
 
  {/* Room link status block */}
  <div className="pt-1.5 flex items-center gap-2 flex-wrap">
- <span className="text-sm capitalize  font-extrabold text-zinc-500">Meeting Room:</span>
+ <span className="text-sm capitalize  font-semibold text-zinc-500">Meeting Room:</span>
  {booking.meetLink ? (
  <button
  type="button"
@@ -1876,7 +1884,7 @@ export default function PsychologistDashboard({ setView }) {
  {/* Diagnostic Feedback Editor / Display */}
  {booking.status === 'COMPLETED' && (
  <div className="pt-3 mt-2 border-t border-zinc-900 space-y-2 w-full max-w-xl">
- <span className="text-sm capitalize  font-extrabold text-zinc-505 block">Session Feedback & Diagnostic Notes:</span>
+ <span className="text-sm capitalize  font-semibold text-zinc-505 block">Session Feedback & Diagnostic Notes:</span>
 
  {editingFeedbackId === booking.id ? (
  <div className="space-y-2">
@@ -1891,14 +1899,14 @@ export default function PsychologistDashboard({ setView }) {
  <button
  type="button"
  onClick={() => saveFeedback(booking.id)}
- className="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded text-sm font-black capitalize  cursor-pointer shadow-xs border-none"
+ className="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded text-sm font-bold capitalize  cursor-pointer shadow-xs border-none"
  >
  Save Feedback
  </button>
  <button
  type="button"
  onClick={() => setEditingFeedbackId(null)}
- className="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-white rounded text-sm font-black capitalize  cursor-pointer border-none"
+ className="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-white rounded text-sm font-bold capitalize  cursor-pointer border-none"
  >
  Cancel
  </button>
@@ -1947,13 +1955,13 @@ export default function PsychologistDashboard({ setView }) {
  <div className="flex gap-2">
  <button
  onClick={() => saveMeetLink(booking.id)}
- className="px-3 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg text-sm font-black capitalize  cursor-pointer shadow-xs border-none"
+ className="px-3 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg text-sm font-bold capitalize  cursor-pointer shadow-xs border-none"
  >
  Save
  </button>
  <button
  onClick={() => setEditingBookingId(null)}
- className="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-lg text-sm font-black capitalize  cursor-pointer border-none"
+ className="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-lg text-sm font-bold capitalize  cursor-pointer border-none"
  >
  Cancel
  </button>
@@ -1970,7 +1978,7 @@ export default function PsychologistDashboard({ setView }) {
  href={booking.meetLink}
  target="_blank"
  rel="noopener noreferrer"
- className="px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-black capitalize  transition cursor-pointer flex items-center gap-1.5 shadow-xs"
+ className="px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-bold capitalize  transition cursor-pointer flex items-center gap-1.5 shadow-xs"
  >
  <Video className="w-3.5 h-3.5 text-white" />
  <span>Join Meet</span>
@@ -1978,7 +1986,7 @@ export default function PsychologistDashboard({ setView }) {
  )}
  <button
  onClick={() => startEditMeetLink(booking)}
- className="px-4.5 py-3 bg-brand hover:bg-brand-dark text-zinc-955 rounded-lg text-sm font-black capitalize  transition cursor-pointer flex items-center gap-1 shadow-xs border-none font-extrabold"
+ className="px-4.5 py-3 bg-brand hover:bg-brand-dark text-zinc-955 rounded-lg text-sm font-bold capitalize  transition cursor-pointer flex items-center gap-1 shadow-xs border-none font-semibold"
  >
  <Edit className="w-3.5 h-3.5 text-zinc-955" />
  <span>{booking.meetLink ? 'Edit Link' : 'Set Meet Link'}</span>
@@ -2018,7 +2026,7 @@ export default function PsychologistDashboard({ setView }) {
  {/* Header */}
  <div className="flex items-center justify-between px-6 py-5 border-b border-zinc-800">
  <div>
- <h3 className="text-sm font-bold text-white capitalize  font-header font-black">My Profile</h3>
+ <h3 className="text-sm font-bold text-white capitalize  font-header font-bold">My Profile</h3>
  <p className="text-sm text-zinc-500 mt-0.5">Clinical Staff Profile</p>
  </div>
  <button
@@ -2031,12 +2039,12 @@ export default function PsychologistDashboard({ setView }) {
 
  {/* Avatar + Name */}
  <div className="px-6 py-6 flex flex-col items-center text-center space-y-3 border-b border-zinc-800">
- <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-600 to-indigo-400 text-white flex items-center justify-center font-header font-black text-2xl shadow-xl">
+ <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-600 to-indigo-400 text-white flex items-center justify-center font-header font-bold text-2xl shadow-xl">
  {(profile?.name || '').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
  </div>
  <div>
- <h2 className="text-base font-bold text-white capitalize tracking-wide font-header font-black">{profile.name}</h2>
- <span className="inline-block mt-1 text-sm px-2.5 py-1 rounded-full font-black capitalize  bg-indigo-950 border border-indigo-900 text-indigo-400 ">
+ <h2 className="text-base font-bold text-white capitalize tracking-wide font-header font-bold">{profile.name}</h2>
+ <span className="inline-block mt-1 text-sm px-2.5 py-1 rounded-full font-bold capitalize  bg-indigo-950 border border-indigo-900 text-indigo-400 ">
  Consultant Psychologist
  </span>
  </div>
@@ -2044,7 +2052,7 @@ export default function PsychologistDashboard({ setView }) {
 
  {/* Profile Details */}
  <div className="px-6 py-5 space-y-4 flex-1">
- <p className="text-sm font-black capitalize  text-zinc-500 ">Professional Details</p>
+ <p className="text-sm font-bold capitalize  text-zinc-500 ">Professional Details</p>
  <div className="bg-zinc-955/60 rounded-xl p-4 space-y-3 border border-zinc-800">
  <div className="flex items-start gap-3">
  <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center shrink-0 mt-0.5">
@@ -2087,7 +2095,7 @@ export default function PsychologistDashboard({ setView }) {
  {/* Specialties */}
  {profile.specialties && (
  <div className="space-y-2">
- <p className="text-sm font-black capitalize  text-zinc-500 ">Specialties</p>
+ <p className="text-sm font-bold capitalize  text-zinc-500 ">Specialties</p>
  <div className="flex flex-wrap gap-1.5">
  {profile.specialties.split(',').map((s, i) => (
  <span key={i} className="text-sm px-2 py-1 bg-indigo-955 border border-indigo-900 text-indigo-300 rounded-full font-semibold ">

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowLeft, Clock, Globe, Award, BookOpen, Calendar, MapPin, Heart, GraduationCap } from 'lucide-react';
+import { ChevronLeft, Clock, Globe, Award, BookOpen, Calendar, MapPin, Heart, GraduationCap } from 'lucide-react';
 import ApiService from '../services/api';
 
 export default function AdvisorProfile({ advisorId, onBack, onBook }) {
@@ -67,7 +67,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
   if (!advisor) {
     return (
       <div className="min-h-screen pt-32 pb-20 bg-zinc-50 text-center px-4">
-        <h2 className="text-2xl font-black mb-4 text-zinc-900">Therapist Not Found</h2>
+        <h2 className="text-2xl font-bold mb-4 text-zinc-900">Therapist Not Found</h2>
         <button
           type="button"
           onClick={onBack}
@@ -88,7 +88,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
           onClick={onBack}
           className="absolute top-20 md:top-32 left-4 md:left-10 z-10 min-h-[44px] flex items-center gap-2 px-4 py-2.5 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg text-xs font-bold capitalize  transition-all cursor-pointer shadow-sm"
         >
-          <ArrowLeft className="w-4 h-4" /> Back to Experts
+          <ChevronLeft className="w-4 h-4" /> Back to Experts
         </button>
       </div>
 
@@ -106,7 +106,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             <div className="space-y-4 flex-1">
               <div>
                 <div className="flex flex-wrap items-center gap-2.5 mb-1.5">
-                  <span className="px-3 py-1 bg-zinc-900 text-white text-xs font-black capitalize  rounded-md">
+                  <span className="px-3 py-1 bg-zinc-900 text-white text-xs font-bold capitalize  rounded-md">
                     Verified Expert
                   </span>
                   <span className="flex items-center gap-1 text-xs sm:text-xs font-bold text-zinc-500 capitalize">
@@ -122,21 +122,21 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
               <div className="flex flex-wrap items-center gap-4 sm:gap-6 pt-2">
                 <div className="flex flex-col">
                   <span className="text-xs text-zinc-500 font-bold capitalize  mb-1">Therapy Hours</span>
-                  <span className="flex items-center gap-1.5 text-xs sm:text-sm font-extrabold text-zinc-900">
+                  <span className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-zinc-900">
                     <Clock className="w-4 h-4 text-brand" /> {advisor.hours}+
                   </span>
                 </div>
                 <div className="w-px h-8 bg-zinc-200" aria-hidden="true"></div>
                 <div className="flex flex-col">
                   <span className="text-xs text-zinc-500 font-bold capitalize  mb-1">Languages</span>
-                  <span className="flex items-center gap-1.5 text-xs sm:text-sm font-extrabold text-zinc-900">
+                  <span className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-zinc-900">
                     <Globe className="w-4 h-4 text-brand" /> {advisor.lang}
                   </span>
                 </div>
                 <div className="w-px h-8 bg-zinc-200" aria-hidden="true"></div>
                 <div className="flex flex-col">
                   <span className="text-xs text-zinc-500 font-bold capitalize  mb-1">Session Fee</span>
-                  <span className="text-xs sm:text-sm font-extrabold text-zinc-900">
+                  <span className="text-xs sm:text-sm font-semibold text-zinc-900">
                     ₹{advisor.price.toLocaleString('en-IN')} / hr
                   </span>
                 </div>
@@ -154,7 +154,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             <div className="bg-white p-5 sm:p-6 md:p-8 rounded-lg border border-zinc-200 shadow-xs space-y-4">
               <div className="flex items-center gap-2 text-zinc-900">
                 <BookOpen className="w-5 h-5 text-brand" />
-                <h3 className="text-sm sm:text-lg font-black capitalize tracking-wide">About {advisor.name.split(' ')[0]}</h3>
+                <h3 className="text-sm sm:text-lg font-bold capitalize tracking-wide">About {advisor.name.split(' ')[0]}</h3>
               </div>
               <p className="text-zinc-600 leading-relaxed text-xs sm:text-sm md:text-base font-light">
                 {advisor.bio}
@@ -165,7 +165,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             <div className="bg-white p-5 sm:p-6 md:p-8 rounded-lg border border-zinc-200 shadow-xs space-y-5">
               <div className="flex items-center gap-2 text-zinc-900">
                 <Heart className="w-5 h-5 text-brand" />
-                <h3 className="text-sm sm:text-lg font-black capitalize tracking-wide">Core Specialties</h3>
+                <h3 className="text-sm sm:text-lg font-bold capitalize tracking-wide">Core Specialties</h3>
               </div>
               <div className="flex flex-wrap gap-3">
                 {advisor.specialties.map((spec, i) => (
@@ -180,7 +180,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             <div className="bg-white p-5 sm:p-6 md:p-8 rounded-lg border border-zinc-200 shadow-xs space-y-4">
               <div className="flex items-center gap-2 text-zinc-900">
                 <Award className="w-5 h-5 text-brand" />
-                <h3 className="text-sm sm:text-lg font-black capitalize tracking-wide">Qualifications</h3>
+                <h3 className="text-sm sm:text-lg font-bold capitalize tracking-wide">Qualifications</h3>
               </div>
               <div className="flex items-start gap-4 p-4 border border-zinc-200 rounded-lg bg-white">
                 <div className="w-10 h-10 rounded-lg bg-zinc-50 flex items-center justify-center shrink-0 text-zinc-600">
@@ -200,26 +200,26 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             <div className="lg:sticky lg:top-32 bg-white p-5 sm:p-6 rounded-lg border border-zinc-200 shadow-sm space-y-4 sm:space-y-6">
 
               <div>
-                <h3 className="text-lg sm:text-xl font-black text-zinc-900 capitalize tracking-wide mb-1">Book a Session</h3>
+                <h3 className="text-lg sm:text-xl font-bold text-zinc-900 capitalize tracking-wide mb-1">Book a Session</h3>
                 <p className="text-xs text-zinc-600">Schedule your 1-hour session directly with {advisor.name.split(' ')[0]}.</p>
               </div>
 
               <div className="p-3.5 sm:p-4 bg-zinc-50 border border-zinc-200 rounded-lg space-y-3">
                 <div className="flex justify-between items-center text-xs sm:text-sm">
                   <span className="text-zinc-600 font-semibold">Next Available</span>
-                  <span className="font-extrabold text-brand bg-brand-light border border-brand/20 px-2 py-0.5 rounded-md text-xs sm:text-xs">{advisor.nextAvailable}</span>
+                  <span className="font-semibold text-brand bg-brand-light border border-brand/20 px-2 py-0.5 rounded-md text-xs sm:text-xs">{advisor.nextAvailable}</span>
                 </div>
                 <div className="w-full h-px bg-zinc-200" aria-hidden="true"></div>
                 <div className="flex justify-between items-center text-xs sm:text-sm">
                   <span className="text-zinc-600 font-semibold">Session Fee</span>
-                  <span className="font-extrabold text-zinc-900">₹{advisor.price.toLocaleString('en-IN')}</span>
+                  <span className="font-semibold text-zinc-900">₹{advisor.price.toLocaleString('en-IN')}</span>
                 </div>
               </div>
 
               <button
                 type="button"
                 onClick={() => onBook(advisorId)}
-                className="min-h-[48px] w-full py-3.5 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg text-xs font-black capitalize  shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+                className="min-h-[48px] w-full py-3.5 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg text-xs font-bold capitalize  shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
                 <Calendar className="w-4 h-4" /> Book Now
               </button>

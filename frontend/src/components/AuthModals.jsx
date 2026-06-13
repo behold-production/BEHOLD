@@ -96,7 +96,7 @@ export default function AuthModals({ isOpen, onClose }) {
         {/* Header */}
         <div className="flex justify-between items-start gap-4 p-5 sm:p-6 border-b border-zinc-100">
           <div className="min-w-0">
-            <h2 id="auth-modal-title" className="text-xl sm:text-2xl font-header font-black tracking-tight text-zinc-900">
+            <h2 id="auth-modal-title" className="text-xl sm:text-2xl font-header font-bold tracking-tight text-zinc-900">
               {mode === 'login' ? 'Welcome Back' : 'Create Account'}
             </h2>
             <p className="text-xs text-zinc-500 font-medium mt-1">
@@ -202,7 +202,7 @@ export default function AuthModals({ isOpen, onClose }) {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3.5 min-h-[48px] bg-zinc-900 hover:bg-zinc-800 text-white font-extrabold text-xs capitalize  rounded-lg transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-sm"
+              className="w-full py-3.5 min-h-[48px] bg-zinc-900 hover:bg-zinc-800 text-white font-semibold text-xs capitalize  rounded-lg transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-sm"
             >
               {isLoading ? (
                 <Loader2 className="w-4 h-4 animate-spin text-white" />

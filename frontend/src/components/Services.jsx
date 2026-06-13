@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, LayoutGrid, List } from 'lucide-react';
+import { Search, LayoutGrid, List, ChevronRight } from 'lucide-react';
 import ApiService from '../services/api';
 
 export default function Services({ setView, onBookTherapist }) {
@@ -68,7 +68,8 @@ export default function Services({ setView, onBookTherapist }) {
   return (
     <section id="services" className="max-w-7xl mx-auto px-4 sm:px-6 py-12 text-zinc-900 text-left relative overflow-hidden">
       {/* Background radial soft light */}
-      <div className="absolute top-1/2 left-1/4 w-[350px] h-[350px] bg-brand-accent/5 rounded-lg glow-glow pointer-events-none" />
+      <div className="absolute top-1/2 left-1/4 w-[500px] h-[500px] bg-brand-accent/5 rounded-full blur-[100px] pointer-events-none mix-blend-multiply" />
+      <div className="absolute top-1/4 right-1/4 w-[400px] h-[400px] bg-brand/5 rounded-full blur-[100px] pointer-events-none mix-blend-multiply" />
 
       {/* DUAL COUPLING ROW */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-stretch w-full">
@@ -76,15 +77,17 @@ export default function Services({ setView, onBookTherapist }) {
         {/* SERVICE 2: CAREER MENTORING */}
         <div
           id="card-career"
-          className="card-luxury card-luxury-hover p-6 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none border border-zinc-200/60 min-h-[300px] md:min-h-[360px] group rounded-lg"
+          className="relative bg-white/70 backdrop-blur-2xl shadow-[0_8px_40px_-12px_rgba(0,0,0,0.1)] border border-white/60 hover:border-brand/20 p-6 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none group rounded-[2rem] transition-all duration-700 min-h-[300px] md:min-h-[360px] overflow-hidden"
         >
-          <div className="space-y-4">
+          {/* Decorative inner glow */}
+          <div className="absolute inset-0 bg-gradient-to-b from-white/60 to-transparent pointer-events-none" />
+          <div className="relative z-10 space-y-4">
             <div className="flex justify-between items-start">
               <div className="space-y-2">
-                <span className="inline-block text-xs bg-zinc-900 text-white px-2.5 py-0.5 rounded-md capitalize  font-black ">
+                <span className="inline-block text-sm sm:text-base bg-zinc-900 text-white px-4 py-1.5 rounded-md capitalize font-bold tracking-wide">
                   Career Mentoring
                 </span>
-                <h3 className="text-lg sm:text-xl md:text-2xl font-header font-black capitalize tracking-wide text-zinc-900 mt-1 group-hover:text-brand transition-colors duration-500">
+                <h3 className="text-lg sm:text-xl md:text-2xl font-header font-bold capitalize tracking-wide text-zinc-900 mt-1 group-hover:text-brand transition-colors duration-500">
                   Career Clarity & Direction
                 </h3>
                 <h4 className="text-xs font-bold text-zinc-400 italic mt-0.5">
@@ -110,7 +113,7 @@ export default function Services({ setView, onBookTherapist }) {
               }
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className="min-h-[44px] px-6 py-3 bg-white hover:bg-gradient-brand hover:text-zinc-950 hover:border-transparent border border-zinc-200 rounded-lg text-xs font-bold capitalize  transition-all duration-200 cursor-pointer w-full sm:w-auto text-center shadow-xs hover:shadow-md text-zinc-800"
+            className="relative z-10 min-h-[52px] px-8 py-3.5 bg-zinc-900 text-white hover:bg-gradient-brand hover:text-zinc-950 hover:border-transparent border border-zinc-900 rounded-xl text-sm font-bold tracking-wide transition-all duration-300 cursor-pointer w-full sm:w-auto text-center shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98]"
           >
             Book a Career Mentoring Session
           </button>
@@ -119,15 +122,17 @@ export default function Services({ setView, onBookTherapist }) {
         {/* SERVICE 3: PSYCHOLOGICAL COUNSELLING */}
         <div
           id="card-mental"
-          className="card-luxury card-luxury-hover p-6 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none border border-zinc-200/60 min-h-[300px] md:min-h-[360px] group rounded-lg"
+          className="relative bg-white/70 backdrop-blur-2xl shadow-[0_8px_40px_-12px_rgba(0,0,0,0.1)] border border-white/60 hover:border-brand/20 p-6 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none group rounded-[2rem] transition-all duration-700 min-h-[300px] md:min-h-[360px] overflow-hidden"
         >
-          <div className="space-y-4">
+          {/* Decorative inner glow */}
+          <div className="absolute inset-0 bg-gradient-to-b from-white/60 to-transparent pointer-events-none" />
+          <div className="relative z-10 space-y-4">
             <div className="flex justify-between items-start">
               <div className="space-y-2">
-                <span className="inline-block text-xs bg-zinc-900 text-white px-2.5 py-0.5 rounded-md capitalize  font-black ">
+                <span className="inline-block text-sm sm:text-base bg-zinc-900 text-white px-4 py-1.5 rounded-md capitalize font-bold tracking-wide">
                   Psychological Counselling
                 </span>
-                <h3 className="text-lg sm:text-xl md:text-2xl font-header font-black capitalize tracking-wide text-zinc-900 mt-1 group-hover:text-brand transition-colors duration-500">
+                <h3 className="text-lg sm:text-xl md:text-2xl font-header font-bold capitalize tracking-wide text-zinc-900 mt-1 group-hover:text-brand transition-colors duration-500">
                   Emotional Wellbeing & Support
                 </h3>
                 <h4 className="text-xs font-bold text-zinc-400 italic mt-0.5">
@@ -153,9 +158,10 @@ export default function Services({ setView, onBookTherapist }) {
               }
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className="min-h-[44px] px-6 py-3 bg-white hover:bg-gradient-brand hover:text-zinc-950 hover:border-transparent border border-zinc-200 rounded-lg text-xs font-bold capitalize  transition-all duration-200 cursor-pointer w-full sm:w-auto text-center shadow-xs hover:shadow-md text-zinc-800"
+            className="relative z-10 min-h-[52px] px-8 py-3.5 bg-zinc-900 text-white hover:bg-gradient-brand hover:text-zinc-950 hover:border-transparent border border-zinc-900 rounded-xl text-sm font-bold tracking-wide transition-all duration-300 cursor-pointer w-full sm:w-auto flex justify-center items-center gap-2 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98]"
           >
-            Talk to a Counsellor →
+            <span>Talk to a Counsellor</span>
+            <ChevronRight className="w-4 h-4" />
           </button>
         </div>
 
@@ -164,10 +170,10 @@ export default function Services({ setView, onBookTherapist }) {
       {/* OUR EXPERTS SECTION */}
       <div id="our-experts" className="mt-12 md:mt-16 space-y-8">
         <div className="text-center space-y-2">
-          <span className="text-xs bg-brand-light text-brand-dark border border-brand/20 px-3.5 py-1 rounded-md capitalize  font-extrabold w-fit mx-auto block">
-            our experts
+          <span className="text-xs bg-brand-light text-brand-dark border border-brand/20 px-3.5 py-1 rounded-full uppercase tracking-wider font-bold w-fit mx-auto block">
+            Our Experts
           </span>
-          <h2 className="text-2xl md:text-3xl font-header font-black capitalize tracking-wide text-zinc-900">
+          <h2 className="text-2xl md:text-3xl font-header font-bold tracking-tight text-zinc-900">
             Meet Our Professionals
           </h2>
           <p className="text-zinc-600 font-sans text-sm font-light max-w-2xl mx-auto">
@@ -176,30 +182,30 @@ export default function Services({ setView, onBookTherapist }) {
         </div>
 
         {/* Dashboard-Style Toolbar */}
-        <div className="bg-white/40 backdrop-blur-md border border-zinc-200/50 p-3 sm:p-4 rounded-lg flex flex-col min-[900px]:flex-row gap-3.5 sm:gap-4 w-full shadow-xs">
+        <div className="bg-white border border-zinc-200 p-3 sm:p-4 rounded-2xl flex flex-col xl:flex-row xl:items-center gap-3 sm:gap-4 w-full shadow-sm">
           {/* Search Box */}
-          <div className="relative w-full min-[900px]:max-w-[280px] shrink-0">
+          <div className="relative w-full xl:w-[260px] shrink-0">
             <input
               type="text"
               placeholder="Search experts or skills..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 min-h-[44px] border border-zinc-200 rounded-lg text-sm font-bold focus:outline-none focus:border-brand shadow-xs bg-white text-zinc-900 transition hover:border-zinc-300"
+              className="w-full pl-10 pr-4 min-h-[44px] border border-zinc-200 rounded-xl text-sm font-bold focus:outline-none focus:border-brand shadow-xs bg-zinc-50 text-zinc-900 transition hover:border-zinc-300"
             />
             <Search className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
           </div>
 
-          {/* Filter Tabs - scrollable horizontally on mobile */}
-          <div className="flex flex-row overflow-x-auto scrollbar-none snap-x gap-1.5 sm:gap-2 w-full flex-1 pb-1 shrink-0">
+          {/* Filter Tabs - scrollable horizontally on all sizes if needed */}
+          <div className="flex flex-row overflow-x-auto scrollbar-none snap-x gap-2 w-full flex-1 pb-1 xl:pb-0 min-w-0">
             {['All', 'Consultant Psychologist', 'Clinical Psychologist', 'Psychiatrist', 'Career Mentor'].map(filter => (
               <button
                 key={filter}
                 type="button"
                 onClick={() => setActiveFilter(filter)}
-                className={`flex items-center justify-center gap-1.5 px-3 min-h-[40px] sm:px-4 sm:min-h-[44px] border rounded-lg text-xs sm:text-sm font-bold whitespace-nowrap shadow-xs transition-all duration-300 cursor-pointer shrink-0 snap-start ${
+                className={`flex items-center justify-center gap-1.5 px-4 min-h-[44px] border rounded-xl text-sm font-bold whitespace-nowrap shadow-xs transition-all duration-300 cursor-pointer shrink-0 snap-start ${
                   activeFilter === filter
-                    ? 'border-brand/40 bg-brand/10 text-brand-dark shadow-xs shadow-brand/10'
-                    : 'border-zinc-200 bg-white text-zinc-650 hover:border-zinc-300 hover:text-zinc-900'
+                    ? 'border-brand/40 bg-brand/10 text-brand-dark shadow-xs'
+                    : 'border-zinc-200 bg-white text-zinc-650 hover:border-zinc-300 hover:text-zinc-900 hover:bg-zinc-50'
                 }`}
               >
                 {filter === 'All' ? 'All Roles' : filter}
@@ -208,12 +214,12 @@ export default function Services({ setView, onBookTherapist }) {
           </div>
 
           {/* Sort Selector & Grid/List View Toggles */}
-          <div className="flex items-center gap-2 w-full min-[900px]:w-auto shrink-0">
-            <div className="relative flex-1 min-[900px]:w-[190px] shrink-0">
+          <div className="flex items-center justify-between sm:justify-start gap-3 w-full xl:w-auto shrink-0">
+            <div className="relative flex-1 sm:w-[200px] shrink-0">
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="w-full px-4 pr-10 min-h-[44px] border border-zinc-200 rounded-lg text-sm font-bold bg-white text-zinc-650 focus:outline-none focus:border-brand shadow-xs cursor-pointer appearance-none hover:border-zinc-300 transition-all"
+                className="w-full px-4 pr-10 min-h-[44px] border border-zinc-200 rounded-xl text-sm font-bold bg-white text-zinc-650 focus:outline-none focus:border-brand shadow-xs cursor-pointer appearance-none hover:border-zinc-300 transition-all"
               >
                 <option value="Recommended">Sort: Recommended</option>
                 <option value="Price: Low to High">Price: Low to High</option>
@@ -221,16 +227,16 @@ export default function Services({ setView, onBookTherapist }) {
                 <option value="Experience">Experience (Most Hours)</option>
               </select>
               <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-400">
-                <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" /></svg>
+                <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" /></svg>
               </div>
             </div>
 
-            <div className="flex border border-zinc-200 rounded-lg overflow-hidden bg-white shrink-0 shadow-xs">
+            <div className="flex border border-zinc-200 rounded-xl overflow-hidden bg-white shrink-0 shadow-xs">
               <button
                 type="button"
                 onClick={() => setViewMode('grid')}
                 aria-label="Grid view"
-                className={`w-11 h-11 sm:w-11 sm:h-11 transition-colors cursor-pointer flex items-center justify-center ${viewMode === 'grid' ? 'bg-zinc-900 text-brand' : 'text-zinc-400 hover:text-zinc-900 hover:bg-zinc-50'}`}
+                className={`w-11 h-11 transition-colors cursor-pointer flex items-center justify-center ${viewMode === 'grid' ? 'bg-zinc-900 text-brand' : 'text-zinc-400 hover:text-zinc-900 hover:bg-zinc-50'}`}
                 title="Grid View"
               >
                 <LayoutGrid className="w-4 h-4" />
@@ -239,7 +245,7 @@ export default function Services({ setView, onBookTherapist }) {
                 type="button"
                 onClick={() => setViewMode('list')}
                 aria-label="List view"
-                className={`w-11 h-11 sm:w-11 sm:h-11 transition-colors cursor-pointer flex items-center justify-center ${viewMode === 'list' ? 'bg-zinc-900 text-brand' : 'text-zinc-400 hover:text-zinc-900 hover:bg-zinc-50'}`}
+                className={`w-11 h-11 transition-colors cursor-pointer flex items-center justify-center ${viewMode === 'list' ? 'bg-zinc-900 text-brand' : 'text-zinc-400 hover:text-zinc-900 hover:bg-zinc-50'}`}
                 title="List View"
               >
                 <List className="w-4 h-4" />
@@ -254,31 +260,31 @@ export default function Services({ setView, onBookTherapist }) {
             {filteredAndSortedAdvisors.slice(0, visibleCount).map(advisor => (
               <div 
                 key={advisor.id}
-                className="bg-white/80 backdrop-blur-md border border-zinc-200 rounded-lg shadow-xs hover:shadow-xl hover:-translate-y-1.5 hover:border-brand/40 transition-all duration-300 flex flex-col overflow-hidden group"
+                className="bg-white border border-zinc-200 rounded-2xl shadow-sm hover:shadow-lg hover:-translate-y-1 hover:border-brand/40 transition-all duration-300 flex flex-col overflow-hidden group"
               >
                 {/* Profile Card Header */}
-                <div className="p-4.5 sm:p-6 flex items-start gap-4 border-b border-zinc-100 bg-gradient-to-br from-white to-zinc-50/50">
-                  <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg bg-brand/10 border border-brand/20 text-brand-dark flex items-center justify-center font-black text-lg sm:text-xl shadow-inner shrink-0 group-hover:scale-105 transition-transform duration-300">
+                <div className="p-5 sm:p-6 flex items-start gap-4 border-b border-zinc-100 bg-gradient-to-b from-zinc-50/50 to-white">
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-brand/10 text-brand-dark flex items-center justify-center font-bold text-xl sm:text-2xl shrink-0 group-hover:scale-105 transition-transform duration-300">
                     {advisor.name.charAt(0)}
                   </div>
-                  <div className="flex flex-col text-left space-y-1.5 flex-1 min-w-0">
-                    <h4 className="font-header font-black text-zinc-900 text-base sm:text-lg leading-tight truncate group-hover:text-brand transition-colors duration-300">
+                  <div className="flex flex-col text-left space-y-1 flex-1 min-w-0 pt-1">
+                    <h4 className="font-header font-bold text-zinc-900 text-lg sm:text-xl leading-tight truncate group-hover:text-brand transition-colors duration-300">
                       {advisor.name}
                     </h4>
-                    <span className="inline-block text-xs sm:text-xs bg-zinc-900 text-white px-2.5 py-0.5 rounded-md capitalize  font-extrabold  w-fit">
+                    <span className="inline-block text-xs bg-zinc-100 text-zinc-600 px-2 py-0.5 rounded-md font-medium w-fit">
                       {advisor.role}
                     </span>
                   </div>
                 </div>
 
                 {/* Specialties Pills */}
-                <div className="p-4.5 sm:px-6 sm:py-4 border-b border-zinc-100 bg-white flex-1 flex flex-col justify-center">
-                  <span className="text-xs sm:text-xs capitalize  font-bold text-zinc-500 mb-2 block text-left">Specialities</span>
-                  <div className="flex flex-wrap gap-1.5">
+                <div className="p-5 sm:p-6 border-b border-zinc-100 bg-white flex-1 flex flex-col justify-center">
+                  <span className="text-xs font-medium text-zinc-400 mb-2.5 block text-left uppercase tracking-wider">Specialties</span>
+                  <div className="flex flex-wrap gap-2">
                     {advisor.specialties.map((spec, i) => (
                       <span
                         key={i}
-                        className="px-2.5 py-1 border border-zinc-100 bg-zinc-50/50 text-xs sm:text-xs font-semibold text-zinc-650 rounded-md"
+                        className="px-2.5 py-1 bg-zinc-50 border border-zinc-200 text-xs font-medium text-zinc-600 rounded-md"
                       >
                         {spec}
                       </span>
@@ -287,38 +293,38 @@ export default function Services({ setView, onBookTherapist }) {
                 </div>
 
                 {/* Stats Panel */}
-                <div className="grid grid-cols-3 gap-2 p-4 sm:px-6 sm:py-4 border-b border-zinc-100 bg-zinc-50/30">
-                  <div className="flex flex-col items-center justify-center text-center">
-                    <span className="font-black text-zinc-900 text-sm sm:text-base tracking-tight">{advisor.hours.toLocaleString()}+</span>
-                    <span className="text-xs sm:text-xs text-zinc-500 font-bold capitalize  mt-0.5">Therapy hrs</span>
+                <div className="grid grid-cols-3 gap-0 p-4 sm:p-5 border-b border-zinc-100 bg-zinc-50/50 divide-x divide-zinc-200">
+                  <div className="flex flex-col items-center justify-center text-center px-2">
+                    <span className="font-bold text-zinc-900 text-sm sm:text-base tracking-tight">{advisor.hours.toLocaleString()}+</span>
+                    <span className="text-[11px] sm:text-xs text-zinc-500 font-medium mt-0.5">Therapy hrs</span>
                   </div>
-                  <div className="flex flex-col items-center justify-center text-center border-x border-zinc-200">
-                    <span className="font-black text-zinc-900 text-sm sm:text-base tracking-tight">{advisor.lang}</span>
-                    <span className="text-xs sm:text-xs text-zinc-500 font-bold capitalize  mt-0.5">Language</span>
+                  <div className="flex flex-col items-center justify-center text-center px-2">
+                    <span className="font-bold text-zinc-900 text-sm sm:text-base tracking-tight truncate max-w-full">{advisor.lang}</span>
+                    <span className="text-[11px] sm:text-xs text-zinc-500 font-medium mt-0.5">Language</span>
                   </div>
-                  <div className="flex flex-col items-center justify-center text-center">
-                    <span className="font-black text-zinc-900 text-sm sm:text-base tracking-tight">₹{advisor.price.toLocaleString('en-IN')}</span>
-                    <span className="text-xs sm:text-xs text-zinc-500 font-bold capitalize  mt-0.5">Session</span>
+                  <div className="flex flex-col items-center justify-center text-center px-2">
+                    <span className="font-bold text-zinc-900 text-sm sm:text-base tracking-tight">₹{advisor.price.toLocaleString('en-IN')}</span>
+                    <span className="text-[11px] sm:text-xs text-zinc-500 font-medium mt-0.5">Per session</span>
                   </div>
                 </div>
 
                 {/* Card Action Footer */}
-                <div className="p-4.5 sm:p-6 bg-white flex flex-col space-y-4 mt-auto">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-xs sm:text-xs text-zinc-500 font-bold capitalize ">Availability</span>
-                    <div className="flex items-center gap-1.5">
+                <div className="p-5 sm:p-6 bg-white flex flex-col space-y-4 mt-auto">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-zinc-500 font-medium">Next available</span>
+                    <div className="flex items-center gap-1.5 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">
                       <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-                      <span className="font-bold text-zinc-700 text-xs sm:text-sm">{advisor.nextAvailable}</span>
+                      <span className="font-medium text-emerald-700 text-[11px] sm:text-xs">{advisor.nextAvailable}</span>
                     </div>
                   </div>
 
-                  <div className="flex gap-2 w-full pt-1">
+                  <div className="flex gap-2.5 w-full pt-1">
                     <button
                       type="button"
                       onClick={() => window.spaNavigate(`/advisor/${advisor.id}`)}
-                      className="flex-1 min-h-[44px] py-2.5 sm:py-3 border border-zinc-200 hover:border-zinc-900 rounded-lg text-xs sm:text-xs font-black text-zinc-900 capitalize  transition-all duration-200 cursor-pointer active:scale-95 text-center bg-white flex items-center justify-center"
+                      className="flex-1 min-h-[44px] py-2.5 border border-zinc-200 hover:border-zinc-300 hover:bg-zinc-50 rounded-xl text-xs sm:text-sm font-semibold text-zinc-700 transition-all duration-200 cursor-pointer active:scale-95 text-center bg-white flex items-center justify-center"
                     >
-                      Profile
+                      View Profile
                     </button>
                     <button
                       type="button"
@@ -330,44 +336,45 @@ export default function Services({ setView, onBookTherapist }) {
                         }
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                       }}
-                      className="flex-1 min-h-[44px] py-2.5 sm:py-3 bg-gradient-brand hover:opacity-95 hover:scale-[1.01] text-zinc-955 rounded-lg text-xs sm:text-xs font-black  capitalize transition-all duration-200 cursor-pointer active:scale-95 shadow-xs border-none flex items-center justify-center"
+                      className="flex-1 min-h-[44px] py-2.5 bg-zinc-900 hover:bg-zinc-800 text-white rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer active:scale-95 shadow-sm border-none flex items-center justify-center"
                     >
-                      Book Now
+                      Book Session
                     </button>
                   </div>
                 </div>
               </div>
             ))}
-          </div>          ) : (
+          </div>
+        ) : (
           <div className="flex flex-col gap-4">
             {filteredAndSortedAdvisors.slice(0, visibleCount).map(advisor => (
               <div 
                 key={advisor.id}
-                className="bg-white/80 backdrop-blur-md border border-zinc-200 rounded-lg shadow-xs hover:shadow-xl hover:border-brand/40 transition-all duration-300 flex flex-col lg:flex-row items-stretch overflow-hidden group"
+                className="bg-white border border-zinc-200 rounded-2xl shadow-sm hover:shadow-lg hover:border-brand/40 transition-all duration-300 flex flex-col lg:flex-row items-stretch overflow-hidden group"
               >
                 {/* Left Column: Avatar & Name */}
-                <div className="p-4.5 sm:p-6 flex items-center gap-4 bg-gradient-to-br from-white to-zinc-50/50 border-b lg:border-b-0 lg:border-r border-zinc-100 flex-1 lg:flex-initial lg:basis-1/4 shrink-0">
-                  <div className="w-12 h-12 rounded-lg bg-brand/10 border border-brand/20 text-brand-dark flex items-center justify-center font-black text-lg shadow-inner shrink-0 group-hover:scale-105 transition-transform duration-300">
+                <div className="p-5 sm:p-6 flex items-center gap-4 bg-gradient-to-br from-zinc-50/50 to-white border-b lg:border-b-0 lg:border-r border-zinc-100 flex-1 lg:flex-initial lg:basis-[28%] shrink-0">
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-brand/10 text-brand-dark flex items-center justify-center font-bold text-xl sm:text-2xl shadow-inner shrink-0 group-hover:scale-105 transition-transform duration-300">
                     {advisor.name.charAt(0)}
                   </div>
-                  <div className="flex flex-col text-left space-y-1.5 min-w-0">
-                    <h4 className="font-header font-black text-zinc-900 text-base sm:text-lg leading-tight truncate group-hover:text-brand transition-colors duration-300">
+                  <div className="flex flex-col text-left space-y-1 min-w-0">
+                    <h4 className="font-header font-bold text-zinc-900 text-lg sm:text-xl leading-tight truncate group-hover:text-brand transition-colors duration-300">
                       {advisor.name}
                     </h4>
-                    <span className="inline-block text-xs sm:text-xs bg-zinc-900 text-white px-2.5 py-0.5 rounded-md capitalize  font-extrabold  w-fit">
+                    <span className="inline-block text-xs bg-zinc-100 text-zinc-600 px-2 py-0.5 rounded-md font-medium w-fit">
                       {advisor.role}
                     </span>
                   </div>
                 </div>
 
                 {/* Middle Column: Specialties */}
-                <div className="p-4.5 sm:p-6 flex-[2] flex flex-col justify-center border-b lg:border-b-0 lg:border-r border-zinc-100 bg-white">
-                  <span className="text-xs sm:text-xs capitalize  font-bold text-zinc-550 mb-2 block text-left">Specialities</span>
-                  <div className="flex flex-wrap gap-1.5">
+                <div className="p-5 sm:p-6 flex-[2] flex flex-col justify-center border-b lg:border-b-0 lg:border-r border-zinc-100 bg-white">
+                  <span className="text-xs font-medium text-zinc-400 mb-2.5 block text-left uppercase tracking-wider">Specialties</span>
+                  <div className="flex flex-wrap gap-2">
                     {advisor.specialties.map((spec, i) => (
                       <span
                         key={i}
-                        className="px-2.5 py-1 border border-zinc-100 bg-zinc-50/50 text-xs sm:text-xs font-semibold text-zinc-650 rounded-md"
+                        className="px-2.5 py-1 bg-zinc-50 border border-zinc-200 text-xs font-medium text-zinc-600 rounded-md"
                       >
                         {spec}
                       </span>
@@ -376,38 +383,38 @@ export default function Services({ setView, onBookTherapist }) {
                 </div>
 
                 {/* Stats & Info Panel */}
-                <div className="grid grid-cols-3 lg:flex lg:flex-col lg:items-start lg:justify-center gap-4 lg:gap-3 p-4.5 sm:p-6 bg-zinc-50/20 flex-1 lg:flex-initial lg:basis-1/4 shrink-0 border-b lg:border-b-0 lg:border-r border-zinc-100">
-                  <div className="flex flex-col lg:flex-row lg:items-center gap-1 sm:gap-1.5 text-center lg:text-left w-full">
-                    <span className="font-black text-zinc-900 text-sm sm:text-base tracking-tight">{advisor.hours.toLocaleString()}+</span>
-                    <span className="text-xs sm:text-xs text-zinc-500 font-bold capitalize  lg:normal-case lg:text-zinc-500 lg:font-semibold">therapy hrs</span>
+                <div className="grid grid-cols-3 lg:flex lg:flex-col lg:items-start lg:justify-center gap-0 lg:gap-3 p-0 sm:p-0 lg:p-6 bg-zinc-50/50 flex-1 lg:flex-initial lg:basis-[20%] shrink-0 border-b lg:border-b-0 lg:border-r border-zinc-100 divide-x divide-zinc-200 lg:divide-x-0">
+                  <div className="flex flex-col lg:flex-row lg:items-center gap-0.5 sm:gap-1.5 text-center lg:text-left w-full py-4 lg:py-0 px-2 lg:px-0">
+                    <span className="font-bold text-zinc-900 text-sm sm:text-base tracking-tight">{advisor.hours.toLocaleString()}+</span>
+                    <span className="text-[11px] sm:text-xs text-zinc-500 font-medium lg:font-medium">therapy hrs</span>
                   </div>
-                  <div className="flex flex-col lg:flex-row lg:items-center gap-1 sm:gap-1.5 text-center lg:text-left border-x border-zinc-200 lg:border-x-0 w-full px-1 lg:px-0">
-                    <span className="font-black text-zinc-900 text-sm sm:text-base tracking-tight truncate max-w-[120px] lg:max-w-none">{advisor.lang}</span>
-                    <span className="text-xs sm:text-xs text-zinc-500 font-bold capitalize  lg:normal-case lg:text-zinc-500 lg:font-semibold">language</span>
+                  <div className="flex flex-col lg:flex-row lg:items-center gap-0.5 sm:gap-1.5 text-center lg:text-left w-full py-4 lg:py-0 px-2 lg:px-0">
+                    <span className="font-bold text-zinc-900 text-sm sm:text-base tracking-tight truncate max-w-full">{advisor.lang}</span>
+                    <span className="text-[11px] sm:text-xs text-zinc-500 font-medium lg:font-medium">language</span>
                   </div>
-                  <div className="flex flex-col lg:flex-row lg:items-center gap-1 sm:gap-1.5 text-center lg:text-left w-full">
-                    <span className="font-black text-zinc-900 text-sm sm:text-base tracking-tight">₹{advisor.price.toLocaleString('en-IN')}</span>
-                    <span className="text-xs sm:text-xs text-zinc-500 font-bold capitalize  lg:normal-case lg:text-zinc-500 lg:font-semibold">/ session</span>
+                  <div className="flex flex-col lg:flex-row lg:items-center gap-0.5 sm:gap-1.5 text-center lg:text-left w-full py-4 lg:py-0 px-2 lg:px-0">
+                    <span className="font-bold text-zinc-900 text-sm sm:text-base tracking-tight">₹{advisor.price.toLocaleString('en-IN')}</span>
+                    <span className="text-[11px] sm:text-xs text-zinc-500 font-medium lg:font-medium">/ session</span>
                   </div>
                 </div>
 
                 {/* Right Column: Actions */}
-                <div className="p-4.5 sm:p-6 bg-white flex-1 lg:flex-initial lg:basis-1/5 shrink-0 flex flex-col justify-center space-y-3.5 mt-auto lg:mt-0">
-                  <div className="flex items-center justify-between lg:justify-center gap-2 text-xs">
-                    <span className="text-xs sm:text-xs text-zinc-500 font-bold capitalize  lg:hidden">Availability</span>
-                    <div className="flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-                      <span className="font-bold text-zinc-700 text-xs sm:text-sm">{advisor.nextAvailable}</span>
+                <div className="p-5 sm:p-6 bg-white flex-1 lg:flex-initial lg:basis-[22%] shrink-0 flex flex-col justify-center space-y-4 mt-auto lg:mt-0">
+                  <div className="flex items-center justify-between lg:justify-center gap-2">
+                    <span className="text-xs text-zinc-500 font-medium lg:hidden">Next available</span>
+                    <div className="flex items-center gap-1.5 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100 lg:w-full lg:justify-center">
+                      <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse shrink-0" />
+                      <span className="font-medium text-emerald-700 text-[11px] sm:text-xs text-center">{advisor.nextAvailable}</span>
                     </div>
                   </div>
 
-                  <div className="flex lg:flex-col gap-2 w-full">
+                  <div className="flex lg:flex-col gap-2.5 w-full">
                     <button
                       type="button"
                       onClick={() => window.spaNavigate(`/advisor/${advisor.id}`)}
-                      className="flex-1 min-h-[44px] py-2.5 border border-zinc-200 hover:border-zinc-900 rounded-lg text-xs sm:text-xs font-black text-zinc-900 capitalize  transition-all duration-200 cursor-pointer active:scale-95 text-center bg-white flex items-center justify-center"
+                      className="flex-1 min-h-[44px] py-2.5 border border-zinc-200 hover:border-zinc-300 hover:bg-zinc-50 rounded-xl text-xs sm:text-sm font-semibold text-zinc-700 transition-all duration-200 cursor-pointer active:scale-95 text-center bg-white flex items-center justify-center"
                     >
-                      Profile
+                      View Profile
                     </button>
                     <button
                       type="button"
@@ -419,9 +426,9 @@ export default function Services({ setView, onBookTherapist }) {
                         }
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                       }}
-                      className="flex-1 min-h-[44px] py-2.5 bg-gradient-brand hover:opacity-95 hover:scale-[1.01] text-zinc-955 rounded-lg text-xs sm:text-xs font-black  capitalize transition-all duration-200 cursor-pointer active:scale-95 shadow-xs border-none flex items-center justify-center"
+                      className="flex-1 min-h-[44px] py-2.5 bg-zinc-900 hover:bg-zinc-800 text-white rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer active:scale-95 shadow-sm border-none flex items-center justify-center"
                     >
-                      Book Now
+                      Book Session
                     </button>
                   </div>
                 </div>

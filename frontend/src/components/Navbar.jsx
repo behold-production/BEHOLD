@@ -129,7 +129,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
               {siteName || 'BEHOLD'}<span className="text-brand font-black">.</span>
             </span>
 
-            <nav className="hidden lg:flex items-center gap-8 text-xs font-semibold  text-zinc-500">
+            <nav className="hidden lg:flex items-center gap-8 text-sm font-bold text-zinc-500">
               <button
                 onClick={handleLogoClick}
                 className={`transition-all duration-300 cursor-pointer pb-1 relative capitalize ${currentView === '/' && (activeSection === 'home' || activeSection === 'cdat' || activeSection === '') ? 'text-zinc-900 font-bold' : 'hover:text-zinc-900'
@@ -187,7 +187,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                   onClick={() => setShowDropdown(!showDropdown)}
                   aria-label="Account menu"
                   aria-expanded={showDropdown}
-                  className="w-10 h-10 rounded-full overflow-hidden bg-brand/10 text-brand-dark font-black flex items-center justify-center capitalize  text-sm shadow-xs border border-brand/20 hover:scale-105 transition-transform cursor-pointer"
+                  className="w-10 h-10 rounded-full overflow-hidden bg-brand/10 text-brand-dark font-bold flex items-center justify-center capitalize  text-sm shadow-xs border border-brand/20 hover:scale-105 transition-transform cursor-pointer"
                 >
                   {user.image ? (
                     <img src={user.image} alt={user.name} className="w-full h-full object-cover" />
@@ -199,20 +199,20 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                 {showDropdown && (
                   <div className="absolute top-full right-0 mt-3 w-52 bg-white border border-zinc-200 shadow-xl rounded-lg overflow-hidden py-1 z-50 animate-in fade-in zoom-in-95 duration-200">
                     <div className="px-4 py-3 border-b border-zinc-150">
-                      <p className="text-xs font-bold text-zinc-900 truncate">{user.name}</p>
-                      <p className="text-xs text-zinc-500 truncate mt-0.5">{user.email}</p>
+                      <p className="text-sm font-bold text-zinc-900 truncate">{user.name}</p>
+                      <p className="text-sm text-zinc-500 truncate mt-0.5">{user.email}</p>
                     </div>
                     <button
                       type="button"
                       onClick={handleProfileClick}
-                      className="w-full text-left px-4 py-3 text-xs font-semibold text-zinc-650 hover:bg-zinc-50 hover:text-zinc-900 transition-colors flex items-center gap-2 cursor-pointer"
+                      className="w-full text-left px-4 py-3 text-sm font-semibold text-zinc-650 hover:bg-zinc-50 hover:text-zinc-900 transition-colors flex items-center gap-2 cursor-pointer"
                     >
                       <User className="w-3.5 h-3.5 text-zinc-400" /> Your Profile
                     </button>
                     <button
                       type="button"
                       onClick={() => { setShowDropdown(false); setIsLogoutConfirmOpen(true); }}
-                      className="w-full text-left px-4 py-3 text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-colors flex items-center gap-2 cursor-pointer"
+                      className="w-full text-left px-4 py-3 text-sm font-semibold text-rose-600 hover:bg-rose-50 transition-colors flex items-center gap-2 cursor-pointer"
                     >
                       <LogOut className="w-3.5 h-3.5 text-rose-500" /> Sign Out
                     </button>
@@ -223,7 +223,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
               <button
                 type="button"
                 onClick={onOpenAuth}
-                className="px-4 h-10 text-xs font-bold text-zinc-900 hover:text-brand transition-colors cursor-pointer capitalize  rounded-lg hover:bg-zinc-50 flex items-center"
+                className="px-4 h-10 text-sm font-bold text-zinc-900 hover:text-brand transition-colors cursor-pointer capitalize  rounded-lg hover:bg-zinc-50 flex items-center"
               >
                 Sign In
               </button>
@@ -232,7 +232,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
             <button
               type="button"
               onClick={() => navigate('/booking')}
-              className={`px-5 h-10 text-xs font-bold rounded-lg border transition-all duration-300 cursor-pointer flex items-center gap-1.5 capitalize  ${currentView === '/booking'
+              className={`px-5 h-10 text-sm font-bold rounded-lg border transition-all duration-300 cursor-pointer flex items-center gap-1.5 capitalize  ${currentView === '/booking'
                 ? 'bg-zinc-950 text-white border-zinc-950'
                 : 'bg-brand hover:bg-brand-dark text-zinc-900 shadow-xs border-brand/30'
                 }`}
@@ -251,7 +251,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                     onClick={() => setShowDropdown(!showDropdown)}
                     aria-label="Account menu"
                     aria-expanded={showDropdown}
-                    className="w-10 h-10 rounded-full overflow-hidden bg-brand/10 text-brand-dark font-black flex items-center justify-center capitalize  text-xs shadow-xs border border-brand/20 cursor-pointer"
+                    className="w-10 h-10 rounded-full overflow-hidden bg-brand/10 text-brand-dark font-bold flex items-center justify-center capitalize  text-sm shadow-xs border border-brand/20 cursor-pointer"
                   >
                     {user.image ? (
                       <img src={user.image} alt={user.name} className="w-full h-full object-cover" />
@@ -262,20 +262,20 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                   {showDropdown && (
                     <div className="absolute top-full right-0 mt-3 w-52 bg-white border border-zinc-200 shadow-xl rounded-lg overflow-hidden py-1 z-50 animate-in fade-in zoom-in-95 duration-200">
                       <div className="px-4 py-3 border-b border-zinc-150">
-                        <p className="text-xs font-bold text-zinc-900 truncate">{user.name}</p>
-                        <p className="text-xs text-zinc-500 truncate mt-0.5">{user.email}</p>
+                        <p className="text-sm font-bold text-zinc-900 truncate">{user.name}</p>
+                        <p className="text-sm text-zinc-500 truncate mt-0.5">{user.email}</p>
                       </div>
                       <button
                         type="button"
                         onClick={handleProfileClick}
-                        className="w-full text-left px-4 py-3 text-xs font-semibold text-zinc-650 hover:bg-zinc-50 hover:text-zinc-900 transition-colors flex items-center gap-2 cursor-pointer"
+                        className="w-full text-left px-4 py-3 text-sm font-semibold text-zinc-650 hover:bg-zinc-50 hover:text-zinc-900 transition-colors flex items-center gap-2 cursor-pointer"
                       >
                         <User className="w-3.5 h-3.5 text-zinc-400" /> Your Profile
                       </button>
                       <button
                         type="button"
                         onClick={() => { setShowDropdown(false); setIsLogoutConfirmOpen(true); }}
-                        className="w-full text-left px-4 py-3 text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-colors flex items-center gap-2 cursor-pointer"
+                        className="w-full text-left px-4 py-3 text-sm font-semibold text-rose-600 hover:bg-rose-50 transition-colors flex items-center gap-2 cursor-pointer"
                       >
                         <LogOut className="w-3.5 h-3.5 text-rose-500" /> Sign Out
                       </button>
@@ -336,8 +336,8 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
           <button
             type="button"
             onClick={handleLogoClick}
-            className={`w-full text-left px-3.5 py-3.5 rounded-lg text-xs font-bold capitalize  transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${currentView === '/' && (activeSection === 'home' || activeSection === 'cdat' || activeSection === '')
-              ? 'bg-brand/10 text-zinc-900 border-brand font-black'
+            className={`w-full text-left px-3.5 py-3.5 rounded-lg text-sm font-bold capitalize  transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${currentView === '/' && (activeSection === 'home' || activeSection === 'cdat' || activeSection === '')
+              ? 'bg-brand/10 text-zinc-900 border-brand font-bold'
               : 'text-zinc-650 hover:text-zinc-900 hover:bg-zinc-50 border-transparent'
               }`}
           >
@@ -348,8 +348,8 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
             <button
               type="button"
               onClick={() => scrollToSection('services')}
-              className={`w-full text-left px-3.5 py-3.5 rounded-lg text-xs font-bold capitalize  transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${activeSection === 'services' && currentView === '/'
-                ? 'bg-brand/10 text-zinc-900 border-brand font-black'
+              className={`w-full text-left px-3.5 py-3.5 rounded-lg text-sm font-bold capitalize  transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${activeSection === 'services' && currentView === '/'
+                ? 'bg-brand/10 text-zinc-900 border-brand font-bold'
                 : 'text-zinc-650 hover:text-zinc-900 hover:bg-zinc-50 border-transparent'
                 }`}
             >
@@ -360,8 +360,8 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
           <button
             type="button"
             onClick={() => { navigate('/sample-test'); setIsMenuOpen(false); }}
-            className={`w-full text-left px-3.5 py-3.5 rounded-lg text-xs font-bold capitalize  transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${currentView === '/sample-test'
-              ? 'bg-brand/10 text-zinc-900 border-brand font-black'
+            className={`w-full text-left px-3.5 py-3.5 rounded-lg text-sm font-bold capitalize  transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${currentView === '/sample-test'
+              ? 'bg-brand/10 text-zinc-900 border-brand font-bold'
               : 'text-zinc-650 hover:text-zinc-900 hover:bg-zinc-50 border-transparent'
               }`}
           >
@@ -371,8 +371,8 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
           <button
             type="button"
             onClick={() => scrollToSection('inquiry')}
-            className={`w-full text-left px-3.5 py-3.5 rounded-lg text-xs font-bold capitalize  transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${activeSection === 'inquiry' && currentView === '/'
-              ? 'bg-brand/10 text-zinc-900 border-brand font-black'
+            className={`w-full text-left px-3.5 py-3.5 rounded-lg text-sm font-bold capitalize  transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${activeSection === 'inquiry' && currentView === '/'
+              ? 'bg-brand/10 text-zinc-900 border-brand font-bold'
               : 'text-zinc-650 hover:text-zinc-900 hover:bg-zinc-50 border-transparent'
               }`}
           >
@@ -382,8 +382,8 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
           <button
             type="button"
             onClick={() => { navigate('/booking'); setIsMenuOpen(false); }}
-            className={`w-full text-left px-3.5 py-3.5 rounded-lg text-xs font-bold capitalize  transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${currentView === '/booking'
-              ? 'bg-brand/10 text-zinc-900 border-brand font-black'
+            className={`w-full text-left px-3.5 py-3.5 rounded-lg text-sm font-bold capitalize  transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${currentView === '/booking'
+              ? 'bg-brand/10 text-zinc-900 border-brand font-bold'
               : 'text-zinc-650 hover:text-zinc-900 hover:bg-zinc-50 border-transparent'
               }`}
           >
@@ -396,12 +396,12 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
           {user ? (
             <div className="bg-zinc-50 p-3 rounded-lg border border-zinc-200 flex flex-col gap-3">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-brand/10 text-brand-dark font-black flex items-center justify-center text-xs shrink-0 shadow-inner border border-brand/20">
+                <div className="w-9 h-9 rounded-full bg-brand/10 text-brand-dark font-bold flex items-center justify-center text-sm shrink-0 shadow-inner border border-brand/20">
                   {user.name.charAt(0).toUpperCase()}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs font-bold text-zinc-900 truncate leading-tight">{user.name}</p>
-                  <p className="text-xs text-zinc-500 truncate mt-0.5 leading-none">{user.email}</p>
+                  <p className="text-sm font-bold text-zinc-900 truncate leading-tight">{user.name}</p>
+                  <p className="text-sm text-zinc-500 truncate mt-0.5 leading-none">{user.email}</p>
                 </div>
               </div>
 
@@ -409,14 +409,14 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                 <button
                   type="button"
                   onClick={handleProfileClick}
-                  className="py-2.5 text-xs font-bold text-zinc-700 bg-white border border-zinc-200 hover:border-zinc-900 rounded-md transition-colors text-center cursor-pointer capitalize  min-h-[40px]"
+                  className="py-2.5 text-sm font-bold text-zinc-700 bg-white border border-zinc-200 hover:border-zinc-900 rounded-md transition-colors text-center cursor-pointer capitalize  min-h-[40px]"
                 >
                   Profile
                 </button>
                 <button
                   type="button"
                   onClick={() => { setIsLogoutConfirmOpen(true); setIsMenuOpen(false); }}
-                  className="py-2.5 text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 rounded-md transition-colors text-center cursor-pointer capitalize  flex items-center justify-center gap-1 min-h-[40px]"
+                  className="py-2.5 text-sm font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 rounded-md transition-colors text-center cursor-pointer capitalize  flex items-center justify-center gap-1 min-h-[40px]"
                 >
                   <LogOut className="w-3 h-3" /> Sign Out
                 </button>
@@ -426,7 +426,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
             <button
               type="button"
               onClick={() => { onOpenAuth(); setIsMenuOpen(false); }}
-              className="w-full py-3.5 bg-brand hover:bg-brand-dark text-zinc-900 font-extrabold text-xs capitalize  rounded-lg text-center transition cursor-pointer shadow-xs"
+              className="w-full py-3.5 bg-brand hover:bg-brand-dark text-zinc-900 font-semibold text-sm capitalize  rounded-lg text-center transition cursor-pointer shadow-xs"
             >
               Sign In to Account
             </button>
