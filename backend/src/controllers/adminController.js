@@ -4,10 +4,12 @@ const AdminController = {
   // Admin Dashboard Statistics
   async getDashboard(req, res, next) {
     try {
-      const users = await StorageService.findAll('users');
-      const counsellors = await StorageService.findAll('counsellors');
-      const appointments = await StorageService.findAll('appointments');
-      const sessions = await StorageService.findAll('sessions');
+      const [users, counsellors, appointments, sessions] = await Promise.all([
+        StorageService.findAll('users'),
+        StorageService.findAll('counsellors'),
+        StorageService.findAll('appointments'),
+        StorageService.findAll('sessions')
+      ]);
 
       const pendingRequests = counsellors.filter(c => !c.isVerified).length;
 

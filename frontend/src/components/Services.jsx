@@ -15,10 +15,12 @@ export default function Services({ setView, onBookTherapist }) {
   }, [searchTerm, activeFilter, sortBy]);
 
   const [advisors, setAdvisors] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchCounsellors = async () => {
       try {
+        setIsLoading(true);
         const res = await ApiService.getCounsellors();
         if (res.success && res.data) {
           const mapped = res.data.map(c => {
@@ -41,6 +43,8 @@ export default function Services({ setView, onBookTherapist }) {
         }
       } catch (err) {
         console.error("Failed to load counsellors from backend", err);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -255,7 +259,39 @@ export default function Services({ setView, onBookTherapist }) {
         </div>
 
         {/* Directory Grid / List */}
-        {viewMode === 'grid' ? (
+        {isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+            {[...Array(6)].map((_, i) => (
+              <div 
+                key={i}
+                className="bg-white border border-zinc-200 rounded-2xl shadow-sm flex flex-col overflow-hidden animate-pulse min-h-[300px]"
+              >
+                <div className="p-5 sm:p-6 flex items-start gap-4 border-b border-zinc-100 bg-gradient-to-b from-zinc-50/50 to-white">
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-zinc-200" />
+                  <div className="flex flex-col flex-1 space-y-3 pt-2">
+                    <div className="h-5 bg-zinc-200 rounded w-3/4" />
+                    <div className="h-4 bg-zinc-200 rounded w-1/2" />
+                  </div>
+                </div>
+                <div className="p-5 sm:p-6 flex-1 flex flex-col justify-center space-y-3 border-b border-zinc-100">
+                  <div className="h-3 bg-zinc-200 rounded w-1/4" />
+                  <div className="flex gap-2">
+                    <div className="h-6 bg-zinc-100 rounded w-20" />
+                    <div className="h-6 bg-zinc-100 rounded w-24" />
+                    <div className="h-6 bg-zinc-100 rounded w-16" />
+                  </div>
+                </div>
+                <div className="p-5 bg-white flex flex-col mt-auto space-y-4">
+                  <div className="h-3 bg-zinc-200 rounded w-1/3" />
+                  <div className="flex gap-2 w-full pt-1">
+                    <div className="h-10 bg-zinc-100 rounded-xl flex-1" />
+                    <div className="h-10 bg-zinc-200 rounded-xl flex-1" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : viewMode === 'grid' ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {filteredAndSortedAdvisors.slice(0, visibleCount).map(advisor => (
               <div 
@@ -437,13 +473,13 @@ export default function Services({ setView, onBookTherapist }) {
           </div>
         )}
 
-        {filteredAndSortedAdvisors.length === 0 && (
+        {!isLoading && filteredAndSortedAdvisors.length === 0 && (
           <div className="text-center py-12">
             <p className="text-zinc-400 font-bold text-sm capitalize ">No professionals found matching your criteria.</p>
           </div>
         )}
         
-        {filteredAndSortedAdvisors.length > visibleCount && (
+        {!isLoading && filteredAndSortedAdvisors.length > visibleCount && (
           <div className="flex justify-center mt-10">
             <button
               type="button"
