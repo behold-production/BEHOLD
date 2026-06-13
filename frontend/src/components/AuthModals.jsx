@@ -118,7 +118,7 @@ export default function AuthModals({ isOpen, onClose }) {
 
           {mode === 'register' && (
             <div className="space-y-1.5">
-              <label className="text-xs font-bold uppercase tracking-wider text-zinc-500 block">Full Name</label>
+              <label className="text-xs font-bold capitalize  text-zinc-500 block">Full Name</label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
                 <input
@@ -135,7 +135,7 @@ export default function AuthModals({ isOpen, onClose }) {
           )}
 
           <div className="space-y-1.5">
-            <label className="text-xs font-bold uppercase tracking-wider text-zinc-500 block">Email Address</label>
+            <label className="text-xs font-bold capitalize  text-zinc-500 block">Email Address</label>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
               <input
@@ -151,7 +151,7 @@ export default function AuthModals({ isOpen, onClose }) {
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-bold uppercase tracking-wider text-zinc-500 block">Password</label>
+            <label className="text-xs font-bold capitalize  text-zinc-500 block">Password</label>
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
               <input
@@ -176,7 +176,7 @@ export default function AuthModals({ isOpen, onClose }) {
 
           {mode === 'register' && (
             <div className="space-y-1.5">
-              <label className="text-xs font-bold uppercase tracking-wider text-zinc-500 block">Confirm Password</label>
+              <label className="text-xs font-bold capitalize  text-zinc-500 block">Confirm Password</label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
                 <input
@@ -202,7 +202,7 @@ export default function AuthModals({ isOpen, onClose }) {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3.5 min-h-[48px] bg-zinc-900 hover:bg-zinc-800 text-white font-extrabold text-xs uppercase tracking-widest rounded-lg transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-sm"
+              className="w-full py-3.5 min-h-[48px] bg-zinc-900 hover:bg-zinc-800 text-white font-extrabold text-xs capitalize  rounded-lg transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-sm"
             >
               {isLoading ? (
                 <Loader2 className="w-4 h-4 animate-spin text-white" />

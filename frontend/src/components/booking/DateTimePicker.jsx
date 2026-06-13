@@ -234,7 +234,7 @@ export default function DateTimePicker({
 
   const getChipClass = (targetStr) => {
     const isSelected = selectedDate === targetStr;
-    const base = "snap-start shrink-0 px-3.5 min-h-[40px] sm:min-h-[36px] rounded-full text-[11px] font-extrabold uppercase tracking-wider transition cursor-pointer flex items-center border";
+    const base = "snap-start shrink-0 px-3.5 min-h-[40px] sm:min-h-[36px] rounded-full text-xs font-extrabold capitalize  transition cursor-pointer flex items-center border";
     if (isSelected) {
       return `${base} bg-brand border-brand text-zinc-900 shadow-md ring-2 ring-brand/30 scale-105`;
     }
@@ -289,10 +289,10 @@ export default function DateTimePicker({
               ←
             </button>
             <div className="text-center">
-              <div className="text-xs sm:text-base font-extrabold text-zinc-900 uppercase tracking-wide truncate max-w-[140px] sm:max-w-none">
+              <div className="text-xs sm:text-base font-extrabold text-zinc-900 capitalize tracking-wide truncate max-w-[140px] sm:max-w-none">
                 {MONTH_LABELS[viewMonth]}
               </div>
-              <div className="text-[10px] text-zinc-500 font-bold tracking-widest uppercase">
+              <div className="text-xs text-zinc-500 font-bold  capitalize">
                 {viewYear}
               </div>
             </div>
@@ -308,7 +308,7 @@ export default function DateTimePicker({
 
           <div className="grid grid-cols-7 gap-1 mb-1.5">
             {WEEKDAY_LABELS.map(d => (
-              <div key={d} className="text-center text-[10px] font-extrabold uppercase tracking-wider text-zinc-500 py-1">
+              <div key={d} className="text-center text-xs font-extrabold capitalize  text-zinc-500 py-1">
                 {d}
               </div>
             ))}
@@ -372,7 +372,7 @@ export default function DateTimePicker({
             })}
           </div>
 
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 pt-4 mt-3 border-t border-zinc-100 text-[10px] font-bold uppercase tracking-wider text-zinc-600">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 pt-4 mt-3 border-t border-zinc-100 text-xs font-bold capitalize  text-zinc-600">
             <span className="flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> 3+ slots
             </span>
@@ -392,11 +392,11 @@ export default function DateTimePicker({
         <div className="lg:col-span-5 bg-white border border-zinc-200 rounded-xl p-4 sm:p-5 shadow-xs">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-1.5">
-              <span className="text-[11px] font-extrabold uppercase tracking-wider text-zinc-700">
+              <span className="text-xs font-extrabold capitalize  text-zinc-700">
                 Available Time Slots
               </span>
             </div>
-            <span className="text-[10px] font-extrabold text-brand-dark bg-brand-light border border-brand/20 px-2 py-0.5 rounded tracking-widest uppercase font-mono">
+            <span className="text-xs font-extrabold text-brand-dark bg-brand-light border border-brand/20 px-2 py-0.5 rounded  capitalize ">
               1 Hour
             </span>
           </div>
@@ -410,7 +410,7 @@ export default function DateTimePicker({
                   const meta = BUCKET_META[bucket];
                   return (
                     <div key={bucket} className="space-y-2">
-                      <div className={`flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-wider ${meta.color}`}>
+                      <div className={`flex items-center gap-1.5 text-xs font-extrabold capitalize  ${meta.color}`}>
                         <span>{meta.label}</span>
                         <span className="text-zinc-400">({items.length})</span>
                       </div>
@@ -422,7 +422,7 @@ export default function DateTimePicker({
                               key={time}
                               type="button"
                               onClick={() => onTimeChange(time)}
-                              className={`min-h-[48px] py-2.5 px-2 text-[11px] uppercase font-bold border rounded-lg transition cursor-pointer text-center ${
+                              className={`min-h-[48px] py-2.5 px-2 text-xs capitalize font-bold border rounded-lg transition cursor-pointer text-center ${
                                 isSelected
                                   ? 'bg-gradient-brand text-zinc-955 border-transparent shadow-xs font-black ring-1 ring-brand/40'
                                   : 'bg-white border-zinc-200 text-zinc-700 hover:border-brand/40 hover:bg-brand/5'
@@ -439,20 +439,20 @@ export default function DateTimePicker({
               </div>
             ) : (
               <div className="py-8 text-center space-y-2">
-                <p className="text-[11px] font-extrabold text-rose-600 uppercase tracking-wider">
+                <p className="text-xs font-extrabold text-rose-600 capitalize ">
                   No Slots Available
                 </p>
-                <p className="text-[11px] text-zinc-500 leading-relaxed px-4">
+                <p className="text-xs text-zinc-500 leading-relaxed px-4">
                   No advisors have availability on {formatHumanDate(selectedDate)}. Try a different day.
                 </p>
               </div>
             )
           ) : (
             <div className="py-10 text-center space-y-2">
-              <p className="text-[11px] font-extrabold text-zinc-500 uppercase tracking-wider">
+              <p className="text-xs font-extrabold text-zinc-500 capitalize ">
                 Pick a Date First
               </p>
-              <p className="text-[11px] text-zinc-400 leading-relaxed px-4">
+              <p className="text-xs text-zinc-400 leading-relaxed px-4">
                 Select a day on the calendar to see available 1-hour time slots.
               </p>
             </div>
@@ -465,13 +465,13 @@ export default function DateTimePicker({
         <div className="bg-gradient-to-br from-brand/8 via-white to-brand-accent/8 border border-brand/20 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-in slide-in-from-top-2 duration-300">
           <div className="flex items-start gap-3 text-left">
             <div>
-              <div className="text-[10px] font-extrabold uppercase tracking-widest text-brand-dark">
+              <div className="text-xs font-extrabold capitalize  text-brand-dark">
                 Your Selection
               </div>
               <div className="text-xs sm:text-sm font-extrabold text-zinc-900 mt-0.5">
                 {formatHumanDate(selectedDate)}
               </div>
-              <div className="text-[11px] text-zinc-600 font-mono mt-0.5">
+              <div className="text-xs text-zinc-600  mt-0.5">
                 {selectedTime
                   ? `${selectedTime} • ${bookingModeLabel(selectedMode)}`
                   : 'No time slot picked yet'}
@@ -482,7 +482,7 @@ export default function DateTimePicker({
             <button
               type="button"
               onClick={() => onTimeChange('')}
-              className="min-h-[36px] px-3 inline-flex items-center text-[10px] font-extrabold uppercase tracking-wider text-zinc-500 hover:text-rose-600 transition cursor-pointer self-start sm:self-auto"
+              className="min-h-[36px] px-3 inline-flex items-center text-xs font-extrabold capitalize  text-zinc-500 hover:text-rose-600 transition cursor-pointer self-start sm:self-auto"
             >
               Clear Time
             </button>
@@ -492,8 +492,8 @@ export default function DateTimePicker({
 
       {(errors.date || errors.time) && (
         <div className="space-y-1">
-          {errors.date && <p className="text-[11px] text-rose-500 font-bold" role="alert">{errors.date}</p>}
-          {errors.time && <p className="text-[11px] text-rose-500 font-bold" role="alert">{errors.time}</p>}
+          {errors.date && <p className="text-xs text-rose-500 font-bold" role="alert">{errors.date}</p>}
+          {errors.time && <p className="text-xs text-rose-500 font-bold" role="alert">{errors.time}</p>}
         </div>
       )}
     </div>

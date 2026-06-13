@@ -157,10 +157,10 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
         <div className="p-5 sm:p-8 space-y-4">
           <div className="flex items-center gap-3 pr-10 text-left font-sans">
             <div className="min-w-0">
-              <h3 id="booking-auth-modal-title" className="text-base sm:text-lg font-black uppercase tracking-wide text-zinc-900 leading-tight">
+              <h3 id="booking-auth-modal-title" className="text-base sm:text-lg font-black capitalize tracking-wide text-zinc-900 leading-tight">
                 {mode === 'login' ? 'Sign In to Continue' : 'Create Your Account'}
               </h3>
-              <p className="text-[11px] text-zinc-500 font-medium mt-1">
+              <p className="text-xs text-zinc-500 font-medium mt-1">
                 {mode === 'login'
                   ? 'Sign in to link this booking to your profile'
                   : 'Quick free registration — under 30 seconds'}
@@ -168,11 +168,11 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
             </div>
           </div>
 
-          <div className="flex rounded-xl border border-zinc-200 bg-zinc-50 p-1 text-[10px] font-black uppercase">
+          <div className="flex rounded-xl border border-zinc-200 bg-zinc-50 p-1 text-xs font-black capitalize">
             <button
               type="button"
               onClick={() => switchMode('login')}
-              className={`flex-1 px-3 min-h-[40px] rounded-lg cursor-pointer transition-all duration-200 tracking-wider flex items-center justify-center ${
+              className={`flex-1 px-3 min-h-[40px] rounded-lg cursor-pointer transition-all duration-200  flex items-center justify-center ${
                 mode === 'login'
                   ? 'bg-zinc-900 text-white shadow-sm'
                   : 'text-zinc-500 hover:text-zinc-700'
@@ -183,7 +183,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
             <button
               type="button"
               onClick={() => switchMode('register')}
-              className={`flex-1 px-3 min-h-[40px] rounded-lg cursor-pointer transition-all duration-200 tracking-wider flex items-center justify-center ${
+              className={`flex-1 px-3 min-h-[40px] rounded-lg cursor-pointer transition-all duration-200  flex items-center justify-center ${
                 mode === 'register'
                   ? 'bg-zinc-900 text-white shadow-sm'
                   : 'text-zinc-500 hover:text-zinc-700'
@@ -197,7 +197,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
             {mode === 'register' && (
               <>
                 <div className="space-y-1.5 text-left">
-                  <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide block">Full Name</label>
+                  <label className="text-xs font-bold text-zinc-500 capitalize tracking-wide block">Full Name</label>
                   <input
                     type="text"
                     name="name"
@@ -209,11 +209,11 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                       fieldErrors.name ? 'border-rose-300 focus:border-rose-400' : 'border-zinc-200 focus:border-brand'
                     }`}
                   />
-                  {fieldErrors.name && <p className="text-[11px] text-rose-500 font-bold">{fieldErrors.name}</p>}
+                  {fieldErrors.name && <p className="text-xs text-rose-500 font-bold">{fieldErrors.name}</p>}
                 </div>
 
                 <div className="space-y-1.5 text-left">
-                  <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide block">Mobile / WhatsApp</label>
+                  <label className="text-xs font-bold text-zinc-500 capitalize tracking-wide block">Mobile / WhatsApp</label>
                   <input
                     type="tel"
                     name="phone"
@@ -225,13 +225,13 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                       fieldErrors.phone ? 'border-rose-300 focus:border-rose-400' : 'border-zinc-200 focus:border-brand'
                     }`}
                   />
-                  {fieldErrors.phone && <p className="text-[11px] text-rose-500 font-bold">{fieldErrors.phone}</p>}
+                  {fieldErrors.phone && <p className="text-xs text-rose-500 font-bold">{fieldErrors.phone}</p>}
                 </div>
               </>
             )}
 
             <div className="space-y-1.5 text-left">
-              <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide block">Email Address</label>
+              <label className="text-xs font-bold text-zinc-500 capitalize tracking-wide block">Email Address</label>
               <input
                 type="email"
                 name="email"
@@ -243,11 +243,11 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                   fieldErrors.email ? 'border-rose-300 focus:border-rose-400' : 'border-zinc-200 focus:border-brand'
                 }`}
               />
-              {fieldErrors.email && <p className="text-[11px] text-rose-500 font-bold">{fieldErrors.email}</p>}
+              {fieldErrors.email && <p className="text-xs text-rose-500 font-bold">{fieldErrors.email}</p>}
             </div>
 
             <div className="space-y-1.5 text-left">
-              <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide block">Password</label>
+              <label className="text-xs font-bold text-zinc-500 capitalize tracking-wide block">Password</label>
               <input
                 type="password"
                 name="password"
@@ -259,12 +259,12 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                   fieldErrors.password ? 'border-rose-300 focus:border-rose-400' : 'border-zinc-200 focus:border-brand'
                 }`}
               />
-              {fieldErrors.password && <p className="text-[11px] text-rose-500 font-bold">{fieldErrors.password}</p>}
+              {fieldErrors.password && <p className="text-xs text-rose-500 font-bold">{fieldErrors.password}</p>}
             </div>
 
             {mode === 'register' && (
               <div className="space-y-1.5 text-left">
-                <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide block">Confirm Password</label>
+                <label className="text-xs font-bold text-zinc-500 capitalize tracking-wide block">Confirm Password</label>
                 <input
                   type="password"
                   name="confirmPassword"
@@ -276,12 +276,12 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                     fieldErrors.confirmPassword ? 'border-rose-300 focus:border-rose-400' : 'border-zinc-200 focus:border-brand'
                   }`}
                 />
-                {fieldErrors.confirmPassword && <p className="text-[11px] text-rose-500 font-bold">{fieldErrors.confirmPassword}</p>}
+                {fieldErrors.confirmPassword && <p className="text-xs text-rose-500 font-bold">{fieldErrors.confirmPassword}</p>}
               </div>
             )}
 
             {error && (
-              <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl text-[11px] font-bold animate-in fade-in duration-200 text-left" role="alert">
+              <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl text-xs font-bold animate-in fade-in duration-200 text-left" role="alert">
                 <span>{error}</span>
               </div>
             )}
@@ -289,7 +289,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full px-6 py-3 min-h-[48px] bg-gradient-brand text-zinc-955 font-black uppercase tracking-wider text-[11px] rounded-lg transition flex items-center justify-center cursor-pointer shadow-md border-none disabled:opacity-60"
+              className="w-full px-6 py-3 min-h-[48px] bg-gradient-brand text-zinc-955 font-black capitalize  text-xs rounded-lg transition flex items-center justify-center cursor-pointer shadow-md border-none disabled:opacity-60"
             >
               {isLoading ? (
                 <div className="flex items-center gap-2 justify-center">
@@ -306,7 +306,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
             <button
               type="button"
               onClick={() => switchMode(mode === 'login' ? 'register' : 'login')}
-              className="text-[11px] font-bold text-brand-dark hover:underline bg-transparent border-none cursor-pointer py-2 min-h-[36px]"
+              className="text-xs font-bold text-brand-dark hover:underline bg-transparent border-none cursor-pointer py-2 min-h-[36px]"
             >
               {mode === 'login'
                 ? "Don't have an account? Register for free"
@@ -315,15 +315,15 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 pt-3 border-t border-zinc-100">
-            <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-wide">
+            <span className="text-xs text-zinc-500 font-bold capitalize tracking-wide">
               SSL Encrypted
             </span>
             <span className="text-zinc-200 select-none" aria-hidden="true">|</span>
-            <span className="text-[10px] text-zinc-550 font-bold uppercase tracking-wide">
+            <span className="text-xs text-zinc-550 font-bold capitalize tracking-wide">
               No spam
             </span>
             <span className="text-zinc-200 select-none" aria-hidden="true">|</span>
-            <span className="text-[10px] text-zinc-550 font-bold uppercase tracking-wide">
+            <span className="text-xs text-zinc-550 font-bold capitalize tracking-wide">
               Instant
             </span>
           </div>

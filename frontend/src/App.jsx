@@ -245,7 +245,7 @@ export default function App() {
 
       {/* Top Banner Notice Alert */}
       {!hideNavbarAndFooter && siteSettings.showBanner && siteSettings.bannerNotice && (
-        <div className="w-full bg-zinc-950 text-zinc-300 text-[10px] sm:text-xs font-bold py-2.5 px-4 text-center border-b border-zinc-900 relative z-50 flex items-center justify-center gap-2 tracking-wide uppercase font-mono shadow-md animate-in slide-in-from-top duration-300">
+        <div className="w-full bg-zinc-950 text-zinc-300 text-xs sm:text-xs font-bold py-2.5 px-4 text-center border-b border-zinc-900 relative z-50 flex items-center justify-center gap-2 tracking-wide capitalize  shadow-md animate-in slide-in-from-top duration-300">
           <span className="inline-block w-2.5 h-2.5 rounded-full bg-brand animate-pulse" />
           <span>{siteSettings.bannerNotice}</span>
         </div>
@@ -365,9 +365,9 @@ export default function App() {
 
             {/* Modal Header */}
             <div className="px-6 py-4 border-b border-zinc-800 flex justify-between items-center bg-zinc-950/40">
-              <h3 className="text-sm font-bold uppercase tracking-widest text-white font-header flex items-center gap-2">
+              <h3 className="text-sm font-bold capitalize  text-white font-header flex items-center gap-2">
                 <span>{activeDocType === 'terms' ? 'Terms & Conditions' : 'Privacy Policy'}</span>
-                <span className="text-[7.5px] bg-zinc-800 border border-zinc-700 text-zinc-400 px-1.5 py-0.5 rounded font-black tracking-widest uppercase font-mono">DOC</span>
+                <span className="text-[7.5px] bg-zinc-800 border border-zinc-700 text-zinc-400 px-1.5 py-0.5 rounded font-black  capitalize ">DOC</span>
               </h3>
               <button
                 onClick={() => setActiveDocType(null)}
@@ -387,7 +387,7 @@ export default function App() {
             <div className="px-6 py-4 border-t border-zinc-800 flex justify-end bg-zinc-955">
               <button
                 onClick={() => setActiveDocType(null)}
-                className="px-5 py-2.5 bg-zinc-800 hover:bg-zinc-750 text-white hover:text-brand font-black text-[9px] uppercase tracking-widest rounded-lg cursor-pointer transition border-none shadow-md"
+                className="px-5 py-2.5 bg-zinc-800 hover:bg-zinc-750 text-white hover:text-brand font-black text-xs capitalize  rounded-lg cursor-pointer transition border-none shadow-md"
               >
                 Close Document
               </button>

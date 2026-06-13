@@ -91,10 +91,10 @@ export default function Inquiry({ testProfile, siteSettings }) {
         <div className="bg-white rounded-lg overflow-hidden grid grid-cols-1 md:grid-cols-2 items-center border border-zinc-200/60 shadow-xs">
           <div className="p-5 sm:p-8 md:p-12 space-y-6">
             <div className="space-y-4 flex flex-col items-center md:items-start text-center md:text-left">
-              <span className="text-[10px] bg-brand-light text-brand-dark border border-brand/20 px-3.5 py-1 rounded-md uppercase tracking-wider font-extrabold w-fit block">
+              <span className="text-xs bg-brand-light text-brand-dark border border-brand/20 px-3.5 py-1 rounded-md capitalize  font-extrabold w-fit block">
                 get in touch
               </span>
-              <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-zinc-900 font-header uppercase leading-tight">Want to Know More</h2>
+              <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-zinc-900 font-header capitalize leading-tight">Want to Know More</h2>
               <p className="text-zinc-600 font-light text-xs sm:text-sm max-w-sm font-sans">
                 Submit your request to align parents, students, and coordinators for assessments and counselling sessions.
               </p>
@@ -109,7 +109,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
             <form onSubmit={handleSubmit} className="space-y-4 text-xs">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label htmlFor="name-input" className="font-bold text-zinc-500 uppercase tracking-wide text-[10px]">Full Name</label>
+                  <label htmlFor="name-input" className="font-bold text-zinc-500 capitalize tracking-wide text-xs">Full Name</label>
                   <input
                     type="text"
                     name="name"
@@ -120,10 +120,10 @@ export default function Inquiry({ testProfile, siteSettings }) {
                     autoComplete="name"
                     className="w-full px-4 py-3 min-h-[44px] bg-white border border-zinc-200 rounded-lg text-sm outline-none focus:border-brand transition text-zinc-900"
                   />
-                  {formErrors.name && <p className="text-red-500 font-bold text-[11px] mt-0.5" role="alert">{formErrors.name}</p>}
+                  {formErrors.name && <p className="text-red-500 font-bold text-xs mt-0.5" role="alert">{formErrors.name}</p>}
                 </div>
                 <div className="space-y-1">
-                  <label htmlFor="email-input" className="font-bold text-zinc-500 uppercase tracking-wide text-[10px]">Email Address</label>
+                  <label htmlFor="email-input" className="font-bold text-zinc-500 capitalize tracking-wide text-xs">Email Address</label>
                   <input
                     type="email"
                     name="email"
@@ -134,12 +134,12 @@ export default function Inquiry({ testProfile, siteSettings }) {
                     autoComplete="email"
                     className="w-full px-4 py-3 min-h-[44px] bg-white border border-zinc-200 rounded-lg text-sm outline-none focus:border-brand transition text-zinc-900"
                   />
-                  {formErrors.email && <p className="text-red-500 font-bold text-[11px] mt-0.5" role="alert">{formErrors.email}</p>}
+                  {formErrors.email && <p className="text-red-500 font-bold text-xs mt-0.5" role="alert">{formErrors.email}</p>}
                 </div>
               </div>
 
               <div className="space-y-1">
-                <label htmlFor="message-textarea" className="font-bold text-zinc-500 uppercase tracking-wide text-[10px]">Your Message</label>
+                <label htmlFor="message-textarea" className="font-bold text-zinc-500 capitalize tracking-wide text-xs">Your Message</label>
                 <textarea
                   rows={4}
                   name="message"
@@ -154,7 +154,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="min-h-[48px] w-full py-3 bg-gradient-brand hover:opacity-95 text-zinc-955 font-bold text-xs uppercase tracking-wider rounded-lg transition-all duration-300 hover:scale-[1.01] active:scale-[0.98] cursor-pointer flex items-center justify-center gap-2 shadow-md shadow-brand/20 border-none"
+                className="min-h-[48px] w-full py-3 bg-gradient-brand hover:opacity-95 text-zinc-955 font-bold text-xs capitalize  rounded-lg transition-all duration-300 hover:scale-[1.01] active:scale-[0.98] cursor-pointer flex items-center justify-center gap-2 shadow-md shadow-brand/20 border-none"
               >
                 {isSubmitting ? (
                   <>
@@ -169,7 +169,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
               </button>
 
               {submitStatus === 'success' && (
-                <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg text-center font-bold text-[11px]" role="status">
+                <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg text-center font-bold text-xs" role="status">
                   Request sent successfully! Our coordinator will contact you shortly.
                 </div>
               )}
@@ -184,7 +184,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
 
       {/* 4. Stay Informed & Community */}
       <section className="max-w-xl mx-auto text-center px-4 sm:px-6 py-10 lg:py-16 space-y-6 flex flex-col items-center">
-        <span className="text-[10px] bg-zinc-900 text-white px-3.5 py-1 rounded-md uppercase tracking-wider font-extrabold w-fit block">
+        <span className="text-xs bg-zinc-900 text-white px-3.5 py-1 rounded-md capitalize  font-extrabold w-fit block">
           Stay Informed
         </span>
         
@@ -199,11 +199,11 @@ export default function Inquiry({ testProfile, siteSettings }) {
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="min-h-[48px] text-xs font-bold uppercase tracking-widest text-zinc-900 hover:text-white transition flex items-center gap-1.5 border border-zinc-200 px-6 py-3.5 rounded-lg bg-white hover:bg-zinc-900 justify-center"
+                className="min-h-[48px] text-xs font-bold capitalize  text-zinc-900 hover:text-white transition flex items-center gap-1.5 border border-zinc-200 px-6 py-3.5 rounded-lg bg-white hover:bg-zinc-900 justify-center"
               >
                 <span>Connect with Our Community</span>
               </a>
-              <p className="text-[11px] text-zinc-500 font-bold uppercase tracking-wider">
+              <p className="text-xs text-zinc-500 font-bold capitalize ">
                 Or email us directly at: <a href={`mailto:${emailAddr}`} className="text-zinc-900 underline hover:text-brand transition break-all">{emailAddr}</a>
               </p>
             </div>

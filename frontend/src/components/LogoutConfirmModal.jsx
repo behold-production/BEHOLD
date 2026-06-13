@@ -73,12 +73,12 @@ export default function LogoutConfirmModal({ isOpen, onConfirm, onCancel, theme 
 
           {/* Text */}
           <div className="space-y-1.5">
-            <h3 id="logout-confirm-title" className={`text-base font-bold uppercase tracking-wider font-header ${
+            <h3 id="logout-confirm-title" className={`text-base font-bold capitalize  font-header ${
               isDark ? 'text-white' : 'text-zinc-900'
             }`}>
               Sign Out?
             </h3>
-            <p className={`text-[11px] leading-relaxed ${
+            <p className={`text-xs leading-relaxed ${
               isDark ? 'text-zinc-400' : 'text-zinc-500'
             }`}>
               You are about to end your current session. You'll need to sign in again to access your dashboard.
@@ -90,7 +90,7 @@ export default function LogoutConfirmModal({ isOpen, onConfirm, onCancel, theme 
             <button
               type="button"
               onClick={onCancel}
-              className={`min-h-[44px] flex-1 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest transition cursor-pointer border ${
+              className={`min-h-[44px] flex-1 py-2.5 rounded-xl text-xs font-bold capitalize  transition cursor-pointer border ${
                 isDark
                   ? 'border-zinc-700 text-zinc-300 hover:bg-zinc-800'
                   : 'border-zinc-200 text-zinc-700 hover:bg-zinc-100'
@@ -101,7 +101,7 @@ export default function LogoutConfirmModal({ isOpen, onConfirm, onCancel, theme 
             <button
               type="button"
               onClick={onConfirm}
-              className="min-h-[44px] flex-1 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition cursor-pointer border-none bg-rose-600 hover:bg-rose-700 text-white flex items-center justify-center gap-1.5 shadow-md"
+              className="min-h-[44px] flex-1 py-2.5 rounded-xl text-xs font-black capitalize  transition cursor-pointer border-none bg-rose-600 hover:bg-rose-700 text-white flex items-center justify-center gap-1.5 shadow-md"
             >
               <LogOut className="w-3.5 h-3.5" />
               Sign Out

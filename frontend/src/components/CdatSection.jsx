@@ -79,10 +79,10 @@ export default function CdatSection({ setView }) {
       >
         {/* TOP: CIGI Differential Aptitude Test (CDAT) */}
         <div className="space-y-3 max-w-4xl text-left">
-          <span className="inline-block text-[9px] bg-zinc-100 text-zinc-550 border border-zinc-200 px-3 py-1 rounded-md uppercase tracking-widest font-extrabold font-mono">
+          <span className="inline-block text-xs bg-zinc-100 text-zinc-550 border border-zinc-200 px-3 py-1 rounded-md capitalize  font-extrabold ">
             scientific strengths mapping
           </span>
-          <h3 className="text-lg sm:text-2xl md:text-3xl font-header font-black uppercase tracking-wide text-zinc-900 mt-1 group-hover:text-brand transition-colors duration-500">
+          <h3 className="text-lg sm:text-2xl md:text-3xl font-header font-black capitalize tracking-wide text-zinc-900 mt-1 group-hover:text-brand transition-colors duration-500">
             CIGI Differential Aptitude Test (CDAT)
           </h3>
           <p className="text-zinc-650 font-sans text-sm md:text-base font-light leading-relaxed">
@@ -94,10 +94,10 @@ export default function CdatSection({ setView }) {
         <div className="pt-6 border-t border-zinc-200 space-y-6">
           <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
             <div className="space-y-2">
-              <span className="inline-block text-[9px] bg-brand-light text-brand-dark px-3 py-1 rounded-md uppercase tracking-widest font-extrabold border border-brand/20">
+              <span className="inline-block text-xs bg-brand-light text-brand-dark px-3 py-1 rounded-md capitalize  font-extrabold border border-brand/20">
                 school & institution access
               </span>
-              <h4 className="text-base sm:text-xl md:text-2xl font-header font-black uppercase tracking-wide text-zinc-900 mt-1">
+              <h4 className="text-base sm:text-xl md:text-2xl font-header font-black capitalize tracking-wide text-zinc-900 mt-1">
                 Registration & Group Code
               </h4>
             </div>
@@ -111,7 +111,7 @@ export default function CdatSection({ setView }) {
             </div>
             <div className="lg:col-span-7 w-full">
               <form onSubmit={handleGenerateCode} className="space-y-4 bg-white/40 backdrop-blur-md border border-zinc-200/50 p-4 sm:p-5 rounded-lg w-full">
-                <div className="text-[10px] font-extrabold uppercase tracking-wider text-zinc-500 mb-2">
+                <div className="text-xs font-extrabold capitalize  text-zinc-500 mb-2">
                   Generate Your Access Code
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
@@ -154,7 +154,7 @@ export default function CdatSection({ setView }) {
                   <div className="pt-1">
                     <button
                       type="submit"
-                      className="min-h-[48px] px-6 py-3 bg-gradient-brand hover:opacity-95 text-zinc-955 font-black text-xs uppercase tracking-widest rounded-lg transition cursor-pointer shadow-sm border-none w-full sm:w-auto"
+                      className="min-h-[48px] px-6 py-3 bg-gradient-brand hover:opacity-95 text-zinc-955 font-black text-xs capitalize  rounded-lg transition cursor-pointer shadow-sm border-none w-full sm:w-auto"
                     >
                       Generate Group Code
                     </button>
@@ -163,13 +163,13 @@ export default function CdatSection({ setView }) {
                   <div className="pt-2 space-y-4 animate-in fade-in duration-300">
                     <div className="p-4 border border-brand/20 bg-brand-light rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                       <div>
-                        <span className="text-[10px] uppercase tracking-widest text-brand-dark/70 font-bold block mb-1">Your Group Code</span>
-                        <span className="text-lg font-mono font-black tracking-widest text-brand-dark">{generatedCode}</span>
+                        <span className="text-xs capitalize  text-brand-dark/70 font-bold block mb-1">Your Group Code</span>
+                        <span className="text-lg  font-black  text-brand-dark">{generatedCode}</span>
                       </div>
                       <button
                         type="button"
                         onClick={copyManually}
-                        className={`min-h-[40px] flex items-center justify-center gap-1.5 px-4 py-2 border rounded-lg text-[10px] uppercase font-bold transition cursor-pointer ${copied
+                        className={`min-h-[40px] flex items-center justify-center gap-1.5 px-4 py-2 border rounded-lg text-xs capitalize font-bold transition cursor-pointer ${copied
                             ? 'bg-emerald-50 border-emerald-300 text-emerald-700'
                             : 'bg-white border-zinc-200 hover:border-zinc-900 text-zinc-900'
                           }`}
@@ -194,7 +194,7 @@ export default function CdatSection({ setView }) {
                           window.open("https://cigicareer.com/cdat-registration/", "_blank", "noopener,noreferrer");
                         }
                       }}
-                      className={`min-h-[48px] flex items-center justify-center gap-2 w-full px-6 py-3.5 font-extrabold text-xs uppercase tracking-widest rounded-lg transition shadow-md ${
+                      className={`min-h-[48px] flex items-center justify-center gap-2 w-full px-6 py-3.5 font-extrabold text-xs capitalize  rounded-lg transition shadow-md ${
                         hasCopied
                           ? 'bg-zinc-900 hover:bg-zinc-800 text-white cursor-pointer border-none'
                           : 'bg-zinc-200 text-zinc-400 cursor-not-allowed border border-zinc-300'
@@ -203,7 +203,7 @@ export default function CdatSection({ setView }) {
                       <span>Proceed to CIGI Website</span>
                     </button>
                     {!hasCopied && (
-                      <p className="text-[10px] text-zinc-550 font-bold text-center mt-1 uppercase tracking-wide">
+                      <p className="text-xs text-zinc-550 font-bold text-center mt-1 capitalize tracking-wide">
                         Please copy the code first to proceed to CIGI registration.
                       </p>
                     )}
@@ -212,7 +212,7 @@ export default function CdatSection({ setView }) {
 
                 {copyMessage && (
                   <p
-                    className="mt-2 text-[11px] font-bold tracking-wider font-mono text-rose-600"
+                    className="mt-2 text-xs font-bold   text-rose-600"
                     role="alert"
                   >
                     {copyMessage}
@@ -226,7 +226,7 @@ export default function CdatSection({ setView }) {
         {/* BOTTOM: Sample Test */}
         <div className="pt-6 border-t border-zinc-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
-            <span className="text-[10px] font-bold text-zinc-450 uppercase tracking-wide block">
+            <span className="text-xs font-bold text-zinc-450 capitalize tracking-wide block">
               Try a demo of our scientific assessment
             </span>
             <p className="text-xs text-zinc-550 font-light leading-relaxed">
@@ -236,7 +236,7 @@ export default function CdatSection({ setView }) {
           <button
             type="button"
             onClick={() => window.spaNavigate('/sample-test')}
-            className="min-h-[48px] px-8 py-3.5 bg-zinc-900 hover:bg-zinc-800 text-white font-bold text-xs uppercase tracking-widest rounded-lg transition cursor-pointer shadow-sm text-center shrink-0 w-full sm:w-auto flex items-center justify-center border-none"
+            className="min-h-[48px] px-8 py-3.5 bg-zinc-900 hover:bg-zinc-800 text-white font-bold text-xs capitalize  rounded-lg transition cursor-pointer shadow-sm text-center shrink-0 w-full sm:w-auto flex items-center justify-center border-none"
           >
             Sample Test
           </button>

@@ -39,10 +39,10 @@ export default function About() {
 
         {/* Header Column */}
         <div className="max-w-3xl mx-auto text-center space-y-3.5">
-          <span className="text-[10px] bg-zinc-900 text-white px-3.5 py-1 rounded-md uppercase tracking-wider font-extrabold w-fit mx-auto block">
+          <span className="text-xs bg-zinc-900 text-white px-3.5 py-1 rounded-md capitalize  font-extrabold w-fit mx-auto block">
             Why Us & What We Offer
           </span>
-          <h2 className="text-3xl md:text-5xl font-header font-black tracking-tight text-zinc-900 leading-[1.1] uppercase">
+          <h2 className="text-3xl md:text-5xl font-header font-black tracking-tight text-zinc-900 leading-[1.1] capitalize">
             Why Choose Us & What We Offer
           </h2>
           <p className="text-zinc-600 font-sans text-sm md:text-base font-light leading-relaxed">
@@ -64,10 +64,10 @@ export default function About() {
                     {`0${idx + 1}`}
                   </span>
                   <div className="space-y-1.5 sm:space-y-2">
-                    <h4 className="font-header font-bold text-xs uppercase tracking-wider text-zinc-900 group-hover:text-brand-dark transition-colors duration-300">
+                    <h4 className="font-header font-bold text-xs capitalize  text-zinc-900 group-hover:text-brand-dark transition-colors duration-300">
                       {pillar.title}
                     </h4>
-                    <p className="text-zinc-550 font-sans text-[11px] sm:text-[12px] font-light leading-relaxed">
+                    <p className="text-zinc-550 font-sans text-xs sm:text-xs font-light leading-relaxed">
                       {pillar.desc}
                     </p>
                   </div>
@@ -85,7 +85,7 @@ export default function About() {
               window.spaNavigate('/booking');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className="min-h-[48px] px-8 py-4 bg-zinc-900 hover:bg-zinc-800 text-white font-bold text-xs uppercase tracking-widest rounded-lg transition-all duration-200 cursor-pointer shadow-sm w-full sm:w-auto text-center"
+            className="min-h-[48px] px-8 py-4 bg-zinc-900 hover:bg-zinc-800 text-white font-bold text-xs capitalize  rounded-lg transition-all duration-200 cursor-pointer shadow-sm w-full sm:w-auto text-center"
           >
             Get Started with Behold
           </button>

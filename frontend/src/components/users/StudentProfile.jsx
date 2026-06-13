@@ -313,8 +313,8 @@ export default function StudentProfile() {
               {/* Profile progress */}
               <div className="mt-3 max-w-xs">
                 <div className="flex justify-between items-center mb-1">
-                  <span className="text-[10px] text-zinc-400 font-medium uppercase tracking-wider">Profile completion</span>
-                  <span className="text-[10px] font-semibold text-zinc-600">{totalProgress}%</span>
+                  <span className="text-xs text-zinc-400 font-medium capitalize ">Profile completion</span>
+                  <span className="text-xs font-semibold text-zinc-600">{totalProgress}%</span>
                 </div>
                 <div className="h-1 w-full bg-zinc-100 rounded-full overflow-hidden">
                   <div
@@ -334,7 +334,7 @@ export default function StudentProfile() {
               ].map((s, i) => (
                 <div key={i} className="text-center px-4 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl min-w-[72px]">
                   <p className="text-base font-bold text-zinc-900">{s.value}</p>
-                  <p className="text-[10px] text-zinc-500 font-medium uppercase tracking-wider">{s.label}</p>
+                  <p className="text-xs text-zinc-500 font-medium capitalize ">{s.label}</p>
                 </div>
               ))}
             </div>
@@ -369,7 +369,7 @@ export default function StudentProfile() {
               <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-zinc-400 group-hover:text-zinc-600'}`} />
               <span className="flex-1 text-left">{tab.label}</span>
               {badge !== null && badge !== 0 && (
-                <span className={`text-[10px] font-semibold px-1.5 min-w-[20px] h-5 rounded-full flex items-center justify-center ${isActive
+                <span className={`text-xs font-semibold px-1.5 min-w-[20px] h-5 rounded-full flex items-center justify-center ${isActive
                   ? 'bg-white/20 text-white'
                   : tab.id === 'results' && !testProfile
                     ? 'bg-amber-100 text-amber-700'
@@ -387,7 +387,7 @@ export default function StudentProfile() {
             <Bell className="w-3.5 h-3.5 text-zinc-400" />
             <span className="text-xs font-semibold text-zinc-700">Need help?</span>
           </div>
-          <p className="text-[11px] text-zinc-500 leading-relaxed">
+          <p className="text-xs text-zinc-500 leading-relaxed">
             Data securely synced in Cloud. Contact your coordinator for support.
           </p>
         </div>
@@ -412,12 +412,12 @@ export default function StudentProfile() {
                 <div className="relative">
                   <Icon className="w-5 h-5" />
                   {badge !== null && badge > 0 && (
-                    <span className="absolute -top-1.5 -right-2 text-[9px] font-bold px-1 min-w-[14px] h-3.5 rounded-full bg-zinc-900 text-white flex items-center justify-center">
+                    <span className="absolute -top-1.5 -right-2 text-xs font-bold px-1 min-w-[14px] h-3.5 rounded-full bg-zinc-900 text-white flex items-center justify-center">
                       {badge}
                     </span>
                   )}
                 </div>
-                <span className="text-[9px] font-medium uppercase tracking-wide truncate max-w-full">{tab.short}</span>
+                <span className="text-xs font-medium capitalize tracking-wide truncate max-w-full">{tab.short}</span>
                 {isActive && (
                   <span className="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-0.5 bg-zinc-900 rounded-full" />
                 )}
@@ -460,7 +460,7 @@ export default function StudentProfile() {
         {/* Next session card */}
         {nextSession ? (
           <div className="bg-zinc-900 rounded-xl p-5 text-white">
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400 mb-3 flex items-center gap-1.5">
+            <p className="text-xs font-semibold capitalize  text-zinc-400 mb-3 flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Next Session
             </p>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -489,7 +489,7 @@ export default function StudentProfile() {
                   const cd = formatCountdown(nextSession.date, nextSession.time);
                   return (
                     <div className="text-right">
-                      <p className="text-[10px] text-zinc-500 font-medium">Starts in</p>
+                      <p className="text-xs text-zinc-500 font-medium">Starts in</p>
                       <p className={`text-xl font-bold ${cd.urgent ? 'text-amber-400' : 'text-white'}`}>{cd.text}</p>
                     </div>
                   );
@@ -539,7 +539,7 @@ export default function StudentProfile() {
                 </div>
                 <p className="text-xs text-zinc-500 font-medium">{kpi.label}</p>
                 <p className="text-xl font-bold text-zinc-900 mt-0.5">{kpi.value}</p>
-                <p className="text-[10px] text-zinc-400 mt-0.5 uppercase tracking-wider">{kpi.sub}</p>
+                <p className="text-xs text-zinc-400 mt-0.5 capitalize ">{kpi.sub}</p>
               </div>
             );
           })}
@@ -553,7 +553,7 @@ export default function StudentProfile() {
               <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center">
                 <BarChart3 className="w-5 h-5 text-zinc-600" />
               </div>
-              <span className={`text-[10px] px-2 py-0.5 rounded-md font-semibold uppercase tracking-wider ${testProfile ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-zinc-100 text-zinc-500'
+              <span className={`text-xs px-2 py-0.5 rounded-md font-semibold capitalize  ${testProfile ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-zinc-100 text-zinc-500'
                 }`}>
                 {testProfile ? 'Completed' : 'Pending'}
               </span>
@@ -579,7 +579,7 @@ export default function StudentProfile() {
               <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center">
                 <Briefcase className="w-5 h-5 text-zinc-600" />
               </div>
-              <span className={`text-[10px] px-2 py-0.5 rounded-md font-semibold uppercase tracking-wider ${bookedSessions.length > 0 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-zinc-100 text-zinc-500'
+              <span className={`text-xs px-2 py-0.5 rounded-md font-semibold capitalize  ${bookedSessions.length > 0 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-zinc-100 text-zinc-500'
                 }`}>
                 {bookedSessions.length > 0 ? `${bookedSessions.length} scheduled` : 'None'}
               </span>
@@ -824,7 +824,7 @@ export default function StudentProfile() {
                             <AlertCircle className="w-3 h-3" /> {errors[field.name]}
                           </p>
                         ) : (
-                          <p className="text-[10px] text-zinc-400">{field.required ? 'Required' : 'Optional'}</p>
+                          <p className="text-xs text-zinc-400">{field.required ? 'Required' : 'Optional'}</p>
                         )}
                       </div>
                     );
@@ -886,7 +886,7 @@ export default function StudentProfile() {
             >
               Upcoming Sessions
               {bookedSessions.length > 0 && (
-                <span className={`ml-1.5 text-[9px] font-bold px-1.5 py-0.5 rounded-full ${sessionSubTab === 'upcoming' ? 'bg-zinc-900 text-white' : 'bg-zinc-100 text-zinc-500'
+                <span className={`ml-1.5 text-xs font-bold px-1.5 py-0.5 rounded-full ${sessionSubTab === 'upcoming' ? 'bg-zinc-900 text-white' : 'bg-zinc-100 text-zinc-500'
                   }`}>
                   {bookedSessions.length}
                 </span>
@@ -902,7 +902,7 @@ export default function StudentProfile() {
             >
               History & Timeline
               {completedSessions.length > 0 && (
-                <span className={`ml-1.5 text-[9px] font-bold px-1.5 py-0.5 rounded-full ${sessionSubTab === 'history' ? 'bg-zinc-900 text-white' : 'bg-zinc-100 text-zinc-500'
+                <span className={`ml-1.5 text-xs font-bold px-1.5 py-0.5 rounded-full ${sessionSubTab === 'history' ? 'bg-zinc-900 text-white' : 'bg-zinc-100 text-zinc-500'
                   }`}>
                   {completedSessions.length}
                 </span>
@@ -938,7 +938,7 @@ export default function StudentProfile() {
                   >
                     {chip.label}
                     {chip.count > 0 && (
-                      <span className={`text-[10px] font-semibold px-1.5 min-w-[18px] h-4 rounded-full flex items-center justify-center ${sessionFilter === chip.id ? 'bg-white/20' : 'bg-zinc-100 text-zinc-600'
+                      <span className={`text-xs font-semibold px-1.5 min-w-[18px] h-4 rounded-full flex items-center justify-center ${sessionFilter === chip.id ? 'bg-white/20' : 'bg-zinc-100 text-zinc-600'
                         }`}>
                         {chip.count}
                       </span>
@@ -966,20 +966,20 @@ export default function StudentProfile() {
                             {session.mode === 'ONLINE' ? <Video className="w-5 h-5 text-zinc-600" /> : <MapPin className="w-5 h-5 text-zinc-600" />}
                           </div>
                           <div>
-                            <span className={`inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md font-semibold uppercase tracking-wider ${isConfirmed
+                            <span className={`inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-md font-semibold capitalize  ${isConfirmed
                               ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                               : 'bg-amber-50 text-amber-700 border border-amber-200'
                               }`}>
                               <span className={`w-1.5 h-1.5 rounded-full ${isConfirmed ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
                               {session.status}
                             </span>
-                            <p className="text-[10px] text-zinc-400 font-medium mt-1">
+                            <p className="text-xs text-zinc-400 font-medium mt-1">
                               {session.service === 'counselling' ? 'Psychological' : 'Career'} · {session.mode}
                             </p>
                           </div>
                         </div>
                         <div className="text-right shrink-0">
-                          <p className="text-[10px] text-zinc-400">In</p>
+                          <p className="text-xs text-zinc-400">In</p>
                           <p className={`text-sm font-bold ${cd.urgent ? 'text-amber-600' : 'text-zinc-900'}`}>{cd.text}</p>
                         </div>
                       </div>
@@ -1090,7 +1090,7 @@ export default function StudentProfile() {
                     <p className="text-lg font-bold text-zinc-900">
                       {s.value}{s.suffix && <span className="text-sm text-zinc-400 font-medium">{s.suffix}</span>}
                     </p>
-                    <p className="text-[10px] text-zinc-500 font-semibold uppercase tracking-wider mt-0.5">{s.label}</p>
+                    <p className="text-xs text-zinc-500 font-semibold capitalize  mt-0.5">{s.label}</p>
                   </div>
                 );
               })}
@@ -1109,10 +1109,10 @@ export default function StudentProfile() {
                         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-2">
                           <div>
                             <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                              <span className="text-[10px] px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold uppercase tracking-wider">
+                              <span className="text-xs px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold capitalize ">
                                 {session.status}
                               </span>
-                              <span className="text-[10px] text-zinc-400 font-medium uppercase tracking-wider">{session.mode}</span>
+                              <span className="text-xs text-zinc-400 font-medium capitalize ">{session.mode}</span>
                               <div className="flex items-center gap-0.5">
                                 {[1, 2, 3, 4, 5].map(n => (
                                   <Star key={n} className="w-3 h-3 fill-amber-400 text-amber-400" />
@@ -1132,13 +1132,13 @@ export default function StudentProfile() {
 
                         {session.feedback && (
                           <div className="mt-3 p-3 bg-zinc-50 border border-zinc-200 rounded-lg">
-                            <p className="text-[10px] font-semibold text-zinc-500 uppercase tracking-wider mb-1.5">Counsellor Feedback</p>
+                            <p className="text-xs font-semibold text-zinc-500 capitalize  mb-1.5">Counsellor Feedback</p>
                             <p className="text-xs text-zinc-600 italic leading-relaxed">"{session.feedback}"</p>
                           </div>
                         )}
 
                         <div className="mt-3 flex items-center justify-between">
-                          <span className="text-[11px] text-zinc-400">Session #{completedSessions.length - sIdx}</span>
+                          <span className="text-xs text-zinc-400">Session #{completedSessions.length - sIdx}</span>
                           <button
                             type="button"
                             className="inline-flex items-center gap-1 text-xs font-medium text-zinc-500 hover:text-zinc-900 transition-colors"
@@ -1216,7 +1216,7 @@ export default function StudentProfile() {
 
         {/* Dominant domain card */}
         <div className="bg-zinc-900 rounded-xl p-6 text-white">
-          <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400 mb-3 flex items-center gap-1.5">
+          <p className="text-xs font-semibold capitalize  text-zinc-400 mb-3 flex items-center gap-1.5">
             <Star className="w-3 h-3 text-amber-400" /> Primary Outcome
           </p>
           <p className="text-xs text-zinc-400 font-medium mb-1">Your Dominant Domain</p>

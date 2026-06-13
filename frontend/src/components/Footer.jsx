@@ -16,27 +16,27 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
           {siteName || 'BEHOLD'}<span className="text-brand">.</span>
         </button>
 
-        <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 font-mono text-[11px] uppercase tracking-wider text-zinc-400">
+        <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2  text-xs capitalize  text-zinc-400">
           <button type="button" onClick={() => navigateToSection('services')} className="py-1 hover:text-brand transition cursor-pointer bg-transparent border-none">Services</button>
           <button type="button" onClick={() => window.spaNavigate('/booking')} className="py-1 hover:text-brand transition cursor-pointer bg-transparent border-none">Booking</button>
           <button type="button" onClick={() => window.spaNavigate('/sample-test')} className="py-1 hover:text-brand transition cursor-pointer bg-transparent border-none">Sample Test</button>
           <button type="button" onClick={() => navigateToSection('inquiry')} className="py-1 hover:text-brand transition cursor-pointer bg-transparent border-none">Contact</button>
         </nav>
 
-        <div className="pt-6 border-t border-zinc-900 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 font-light text-zinc-500 text-[11px]">
+        <div className="pt-6 border-t border-zinc-900 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 font-light text-zinc-500 text-xs">
           <p className="leading-relaxed">{siteCopyright || '© BEHOLD Ltd., 2026. All rights reserved.'}</p>
-          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-5 uppercase tracking-widest font-mono">
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-5 capitalize  ">
             <button
               type="button"
               onClick={() => onOpenDocs('privacy')}
-              className="py-1 hover:text-brand transition bg-transparent border-none cursor-pointer text-zinc-500 text-[11px] uppercase"
+              className="py-1 hover:text-brand transition bg-transparent border-none cursor-pointer text-zinc-500 text-xs capitalize"
             >
               Privacy Policy
             </button>
             <button
               type="button"
               onClick={() => onOpenDocs('terms')}
-              className="py-1 hover:text-brand transition bg-transparent border-none cursor-pointer text-zinc-500 text-[11px] uppercase"
+              className="py-1 hover:text-brand transition bg-transparent border-none cursor-pointer text-zinc-500 text-xs capitalize"
             >
               Terms of Use
             </button>

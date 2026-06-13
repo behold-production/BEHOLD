@@ -41,10 +41,10 @@ export default function Faq() {
 
       {/* Section Header */}
       <div className="mb-6 md:mb-12 space-y-4 text-center">
-        <span className="text-[10px] bg-zinc-900 text-white px-3.5 py-1 rounded-md uppercase tracking-wider font-extrabold w-fit mx-auto block">
+        <span className="text-xs bg-zinc-900 text-white px-3.5 py-1 rounded-md capitalize  font-extrabold w-fit mx-auto block">
           clarity desk
         </span>
-        <h2 className="text-2xl sm:text-3xl md:text-5xl font-header font-black tracking-tight text-zinc-900 leading-tight uppercase">
+        <h2 className="text-2xl sm:text-3xl md:text-5xl font-header font-black tracking-tight text-zinc-900 leading-tight capitalize">
           Frequently Asked
         </h2>
         <p className="text-zinc-600 font-sans text-xs sm:text-sm md:text-base font-light max-w-xl mx-auto">
@@ -73,7 +73,7 @@ export default function Faq() {
                   }`}>
                     <HelpCircle className="w-4 h-4" />
                   </div>
-                  <span className="text-xs sm:text-sm md:text-base font-header font-bold uppercase tracking-wide leading-tight pt-1">{faq.question}</span>
+                  <span className="text-xs sm:text-sm md:text-base font-header font-bold capitalize tracking-wide leading-tight pt-1">{faq.question}</span>
                 </div>
                 <ChevronDown 
                   className={`w-5 h-5 text-zinc-400 shrink-0 transition-transform duration-500 mt-1.5 ${

@@ -657,10 +657,10 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
         {/* Header */}
         <div className="text-center flex flex-col items-center space-y-4">
-          <span className="text-[10px] bg-zinc-900 text-white px-3.5 py-1 rounded-md uppercase tracking-wider font-extrabold w-fit block">
+          <span className="text-xs bg-zinc-900 text-white px-3.5 py-1 rounded-md capitalize  font-extrabold w-fit block">
             book a session
           </span>
-          <h1 className="text-2xl sm:text-3xl md:text-5xl font-header font-black tracking-tight leading-none text-zinc-900 uppercase">
+          <h1 className="text-2xl sm:text-3xl md:text-5xl font-header font-black tracking-tight leading-none text-zinc-900 capitalize">
             Book Your Session
           </h1>
           <p className="text-zinc-650 max-w-xl mx-auto text-xs sm:text-sm md:text-base leading-relaxed font-light">
@@ -671,7 +671,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
         {/* BOOKING FORM */}
         <div id="booking-console" className="border-0 sm:border border-zinc-200/80 p-0 sm:p-8 bg-transparent sm:bg-white/70 backdrop-blur-none sm:backdrop-blur-md space-y-6 sm:space-y-8 rounded-none sm:rounded-xl shadow-none sm:shadow-xs">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-100 pb-4">
-            <h2 className="text-lg sm:text-xl font-bold uppercase tracking-wide text-zinc-900">
+            <h2 className="text-lg sm:text-xl font-bold capitalize tracking-wide text-zinc-900">
               Your Booking
             </h2>
           </div>
@@ -686,7 +686,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
               {/* Mobile: compact progress bar */}
               <div className="flex sm:hidden items-center gap-2">
                 <div className="flex items-center gap-1.5 flex-1 min-w-0">
-                  <span className="text-[11px] font-black text-zinc-900 shrink-0">
+                  <span className="text-xs font-black text-zinc-900 shrink-0">
                     Step {currentStepIdx + 1} of 4
                   </span>
                   <div className="h-1.5 flex-1 bg-zinc-200 rounded-full overflow-hidden">
@@ -696,7 +696,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                     />
                   </div>
                 </div>
-                <span className="text-[11px] font-bold text-brand-dark truncate">
+                <span className="text-xs font-bold text-brand-dark truncate">
                   {stepLabels[currentStepIdx]}
                 </span>
               </div>
@@ -705,7 +705,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
               <div className="hidden sm:block">
                 <div className="flex items-center justify-between gap-2 border-b border-zinc-200 pb-3">
                   <div className="flex items-center gap-2">
-                    <h3 className="font-bold uppercase tracking-wider text-xs text-zinc-900">
+                    <h3 className="font-bold capitalize  text-xs text-zinc-900">
                       {bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring'} &middot; {bookingMode === 'ONLINE' ? 'Video Call' : bookingMode === 'DOOR_STEP' ? 'Home Visit' : 'At Center'}
                     </h3>
                   </div>
@@ -719,7 +719,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                     return (
                       <div key={idx} className="flex lg:flex-col items-start gap-3 lg:gap-2 relative shrink-0 snap-start w-[200px] sm:w-[220px] lg:w-auto">
                         <div className="flex items-center lg:w-full">
-                          <div className={`flex items-center justify-center w-8 h-8 rounded-full font-bold text-[11px] border transition-all duration-300 shrink-0 ${
+                          <div className={`flex items-center justify-center w-8 h-8 rounded-full font-bold text-xs border transition-all duration-300 shrink-0 ${
                             isCompleted
                               ? 'bg-zinc-900 border-zinc-900 text-white'
                               : isActive
@@ -735,10 +735,10 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                           )}
                         </div>
                         <div className="flex flex-col text-left min-w-0">
-                          <span className={`text-[10px] font-bold uppercase tracking-wider ${isActive ? 'text-brand-dark' : isCompleted ? 'text-zinc-900' : 'text-zinc-400'}`}>
+                          <span className={`text-xs font-bold capitalize  ${isActive ? 'text-brand-dark' : isCompleted ? 'text-zinc-900' : 'text-zinc-400'}`}>
                             {stepLabels[idx]}
                           </span>
-                          <span className={`text-[11px] font-light leading-snug transition-colors duration-300 mt-0.5 ${isActive ? 'text-zinc-900 font-normal' : 'text-zinc-650'}`}>
+                          <span className={`text-xs font-light leading-snug transition-colors duration-300 mt-0.5 ${isActive ? 'text-zinc-900 font-normal' : 'text-zinc-650'}`}>
                             {step}
                           </span>
                         </div>
@@ -758,10 +758,10 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                 ✓
               </div>
               <div className="space-y-2">
-                <span className="text-[10px] bg-emerald-100 text-emerald-800 border border-emerald-200 px-3 py-1 rounded-md uppercase tracking-wider font-extrabold w-fit mx-auto block">
+                <span className="text-xs bg-emerald-100 text-emerald-800 border border-emerald-200 px-3 py-1 rounded-md capitalize  font-extrabold w-fit mx-auto block">
                   session confirmed
                 </span>
-                <h3 className="text-xl sm:text-2xl font-black uppercase text-zinc-900 tracking-wide mt-2">
+                <h3 className="text-xl sm:text-2xl font-black capitalize text-zinc-900 tracking-wide mt-2">
                   You're All Set!
                 </h3>
                 <p className="text-xs text-zinc-600 max-w-md mx-auto leading-relaxed">
@@ -771,37 +771,37 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
               {/* Invoice & Meeting Card */}
               <div className="bg-white border border-zinc-200/80 rounded-xl p-5 text-left space-y-4 shadow-xs">
-                <h4 className="text-xs font-extrabold uppercase tracking-widest text-zinc-400 border-b border-zinc-100 pb-2">
+                <h4 className="text-xs font-extrabold capitalize  text-zinc-400 border-b border-zinc-100 pb-2">
                   Booking Confirmation
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                   <div>
                     <span className="text-zinc-400 block font-light">Advisor</span>
                     <span className="font-bold text-zinc-800">{selectedAdvisor?.name || 'Assigned Advisor'}</span>
-                    <span className="text-[10px] text-zinc-500 block">{selectedAdvisor?.role || 'Consultant Psychologist'}</span>
+                    <span className="text-xs text-zinc-500 block">{selectedAdvisor?.role || 'Consultant Psychologist'}</span>
                   </div>
                   <div>
                     <span className="text-zinc-400 block font-light">Service</span>
-                    <span className="font-semibold text-zinc-800 uppercase">
+                    <span className="font-semibold text-zinc-800 capitalize">
                       {bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring'}
                     </span>
-                    <span className="text-[10px] text-zinc-500 block">Mode: {bookingMode === 'ONLINE' ? 'Video Call' : bookingMode === 'DOOR_STEP' ? 'Home Visit' : 'At Center'}</span>
+                    <span className="text-xs text-zinc-500 block">Mode: {bookingMode === 'ONLINE' ? 'Video Call' : bookingMode === 'DOOR_STEP' ? 'Home Visit' : 'At Center'}</span>
                   </div>
                   <div>
                     <span className="text-zinc-400 block font-light">Date & Time Slot</span>
                     <span className="font-bold text-zinc-800 block">
                       {selectedDate}
                     </span>
-                    <span className="text-[10px] text-zinc-500 font-mono block mt-0.5">
+                    <span className="text-xs text-zinc-500  block mt-0.5">
                       {selectedTime}
                     </span>
                   </div>
                   <div>
                     <span className="text-zinc-400 block font-light">Payment</span>
-                    <span className="font-semibold text-zinc-800 uppercase block">
+                    <span className="font-semibold text-zinc-800 capitalize block">
                       {paymentMethod === 'card' ? 'Card' : paymentMethod === 'upi' ? 'UPI' : 'Net Banking'}
                     </span>
-                    <span className="text-[10px] text-zinc-500 block">Amount Paid: ₹{(selectedAdvisor?.price || 1200) + Math.round((selectedAdvisor?.price || 1200) * 0.18) - appliedDiscount}</span>
+                    <span className="text-xs text-zinc-500 block">Amount Paid: ₹{(selectedAdvisor?.price || 1200) + Math.round((selectedAdvisor?.price || 1200) * 0.18) - appliedDiscount}</span>
                   </div>
                 </div>
 
@@ -809,10 +809,10 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                 {bookingMode === 'ONLINE' && (
                   <div className="pt-3 border-t border-zinc-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-zinc-50 p-3 rounded-lg border border-zinc-200 mt-2">
                     <div>
-                      <span className="text-[10px] font-bold text-zinc-700 block uppercase tracking-wide">
+                      <span className="text-xs font-bold text-zinc-700 block capitalize tracking-wide">
                         Google Meet Session Link
                       </span>
-                      <span className="text-[10px] text-zinc-500 truncate block font-mono max-w-[280px] sm:max-w-xs">
+                      <span className="text-xs text-zinc-500 truncate block  max-w-[280px] sm:max-w-xs">
                         {selectedAdvisor?.defaultMeetLink || 'https://meet.google.com/abc-defg-hij'}
                       </span>
                     </div>
@@ -823,7 +823,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                         setCopiedMeet(true);
                         setTimeout(() => setCopiedMeet(false), 2000);
                       }}
-                      className="px-4 py-2.5 min-h-[40px] bg-zinc-900 text-white text-[11px] font-bold uppercase tracking-wider rounded-lg hover:bg-zinc-800 transition cursor-pointer flex items-center justify-center border-none shadow-xs whitespace-nowrap"
+                      className="px-4 py-2.5 min-h-[40px] bg-zinc-900 text-white text-xs font-bold capitalize  rounded-lg hover:bg-zinc-800 transition cursor-pointer flex items-center justify-center border-none shadow-xs whitespace-nowrap"
                     >
                       {copiedMeet ? 'Copied!' : 'Copy Link'}
                     </button>
@@ -852,7 +852,7 @@ Status: CONFIRMED
                     setCopiedReceipt(true);
                     setTimeout(() => setCopiedReceipt(false), 2000);
                   }}
-                  className="px-6 py-3 bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 text-xs font-semibold uppercase tracking-wider rounded-lg transition cursor-pointer w-full sm:w-auto justify-center"
+                  className="px-6 py-3 bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 text-xs font-semibold capitalize  rounded-lg transition cursor-pointer w-full sm:w-auto justify-center"
                 >
                   {copiedReceipt ? 'Receipt Copied!' : 'Copy Receipt'}
                 </button>
@@ -875,7 +875,7 @@ Status: CONFIRMED
                     setBookingStep('config');
                     try { sessionStorage.removeItem(BOOKING_DRAFT_KEY); } catch (e) { /* ignore */ }
                   }}
-                  className="px-6 py-3 bg-zinc-900 text-white hover:bg-zinc-800 text-xs font-semibold uppercase tracking-wider rounded-lg transition cursor-pointer w-full sm:w-auto text-center border-none shadow-md"
+                  className="px-6 py-3 bg-zinc-900 text-white hover:bg-zinc-800 text-xs font-semibold capitalize  rounded-lg transition cursor-pointer w-full sm:w-auto text-center border-none shadow-md"
                 >
                   Book Another Session
                 </button>
@@ -892,17 +892,17 @@ Status: CONFIRMED
                 {bookingStep === 'config' && (
                   <div className="space-y-6 animate-in fade-in duration-300">
                     <div className="border-b border-zinc-100 pb-3">
-                      <h3 className="text-sm font-extrabold uppercase tracking-wider text-zinc-850 flex items-center gap-2">
-                        <span className="w-6 h-6 rounded-full bg-zinc-900 text-white text-[10px] flex items-center justify-center shrink-0 font-black">1</span>
+                      <h3 className="text-sm font-extrabold capitalize  text-zinc-850 flex items-center gap-2">
+                        <span className="w-6 h-6 rounded-full bg-zinc-900 text-white text-xs flex items-center justify-center shrink-0 font-black">1</span>
                         Choose Service, Date & Time
                       </h3>
-                      <p className="text-[10px] text-zinc-500 mt-1">Tell us what kind of guidance you need, your preferred mode, and when to schedule.</p>
+                      <p className="text-xs text-zinc-500 mt-1">Tell us what kind of guidance you need, your preferred mode, and when to schedule.</p>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {/* Service Type Selection */}
                       <div className="space-y-1">
-                        <label className="text-[10px] font-bold text-zinc-550 uppercase tracking-wide block">Service Type</label>
+                        <label className="text-xs font-bold text-zinc-550 capitalize tracking-wide block">Service Type</label>
                         <div className="grid grid-cols-2 gap-2 w-full">
                           {[
                             { id: 'counselling', label: 'Psychological' },
@@ -912,7 +912,7 @@ Status: CONFIRMED
                               type="button"
                               key={s.id}
                               onClick={() => setBookingService(s.id)}
-                              className={`px-3 py-3 text-[11px] uppercase font-black border rounded-xl transition cursor-pointer text-center min-h-[56px] leading-tight ${
+                              className={`px-3 py-3 text-xs capitalize font-black border rounded-xl transition cursor-pointer text-center min-h-[56px] leading-tight ${
                                 bookingService === s.id
                                   ? 'bg-zinc-900 border-zinc-900 text-white shadow-xs font-black'
                                   : 'bg-white text-zinc-600 border-zinc-200 hover:border-brand/40 hover:text-brand-dark'
@@ -920,7 +920,7 @@ Status: CONFIRMED
                             >
                               <span className="flex flex-col items-center">
                                 <span>{s.label}</span>
-                                <span className="text-[9px] font-normal normal-case text-zinc-400">
+                                <span className="text-xs font-normal normal-case text-zinc-400">
                                   {s.id === 'counselling' ? 'Counselling' : 'Mentoring'}
                                 </span>
                               </span>
@@ -930,7 +930,7 @@ Status: CONFIRMED
                       </div>
                       {/* Mode of Session Select */}
                       <div className="space-y-1">
-                        <label className="text-[10px] font-bold text-zinc-550 uppercase tracking-wide block">Session Mode</label>
+                        <label className="text-xs font-bold text-zinc-550 capitalize tracking-wide block">Session Mode</label>
                         <div className="grid grid-cols-3 gap-2 w-full">
                           {[
                             { id: 'ONLINE', label: 'Online', desc: 'Video call' },
@@ -941,7 +941,7 @@ Status: CONFIRMED
                               type="button"
                               key={m.id}
                               onClick={() => setBookingMode(m.id)}
-                              className={`flex flex-col items-center justify-center gap-1 px-2 py-3.5 text-[10px] uppercase font-extrabold border rounded-xl transition cursor-pointer text-center min-h-[56px] leading-tight ${
+                              className={`flex flex-col items-center justify-center gap-1 px-2 py-3.5 text-xs capitalize font-extrabold border rounded-xl transition cursor-pointer text-center min-h-[56px] leading-tight ${
                                 bookingMode === m.id
                                   ? 'bg-brand/10 text-brand-dark border-brand/30 shadow-xs font-black'
                                   : 'bg-white text-zinc-600 border-zinc-200 hover:border-brand/40 hover:text-brand-dark'
@@ -949,7 +949,7 @@ Status: CONFIRMED
                             >
                               <span className="flex flex-col items-center">
                                 <span>{m.label}</span>
-                                <span className="text-[9px] font-normal normal-case text-zinc-400">{m.desc}</span>
+                                <span className="text-xs font-normal normal-case text-zinc-400">{m.desc}</span>
                               </span>
                             </button>
                           ))}
@@ -982,7 +982,7 @@ Status: CONFIRMED
                         type="button"
                         disabled={!selectedDate || !selectedTime}
                         onClick={() => handleStepChange('advisor')}
-                        className="px-6 py-3 min-h-[48px] bg-zinc-900 text-white font-bold uppercase tracking-wider text-[11px] rounded-lg transition hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center border-none shadow-xs w-full sm:w-auto"
+                        className="px-6 py-3 min-h-[48px] bg-zinc-900 text-white font-bold capitalize  text-xs rounded-lg transition hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center border-none shadow-xs w-full sm:w-auto"
                       >
                         Choose Advisor
                       </button>
@@ -994,11 +994,11 @@ Status: CONFIRMED
                 {bookingStep === 'advisor' && (
                   <div className="space-y-6 animate-in fade-in duration-300">
                     <div className="border-b border-zinc-100 pb-3">
-                      <h3 className="text-sm font-extrabold uppercase tracking-wider text-zinc-850 flex items-center gap-2">
-                        <span className="w-6 h-6 rounded-full bg-zinc-900 text-white text-[10px] flex items-center justify-center shrink-0 font-black">2</span>
+                      <h3 className="text-sm font-extrabold capitalize  text-zinc-850 flex items-center gap-2">
+                        <span className="w-6 h-6 rounded-full bg-zinc-900 text-white text-xs flex items-center justify-center shrink-0 font-black">2</span>
                         Choose Your Advisor
                       </h3>
-                      <p className="text-[10px] text-zinc-500 mt-1">Pick the best specialist available for your selected date and time.</p>
+                      <p className="text-xs text-zinc-500 mt-1">Pick the best specialist available for your selected date and time.</p>
                     </div>
 
                     <div className="space-y-3">
@@ -1046,14 +1046,14 @@ Status: CONFIRMED
                               <div className="flex items-start justify-between gap-3">
                                 <div className="space-y-1.5 text-left min-w-0 flex-1">
                                   <h4 className="font-extrabold text-zinc-900 text-sm sm:text-base leading-tight">{advisor.name}</h4>
-                                  <p className="text-[11px] sm:text-xs text-zinc-500 font-medium">{advisor.role}</p>
+                                  <p className="text-xs sm:text-xs text-zinc-500 font-medium">{advisor.role}</p>
                                   {selectedDate && (
-                                    <div className="text-[10px] text-zinc-500 bg-zinc-50 border border-zinc-150 px-2.5 py-1.5 rounded-lg inline-block">
+                                    <div className="text-xs text-zinc-500 bg-zinc-50 border border-zinc-150 px-2.5 py-1.5 rounded-lg inline-block">
                                       <span className="font-bold text-zinc-700">Slots:</span>{' '}
                                       {advisorSlotsOnDate.length > 0 ? (
-                                        <span className="text-brand-dark font-extrabold font-mono text-[10px]">{advisorSlotsOnDate.join(', ')}</span>
+                                        <span className="text-brand-dark font-extrabold  text-xs">{advisorSlotsOnDate.join(', ')}</span>
                                       ) : (
-                                        <span className="text-rose-500 font-bold text-[10px]">No slots on this day</span>
+                                        <span className="text-rose-500 font-bold text-xs">No slots on this day</span>
                                       )}
                                     </div>
                                   )}
@@ -1061,18 +1061,18 @@ Status: CONFIRMED
                                 <div className="flex flex-col items-end gap-2 shrink-0">
                                   <span className="text-sm font-black text-zinc-900">₹{advisor.price}</span>
                                   {availabilityStatus === 'Available' ? (
-                                     <span className="text-[10px] px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200 font-black uppercase tracking-wide">Available</span>
+                                     <span className="text-xs px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200 font-black capitalize tracking-wide">Available</span>
                                    ) : availabilityStatus === 'Booked' ? (
-                                     <span className="text-[10px] px-2.5 py-1 rounded-lg bg-amber-50 text-amber-700 border border-amber-200 font-bold uppercase">Booked</span>
+                                     <span className="text-xs px-2.5 py-1 rounded-lg bg-amber-50 text-amber-700 border border-amber-200 font-bold capitalize">Booked</span>
                                    ) : (
-                                     <span className="text-[10px] px-2.5 py-1 rounded-lg bg-rose-50 text-rose-650 border border-rose-200 font-bold uppercase">Unavailable</span>
+                                     <span className="text-xs px-2.5 py-1 rounded-lg bg-rose-50 text-rose-650 border border-rose-200 font-bold capitalize">Unavailable</span>
                                    )}
                                 </div>
                               </div>
                             </div>
                           );
                         })}
-                      {errors.advisor && <p className="text-[10px] text-rose-500 font-semibold mt-1">{errors.advisor}</p>}
+                      {errors.advisor && <p className="text-xs text-rose-500 font-semibold mt-1">{errors.advisor}</p>}
                     </div>
 
                     {/* Advisor Selected Panel */}
@@ -1081,7 +1081,7 @@ Status: CONFIRMED
                       return (
                         <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-lg flex flex-col gap-3 animate-in zoom-in-95 duration-200 text-left">
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 w-full">
-                            <span className="text-[10px] text-zinc-700 font-bold uppercase tracking-wide">
+                            <span className="text-xs text-zinc-700 font-bold capitalize tracking-wide">
                               Selected Advisor: <strong className="text-zinc-900">{selectedAdvisor.name}</strong>
                             </span>
                             {isSelectedAdvisorAvailable ? (
@@ -1096,7 +1096,7 @@ Status: CONFIRMED
                                     }
                                   }
                                 }}
-                                className={`px-4 py-1.5 rounded-lg text-[10px] font-bold transition cursor-pointer border-none ${
+                                className={`px-4 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer border-none ${
                                   advisorConfirmed
                                     ? 'bg-brand/10 text-brand-dark font-extrabold border border-brand/20'
                                     : 'bg-gradient-brand text-zinc-955 shadow-sm hover:opacity-95 font-black'
@@ -1105,27 +1105,27 @@ Status: CONFIRMED
                                 {advisorConfirmed ? 'Confirmed' : 'Confirm Advisor'}
                               </button>
                             ) : (
-                              <span className="text-[9px] px-2.5 py-1 rounded bg-rose-50 border border-rose-200 text-rose-600 font-black uppercase tracking-wide shrink-0">
+                              <span className="text-xs px-2.5 py-1 rounded bg-rose-50 border border-rose-200 text-rose-600 font-black capitalize tracking-wide shrink-0">
                                 Unavailable
                               </span>
                             )}
                           </div>
                           {!isSelectedAdvisorAvailable && (
-                            <div className="p-3 bg-rose-50 border border-rose-150 rounded-lg text-[10px] text-rose-800 font-semibold leading-relaxed">
+                            <div className="p-3 bg-rose-50 border border-rose-150 rounded-lg text-xs text-rose-800 font-semibold leading-relaxed">
                               <strong>{selectedAdvisor.name}</strong> is {getAdvisorAvailabilityStatus(selectedAdvisor.id, selectedDate, selectedTime) === 'Booked' ? 'already booked' : 'not available'} at {selectedTime} on {selectedDate}. Please select another time slot or advisor to proceed.
                             </div>
                           )}
                         </div>
                       );
                     })()}
-                    {errors.confirm && <p className="text-[10px] text-rose-500 font-semibold mt-1">{errors.confirm}</p>}
+                    {errors.confirm && <p className="text-xs text-rose-500 font-semibold mt-1">{errors.confirm}</p>}
 
                     {/* Navigation */}
                     <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-4 border-t border-zinc-200 mt-4">
                       <button
                         type="button"
                         onClick={() => handleStepChange('config')}
-                        className="px-5 py-3 min-h-[44px] bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 font-bold uppercase tracking-wider text-[11px] rounded-lg transition cursor-pointer w-full sm:w-auto text-center"
+                        className="px-5 py-3 min-h-[44px] bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 font-bold capitalize  text-xs rounded-lg transition cursor-pointer w-full sm:w-auto text-center"
                       >
                         Change Schedule
                       </button>
@@ -1133,7 +1133,7 @@ Status: CONFIRMED
                         type="button"
                         disabled={!selectedAdvisor || !advisorConfirmed}
                         onClick={() => handleStepChange('details')}
-                        className="px-5 py-3 min-h-[44px] bg-zinc-900 text-white font-bold uppercase tracking-wider text-[11px] rounded-lg transition hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center border-none shadow-xs w-full sm:w-auto"
+                        className="px-5 py-3 min-h-[44px] bg-zinc-900 text-white font-bold capitalize  text-xs rounded-lg transition hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center border-none shadow-xs w-full sm:w-auto"
                       >
                         Account Details
                       </button>
@@ -1145,11 +1145,11 @@ Status: CONFIRMED
                 {bookingStep === 'details' && (
                   <div className="space-y-6 animate-in fade-in duration-300">
                     <div className="border-b border-zinc-100 pb-3">
-                      <h3 className="text-sm font-extrabold uppercase tracking-wider text-zinc-850 flex items-center gap-2">
-                        <span className="w-6 h-6 rounded-full bg-zinc-900 text-white text-[10px] flex items-center justify-center shrink-0 font-black">3</span>
+                      <h3 className="text-sm font-extrabold capitalize  text-zinc-850 flex items-center gap-2">
+                        <span className="w-6 h-6 rounded-full bg-zinc-900 text-white text-xs flex items-center justify-center shrink-0 font-black">3</span>
                         Your Details & Account
                       </h3>
-                      <p className="text-[10px] text-zinc-500 mt-1">
+                      <p className="text-xs text-zinc-500 mt-1">
                         {user
                           ? 'Signed in. Confirm your details, then proceed to payment.'
                           : 'Fill your details, then sign in or create a free account to continue.'}
@@ -1160,9 +1160,9 @@ Status: CONFIRMED
                       <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center justify-between gap-3 animate-in fade-in duration-300">
                         <div className="flex-1 min-w-0">
                           <span className="text-xs font-extrabold text-emerald-800 block truncate">{user.name}</span>
-                          <span className="text-[10px] text-emerald-600 font-mono truncate block">{user.email}</span>
+                          <span className="text-xs text-emerald-600  truncate block">{user.email}</span>
                         </div>
-                        <span className="shrink-0 text-[9px] font-black uppercase tracking-wider bg-emerald-100 border border-emerald-300 text-emerald-700 px-2.5 py-1 rounded-lg">
+                        <span className="shrink-0 text-xs font-black capitalize  bg-emerald-100 border border-emerald-300 text-emerald-700 px-2.5 py-1 rounded-lg">
                           ✓ Authenticated
                         </span>
                       </div>
@@ -1170,7 +1170,7 @@ Status: CONFIRMED
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-1 text-left">
-                        <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide block">Full Name</label>
+                        <label className="text-xs font-bold text-zinc-500 capitalize tracking-wide block">Full Name</label>
                         <input
                           type="text"
                           name="name"
@@ -1184,7 +1184,7 @@ Status: CONFIRMED
                         {errors.name && <p className="text-[9.5px] text-rose-500 font-bold">{errors.name}</p>}
                       </div>
                       <div className="space-y-1 text-left">
-                        <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide block">WhatsApp / Mobile</label>
+                        <label className="text-xs font-bold text-zinc-500 capitalize tracking-wide block">WhatsApp / Mobile</label>
                         <input
                           type="tel"
                           name="phone"
@@ -1198,7 +1198,7 @@ Status: CONFIRMED
                         {errors.phone && <p className="text-[9.5px] text-rose-500 font-bold">{errors.phone}</p>}
                       </div>
                       <div className="space-y-1 sm:col-span-2 text-left">
-                        <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide block">
+                        <label className="text-xs font-bold text-zinc-500 capitalize tracking-wide block">
                           Email Address {user && <span className="text-emerald-600 normal-case font-bold">(verified)</span>}
                         </label>
                         <input
@@ -1219,14 +1219,14 @@ Status: CONFIRMED
                     </div>
 
                     {!user && (
-                      <div className="bg-zinc-50 border border-zinc-200 p-3 rounded-lg text-[10px] text-zinc-500 text-left">
+                      <div className="bg-zinc-50 border border-zinc-200 p-3 rounded-lg text-xs text-zinc-500 text-left">
                         <span className="text-zinc-800 font-semibold block">Account Required to Continue</span>
                         You'll be asked to sign in or create a free account when you click "Proceed to Payment" — your booking details are saved automatically.
                       </div>
                     )}
 
                     {user && (
-                      <div className="bg-zinc-50 border border-zinc-200 p-3 rounded-lg text-[10px] text-zinc-500 text-left">
+                      <div className="bg-zinc-50 border border-zinc-200 p-3 rounded-lg text-xs text-zinc-500 text-left">
                         <span className="text-zinc-800 font-semibold block">Notification Reminders</span>
                         Live session reminders will be sent to your verified email &amp; WhatsApp number.
                       </div>
@@ -1237,7 +1237,7 @@ Status: CONFIRMED
                       <button
                         type="button"
                         onClick={() => handleStepChange('advisor')}
-                        className="px-5 py-3 min-h-[44px] bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 font-bold uppercase tracking-wider text-[11px] rounded-lg transition cursor-pointer w-full sm:w-auto text-center"
+                        className="px-5 py-3 min-h-[44px] bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 font-bold capitalize  text-xs rounded-lg transition cursor-pointer w-full sm:w-auto text-center"
                       >
                         Back to Advisor
                       </button>
@@ -1245,7 +1245,7 @@ Status: CONFIRMED
                         type="button"
                         onClick={handleProceedToPayment}
                         disabled={isSubmitting}
-                        className="px-6 py-3 min-h-[48px] bg-gradient-brand text-zinc-900 font-extrabold uppercase tracking-wider text-[11px] rounded-lg transition flex items-center justify-center cursor-pointer shadow-md border-none disabled:opacity-50 w-full sm:w-auto"
+                        className="px-6 py-3 min-h-[48px] bg-gradient-brand text-zinc-900 font-extrabold capitalize  text-xs rounded-lg transition flex items-center justify-center cursor-pointer shadow-md border-none disabled:opacity-50 w-full sm:w-auto"
                       >
                         {isSubmitting ? (
                           <div className="w-4 h-4 border-2 border-zinc-900/30 border-t-zinc-900 rounded-full animate-spin" />
@@ -1268,23 +1268,23 @@ Status: CONFIRMED
                       <div className="absolute inset-0 bg-white/95 backdrop-blur-sm z-50 rounded-xl flex flex-col items-center justify-center p-6 text-center space-y-4 animate-in fade-in duration-200">
                         <div className="w-12 h-12 border-4 border-zinc-900/10 border-t-brand rounded-full animate-spin"></div>
                         <div className="space-y-1.5">
-                          <h4 className="text-xs font-extrabold uppercase tracking-wider text-zinc-900">Processing Payment</h4>
-                          <p className="text-[10px] font-semibold text-zinc-500 animate-pulse">{paymentStepText}</p>
+                          <h4 className="text-xs font-extrabold capitalize  text-zinc-900">Processing Payment</h4>
+                          <p className="text-xs font-semibold text-zinc-500 animate-pulse">{paymentStepText}</p>
                         </div>
                       </div>
                     )}
 
                     <div className="border-b border-zinc-100 pb-3">
-                      <h3 className="text-sm font-extrabold uppercase tracking-wider text-zinc-850 flex items-center gap-2">
-                        <span className="w-6 h-6 rounded-full bg-zinc-900 text-white text-[10px] flex items-center justify-center shrink-0 font-black">4</span>
+                      <h3 className="text-sm font-extrabold capitalize  text-zinc-850 flex items-center gap-2">
+                        <span className="w-6 h-6 rounded-full bg-zinc-900 text-white text-xs flex items-center justify-center shrink-0 font-black">4</span>
                         Payment & Confirm
                       </h3>
-                      <p className="text-[10px] text-zinc-500 mt-1">Choose payment method, apply any promo codes, and confirm your booking.</p>
+                      <p className="text-xs text-zinc-500 mt-1">Choose payment method, apply any promo codes, and confirm your booking.</p>
                     </div>
 
                     {/* Invoice ledger (shown on payment panel directly) */}
                     <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-lg space-y-3 text-left">
-                      <h4 className="text-[10px] font-extrabold uppercase tracking-wider text-zinc-650">
+                      <h4 className="text-xs font-extrabold capitalize  text-zinc-650">
                         Apply Promotional Coupon
                       </h4>
                       <div className="flex gap-2">
@@ -1293,12 +1293,12 @@ Status: CONFIRMED
                           value={couponInput}
                           onChange={(e) => setCouponInput(e.target.value)}
                           placeholder="Try GROWTH50 or BEHOLD20"
-                          className="px-3 py-2 bg-white border border-zinc-200 rounded-lg text-xs font-semibold text-zinc-800 outline-none uppercase placeholder:normal-case focus:border-brand focus:ring-1 focus:ring-brand transition flex-1"
+                          className="px-3 py-2 bg-white border border-zinc-200 rounded-lg text-xs font-semibold text-zinc-800 outline-none capitalize placeholder:normal-case focus:border-brand focus:ring-1 focus:ring-brand transition flex-1"
                         />
                         <button
                           type="button"
                           onClick={handleApplyCoupon}
-                          className="px-4 py-2 bg-zinc-900 text-white text-[10px] font-bold uppercase tracking-wider rounded-lg hover:bg-zinc-800 transition cursor-pointer border-none shadow-xs"
+                          className="px-4 py-2 bg-zinc-900 text-white text-xs font-bold capitalize  rounded-lg hover:bg-zinc-800 transition cursor-pointer border-none shadow-xs"
                         >
                           Apply
                         </button>
@@ -1316,7 +1316,7 @@ Status: CONFIRMED
                       
                       {/* Payment Methods tabs selector */}
                       <div className="space-y-2 text-left">
-                        <label className="text-[10px] font-bold text-zinc-550 uppercase tracking-wide block">Select Payment Method</label>
+                        <label className="text-xs font-bold text-zinc-550 capitalize tracking-wide block">Select Payment Method</label>
                         <div className="grid grid-cols-3 gap-2 w-full">
                           {[
                             { id: 'card', label: 'Card Pay', desc: 'Credit/Debit' },
@@ -1338,8 +1338,8 @@ Status: CONFIRMED
                                 }`}
                               >
                                 <div className="flex flex-col items-center">
-                                  <span className="text-xs sm:text-[10px] uppercase tracking-wider font-bold">{m.label}</span>
-                                  <span className="text-[9px] text-zinc-400 font-normal normal-case">{m.desc}</span>
+                                  <span className="text-xs sm:text-xs capitalize  font-bold">{m.label}</span>
+                                  <span className="text-xs text-zinc-400 font-normal normal-case">{m.desc}</span>
                                 </div>
                               </button>
                             );
@@ -1353,10 +1353,10 @@ Status: CONFIRMED
                         {/* CARD CHECKOUT FORM */}
                         {paymentMethod === 'card' && (
                           <div className="space-y-3.5 animate-in fade-in duration-300 text-left">
-                            <span className="text-[9.5px] text-zinc-400 block tracking-wider uppercase font-extrabold">Card Details</span>
+                            <span className="text-[9.5px] text-zinc-400 block  capitalize font-extrabold">Card Details</span>
                             
                             <div className="space-y-1">
-                              <label className="text-[10px] font-bold text-zinc-550 block">Cardholder Name</label>
+                              <label className="text-xs font-bold text-zinc-550 block">Cardholder Name</label>
                               <input
                                 type="text"
                                 value={cardName}
@@ -1367,11 +1367,11 @@ Status: CONFIRMED
                                 placeholder="e.g. John Doe"
                                 className="w-full px-3 py-2 bg-white border border-zinc-200 rounded-lg text-xs font-semibold text-zinc-800 outline-none focus:border-brand focus:ring-1 focus:ring-brand transition"
                               />
-                              {errors.cardName && <p className="text-[9px] text-rose-500 font-bold">{errors.cardName}</p>}
+                              {errors.cardName && <p className="text-xs text-rose-500 font-bold">{errors.cardName}</p>}
                             </div>
 
                             <div className="space-y-1">
-                              <label className="text-[10px] font-bold text-zinc-550 block">16-Digit Card Number</label>
+                              <label className="text-xs font-bold text-zinc-550 block">16-Digit Card Number</label>
                               <input
                                 type="text"
                                 maxLength="19"
@@ -1393,14 +1393,14 @@ Status: CONFIRMED
                                   if (errors.cardNum) setErrors(prev => ({ ...prev, cardNum: null }));
                                 }}
                                 placeholder="xxxx xxxx xxxx xxxx"
-                                className="w-full px-3 py-2 bg-white border border-zinc-200 rounded-lg text-xs font-semibold text-zinc-850 font-mono outline-none focus:border-brand focus:ring-1 focus:ring-brand transition"
+                                className="w-full px-3 py-2 bg-white border border-zinc-200 rounded-lg text-xs font-semibold text-zinc-850  outline-none focus:border-brand focus:ring-1 focus:ring-brand transition"
                               />
-                              {errors.cardNum && <p className="text-[9px] text-rose-500 font-bold">{errors.cardNum}</p>}
+                              {errors.cardNum && <p className="text-xs text-rose-500 font-bold">{errors.cardNum}</p>}
                             </div>
 
                             <div className="grid grid-cols-2 gap-3">
                               <div className="space-y-1">
-                                <label className="text-[10px] font-bold text-zinc-550 block">Expiry Date</label>
+                                <label className="text-xs font-bold text-zinc-550 block">Expiry Date</label>
                                 <input
                                   type="text"
                                   maxLength="5"
@@ -1415,13 +1415,13 @@ Status: CONFIRMED
                                     if (errors.cardExpiry) setErrors(prev => ({ ...prev, cardExpiry: null }));
                                   }}
                                   placeholder="MM/YY"
-                                  className="w-full px-3 py-2 bg-white border border-zinc-200 rounded-lg text-xs font-semibold text-zinc-850 font-mono outline-none focus:border-brand focus:ring-1 focus:ring-brand transition"
+                                  className="w-full px-3 py-2 bg-white border border-zinc-200 rounded-lg text-xs font-semibold text-zinc-850  outline-none focus:border-brand focus:ring-1 focus:ring-brand transition"
                                 />
-                                {errors.cardExpiry && <p className="text-[9px] text-rose-500 font-bold">{errors.cardExpiry}</p>}
+                                {errors.cardExpiry && <p className="text-xs text-rose-500 font-bold">{errors.cardExpiry}</p>}
                               </div>
 
                               <div className="space-y-1">
-                                <label className="text-[10px] font-bold text-zinc-555 block">CVV Code</label>
+                                <label className="text-xs font-bold text-zinc-555 block">CVV Code</label>
                                 <input
                                   type="password"
                                   maxLength="4"
@@ -1431,9 +1431,9 @@ Status: CONFIRMED
                                     if (errors.cardCvv) setErrors(prev => ({ ...prev, cardCvv: null }));
                                   }}
                                   placeholder="•••"
-                                  className="w-full px-3 py-2 bg-white border border-zinc-200 rounded-lg text-xs font-semibold text-zinc-850 font-mono outline-none focus:border-brand focus:ring-1 focus:ring-brand transition"
+                                  className="w-full px-3 py-2 bg-white border border-zinc-200 rounded-lg text-xs font-semibold text-zinc-850  outline-none focus:border-brand focus:ring-1 focus:ring-brand transition"
                                 />
-                                {errors.cardCvv && <p className="text-[9px] text-rose-500 font-bold">{errors.cardCvv}</p>}
+                                {errors.cardCvv && <p className="text-xs text-rose-500 font-bold">{errors.cardCvv}</p>}
                               </div>
                             </div>
                           </div>
@@ -1442,10 +1442,10 @@ Status: CONFIRMED
                         {/* UPI CHECKOUT FORM */}
                         {paymentMethod === 'upi' && (
                           <div className="space-y-4 animate-in fade-in duration-300 text-left">
-                            <span className="text-[9.5px] text-zinc-400 block tracking-wider uppercase font-extrabold">UPI Payment</span>
+                            <span className="text-[9.5px] text-zinc-400 block  capitalize font-extrabold">UPI Payment</span>
                             
                             <div className="space-y-1">
-                              <label className="text-[10px] font-bold text-zinc-550 block">Enter UPI ID</label>
+                              <label className="text-xs font-bold text-zinc-550 block">Enter UPI ID</label>
                               <input
                                 type="text"
                                 value={upiAddress}
@@ -1456,7 +1456,7 @@ Status: CONFIRMED
                                 placeholder="name@upi (or name@okhdfc)"
                                 className="w-full px-3 py-2 bg-white border border-zinc-200 rounded-lg text-xs font-semibold text-zinc-850 outline-none focus:border-brand focus:ring-1 focus:ring-brand transition"
                               />
-                              {errors.upiAddress && <p className="text-[9px] text-rose-500 font-bold">{errors.upiAddress}</p>}
+                              {errors.upiAddress && <p className="text-xs text-rose-500 font-bold">{errors.upiAddress}</p>}
                             </div>
 
                             {/* PREMIUM STYLE QR SCAN CARD */}
@@ -1488,7 +1488,7 @@ Status: CONFIRMED
                                 </svg>
                               </div>
                               <div className="space-y-1 text-center sm:text-left">
-                                <h5 className="text-[10px] font-black uppercase text-zinc-800 tracking-wider">Scan QR Code</h5>
+                                <h5 className="text-xs font-black capitalize text-zinc-800 ">Scan QR Code</h5>
                                 <p className="text-[9.5px] text-zinc-550 leading-relaxed font-light">
                                   Open BHIM, GooglePay, Paytm, or PhonePe and scan this code to pay.
                                 </p>
@@ -1500,10 +1500,10 @@ Status: CONFIRMED
                         {/* NET BANKING CHECKOUT FORM */}
                         {paymentMethod === 'netbanking' && (
                           <div className="space-y-3.5 animate-in fade-in duration-300 text-left">
-                            <span className="text-[9.5px] text-zinc-400 block tracking-wider uppercase font-extrabold">Net Banking</span>
+                            <span className="text-[9.5px] text-zinc-400 block  capitalize font-extrabold">Net Banking</span>
                             
                             <div className="space-y-1">
-                              <label className="text-[10px] font-bold text-zinc-555 block">Select Bank Partner</label>
+                              <label className="text-xs font-bold text-zinc-555 block">Select Bank Partner</label>
                               <select
                                 value={selectedBank}
                                 onChange={(e) => setSelectedBank(e.target.value)}
@@ -1529,14 +1529,14 @@ Status: CONFIRMED
                         <button
                           type="button"
                           onClick={() => handleStepChange('details')}
-                          className="px-5 py-3 min-h-[44px] bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 font-bold uppercase tracking-wider text-[11px] rounded-lg transition cursor-pointer w-full sm:w-auto text-center"
+                          className="px-5 py-3 min-h-[44px] bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 font-bold capitalize  text-xs rounded-lg transition cursor-pointer w-full sm:w-auto text-center"
                         >
                           Back to Details
                         </button>
 
                         <button
                           type="submit"
-                          className="px-6 py-3 min-h-[48px] bg-gradient-brand text-zinc-900 font-black uppercase tracking-wider text-[11px] rounded-lg transition flex items-center justify-center cursor-pointer shadow-md border-none w-full sm:w-auto"
+                          className="px-6 py-3 min-h-[48px] bg-gradient-brand text-zinc-900 font-black capitalize  text-xs rounded-lg transition flex items-center justify-center cursor-pointer shadow-md border-none w-full sm:w-auto"
                         >
                           <span className="truncate">Pay ₹{(selectedAdvisor?.price || 1200) + Math.round((selectedAdvisor?.price || 1200) * 0.18) - appliedDiscount} Securely</span>
                         </button>
@@ -1555,10 +1555,10 @@ Status: CONFIRMED
                   onClick={() => setShowSummary(!showSummary)}
                   className="flex lg:hidden items-center justify-between w-full bg-zinc-50 border border-zinc-200 p-3 rounded-xl text-left shadow-xs mb-3 hover:bg-zinc-100 transition cursor-pointer"
                 >
-                  <span className="text-xs font-black uppercase tracking-wider text-zinc-850 flex items-center gap-2">
+                  <span className="text-xs font-black capitalize  text-zinc-850 flex items-center gap-2">
                     <span>Booking Summary</span>
                     {selectedAdvisor && (
-                      <span className="text-[9px] bg-brand/10 text-brand-dark px-2 py-0.5 rounded font-bold">
+                      <span className="text-xs bg-brand/10 text-brand-dark px-2 py-0.5 rounded font-bold">
                         {bookingService === 'counselling' ? 'Counselling' : 'Career'}
                       </span>
                     )}
@@ -1573,7 +1573,7 @@ Status: CONFIRMED
 
                 <div className={`bg-transparent lg:bg-zinc-50 border-0 lg:border border-zinc-200 p-0 lg:p-5 rounded-none lg:rounded-xl space-y-5 shadow-none lg:shadow-xs ${showSummary ? 'block' : 'hidden'} lg:block`}>
                 <div>
-                  <h3 className="text-xs font-black uppercase tracking-wider text-zinc-850 border-b border-zinc-200 pb-2 hidden lg:block">
+                  <h3 className="text-xs font-black capitalize  text-zinc-850 border-b border-zinc-200 pb-2 hidden lg:block">
                     Booking Summary
                   </h3>
                 </div>
@@ -1581,51 +1581,51 @@ Status: CONFIRMED
                 <div className="space-y-4 text-xs font-semibold">
                   {/* Service type & Mode */}
                   <div>
-                    <span className="text-[9.5px] text-zinc-400 uppercase tracking-wide block font-semibold mb-0.5">Service & Mode</span>
+                    <span className="text-[9.5px] text-zinc-400 capitalize tracking-wide block font-semibold mb-0.5">Service & Mode</span>
                     <span className="font-bold text-zinc-800 block text-left">
                       {bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring'}
                     </span>
-                    <span className="text-[10px] text-zinc-500 font-semibold uppercase block mt-0.5 bg-white border border-zinc-150 rounded px-2 py-0.5 w-fit">
+                    <span className="text-xs text-zinc-500 font-semibold capitalize block mt-0.5 bg-white border border-zinc-150 rounded px-2 py-0.5 w-fit">
                       {bookingMode.replace('_', ' ')}
                     </span>
                   </div>
 
                   {/* Date & Time Slot */}
                   <div>
-                    <span className="text-[9.5px] text-zinc-400 uppercase tracking-wide block font-semibold mb-0.5">Date & Time</span>
+                    <span className="text-[9.5px] text-zinc-400 capitalize tracking-wide block font-semibold mb-0.5">Date & Time</span>
                     {selectedDate && selectedTime ? (
                       <div className="space-y-1 bg-white border border-zinc-150 p-2 rounded-lg text-left">
                         <span className="font-bold text-zinc-800 block">
                           {selectedDate}
                         </span>
-                        <span className="text-[10px] text-zinc-500 font-mono block">
+                        <span className="text-xs text-zinc-500  block">
                           {selectedTime}
                         </span>
                       </div>
                     ) : (
-                      <span className="text-zinc-400 italic font-light text-[10px] block text-left">Not configured yet</span>
+                      <span className="text-zinc-400 italic font-light text-xs block text-left">Not configured yet</span>
                     )}
                   </div>
 
                   {/* Selected Advisor */}
                   <div>
-                    <span className="text-[9.5px] text-zinc-400 uppercase tracking-wide block font-semibold mb-0.5">Advisor</span>
+                    <span className="text-[9.5px] text-zinc-400 capitalize tracking-wide block font-semibold mb-0.5">Advisor</span>
                     {selectedAdvisor ? (
                       <div className="bg-white border border-zinc-150 p-2.5 rounded-lg text-left">
                         <span className="font-bold text-zinc-800 block text-xs">{selectedAdvisor.name}</span>
                         <span className="text-[9.5px] text-zinc-500 block font-normal">{selectedAdvisor.role}</span>
                       </div>
                     ) : (
-                      <span className="text-zinc-400 italic font-light text-[10px] block text-left">No advisor selected</span>
+                      <span className="text-zinc-400 italic font-light text-xs block text-left">No advisor selected</span>
                     )}
                   </div>
 
                   {/* Invoice ledger calculation breakdown */}
                   <div className="pt-3 border-t border-zinc-200 space-y-2">
-                    <span className="text-[9.5px] text-zinc-400 uppercase tracking-wide block font-semibold text-left">Pricing Breakdown</span>
+                    <span className="text-[9.5px] text-zinc-400 capitalize tracking-wide block font-semibold text-left">Pricing Breakdown</span>
                     
                     {/* Fee list */}
-                    <div className="space-y-1.5 text-[10px] font-semibold text-zinc-650">
+                    <div className="space-y-1.5 text-xs font-semibold text-zinc-650">
                       <div className="flex justify-between">
                         <span>Session Fee</span>
                         <span className="text-zinc-800 font-bold">₹{selectedAdvisor?.price || 1200}</span>
@@ -1651,7 +1651,7 @@ Status: CONFIRMED
                   </div>
 
                   {/* Security badge */}
-                  <div className="pt-4 border-t border-zinc-200 text-[9px] font-bold text-zinc-400 uppercase text-center w-full">
+                  <div className="pt-4 border-t border-zinc-200 text-xs font-bold text-zinc-400 capitalize text-center w-full">
                     <span>SSL Secure Checkout</span>
                   </div>
 
@@ -1680,11 +1680,11 @@ Status: CONFIRMED
         {showNoCounsellorsModal && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
             <div className="bg-white border border-zinc-200 rounded-2xl w-full max-w-sm p-6 shadow-2xl space-y-4 text-center animate-in zoom-in-95 duration-200">
-              <div className="w-12 h-12 bg-amber-50 border border-amber-250 rounded-full flex items-center justify-center mx-auto text-amber-600 shadow-sm text-xl font-bold font-mono">
+              <div className="w-12 h-12 bg-amber-50 border border-amber-250 rounded-full flex items-center justify-center mx-auto text-amber-600 shadow-sm text-xl font-bold ">
                 !
               </div>
               <div className="space-y-1">
-                <h3 className="text-base font-black uppercase text-zinc-900 tracking-wide">
+                <h3 className="text-base font-black capitalize text-zinc-900 tracking-wide">
                   No Counsellors Found
                 </h3>
                 <p className="text-xs text-zinc-500 leading-relaxed font-sans font-light">
@@ -1694,7 +1694,7 @@ Status: CONFIRMED
               <button
                 type="button"
                 onClick={() => setShowNoCounsellorsModal(false)}
-                className="w-full py-2.5 bg-zinc-900 hover:bg-zinc-800 text-white font-bold text-xs uppercase tracking-widest rounded-lg cursor-pointer transition border-none shadow-md"
+                className="w-full py-2.5 bg-zinc-900 hover:bg-zinc-800 text-white font-bold text-xs capitalize  rounded-lg cursor-pointer transition border-none shadow-md"
               >
                 OK
               </button>

@@ -11,7 +11,8 @@ const settingSchema = new mongoose.Schema({
   showBanner: { type: Boolean, default: false },
   bannerNotice: { type: String, default: '' },
   termsOfUse: { type: String, default: '' },
-  privacyPolicy: { type: String, default: '' }
+  privacyPolicy: { type: String, default: '' },
+  cdatGroupCode: { type: String, default: 'cdat@behold' }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Setting', settingSchema);
