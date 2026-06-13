@@ -9,7 +9,6 @@ export default function AuthModals({ isOpen, onClose }) {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({ name: '', email: '', password: '', confirmPassword: '' });
-  const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -17,7 +16,6 @@ export default function AuthModals({ isOpen, onClose }) {
   useEffect(() => {
     if (isOpen) {
       setFormData({ name: '', email: '', password: '', confirmPassword: '' });
-      setError('');
       setMode('login');
       setShowPassword(false);
     }
@@ -41,12 +39,10 @@ export default function AuthModals({ isOpen, onClose }) {
 
   const handleInputChange = (e) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
-    if (error) setError('');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
     setIsLoading(true);
 
     try {
@@ -75,7 +71,10 @@ export default function AuthModals({ isOpen, onClose }) {
         else navigate('/profile');
       }
     } catch (err) {
-      setError(err.message);
+      // API errors are automatically toasted, but we should toast local validation errors too
+      if (err.message && !err.message.includes('Status:')) {
+        import('react-hot-toast').then(mod => mod.toast.error(err.message));
+      }
     } finally {
       setIsLoading(false);
     }
@@ -192,11 +191,7 @@ export default function AuthModals({ isOpen, onClose }) {
             </div>
           )}
 
-          {error && (
-            <div className="p-3 bg-rose-50 border border-rose-100 text-rose-600 text-xs font-semibold rounded-lg" role="alert">
-              {error}
-            </div>
-          )}
+
 
           <div className="pt-2">
             <button

@@ -14,7 +14,6 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
     password: '',
     confirmPassword: ''
   });
-  const [error, setError] = useState('');
   const [fieldErrors, setFieldErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
@@ -27,7 +26,6 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
       password: '',
       confirmPassword: ''
     });
-    setError('');
     setFieldErrors({});
     setMode('login');
   }, [isOpen, bookingForm]);
@@ -54,7 +52,6 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
     if (fieldErrors[name]) {
       setFieldErrors((prev) => ({ ...prev, [name]: null }));
     }
-    if (error) setError('');
   };
 
   const validate = () => {
@@ -82,7 +79,6 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
 
     const err = validate();
     if (Object.keys(err).length > 0) {
@@ -119,7 +115,9 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
 
       if (onSuccess) onSuccess(authData);
     } catch (err) {
-      setError(err.message || 'Authentication failed. Please try again.');
+      if (err.message && !err.message.includes('Status:')) {
+        import('react-hot-toast').then(mod => mod.toast.error(err.message || 'Authentication failed. Please try again.'));
+      }
     } finally {
       setIsLoading(false);
     }
@@ -127,7 +125,6 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
 
   const switchMode = (newMode) => {
     setMode(newMode);
-    setError('');
     setFieldErrors({});
   };
 
@@ -280,11 +277,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
               </div>
             )}
 
-            {error && (
-              <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl text-xs font-bold animate-in fade-in duration-200 text-left" role="alert">
-                <span>{error}</span>
-              </div>
-            )}
+
 
             <button
               type="submit"

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { Routes, Route, Navigate, useNavigate, useLocation, useParams } from 'react-router-dom';
 import { MessageCircle, X } from 'lucide-react';
+import { Toaster } from 'react-hot-toast';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import CdatSection from './components/CdatSection';
@@ -244,6 +245,22 @@ export default function App() {
 
   return (
     <div className="font-sans antialiased selection:bg-brand/30 min-h-screen relative text-zinc-900 bg-zinc-50">
+
+      {/* Global Toast Notifications */}
+      <Toaster 
+        position="top-center"
+        toastOptions={{
+          duration: 4000,
+          style: {
+            background: '#18181b', // zinc-900
+            color: '#fff',
+            fontSize: '14px',
+            fontWeight: '600',
+            borderRadius: '12px',
+            border: '1px solid #27272a', // zinc-800
+          },
+        }}
+      />
 
       {/* Top Banner Notice Alert */}
       {!hideNavbarAndFooter && siteSettings.showBanner && siteSettings.bannerNotice && (

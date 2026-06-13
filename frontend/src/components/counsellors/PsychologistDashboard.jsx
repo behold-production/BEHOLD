@@ -57,13 +57,15 @@ export default function PsychologistDashboard({ setView }) {
  const [customHour, setCustomHour] = useState('09');
  const [customMinute, setCustomMinute] = useState('00');
  const [customPeriod, setCustomPeriod] = useState('AM');
- const [slotError, setSlotError] = useState('');
+ const setSlotError = (msg) => { if (msg && !msg.includes('Status:')) import('react-hot-toast').then(mod => mod.toast.error(msg)) };
+ const slotError = '';
  const [isAvailabilitySaved, setIsAvailabilitySaved] = useState(false);
 
  // Input meeting link state per booking
  const [editingBookingId, setEditingBookingId] = useState(null);
  const [meetLinkInput, setMeetLinkInput] = useState('');
- const [meetLinkError, setMeetLinkError] = useState('');
+ const setMeetLinkError = (msg) => { if (msg && !msg.includes('Status:')) import('react-hot-toast').then(mod => mod.toast.error(msg)) };
+ const meetLinkError = '';
  const [editingFeedbackId, setEditingFeedbackId] = useState(null);
  const [feedbackInput, setFeedbackInput] = useState('');
  const [activeBookingTab, setActiveBookingTab] = useState('CONFIRMED'); // CONFIRMED, COMPLETED, CANCELLED
@@ -71,7 +73,8 @@ export default function PsychologistDashboard({ setView }) {
  // Login form states
  const [loginEmail, setLoginEmail] = useState('');
  const [loginPassword, setLoginPassword] = useState('');
- const [loginError, setLoginError] = useState('');
+ const setLoginError = (msg) => { if (msg && !msg.includes('Status:')) import('react-hot-toast').then(mod => mod.toast.error(msg)) };
+ const loginError = '';
  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
  // Onboarding & Registration Gate states
@@ -93,7 +96,8 @@ export default function PsychologistDashboard({ setView }) {
  hours: 0,
  modes: ['ONLINE', 'OFFLINE', 'DOOR_STEP']
  });
- const [regError, setRegError] = useState('');
+ const setRegError = (msg) => { if (msg && !msg.includes('Status:')) import('react-hot-toast').then(mod => mod.toast.error(msg)) };
+ const regError = '';
  const [regActiveDays, setRegActiveDays] = useState({
  1: true, 2: true, 3: true, 4: true, 5: true, 6: false, 0: false
  });
@@ -102,7 +106,8 @@ export default function PsychologistDashboard({ setView }) {
  const [regCustomHour, setRegCustomHour] = useState('09');
  const [regCustomMinute, setRegCustomMinute] = useState('00');
  const [regCustomPeriod, setRegCustomPeriod] = useState('AM');
- const [regSlotError, setRegSlotError] = useState('');
+ const setRegSlotError = (msg) => { if (msg && !msg.includes('Status:')) import('react-hot-toast').then(mod => mod.toast.error(msg)) };
+ const regSlotError = '';
 
  // Availability time range state
  const [fromHour, setFromHour] = useState('09');
@@ -145,9 +150,12 @@ export default function PsychologistDashboard({ setView }) {
  return false;
  };
 
+ const [isLoadingData, setIsLoadingData] = useState(true);
+
  const loadBookingsData = async () => {
  try {
  if (!user) return;
+ setIsLoadingData(true);
  const advisorId = user.id;
 
  // Load profile
@@ -215,9 +223,14 @@ export default function PsychologistDashboard({ setView }) {
  return b.date.localeCompare(a.date);
  });
  setBookings(myBookings);
+ } else {
+ throw new Error(bookingsRes.message || "Failed to fetch appointments");
  }
  } catch (err) {
  console.error("Failed loading counsellor profile & bookings from API", err);
+ toast.error("Failed to load dashboard data. Please try again.");
+ } finally {
+ setIsLoadingData(false);
  }
  };
 
@@ -673,10 +686,6 @@ export default function PsychologistDashboard({ setView }) {
  />
  </div>
 
- {loginError && (
- <p className="text-sm text-rose-500 font-bold capitalize tracking-wide ">{loginError}</p>
- )}
-
  <button
  type="submit"
  disabled={isLoggingIn}
@@ -749,10 +758,6 @@ export default function PsychologistDashboard({ setView }) {
  />
  </div>
  </div>
-
- {regError && (
- <p className="text-sm text-rose-500 font-bold capitalize tracking-wide ">{regError}</p>
- )}
 
  <button
  type="submit"
@@ -864,10 +869,6 @@ export default function PsychologistDashboard({ setView }) {
  className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-indigo-500 rounded-lg text-sm text-white outline-none transition-colors resize-none"
  />
  </div>
-
- {regError && (
- <p className="text-sm text-rose-500 font-bold capitalize tracking-wide ">{regError}</p>
- )}
 
  <div className="flex gap-3">
  <button
@@ -999,7 +1000,6 @@ export default function PsychologistDashboard({ setView }) {
  Add Slot
  </button>
  </div>
- {regSlotError && <p className="text-sm text-rose-500 font-bold capitalize tracking-wide  mt-1">{regSlotError}</p>}
  </div>
 
  <div className="space-y-2 border-t border-zinc-800 pt-3 text-left">
@@ -1091,10 +1091,6 @@ export default function PsychologistDashboard({ setView }) {
  </button>
  </div>
  </div>
-
- {regError && (
- <p className="text-sm text-rose-500 font-bold capitalize tracking-wide ">{regError}</p>
- )}
 
  <div className="flex gap-3 pt-1">
  <button
@@ -1309,7 +1305,28 @@ export default function PsychologistDashboard({ setView }) {
 
  {/* WORKSPACE CONTENT ROUTER */}
  <div className="bg-zinc-900 border border-zinc-855 rounded-2xl p-5 sm:p-8 shadow-md">
-
+ {isLoadingData ? (
+    <div className="animate-pulse space-y-6">
+      <div className="border-b border-zinc-800 pb-3 flex justify-between items-center">
+        <div className="h-4 bg-zinc-800 rounded w-48"></div>
+        <div className="h-6 bg-zinc-800 rounded w-24"></div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="bg-zinc-950 border border-zinc-850 rounded-xl p-5 min-h-[160px] space-y-4">
+           <div className="h-6 bg-zinc-800 rounded w-1/3"></div>
+           <div className="h-5 bg-zinc-800 rounded w-2/3"></div>
+           <div className="h-4 bg-zinc-800 rounded w-1/2 mt-6"></div>
+        </div>
+        <div className="bg-zinc-950 border border-zinc-850 rounded-xl p-5 min-h-[160px] space-y-4">
+           <div className="h-6 bg-zinc-800 rounded w-1/3"></div>
+           <div className="h-4 bg-zinc-800 rounded w-full mt-4"></div>
+           <div className="h-4 bg-zinc-800 rounded w-full"></div>
+           <div className="h-4 bg-zinc-800 rounded w-full"></div>
+        </div>
+      </div>
+    </div>
+  ) : (
+    <>
  {/* WORKSPACE 1: OVERVIEW */}
  {currentSection === 'overview' && (
  <div className="space-y-6 animate-in fade-in duration-200 text-sm">
@@ -1662,7 +1679,6 @@ export default function PsychologistDashboard({ setView }) {
  Add Slot
  </button>
  </div>
- {slotError && <p className="text-sm text-rose-500 font-bold capitalize tracking-wide  mt-1">{slotError}</p>}
  </div>
 
  {/* Custom Time Range Adder */}
@@ -1761,10 +1777,6 @@ export default function PsychologistDashboard({ setView }) {
  {isAvailabilitySaved ? (
  <span className="text-sm text-emerald-500 font-bold capitalize  flex items-center gap-1">
  Availability Matrix Synchronized!
- </span>
- ) : slotError ? (
- <span className="text-sm text-rose-500 font-bold capitalize  ">
- {slotError}
  </span>
  ) : <span />}
  <button
@@ -1967,9 +1979,6 @@ export default function PsychologistDashboard({ setView }) {
  </button>
  </div>
  </div>
- {meetLinkError && (
- <p className="text-sm text-rose-500 font-bold capitalize tracking-wide  mt-0.5">{meetLinkError}</p>
- )}
  </div>
  ) : (
  <div className="flex items-center gap-2">
@@ -2009,7 +2018,8 @@ export default function PsychologistDashboard({ setView }) {
  </div>
  );
  })()}
-
+ </>
+ )}
  </div>
  </div>
 

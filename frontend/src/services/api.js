@@ -1,3 +1,5 @@
+import toast from 'react-hot-toast';
+
 const BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 let isRefreshing = false;
@@ -27,7 +29,9 @@ async function request(endpoint, options = {}) {
       headers
     });
   } catch (err) {
-    throw new Error('Network error occurred. Please verify your connection.');
+    const errorMsg = 'Network error occurred. Please verify your connection.';
+    toast.error(errorMsg);
+    throw new Error(errorMsg);
   }
 
   const text = await response.text();
@@ -47,6 +51,7 @@ async function request(endpoint, options = {}) {
       localStorage.removeItem('behold_refresh_token');
       localStorage.removeItem('behold_auth_user');
       if (window.spaNavigate) window.spaNavigate('/');
+      toast.error('Session expired. Please log in again.');
       throw new Error('Session expired. Please log in again.');
     }
 
@@ -72,6 +77,7 @@ async function request(endpoint, options = {}) {
           localStorage.removeItem('behold_refresh_token');
           localStorage.removeItem('behold_auth_user');
           if (window.spaNavigate) window.spaNavigate('/');
+          toast.error('Session expired. Please log in again.');
           throw new Error('Session expired. Please log in again.');
         }
       } catch (err) {
@@ -80,6 +86,7 @@ async function request(endpoint, options = {}) {
         localStorage.removeItem('behold_refresh_token');
         localStorage.removeItem('behold_auth_user');
         if (window.spaNavigate) window.spaNavigate('/');
+        toast.error('Session expired. Please log in again.');
         throw err;
       }
     }
@@ -97,7 +104,12 @@ async function request(endpoint, options = {}) {
   }
 
   if (!response.ok) {
-    throw new Error(data.message || `HTTP error! Status: ${response.status}`);
+    const errorMsg = data.message || `HTTP error! Status: ${response.status}`;
+    // Only toast if it's not a background validation that's handled gracefully
+    if (!options.silent) {
+      toast.error(errorMsg);
+    }
+    throw new Error(errorMsg);
   }
 
   return data;

@@ -1306,27 +1306,58 @@ export default function StudentProfile() {
   return (
     <div className="pt-5 sm:pt-20 pb-24 lg:pb-12 min-h-screen bg-zinc-50 text-zinc-900 font-sans text-left">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-5 sm:space-y-6">
-        {isLoading && (
-          <div className="fixed inset-0 z-[100] bg-white/60 backdrop-blur-[2px] flex flex-col items-center justify-center">
-            <RefreshCw className="w-8 h-8 text-zinc-900 animate-spin mb-4" />
-            <p className="text-sm font-semibold text-zinc-900">Loading your profile...</p>
+        {isLoading ? (
+          <div className="animate-pulse space-y-5 sm:space-y-6">
+            {/* Skeleton Hero Header */}
+            <div className="bg-white rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-center sm:items-start gap-6 border border-zinc-200">
+              <div className="w-20 h-20 rounded-2xl bg-zinc-200 shrink-0"></div>
+              <div className="flex-1 w-full space-y-3">
+                <div className="h-6 bg-zinc-200 rounded-md w-1/3"></div>
+                <div className="h-4 bg-zinc-200 rounded-md w-1/4"></div>
+                <div className="flex gap-4 mt-4">
+                  <div className="h-4 bg-zinc-200 rounded-md w-24"></div>
+                  <div className="h-4 bg-zinc-200 rounded-md w-24"></div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Skeleton Layout */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+              <aside className="lg:col-span-3">
+                <div className="bg-white border border-zinc-200 rounded-xl p-3 space-y-2">
+                  <div className="h-10 bg-zinc-200 rounded-lg w-full"></div>
+                  <div className="h-10 bg-zinc-200 rounded-lg w-full"></div>
+                  <div className="h-10 bg-zinc-200 rounded-lg w-full"></div>
+                  <div className="h-10 bg-zinc-200 rounded-lg w-full"></div>
+                </div>
+              </aside>
+              <main className="lg:col-span-9 space-y-5">
+                <div className="h-8 bg-zinc-200 rounded-md w-1/4 mb-4"></div>
+                <div className="h-32 bg-zinc-200 rounded-xl w-full"></div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="h-24 bg-zinc-200 rounded-xl w-full"></div>
+                  <div className="h-24 bg-zinc-200 rounded-xl w-full"></div>
+                </div>
+              </main>
+            </div>
           </div>
+        ) : (
+          <>
+            <HeroHeader />
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+              <aside className="lg:col-span-3">
+                <SidebarNav />
+              </aside>
+
+              <main className="lg:col-span-9 min-w-0">
+                {currentSection === 'overview' && <OverviewTab />}
+                {currentSection === 'details' && <ProfileDetailsTab />}
+                {currentSection === 'booked' && <BookedSessionsTab />}
+                {currentSection === 'results' && <ResultsTab />}
+              </main>
+            </div>
+          </>
         )}
-
-        <HeroHeader />
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
-          <aside className="lg:col-span-3">
-            <SidebarNav />
-          </aside>
-
-          <main className="lg:col-span-9 min-w-0">
-            {currentSection === 'overview' && <OverviewTab />}
-            {currentSection === 'details' && <ProfileDetailsTab />}
-            {currentSection === 'booked' && <BookedSessionsTab />}
-            {currentSection === 'results' && <ResultsTab />}
-          </main>
-        </div>
       </div>
     </div>
   );

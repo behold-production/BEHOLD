@@ -21,9 +21,6 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
         <span>
           {parts[0]}<span className="relative whitespace-nowrap text-brand">
             {match[1]}
-            <svg className="absolute left-0 -bottom-1 sm:-bottom-2 w-full h-[10px] sm:h-[14px] text-brand pointer-events-none" viewBox="0 0 100 10" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M2 8C35 3 70 3 98 8" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
-            </svg>
           </span>{parts[1]}
         </span>
       );
@@ -34,12 +31,12 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
   return (
     <section
       id="home"
-      className="relative w-full pt-28 pb-40 lg:pt-24 lg:pb-64 px-4 sm:px-6 flex flex-col items-center justify-center lg:justify-start min-h-[calc(100vh-72px)] lg:min-h-[85vh] select-none bg-gradient-to-b from-slate-900 to-slate-800"
+      className="relative w-full pt-28 pb-40 lg:pt-16 lg:pb-80 px-4 sm:px-6 flex flex-col items-center justify-center min-h-[calc(100vh-72px)] lg:min-h-[85vh] select-none bg-gradient-to-b from-slate-900 to-slate-800"
     >
       {/* Heavy 3D Background Elements & Particles */}
       <HeroBackgroundElements />
 
-      <div className="max-w-4xl mx-auto w-full flex flex-col items-center justify-start text-center relative z-20 space-y-6 mt-0 lg:mt-0">
+      <div className="max-w-4xl mx-auto w-full flex flex-col items-center justify-center text-center relative z-20 space-y-6 mt-0 lg:mt-0">
 
         {/* Top Highlight Label */}
         <motion.div
