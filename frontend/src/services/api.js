@@ -50,6 +50,7 @@ async function request(endpoint, options = {}) {
       localStorage.removeItem('behold_token');
       localStorage.removeItem('behold_refresh_token');
       localStorage.removeItem('behold_auth_user');
+      window.dispatchEvent(new Event('storage'));
       if (window.spaNavigate) window.spaNavigate('/');
       toast.error('Session expired. Please log in again.');
       throw new Error('Session expired. Please log in again.');
@@ -76,6 +77,7 @@ async function request(endpoint, options = {}) {
           localStorage.removeItem('behold_token');
           localStorage.removeItem('behold_refresh_token');
           localStorage.removeItem('behold_auth_user');
+          window.dispatchEvent(new Event('storage'));
           if (window.spaNavigate) window.spaNavigate('/');
           toast.error('Session expired. Please log in again.');
           throw new Error('Session expired. Please log in again.');
@@ -85,6 +87,7 @@ async function request(endpoint, options = {}) {
         localStorage.removeItem('behold_token');
         localStorage.removeItem('behold_refresh_token');
         localStorage.removeItem('behold_auth_user');
+        window.dispatchEvent(new Event('storage'));
         if (window.spaNavigate) window.spaNavigate('/');
         toast.error('Session expired. Please log in again.');
         throw err;
@@ -126,6 +129,7 @@ const ApiService = {
       localStorage.setItem('behold_token', res.data.accessToken);
       localStorage.setItem('behold_refresh_token', res.data.refreshToken);
       localStorage.setItem('behold_auth_user', JSON.stringify(res.data.user));
+      window.dispatchEvent(new Event('storage'));
     }
     return res;
   },
@@ -141,6 +145,7 @@ const ApiService = {
       localStorage.setItem('behold_refresh_token', res.data.refreshToken);
       // Log in automatically if registration succeeded
       localStorage.setItem('behold_auth_user', JSON.stringify(res.data.user || res.data.counsellor));
+      window.dispatchEvent(new Event('storage'));
     }
     return res;
   },
@@ -149,6 +154,7 @@ const ApiService = {
     localStorage.removeItem('behold_token');
     localStorage.removeItem('behold_refresh_token');
     localStorage.removeItem('behold_auth_user');
+    window.dispatchEvent(new Event('storage'));
   },
 
   // User/Student Profile
@@ -163,6 +169,13 @@ const ApiService = {
     });
     if (res.success && res.data) {
       localStorage.setItem('behold_student_profile', JSON.stringify(res.data));
+      // Sync auth user session
+      try {
+        const authUser = JSON.parse(localStorage.getItem('behold_auth_user') || '{}');
+        const updatedUser = { ...authUser, ...res.data };
+        localStorage.setItem('behold_auth_user', JSON.stringify(updatedUser));
+        window.dispatchEvent(new Event('storage'));
+      } catch (e) {}
     }
     return res;
   },
@@ -414,10 +427,20 @@ const ApiService = {
   },
 
   async updateCounsellorProfile(profileData) {
-    return await request('/counsellors/profile', {
+    const res = await request('/counsellors/profile', {
       method: 'PUT',
       body: JSON.stringify(profileData)
     });
+    if (res.success && res.data) {
+      // Sync auth user session
+      try {
+        const authUser = JSON.parse(localStorage.getItem('behold_auth_user') || '{}');
+        const updatedUser = { ...authUser, ...res.data };
+        localStorage.setItem('behold_auth_user', JSON.stringify(updatedUser));
+        window.dispatchEvent(new Event('storage'));
+      } catch (e) {}
+    }
+    return res;
   },
 
   // Inquiries

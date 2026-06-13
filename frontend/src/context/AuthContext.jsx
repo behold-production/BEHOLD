@@ -8,15 +8,25 @@ export function AuthProvider({ children }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const savedUser = localStorage.getItem('behold_auth_user');
-    if (savedUser) {
-      try {
-        setUser(JSON.parse(savedUser));
-      } catch (e) {
-        console.error("Failed to parse saved user", e);
+    const syncUserFromStorage = () => {
+      const savedUser = localStorage.getItem('behold_auth_user');
+      if (savedUser) {
+        try {
+          setUser(JSON.parse(savedUser));
+        } catch (e) {
+          console.error("Failed to parse saved user", e);
+        }
+      } else {
+        setUser(null);
       }
-    }
-    setIsLoading(false);
+      setIsLoading(false);
+    };
+
+    syncUserFromStorage();
+
+    // Listen for cross-tab or programmatic storage changes to sync session instantly
+    window.addEventListener('storage', syncUserFromStorage);
+    return () => window.removeEventListener('storage', syncUserFromStorage);
   }, []);
 
   const login = async (email, password) => {
