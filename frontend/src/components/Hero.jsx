@@ -9,7 +9,8 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
   };
 
   const settings = siteSettings || {};
-  const rawTitle = settings.heroTitle || "Bridging You \nTo Your {True Growth.}";
+  // Removed hardcoded newline to allow natural text flow on large screens
+  const rawTitle = settings.heroTitle || "Bridging You To Your {True Growth.}";
   const heroSub = settings.heroSub || "Professional psychological counseling, aptitude assessment, and career mentorship designed to help individuals thrive with confidence and purpose.";
 
   const renderTitle = (text) => {
@@ -17,19 +18,17 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
     if (match) {
       const parts = text.split(match[0]);
       return (
-        <span className="whitespace-pre-line">
-          {parts[0]}
-          <span className="relative inline-block text-brand">
+        <span>
+          {parts[0]}<span className="relative whitespace-nowrap text-brand">
             {match[1]}
-            <svg className="absolute left-0 -bottom-2 w-full h-[8px] text-brand pointer-events-none" viewBox="0 0 100 10" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg className="absolute left-0 -bottom-1 sm:-bottom-2 w-full h-[10px] sm:h-[14px] text-brand pointer-events-none" viewBox="0 0 100 10" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M2 8C35 3 70 3 98 8" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
             </svg>
-          </span>
-          {parts[1]}
+          </span>{parts[1]}
         </span>
       );
     }
-    return <span className="whitespace-pre-line">{text}</span>;
+    return <span>{text}</span>;
   };
 
   return (
@@ -59,7 +58,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
-          className="text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-black text-white leading-[1.1] tracking-tight"
+          className="text-4xl sm:text-5xl md:text-6xl lg:text-[5rem] font-black text-white leading-tight sm:leading-[1.1] tracking-tight drop-shadow-lg"
         >
           {renderTitle(rawTitle)}
         </motion.h1>
