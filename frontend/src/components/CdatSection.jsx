@@ -143,7 +143,6 @@ export default function CdatSection({ setView }) {
               <div className="absolute -inset-1 bg-gradient-to-r from-brand/20 to-brand-accent/20 rounded-3xl blur opacity-30 group-hover:opacity-60 transition duration-700"></div>
               <form onSubmit={handleGenerateCode} className="relative space-y-5 bg-white/80 backdrop-blur-2xl border border-white shadow-xl shadow-zinc-200/50 p-6 sm:p-8 rounded-2xl w-full">
                 <div className="text-sm font-black capitalize text-zinc-800 mb-2 flex items-center gap-2">
-                  <ArrowRight className="w-4 h-4 text-brand" />
                   Generate Your Access Code
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
