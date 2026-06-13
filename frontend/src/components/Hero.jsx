@@ -34,12 +34,12 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
   return (
     <section
       id="home"
-      className="relative w-full pt-20 pb-40 lg:pt-32 lg:pb-56 px-4 sm:px-6 flex flex-col items-center justify-center min-h-[calc(100vh-72px)] select-none bg-gradient-to-b from-slate-900 to-slate-800"
+      className="relative w-full pt-24 pb-40 lg:pt-40 lg:pb-56 px-4 sm:px-6 flex flex-col items-center justify-center lg:justify-start min-h-[calc(100vh-72px)] select-none bg-gradient-to-b from-slate-900 to-slate-800"
     >
       {/* Heavy 3D Background Elements & Particles */}
       <HeroBackgroundElements />
 
-      <div className="max-w-4xl mx-auto w-full flex flex-col items-center justify-center text-center relative z-20 space-y-6 mt-8 lg:mt-4">
+      <div className="max-w-4xl mx-auto w-full flex flex-col items-center justify-start text-center relative z-20 space-y-6 mt-0 lg:mt-0">
 
         {/* Top Highlight Label */}
         <motion.div
