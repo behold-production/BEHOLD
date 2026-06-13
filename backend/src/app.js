@@ -20,6 +20,7 @@ const app = express();
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
+  /^http:\/\/192\.168\.29\.45:\d+$/, // Allow specific LAN IP for development
   /^https:\/\/.*\.vercel\.app$/,  // All Vercel preview deployments
   process.env.FRONTEND_URL        // Set this in Vercel env vars to your production URL
 ].filter(Boolean);
