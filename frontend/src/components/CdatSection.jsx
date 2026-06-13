@@ -82,7 +82,7 @@ export default function CdatSection({ setView }) {
           <span className="inline-block text-[9px] bg-zinc-100 text-zinc-550 border border-zinc-200 px-3 py-1 rounded-md uppercase tracking-widest font-extrabold font-mono">
             scientific strengths mapping
           </span>
-          <h3 className="text-2xl md:text-3xl font-header font-black uppercase tracking-wide text-zinc-900 mt-1 group-hover:text-brand transition-colors duration-500">
+          <h3 className="text-lg sm:text-2xl md:text-3xl font-header font-black uppercase tracking-wide text-zinc-900 mt-1 group-hover:text-brand transition-colors duration-500">
             CIGI Differential Aptitude Test (CDAT)
           </h3>
           <p className="text-zinc-650 font-sans text-sm md:text-base font-light leading-relaxed">
@@ -97,7 +97,7 @@ export default function CdatSection({ setView }) {
               <span className="inline-block text-[9px] bg-brand-light text-brand-dark px-3 py-1 rounded-md uppercase tracking-widest font-extrabold border border-brand/20">
                 school & institution access
               </span>
-              <h4 className="text-xl md:text-2xl font-header font-black uppercase tracking-wide text-zinc-900 mt-1">
+              <h4 className="text-base sm:text-xl md:text-2xl font-header font-black uppercase tracking-wide text-zinc-900 mt-1">
                 Registration & Group Code
               </h4>
             </div>
@@ -154,9 +154,9 @@ export default function CdatSection({ setView }) {
                   <div className="pt-1">
                     <button
                       type="submit"
-                      className="min-h-[48px] px-6 py-3 bg-gradient-brand hover:opacity-95 text-zinc-955 font-extrabold text-[10px] uppercase tracking-wider rounded-lg transition cursor-pointer shadow-sm border-none w-full sm:w-auto"
+                      className="min-h-[48px] px-6 py-3 bg-gradient-brand hover:opacity-95 text-zinc-955 font-black text-xs uppercase tracking-widest rounded-lg transition cursor-pointer shadow-sm border-none w-full sm:w-auto"
                     >
-                      Generate Group Code for Your Aptitude
+                      Generate Group Code
                     </button>
                   </div>
                 ) : (

@@ -84,7 +84,7 @@ export default function Services({ setView, onBookTherapist }) {
                 <span className="inline-block text-[9px] bg-zinc-900 text-white px-2.5 py-0.5 rounded-md uppercase tracking-widest font-black font-mono">
                   Career Mentoring
                 </span>
-                <h3 className="text-xl md:text-2xl font-header font-black uppercase tracking-wide text-zinc-900 mt-1 group-hover:text-brand transition-colors duration-500">
+                <h3 className="text-lg sm:text-xl md:text-2xl font-header font-black uppercase tracking-wide text-zinc-900 mt-1 group-hover:text-brand transition-colors duration-500">
                   Career Clarity & Direction
                 </h3>
                 <h4 className="text-xs font-bold text-zinc-400 italic mt-0.5">
@@ -127,7 +127,7 @@ export default function Services({ setView, onBookTherapist }) {
                 <span className="inline-block text-[9px] bg-zinc-900 text-white px-2.5 py-0.5 rounded-md uppercase tracking-widest font-black font-mono">
                   Psychological Counselling
                 </span>
-                <h3 className="text-xl md:text-2xl font-header font-black uppercase tracking-wide text-zinc-900 mt-1 group-hover:text-brand transition-colors duration-500">
+                <h3 className="text-lg sm:text-xl md:text-2xl font-header font-black uppercase tracking-wide text-zinc-900 mt-1 group-hover:text-brand transition-colors duration-500">
                   Emotional Wellbeing & Support
                 </h3>
                 <h4 className="text-xs font-bold text-zinc-400 italic mt-0.5">

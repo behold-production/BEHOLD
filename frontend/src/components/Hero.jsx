@@ -70,7 +70,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
 
           {/* Main Title */}
           <div className="space-y-5 sm:space-y-6 flex-1 flex flex-col justify-center items-center lg:items-start mt-2 lg:mt-8">
-            <h1 className="text-[1.85rem] min-[400px]:text-[2.2rem] sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-header font-black tracking-tight leading-[1.1] text-white lg:text-zinc-900 uppercase pb-0">
+            <h1 className="text-[1.6rem] min-[400px]:text-[1.95rem] sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-header font-black tracking-tight leading-[1.15] text-white lg:text-zinc-900 uppercase pb-0">
               {renderTitle(rawTitle)}
             </h1>
             <p className="text-zinc-200 lg:text-zinc-600 font-sans text-xs min-[400px]:text-sm sm:text-base lg:text-base xl:text-lg 2xl:text-xl font-light max-w-lg xl:max-w-xl 2xl:max-w-2xl leading-relaxed pb-2 sm:pb-6">
