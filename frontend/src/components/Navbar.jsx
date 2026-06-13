@@ -9,6 +9,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
   const [activeSection, setActiveSection] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
   const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const desktopDropdownRef = useRef(null);
@@ -57,6 +58,16 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
     return () => document.body.classList.remove('no-scroll');
   }, [isMenuOpen]);
 
+  // Track scroll position for dynamic styling
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Check initial state
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   // Close mobile drawer & dropdown automatically when route changes
   useEffect(() => {
     setIsMenuOpen(false);
@@ -79,13 +90,18 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
   }, [showDropdown]);
 
   const scrollToSection = (id) => {
-    navigateToSection(id);
     setIsMenuOpen(false);
+    // Delay scrolling slightly to allow the no-scroll lock to be removed from the body first
+    setTimeout(() => {
+      navigateToSection(id);
+    }, 50);
   };
 
   const handleLogoClick = () => {
-    navigateToSection('top');
     setIsMenuOpen(false);
+    setTimeout(() => {
+      navigateToSection('top');
+    }, 50);
   };
 
   const handleProfileClick = () => {
@@ -103,9 +119,15 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
     }
   };
 
+  const isDarkTheme = currentView === '/' && !isScrolled;
+
   return (
     <>
-      <header className="sticky top-0 w-full bg-white/85 backdrop-blur-lg z-50 border-b border-zinc-200/60 text-zinc-900 transition-all shadow-xs">
+      <header className={`sticky top-0 w-full z-50 transition-all duration-300 ${
+        isDarkTheme 
+          ? 'bg-slate-900 border-b border-transparent text-white shadow-none py-1' 
+          : 'bg-white/85 backdrop-blur-lg border-b border-zinc-200/60 text-zinc-900 shadow-xs'
+      }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3">
           {/* Left Column: Logo & Nav Links */}
           <div className="flex items-center gap-2 sm:gap-3 lg:gap-12 min-w-0">
@@ -115,7 +137,9 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
               type="button"
               aria-label={isMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
               aria-expanded={isMenuOpen}
-              className="lg:hidden text-zinc-900 hover:text-brand-dark hover:bg-zinc-50 transition rounded-lg w-11 h-11 -ml-2 flex items-center justify-center cursor-pointer"
+              className={`lg:hidden transition rounded-lg w-11 h-11 -ml-2 flex items-center justify-center cursor-pointer ${
+                isDarkTheme ? 'text-white hover:bg-slate-800' : 'text-zinc-900 hover:text-brand-dark hover:bg-zinc-50'
+              }`}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -123,16 +147,21 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
 
             <span
               onClick={handleLogoClick}
-              className="font-header font-black text-lg sm:text-xl tracking-tighter cursor-pointer text-zinc-900 hover:text-brand transition duration-300 select-none truncate"
+              className={`font-header font-black text-lg sm:text-xl tracking-tighter cursor-pointer transition duration-300 select-none truncate ${
+                isDarkTheme ? 'text-white hover:text-zinc-200' : 'text-zinc-900 hover:text-brand'
+              }`}
               id="nav-logo"
             >
               {siteName || 'BEHOLD'}<span className="text-brand font-black">.</span>
             </span>
 
-            <nav className="hidden lg:flex items-center gap-8 text-sm font-bold text-zinc-500">
+            <nav className={`hidden lg:flex items-center gap-8 text-sm font-bold ${isDarkTheme ? 'text-zinc-300' : 'text-zinc-500'}`}>
               <button
                 onClick={handleLogoClick}
-                className={`transition-all duration-300 cursor-pointer pb-1 relative capitalize ${currentView === '/' && (activeSection === 'home' || activeSection === 'cdat' || activeSection === '') ? 'text-zinc-900 font-bold' : 'hover:text-zinc-900'
+                className={`transition-all duration-300 cursor-pointer pb-1 relative capitalize ${
+                  currentView === '/' && (activeSection === 'home' || activeSection === 'cdat' || activeSection === '') 
+                    ? (isDarkTheme ? 'text-white' : 'text-zinc-900 font-bold') 
+                    : (isDarkTheme ? 'hover:text-white' : 'hover:text-zinc-900')
                   }`}
               >
                 Home
@@ -144,7 +173,10 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
               {siteSettings.enablePsychology !== false && (
                 <button
                   onClick={() => scrollToSection('services')}
-                  className={`transition-all duration-300 cursor-pointer pb-1 relative capitalize ${activeSection === 'services' && currentView === '/' ? 'text-zinc-900 font-bold' : 'hover:text-zinc-900'
+                  className={`transition-all duration-300 cursor-pointer pb-1 relative capitalize ${
+                    activeSection === 'services' && currentView === '/' 
+                      ? (isDarkTheme ? 'text-white' : 'text-zinc-900 font-bold') 
+                      : (isDarkTheme ? 'hover:text-white' : 'hover:text-zinc-900')
                     }`}
                 >
                   Services
@@ -156,7 +188,10 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
 
               <button
                 onClick={() => navigate('/sample-test')}
-                className={`transition-all duration-300 cursor-pointer pb-1 relative capitalize ${currentView === '/sample-test' ? 'text-zinc-900 font-bold' : 'hover:text-zinc-900'
+                className={`transition-all duration-300 cursor-pointer pb-1 relative capitalize ${
+                  currentView === '/sample-test' 
+                    ? (isDarkTheme ? 'text-white' : 'text-zinc-900 font-bold') 
+                    : (isDarkTheme ? 'hover:text-white' : 'hover:text-zinc-900')
                   }`}
               >
                 Sample Test
@@ -167,7 +202,10 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
 
               <button
                 onClick={() => scrollToSection('inquiry')}
-                className={`transition-all duration-300 cursor-pointer pb-1 relative capitalize ${activeSection === 'inquiry' && currentView === '/' ? 'text-zinc-900 font-bold' : 'hover:text-zinc-900'
+                className={`transition-all duration-300 cursor-pointer pb-1 relative capitalize ${
+                  activeSection === 'inquiry' && currentView === '/' 
+                    ? (isDarkTheme ? 'text-white' : 'text-zinc-900 font-bold') 
+                    : (isDarkTheme ? 'hover:text-white' : 'hover:text-zinc-900')
                   }`}
               >
                 Contact
@@ -223,7 +261,9 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
               <button
                 type="button"
                 onClick={onOpenAuth}
-                className="px-4 h-10 text-sm font-bold text-zinc-900 hover:text-brand transition-colors cursor-pointer capitalize  rounded-lg hover:bg-zinc-50 flex items-center"
+                className={`px-4 h-10 text-sm font-bold transition-colors cursor-pointer capitalize rounded-lg flex items-center ${
+                  isDarkTheme ? 'text-white hover:bg-slate-800' : 'text-zinc-900 hover:text-brand hover:bg-zinc-50'
+                }`}
               >
                 Sign In
               </button>
@@ -310,8 +350,9 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
       <aside
         id="mobile-drawer"
         aria-hidden={!isMenuOpen}
-        className={`fixed top-0 left-0 bottom-0 w-[300px] max-w-[85vw] bg-white z-50 lg:hidden shadow-2xl transition-all duration-300 ease-in-out transform flex flex-col p-5 border-r border-zinc-200 ${isMenuOpen ? 'translate-x-0 opacity-100 visible' : '-translate-x-full opacity-0 invisible pointer-events-none'
-          }`}
+        className={`fixed top-0 left-0 bottom-0 w-[300px] max-w-[85vw] bg-white z-50 lg:hidden shadow-2xl transition-all duration-300 ease-in-out transform flex flex-col p-5 border-r border-zinc-200 ${
+          isMenuOpen ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0 pointer-events-none'
+        }`}
       >
         {/* Drawer Header */}
         <div className="flex items-center justify-between pb-4 border-b border-zinc-150 mb-5">

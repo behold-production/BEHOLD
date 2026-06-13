@@ -81,7 +81,6 @@ export default function CdatSection({ setView }) {
   return (
     <section id="cdat" className="max-w-7xl mx-auto px-4 sm:px-6 py-12 md:py-20 text-zinc-900 text-left relative">
       {/* High-End Background Glows */}
-      <div className="absolute inset-0 bg-gradient-to-br from-brand/5 via-zinc-50/50 to-brand-accent/5 pointer-events-none rounded-[2.5rem]" />
       <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-brand/10 rounded-full blur-[100px] pointer-events-none mix-blend-multiply" />
       <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-brand-accent/10 rounded-full blur-[100px] pointer-events-none mix-blend-multiply" />
 
