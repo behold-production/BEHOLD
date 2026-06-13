@@ -181,7 +181,10 @@ const ApiService = {
   },
 
   // Counsellor search & details
-  async getCounsellors(query = {}) {
+  _counsellorsCache: null,
+  _counsellorsCacheTime: 0,
+
+  async getCounsellors(query = {}, forceRefresh = false) {
     const params = new URLSearchParams();
     Object.entries(query).forEach(([key, value]) => {
       if (value !== undefined && value !== null && value !== '') {
@@ -190,6 +193,20 @@ const ApiService = {
     });
 
     const qs = params.toString();
+
+    // Cache the default full list to prevent sudden loading screens
+    if (!qs && !forceRefresh) {
+      if (this._counsellorsCache && (Date.now() - this._counsellorsCacheTime < 5 * 60 * 1000)) {
+        return this._counsellorsCache;
+      }
+      const res = await request('/users/counsellors');
+      if (res.success) {
+        this._counsellorsCache = res;
+        this._counsellorsCacheTime = Date.now();
+      }
+      return res;
+    }
+
     return await request(`/users/counsellors${qs ? `?${qs}` : ''}`);
   },
 

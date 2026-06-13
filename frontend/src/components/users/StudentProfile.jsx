@@ -1343,17 +1343,17 @@ export default function StudentProfile() {
           </div>
         ) : (
           <>
-            <HeroHeader />
+            {HeroHeader()}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
               <aside className="lg:col-span-3">
-                <SidebarNav />
+                {SidebarNav()}
               </aside>
 
               <main className="lg:col-span-9 min-w-0">
-                {currentSection === 'overview' && <OverviewTab />}
-                {currentSection === 'details' && <ProfileDetailsTab />}
-                {currentSection === 'booked' && <BookedSessionsTab />}
-                {currentSection === 'results' && <ResultsTab />}
+                {currentSection === 'overview' && OverviewTab()}
+                {currentSection === 'details' && ProfileDetailsTab()}
+                {currentSection === 'booked' && BookedSessionsTab()}
+                {currentSection === 'results' && ResultsTab()}
               </main>
             </div>
           </>

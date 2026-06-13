@@ -25,7 +25,7 @@ export default function PsychologistDashboard({ setView }) {
     setIsMobileMenuOpen(false);
   };
 
-  // Profile state
+  // Profile state (server truth — updated by loadBookingsData)
   const [profile, setProfile] = useState({
     name: user?.name || '',
     role: 'Consultant Psychologist',
@@ -38,6 +38,8 @@ export default function PsychologistDashboard({ setView }) {
     hours: 0,
     modes: ['ONLINE', 'OFFLINE', 'DOOR_STEP']
   });
+  // Separate edit state — what the form binds to, so background refreshes don't clear the user's typing
+  const [editProfile, setEditProfile] = useState(null);
 
   const [isProfileSaved, setIsProfileSaved] = useState(false);
   const [bookings, setBookings] = useState([]);
@@ -152,10 +154,10 @@ export default function PsychologistDashboard({ setView }) {
 
   const [isLoadingData, setIsLoadingData] = useState(true);
 
-  const loadBookingsData = async () => {
+  const loadBookingsData = async (silent = false) => {
     try {
       if (!user) return;
-      setIsLoadingData(true);
+      if (!silent) setIsLoadingData(true);
 
       // Fetch both profile and bookings concurrently
       const [profileRes, bookingsRes] = await Promise.all([
@@ -239,13 +241,17 @@ export default function PsychologistDashboard({ setView }) {
 
   // Load advisor details & bookings from API
   useEffect(() => {
-    loadBookingsData();
+    loadBookingsData(false);
   }, [user]);
 
-  // Auto-refresh bookings when switching to bookings or overview tab
+  // Auto-refresh bookings silently when switching to bookings or overview tab
   useEffect(() => {
     if (currentSection === 'bookings' || currentSection === 'overview') {
-      loadBookingsData();
+      loadBookingsData(true);
+    }
+    // When entering the profile edit section, sync editProfile from latest server data
+    if (currentSection === 'profile') {
+      setEditProfile({ ...profile });
     }
   }, [currentSection]);
 
@@ -387,21 +393,22 @@ export default function PsychologistDashboard({ setView }) {
 
   const handleProfileSave = async (e) => {
     e.preventDefault();
+    const formData = editProfile || profile;
     try {
-      const specialtiesArr = profile.specialties
-        ? profile.specialties.split(',').map(s => s.trim()).filter(Boolean)
+      const specialtiesArr = formData.specialties
+        ? formData.specialties.split(',').map(s => s.trim()).filter(Boolean)
         : [];
 
       const payload = {
-        name: profile.name,
-        education: profile.education,
+        name: formData.name,
+        education: formData.education,
         specialties: specialtiesArr,
-        price: Number(profile.price) || 1200,
-        lang: profile.lang,
-        bio: profile.bio,
-        defaultMeetLink: profile.defaultMeetLink,
-        hours: Number(profile.hours) || 0,
-        modes: profile.modes
+        price: Number(formData.price) || 1200,
+        lang: formData.lang,
+        bio: formData.bio,
+        defaultMeetLink: formData.defaultMeetLink,
+        hours: Number(formData.hours) || 0,
+        modes: formData.modes
       };
 
       const res = await ApiService.updateCounsellorProfile(payload);
@@ -1426,14 +1433,19 @@ export default function PsychologistDashboard({ setView }) {
                     <span className="text-sm text-zinc-500 font-light">Clinic Records</span>
                   </div>
 
+                  {(() => {
+                    // Use editProfile (local edit copy) so background refreshes never reset the form
+                    const ep = editProfile || profile;
+                    const setEp = (updater) => setEditProfile(prev => ({ ...(prev || profile), ...updater }));
+                    return (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-left font-medium">
                     <div className="space-y-1.5">
                       <label className="text-zinc-455 capitalize  font-bold">Display Name</label>
                       <input
                         type="text"
                         placeholder="e.g. Dr. Sandra Tomy"
-                        value={profile.name}
-                        onChange={(e) => setProfile({ ...profile, name: e.target.value })}
+                        value={ep.name || ''}
+                        onChange={(e) => setEp({ name: e.target.value })}
                         className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand"
                       />
                     </div>
@@ -1443,8 +1455,8 @@ export default function PsychologistDashboard({ setView }) {
                       <input
                         type="text"
                         placeholder="e.g. PhD Clinical Psychology"
-                        value={profile.education}
-                        onChange={(e) => setProfile({ ...profile, education: e.target.value })}
+                        value={ep.education || ''}
+                        onChange={(e) => setEp({ education: e.target.value })}
                         className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand"
                       />
                     </div>
@@ -1454,8 +1466,8 @@ export default function PsychologistDashboard({ setView }) {
                       <input
                         type="number"
                         placeholder="1200"
-                        value={profile.price}
-                        onChange={(e) => setProfile({ ...profile, price: Number(e.target.value) })}
+                        value={ep.price || ''}
+                        onChange={(e) => setEp({ price: Number(e.target.value) })}
                         className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand"
                       />
                     </div>
@@ -1465,8 +1477,8 @@ export default function PsychologistDashboard({ setView }) {
                       <input
                         type="text"
                         placeholder="Malayalam, English, Tamil"
-                        value={profile.lang}
-                        onChange={(e) => setProfile({ ...profile, lang: e.target.value })}
+                        value={ep.lang || ''}
+                        onChange={(e) => setEp({ lang: e.target.value })}
                         className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand"
                       />
                     </div>
@@ -1476,8 +1488,8 @@ export default function PsychologistDashboard({ setView }) {
                       <input
                         type="number"
                         placeholder="0"
-                        value={profile.hours || 0}
-                        onChange={(e) => setProfile({ ...profile, hours: Number(e.target.value) })}
+                        value={ep.hours || 0}
+                        onChange={(e) => setEp({ hours: Number(e.target.value) })}
                         className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand"
                       />
                     </div>
@@ -1487,8 +1499,8 @@ export default function PsychologistDashboard({ setView }) {
                       <input
                         type="text"
                         placeholder="Anxiety, Relationship Dynamics, Career Stress"
-                        value={profile.specialties}
-                        onChange={(e) => setProfile({ ...profile, specialties: e.target.value })}
+                        value={ep.specialties || ''}
+                        onChange={(e) => setEp({ specialties: e.target.value })}
                         className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand"
                       />
                     </div>
@@ -1498,8 +1510,8 @@ export default function PsychologistDashboard({ setView }) {
                       <input
                         type="url"
                         placeholder="https://meet.google.com/abc-defg-hij"
-                        value={profile.defaultMeetLink || ''}
-                        onChange={(e) => setProfile({ ...profile, defaultMeetLink: e.target.value })}
+                        value={ep.defaultMeetLink || ''}
+                        onChange={(e) => setEp({ defaultMeetLink: e.target.value })}
                         className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand"
                       />
                     </div>
@@ -1508,20 +1520,20 @@ export default function PsychologistDashboard({ setView }) {
                       <label className="text-zinc-455 capitalize  font-bold block text-left">Supported Session Modes</label>
                       <div className="flex gap-4 pt-1 justify-start text-left">
                         {['ONLINE', 'OFFLINE', 'DOOR_STEP'].map(mode => {
-                          const isSelected = profile.modes?.includes(mode);
+                          const isSelected = ep.modes?.includes(mode);
                           return (
                             <label key={mode} className="flex items-center gap-2 cursor-pointer text-sm text-white select-none">
                               <input
                                 type="checkbox"
                                 checked={isSelected}
                                 onChange={(e) => {
-                                  let nextModes = [...(profile.modes || [])];
+                                  let nextModes = [...(ep.modes || [])];
                                   if (e.target.checked) {
                                     if (!nextModes.includes(mode)) nextModes.push(mode);
                                   } else {
                                     nextModes = nextModes.filter(m => m !== mode);
                                   }
-                                  setProfile({ ...profile, modes: nextModes });
+                                  setEp({ modes: nextModes });
                                 }}
                                 className="w-4 h-4 rounded border-zinc-850 bg-zinc-950 text-brand focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
                               />
@@ -1537,12 +1549,14 @@ export default function PsychologistDashboard({ setView }) {
                       <textarea
                         rows={5}
                         placeholder="Describe your clinical expertise and background..."
-                        value={profile.bio}
-                        onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
+                        value={ep.bio || ''}
+                        onChange={(e) => setEp({ bio: e.target.value })}
                         className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand resize-none"
                       />
                     </div>
                   </div>
+                    );
+                  })()}
 
                   <div className="pt-4 border-t border-zinc-800 flex items-center justify-between">
                     {isProfileSaved ? (
