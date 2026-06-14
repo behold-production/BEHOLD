@@ -234,8 +234,24 @@ export default function AdminDashboard({ setView }) {
     modes: ['ONLINE', 'OFFLINE', 'DOOR_STEP'],
     title: 'Consultant Psychologist'
   });
- const [psyFormError, setPsyFormError] = useState('');
- const [psyFormSuccess, setPsyFormSuccess] = useState('');
+  const [psyFormError, setPsyFormError] = useState('');
+  const [psyFormSuccess, setPsyFormSuccess] = useState('');
+
+  // Admin Availability state declarations
+  const [adminActiveDays, setAdminActiveDays] = useState({
+    1: true, 2: true, 3: true, 4: true, 5: true, 6: false, 0: false
+  });
+  const [adminAvailableSlots, setAdminAvailableSlots] = useState([]);
+  const [adminAllSlots, setAdminAllSlots] = useState([]);
+  const [adminCustomHour, setAdminCustomHour] = useState('09');
+  const [adminCustomMinute, setAdminCustomMinute] = useState('00');
+  const [adminCustomPeriod, setAdminCustomPeriod] = useState('AM');
+  const [adminFromHour, setAdminFromHour] = useState('09');
+  const [adminFromMinute, setAdminFromMinute] = useState('00');
+  const [adminFromPeriod, setAdminFromPeriod] = useState('AM');
+  const [adminToHour, setAdminToHour] = useState('05');
+  const [adminToMinute, setAdminToMinute] = useState('00');
+  const [adminToPeriod, setAdminToPeriod] = useState('PM');
 
  const [isAddBookingOpen, setIsAddBookingOpen] = useState(false);
  const [isEditBookingOpen, setIsEditBookingOpen] = useState(false);
@@ -686,6 +702,75 @@ export default function AdminDashboard({ setView }) {
  };
 
  // Psychologist Actions
+  const parseAdminTimeToMinutes = (timeStr) => {
+    const [time, period] = timeStr.split(' ');
+    let [hours, minutes] = time.split(':').map(Number);
+    if (period === 'PM' && hours !== 12) hours += 12;
+    if (period === 'AM' && hours === 12) hours = 0;
+    return hours * 60 + minutes;
+  };
+
+  const formatAdminMinutesToTime = (minutes) => {
+    let hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    const period = hours >= 12 ? 'PM' : 'AM';
+    if (hours > 12) hours -= 12;
+    if (hours === 0) hours = 12;
+    const hourStr = String(hours).padStart(2, '0');
+    const minStr = String(mins).padStart(2, '0');
+    return `${hourStr}:${minStr} ${period}`;
+  };
+
+  const addAdminTimeRangeSlots = (fromStr, toStr) => {
+    const fromMins = parseAdminTimeToMinutes(fromStr);
+    const toMins = parseAdminTimeToMinutes(toStr);
+    if (fromMins >= toMins) {
+      setPsyFormError('Start time must be before end time.');
+      return;
+    }
+
+    const generated = [];
+    // Generate every 60 minutes (1 hour)
+    for (let m = fromMins; m <= toMins; m += 60) {
+      generated.push(formatAdminMinutesToTime(m));
+    }
+
+    setAdminAllSlots(prev => {
+      const merged = [...prev];
+      generated.forEach(slot => {
+        if (!merged.includes(slot)) merged.push(slot);
+      });
+      return merged;
+    });
+    setAdminAvailableSlots(prev => {
+      const merged = [...prev];
+      generated.forEach(slot => {
+        if (!merged.includes(slot)) merged.push(slot);
+      });
+      return merged;
+    });
+  };
+
+  const handleAddAdminCustomSlot = () => {
+    setPsyFormError('');
+    const slotStr = `${adminCustomHour}:${adminCustomMinute} ${adminCustomPeriod}`;
+    if (adminAllSlots.includes(slotStr)) {
+      setPsyFormError('This slot already exists.');
+      return;
+    }
+    setAdminAllSlots(prev => [...prev, slotStr]);
+    setAdminAvailableSlots(prev => [...prev, slotStr]);
+  };
+
+  const handleRemoveAdminSlot = (slot) => {
+    setAdminAllSlots(prev => prev.filter(s => s !== slot));
+    setAdminAvailableSlots(prev => prev.filter(s => s !== slot));
+  };
+
+  const toggleAdminDay = (dayIndex) => {
+    setAdminActiveDays(prev => ({ ...prev, [dayIndex]: !prev[dayIndex] }));
+  };
+
  const handleCreatePsy = async (e) => {
     e.preventDefault();
     if (!hasPsyPermission) {
@@ -719,7 +804,11 @@ export default function AdminDashboard({ setView }) {
         phone: psyForm.phone,
         hours: psyForm.hours,
         modes: psyForm.modes,
-        title: psyForm.title
+        title: psyForm.title,
+        availability: {
+          activeDays: adminActiveDays,
+          availableSlots: adminAvailableSlots
+        }
       });
       setPsyFormSuccess("Psychologist added successfully!");
       setPsyForm({
@@ -738,6 +827,11 @@ export default function AdminDashboard({ setView }) {
         modes: ['ONLINE', 'OFFLINE', 'DOOR_STEP'],
         title: 'Consultant Psychologist'
       });
+      setAdminActiveDays({
+        1: true, 2: true, 3: true, 4: true, 5: true, 6: false, 0: false
+      });
+      setAdminAvailableSlots([]);
+      setAdminAllSlots([]);
       reloadData();
       setTimeout(() => {
         setIsAddPsyOpen(false);
@@ -765,6 +859,26 @@ export default function AdminDashboard({ setView }) {
       modes: psy.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP'],
       title: psy.title || 'Consultant Psychologist'
     });
+    
+    // Load availability
+    if (psy.availability) {
+      const avail = psy.availability;
+      if (avail.activeDays) setAdminActiveDays(avail.activeDays);
+      if (avail.availableSlots) {
+        setAdminAvailableSlots(avail.availableSlots);
+        setAdminAllSlots(avail.availableSlots);
+      } else {
+        setAdminAvailableSlots([]);
+        setAdminAllSlots([]);
+      }
+    } else {
+      setAdminActiveDays({
+        1: true, 2: true, 3: true, 4: true, 5: true, 6: false, 0: false
+      });
+      setAdminAvailableSlots([]);
+      setAdminAllSlots([]);
+    }
+    
     setPsyFormError('');
     setPsyFormSuccess('');
     setIsEditPsyOpen(true);
@@ -803,7 +917,11 @@ export default function AdminDashboard({ setView }) {
         phone: psyForm.phone,
         hours: psyForm.hours,
         modes: psyForm.modes,
-        title: psyForm.title
+        title: psyForm.title,
+        availability: {
+          activeDays: adminActiveDays,
+          availableSlots: adminAvailableSlots
+        }
       });
       setPsyFormSuccess("Psychologist details updated!");
       reloadData();
@@ -2432,6 +2550,11 @@ export default function AdminDashboard({ setView }) {
  specialties: 'Anxiety Stress & Panic, Depression & Mood Concerns, Relationship',
  price: 1250, lang: 'Malayalam, English', bio: ''
  });
+ setAdminActiveDays({
+   1: true, 2: true, 3: true, 4: true, 5: true, 6: false, 0: false
+ });
+ setAdminAvailableSlots([]);
+ setAdminAllSlots([]);
  setPsyFormError('');
  setPsyFormSuccess('');
  setIsAddPsyOpen(true);
@@ -3021,7 +3144,12 @@ export default function AdminDashboard({ setView }) {
  lang: 'Malayalam, English',
  bio: ''
  });
- setPsyFormError('');
+  setAdminActiveDays({
+    1: true, 2: true, 3: true, 4: true, 5: true, 6: false, 0: false
+  });
+  setAdminAvailableSlots([]);
+  setAdminAllSlots([]);
+  setPsyFormError('');
  setPsyFormSuccess('');
  setIsAddPsyOpen(true);
  }}
@@ -4595,6 +4723,224 @@ export default function AdminDashboard({ setView }) {
  className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors resize-none"
  />
  </div>
+
+ {/* Availability Timings */}
+ <div className="sm:col-span-2 border-t border-zinc-800 pt-4 space-y-4">
+   <h4 className="text-sm font-bold text-zinc-300 capitalize font-header">Availability Timings</h4>
+   
+   {/* Operational Days */}
+   <div className="space-y-1.5">
+     <label className="text-xs capitalize font-bold text-zinc-400 block">Operational Days</label>
+     <div className="flex flex-wrap gap-1.5">
+       {[
+         { label: 'Mon', index: 1 },
+         { label: 'Tue', index: 2 },
+         { label: 'Wed', index: 3 },
+         { label: 'Thu', index: 4 },
+         { label: 'Fri', index: 5 },
+         { label: 'Sat', index: 6 },
+         { label: 'Sun', index: 0 }
+       ].map(day => {
+         const active = adminActiveDays[day.index];
+         return (
+           <button
+             key={day.index}
+             type="button"
+             onClick={() => toggleAdminDay(day.index)}
+             className={`px-3 py-1.5 border rounded-lg text-xs font-bold capitalize transition-all duration-200 cursor-pointer ${active
+               ? 'bg-brand text-zinc-955 font-bold border-none'
+               : 'bg-zinc-955 border-zinc-850 text-zinc-500 hover:border-zinc-750'
+               }`}
+           >
+             {day.label}
+           </button>
+         );
+       })}
+     </div>
+   </div>
+
+   {/* Active Timing Slots */}
+   <div className="space-y-1.5">
+     <label className="text-xs capitalize font-bold text-zinc-400 block">Timing Slots (Active)</label>
+     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[200px] overflow-y-auto pr-1">
+       {adminAllSlots.map(slot => {
+         const exists = adminAvailableSlots.includes(slot);
+         return (
+           <div key={slot} className="flex items-center gap-1.5 w-full">
+             <button
+               type="button"
+               onClick={() => {
+                 if (exists) {
+                   setAdminAvailableSlots(prev => prev.filter(s => s !== slot));
+                 } else {
+                   setAdminAvailableSlots(prev => [...prev, slot]);
+                 }
+               }}
+               className={`flex-1 py-2 border rounded-lg font-bold transition cursor-pointer text-xs ${exists
+                 ? 'bg-brand/10 border-brand text-brand'
+                 : 'bg-zinc-955 border-zinc-850 text-zinc-400 hover:border-zinc-750'
+                 }`}
+             >
+               {slot}
+             </button>
+             <button
+               type="button"
+               onClick={() => handleRemoveAdminSlot(slot)}
+               className="px-2 py-2 bg-zinc-950 border border-zinc-850 hover:bg-rose-955/40 hover:border-rose-900 text-zinc-500 hover:text-rose-400 rounded-lg text-xs font-bold transition cursor-pointer shrink-0 font-header"
+               title="Remove Slot"
+             >
+               Remove
+             </button>
+           </div>
+         );
+       })}
+       {adminAllSlots.length === 0 && (
+         <div className="col-span-2 py-4 bg-zinc-955/40 border border-dashed border-zinc-850 rounded-xl text-zinc-550 italic text-xs text-center w-full">
+           No timing slots configured. Use the controls below to add custom slots or generate from a time range.
+         </div>
+       )}
+     </div>
+   </div>
+
+   {/* Add Custom Timing Slot */}
+   <div className="space-y-1.5 bg-zinc-955/50 border border-zinc-850/60 p-3.5 rounded-xl">
+     <label className="text-xs capitalize font-bold text-zinc-350 block">Add Custom Timing Slot</label>
+     <div className="flex gap-2 items-end">
+       <div className="flex-1 space-y-0.5">
+         <label className="text-[10px] text-zinc-500 capitalize font-bold block">Hour</label>
+         <select
+           value={adminCustomHour}
+           onChange={(e) => setAdminCustomHour(e.target.value)}
+           className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+         >
+           {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map(h => (
+             <option key={h} value={h}>{h}</option>
+           ))}
+         </select>
+       </div>
+       <div className="flex-1 space-y-0.5">
+         <label className="text-[10px] text-zinc-500 capitalize font-bold block">Minute</label>
+         <select
+           value={adminCustomMinute}
+           onChange={(e) => setAdminCustomMinute(e.target.value)}
+           className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-855 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+         >
+           {['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55'].map(m => (
+             <option key={m} value={m}>{m}</option>
+           ))}
+         </select>
+       </div>
+       <div className="flex-1 space-y-0.5">
+         <label className="text-[10px] text-zinc-500 capitalize font-bold block">AM/PM</label>
+         <select
+           value={adminCustomPeriod}
+           onChange={(e) => setAdminCustomPeriod(e.target.value)}
+           className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-855 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+         >
+           <option value="AM">AM</option>
+           <option value="PM">PM</option>
+         </select>
+       </div>
+       <button
+         type="button"
+         onClick={handleAddAdminCustomSlot}
+         className="bg-brand/10 hover:bg-brand text-brand hover:text-zinc-955 px-3 py-1.5 text-xs font-bold capitalize rounded-lg transition-colors border border-brand/30 hover:border-brand cursor-pointer shrink-0 h-[30px] flex items-center justify-center font-header"
+       >
+         Add Slot
+       </button>
+     </div>
+   </div>
+
+   {/* Add Custom Time Range */}
+   <div className="space-y-1.5 bg-zinc-955/50 border border-zinc-850/60 p-3.5 rounded-xl">
+     <label className="text-xs capitalize font-bold text-zinc-350 block">Generate Timing Slots from Range</label>
+     <div className="flex flex-col gap-2">
+       <div className="flex gap-1.5 items-end">
+         <span className="text-xs text-zinc-500 font-bold pb-1.5 capitalize tracking-wide w-10 text-left">From:</span>
+         <div className="flex-1 space-y-0.5">
+           <select
+             value={adminFromHour}
+             onChange={(e) => setAdminFromHour(e.target.value)}
+             className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+           >
+             {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map(h => (
+               <option key={h} value={h}>{h}</option>
+             ))}
+           </select>
+         </div>
+         <div className="flex-1 space-y-0.5">
+           <select
+             value={adminFromMinute}
+             onChange={(e) => setAdminFromMinute(e.target.value)}
+             className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+           >
+             {['00', '15', '30', '45'].map(m => (
+               <option key={m} value={m}>{m}</option>
+             ))}
+           </select>
+         </div>
+         <div className="flex-1 space-y-0.5">
+           <select
+             value={adminFromPeriod}
+             onChange={(e) => setAdminFromPeriod(e.target.value)}
+             className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-855 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+           >
+             <option value="AM">AM</option>
+             <option value="PM">PM</option>
+           </select>
+         </div>
+       </div>
+
+       <div className="flex gap-1.5 items-end">
+         <span className="text-xs text-zinc-500 font-bold pb-1.5 capitalize tracking-wide w-10 text-left">To:</span>
+         <div className="flex-1 space-y-0.5">
+           <select
+             value={adminToHour}
+             onChange={(e) => setAdminToHour(e.target.value)}
+             className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+           >
+             {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map(h => (
+               <option key={h} value={h}>{h}</option>
+             ))}
+           </select>
+         </div>
+         <div className="flex-1 space-y-0.5">
+           <select
+             value={adminToMinute}
+             onChange={(e) => setAdminToMinute(e.target.value)}
+             className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+           >
+             {['00', '15', '30', '45'].map(m => (
+               <option key={m} value={m}>{m}</option>
+             ))}
+           </select>
+         </div>
+         <div className="flex-1 space-y-0.5">
+           <select
+             value={adminToPeriod}
+             onChange={(e) => setAdminToPeriod(e.target.value)}
+             className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-855 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+           >
+             <option value="AM">AM</option>
+             <option value="PM">PM</option>
+           </select>
+         </div>
+       </div>
+
+       <button
+         type="button"
+         onClick={() => {
+           const fromStr = `${adminFromHour}:${adminFromMinute} ${adminFromPeriod}`;
+           const toStr = `${adminToHour}:${adminToMinute} ${adminToPeriod}`;
+           addAdminTimeRangeSlots(fromStr, toStr);
+         }}
+         className="w-full mt-1 bg-brand/10 hover:bg-brand text-brand hover:text-zinc-955 py-2 text-xs font-bold capitalize rounded-lg transition-colors border border-brand/30 hover:border-brand cursor-pointer flex items-center justify-center font-header"
+       >
+         Generate Hourly Slots from Range
+       </button>
+     </div>
+   </div>
+ </div>
  </div>
 
  {psyFormError && (
@@ -5322,6 +5668,39 @@ export default function AdminDashboard({ setView }) {
                     {mode === 'DOOR_STEP' ? 'Doorstep' : mode.charAt(0) + mode.slice(1).toLowerCase()}
                   </span>
                 ))}
+              </div>
+            </div>
+
+            {/* Active Availability Timings */}
+            <div className="bg-zinc-955 border border-zinc-850 rounded-xl p-4 space-y-2.5 text-sm">
+              <span className="text-sm capitalize font-bold text-zinc-500 block ">Active Availability Timings</span>
+              <div>
+                <span className="text-zinc-500 block text-xs capitalize">Operational Days</span>
+                <span className="font-semibold text-zinc-300">
+                  {viewingPsychologist.availability?.activeDays
+                    ? Object.entries(viewingPsychologist.availability.activeDays)
+                        .filter(([_, active]) => active)
+                        .map(([dayIndex]) => {
+                          const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                          return days[Number(dayIndex)];
+                        })
+                        .join(', ') || 'None'
+                    : 'Monday, Tuesday, Wednesday, Thursday, Friday'}
+                </span>
+              </div>
+              <div className="pt-1.5">
+                <span className="text-zinc-500 block text-xs capitalize">Available Time Slots</span>
+                <div className="flex flex-wrap gap-1 mt-1.5 max-h-[100px] overflow-y-auto pr-1">
+                  {viewingPsychologist.availability?.availableSlots?.length > 0 ? (
+                    viewingPsychologist.availability.availableSlots.map(slot => (
+                      <span key={slot} className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-xs font-bold text-zinc-400">
+                        {slot}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="text-zinc-550 italic text-xs">No timing slots configured.</span>
+                  )}
+                </div>
               </div>
             </div>
           </div>

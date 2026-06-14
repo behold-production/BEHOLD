@@ -44,14 +44,14 @@ export function AuthProvider({ children }) {
     }
   };
 
-  const register = async (name, email, password, role = 'USER') => {
+  const register = async (name, email, password, role = 'USER', extraData = {}) => {
     try {
       // Convert UI role values to matching backend format
       const backendRole = role.toLowerCase() === 'psychologist' || role === 'counsellor'
         ? 'counsellor'
         : 'user';
 
-      const res = await ApiService.register(name, email, password, backendRole);
+      const res = await ApiService.register(name, email, password, backendRole, extraData);
       if (res.success && res.data) {
         const userData = res.data.user || res.data.counsellor;
         setUser(userData);

@@ -277,7 +277,7 @@ const AdminController = {
   // Create Counsellor
   async createCounsellor(req, res, next) {
     try {
-      const { name, email, password, education, specialties, price, lang, bio, defaultMeetLink, phone, hours, modes, title } = req.body;
+      const { name, email, password, education, specialties, price, lang, bio, defaultMeetLink, phone, hours, modes, title, availability } = req.body;
       const bcrypt = require('bcryptjs');
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
@@ -296,7 +296,7 @@ const AdminController = {
         qualifications: education ? [education] : [],
         experience: bio || '',
         bio: bio || '',
-        availability: {},
+        availability: availability || {},
         isVerified: true,
         isActive: true,
         rating: 5.0,
@@ -324,7 +324,7 @@ const AdminController = {
   async updateCounsellor(req, res, next) {
     try {
       const { id } = req.params;
-      const { name, email, password, education, specialties, price, lang, bio, defaultMeetLink, phone, hours, modes, title } = req.body;
+      const { name, email, password, education, specialties, price, lang, bio, defaultMeetLink, phone, hours, modes, title, availability } = req.body;
       const updates = {};
       if (name !== undefined) updates.name = name;
       if (email !== undefined) updates.email = email.toLowerCase();
@@ -350,12 +350,13 @@ const AdminController = {
       if (hours !== undefined) updates.hours = Number(hours) || 0;
       if (modes !== undefined) {
         updates.modes = Array.isArray(modes)
-          ? modes
+          ? updates.modes = modes
           : (typeof modes === 'string'
-            ? modes.split(',').map(m => m.trim().toUpperCase()).filter(Boolean)
+            ? updates.modes = modes.split(',').map(m => m.trim().toUpperCase()).filter(Boolean)
             : []);
       }
       if (title !== undefined) updates.title = title;
+      if (availability !== undefined) updates.availability = availability;
       
       if (password) {
         const bcrypt = require('bcryptjs');

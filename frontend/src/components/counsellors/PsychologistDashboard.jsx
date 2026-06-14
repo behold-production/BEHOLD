@@ -319,20 +319,12 @@ export default function PsychologistDashboard({ setView }) {
     }
 
     try {
-      await register(
-        regForm.name.trim(),
-        regForm.email.trim(),
-        regForm.password,
-        'PSYCHOLOGIST'
-      );
-
       // Convert specialties string to array
       const specialtiesArr = regForm.specialties
         ? regForm.specialties.split(',').map(s => s.trim()).filter(Boolean)
         : [];
 
-      const newProfilePayload = {
-        name: regForm.name.trim(),
+      const extraPayload = {
         education: regForm.education.trim(),
         specialties: specialtiesArr,
         price: Number(regForm.price) || 1200,
@@ -340,17 +332,21 @@ export default function PsychologistDashboard({ setView }) {
         bio: regForm.bio.trim(),
         defaultMeetLink: regForm.defaultMeetLink.trim(),
         hours: Number(regForm.hours) || 0,
-        modes: regForm.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP']
+        modes: regForm.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP'],
+        title: 'Consultant Psychologist',
+        availability: {
+          activeDays: regActiveDays,
+          availableSlots: regAvailableSlots
+        }
       };
 
-      // Call API updates
-      await ApiService.updateCounsellorProfile(newProfilePayload);
-      await ApiService.updateAvailability({
-        activeDays: regActiveDays,
-        availableSlots: regAvailableSlots
-      });
-
-      await login(regForm.email.trim(), regForm.password);
+      await register(
+        regForm.name.trim(),
+        regForm.email.trim(),
+        regForm.password,
+        'PSYCHOLOGIST',
+        extraPayload
+      );
 
       setRegForm({
         name: '',

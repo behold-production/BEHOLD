@@ -161,11 +161,11 @@ const ApiService = {
     return res;
   },
 
-  async register(name, email, password, role = 'user') {
+  async register(name, email, password, role = 'user', extra = {}) {
     const endpoint = role === 'counsellor' ? '/auth/register-counsellor' : '/auth/register';
     const res = await request(endpoint, {
       method: 'POST',
-      body: JSON.stringify({ name, email, password })
+      body: JSON.stringify({ name, email, password, ...extra })
     });
     if (res.success && res.data && res.data.accessToken) {
       localStorage.setItem('behold_token', res.data.accessToken);

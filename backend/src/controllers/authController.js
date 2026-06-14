@@ -84,7 +84,11 @@ const AuthController = {
   // Register Counsellor
   async registerCounsellor(req, res, next) {
     try {
-      const { name, email, password, phone, specialties } = req.body;
+      const {
+        name, email, password, phone, specialties,
+        education, price, lang, bio, defaultMeetLink,
+        hours, modes, title, availability
+      } = req.body;
 
       if (!name || !email || !password) {
         return res.status(400).json({ success: false, message: 'Name, email, and password are required' });
@@ -105,14 +109,31 @@ const AuthController = {
         password: hashedPassword,
         phone: phone || '',
         role: 'counsellor',
-        specialties: specialties || [],
-        qualifications: [],
-        experience: '',
-        availability: {},
+        education: education || '',
+        specialties: Array.isArray(specialties)
+          ? specialties
+          : (specialties && typeof specialties === 'string'
+            ? specialties.split(',').map(s => s.trim()).filter(Boolean)
+            : []),
+        qualifications: education ? [education] : [],
+        experience: bio || '',
+        bio: bio || '',
+        availability: availability || {},
         isVerified: false,
         isActive: true,
         rating: 5.0,
-        reviewCount: 0
+        reviewCount: 0,
+        price: Number(price) || 1200,
+        lang: lang || 'English, Malayalam',
+        defaultMeetLink: defaultMeetLink || '',
+        modePreference: 'BOTH',
+        hours: Number(hours) || 0,
+        modes: Array.isArray(modes)
+          ? modes
+          : (modes && typeof modes === 'string'
+            ? modes.split(',').map(m => m.trim().toUpperCase()).filter(Boolean)
+            : ['ONLINE', 'OFFLINE', 'DOOR_STEP']),
+        title: title || 'Consultant Psychologist'
       });
 
       const { password: _, ...counsellorData } = newCounsellor;
