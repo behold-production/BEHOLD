@@ -64,10 +64,10 @@ export default function About() {
                     {`0${idx + 1}`}
                   </span>
                   <div className="space-y-1.5 sm:space-y-2">
-                    <h4 className="font-header font-bold text-xs capitalize  text-zinc-900 group-hover:text-brand-dark transition-colors duration-300">
+                    <h4 className="font-header font-bold text-lg sm:text-xl capitalize  text-zinc-900 group-hover:text-brand-dark transition-colors duration-300">
                       {pillar.title}
                     </h4>
-                    <p className="text-zinc-550 font-sans text-xs sm:text-xs font-light leading-relaxed">
+                    <p className="text-zinc-550 font-sans text-sm sm:text-base font-normal leading-relaxed">
                       {pillar.desc}
                     </p>
                   </div>

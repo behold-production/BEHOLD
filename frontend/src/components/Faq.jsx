@@ -59,12 +59,12 @@ export default function Faq() {
           return (
             <div 
               key={idx} 
-              className="bg-white border border-zinc-200 rounded-lg p-4 sm:p-6 md:p-8 shadow-xs hover:shadow-md transition-all duration-500"
+              className="bg-white border border-zinc-200 rounded-lg p-3 sm:p-4 md:p-5 shadow-xs hover:shadow-md transition-all duration-500"
             >
               <button
                 type="button"
                 onClick={() => toggleFaq(idx)}
-                className="w-full min-h-[44px] text-left font-medium text-zinc-900 flex items-start justify-between hover:text-zinc-900 transition cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 rounded-md"
+                className="w-full min-h-[40px] text-left font-medium text-zinc-900 flex items-start justify-between hover:text-zinc-900 transition cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 rounded-md"
                 aria-expanded={isOpen}
               >
                 <div className="flex items-start gap-3 sm:gap-4">
@@ -84,7 +84,7 @@ export default function Faq() {
               
               <div 
                 className={`transition-all duration-500 ease-out overflow-hidden ${
-                  isOpen ? 'max-h-60 opacity-100 mt-6 pt-6 border-t border-zinc-100' : 'max-h-0 opacity-0'
+                  isOpen ? 'max-h-60 opacity-100 mt-4 pt-4 border-t border-zinc-100' : 'max-h-0 opacity-0'
                 }`}
               >
                 <p className="text-zinc-650 text-xs md:text-sm font-light leading-relaxed pl-12">

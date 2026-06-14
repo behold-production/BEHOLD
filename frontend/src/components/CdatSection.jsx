@@ -111,29 +111,43 @@ export default function CdatSection({ setView }) {
         <div className="absolute inset-0 bg-gradient-to-b from-white/60 to-transparent pointer-events-none" />
 
         {/* TOP: CIGI Differential Aptitude Test (CDAT) */}
-        <div className="relative z-10 flex flex-col lg:flex-row items-center lg:items-start justify-between gap-10 text-left w-full">
+        <div className="relative z-10 flex flex-col lg:flex-row justify-between gap-10 text-left w-full">
+          
+          <div className="flex-1 min-w-0">
+            {/* Header row containing title and logo on mobile */}
+            <div className="flex items-start justify-between gap-4 w-full">
+              <div className="space-y-3 flex-1 min-w-0">
+                <span className="inline-flex items-center gap-1.5 text-xs bg-brand/10 text-brand-dark border border-brand/20 px-3.5 py-1.5 rounded-full capitalize font-bold shadow-sm whitespace-nowrap">
+                  <span className="w-1.5 h-1.5 rounded-full bg-brand-dark animate-pulse"></span>
+                  Scientific Strengths Mapping
+                </span>
+                <h3 className="text-xl sm:text-3xl md:text-4xl font-header font-black capitalize tracking-tight text-zinc-900 mt-2 group-hover:text-brand-dark transition-colors duration-500">
+                  CIGI Differential Aptitude Test (CDAT)
+                </h3>
+              </div>
+              
+              {/* Mobile/Tablet Logo (hidden on lg) */}
+              <div className="lg:hidden w-20 h-20 sm:w-28 sm:h-28 flex items-center justify-center shrink-0 pointer-events-none mt-1">
+                <img
+                  src="/CIGI.png"
+                  alt="CIGI Differential Aptitude Test Logo"
+                  className="w-full h-full object-contain mix-blend-multiply transition-all duration-500"
+                />
+              </div>
+            </div>
 
-          {/* Text Area */}
-          <div className="space-y-4 lg:max-w-2xl flex-1">
-            <span className="inline-flex items-center gap-1.5 text-xs bg-brand/10 text-brand-dark border border-brand/20 px-3.5 py-1.5 rounded-full capitalize font-bold shadow-sm">
-              <span className="w-1.5 h-1.5 rounded-full bg-brand-dark animate-pulse"></span>
-              Scientific Strengths Mapping
-            </span>
-            <h3 className="text-xl sm:text-3xl md:text-4xl font-header font-black capitalize tracking-tight text-zinc-900 mt-2 group-hover:text-brand-dark transition-colors duration-500">
-              CIGI Differential Aptitude Test (CDAT)
-            </h3>
-            <p className="text-zinc-650 font-sans text-sm md:text-base font-medium leading-relaxed">
+            {/* Paragraph below title & logo */}
+            <p className="text-zinc-650 font-sans text-sm md:text-base font-medium leading-relaxed mt-4">
               C-DAT (CIGI-Differential Aptitude Test). This standardized tool effectively identifies the inherent capacities of high school and higher secondary students. C-DAT has guided many students from various states in India and abroad towards suitable academic and career paths.
             </p>
           </div>
 
-          {/* CIGI Logo (Background on Mobile, Right-Side on Desktop) */}
-          <div className="absolute top-[55%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none lg:pointer-events-auto lg:static lg:translate-x-0 lg:translate-y-0 w-full lg:w-auto flex justify-center lg:justify-end shrink-0 z-0 lg:z-10">
-            <div className="hidden lg:block absolute inset-0 bg-brand/5 blur-3xl rounded-full scale-150"></div>
+          {/* Desktop Logo (hidden on mobile/tablet) */}
+          <div className="hidden lg:flex w-36 h-36 items-center justify-center z-10 shrink-0 pointer-events-none lg:pointer-events-auto">
             <img
               src="/CIGI.png"
               alt="CIGI Differential Aptitude Test Logo"
-              className="w-full max-w-[280px] sm:max-w-[350px] lg:max-w-[220px] h-auto object-contain opacity-30 lg:opacity-95 lg:hover:opacity-100 lg:hover:scale-105 transition-all duration-500 mix-blend-multiply contrast-125 brightness-110"
+              className="w-full h-full object-contain mix-blend-multiply transition-all duration-500 lg:hover:scale-105"
             />
           </div>
         </div>
@@ -142,7 +156,7 @@ export default function CdatSection({ setView }) {
         <div className="relative z-10 pt-8 border-t border-zinc-200/80 space-y-8">
           <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
             <div className="space-y-2">
-              <span className="inline-block text-[11px] bg-zinc-900 text-white px-3 py-1 rounded-md capitalize font-bold tracking-wide shadow-md">
+              <span className="inline-block text-xs bg-zinc-900 text-white px-3 py-1.5 rounded-md capitalize font-bold tracking-wide shadow-md">
                 School & Institution Access
               </span>
               <h4 className="text-lg sm:text-2xl font-header font-black capitalize tracking-tight text-zinc-900 mt-1">
@@ -203,15 +217,15 @@ export default function CdatSection({ setView }) {
                   <div className="pt-2">
                     <button
                       type="submit"
-                      className="min-h-[52px] px-8 py-3.5 bg-gradient-brand hover:scale-[1.02] active:scale-[0.98] text-zinc-950 font-bold text-sm tracking-wide rounded-xl transition-all duration-300 shadow-sm hover:shadow-md w-full sm:w-auto border-none"
+                      className="min-h-[52px] px-8 py-3.5 bg-gradient-brand hover:scale-[1.02] active:scale-[0.98] text-white font-bold text-sm tracking-wide rounded-xl transition-all duration-300 shadow-sm hover:shadow-md w-full sm:w-auto border-none"
                     >
                       Generate group code for CIGI aptitude
                     </button>
                   </div>
                 ) : (
                   <div className="pt-2 space-y-4 animate-in fade-in zoom-in-95 duration-500">
-                    <div className="p-5 border border-brand/20 bg-gradient-to-r from-brand-light/50 to-brand-light/10 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-inner">
-                      <div>
+                    <div className="p-5 border border-brand/20 bg-gradient-to-r from-brand-light/50 to-brand-light/10 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-inner text-center sm:text-left">
+                      <div className="w-full sm:w-auto">
                         <span className="text-xs uppercase tracking-widest text-brand-dark/60 font-black block mb-1">Your Group Code</span>
                         <span className="text-2xl font-black text-zinc-900 tracking-tight">{generatedCode}</span>
                       </div>
@@ -244,7 +258,7 @@ export default function CdatSection({ setView }) {
                         }
                       }}
                       className={`relative overflow-hidden min-h-[52px] flex items-center justify-center gap-2 w-full px-8 py-3.5 font-bold text-sm tracking-wide rounded-xl transition-all duration-300 shadow-lg ${hasCopied
-                        ? 'bg-brand text-zinc-950 cursor-pointer border-none hover:scale-[1.01] hover:shadow-brand/20 active:scale-100'
+                        ? 'bg-brand text-white cursor-pointer border-none hover:scale-[1.01] hover:shadow-brand/20 active:scale-100'
                         : 'bg-zinc-100/50 text-zinc-400 cursor-not-allowed border border-zinc-200 shadow-none'
                         }`}
                     >
@@ -262,7 +276,13 @@ export default function CdatSection({ setView }) {
 
                 {copyMessage && (
                   <p
-                    className="mt-2 text-xs font-bold text-rose-650"
+                    className={`mt-2 text-xs font-bold text-center sm:text-left ${
+                      isError 
+                        ? 'text-rose-650' 
+                        : copyMessage.includes('copied') 
+                          ? 'text-emerald-650' 
+                          : 'text-amber-600'
+                    }`}
                     role={isError ? 'alert' : 'status'}
                   >
                     {copyMessage}
