@@ -125,7 +125,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
     <>
       <header className={`sticky top-0 w-full z-50 transition-all duration-300 ${
         isDarkTheme 
-          ? 'bg-transparent text-white shadow-none py-1' 
+          ? 'bg-slate-900 text-white shadow-none py-1' 
           : 'bg-white/70 backdrop-blur-md text-zinc-900 shadow-xs'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3">
