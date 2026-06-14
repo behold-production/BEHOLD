@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
+const { connectDB } = require('./config/db');
 
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
@@ -15,6 +16,16 @@ const publicRoutes = require('./routes/publicRoutes');
 const errorHandler = require('./middleware/errorMiddleware');
 
 const app = express();
+
+// Database Connection Middleware for Serverless / Cold Starts
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
 
 // Enable CORS
 const allowedOrigins = [

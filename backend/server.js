@@ -1,22 +1,8 @@
 require('dotenv').config();
-const mongoose = require('mongoose');
 const app = require('./src/app');
-const StorageService = require('./src/services/storageService');
+const { connectDB } = require('./src/config/db');
 
 const PORT = process.env.PORT || 5000;
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/behold_aspire';
-
-// Cache MongoDB connection for Vercel serverless (reuse across invocations)
-let isConnected = false;
-
-async function connectDB() {
-  if (isConnected) return;
-  console.log('[Database] Connecting to MongoDB...');
-  await mongoose.connect(MONGODB_URI);
-  isConnected = true;
-  console.log('[Database] MongoDB Connected successfully.');
-  await StorageService.seedDefaultAdmin();
-}
 
 // On Vercel (serverless), module.exports = app is required.
 // For local dev with node/nodemon, we call app.listen().

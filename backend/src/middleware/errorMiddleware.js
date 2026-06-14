@@ -4,6 +4,20 @@ const errorHandler = (err, req, res, next) => {
   let statusCode = err.statusCode || 500;
   let message = err.message || 'Internal Server Error';
 
+  // Handle Mongoose Connection & Buffering Timeouts (Serverless/Network issues)
+  if (
+    err.name === 'MongooseServerSelectionError' ||
+    (err.message && (
+      err.message.includes('buffering timed out') ||
+      err.message.includes('ECONNREFUSED') ||
+      err.message.includes('ENOTFOUND') ||
+      err.message.includes('connection timed out')
+    ))
+  ) {
+    statusCode = 503; // Service Unavailable
+    message = 'Database connection error. Please verify the database is running or try again later.';
+  }
+
   // Handle Mongoose Validation Errors
   if (err.name === 'ValidationError') {
     statusCode = 400;

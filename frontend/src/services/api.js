@@ -107,7 +107,23 @@ async function request(endpoint, options = {}) {
   }
 
   if (!response.ok) {
-    const errorMsg = data.message || `HTTP error! Status: ${response.status}`;
+    let errorMsg = data.message || `HTTP error! Status: ${response.status}`;
+
+    // Map raw/system database timeout and network errors to user-friendly messages
+    if (
+      typeof errorMsg === 'string' && (
+        errorMsg.includes('buffering timed out') ||
+        errorMsg.includes('MongooseServerSelectionError') ||
+        errorMsg.includes('ECONNREFUSED') ||
+        errorMsg.includes('ENOTFOUND') ||
+        errorMsg.includes('connection timed out')
+      )
+    ) {
+      errorMsg = 'Database connection error. Please try again later.';
+    } else if (response.status === 502 || response.status === 504) {
+      errorMsg = 'Server is temporarily unavailable. Please try again later.';
+    }
+
     // Only toast if it's not a background validation that's handled gracefully
     if (!options.silent) {
       toast.error(errorMsg, { id: endpoint });

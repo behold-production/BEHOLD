@@ -80,7 +80,7 @@ export default function CdatSection({ setView }) {
     profileData.groupCode = HARDCODED_CODE;
     localStorage.setItem('behold_student_profile', JSON.stringify(profileData));
 
-    setCopyMessage("Please enter your group id on the dedicated column without fail.");
+    setCopyMessage("Action Required: Please copy your group code first to unlock the registration portal.");
     setIsError(false);
   };
 
@@ -219,7 +219,7 @@ export default function CdatSection({ setView }) {
                         type="button"
                         onClick={copyManually}
                         className={`min-h-[44px] flex items-center justify-center gap-2 px-5 py-2.5 border rounded-xl text-sm font-bold transition-all duration-300 cursor-pointer shadow-sm ${copied
-                          ? 'bg-emerald-500 border-emerald-500 text-white shadow-emerald-500/25'
+                          ? 'bg-rose-500 border-rose-500 text-white shadow-rose-500/25'
                           : 'bg-white border-zinc-200 hover:border-brand/30 hover:bg-brand/5 text-zinc-900 hover:text-brand-dark'
                           }`}
                       >
@@ -254,7 +254,7 @@ export default function CdatSection({ setView }) {
                     {!hasCopied && (
                       <div className="mt-4 p-3.5 bg-amber-50/80 border border-amber-200/60 text-amber-800 text-sm rounded-xl flex items-start sm:items-center gap-2.5 text-left animate-in fade-in slide-in-from-top-2 duration-500 shadow-sm backdrop-blur-sm">
                         <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 sm:mt-0 text-amber-600" />
-                        <span className="font-semibold leading-relaxed">Action Required: Please copy your group code first to unlock the registration portal.</span>
+                        <span className="font-semibold leading-relaxed">Please enter your group id on the dedicated column without fail.</span>
                       </div>
                     )}
                   </div>
@@ -262,7 +262,7 @@ export default function CdatSection({ setView }) {
 
                 {copyMessage && (
                   <p
-                    className={`mt-2 text-xs font-bold ${isError ? 'text-rose-650' : 'text-emerald-650'}`}
+                    className="mt-2 text-xs font-bold text-rose-650"
                     role={isError ? 'alert' : 'status'}
                   >
                     {copyMessage}
