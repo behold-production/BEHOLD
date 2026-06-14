@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowRight, Copy, AlertCircle } from 'lucide-react';
+import ApiService from '../services/api';
 
 export default function CdatSection({ setView }) {
   const [groupRegName, setGroupRegName] = useState('');
@@ -29,8 +30,7 @@ export default function CdatSection({ setView }) {
     }
 
     // Fetch settings to get dynamic group code
-    fetch('http://localhost:5000/api/public/settings')
-      .then(res => res.json())
+    ApiService.getSettings()
       .then(data => {
         if (data.success && data.data && data.data.cdatGroupCode) {
           setFetchedGroupCode(data.data.cdatGroupCode);

@@ -587,7 +587,7 @@ const ApiService = {
 
   // Public Aptitude Questions
   async getPublicAptitudeQuestions() {
-    return await request('/public/aptitude-questions');
+    return await request('/aptitude-questions');
   },
 
   // Admin Aptitude Questions Management
