@@ -187,7 +187,7 @@ export default function CdatSection({ setView }) {
                       type="submit"
                       className="min-h-[52px] px-8 py-3.5 bg-gradient-brand hover:scale-[1.02] active:scale-[0.98] text-zinc-950 font-bold text-sm tracking-wide rounded-xl transition-all duration-300 shadow-sm hover:shadow-md w-full sm:w-auto border-none"
                     >
-                      Generate Group Code
+                      Generate group code for CIGI aptitude
                     </button>
                   </div>
                 ) : (

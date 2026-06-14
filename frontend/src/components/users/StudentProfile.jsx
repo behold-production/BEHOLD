@@ -273,13 +273,18 @@ export default function StudentProfile() {
     return bookedSessions;
   }, [bookedSessions, sessionFilter]);
 
-  const nextSession = bookedSessions[0];
-  const stats = {
-    total: bookedSessions.length + completedSessions.length,
-    completed: completedSessions.length,
-    upcoming: bookedSessions.length,
-    hours: completedSessions.length,
-  };
+  const filterChips = useMemo(() => [
+    { id: 'all', label: 'All', count: bookedSessions.length },
+    { id: 'online', label: 'Online', count: bookedSessions.filter(s => s.mode === 'ONLINE').length },
+    { id: 'offline', label: 'In-Person', count: bookedSessions.filter(s => s.mode !== 'ONLINE').length },
+    { id: 'pending', label: 'Pending', count: bookedSessions.filter(s => s.status === 'PENDING').length },
+  ], [bookedSessions]);
+
+  const [, setNow] = useState(new Date());
+  useEffect(() => {
+    const t = setInterval(() => setNow(new Date()), 60000);
+    return () => clearInterval(t);
+  }, []);
 
   // ─── Hero Header ─────────────────────────────────────────────────────
 
@@ -460,12 +465,6 @@ export default function StudentProfile() {
   // ─── Tab: Overview ───────────────────────────────────────────────────
 
   const OverviewTab = () => {
-    const [, setNow] = useState(new Date());
-    useEffect(() => {
-      const t = setInterval(() => setNow(new Date()), 60000);
-      return () => clearInterval(t);
-    }, []);
-
     return (
       <div className="space-y-5">
         {/* Header */}
@@ -898,13 +897,6 @@ export default function StudentProfile() {
   // ─── Tab: Booked Sessions ────────────────────────────────────────────
 
   const BookedSessionsTab = () => {
-    const filterChips = useMemo(() => [
-      { id: 'all', label: 'All', count: bookedSessions.length },
-      { id: 'online', label: 'Online', count: bookedSessions.filter(s => s.mode === 'ONLINE').length },
-      { id: 'offline', label: 'In-Person', count: bookedSessions.filter(s => s.mode !== 'ONLINE').length },
-      { id: 'pending', label: 'Pending', count: bookedSessions.filter(s => s.status === 'PENDING').length },
-    ], [bookedSessions]);
-
     return (
       <div className="space-y-5">
         {/* Sub-tab Navigation Bar */}
