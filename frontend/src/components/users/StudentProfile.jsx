@@ -177,7 +177,7 @@ export default function StudentProfile() {
           try {
             const stored = localStorage.getItem('behold_test_profile');
             if (stored) setTestProfile(JSON.parse(stored));
-          } catch (_) {}
+          } catch (_) { }
         }
       } catch (err) {
         console.error('Failed to load student dashboard info:', err);
@@ -186,14 +186,11 @@ export default function StudentProfile() {
       }
     };
 
-    const hasToken = !!localStorage.getItem('behold_token');
-    const isStudent = user && user.role?.toUpperCase() === 'USER';
-
-    if (isStudent && hasToken && !authLoading) {
+    if (user && !authLoading) {
       setIsLoading(true);
       fetchData();
-    } else if (!authLoading) {
-      // Not logged in or not a student — stop the spinner
+    } else if (!authLoading && !user) {
+      // Not logged in — stop the spinner
       setIsLoading(false);
     }
   }, [user, authLoading]);
@@ -856,12 +853,11 @@ export default function StudentProfile() {
                               placeholder={field.placeholder}
                               autoComplete={field.autoComplete}
                               disabled={field.disabled}
-                              className={`w-full min-h-[44px] pl-10 pr-9 py-2.5 text-sm rounded-lg outline-none transition-all ${
-                                field.disabled
+                              className={`w-full min-h-[44px] pl-10 pr-9 py-2.5 text-sm rounded-lg outline-none transition-all ${field.disabled
                                   ? 'bg-zinc-50 border-zinc-200 text-zinc-400 cursor-not-allowed'
                                   : hasError
-                                  ? 'bg-white border-rose-300 focus:border-rose-400 focus:ring-2 focus:ring-rose-100 text-zinc-900'
-                                  : 'bg-white border-zinc-200 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-100 text-zinc-900'
+                                    ? 'bg-white border-rose-300 focus:border-rose-400 focus:ring-2 focus:ring-rose-100 text-zinc-900'
+                                    : 'bg-white border-zinc-200 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-100 text-zinc-900'
                                 }`}
                             />
                           )}
@@ -1376,7 +1372,7 @@ export default function StudentProfile() {
                 </div>
               </div>
             </div>
-            
+
             {/* Skeleton Layout */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
               <aside className="lg:col-span-3">

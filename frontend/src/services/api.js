@@ -42,57 +42,37 @@ async function request(endpoint, options = {}) {
     data = { success: false, message: 'Invalid response format from server' };
   }
 
-  // Handle expired/missing token transparently
-  if (response.status === 401) {
-    if (data.message === 'Access Denied: No Token Provided') {
+  // Handle expired token transparently
+  if (response.status === 401 && data.message === 'Access Token Expired') {
+    const refreshToken = localStorage.getItem('behold_refresh_token');
+    if (!refreshToken) {
+      // Clear token, user must login
       localStorage.removeItem('behold_token');
       localStorage.removeItem('behold_refresh_token');
       localStorage.removeItem('behold_auth_user');
       window.dispatchEvent(new Event('storage'));
       if (window.spaNavigate) window.spaNavigate('/');
-      throw new Error('Access Denied: No Token Provided');
+      toast.error('Session expired. Please log in again.', { id: 'session-expired' });
+      throw new Error('Session expired. Please log in again.');
     }
 
-    if (data.message === 'Access Token Expired') {
-      const refreshToken = localStorage.getItem('behold_refresh_token');
-      if (!refreshToken) {
-        // Clear token, user must login
-        localStorage.removeItem('behold_token');
-        localStorage.removeItem('behold_refresh_token');
-        localStorage.removeItem('behold_auth_user');
-        window.dispatchEvent(new Event('storage'));
-        if (window.spaNavigate) window.spaNavigate('/');
-        toast.error('Session expired. Please log in again.', { id: 'session-expired' });
-        throw new Error('Session expired. Please log in again.');
-      }
-
-      if (!isRefreshing) {
-        isRefreshing = true;
-        try {
-          const refreshResponse = await fetch(`${BASE_URL}/auth/refresh-token`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ refreshToken })
-          });
-          const refreshResult = await refreshResponse.json();
-          if (refreshResult.success && refreshResult.data && refreshResult.data.accessToken) {
-            localStorage.setItem('behold_token', refreshResult.data.accessToken);
-            if (refreshResult.data.refreshToken) {
-              localStorage.setItem('behold_refresh_token', refreshResult.data.refreshToken);
-            }
-            isRefreshing = false;
-            onRefreshed(refreshResult.data.accessToken);
-          } else {
-            isRefreshing = false;
-            localStorage.removeItem('behold_token');
-            localStorage.removeItem('behold_refresh_token');
-            localStorage.removeItem('behold_auth_user');
-            window.dispatchEvent(new Event('storage'));
-            if (window.spaNavigate) window.spaNavigate('/');
-            toast.error('Session expired. Please log in again.', { id: 'session-expired' });
-            throw new Error('Session expired. Please log in again.');
+    if (!isRefreshing) {
+      isRefreshing = true;
+      try {
+        const refreshResponse = await fetch(`${BASE_URL}/auth/refresh-token`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ refreshToken })
+        });
+        const refreshResult = await refreshResponse.json();
+        if (refreshResult.success && refreshResult.data && refreshResult.data.accessToken) {
+          localStorage.setItem('behold_token', refreshResult.data.accessToken);
+          if (refreshResult.data.refreshToken) {
+            localStorage.setItem('behold_refresh_token', refreshResult.data.refreshToken);
           }
-        } catch (err) {
+          isRefreshing = false;
+          onRefreshed(refreshResult.data.accessToken);
+        } else {
           isRefreshing = false;
           localStorage.removeItem('behold_token');
           localStorage.removeItem('behold_refresh_token');
@@ -100,21 +80,30 @@ async function request(endpoint, options = {}) {
           window.dispatchEvent(new Event('storage'));
           if (window.spaNavigate) window.spaNavigate('/');
           toast.error('Session expired. Please log in again.', { id: 'session-expired' });
-          throw err;
+          throw new Error('Session expired. Please log in again.');
         }
+      } catch (err) {
+        isRefreshing = false;
+        localStorage.removeItem('behold_token');
+        localStorage.removeItem('behold_refresh_token');
+        localStorage.removeItem('behold_auth_user');
+        window.dispatchEvent(new Event('storage'));
+        if (window.spaNavigate) window.spaNavigate('/');
+        toast.error('Session expired. Please log in again.', { id: 'session-expired' });
+        throw err;
       }
-
-      // Queue requests while refreshing
-      return new Promise((resolve, reject) => {
-        subscribeTokenRefresh((newToken) => {
-          const retryHeaders = {
-            ...headers,
-            'Authorization': `Bearer ${newToken}`
-          };
-          request(endpoint, { ...options, headers: retryHeaders }).then(resolve).catch(reject);
-        });
-      });
     }
+
+    // Queue requests while refreshing
+    return new Promise((resolve, reject) => {
+      subscribeTokenRefresh((newToken) => {
+        const retryHeaders = {
+          ...headers,
+          'Authorization': `Bearer ${newToken}`
+        };
+        request(endpoint, { ...options, headers: retryHeaders }).then(resolve).catch(reject);
+      });
+    });
   }
 
   if (!response.ok) {
@@ -202,7 +191,7 @@ const ApiService = {
         const updatedUser = { ...authUser, ...res.data };
         localStorage.setItem('behold_auth_user', JSON.stringify(updatedUser));
         window.dispatchEvent(new Event('storage'));
-      } catch (e) {}
+      } catch (e) { }
     }
     return res;
   },
@@ -482,7 +471,7 @@ const ApiService = {
         const updatedUser = { ...authUser, ...res.data };
         localStorage.setItem('behold_auth_user', JSON.stringify(updatedUser));
         window.dispatchEvent(new Event('storage'));
-      } catch (e) {}
+      } catch (e) { }
     }
     return res;
   },

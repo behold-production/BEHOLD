@@ -156,9 +156,7 @@ export default function PsychologistDashboard({ setView }) {
 
   const loadBookingsData = async (silent = false) => {
     try {
-      const isCounsellor = user && (user?.role?.toUpperCase() === 'PSYCHOLOGIST' || user?.role?.toUpperCase() === 'COUNSELLOR');
-      const hasToken = !!localStorage.getItem('behold_token');
-      if (!isCounsellor || !hasToken) return;
+      if (!user) return;
       if (!silent) setIsLoadingData(true);
 
       // Fetch both profile and bookings concurrently
@@ -243,11 +241,7 @@ export default function PsychologistDashboard({ setView }) {
 
   // Load advisor details & bookings from API
   useEffect(() => {
-    const isCounsellor = user && (user?.role?.toUpperCase() === 'PSYCHOLOGIST' || user?.role?.toUpperCase() === 'COUNSELLOR');
-    const hasToken = !!localStorage.getItem('behold_token');
-    if (isCounsellor && hasToken) {
-      loadBookingsData(false);
-    }
+    loadBookingsData(false);
   }, [user]);
 
   // Auto-refresh bookings silently when switching to bookings or overview tab
