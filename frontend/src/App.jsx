@@ -138,7 +138,7 @@ export default function App() {
       }
     } else {
       if (path === '/profile') {
-        navigate('/', { replace: true });
+        navigate('/', { replace: true, state: { from: '/profile' } });
         setIsAuthModalOpen(true);
       }
     }
