@@ -14,7 +14,22 @@ const userSchema = new mongoose.Schema({
   role: { type: String, default: 'user' },
   status: { type: String, default: 'ACTIVE' },
   permissions: { type: [String], default: [] },
-  customRoleTitle: { type: String, default: '' }
+  customRoleTitle: { type: String, default: '' },
+  profilePic: { type: String, default: '' },
+  profilePicPublicId: { type: String, default: '' },
+  cigiResults: {
+    type: [{
+      id: { type: String, required: true },
+      fileUrl: { type: String, required: true },
+      publicId: { type: String, default: '' },
+      fileType: { type: String, required: true }, // 'image' or 'pdf'
+      testDate: { type: String, default: '' },
+      testTime: { type: String, default: '' },
+      note: { type: String, default: '' },
+      uploadedAt: { type: Date, default: Date.now }
+    }],
+    default: []
+  }
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);

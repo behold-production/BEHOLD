@@ -24,7 +24,9 @@ const counsellorSchema = new mongoose.Schema({
   defaultMeetLink: { type: String, default: '' },
   hours: { type: Number, default: 0 },
   modes: { type: [String], default: ['ONLINE', 'OFFLINE', 'DOOR_STEP'] },
-  title: { type: String, default: 'Consultant Psychologist' }
+  title: { type: String, default: 'Consultant Psychologist' },
+  profilePic: { type: String, default: '' },
+  profilePicPublicId: { type: String, default: '' }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Counsellor', counsellorSchema);

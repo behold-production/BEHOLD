@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import {
  User, ShieldAlert, Award, Trash, Check, Plus, Lock,
  Settings, KeyRound, BarChart3, LogOut, Search, ShieldCheck,
@@ -212,9 +212,12 @@ export default function AdminDashboard({ setView }) {
  // Modals / Add / Edit states
  const [isAddUserOpen, setIsAddUserOpen] = useState(false);
  const [isEditUserOpen, setIsEditUserOpen] = useState(false);
- const [userForm, setUserForm] = useState({ id: '', name: '', email: '', password: '' });
+ const [userForm, setUserForm] = useState({ id: '', name: '', email: '', password: '', phone: '', schoolName: '', grade: '', guardianName: '', guardianPhone: '', groupCode: '' });
  const [userFormError, setUserFormError] = useState('');
  const [userFormSuccess, setUserFormSuccess] = useState('');
+ const [userProfilePicFile, setUserProfilePicFile] = useState(null);
+ const [isUserPicUploading, setIsUserPicUploading] = useState(false);
+ const userProfilePicRef = React.useRef(null);
 
  const [isAddPsyOpen, setIsAddPsyOpen] = useState(false);
  const [isEditPsyOpen, setIsEditPsyOpen] = useState(false);
@@ -273,6 +276,109 @@ export default function AdminDashboard({ setView }) {
  const [viewingStudent, setViewingStudent] = useState(null);
  const [viewingPsychologist, setViewingPsychologist] = useState(null);
  const [editingSubAdmin, setEditingSubAdmin] = useState(null);
+
+  // Admin CIGI management state
+  const [adminCigiFile, setAdminCigiFile] = useState(null);
+  const [adminCigiDate, setAdminCigiDate] = useState('');
+  const [adminCigiTime, setAdminCigiTime] = useState('');
+  const [adminCigiNote, setAdminCigiNote] = useState('');
+  const [adminCigiEditingId, setAdminCigiEditingId] = useState(null);
+  const [isAdminCigiUploading, setIsAdminCigiUploading] = useState(false);
+  const adminCigiFileInputRef = React.useRef(null);
+
+  const handleAdminCigiUpload = async (e) => {
+    e.preventDefault();
+    if (!viewingStudent) return;
+    if (!adminCigiFile && !adminCigiEditingId) {
+      alert('Please select a file to upload');
+      return;
+    }
+
+    if (adminCigiFile) {
+      const allowedExtensions = ['jpg', 'jpeg', 'png', 'pdf'];
+      const fileExt = adminCigiFile.name.split('.').pop().toLowerCase();
+      if (!allowedExtensions.includes(fileExt)) {
+        alert('Only JPG, JPEG, PNG, and PDF files are allowed.');
+        return;
+      }
+    }
+
+    setIsAdminCigiUploading(true);
+    try {
+      const formData = new FormData();
+      if (adminCigiFile) {
+        formData.append('file', adminCigiFile);
+      }
+      formData.append('testDate', adminCigiDate);
+      formData.append('testTime', adminCigiTime);
+      formData.append('note', adminCigiNote);
+
+      let res;
+      if (adminCigiEditingId) {
+        res = await ApiService.adminUpdateCigiResult(viewingStudent.id, adminCigiEditingId, formData);
+      } else {
+        res = await ApiService.adminUploadCigiResult(viewingStudent.id, formData);
+      }
+
+      if (res.success) {
+        alert(adminCigiEditingId ? 'CIGI result updated successfully' : 'CIGI result uploaded successfully');
+        
+        // Update local database list
+        const updatedUser = res.data;
+        setUsersDb(prev => prev.map(u => u.id === updatedUser.id ? { ...u, ...updatedUser } : u));
+        
+        // Update modal state
+        setViewingStudent(prev => prev && prev.id === updatedUser.id ? { ...prev, ...updatedUser } : prev);
+
+        // Reset inputs
+        setAdminCigiFile(null);
+        setAdminCigiDate('');
+        setAdminCigiTime('');
+        setAdminCigiNote('');
+        setAdminCigiEditingId(null);
+        if (adminCigiFileInputRef.current) adminCigiFileInputRef.current.value = '';
+      }
+    } catch (err) {
+      alert(err.message || 'Failed to manage CIGI result');
+    } finally {
+      setIsAdminCigiUploading(false);
+    }
+  };
+
+  const handleAdminCigiDelete = async (resultId) => {
+    if (!viewingStudent) return;
+    if (!window.confirm('Are you sure you want to delete this CIGI result?')) return;
+    try {
+      const res = await ApiService.adminDeleteCigiResult(viewingStudent.id, resultId);
+      if (res.success) {
+        alert('CIGI result deleted successfully');
+        const updatedUser = res.data;
+        setUsersDb(prev => prev.map(u => u.id === updatedUser.id ? { ...u, ...updatedUser } : u));
+        setViewingStudent(prev => prev && prev.id === updatedUser.id ? { ...prev, ...updatedUser } : prev);
+      }
+    } catch (err) {
+      alert(err.message || 'Failed to delete CIGI result');
+    }
+  };
+
+  const handleAdminStartEditCigi = (result) => {
+    setAdminCigiEditingId(result.id);
+    setAdminCigiDate(result.testDate || '');
+    setAdminCigiTime(result.testTime || '');
+    setAdminCigiNote(result.note || '');
+    setAdminCigiFile(null);
+    if (adminCigiFileInputRef.current) adminCigiFileInputRef.current.value = '';
+  };
+
+  const handleAdminCancelEditCigi = () => {
+    setAdminCigiEditingId(null);
+    setAdminCigiDate('');
+    setAdminCigiTime('');
+    setAdminCigiNote('');
+    setAdminCigiFile(null);
+    if (adminCigiFileInputRef.current) adminCigiFileInputRef.current.value = '';
+  };
+
 
  // Mobile menu state
  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -535,7 +641,8 @@ export default function AdminDashboard({ setView }) {
  userForm.password
  );
  setUserFormSuccess("Student created successfully!");
- setUserForm({ id: '', name: '', email: '', password: '' });
+ setUserForm({ id: '', name: '', email: '', password: '', phone: '', schoolName: '', grade: '', guardianName: '', guardianPhone: '', groupCode: '' });
+ setUserProfilePicFile(null);
  reloadData();
  setTimeout(() => {
  setIsAddUserOpen(false);
@@ -551,8 +658,15 @@ export default function AdminDashboard({ setView }) {
  id: student.id,
  name: student.name,
  email: student.email,
- password: student.password || ''
+ password: student.password || '',
+ phone: student.phone || '',
+ schoolName: student.schoolName || '',
+ grade: student.grade || '',
+ guardianName: student.guardianName || '',
+ guardianPhone: student.guardianPhone || '',
+ groupCode: student.groupCode || ''
  });
+ setUserProfilePicFile(null);
  setUserFormError('');
  setUserFormSuccess('');
  setIsEditUserOpen(true);
@@ -577,15 +691,36 @@ export default function AdminDashboard({ setView }) {
  userForm.id,
  userForm.name.trim(),
  userForm.email.trim(),
- userForm.password || undefined
+ userForm.password || undefined,
+ undefined,
+ undefined,
+ undefined,
+ undefined,
+ {
+ phone: userForm.phone,
+ schoolName: userForm.schoolName,
+ grade: userForm.grade,
+ guardianName: userForm.guardianName,
+ guardianPhone: userForm.guardianPhone,
+ groupCode: userForm.groupCode
+ }
  );
+ if (userProfilePicFile) {
+ setIsUserPicUploading(true);
+ const fd = new FormData();
+ fd.append('profilePic', userProfilePicFile);
+ await ApiService.adminUpdateUserProfilePic(userForm.id, fd);
+ setIsUserPicUploading(false);
+ }
  setUserFormSuccess("Student details updated!");
+ setUserProfilePicFile(null);
  reloadData();
  setTimeout(() => {
  setIsEditUserOpen(false);
  setUserFormSuccess('');
  }, 1500);
  } catch (err) {
+ setIsUserPicUploading(false);
  setUserFormError(err.message || "Failed to update user.");
  }
  };
@@ -2533,7 +2668,8 @@ export default function AdminDashboard({ setView }) {
  <div className="flex flex-wrap gap-3">
  <button
  onClick={() => {
- setUserForm({ id: '', name: '', email: '', password: '' });
+ setUserForm({ id: '', name: '', email: '', password: '', phone: '', schoolName: '', grade: '', guardianName: '', guardianPhone: '', groupCode: '' });
+ setUserProfilePicFile(null);
  setUserFormError('');
  setUserFormSuccess('');
  setIsAddUserOpen(true);
@@ -3021,7 +3157,8 @@ export default function AdminDashboard({ setView }) {
  </button>
  <button
  onClick={() => {
- setUserForm({ id: '', name: '', email: '', password: '' });
+ setUserForm({ id: '', name: '', email: '', password: '', phone: '', schoolName: '', grade: '', guardianName: '', guardianPhone: '', groupCode: '' });
+ setUserProfilePicFile(null);
  setUserFormError('');
  setUserFormSuccess('');
  setIsAddUserOpen(true);
@@ -4460,87 +4597,107 @@ export default function AdminDashboard({ setView }) {
 
  {/* 1. STUDENT ADD / EDIT MODAL */}
  {(isAddUserOpen || isEditUserOpen) && (
- <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
- <div
- className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
- onClick={() => { setIsAddUserOpen(false); setIsEditUserOpen(false); }}
- />
- <div className="relative w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200">
- <div>
- <h3 className="text-base font-bold text-white capitalize  font-header">
- {isAddUserOpen ? 'Register Student' : 'Edit Student Details'}
- </h3>
- <p className="text-sm text-zinc-500 leading-none mt-1">
- {isAddUserOpen ? 'Provision a new student account.' : 'Modify account registry records.'}
- </p>
- </div>
-
- <form onSubmit={isAddUserOpen ? handleCreateUser : handleUpdateUser} className="space-y-4 font-medium">
- <div className="space-y-1">
- <label className="text-sm capitalize  font-bold text-zinc-400">Full Name</label>
- <input
- type="text"
- required
- placeholder="e.g. John Doe"
- value={userForm.name}
- onChange={(e) => setUserForm({ ...userForm, name: e.target.value })}
- className="w-full px-3.5 py-3 bg-zinc-950 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
- />
- </div>
-
- <div className="space-y-1">
- <label className="text-sm capitalize  font-bold text-zinc-400">Email Address</label>
- <input
- type="email"
- required
- placeholder="john@example.com"
- value={userForm.email}
- onChange={(e) => setUserForm({ ...userForm, email: e.target.value })}
- className="w-full px-3.5 py-3 bg-zinc-950 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
- />
- </div>
-
- <div className="space-y-1">
- <label className="text-sm capitalize  font-bold text-zinc-400">
- Password {isEditUserOpen && <span className="text-zinc-500 lowercase font-normal">(leave blank to keep unchanged)</span>}
- </label>
- <input
- type="password"
- required={isAddUserOpen}
- placeholder={isEditUserOpen ? "••••••••" : "Enter password"}
- value={userForm.password}
- onChange={(e) => setUserForm({ ...userForm, password: e.target.value })}
- className="w-full px-3.5 py-3 bg-zinc-950 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
- />
- </div>
-
- {userFormError && (
- <p className="text-sm text-rose-500 font-bold capitalize tracking-wide ">{userFormError}</p>
- )}
-
- {userFormSuccess && (
- <p className="text-sm text-emerald-500 font-bold capitalize tracking-wide">{userFormSuccess}</p>
- )}
-
- <div className="flex gap-3 pt-2">
- <button
- type="button"
- onClick={() => { setIsAddUserOpen(false); setIsEditUserOpen(false); }}
- className="flex-1 py-3 border border-zinc-800 hover:bg-zinc-850 text-white font-bold text-sm capitalize  rounded-lg cursor-pointer transition text-center"
- >
- Cancel
- </button>
- <button
- type="submit"
- className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-950 font-bold text-sm capitalize  rounded-lg cursor-pointer transition border-none shadow-md"
- >
- {isAddUserOpen ? 'Create Account' : 'Save Changes'}
- </button>
- </div>
- </form>
- </div>
- </div>
- )}
+  <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+  <div
+  className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
+  onClick={() => { setIsAddUserOpen(false); setIsEditUserOpen(false); }}
+  />
+  <div className="relative w-full max-w-lg bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
+  <div>
+  <h3 className="text-base font-bold text-white capitalize  font-header">
+  {isAddUserOpen ? 'Register Student' : 'Edit Student Details'}
+  </h3>
+  <p className="text-sm text-zinc-500 leading-none mt-1">
+  {isAddUserOpen ? 'Provision a new student account.' : 'Modify account registry records.'}
+  </p>
+  </div>
+  <form onSubmit={isAddUserOpen ? handleCreateUser : handleUpdateUser} className="space-y-4 font-medium">
+  {isEditUserOpen && (
+  <div className="space-y-2">
+  <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Profile Picture</label>
+  <div className="flex items-center gap-3">
+  <div className="w-14 h-14 rounded-xl bg-zinc-950 border border-zinc-800 overflow-hidden shrink-0 flex items-center justify-center">
+  {userProfilePicFile ? (
+  <img src={URL.createObjectURL(userProfilePicFile)} alt="Preview" className="w-full h-full object-cover" />
+  ) : (
+  <User className="w-6 h-6 text-zinc-600" />
+  )}
+  </div>
+  <div className="flex-1 space-y-1">
+  <input ref={userProfilePicRef} type="file" accept="image/jpeg,image/png,image/jpg" className="hidden" onChange={(e) => { const file = e.target.files?.[0]; if (file) setUserProfilePicFile(file); }} />
+  <button type="button" onClick={() => userProfilePicRef.current?.click()} className="px-3 py-2 text-xs font-bold bg-zinc-950 border border-zinc-800 hover:border-brand text-zinc-300 hover:text-white rounded-lg cursor-pointer transition">
+  {userProfilePicFile ? 'Change Image' : 'Upload Photo'}
+  </button>
+  {userProfilePicFile && (<p className="text-xs text-zinc-500 truncate max-w-[180px]">{userProfilePicFile.name}</p>)}
+  </div>
+  </div>
+  </div>
+  )}
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+  <div className="space-y-1">
+  <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Full Name</label>
+  <input type="text" required placeholder="e.g. John Doe" value={userForm.name} onChange={(e) => setUserForm({ ...userForm, name: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors" />
+  </div>
+  <div className="space-y-1">
+  <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Email Address</label>
+  <input type="email" required placeholder="john@example.com" value={userForm.email} onChange={(e) => setUserForm({ ...userForm, email: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors" />
+  </div>
+  </div>
+  <div className="space-y-1">
+  <label className="text-sm capitalize  font-bold text-zinc-400">
+  Password {isEditUserOpen && <span className="text-zinc-500 lowercase font-normal">(leave blank to keep unchanged)</span>}
+  </label>
+  <input type="password" required={isAddUserOpen} placeholder={isEditUserOpen ? "••••••••" : "Enter password"} value={userForm.password} onChange={(e) => setUserForm({ ...userForm, password: e.target.value })} className="w-full px-3.5 py-3 bg-zinc-950 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors" />
+  </div>
+  {isEditUserOpen && (
+  <>
+  <div className="border-t border-zinc-800 pt-3">
+  <p className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-3">Student Information</p>
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+  <div className="space-y-1">
+  <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Phone Number</label>
+  <input type="tel" placeholder="e.g. 9876543210" value={userForm.phone} onChange={(e) => setUserForm({ ...userForm, phone: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors" />
+  </div>
+  <div className="space-y-1">
+  <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Grade / Class</label>
+  <input type="text" placeholder="e.g. Grade 10" value={userForm.grade} onChange={(e) => setUserForm({ ...userForm, grade: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors" />
+  </div>
+  <div className="sm:col-span-2 space-y-1">
+  <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">School Name</label>
+  <input type="text" placeholder="e.g. St. Mary's Higher Secondary School" value={userForm.schoolName} onChange={(e) => setUserForm({ ...userForm, schoolName: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors" />
+  </div>
+  </div>
+  </div>
+  <div className="border-t border-zinc-800 pt-3">
+  <p className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-3">Guardian Information</p>
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+  <div className="space-y-1">
+  <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Guardian Name</label>
+  <input type="text" placeholder="e.g. Mary Doe" value={userForm.guardianName} onChange={(e) => setUserForm({ ...userForm, guardianName: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors" />
+  </div>
+  <div className="space-y-1">
+  <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Guardian Phone</label>
+  <input type="tel" placeholder="e.g. 9876543211" value={userForm.guardianPhone} onChange={(e) => setUserForm({ ...userForm, guardianPhone: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors" />
+  </div>
+  <div className="space-y-1">
+  <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Group / Batch Code</label>
+  <input type="text" placeholder="e.g. CIGI-2024-A" value={userForm.groupCode} onChange={(e) => setUserForm({ ...userForm, groupCode: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors" />
+  </div>
+  </div>
+  </div>
+  </>
+  )}
+  {userFormError && (<p className="text-sm text-rose-500 font-bold capitalize tracking-wide ">{userFormError}</p>)}
+  {userFormSuccess && (<p className="text-sm text-emerald-500 font-bold capitalize tracking-wide">{userFormSuccess}</p>)}
+  {isUserPicUploading && (<p className="text-xs text-brand font-bold animate-pulse">Uploading profile picture...</p>)}
+  <div className="flex gap-3 pt-2">
+  <button type="button" onClick={() => { setIsAddUserOpen(false); setIsEditUserOpen(false); }} className="flex-1 py-3 border border-zinc-800 hover:bg-zinc-850 text-white font-bold text-sm capitalize  rounded-lg cursor-pointer transition text-center">Cancel</button>
+  <button type="submit" className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-950 font-bold text-sm capitalize  rounded-lg cursor-pointer transition border-none shadow-md">{isAddUserOpen ? 'Create Account' : 'Save Changes'}</button>
+  </div>
+  </form>
+  </div>
+  </div>
+  )}
 
  {/* 2. PSYCHOLOGIST ADD / EDIT MODAL */}
  {(isAddPsyOpen || isEditPsyOpen) && (
@@ -5527,6 +5684,155 @@ export default function AdminDashboard({ setView }) {
  </div>
 
  <div className="pt-2 flex justify-end">
+
+  {/* CIGI Differential Aptitude Test Results Management */}
+  <div className="space-y-4 pt-4 border-t border-zinc-800">
+    <span className="text-sm capitalize font-bold text-zinc-550 block">CIGI Differential Aptitude Test (C-DAT) Results</span>
+    
+    {/* Existing uploads */}
+    <div className="space-y-2">
+      {(!viewingStudent.cigiResults || viewingStudent.cigiResults.length === 0) ? (
+        <div className="p-4 bg-zinc-950/30 border border-zinc-850/60 rounded-xl text-center text-zinc-650 italic text-xs">
+          No CIGI results uploaded for this student yet.
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-2.5 max-h-[200px] overflow-y-auto pr-1">
+          {viewingStudent.cigiResults.map(res => (
+            <div key={res.id} className="p-3 bg-zinc-955 border border-zinc-850 rounded-xl flex items-center justify-between gap-3 text-sm">
+              <div className="min-w-0 flex-1 space-y-1">
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold uppercase ${res.fileType === 'pdf' ? 'bg-rose-955/40 border border-rose-900/30 text-rose-450' : 'bg-blue-955/40 border border-blue-900/30 text-blue-400'}`}>
+                    {res.fileType}
+                  </span>
+                  {(res.testDate || res.testTime) && (
+                    <span className="text-xs text-zinc-400 font-medium">
+                      Date: {res.testDate} {res.testTime}
+                    </span>
+                  )}
+                </div>
+                {res.note && (
+                  <p className="text-xs text-zinc-400 italic truncate" title={res.note}>
+                    "{res.note}"
+                  </p>
+                )}
+                <span className="text-[10px] text-zinc-500 block">
+                  Uploaded at: {new Date(res.uploadedAt).toLocaleString()}
+                </span>
+              </div>
+              <div className="flex items-center gap-1.5 shrink-0">
+                <a
+                  href={res.fileUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-lg text-zinc-300 hover:text-white transition"
+                  title="View File"
+                >
+                  <Link className="w-3.5 h-3.5" />
+                </a>
+                <button
+                  type="button"
+                  onClick={() => handleAdminStartEditCigi(res)}
+                  className="p-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-lg text-brand hover:text-brand-light transition cursor-pointer border-none"
+                  title="Edit Result Info"
+                >
+                  <Edit className="w-3.5 h-3.5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleAdminCigiDelete(res.id)}
+                  className="p-1.5 bg-zinc-900 hover:bg-rose-955/20 border border-zinc-800 hover:border-rose-900/30 rounded-lg text-rose-500 hover:text-rose-450 transition cursor-pointer border-none"
+                  title="Delete Result"
+                >
+                  <Trash className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+
+    {/* Form to Add/Edit Result */}
+    <form onSubmit={handleAdminCigiUpload} className="bg-zinc-955 border border-zinc-850 rounded-xl p-4 space-y-3">
+      <span className="text-xs font-bold text-zinc-405 block">
+        {adminCigiEditingId ? '📝 Edit CIGI Result Metadata / Replace File' : '➕ Add CIGI Result Record'}
+      </span>
+      
+      <div className="space-y-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label className="text-[10px] uppercase font-bold text-zinc-550 block mb-1">
+              Result File {adminCigiEditingId ? '(Optional)' : '(Required)'}
+            </label>
+            <input
+              type="file"
+              ref={adminCigiFileInputRef}
+              onChange={(e) => setAdminCigiFile(e.target.files[0])}
+              accept="image/*,application/pdf"
+              required={!adminCigiEditingId}
+              className="w-full text-xs text-zinc-400 file:mr-2.5 file:py-1 file:px-2.5 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-zinc-800 file:text-zinc-300 hover:file:bg-zinc-700 file:cursor-pointer p-1.5 border border-zinc-805 rounded bg-zinc-900 focus:outline-none"
+            />
+            <p className="text-[9px] text-zinc-500 mt-0.5">Images and PDFs up to 5MB</p>
+          </div>
+          <div>
+            <label className="text-[10px] uppercase font-bold text-zinc-555 block mb-1">Remarks / Notes</label>
+            <input
+              type="text"
+              placeholder="e.g. Scored 85% logical"
+              value={adminCigiNote}
+              onChange={(e) => setAdminCigiNote(e.target.value)}
+              className="w-full p-2 bg-zinc-900 border border-zinc-800 focus:border-brand rounded text-xs text-white outline-none transition-colors"
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label className="text-[10px] uppercase font-bold text-zinc-550 block mb-1">Date Taken</label>
+            <input
+              type="date"
+              value={adminCigiDate}
+              onChange={(e) => setAdminCigiDate(e.target.value)}
+              className="w-full p-2 bg-zinc-900 border border-zinc-800 focus:border-brand rounded text-xs text-white outline-none transition-colors"
+            />
+          </div>
+          <div>
+            <label className="text-[10px] uppercase font-bold text-zinc-550 block mb-1">Time Taken</label>
+            <input
+              type="time"
+              value={adminCigiTime}
+              onChange={(e) => setAdminCigiTime(e.target.value)}
+              className="w-full p-2 bg-zinc-900 border border-zinc-800 focus:border-brand rounded text-xs text-white outline-none transition-colors"
+            />
+          </div>
+        </div>
+
+        <div className="flex gap-2 pt-1.5 justify-end">
+          {adminCigiEditingId && (
+            <button
+              type="button"
+              onClick={handleAdminCancelEditCigi}
+              className="px-3.5 py-1.5 border border-zinc-800 hover:bg-zinc-800 text-zinc-400 hover:text-white rounded text-xs font-semibold cursor-pointer border-none"
+            >
+              Cancel
+            </button>
+          )}
+          <button
+            type="submit"
+            disabled={isAdminCigiUploading}
+            className="px-4 py-1.5 bg-brand hover:bg-brand-dark disabled:bg-zinc-700 text-zinc-955 font-bold rounded text-xs cursor-pointer border-none flex items-center gap-1 shadow"
+          >
+            {isAdminCigiUploading ? (
+              <><span className="w-3 h-3 border-2 border-zinc-955/30 border-t-zinc-955 rounded-full animate-spin" /> Saving...</>
+            ) : (
+              <>{adminCigiEditingId ? 'Update Result' : 'Upload Result'}</>
+            )}
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
  <button
  onClick={() => setViewingStudent(null)}
  className="px-6 py-2.5 border border-zinc-800 hover:bg-zinc-855 text-white font-bold text-sm capitalize  rounded-lg cursor-pointer transition text-center border-none"

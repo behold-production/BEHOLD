@@ -1,4 +1,8 @@
 const StorageService = require('../services/storageService');
+const User = require('../models/User');
+const Counsellor = require('../models/Counsellor');
+const cloudinary = require('../config/cloudinary');
+const { uploadToCloudinary, uploadProfilePicToCloudinary } = require('../utils/cloudinaryHelper');
 
 const AdminController = {
   // Admin Dashboard Statistics
@@ -239,7 +243,10 @@ const AdminController = {
   async updateUser(req, res, next) {
     try {
       const { id } = req.params;
-      const { name, email, password, role, permissions, customRoleTitle, status } = req.body;
+      const { 
+        name, email, password, role, permissions, customRoleTitle, status,
+        phone, schoolName, grade, guardianName, guardianPhone, groupCode, profilePic, profilePicPublicId
+      } = req.body;
       const updates = {};
       if (name !== undefined) updates.name = name;
       if (email !== undefined) updates.email = email.toLowerCase();
@@ -247,6 +254,15 @@ const AdminController = {
       if (permissions !== undefined) updates.permissions = permissions;
       if (customRoleTitle !== undefined) updates.customRoleTitle = customRoleTitle;
       if (status !== undefined) updates.status = status;
+      if (phone !== undefined) updates.phone = phone;
+      if (schoolName !== undefined) updates.schoolName = schoolName;
+      if (grade !== undefined) updates.grade = grade;
+      if (guardianName !== undefined) updates.guardianName = guardianName;
+      if (guardianPhone !== undefined) updates.guardianPhone = guardianPhone;
+      if (groupCode !== undefined) updates.groupCode = groupCode;
+      if (profilePic !== undefined) updates.profilePic = profilePic;
+      if (profilePicPublicId !== undefined) updates.profilePicPublicId = profilePicPublicId;
+
       if (password) {
         const bcrypt = require('bcryptjs');
         const salt = await bcrypt.genSalt(10);
@@ -324,7 +340,7 @@ const AdminController = {
   async updateCounsellor(req, res, next) {
     try {
       const { id } = req.params;
-      const { name, email, password, education, specialties, price, lang, bio, defaultMeetLink, phone, hours, modes, title, availability } = req.body;
+      const { name, email, password, education, specialties, price, lang, bio, defaultMeetLink, phone, hours, modes, title, availability, profilePic, profilePicPublicId } = req.body;
       const updates = {};
       if (name !== undefined) updates.name = name;
       if (email !== undefined) updates.email = email.toLowerCase();
@@ -357,6 +373,8 @@ const AdminController = {
       }
       if (title !== undefined) updates.title = title;
       if (availability !== undefined) updates.availability = availability;
+      if (profilePic !== undefined) updates.profilePic = profilePic;
+      if (profilePicPublicId !== undefined) updates.profilePicPublicId = profilePicPublicId;
       
       if (password) {
         const bcrypt = require('bcryptjs');
@@ -704,6 +722,248 @@ const AdminController = {
       const deleted = await StorageService.delete('aptitudequestions', id);
       if (!deleted) return res.status(404).json({ success: false, message: 'Aptitude question not found' });
       res.status(200).json({ success: true, message: 'Aptitude question deleted successfully' });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // Upload CIGI Aptitude Test Result for student
+  async addCigiResult(req, res, next) {
+    try {
+      const { userId } = req.params;
+      const { testDate, testTime, note } = req.body;
+
+      if (!req.file) {
+        return res.status(400).json({
+          success: false,
+          message: 'No file provided. Please select an image or PDF.'
+        });
+      }
+
+      const user = await User.findOne({ id: userId });
+      if (!user) {
+        return res.status(404).json({ success: false, message: 'Student user not found' });
+      }
+
+      const uploadResult = await uploadToCloudinary(req.file.buffer);
+
+      const fileType = req.file.mimetype.startsWith('image/') ? 'image' : 'pdf';
+      const newResult = {
+        id: 'cigi_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+        fileUrl: uploadResult.secure_url,
+        publicId: uploadResult.public_id,
+        fileType,
+        testDate: testDate || '',
+        testTime: testTime || '',
+        note: note || '',
+        uploadedAt: new Date()
+      };
+
+      if (!user.cigiResults) {
+        user.cigiResults = [];
+      }
+      user.cigiResults.push(newResult);
+      await user.save();
+
+      const { password, ...userData } = user.toObject();
+
+      res.status(200).json({
+        success: true,
+        message: 'CIGI Aptitude Test result uploaded successfully',
+        data: userData
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // Edit CIGI Aptitude Test Result (Update metadata or replace file)
+  async editCigiResult(req, res, next) {
+    try {
+      const { userId, resultId } = req.params;
+      const { testDate, testTime, note } = req.body;
+
+      const user = await User.findOne({ id: userId });
+      if (!user) {
+        return res.status(404).json({ success: false, message: 'Student user not found' });
+      }
+
+      const Cigis = user.cigiResults || [];
+      const resultIndex = Cigis.findIndex(r => r.id === resultId);
+      if (resultIndex === -1) {
+        return res.status(404).json({ success: false, message: 'Result record not found' });
+      }
+
+      const targetResult = Cigis[resultIndex];
+
+      // If a new file is uploaded, replace the existing file
+      if (req.file) {
+        // Delete old file from Cloudinary first if publicId exists
+        if (targetResult.publicId) {
+          try {
+            await cloudinary.uploader.destroy(targetResult.publicId);
+          } catch (cloudinaryError) {
+            console.error('[Cloudinary Delete Error]:', cloudinaryError);
+          }
+        }
+
+        // Upload new file
+        const uploadResult = await uploadToCloudinary(req.file.buffer);
+        targetResult.fileUrl = uploadResult.secure_url;
+        targetResult.publicId = uploadResult.public_id;
+        targetResult.fileType = req.file.mimetype.startsWith('image/') ? 'image' : 'pdf';
+      }
+
+      // Update other fields
+      if (testDate !== undefined) targetResult.testDate = testDate;
+      if (testTime !== undefined) targetResult.testTime = testTime;
+      if (note !== undefined) targetResult.note = note;
+
+      // Mark the array element as modified
+      user.markModified('cigiResults');
+      await user.save();
+
+      const { password, ...userData } = user.toObject();
+
+      res.status(200).json({
+        success: true,
+        message: 'CIGI Aptitude Test result updated successfully',
+        data: userData
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // Delete CIGI Aptitude Test Result
+  async deleteCigiResult(req, res, next) {
+    try {
+      const { userId, resultId } = req.params;
+
+      const user = await User.findOne({ id: userId });
+      if (!user) {
+        return res.status(404).json({ success: false, message: 'Student user not found' });
+      }
+
+      const Cigis = user.cigiResults || [];
+      const resultIndex = Cigis.findIndex(r => r.id === resultId);
+      if (resultIndex === -1) {
+        return res.status(404).json({ success: false, message: 'Result record not found' });
+      }
+
+      const targetResult = Cigis[resultIndex];
+
+      // Delete from Cloudinary if publicId exists
+      if (targetResult.publicId) {
+        try {
+          await cloudinary.uploader.destroy(targetResult.publicId);
+        } catch (cloudinaryError) {
+          console.error('[Cloudinary Delete Error]:', cloudinaryError);
+        }
+      }
+
+      Cigis.splice(resultIndex, 1);
+      user.cigiResults = Cigis;
+      user.markModified('cigiResults');
+      await user.save();
+
+      const { password, ...userData } = user.toObject();
+
+      res.status(200).json({
+        success: true,
+        message: 'CIGI Aptitude Test result deleted successfully',
+        data: userData
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // Admin upload/update student profile pic
+  async updateUserProfilePic(req, res, next) {
+    try {
+      const { userId } = req.params;
+
+      if (!req.file) {
+        return res.status(400).json({
+          success: false,
+          message: 'No file provided. Please select an image.'
+        });
+      }
+
+      const user = await User.findOne({ id: userId });
+      if (!user) {
+        return res.status(404).json({ success: false, message: 'Student user not found' });
+      }
+
+      // Delete existing profile pic if it exists
+      if (user.profilePicPublicId) {
+        try {
+          await cloudinary.uploader.destroy(user.profilePicPublicId);
+        } catch (err) {
+          console.error('[Cloudinary Delete User Avatar Error]:', err);
+        }
+      }
+
+      // Upload and compress new profile pic
+      const uploadResult = await uploadProfilePicToCloudinary(req.file.buffer);
+
+      user.profilePic = uploadResult.secure_url;
+      user.profilePicPublicId = uploadResult.public_id;
+      await user.save();
+
+      const { password, ...userData } = user.toObject();
+
+      res.status(200).json({
+        success: true,
+        message: 'Student profile picture updated successfully',
+        data: userData
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // Admin upload/update psychologist profile pic
+  async updateCounsellorProfilePic(req, res, next) {
+    try {
+      const { counsellorId } = req.params;
+
+      if (!req.file) {
+        return res.status(400).json({
+          success: false,
+          message: 'No file provided. Please select an image.'
+        });
+      }
+
+      const counsellor = await Counsellor.findOne({ id: counsellorId });
+      if (!counsellor) {
+        return res.status(404).json({ success: false, message: 'Psychologist not found' });
+      }
+
+      // Delete existing profile pic if it exists
+      if (counsellor.profilePicPublicId) {
+        try {
+          await cloudinary.uploader.destroy(counsellor.profilePicPublicId);
+        } catch (err) {
+          console.error('[Cloudinary Delete Psychologist Avatar Error]:', err);
+        }
+      }
+
+      // Upload and compress new profile pic
+      const uploadResult = await uploadProfilePicToCloudinary(req.file.buffer);
+
+      counsellor.profilePic = uploadResult.secure_url;
+      counsellor.profilePicPublicId = uploadResult.public_id;
+      await counsellor.save();
+
+      const { password, ...counsellorData } = counsellor.toObject();
+
+      res.status(200).json({
+        success: true,
+        message: 'Psychologist profile picture updated successfully',
+        data: counsellorData
+      });
     } catch (error) {
       next(error);
     }

@@ -1,6 +1,7 @@
 const express = require('express');
 const AdminController = require('../controllers/adminController');
 const { verifyJWT, requireRole } = require('../middleware/authMiddleware');
+const upload = require('../middleware/uploadMiddleware');
 
 const router = express.Router();
 
@@ -12,11 +13,18 @@ router.get('/users', AdminController.getUsers);
 router.post('/users', AdminController.createUser);
 router.put('/users/:id', AdminController.updateUser);
 router.delete('/users/:id', AdminController.deleteUser);
+router.put('/users/:userId/profile-pic', upload.single('profilePic'), AdminController.updateUserProfilePic);
+
+// Admin CIGI Aptitude Test Results management
+router.post('/users/:userId/cigi-results', upload.single('file'), AdminController.addCigiResult);
+router.put('/users/:userId/cigi-results/:resultId', upload.single('file'), AdminController.editCigiResult);
+router.delete('/users/:userId/cigi-results/:resultId', AdminController.deleteCigiResult);
 
 router.get('/counsellors', AdminController.getCounsellors);
 router.post('/counsellors', AdminController.createCounsellor);
 router.put('/counsellors/:id', AdminController.updateCounsellor);
 router.delete('/counsellors/:id', AdminController.deleteCounsellor);
+router.put('/counsellors/:counsellorId/profile-pic', upload.single('profilePic'), AdminController.updateCounsellorProfilePic);
 router.put('/counsellors/:id/verify', AdminController.verifyCounsellor);
 
 router.get('/appointments', AdminController.getAppointments);

@@ -1,4 +1,7 @@
 const StorageService = require('../services/storageService');
+const Counsellor = require('../models/Counsellor');
+const cloudinary = require('../config/cloudinary');
+const { uploadProfilePicToCloudinary } = require('../utils/cloudinaryHelper');
 
 const CounsellorController = {
   // Get Counsellor Profile
@@ -133,6 +136,51 @@ const CounsellorController = {
           feedbackSummary: feedbacks.slice(0, 5),
           earningsPlaceholder: `$${sessions.filter(s => s.status === 'COMPLETED').length * 50}` // Dev mock
         }
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // Update Profile Picture
+  async updateProfilePic(req, res, next) {
+    try {
+      const counsellorId = req.user.id;
+
+      if (!req.file) {
+        return res.status(400).json({
+          success: false,
+          message: 'No file provided. Please select an image.'
+        });
+      }
+
+      const counsellor = await Counsellor.findOne({ id: counsellorId });
+      if (!counsellor) {
+        return res.status(404).json({ success: false, message: 'Counsellor not found' });
+      }
+
+      // Delete existing profile pic if it exists
+      if (counsellor.profilePicPublicId) {
+        try {
+          await cloudinary.uploader.destroy(counsellor.profilePicPublicId);
+        } catch (err) {
+          console.error('[Cloudinary Delete Avatar Error]:', err);
+        }
+      }
+
+      // Upload and compress new profile pic
+      const uploadResult = await uploadProfilePicToCloudinary(req.file.buffer);
+
+      counsellor.profilePic = uploadResult.secure_url;
+      counsellor.profilePicPublicId = uploadResult.public_id;
+      await counsellor.save();
+
+      const { password, ...counsellorData } = counsellor.toObject();
+
+      res.status(200).json({
+        success: true,
+        message: 'Profile picture updated successfully',
+        data: counsellorData
       });
     } catch (error) {
       next(error);

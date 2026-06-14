@@ -22,6 +22,10 @@ async function request(endpoint, options = {}) {
     ...(options.headers || {})
   };
 
+  if (options.body instanceof FormData) {
+    delete headers['Content-Type'];
+  }
+
   let response;
   try {
     response = await fetch(`${BASE_URL}${endpoint}`, {
@@ -358,10 +362,10 @@ const ApiService = {
     });
   },
 
-  async updateAdminUser(id, name, email, password, role, permissions, customRoleTitle, status) {
+  async updateAdminUser(id, name, email, password, role, permissions, customRoleTitle, status, extraFields = {}) {
     return await request(`/admin/users/${id}`, {
       method: 'PUT',
-      body: JSON.stringify({ name, email, password, role, permissions, customRoleTitle, status })
+      body: JSON.stringify({ name, email, password, role, permissions, customRoleTitle, status, ...extraFields })
     });
   },
 
@@ -639,6 +643,104 @@ const ApiService = {
   async deleteAptitudeQuestion(id) {
     return await request(`/admin/aptitude-questions/${id}`, {
       method: 'DELETE'
+    });
+  },
+
+  // CIGI Aptitude Test Results
+  async uploadCigiResult(formData) {
+    const res = await request('/users/cigi-results', {
+      method: 'POST',
+      body: formData
+    });
+    if (res.success && res.data) {
+      try {
+        const authUser = JSON.parse(localStorage.getItem('behold_auth_user') || '{}');
+        const updatedUser = { ...authUser, ...res.data };
+        localStorage.setItem('behold_auth_user', JSON.stringify(updatedUser));
+        window.dispatchEvent(new Event('storage'));
+      } catch (e) { }
+    }
+    return res;
+  },
+
+  async deleteCigiResult(resultId) {
+    const res = await request(`/users/cigi-results/${resultId}`, {
+      method: 'DELETE'
+    });
+    if (res.success && res.data) {
+      try {
+        const authUser = JSON.parse(localStorage.getItem('behold_auth_user') || '{}');
+        const updatedUser = { ...authUser, ...res.data };
+        localStorage.setItem('behold_auth_user', JSON.stringify(updatedUser));
+        window.dispatchEvent(new Event('storage'));
+      } catch (e) { }
+    }
+    return res;
+  },
+
+  async adminUploadCigiResult(userId, formData) {
+    return await request(`/admin/users/${userId}/cigi-results`, {
+      method: 'POST',
+      body: formData
+    });
+  },
+
+  async adminUpdateCigiResult(userId, resultId, formData) {
+    return await request(`/admin/users/${userId}/cigi-results/${resultId}`, {
+      method: 'PUT',
+      body: formData
+    });
+  },
+
+  async adminDeleteCigiResult(userId, resultId) {
+    return await request(`/admin/users/${userId}/cigi-results/${resultId}`, {
+      method: 'DELETE'
+    });
+  },
+
+  async updateProfilePic(formData) {
+    const res = await request('/users/profile-pic', {
+      method: 'PUT',
+      body: formData
+    });
+    if (res.success && res.data) {
+      try {
+        const authUser = JSON.parse(localStorage.getItem('behold_auth_user') || '{}');
+        const updatedUser = { ...authUser, ...res.data };
+        localStorage.setItem('behold_auth_user', JSON.stringify(updatedUser));
+        window.dispatchEvent(new Event('storage'));
+      } catch (e) { }
+    }
+    return res;
+  },
+
+  async updateCounsellorProfilePic(formData) {
+    const res = await request('/counsellors/profile-pic', {
+      method: 'PUT',
+      body: formData
+    });
+    if (res.success && res.data) {
+      try {
+        const authUser = JSON.parse(localStorage.getItem('behold_auth_user') || '{}');
+        const updatedUser = { ...authUser, ...res.data };
+        localStorage.setItem('behold_auth_user', JSON.stringify(updatedUser));
+        window.dispatchEvent(new Event('storage'));
+      } catch (e) { }
+    }
+    return res;
+  },
+
+  async adminUpdateUserProfilePic(userId, formData) {
+    return await request(`/admin/users/${userId}/profile-pic`, {
+      method: 'PUT',
+      body: formData
+    });
+  },
+
+  async adminUpdateCounsellorProfilePic(counsellorId, formData) {
+    return await request(`/admin/counsellors/${counsellorId}/profile-pic`, {
+      method: 'PUT',
+      body: formData
     });
   }
 };

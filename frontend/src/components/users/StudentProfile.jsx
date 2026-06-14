@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import ApiService from '../../services/api';
+import toast from 'react-hot-toast';
 
 const INITIAL_STATE = {
   name: '', email: '', phone: '', schoolName: '', grade: '',
@@ -132,6 +133,14 @@ export default function StudentProfile() {
   const { user, isLoading: authLoading, updateUser } = useAuth();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
+
+  // CIGI Aptitude Test uploads state
+  const [cigiFile, setCigiFile] = useState(null);
+  const [cigiDate, setCigiDate] = useState('');
+  const [cigiTime, setCigiTime] = useState('');
+  const [cigiNote, setCigiNote] = useState('');
+  const [isCigiUploading, setIsCigiUploading] = useState(false);
+  const fileInputRef = useRef(null);
 
   const currentSection = useMemo(() => searchParams.get('tab') || 'overview', [searchParams]);
 
@@ -324,10 +333,27 @@ export default function StudentProfile() {
         <div className="p-5 sm:p-7">
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5">
             {/* Avatar */}
-            <div className="relative shrink-0">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-zinc-100 border border-zinc-200 flex items-center justify-center text-zinc-700 font-bold text-xl sm:text-2xl">
-                {getInitials(profile.name, user?.name)}
-              </div>
+            <div className="relative shrink-0 group">
+              {profile.profilePic ? (
+                <img
+                  src={profile.profilePic}
+                  alt={displayName}
+                  className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl object-cover border border-zinc-200"
+                />
+              ) : (
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-zinc-100 border border-zinc-200 flex items-center justify-center text-zinc-700 font-bold text-xl sm:text-2xl">
+                  {getInitials(profile.name, user?.name)}
+                </div>
+              )}
+              <label className="absolute inset-0 rounded-2xl bg-black/45 flex items-center justify-center opacity-0 group-hover:opacity-100 cursor-pointer transition-opacity duration-200">
+                <Plus className="w-5 h-5 text-white" />
+                <input
+                  type="file"
+                  onChange={handleProfilePicUpload}
+                  accept="image/*"
+                  className="hidden"
+                />
+              </label>
               <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center">
                 <Check className="w-2.5 h-2.5 text-white" strokeWidth={3} />
               </div>
@@ -1231,126 +1257,338 @@ export default function StudentProfile() {
 
   // ─── Tab: CDAT Results ───────────────────────────────────────────────
 
-  const ResultsTab = () => {
-    if (!testProfile) {
-      return (
-        <div className="space-y-5">
-          <div>
-            <h2 className="text-lg font-bold text-zinc-900">CDAT Results</h2>
-            <p className="text-sm text-zinc-500 mt-0.5">Discover your dominant strengths across 7 key domains.</p>
-          </div>
-          <div className="bg-zinc-50 border border-dashed border-zinc-300 rounded-xl p-8 text-center">
-            <div className="w-12 h-12 mx-auto rounded-xl bg-zinc-200 flex items-center justify-center mb-3">
-              <BarChart3 className="w-6 h-6 text-zinc-500" />
-            </div>
-            <p className="text-sm font-semibold text-zinc-700">No test history yet</p>
-            <p className="text-xs text-zinc-500 mt-1 max-w-sm mx-auto">
-              Take the CIGI Differential Aptitude Test to unlock personalized career insights.
-            </p>
-            <button
-              type="button"
-              onClick={() => navigate('/sample-test')}
-              className="mt-4 inline-flex items-center gap-1.5 min-h-[40px] px-5 py-2 bg-zinc-900 text-white text-xs font-semibold rounded-lg hover:bg-zinc-800 transition-colors border-none"
-            >
-              <Target className="w-3.5 h-3.5" /> Take CDAT Test
-            </button>
-          </div>
-        </div>
-      );
+  const handleCigiUpload = async (e) => {
+    e.preventDefault();
+    if (!cigiFile) {
+      toast.error('Please select a result file (Image or PDF)');
+      return;
+    }
+    
+    // File extension check
+    const allowedExtensions = ['jpg', 'jpeg', 'png', 'pdf'];
+    const fileExt = cigiFile.name.split('.').pop().toLowerCase();
+    if (!allowedExtensions.includes(fileExt)) {
+      toast.error('Only JPG, JPEG, PNG, and PDF files are allowed.');
+      return;
     }
 
-    const scores = Object.entries(testProfile.scores || {});
-    const topDomain = testProfile.dominantDomain;
+    setIsCigiUploading(true);
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append('file', cigiFile);
+      formDataToSend.append('testDate', cigiDate);
+      formDataToSend.append('testTime', cigiTime);
+      formDataToSend.append('note', cigiNote);
+
+      const res = await ApiService.uploadCigiResult(formDataToSend);
+      if (res.success) {
+        toast.success('CIGI result uploaded successfully');
+        setProfile(prev => ({ ...prev, cigiResults: res.data.cigiResults }));
+        // Reset form
+        setCigiFile(null);
+        setCigiDate('');
+        setCigiTime('');
+        setCigiNote('');
+        if (fileInputRef.current) fileInputRef.current.value = '';
+      }
+    } catch (err) {
+      toast.error(err.message || 'Failed to upload CIGI result');
+    } finally {
+      setIsCigiUploading(false);
+    }
+  };
+
+  const handleCigiDelete = async (resultId) => {
+    if (!window.confirm('Are you sure you want to delete this CIGI result?')) return;
+    try {
+      const res = await ApiService.deleteCigiResult(resultId);
+      if (res.success) {
+        toast.success('CIGI result deleted successfully');
+        setProfile(prev => ({ ...prev, cigiResults: res.data.cigiResults }));
+      }
+    } catch (err) {
+      toast.error(err.message || 'Failed to delete CIGI result');
+    }
+  };
+
+  const handleProfilePicUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const allowedExtensions = ['jpg', 'jpeg', 'png'];
+    const fileExt = file.name.split('.').pop().toLowerCase();
+    if (!allowedExtensions.includes(fileExt)) {
+      toast.error('Only JPG, JPEG, and PNG images are allowed.');
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('File size must be under 5MB.');
+      return;
+    }
+
+    const toastId = toast.loading('Uploading profile picture...');
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append('profilePic', file);
+
+      const res = await ApiService.updateProfilePic(formDataToSend);
+      if (res.success) {
+        toast.success('Profile picture updated!', { id: toastId });
+        setProfile(prev => ({ 
+          ...prev, 
+          profilePic: res.data.profilePic, 
+          profilePicPublicId: res.data.profilePicPublicId 
+        }));
+        
+        // Update user context so top header avatar updates too
+        if (user) {
+          updateUser({
+            ...user,
+            profilePic: res.data.profilePic
+          });
+        }
+      }
+    } catch (err) {
+      toast.error(err.message || 'Failed to upload profile picture', { id: toastId });
+    }
+  };
+
+  const ResultsTab = () => {
+    const cigiResultsList = profile.cigiResults || [];
+    const scores = testProfile ? Object.entries(testProfile.scores || {}) : [];
+    const topDomain = testProfile?.dominantDomain;
 
     return (
-      <div className="space-y-5">
+      <div className="space-y-6 text-left">
         <div>
-          <h2 className="text-lg font-bold text-zinc-900">Your CDAT Profile</h2>
-          <p className="text-sm text-zinc-500 mt-0.5">Detailed breakdown of your strengths across all domains.</p>
+          <h2 className="text-xl font-bold text-zinc-950">Aptitude Test Results</h2>
+          <p className="text-sm text-zinc-500 mt-1">
+            Access your sample diagnostic test results and upload external CIGI Differential Aptitude Test (C-DAT) results.
+          </p>
         </div>
 
-        {/* Dominant domain card */}
-        <div className="bg-zinc-900 rounded-xl p-6 text-white">
-          <p className="text-xs font-semibold capitalize  text-zinc-400 mb-3 flex items-center gap-1.5">
-            <Star className="w-3 h-3 text-amber-400" /> Primary Outcome
-          </p>
-          <p className="text-xs text-zinc-400 font-medium mb-1">Your Dominant Domain</p>
-          <h3 className="text-2xl font-bold text-white">{topDomain}</h3>
-          <p className="text-sm text-zinc-400 mt-2 max-w-md">
-            You scored highest in this domain. Career paths aligned with this strength tend to be a great fit.
-          </p>
-          {scores[0] && (
-            <div className="mt-4 inline-flex items-center gap-2 px-3 py-2 bg-white/10 border border-white/10 rounded-lg text-sm font-bold">
-              Top Score: {scores[0][1]}%
-            </div>
-          )}
-        </div>
-
-        {/* Score distribution */}
-        <div className="bg-white border border-zinc-200 rounded-xl p-5">
-          <h4 className="text-sm font-semibold text-zinc-900 mb-4 flex items-center gap-2">
-            <Target className="w-4 h-4 text-zinc-400" /> Score Distribution
-          </h4>
-          <div className="space-y-4">
-            {scores.map(([key, pct]) => {
-              const isTop = pct === Math.max(...scores.map(s => s[1]));
-              return (
-                <div key={key} className="space-y-1.5">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className={`font-medium flex items-center gap-1.5 ${isTop ? 'text-zinc-900' : 'text-zinc-600'}`}>
-                      {isTop && <Trophy className="w-3.5 h-3.5 text-amber-500" />}
-                      {key}
-                    </span>
-                    <span className={`font-semibold tabular-nums ${isTop ? 'text-zinc-900' : 'text-zinc-500'}`}>{pct}%</span>
+        {/* Grid layout for two sections: Sample Test and CIGI Test */}
+        <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+          {/* Column 1: Sample Test Results */}
+          <div className="xl:col-span-7 space-y-6">
+            <div className="bg-white border border-zinc-200 rounded-xl p-5 shadow-sm">
+              <h3 className="text-base font-semibold text-zinc-900 mb-3 flex items-center gap-2">
+                <BarChart3 className="w-4 h-4 text-zinc-700 animate-pulse" /> Sample Aptitude Test (CDAT)
+              </h3>
+              
+              {!testProfile ? (
+                <div className="bg-zinc-50 border border-dashed border-zinc-300 rounded-xl p-8 text-center">
+                  <div className="w-12 h-12 mx-auto rounded-xl bg-zinc-200 flex items-center justify-center mb-3">
+                    <Activity className="w-6 h-6 text-zinc-500" />
                   </div>
-                  <div className="h-2 w-full bg-zinc-100 rounded-full overflow-hidden">
-                    <div
-                      className={`h-full rounded-full transition-all duration-1000 ${isTop ? 'bg-zinc-900' : 'bg-zinc-300'
-                        }`}
-                      style={{ width: `${pct}%` }}
+                  <p className="text-sm font-semibold text-zinc-700">No Sample Test History</p>
+                  <p className="text-xs text-zinc-500 mt-1 max-w-sm mx-auto">
+                    Take the Behold sample diagnostic test to map your strengths.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => navigate('/sample-test')}
+                    className="mt-4 inline-flex items-center gap-1.5 px-5 py-2 bg-zinc-900 text-white text-xs font-semibold rounded-lg hover:bg-zinc-800 transition-colors border-none"
+                  >
+                    <Target className="w-3.5 h-3.5" /> Start Sample Test
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {/* Dominant Domain Card */}
+                  <div className="bg-zinc-900 rounded-xl p-5 text-white">
+                    <p className="text-xs text-zinc-400 font-semibold uppercase tracking-wider mb-1">Dominant Domain</p>
+                    <h4 className="text-xl font-bold text-white">{topDomain}</h4>
+                    <p className="text-xs text-zinc-400 mt-1.5">
+                      Your primary strength outcome. Click below to view the full detailed breakdown.
+                    </p>
+                    <div className="mt-3.5 flex justify-between items-center">
+                      <span className="text-xs font-bold px-2.5 py-1 bg-white/10 rounded-md">
+                        Score: {scores.find(([k]) => k === topDomain)?.[1] || 100}%
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Score Breakdown */}
+                  <div className="space-y-3 pt-2">
+                    <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Top Strength Domains</p>
+                    {scores.slice(0, 4).map(([key, pct]) => (
+                      <div key={key} className="space-y-1">
+                        <div className="flex justify-between text-xs font-medium">
+                          <span className="text-zinc-700">{key}</span>
+                          <span className="text-zinc-900 font-semibold">{pct}%</span>
+                        </div>
+                        <div className="h-1.5 w-full bg-zinc-100 rounded-full overflow-hidden">
+                          <div className="h-full bg-zinc-800 rounded-full" style={{ width: `${pct}%` }} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => navigate('/sample-test')}
+                    className="w-full mt-2 inline-flex items-center justify-center gap-1.5 px-4 py-2 border border-zinc-200 hover:border-zinc-300 text-zinc-700 hover:text-zinc-950 font-medium rounded-lg text-xs transition-colors bg-white cursor-pointer"
+                  >
+                    <RefreshCw className="w-3.5 h-3.5" /> Retake Sample Test
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Career Suggestions */}
+            {testProfile && topDomain && CAREER_SUGGESTIONS[topDomain] && (
+              <div className="bg-white border border-zinc-200 rounded-xl p-5 shadow-sm">
+                <h3 className="text-sm font-semibold text-zinc-900 mb-1 flex items-center gap-2">
+                  <Briefcase className="w-4 h-4 text-zinc-400" /> Career Alignment
+                </h3>
+                <p className="text-xs text-zinc-400 mb-3">Paths suited for {topDomain} strength.</p>
+                <div className="grid grid-cols-2 gap-2">
+                  {CAREER_SUGGESTIONS[topDomain].map((career, i) => (
+                    <div key={i} className="bg-zinc-50 border border-zinc-200 rounded-lg p-2.5 flex items-center gap-2">
+                      <div className="w-5 h-5 rounded bg-zinc-200 flex items-center justify-center shrink-0">
+                        <Check className="w-3 h-3 text-zinc-600" />
+                      </div>
+                      <span className="text-xs font-medium text-zinc-800">{career}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Column 2: CIGI Aptitude Test Results & Uploads */}
+          <div className="xl:col-span-5 space-y-6">
+            {/* Upload form */}
+            <div className="bg-white border border-zinc-200 rounded-xl p-5 shadow-sm">
+              <h3 className="text-base font-semibold text-zinc-900 mb-1.5 flex items-center gap-2">
+                <Award className="w-4 h-4 text-zinc-750" /> CIGI Aptitude Test (C-DAT)
+              </h3>
+              <p className="text-xs text-zinc-500 mb-4 leading-relaxed">
+                Registered and took the test on CIGI's site? Upload your scorecard/result (Image or PDF) below.
+              </p>
+
+              <form onSubmit={handleCigiUpload} className="space-y-3.5">
+                <div>
+                  <label className="text-xs font-medium text-zinc-700 block mb-1">
+                    Upload Result File <span className="text-rose-500">*</span>
+                  </label>
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={(e) => setCigiFile(e.target.files[0])}
+                    accept="image/*,application/pdf"
+                    required
+                    className="w-full text-xs text-zinc-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-zinc-100 file:text-zinc-700 hover:file:bg-zinc-200 file:cursor-pointer p-2 border border-zinc-200 rounded-lg bg-zinc-50 focus:outline-none"
+                  />
+                  <p className="text-[10px] text-zinc-400 mt-1">Allowed formats: JPG, JPEG, PNG, PDF (Max 5MB)</p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-xs font-medium text-zinc-700 block mb-1">Date Taken</label>
+                    <input
+                      type="date"
+                      value={cigiDate}
+                      onChange={(e) => setCigiDate(e.target.value)}
+                      className="w-full p-2 border border-zinc-200 rounded-lg text-xs focus:ring-1 focus:ring-zinc-400 outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-zinc-700 block mb-1">Time Taken</label>
+                    <input
+                      type="time"
+                      value={cigiTime}
+                      onChange={(e) => setCigiTime(e.target.value)}
+                      className="w-full p-2 border border-zinc-200 rounded-lg text-xs focus:ring-1 focus:ring-zinc-400 outline-none"
                     />
                   </div>
                 </div>
-              );
-            })}
-          </div>
-        </div>
 
-        {/* Career suggestions */}
-        {topDomain && CAREER_SUGGESTIONS[topDomain] && (
-          <div className="bg-white border border-zinc-200 rounded-xl p-5">
-            <h4 className="text-sm font-semibold text-zinc-900 mb-1 flex items-center gap-2">
-              <Briefcase className="w-4 h-4 text-zinc-400" /> Suggested Career Paths
-            </h4>
-            <p className="text-xs text-zinc-500 mb-4">Based on your top domain.</p>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              {CAREER_SUGGESTIONS[topDomain].map((career, i) => (
-                <div key={i} className="group bg-zinc-50 border border-zinc-200 rounded-lg p-3 hover:border-zinc-300 transition-colors cursor-pointer">
-                  <div className="w-7 h-7 rounded-md bg-zinc-200 flex items-center justify-center mb-2">
-                    <Target className="w-3.5 h-3.5 text-zinc-600" />
-                  </div>
-                  <p className="text-xs font-medium text-zinc-800 leading-tight">{career}</p>
+                <div>
+                  <label className="text-xs font-medium text-zinc-700 block mb-1">Remarks / Note</label>
+                  <textarea
+                    placeholder="E.g. Got high scores in mathematical reasoning..."
+                    value={cigiNote}
+                    onChange={(e) => setCigiNote(e.target.value)}
+                    rows={2}
+                    className="w-full p-2 border border-zinc-200 rounded-lg text-xs focus:ring-1 focus:ring-zinc-400 outline-none resize-none"
+                  />
                 </div>
-              ))}
-            </div>
-            <button
-              type="button"
-              onClick={() => navigate('/booking')}
-              className="mt-4 w-full sm:w-auto inline-flex items-center justify-center gap-1.5 min-h-[40px] px-5 py-2 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-semibold rounded-lg transition-colors border-none"
-            >
-              <MessageCircle className="w-3.5 h-3.5" /> Discuss with a Counsellor
-            </button>
-          </div>
-        )}
 
-        <div className="text-center">
-          <button
-            type="button"
-            onClick={() => navigate('/sample-test')}
-            className="inline-flex items-center gap-1.5 text-xs font-medium text-zinc-500 hover:text-zinc-900 transition-colors"
-          >
-            <RefreshCw className="w-3.5 h-3.5" /> Retake diagnostic test
-          </button>
+                <button
+                  type="submit"
+                  disabled={isCigiUploading}
+                  className="w-full min-h-[38px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-zinc-950 hover:bg-zinc-800 disabled:bg-zinc-500 text-white rounded-lg text-xs font-semibold transition-colors border-none cursor-pointer"
+                >
+                  {isCigiUploading ? (
+                    <><span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Uploading...</>
+                  ) : (
+                    <>Upload Result</>
+                  )}
+                </button>
+              </form>
+            </div>
+
+            {/* Results list */}
+            <div className="bg-white border border-zinc-200 rounded-xl p-5 shadow-sm">
+              <h3 className="text-sm font-semibold text-zinc-900 mb-3">Uploaded CIGI Results ({cigiResultsList.length})</h3>
+
+              {cigiResultsList.length === 0 ? (
+                <div className="text-center py-6 text-zinc-400 border border-dashed border-zinc-200 rounded-xl bg-zinc-50">
+                  <p className="text-xs">No result files uploaded yet.</p>
+                </div>
+              ) : (
+                <div className="space-y-3 max-h-[350px] overflow-y-auto pr-1">
+                  {cigiResultsList.map((result) => (
+                    <div key={result.id} className="p-3 bg-zinc-50 border border-zinc-200 rounded-xl flex items-center justify-between gap-3 text-left">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold uppercase ${result.fileType === 'pdf' ? 'bg-rose-100 text-rose-700' : 'bg-blue-100 text-blue-700'}`}>
+                            {result.fileType}
+                          </span>
+                          {(result.testDate || result.testTime) && (
+                            <span className="text-[10px] text-zinc-500">
+                              {result.testDate} {result.testTime}
+                            </span>
+                          )}
+                        </div>
+                        {result.note && (
+                          <p className="text-xs text-zinc-600 mt-1 truncate" title={result.note}>
+                            {result.note}
+                          </p>
+                        )}
+                        <p className="text-[10px] text-zinc-400 mt-0.5">
+                          Uploaded {new Date(result.uploadedAt).toLocaleDateString()}
+                        </p>
+                      </div>
+
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <a
+                          href={result.fileUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-1.5 bg-white hover:bg-zinc-100 border border-zinc-200 rounded-lg text-zinc-600 hover:text-zinc-900 transition-colors"
+                          title="View document"
+                        >
+                          <ExternalLink className="w-3.5 h-3.5" />
+                        </a>
+                        <button
+                          type="button"
+                          onClick={() => handleCigiDelete(result.id)}
+                          className="p-1.5 bg-white hover:bg-rose-50 border border-zinc-200 hover:border-rose-200 rounded-lg text-zinc-400 hover:text-rose-600 transition-colors"
+                          title="Delete result"
+                        >
+                          <XIcon className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     );

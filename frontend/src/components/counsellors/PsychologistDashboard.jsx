@@ -127,6 +127,36 @@ export default function PsychologistDashboard({ setView }) {
   const [regToMinute, setRegToMinute] = useState('00');
   const [regToPeriod, setRegToPeriod] = useState('PM');
 
+  // Profile picture upload state
+  const [profilePicFile, setProfilePicFile] = useState(null);
+  const [isAvatarUploading, setIsAvatarUploading] = useState(false);
+  const avatarFileRef = React.useRef(null);
+
+  const handleCounsellorAvatarUpload = async (file) => {
+    if (!file) return;
+    const allowed = ['image/jpeg', 'image/jpg', 'image/png'];
+    if (!allowed.includes(file.type)) {
+      import('react-hot-toast').then(mod => mod.toast.error('Only JPG/PNG images are allowed for profile picture.'));
+      return;
+    }
+    setIsAvatarUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append('profilePic', file);
+      const res = await ApiService.updateCounsellorProfilePic(fd);
+      if (res.success) {
+        import('react-hot-toast').then(mod => mod.toast.success('Profile picture updated!'));
+        if (updateUser && user && res.data) updateUser({ ...user, profilePic: res.data.profilePic });
+        setProfilePicFile(null);
+      }
+    } catch (err) {
+      import('react-hot-toast').then(mod => mod.toast.error(err.message || 'Failed to upload picture.'));
+    } finally {
+      setIsAvatarUploading(false);
+    }
+  };
+
+
   const isSessionCompleted = (booking) => {
     if (booking.status === 'CANCELLED') return false;
     if (booking.status === 'COMPLETED') return true;
@@ -1218,8 +1248,12 @@ export default function PsychologistDashboard({ setView }) {
             onClick={() => setIsProfileDrawerOpen(true)}
             className="w-full flex items-center gap-3 bg-zinc-950/60 hover:bg-zinc-955 p-3 rounded-xl border border-zinc-850 hover:border-indigo-500/30 transition-all cursor-pointer text-left"
           >
-            <div className="w-10 h-10 rounded-lg bg-indigo-950 text-brand flex items-center justify-center font-header font-bold text-sm border border-indigo-900 shrink-0">
-              {(profile?.name || '').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
+            <div className="w-10 h-10 rounded-lg bg-indigo-950 text-brand flex items-center justify-center font-header font-bold text-sm border border-indigo-900 shrink-0 overflow-hidden">
+              {user?.profilePic ? (
+                <img src={user.profilePic} alt={profile.name} className="w-full h-full object-cover" />
+              ) : (
+                (profile?.name || '').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()
+              )}
             </div>
             <div className="min-w-0 flex-1">
               <h4 className="text-sm font-bold text-white truncate leading-tight capitalize font-header">
@@ -1440,6 +1474,52 @@ export default function PsychologistDashboard({ setView }) {
                   <div className="border-b border-zinc-805 pb-3 flex justify-between items-center">
                     <h3 className="text-sm font-bold capitalize  text-zinc-400">Consultant Psychologist Profile</h3>
                     <span className="text-sm text-zinc-500 font-light">Clinic Records</span>
+                  </div>
+
+                  {/* Profile Picture Upload */}
+                  <div className="flex items-center gap-5 p-4 bg-zinc-950 border border-zinc-800 rounded-xl">
+                    <div className="relative group shrink-0">
+                      <div className="w-20 h-20 rounded-xl overflow-hidden border-2 border-zinc-700 group-hover:border-indigo-500 transition-colors">
+                        {user?.profilePic ? (
+                          <img src={user.profilePic} alt={profile.name} className="w-full h-full object-cover" />
+                        ) : (
+                          <div className="w-full h-full bg-indigo-950 flex items-center justify-center">
+                            <span className="text-indigo-400 font-bold text-2xl font-header">
+                              {(profile?.name || '').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => avatarFileRef.current?.click()}
+                        className="absolute inset-0 flex items-center justify-center bg-zinc-950/70 opacity-0 group-hover:opacity-100 rounded-xl transition-opacity cursor-pointer text-white"
+                      >
+                        <Edit className="w-5 h-5" />
+                      </button>
+                    </div>
+                    <div className="flex-1 space-y-1">
+                      <p className="text-sm font-bold text-white">{profile.name || 'Unnamed Counsellor'}</p>
+                      <p className="text-xs text-zinc-500">{user?.email || ''}</p>
+                      <input
+                        ref={avatarFileRef}
+                        type="file"
+                        accept="image/jpeg,image/png,image/jpg"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) handleCounsellorAvatarUpload(file);
+                        }}
+                      />
+                      <button
+                        type="button"
+                        disabled={isAvatarUploading}
+                        onClick={() => avatarFileRef.current?.click()}
+                        className="mt-1 px-3 py-1.5 text-xs font-bold bg-indigo-950 border border-indigo-800 hover:border-indigo-500 text-indigo-400 hover:text-white rounded-lg cursor-pointer transition disabled:opacity-50"
+                      >
+                        {isAvatarUploading ? 'Uploading...' : 'Change Photo'}
+                      </button>
+                    </div>
                   </div>
 
                   {(() => {

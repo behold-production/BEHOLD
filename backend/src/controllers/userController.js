@@ -1,4 +1,7 @@
 const StorageService = require('../services/storageService');
+const User = require('../models/User');
+const cloudinary = require('../config/cloudinary');
+const { uploadToCloudinary, uploadProfilePicToCloudinary } = require('../utils/cloudinaryHelper');
 
 const UserController = {
   // Get User Profile
@@ -180,6 +183,145 @@ const UserController = {
         success: true,
         message: 'Test results retrieved successfully',
         data: results
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // Upload CIGI Aptitude Test Result
+  async addCigiResult(req, res, next) {
+    try {
+      const userId = req.user.id;
+      const { testDate, testTime, note } = req.body;
+
+      if (!req.file) {
+        return res.status(400).json({
+          success: false,
+          message: 'No file provided. Please select an image or PDF.'
+        });
+      }
+
+      // Find user
+      const user = await User.findOne({ id: userId });
+      if (!user) {
+        return res.status(404).json({ success: false, message: 'User not found' });
+      }
+
+      // Upload file to Cloudinary
+      const uploadResult = await uploadToCloudinary(req.file.buffer);
+
+      const fileType = req.file.mimetype.startsWith('image/') ? 'image' : 'pdf';
+      const newResult = {
+        id: 'cigi_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+        fileUrl: uploadResult.secure_url,
+        publicId: uploadResult.public_id,
+        fileType,
+        testDate: testDate || '',
+        testTime: testTime || '',
+        note: note || '',
+        uploadedAt: new Date()
+      };
+
+      if (!user.cigiResults) {
+        user.cigiResults = [];
+      }
+      user.cigiResults.push(newResult);
+      await user.save();
+
+      const { password, ...userData } = user.toObject();
+
+      res.status(200).json({
+        success: true,
+        message: 'CIGI Aptitude Test result uploaded successfully',
+        data: userData
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // Delete CIGI Aptitude Test Result
+  async deleteCigiResult(req, res, next) {
+    try {
+      const userId = req.user.id;
+      const { resultId } = req.params;
+
+      const user = await User.findOne({ id: userId });
+      if (!user) {
+        return res.status(404).json({ success: false, message: 'User not found' });
+      }
+
+      const resultIndex = user.cigiResults.findIndex(r => r.id === resultId);
+      if (resultIndex === -1) {
+        return res.status(404).json({ success: false, message: 'Result record not found' });
+      }
+
+      const targetResult = user.cigiResults[resultIndex];
+
+      // Delete from Cloudinary if publicId exists
+      if (targetResult.publicId) {
+        try {
+          await cloudinary.uploader.destroy(targetResult.publicId);
+        } catch (cloudinaryError) {
+          console.error('[Cloudinary Delete Error]:', cloudinaryError);
+        }
+      }
+
+      user.cigiResults.splice(resultIndex, 1);
+      await user.save();
+
+      const { password, ...userData } = user.toObject();
+
+      res.status(200).json({
+        success: true,
+        message: 'CIGI Aptitude Test result deleted successfully',
+        data: userData
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // Update Profile Picture
+  async updateProfilePic(req, res, next) {
+    try {
+      const userId = req.user.id;
+
+      if (!req.file) {
+        return res.status(400).json({
+          success: false,
+          message: 'No file provided. Please select an image.'
+        });
+      }
+
+      const user = await User.findOne({ id: userId });
+      if (!user) {
+        return res.status(404).json({ success: false, message: 'User not found' });
+      }
+
+      // Delete existing profile pic if it exists
+      if (user.profilePicPublicId) {
+        try {
+          await cloudinary.uploader.destroy(user.profilePicPublicId);
+        } catch (err) {
+          console.error('[Cloudinary Delete Avatar Error]:', err);
+        }
+      }
+
+      // Upload and compress new profile pic
+      const uploadResult = await uploadProfilePicToCloudinary(req.file.buffer);
+
+      user.profilePic = uploadResult.secure_url;
+      user.profilePicPublicId = uploadResult.public_id;
+      await user.save();
+
+      const { password, ...userData } = user.toObject();
+
+      res.status(200).json({
+        success: true,
+        message: 'Profile picture updated successfully',
+        data: userData
       });
     } catch (error) {
       next(error);
