@@ -30,7 +30,7 @@ async function request(endpoint, options = {}) {
     });
   } catch (err) {
     const errorMsg = 'Network error occurred. Please verify your connection.';
-    toast.error(errorMsg);
+    toast.error(errorMsg, { id: 'network-error' });
     throw new Error(errorMsg);
   }
 
@@ -52,7 +52,7 @@ async function request(endpoint, options = {}) {
       localStorage.removeItem('behold_auth_user');
       window.dispatchEvent(new Event('storage'));
       if (window.spaNavigate) window.spaNavigate('/');
-      toast.error('Session expired. Please log in again.');
+      toast.error('Session expired. Please log in again.', { id: 'session-expired' });
       throw new Error('Session expired. Please log in again.');
     }
 
@@ -79,7 +79,7 @@ async function request(endpoint, options = {}) {
           localStorage.removeItem('behold_auth_user');
           window.dispatchEvent(new Event('storage'));
           if (window.spaNavigate) window.spaNavigate('/');
-          toast.error('Session expired. Please log in again.');
+          toast.error('Session expired. Please log in again.', { id: 'session-expired' });
           throw new Error('Session expired. Please log in again.');
         }
       } catch (err) {
@@ -89,7 +89,7 @@ async function request(endpoint, options = {}) {
         localStorage.removeItem('behold_auth_user');
         window.dispatchEvent(new Event('storage'));
         if (window.spaNavigate) window.spaNavigate('/');
-        toast.error('Session expired. Please log in again.');
+        toast.error('Session expired. Please log in again.', { id: 'session-expired' });
         throw err;
       }
     }
@@ -110,7 +110,7 @@ async function request(endpoint, options = {}) {
     const errorMsg = data.message || `HTTP error! Status: ${response.status}`;
     // Only toast if it's not a background validation that's handled gracefully
     if (!options.silent) {
-      toast.error(errorMsg);
+      toast.error(errorMsg, { id: endpoint });
     }
     throw new Error(errorMsg);
   }
