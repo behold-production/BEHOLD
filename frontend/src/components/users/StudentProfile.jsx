@@ -301,6 +301,14 @@ export default function StudentProfile() {
     return () => clearInterval(t);
   }, []);
 
+  const nextSession = bookedSessions[0];
+  const stats = {
+    total: bookedSessions.length + completedSessions.length,
+    completed: completedSessions.length,
+    upcoming: bookedSessions.length,
+    hours: completedSessions.length,
+  };
+
   // ─── Hero Header ─────────────────────────────────────────────────────
 
   const HeroHeader = () => {
