@@ -9,7 +9,8 @@ import {
   Award,
   ArrowUpRight,
   Lightbulb,
-  Heart
+  Heart,
+  Loader2
 } from 'lucide-react';
 
 import ApiService from '../services/api';
@@ -75,6 +76,7 @@ export default function AptitudeTest({ onFinishTest }) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [testFinished, setTestFinished] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isClaiming, setIsClaiming] = useState(false);
   
   const [testScores, setTestScores] = useState({
     Aptitude: 0,
@@ -140,6 +142,18 @@ export default function AptitudeTest({ onFinishTest }) {
     setShuffledQuestions(reshuffled);
     setTestFinished(false);
     setIsAnimating(false);
+  };
+
+  const handleClaimMentoring = async () => {
+    if (isClaiming) return;
+    setIsClaiming(true);
+    try {
+      await onFinishTest(dominantDomain, scorePercentages);
+    } catch (error) {
+      console.error("Error claiming mentoring:", error);
+    } finally {
+      setIsClaiming(false);
+    }
   };
 
   // Calculations for results panel (max score is 10 per category)
@@ -312,9 +326,9 @@ export default function AptitudeTest({ onFinishTest }) {
             {/* Main Strength Indicator */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10">
 
-              {/* Left Column: Dominant Domain */}
+              {/* Dominant Affinity Profile Card */}
               <div className="lg:col-span-7 space-y-6">
-                <h3 className="text-xs font-semibold text-zinc-400  capitalize">
+                <h3 className="text-xs font-semibold text-zinc-400 capitalize">
                   Your Dominant Affinity Profile
                 </h3>
 
@@ -329,37 +343,10 @@ export default function AptitudeTest({ onFinishTest }) {
                     </p>
                   </div>
                 </div>
-
-                {/* Score breakdown charts */}
-                <div className="space-y-4 pt-2 sm:pt-4">
-                  <h4 className="font-header font-semibold text-zinc-900 text-xs capitalize ">
-                    Cognitive Distribution Metrics
-                  </h4>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {CATEGORIES.map(({ key, label }) => {
-                      const pct = scorePercentages[key];
-                      return (
-                        <div key={key} className="space-y-1 bg-white p-3 rounded-lg border border-zinc-200" id={`score-metric-${key.toLowerCase()}`}>
-                          <div className="flex justify-between text-xs font-bold text-zinc-550">
-                            <span>{label}</span>
-                            <span className="font-semibold text-zinc-900">{pct}%</span>
-                          </div>
-                          <div className="h-2 w-full bg-zinc-100 rounded-md overflow-hidden">
-                            <div
-                              className="h-full bg-gradient-brand rounded-md transition-all duration-1000 ease-out"
-                              style={{ width: `${pct}%` }}
-                            ></div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
               </div>
 
-              {/* Right Column: Recommendations */}
-              <div className="lg:col-span-5 space-y-6">
+              {/* Recommendations and Call-to-Action */}
+              <div className="lg:col-span-5 lg:row-span-2 space-y-6">
                 <div className="p-5 sm:p-6 bg-zinc-50/50 border border-zinc-200 rounded-lg space-y-6 shadow-xs">
                   <h4 className="font-header font-semibold text-zinc-900 text-xs capitalize  border-b border-zinc-200 pb-3">
                     Recommended Pathways
@@ -386,15 +373,50 @@ export default function AptitudeTest({ onFinishTest }) {
                   <div className="pt-2">
                     <button
                       id="btn-results-consult"
-                      onClick={() => onFinishTest(dominantDomain, scorePercentages)}
-                      className="w-full py-3.5 sm:py-4 bg-brand hover:bg-brand-dark text-zinc-955 font-semibold text-xs capitalize  rounded-lg transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm hover:scale-[1.02] active:scale-[0.98] border-none"
+                      onClick={handleClaimMentoring}
+                      disabled={isClaiming}
+                      className="w-full py-3.5 sm:py-4 bg-brand hover:bg-brand-dark text-zinc-955 font-semibold text-xs capitalize  rounded-lg transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm hover:scale-[1.02] active:scale-[0.98] border-none disabled:opacity-70 disabled:cursor-not-allowed disabled:scale-100"
                     >
-                      <span>Claim Free Mentoring</span>
+                      {isClaiming ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin text-zinc-955" />
+                          <span>Claiming...</span>
+                        </>
+                      ) : (
+                        <span>Claim Free Mentoring</span>
+                      )}
                     </button>
                     <p className="text-xs text-zinc-450 text-center mt-3 font-semibold flex items-center justify-center gap-1">
                       Schedules with a State Coordinator.
                     </p>
                   </div>
+                </div>
+              </div>
+
+              {/* Detailed Metrics Breakdown */}
+              <div className="lg:col-span-7 space-y-4">
+                <h4 className="font-header font-semibold text-zinc-900 text-xs capitalize">
+                  Cognitive Distribution Metrics
+                </h4>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {CATEGORIES.map(({ key, label }) => {
+                    const pct = scorePercentages[key];
+                    return (
+                      <div key={key} className="space-y-1 bg-white p-3 rounded-lg border border-zinc-200" id={`score-metric-${key.toLowerCase()}`}>
+                        <div className="flex justify-between text-xs font-bold text-zinc-550">
+                          <span>{label}</span>
+                          <span className="font-semibold text-zinc-900">{pct}%</span>
+                        </div>
+                        <div className="h-2 w-full bg-zinc-100 rounded-md overflow-hidden">
+                          <div
+                            className="h-full bg-gradient-brand rounded-md transition-all duration-1000 ease-out"
+                            style={{ width: `${pct}%` }}
+                          ></div>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 
