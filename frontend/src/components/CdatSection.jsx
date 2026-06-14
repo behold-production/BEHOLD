@@ -8,6 +8,7 @@ export default function CdatSection({ setView }) {
 
   const [generatedCode, setGeneratedCode] = useState(null);
   const [copyMessage, setCopyMessage] = useState('');
+  const [isError, setIsError] = useState(false);
   const [copied, setCopied] = useState(false);
   const [hasCopied, setHasCopied] = useState(false);
 
@@ -42,6 +43,21 @@ export default function CdatSection({ setView }) {
     e.preventDefault();
     if (!groupRegName.trim() || !groupRegPhone.trim() || !groupRegEmail.trim()) {
       setCopyMessage("Please fill in all fields.");
+      setIsError(true);
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(groupRegEmail.trim())) {
+      setCopyMessage("Please enter a valid email address.");
+      setIsError(true);
+      return;
+    }
+
+    const phoneRegex = /^(\+?\d{1,4}[- ]?)?[6-9]\d{9}$/;
+    if (!phoneRegex.test(groupRegPhone.trim())) {
+      setCopyMessage("Please enter a valid 10-digit phone number.");
+      setIsError(true);
       return;
     }
 
@@ -64,13 +80,15 @@ export default function CdatSection({ setView }) {
     profileData.groupCode = HARDCODED_CODE;
     localStorage.setItem('behold_student_profile', JSON.stringify(profileData));
 
-    setCopyMessage("Please enter your group id on the dedicated column without fail");
+    setCopyMessage("Please enter your group id on the dedicated column without fail.");
+    setIsError(false);
   };
 
   const copyManually = () => {
     if (generatedCode) {
       navigator.clipboard.writeText(generatedCode).then(() => {
         setCopyMessage("Code copied to clipboard! You can now register on CIGI.");
+        setIsError(false);
         setCopied(true);
         setHasCopied(true);
         setTimeout(() => setCopied(false), 2000);
@@ -244,8 +262,8 @@ export default function CdatSection({ setView }) {
 
                 {copyMessage && (
                   <p
-                    className="mt-2 text-xs font-bold   text-rose-600"
-                    role="alert"
+                    className={`mt-2 text-xs font-bold ${isError ? 'text-rose-650' : 'text-emerald-650'}`}
+                    role={isError ? 'alert' : 'status'}
                   >
                     {copyMessage}
                   </p>

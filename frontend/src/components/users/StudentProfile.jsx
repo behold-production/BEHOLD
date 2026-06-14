@@ -129,7 +129,7 @@ export default function StudentProfile() {
   const [testProfile, setTestProfile] = useState(null);
   const [sessionFilter, setSessionFilter] = useState('all');
   const [sessionSubTab, setSessionSubTab] = useState('upcoming');
-  const { user, isLoading: authLoading } = useAuth();
+  const { user, isLoading: authLoading, updateUser } = useAuth();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -222,6 +222,11 @@ export default function StudentProfile() {
     if (!formData.phone.trim()) err.phone = 'Required';
     else if (!/^(\+?\d{1,4}[- ]?)?[6-9]\d{9}$/.test(formData.phone.trim())) err.phone = 'Invalid phone';
     if (!formData.guardianName.trim()) err.guardianName = 'Required';
+    if (formData.guardianPhone.trim()) {
+      if (!/^(\+?\d{1,4}[- ]?)?[6-9]\d{9}$/.test(formData.guardianPhone.trim())) {
+        err.guardianPhone = 'Invalid phone';
+      }
+    }
     return err;
   };
 
@@ -231,9 +236,19 @@ export default function StudentProfile() {
     if (Object.keys(err).length > 0) { setErrors(err); return; }
     setIsSaving(true);
     try {
-      await ApiService.updateProfile(formData);
+      const res = await ApiService.updateProfile(formData);
       // Sync saved form back to server-truth profile
       setProfile({ ...formData });
+
+      // Update global user authentication details (like name)
+      if (res.success && res.data && user) {
+        updateUser({
+          ...user,
+          name: formData.name,
+          phone: formData.phone
+        });
+      }
+
       setIsSaved(true);
       setTimeout(() => setIsSaved(false), 3000);
     } catch (error) {
@@ -715,7 +730,7 @@ export default function StudentProfile() {
         hint: 'Used for booking and contact',
         fields: [
           { name: 'name', label: 'Full Name', type: 'text', placeholder: 'Your full name', required: true, icon: User },
-          { name: 'email', label: 'Email Address', type: 'email', placeholder: 'name@email.com', required: true, icon: Mail, autoComplete: 'email' },
+          { name: 'email', label: 'Email Address', type: 'email', placeholder: 'name@email.com', required: true, icon: Mail, autoComplete: 'email', disabled: true },
           { name: 'phone', label: 'Phone Number', type: 'tel', placeholder: 'e.g. 8086664001', required: true, icon: Phone, autoComplete: 'tel' },
         ],
       },
@@ -829,9 +844,13 @@ export default function StudentProfile() {
                               onChange={handleChange}
                               placeholder={field.placeholder}
                               autoComplete={field.autoComplete}
-                              className={`w-full min-h-[44px] pl-10 pr-9 py-2.5 bg-white border text-sm text-zinc-900 rounded-lg outline-none transition-all ${hasError
-                                ? 'border-rose-300 focus:border-rose-400 focus:ring-2 focus:ring-rose-100'
-                                : 'border-zinc-200 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-100'
+                              disabled={field.disabled}
+                              className={`w-full min-h-[44px] pl-10 pr-9 py-2.5 text-sm rounded-lg outline-none transition-all ${
+                                field.disabled
+                                  ? 'bg-zinc-50 border-zinc-200 text-zinc-400 cursor-not-allowed'
+                                  : hasError
+                                  ? 'bg-white border-rose-300 focus:border-rose-400 focus:ring-2 focus:ring-rose-100 text-zinc-900'
+                                  : 'bg-white border-zinc-200 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-100 text-zinc-900'
                                 }`}
                             />
                           )}

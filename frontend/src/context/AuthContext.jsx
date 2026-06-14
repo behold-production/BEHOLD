@@ -66,13 +66,18 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const updateUser = (updatedData) => {
+    setUser(updatedData);
+    localStorage.setItem('behold_auth_user', JSON.stringify(updatedData));
+  };
+
   const logout = () => {
     ApiService.logout();
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, isLoading, login, register, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );
