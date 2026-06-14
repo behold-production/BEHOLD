@@ -80,7 +80,6 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
   const [advisors, setAdvisors] = useState([]);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showNoCounsellorsModal, setShowNoCounsellorsModal] = useState(false);
-  const justAuthenticatedRef = useRef(false);
 
   const [existingAppointments, setExistingAppointments] = useState([]);
 
@@ -93,7 +92,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
             return {
               id: c.id || c._id,
               name: c.name,
-              role: c.experience ? 'Senior Psychologist' : 'Consultant Psychologist',
+              role: c.title || 'Consultant Psychologist',
               availability: 'Available Today',
               type: c.type || 'counselling',
               defaultMeetLink: c.defaultMeetLink || '',
@@ -105,9 +104,11 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
           setAdvisors(resolved);
         }
 
-        const apptsRes = await ApiService.getAppointments();
-        if (apptsRes.success && apptsRes.data) {
-          setExistingAppointments(apptsRes.data);
+        if (user) {
+          const apptsRes = await ApiService.getAppointments();
+          if (apptsRes.success && apptsRes.data) {
+            setExistingAppointments(apptsRes.data);
+          }
         }
       } catch (err) {
         console.error('Failed to load booking details:', err);
@@ -327,13 +328,6 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
         return merged;
       });
       setIsAutofilled(true);
-
-      if (justAuthenticatedRef.current) {
-        justAuthenticatedRef.current = false;
-        setShowAuthModal(false);
-        setIsSubmitting(false);
-        setTimeout(() => handleStepChange('payment'), 150);
-      }
     }
   }, [user]);
 
@@ -554,7 +548,6 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
     } catch (e) { /* ignore */ }
 
     if (!user) {
-      justAuthenticatedRef.current = true;
       setShowAuthModal(true);
       return;
     }
@@ -564,7 +557,9 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
   };
 
   const handleAuthSuccess = (authData) => {
-    justAuthenticatedRef.current = true;
+    setShowAuthModal(false);
+    setIsSubmitting(false);
+    handleStepChange('payment');
   };
 
   const handleApplyCoupon = () => {
@@ -1669,7 +1664,6 @@ Status: CONFIRMED
           isOpen={showAuthModal}
           onClose={() => {
             setShowAuthModal(false);
-            justAuthenticatedRef.current = false;
             setIsSubmitting(false);
           }}
           onSuccess={handleAuthSuccess}

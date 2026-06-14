@@ -218,18 +218,22 @@ export default function AdminDashboard({ setView }) {
 
  const [isAddPsyOpen, setIsAddPsyOpen] = useState(false);
  const [isEditPsyOpen, setIsEditPsyOpen] = useState(false);
- const [psyForm, setPsyForm] = useState({
- id: '',
- name: '',
- email: '',
- password: '',
- education: '',
- specialties: '',
- price: '',
- lang: '',
- bio: '',
- defaultMeetLink: ''
- });
+  const [psyForm, setPsyForm] = useState({
+    id: '',
+    name: '',
+    email: '',
+    password: '',
+    education: '',
+    specialties: '',
+    price: '',
+    lang: '',
+    bio: '',
+    defaultMeetLink: '',
+    phone: '',
+    hours: 0,
+    modes: ['ONLINE', 'OFFLINE', 'DOOR_STEP'],
+    title: 'Consultant Psychologist'
+  });
  const [psyFormError, setPsyFormError] = useState('');
  const [psyFormSuccess, setPsyFormSuccess] = useState('');
 
@@ -683,118 +687,134 @@ export default function AdminDashboard({ setView }) {
 
  // Psychologist Actions
  const handleCreatePsy = async (e) => {
- e.preventDefault();
- if (!hasPsyPermission) {
- setPsyFormError("Access Denied: You do not have permission to manage psychologists.");
- return;
- }
- setPsyFormError('');
- setPsyFormSuccess('');
+    e.preventDefault();
+    if (!hasPsyPermission) {
+      setPsyFormError("Access Denied: You do not have permission to manage psychologists.");
+      return;
+    }
+    setPsyFormError('');
+    setPsyFormSuccess('');
 
- if (!psyForm.name.trim() || !psyForm.email.trim() || !psyForm.password) {
- setPsyFormError("Name, Email, and Password are required.");
- return;
- }
+    if (!psyForm.name.trim() || !psyForm.email.trim() || !psyForm.password) {
+      setPsyFormError("Name, Email, and Password are required.");
+      return;
+    }
 
- if (psyForm.defaultMeetLink && !psyForm.defaultMeetLink.trim().startsWith('https://')) {
- setPsyFormError("Please enter a valid Google Meet link beginning with https://");
- return;
- }
+    if (psyForm.defaultMeetLink && !psyForm.defaultMeetLink.trim().startsWith('https://')) {
+      setPsyFormError("Please enter a valid Google Meet link beginning with https://");
+      return;
+    }
 
- try {
- await ApiService.createAdminCounsellor({
- name: psyForm.name.trim(),
- email: psyForm.email.trim(),
- password: psyForm.password,
- education: psyForm.education,
- specialties: psyForm.specialties,
- price: psyForm.price,
- lang: psyForm.lang,
- bio: psyForm.bio,
- defaultMeetLink: psyForm.defaultMeetLink
- });
- setPsyFormSuccess("Psychologist added successfully!");
- setPsyForm({
- id: '',
- name: '',
- email: '',
- password: '',
- education: '',
- specialties: '',
- price: '',
- lang: '',
- bio: '',
- defaultMeetLink: ''
- });
- reloadData();
- setTimeout(() => {
- setIsAddPsyOpen(false);
- setPsyFormSuccess('');
- }, 1500);
- } catch (err) {
- setPsyFormError(err.message || "Failed to add psychologist.");
- }
- };
+    try {
+      await ApiService.createAdminCounsellor({
+        name: psyForm.name.trim(),
+        email: psyForm.email.trim(),
+        password: psyForm.password,
+        education: psyForm.education,
+        specialties: psyForm.specialties,
+        price: psyForm.price,
+        lang: psyForm.lang,
+        bio: psyForm.bio,
+        defaultMeetLink: psyForm.defaultMeetLink,
+        phone: psyForm.phone,
+        hours: psyForm.hours,
+        modes: psyForm.modes,
+        title: psyForm.title
+      });
+      setPsyFormSuccess("Psychologist added successfully!");
+      setPsyForm({
+        id: '',
+        name: '',
+        email: '',
+        password: '',
+        education: '',
+        specialties: '',
+        price: '',
+        lang: '',
+        bio: '',
+        defaultMeetLink: '',
+        phone: '',
+        hours: 0,
+        modes: ['ONLINE', 'OFFLINE', 'DOOR_STEP'],
+        title: 'Consultant Psychologist'
+      });
+      reloadData();
+      setTimeout(() => {
+        setIsAddPsyOpen(false);
+        setPsyFormSuccess('');
+      }, 1500);
+    } catch (err) {
+      setPsyFormError(err.message || "Failed to add psychologist.");
+    }
+  };
 
- const handleOpenEditPsy = (psy) => {
- setPsyForm({
- id: psy.id,
- name: psy.name,
- email: psy.email,
- password: '',
- education: psy.education || '',
- specialties: Array.isArray(psy.specialties) ? psy.specialties.join(', ') : psy.specialties || '',
- price: psy.price || 1200,
- lang: psy.lang || '',
- bio: psy.experience || psy.bio || '',
- defaultMeetLink: psy.defaultMeetLink || ''
- });
- setPsyFormError('');
- setPsyFormSuccess('');
- setIsEditPsyOpen(true);
- };
+  const handleOpenEditPsy = (psy) => {
+    setPsyForm({
+      id: psy.id,
+      name: psy.name,
+      email: psy.email,
+      password: '',
+      education: psy.education || '',
+      specialties: Array.isArray(psy.specialties) ? psy.specialties.join(', ') : psy.specialties || '',
+      price: psy.price || 1200,
+      lang: psy.lang || '',
+      bio: psy.bio || psy.experience || '',
+      defaultMeetLink: psy.defaultMeetLink || '',
+      phone: psy.phone || '',
+      hours: psy.hours !== undefined ? psy.hours : 0,
+      modes: psy.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP'],
+      title: psy.title || 'Consultant Psychologist'
+    });
+    setPsyFormError('');
+    setPsyFormSuccess('');
+    setIsEditPsyOpen(true);
+  };
 
- const handleUpdatePsy = async (e) => {
- e.preventDefault();
- if (!hasPsyPermission) {
- setPsyFormError("Access Denied: You do not have permission to manage psychologists.");
- return;
- }
- setPsyFormError('');
- setPsyFormSuccess('');
+  const handleUpdatePsy = async (e) => {
+    e.preventDefault();
+    if (!hasPsyPermission) {
+      setPsyFormError("Access Denied: You do not have permission to manage psychologists.");
+      return;
+    }
+    setPsyFormError('');
+    setPsyFormSuccess('');
 
- if (!psyForm.name.trim() || !psyForm.email.trim()) {
- setPsyFormError("Name and Email are required.");
- return;
- }
+    if (!psyForm.name.trim() || !psyForm.email.trim()) {
+      setPsyFormError("Name and Email are required.");
+      return;
+    }
 
- if (psyForm.defaultMeetLink && !psyForm.defaultMeetLink.trim().startsWith('https://')) {
- setPsyFormError("Please enter a valid Google Meet link beginning with https://");
- return;
- }
+    if (psyForm.defaultMeetLink && !psyForm.defaultMeetLink.trim().startsWith('https://')) {
+      setPsyFormError("Please enter a valid Google Meet link beginning with https://");
+      return;
+    }
 
- try {
- await ApiService.updateAdminCounsellor(psyForm.id, {
- name: psyForm.name.trim(),
- email: psyForm.email.trim(),
- password: psyForm.password || undefined,
- education: psyForm.education,
- specialties: psyForm.specialties,
- price: psyForm.price,
- lang: psyForm.lang,
- bio: psyForm.bio,
- defaultMeetLink: psyForm.defaultMeetLink
- });
- setPsyFormSuccess("Psychologist details updated!");
- reloadData();
- setTimeout(() => {
- setIsEditPsyOpen(false);
- setPsyFormSuccess('');
- }, 1500);
- } catch (err) {
- setPsyFormError(err.message || "Failed to update psychologist.");
- }
- };
+    try {
+      await ApiService.updateAdminCounsellor(psyForm.id, {
+        name: psyForm.name.trim(),
+        email: psyForm.email.trim(),
+        password: psyForm.password || undefined,
+        education: psyForm.education,
+        specialties: psyForm.specialties,
+        price: psyForm.price,
+        lang: psyForm.lang,
+        bio: psyForm.bio,
+        defaultMeetLink: psyForm.defaultMeetLink,
+        phone: psyForm.phone,
+        hours: psyForm.hours,
+        modes: psyForm.modes,
+        title: psyForm.title
+      });
+      setPsyFormSuccess("Psychologist details updated!");
+      reloadData();
+      setTimeout(() => {
+        setIsEditPsyOpen(false);
+        setPsyFormSuccess('');
+      }, 1500);
+    } catch (err) {
+      setPsyFormError(err.message || "Failed to update psychologist.");
+    }
+  };
 
  const handleDeletePsy = async (psyId) => {
  if (!hasPsyPermission) {
@@ -4451,49 +4471,108 @@ export default function AdminDashboard({ setView }) {
  />
  </div>
 
- <div className="space-y-1">
- <label className="text-sm capitalize  font-bold text-zinc-400">Education qualifications</label>
- <input
- type="text"
- placeholder="e.g. MPhil Clinical Psychology"
- value={psyForm.education}
- onChange={(e) => setPsyForm({ ...psyForm, education: e.target.value })}
- className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
- />
- </div>
+  <div className="space-y-1">
+  <label className="text-sm capitalize  font-bold text-zinc-400">Education qualifications</label>
+  <input
+  type="text"
+  placeholder="e.g. MPhil Clinical Psychology"
+  value={psyForm.education}
+  onChange={(e) => setPsyForm({ ...psyForm, education: e.target.value })}
+  className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+  />
+  </div>
 
- <div className="space-y-1">
- <label className="text-sm capitalize  font-bold text-zinc-400">Hourly price (INR)</label>
- <input
- type="number"
- placeholder="e.g. 1250"
- value={psyForm.price}
- onChange={(e) => setPsyForm({ ...psyForm, price: e.target.value })}
- className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
- />
- </div>
+  <div className="space-y-1">
+  <label className="text-sm capitalize  font-bold text-zinc-400">Professional Title</label>
+  <select
+  value={psyForm.title}
+  onChange={(e) => setPsyForm({ ...psyForm, title: e.target.value })}
+  className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none cursor-pointer"
+  >
+  <option value="Consultant Psychologist">Consultant Psychologist</option>
+  <option value="Clinical Psychologist">Clinical Psychologist</option>
+  <option value="Psychiatrist">Psychiatrist</option>
+  <option value="Career Mentor">Career Mentor</option>
+  </select>
+  </div>
 
- <div className="space-y-1">
- <label className="text-sm capitalize  font-bold text-zinc-400">Languages Spoken</label>
- <input
- type="text"
- placeholder="e.g. Malayalam, English"
- value={psyForm.lang}
- onChange={(e) => setPsyForm({ ...psyForm, lang: e.target.value })}
- className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
- />
- </div>
+  <div className="space-y-1">
+  <label className="text-sm capitalize  font-bold text-zinc-400">Phone Number</label>
+  <input
+  type="text"
+  placeholder="e.g. +91 94971 74011"
+  value={psyForm.phone}
+  onChange={(e) => setPsyForm({ ...psyForm, phone: e.target.value })}
+  className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+  />
+  </div>
 
- <div className="sm:col-span-2 space-y-1">
- <label className="text-sm capitalize  font-bold text-zinc-400">Default Google Meet Link (optional)</label>
- <input
- type="text"
- placeholder="https://meet.google.com/abc-defg-hij"
- value={psyForm.defaultMeetLink}
- onChange={(e) => setPsyForm({ ...psyForm, defaultMeetLink: e.target.value })}
- className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
- />
- </div>
+  <div className="space-y-1">
+  <label className="text-sm capitalize  font-bold text-zinc-400">Hourly price (INR)</label>
+  <input
+  type="number"
+  placeholder="e.g. 1250"
+  value={psyForm.price}
+  onChange={(e) => setPsyForm({ ...psyForm, price: e.target.value })}
+  className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+  />
+  </div>
+
+  <div className="space-y-1">
+  <label className="text-sm capitalize  font-bold text-zinc-400">Languages Spoken</label>
+  <input
+  type="text"
+  placeholder="e.g. Malayalam, English"
+  value={psyForm.lang}
+  onChange={(e) => setPsyForm({ ...psyForm, lang: e.target.value })}
+  className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+  />
+  </div>
+
+  <div className="space-y-1">
+  <label className="text-sm capitalize  font-bold text-zinc-400">Experience Hours</label>
+  <input
+  type="number"
+  placeholder="e.g. 150"
+  value={psyForm.hours}
+  onChange={(e) => setPsyForm({ ...psyForm, hours: Number(e.target.value) || 0 })}
+  className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+  />
+  </div>
+
+  <div className="sm:col-span-2 space-y-1">
+  <label className="text-sm capitalize  font-bold text-zinc-400">Default Google Meet Link (optional)</label>
+  <input
+  type="text"
+  placeholder="https://meet.google.com/abc-defg-hij"
+  value={psyForm.defaultMeetLink}
+  onChange={(e) => setPsyForm({ ...psyForm, defaultMeetLink: e.target.value })}
+  className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+  />
+  </div>
+
+  <div className="sm:col-span-2 space-y-1.5 pt-1">
+  <label className="text-sm capitalize  font-bold text-zinc-400 block mb-1">Supported Session Modes</label>
+  <div className="flex flex-wrap gap-4">
+  {['ONLINE', 'OFFLINE', 'DOOR_STEP'].map(mode => (
+  <label key={mode} className="flex items-center gap-2 cursor-pointer text-sm text-zinc-300 select-none font-semibold">
+  <input
+  type="checkbox"
+  checked={psyForm.modes ? psyForm.modes.includes(mode) : false}
+  onChange={() => {
+    const currentModes = psyForm.modes || [];
+    const nextModes = currentModes.includes(mode)
+      ? currentModes.filter(m => m !== mode)
+      : [...currentModes, mode];
+    setPsyForm({ ...psyForm, modes: nextModes });
+  }}
+  className="w-4 h-4 rounded border-zinc-805 bg-zinc-955 text-brand focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
+  />
+  <span>{mode === 'DOOR_STEP' ? 'Doorstep' : mode.charAt(0) + mode.slice(1).toLowerCase()}</span>
+  </label>
+  ))}
+  </div>
+  </div>
 
  <div className="sm:col-span-2 space-y-1">
  <label className="text-sm capitalize  font-bold text-zinc-400">Specialties (comma-separated)</label>
@@ -5137,85 +5216,116 @@ export default function AdminDashboard({ setView }) {
  </div>
 
  {(() => {
- const education = viewingPsychologist.education || 'MPhil Clinical Psychology';
- const specialties = viewingPsychologist.specialties || 'Anxiety, Stress Management, Mood Disorders';
- const price = viewingPsychologist.price || 1200;
- const lang = viewingPsychologist.lang || 'English, Malayalam';
- const bio = viewingPsychologist.bio || 'Professional clinical therapist committed to student wellbeing.';
+    const title = viewingPsychologist.title || 'Consultant Psychologist';
+    const phone = viewingPsychologist.phone || 'N/A';
+    const hours = viewingPsychologist.hours !== undefined ? viewingPsychologist.hours : 0;
+    const modes = viewingPsychologist.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP'];
+    const education = viewingPsychologist.education || 'MPhil Clinical Psychology';
+    const specialties = viewingPsychologist.specialties || 'Anxiety, Stress Management, Mood Disorders';
+    const price = viewingPsychologist.price || 1200;
+    const lang = viewingPsychologist.lang || 'English, Malayalam';
+    const bio = viewingPsychologist.bio || viewingPsychologist.experience || 'Professional clinical therapist committed to student wellbeing.';
 
- return (
- <div className="space-y-6">
- {/* Grid details */}
- <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
- {/* Professional Info */}
- <div className="bg-zinc-955 border border-zinc-850 rounded-xl p-4 space-y-3.5 text-sm">
- <span className="text-sm capitalize  font-bold text-zinc-500 block ">Advisor Credentials</span>
- <div className="space-y-2.5">
- <div>
- <span className="text-zinc-500 block text-sm capitalize">Full Name</span>
- <span className="font-bold text-white">{viewingPsychologist.name}</span>
- </div>
- <div>
- <span className="text-zinc-500 block text-sm capitalize">Email Address</span>
- <span className="font-semibold text-zinc-300">{viewingPsychologist.email}</span>
- </div>
- <div>
- <span className="text-zinc-500 block text-sm capitalize">Education Qualification</span>
- <span className="font-bold text-zinc-350">{education}</span>
- </div>
- <div>
- <span className="text-zinc-500 block text-sm capitalize">Consultation Fee</span>
- <span className="font-bold text-brand">₹{price} / hour</span>
- </div>
- <div>
- <span className="text-zinc-500 block text-sm capitalize">Languages Spoken</span>
- <span className="font-medium text-zinc-300">{lang}</span>
- </div>
- <div className="flex gap-2 items-center pt-1">
- <span className={`px-2.5 py-0.5 rounded text-sm font-bold capitalize  ${viewingPsychologist.verified
- ? 'bg-emerald-955/20 border border-emerald-900/30 text-emerald-450'
- : 'bg-amber-955/20 border border-amber-900/30 text-amber-500'
- }`}>
- {viewingPsychologist.verified ? 'Verified' : 'Pending Verification'}
- </span>
- <a
- href={`#/advisor/${viewingPsychologist.id}`}
- target="_blank"
- rel="noopener noreferrer"
- className="px-2.5 py-0.5 bg-zinc-900 border border-zinc-800 hover:text-brand rounded text-sm font-bold capitalize  transition"
- >
- Preview Profile
- </a>
- </div>
- </div>
- </div>
+    return (
+      <div className="space-y-6">
+        {/* Grid details */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Professional Info */}
+          <div className="bg-zinc-955 border border-zinc-850 rounded-xl p-4 space-y-3.5 text-sm">
+            <span className="text-sm capitalize  font-bold text-zinc-500 block ">Advisor Credentials</span>
+            <div className="space-y-2.5">
+              <div>
+                <span className="text-zinc-500 block text-xs capitalize">Professional Title</span>
+                <span className="font-bold text-white">{title}</span>
+              </div>
+              <div>
+                <span className="text-zinc-500 block text-sm capitalize">Full Name</span>
+                <span className="font-bold text-white">{viewingPsychologist.name}</span>
+              </div>
+              <div>
+                <span className="text-zinc-500 block text-sm capitalize">Email Address</span>
+                <span className="font-semibold text-zinc-300">{viewingPsychologist.email}</span>
+              </div>
+              <div>
+                <span className="text-zinc-500 block text-xs capitalize">Phone Number</span>
+                <span className="font-semibold text-zinc-300">{phone}</span>
+              </div>
+              <div>
+                <span className="text-zinc-550 block text-sm capitalize">Education Qualification</span>
+                <span className="font-bold text-zinc-350">{education}</span>
+              </div>
+              <div>
+                <span className="text-zinc-500 block text-xs capitalize">Experience Hours</span>
+                <span className="font-bold text-zinc-300">{hours} hours</span>
+              </div>
+              <div>
+                <span className="text-zinc-500 block text-sm capitalize">Consultation Fee</span>
+                <span className="font-bold text-brand">₹{price} / hour</span>
+              </div>
+              <div>
+                <span className="text-zinc-500 block text-sm capitalize">Languages Spoken</span>
+                <span className="font-medium text-zinc-300">{lang}</span>
+              </div>
+              <div className="flex gap-2 items-center pt-1">
+                <span className={`px-2.5 py-0.5 rounded text-sm font-bold capitalize  ${viewingPsychologist.verified
+                  ? 'bg-emerald-955/20 border border-emerald-900/30 text-emerald-450'
+                  : 'bg-amber-955/20 border border-amber-900/30 text-amber-500'
+                  }`}>
+                  {viewingPsychologist.verified ? 'Verified' : 'Pending Verification'}
+                </span>
+                <a
+                  href={`#/advisor/${viewingPsychologist.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-2.5 py-0.5 bg-zinc-900 border border-zinc-800 hover:text-brand rounded text-sm font-bold capitalize  transition"
+                >
+                  Preview Profile
+                </a>
+              </div>
+            </div>
+          </div>
 
- {/* Bio & Availability */}
- <div className="space-y-4">
- {/* Bio */}
- <div className="bg-zinc-955 border border-zinc-850 rounded-xl p-4 space-y-2 text-sm">
- <span className="text-sm capitalize  font-bold text-zinc-500 block ">Therapist Bio</span>
- <p className="text-zinc-300 leading-relaxed italic text-[12.5px]">
- "{bio}"
- </p>
- </div>
+          {/* Bio & Availability */}
+          <div className="space-y-4">
+            {/* Bio */}
+            <div className="bg-zinc-955 border border-zinc-850 rounded-xl p-4 space-y-2 text-sm">
+              <span className="text-sm capitalize  font-bold text-zinc-500 block ">Therapist Bio</span>
+              <p className="text-zinc-300 leading-relaxed italic text-[12.5px]">
+                "{bio}"
+              </p>
+            </div>
 
- {/* Specialties List */}
- <div className="bg-zinc-955 border border-zinc-850 rounded-xl p-4 space-y-2">
- <span className="text-sm capitalize  font-bold text-zinc-500 block ">Areas of Expertise</span>
- <div className="flex flex-wrap gap-1.5 pt-1">
- {specialties.split(',').map(spec => (
- <span
- key={spec.trim()}
- className="px-2.5 py-0.5 rounded-full bg-zinc-900 border border-zinc-800 text-sm font-bold text-zinc-400 capitalize tracking-wide"
- >
- {spec.trim()}
- </span>
- ))}
- </div>
- </div>
- </div>
- </div>
+            {/* Specialties List */}
+            <div className="bg-zinc-955 border border-zinc-850 rounded-xl p-4 space-y-2">
+              <span className="text-sm capitalize  font-bold text-zinc-500 block ">Areas of Expertise</span>
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                {specialties.split(',').map(spec => (
+                  <span
+                    key={spec.trim()}
+                    className="px-2.5 py-0.5 rounded-full bg-zinc-900 border border-zinc-800 text-sm font-bold text-zinc-400 capitalize tracking-wide"
+                  >
+                    {spec.trim()}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Supported Session Modes */}
+            <div className="bg-zinc-955 border border-zinc-850 rounded-xl p-4 space-y-2">
+              <span className="text-sm capitalize  font-bold text-zinc-500 block ">Supported Session Modes</span>
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                {modes.map(mode => (
+                  <span
+                    key={mode}
+                    className="px-2.5 py-0.5 rounded-full bg-zinc-900 border border-zinc-800 text-xs font-bold text-zinc-400 capitalize tracking-wide"
+                  >
+                    {mode === 'DOOR_STEP' ? 'Doorstep' : mode.charAt(0) + mode.slice(1).toLowerCase()}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
 
  {/* Consult bookings count */}
  <div className="space-y-2">

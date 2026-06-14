@@ -28,15 +28,16 @@ export default function Services({ setView, onBookTherapist }) {
             return {
               id: c.id,
               name: c.name,
-              role: c.experience ? 'Senior Psychologist' : 'Consultant Psychologist',
+              role: c.title || 'Consultant Psychologist',
               specialties: c.specialties && c.specialties.length > 0 
                 ? c.specialties 
                 : ['Anxiety Stress & Panic', 'Depression & Mood Concerns', 'Relationship'],
-              hours: c.reviewCount || 0,
-              lang: 'English, Malayalam',
-              price: 1200,
+              hours: c.hours || 0,
+              lang: c.lang || 'English, Malayalam',
+              price: c.price || 1200,
               nextAvailable: 'Available Today',
-              rating: c.rating || 5.0
+              rating: c.rating || 5.0,
+              modes: c.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP']
             };
           });
           setAdvisors(mapped);

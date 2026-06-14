@@ -274,9 +274,10 @@ const AdminController = {
   },
 
   // Create Counsellor
+  // Create Counsellor
   async createCounsellor(req, res, next) {
     try {
-      const { name, email, password, education, specialties, price, lang, bio, defaultMeetLink } = req.body;
+      const { name, email, password, education, specialties, price, lang, bio, defaultMeetLink, phone, hours, modes, title } = req.body;
       const bcrypt = require('bcryptjs');
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
@@ -284,12 +285,17 @@ const AdminController = {
         name,
         email: email.toLowerCase(),
         password: hashedPassword,
-        phone: '',
+        phone: phone || '',
         role: 'counsellor',
         education: education || '',
-        specialties: specialties ? specialties.split(',').map(s => s.trim()).filter(Boolean) : [],
+        specialties: Array.isArray(specialties)
+          ? specialties
+          : (specialties && typeof specialties === 'string'
+            ? specialties.split(',').map(s => s.trim()).filter(Boolean)
+            : []),
         qualifications: education ? [education] : [],
         experience: bio || '',
+        bio: bio || '',
         availability: {},
         isVerified: true,
         isActive: true,
@@ -298,7 +304,14 @@ const AdminController = {
         price: Number(price) || 1200,
         lang: lang || 'English',
         defaultMeetLink: defaultMeetLink || '',
-        modePreference: 'BOTH'
+        modePreference: 'BOTH',
+        hours: Number(hours) || 0,
+        modes: Array.isArray(modes)
+          ? modes
+          : (modes && typeof modes === 'string'
+            ? modes.split(',').map(m => m.trim().toUpperCase()).filter(Boolean)
+            : ['ONLINE', 'OFFLINE', 'DOOR_STEP']),
+        title: title || 'Consultant Psychologist'
       });
       const { password: _, ...counsellorData } = newCounsellor;
       res.status(201).json({ success: true, message: 'Counsellor created successfully', data: counsellorData });
@@ -311,7 +324,7 @@ const AdminController = {
   async updateCounsellor(req, res, next) {
     try {
       const { id } = req.params;
-      const { name, email, password, education, specialties, price, lang, bio, defaultMeetLink } = req.body;
+      const { name, email, password, education, specialties, price, lang, bio, defaultMeetLink, phone, hours, modes, title } = req.body;
       const updates = {};
       if (name !== undefined) updates.name = name;
       if (email !== undefined) updates.email = email.toLowerCase();
@@ -320,14 +333,29 @@ const AdminController = {
         updates.qualifications = [education];
       }
       if (specialties !== undefined) {
-        updates.specialties = typeof specialties === 'string' 
-          ? specialties.split(',').map(s => s.trim()).filter(Boolean) 
-          : specialties;
+        updates.specialties = Array.isArray(specialties)
+          ? specialties
+          : (typeof specialties === 'string'
+            ? specialties.split(',').map(s => s.trim()).filter(Boolean)
+            : []);
       }
       if (price !== undefined) updates.price = Number(price);
       if (lang !== undefined) updates.lang = lang;
-      if (bio !== undefined) updates.experience = bio;
+      if (bio !== undefined) {
+        updates.experience = bio;
+        updates.bio = bio;
+      }
       if (defaultMeetLink !== undefined) updates.defaultMeetLink = defaultMeetLink;
+      if (phone !== undefined) updates.phone = phone;
+      if (hours !== undefined) updates.hours = Number(hours) || 0;
+      if (modes !== undefined) {
+        updates.modes = Array.isArray(modes)
+          ? modes
+          : (typeof modes === 'string'
+            ? modes.split(',').map(m => m.trim().toUpperCase()).filter(Boolean)
+            : []);
+      }
+      if (title !== undefined) updates.title = title;
       
       if (password) {
         const bcrypt = require('bcryptjs');

@@ -9,7 +9,7 @@ import LogoutConfirmModal from '../LogoutConfirmModal';
 import ApiService from '../../services/api';
 
 export default function PsychologistDashboard({ setView }) {
-  const { user, login, register, logout, isLoading } = useAuth();
+  const { user, login, register, logout, isLoading, updateUser } = useAuth();
 
   const isCounsellorVerified = () => {
     return user ? user.isVerified !== false : true;
@@ -28,7 +28,7 @@ export default function PsychologistDashboard({ setView }) {
   // Profile state (server truth — updated by loadBookingsData)
   const [profile, setProfile] = useState({
     name: user?.name || '',
-    role: 'Consultant Psychologist',
+    role: user?.title || 'Consultant Psychologist',
     education: '',
     specialties: '',
     price: '',
@@ -175,7 +175,7 @@ export default function PsychologistDashboard({ setView }) {
           : '';
         setProfile({
           name: c.name || user.name || '',
-          role: 'Consultant Psychologist',
+          role: c.title || 'Consultant Psychologist',
           education: c.education || '',
           specialties: specialtiesStr,
           price: c.price !== undefined ? c.price : 1200,
@@ -422,6 +422,12 @@ export default function PsychologistDashboard({ setView }) {
       if (res.success) {
         setIsProfileSaved(true);
         setTimeout(() => setIsProfileSaved(false), 3000);
+        if (updateUser && user) {
+          updateUser({
+            ...user,
+            name: payload.name
+          });
+        }
         await loadBookingsData();
       }
     } catch (err) {

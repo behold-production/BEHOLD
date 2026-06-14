@@ -23,7 +23,8 @@ const counsellorSchema = new mongoose.Schema({
   lang: { type: String, default: 'English, Malayalam' },
   defaultMeetLink: { type: String, default: '' },
   hours: { type: Number, default: 0 },
-  modes: { type: [String], default: ['ONLINE', 'OFFLINE', 'DOOR_STEP'] }
+  modes: { type: [String], default: ['ONLINE', 'OFFLINE', 'DOOR_STEP'] },
+  title: { type: String, default: 'Consultant Psychologist' }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Counsellor', counsellorSchema);

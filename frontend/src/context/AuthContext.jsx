@@ -10,7 +10,8 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const syncUserFromStorage = () => {
       const savedUser = localStorage.getItem('behold_auth_user');
-      if (savedUser) {
+      const savedToken = localStorage.getItem('behold_token');
+      if (savedUser && savedToken) {
         try {
           setUser(JSON.parse(savedUser));
         } catch (e) {
@@ -53,10 +54,7 @@ export function AuthProvider({ children }) {
       const res = await ApiService.register(name, email, password, backendRole);
       if (res.success && res.data) {
         const userData = res.data.user || res.data.counsellor;
-        const currentActive = localStorage.getItem('behold_auth_user');
-        if (currentActive) {
-          setUser(JSON.parse(currentActive));
-        }
+        setUser(userData);
         return userData;
       } else {
         throw new Error(res.message || 'Registration failed');
