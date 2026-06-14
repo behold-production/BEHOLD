@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { X, Mail, Lock, User, ArrowRight, Loader2, Eye, EyeOff } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 export default function AuthModals({ isOpen, onClose }) {
   const [mode, setMode] = useState('login'); // 'login' or 'register'
   const { login, register } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [formData, setFormData] = useState({ name: '', email: '', password: '', confirmPassword: '' });
   const [isLoading, setIsLoading] = useState(false);
@@ -66,9 +67,29 @@ export default function AuthModals({ isOpen, onClose }) {
       
       if (loggedUser) {
         const role = loggedUser.role?.toUpperCase();
-        if (role === 'ADMIN') navigate('/admin');
-        else if (role === 'PSYCHOLOGIST' || role === 'COUNSELLOR') navigate('/counsellor');
-        else navigate('/profile');
+        if (role === 'ADMIN') {
+          navigate('/admin');
+        } else if (role === 'PSYCHOLOGIST' || role === 'COUNSELLOR') {
+          navigate('/counsellor');
+        } else {
+          // Normal student (USER)
+          // If the user was redirected from a protected route (like /profile), take them there.
+          // Otherwise, if they are already on a public page (/, /booking, /sample-test, /advisor/:id), let them stay.
+          const redirectPath = location.state?.from;
+          if (redirectPath) {
+            navigate(redirectPath);
+          } else {
+            const currentPath = location.pathname;
+            const keepPagePaths = ['/', '/booking', '/sample-test'];
+            const isAdvisorPath = currentPath.startsWith('/advisor/');
+            
+            if (keepPagePaths.includes(currentPath) || isAdvisorPath) {
+              // Stay on current page, modal will close
+            } else {
+              navigate('/profile');
+            }
+          }
+        }
       }
     } catch (err) {
       // API errors are automatically toasted, but we should toast local validation errors too
