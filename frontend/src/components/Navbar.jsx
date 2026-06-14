@@ -125,8 +125,8 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
     <>
       <header className={`sticky top-0 w-full z-50 transition-all duration-300 ${
         isDarkTheme 
-          ? 'bg-slate-900 border-b border-transparent text-white shadow-none py-1' 
-          : 'bg-white/85 backdrop-blur-lg border-b border-zinc-200/60 text-zinc-900 shadow-xs'
+          ? 'bg-transparent text-white shadow-none py-1' 
+          : 'bg-white/70 backdrop-blur-md text-zinc-900 shadow-xs'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3">
           {/* Left Column: Logo & Nav Links */}
