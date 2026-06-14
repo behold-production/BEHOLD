@@ -156,7 +156,9 @@ export default function PsychologistDashboard({ setView }) {
 
   const loadBookingsData = async (silent = false) => {
     try {
-      if (!user) return;
+      const isCounsellor = user && (user?.role?.toUpperCase() === 'PSYCHOLOGIST' || user?.role?.toUpperCase() === 'COUNSELLOR');
+      const hasToken = !!localStorage.getItem('behold_token');
+      if (!isCounsellor || !hasToken) return;
       if (!silent) setIsLoadingData(true);
 
       // Fetch both profile and bookings concurrently
@@ -241,7 +243,11 @@ export default function PsychologistDashboard({ setView }) {
 
   // Load advisor details & bookings from API
   useEffect(() => {
-    loadBookingsData(false);
+    const isCounsellor = user && (user?.role?.toUpperCase() === 'PSYCHOLOGIST' || user?.role?.toUpperCase() === 'COUNSELLOR');
+    const hasToken = !!localStorage.getItem('behold_token');
+    if (isCounsellor && hasToken) {
+      loadBookingsData(false);
+    }
   }, [user]);
 
   // Auto-refresh bookings silently when switching to bookings or overview tab
@@ -380,7 +386,8 @@ export default function PsychologistDashboard({ setView }) {
     setIsLoggingIn(true);
     try {
       const loggedInUser = await login(loginEmail, loginPassword);
-      if (loggedInUser.role !== 'PSYCHOLOGIST') {
+      const roleUpper = loggedInUser.role?.toUpperCase();
+      if (roleUpper !== 'PSYCHOLOGIST' && roleUpper !== 'COUNSELLOR') {
         logout();
         setLoginError('Access Denied: Account does not have Counsellor privileges.');
       }

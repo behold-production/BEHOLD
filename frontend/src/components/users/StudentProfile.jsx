@@ -186,11 +186,14 @@ export default function StudentProfile() {
       }
     };
 
-    if (user && !authLoading) {
+    const hasToken = !!localStorage.getItem('behold_token');
+    const isStudent = user && user.role?.toUpperCase() === 'USER';
+
+    if (isStudent && hasToken && !authLoading) {
       setIsLoading(true);
       fetchData();
-    } else if (!authLoading && !user) {
-      // Not logged in — stop the spinner
+    } else if (!authLoading) {
+      // Not logged in or not a student — stop the spinner
       setIsLoading(false);
     }
   }, [user, authLoading]);
