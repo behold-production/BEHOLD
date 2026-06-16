@@ -126,23 +126,6 @@ export default function DateTimePicker({
   }, [today, maxAdvanceDays]);
 
   const cells = useMemo(() => buildCalendarMonth(viewYear, viewMonth), [viewYear, viewMonth]);
-
-  const slotsForSelectedDate = useMemo(() => {
-    if (!selectedDate) return [];
-    const raw = getAvailableSlotsForDate ? getAvailableSlotsForDate(selectedDate) : [];
-    return raw
-      .filter(t => !isSlotInPast(t, selectedDate))
-      .sort((a, b) => parseTimeToMinutes(a) - parseTimeToMinutes(b));
-  }, [selectedDate, getAvailableSlotsForDate]);
-
-  const groupedSlots = useMemo(() => {
-    const groups = { morning: [], afternoon: [], evening: [] };
-    slotsForSelectedDate.forEach(slot => {
-      groups[getTimeBucket(slot)].push(slot);
-    });
-    return groups;
-  }, [slotsForSelectedDate]);
-
   const goToPrevMonth = () => {
     if (viewMonth === 0) {
       setViewMonth(11);
@@ -276,9 +259,9 @@ export default function DateTimePicker({
         </button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+      <div className="grid grid-cols-1 gap-5">
         {/* Calendar */}
-        <div className="lg:col-span-7 bg-white border border-zinc-200 rounded-xl p-4 sm:p-5 shadow-xs">
+        <div className="bg-white border border-zinc-200 rounded-xl p-4 sm:p-5 shadow-xs">
           <div className="flex items-center justify-between mb-3 sm:mb-4">
             <button
               type="button"
@@ -388,79 +371,7 @@ export default function DateTimePicker({
             </span>
           </div>
         </div>
-
-        {/* Time slots */}
-        <div className="lg:col-span-5 bg-white border border-zinc-200 rounded-xl p-4 sm:p-5 shadow-xs">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-1.5">
-              <span className="text-xs font-semibold capitalize  text-zinc-700">
-                Available Time Slots
-              </span>
-            </div>
-            <span className="text-xs font-semibold text-brand-dark bg-brand-light border border-brand/20 px-2 py-0.5 rounded  capitalize ">
-              1 Hour
-            </span>
-          </div>
-
-          {selectedDate ? (
-            slotsForSelectedDate.length > 0 ? (
-              <div className="space-y-4 max-h-[320px] sm:max-h-[420px] overflow-y-auto pr-1">
-                {['morning', 'afternoon', 'evening'].map(bucket => {
-                  const items = groupedSlots[bucket];
-                  if (!items || items.length === 0) return null;
-                  const meta = BUCKET_META[bucket];
-                  return (
-                    <div key={bucket} className="space-y-2">
-                      <div className={`flex items-center gap-1.5 text-xs font-semibold capitalize  ${meta.color}`}>
-                        <span>{meta.label}</span>
-                        <span className="text-zinc-400">({items.length})</span>
-                      </div>
-                      <div className="grid grid-cols-2 gap-1.5">
-                        {items.map(time => {
-                          const isSelected = selectedTime === time;
-                          return (
-                            <button
-                              key={time}
-                              type="button"
-                              onClick={() => onTimeChange(time)}
-                              className={`min-h-[48px] py-2.5 px-2 text-xs capitalize font-bold border rounded-lg transition cursor-pointer text-center ${
-                                isSelected
-                                  ? 'bg-gradient-brand text-zinc-955 border-transparent shadow-xs font-bold ring-1 ring-brand/40'
-                                  : 'bg-white border-zinc-200 text-zinc-700 hover:border-brand/40 hover:bg-brand/5'
-                              }`}
-                            >
-                              {time}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            ) : (
-              <div className="py-8 text-center space-y-2">
-                <p className="text-xs font-semibold text-rose-600 capitalize ">
-                  No Slots Available
-                </p>
-                <p className="text-xs text-zinc-500 leading-relaxed px-4">
-                  No advisors have availability on {formatHumanDate(selectedDate)}. Try a different day.
-                </p>
-              </div>
-            )
-          ) : (
-            <div className="py-10 text-center space-y-2">
-              <p className="text-xs font-semibold text-zinc-500 capitalize ">
-                Pick a Date First
-              </p>
-              <p className="text-xs text-zinc-400 leading-relaxed px-4">
-                Select a day on the calendar to see available 1-hour time slots.
-              </p>
-            </div>
-          )}
-        </div>
       </div>
-
       {/* Selected summary */}
       {selectedDate && (
         <div className="bg-gradient-to-br from-brand/8 via-white to-brand-accent/8 border border-brand/20 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-in slide-in-from-top-2 duration-300">

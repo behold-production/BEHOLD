@@ -2,26 +2,24 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import ApiService from '../services/api';
 import DateTimePicker from './booking/DateTimePicker';
+import TimePicker from './booking/TimePicker';
 import BookingAuthModal from './booking/BookingAuthModal';
 
 const BOOKING_DRAFT_KEY = 'behold_booking_draft';
 
 const COUNSELLING_FLOW = {
   online: [
-    "Select preferred date, time slot, & service mode",
-    "Choose consultant psychologist & confirm availability",
+    "Schedule Date, Time & choose consultant psychologist",
     "Fill student profile & process online payment fee",
     "Access Google Meet link, schedule, & WhatsApp notifications"
   ],
   doorstep: [
-    "Select preferred date, time slot, & service mode",
-    "Choose consultant psychologist & confirm availability",
+    "Schedule Date, Time & choose consultant psychologist",
     "Fill student profile & process online payment fee",
     "Receive doorstep counselor assignment & WhatsApp notifications"
   ],
   offline: [
-    "Select preferred date, time slot, & service mode",
-    "Choose consultant psychologist & confirm availability",
+    "Schedule Date, Time & choose consultant psychologist",
     "Fill student profile & process online payment fee",
     "Receive center address, instructions, & WhatsApp notifications"
   ]
@@ -29,20 +27,17 @@ const COUNSELLING_FLOW = {
 
 const CAREER_FLOW = {
   online: [
-    "Select preferred date, time slot, & service mode",
-    "Choose career coach/advisor & confirm availability",
+    "Schedule Date, Time & choose career coach/advisor",
     "Fill student profile & process online payment fee",
     "Access Google Meet link, checklist, & WhatsApp notifications"
   ],
   doorstep: [
-    "Select preferred date, time slot, & service mode",
-    "Choose career coach/advisor & confirm availability",
+    "Schedule Date, Time & choose career coach/advisor",
     "Fill student profile & process online payment fee",
     "Receive doorstep advisor assignment & WhatsApp notifications"
   ],
   offline: [
-    "Select preferred date, time slot, & service mode",
-    "Choose career coach/advisor & confirm availability",
+    "Schedule Date, Time & choose career coach/advisor",
     "Fill student profile & process online payment fee",
     "Receive center address, preparation guide, & WhatsApp notifications"
   ]
@@ -116,7 +111,8 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
   const [isSuccess, setIsSuccess] = useState(false);
   const [isAutofilled, setIsAutofilled] = useState(false);
   
-  const [bookingStep, setBookingStep] = useState('config'); // 'config' | 'advisor' | 'details' | 'payment' | 'success'
+  const [isAdvisorLocked] = useState(!!preselectedAdvisorId);
+  const [bookingStep, setBookingStep] = useState(preselectedAdvisorId ? 'config' : 'advisor'); // 'config' | 'advisor' | 'payment' | 'success'
 
   // Payment checkout states
   const [paymentMethod, setPaymentMethod] = useState('card'); // 'card' | 'upi' | 'netbanking'
@@ -303,11 +299,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
     window.history.pushState({ component: 'booking', step: newStep }, '');
   };
 
-  // Selected advisor reset when date/time changes
-  useEffect(() => {
-    setSelectedAdvisor(null);
-    setAdvisorConfirmed(false);
-  }, [selectedDate, selectedTime]);
+
 
   // Autofill form from Auth user
   useEffect(() => {
@@ -635,21 +627,21 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
           {/* Step Progress */}
           {bookingStep !== 'success' && (() => {
-            const stepMapping = { config: 0, advisor: 1, details: 2, payment: 3, success: 4 };
+            const stepMapping = { config: 0, payment: 1, success: 2 };
             const currentStepIdx = stepMapping[bookingStep] || 0;
-            const stepLabels = ['Schedule', 'Advisor', 'Account', 'Payment', 'Session'];
+            const stepLabels = ['Schedule & Advisor', 'Account & Payment', 'Session Confirmed'];
             return (
             <div className="bg-zinc-50 border border-zinc-200 p-3 sm:p-5 rounded-lg space-y-3 animate-in fade-in duration-300">
               {/* Mobile: compact progress bar */}
               <div className="flex sm:hidden items-center gap-2">
                 <div className="flex items-center gap-1.5 flex-1 min-w-0">
                   <span className="text-xs font-bold text-zinc-900 shrink-0">
-                    Step {currentStepIdx + 1} of 4
+                    Step {currentStepIdx + 1} of 3
                   </span>
                   <div className="h-1.5 flex-1 bg-zinc-200 rounded-full overflow-hidden">
                     <div
                       className="h-full bg-zinc-900 rounded-full transition-all duration-500"
-                      style={{ width: `${(currentStepIdx / 4) * 100}%` }}
+                      style={{ width: `${(currentStepIdx / 3) * 100}%` }}
                     />
                   </div>
                 </div>
@@ -845,15 +837,15 @@ Status: CONFIRMED
               {/* Left Column: Active Step Form Panel */}
               <div className="lg:col-span-8 lg:bg-white bg-transparent border-0 lg:border border-zinc-200/85 p-0 sm:p-4 lg:p-7 rounded-none lg:rounded-xl space-y-6 shadow-none lg:shadow-xs text-left min-h-[380px] relative">
                 
-                {/* STEP 1: Choose Advisor */}
-                {bookingStep === 'advisor' && (
+                {/* STEP 1: Schedule & Advisor */}
+                {bookingStep === 'config' && (
                   <div className="space-y-6 animate-in fade-in duration-300">
                     <div className="border-b border-zinc-100 pb-3">
                       <h3 className="text-sm font-semibold capitalize  text-zinc-850 flex items-center gap-2">
                         <span className="w-6 h-6 rounded-full bg-zinc-900 text-white text-xs flex items-center justify-center shrink-0 font-bold">1</span>
-                        Choose Service & Advisor
+                        Schedule & Advisor
                       </h3>
-                      <p className="text-xs text-zinc-500 mt-1">Tell us what kind of guidance you need, and pick your preferred advisor.</p>
+                      <p className="text-xs text-zinc-500 mt-1">Select a date, choose your advisor, and pick a time.</p>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -914,134 +906,121 @@ Status: CONFIRMED
                       </div>
                     </div>
 
-                    <div className="space-y-3">
-                      {advisors
-                        .filter(advisor => advisor.type === bookingService)
-                        .filter(advisor => !advisor.modes || advisor.modes.includes(bookingMode))
-                        .map((advisor) => {
-                          return (
-                            <div
-                              key={advisor.id}
-                              onClick={() => {
-                                setSelectedAdvisor(advisor);
-                                setAdvisorConfirmed(true);
-                                if (errors.advisor) {
-                                  setErrors(prev => ({ ...prev, advisor: null }));
-                                }
-                                if (errors.confirm) {
-                                  setErrors(prev => ({ ...prev, confirm: null }));
-                                }
-                                if (advisor.modes && advisor.modes.length > 0 && !advisor.modes.includes(bookingMode)) {
-                                  setBookingMode(advisor.modes[0]);
-                                }
-                              }}
-                              className={`p-4 border rounded-xl cursor-pointer transition active:scale-[0.98] ${
-                                selectedAdvisor?.id === advisor.id
-                                  ? 'bg-brand/5 border-brand shadow-sm ring-1 ring-brand/10'
-                                  : 'bg-white border-zinc-200 hover:border-brand/40 hover:bg-zinc-50'
-                              }`}
-                            >
-                              <div className="flex items-start justify-between gap-3">
-                                <div className="space-y-1.5 text-left min-w-0 flex-1">
-                                  <h4 className="font-semibold text-zinc-900 text-sm sm:text-base leading-tight">{advisor.name}</h4>
-                                  <p className="text-xs sm:text-xs text-zinc-500 font-medium">{advisor.role}</p>
-                                </div>
-                                <div className="flex flex-col items-end gap-2 shrink-0">
-                                  <span className="text-sm font-bold text-zinc-900">₹{advisor.price}</span>
-                                </div>
+                    {/* Step A: Date Picker */}
+                    <div className="space-y-2 pt-4 border-t border-zinc-100">
+                      <label className="text-sm font-bold text-zinc-700 block">1. Select Date</label>
+                      <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-lg">
+                        <DateTimePicker
+                          selectedDate={selectedDate}
+                          selectedTime={selectedTime}
+                          onDateChange={(d) => {
+                            setSelectedDate(d);
+                            setSelectedTime('');
+                            if (!isAdvisorLocked) {
+                              setSelectedAdvisor(null);
+                              setAdvisorConfirmed(false);
+                            }
+                            if (errors.date) setErrors(prev => ({ ...prev, date: null }));
+                          }}
+                          onTimeChange={(t) => {
+                            setSelectedTime(t);
+                            if (errors.time) setErrors(prev => ({ ...prev, time: null }));
+                          }}
+                          getAvailableSlotsForDate={(date) => getAvailableSlotsForDate(date, bookingService)}
+                          errors={errors}
+                          selectedMode={bookingMode}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Step B: Advisor Selection */}
+                    {selectedDate && (
+                      <div className="space-y-3 pt-6 border-t border-zinc-100 animate-in fade-in slide-in-from-top-2 duration-300">
+                        <label className="text-sm font-bold text-zinc-700 block">2. Choose Advisor</label>
+                        {isAdvisorLocked && selectedAdvisor ? (
+                          <div className="p-4 border border-brand bg-brand/5 shadow-sm ring-1 ring-brand/10 rounded-xl">
+                            <div className="flex items-start justify-between gap-3">
+                              <div className="space-y-1.5 text-left min-w-0 flex-1">
+                                <h4 className="font-semibold text-zinc-900 text-sm sm:text-base leading-tight">{selectedAdvisor.name}</h4>
+                                <p className="text-xs sm:text-xs text-zinc-500 font-medium">{selectedAdvisor.role}</p>
+                                <span className="text-xs font-semibold text-brand-dark mt-1 inline-block">Pre-selected</span>
+                              </div>
+                              <div className="flex flex-col items-end gap-2 shrink-0">
+                                <span className="text-sm font-bold text-zinc-900">₹{selectedAdvisor.price}</span>
                               </div>
                             </div>
-                          );
-                        })}
-                      {errors.advisor && <p className="text-xs text-rose-500 font-semibold mt-1">{errors.advisor}</p>}
-                    </div>
-
-                    {/* Advisor Selected Panel */}
-                    {selectedAdvisor && (
-                      <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-lg flex flex-col gap-3 animate-in zoom-in-95 duration-200 text-left">
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 w-full">
-                          <span className="text-xs text-zinc-700 font-bold capitalize tracking-wide">
-                            Selected Advisor: <strong className="text-zinc-900">{selectedAdvisor.name}</strong>
-                          </span>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              const nextConfirmed = !advisorConfirmed;
-                              setAdvisorConfirmed(nextConfirmed);
-                              if (nextConfirmed) {
-                                if (errors.confirm) {
-                                  setErrors(prev => ({ ...prev, confirm: null }));
-                                }
-                              }
-                            }}
-                            className={`px-4 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer border-none ${
-                              advisorConfirmed
-                                ? 'bg-brand/10 text-brand-dark font-semibold border border-brand/20'
-                                : 'bg-gradient-brand text-zinc-955 shadow-sm hover:opacity-95 font-bold'
-                            }`}
-                          >
-                            {advisorConfirmed ? 'Confirmed' : 'Confirm Advisor'}
-                          </button>
-                        </div>
+                          </div>
+                        ) : (
+                          <div className="space-y-3">
+                            {advisors
+                              .filter(advisor => advisor.type === bookingService)
+                              .filter(advisor => !advisor.modes || advisor.modes.includes(bookingMode))
+                              .map((advisor) => {
+                                return (
+                                  <div
+                                    key={advisor.id}
+                                    onClick={() => {
+                                      setSelectedAdvisor(advisor);
+                                      setAdvisorConfirmed(true);
+                                      if (errors.advisor) setErrors(prev => ({ ...prev, advisor: null }));
+                                      if (errors.confirm) setErrors(prev => ({ ...prev, confirm: null }));
+                                      if (advisor.modes && advisor.modes.length > 0 && !advisor.modes.includes(bookingMode)) {
+                                        setBookingMode(advisor.modes[0]);
+                                      }
+                                      // Clear selected time if they change advisor!
+                                      setSelectedTime('');
+                                    }}
+                                    className={`p-4 border rounded-xl cursor-pointer transition active:scale-[0.98] ${
+                                      selectedAdvisor?.id === advisor.id
+                                        ? 'bg-brand/5 border-brand shadow-sm ring-1 ring-brand/10'
+                                        : 'bg-white border-zinc-200 hover:border-brand/40 hover:bg-zinc-50'
+                                    }`}
+                                  >
+                                    <div className="flex items-start justify-between gap-3">
+                                      <div className="space-y-1.5 text-left min-w-0 flex-1">
+                                        <h4 className="font-semibold text-zinc-900 text-sm sm:text-base leading-tight">{advisor.name}</h4>
+                                        <p className="text-xs sm:text-xs text-zinc-500 font-medium">{advisor.role}</p>
+                                      </div>
+                                      <div className="flex flex-col items-end gap-2 shrink-0">
+                                        <span className="text-sm font-bold text-zinc-900">₹{advisor.price}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            {errors.advisor && <p className="text-xs text-rose-500 font-semibold mt-1">{errors.advisor}</p>}
+                          </div>
+                        )}
                       </div>
                     )}
-                    {errors.confirm && <p className="text-xs text-rose-500 font-semibold mt-1">{errors.confirm}</p>}
+
+                    {/* Step C: Time Selection */}
+                    {selectedDate && selectedAdvisor && (
+                      <div className="space-y-3 pt-6 border-t border-zinc-100 animate-in fade-in slide-in-from-top-2 duration-300">
+                        <label className="text-sm font-bold text-zinc-700 block">3. Select Time</label>
+                        <TimePicker
+                          selectedDate={selectedDate}
+                          selectedTime={selectedTime}
+                          onTimeChange={(t) => {
+                            setSelectedTime(t);
+                            if (errors.time) setErrors(prev => ({ ...prev, time: null }));
+                          }}
+                          availableSlots={(() => {
+                            if (!selectedDate || !selectedAdvisor) return [];
+                            const dateObj = selectedAdvisor.availabilitySlots?.[selectedDate];
+                            if (!dateObj || !dateObj.slots) return [];
+                            return dateObj.slots.filter(s => s.isAvailable).map(s => s.time);
+                          })()}
+                          errors={errors}
+                        />
+                      </div>
+                    )}
 
                     {/* Navigation */}
-                    <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-4 border-t border-zinc-200 mt-4">
+                    <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-8 mt-4 border-t border-zinc-200">
                       <button
                         type="button"
-                        disabled={!selectedAdvisor || !advisorConfirmed}
-                        onClick={() => handleStepChange('config')}
-                        className="px-5 py-3 min-h-[44px] bg-zinc-900 text-white font-bold capitalize  text-xs rounded-lg transition hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center border-none shadow-xs w-full sm:w-auto"
-                      >
-                        Choose Schedule
-                      </button>
-                    </div>
-                  </div>
-                )}
-                {/* STEP 2: Choose Schedule */}
-                {bookingStep === 'config' && (
-                  <div className="space-y-6 animate-in fade-in duration-300">
-                    <div className="border-b border-zinc-100 pb-3">
-                      <h3 className="text-sm font-semibold capitalize  text-zinc-850 flex items-center gap-2">
-                        <span className="w-6 h-6 rounded-full bg-zinc-900 text-white text-xs flex items-center justify-center shrink-0 font-bold">2</span>
-                        Choose Date & Time
-                      </h3>
-                      <p className="text-xs text-zinc-500 mt-1">Select an available time slot for your chosen advisor.</p>
-                    </div>
-
-                    <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-lg">
-                      <DateTimePicker
-                        selectedDate={selectedDate}
-                        selectedTime={selectedTime}
-                        onDateChange={(d) => {
-                          setSelectedDate(d);
-                          setSelectedTime('');
-                          if (errors.date) setErrors(prev => ({ ...prev, date: null }));
-                        }}
-                        onTimeChange={(t) => {
-                          setSelectedTime(t);
-                          if (errors.time) setErrors(prev => ({ ...prev, time: null }));
-                        }}
-                        getAvailableSlotsForDate={(date) => getAvailableSlotsForDate(date, bookingService)}
-                        errors={errors}
-                        selectedMode={bookingMode}
-                      />
-                    </div>
-
-                    {/* Navigation */}
-                    <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-4 border-t border-zinc-200 mt-4">
-                      <button
-                        type="button"
-                        onClick={() => handleStepChange('advisor')}
-                        className="px-5 py-3 min-h-[44px] bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 font-bold capitalize  text-xs rounded-lg transition cursor-pointer w-full sm:w-auto text-center"
-                      >
-                        Change Advisor
-                      </button>
-                      <button
-                        type="button"
-                        disabled={!selectedDate || !selectedTime}
+                        disabled={!selectedDate || !selectedTime || !selectedAdvisor}
                         onClick={() => handleStepChange('payment')}
                         className="px-6 py-3 min-h-[48px] bg-zinc-900 text-white font-bold capitalize  text-xs rounded-lg transition hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center border-none shadow-xs w-full sm:w-auto"
                       >
@@ -1050,6 +1029,7 @@ Status: CONFIRMED
                     </div>
                   </div>
                 )}
+
                 {/* STEP 3: Account & Payment */}
                 {bookingStep === 'payment' && (
                   <div className="space-y-6 animate-in fade-in duration-300">
