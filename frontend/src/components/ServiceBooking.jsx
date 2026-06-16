@@ -906,38 +906,10 @@ Status: CONFIRMED
                       </div>
                     </div>
 
-                    {/* Step A: Date Picker */}
-                    <div className="space-y-2 pt-4 border-t border-zinc-100">
-                      <label className="text-sm font-bold text-zinc-700 block">1. Select Date</label>
-                      <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-lg">
-                        <DateTimePicker
-                          selectedDate={selectedDate}
-                          selectedTime={selectedTime}
-                          onDateChange={(d) => {
-                            setSelectedDate(d);
-                            setSelectedTime('');
-                            if (!isAdvisorLocked) {
-                              setSelectedAdvisor(null);
-                              setAdvisorConfirmed(false);
-                            }
-                            if (errors.date) setErrors(prev => ({ ...prev, date: null }));
-                          }}
-                          onTimeChange={(t) => {
-                            setSelectedTime(t);
-                            if (errors.time) setErrors(prev => ({ ...prev, time: null }));
-                          }}
-                          getAvailableSlotsForDate={(date) => getAvailableSlotsForDate(date, bookingService)}
-                          errors={errors}
-                          selectedMode={bookingMode}
-                        />
-                      </div>
-                    </div>
-
                     {/* Step B: Advisor Selection */}
-                    {selectedDate && (
-                      <div className="space-y-3 pt-6 border-t border-zinc-100 animate-in fade-in slide-in-from-top-2 duration-300">
-                        <label className="text-sm font-bold text-zinc-700 block">2. Choose Advisor</label>
-                        {isAdvisorLocked && selectedAdvisor ? (
+                    <div className="space-y-3 pt-6 border-t border-zinc-100 animate-in fade-in slide-in-from-top-2 duration-300">
+                      <label className="text-sm font-bold text-zinc-700 block">1. Choose Advisor</label>
+                      {isAdvisorLocked && selectedAdvisor ? (
                           <div className="p-4 border border-brand bg-brand/5 shadow-sm ring-1 ring-brand/10 rounded-xl">
                             <div className="flex items-start justify-between gap-3">
                               <div className="space-y-1.5 text-left min-w-0 flex-1">
@@ -992,7 +964,29 @@ Status: CONFIRMED
                           </div>
                         )}
                       </div>
-                    )}
+
+                    {/* Step A: Date Picker */}
+                    <div className="space-y-2 pt-4 border-t border-zinc-100">
+                      <label className="text-sm font-bold text-zinc-700 block">2. Select Date</label>
+                      <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-lg">
+                        <DateTimePicker
+                          selectedDate={selectedDate}
+                          selectedTime={selectedTime}
+                          onDateChange={(d) => {
+                            setSelectedDate(d);
+                            setSelectedTime('');
+                            if (errors.date) setErrors(prev => ({ ...prev, date: null }));
+                          }}
+                          onTimeChange={(t) => {
+                            setSelectedTime(t);
+                            if (errors.time) setErrors(prev => ({ ...prev, time: null }));
+                          }}
+                          getAvailableSlotsForDate={(date) => getAvailableSlotsForDate(date, bookingService)}
+                          errors={errors}
+                          selectedMode={bookingMode}
+                        />
+                      </div>
+                    </div>
 
                     {/* Step C: Time Selection */}
                     {selectedDate && selectedAdvisor && (
