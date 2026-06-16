@@ -443,7 +443,9 @@ export default function AdminDashboard({ setView }) {
     bannerNotice: '',
     termsOfUse: '',
     privacyPolicy: '',
-    cdatGroupCode: ''
+    cdatGroupCode: '',
+    gstEnabled: false,
+    gstPercent: 0
   });
   const [settingsSuccess, setSettingsSuccess] = useState('');
 
@@ -561,7 +563,9 @@ export default function AdminDashboard({ setView }) {
           termsOfUse: settings.termsOfUse || '',
           privacyPolicy: settings.privacyPolicy || '',
           cdatGroupCode: settings.cdatGroupCode || 'cdat@behold',
-          enablePsychology: settings.enablePsychology !== undefined ? settings.enablePsychology : true
+          enablePsychology: settings.enablePsychology !== undefined ? settings.enablePsychology : true,
+          gstEnabled: settings.gstEnabled !== undefined ? settings.gstEnabled : false,
+          gstPercent: settings.gstPercent !== undefined ? settings.gstPercent : 0
         });
       }
     } catch (error) {
@@ -4550,6 +4554,53 @@ export default function AdminDashboard({ setView }) {
                       <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
                     </label>
                   </div>
+                </div>
+
+                {/* GST / Tax Configuration */}
+                <div className="bg-zinc-900/60 border border-zinc-800 rounded-xl p-4 space-y-4">
+                  <h4 className="text-sm font-bold text-zinc-300 capitalize tracking-wide flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-amber-500" />
+                    Tax / GST Configuration
+                  </h4>
+
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <span className="text-sm capitalize font-bold text-brand block">Enable GST on Bookings</span>
+                      <span className="text-sm text-zinc-550 block font-medium mt-1">When enabled, GST will be applied to the session fee on the booking checkout page.</span>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={settingsForm.gstEnabled}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, gstEnabled: e.target.checked })}
+                        className="sr-only peer"
+                      />
+                      <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
+                    </label>
+                  </div>
+
+                  {settingsForm.gstEnabled && (
+                    <div className="space-y-1 max-w-xs animate-in slide-in-from-top-2 duration-200">
+                      <label className="text-sm capitalize font-bold text-zinc-400">GST Percentage (%)</label>
+                      <input
+                        type="number"
+                        min={0}
+                        max={100}
+                        step={0.5}
+                        value={settingsForm.gstPercent}
+                        onChange={(e) => {
+                          let val = parseFloat(e.target.value);
+                          if (isNaN(val)) val = 0;
+                          if (val < 0) val = 0;
+                          if (val > 100) val = 100;
+                          setSettingsForm({ ...settingsForm, gstPercent: val });
+                        }}
+                        className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
+                        placeholder="e.g. 18"
+                      />
+                      <p className="text-xs text-zinc-550 font-medium">Set to 0 to show ₹0 for GST. Common values: 5%, 12%, 18%, 28%</p>
+                    </div>
+                  )}
                 </div>
 
                 {/* Policies & Documents */}

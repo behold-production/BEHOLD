@@ -1515,34 +1515,56 @@ Status: CONFIRMED
                   </div>
 
                   {/* Invoice ledger calculation breakdown */}
-                  <div className="pt-3 border-t border-zinc-200 space-y-2">
-                    <span className="text-[9.5px] text-zinc-400 capitalize tracking-wide block font-semibold text-left">Pricing Breakdown</span>
-                    
-                    {/* Fee list */}
-                    <div className="space-y-1.5 text-xs font-semibold text-zinc-650">
-                      <div className="flex justify-between">
-                        <span>Session Fee</span>
-                        <span className="text-zinc-800 font-bold">₹{selectedAdvisor?.price || 1200}</span>
-                      </div>
-                      
-                      <div className="flex justify-between">
-                        <span>GST (18%)</span>
-                        <span className="text-zinc-800 font-bold">₹{Math.round((selectedAdvisor?.price || 1200) * 0.18)}</span>
-                      </div>
+                  {(() => {
+                    // Read GST settings from site settings (persisted by App.jsx)
+                    let gstEnabled = false;
+                    let gstPercent = 0;
+                    try {
+                      const stored = localStorage.getItem('behold_site_settings');
+                      if (stored) {
+                        const parsed = JSON.parse(stored);
+                        gstEnabled = parsed.gstEnabled === true;
+                        gstPercent = typeof parsed.gstPercent === 'number' ? parsed.gstPercent : 0;
+                      }
+                    } catch (e) {}
 
-                      {appliedDiscount > 0 && (
-                        <div className="flex justify-between text-emerald-600 font-bold">
-                          <span>Promo Discount</span>
-                          <span>-₹{appliedDiscount}</span>
+                    const baseFee = selectedAdvisor ? (selectedAdvisor.price || 0) : 0;
+                    const gstAmount = gstEnabled && gstPercent > 0 ? Math.round(baseFee * (gstPercent / 100)) : 0;
+                    const netTotal = Math.max(0, baseFee + gstAmount - appliedDiscount);
+
+                    return (
+                      <div className="pt-3 border-t border-zinc-200 space-y-2">
+                        <span className="text-[9.5px] text-zinc-400 capitalize tracking-wide block font-semibold text-left">Pricing Breakdown</span>
+                        
+                        {/* Fee list */}
+                        <div className="space-y-1.5 text-xs font-semibold text-zinc-650">
+                          <div className="flex justify-between">
+                            <span>Session Fee</span>
+                            <span className="text-zinc-800 font-bold">₹{baseFee}</span>
+                          </div>
+                          
+                          {gstEnabled && (
+                            <div className="flex justify-between">
+                              <span>GST ({gstPercent}%)</span>
+                              <span className="text-zinc-800 font-bold">₹{gstAmount}</span>
+                            </div>
+                          )}
+
+                          {appliedDiscount > 0 && (
+                            <div className="flex justify-between text-emerald-600 font-bold">
+                              <span>Promo Discount</span>
+                              <span>-₹{appliedDiscount}</span>
+                            </div>
+                          )}
+
+                          <div className="flex justify-between text-xs font-bold text-zinc-900 border-t border-zinc-200 pt-2 mt-1">
+                            <span>Net Total</span>
+                            <span className="text-brand-dark">₹{netTotal}</span>
+                          </div>
                         </div>
-                      )}
-
-                      <div className="flex justify-between text-xs font-bold text-zinc-900 border-t border-zinc-200 pt-2 mt-1">
-                        <span>Net Total</span>
-                        <span className="text-brand-dark">₹{(selectedAdvisor?.price || 1200) + Math.round((selectedAdvisor?.price || 1200) * 0.18) - appliedDiscount}</span>
                       </div>
-                    </div>
-                  </div>
+                    );
+                  })()}
 
                   {/* Security badge */}
                   <div className="pt-4 border-t border-zinc-200 text-xs font-bold text-zinc-400 capitalize text-center w-full">

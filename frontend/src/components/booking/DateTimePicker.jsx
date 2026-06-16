@@ -1,5 +1,8 @@
-import { useMemo, useEffect } from 'react';
+import { useMemo, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+
+const WEEKDAY_SHORT = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+const MONTH_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 function toLocalDateString(date) {
   const yyyy = date.getFullYear();
@@ -54,6 +57,12 @@ function isSlotInPast(timeStr, dateStr) {
   }
 }
 
+function bookingModeLabel(mode) {
+  if (mode === 'DOOR_STEP') return 'Doorstep visit';
+  if (mode === 'OFFLINE') return 'In-center visit';
+  return 'Online video session';
+}
+
 export default function DateTimePicker({
   selectedDate,
   selectedTime,
@@ -64,25 +73,28 @@ export default function DateTimePicker({
   maxAdvanceDays = 60,
   selectedMode = 'ONLINE'
 }) {
-  const today = useMemo(() => new Date(), []);
+  const today = useMemo(() => {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    return d;
+  }, []);
   const todayStr = useMemo(() => getLocalTodayString(), []);
-  
+  const scrollRef = useRef(null);
+
   const maxDate = useMemo(() => {
     const d = new Date(today);
     d.setDate(d.getDate() + maxAdvanceDays);
     return d;
   }, [today, maxAdvanceDays]);
 
+  // Quick-jump dates
   const tomorrowStr = useMemo(() => {
     const d = new Date(today);
     d.setDate(d.getDate() + 1);
     return toLocalDateString(d);
   }, [today]);
 
-  const weekendStr = useMemo(() => {
-    const d = getNextWeekdayDate(6, today);
-    return toLocalDateString(d);
-  }, [today]);
+  const weekendStr = useMemo(() => toLocalDateString(getNextWeekdayDate(6, today)), [today]);
 
   const nextWeekStr = useMemo(() => {
     const d = new Date(today);
@@ -90,23 +102,24 @@ export default function DateTimePicker({
     return toLocalDateString(d);
   }, [today]);
 
-  // Generate full list of days
+  // Build the list of all days from today to maxAdvanceDays
   const daysList = useMemo(() => {
     const list = [];
-    const temp = new Date(today);
-    temp.setHours(0, 0, 0, 0);
-    
     for (let i = 0; i <= maxAdvanceDays; i++) {
-      const d = new Date(temp);
-      d.setDate(temp.getDate() + i);
+      const d = new Date(today);
+      d.setDate(today.getDate() + i);
       list.push({
         dateObj: d,
-        dateStr: toLocalDateString(d)
+        dateStr: toLocalDateString(d),
+        weekday: WEEKDAY_SHORT[d.getDay()],
+        day: d.getDate(),
+        month: MONTH_SHORT[d.getMonth()]
       });
     }
     return list;
   }, [today, maxAdvanceDays]);
 
+  // Get availability metadata for a given date
   const getDayMeta = (dateStr, dateObj) => {
     const isPast = dateStr < todayStr;
     const isBeyondMax = dateObj > maxDate;
@@ -121,141 +134,122 @@ export default function DateTimePicker({
     return { isPast: isPast || isBeyondMax, isAvailable, slotCount };
   };
 
-  // Scroll active date card into center of ribbon view when selectedDate changes
+  // Auto-scroll selected date card into view
   useEffect(() => {
-    if (selectedDate) {
-      const activeEl = document.querySelector(`[data-date="${selectedDate}"]`);
-      if (activeEl) {
-        activeEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    if (selectedDate && scrollRef.current) {
+      const el = scrollRef.current.querySelector(`[data-date="${selectedDate}"]`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
       }
     }
   }, [selectedDate]);
 
+  const scrollBy = (dir) => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ left: dir * 280, behavior: 'smooth' });
+    }
+  };
+
   const getChipClass = (targetStr) => {
     const isSelected = selectedDate === targetStr;
-    const base = "snap-start shrink-0 px-3.5 min-h-[36px] rounded-full text-xs font-semibold capitalize transition-all duration-200 cursor-pointer flex items-center border";
+    const base = "shrink-0 px-3 min-h-[34px] rounded-full text-[11px] font-semibold capitalize transition-all duration-200 cursor-pointer flex items-center border";
     if (isSelected) {
-      return `${base} bg-brand border-brand text-zinc-900 shadow-md ring-2 ring-brand/20 scale-105`;
+      return `${base} bg-zinc-900 border-zinc-900 text-white shadow-sm`;
     }
-    return `${base} bg-white border-zinc-200 text-zinc-700 hover:border-brand/40 hover:bg-brand/5`;
+    return `${base} bg-white border-zinc-200 text-zinc-600 hover:border-zinc-400 hover:bg-zinc-50`;
+  };
+
+  const handleQuickJump = (dateStr) => {
+    onDateChange(dateStr);
+    onTimeChange('');
   };
 
   return (
     <div className="space-y-4">
       {/* Quick-jump chips */}
-      <div className="flex flex-wrap gap-2 w-full">
-        <button
-          type="button"
-          onClick={() => {
-            onDateChange(todayStr);
-            onTimeChange('');
-          }}
-          className={getChipClass(todayStr)}
-        >
-          Today
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            onDateChange(tomorrowStr);
-            onTimeChange('');
-          }}
-          className={getChipClass(tomorrowStr)}
-        >
-          Tomorrow
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            onDateChange(weekendStr);
-            onTimeChange('');
-          }}
-          className={getChipClass(weekendStr)}
-        >
-          This Weekend
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            onDateChange(nextWeekStr);
-            onTimeChange('');
-          }}
-          className={getChipClass(nextWeekStr)}
-        >
-          Next Week
-        </button>
+      <div className="flex flex-wrap gap-1.5">
+        <button type="button" onClick={() => handleQuickJump(todayStr)} className={getChipClass(todayStr)}>Today</button>
+        <button type="button" onClick={() => handleQuickJump(tomorrowStr)} className={getChipClass(tomorrowStr)}>Tomorrow</button>
+        <button type="button" onClick={() => handleQuickJump(weekendStr)} className={getChipClass(weekendStr)}>Weekend</button>
+        <button type="button" onClick={() => handleQuickJump(nextWeekStr)} className={getChipClass(nextWeekStr)}>Next Week</button>
       </div>
 
-      {/* Horizontal Date Ribbon Container */}
-      <div className="bg-white border border-zinc-200 rounded-xl p-3 sm:p-4 shadow-xs relative group">
+      {/* Calendar Card Strip */}
+      <div className="relative group">
         {/* Left Arrow */}
         <button
           type="button"
-          onClick={() => {
-            const el = document.getElementById('date-ribbon');
-            if (el) el.scrollBy({ left: -220, behavior: 'smooth' });
-          }}
-          className="absolute left-1.5 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-white border border-zinc-250 shadow-sm hover:bg-zinc-50 flex items-center justify-center text-zinc-650 transition cursor-pointer md:flex hidden"
+          onClick={() => scrollBy(-1)}
+          className="absolute -left-1 top-1/2 -translate-y-1/2 z-10 w-7 h-7 rounded-full bg-white border border-zinc-200 shadow-md hover:bg-zinc-50 items-center justify-center text-zinc-500 hover:text-zinc-800 transition cursor-pointer hidden sm:flex"
           aria-label="Scroll left"
         >
-          <ChevronLeft className="w-4 h-4" />
+          <ChevronLeft className="w-3.5 h-3.5" />
         </button>
 
-        {/* Scrollable strip */}
+        {/* Scrollable Date Cards */}
         <div
-          id="date-ribbon"
-          className="flex gap-2 overflow-x-auto scrollbar-none snap-x snap-mandatory py-1.5 px-0.5 scroll-smooth"
+          ref={scrollRef}
+          className="flex gap-2 overflow-x-auto scrollbar-none snap-x snap-mandatory scroll-smooth px-1 py-1"
         >
           {daysList.map((day) => {
             const meta = getDayMeta(day.dateStr, day.dateObj);
             const isSelected = selectedDate === day.dateStr;
-            const weekday = day.dateObj.toLocaleDateString('en-US', { weekday: 'short' });
-            const dayNum = day.dateObj.getDate();
-            const month = day.dateObj.toLocaleDateString('en-US', { month: 'short' });
-
-            const baseClasses = "flex flex-col items-center justify-center p-2 rounded-xl border transition-all duration-200 min-w-[58px] sm:min-w-[62px] h-[78px] sm:h-[82px] snap-start select-none cursor-pointer";
-            let stateClasses = "";
-
-            if (meta.isPast) {
-              stateClasses = "bg-zinc-50 border-zinc-100 text-zinc-300 opacity-40 cursor-not-allowed";
-            } else if (isSelected) {
-              stateClasses = "bg-zinc-900 border-zinc-900 text-white font-bold shadow-md scale-105";
-            } else if (meta.isAvailable) {
-              stateClasses = "bg-white border-zinc-255 text-zinc-850 hover:border-brand hover:bg-brand/5";
-            } else {
-              stateClasses = "bg-zinc-50 border-zinc-150 text-zinc-400 opacity-60 cursor-not-allowed";
-            }
+            const isToday = day.dateStr === todayStr;
 
             return (
               <button
                 key={day.dateStr}
                 data-date={day.dateStr}
                 type="button"
-                disabled={meta.isPast || (!meta.isAvailable && !isSelected)}
+                disabled={meta.isPast}
                 onClick={() => {
-                  onDateChange(day.dateStr);
-                  onTimeChange('');
+                  if (!meta.isPast) {
+                    onDateChange(day.dateStr);
+                    onTimeChange('');
+                  }
                 }}
-                className={`${baseClasses} ${stateClasses}`}
-                aria-label={`${day.dateStr}${meta.isAvailable ? `, ${meta.slotCount} slots available` : ''}`}
+                className={`
+                  flex flex-col items-center justify-center snap-start
+                  min-w-[60px] sm:min-w-[66px] h-[82px] sm:h-[88px]
+                  rounded-xl border-2 transition-all duration-200 select-none
+                  ${meta.isPast
+                    ? 'bg-zinc-50 border-zinc-100 text-zinc-300 cursor-not-allowed opacity-40'
+                    : isSelected
+                      ? 'bg-zinc-900 border-zinc-900 text-white shadow-lg scale-[1.04] cursor-pointer'
+                      : meta.isAvailable
+                        ? 'bg-white border-zinc-200 text-zinc-800 hover:border-zinc-900 hover:shadow-sm cursor-pointer'
+                        : 'bg-zinc-50 border-zinc-150 text-zinc-350 cursor-not-allowed opacity-50'
+                  }
+                `}
               >
-                {/* Weekday name */}
-                <span className={`text-[9px] uppercase tracking-wider font-semibold ${isSelected ? 'text-brand' : 'text-zinc-400'}`}>
-                  {weekday}
-                </span>
-                
-                {/* Day Number */}
-                <span className="text-base sm:text-lg font-black tracking-tight mt-0.5 leading-none">
-                  {dayNum}
+                {/* Weekday */}
+                <span className={`text-[9px] sm:text-[10px] font-bold tracking-widest uppercase leading-none ${
+                  isSelected ? 'text-zinc-400' : 'text-zinc-400'
+                }`}>
+                  {day.weekday}
                 </span>
 
-                {/* Month Name / Availability dot */}
-                <span className="text-[9px] font-semibold mt-1.5 flex items-center gap-1">
-                  <span>{month}</span>
-                  {meta.isAvailable && !isSelected && (
-                    <span className={`w-1 h-1 rounded-full ${
-                      meta.slotCount >= 3 ? 'bg-emerald-500' : meta.slotCount === 2 ? 'bg-amber-500' : 'bg-rose-500'
+                {/* Day Number */}
+                <span className={`text-xl sm:text-2xl font-black leading-none mt-1 ${
+                  isSelected ? 'text-white' : isToday ? 'text-zinc-900' : ''
+                }`}>
+                  {day.day}
+                </span>
+
+                {/* Month + availability dot */}
+                <span className="flex items-center gap-1 mt-1.5">
+                  <span className={`text-[9px] sm:text-[10px] font-semibold leading-none ${
+                    isSelected ? 'text-zinc-400' : 'text-zinc-450'
+                  }`}>
+                    {day.month}
+                  </span>
+                  {!meta.isPast && meta.isAvailable && !isSelected && (
+                    <span className={`w-1 h-1 rounded-full shrink-0 ${
+                      meta.slotCount >= 3 ? 'bg-emerald-500' : meta.slotCount >= 2 ? 'bg-amber-500' : 'bg-rose-500'
                     }`} />
+                  )}
+                  {isSelected && (
+                    <span className="w-1.5 h-1.5 rounded-full bg-brand shrink-0" />
                   )}
                 </span>
               </button>
@@ -266,40 +260,35 @@ export default function DateTimePicker({
         {/* Right Arrow */}
         <button
           type="button"
-          onClick={() => {
-            const el = document.getElementById('date-ribbon');
-            if (el) el.scrollBy({ left: 220, behavior: 'smooth' });
-          }}
-          className="absolute right-1.5 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-white border border-zinc-250 shadow-sm hover:bg-zinc-50 flex items-center justify-center text-zinc-650 transition cursor-pointer md:flex hidden"
+          onClick={() => scrollBy(1)}
+          className="absolute -right-1 top-1/2 -translate-y-1/2 z-10 w-7 h-7 rounded-full bg-white border border-zinc-200 shadow-md hover:bg-zinc-50 items-center justify-center text-zinc-500 hover:text-zinc-800 transition cursor-pointer hidden sm:flex"
           aria-label="Scroll right"
         >
-          <ChevronRight className="w-4 h-4" />
+          <ChevronRight className="w-3.5 h-3.5" />
         </button>
       </div>
 
-      {/* Selected summary info */}
+      {/* Selected date summary */}
       {selectedDate && (
-        <div className="bg-gradient-to-br from-brand/8 via-white to-brand-accent/8 border border-brand/20 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-in slide-in-from-top-2 duration-300">
-          <div className="flex items-start gap-3 text-left">
-            <div>
-              <div className="text-xs font-semibold capitalize text-brand-dark">
-                Your Selection
-              </div>
-              <div className="text-xs sm:text-sm font-semibold text-zinc-900 mt-0.5">
-                {formatHumanDate(selectedDate)}
-              </div>
-              <div className="text-xs text-zinc-650 mt-0.5">
-                {selectedTime
-                  ? `${selectedTime} • ${bookingModeLabel(selectedMode)}`
-                  : 'No time slot picked yet'}
-              </div>
+        <div className="bg-gradient-to-br from-brand/8 via-white to-brand-accent/8 border border-brand/20 rounded-xl p-3 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2 animate-in slide-in-from-top-2 duration-300">
+          <div className="text-left">
+            <div className="text-[10px] font-semibold capitalize text-brand-dark tracking-wide">
+              Your Selection
+            </div>
+            <div className="text-xs sm:text-sm font-bold text-zinc-900 mt-0.5">
+              {formatHumanDate(selectedDate)}
+            </div>
+            <div className="text-[11px] text-zinc-500 mt-0.5">
+              {selectedTime
+                ? `${selectedTime} • ${bookingModeLabel(selectedMode)}`
+                : 'No time slot picked yet'}
             </div>
           </div>
           {selectedTime && (
             <button
               type="button"
               onClick={() => onTimeChange('')}
-              className="min-h-[36px] px-3 inline-flex items-center text-xs font-semibold capitalize text-zinc-500 hover:text-rose-600 transition cursor-pointer self-start sm:self-auto"
+              className="min-h-[32px] px-3 inline-flex items-center text-[11px] font-semibold text-zinc-500 hover:text-rose-600 transition cursor-pointer self-start sm:self-auto"
             >
               Clear Time
             </button>
@@ -307,6 +296,7 @@ export default function DateTimePicker({
         </div>
       )}
 
+      {/* Errors */}
       {(errors.date || errors.time) && (
         <div className="space-y-1">
           {errors.date && <p className="text-xs text-rose-500 font-bold" role="alert">{errors.date}</p>}
@@ -315,10 +305,4 @@ export default function DateTimePicker({
       )}
     </div>
   );
-}
-
-function bookingModeLabel(mode) {
-  if (mode === 'DOOR_STEP') return 'Doorstep visit';
-  if (mode === 'OFFLINE') return 'In-center visit';
-  return 'Online video session';
 }

@@ -562,7 +562,9 @@ const AdminController = {
           bannerNotice: '🚨 Maintenance Notice: Schedulers undergoing maintenance tonight between 12:00 AM - 02:00 AM IST.',
           termsOfUse: 'Welcome to BEHOLD. By accessing or using our platform, you agree to comply with and be bound by the terms and conditions.',
           privacyPolicy: 'Your privacy is extremely important to us. This policy describes how we collect, protect, and use your personal information.',
-          enablePsychology: true
+          enablePsychology: true,
+          gstEnabled: false,
+          gstPercent: 0
         });
       }
       res.status(200).json({ success: true, data: settings });

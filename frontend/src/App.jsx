@@ -54,7 +54,9 @@ export default function App() {
     privacyPolicy: '',
     whatsapp: 'https://wa.me/919497174011',
     contactEmail: 'support@behold.com',
-    enablePsychology: true
+    enablePsychology: true,
+    gstEnabled: false,
+    gstPercent: 0
   });
   const [activeDocType, setActiveDocType] = useState(null); // 'terms' or 'privacy'
 
