@@ -1,11 +1,5 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-
-const WEEKDAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-const MONTH_LABELS = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December'
-];
 
 function toLocalDateString(date) {
   const yyyy = date.getFullYear();
@@ -16,65 +10,6 @@ function toLocalDateString(date) {
 
 function getLocalTodayString() {
   return toLocalDateString(new Date());
-}
-
-function parseTimeToMinutes(timeStr) {
-  if (!timeStr) return 0;
-  const [time, meridiem] = timeStr.split(' ');
-  let [hours, minutes] = time.split(':').map(Number);
-  if (meridiem === 'PM' && hours !== 12) hours += 12;
-  if (meridiem === 'AM' && hours === 12) hours = 0;
-  return hours * 60 + minutes;
-}
-
-function getTimeBucket(timeStr) {
-  const minutes = parseTimeToMinutes(timeStr);
-  if (minutes < 12 * 60) return 'morning';
-  if (minutes < 17 * 60) return 'afternoon';
-  return 'evening';
-}
-
-const BUCKET_META = {
-  morning: { label: 'Morning', color: 'text-amber-500' },
-  afternoon: { label: 'Afternoon', color: 'text-sky-500' },
-  evening: { label: 'Evening', color: 'text-indigo-500' }
-};
-
-function isSlotInPast(timeStr, dateStr) {
-  if (!timeStr || !dateStr) return false;
-  if (dateStr !== getLocalTodayString()) return false;
-  try {
-    const [time, modifier] = timeStr.split(' ');
-    let [hours, minutes] = time.split(':').map(Number);
-    if (modifier === 'PM' && hours < 12) hours += 12;
-    if (modifier === 'AM' && hours === 12) hours = 0;
-    const now = new Date();
-    const slotDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
-    return now >= slotDate;
-  } catch (e) {
-    return false;
-  }
-}
-
-function buildCalendarMonth(viewYear, viewMonth) {
-  const firstDay = new Date(viewYear, viewMonth, 1);
-  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
-  const startWeekday = firstDay.getDay();
-  const cells = [];
-
-  for (let i = 0; i < startWeekday; i++) {
-    cells.push(null);
-  }
-  for (let d = 1; d <= daysInMonth; d++) {
-    const date = new Date(viewYear, viewMonth, d);
-    cells.push({
-      day: d,
-      dateObj: date,
-      dateStr: toLocalDateString(date)
-    });
-  }
-  while (cells.length % 7 !== 0) cells.push(null);
-  return cells;
 }
 
 function getNextWeekdayDate(targetWeekday, fromDate = new Date()) {
@@ -103,6 +38,22 @@ function formatHumanDate(dateStr) {
   }
 }
 
+function isSlotInPast(timeStr, dateStr) {
+  if (!timeStr || !dateStr) return false;
+  if (dateStr !== getLocalTodayString()) return false;
+  try {
+    const [time, modifier] = timeStr.split(' ');
+    let [hours, minutes] = time.split(':').map(Number);
+    if (modifier === 'PM' && hours < 12) hours += 12;
+    if (modifier === 'AM' && hours === 12) hours = 0;
+    const now = new Date();
+    const slotDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+    return now >= slotDate;
+  } catch (e) {
+    return false;
+  }
+}
+
 export default function DateTimePicker({
   selectedDate,
   selectedTime,
@@ -115,34 +66,12 @@ export default function DateTimePicker({
 }) {
   const today = useMemo(() => new Date(), []);
   const todayStr = useMemo(() => getLocalTodayString(), []);
-
-  const [viewYear, setViewYear] = useState(today.getFullYear());
-  const [viewMonth, setViewMonth] = useState(today.getMonth());
-
+  
   const maxDate = useMemo(() => {
     const d = new Date(today);
     d.setDate(d.getDate() + maxAdvanceDays);
     return d;
   }, [today, maxAdvanceDays]);
-
-  const cells = useMemo(() => buildCalendarMonth(viewYear, viewMonth), [viewYear, viewMonth]);
-  const goToPrevMonth = () => {
-    if (viewMonth === 0) {
-      setViewMonth(11);
-      setViewYear(y => y - 1);
-    } else {
-      setViewMonth(m => m - 1);
-    }
-  };
-
-  const goToNextMonth = () => {
-    if (viewMonth === 11) {
-      setViewMonth(0);
-      setViewYear(y => y + 1);
-    } else {
-      setViewMonth(m => m + 1);
-    }
-  };
 
   const tomorrowStr = useMemo(() => {
     const d = new Date(today);
@@ -161,229 +90,205 @@ export default function DateTimePicker({
     return toLocalDateString(d);
   }, [today]);
 
-  const goToToday = () => {
-    setViewYear(today.getFullYear());
-    setViewMonth(today.getMonth());
-    onDateChange(todayStr);
-    onTimeChange('');
-  };
+  // Generate full list of days
+  const daysList = useMemo(() => {
+    const list = [];
+    const temp = new Date(today);
+    temp.setHours(0, 0, 0, 0);
+    
+    for (let i = 0; i <= maxAdvanceDays; i++) {
+      const d = new Date(temp);
+      d.setDate(temp.getDate() + i);
+      list.push({
+        dateObj: d,
+        dateStr: toLocalDateString(d)
+      });
+    }
+    return list;
+  }, [today, maxAdvanceDays]);
 
-  const goToTomorrow = () => {
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    setViewYear(tomorrow.getFullYear());
-    setViewMonth(tomorrow.getMonth());
-    onDateChange(tomorrowStr);
-    onTimeChange('');
-  };
-
-  const goToWeekend = () => {
-    const sat = getNextWeekdayDate(6, today);
-    setViewYear(sat.getFullYear());
-    setViewMonth(sat.getMonth());
-    onDateChange(weekendStr);
-    onTimeChange('');
-  };
-
-  const goToNextWeek = () => {
-    const next = new Date(today);
-    next.setDate(next.getDate() + 7);
-    setViewYear(next.getFullYear());
-    setViewMonth(next.getMonth());
-    onDateChange(nextWeekStr);
-    onTimeChange('');
-  };
-
-  const getDayMeta = (cell) => {
-    if (!cell) return { isPast: true, isToday: false, isAvailable: false, slotCount: 0 };
-    const isPast = cell.dateStr < todayStr;
-    const isToday = cell.dateStr === todayStr;
-    const isBeyondMax = cell.dateObj > maxDate;
+  const getDayMeta = (dateStr, dateObj) => {
+    const isPast = dateStr < todayStr;
+    const isBeyondMax = dateObj > maxDate;
     let slotCount = 0;
     let isAvailable = false;
     if (!isPast && !isBeyondMax && getAvailableSlotsForDate) {
-      const slots = getAvailableSlotsForDate(cell.dateStr)
-        .filter(t => !isSlotInPast(t, cell.dateStr));
+      const slots = getAvailableSlotsForDate(dateStr)
+        .filter(t => !isSlotInPast(t, dateStr));
       slotCount = slots.length;
       isAvailable = slotCount > 0;
     }
-    return { isPast: isPast || isBeyondMax, isToday, isAvailable, slotCount };
+    return { isPast: isPast || isBeyondMax, isAvailable, slotCount };
   };
 
-  const isPrevDisabled = (() => {
-    if (viewYear < today.getFullYear()) return false;
-    if (viewYear > today.getFullYear()) return true;
-    return viewMonth <= today.getMonth();
-  })();
+  // Scroll active date card into center of ribbon view when selectedDate changes
+  useEffect(() => {
+    if (selectedDate) {
+      const activeEl = document.querySelector(`[data-date="${selectedDate}"]`);
+      if (activeEl) {
+        activeEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    }
+  }, [selectedDate]);
 
   const getChipClass = (targetStr) => {
     const isSelected = selectedDate === targetStr;
-    const base = "snap-start shrink-0 px-3.5 min-h-[40px] sm:min-h-[36px] rounded-full text-xs font-semibold capitalize  transition cursor-pointer flex items-center border";
+    const base = "snap-start shrink-0 px-3.5 min-h-[36px] rounded-full text-xs font-semibold capitalize transition-all duration-200 cursor-pointer flex items-center border";
     if (isSelected) {
-      return `${base} bg-brand border-brand text-zinc-900 shadow-md ring-2 ring-brand/30 scale-105`;
+      return `${base} bg-brand border-brand text-zinc-900 shadow-md ring-2 ring-brand/20 scale-105`;
     }
     return `${base} bg-white border-zinc-200 text-zinc-700 hover:border-brand/40 hover:bg-brand/5`;
   };
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       {/* Quick-jump chips */}
       <div className="flex flex-wrap gap-2 w-full">
         <button
           type="button"
-          onClick={goToToday}
+          onClick={() => {
+            onDateChange(todayStr);
+            onTimeChange('');
+          }}
           className={getChipClass(todayStr)}
         >
           Today
         </button>
         <button
           type="button"
-          onClick={goToTomorrow}
+          onClick={() => {
+            onDateChange(tomorrowStr);
+            onTimeChange('');
+          }}
           className={getChipClass(tomorrowStr)}
         >
           Tomorrow
         </button>
         <button
           type="button"
-          onClick={goToWeekend}
+          onClick={() => {
+            onDateChange(weekendStr);
+            onTimeChange('');
+          }}
           className={getChipClass(weekendStr)}
         >
           This Weekend
         </button>
         <button
           type="button"
-          onClick={goToNextWeek}
+          onClick={() => {
+            onDateChange(nextWeekStr);
+            onTimeChange('');
+          }}
           className={getChipClass(nextWeekStr)}
         >
           Next Week
         </button>
       </div>
 
-      <div className="grid grid-cols-1 gap-5">
-        {/* Calendar */}
-        <div className="bg-white border border-zinc-200 rounded-xl p-4 sm:p-5 shadow-xs">
-          <div className="flex items-center justify-between mb-3 sm:mb-4">
-            <button
-              type="button"
-              onClick={goToPrevMonth}
-              disabled={isPrevDisabled}
-              className="w-11 h-11 sm:w-10 sm:h-10 rounded-xl sm:rounded-lg bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 text-zinc-600 hover:text-zinc-900 flex items-center justify-center transition disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer font-bold text-base"
-              aria-label="Previous month"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <div className="text-center">
-              <div className="text-xs sm:text-base font-semibold text-zinc-900 capitalize tracking-wide truncate max-w-[140px] sm:max-w-none">
-                {MONTH_LABELS[viewMonth]}
-              </div>
-              <div className="text-xs text-zinc-500 font-bold  capitalize">
-                {viewYear}
-              </div>
-            </div>
-            <button
-              type="button"
-              onClick={goToNextMonth}
-              className="w-11 h-11 sm:w-10 sm:h-10 rounded-xl sm:rounded-lg bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 text-zinc-600 hover:text-zinc-900 flex items-center justify-center transition cursor-pointer font-bold text-base"
-              aria-label="Next month"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
-          </div>
+      {/* Horizontal Date Ribbon Container */}
+      <div className="bg-white border border-zinc-200 rounded-xl p-3 sm:p-4 shadow-xs relative group">
+        {/* Left Arrow */}
+        <button
+          type="button"
+          onClick={() => {
+            const el = document.getElementById('date-ribbon');
+            if (el) el.scrollBy({ left: -220, behavior: 'smooth' });
+          }}
+          className="absolute left-1.5 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-white border border-zinc-250 shadow-sm hover:bg-zinc-50 flex items-center justify-center text-zinc-650 transition cursor-pointer md:flex hidden"
+          aria-label="Scroll left"
+        >
+          <ChevronLeft className="w-4 h-4" />
+        </button>
 
-          <div className="grid grid-cols-7 gap-1 mb-1.5">
-            {WEEKDAY_LABELS.map(d => (
-              <div key={d} className="text-center text-xs font-semibold capitalize  text-zinc-500 py-1">
-                {d}
-              </div>
-            ))}
-          </div>
+        {/* Scrollable strip */}
+        <div
+          id="date-ribbon"
+          className="flex gap-2 overflow-x-auto scrollbar-none snap-x snap-mandatory py-1.5 px-0.5 scroll-smooth"
+        >
+          {daysList.map((day) => {
+            const meta = getDayMeta(day.dateStr, day.dateObj);
+            const isSelected = selectedDate === day.dateStr;
+            const weekday = day.dateObj.toLocaleDateString('en-US', { weekday: 'short' });
+            const dayNum = day.dateObj.getDate();
+            const month = day.dateObj.toLocaleDateString('en-US', { month: 'short' });
 
-          <div className="grid grid-cols-7 gap-1 sm:gap-1.5">
-            {cells.map((cell, idx) => {
-              if (!cell) {
-                return <div key={`empty-${idx}`} className="aspect-square" />;
-              }
-              const meta = getDayMeta(cell);
-              const isSelected = selectedDate === cell.dateStr;
-              const baseClasses = 'w-full aspect-square rounded-lg flex flex-col items-center justify-center text-xs sm:text-sm font-bold transition-all duration-200 border';
-              let stateClasses = 'bg-zinc-50 border-zinc-100 text-zinc-300 cursor-not-allowed';
-              if (!meta.isPast) {
-                if (isSelected) {
-                  stateClasses = 'bg-gradient-brand border-transparent text-zinc-955 font-bold shadow-md ring-2 ring-brand/30 scale-105 cursor-pointer';
-                } else if (meta.isAvailable) {
-                  stateClasses = 'bg-white border-zinc-200 text-zinc-800 hover:border-brand/50 hover:bg-brand/5 cursor-pointer';
-                } else {
-                  stateClasses = 'bg-zinc-50/40 border-zinc-100 text-zinc-400 cursor-not-allowed';
-                }
-              }
+            const baseClasses = "flex flex-col items-center justify-center p-2 rounded-xl border transition-all duration-200 min-w-[58px] sm:min-w-[62px] h-[78px] sm:h-[82px] snap-start select-none cursor-pointer";
+            let stateClasses = "";
 
-              return (
-                <button
-                  key={cell.dateStr}
-                  type="button"
-                  disabled={meta.isPast}
-                  onClick={() => {
-                    if (meta.isPast) return;
-                    onDateChange(cell.dateStr);
-                    onTimeChange('');
-                  }}
-                  className={`${baseClasses} ${stateClasses} relative`}
-                  aria-label={`${cell.dateStr}${meta.isAvailable ? `, ${meta.slotCount} slots available` : ''}`}
-                >
-                  <span className={`leading-none ${meta.isToday && !isSelected ? 'underline decoration-brand decoration-2 underline-offset-2' : ''}`}>
-                    {cell.day}
-                  </span>
-                  {!meta.isPast && meta.isAvailable && !isSelected && (
-                    <span className="absolute bottom-1 flex gap-0.5">
-                      {meta.slotCount >= 3 ? (
-                        <>
-                          <span className="w-1 h-1 rounded-full bg-emerald-500" />
-                          <span className="w-1 h-1 rounded-full bg-emerald-500" />
-                          <span className="w-1 h-1 rounded-full bg-emerald-500" />
-                        </>
-                      ) : meta.slotCount === 2 ? (
-                        <>
-                          <span className="w-1 h-1 rounded-full bg-amber-500" />
-                          <span className="w-1 h-1 rounded-full bg-amber-500" />
-                        </>
-                      ) : (
-                        <span className="w-1 h-1 rounded-full bg-rose-500" />
-                      )}
-                    </span>
+            if (meta.isPast) {
+              stateClasses = "bg-zinc-50 border-zinc-100 text-zinc-300 opacity-40 cursor-not-allowed";
+            } else if (isSelected) {
+              stateClasses = "bg-zinc-900 border-zinc-900 text-white font-bold shadow-md scale-105";
+            } else if (meta.isAvailable) {
+              stateClasses = "bg-white border-zinc-255 text-zinc-850 hover:border-brand hover:bg-brand/5";
+            } else {
+              stateClasses = "bg-zinc-50 border-zinc-150 text-zinc-400 opacity-60 cursor-not-allowed";
+            }
+
+            return (
+              <button
+                key={day.dateStr}
+                data-date={day.dateStr}
+                type="button"
+                disabled={meta.isPast || (!meta.isAvailable && !isSelected)}
+                onClick={() => {
+                  onDateChange(day.dateStr);
+                  onTimeChange('');
+                }}
+                className={`${baseClasses} ${stateClasses}`}
+                aria-label={`${day.dateStr}${meta.isAvailable ? `, ${meta.slotCount} slots available` : ''}`}
+              >
+                {/* Weekday name */}
+                <span className={`text-[9px] uppercase tracking-wider font-semibold ${isSelected ? 'text-brand' : 'text-zinc-400'}`}>
+                  {weekday}
+                </span>
+                
+                {/* Day Number */}
+                <span className="text-base sm:text-lg font-black tracking-tight mt-0.5 leading-none">
+                  {dayNum}
+                </span>
+
+                {/* Month Name / Availability dot */}
+                <span className="text-[9px] font-semibold mt-1.5 flex items-center gap-1">
+                  <span>{month}</span>
+                  {meta.isAvailable && !isSelected && (
+                    <span className={`w-1 h-1 rounded-full ${
+                      meta.slotCount >= 3 ? 'bg-emerald-500' : meta.slotCount === 2 ? 'bg-amber-500' : 'bg-rose-500'
+                    }`} />
                   )}
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 pt-4 mt-3 border-t border-zinc-100 text-xs font-bold capitalize  text-zinc-600">
-            <span className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> 3+ slots
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-500" /> 1-2 slots
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-rose-500" /> Last slot
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded bg-gradient-brand" /> Selected
-            </span>
-          </div>
+                </span>
+              </button>
+            );
+          })}
         </div>
+
+        {/* Right Arrow */}
+        <button
+          type="button"
+          onClick={() => {
+            const el = document.getElementById('date-ribbon');
+            if (el) el.scrollBy({ left: 220, behavior: 'smooth' });
+          }}
+          className="absolute right-1.5 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-white border border-zinc-250 shadow-sm hover:bg-zinc-50 flex items-center justify-center text-zinc-650 transition cursor-pointer md:flex hidden"
+          aria-label="Scroll right"
+        >
+          <ChevronRight className="w-4 h-4" />
+        </button>
       </div>
-      {/* Selected summary */}
+
+      {/* Selected summary info */}
       {selectedDate && (
         <div className="bg-gradient-to-br from-brand/8 via-white to-brand-accent/8 border border-brand/20 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-in slide-in-from-top-2 duration-300">
           <div className="flex items-start gap-3 text-left">
             <div>
-              <div className="text-xs font-semibold capitalize  text-brand-dark">
+              <div className="text-xs font-semibold capitalize text-brand-dark">
                 Your Selection
               </div>
               <div className="text-xs sm:text-sm font-semibold text-zinc-900 mt-0.5">
                 {formatHumanDate(selectedDate)}
               </div>
-              <div className="text-xs text-zinc-600  mt-0.5">
+              <div className="text-xs text-zinc-650 mt-0.5">
                 {selectedTime
                   ? `${selectedTime} • ${bookingModeLabel(selectedMode)}`
                   : 'No time slot picked yet'}
@@ -394,7 +299,7 @@ export default function DateTimePicker({
             <button
               type="button"
               onClick={() => onTimeChange('')}
-              className="min-h-[36px] px-3 inline-flex items-center text-xs font-semibold capitalize  text-zinc-500 hover:text-rose-600 transition cursor-pointer self-start sm:self-auto"
+              className="min-h-[36px] px-3 inline-flex items-center text-xs font-semibold capitalize text-zinc-500 hover:text-rose-600 transition cursor-pointer self-start sm:self-auto"
             >
               Clear Time
             </button>
