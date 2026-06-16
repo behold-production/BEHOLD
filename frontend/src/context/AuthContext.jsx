@@ -34,6 +34,10 @@ export function AuthProvider({ children }) {
     try {
       const res = await ApiService.login(email, password);
       if (res.success && res.data && res.data.user) {
+        if (res.data.user.status === 'REJECTED') {
+          ApiService.logout();
+          throw new Error('REJECTED_USER:' + (res.data.user.rejectionReason || 'Credentials did not meet verification standards. Please contact the administrator.'));
+        }
         setUser(res.data.user);
         return res.data.user;
       } else {

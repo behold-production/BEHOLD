@@ -10,22 +10,19 @@ const COUNSELLING_FLOW = {
   online: [
     "Select preferred date, time slot, & service mode",
     "Choose consultant psychologist & confirm availability",
-    "Fill student profile & authenticate account (inline)",
-    "Process online payment fee with promo coupon discount",
+    "Fill student profile & process online payment fee",
     "Access Google Meet link, schedule, & WhatsApp notifications"
   ],
   doorstep: [
     "Select preferred date, time slot, & service mode",
     "Choose consultant psychologist & confirm availability",
-    "Fill student profile & authenticate account (inline)",
-    "Process online payment fee with promo coupon discount",
+    "Fill student profile & process online payment fee",
     "Receive doorstep counselor assignment & WhatsApp notifications"
   ],
   offline: [
     "Select preferred date, time slot, & service mode",
     "Choose consultant psychologist & confirm availability",
-    "Fill student profile & authenticate account (inline)",
-    "Process online payment fee with promo coupon discount",
+    "Fill student profile & process online payment fee",
     "Receive center address, instructions, & WhatsApp notifications"
   ]
 };
@@ -34,22 +31,19 @@ const CAREER_FLOW = {
   online: [
     "Select preferred date, time slot, & service mode",
     "Choose career coach/advisor & confirm availability",
-    "Fill student profile & authenticate account (inline)",
-    "Process online payment fee with promo coupon discount",
+    "Fill student profile & process online payment fee",
     "Access Google Meet link, checklist, & WhatsApp notifications"
   ],
   doorstep: [
     "Select preferred date, time slot, & service mode",
     "Choose career coach/advisor & confirm availability",
-    "Fill student profile & authenticate account (inline)",
-    "Process online payment fee with promo coupon discount",
+    "Fill student profile & process online payment fee",
     "Receive doorstep advisor assignment & WhatsApp notifications"
   ],
   offline: [
     "Select preferred date, time slot, & service mode",
     "Choose career coach/advisor & confirm availability",
-    "Fill student profile & authenticate account (inline)",
-    "Process online payment fee with promo coupon discount",
+    "Fill student profile & process online payment fee",
     "Receive center address, preparation guide, & WhatsApp notifications"
   ]
 };
@@ -490,129 +484,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
     return err;
   };
 
-  const handleProceedToPayment = async (e) => {
-    if (e && e.preventDefault) e.preventDefault();
-    const baseErrors = {};
-
-    if (!bookingForm.name.trim()) baseErrors.name = 'Name is required';
-    else if (bookingForm.name.trim().length < 3) baseErrors.name = 'Name must be at least 3 characters';
-
-    if (!bookingForm.phone.trim()) {
-      baseErrors.phone = 'Phone number is required';
-    } else {
-      const phoneRegex = /^(\+?\d{1,4}[- ]?)?[6-9]\d{9}$/;
-      if (!phoneRegex.test(bookingForm.phone)) {
-        baseErrors.phone = 'Please enter a valid 10-digit phone number';
-      }
-    }
-
-    if (!bookingForm.email.trim()) {
-      baseErrors.email = 'Email is required';
-    } else {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(bookingForm.email)) {
-        baseErrors.email = 'Please enter a valid email address';
-      }
-    }
-
-    if (!selectedDate) baseErrors.date = 'Please select a date';
-    if (!selectedTime) baseErrors.time = 'Please select a time slot';
-    if (!selectedAdvisor) baseErrors.advisor = 'Please select an advisor';
-    if (!advisorConfirmed) baseErrors.confirm = 'Please confirm the advisor selection';
-
-    if (Object.keys(baseErrors).length > 0) {
-      setErrors(baseErrors);
-      const firstErrorField = ['name', 'phone', 'email', 'date', 'time', 'advisor', 'confirm'].find(
-        (k) => baseErrors[k]
-      );
-      if (firstErrorField) {
-        const el = document.getElementsByName(firstErrorField)[0] || document.getElementById('booking-console');
-        if (el && el.scrollIntoView) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-      }
-      return;
-    }
-
-    try {
-      const draft = {
-        bookingService,
-        bookingMode,
-        selectedDate,
-        selectedTime,
-        selectedAdvisorId: selectedAdvisor ? selectedAdvisor.id : null,
-        advisorConfirmed,
-        bookingForm
-      };
-      sessionStorage.setItem(BOOKING_DRAFT_KEY, JSON.stringify(draft));
-    } catch (e) { /* ignore */ }
-
-    if (!user) {
-      setShowAuthModal(true);
-      return;
-    }
-
-    setErrors({});
-    handleStepChange('payment');
-  };
-
-  const handleAuthSuccess = (authData) => {
-    setShowAuthModal(false);
-    setIsSubmitting(false);
-    handleStepChange('payment');
-  };
-
-  const handleApplyCoupon = () => {
-    setCouponMsg({ text: '', type: '' });
-    const code = couponInput.trim().toUpperCase();
-    if (!code) {
-      setCouponMsg({ text: "Please enter a promo code", type: 'error' });
-      return;
-    }
-
-    const advisorPrice = selectedAdvisor ? selectedAdvisor.price : 1200;
-    
-    if (code === 'GROWTH50') {
-      const discountVal = Math.round(advisorPrice * 0.5);
-      setAppliedDiscount(discountVal);
-      setCouponMsg({ text: "Promo code GROWTH50 applied! 50% discount on session fee.", type: 'success' });
-    } else if (code === 'BEHOLD20') {
-      const discountVal = Math.round(advisorPrice * 0.2);
-      setAppliedDiscount(discountVal);
-      setCouponMsg({ text: "Promo code BEHOLD20 applied! 20% discount on session fee.", type: 'success' });
-    } else {
-      setAppliedDiscount(0);
-      setCouponMsg({ text: "Invalid promo code.", type: 'error' });
-    }
-  };
-
-  const handlePaymentSubmit = (e) => {
-    e.preventDefault();
-    setErrors({});
-    
-    const payErrors = {};
-    if (paymentMethod === 'card') {
-      if (!cardName.trim()) payErrors.cardName = "Cardholder name is required";
-      if (!cardNum.trim() || cardNum.replace(/\s/g, '').length !== 16) {
-        payErrors.cardNum = "Please enter a valid 16-digit card number";
-      }
-      if (!cardExpiry.trim() || !/^\d{2}\/\d{2}$/.test(cardExpiry)) {
-        payErrors.cardExpiry = "Expiry date must be in MM/YY format";
-      }
-      if (!cardCvv.trim() || cardCvv.length < 3 || cardCvv.length > 4) {
-        payErrors.cardCvv = "CVV must be 3 or 4 digits";
-      }
-    } else if (paymentMethod === 'upi') {
-      if (!upiAddress.trim() || !upiAddress.includes('@')) {
-        payErrors.upiAddress = "Please enter a valid UPI address (e.g. name@okhdfc)";
-      }
-    }
-
-    if (Object.keys(payErrors).length > 0) {
-      setErrors(payErrors);
-      return;
-    }
-
+  const processPayment = () => {
     setIsProcessingPayment(true);
     setPaymentStepText("Processing your payment...");
     
@@ -641,6 +513,96 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
         }, 1200);
       }, 1200);
     }, 1200);
+  };
+
+  const handleAuthSuccess = (authData) => {
+    setShowAuthModal(false);
+    setIsSubmitting(false);
+    processPayment();
+  };
+
+  const handlePaymentSubmit = (e) => {
+    e.preventDefault();
+    setErrors({});
+    
+    const baseErrors = {};
+
+    // Validate Account Profile Details
+    if (!bookingForm.name.trim()) baseErrors.name = 'Name is required';
+    else if (bookingForm.name.trim().length < 3) baseErrors.name = 'Name must be at least 3 characters';
+
+    if (!bookingForm.phone.trim()) {
+      baseErrors.phone = 'Phone number is required';
+    } else {
+      const phoneRegex = /^(\+?\d{1,4}[- ]?)?[6-9]\d{9}$/;
+      if (!phoneRegex.test(bookingForm.phone)) {
+        baseErrors.phone = 'Please enter a valid 10-digit phone number';
+      }
+    }
+
+    if (!bookingForm.email.trim()) {
+      baseErrors.email = 'Email is required';
+    } else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(bookingForm.email)) {
+        baseErrors.email = 'Please enter a valid email address';
+      }
+    }
+
+    // Validate Payment Fields
+    if (paymentMethod === 'card') {
+      if (!cardName.trim()) baseErrors.cardName = "Cardholder name is required";
+      if (!cardNum.trim() || cardNum.replace(/\s/g, '').length !== 16) {
+        baseErrors.cardNum = "Please enter a valid 16-digit card number";
+      }
+      if (!cardExpiry.trim() || !/^\d{2}\/\d{2}$/.test(cardExpiry)) {
+        baseErrors.cardExpiry = "Expiry date must be in MM/YY format";
+      }
+      if (!cardCvv.trim() || cardCvv.length < 3 || cardCvv.length > 4) {
+        baseErrors.cardCvv = "CVV must be 3 or 4 digits";
+      }
+    } else if (paymentMethod === 'upi') {
+      if (!upiAddress.trim() || !upiAddress.includes('@')) {
+        baseErrors.upiAddress = "Please enter a valid UPI address (e.g. name@okhdfc)";
+      }
+    }
+
+    if (Object.keys(baseErrors).length > 0) {
+      setErrors(baseErrors);
+      const firstErrorField = ['name', 'phone', 'email', 'cardName', 'cardNum', 'cardExpiry', 'cardCvv', 'upiAddress'].find(
+        (k) => baseErrors[k]
+      );
+      if (firstErrorField) {
+        const el = document.getElementsByName(firstErrorField)[0] || document.getElementById('booking-console');
+        if (el && el.scrollIntoView) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }
+      return;
+    }
+
+    // Save Draft
+    try {
+      const draft = {
+        bookingService,
+        bookingMode,
+        selectedDate,
+        selectedTime,
+        selectedAdvisorId: selectedAdvisor ? selectedAdvisor.id : null,
+        advisorConfirmed,
+        bookingForm
+      };
+      sessionStorage.setItem(BOOKING_DRAFT_KEY, JSON.stringify(draft));
+    } catch (e) { /* ignore */ }
+
+    // Enforce Authentication
+    if (!user) {
+      setShowAuthModal(true);
+      return;
+    }
+
+    // All valid and authenticated, process payment!
+    processPayment();
   };
 
   const flowKey = bookingMode === 'DOOR_STEP' ? 'doorstep' : bookingMode.toLowerCase();
@@ -883,15 +845,15 @@ Status: CONFIRMED
               {/* Left Column: Active Step Form Panel */}
               <div className="lg:col-span-8 lg:bg-white bg-transparent border-0 lg:border border-zinc-200/85 p-0 sm:p-4 lg:p-7 rounded-none lg:rounded-xl space-y-6 shadow-none lg:shadow-xs text-left min-h-[380px] relative">
                 
-                {/* STEP 1: Schedule Configuration */}
-                {bookingStep === 'config' && (
+                {/* STEP 1: Choose Advisor */}
+                {bookingStep === 'advisor' && (
                   <div className="space-y-6 animate-in fade-in duration-300">
                     <div className="border-b border-zinc-100 pb-3">
                       <h3 className="text-sm font-semibold capitalize  text-zinc-850 flex items-center gap-2">
                         <span className="w-6 h-6 rounded-full bg-zinc-900 text-white text-xs flex items-center justify-center shrink-0 font-bold">1</span>
-                        Choose Service, Date & Time
+                        Choose Service & Advisor
                       </h3>
-                      <p className="text-xs text-zinc-500 mt-1">Tell us what kind of guidance you need, your preferred mode, and when to schedule.</p>
+                      <p className="text-xs text-zinc-500 mt-1">Tell us what kind of guidance you need, and pick your preferred advisor.</p>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -952,70 +914,11 @@ Status: CONFIRMED
                       </div>
                     </div>
 
-                    <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-lg">
-                      <DateTimePicker
-                        selectedDate={selectedDate}
-                        selectedTime={selectedTime}
-                        onDateChange={(d) => {
-                          setSelectedDate(d);
-                          setSelectedTime('');
-                          if (errors.date) setErrors(prev => ({ ...prev, date: null }));
-                        }}
-                        onTimeChange={(t) => {
-                          setSelectedTime(t);
-                          if (errors.time) setErrors(prev => ({ ...prev, time: null }));
-                        }}
-                        getAvailableSlotsForDate={(date) => getAvailableSlotsForDate(date, bookingService)}
-                        errors={errors}
-                        selectedMode={bookingMode}
-                      />
-                    </div>
-
-                    {/* Navigation */}
-                    <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-4 border-t border-zinc-200 mt-4">
-                      <button
-                        type="button"
-                        disabled={!selectedDate || !selectedTime}
-                        onClick={() => handleStepChange('advisor')}
-                        className="px-6 py-3 min-h-[48px] bg-zinc-900 text-white font-bold capitalize  text-xs rounded-lg transition hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center border-none shadow-xs w-full sm:w-auto"
-                      >
-                        Choose Advisor
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {/* STEP 2: Select Advisor */}
-                {bookingStep === 'advisor' && (
-                  <div className="space-y-6 animate-in fade-in duration-300">
-                    <div className="border-b border-zinc-100 pb-3">
-                      <h3 className="text-sm font-semibold capitalize  text-zinc-850 flex items-center gap-2">
-                        <span className="w-6 h-6 rounded-full bg-zinc-900 text-white text-xs flex items-center justify-center shrink-0 font-bold">2</span>
-                        Choose Your Advisor
-                      </h3>
-                      <p className="text-xs text-zinc-500 mt-1">Pick the best specialist available for your selected date and time.</p>
-                    </div>
-
                     <div className="space-y-3">
                       {advisors
                         .filter(advisor => advisor.type === bookingService)
                         .filter(advisor => !advisor.modes || advisor.modes.includes(bookingMode))
                         .map((advisor) => {
-                          const availabilityStatus = getAdvisorAvailabilityStatus(advisor.id, selectedDate, selectedTime);
-                          
-                          // Get available slots for this specific advisor on the selected date
-                          let advisorSlotsOnDate = [];
-                          if (selectedDate) {
-                            const dayOfWeek = new Date(selectedDate).getDay();
-                            try {
-                              const parsed = advisor.availabilitySlots;
-                              const dayActive = parsed.activeDays && parsed.activeDays[dayOfWeek];
-                              if (dayActive && parsed.availableSlots && parsed.availableSlots.length > 0) {
-                                advisorSlotsOnDate = [...parsed.availableSlots];
-                              }
-                            } catch (e) {}
-                          }
-
                           return (
                             <div
                               key={advisor.id}
@@ -1042,26 +945,9 @@ Status: CONFIRMED
                                 <div className="space-y-1.5 text-left min-w-0 flex-1">
                                   <h4 className="font-semibold text-zinc-900 text-sm sm:text-base leading-tight">{advisor.name}</h4>
                                   <p className="text-xs sm:text-xs text-zinc-500 font-medium">{advisor.role}</p>
-                                  {selectedDate && (
-                                    <div className="text-xs text-zinc-500 bg-zinc-50 border border-zinc-150 px-2.5 py-1.5 rounded-lg inline-block">
-                                      <span className="font-bold text-zinc-700">Slots:</span>{' '}
-                                      {advisorSlotsOnDate.length > 0 ? (
-                                        <span className="text-brand-dark font-semibold  text-xs">{advisorSlotsOnDate.join(', ')}</span>
-                                      ) : (
-                                        <span className="text-rose-500 font-bold text-xs">No slots on this day</span>
-                                      )}
-                                    </div>
-                                  )}
                                 </div>
                                 <div className="flex flex-col items-end gap-2 shrink-0">
                                   <span className="text-sm font-bold text-zinc-900">₹{advisor.price}</span>
-                                  {availabilityStatus === 'Available' ? (
-                                     <span className="text-xs px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold capitalize tracking-wide">Available</span>
-                                   ) : availabilityStatus === 'Booked' ? (
-                                     <span className="text-xs px-2.5 py-1 rounded-lg bg-amber-50 text-amber-700 border border-amber-200 font-bold capitalize">Booked</span>
-                                   ) : (
-                                     <span className="text-xs px-2.5 py-1 rounded-lg bg-rose-50 text-rose-650 border border-rose-200 font-bold capitalize">Unavailable</span>
-                                   )}
                                 </div>
                               </div>
                             </div>
@@ -1071,73 +957,101 @@ Status: CONFIRMED
                     </div>
 
                     {/* Advisor Selected Panel */}
-                    {selectedAdvisor && (() => {
-                      const isSelectedAdvisorAvailable = getAdvisorAvailabilityStatus(selectedAdvisor.id, selectedDate, selectedTime) === 'Available';
-                      return (
-                        <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-lg flex flex-col gap-3 animate-in zoom-in-95 duration-200 text-left">
-                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 w-full">
-                            <span className="text-xs text-zinc-700 font-bold capitalize tracking-wide">
-                              Selected Advisor: <strong className="text-zinc-900">{selectedAdvisor.name}</strong>
-                            </span>
-                            {isSelectedAdvisorAvailable ? (
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  const nextConfirmed = !advisorConfirmed;
-                                  setAdvisorConfirmed(nextConfirmed);
-                                  if (nextConfirmed) {
-                                    if (errors.confirm) {
-                                      setErrors(prev => ({ ...prev, confirm: null }));
-                                    }
-                                  }
-                                }}
-                                className={`px-4 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer border-none ${
-                                  advisorConfirmed
-                                    ? 'bg-brand/10 text-brand-dark font-semibold border border-brand/20'
-                                    : 'bg-gradient-brand text-zinc-955 shadow-sm hover:opacity-95 font-bold'
-                                }`}
-                              >
-                                {advisorConfirmed ? 'Confirmed' : 'Confirm Advisor'}
-                              </button>
-                            ) : (
-                              <span className="text-xs px-2.5 py-1 rounded bg-rose-50 border border-rose-200 text-rose-600 font-bold capitalize tracking-wide shrink-0">
-                                Unavailable
-                              </span>
-                            )}
-                          </div>
-                          {!isSelectedAdvisorAvailable && (
-                            <div className="p-3 bg-rose-50 border border-rose-150 rounded-lg text-xs text-rose-800 font-semibold leading-relaxed">
-                              <strong>{selectedAdvisor.name}</strong> is {getAdvisorAvailabilityStatus(selectedAdvisor.id, selectedDate, selectedTime) === 'Booked' ? 'already booked' : 'not available'} at {selectedTime} on {selectedDate}. Please select another time slot or advisor to proceed.
-                            </div>
-                          )}
+                    {selectedAdvisor && (
+                      <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-lg flex flex-col gap-3 animate-in zoom-in-95 duration-200 text-left">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 w-full">
+                          <span className="text-xs text-zinc-700 font-bold capitalize tracking-wide">
+                            Selected Advisor: <strong className="text-zinc-900">{selectedAdvisor.name}</strong>
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const nextConfirmed = !advisorConfirmed;
+                              setAdvisorConfirmed(nextConfirmed);
+                              if (nextConfirmed) {
+                                if (errors.confirm) {
+                                  setErrors(prev => ({ ...prev, confirm: null }));
+                                }
+                              }
+                            }}
+                            className={`px-4 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer border-none ${
+                              advisorConfirmed
+                                ? 'bg-brand/10 text-brand-dark font-semibold border border-brand/20'
+                                : 'bg-gradient-brand text-zinc-955 shadow-sm hover:opacity-95 font-bold'
+                            }`}
+                          >
+                            {advisorConfirmed ? 'Confirmed' : 'Confirm Advisor'}
+                          </button>
                         </div>
-                      );
-                    })()}
+                      </div>
+                    )}
                     {errors.confirm && <p className="text-xs text-rose-500 font-semibold mt-1">{errors.confirm}</p>}
+
+                    {/* Navigation */}
+                    <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-4 border-t border-zinc-200 mt-4">
+                      <button
+                        type="button"
+                        disabled={!selectedAdvisor || !advisorConfirmed}
+                        onClick={() => handleStepChange('config')}
+                        className="px-5 py-3 min-h-[44px] bg-zinc-900 text-white font-bold capitalize  text-xs rounded-lg transition hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center border-none shadow-xs w-full sm:w-auto"
+                      >
+                        Choose Schedule
+                      </button>
+                    </div>
+                  </div>
+                )}
+                {/* STEP 2: Choose Schedule */}
+                {bookingStep === 'config' && (
+                  <div className="space-y-6 animate-in fade-in duration-300">
+                    <div className="border-b border-zinc-100 pb-3">
+                      <h3 className="text-sm font-semibold capitalize  text-zinc-850 flex items-center gap-2">
+                        <span className="w-6 h-6 rounded-full bg-zinc-900 text-white text-xs flex items-center justify-center shrink-0 font-bold">2</span>
+                        Choose Date & Time
+                      </h3>
+                      <p className="text-xs text-zinc-500 mt-1">Select an available time slot for your chosen advisor.</p>
+                    </div>
+
+                    <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-lg">
+                      <DateTimePicker
+                        selectedDate={selectedDate}
+                        selectedTime={selectedTime}
+                        onDateChange={(d) => {
+                          setSelectedDate(d);
+                          setSelectedTime('');
+                          if (errors.date) setErrors(prev => ({ ...prev, date: null }));
+                        }}
+                        onTimeChange={(t) => {
+                          setSelectedTime(t);
+                          if (errors.time) setErrors(prev => ({ ...prev, time: null }));
+                        }}
+                        getAvailableSlotsForDate={(date) => getAvailableSlotsForDate(date, bookingService)}
+                        errors={errors}
+                        selectedMode={bookingMode}
+                      />
+                    </div>
 
                     {/* Navigation */}
                     <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-4 border-t border-zinc-200 mt-4">
                       <button
                         type="button"
-                        onClick={() => handleStepChange('config')}
+                        onClick={() => handleStepChange('advisor')}
                         className="px-5 py-3 min-h-[44px] bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 font-bold capitalize  text-xs rounded-lg transition cursor-pointer w-full sm:w-auto text-center"
                       >
-                        Change Schedule
+                        Change Advisor
                       </button>
                       <button
                         type="button"
-                        disabled={!selectedAdvisor || !advisorConfirmed}
-                        onClick={() => handleStepChange('details')}
-                        className="px-5 py-3 min-h-[44px] bg-zinc-900 text-white font-bold capitalize  text-xs rounded-lg transition hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center border-none shadow-xs w-full sm:w-auto"
+                        disabled={!selectedDate || !selectedTime}
+                        onClick={() => handleStepChange('payment')}
+                        className="px-6 py-3 min-h-[48px] bg-zinc-900 text-white font-bold capitalize  text-xs rounded-lg transition hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center border-none shadow-xs w-full sm:w-auto"
                       >
-                        Account Details
+                        Account & Payment
                       </button>
                     </div>
                   </div>
                 )}
-
-                {/* STEP 3: Student Profile & Auth Trigger */}
-                {bookingStep === 'details' && (
+                {/* STEP 3: Account & Payment */}
+                {bookingStep === 'payment' && (
                   <div className="space-y-6 animate-in fade-in duration-300">
                     <div className="border-b border-zinc-100 pb-3">
                       <h3 className="text-sm font-semibold capitalize  text-zinc-850 flex items-center gap-2">
@@ -1227,88 +1141,20 @@ Status: CONFIRMED
                       </div>
                     )}
 
-                    {/* Navigation */}
-                    <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-4 border-t border-zinc-200 mt-4">
-                      <button
-                        type="button"
-                        onClick={() => handleStepChange('advisor')}
-                        className="px-5 py-3 min-h-[44px] bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 font-bold capitalize  text-xs rounded-lg transition cursor-pointer w-full sm:w-auto text-center"
-                      >
-                        Back to Advisor
-                      </button>
-                      <button
-                        type="button"
-                        onClick={handleProceedToPayment}
-                        disabled={isSubmitting}
-                        className="px-6 py-3 min-h-[48px] bg-gradient-brand text-zinc-900 font-semibold capitalize  text-xs rounded-lg transition flex items-center justify-center cursor-pointer shadow-md border-none disabled:opacity-50 w-full sm:w-auto"
-                      >
-                        {isSubmitting ? (
-                          <div className="w-4 h-4 border-2 border-zinc-900/30 border-t-zinc-900 rounded-full animate-spin" />
-                        ) : (
-                          <span>Proceed to Payment</span>
-                        )}
-                      </button>
-                    </div>
-                  </div>
-                )}
 
-
-
-                {/* STEP 4: Payment Portal Checkout */}
-                {bookingStep === 'payment' && (
-                  <div className="space-y-6 animate-in fade-in duration-300">
-                    
-                    {/* Payment Loading overlay animation */}
-                    {isProcessingPayment && (
-                      <div className="absolute inset-0 bg-white/95 backdrop-blur-sm z-50 rounded-xl flex flex-col items-center justify-center p-6 text-center space-y-4 animate-in fade-in duration-200">
-                        <div className="w-12 h-12 border-4 border-zinc-900/10 border-t-brand rounded-full animate-spin"></div>
-                        <div className="space-y-1.5">
-                          <h4 className="text-xs font-semibold capitalize  text-zinc-900">Processing Payment</h4>
-                          <p className="text-xs font-semibold text-zinc-500 animate-pulse">{paymentStepText}</p>
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="border-b border-zinc-100 pb-3">
-                      <h3 className="text-sm font-semibold capitalize  text-zinc-850 flex items-center gap-2">
-                        <span className="w-6 h-6 rounded-full bg-zinc-900 text-white text-xs flex items-center justify-center shrink-0 font-bold">4</span>
-                        Payment & Confirm
-                      </h3>
-                      <p className="text-xs text-zinc-500 mt-1">Choose payment method, apply any promo codes, and confirm your booking.</p>
-                    </div>
-
-                    {/* Invoice ledger (shown on payment panel directly) */}
-                    <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-lg space-y-3 text-left">
-                      <h4 className="text-xs font-semibold capitalize  text-zinc-650">
-                        Apply Promotional Coupon
-                      </h4>
-                      <div className="flex gap-2">
-                        <input
-                          type="text"
-                          value={couponInput}
-                          onChange={(e) => setCouponInput(e.target.value)}
-                          placeholder="Try GROWTH50 or BEHOLD20"
-                          className="px-3 py-2 bg-white border border-zinc-200 rounded-lg text-xs font-semibold text-zinc-800 outline-none capitalize placeholder:normal-case focus:border-brand focus:ring-1 focus:ring-brand transition flex-1"
-                        />
-                        <button
-                          type="button"
-                          onClick={handleApplyCoupon}
-                          className="px-4 py-2 bg-zinc-900 text-white text-xs font-bold capitalize  rounded-lg hover:bg-zinc-800 transition cursor-pointer border-none shadow-xs"
-                        >
-                          Apply
-                        </button>
+                    {/* --- PAYMENT SECTION --- */}
+                    <div className="pt-4 border-t border-zinc-200 mt-6">
+                      <div className="border-b border-zinc-100 pb-3 mb-6">
+                        <h3 className="text-sm font-semibold capitalize  text-zinc-850 flex items-center gap-2">
+                          <span className="w-6 h-6 rounded-full bg-zinc-900 text-white text-xs flex items-center justify-center shrink-0 font-bold">4</span>
+                          Payment & Confirm
+                        </h3>
+                        <p className="text-xs text-zinc-500 mt-1">Choose payment method, apply any promo codes, and confirm your booking.</p>
                       </div>
 
-                      {/* Coupon validation messages */}
-                      {couponMsg.text && (
-                        <p className={`text-[9.5px] font-bold ${couponMsg.type === 'success' ? 'text-emerald-600' : 'text-rose-500'}`}>
-                          {couponMsg.text}
-                        </p>
-                      )}
-                    </div>
-
-                    <form onSubmit={handlePaymentSubmit} className="space-y-6">
+                      <form onSubmit={handlePaymentSubmit} className="space-y-6">
                       
+                       
                       {/* Payment Methods tabs selector */}
                       <div className="space-y-2 text-left">
                         <label className="text-xs font-bold text-zinc-550 capitalize tracking-wide block">Select Payment Method</label>
@@ -1537,7 +1383,29 @@ Status: CONFIRMED
                         </button>
                       </div>
 
+                      <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-4 border-t border-zinc-200 mt-6">
+                        <button
+                          type="button"
+                          onClick={() => handleStepChange('config')}
+                          className="px-5 py-3 min-h-[44px] bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 font-bold capitalize  text-xs rounded-lg transition cursor-pointer w-full sm:w-auto text-center"
+                        >
+                          Back to Schedule
+                        </button>
+
+                        <button
+                          type="submit"
+                          disabled={isProcessingPayment}
+                          className="px-6 py-3 min-h-[48px] bg-gradient-brand text-zinc-900 font-bold capitalize  text-xs rounded-lg transition flex items-center justify-center cursor-pointer shadow-md border-none disabled:opacity-50 w-full sm:w-auto"
+                        >
+                          {isProcessingPayment ? (
+                            <div className="w-4 h-4 border-2 border-zinc-900/30 border-t-zinc-900 rounded-full animate-spin" />
+                          ) : (
+                            <span>Pay & Confirm</span>
+                          )}
+                        </button>
+                      </div>
                     </form>
+                  </div>
                   </div>
                 )}
               </div>

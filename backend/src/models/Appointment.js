@@ -12,7 +12,9 @@ const appointmentSchema = new mongoose.Schema({
   feedback: { type: String, default: '' },
   service: { type: String, default: 'counselling' },
   cancellationReason: { type: String, default: '' },
-  cancelledBy: { type: String, default: '' }
+  cancelledBy: { type: String, default: '' },
+  rescheduleCount: { type: Number, default: 0 },
+  lastRescheduledAt: { type: Date, default: null }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Appointment', appointmentSchema);

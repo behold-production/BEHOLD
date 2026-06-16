@@ -1,1 +1,10 @@
-[]
+﻿{
+    "service":  "counselling",
+    "id":  "test-appt",
+    "time":  "10:00 AM",
+    "userId":  "user1",
+    "status":  "PENDING",
+    "mode":  "ONLINE",
+    "date":  "2026-06-20",
+    "counsellorId":  "couns1"
+}

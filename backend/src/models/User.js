@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema({
   groupCode: { type: String, default: '' },
   role: { type: String, default: 'user' },
   status: { type: String, default: 'ACTIVE' },
+  rejectionReason: { type: String, default: '' },
   permissions: { type: [String], default: [] },
   customRoleTitle: { type: String, default: '' },
   profilePic: { type: String, default: '' },

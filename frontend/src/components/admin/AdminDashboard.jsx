@@ -5,6 +5,8 @@ import {
   Calendar, Clock, Link, AlertCircle, Edit, Video, UserPlus,
   MessageSquare, FileSpreadsheet, HelpCircle, X, ChevronRight, ChevronLeft, Mail, Shield, Menu, Brain
 } from 'lucide-react';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 // ─── Reusable Pagination Bar ───────────────────────────────────────────────
 function PaginationBar({ total, page, limit, onPageChange, onLimitChange }) {
@@ -82,6 +84,42 @@ export default function AdminDashboard({ setView }) {
     const mm = String(today.getMonth() + 1).padStart(2, '0');
     const dd = String(today.getDate()).padStart(2, '0');
     return `${yyyy}-${mm}-${dd}`;
+  };
+
+  const handleExportPDF = async (tableId, title) => {
+    try {
+      const element = document.getElementById(tableId);
+      if (!element) {
+        alert("Table not found for export.");
+        return;
+      }
+      const canvas = await html2canvas(element, { scale: 2, backgroundColor: '#18181b' });
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('l', 'pt', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`${title.replace(/\s+/g, '_')}_${getLocalTodayString()}.pdf`);
+    } catch (err) {
+      alert("Failed to export PDF: " + err.message);
+    }
+  };
+
+  const handleExportImage = async (tableId, title) => {
+    try {
+      const element = document.getElementById(tableId);
+      if (!element) {
+        alert("Table not found for export.");
+        return;
+      }
+      const canvas = await html2canvas(element, { scale: 2, backgroundColor: '#18181b' });
+      const link = document.createElement('a');
+      link.download = `${title.replace(/\s+/g, '_')}_${getLocalTodayString()}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    } catch (err) {
+      alert("Failed to export Image: " + err.message);
+    }
   };
 
   const { user, login, register, logout, isLoading } = useAuth();
@@ -739,6 +777,23 @@ export default function AdminDashboard({ setView }) {
     }
   };
 
+  const handleGenerateResetToken = async (email) => {
+    try {
+      const res = await ApiService.request('/auth/forgot-password', {
+        method: 'POST',
+        body: JSON.stringify({ email })
+      });
+      if (res.success && res.resetToken) {
+        const link = window.location.origin + '/reset-password?token=' + res.resetToken;
+        window.prompt("Password reset link generated. Copy it below to share:", link);
+      } else {
+        alert(res.message || "Failed to generate token.");
+      }
+    } catch (err) {
+      alert(err.message || "An error occurred.");
+    }
+  };
+
   // Aptitude Questions Actions
   const handleCreateAptitudeQuestion = async (e) => {
     e.preventDefault();
@@ -1080,6 +1135,22 @@ export default function AdminDashboard({ setView }) {
       reloadData();
     } catch (err) {
       alert(err.message || "Failed to delete psychologist.");
+    }
+  };
+
+  const handleRejectPsy = async (psyId) => {
+    if (!hasPsyPermission) {
+      alert("Access Denied: You do not have permission to manage psychologists.");
+      return;
+    }
+    const reason = window.prompt("Enter reason for rejection:");
+    if (reason === null) return; // User cancelled
+    
+    try {
+      await ApiService.rejectCounsellor(psyId, reason);
+      reloadData();
+    } catch (err) {
+      alert(err.message || "Failed to reject psychologist.");
     }
   };
 
@@ -1451,9 +1522,9 @@ export default function AdminDashboard({ setView }) {
     u.role === 'PSYCHOLOGIST' &&
     (u.name.toLowerCase().includes(searchPsy.toLowerCase()) || u.email.toLowerCase().includes(searchPsy.toLowerCase()))
   ).sort((a, b) => {
-    const aVer = a.verified === false ? 0 : 1;
-    const bVer = b.verified === false ? 0 : 1;
-    if (aVer !== bVer) return aVer - bVer;
+    const aVer = a.status === 'ACTIVE' ? 1 : 0;
+    const bVer = b.status === 'ACTIVE' ? 1 : 0;
+    if (aVer !== bVer) return bVer - aVer;
     return a.name.localeCompare(b.name);
   });
 
@@ -1962,8 +2033,7 @@ export default function AdminDashboard({ setView }) {
       )}
 
       {/* 1. Left Fixed Sidebar (Drawer on Mobile, static on Desktop) */}
-      <div className={`fixed lg:static inset-y-0 left-0 z-50 w-64 lg:w-64 bg-zinc-900 border-r border-zinc-800 flex flex-col justify-between shrink-0 p-5 transition-transform duration-300 ease-in-out lg:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-        } lg:flex`}>
+      <div className={`fixed lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto inset-y-0 left-0 z-50 w-64 lg:w-64 bg-zinc-900 border-r border-zinc-800 flex flex-col justify-between shrink-0 p-5 transition-transform duration-300 ease-in-out lg:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
         <div className="space-y-6">
           {/* Logo & Header */}
           <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
@@ -2213,8 +2283,8 @@ export default function AdminDashboard({ setView }) {
             const suspendedStudentsCount = usersDb.filter(u => (u.role === 'USER' || !u.role) && u.status === 'SUSPENDED').length;
 
             const psyCount = usersDb.filter(u => u.role === 'PSYCHOLOGIST').length;
-            const approvedPsyCount = usersDb.filter(u => u.role === 'PSYCHOLOGIST' && u.verified).length;
-            const pendingPsyCount = usersDb.filter(u => u.role === 'PSYCHOLOGIST' && !u.verified).length;
+            const approvedPsyCount = usersDb.filter(u => u.role === 'PSYCHOLOGIST' && u.status === 'ACTIVE').length;
+            const pendingPsyCount = usersDb.filter(u => u.role === 'PSYCHOLOGIST' && u.status === 'PENDING').length;
 
             const totalBookingsCount = bookingsDb.length;
             const confirmedBookingsCount = bookingsDb.filter(b => b.status === 'CONFIRMED').length;
@@ -2475,7 +2545,7 @@ export default function AdminDashboard({ setView }) {
                           <div className="sm:col-span-8 bg-zinc-900/60 p-4 rounded-lg border border-zinc-850 space-y-3">
                             <span className="text-sm capitalize font-bold  text-zinc-500 block">Pending Acceptance Requests ({pendingPsyCount})</span>
                             <div className="space-y-2 max-h-[140px] overflow-y-auto pr-1">
-                              {usersDb.filter(u => u.role === 'PSYCHOLOGIST' && !u.verified).map(psy => (
+                              {usersDb.filter(u => u.role === 'PSYCHOLOGIST' && u.status === 'PENDING').map(psy => (
                                 <div key={psy.id} className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 bg-zinc-955 p-2.5 rounded border border-zinc-850 text-sm">
                                   <div>
                                     <span className="font-bold text-white capitalize block leading-tight">{psy.name}</span>
@@ -2489,7 +2559,7 @@ export default function AdminDashboard({ setView }) {
                                       Accept
                                     </button>
                                     <button
-                                      onClick={() => handleDeletePsy(psy.id)}
+                                      onClick={() => handleRejectPsy(psy.id)}
                                       className="px-3 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded text-sm font-bold capitalize  cursor-pointer border-none transition"
                                     >
                                       Reject
@@ -3051,10 +3121,16 @@ export default function AdminDashboard({ setView }) {
 
                 {/* Sub-admins list table */}
                 <div className="pt-4 space-y-3">
-                  <h4 className="font-header font-bold text-zinc-300 text-sm capitalize ">Active Sub-Admin Personnel</h4>
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-header font-bold text-zinc-300 text-sm capitalize ">Active Sub-Admin Personnel</h4>
+                    <div className="flex gap-2">
+                      <button onClick={() => handleExportPDF('subadmins-table', 'SubAdmins_Directory')} className="px-2 py-1 border border-zinc-800 hover:bg-zinc-850 hover:text-white text-zinc-400 text-xs font-bold rounded transition-colors cursor-pointer capitalize">Export PDF</button>
+                      <button onClick={() => handleExportImage('subadmins-table', 'SubAdmins_Directory')} className="px-2 py-1 border border-zinc-800 hover:bg-zinc-850 hover:text-white text-zinc-400 text-xs font-bold rounded transition-colors cursor-pointer capitalize">Export Image</button>
+                    </div>
+                  </div>
                   <div className="border border-zinc-850 rounded-lg overflow-hidden bg-zinc-955">
                     <div className="overflow-x-auto w-full">
-                      <table className="w-full text-sm border-collapse min-w-[650px]">
+                      <table id="subadmins-table" className="w-full text-sm border-collapse min-w-[650px]">
                         <thead>
                           <tr className="bg-zinc-900 text-zinc-400 font-bold capitalize  border-b border-zinc-850 text-left">
                             <th className="p-3">Staff Name</th>
@@ -3093,7 +3169,14 @@ export default function AdminDashboard({ setView }) {
                                     Edit
                                   </button>
                                 </td>
-                                <td className="p-3 text-center">
+                                <td className="p-3 text-center space-x-1">
+                                  <button
+                                    onClick={() => handleGenerateResetToken(admin.email)}
+                                    className="p-1.5 bg-zinc-900 text-amber-500 hover:bg-amber-900/30 hover:text-amber-400 rounded border border-zinc-800 transition cursor-pointer inline-flex"
+                                    title="Generate Password Reset Link"
+                                  >
+                                    <KeyRound className="w-3.5 h-3.5" />
+                                  </button>
                                   <button
                                     onClick={() => handleDeleteUser(admin.id)}
                                     className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
@@ -3155,6 +3238,12 @@ export default function AdminDashboard({ setView }) {
                     >
                       Export CSV
                     </button>
+                    <button onClick={() => handleExportPDF('students-table', 'Students_Directory')} className="px-3 py-2 border border-zinc-800 hover:bg-zinc-850 hover:text-white text-zinc-400 text-sm font-bold rounded-lg transition-colors cursor-pointer capitalize shrink-0">
+                      Export PDF
+                    </button>
+                    <button onClick={() => handleExportImage('students-table', 'Students_Directory')} className="px-3 py-2 border border-zinc-800 hover:bg-zinc-850 hover:text-white text-zinc-400 text-sm font-bold rounded-lg transition-colors cursor-pointer capitalize shrink-0">
+                      Export Image
+                    </button>
                     <button
                       onClick={() => {
                         setUserForm({ id: '', name: '', email: '', password: '', phone: '', schoolName: '', grade: '', guardianName: '', guardianPhone: '', groupCode: '' });
@@ -3172,7 +3261,7 @@ export default function AdminDashboard({ setView }) {
 
                 <div className="border border-zinc-850 rounded-lg overflow-hidden bg-zinc-950">
                   <div className="overflow-x-auto w-full">
-                    <table className="w-full text-sm border-collapse min-w-[700px]">
+                    <table id="students-table" className="w-full text-sm border-collapse min-w-[700px]">
                       <thead>
                         <tr className="bg-zinc-900 text-zinc-400 font-bold capitalize  border-b border-zinc-850 text-left">
                           <th className="p-3">Student Name</th>
@@ -3218,6 +3307,13 @@ export default function AdminDashboard({ setView }) {
                                 title="Edit Student"
                               >
                                 <Edit className="w-3.5 h-3.5" />
+                              </button>
+                              <button
+                                onClick={() => handleGenerateResetToken(student.email)}
+                                className="p-1.5 bg-zinc-900 text-amber-500 hover:bg-amber-900/30 hover:text-amber-400 rounded border border-zinc-800 transition cursor-pointer"
+                                title="Generate Password Reset Link"
+                              >
+                                <KeyRound className="w-3.5 h-3.5" />
                               </button>
                               <button
                                 onClick={() => handleDeleteUser(student.id)}
@@ -3268,6 +3364,12 @@ export default function AdminDashboard({ setView }) {
                     />
                     <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-2.5" />
                   </div>
+                  <button onClick={() => handleExportPDF('counsellors-table', 'Psychologists_Directory')} className="px-3 py-2 border border-zinc-800 hover:bg-zinc-850 hover:text-white text-zinc-400 text-sm font-bold rounded-lg transition-colors cursor-pointer capitalize shrink-0">
+                    Export PDF
+                  </button>
+                  <button onClick={() => handleExportImage('counsellors-table', 'Psychologists_Directory')} className="px-3 py-2 border border-zinc-800 hover:bg-zinc-850 hover:text-white text-zinc-400 text-sm font-bold rounded-lg transition-colors cursor-pointer capitalize shrink-0">
+                    Export Image
+                  </button>
                   <button
                     onClick={() => {
                       setPsyForm({
@@ -3299,7 +3401,7 @@ export default function AdminDashboard({ setView }) {
 
               <div className="border border-zinc-850 rounded-lg overflow-hidden bg-zinc-950">
                 <div className="overflow-x-auto w-full">
-                  <table className="w-full text-sm border-collapse min-w-[700px]">
+                  <table id="counsellors-table" className="w-full text-sm border-collapse min-w-[700px]">
                     <thead>
                       <tr className="bg-zinc-900 text-zinc-400 font-bold capitalize  border-b border-zinc-850 text-left">
                         <th className="p-3">Psychologist Name</th>
@@ -3317,7 +3419,7 @@ export default function AdminDashboard({ setView }) {
                           </td>
                           <td className="p-3 text-zinc-350 font-medium">{psy.email}</td>
                           <td className="p-3 text-center">
-                            {psy.verified ? (
+                            {psy.status === 'ACTIVE' ? (
                               <div className="flex items-center justify-center gap-2">
                                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-955/20 border border-emerald-900/40 text-emerald-450 text-sm font-bold capitalize ">
                                   <Check className="w-3.5 h-3.5 text-emerald-450" /> Approved
@@ -3330,6 +3432,19 @@ export default function AdminDashboard({ setView }) {
                                   Revoke
                                 </button>
                               </div>
+                            ) : psy.status === 'REJECTED' ? (
+                              <div className="flex items-center justify-center gap-2">
+                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-rose-955/20 border border-rose-900/40 text-rose-450 text-sm font-bold capitalize ">
+                                  Rejected
+                                </span>
+                                <button
+                                  onClick={() => handleTogglePsyVerification(psy.id, false)}
+                                  className="text-sm text-zinc-500 hover:text-emerald-500 underline cursor-pointer bg-transparent border-none p-0 animate-in fade-in duration-200"
+                                  title="Accept counselor"
+                                >
+                                  Accept
+                                </button>
+                              </div>
                             ) : (
                               <div className="flex items-center justify-center gap-1.5">
                                 <button
@@ -3340,9 +3455,9 @@ export default function AdminDashboard({ setView }) {
                                   Accept
                                 </button>
                                 <button
-                                  onClick={() => handleDeletePsy(psy.id)}
+                                  onClick={() => handleRejectPsy(psy.id)}
                                   className="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded text-sm font-bold capitalize  cursor-pointer border-none shadow-sm transition-colors"
-                                  title="Reject and delete counselor request"
+                                  title="Reject counselor request"
                                 >
                                   Reject
                                 </button>
@@ -3355,6 +3470,13 @@ export default function AdminDashboard({ setView }) {
                               className="px-2.5 py-1 bg-zinc-900 text-brand hover:text-white rounded border border-zinc-800 hover:bg-zinc-850 transition cursor-pointer text-sm font-bold capitalize "
                             >
                               Details
+                            </button>
+                            <button
+                              onClick={() => handleGenerateResetToken(psy.email)}
+                              className="px-2.5 py-1 bg-zinc-900 text-amber-500 hover:text-amber-400 rounded border border-zinc-800 hover:bg-amber-900/30 transition cursor-pointer text-sm font-bold capitalize "
+                              title="Generate Password Reset Link"
+                            >
+                              <KeyRound className="w-4 h-4 inline-block" />
                             </button>
                             <a
                               href={`#/advisor/${psy.id}`}
@@ -4457,7 +4579,7 @@ export default function AdminDashboard({ setView }) {
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-sm capitalize font-bold text-zinc-400">CDAT Default Group Code</label>
+                    <label className="text-sm capitalize font-bold text-zinc-400">C-DAT Default Group Code</label>
                     <input
                       type="text"
                       required
@@ -5919,11 +6041,13 @@ export default function AdminDashboard({ setView }) {
                           <span className="font-medium text-zinc-300">{lang}</span>
                         </div>
                         <div className="flex gap-2 items-center pt-1">
-                          <span className={`px-2.5 py-0.5 rounded text-sm font-bold capitalize  ${viewingPsychologist.verified
+                          <span className={`px-2.5 py-0.5 rounded text-sm font-bold capitalize  ${viewingPsychologist.status === 'ACTIVE'
                             ? 'bg-emerald-955/20 border border-emerald-900/30 text-emerald-450'
-                            : 'bg-amber-955/20 border border-amber-900/30 text-amber-500'
+                            : viewingPsychologist.status === 'REJECTED'
+                              ? 'bg-rose-955/20 border border-rose-900/30 text-rose-450'
+                              : 'bg-amber-955/20 border border-amber-900/30 text-amber-500'
                             }`}>
-                            {viewingPsychologist.verified ? 'Verified' : 'Pending Verification'}
+                            {viewingPsychologist.status === 'ACTIVE' ? 'Verified' : viewingPsychologist.status === 'REJECTED' ? 'Rejected' : 'Pending Verification'}
                           </span>
                           <a
                             href={`#/advisor/${viewingPsychologist.id}`}

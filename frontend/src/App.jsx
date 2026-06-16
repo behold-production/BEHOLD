@@ -17,6 +17,7 @@ const StudentProfile = lazy(() => import('./components/users/StudentProfile'));
 const PsychologistDashboard = lazy(() => import('./components/counsellors/PsychologistDashboard'));
 const AdminDashboard = lazy(() => import('./components/admin/AdminDashboard'));
 const AptitudeTest = lazy(() => import('./components/AptitudeTest'));
+const ResetPassword = lazy(() => import('./components/ResetPassword'));
 
 import { useAuth } from './context/AuthContext';
 import ApiService from './services/api';
@@ -342,6 +343,9 @@ export default function App() {
             setPendingScrollSection={setPendingScrollSection}
           />
         } />
+
+        {/* Reset Password */}
+        <Route path="/reset-password" element={<ResetPassword />} />
 
         {/* Catch-all fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />

@@ -21,7 +21,7 @@ const TABS = [
   { id: 'overview', label: 'Overview', short: 'Home', icon: LayoutDashboard },
   { id: 'details', label: 'My Profile', short: 'Profile', icon: User },
   { id: 'booked', label: 'My Sessions', short: 'Sessions', icon: Calendar },
-  { id: 'results', label: 'CDAT Results', short: 'Results', icon: BarChart3 },
+  { id: 'results', label: 'C-DAT Results', short: 'Results', icon: BarChart3 },
 ];
 
 const CAREER_SUGGESTIONS = {
@@ -272,13 +272,16 @@ export default function StudentProfile() {
   };
 
   const handleCancelSession = async (sessionId) => {
+    const reason = window.prompt('Please provide a reason for cancelling this session:');
+    if (reason === null) return;
+
     try {
       const session = bookedSessions.find(b => b.id === sessionId);
       if (session && isSessionCompleted(session)) {
         alert('Cannot cancel a session that is already in the past or completed.');
         return;
       }
-      await ApiService.cancelAppointment(sessionId);
+      await ApiService.cancelAppointment(sessionId, reason);
 
       // Reload sessions list
       const sessionsRes = await ApiService.getSessions();
@@ -607,7 +610,7 @@ export default function StudentProfile() {
           {[
             { icon: Calendar, label: 'Upcoming', value: stats.upcoming, sub: 'sessions' },
             { icon: CheckCircle2, label: 'Completed', value: stats.completed, sub: 'lifetime' },
-            { icon: BarChart3, label: 'CDAT', value: testProfile ? 'Done' : 'Pending', sub: testProfile ? 'profile ready' : 'not taken' },
+            { icon: BarChart3, label: 'C-DAT', value: testProfile ? 'Done' : 'Pending', sub: testProfile ? 'profile ready' : 'not taken' },
             { icon: Clock, label: 'Hours', value: `${stats.hours}h`, sub: 'coached' },
           ].map((kpi, i) => {
             const Icon = kpi.icon;
@@ -626,7 +629,7 @@ export default function StudentProfile() {
 
         {/* Action cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {/* CDAT card */}
+          {/* C-DAT card */}
           <div className="card-luxury border-none rounded-xl p-5 card-luxury-hover">
             <div className="flex items-start justify-between mb-3">
               <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center">
@@ -736,7 +739,7 @@ export default function StudentProfile() {
                 { icon: Mail, label: 'Email Added', done: !!profile.email },
                 { icon: Phone, label: 'Phone Added', done: !!profile.phone },
                 { icon: Calendar, label: 'First Booking', done: stats.total > 0 },
-                { icon: BarChart3, label: 'CDAT Completed', done: !!testProfile },
+                { icon: BarChart3, label: 'C-DAT Completed', done: !!testProfile },
                 { icon: Award, label: '5 Sessions Done', done: stats.completed >= 5 },
               ].map((a, i) => {
                 const Icon = a.icon;
@@ -1122,7 +1125,7 @@ export default function StudentProfile() {
                         </button>
                         <button
                           type="button"
-                          onClick={() => { if (window.confirm('Cancel this session?')) handleCancelSession(session.id); }}
+                          onClick={() => handleCancelSession(session.id)}
                           className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 card-luxury border-none hover:border-rose-200 hover:bg-rose-50 text-zinc-500 hover:text-rose-600 rounded-lg text-xs font-medium transition-colors"
                         >
                           <XIcon className="w-3.5 h-3.5" /> Cancel
@@ -1255,7 +1258,7 @@ export default function StudentProfile() {
     );
   };
 
-  // ─── Tab: CDAT Results ───────────────────────────────────────────────
+  // ─── Tab: C-DAT Results ───────────────────────────────────────────────
 
   const handleCigiUpload = async (e) => {
     e.preventDefault();
@@ -1374,7 +1377,7 @@ export default function StudentProfile() {
           <div className="xl:col-span-7 space-y-6">
             <div className="card-luxury border-none rounded-xl p-5 shadow-sm">
               <h3 className="text-base font-semibold text-zinc-900 mb-3 flex items-center gap-2">
-                <BarChart3 className="w-4 h-4 text-zinc-700 animate-pulse" /> Sample Aptitude Test (CDAT)
+                <BarChart3 className="w-4 h-4 text-zinc-700 animate-pulse" /> Sample Aptitude Test (C-DAT)
               </h3>
               
               {!testProfile ? (

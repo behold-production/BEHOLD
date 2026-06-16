@@ -15,6 +15,7 @@ export default function AuthModals({ isOpen, onClose }) {
   const [showPassword, setShowPassword] = useState(false);
   const [forgotSuccess, setForgotSuccess] = useState(null); // stores { resetToken }
   const [resetSuccess, setResetSuccess] = useState(false);
+  const [rejectionReason, setRejectionReason] = useState(null);
 
   // Reset state when opened/closed
   useEffect(() => {
@@ -24,6 +25,7 @@ export default function AuthModals({ isOpen, onClose }) {
       setShowPassword(false);
       setForgotSuccess(null);
       setResetSuccess(false);
+      setRejectionReason(null);
     }
   }, [isOpen]);
 
@@ -114,7 +116,9 @@ export default function AuthModals({ isOpen, onClose }) {
         }
       }
     } catch (err) {
-      if (err.message && !err.message.includes('Status:')) {
+      if (err.message && err.message.startsWith('REJECTED_USER:')) {
+        setRejectionReason(err.message.replace('REJECTED_USER:', ''));
+      } else if (err.message && !err.message.includes('Status:')) {
         import('react-hot-toast').then(mod => mod.toast.error(err.message));
       }
     } finally {
@@ -150,10 +154,10 @@ export default function AuthModals({ isOpen, onClose }) {
         <div className="flex justify-between items-start gap-4 p-5 sm:p-6 border-b border-zinc-100">
           <div className="min-w-0">
             <h2 id="auth-modal-title" className="text-xl sm:text-2xl font-header font-bold tracking-tight text-zinc-900">
-              {titles[mode].title}
+              {rejectionReason ? 'Application Rejected' : titles[mode].title}
             </h2>
             <p className="text-xs text-zinc-500 font-medium mt-1">
-              {titles[mode].subtitle}
+              {rejectionReason ? 'Your counselor application has been declined.' : titles[mode].subtitle}
             </p>
           </div>
           <button
@@ -167,7 +171,26 @@ export default function AuthModals({ isOpen, onClose }) {
         </div>
 
         {/* Form body */}
-        <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-4">
+        {rejectionReason ? (
+          <div className="p-5 sm:p-6 space-y-4">
+            <div className="bg-rose-50 border border-rose-200 p-4 rounded-xl space-y-3">
+              <p className="text-sm text-zinc-700 leading-relaxed font-medium">
+                We regret to inform you that your professional counsellor application has been rejected by the system administrator.
+              </p>
+              <div className="bg-white border border-rose-100 p-3 rounded-lg">
+                <span className="text-[10px] font-bold text-rose-500 uppercase tracking-wider block mb-1">Reason for Rejection:</span>
+                <p className="text-sm text-zinc-800 italic leading-relaxed">"{rejectionReason}"</p>
+              </div>
+            </div>
+            <button
+              onClick={() => { setRejectionReason(null); setMode('login'); }}
+              className="w-full py-3 bg-zinc-900 hover:bg-zinc-800 text-white font-semibold text-sm rounded-lg transition-all cursor-pointer border-none"
+            >
+              Return to Login
+            </button>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-4">
 
           {/* Forgot → success: show token box */}
           {mode === 'forgot' && forgotSuccess && (
@@ -377,8 +400,10 @@ export default function AuthModals({ isOpen, onClose }) {
           )}
 
         </form>
+        )}
 
         {/* Footer */}
+        {!rejectionReason && (
         <div className="p-5 sm:p-6 bg-zinc-50 border-t border-zinc-100 text-center">
           <p className="text-xs text-zinc-600 font-medium">
             {mode === 'login' && (
@@ -415,6 +440,7 @@ export default function AuthModals({ isOpen, onClose }) {
             )}
           </p>
         </div>
+        )}
 
       </div>
     </div>
