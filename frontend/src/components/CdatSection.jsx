@@ -110,7 +110,7 @@ export default function CdatSection({ setView }) {
         {/* Decorative inner glow */}
         <div className="absolute inset-0 bg-gradient-to-b from-white/60 to-transparent pointer-events-none" />
 
-        {/* TOP: CIGI Differential Aptitude Test (CDAT) */}
+        {/* TOP: CIGI Differential Aptitude Test (C-DAT) */}
         <div className="relative z-10 flex flex-col lg:flex-row justify-between gap-10 text-left w-full">
           
           <div className="flex-1 min-w-0">
@@ -122,7 +122,7 @@ export default function CdatSection({ setView }) {
                   Scientific Strengths Mapping
                 </span>
                 <h3 className="text-xl sm:text-3xl md:text-4xl font-header font-black capitalize tracking-tight text-zinc-900 mt-2 group-hover:text-brand-dark transition-colors duration-500">
-                  CIGI Differential Aptitude Test (CDAT)
+                  CIGI Differential Aptitude Test (C-DAT)
                 </h3>
               </div>
               
@@ -130,7 +130,7 @@ export default function CdatSection({ setView }) {
               <div className="lg:hidden w-20 h-20 sm:w-28 sm:h-28 flex items-center justify-center shrink-0 pointer-events-none mt-1">
                 <img
                   src="/CIGI.png"
-                  alt="CIGI Differential Aptitude Test Logo"
+                  alt="CIGI Differential Aptitude Test (C-DAT) Logo"
                   className="w-full h-full object-contain mix-blend-multiply transition-all duration-500"
                 />
               </div>
@@ -146,7 +146,7 @@ export default function CdatSection({ setView }) {
           <div className="hidden lg:flex w-36 h-36 items-center justify-center z-10 shrink-0 pointer-events-none lg:pointer-events-auto">
             <img
               src="/CIGI.png"
-              alt="CIGI Differential Aptitude Test Logo"
+              alt="CIGI Differential Aptitude Test (C-DAT) Logo"
               className="w-full h-full object-contain mix-blend-multiply transition-all duration-500 lg:hover:scale-105"
             />
           </div>
@@ -168,14 +168,14 @@ export default function CdatSection({ setView }) {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start pt-2">
             <div className="lg:col-span-5 space-y-4">
               <p className="text-zinc-650 font-sans text-sm md:text-base font-medium leading-relaxed">
-                Enter your details below to generate your unique group access code. Once generated and copied, proceed to the official CIGI registration portal to finalize your test access.
+                Enter your details below to generate your unique group code. Once generated and copied, proceed to the official CIGI registration portal to finalize your test access.
               </p>
             </div>
             <div className="lg:col-span-7 w-full relative">
               <div className="absolute -inset-1 bg-gradient-to-r from-brand/20 to-brand-accent/20 rounded-3xl blur opacity-30 group-hover:opacity-60 transition duration-700"></div>
               <form onSubmit={handleGenerateCode} className="relative space-y-5 bg-white/80 backdrop-blur-2xl border border-white shadow-xl shadow-zinc-200/50 p-6 sm:p-8 rounded-2xl w-full">
                 <div className="text-sm font-black capitalize text-zinc-800 mb-2 flex items-center gap-2">
-                  Generate Your Access Code
+                  Generate Your Group Code
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                   <div>
@@ -243,7 +243,7 @@ export default function CdatSection({ setView }) {
                           </>
                         ) : (
                           <>
-                            <Copy className="w-4 h-4" /> Copy Access Code
+                            <Copy className="w-4 h-4" /> Copy Group Code
                           </>
                         )}
                       </button>

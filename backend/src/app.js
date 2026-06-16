@@ -2,7 +2,11 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const mongoSanitize = require('express-mongo-sanitize');
 const { connectDB } = require('./config/db');
+const { ipBlockMiddleware } = require('./middleware/ipBlockMiddleware');
 
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
@@ -17,7 +21,15 @@ const errorHandler = require('./middleware/errorMiddleware');
 
 const app = express();
 
-// Database Connection Middleware for Serverless / Cold Starts
+// ─── Trust Proxy for Rate Limiting ──────────────────────────────────────────
+app.set('trust proxy', 1); // Essential for rate limiters behind a reverse proxy/load balancer (e.g., Vercel, AWS, Render)
+
+// ─── Security Headers ────────────────────────────────────────────────────────
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: 'cross-origin' }, // allow images/uploads from other origins
+}));
+
+// ─── Database Connection Middleware for Serverless / Cold Starts ───────────
 app.use(async (req, res, next) => {
   try {
     await connectDB();
@@ -27,13 +39,16 @@ app.use(async (req, res, next) => {
   }
 });
 
-// Enable CORS
+// ─── IP Blocklist ─────────────────────────────────────────────────────────
+app.use(ipBlockMiddleware);
+
+// ─── CORS ─────────────────────────────────────────────────────────────────
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
   /^http:\/\/192\.168\.29\.45:\d+$/, // Allow specific LAN IP for development
-  /^https:\/\/.*\.vercel\.app$/,  // All Vercel preview deployments
-  process.env.FRONTEND_URL        // Set this in Vercel env vars to your production URL
+  /^https:\/\/.*\.vercel\.app$/,     // All Vercel preview deployments
+  process.env.FRONTEND_URL           // Set this in Vercel env vars to your production URL
 ].filter(Boolean);
 
 app.use(cors({
@@ -51,19 +66,54 @@ app.use(cors({
   credentials: true
 }));
 
+// ─── Rate Limiters ────────────────────────────────────────────────────────
+// General API limiter: 200 requests per 15 minutes per IP
+const generalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 200,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: 'Too many requests from this IP, please try again after 15 minutes.'
+  }
+});
 
-// Body parsers
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Strict auth limiter: 20 requests per 15 minutes per IP (brute-force protection)
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: 'Too many authentication attempts. Please try again after 15 minutes.'
+  }
+});
 
-// Ensure uploads folder exists and host static files
+app.use('/api/', generalLimiter);
+app.use('/api/auth', authLimiter); // Applied in addition to general; auth gets stricter limit
+
+// ─── Body Parsers ─────────────────────────────────────────────────────────
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// ─── MongoDB Injection Sanitization ──────────────────────────────────────
+// Strips keys starting with '$' or containing '.' from request body/query/params
+app.use(mongoSanitize({
+  onSanitize: ({ req, key }) => {
+    console.warn(`[Security] Sanitized key "${key}" from ${req.ip}`);
+  }
+}));
+
+// ─── Static File Serving ──────────────────────────────────────────────────
 const uploadsDir = path.join(__dirname, '..', 'uploads');
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
 app.use('/uploads', express.static(uploadsDir));
 
-// API Health Check
+// ─── Health Check ─────────────────────────────────────────────────────────
 app.get('/api/health', (req, res) => {
   res.status(200).json({
     success: true,
@@ -75,7 +125,7 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Register routes
+// ─── Routes ───────────────────────────────────────────────────────────────
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/counsellors', counsellorRoutes);
@@ -86,15 +136,15 @@ app.use('/api/feedbacks', feedbackRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api', publicRoutes);
 
-// Catch 404
-app.use((req, res, next) => {
+// ─── 404 Catch ────────────────────────────────────────────────────────────
+app.use((req, res) => {
   res.status(404).json({
     success: false,
     message: `API Route not found: ${req.originalUrl}`
   });
 });
 
-// Centralized error handling
+// ─── Centralised Error Handler ────────────────────────────────────────────
 app.use(errorHandler);
 
 module.exports = app;

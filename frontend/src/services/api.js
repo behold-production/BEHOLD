@@ -188,6 +188,20 @@ const ApiService = {
     window.dispatchEvent(new Event('storage'));
   },
 
+  async forgotPassword(email) {
+    return await request('/auth/forgot-password', {
+      method: 'POST',
+      body: JSON.stringify({ email })
+    });
+  },
+
+  async resetPassword(token, newPassword) {
+    return await request('/auth/reset-password', {
+      method: 'POST',
+      body: JSON.stringify({ token, newPassword })
+    });
+  },
+
   // User/Student Profile
   async getProfile() {
     return await request('/users/profile');
@@ -209,6 +223,12 @@ const ApiService = {
       } catch (e) { }
     }
     return res;
+  },
+
+  async deleteProfile() {
+    return await request('/users/profile', {
+      method: 'DELETE'
+    });
   },
 
   // Counsellor search & details
@@ -257,9 +277,10 @@ const ApiService = {
     return await request('/appointments');
   },
 
-  async cancelAppointment(id) {
+  async cancelAppointment(id, reason) {
     return await request(`/appointments/${id}/cancel`, {
-      method: 'PUT'
+      method: 'PUT',
+      body: JSON.stringify({ reason })
     });
   },
 
@@ -403,6 +424,13 @@ const ApiService = {
     return await request(`/admin/counsellors/${id}/verify`, {
       method: 'PUT',
       body: JSON.stringify({ isVerified })
+    });
+  },
+
+  async rejectCounsellor(id, reason) {
+    return await request(`/admin/counsellors/${id}/reject`, {
+      method: 'PUT',
+      body: JSON.stringify({ reason })
     });
   },
 
@@ -595,6 +623,24 @@ const ApiService = {
     return await request('/admin/settings', {
       method: 'PUT',
       body: JSON.stringify(settings)
+    });
+  },
+
+  // IP Blocklist Management
+  async getBlockedIps() {
+    return await request('/admin/settings/blocked-ips');
+  },
+
+  async addBlockedIp(ip) {
+    return await request('/admin/settings/blocked-ips', {
+      method: 'POST',
+      body: JSON.stringify({ ip })
+    });
+  },
+
+  async removeBlockedIp(ip) {
+    return await request(`/admin/settings/blocked-ips/${encodeURIComponent(ip)}`, {
+      method: 'DELETE'
     });
   },
 

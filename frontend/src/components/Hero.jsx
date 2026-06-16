@@ -38,18 +38,6 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
 
       <div className="max-w-4xl mx-auto w-full flex flex-col items-center justify-center text-center relative z-20 space-y-6 mt-0 lg:mt-0">
 
-        {/* Top Highlight Label */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="inline-block"
-        >
-          <span className="text-brand font-bold tracking-widest text-sm sm:text-base drop-shadow-sm uppercase">
-            24×7 Professional Support
-          </span>
-        </motion.div>
-
         {/* Main Headline */}
         <motion.h1
           initial={{ opacity: 0, scale: 0.95 }}
@@ -90,10 +78,10 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => navigateToSection('services')}
+            onClick={() => navigateToSection('cdat')}
             className="px-10 py-4 min-h-[50px] bg-white/10 hover:bg-white/20 text-white text-xs sm:text-sm font-black tracking-widest uppercase rounded-full backdrop-blur-md border border-white/20 transition-all w-full sm:w-auto"
           >
-            Explore Services
+            Explore Aptitude
           </motion.button>
         </motion.div>
       </div>

@@ -38,6 +38,8 @@ export default function PsychologistDashboard({ setView }) {
     hours: 0,
     modes: ['ONLINE', 'OFFLINE', 'DOOR_STEP']
   });
+  const [counsellorStatus, setCounsellorStatus] = useState(user?.status || 'PENDING');
+  const [counsellorRejectionReason, setCounsellorRejectionReason] = useState(user?.rejectionReason || '');
   // Separate edit state — what the form binds to, so background refreshes don't clear the user's typing
   const [editProfile, setEditProfile] = useState(null);
 
@@ -200,6 +202,8 @@ export default function PsychologistDashboard({ setView }) {
       // Load profile
       if (profileRes.success && profileRes.data) {
         const c = profileRes.data;
+        setCounsellorStatus(c.status || 'PENDING');
+        setCounsellorRejectionReason(c.rejectionReason || '');
         const specialtiesStr = c.specialties
           ? (Array.isArray(c.specialties) ? c.specialties.join(', ') : c.specialties)
           : '';
@@ -616,11 +620,15 @@ export default function PsychologistDashboard({ setView }) {
       if (newStatus === 'CONFIRMED' || newStatus === 'APPROVED') {
         res = await ApiService.approveAppointment(bookingId);
       } else if (newStatus === 'CANCELLED') {
-        res = await ApiService.cancelAppointment(bookingId);
+        const reason = window.prompt("Please enter a reason for cancelling this session:");
+        if (reason === null) return;
+        res = await ApiService.cancelAppointment(bookingId, reason);
       } else if (newStatus === 'COMPLETED') {
         res = await ApiService.completeAppointment(bookingId);
       } else if (newStatus === 'REJECTED') {
-        res = await ApiService.rejectAppointment(bookingId, 'Declined by counsellor');
+        const reason = window.prompt("Please enter a reason for declining this request:");
+        if (reason === null) return;
+        res = await ApiService.rejectAppointment(bookingId, reason);
       }
 
       if (res && res.success) {
@@ -1167,6 +1175,47 @@ export default function PsychologistDashboard({ setView }) {
     );
   }
 
+  if (counsellorStatus === 'REJECTED' || user?.status === 'REJECTED') {
+    return (
+      <div className="min-h-screen bg-zinc-955 flex items-center justify-center p-4 relative overflow-hidden text-left">
+        <div className="absolute top-1/4 left-1/3 w-[300px] h-[300px] bg-rose-500/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-1/3 right-1/4 w-[300px] h-[300px] bg-rose-900/5 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="w-full max-w-md bg-zinc-900/60 border border-rose-900/30 rounded-2xl p-6 sm:p-8 shadow-2xl relative z-10 backdrop-blur-xl space-y-6">
+          <div className="text-center space-y-3">
+            <div className="w-16 h-16 mx-auto rounded-full bg-rose-955/20 border border-rose-900/30 flex items-center justify-center text-rose-500">
+              <ShieldAlert className="w-8 h-8 animate-pulse" />
+            </div>
+            <h2 className="text-xl font-bold tracking-tight text-white font-header">Application Rejected</h2>
+            <p className="text-sm text-zinc-400 font-medium">
+              We regret to inform you that your professional counsellor application has been rejected by the system administrator.
+            </p>
+          </div>
+
+          <div className="bg-rose-955/15 border border-rose-900/20 p-4 rounded-xl space-y-1.5">
+            <span className="text-xs font-bold text-rose-400 uppercase tracking-wider block">Rejection Reason:</span>
+            <p className="text-sm text-zinc-300 italic leading-relaxed">
+              "{counsellorRejectionReason || user?.rejectionReason || 'Credentials did not meet verification standards.'}"
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            <p className="text-xs text-zinc-500 text-center leading-relaxed">
+              If you believe this was in error or would like to submit additional credentials, please contact our support team at <a href="mailto:support@behold.com" className="text-brand hover:underline">support@behold.com</a>.
+            </p>
+
+            <button
+              onClick={() => logout()}
+              className="w-full py-3 bg-zinc-950 border border-zinc-800 hover:bg-zinc-850 hover:border-zinc-700 text-rose-450 hover:text-rose-400 font-bold text-sm capitalize rounded-lg transition cursor-pointer flex items-center justify-center gap-1.5"
+            >
+              <LogOut className="w-4 h-4" /> Sign Out
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // --- 2. DEDICATED LOGGED-IN COUNSELLOR CONSOLE ---
   return (
     <div className="min-h-screen bg-zinc-955 text-white text-left flex flex-col lg:flex-row relative overflow-hidden">
@@ -1217,8 +1266,8 @@ export default function PsychologistDashboard({ setView }) {
         />
       )}
 
-      {/* 1. Left Fixed Sidebar (Drawer on Mobile, static on Desktop) */}
-      <div className={`fixed lg:static inset-y-0 left-0 z-50 w-64 lg:w-64 bg-zinc-900 border-r border-zinc-800 flex flex-col justify-between shrink-0 p-5 transition-transform duration-300 ease-in-out lg:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+      {/* 1. Left Fixed Sidebar (Drawer on Mobile, sticky on Desktop) */}
+      <div className={`fixed lg:sticky lg:top-24 lg:h-[calc(100vh-6rem)] lg:overflow-y-auto inset-y-0 left-0 z-50 w-64 lg:w-64 bg-zinc-900 border-r border-zinc-800 flex flex-col justify-between shrink-0 p-5 transition-transform duration-300 ease-in-out lg:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         } lg:flex`}>
         <div className="space-y-6">
           {/* Logo & Header */}

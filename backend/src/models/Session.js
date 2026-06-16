@@ -11,7 +11,9 @@ const sessionSchema = new mongoose.Schema({
   meetLink: { type: String, default: '' },
   status: { type: String, default: 'PENDING' },
   notes: { type: String, default: '' },
-  feedback: { type: String, default: '' }
+  feedback: { type: String, default: '' },
+  cancellationReason: { type: String, default: '' },
+  cancelledBy: { type: String, default: '' }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Session', sessionSchema);

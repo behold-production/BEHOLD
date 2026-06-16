@@ -12,6 +12,8 @@ const counsellorSchema = new mongoose.Schema({
   experience: { type: String, default: '' },
   availability: { type: mongoose.Schema.Types.Mixed, default: {} },
   isVerified: { type: Boolean, default: false },
+  status: { type: String, enum: ['PENDING', 'APPROVED', 'REJECTED'], default: 'PENDING' },
+  rejectionReason: { type: String, default: '' },
   isActive: { type: Boolean, default: true },
   rating: { type: Number, default: 5.0 },
   reviewCount: { type: Number, default: 0 },

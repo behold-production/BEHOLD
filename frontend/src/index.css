@@ -114,24 +114,48 @@ body.no-scroll {
 @utility card-luxury {
   background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(16px);
-  border: 1px solid rgba(0, 209, 209, 0.15);
+  border: 1px solid rgba(0, 209, 209, 0.22);
   box-shadow: 
-    0 4px 6px -1px rgba(0, 209, 209, 0.01),
-    0 2px 4px -1px rgba(0, 209, 209, 0.01),
-    0 20px 40px -15px rgba(0, 209, 209, 0.03);
+    0 4px 12px rgba(0, 209, 209, 0.08),
+    0 2px 4px rgba(0, 209, 209, 0.06),
+    0 12px 32px rgba(0, 209, 209, 0.05);
   border-radius: 12px;
   transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@utility card-luxury-dark {
+  background: rgba(24, 24, 27, 0.65);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 209, 209, 0.15);
+  box-shadow: 
+    0 4px 12px rgba(0, 209, 209, 0.05),
+    0 2px 4px rgba(0, 209, 209, 0.03),
+    0 12px 32px rgba(0, 209, 209, 0.08);
+  border-radius: 12px;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@utility card-luxury-dark-hover {
+  &:hover {
+    background: rgba(24, 24, 27, 0.95);
+    box-shadow: 
+      0 12px 36px rgba(0, 209, 209, 0.12),
+      0 30px 60px rgba(0, 0, 0, 0.3),
+      0 2px 8px rgba(0, 209, 209, 0.08);
+    transform: translateY(-4px);
+    border-color: rgba(0, 209, 209, 0.35);
+  }
 }
 
 @utility card-luxury-hover {
   &:hover {
     background: rgba(255, 255, 255, 0.98);
     box-shadow: 
-      0 10px 30px -10px rgba(0, 209, 209, 0.05),
-      0 30px 60px -10px rgba(0, 0, 0, 0.06),
-      0 1px 2px 0 rgba(0, 209, 209, 0.05);
+      0 12px 36px rgba(0, 209, 209, 0.18),
+      0 30px 60px rgba(0, 0, 0, 0.08),
+      0 2px 8px rgba(0, 209, 209, 0.12);
     transform: translateY(-4px);
-    border-color: rgba(0, 209, 209, 0.35);
+    border-color: rgba(0, 209, 209, 0.45);
   }
 }
 
@@ -144,6 +168,20 @@ body.no-scroll {
   background: linear-gradient(135deg, var(--color-brand) 0%, var(--color-brand-accent) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+/* Dark Blue Theme Gradients & Shadows for UI Combinations */
+@utility bg-dark-blue-gradient {
+  background: linear-gradient(135deg, #090e1a 0%, #121829 100%);
+}
+
+@utility bg-dark-slate-gradient {
+  background: linear-gradient(135deg, #090d16 0%, #16122c 100%);
+}
+
+@utility border-dark-blue-glow {
+  border: 1px solid rgba(14, 165, 233, 0.25);
+  box-shadow: 0 0 15px rgba(14, 165, 233, 0.12);
 }
 
 /* Parallax grid */

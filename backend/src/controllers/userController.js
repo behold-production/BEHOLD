@@ -326,6 +326,19 @@ const UserController = {
     } catch (error) {
       next(error);
     }
+  },
+
+  // Delete own profile (soft delete)
+  async deleteProfile(req, res, next) {
+    try {
+      const updated = await StorageService.update('users', req.user.id, { status: 'DELETED' });
+      if (!updated) {
+        return res.status(404).json({ success: false, message: 'User not found' });
+      }
+      res.status(200).json({ success: true, message: 'Account deleted successfully' });
+    } catch (error) {
+      next(error);
+    }
   }
 };
 

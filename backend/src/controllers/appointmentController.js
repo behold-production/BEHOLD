@@ -142,7 +142,11 @@ const AppointmentController = {
         return res.status(400).json({ success: false, message: `Cannot reject appointment with status: ${appointment.status}` });
       }
 
-      const updated = await StorageService.update('appointments', id, { status: 'REJECTED' });
+      const updated = await StorageService.update('appointments', id, { 
+        status: 'REJECTED',
+        cancellationReason: reason || 'Declined by counsellor.',
+        cancelledBy: req.user.role || 'counsellor'
+      });
 
       // Notify User
       const counsellor = await StorageService.findById('counsellors', appointment.counsellorId);
@@ -190,6 +194,67 @@ const AppointmentController = {
         return res.status(403).json({ success: false, message: 'Unauthorized to reschedule this appointment' });
       }
 
+      // Reschedule constraints for students
+      let warning = '';
+      if (req.user.role === 'user') {
+        // 1. One hour warning check
+        try {
+          const appointmentDateStr = appointment.date;
+          const appointmentTimeStr = appointment.time;
+          
+          const [timeParts, modifier] = appointmentTimeStr.split(' ');
+          let [hours, minutes] = timeParts.split(':').map(Number);
+          if (modifier === 'PM' && hours < 12) hours += 12;
+          if (modifier === 'AM' && hours === 12) hours = 0;
+          
+          const [year, month, day] = appointmentDateStr.split('-').map(Number);
+          const appDateTime = new Date(year, month - 1, day, hours, minutes);
+          const now = new Date();
+          
+          const diffMs = appDateTime - now;
+          const diffHours = diffMs / (1000 * 60 * 60);
+          
+          if (diffHours < 1) {
+            return res.status(400).json({ 
+              success: false, 
+              message: 'Cannot reschedule a session less than 1 hour before the scheduled time.' 
+            });
+          }
+        } catch (e) {
+          console.error("Error parsing appointment date/time for reschedule check:", e);
+        }
+
+        // 2. Daily limit check (3 reschedules max)
+        const User = require('../models/User');
+        const studentUser = await User.findOne({ id: appointment.userId });
+        if (studentUser) {
+          const todayStr = new Date().toISOString().split('T')[0];
+          let count = studentUser.rescheduleCountToday || 0;
+          const lastDate = studentUser.lastRescheduleDate || '';
+          
+          if (lastDate === todayStr) {
+            if (count >= 3) {
+              return res.status(400).json({ 
+                success: false, 
+                message: 'Daily limit exceeded. You can only reschedule up to 3 times per day.' 
+              });
+            }
+          } else {
+            count = 0;
+          }
+
+          const newCount = count + 1;
+          await User.updateOne(
+            { id: appointment.userId },
+            { $set: { rescheduleCountToday: newCount, lastRescheduleDate: todayStr } }
+          );
+
+          if (newCount === 2) {
+            warning = 'You have only 1 reschedule remaining for today.';
+          }
+        }
+      }
+
       const updated = await StorageService.update('appointments', id, {
         date,
         time,
@@ -220,6 +285,7 @@ const AppointmentController = {
       res.status(200).json({
         success: true,
         message: 'Appointment rescheduled successfully. Pending approval.',
+        warning: warning || undefined,
         data: updated
       });
     } catch (error) {
@@ -231,6 +297,8 @@ const AppointmentController = {
   async cancelAppointment(req, res, next) {
     try {
       const { id } = req.params;
+      const { reason } = req.body;
+      const cancelledBy = req.user.role || 'user';
 
       const appointment = await StorageService.findById('appointments', id);
       if (!appointment) {
@@ -247,25 +315,34 @@ const AppointmentController = {
         return res.status(403).json({ success: false, message: 'Unauthorized to cancel this appointment' });
       }
 
-      const updated = await StorageService.update('appointments', id, { status: 'CANCELLED' });
+      const updated = await StorageService.update('appointments', id, { 
+        status: 'CANCELLED',
+        cancellationReason: reason || 'No reason specified.',
+        cancelledBy
+      });
 
       // Cancel matching session if exists
       const session = await StorageService.findOne('sessions', { appointmentId: id });
       if (session) {
-        await StorageService.update('sessions', session.id, { status: 'CANCELLED' });
+        await StorageService.update('sessions', session.id, { 
+          status: 'CANCELLED',
+          cancellationReason: reason || 'No reason specified.',
+          cancelledBy
+        });
       }
 
       // Notify the other party
       const isStudentCancelling = req.user.id === appointment.userId;
       const targetId = isStudentCancelling ? appointment.counsellorId : appointment.userId;
       const targetRole = isStudentCancelling ? 'counsellor' : 'user';
-      const cancellerName = req.user.role === 'user' ? 'Student' : 'Counsellor';
+      const cancellerName = req.user.role === 'user' ? 'Student' : req.user.role === 'admin' ? 'Administrator' : 'Counsellor';
+      const reasonText = reason ? ` Reason: "${reason}"` : '';
 
       await StorageService.create('notifications', {
         recipientId: targetId,
         recipientRole: targetRole,
         title: 'Appointment Cancelled',
-        message: `${cancellerName} has cancelled the appointment scheduled on ${appointment.date}.`,
+        message: `${cancellerName} has cancelled the appointment scheduled on ${appointment.date}.${reasonText}`,
         type: 'appointment_cancelled',
         isRead: false
       });

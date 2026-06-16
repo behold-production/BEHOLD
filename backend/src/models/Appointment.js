@@ -10,7 +10,9 @@ const appointmentSchema = new mongoose.Schema({
   status: { type: String, default: 'PENDING' },
   meetLink: { type: String, default: '' },
   feedback: { type: String, default: '' },
-  service: { type: String, default: 'counselling' }
+  service: { type: String, default: 'counselling' },
+  cancellationReason: { type: String, default: '' },
+  cancelledBy: { type: String, default: '' }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Appointment', appointmentSchema);

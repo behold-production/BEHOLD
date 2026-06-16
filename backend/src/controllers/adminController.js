@@ -53,7 +53,7 @@ const AdminController = {
   // Manage Users - List
   async getUsers(req, res, next) {
     try {
-      const users = await StorageService.findAll('users');
+      const users = await StorageService.findAll('users', { status: { $ne: 'DELETED' } });
       const safeUsers = users.map(({ password, ...data }) => data);
 
       res.status(200).json({
@@ -69,7 +69,7 @@ const AdminController = {
   // Manage Counsellors - List
   async getCounsellors(req, res, next) {
     try {
-      const counsellors = await StorageService.findAll('counsellors');
+      const counsellors = await StorageService.findAll('counsellors', { status: { $ne: 'DELETED' } });
       const safeCounsellors = counsellors.map(({ password, ...data }) => data);
 
       res.status(200).json({
@@ -92,7 +92,11 @@ const AdminController = {
         return res.status(400).json({ success: false, message: 'isVerified status is required' });
       }
 
-      const updated = await StorageService.update('counsellors', id, { isVerified });
+      const updated = await StorageService.update('counsellors', id, { 
+        isVerified,
+        status: isVerified ? 'APPROVED' : 'PENDING',
+        rejectionReason: isVerified ? '' : ''
+      });
       if (!updated) {
         return res.status(404).json({ success: false, message: 'Counsellor not found' });
       }
@@ -113,6 +117,43 @@ const AdminController = {
       res.status(200).json({
         success: true,
         message: `Counsellor verification status updated to ${isVerified}`,
+        data: counsellorData
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // Reject Counsellor application
+  async rejectCounsellor(req, res, next) {
+    try {
+      const { id } = req.params;
+      const { reason } = req.body;
+
+      const updated = await StorageService.update('counsellors', id, {
+        isVerified: false,
+        status: 'REJECTED',
+        rejectionReason: reason || 'Credentials did not meet verification standards.'
+      });
+
+      if (!updated) {
+        return res.status(404).json({ success: false, message: 'Counsellor not found' });
+      }
+
+      // Send a notification to the counsellor
+      await StorageService.create('notifications', {
+        recipientId: id,
+        recipientRole: 'counsellor',
+        title: 'Application Rejected',
+        message: `Your professional counsellor profile application has been rejected. Reason: ${reason || 'Credentials did not meet verification standards.'}`,
+        type: 'verification_update',
+        isRead: false
+      });
+
+      const { password, ...counsellorData } = updated;
+      res.status(200).json({
+        success: true,
+        message: 'Counsellor status updated to REJECTED',
         data: counsellorData
       });
     } catch (error) {
@@ -281,8 +322,8 @@ const AdminController = {
   async deleteUser(req, res, next) {
     try {
       const { id } = req.params;
-      const deleted = await StorageService.delete('users', id);
-      if (!deleted) return res.status(404).json({ success: false, message: 'User not found' });
+      const updated = await StorageService.update('users', id, { status: 'DELETED' });
+      if (!updated) return res.status(404).json({ success: false, message: 'User not found' });
       res.status(200).json({ success: true, message: 'User deleted successfully' });
     } catch (error) {
       next(error);
@@ -394,8 +435,8 @@ const AdminController = {
   async deleteCounsellor(req, res, next) {
     try {
       const { id } = req.params;
-      const deleted = await StorageService.delete('counsellors', id);
-      if (!deleted) return res.status(404).json({ success: false, message: 'Counsellor not found' });
+      const updated = await StorageService.update('counsellors', id, { status: 'DELETED', isVerified: false });
+      if (!updated) return res.status(404).json({ success: false, message: 'Counsellor not found' });
       res.status(200).json({ success: true, message: 'Counsellor deleted successfully' });
     } catch (error) {
       next(error);
@@ -546,6 +587,74 @@ const AdminController = {
     }
   },
 
+  // ── IP Blocklist ──────────────────────────────────────────────────────────
+  async getBlockedIps(req, res, next) {
+    try {
+      const { invalidateIpCache } = require('../middleware/ipBlockMiddleware');
+      let settingsList = await StorageService.findAll('settings');
+      const settings = settingsList[0];
+      res.status(200).json({ success: true, data: settings?.blockedIps ?? [] });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async addBlockedIp(req, res, next) {
+    try {
+      const { invalidateIpCache } = require('../middleware/ipBlockMiddleware');
+      const { ip } = req.body;
+      if (!ip || typeof ip !== 'string') {
+        return res.status(400).json({ success: false, message: 'IP address is required' });
+      }
+      // Basic IPv4/IPv6 sanity check
+      const ipTrimmed = ip.trim();
+      if (!/^[\d.:a-fA-F]+$/.test(ipTrimmed)) {
+        return res.status(400).json({ success: false, message: 'Invalid IP address format' });
+      }
+
+      let settingsList = await StorageService.findAll('settings');
+      let settings = settingsList[0];
+      if (!settings) {
+        settings = await StorageService.create('settings', { blockedIps: [ipTrimmed] });
+      } else {
+        const current = settings.blockedIps ?? [];
+        if (current.includes(ipTrimmed)) {
+          return res.status(409).json({ success: false, message: 'IP is already blocked' });
+        }
+        settings = await StorageService.update('settings', settings.id, {
+          blockedIps: [...current, ipTrimmed]
+        });
+      }
+      invalidateIpCache();
+      res.status(200).json({ success: true, message: `IP ${ipTrimmed} blocked successfully`, data: settings.blockedIps });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async removeBlockedIp(req, res, next) {
+    try {
+      const { invalidateIpCache } = require('../middleware/ipBlockMiddleware');
+      const ipToRemove = decodeURIComponent(req.params.ip);
+      let settingsList = await StorageService.findAll('settings');
+      let settings = settingsList[0];
+      if (!settings) {
+        return res.status(404).json({ success: false, message: 'Settings not found' });
+      }
+      const current = settings.blockedIps ?? [];
+      if (!current.includes(ipToRemove)) {
+        return res.status(404).json({ success: false, message: 'IP not found in blocklist' });
+      }
+      settings = await StorageService.update('settings', settings.id, {
+        blockedIps: current.filter(i => i !== ipToRemove)
+      });
+      invalidateIpCache();
+      res.status(200).json({ success: true, message: `IP ${ipToRemove} unblocked successfully`, data: settings.blockedIps });
+    } catch (error) {
+      next(error);
+    }
+  },
+
   // Roles management
   async getRoles(req, res, next) {
     try {
@@ -631,7 +740,7 @@ const AdminController = {
   async updateAppointment(req, res, next) {
     try {
       const { id } = req.params;
-      const { userId, advisorId, service, mode, date, time, status, meetLink } = req.body;
+      const { userId, advisorId, service, mode, date, time, status, meetLink, cancellationReason } = req.body;
       
       const updates = {};
       if (userId !== undefined) updates.userId = userId;
@@ -642,12 +751,27 @@ const AdminController = {
       if (time !== undefined) updates.time = time;
       if (status !== undefined) {
         updates.status = status === 'CONFIRMED' ? 'APPROVED' : status;
+        if (status === 'CANCELLED') {
+          updates.cancellationReason = cancellationReason || 'Cancelled by administrator.';
+          updates.cancelledBy = req.user.role || 'admin';
+        }
       }
       if (meetLink !== undefined) updates.meetLink = meetLink;
 
       const updated = await StorageService.update('appointments', id, updates);
       if (!updated) {
         return res.status(404).json({ success: false, message: 'Appointment not found' });
+      }
+
+      if (status === 'CANCELLED') {
+        const session = await StorageService.findOne('sessions', { appointmentId: id });
+        if (session) {
+          await StorageService.update('sessions', session.id, { 
+            status: 'CANCELLED',
+            cancellationReason: cancellationReason || 'Cancelled by administrator.',
+            cancelledBy: req.user.role || 'admin'
+          });
+        }
       }
 
       res.status(200).json({

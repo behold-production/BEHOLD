@@ -14,7 +14,7 @@ const PILLARS = [
     desc: 'Conducting in-school orientations, student alignments, and focus workshops to configure healthy learning environments.'
   },
   {
-    title: 'CDAT & Career Roadmaps',
+    title: 'C-DAT & Career Roadmaps',
     desc: 'Rigorous stream mapping and aptitude evaluations matching university pathways with individual natural talents.'
   },
   {

@@ -326,7 +326,7 @@ export default function StudentProfile() {
   const HeroHeader = () => {
     const totalProgress = Math.min(100, completion + (testProfile ? 15 : 0) + (stats.completed > 0 ? 10 : 0));
     return (
-      <div className="bg-white border border-zinc-200 rounded-2xl shadow-sm overflow-hidden">
+      <div className="card-luxury border-none rounded-2xl shadow-sm overflow-hidden">
         {/* Top accent strip */}
         <div className="h-1 bg-brand w-full" />
 
@@ -434,7 +434,7 @@ export default function StudentProfile() {
   const SidebarNav = () => (
     <>
       {/* Desktop sidebar */}
-      <nav className="hidden lg:flex flex-col gap-0.5 p-1.5 bg-white border border-zinc-200 rounded-xl shadow-sm sticky top-24">
+      <nav className="hidden lg:flex flex-col gap-0.5 p-1.5 card-luxury border-none rounded-xl shadow-sm sticky top-24">
         {TABS.map(tab => {
           const Icon = tab.icon;
           const isActive = currentSection === tab.id;
@@ -612,7 +612,7 @@ export default function StudentProfile() {
           ].map((kpi, i) => {
             const Icon = kpi.icon;
             return (
-              <div key={i} className="bg-white border border-zinc-200 rounded-xl p-4 hover:border-zinc-300 transition-colors">
+              <div key={i} className="card-luxury border-none rounded-xl p-4 card-luxury-hover">
                 <div className="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center mb-2.5">
                   <Icon className="w-4 h-4 text-zinc-600" />
                 </div>
@@ -627,7 +627,7 @@ export default function StudentProfile() {
         {/* Action cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* CDAT card */}
-          <div className="bg-white border border-zinc-200 rounded-xl p-5 hover:border-zinc-300 transition-colors">
+          <div className="card-luxury border-none rounded-xl p-5 card-luxury-hover">
             <div className="flex items-start justify-between mb-3">
               <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center">
                 <BarChart3 className="w-5 h-5 text-zinc-600" />
@@ -653,7 +653,7 @@ export default function StudentProfile() {
           </div>
 
           {/* Consultation card */}
-          <div className="bg-white border border-zinc-200 rounded-xl p-5 hover:border-zinc-300 transition-colors">
+          <div className="card-luxury border-none rounded-xl p-5 card-luxury-hover">
             <div className="flex items-start justify-between mb-3">
               <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center">
                 <Briefcase className="w-5 h-5 text-zinc-600" />
@@ -689,7 +689,7 @@ export default function StudentProfile() {
         {/* Recent activity + Achievements */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           {/* Recent activity */}
-          <div className="lg:col-span-2 bg-white border border-zinc-200 rounded-xl p-5">
+          <div className="lg:col-span-2 card-luxury border-none rounded-xl p-5">
             <div className="flex items-center justify-between mb-4">
               <h4 className="text-sm font-semibold text-zinc-900 flex items-center gap-2">
                 <Activity className="w-4 h-4 text-zinc-400" /> Recent Activity
@@ -706,7 +706,7 @@ export default function StudentProfile() {
               <div className="space-y-2">
                 {completedSessions.slice(0, 3).map((s, i) => (
                   <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-zinc-50 border border-zinc-100 hover:border-zinc-200 transition-colors">
-                    <div className="w-8 h-8 rounded-lg bg-white border border-zinc-200 flex items-center justify-center shrink-0">
+                    <div className="w-8 h-8 rounded-lg card-luxury border-none flex items-center justify-center shrink-0">
                       <Award className="w-4 h-4 text-zinc-500" />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -726,7 +726,7 @@ export default function StudentProfile() {
           </div>
 
           {/* Achievements */}
-          <div className="bg-white border border-zinc-200 rounded-xl p-5">
+          <div className="card-luxury border-none rounded-xl p-5">
             <h4 className="text-sm font-semibold text-zinc-900 flex items-center gap-2 mb-4">
               <Trophy className="w-4 h-4 text-zinc-400" /> Achievements
             </h4>
@@ -806,7 +806,7 @@ export default function StudentProfile() {
         </div>
 
         {/* Progress */}
-        <div className="bg-white border border-zinc-200 rounded-xl p-4">
+        <div className="card-luxury border-none rounded-xl p-4">
           <div className="flex items-center justify-between mb-2">
             <div>
               <p className="text-xs font-semibold text-zinc-700">Profile Strength</p>
@@ -830,7 +830,7 @@ export default function StudentProfile() {
           {sections.map((section, sIdx) => {
             const SIcon = section.icon;
             return (
-              <div key={sIdx} className="bg-white border border-zinc-200 rounded-xl p-5">
+              <div key={sIdx} className="card-luxury border-none rounded-xl p-5">
                 <div className="flex items-center gap-2.5 mb-4 pb-3 border-b border-zinc-100">
                   <div className="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center">
                     <SIcon className="w-4 h-4 text-zinc-600" />
@@ -916,7 +916,7 @@ export default function StudentProfile() {
             );
           })}
 
-          <div className="sticky bottom-16 lg:bottom-0 z-30 flex items-center justify-end gap-2 p-3 bg-white border border-zinc-200 rounded-xl shadow-sm">
+          <div className="sticky bottom-16 lg:bottom-0 z-30 flex items-center justify-end gap-2 p-3 card-luxury border-none rounded-xl shadow-sm">
             <button
               type="button"
               onClick={handleDiscard}
@@ -1038,7 +1038,7 @@ export default function StudentProfile() {
                   return (
                     <div
                       key={session.id || idx}
-                      className="bg-white border border-zinc-200 rounded-xl p-5 hover:border-zinc-300 transition-colors text-left"
+                      className="card-luxury border-none rounded-xl p-5 card-luxury-hover text-left"
                     >
                       {/* Status indicator */}
                       <div className="flex items-start justify-between gap-3 mb-4">
@@ -1108,7 +1108,7 @@ export default function StudentProfile() {
                         ) : (
                           <button
                             type="button"
-                            className="flex-1 min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-zinc-100 text-zinc-700 border border-zinc-200 rounded-lg text-xs font-medium hover:border-zinc-300 transition-colors"
+                            className="flex-1 min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-zinc-100 text-zinc-700 border border-zinc-200 rounded-lg text-xs font-medium card-luxury-hover"
                           >
                             <MapPin className="w-3.5 h-3.5" /> View Location
                           </button>
@@ -1123,7 +1123,7 @@ export default function StudentProfile() {
                         <button
                           type="button"
                           onClick={() => { if (window.confirm('Cancel this session?')) handleCancelSession(session.id); }}
-                          className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-white border border-zinc-200 hover:border-rose-200 hover:bg-rose-50 text-zinc-500 hover:text-rose-600 rounded-lg text-xs font-medium transition-colors"
+                          className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 card-luxury border-none hover:border-rose-200 hover:bg-rose-50 text-zinc-500 hover:text-rose-600 rounded-lg text-xs font-medium transition-colors"
                         >
                           <XIcon className="w-3.5 h-3.5" /> Cancel
                         </button>
@@ -1164,7 +1164,7 @@ export default function StudentProfile() {
               ].map((s, i) => {
                 const Icon = s.icon;
                 return (
-                  <div key={i} className="bg-white border border-zinc-200 rounded-xl p-4 text-left">
+                  <div key={i} className="card-luxury border-none rounded-xl p-4 text-left">
                     <div className="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center mb-2">
                       <Icon className="w-4 h-4 text-zinc-600" />
                     </div>
@@ -1183,10 +1183,10 @@ export default function StudentProfile() {
                 <div className="space-y-4">
                   {completedSessions.map((session, sIdx) => (
                     <div key={session.id || sIdx} className="relative pl-12 text-left">
-                      <div className="absolute left-0 top-3 w-8 h-8 rounded-lg bg-white border border-zinc-200 flex items-center justify-center shadow-sm">
+                      <div className="absolute left-0 top-3 w-8 h-8 rounded-lg card-luxury border-none flex items-center justify-center shadow-sm">
                         <Award className="w-4 h-4 text-zinc-500" />
                       </div>
-                      <div className="bg-white border border-zinc-200 rounded-xl p-4 hover:border-zinc-300 transition-colors">
+                      <div className="card-luxury border-none rounded-xl p-4 card-luxury-hover">
                         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-2">
                           <div>
                             <div className="flex flex-wrap items-center gap-2 mb-1.5">
@@ -1372,7 +1372,7 @@ export default function StudentProfile() {
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
           {/* Column 1: Sample Test Results */}
           <div className="xl:col-span-7 space-y-6">
-            <div className="bg-white border border-zinc-200 rounded-xl p-5 shadow-sm">
+            <div className="card-luxury border-none rounded-xl p-5 shadow-sm">
               <h3 className="text-base font-semibold text-zinc-900 mb-3 flex items-center gap-2">
                 <BarChart3 className="w-4 h-4 text-zinc-700 animate-pulse" /> Sample Aptitude Test (CDAT)
               </h3>
@@ -1439,7 +1439,7 @@ export default function StudentProfile() {
 
             {/* Career Suggestions */}
             {testProfile && topDomain && CAREER_SUGGESTIONS[topDomain] && (
-              <div className="bg-white border border-zinc-200 rounded-xl p-5 shadow-sm">
+              <div className="card-luxury border-none rounded-xl p-5 shadow-sm">
                 <h3 className="text-sm font-semibold text-zinc-900 mb-1 flex items-center gap-2">
                   <Briefcase className="w-4 h-4 text-zinc-400" /> Career Alignment
                 </h3>
@@ -1461,7 +1461,7 @@ export default function StudentProfile() {
           {/* Column 2: CIGI Aptitude Test Results & Uploads */}
           <div className="xl:col-span-5 space-y-6">
             {/* Upload form */}
-            <div className="bg-white border border-zinc-200 rounded-xl p-5 shadow-sm">
+            <div className="card-luxury border-none rounded-xl p-5 shadow-sm">
               <h3 className="text-base font-semibold text-zinc-900 mb-1.5 flex items-center gap-2">
                 <Award className="w-4 h-4 text-zinc-750" /> CIGI Aptitude Test (C-DAT)
               </h3>
@@ -1532,7 +1532,7 @@ export default function StudentProfile() {
             </div>
 
             {/* Results list */}
-            <div className="bg-white border border-zinc-200 rounded-xl p-5 shadow-sm">
+            <div className="card-luxury border-none rounded-xl p-5 shadow-sm">
               <h3 className="text-sm font-semibold text-zinc-900 mb-3">Uploaded CIGI Results ({cigiResultsList.length})</h3>
 
               {cigiResultsList.length === 0 ? (
@@ -1617,7 +1617,7 @@ export default function StudentProfile() {
             {/* Skeleton Layout */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
               <aside className="lg:col-span-3">
-                <div className="bg-white border border-zinc-200 rounded-xl p-3 space-y-2">
+                <div className="card-luxury border-none rounded-xl p-3 space-y-2">
                   <div className="h-10 bg-zinc-200 rounded-lg w-full"></div>
                   <div className="h-10 bg-zinc-200 rounded-lg w-full"></div>
                   <div className="h-10 bg-zinc-200 rounded-lg w-full"></div>

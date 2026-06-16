@@ -17,6 +17,8 @@ const userSchema = new mongoose.Schema({
   customRoleTitle: { type: String, default: '' },
   profilePic: { type: String, default: '' },
   profilePicPublicId: { type: String, default: '' },
+  rescheduleCountToday: { type: Number, default: 0 },
+  lastRescheduleDate: { type: String, default: '' },
   cigiResults: {
     type: [{
       id: { type: String, required: true },

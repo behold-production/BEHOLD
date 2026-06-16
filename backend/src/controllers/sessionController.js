@@ -9,11 +9,34 @@ const SessionController = {
         : { userId: req.user.id };
 
       const sessions = await StorageService.findAll('sessions', filter);
+      const appointments = await StorageService.findAll('appointments', filter);
+
+      const sessionAppIds = new Set(sessions.map(s => s.appointmentId));
+      const mergedSessions = [...sessions];
+
+      for (const a of appointments) {
+        if (!sessionAppIds.has(a.id)) {
+          mergedSessions.push({
+            id: 'mock_session_' + a.id,
+            appointmentId: a.id,
+            userId: a.userId,
+            counsellorId: a.counsellorId,
+            date: a.date,
+            time: a.time,
+            mode: a.mode,
+            meetLink: '',
+            status: a.status,
+            notes: '',
+            feedback: ''
+          });
+        }
+      }
       
       const populated = await Promise.all(
-        sessions.map(async (s) => {
+        mergedSessions.map(async (s) => {
           const user = await StorageService.findById('users', s.userId);
           const counsellor = await StorageService.findById('counsellors', s.counsellorId);
+          const appt = appointments.find(a => a.id === s.appointmentId);
           
           // Filter meeting link based on session access rules (only return link if session is today/upcoming)
           let meetLink = s.meetLink;
@@ -44,10 +67,22 @@ const SessionController = {
             }
           }
 
+          // Compute status for frontend
+          let frontendStatus = s.status;
+          if (s.status === 'PENDING' && appt && appt.status === 'APPROVED') {
+            frontendStatus = 'CONFIRMED';
+          } else if (s.status === 'APPROVED') {
+            frontendStatus = 'CONFIRMED';
+          }
+
           return {
             ...s,
             studentName: user ? user.name : 'Unknown Student',
             counsellorName: counsellor ? counsellor.name : 'Unknown Counsellor',
+            advisorName: counsellor ? counsellor.name : 'Unknown Counsellor',
+            advisorRole: counsellor ? (counsellor.role || 'Consultation') : 'Consultation',
+            service: appt ? appt.service : (s.service || 'counselling'),
+            status: frontendStatus,
             meetLink
           };
         })
@@ -102,6 +137,15 @@ const SessionController = {
         }
       }
 
+      const appt = await StorageService.findById('appointments', session.appointmentId);
+      
+      let frontendStatus = session.status;
+      if (session.status === 'PENDING' && appt && appt.status === 'APPROVED') {
+        frontendStatus = 'CONFIRMED';
+      } else if (session.status === 'APPROVED') {
+        frontendStatus = 'CONFIRMED';
+      }
+
       res.status(200).json({
         success: true,
         message: 'Session retrieved successfully',
@@ -109,6 +153,10 @@ const SessionController = {
           ...session,
           studentName: user ? user.name : 'Unknown Student',
           counsellorName: counsellor ? counsellor.name : 'Unknown Counsellor',
+          advisorName: counsellor ? counsellor.name : 'Unknown Counsellor',
+          advisorRole: counsellor ? (counsellor.role || 'Consultation') : 'Consultation',
+          service: appt ? appt.service : (session.service || 'counselling'),
+          status: frontendStatus,
           meetLink
         }
       });

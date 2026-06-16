@@ -26,6 +26,7 @@ router.put('/counsellors/:id', AdminController.updateCounsellor);
 router.delete('/counsellors/:id', AdminController.deleteCounsellor);
 router.put('/counsellors/:counsellorId/profile-pic', upload.single('profilePic'), AdminController.updateCounsellorProfilePic);
 router.put('/counsellors/:id/verify', AdminController.verifyCounsellor);
+router.put('/counsellors/:id/reject', AdminController.rejectCounsellor);
 
 router.get('/appointments', AdminController.getAppointments);
 router.post('/appointments', AdminController.createAppointment);
@@ -51,6 +52,11 @@ router.post('/inquiries/clear-resolved', AdminController.clearResolvedInquiries)
 // Settings management
 router.get('/settings', AdminController.getSettings);
 router.put('/settings', AdminController.updateSettings);
+
+// IP Blocklist management
+router.get('/settings/blocked-ips', AdminController.getBlockedIps);
+router.post('/settings/blocked-ips', AdminController.addBlockedIp);
+router.delete('/settings/blocked-ips/:ip', AdminController.removeBlockedIp);
 
 // Roles management
 router.get('/roles', AdminController.getRoles);

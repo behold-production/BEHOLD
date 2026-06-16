@@ -27,10 +27,10 @@ async function findAnyUserByEmail(email) {
   const admin = await StorageService.findOne('admins', { email: emailLower });
   if (admin) return { user: admin, table: 'admins' };
   
-  const counsellor = await StorageService.findOne('counsellors', { email: emailLower });
+  const counsellor = await StorageService.findOne('counsellors', { email: emailLower, status: { $ne: 'DELETED' } });
   if (counsellor) return { user: counsellor, table: 'counsellors' };
   
-  const student = await StorageService.findOne('users', { email: emailLower });
+  const student = await StorageService.findOne('users', { email: emailLower, status: { $ne: 'DELETED' } });
   if (student) return { user: student, table: 'users' };
 
   return null;
