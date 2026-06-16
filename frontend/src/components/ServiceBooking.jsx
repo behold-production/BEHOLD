@@ -111,8 +111,8 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
   const [isSuccess, setIsSuccess] = useState(false);
   const [isAutofilled, setIsAutofilled] = useState(false);
   
-  const [isAdvisorLocked] = useState(!!preselectedAdvisorId);
-  const [bookingStep, setBookingStep] = useState(preselectedAdvisorId ? 'config' : 'advisor'); // 'config' | 'advisor' | 'payment' | 'success'
+  const isAdvisorLocked = !!preselectedAdvisorId;
+  const [bookingStep, setBookingStep] = useState('config'); // 'config' | 'payment' | 'success'
 
   // Payment checkout states
   const [paymentMethod, setPaymentMethod] = useState('card'); // 'card' | 'upi' | 'netbanking'
@@ -193,7 +193,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
       // Collect union of available slots across matching advisors
       const activeSlotsSet = new Set();
-      const matchingAdvisors = advisors.filter(a => a.type === serviceType);
+      const matchingAdvisors = advisors.filter(a => a.type === serviceType && (!a.modes || a.modes.includes(bookingMode)));
 
       matchingAdvisors.forEach(advisor => {
         const parsed = advisor.availabilitySlots;
@@ -237,6 +237,64 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
     } catch (err) {
       console.error("Error generating dynamic slots", err);
       return [];
+    }
+  };
+
+  const getAdvisorSlotsForDate = (advisor, dateStr) => {
+    if (!dateStr || !advisor) return [];
+    if (advisor.modes && !advisor.modes.includes(bookingMode)) {
+      return [];
+    }
+    const dayOfWeek = new Date(dateStr).getDay();
+    const parsed = advisor.availabilitySlots;
+    if (!parsed) return [];
+    try {
+      const dayActive = parsed.activeDays && parsed.activeDays[dayOfWeek];
+      if (dayActive && parsed.availableSlots && parsed.availableSlots.length > 0) {
+        const bookings = existingAppointments;
+        const todayStr = getLocalTodayString();
+        const isSlotInPast = (timeStr) => {
+          try {
+            const [time, modifier] = timeStr.split(' ');
+            let [hours, minutes] = time.split(':').map(Number);
+            if (modifier === 'PM' && hours < 12) hours += 12;
+            if (modifier === 'AM' && hours === 12) hours = 0;
+            const now = new Date();
+            const slotDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+            return now >= slotDate;
+          } catch (e) {
+            return false;
+          }
+        };
+        return parsed.availableSlots.filter(slot => {
+          if (dateStr === todayStr && isSlotInPast(slot)) {
+            return false;
+          }
+          return !bookings.some(b => 
+            b.counsellorId === advisor.id && 
+            b.date === dateStr && 
+            b.time === slot && 
+            (b.status === 'APPROVED' || b.status === 'PENDING')
+          );
+        });
+      }
+    } catch (e) {
+      console.error("Error checking slots for advisor:", e);
+    }
+    return [];
+  };
+
+  const handleDateChange = (newDate) => {
+    setSelectedDate(newDate);
+    setSelectedTime('');
+    if (errors.date) setErrors(prev => ({ ...prev, date: null }));
+
+    if (!isAdvisorLocked && selectedAdvisor) {
+      const slots = getAdvisorSlotsForDate(selectedAdvisor, newDate);
+      if (slots.length === 0) {
+        setSelectedAdvisor(null);
+        setAdvisorConfirmed(false);
+      }
     }
   };
 
@@ -396,13 +454,18 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
     }
   }, [preselectedAdvisorId, clearPreselectedAdvisor, advisors]);
 
-  // Reset advisor if service type changes to avoid invalid combinations
+  // Reset advisor if service type or mode changes to avoid invalid combinations
   useEffect(() => {
-    if (selectedAdvisor && selectedAdvisor.type !== bookingService) {
-      setSelectedAdvisor(null);
-      setAdvisorConfirmed(false);
+    if (selectedAdvisor) {
+      const isServiceMatch = selectedAdvisor.type === bookingService;
+      const isModeMatch = !selectedAdvisor.modes || selectedAdvisor.modes.includes(bookingMode);
+      if (!isServiceMatch || !isModeMatch) {
+        setSelectedAdvisor(null);
+        setAdvisorConfirmed(false);
+        setSelectedTime('');
+      }
     }
-  }, [bookingService]);
+  }, [bookingService, bookingMode]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -660,7 +723,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                   </div>
                 </div>
 
-                <div className="flex overflow-x-auto snap-x scrollbar-none gap-3 lg:gap-4 pb-2 mt-3 lg:grid lg:grid-cols-5 lg:gap-6 w-full">
+                <div className="flex overflow-x-auto snap-x scrollbar-none gap-3 lg:gap-4 pb-2 mt-3 lg:grid lg:grid-cols-3 lg:gap-6 w-full">
                   {activeSteps.map((step, idx) => {
                     const isCompleted = idx < currentStepIdx;
                     const isActive = idx === currentStepIdx;
@@ -677,7 +740,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                           }`}>
                             {isCompleted ? '✓' : idx + 1}
                           </div>
-                          {idx < 4 && (
+                          {idx < activeSteps.length - 1 && (
                             <div className={`hidden lg:block h-0.5 w-full ml-2 transition-all duration-300 ${
                               isCompleted ? 'bg-zinc-900' : 'bg-zinc-200'
                             }`} />
@@ -906,10 +969,32 @@ Status: CONFIRMED
                       </div>
                     </div>
 
-                    {/* Step B: Advisor Selection */}
-                    <div className="space-y-3 pt-6 border-t border-zinc-100 animate-in fade-in slide-in-from-top-2 duration-300">
-                      <label className="text-sm font-bold text-zinc-700 block">1. Choose Advisor</label>
-                      {isAdvisorLocked && selectedAdvisor ? (
+                    {/* Step 1: Select Date */}
+                    <div className="space-y-2 pt-4 border-t border-zinc-100">
+                      <label className="text-sm font-bold text-zinc-700 block">1. Select Date</label>
+                      <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-lg">
+                        <DateTimePicker
+                          selectedDate={selectedDate}
+                          selectedTime={selectedTime}
+                          onDateChange={handleDateChange}
+                          onTimeChange={(t) => {
+                            setSelectedTime(t);
+                            if (errors.time) setErrors(prev => ({ ...prev, time: null }));
+                          }}
+                          getAvailableSlotsForDate={(date) => getAvailableSlotsForDate(date, bookingService)}
+                          errors={errors}
+                          selectedMode={bookingMode}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Step 2: Advisor Selection */}
+                    {(selectedDate || isAdvisorLocked) && (
+                      <div className="space-y-3 pt-6 border-t border-zinc-100 animate-in fade-in slide-in-from-top-2 duration-300">
+                        <label className="text-sm font-bold text-zinc-700 block">
+                          2. {isAdvisorLocked ? 'Advisor Pre-Selected' : 'Choose Advisor'}
+                        </label>
+                        {isAdvisorLocked && selectedAdvisor ? (
                           <div className="p-4 border border-brand bg-brand/5 shadow-sm ring-1 ring-brand/10 rounded-xl">
                             <div className="flex items-start justify-between gap-3">
                               <div className="space-y-1.5 text-left min-w-0 flex-1">
@@ -928,10 +1013,14 @@ Status: CONFIRMED
                               .filter(advisor => advisor.type === bookingService)
                               .filter(advisor => !advisor.modes || advisor.modes.includes(bookingMode))
                               .map((advisor) => {
+                                const slots = getAdvisorSlotsForDate(advisor, selectedDate);
+                                const isAvailable = slots.length > 0;
+
                                 return (
                                   <div
                                     key={advisor.id}
                                     onClick={() => {
+                                      if (!isAvailable) return;
                                       setSelectedAdvisor(advisor);
                                       setAdvisorConfirmed(true);
                                       if (errors.advisor) setErrors(prev => ({ ...prev, advisor: null }));
@@ -939,22 +1028,33 @@ Status: CONFIRMED
                                       if (advisor.modes && advisor.modes.length > 0 && !advisor.modes.includes(bookingMode)) {
                                         setBookingMode(advisor.modes[0]);
                                       }
-                                      // Clear selected time if they change advisor!
+                                      // Clear selected time if they change advisor
                                       setSelectedTime('');
                                     }}
-                                    className={`p-4 border rounded-xl cursor-pointer transition active:scale-[0.98] ${
-                                      selectedAdvisor?.id === advisor.id
-                                        ? 'bg-brand/5 border-brand shadow-sm ring-1 ring-brand/10'
-                                        : 'bg-white border-zinc-200 hover:border-brand/40 hover:bg-zinc-50'
+                                    className={`p-4 border rounded-xl transition ${
+                                      !isAvailable
+                                        ? 'bg-zinc-50 border-zinc-150 opacity-50 cursor-not-allowed'
+                                        : selectedAdvisor?.id === advisor.id
+                                          ? 'bg-brand/5 border-brand shadow-sm ring-1 ring-brand/10 cursor-pointer active:scale-[0.98]'
+                                          : 'bg-white border-zinc-200 hover:border-brand/40 hover:bg-zinc-50 cursor-pointer active:scale-[0.98]'
                                     }`}
                                   >
                                     <div className="flex items-start justify-between gap-3">
                                       <div className="space-y-1.5 text-left min-w-0 flex-1">
-                                        <h4 className="font-semibold text-zinc-900 text-sm sm:text-base leading-tight">{advisor.name}</h4>
+                                        <h4 className={`font-semibold text-sm sm:text-base leading-tight ${!isAvailable ? 'text-zinc-400' : 'text-zinc-900'}`}>
+                                          {advisor.name}
+                                        </h4>
                                         <p className="text-xs sm:text-xs text-zinc-500 font-medium">{advisor.role}</p>
+                                        {!isAvailable && (
+                                          <span className="text-[10px] text-rose-500 font-semibold mt-1 inline-block">
+                                            Unavailable on this date
+                                          </span>
+                                        )}
                                       </div>
                                       <div className="flex flex-col items-end gap-2 shrink-0">
-                                        <span className="text-sm font-bold text-zinc-900">₹{advisor.price}</span>
+                                        <span className={`text-sm font-bold ${!isAvailable ? 'text-zinc-400' : 'text-zinc-900'}`}>
+                                          ₹{advisor.price}
+                                        </span>
                                       </div>
                                     </div>
                                   </div>
@@ -964,31 +1064,9 @@ Status: CONFIRMED
                           </div>
                         )}
                       </div>
+                    )}
 
-                    {/* Step A: Date Picker */}
-                    <div className="space-y-2 pt-4 border-t border-zinc-100">
-                      <label className="text-sm font-bold text-zinc-700 block">2. Select Date</label>
-                      <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-lg">
-                        <DateTimePicker
-                          selectedDate={selectedDate}
-                          selectedTime={selectedTime}
-                          onDateChange={(d) => {
-                            setSelectedDate(d);
-                            setSelectedTime('');
-                            if (errors.date) setErrors(prev => ({ ...prev, date: null }));
-                          }}
-                          onTimeChange={(t) => {
-                            setSelectedTime(t);
-                            if (errors.time) setErrors(prev => ({ ...prev, time: null }));
-                          }}
-                          getAvailableSlotsForDate={(date) => getAvailableSlotsForDate(date, bookingService)}
-                          errors={errors}
-                          selectedMode={bookingMode}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Step C: Time Selection */}
+                    {/* Step 3: Time Selection */}
                     {selectedDate && selectedAdvisor && (
                       <div className="space-y-3 pt-6 border-t border-zinc-100 animate-in fade-in slide-in-from-top-2 duration-300">
                         <label className="text-sm font-bold text-zinc-700 block">3. Select Time</label>
@@ -999,12 +1077,7 @@ Status: CONFIRMED
                             setSelectedTime(t);
                             if (errors.time) setErrors(prev => ({ ...prev, time: null }));
                           }}
-                          availableSlots={(() => {
-                            if (!selectedDate || !selectedAdvisor) return [];
-                            const dateObj = selectedAdvisor.availabilitySlots?.[selectedDate];
-                            if (!dateObj || !dateObj.slots) return [];
-                            return dateObj.slots.filter(s => s.isAvailable).map(s => s.time);
-                          })()}
+                          availableSlots={getAdvisorSlotsForDate(selectedAdvisor, selectedDate)}
                           errors={errors}
                         />
                       </div>
@@ -1339,23 +1412,7 @@ Status: CONFIRMED
 
                       </div>
 
-                      {/* Navigation and Checkout triggers */}
-                      <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-4 border-t border-zinc-200 mt-6">
-                        <button
-                          type="button"
-                          onClick={() => handleStepChange('details')}
-                          className="px-5 py-3 min-h-[44px] bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 font-bold capitalize  text-xs rounded-lg transition cursor-pointer w-full sm:w-auto text-center"
-                        >
-                          Back to Details
-                        </button>
 
-                        <button
-                          type="submit"
-                          className="px-6 py-3 min-h-[48px] bg-gradient-brand text-zinc-900 font-bold capitalize  text-xs rounded-lg transition flex items-center justify-center cursor-pointer shadow-md border-none w-full sm:w-auto"
-                        >
-                          <span className="truncate">Pay ₹{(selectedAdvisor?.price || 1200) + Math.round((selectedAdvisor?.price || 1200) * 0.18) - appliedDiscount} Securely</span>
-                        </button>
-                      </div>
 
                       <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-4 border-t border-zinc-200 mt-6">
                         <button
