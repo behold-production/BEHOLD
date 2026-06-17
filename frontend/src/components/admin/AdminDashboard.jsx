@@ -8,6 +8,16 @@ import {
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
+function getInitials(name) {
+  if (!name) return 'EX';
+  const clean = name.trim();
+  if (clean.length === 0) return 'EX';
+  if (clean.length === 1) return clean.toUpperCase();
+  const first = clean[0];
+  const last = clean[clean.length - 1];
+  return (first + last).toUpperCase();
+}
+
 // ─── Reusable Pagination Bar ───────────────────────────────────────────────
 function PaginationBar({ total, page, limit, onPageChange, onLimitChange }) {
   const totalPages = Math.max(1, Math.ceil(total / limit));
@@ -430,7 +440,7 @@ export default function AdminDashboard({ setView }) {
   // Modals / Add / Edit states
   const [isAddUserOpen, setIsAddUserOpen] = useState(false);
   const [isEditUserOpen, setIsEditUserOpen] = useState(false);
-  const [userForm, setUserForm] = useState({ id: '', name: '', email: '', password: '', phone: '', schoolName: '', grade: '', guardianName: '', guardianPhone: '', groupCode: '' });
+  const [userForm, setUserForm] = useState({ id: '', name: '', email: '', password: '', phone: '', schoolName: '', grade: '', guardianName: '', guardianPhone: '', groupCode: '', profilePic: '' });
   const [userFormError, setUserFormError] = useState('');
   const [userFormSuccess, setUserFormSuccess] = useState('');
   const [userProfilePicFile, setUserProfilePicFile] = useState(null);
@@ -453,10 +463,14 @@ export default function AdminDashboard({ setView }) {
     phone: '',
     hours: 0,
     modes: ['ONLINE', 'OFFLINE', 'DOOR_STEP'],
-    title: 'Consultant Psychologist'
+    title: 'Consultant Psychologist',
+    profilePic: ''
   });
   const [psyFormError, setPsyFormError] = useState('');
   const [psyFormSuccess, setPsyFormSuccess] = useState('');
+  const [psyProfilePicFile, setPsyProfilePicFile] = useState(null);
+  const [isPsyPicUploading, setIsPsyPicUploading] = useState(false);
+  const psyProfilePicRef = React.useRef(null);
 
   // Admin Availability state declarations
   const [adminActiveDays, setAdminActiveDays] = useState({
@@ -863,7 +877,7 @@ export default function AdminDashboard({ setView }) {
         userForm.password
       );
       setUserFormSuccess("Student created successfully!");
-      setUserForm({ id: '', name: '', email: '', password: '', phone: '', schoolName: '', grade: '', guardianName: '', guardianPhone: '', groupCode: '' });
+      setUserForm({ id: '', name: '', email: '', password: '', phone: '', schoolName: '', grade: '', guardianName: '', guardianPhone: '', groupCode: '', profilePic: '' });
       setUserProfilePicFile(null);
       reloadData();
       setTimeout(() => {
@@ -886,7 +900,8 @@ export default function AdminDashboard({ setView }) {
       grade: student.grade || '',
       guardianName: student.guardianName || '',
       guardianPhone: student.guardianPhone || '',
-      groupCode: student.groupCode || ''
+      groupCode: student.groupCode || '',
+      profilePic: student.profilePic || student.image || ''
     });
     setUserProfilePicFile(null);
     setUserFormError('');
@@ -1231,8 +1246,10 @@ export default function AdminDashboard({ setView }) {
       phone: psy.phone || '',
       hours: psy.hours !== undefined ? psy.hours : 0,
       modes: psy.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP'],
-      title: psy.title || 'Consultant Psychologist'
+      title: psy.title || 'Consultant Psychologist',
+      profilePic: psy.profilePic || psy.image || ''
     });
+    setPsyProfilePicFile(null);
 
     // Load availability
     if (psy.availability) {
@@ -1278,6 +1295,13 @@ export default function AdminDashboard({ setView }) {
     }
 
     try {
+      if (psyProfilePicFile) {
+        setIsPsyPicUploading(true);
+        const fd = new FormData();
+        fd.append('profilePic', psyProfilePicFile);
+        await ApiService.adminUpdateCounsellorProfilePic(psyForm.id, fd);
+        setIsPsyPicUploading(false);
+      }
       await ApiService.updateAdminCounsellor(psyForm.id, {
         name: psyForm.name.trim(),
         email: psyForm.email.trim(),
@@ -1298,12 +1322,14 @@ export default function AdminDashboard({ setView }) {
         }
       });
       setPsyFormSuccess("Psychologist details updated!");
+      setPsyProfilePicFile(null);
       reloadData();
       setTimeout(() => {
         setIsEditPsyOpen(false);
         setPsyFormSuccess('');
       }, 1500);
     } catch (err) {
+      setIsPsyPicUploading(false);
       setPsyFormError(err.message || "Failed to update psychologist.");
     }
   };
@@ -3464,9 +3490,18 @@ export default function AdminDashboard({ setView }) {
                       <tbody>
                         {studentsList.slice((studentPage - 1) * studentLimit, studentPage * studentLimit).map(student => (
                           <tr key={student.id} className="border-b border-zinc-900 hover:bg-zinc-900/50">
-                            <td className="p-3">
-                              <span className="font-bold text-white block leading-tight">{student.name}</span>
-                              <span className="text-sm text-zinc-500">ID: {student.id}</span>
+                            <td className="p-3 flex items-center gap-3">
+                              <div className="w-10 h-10 rounded-lg bg-zinc-900 border border-zinc-800 text-brand flex items-center justify-center font-bold text-sm shrink-0 overflow-hidden">
+                                {student.profilePic || student.image ? (
+                                  <img src={student.profilePic || student.image} alt={student.name} className="w-full h-full object-cover" />
+                                ) : (
+                                  getInitials(student.name)
+                                )}
+                              </div>
+                              <div>
+                                <span className="font-bold text-white block leading-tight">{student.name}</span>
+                                <span className="text-sm text-zinc-500">ID: {student.id}</span>
+                              </div>
                             </td>
                             <td className="p-3 text-zinc-350 font-medium">{student.email}</td>
                             <td className="p-3 text-center">
@@ -3603,9 +3638,18 @@ export default function AdminDashboard({ setView }) {
                     <tbody>
                       {psychologistsList.slice((psyPage - 1) * psyLimit, psyPage * psyLimit).map(psy => (
                         <tr key={psy.id} className="border-b border-zinc-900 hover:bg-zinc-900/50">
-                          <td className="p-3">
-                            <span className="font-bold text-white block leading-tight">{psy.name}</span>
-                            <span className="text-sm text-zinc-500">ID: {psy.id} • Active Profile</span>
+                          <td className="p-3 flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-lg bg-zinc-900 border border-zinc-800 text-brand flex items-center justify-center font-bold text-sm shrink-0 overflow-hidden">
+                              {psy.profilePic || psy.image ? (
+                                <img src={psy.profilePic || psy.image} alt={psy.name} className="w-full h-full object-cover" />
+                              ) : (
+                                getInitials(psy.name)
+                              )}
+                            </div>
+                            <div>
+                              <span className="font-bold text-white block leading-tight">{psy.name}</span>
+                              <span className="text-sm text-zinc-500">ID: {psy.id} • Active Profile</span>
+                            </div>
                           </td>
                           <td className="p-3 text-zinc-350 font-medium">{psy.email}</td>
                           <td className="p-3 text-center">
@@ -4987,11 +5031,13 @@ export default function AdminDashboard({ setView }) {
                 <div className="space-y-2">
                   <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Profile Picture</label>
                   <div className="flex items-center gap-3">
-                    <div className="w-14 h-14 rounded-xl bg-zinc-950 border border-zinc-800 overflow-hidden shrink-0 flex items-center justify-center">
+                    <div className="w-14 h-14 rounded-xl bg-zinc-950 border border-zinc-800 overflow-hidden shrink-0 flex items-center justify-center text-brand font-bold text-lg">
                       {userProfilePicFile ? (
                         <img src={URL.createObjectURL(userProfilePicFile)} alt="Preview" className="w-full h-full object-cover" />
+                      ) : userForm.profilePic ? (
+                        <img src={userForm.profilePic} alt="Profile" className="w-full h-full object-cover" />
                       ) : (
-                        <User className="w-6 h-6 text-zinc-600" />
+                        getInitials(userForm.name)
                       )}
                     </div>
                     <div className="flex-1 space-y-1">
@@ -5088,6 +5134,29 @@ export default function AdminDashboard({ setView }) {
             </div>
 
             <form onSubmit={isAddPsyOpen ? handleCreatePsy : handleUpdatePsy} className="space-y-4 font-medium">
+              {isEditPsyOpen && (
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Profile Picture</label>
+                  <div className="flex items-center gap-3">
+                    <div className="w-14 h-14 rounded-xl bg-zinc-950 border border-zinc-800 overflow-hidden shrink-0 flex items-center justify-center text-brand font-bold text-lg">
+                      {psyProfilePicFile ? (
+                        <img src={URL.createObjectURL(psyProfilePicFile)} alt="Preview" className="w-full h-full object-cover" />
+                      ) : psyForm.profilePic ? (
+                        <img src={psyForm.profilePic} alt="Profile" className="w-full h-full object-cover" />
+                      ) : (
+                        getInitials(psyForm.name)
+                      )}
+                    </div>
+                    <div className="flex-1 space-y-1">
+                      <input ref={psyProfilePicRef} type="file" accept="image/jpeg,image/png,image/jpg" className="hidden" onChange={(e) => { const file = e.target.files?.[0]; if (file) setPsyProfilePicFile(file); }} />
+                      <button type="button" onClick={() => psyProfilePicRef.current?.click()} className="px-3 py-2 text-xs font-bold bg-zinc-950 border border-zinc-800 hover:border-brand text-zinc-300 hover:text-white rounded-lg cursor-pointer transition">
+                        {psyProfilePicFile ? 'Change Image' : 'Upload Photo'}
+                      </button>
+                      {psyProfilePicFile && (<p className="text-xs text-zinc-500 truncate max-w-[180px]">{psyProfilePicFile.name}</p>)}
+                    </div>
+                  </div>
+                </div>
+              )}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 <div className="space-y-1">
                   <label className="text-sm capitalize  font-bold text-zinc-400">Full Name</label>
@@ -5872,11 +5941,20 @@ export default function AdminDashboard({ setView }) {
           />
           <div className="relative w-full max-w-2xl bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6 text-left text-white z-10 animate-in zoom-in-95 duration-200 overflow-y-auto max-h-[85vh]">
             <div className="flex justify-between items-start">
-              <div>
-                <h3 className="text-base font-bold text-white capitalize  font-header flex items-center gap-2">
-                  <User className="w-5 h-5 text-brand" /> Student Profile Details
-                </h3>
-                <p className="text-sm text-zinc-500 mt-1">Registry records, booking history, and diagnostic aptitude profiles.</p>
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-xl bg-brand/10 border border-brand/20 text-brand flex items-center justify-center font-bold text-lg shrink-0 overflow-hidden">
+                  {viewingStudent.profilePic || viewingStudent.image ? (
+                    <img src={viewingStudent.profilePic || viewingStudent.image} alt={viewingStudent.name} className="w-full h-full object-cover" />
+                  ) : (
+                    getInitials(viewingStudent.name)
+                  )}
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-white capitalize  font-header flex items-center gap-2">
+                    <User className="w-5 h-5 text-brand" /> Student Profile Details
+                  </h3>
+                  <p className="text-sm text-zinc-500 mt-1">Registry records, booking history, and diagnostic aptitude profiles.</p>
+                </div>
               </div>
               <button
                 onClick={() => setViewingStudent(null)}
@@ -6224,11 +6302,20 @@ export default function AdminDashboard({ setView }) {
           />
           <div className="relative w-full max-w-2xl bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6 text-left text-white z-10 animate-in zoom-in-95 duration-200 overflow-y-auto max-h-[85vh]">
             <div className="flex justify-between items-start">
-              <div>
-                <h3 className="text-base font-bold text-white capitalize  font-header flex items-center gap-2">
-                  <Award className="w-5 h-5 text-brand" /> Psychologist Profile Details
-                </h3>
-                <p className="text-sm text-zinc-500 mt-1">Credentials, availability, rates, and booking history logs.</p>
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-xl bg-brand/10 border border-brand/20 text-brand flex items-center justify-center font-bold text-lg shrink-0 overflow-hidden">
+                  {viewingPsychologist.profilePic || viewingPsychologist.image ? (
+                    <img src={viewingPsychologist.profilePic || viewingPsychologist.image} alt={viewingPsychologist.name} className="w-full h-full object-cover" />
+                  ) : (
+                    getInitials(viewingPsychologist.name)
+                  )}
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-white capitalize  font-header flex items-center gap-2">
+                    <Award className="w-5 h-5 text-brand" /> Psychologist Profile Details
+                  </h3>
+                  <p className="text-sm text-zinc-500 mt-1">Credentials, availability, rates, and booking history logs.</p>
+                </div>
               </div>
               <button
                 onClick={() => setViewingPsychologist(null)}

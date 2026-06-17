@@ -299,7 +299,7 @@ export default function DateTimePicker({
 
       {viewType === 'calendar' ? (
         /* Calendar Grid View */
-        <div className="bg-white border border-zinc-200/80 rounded-2xl overflow-hidden shadow-xs animate-in fade-in duration-300">
+        <div className="bg-white border border-zinc-200/80 rounded-2xl overflow-hidden shadow-xs animate-in fade-in duration-300 w-full max-w-full md:max-w-[450px] md:mx-auto">
           {/* Calendar Header / Navigation */}
           <div className="flex items-center justify-between px-4 py-3 bg-zinc-50 border-b border-zinc-150">
             <span className="text-xs sm:text-sm font-black text-zinc-800 uppercase tracking-wide">
