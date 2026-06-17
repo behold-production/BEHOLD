@@ -3,7 +3,7 @@ import {
   User, ShieldAlert, Award, Trash, Check, Plus, Lock,
   Settings, KeyRound, BarChart3, LogOut, Search, ShieldCheck,
   Calendar, Clock, Link, AlertCircle, Edit, Video, UserPlus,
-  MessageSquare, FileSpreadsheet, HelpCircle, X, ChevronRight, ChevronLeft, Mail, Shield, Menu, Brain
+  MessageSquare, FileSpreadsheet, HelpCircle, X, ChevronRight, ChevronLeft, Mail, Shield, Menu, Brain, Download
 } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
@@ -119,6 +119,186 @@ export default function AdminDashboard({ setView }) {
       link.click();
     } catch (err) {
       alert("Failed to export Image: " + err.message);
+    }
+  };
+
+  const downloadPDFReceipt = (booking) => {
+    try {
+      const doc = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      });
+
+      // Find student details from usersDb
+      const student = usersDb.find(u => u.id === booking.userId);
+      const clientName = booking.userName || (student ? student.name : 'Student');
+      const clientEmail = student ? student.email : 'N/A';
+      const clientPhone = student ? student.phone : 'N/A';
+
+      const service = booking.service === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring';
+      const mode = booking.mode === 'ONLINE' ? 'Video Call' : booking.mode === 'DOOR_STEP' ? 'Home Visit' : 'At Center';
+
+      // GST and Amount Math
+      const amountPaid = typeof booking.amountPaid === 'number' ? booking.amountPaid : 1200;
+      const gstEnabled = settingsForm.gstEnabled === true;
+      const gstPercent = gstEnabled ? (Number(settingsForm.gstPercent) || 0) : 0;
+      
+      let baseFeeVal = amountPaid;
+      let gstAmountVal = 0;
+      if (gstEnabled && gstPercent > 0) {
+        baseFeeVal = Math.round(amountPaid / (1 + gstPercent / 100));
+        gstAmountVal = amountPaid - baseFeeVal;
+      }
+
+      // Draw PDF Receipt
+      // Top Banner Accent Bar (Teal brand color #06b6d4)
+      doc.setFillColor(6, 182, 212);
+      doc.rect(0, 0, 210, 8, 'F');
+
+      // Header Brand Title
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(22);
+      doc.setTextColor(9, 9, 11); // zinc-900
+      doc.text('BEHOLD.', 20, 25);
+      
+      doc.setFontSize(9);
+      doc.setFont('Helvetica', 'normal');
+      doc.setTextColor(113, 113, 122); // zinc-500
+      doc.text('Premium Career Guidance & Mental Health Platform', 20, 30);
+
+      // Status Badge
+      doc.setFillColor(240, 253, 250); // light teal background
+      doc.roundedRect(142, 18, 48, 10, 2, 2, 'F');
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(8.5);
+      doc.setTextColor(13, 148, 136); // Teal text
+      doc.text('CONFIRMED & PAID', 147, 24.5);
+
+      // Divider Line
+      doc.setDrawColor(228, 228, 231); // zinc-200
+      doc.line(20, 36, 190, 36);
+
+      // Client & Billing Info Grid
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(9.5);
+      doc.setTextColor(39, 39, 42); // zinc-800
+      doc.text('CLIENT DETAILS', 20, 46);
+      doc.text('RECEIPT METADATA', 120, 46);
+
+      doc.setFont('Helvetica', 'normal');
+      doc.setFontSize(8.5);
+      doc.setTextColor(82, 82, 91); // zinc-600
+      
+      // Client info
+      doc.text(`Name: ${clientName}`, 20, 52);
+      doc.text(`Email: ${clientEmail}`, 20, 58);
+      doc.text(`Phone: ${clientPhone}`, 20, 64);
+
+      // Receipt Metadata info
+      const displayId = booking.id ? booking.id.toString().substring(Math.max(0, booking.id.toString().length - 6)) : 'N/A';
+      doc.text(`Receipt ID: REC-${displayId}`, 120, 52);
+      doc.text(`Booking ID: SB-${booking.id || 'N/A'}`, 120, 58);
+      doc.text(`Date of Issue: ${new Date().toLocaleDateString('en-IN')}`, 120, 64);
+
+      // Divider Line
+      doc.line(20, 70, 190, 70);
+
+      // Booking Specifics
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(9.5);
+      doc.setTextColor(39, 39, 42);
+      doc.text('SESSION DETAILS', 20, 80);
+
+      doc.setFont('Helvetica', 'normal');
+      doc.setFontSize(8.5);
+      doc.setTextColor(82, 82, 91);
+      doc.text(`Service Type: ${service}`, 20, 86);
+      doc.text(`Advisor Assigned: ${booking.advisorName || 'Advisor'} (${booking.advisorRole || 'Consultant'})`, 20, 92);
+      doc.text(`Session Schedule: ${booking.date} at ${booking.time}`, 20, 98);
+      doc.text(`Session Mode: ${mode}`, 20, 104);
+
+      // Divider Line
+      doc.line(20, 110, 190, 110);
+
+      // Pricing Breakdown Table
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(9.5);
+      doc.setTextColor(39, 39, 42);
+      doc.text('CHARGES BREAKDOWN', 20, 120);
+
+      // Table Header Background
+      doc.setFillColor(244, 244, 245); // zinc-100
+      doc.rect(20, 124, 170, 8, 'F');
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(8.5);
+      doc.setTextColor(63, 63, 70); // zinc-700
+      doc.text('Description', 24, 129.5);
+      doc.text('Amount', 160, 129.5);
+
+      // Table Rows
+      let tableY = 138;
+      doc.setFont('Helvetica', 'normal');
+      doc.setTextColor(82, 82, 91);
+
+      // 1. Base fee
+      doc.text(`${service} Session Booking Fee`, 24, tableY);
+      doc.text(`Rs. ${baseFeeVal.toFixed(2)}`, 160, tableY);
+      tableY += 8;
+
+      // 2. GST (if enabled)
+      if (gstAmountVal > 0) {
+        doc.text(`GST (${gstPercent}%)`, 24, tableY);
+        doc.text(`Rs. ${gstAmountVal.toFixed(2)}`, 160, tableY);
+        tableY += 8;
+      }
+
+      // Border line for total
+      doc.setDrawColor(228, 228, 231);
+      doc.line(20, tableY - 4, 190, tableY - 4);
+
+      // Total Row
+      doc.setFont('Helvetica', 'bold');
+      doc.setTextColor(9, 9, 11); // zinc-900
+      doc.text('Net Total Paid', 24, tableY + 2);
+      doc.setTextColor(13, 148, 136); // Teal color for total price
+      doc.setFontSize(10.5);
+      doc.text(`INR ${amountPaid.toFixed(2)}`, 160, tableY + 2);
+      
+      tableY += 16;
+
+      // Google Meet Session Link if Online
+      if (booking.meetLink && booking.meetLink !== 'LOCKED') {
+        doc.setFillColor(240, 253, 250); // Light teal bg
+        doc.roundedRect(20, tableY, 170, 18, 2, 2, 'F');
+        
+        doc.setFont('Helvetica', 'bold');
+        doc.setFontSize(8.5);
+        doc.setTextColor(13, 148, 136);
+        doc.text('Google Meet Session Link (Online Video Call):', 25, tableY + 6);
+        
+        doc.setFont('Helvetica', 'normal');
+        doc.setFontSize(8);
+        doc.setTextColor(6, 182, 212); // blue-link
+        doc.text(booking.meetLink, 25, tableY + 12);
+        
+        tableY += 28;
+      } else {
+        tableY += 10;
+      }
+
+      // Footer Notes
+      doc.setFont('Helvetica', 'normal');
+      doc.setFontSize(8);
+      doc.setTextColor(161, 161, 170); // zinc-400
+      doc.text('This is a secure computer-generated booking receipt. No physical signature is required.', 20, tableY);
+      doc.text('For rescheduling queries, cancellations, or support, please reply to your coordinator on WhatsApp.', 20, tableY + 5);
+
+      // Save document
+      doc.save(`Behold_Session_Receipt_${booking.id}.pdf`);
+    } catch (e) {
+      console.error(e);
+      alert("Failed to generate PDF receipt: " + e.message);
     }
   };
 
@@ -2303,6 +2483,9 @@ export default function AdminDashboard({ setView }) {
 
             const totalRevenue = bookingsDb.reduce((acc, b) => {
               if (b.status !== 'COMPLETED') return acc;
+              if (b.amountPaid !== undefined && b.amountPaid !== null) {
+                return acc + Number(b.amountPaid);
+              }
               const advisor = usersDb.find(u => u.id === b.advisorId) || usersDb.find(u => u.name === b.advisorName);
               let price = 1250;
               if (advisor && advisor.price) {
@@ -2313,6 +2496,9 @@ export default function AdminDashboard({ setView }) {
 
             const projectedRevenue = bookingsDb.reduce((acc, b) => {
               if (b.status !== 'CONFIRMED' && b.status !== 'PENDING') return acc;
+              if (b.amountPaid !== undefined && b.amountPaid !== null) {
+                return acc + Number(b.amountPaid);
+              }
               const advisor = usersDb.find(u => u.id === b.advisorId) || usersDb.find(u => u.name === b.advisorName);
               let price = 1250;
               if (advisor && advisor.price) {
@@ -3868,6 +4054,9 @@ export default function AdminDashboard({ setView }) {
                     <span className="text-sm font-bold text-emerald-450">₹{
                       filteredBookings.reduce((acc, b) => {
                         if (b.status !== 'COMPLETED') return acc;
+                        if (b.amountPaid !== undefined && b.amountPaid !== null) {
+                          return acc + Number(b.amountPaid);
+                        }
                         const advisor = usersDb.find(u => u.id === b.advisorId) || usersDb.find(u => u.name === b.advisorName);
                         let price = 1250;
                         if (advisor && advisor.price) {
@@ -4001,6 +4190,15 @@ export default function AdminDashboard({ setView }) {
                               </span>
                             </td>
                             <td className="p-3 text-center flex items-center justify-center gap-2">
+                              {booking.status !== 'CANCELLED' && (
+                                <button
+                                  onClick={() => downloadPDFReceipt(booking)}
+                                  className="p-1.5 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"
+                                  title="Download Receipt PDF"
+                                >
+                                  <Download className="w-3.5 h-3.5" />
+                                </button>
+                              )}
                               <button
                                 onClick={() => handleOpenEditBooking(booking)}
                                 className="p-1.5 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"

@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { jsPDF } from 'jspdf';
 import {
   User, Phone, Mail, BookOpen, Award, LayoutDashboard, Calendar,
   History, BarChart3, Clock, ExternalLink, Lock, Check, Sun,
@@ -149,6 +150,236 @@ export default function StudentProfile() {
   const greeting = useMemo(() => getGreeting(), []);
   // displayName from saved profile (header doesn't change until Save is clicked)
   const displayName = profile.name || user?.name || 'Student';
+
+  const generateReceiptPDFDoc = (bookingDetails) => {
+    try {
+      const doc = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      });
+
+      // Top Banner Accent Bar (Teal brand color #06b6d4)
+      doc.setFillColor(6, 182, 212);
+      doc.rect(0, 0, 210, 8, 'F');
+
+      // Header Brand Title
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(22);
+      doc.setTextColor(9, 9, 11); // zinc-900
+      doc.text('BEHOLD.', 20, 25);
+      
+      doc.setFontSize(9);
+      doc.setFont('Helvetica', 'normal');
+      doc.setTextColor(113, 113, 122); // zinc-500
+      doc.text('Premium Career Guidance & Mental Health Platform', 20, 30);
+
+      // Status Badge
+      doc.setFillColor(240, 253, 250); // light teal background
+      doc.roundedRect(142, 18, 48, 10, 2, 2, 'F');
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(8.5);
+      doc.setTextColor(13, 148, 136); // Teal text
+      doc.text('CONFIRMED & PAID', 147, 24.5);
+
+      // Divider Line
+      doc.setDrawColor(228, 228, 231); // zinc-200
+      doc.line(20, 36, 190, 36);
+
+      // Client & Billing Info Grid
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(9.5);
+      doc.setTextColor(39, 39, 42); // zinc-800
+      doc.text('CLIENT DETAILS', 20, 46);
+      doc.text('RECEIPT METADATA', 120, 46);
+
+      doc.setFont('Helvetica', 'normal');
+      doc.setFontSize(8.5);
+      doc.setTextColor(82, 82, 91); // zinc-600
+      
+      // Client info
+      doc.text(`Name: ${bookingDetails.clientName}`, 20, 52);
+      doc.text(`Email: ${bookingDetails.clientEmail || 'N/A'}`, 20, 58);
+      doc.text(`Phone: ${bookingDetails.clientPhone || 'N/A'}`, 20, 64);
+
+      // Receipt Metadata info
+      const displayId = bookingDetails.id ? bookingDetails.id.toString().substring(Math.max(0, bookingDetails.id.toString().length - 6)) : 'N/A';
+      doc.text(`Receipt ID: REC-${displayId}`, 120, 52);
+      doc.text(`Booking ID: SB-${bookingDetails.id || 'N/A'}`, 120, 58);
+      doc.text(`Date of Issue: ${new Date().toLocaleDateString('en-IN')}`, 120, 64);
+
+      // Divider Line
+      doc.line(20, 70, 190, 70);
+
+      // Booking Specifics
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(9.5);
+      doc.setTextColor(39, 39, 42);
+      doc.text('SESSION DETAILS', 20, 80);
+
+      doc.setFont('Helvetica', 'normal');
+      doc.setFontSize(8.5);
+      doc.setTextColor(82, 82, 91);
+      doc.text(`Service Type: ${bookingDetails.service}`, 20, 86);
+      doc.text(`Advisor Assigned: ${bookingDetails.advisorName} (${bookingDetails.advisorRole})`, 20, 92);
+      doc.text(`Session Schedule: ${bookingDetails.date} at ${bookingDetails.time}`, 20, 98);
+      doc.text(`Session Mode: ${bookingDetails.mode}`, 20, 104);
+
+      // Divider Line
+      doc.line(20, 110, 190, 110);
+
+      // Pricing Breakdown Table
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(9.5);
+      doc.setTextColor(39, 39, 42);
+      doc.text('CHARGES BREAKDOWN', 20, 120);
+
+      // Table Header Background
+      doc.setFillColor(244, 244, 245); // zinc-100
+      doc.rect(20, 124, 170, 8, 'F');
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(8.5);
+      doc.setTextColor(63, 63, 70); // zinc-700
+      doc.text('Description', 24, 129.5);
+      doc.text('Amount', 160, 129.5);
+
+      // Table Rows
+      let tableY = 138;
+      doc.setFont('Helvetica', 'normal');
+      doc.setTextColor(82, 82, 91);
+
+      // Resolve breakdown metrics dynamically
+      const detailsBaseFee = bookingDetails.baseFee || 0;
+      const detailsGstPercent = bookingDetails.gstPercent || 0;
+      const detailsGstAmount = bookingDetails.gstAmount || 0;
+      const detailsDiscount = bookingDetails.appliedDiscount || 0;
+      const detailsNetTotal = bookingDetails.amount || 0;
+
+      // 1. Base fee
+      doc.text(`${bookingDetails.service} Session Booking Fee`, 24, tableY);
+      doc.text(`Rs. ${detailsBaseFee.toFixed(2)}`, 160, tableY);
+      tableY += 8;
+
+      // 2. GST (if enabled)
+      if (detailsGstAmount > 0) {
+        doc.text(`GST (${detailsGstPercent}%)`, 24, tableY);
+        doc.text(`Rs. ${detailsGstAmount.toFixed(2)}`, 160, tableY);
+        tableY += 8;
+      }
+
+      // 3. Discount (if applied)
+      if (detailsDiscount > 0) {
+        doc.setTextColor(22, 163, 74); // green
+        doc.text(`Promo Discount Code`, 24, tableY);
+        doc.text(`-Rs. ${detailsDiscount.toFixed(2)}`, 160, tableY);
+        tableY += 8;
+        doc.setTextColor(82, 82, 91); // reset to zinc-600
+      }
+
+      // Border line for total
+      doc.setDrawColor(228, 228, 231);
+      doc.line(20, tableY - 4, 190, tableY - 4);
+
+      // Total Row
+      doc.setFont('Helvetica', 'bold');
+      doc.setTextColor(9, 9, 11); // zinc-900
+      doc.text('Net Total Paid', 24, tableY + 2);
+      doc.setTextColor(13, 148, 136); // Teal color for total price
+      doc.setFontSize(10.5);
+      doc.text(`INR ${detailsNetTotal.toFixed(2)}`, 160, tableY + 2);
+      
+      tableY += 16;
+
+      // Google Meet Session Link if Online
+      if (bookingDetails.meetLink) {
+        doc.setFillColor(240, 253, 250); // Light teal bg
+        doc.roundedRect(20, tableY, 170, 18, 2, 2, 'F');
+        
+        doc.setFont('Helvetica', 'bold');
+        doc.setFontSize(8.5);
+        doc.setTextColor(13, 148, 136);
+        doc.text('Google Meet Session Link (Online Video Call):', 25, tableY + 6);
+        
+        doc.setFont('Helvetica', 'normal');
+        doc.setFontSize(8);
+        doc.setTextColor(6, 182, 212); // blue-link
+        doc.text(bookingDetails.meetLink, 25, tableY + 12);
+        
+        tableY += 28;
+      } else {
+        tableY += 10;
+      }
+
+      // Footer Notes
+      doc.setFont('Helvetica', 'normal');
+      doc.setFontSize(8);
+      doc.setTextColor(161, 161, 170); // zinc-400
+      doc.text('This is a secure computer-generated booking receipt. No physical signature is required.', 20, tableY);
+      doc.text('For rescheduling queries, cancellations, or support, please reply to your coordinator on WhatsApp.', 20, tableY + 5);
+
+      // Save document
+      doc.save(`Behold_Session_Receipt_${bookingDetails.id}.pdf`);
+    } catch (e) {
+      console.error(e);
+      alert("Failed to generate PDF receipt. Please contact platform support.");
+    }
+  };
+
+  const downloadPDFReceiptForSession = (session) => {
+    const toastId = toast.loading('Generating receipt PDF...');
+    try {
+      let gstEnabled = false;
+      let gstPercent = 0;
+      try {
+        const stored = localStorage.getItem('behold_site_settings');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          gstEnabled = parsed.gstEnabled === true;
+          gstPercent = typeof parsed.gstPercent === 'number' ? parsed.gstPercent : 0;
+        }
+      } catch (e) {}
+
+      const amountPaid = session.amountPaid || 1200;
+      let baseFeeVal = amountPaid;
+      let gstAmountVal = 0;
+      if (gstEnabled && gstPercent > 0) {
+        baseFeeVal = Math.round(amountPaid / (1 + gstPercent / 100));
+        gstAmountVal = amountPaid - baseFeeVal;
+      }
+
+      const clientName = profile.name || user?.name || 'Student';
+      const clientEmail = profile.email || user?.email || '';
+      const clientPhone = profile.phone || user?.phone || '';
+
+      const service = session.service === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring';
+      const mode = session.mode === 'ONLINE' ? 'Video Call' : session.mode === 'DOOR_STEP' ? 'Home Visit' : 'At Center';
+
+      const details = {
+        id: session.appointmentId || session.id,
+        service,
+        mode,
+        advisorName: session.advisorName || 'Advisor',
+        advisorRole: session.advisorRole || (session.service === 'counselling' ? 'Consultant Psychologist' : 'Career Advisor'),
+        date: session.date,
+        time: session.time,
+        clientName,
+        clientEmail,
+        clientPhone,
+        meetLink: session.meetLink && session.meetLink !== 'LOCKED' ? session.meetLink : null,
+        amount: amountPaid,
+        baseFee: baseFeeVal,
+        gstPercent: gstEnabled ? gstPercent : 0,
+        gstAmount: gstAmountVal,
+        appliedDiscount: 0
+      };
+
+      generateReceiptPDFDoc(details);
+      toast.success('Receipt downloaded successfully!', { id: toastId });
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to generate PDF receipt', { id: toastId });
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -1116,6 +1347,16 @@ export default function StudentProfile() {
                             <MapPin className="w-3.5 h-3.5" /> View Location
                           </button>
                         )}
+                        {(session.paymentStatus === 'PAID' || session.amountPaid > 0) && (
+                          <button
+                            type="button"
+                            onClick={() => downloadPDFReceiptForSession(session)}
+                            className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 border border-zinc-200 hover:border-zinc-300 rounded-lg text-xs font-medium text-zinc-600 hover:text-zinc-900 transition-colors bg-white cursor-pointer"
+                            title="Download Receipt PDF"
+                          >
+                            <Download className="w-3.5 h-3.5 text-zinc-500" /> Receipt
+                          </button>
+                        )}
                         <button
                           type="button"
                           onClick={() => navigate('/booking')}
@@ -1223,13 +1464,25 @@ export default function StudentProfile() {
 
                         <div className="mt-3 flex items-center justify-between">
                           <span className="text-xs text-zinc-400">Session #{completedSessions.length - sIdx}</span>
-                          <button
-                            type="button"
-                            className="inline-flex items-center gap-1 text-xs font-medium text-zinc-500 hover:text-zinc-900 transition-colors"
-                            title="Download certificate"
-                          >
-                            <Download className="w-3.5 h-3.5" /> Certificate
-                          </button>
+                          <div className="flex items-center gap-3">
+                            {(session.paymentStatus === 'PAID' || session.amountPaid > 0) && (
+                              <button
+                                type="button"
+                                onClick={() => downloadPDFReceiptForSession(session)}
+                                className="inline-flex items-center gap-1 text-xs font-medium text-zinc-500 hover:text-zinc-900 transition-colors cursor-pointer"
+                                title="Download Receipt PDF"
+                              >
+                                <Download className="w-3.5 h-3.5" /> Receipt
+                              </button>
+                            )}
+                            <button
+                              type="button"
+                              className="inline-flex items-center gap-1 text-xs font-medium text-zinc-500 hover:text-zinc-900 transition-colors"
+                              title="Download certificate"
+                            >
+                              <Download className="w-3.5 h-3.5" /> Certificate
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>

@@ -137,6 +137,22 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
   const [showSummary, setShowSummary] = useState(false);
   const [downloadingPdf, setDownloadingPdf] = useState(false);
 
+  // Read GST settings from site settings (persisted by App.jsx)
+  let gstEnabled = false;
+  let gstPercent = 0;
+  try {
+    const stored = localStorage.getItem('behold_site_settings');
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      gstEnabled = parsed.gstEnabled === true;
+      gstPercent = typeof parsed.gstPercent === 'number' ? parsed.gstPercent : 0;
+    }
+  } catch (e) {}
+
+  const baseFee = selectedAdvisor ? (selectedAdvisor.price || 0) : 0;
+  const gstAmount = gstEnabled && gstPercent > 0 ? Math.round(baseFee * (gstPercent / 100)) : 0;
+  const netTotal = Math.max(0, baseFee + gstAmount - appliedDiscount);
+
   const downloadPDFReceipt = (bookingDetails) => {
     setDownloadingPdf(true);
     try {
@@ -146,118 +162,169 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
         format: 'a4'
       });
 
-      // Top Banner Accent Bar
-      doc.setFillColor(6, 182, 212); // brandCyan
+      // Top Banner Accent Bar (Teal brand color #06b6d4)
+      doc.setFillColor(6, 182, 212);
       doc.rect(0, 0, 210, 8, 'F');
 
-      // Header Title
+      // Header Brand Title
       doc.setFont('Helvetica', 'bold');
       doc.setFontSize(22);
-      doc.setTextColor(9, 9, 11);
+      doc.setTextColor(9, 9, 11); // zinc-900
       doc.text('BEHOLD.', 20, 25);
-      doc.setFontSize(10);
+      
+      doc.setFontSize(9);
       doc.setFont('Helvetica', 'normal');
-      doc.setTextColor(113, 113, 122);
-      doc.text('Session Booking Receipt', 20, 30);
+      doc.setTextColor(113, 113, 122); // zinc-500
+      doc.text('Premium Career Guidance & Mental Health Platform', 20, 30);
+
+      // Status Badge
+      doc.setFillColor(240, 253, 250); // light teal background
+      doc.roundedRect(142, 18, 48, 10, 2, 2, 'F');
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(8.5);
+      doc.setTextColor(13, 148, 136); // Teal text
+      doc.text('CONFIRMED & PAID', 147, 24.5);
 
       // Divider Line
-      doc.setDrawColor(228, 228, 231);
+      doc.setDrawColor(228, 228, 231); // zinc-200
       doc.line(20, 36, 190, 36);
 
-      // Booking details & status badge
-      doc.setFillColor(240, 253, 250); // Light teal background
-      doc.roundedRect(138, 20, 52, 10, 2, 2, 'F');
+      // Client & Billing Info Grid
       doc.setFont('Helvetica', 'bold');
-      doc.setFontSize(9);
-      doc.setTextColor(13, 148, 136); // Teal text
-      doc.text('✓ CONFIRMED & PAID', 144, 26.5);
-
-      // Left Column - Booking Info
-      doc.setFont('Helvetica', 'bold');
-      doc.setFontSize(11);
-      doc.setTextColor(39, 39, 42);
-      doc.text('BOOKING DETAILS', 20, 48);
+      doc.setFontSize(9.5);
+      doc.setTextColor(39, 39, 42); // zinc-800
+      doc.text('CLIENT DETAILS', 20, 46);
+      doc.text('RECEIPT METADATA', 120, 46);
 
       doc.setFont('Helvetica', 'normal');
-      doc.setFontSize(9.5);
-      doc.setTextColor(82, 82, 91);
+      doc.setFontSize(8.5);
+      doc.setTextColor(82, 82, 91); // zinc-600
       
-      const details = [
-        { label: 'Booking ID:', val: `sb_${bookingDetails.id}` },
-        { label: 'Service:', val: bookingDetails.service },
-        { label: 'Session Mode:', val: bookingDetails.mode },
-        { label: 'Advisor:', val: bookingDetails.advisorName },
-        { label: 'Advisor Role:', val: bookingDetails.advisorRole },
-        { label: 'Date & Time:', val: `${bookingDetails.date} at ${bookingDetails.time}` }
-      ];
+      // Client info
+      doc.text(`Name: ${bookingDetails.clientName}`, 20, 52);
+      doc.text(`Email: ${bookingDetails.clientEmail || 'N/A'}`, 20, 58);
+      doc.text(`Phone: ${bookingDetails.clientPhone || 'N/A'}`, 20, 64);
 
-      let currentY = 55;
-      details.forEach(item => {
-        doc.setFont('Helvetica', 'bold');
-        doc.text(item.label, 20, currentY);
-        doc.setFont('Helvetica', 'normal');
-        doc.text(item.val, 55, currentY);
-        currentY += 7.5;
-      });
+      // Receipt Metadata info
+      const displayId = bookingDetails.id ? bookingDetails.id.toString().substring(Math.max(0, bookingDetails.id.toString().length - 6)) : 'N/A';
+      doc.text(`Receipt ID: REC-${displayId}`, 120, 52);
+      doc.text(`Booking ID: SB-${bookingDetails.id || 'N/A'}`, 120, 58);
+      doc.text(`Date of Issue: ${new Date().toLocaleDateString('en-IN')}`, 120, 64);
 
-      // Right Column / Box - Student Info & Payment
-      doc.setFillColor(248, 250, 252); // soft slate background
-      doc.setDrawColor(226, 232, 240);
-      doc.roundedRect(120, 45, 70, 48, 2, 2, 'FD');
+      // Divider Line
+      doc.line(20, 70, 190, 70);
 
-      doc.setFont('Helvetica', 'bold');
-      doc.setFontSize(10);
-      doc.setTextColor(15, 23, 42);
-      doc.text('CLIENT DETAILS', 125, 52);
-
-      doc.setFont('Helvetica', 'normal');
-      doc.setFontSize(9);
-      doc.setTextColor(71, 85, 105);
-      doc.text(`Name: ${bookingDetails.clientName}`, 125, 59);
-      doc.text(`Email: ${bookingDetails.clientEmail}`, 125, 65);
-      doc.text(`Phone: ${bookingDetails.clientPhone}`, 125, 71);
-
-      // Divider inside slate box
-      doc.line(125, 76, 185, 76);
-
+      // Booking Specifics
       doc.setFont('Helvetica', 'bold');
       doc.setFontSize(9.5);
-      doc.setTextColor(15, 23, 42);
-      doc.text('Total Paid:', 125, 83);
-      doc.setFontSize(11);
-      doc.setTextColor(13, 148, 136); // Teal price
-      doc.text(`INR ${bookingDetails.amount}`, 148, 83);
+      doc.setTextColor(39, 39, 42);
+      doc.text('SESSION DETAILS', 20, 80);
 
-      // Google Meet info block if online
-      let finalY = 110;
-      if (bookingDetails.meetLink) {
-        doc.setFillColor(244, 244, 245);
-        doc.roundedRect(20, 105, 170, 18, 2, 2, 'F');
-        
-        doc.setFont('Helvetica', 'bold');
-        doc.setFontSize(9);
-        doc.setTextColor(39, 39, 42);
-        doc.text('Google Meet Session Link:', 25, 111);
-        
-        doc.setFont('Helvetica', 'normal');
-        doc.setFontSize(9);
-        doc.setTextColor(6, 182, 212); // Blue link color
-        doc.text(bookingDetails.meetLink, 25, 117);
-        
-        finalY = 135;
+      doc.setFont('Helvetica', 'normal');
+      doc.setFontSize(8.5);
+      doc.setTextColor(82, 82, 91);
+      doc.text(`Service Type: ${bookingDetails.service}`, 20, 86);
+      doc.text(`Advisor Assigned: ${bookingDetails.advisorName} (${bookingDetails.advisorRole})`, 20, 92);
+      doc.text(`Session Schedule: ${bookingDetails.date} at ${bookingDetails.time}`, 20, 98);
+      doc.text(`Session Mode: ${bookingDetails.mode}`, 20, 104);
+
+      // Divider Line
+      doc.line(20, 110, 190, 110);
+
+      // Pricing Breakdown Table
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(9.5);
+      doc.setTextColor(39, 39, 42);
+      doc.text('CHARGES BREAKDOWN', 20, 120);
+
+      // Table Header Background
+      doc.setFillColor(244, 244, 245); // zinc-100
+      doc.rect(20, 124, 170, 8, 'F');
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(8.5);
+      doc.setTextColor(63, 63, 70); // zinc-700
+      doc.text('Description', 24, 129.5);
+      doc.text('Amount', 160, 129.5);
+
+      // Table Rows
+      let tableY = 138;
+      doc.setFont('Helvetica', 'normal');
+      doc.setTextColor(82, 82, 91);
+
+      // Resolve breakdown metrics dynamically
+      const detailsBaseFee = typeof bookingDetails.baseFee === 'number' ? bookingDetails.baseFee : baseFee;
+      const detailsGstPercent = typeof bookingDetails.gstPercent === 'number' ? bookingDetails.gstPercent : (gstEnabled ? gstPercent : 0);
+      const detailsGstAmount = typeof bookingDetails.gstAmount === 'number' ? bookingDetails.gstAmount : (gstEnabled && gstPercent > 0 ? Math.round(detailsBaseFee * (detailsGstPercent / 100)) : 0);
+      const detailsDiscount = typeof bookingDetails.appliedDiscount === 'number' ? bookingDetails.appliedDiscount : appliedDiscount;
+      const detailsNetTotal = typeof bookingDetails.amount === 'number' ? bookingDetails.amount : Math.max(0, detailsBaseFee + detailsGstAmount - detailsDiscount);
+
+      // 1. Base fee
+      doc.text(`${bookingDetails.service} Session Booking Fee`, 24, tableY);
+      doc.text(`Rs. ${detailsBaseFee.toFixed(2)}`, 160, tableY);
+      tableY += 8;
+
+      // 2. GST (if enabled)
+      if (detailsGstAmount > 0) {
+        doc.text(`GST (${detailsGstPercent}%)`, 24, tableY);
+        doc.text(`Rs. ${detailsGstAmount.toFixed(2)}`, 160, tableY);
+        tableY += 8;
       }
 
-      // Footer / Terms
+      // 3. Discount (if applied)
+      if (detailsDiscount > 0) {
+        doc.setTextColor(22, 163, 74); // green
+        doc.text(`Promo Discount Code`, 24, tableY);
+        doc.text(`-Rs. ${detailsDiscount.toFixed(2)}`, 160, tableY);
+        tableY += 8;
+        doc.setTextColor(82, 82, 91); // reset to zinc-600
+      }
+
+      // Border line for total
+      doc.setDrawColor(228, 228, 231);
+      doc.line(20, tableY - 4, 190, tableY - 4);
+
+      // Total Row
+      doc.setFont('Helvetica', 'bold');
+      doc.setTextColor(9, 9, 11); // zinc-900
+      doc.text('Net Total Paid', 24, tableY + 2);
+      doc.setTextColor(13, 148, 136); // Teal color for total price
+      doc.setFontSize(10.5);
+      doc.text(`INR ${detailsNetTotal.toFixed(2)}`, 160, tableY + 2);
+      
+      tableY += 16;
+
+      // Google Meet Session Link if Online
+      if (bookingDetails.meetLink) {
+        doc.setFillColor(240, 253, 250); // Light teal bg
+        doc.roundedRect(20, tableY, 170, 18, 2, 2, 'F');
+        
+        doc.setFont('Helvetica', 'bold');
+        doc.setFontSize(8.5);
+        doc.setTextColor(13, 148, 136);
+        doc.text('Google Meet Session Link (Online Video Call):', 25, tableY + 6);
+        
+        doc.setFont('Helvetica', 'normal');
+        doc.setFontSize(8);
+        doc.setTextColor(6, 182, 212); // blue-link
+        doc.text(bookingDetails.meetLink, 25, tableY + 12);
+        
+        tableY += 28;
+      } else {
+        tableY += 10;
+      }
+
+      // Footer Notes
       doc.setFont('Helvetica', 'normal');
       doc.setFontSize(8);
-      doc.setTextColor(161, 161, 170);
-      doc.text('This is a computer-generated confirmation. No physical signature is required.', 20, finalY);
-      doc.text('Need help? Contact support at support@beholdaspire.com or reply on WhatsApp.', 20, finalY + 5);
+      doc.setTextColor(161, 161, 170); // zinc-400
+      doc.text('This is a secure computer-generated booking receipt. No physical signature is required.', 20, tableY);
+      doc.text('For rescheduling queries, cancellations, or support, please reply to your coordinator on WhatsApp.', 20, tableY + 5);
 
+      // Save document
       doc.save(`Behold_Session_Receipt_${bookingDetails.id}.pdf`);
     } catch (e) {
       console.error(e);
-      alert("Failed to generate PDF. Please try copying receipt instead.");
+      alert("Failed to generate PDF receipt. Please contact platform support.");
     } finally {
       setDownloadingPdf(false);
     }
@@ -1011,7 +1078,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                     <span className="font-semibold text-zinc-800 capitalize block">
                       {paymentMethod === 'card' ? 'Card' : paymentMethod === 'upi' ? 'UPI' : 'Net Banking'}
                     </span>
-                    <span className="text-xs text-zinc-500 block">Amount Paid: ₹{(selectedAdvisor?.price || 1200) + Math.round((selectedAdvisor?.price || 1200) * 0.18) - appliedDiscount}</span>
+                    <span className="text-xs text-zinc-500 block">Amount Paid: ₹{netTotal}</span>
                   </div>
                 </div>
 
@@ -1052,7 +1119,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                     const advisorRole = selectedAdvisor?.role || 'Consultant Psychologist';
                     const service = bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring';
                     const mode = bookingMode === 'ONLINE' ? 'Video Call' : bookingMode === 'DOOR_STEP' ? 'Home Visit' : 'At Center';
-                    const amount = (selectedAdvisor?.price || 1200) + Math.round((selectedAdvisor?.price || 1200) * 0.18) - appliedDiscount;
+                    const amount = netTotal;
                     const clientName = bookingForm.name || 'Student';
                     const clientEmail = bookingForm.email;
                     const clientPhone = bookingForm.phone;
@@ -1070,7 +1137,11 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                       clientEmail,
                       clientPhone,
                       amount,
-                      meetLink
+                      meetLink,
+                      baseFee: baseFee,
+                      gstPercent: gstEnabled ? gstPercent : 0,
+                      gstAmount: gstAmount,
+                      appliedDiscount: appliedDiscount
                     });
                   }}
                   className="px-6 py-3 bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 hover:border-zinc-300 text-xs font-bold capitalize rounded-lg transition cursor-pointer w-full sm:w-auto flex items-center justify-center gap-2"
@@ -1725,56 +1796,36 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                   </div>
 
                   {/* Invoice ledger calculation breakdown */}
-                  {(() => {
-                    // Read GST settings from site settings (persisted by App.jsx)
-                    let gstEnabled = false;
-                    let gstPercent = 0;
-                    try {
-                      const stored = localStorage.getItem('behold_site_settings');
-                      if (stored) {
-                        const parsed = JSON.parse(stored);
-                        gstEnabled = parsed.gstEnabled === true;
-                        gstPercent = typeof parsed.gstPercent === 'number' ? parsed.gstPercent : 0;
-                      }
-                    } catch (e) {}
-
-                    const baseFee = selectedAdvisor ? (selectedAdvisor.price || 0) : 0;
-                    const gstAmount = gstEnabled && gstPercent > 0 ? Math.round(baseFee * (gstPercent / 100)) : 0;
-                    const netTotal = Math.max(0, baseFee + gstAmount - appliedDiscount);
-
-                    return (
-                      <div className="pt-3 border-t border-zinc-200 space-y-2">
-                        <span className="text-[9.5px] text-zinc-400 capitalize tracking-wide block font-semibold text-left">Pricing Breakdown</span>
-                        
-                        {/* Fee list */}
-                        <div className="space-y-1.5 text-xs font-semibold text-zinc-650">
-                          <div className="flex justify-between">
-                            <span>Session Fee</span>
-                            <span className="text-zinc-800 font-bold">₹{baseFee}</span>
-                          </div>
-                          
-                          {gstEnabled && (
-                            <div className="flex justify-between">
-                              <span>GST ({gstPercent}%)</span>
-                              <span className="text-zinc-800 font-bold">₹{gstAmount}</span>
-                            </div>
-                          )}
-
-                          {appliedDiscount > 0 && (
-                            <div className="flex justify-between text-emerald-600 font-bold">
-                              <span>Promo Discount</span>
-                              <span>-₹{appliedDiscount}</span>
-                            </div>
-                          )}
-
-                          <div className="flex justify-between text-xs font-bold text-zinc-900 border-t border-zinc-200 pt-2 mt-1">
-                            <span>Net Total</span>
-                            <span className="text-brand-dark">₹{netTotal}</span>
-                          </div>
-                        </div>
+                  <div className="pt-3 border-t border-zinc-200 space-y-2">
+                    <span className="text-[9.5px] text-zinc-400 capitalize tracking-wide block font-semibold text-left">Pricing Breakdown</span>
+                    
+                    {/* Fee list */}
+                    <div className="space-y-1.5 text-xs font-semibold text-zinc-650">
+                      <div className="flex justify-between">
+                        <span>Session Fee</span>
+                        <span className="text-zinc-800 font-bold">₹{baseFee}</span>
                       </div>
-                    );
-                  })()}
+                      
+                      {gstEnabled && (
+                        <div className="flex justify-between">
+                          <span>GST ({gstPercent}%)</span>
+                          <span className="text-zinc-800 font-bold">₹{gstAmount}</span>
+                        </div>
+                      )}
+
+                      {appliedDiscount > 0 && (
+                        <div className="flex justify-between text-emerald-600 font-bold">
+                          <span>Promo Discount</span>
+                          <span>-₹{appliedDiscount}</span>
+                        </div>
+                      )}
+
+                      <div className="flex justify-between text-xs font-bold text-zinc-900 border-t border-zinc-200 pt-2 mt-1">
+                        <span>Net Total</span>
+                        <span className="text-brand-dark">₹{netTotal}</span>
+                      </div>
+                    </div>
+                  </div>
 
                   {/* Security badge */}
                   <div className="pt-4 border-t border-zinc-200 text-xs font-bold text-zinc-400 capitalize text-center w-full">

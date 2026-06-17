@@ -83,7 +83,11 @@ const SessionController = {
             advisorRole: counsellor ? (counsellor.role || 'Consultation') : 'Consultation',
             service: appt ? appt.service : (s.service || 'counselling'),
             status: frontendStatus,
-            meetLink
+            meetLink,
+            amountPaid: appt ? appt.amountPaid : 0,
+            paymentStatus: appt ? appt.paymentStatus : 'PENDING',
+            razorpayPaymentId: appt ? appt.razorpayPaymentId : '',
+            razorpayOrderId: appt ? appt.razorpayOrderId : ''
           };
         })
       );
@@ -157,7 +161,11 @@ const SessionController = {
           advisorRole: counsellor ? (counsellor.role || 'Consultation') : 'Consultation',
           service: appt ? appt.service : (session.service || 'counselling'),
           status: frontendStatus,
-          meetLink
+          meetLink,
+          amountPaid: appt ? appt.amountPaid : 0,
+          paymentStatus: appt ? appt.paymentStatus : 'PENDING',
+          razorpayPaymentId: appt ? appt.razorpayPaymentId : '',
+          razorpayOrderId: appt ? appt.razorpayOrderId : ''
         }
       });
     } catch (error) {
