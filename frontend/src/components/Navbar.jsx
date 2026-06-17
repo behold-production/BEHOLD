@@ -4,6 +4,16 @@ import { Menu, X, ArrowUpRight, User, LogOut, ChevronRight } from 'lucide-react'
 import { useAuth } from '../context/AuthContext';
 import LogoutConfirmModal from './LogoutConfirmModal';
 
+function getInitials(name) {
+  if (!name) return 'ST';
+  const clean = name.trim();
+  if (clean.length === 0) return 'ST';
+  if (clean.length === 1) return clean.toUpperCase();
+  const first = clean[0];
+  const last = clean[clean.length - 1];
+  return (first + last).toUpperCase();
+}
+
 export default function Navbar({ navigateToSection, currentView, onOpenAuth, siteName, siteSettings = {} }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('');
@@ -227,10 +237,10 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                   aria-expanded={showDropdown}
                   className="w-10 h-10 rounded-full overflow-hidden bg-brand/10 text-brand-dark font-bold flex items-center justify-center capitalize  text-sm shadow-xs border border-brand/20 hover:scale-105 transition-transform cursor-pointer"
                 >
-                  {user.image ? (
-                    <img src={user.image} alt={user.name} className="w-full h-full object-cover" />
+                  {user.profilePic || user.image ? (
+                    <img src={user.profilePic || user.image} alt={user.name} className="w-full h-full object-cover" />
                   ) : (
-                    user.name.charAt(0)
+                    getInitials(user.name)
                   )}
                 </button>
 
@@ -293,10 +303,10 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                     aria-expanded={showDropdown}
                     className="w-10 h-10 rounded-full overflow-hidden bg-brand/10 text-brand-dark font-bold flex items-center justify-center capitalize  text-sm shadow-xs border border-brand/20 cursor-pointer"
                   >
-                    {user.image ? (
-                      <img src={user.image} alt={user.name} className="w-full h-full object-cover" />
+                    {user.profilePic || user.image ? (
+                      <img src={user.profilePic || user.image} alt={user.name} className="w-full h-full object-cover" />
                     ) : (
-                      user.name.charAt(0)
+                      getInitials(user.name)
                     )}
                   </button>
                   {showDropdown && (
@@ -437,8 +447,12 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
           {user ? (
             <div className="bg-zinc-50 p-3 rounded-lg border border-zinc-200 flex flex-col gap-3">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-brand/10 text-brand-dark font-bold flex items-center justify-center text-sm shrink-0 shadow-inner border border-brand/20">
-                  {user.name.charAt(0).toUpperCase()}
+                <div className="w-9 h-9 rounded-full bg-brand/10 text-brand-dark font-bold flex items-center justify-center text-sm shrink-0 shadow-inner border border-brand/20 overflow-hidden">
+                  {user.profilePic || user.image ? (
+                    <img src={user.profilePic || user.image} alt={user.name} className="w-full h-full object-cover" />
+                  ) : (
+                    getInitials(user.name)
+                  )}
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-bold text-zinc-900 truncate leading-tight">{user.name}</p>

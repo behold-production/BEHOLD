@@ -21,6 +21,7 @@ const ResetPassword = lazy(() => import('./components/ResetPassword'));
 
 import { useAuth } from './context/AuthContext';
 import ApiService from './services/api';
+import { requestNotificationPermission, syncAndNotifyLocal } from './services/notificationHelper';
 
 function AdvisorProfileWrapper({ handleBookTherapist, setPendingScrollSection }) {
   const { id } = useParams();
@@ -117,6 +118,24 @@ export default function App() {
       if (path) navigate(path);
     };
   }, [navigate]);
+
+  // Native desktop/device local notifications sync hook
+  useEffect(() => {
+    if (!user || !user.id) return;
+
+    // 1. Request notification permission on login/first active session
+    requestNotificationPermission();
+
+    // 2. Initial sync
+    syncAndNotifyLocal(user.id, user.role);
+
+    // 3. Poll every 15 seconds to fetch new alerts and notify natively
+    const interval = setInterval(() => {
+      syncAndNotifyLocal(user.id, user.role);
+    }, 15000);
+
+    return () => clearInterval(interval);
+  }, [user]);
 
   // Role-based routing and redirection flow
   useEffect(() => {

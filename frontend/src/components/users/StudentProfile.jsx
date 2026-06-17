@@ -49,8 +49,12 @@ function calculateCompletion(profile) {
 }
 
 function getInitials(name, fallback) {
-  const source = name || fallback || 'ST';
-  return source.split(' ').filter(Boolean).map(n => n[0]).join('').substring(0, 2).toUpperCase();
+  const clean = (name || fallback || 'ST').trim();
+  if (clean.length === 0) return 'ST';
+  if (clean.length === 1) return clean.toUpperCase();
+  const first = clean[0];
+  const last = clean[clean.length - 1];
+  return (first + last).toUpperCase();
 }
 
 function formatCountdown(dateStr, timeStr) {

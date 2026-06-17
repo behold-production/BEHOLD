@@ -1301,7 +1301,7 @@ export default function PsychologistDashboard({ setView }) {
               {user?.profilePic ? (
                 <img src={user.profilePic} alt={profile.name} className="w-full h-full object-cover" />
               ) : (
-                (profile?.name || '').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()
+                (() => { const c = (profile?.name || '').trim(); return c.length > 1 ? (c[0] + c[c.length - 1]).toUpperCase() : c.toUpperCase() || 'ST'; })()
               )}
             </div>
             <div className="min-w-0 flex-1">
@@ -1534,7 +1534,7 @@ export default function PsychologistDashboard({ setView }) {
                         ) : (
                           <div className="w-full h-full bg-indigo-950 flex items-center justify-center">
                             <span className="text-indigo-400 font-bold text-2xl font-header">
-                              {(profile?.name || '').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
+                              {(() => { const c = (profile?.name || '').trim(); return c.length > 1 ? (c[0] + c[c.length - 1]).toUpperCase() : c.toUpperCase() || 'ST'; })()}
                             </span>
                           </div>
                         )}
