@@ -105,7 +105,7 @@ export default function CdatSection({ setView }) {
       {/* CDAT CARD */}
       <div
         id="card-aptitude"
-        className="relative bg-white/70 backdrop-blur-2xl shadow-[0_8px_40px_-12px_rgba(9,14,26,0.16)] border border-white/60 hover:border-brand/20 p-6 sm:p-10 md:p-16 flex flex-col space-y-10 select-none group rounded-[2rem] transition-all duration-700 overflow-hidden"
+        className="relative bg-white/70 backdrop-blur-2xl shadow-[0_12px_36px_-8px_rgba(9,14,26,0.28),0_4px_20px_-2px_rgba(0,209,209,0.12)] border border-white/60 hover:border-brand/30 p-6 sm:p-10 md:p-16 flex flex-col space-y-10 select-none group rounded-[2rem] transition-all duration-700 overflow-hidden"
       >
         {/* Decorative inner glow */}
         <div className="absolute inset-0 bg-gradient-to-b from-white/60 to-transparent pointer-events-none" />
