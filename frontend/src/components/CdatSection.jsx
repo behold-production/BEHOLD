@@ -217,7 +217,7 @@ export default function CdatSection({ setView }) {
                   <div className="pt-2">
                     <button
                       type="submit"
-                      className="min-h-[52px] px-8 py-3.5 bg-gradient-brand hover:scale-[1.02] active:scale-[0.98] text-white font-bold text-sm tracking-wide rounded-xl transition-all duration-300 shadow-sm hover:shadow-md w-full sm:w-auto border-none"
+                      className="min-h-[52px] px-8 py-3.5 bg-gradient-brand hover:scale-[1.02] active:scale-[0.98] text-zinc-955 font-bold text-sm tracking-wide rounded-xl transition-all duration-300 shadow-sm hover:shadow-md w-full sm:w-auto border-none"
                     >
                       Generate group code for CIGI aptitude
                     </button>
@@ -258,12 +258,12 @@ export default function CdatSection({ setView }) {
                         }
                       }}
                       className={`relative overflow-hidden min-h-[52px] flex items-center justify-center gap-2 w-full px-8 py-3.5 font-bold text-sm tracking-wide rounded-xl transition-all duration-300 shadow-lg ${hasCopied
-                        ? 'bg-brand text-white cursor-pointer border-none hover:scale-[1.01] hover:shadow-brand/20 active:scale-100'
+                        ? 'bg-brand text-zinc-950 cursor-pointer border-none hover:scale-[1.01] hover:shadow-brand/20 active:scale-100'
                         : 'bg-zinc-100/50 text-zinc-400 cursor-not-allowed border border-zinc-200 shadow-none'
                         }`}
                     >
                       {hasCopied && <div className="absolute inset-0 bg-white/20 w-1/2 -skew-x-12 -translate-x-full animate-[shimmer_2s_infinite]"></div>}
-                      <span className="relative z-10">Proceed to Official Registration</span>
+                      <span className={`relative z-10 ${hasCopied ? 'text-zinc-950' : 'text-zinc-400'}`}>Proceed to Official Registration</span>
                     </button>
                     {!hasCopied && (
                       <div className="mt-4 p-3.5 bg-amber-50/80 border border-amber-200/60 text-amber-800 text-sm rounded-xl flex items-start sm:items-center gap-2.5 text-left animate-in fade-in slide-in-from-top-2 duration-500 shadow-sm backdrop-blur-sm">

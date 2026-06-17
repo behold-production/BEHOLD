@@ -2,6 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { Search, LayoutGrid, List, ChevronRight } from 'lucide-react';
 import ApiService from '../services/api';
 
+function getInitials(name) {
+  if (!name) return 'EX';
+  const clean = name.trim();
+  if (clean.length === 0) return 'EX';
+  if (clean.length === 1) return clean.toUpperCase();
+  const first = clean[0];
+  const last = clean[clean.length - 1];
+  return (first + last).toUpperCase();
+}
+
 export default function Services({ setView, onBookTherapist }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState('All');
@@ -28,6 +38,7 @@ export default function Services({ setView, onBookTherapist }) {
             return {
               id: c.id,
               name: c.name,
+              profilePic: c.profilePic || '',
               role: c.title || 'Consultant Psychologist',
               specialties: c.specialties && c.specialties.length > 0 
                 ? c.specialties 
@@ -301,8 +312,12 @@ export default function Services({ setView, onBookTherapist }) {
               >
                 {/* Profile Card Header */}
                 <div className="p-5 sm:p-6 flex items-start gap-4 border-b border-zinc-100 bg-gradient-to-b from-zinc-50/50 to-white">
-                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-brand/10 text-brand-dark flex items-center justify-center font-bold text-xl sm:text-2xl shrink-0 group-hover:scale-105 transition-transform duration-300">
-                    {advisor.name.charAt(0)}
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-brand/10 text-brand-dark flex items-center justify-center font-bold text-xl sm:text-2xl shrink-0 group-hover:scale-105 transition-transform duration-300 overflow-hidden">
+                    {advisor.profilePic ? (
+                      <img src={advisor.profilePic} alt={advisor.name} className="w-full h-full object-cover" />
+                    ) : (
+                      getInitials(advisor.name)
+                    )}
                   </div>
                   <div className="flex flex-col text-left space-y-1 flex-1 min-w-0 pt-1">
                     <h4 className="font-header font-bold text-zinc-900 text-lg sm:text-xl leading-tight truncate group-hover:text-brand transition-colors duration-300">
@@ -391,8 +406,12 @@ export default function Services({ setView, onBookTherapist }) {
               >
                 {/* Left Column: Avatar & Name */}
                 <div className="p-5 sm:p-6 flex items-center gap-4 bg-gradient-to-br from-zinc-50/50 to-white border-b lg:border-b-0 lg:border-r border-zinc-100 flex-1 lg:flex-initial lg:basis-[28%] shrink-0">
-                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-brand/10 text-brand-dark flex items-center justify-center font-bold text-xl sm:text-2xl shadow-inner shrink-0 group-hover:scale-105 transition-transform duration-300">
-                    {advisor.name.charAt(0)}
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-brand/10 text-brand-dark flex items-center justify-center font-bold text-xl sm:text-2xl shadow-inner shrink-0 group-hover:scale-105 transition-transform duration-300 overflow-hidden">
+                    {advisor.profilePic ? (
+                      <img src={advisor.profilePic} alt={advisor.name} className="w-full h-full object-cover" />
+                    ) : (
+                      getInitials(advisor.name)
+                    )}
                   </div>
                   <div className="flex flex-col text-left space-y-1 min-w-0">
                     <h4 className="font-header font-bold text-zinc-900 text-lg sm:text-xl leading-tight truncate group-hover:text-brand transition-colors duration-300">

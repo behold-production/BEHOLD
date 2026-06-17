@@ -572,9 +572,9 @@ export default function StudentProfile() {
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5">
             {/* Avatar */}
             <div className="relative shrink-0 group">
-              {profile.profilePic ? (
+              {profile.profilePic || user?.profilePic || user?.image ? (
                 <img
-                  src={profile.profilePic}
+                  src={profile.profilePic || user?.profilePic || user?.image}
                   alt={displayName}
                   className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl object-cover border border-zinc-200"
                 />

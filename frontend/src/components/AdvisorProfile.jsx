@@ -2,6 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { ChevronLeft, Clock, Globe, Award, BookOpen, Calendar, MapPin, Heart, GraduationCap } from 'lucide-react';
 import ApiService from '../services/api';
 
+function getInitials(name) {
+  if (!name) return 'EX';
+  const clean = name.trim();
+  if (clean.length === 0) return 'EX';
+  if (clean.length === 1) return clean.toUpperCase();
+  const first = clean[0];
+  const last = clean[clean.length - 1];
+  return (first + last).toUpperCase();
+}
+
 export default function AdvisorProfile({ advisorId, onBack, onBook }) {
   const [advisor, setAdvisor] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -32,6 +42,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
           setAdvisor({
             id: psy._id || psy.id,
             name: psy.name,
+            profilePic: psy.profilePic || '',
             role: 'Consultant Psychologist',
             specialties: Array.isArray(psy.specialties) ? psy.specialties : ['Anxiety Stress & Panic', 'Depression & Mood Concerns', 'Relationship'],
             hours: psy.completedHours || 0, // Mock hours
@@ -98,8 +109,12 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
           
           <div className="flex flex-col md:flex-row gap-6 md:gap-8 items-start md:items-center relative z-10">
             {/* Avatar */}
-            <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-48 md:h-48 rounded-full bg-white border border-zinc-200 shadow-sm flex items-center justify-center text-zinc-900 shrink-0">
-              <span className="text-4xl sm:text-6xl md:text-8xl font-black">{advisor.name.charAt(0)}</span>
+            <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-48 md:h-48 rounded-full bg-white border border-zinc-200 shadow-sm flex items-center justify-center text-zinc-900 shrink-0 overflow-hidden">
+              {advisor.profilePic ? (
+                <img src={advisor.profilePic} alt={advisor.name} className="w-full h-full object-cover" />
+              ) : (
+                <span className="text-4xl sm:text-6xl md:text-8xl font-black">{getInitials(advisor.name)}</span>
+              )}
             </div>
 
             {/* Title & Info */}
