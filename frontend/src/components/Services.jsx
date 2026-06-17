@@ -82,7 +82,7 @@ export default function Services({ setView, onBookTherapist }) {
         {/* SERVICE 2: CAREER MENTORING */}
         <div
           id="card-career"
-          className="relative bg-white/70 backdrop-blur-2xl shadow-[0_8px_40px_-12px_rgba(0,0,0,0.1)] border border-white/60 hover:border-brand/20 p-6 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none group rounded-[2rem] transition-all duration-700 min-h-[300px] md:min-h-[360px] overflow-hidden"
+          className="relative bg-white/70 backdrop-blur-2xl shadow-[0_8px_40px_-12px_rgba(9,14,26,0.16)] border border-white/60 hover:border-brand/20 p-6 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none group rounded-[2rem] transition-all duration-700 min-h-[300px] md:min-h-[360px] overflow-hidden"
         >
           {/* Decorative inner glow */}
           <div className="absolute inset-0 bg-gradient-to-b from-white/60 to-transparent pointer-events-none" />
@@ -127,7 +127,7 @@ export default function Services({ setView, onBookTherapist }) {
         {/* SERVICE 3: PSYCHOLOGICAL COUNSELLING */}
         <div
           id="card-mental"
-          className="relative bg-white/70 backdrop-blur-2xl shadow-[0_8px_40px_-12px_rgba(0,0,0,0.1)] border border-white/60 hover:border-brand/20 p-6 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none group rounded-[2rem] transition-all duration-700 min-h-[300px] md:min-h-[360px] overflow-hidden"
+          className="relative bg-white/70 backdrop-blur-2xl shadow-[0_8px_40px_-12px_rgba(9,14,26,0.16)] border border-white/60 hover:border-brand/20 p-6 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none group rounded-[2rem] transition-all duration-700 min-h-[300px] md:min-h-[360px] overflow-hidden"
         >
           {/* Decorative inner glow */}
           <div className="absolute inset-0 bg-gradient-to-b from-white/60 to-transparent pointer-events-none" />

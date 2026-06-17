@@ -105,17 +105,17 @@ export default function CdatSection({ setView }) {
       {/* CDAT CARD */}
       <div
         id="card-aptitude"
-        className="relative bg-white/70 backdrop-blur-2xl shadow-[0_8px_40px_-12px_rgba(0,0,0,0.1)] border border-white/60 hover:border-brand/20 p-6 sm:p-10 md:p-16 flex flex-col space-y-10 select-none group rounded-[2rem] transition-all duration-700 overflow-hidden"
+        className="relative bg-white/70 backdrop-blur-2xl shadow-[0_8px_40px_-12px_rgba(9,14,26,0.16)] border border-white/60 hover:border-brand/20 p-6 sm:p-10 md:p-16 flex flex-col space-y-10 select-none group rounded-[2rem] transition-all duration-700 overflow-hidden"
       >
         {/* Decorative inner glow */}
         <div className="absolute inset-0 bg-gradient-to-b from-white/60 to-transparent pointer-events-none" />
 
         {/* TOP: CIGI Differential Aptitude Test (C-DAT) */}
-        <div className="relative z-10 flex flex-col lg:flex-row-reverse justify-between gap-10 text-left w-full">
+        <div className="relative z-10 flex flex-col lg:flex-row justify-between gap-10 text-left w-full">
           
           <div className="flex-1 min-w-0">
             {/* Header row containing title and logo on mobile */}
-            <div className="flex flex-row-reverse items-start justify-between gap-4 w-full">
+            <div className="flex flex-row items-start justify-between gap-4 w-full">
               <div className="space-y-3 flex-1 min-w-0">
                 <span className="inline-flex items-center gap-1.5 text-xs bg-brand/10 text-brand-dark border border-brand/20 px-3.5 py-1.5 rounded-full capitalize font-bold shadow-sm whitespace-nowrap">
                   <span className="w-1.5 h-1.5 rounded-full bg-brand-dark animate-pulse"></span>

@@ -4,6 +4,8 @@ import ApiService from '../services/api';
 import DateTimePicker from './booking/DateTimePicker';
 import TimePicker from './booking/TimePicker';
 import BookingAuthModal from './booking/BookingAuthModal';
+import { jsPDF } from 'jspdf';
+import { FileDown } from 'lucide-react';
 
 const BOOKING_DRAFT_KEY = 'behold_booking_draft';
 
@@ -132,6 +134,133 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
   const [copiedMeet, setCopiedMeet] = useState(false);
   const [copiedReceipt, setCopiedReceipt] = useState(false);
   const [showSummary, setShowSummary] = useState(false);
+  const [downloadingPdf, setDownloadingPdf] = useState(false);
+
+  const downloadPDFReceipt = (bookingDetails) => {
+    setDownloadingPdf(true);
+    try {
+      const doc = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      });
+
+      // Top Banner Accent Bar
+      doc.setFillColor(6, 182, 212); // brandCyan
+      doc.rect(0, 0, 210, 8, 'F');
+
+      // Header Title
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(22);
+      doc.setTextColor(9, 9, 11);
+      doc.text('BEHOLD.', 20, 25);
+      doc.setFontSize(10);
+      doc.setFont('Helvetica', 'normal');
+      doc.setTextColor(113, 113, 122);
+      doc.text('Session Booking Receipt', 20, 30);
+
+      // Divider Line
+      doc.setDrawColor(228, 228, 231);
+      doc.line(20, 36, 190, 36);
+
+      // Booking details & status badge
+      doc.setFillColor(240, 253, 250); // Light teal background
+      doc.roundedRect(138, 20, 52, 10, 2, 2, 'F');
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(13, 148, 136); // Teal text
+      doc.text('✓ CONFIRMED & PAID', 144, 26.5);
+
+      // Left Column - Booking Info
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.setTextColor(39, 39, 42);
+      doc.text('BOOKING DETAILS', 20, 48);
+
+      doc.setFont('Helvetica', 'normal');
+      doc.setFontSize(9.5);
+      doc.setTextColor(82, 82, 91);
+      
+      const details = [
+        { label: 'Booking ID:', val: `sb_${bookingDetails.id}` },
+        { label: 'Service:', val: bookingDetails.service },
+        { label: 'Session Mode:', val: bookingDetails.mode },
+        { label: 'Advisor:', val: bookingDetails.advisorName },
+        { label: 'Advisor Role:', val: bookingDetails.advisorRole },
+        { label: 'Date & Time:', val: `${bookingDetails.date} at ${bookingDetails.time}` }
+      ];
+
+      let currentY = 55;
+      details.forEach(item => {
+        doc.setFont('Helvetica', 'bold');
+        doc.text(item.label, 20, currentY);
+        doc.setFont('Helvetica', 'normal');
+        doc.text(item.val, 55, currentY);
+        currentY += 7.5;
+      });
+
+      // Right Column / Box - Student Info & Payment
+      doc.setFillColor(248, 250, 252); // soft slate background
+      doc.setDrawColor(226, 232, 240);
+      doc.roundedRect(120, 45, 70, 48, 2, 2, 'FD');
+
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(10);
+      doc.setTextColor(15, 23, 42);
+      doc.text('CLIENT DETAILS', 125, 52);
+
+      doc.setFont('Helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.setTextColor(71, 85, 105);
+      doc.text(`Name: ${bookingDetails.clientName}`, 125, 59);
+      doc.text(`Email: ${bookingDetails.clientEmail}`, 125, 65);
+      doc.text(`Phone: ${bookingDetails.clientPhone}`, 125, 71);
+
+      // Divider inside slate box
+      doc.line(125, 76, 185, 76);
+
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(9.5);
+      doc.setTextColor(15, 23, 42);
+      doc.text('Total Paid:', 125, 83);
+      doc.setFontSize(11);
+      doc.setTextColor(13, 148, 136); // Teal price
+      doc.text(`INR ${bookingDetails.amount}`, 148, 83);
+
+      // Google Meet info block if online
+      let finalY = 110;
+      if (bookingDetails.meetLink) {
+        doc.setFillColor(244, 244, 245);
+        doc.roundedRect(20, 105, 170, 18, 2, 2, 'F');
+        
+        doc.setFont('Helvetica', 'bold');
+        doc.setFontSize(9);
+        doc.setTextColor(39, 39, 42);
+        doc.text('Google Meet Session Link:', 25, 111);
+        
+        doc.setFont('Helvetica', 'normal');
+        doc.setFontSize(9);
+        doc.setTextColor(6, 182, 212); // Blue link color
+        doc.text(bookingDetails.meetLink, 25, 117);
+        
+        finalY = 135;
+      }
+
+      // Footer / Terms
+      doc.setFont('Helvetica', 'normal');
+      doc.setFontSize(8);
+      doc.setTextColor(161, 161, 170);
+      doc.text('This is a computer-generated confirmation. No physical signature is required.', 20, finalY);
+      doc.text('Need help? Contact support at support@beholdaspire.com or reply on WhatsApp.', 20, finalY + 5);
+
+      doc.save(`Behold_Session_Receipt_${bookingDetails.id}.pdf`);
+    } catch (e) {
+      console.error(e);
+      alert("Failed to generate PDF. Please try copying receipt instead.");
+    } finally {
+      setDownloadingPdf(false);
+    }
+  };
 
   const getAvailableSlotsForDate = (dateStr, serviceType) => {
     if (!dateStr) return [];
@@ -843,30 +972,42 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                 )}
               </div>
 
-              {/* Receipt Clip Exporter & Restart buttons */}
+              {/* Receipt Exporter (PDF) & Restart buttons */}
               <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
                 <button
                   type="button"
+                  disabled={downloadingPdf}
                   onClick={() => {
-                    const textReceipt = `=== BEHOLD ASPIRE SESSION RECEIPT ===
-Booking ID: sb_${Date.now()}
-Student Name: ${bookingForm.name || 'Student'}
-Email: ${bookingForm.email}
-Phone: ${bookingForm.phone}
-Service: ${bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring'}
-Advisor: ${selectedAdvisor?.name || 'Assigned Advisor'} (${selectedAdvisor?.role || 'Consultant Psychologist'})
-Date & Time: ${selectedDate} at ${selectedTime}
-Mode: ${bookingMode.replace('_', ' ')}
-Amount Paid: ₹${(selectedAdvisor?.price || 1200) + Math.round((selectedAdvisor?.price || 1200) * 0.18) - appliedDiscount}
-Status: CONFIRMED
-=====================================`;
-                    navigator.clipboard.writeText(textReceipt);
-                    setCopiedReceipt(true);
-                    setTimeout(() => setCopiedReceipt(false), 2000);
+                    const bookingId = Date.now();
+                    const advisorName = selectedAdvisor?.name || 'Assigned Advisor';
+                    const advisorRole = selectedAdvisor?.role || 'Consultant Psychologist';
+                    const service = bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring';
+                    const mode = bookingMode === 'ONLINE' ? 'Video Call' : bookingMode === 'DOOR_STEP' ? 'Home Visit' : 'At Center';
+                    const amount = (selectedAdvisor?.price || 1200) + Math.round((selectedAdvisor?.price || 1200) * 0.18) - appliedDiscount;
+                    const clientName = bookingForm.name || 'Student';
+                    const clientEmail = bookingForm.email;
+                    const clientPhone = bookingForm.phone;
+                    const meetLink = bookingMode === 'ONLINE' ? (selectedAdvisor?.defaultMeetLink || 'https://meet.google.com/abc-defg-hij') : null;
+
+                    downloadPDFReceipt({
+                      id: bookingId,
+                      service,
+                      mode,
+                      advisorName,
+                      advisorRole,
+                      date: selectedDate,
+                      time: selectedTime,
+                      clientName,
+                      clientEmail,
+                      clientPhone,
+                      amount,
+                      meetLink
+                    });
                   }}
-                  className="px-6 py-3 bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 text-xs font-semibold capitalize  rounded-lg transition cursor-pointer w-full sm:w-auto justify-center"
+                  className="px-6 py-3 bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 hover:border-zinc-300 text-xs font-bold capitalize rounded-lg transition cursor-pointer w-full sm:w-auto flex items-center justify-center gap-2"
                 >
-                  {copiedReceipt ? 'Receipt Copied!' : 'Copy Receipt'}
+                  <FileDown className="w-4 h-4 text-zinc-700" />
+                  {downloadingPdf ? 'Generating PDF...' : 'Download PDF Receipt'}
                 </button>
 
                 <button

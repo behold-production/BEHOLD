@@ -2037,8 +2037,8 @@ export default function AdminDashboard({ setView }) {
       )}
 
       {/* 1. Left Fixed Sidebar (Drawer on Mobile, static on Desktop) */}
-      <div className={`fixed lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto inset-y-0 left-0 z-50 w-64 lg:w-64 bg-zinc-900 border-r border-zinc-800 flex flex-col justify-between shrink-0 p-5 transition-transform duration-300 ease-in-out lg:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
-        <div className="space-y-6">
+      <div className={`fixed lg:sticky lg:top-0 h-screen lg:h-screen overflow-hidden inset-y-0 left-0 z-50 w-64 lg:w-64 bg-zinc-900 border-r border-zinc-800 flex flex-col justify-between shrink-0 p-5 transition-transform duration-300 ease-in-out lg:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
+        <div className="flex flex-col flex-1 min-h-0 space-y-6">
           {/* Logo & Header */}
           <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
             <div className="flex items-center gap-2">
@@ -2085,7 +2085,7 @@ export default function AdminDashboard({ setView }) {
           })()}
 
           {/* Nav Links */}
-          <nav className="flex flex-col gap-1">
+          <nav className="flex flex-col gap-1 flex-1 overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-zinc-800 hover:scrollbar-thumb-zinc-700">
             {isSuperAdmin && (
               <button
                 onClick={() => handleNavClick('overview')}
@@ -2222,7 +2222,7 @@ export default function AdminDashboard({ setView }) {
         </div>
 
         {/* Sidebar Footer */}
-        <div className="space-y-4 pt-4 border-t border-zinc-800 mt-6 lg:mt-0">
+        <div className="space-y-4 pt-4 border-t border-zinc-800 mt-auto shrink-0">
           <div className="bg-zinc-950/40 p-3 rounded-lg border border-zinc-850">
             <span className="text-sm capitalize font-bold  text-zinc-500 flex items-center gap-1">
               <ShieldAlert className="w-3.5 h-3.5 text-brand" /> System Guard

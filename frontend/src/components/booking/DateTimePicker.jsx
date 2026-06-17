@@ -1,5 +1,5 @@
-import { useMemo, useEffect, useRef } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useMemo, useEffect, useRef, useState } from 'react';
+import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, List as ListIcon } from 'lucide-react';
 
 const WEEKDAY_SHORT = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 const MONTH_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -87,6 +87,15 @@ export default function DateTimePicker({
     return d;
   }, [today, maxAdvanceDays]);
 
+  const [viewType, setViewType] = useState('calendar'); // 'calendar' or 'strip'
+  const [currentMonth, setCurrentMonth] = useState(() => {
+    if (selectedDate) {
+      const [y, m, d] = selectedDate.split('-').map(Number);
+      return new Date(y, m - 1, 1);
+    }
+    return new Date(today.getFullYear(), today.getMonth(), 1);
+  });
+
   // Quick-jump dates
   const tomorrowStr = useMemo(() => {
     const d = new Date(today);
@@ -134,12 +143,26 @@ export default function DateTimePicker({
     return { isPast: isPast || isBeyondMax, isAvailable, slotCount };
   };
 
-  // Auto-scroll selected date card into view
+  // Auto-scroll selected date card into view (only if in strip mode)
   useEffect(() => {
-    if (selectedDate && scrollRef.current) {
+    if (viewType === 'strip' && selectedDate && scrollRef.current) {
       const el = scrollRef.current.querySelector(`[data-date="${selectedDate}"]`);
       if (el) {
         el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    }
+  }, [selectedDate, viewType]);
+
+  // Adjust current month when selectedDate changes from outside (e.g. quick-jump)
+  useEffect(() => {
+    if (selectedDate) {
+      const [y, m, d] = selectedDate.split('-').map(Number);
+      const targetMonth = new Date(y, m - 1, 1);
+      if (
+        targetMonth.getFullYear() !== currentMonth.getFullYear() ||
+        targetMonth.getMonth() !== currentMonth.getMonth()
+      ) {
+        setCurrentMonth(targetMonth);
       }
     }
   }, [selectedDate]);
@@ -164,109 +187,318 @@ export default function DateTimePicker({
     onTimeChange('');
   };
 
+  // Calculate days for the calendar grid
+  const calendarCells = useMemo(() => {
+    const year = currentMonth.getFullYear();
+    const month = currentMonth.getMonth();
+    
+    // First day of the month (0 = Sunday, 1 = Monday, etc.)
+    const firstDayIndex = new Date(year, month, 1).getDay();
+    
+    // Days in current month
+    const totalDays = new Date(year, month + 1, 0).getDate();
+    
+    // Days in previous month
+    const prevTotalDays = new Date(year, month, 0).getDate();
+    
+    const cells = [];
+    
+    // Previous month padding days
+    for (let i = firstDayIndex - 1; i >= 0; i--) {
+      const dObj = new Date(year, month - 1, prevTotalDays - i);
+      cells.push({
+        dateObj: dObj,
+        dateStr: toLocalDateString(dObj),
+        isCurrentMonth: false,
+        dayNum: prevTotalDays - i
+      });
+    }
+    
+    // Current month days
+    for (let i = 1; i <= totalDays; i++) {
+      const dObj = new Date(year, month, i);
+      cells.push({
+        dateObj: dObj,
+        dateStr: toLocalDateString(dObj),
+        isCurrentMonth: true,
+        dayNum: i
+      });
+    }
+    
+    // Next month padding days to complete standard 6-row layout (42 cells)
+    const remaining = 42 - cells.length;
+    for (let i = 1; i <= remaining; i++) {
+      const dObj = new Date(year, month + 1, i);
+      cells.push({
+        dateObj: dObj,
+        dateStr: toLocalDateString(dObj),
+        isCurrentMonth: false,
+        dayNum: i
+      });
+    }
+    
+    return cells;
+  }, [currentMonth]);
+
+  const handlePrevMonth = () => {
+    setCurrentMonth(prev => new Date(prev.getFullYear(), prev.getMonth() - 1, 1));
+  };
+  
+  const handleNextMonth = () => {
+    setCurrentMonth(prev => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
+  };
+
+  const isPrevMonthDisabled = useMemo(() => {
+    return currentMonth.getFullYear() === today.getFullYear() && currentMonth.getMonth() === today.getMonth();
+  }, [currentMonth, today]);
+
+  const isNextMonthDisabled = useMemo(() => {
+    return currentMonth.getFullYear() === maxDate.getFullYear() && currentMonth.getMonth() === maxDate.getMonth();
+  }, [currentMonth, maxDate]);
+
   return (
     <div className="space-y-4">
-      {/* Quick-jump chips */}
-      <div className="flex flex-wrap gap-1.5">
-        <button type="button" onClick={() => handleQuickJump(todayStr)} className={getChipClass(todayStr)}>Today</button>
-        <button type="button" onClick={() => handleQuickJump(tomorrowStr)} className={getChipClass(tomorrowStr)}>Tomorrow</button>
-        <button type="button" onClick={() => handleQuickJump(weekendStr)} className={getChipClass(weekendStr)}>Weekend</button>
-        <button type="button" onClick={() => handleQuickJump(nextWeekStr)} className={getChipClass(nextWeekStr)}>Next Week</button>
-      </div>
-
-      {/* Calendar Card Strip */}
-      <div className="relative group">
-        {/* Left Arrow */}
-        <button
-          type="button"
-          onClick={() => scrollBy(-1)}
-          className="absolute -left-1 top-1/2 -translate-y-1/2 z-10 w-7 h-7 rounded-full bg-white border border-zinc-200 shadow-md hover:bg-zinc-50 items-center justify-center text-zinc-500 hover:text-zinc-800 transition cursor-pointer hidden sm:flex"
-          aria-label="Scroll left"
-        >
-          <ChevronLeft className="w-3.5 h-3.5" />
-        </button>
-
-        {/* Scrollable Date Cards */}
-        <div
-          ref={scrollRef}
-          className="flex gap-2 overflow-x-auto scrollbar-none snap-x snap-mandatory scroll-smooth px-1 py-1"
-        >
-          {daysList.map((day) => {
-            const meta = getDayMeta(day.dateStr, day.dateObj);
-            const isSelected = selectedDate === day.dateStr;
-            const isToday = day.dateStr === todayStr;
-
-            return (
-              <button
-                key={day.dateStr}
-                data-date={day.dateStr}
-                type="button"
-                disabled={meta.isPast}
-                onClick={() => {
-                  if (!meta.isPast) {
-                    onDateChange(day.dateStr);
-                    onTimeChange('');
-                  }
-                }}
-                className={`
-                  flex flex-col items-center justify-center snap-start
-                  min-w-[60px] sm:min-w-[66px] h-[82px] sm:h-[88px]
-                  rounded-xl border-2 transition-all duration-200 select-none
-                  ${meta.isPast
-                    ? 'bg-zinc-50 border-zinc-100 text-zinc-300 cursor-not-allowed opacity-40'
-                    : isSelected
-                      ? 'bg-zinc-900 border-zinc-900 text-white shadow-lg scale-[1.04] cursor-pointer'
-                      : meta.isAvailable
-                        ? 'bg-white border-zinc-200 text-zinc-800 hover:border-zinc-900 hover:shadow-sm cursor-pointer'
-                        : 'bg-zinc-50 border-zinc-150 text-zinc-350 cursor-not-allowed opacity-50'
-                  }
-                `}
-              >
-                {/* Weekday */}
-                <span className={`text-[9px] sm:text-[10px] font-bold tracking-widest uppercase leading-none ${
-                  isSelected ? 'text-zinc-400' : 'text-zinc-400'
-                }`}>
-                  {day.weekday}
-                </span>
-
-                {/* Day Number */}
-                <span className={`text-xl sm:text-2xl font-black leading-none mt-1 ${
-                  isSelected ? 'text-white' : isToday ? 'text-zinc-900' : ''
-                }`}>
-                  {day.day}
-                </span>
-
-                {/* Month + availability dot */}
-                <span className="flex items-center gap-1 mt-1.5">
-                  <span className={`text-[9px] sm:text-[10px] font-semibold leading-none ${
-                    isSelected ? 'text-zinc-400' : 'text-zinc-450'
-                  }`}>
-                    {day.month}
-                  </span>
-                  {!meta.isPast && meta.isAvailable && !isSelected && (
-                    <span className={`w-1 h-1 rounded-full shrink-0 ${
-                      meta.slotCount >= 3 ? 'bg-emerald-500' : meta.slotCount >= 2 ? 'bg-amber-500' : 'bg-rose-500'
-                    }`} />
-                  )}
-                  {isSelected && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-brand shrink-0" />
-                  )}
-                </span>
-              </button>
-            );
-          })}
+      {/* Top Header Row with Quick Jump & View Selector */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-1">
+        {/* Quick-jump chips */}
+        <div className="flex flex-wrap gap-1.5">
+          <button type="button" onClick={() => handleQuickJump(todayStr)} className={getChipClass(todayStr)}>Today</button>
+          <button type="button" onClick={() => handleQuickJump(tomorrowStr)} className={getChipClass(tomorrowStr)}>Tomorrow</button>
+          <button type="button" onClick={() => handleQuickJump(weekendStr)} className={getChipClass(weekendStr)}>Weekend</button>
+          <button type="button" onClick={() => handleQuickJump(nextWeekStr)} className={getChipClass(nextWeekStr)}>Next Week</button>
         </div>
 
-        {/* Right Arrow */}
-        <button
-          type="button"
-          onClick={() => scrollBy(1)}
-          className="absolute -right-1 top-1/2 -translate-y-1/2 z-10 w-7 h-7 rounded-full bg-white border border-zinc-200 shadow-md hover:bg-zinc-50 items-center justify-center text-zinc-500 hover:text-zinc-800 transition cursor-pointer hidden sm:flex"
-          aria-label="Scroll right"
-        >
-          <ChevronRight className="w-3.5 h-3.5" />
-        </button>
+        {/* View Switcher toggle */}
+        <div className="flex items-center bg-zinc-100 p-0.5 rounded-lg border border-zinc-200 shrink-0 self-start sm:self-auto">
+          <button
+            type="button"
+            onClick={() => setViewType('calendar')}
+            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-md transition-all cursor-pointer ${
+              viewType === 'calendar'
+                ? 'bg-white text-zinc-950 shadow-xs'
+                : 'text-zinc-550 hover:text-zinc-900'
+            }`}
+          >
+            <CalendarIcon className="w-3.5 h-3.5" />
+            Calendar Grid
+          </button>
+          <button
+            type="button"
+            onClick={() => setViewType('strip')}
+            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-md transition-all cursor-pointer ${
+              viewType === 'strip'
+                ? 'bg-white text-zinc-950 shadow-xs'
+                : 'text-zinc-550 hover:text-zinc-900'
+            }`}
+          >
+            <ListIcon className="w-3.5 h-3.5" />
+            Weekly Strip
+          </button>
+        </div>
       </div>
+
+      {viewType === 'calendar' ? (
+        /* Calendar Grid View */
+        <div className="bg-white border border-zinc-200/80 rounded-2xl overflow-hidden shadow-xs animate-in fade-in duration-300">
+          {/* Calendar Header / Navigation */}
+          <div className="flex items-center justify-between px-4 py-3 bg-zinc-50 border-b border-zinc-150">
+            <span className="text-xs sm:text-sm font-black text-zinc-800 uppercase tracking-wide">
+              {currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+            </span>
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                onClick={handlePrevMonth}
+                disabled={isPrevMonthDisabled}
+                className="w-8 h-8 rounded-lg flex items-center justify-center border border-zinc-200 hover:bg-zinc-100 disabled:opacity-30 disabled:hover:bg-transparent text-zinc-650 transition cursor-pointer"
+                aria-label="Previous month"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <button
+                type="button"
+                onClick={handleNextMonth}
+                disabled={isNextMonthDisabled}
+                className="w-8 h-8 rounded-lg flex items-center justify-center border border-zinc-200 hover:bg-zinc-100 disabled:opacity-30 disabled:hover:bg-transparent text-zinc-650 transition cursor-pointer"
+                aria-label="Next month"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
+          {/* Grid Weekdays Labels */}
+          <div className="grid grid-cols-7 gap-1 px-3 py-2 text-center border-b border-zinc-100 bg-zinc-50/30">
+            {['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map((wd, i) => (
+              <span key={i} className="text-[9px] sm:text-[10px] font-bold uppercase text-zinc-400 tracking-wider">
+                {wd.substring(0, 3)}
+              </span>
+            ))}
+          </div>
+
+          {/* Grid Days */}
+          <div className="grid grid-cols-7 gap-1.5 p-3">
+            {calendarCells.map((cell, idx) => {
+              const meta = getDayMeta(cell.dateStr, cell.dateObj);
+              const isSelected = selectedDate === cell.dateStr;
+              const isToday = cell.dateStr === todayStr;
+
+              return (
+                <button
+                  key={`${cell.dateStr}-${idx}`}
+                  type="button"
+                  disabled={meta.isPast}
+                  onClick={() => {
+                    if (!meta.isPast) {
+                      onDateChange(cell.dateStr);
+                      onTimeChange('');
+                    }
+                  }}
+                  className={`
+                    relative flex flex-col items-center justify-center h-11 sm:h-12 w-full rounded-xl transition-all duration-200 select-none border-2
+                    ${meta.isPast
+                      ? 'bg-zinc-50 border-zinc-50 text-zinc-300 cursor-not-allowed opacity-40'
+                      : isSelected
+                        ? 'bg-zinc-900 border-zinc-900 text-white shadow-md font-bold scale-[1.03]'
+                        : meta.isAvailable
+                          ? 'bg-white border-zinc-200 text-zinc-800 hover:border-zinc-900 hover:shadow-xs cursor-pointer'
+                          : 'bg-zinc-50 border-zinc-100 text-zinc-450 cursor-not-allowed opacity-50'
+                    }
+                    ${!cell.isCurrentMonth && !meta.isPast && !isSelected ? 'opacity-40 text-zinc-400' : ''}
+                  `}
+                >
+                  {/* Day Number */}
+                  <span className={`text-sm sm:text-base font-black leading-none ${
+                    isSelected ? 'text-white' : isToday ? 'text-zinc-900 underline decoration-2 underline-offset-4' : ''
+                  }`}>
+                    {cell.dayNum}
+                  </span>
+
+                  {/* Availability Dot indicator */}
+                  {!meta.isPast && meta.isAvailable && (
+                    <span className={`w-1.5 h-1.5 rounded-full mt-1 shrink-0 ${
+                      isSelected
+                        ? 'bg-white'
+                        : meta.slotCount >= 3
+                          ? 'bg-emerald-500'
+                          : meta.slotCount >= 2
+                            ? 'bg-amber-500'
+                            : 'bg-rose-500'
+                    }`} />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Calendar Color Legend */}
+          <div className="flex flex-wrap items-center gap-4 px-4 py-2.5 bg-zinc-50/50 border-t border-zinc-150 text-[10px] sm:text-xs text-zinc-500 font-medium">
+            <span className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-emerald-500" /> High Availability (3+ slots)
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-amber-500" /> Limited Availability (2 slots)
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-rose-500" /> Last Slots Remaining (1 slot)
+            </span>
+          </div>
+        </div>
+      ) : (
+        /* Weekly Strip View (Original Layout) */
+        <div className="relative group animate-in fade-in duration-300">
+          {/* Left Arrow */}
+          <button
+            type="button"
+            onClick={() => scrollBy(-1)}
+            className="absolute -left-1 top-1/2 -translate-y-1/2 z-10 w-7 h-7 rounded-full bg-white border border-zinc-200 shadow-md hover:bg-zinc-50 items-center justify-center text-zinc-500 hover:text-zinc-800 transition cursor-pointer hidden sm:flex"
+            aria-label="Scroll left"
+          >
+            <ChevronLeft className="w-3.5 h-3.5" />
+          </button>
+
+          {/* Scrollable Date Cards */}
+          <div
+            ref={scrollRef}
+            className="flex gap-2 overflow-x-auto scrollbar-none snap-x snap-mandatory scroll-smooth px-1 py-1"
+          >
+            {daysList.map((day) => {
+              const meta = getDayMeta(day.dateStr, day.dateObj);
+              const isSelected = selectedDate === day.dateStr;
+              const isToday = day.dateStr === todayStr;
+
+              return (
+                <button
+                  key={day.dateStr}
+                  data-date={day.dateStr}
+                  type="button"
+                  disabled={meta.isPast}
+                  onClick={() => {
+                    if (!meta.isPast) {
+                      onDateChange(day.dateStr);
+                      onTimeChange('');
+                    }
+                  }}
+                  className={`
+                    flex flex-col items-center justify-center snap-start
+                    min-w-[60px] sm:min-w-[66px] h-[82px] sm:h-[88px]
+                    rounded-xl border-2 transition-all duration-200 select-none
+                    ${meta.isPast
+                      ? 'bg-zinc-50 border-zinc-100 text-zinc-300 cursor-not-allowed opacity-40'
+                      : isSelected
+                        ? 'bg-zinc-900 border-zinc-900 text-white shadow-lg scale-[1.04] cursor-pointer'
+                        : meta.isAvailable
+                          ? 'bg-white border-zinc-200 text-zinc-800 hover:border-zinc-900 hover:shadow-sm cursor-pointer'
+                          : 'bg-zinc-50 border-zinc-150 text-zinc-350 cursor-not-allowed opacity-50'
+                    }
+                  `}
+                >
+                  {/* Weekday */}
+                  <span className={`text-[9px] sm:text-[10px] font-bold tracking-widest uppercase leading-none ${
+                    isSelected ? 'text-zinc-400' : 'text-zinc-400'
+                  }`}>
+                    {day.weekday}
+                  </span>
+
+                  {/* Day Number */}
+                  <span className={`text-xl sm:text-2xl font-black leading-none mt-1 ${
+                    isSelected ? 'text-white' : isToday ? 'text-zinc-900' : ''
+                  }`}>
+                    {day.day}
+                  </span>
+
+                  {/* Month + availability dot */}
+                  <span className="flex items-center gap-1 mt-1.5">
+                    <span className={`text-[9px] sm:text-[10px] font-semibold leading-none ${
+                      isSelected ? 'text-zinc-400' : 'text-zinc-455'
+                    }`}>
+                      {day.month}
+                    </span>
+                    {!meta.isPast && meta.isAvailable && !isSelected && (
+                      <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${
+                        meta.slotCount >= 3 ? 'bg-emerald-500' : meta.slotCount >= 2 ? 'bg-amber-500' : 'bg-rose-500'
+                      }`} />
+                    )}
+                    {isSelected && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-brand shrink-0" />
+                    )}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Right Arrow */}
+          <button
+            type="button"
+            onClick={() => scrollBy(1)}
+            className="absolute -right-1 top-1/2 -translate-y-1/2 z-10 w-7 h-7 rounded-full bg-white border border-zinc-200 shadow-md hover:bg-zinc-50 items-center justify-center text-zinc-500 hover:text-zinc-800 transition cursor-pointer hidden sm:flex"
+            aria-label="Scroll right"
+          >
+            <ChevronRight className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
 
       {/* Selected date summary */}
       {selectedDate && (

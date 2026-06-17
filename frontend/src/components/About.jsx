@@ -40,10 +40,10 @@ export default function About() {
         {/* Header Column */}
         <div className="max-w-3xl mx-auto text-center space-y-3.5">
           <span className="text-xs bg-zinc-900 text-white px-3.5 py-1 rounded-md capitalize  font-semibold w-fit mx-auto block">
-            Why Us & What We Offer
+            Why Choose Us
           </span>
           <h2 className="text-3xl md:text-5xl font-header font-black tracking-tight text-zinc-900 leading-[1.1] capitalize">
-            Why Choose Us & What We Offer
+            What We Offer
           </h2>
           <p className="text-zinc-600 font-sans text-sm md:text-base font-light leading-relaxed">
             At BEHOLD, we go beyond traditional career guidance by offering extended mentorship, doorstep psychological counselling, and personalized career support directly within schools and student spaces.
