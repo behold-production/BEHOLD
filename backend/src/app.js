@@ -17,6 +17,7 @@ const sessionRoutes = require('./routes/sessionRoutes');
 const feedbackRoutes = require('./routes/feedbackRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
 const publicRoutes = require('./routes/publicRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
 const errorHandler = require('./middleware/errorMiddleware');
 
 const app = express();
@@ -134,6 +135,7 @@ app.use('/api/appointments', appointmentRoutes);
 app.use('/api/sessions', sessionRoutes);
 app.use('/api/feedbacks', feedbackRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/payments', paymentRoutes);
 app.use('/api', publicRoutes);
 
 // ─── 404 Catch ────────────────────────────────────────────────────────────

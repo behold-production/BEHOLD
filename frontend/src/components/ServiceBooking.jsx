@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
+import toast from 'react-hot-toast';
 import ApiService from '../services/api';
 import DateTimePicker from './booking/DateTimePicker';
 import TimePicker from './booking/TimePicker';
@@ -668,35 +669,103 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
     return err;
   };
 
-  const processPayment = () => {
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      if (window.Razorpay) {
+        resolve(true);
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
+  const processPayment = async () => {
     setIsProcessingPayment(true);
-    setPaymentStepText("Processing your payment...");
-    
-    setTimeout(() => {
-      setPaymentStepText("Confirming with your bank...");
-      
-      setTimeout(() => {
-        setPaymentStepText("Payment confirmed! Finalizing booking...");
-        
-        setTimeout(async () => {
+    setPaymentStepText("Initializing secure checkout...");
+
+    try {
+      // 1. Load Razorpay SDK
+      const isScriptLoaded = await loadRazorpayScript();
+      if (!isScriptLoaded) {
+        toast.error("Failed to load Razorpay Payment Gateway. Check your connection.");
+        setIsProcessingPayment(false);
+        return;
+      }
+
+      setPaymentStepText("Creating payment order...");
+      // 2. Create order on backend
+      const orderRes = await ApiService.createPaymentOrder(selectedAdvisor ? selectedAdvisor.id : '');
+      if (!orderRes.success || !orderRes.data) {
+        throw new Error(orderRes.message || 'Failed to create payment order');
+      }
+
+      const { keyId, orderId, amount, currency } = orderRes.data;
+
+      setPaymentStepText("Awaiting payment...");
+
+      // 3. Open Razorpay Checkout modal
+      const options = {
+        key: keyId,
+        amount: amount,
+        currency: currency,
+        name: "BEHOLD.",
+        description: `${bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring'} Session`,
+        image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=120&q=80",
+        order_id: orderId,
+        handler: async function (response) {
           try {
-            await ApiService.bookAppointment(
-              selectedAdvisor ? selectedAdvisor.id : '',
-              selectedDate,
-              selectedTime,
-              bookingMode,
-              bookingService
-            );
-            setIsProcessingPayment(false);
-            setIsSuccess(true);
-            handleStepChange('success');
-          } catch (err) {
-            alert(err.message || 'Failed to finalize booking');
+            setPaymentStepText("Verifying payment signature...");
+            
+            const bookingDetails = {
+              counsellorId: selectedAdvisor ? selectedAdvisor.id : '',
+              date: selectedDate,
+              time: selectedTime,
+              mode: bookingMode,
+              service: bookingService
+            };
+
+            const verifyRes = await ApiService.verifyPaymentAndBook(response, bookingDetails);
+            if (verifyRes.success) {
+              toast.success("Payment verified! Booking confirmed.");
+              setIsProcessingPayment(false);
+              setIsSuccess(true);
+              handleStepChange('success');
+            } else {
+              throw new Error(verifyRes.message || "Verification failed");
+            }
+          } catch (verifyErr) {
+            console.error("Payment verification failed:", verifyErr);
+            toast.error(verifyErr.message || "Failed to verify payment and complete booking.");
             setIsProcessingPayment(false);
           }
-        }, 1200);
-      }, 1200);
-    }, 1200);
+        },
+        prefill: {
+          name: bookingForm.name,
+          email: bookingForm.email,
+          contact: bookingForm.phone
+        },
+        theme: {
+          color: "#06b6d4" // brand cyan color
+        },
+        modal: {
+          ondismiss: function () {
+            toast.error("Payment cancelled by user.");
+            setIsProcessingPayment(false);
+          }
+        }
+      };
+
+      const razorpayInstance = new window.Razorpay(options);
+      razorpayInstance.open();
+    } catch (err) {
+      console.error("Payment initialization error:", err);
+      toast.error(err.message || 'Failed to initialize payment');
+      setIsProcessingPayment(false);
+    }
   };
 
   const handleAuthSuccess = (authData) => {

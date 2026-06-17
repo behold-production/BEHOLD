@@ -14,7 +14,11 @@ const appointmentSchema = new mongoose.Schema({
   cancellationReason: { type: String, default: '' },
   cancelledBy: { type: String, default: '' },
   rescheduleCount: { type: Number, default: 0 },
-  lastRescheduledAt: { type: Date, default: null }
+  lastRescheduledAt: { type: Date, default: null },
+  paymentStatus: { type: String, default: 'PENDING', enum: ['PENDING', 'PAID', 'FAILED'] },
+  razorpayOrderId: { type: String, default: '' },
+  razorpayPaymentId: { type: String, default: '' },
+  amountPaid: { type: Number, default: 0 }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Appointment', appointmentSchema);

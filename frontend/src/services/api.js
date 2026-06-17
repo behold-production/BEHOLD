@@ -273,6 +273,25 @@ const ApiService = {
     });
   },
 
+  async createPaymentOrder(counsellorId) {
+    return await request('/payments/order', {
+      method: 'POST',
+      body: JSON.stringify({ counsellorId })
+    });
+  },
+
+  async verifyPaymentAndBook(paymentDetails, bookingDetails) {
+    return await request('/payments/verify', {
+      method: 'POST',
+      body: JSON.stringify({
+        razorpay_payment_id: paymentDetails.razorpay_payment_id,
+        razorpay_order_id: paymentDetails.razorpay_order_id,
+        razorpay_signature: paymentDetails.razorpay_signature,
+        bookingDetails
+      })
+    });
+  },
+
   async getAppointments() {
     return await request('/appointments');
   },
