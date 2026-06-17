@@ -764,8 +764,17 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
       }
 
       setPaymentStepText("Creating payment order...");
+      
+      const bookingDetails = {
+        counsellorId: selectedAdvisor ? selectedAdvisor.id : '',
+        date: selectedDate,
+        time: selectedTime,
+        mode: bookingMode,
+        service: bookingService
+      };
+
       // 2. Create order on backend
-      const orderRes = await ApiService.createPaymentOrder(selectedAdvisor ? selectedAdvisor.id : '');
+      const orderRes = await ApiService.createPaymentOrder(selectedAdvisor ? selectedAdvisor.id : '', bookingDetails);
       if (!orderRes.success || !orderRes.data) {
         throw new Error(orderRes.message || 'Failed to create payment order');
       }

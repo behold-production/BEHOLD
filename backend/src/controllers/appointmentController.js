@@ -1,4 +1,5 @@
 const StorageService = require('../services/storageService');
+const { validateBookingDetails } = require('../utils/bookingValidator');
 
 const AppointmentController = {
   // Create Appointment (User / Student)
@@ -13,10 +14,23 @@ const AppointmentController = {
 
       // Check user and counsellor exist
       const user = await StorageService.findById('users', userId);
-      const counsellor = await StorageService.findById('counsellors', counsellorId);
-
       if (!user) return res.status(404).json({ success: false, message: 'Student profile not found' });
-      if (!counsellor) return res.status(404).json({ success: false, message: 'Counsellor not found' });
+
+      // Check details validation (availability, double booking, past date)
+      const validation = await validateBookingDetails(counsellorId, date, time, mode, service || 'counselling');
+      if (!validation.valid) {
+        return res.status(400).json({ success: false, message: validation.message });
+      }
+
+      const counsellor = validation.counsellor;
+
+      // Enforce checkout payment if the counsellor is not free
+      if (counsellor.price && Number(counsellor.price) > 0) {
+        return res.status(400).json({
+          success: false,
+          message: 'This counsellor requires a paid booking. Please complete payment via checkout.'
+        });
+      }
 
       // Create appointment
       const newAppointment = await StorageService.create('appointments', {
@@ -253,6 +267,19 @@ const AppointmentController = {
             warning = 'You have only 1 reschedule remaining for today.';
           }
         }
+      }
+
+      // Validate new date/time availability and double booking
+      const validation = await validateBookingDetails(
+        appointment.counsellorId,
+        date,
+        time,
+        appointment.mode,
+        appointment.service || 'counselling',
+        id
+      );
+      if (!validation.valid) {
+        return res.status(400).json({ success: false, message: validation.message });
       }
 
       const updated = await StorageService.update('appointments', id, {

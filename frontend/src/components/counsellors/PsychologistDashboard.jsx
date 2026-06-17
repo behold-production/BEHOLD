@@ -1218,7 +1218,7 @@ export default function PsychologistDashboard({ setView }) {
 
   // --- 2. DEDICATED LOGGED-IN COUNSELLOR CONSOLE ---
   return (
-    <div className="min-h-screen bg-zinc-955 text-white text-left flex flex-col lg:flex-row relative overflow-hidden">
+    <div className="min-h-screen lg:h-screen lg:overflow-hidden bg-zinc-955 text-white text-left flex flex-col lg:flex-row relative overflow-hidden">
 
       {/* Background Soft Glows */}
       <div className="absolute top-1/4 left-1/3 w-[350px] h-[350px] bg-indigo-500/5 rounded-full blur-3xl pointer-events-none" />
@@ -1267,9 +1267,10 @@ export default function PsychologistDashboard({ setView }) {
       )}
 
       {/* 1. Left Fixed Sidebar (Drawer on Mobile, sticky on Desktop) */}
-      <div className={`fixed lg:sticky lg:top-24 lg:h-[calc(100vh-6rem)] lg:overflow-y-auto inset-y-0 left-0 z-50 w-64 lg:w-64 bg-zinc-900 border-r border-zinc-800 flex flex-col justify-between shrink-0 p-5 transition-transform duration-300 ease-in-out lg:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+      {/* 1. Left Fixed Sidebar (Drawer on Mobile, static on Desktop) */}
+      <div className={`fixed lg:sticky lg:top-0 h-screen lg:h-screen overflow-hidden inset-y-0 left-0 z-50 w-64 lg:w-64 bg-zinc-900 border-r border-zinc-800 flex flex-col justify-between shrink-0 p-5 transition-transform duration-300 ease-in-out lg:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         } lg:flex`}>
-        <div className="space-y-6">
+        <div className="flex flex-col flex-1 min-h-0 space-y-6">
           {/* Logo & Header */}
           <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
             <div className="flex items-center gap-2">
@@ -1295,7 +1296,7 @@ export default function PsychologistDashboard({ setView }) {
           <button
             type="button"
             onClick={() => setIsProfileDrawerOpen(true)}
-            className="w-full flex items-center gap-3 bg-zinc-950/60 hover:bg-zinc-955 p-3 rounded-xl border border-zinc-850 hover:border-indigo-500/30 transition-all cursor-pointer text-left"
+            className="w-full flex items-center gap-3 bg-zinc-955/60 hover:bg-zinc-950 p-3 rounded-xl border border-zinc-855 hover:border-indigo-500/30 transition-all cursor-pointer text-left"
           >
             <div className="w-10 h-10 rounded-lg bg-indigo-950 text-brand flex items-center justify-center font-header font-bold text-sm border border-indigo-900 shrink-0 overflow-hidden">
               {user?.profilePic ? (
@@ -1315,7 +1316,7 @@ export default function PsychologistDashboard({ setView }) {
           </button>
 
           {/* Nav Links */}
-          <nav className="flex flex-col gap-1">
+          <nav className="flex flex-col gap-1 flex-1 overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-zinc-800 hover:scrollbar-thumb-zinc-700">
             {[
               { id: 'overview', label: 'Overview', icon: BarChart3 },
               { id: 'profile', label: 'Consultant Profile', icon: User },

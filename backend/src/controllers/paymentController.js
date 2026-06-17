@@ -1,21 +1,24 @@
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
 const StorageService = require('../services/storageService');
+const { validateBookingDetails } = require('../utils/bookingValidator');
 
 const PaymentController = {
   // Create Razorpay Order
   async createOrder(req, res, next) {
     try {
-      const { counsellorId } = req.body;
-      if (!counsellorId) {
-        return res.status(400).json({ success: false, message: 'Counsellor ID is required' });
+      const { counsellorId, date, time, mode, service } = req.body;
+      if (!counsellorId || !date || !time || !mode) {
+        return res.status(400).json({ success: false, message: 'Counsellor ID, date, time, and mode are required' });
       }
 
-      // 1. Fetch counsellor to get their rate
-      const counsellor = await StorageService.findById('counsellors', counsellorId);
-      if (!counsellor) {
-        return res.status(404).json({ success: false, message: 'Counsellor not found' });
+      // 1. Validate booking details (availability, double booking, past date)
+      const validation = await validateBookingDetails(counsellorId, date, time, mode, service || 'counselling');
+      if (!validation.valid) {
+        return res.status(400).json({ success: false, message: validation.message });
       }
+
+      const counsellor = validation.counsellor;
 
       // 2. Fetch site settings to see if GST is enabled
       const settings = await StorageService.findOne('settings') || {};
@@ -45,7 +48,15 @@ const PaymentController = {
       const options = {
         amount: netTotal * 100, // Razorpay amount is in paise (INR * 100)
         currency: 'INR',
-        receipt: `rcpt_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`
+        receipt: `rcpt_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+        notes: {
+          counsellorId,
+          userId: req.user.id,
+          date,
+          time,
+          mode,
+          service: service || 'counselling'
+        }
       };
 
       const order = await razorpay.orders.create(options);
@@ -109,14 +120,49 @@ const PaymentController = {
         });
       }
 
-      // 2. Verify student and counsellor profiles exist
+      // 2. Fetch Razorpay order details and compare with booking details to prevent tampering
+      const razorpay = new Razorpay({
+        key_id: process.env.RAZORPAY_KEY_ID,
+        key_secret: process.env.RAZORPAY_KEY_SECRET
+      });
+      let order;
+      try {
+        order = await razorpay.orders.fetch(razorpay_order_id);
+      } catch (err) {
+        console.error('[Razorpay Order Fetch Error]:', err);
+        return res.status(400).json({ success: false, message: 'Invalid payment details: Order not found' });
+      }
+
+      if (!order) {
+        return res.status(404).json({ success: false, message: 'Razorpay order not found' });
+      }
+
+      const notes = order.notes || {};
+      if (
+        notes.counsellorId !== counsellorId ||
+        notes.userId !== userId ||
+        notes.date !== date ||
+        notes.time !== time ||
+        notes.mode !== mode ||
+        notes.service !== (service || 'counselling')
+      ) {
+        return res.status(400).json({ 
+          success: false, 
+          message: 'Payment verification failed: Booking details do not match the paid order.' 
+        });
+      }
+
+      // 3. Final validation check (double booking, past date, counsellor availability)
+      const validation = await validateBookingDetails(counsellorId, date, time, mode, service || 'counselling');
+      if (!validation.valid) {
+        return res.status(400).json({ success: false, message: validation.message });
+      }
+
       const user = await StorageService.findById('users', userId);
-      const counsellor = await StorageService.findById('counsellors', counsellorId);
-
       if (!user) return res.status(404).json({ success: false, message: 'Student profile not found' });
-      if (!counsellor) return res.status(404).json({ success: false, message: 'Counsellor not found' });
+      const counsellor = validation.counsellor;
 
-      // 3. Compute price for records
+      // 4. Compute price for records
       const settings = await StorageService.findOne('settings') || {};
       const baseFee = Number(counsellor.price) || 1200;
       const gstEnabled = settings.gstEnabled === true;

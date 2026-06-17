@@ -2194,7 +2194,7 @@ export default function AdminDashboard({ setView }) {
 
   // --- DEDICATED LOGGED-IN ADMIN DASHBOARD UI ---
   return (
-    <div className="min-h-screen bg-zinc-955 text-white text-left flex flex-col lg:flex-row relative overflow-hidden">
+    <div className="min-h-screen lg:h-screen lg:overflow-hidden bg-zinc-955 text-white text-left flex flex-col lg:flex-row relative overflow-hidden">
 
       {/* Background Soft Glows */}
       <div className="absolute top-1/4 left-1/3 w-[350px] h-[350px] bg-brand/5 rounded-full blur-3xl pointer-events-none" />
@@ -5575,7 +5575,7 @@ export default function AdminDashboard({ setView }) {
             className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
             onClick={() => { setIsAddBookingOpen(false); setIsEditBookingOpen(false); }}
           />
-          <div className="relative w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200">
+          <div className="relative w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
             <div>
               <h3 className="text-base font-bold text-white capitalize  font-header">
                 {isAddBookingOpen ? 'Schedule Consultation' : 'Update Appointment'}
@@ -5740,7 +5740,7 @@ export default function AdminDashboard({ setView }) {
             className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
             onClick={() => { setIsAddFaqOpen(false); setIsEditFaqOpen(false); }}
           />
-          <div className="relative w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200">
+          <div className="relative w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
             <div>
               <h3 className="text-base font-bold text-white capitalize  font-header">
                 {isAddFaqOpen ? 'Create FAQ Record' : 'Update FAQ Record'}
@@ -6560,7 +6560,7 @@ export default function AdminDashboard({ setView }) {
               className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
               onClick={() => setEditingSubAdmin(null)}
             />
-            <div className="relative w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200">
+            <div className="relative w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
               <div>
                 <h3 className="text-base font-bold text-white capitalize  font-header flex items-center gap-2">
                   <Lock className="w-4 h-4 text-brand" /> Edit Access Scopes

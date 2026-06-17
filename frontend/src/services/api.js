@@ -273,10 +273,10 @@ const ApiService = {
     });
   },
 
-  async createPaymentOrder(counsellorId) {
+  async createPaymentOrder(counsellorId, bookingDetails = {}) {
     return await request('/payments/order', {
       method: 'POST',
-      body: JSON.stringify({ counsellorId })
+      body: JSON.stringify({ counsellorId, ...bookingDetails })
     });
   },
 
