@@ -4021,7 +4021,7 @@ export default function AdminDashboard({ setView }) {
               if (a.status !== 'PENDING' && b.status === 'PENDING') return 1;
               if (a.status === 'CONFIRMED' && b.status !== 'CONFIRMED' && b.status !== 'PENDING') return -1;
               if (b.status === 'CONFIRMED' && a.status !== 'CONFIRMED' && a.status !== 'PENDING') return 1;
-              return b.date.localeCompare(a.date);
+              return (b.date || '').localeCompare(a.date || '');
             });
 
             return (

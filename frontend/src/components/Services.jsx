@@ -198,7 +198,7 @@ export default function Services({ setView, onBookTherapist }) {
         </div>
 
         {/* Dashboard-Style Toolbar */}
-        <div className="bg-white border border-zinc-200 p-3 sm:p-4 rounded-2xl flex flex-col xl:flex-row xl:items-center gap-3 sm:gap-4 w-full shadow-sm">
+        <div className="bg-white border border-zinc-200 p-3 sm:p-4 rounded-2xl flex flex-col xl:flex-row xl:items-center gap-3 sm:gap-4 w-full shadow-[0_12px_36px_-8px_rgba(9,14,26,0.22),0_4px_20px_-2px_rgba(0,209,209,0.08)] hover:shadow-[0_20px_48px_-6px_rgba(9,14,26,0.30),0_8px_30px_-4px_rgba(0,209,209,0.16)] hover:border-brand/30 transition-all duration-300">
           {/* Search Box */}
           <div className="relative w-full xl:w-[260px] shrink-0">
             <input
@@ -276,7 +276,7 @@ export default function Services({ setView, onBookTherapist }) {
             {[...Array(6)].map((_, i) => (
               <div 
                 key={i}
-                className="bg-white border border-zinc-200 rounded-2xl shadow-[0_8px_30px_-12px_rgba(9,14,26,0.08)] flex flex-col overflow-hidden animate-pulse min-h-[300px]"
+                className="bg-white border border-zinc-200 rounded-2xl shadow-[0_12px_36px_-8px_rgba(9,14,26,0.15)] flex flex-col overflow-hidden animate-pulse min-h-[300px]"
               >
                 <div className="p-5 sm:p-6 flex items-start gap-4 border-b border-zinc-100 bg-gradient-to-b from-zinc-50/50 to-white">
                   <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-zinc-200" />
@@ -308,7 +308,7 @@ export default function Services({ setView, onBookTherapist }) {
             {filteredAndSortedAdvisors.slice(0, visibleCount).map(advisor => (
               <div 
                 key={advisor.id}
-                className="bg-white border border-zinc-200 rounded-2xl shadow-[0_8px_30px_-10px_rgba(9,14,26,0.22),0_2px_12px_-2px_rgba(0,209,209,0.08)] hover:shadow-[0_16px_40px_-8px_rgba(9,14,26,0.34),0_6px_20px_-3px_rgba(0,209,209,0.18)] hover:-translate-y-1 hover:border-brand/40 transition-all duration-300 flex flex-col overflow-hidden group"
+                className="bg-white border border-zinc-200/80 rounded-2xl shadow-[0_12px_36px_-8px_rgba(9,14,26,0.28),0_4px_20px_-2px_rgba(0,209,209,0.12)] hover:shadow-[0_20px_48px_-6px_rgba(9,14,26,0.38),0_8px_30px_-4px_rgba(0,209,209,0.22)] hover:-translate-y-1 hover:border-brand/40 transition-all duration-300 flex flex-col overflow-hidden group"
               >
                 {/* Profile Card Header */}
                 <div className="p-5 sm:p-6 flex items-start gap-4 border-b border-zinc-100 bg-gradient-to-b from-zinc-50/50 to-white">
@@ -402,7 +402,7 @@ export default function Services({ setView, onBookTherapist }) {
             {filteredAndSortedAdvisors.slice(0, visibleCount).map(advisor => (
               <div 
                 key={advisor.id}
-                className="bg-white border border-zinc-200 rounded-2xl shadow-[0_8px_30px_-10px_rgba(9,14,26,0.22),0_2px_12px_-2px_rgba(0,209,209,0.08)] hover:shadow-[0_16px_40px_-8px_rgba(9,14,26,0.34),0_6px_20px_-3px_rgba(0,209,209,0.18)] hover:border-brand/40 transition-all duration-300 flex flex-col lg:flex-row items-stretch overflow-hidden group"
+                className="bg-white border border-zinc-200/80 rounded-2xl shadow-[0_12px_36px_-8px_rgba(9,14,26,0.28),0_4px_20px_-2px_rgba(0,209,209,0.12)] hover:shadow-[0_20px_48px_-6px_rgba(9,14,26,0.38),0_8px_30px_-4px_rgba(0,209,209,0.22)] hover:border-brand/40 transition-all duration-300 flex flex-col lg:flex-row items-stretch overflow-hidden group"
               >
                 {/* Left Column: Avatar & Name */}
                 <div className="p-5 sm:p-6 flex items-center gap-4 bg-gradient-to-br from-zinc-50/50 to-white border-b lg:border-b-0 lg:border-r border-zinc-100 flex-1 lg:flex-initial lg:basis-[28%] shrink-0">

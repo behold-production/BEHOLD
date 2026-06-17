@@ -13,7 +13,7 @@ const NotificationController = {
       const filtered = list.filter(n => 
         (n.recipientId === recipientId && n.recipientRole === recipientRole) || 
         (n.recipientId === 'ALL' && n.recipientRole === recipientRole)
-      ).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+      ).sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
 
       res.status(200).json({
         success: true,

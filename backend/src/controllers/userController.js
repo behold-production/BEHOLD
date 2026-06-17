@@ -138,9 +138,9 @@ const UserController = {
         } catch {
           return s.status === 'PENDING';
         }
-      }).sort((a, b) => a.date.localeCompare(b.date));
+      }).sort((a, b) => (a.date || '').localeCompare(b.date || ''));
 
-      const appointmentHistory = appointments.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+      const appointmentHistory = appointments.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
 
       // Get notifications
       const notifications = await StorageService.findAll('notifications', { 

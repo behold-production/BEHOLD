@@ -415,7 +415,7 @@ export default function StudentProfile() {
         }
 
         if (testRes && testRes.success && Array.isArray(testRes.data) && testRes.data.length > 0) {
-          const sorted = [...testRes.data].sort((a, b) => b.date.localeCompare(a.date));
+          const sorted = [...testRes.data].sort((a, b) => (b.date || '').localeCompare(a.date || ''));
           setTestProfile(sorted[0]);
         } else {
           try {
