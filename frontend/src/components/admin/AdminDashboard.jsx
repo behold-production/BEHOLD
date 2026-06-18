@@ -3442,58 +3442,61 @@ export default function AdminDashboard({ setView }) {
                             <th className="p-3 text-center">Delete</th>
                           </tr>
                         </thead>
-                        <tbody>
-                          {subAdminsList.map(admin => {
-                            const { cleanName, roleTitle } = parseStaffDetails(admin);
-                            return (
-                              <tr key={admin.id} className="border-b border-zinc-900 hover:bg-zinc-900/50">
-                                <td className="p-3">
-                                  <span className="font-bold text-white block">{cleanName}</span>
-                                  {roleTitle && (
-                                    <span className="text-sm bg-brand/10 border border-brand/20 text-brand px-1.5 py-0.5 rounded font-bold  capitalize  inline-block mt-1">
-                                      {roleTitle}
-                                    </span>
-                                  )}
-                                </td>
-                                <td className="p-3 text-zinc-400">{admin.email}</td>
-                                <td className="p-3 flex flex-wrap gap-1">
-                                  {admin.permissions.map(p => (
-                                    <span key={p} className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-sm font-bold text-zinc-400 capitalize  ">
-                                      {p.replace('MANAGE_', '')}
-                                    </span>
-                                  ))}
-                                </td>
-                                <td className="p-3 text-center">
-                                  <button
-                                    onClick={() => handleOpenEditSubAdmin(admin)}
-                                    className="px-2.5 py-1 bg-zinc-900 text-brand hover:text-white rounded border border-zinc-800 hover:bg-zinc-855 transition cursor-pointer text-sm font-bold capitalize "
-                                  >
-                                    Edit
-                                  </button>
-                                </td>
-                                <td className="p-3 text-center space-x-1">
-                                  <button
-                                    onClick={() => handleGenerateResetToken(admin.email)}
-                                    className="p-1.5 bg-zinc-900 text-amber-500 hover:bg-amber-900/30 hover:text-amber-400 rounded border border-zinc-800 transition cursor-pointer inline-flex"
-                                    title="Generate Password Reset Link"
-                                  >
-                                    <KeyRound className="w-3.5 h-3.5" />
-                                  </button>
-                                  <button
-                                    onClick={() => handleDeleteUser(admin.id)}
-                                    className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
-                                    title="Delete sub-admin account"
-                                  >
-                                    <Trash className="w-3.5 h-3.5" />
-                                  </button>
-                                </td>
-                              </tr>
-                            );
-                          })}
-                          {subAdminsList.length === 0 && (
+                         <tbody>
+                          {isDbLoading ? (
+                            <SkeletonTableRows cols={5} />
+                          ) : subAdminsList.length === 0 ? (
                             <tr>
                               <td colSpan={5} className="p-5 text-center text-zinc-500 italic">No sub-admin accounts registered. Create accounts inside the "Roles & Scopes" tab.</td>
                             </tr>
+                          ) : (
+                            subAdminsList.map(admin => {
+                              const { cleanName, roleTitle } = parseStaffDetails(admin);
+                              return (
+                                <tr key={admin.id} className="border-b border-zinc-900 hover:bg-zinc-900/50">
+                                  <td className="p-3">
+                                    <span className="font-bold text-white block">{cleanName}</span>
+                                    {roleTitle && (
+                                      <span className="text-sm bg-brand/10 border border-brand/20 text-brand px-1.5 py-0.5 rounded font-bold  capitalize  inline-block mt-1">
+                                        {roleTitle}
+                                      </span>
+                                    )}
+                                  </td>
+                                  <td className="p-3 text-zinc-400">{admin.email}</td>
+                                  <td className="p-3 flex flex-wrap gap-1">
+                                    {admin.permissions.map(p => (
+                                      <span key={p} className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-sm font-bold text-zinc-400 capitalize  ">
+                                        {p.replace('MANAGE_', '')}
+                                      </span>
+                                    ))}
+                                  </td>
+                                  <td className="p-3 text-center">
+                                    <button
+                                      onClick={() => handleOpenEditSubAdmin(admin)}
+                                      className="px-2.5 py-1 bg-zinc-900 text-brand hover:text-white rounded border border-zinc-800 hover:bg-zinc-855 transition cursor-pointer text-sm font-bold capitalize "
+                                    >
+                                      Edit
+                                    </button>
+                                  </td>
+                                  <td className="p-3 text-center space-x-1">
+                                    <button
+                                      onClick={() => handleGenerateResetToken(admin.email)}
+                                      className="p-1.5 bg-zinc-900 text-amber-500 hover:bg-amber-900/30 hover:text-amber-400 rounded border border-zinc-800 transition cursor-pointer inline-flex"
+                                      title="Generate Password Reset Link"
+                                    >
+                                      <KeyRound className="w-3.5 h-3.5" />
+                                    </button>
+                                    <button
+                                      onClick={() => handleDeleteUser(admin.id)}
+                                      className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
+                                      title="Delete sub-admin account"
+                                    >
+                                      <Trash className="w-3.5 h-3.5" />
+                                    </button>
+                                  </td>
+                                </tr>
+                              );
+                            })
                           )}
                         </tbody>
                       </table>
