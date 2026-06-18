@@ -5,7 +5,7 @@ import {
   Calendar, Clock, Link, AlertCircle, Edit, Video, UserPlus,
   MessageSquare, FileSpreadsheet, HelpCircle, X, ChevronRight, ChevronLeft, Mail, Shield, Menu, Brain, Download
 } from 'lucide-react';
-import html2canvas from 'html2canvas';
+import html2canvas from 'html2canvas-pro';
 import jsPDF from 'jspdf';
 import { useCustomDialog } from '../../context/CustomDialogContext';
 import { formatDateString } from '../../utils/dateFormatter';
