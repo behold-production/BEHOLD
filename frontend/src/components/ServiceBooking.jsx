@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useCustomDialog } from '../context/CustomDialogContext';
 import toast from 'react-hot-toast';
 import ApiService from '../services/api';
 import DateTimePicker from './booking/DateTimePicker';
@@ -49,6 +50,7 @@ const CAREER_FLOW = {
 
 export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedAdvisor, onOpenAuth }) {
   const { user, login, register } = useAuth();
+  const { showAlert } = useCustomDialog();
   
   const getLocalTodayString = () => {
     const today = new Date();
@@ -154,7 +156,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
   const gstAmount = gstEnabled && gstPercent > 0 ? Math.round(baseFee * (gstPercent / 100)) : 0;
   const netTotal = Math.max(0, baseFee + gstAmount - appliedDiscount);
 
-  const downloadPDFReceipt = (bookingDetails) => {
+  const downloadPDFReceipt = async (bookingDetails) => {
     setDownloadingPdf(true);
     try {
       const doc = new jsPDF({
@@ -325,7 +327,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
       doc.save(`Behold_Session_Receipt_${bookingDetails.id}.pdf`);
     } catch (e) {
       console.error(e);
-      alert("Failed to generate PDF receipt. Please contact platform support.");
+      await showAlert("Failed to generate PDF receipt. Please contact platform support.", "Export Error");
     } finally {
       setDownloadingPdf(false);
     }

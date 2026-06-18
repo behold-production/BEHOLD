@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { useCustomDialog } from '../../context/CustomDialogContext';
 import { formatDateString } from '../../utils/dateFormatter';
 
 function getInitials(name) {
@@ -89,6 +90,7 @@ import LogoutConfirmModal from '../LogoutConfirmModal';
 import ApiService from '../../services/api';
 
 export default function AdminDashboard({ setView }) {
+  const { showAlert, showConfirm, showPrompt } = useCustomDialog();
   const getLocalTodayString = () => {
     const today = new Date();
     const yyyy = today.getFullYear();
@@ -101,7 +103,7 @@ export default function AdminDashboard({ setView }) {
     try {
       const element = document.getElementById(tableId);
       if (!element) {
-        alert("Table not found for export.");
+        await showAlert("Table not found for export.");
         return;
       }
       const canvas = await html2canvas(element, { scale: 2, backgroundColor: '#18181b' });
@@ -112,7 +114,7 @@ export default function AdminDashboard({ setView }) {
       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
       pdf.save(`${title.replace(/\s+/g, '_')}_${getLocalTodayString()}.pdf`);
     } catch (err) {
-      alert("Failed to export PDF: " + err.message);
+      await showAlert("Failed to export PDF: " + err.message);
     }
   };
 
@@ -120,7 +122,7 @@ export default function AdminDashboard({ setView }) {
     try {
       const element = document.getElementById(tableId);
       if (!element) {
-        alert("Table not found for export.");
+        await showAlert("Table not found for export.");
         return;
       }
       const canvas = await html2canvas(element, { scale: 2, backgroundColor: '#18181b' });
@@ -129,11 +131,11 @@ export default function AdminDashboard({ setView }) {
       link.href = canvas.toDataURL('image/png');
       link.click();
     } catch (err) {
-      alert("Failed to export Image: " + err.message);
+      await showAlert("Failed to export Image: " + err.message);
     }
   };
 
-  const downloadPDFReceipt = (booking) => {
+  const downloadPDFReceipt = async (booking) => {
     try {
       const doc = new jsPDF({
         orientation: 'portrait',
@@ -320,7 +322,7 @@ export default function AdminDashboard({ setView }) {
       doc.save(`Behold_Session_Receipt_${booking.id}.pdf`);
     } catch (e) {
       console.error(e);
-      alert("Failed to generate PDF receipt: " + e.message);
+      await showAlert("Failed to generate PDF receipt: " + e.message);
     }
   };
 
@@ -534,7 +536,7 @@ export default function AdminDashboard({ setView }) {
     e.preventDefault();
     if (!viewingStudent) return;
     if (!adminCigiFile && !adminCigiEditingId) {
-      alert('Please select a file to upload');
+      await showAlert('Please select a file to upload');
       return;
     }
 
@@ -542,7 +544,7 @@ export default function AdminDashboard({ setView }) {
       const allowedExtensions = ['jpg', 'jpeg', 'png', 'pdf'];
       const fileExt = adminCigiFile.name.split('.').pop().toLowerCase();
       if (!allowedExtensions.includes(fileExt)) {
-        alert('Only JPG, JPEG, PNG, and PDF files are allowed.');
+        await showAlert('Only JPG, JPEG, PNG, and PDF files are allowed.');
         return;
       }
     }
@@ -565,7 +567,7 @@ export default function AdminDashboard({ setView }) {
       }
 
       if (res.success) {
-        alert(adminCigiEditingId ? 'CIGI result updated successfully' : 'CIGI result uploaded successfully');
+        await showAlert(adminCigiEditingId ? 'CIGI result updated successfully' : 'CIGI result uploaded successfully');
 
         // Update local database list
         const updatedUser = res.data;
@@ -583,7 +585,7 @@ export default function AdminDashboard({ setView }) {
         if (adminCigiFileInputRef.current) adminCigiFileInputRef.current.value = '';
       }
     } catch (err) {
-      alert(err.message || 'Failed to manage CIGI result');
+      await showAlert(err.message || 'Failed to manage CIGI result');
     } finally {
       setIsAdminCigiUploading(false);
     }
@@ -591,17 +593,17 @@ export default function AdminDashboard({ setView }) {
 
   const handleAdminCigiDelete = async (resultId) => {
     if (!viewingStudent) return;
-    if (!window.confirm('Are you sure you want to delete this CIGI result?')) return;
+    if (!await showConfirm('Are you sure you want to delete this CIGI result?')) return;
     try {
       const res = await ApiService.adminDeleteCigiResult(viewingStudent.id, resultId);
       if (res.success) {
-        alert('CIGI result deleted successfully');
+        await showAlert('CIGI result deleted successfully');
         const updatedUser = res.data;
         setUsersDb(prev => prev.map(u => u.id === updatedUser.id ? { ...u, ...updatedUser } : u));
         setViewingStudent(prev => prev && prev.id === updatedUser.id ? { ...prev, ...updatedUser } : prev);
       }
     } catch (err) {
-      alert(err.message || 'Failed to delete CIGI result');
+      await showAlert(err.message || 'Failed to delete CIGI result');
     }
   };
 
@@ -976,15 +978,15 @@ export default function AdminDashboard({ setView }) {
 
   const handleDeleteUser = async (userId) => {
     if (!hasUserPermission) {
-      alert("Access Denied: You do not have permission to manage students.");
+      await showAlert("Access Denied: You do not have permission to manage students.");
       return;
     }
-    if (!window.confirm("Are you sure you want to delete this account?")) return;
+    if (!await showConfirm("Are you sure you want to delete this account?")) return;
     try {
       await ApiService.deleteAdminUser(userId);
       reloadData();
     } catch (err) {
-      alert(err.message || "Failed to delete user.");
+      await showAlert(err.message || "Failed to delete user.");
     }
   };
 
@@ -996,12 +998,12 @@ export default function AdminDashboard({ setView }) {
       });
       if (res.success && res.resetToken) {
         const link = window.location.origin + '/reset-password?token=' + res.resetToken;
-        window.prompt("Password reset link generated. Copy it below to share:", link);
+        await showPrompt("Password reset link generated. Copy it below to share:", link);
       } else {
-        alert(res.message || "Failed to generate token.");
+        await showAlert(res.message || "Failed to generate token.");
       }
     } catch (err) {
-      alert(err.message || "An error occurred.");
+      await showAlert(err.message || "An error occurred.");
     }
   };
 
@@ -1090,15 +1092,15 @@ export default function AdminDashboard({ setView }) {
 
   const handleDeleteAptitudeQuestion = async (id) => {
     if (!isSuperAdmin) {
-      alert("Access Denied: Only super admins can manage tests.");
+      await showAlert("Access Denied: Only super admins can manage tests.");
       return;
     }
-    if (!window.confirm("Delete this question?")) return;
+    if (!await showConfirm("Delete this question?")) return;
     try {
       await ApiService.deleteAptitudeQuestion(id);
       reloadData();
     } catch (err) {
-      alert(err.message || "Failed to delete question.");
+      await showAlert(err.message || "Failed to delete question.");
     }
   };
 
@@ -1348,31 +1350,31 @@ export default function AdminDashboard({ setView }) {
 
   const handleDeletePsy = async (psyId) => {
     if (!hasPsyPermission) {
-      alert("Access Denied: You do not have permission to manage psychologists.");
+      await showAlert("Access Denied: You do not have permission to manage psychologists.");
       return;
     }
-    if (!window.confirm("Are you sure you want to remove this psychologist?")) return;
+    if (!await showConfirm("Are you sure you want to remove this psychologist?")) return;
     try {
       await ApiService.deleteAdminCounsellor(psyId);
       reloadData();
     } catch (err) {
-      alert(err.message || "Failed to delete psychologist.");
+      await showAlert(err.message || "Failed to delete psychologist.");
     }
   };
 
   const handleRejectPsy = async (psyId) => {
     if (!hasPsyPermission) {
-      alert("Access Denied: You do not have permission to manage psychologists.");
+      await showAlert("Access Denied: You do not have permission to manage psychologists.");
       return;
     }
-    const reason = window.prompt("Enter reason for rejection:");
+    const reason = await showPrompt("Enter reason for rejection:");
     if (reason === null) return; // User cancelled
     
     try {
       await ApiService.rejectCounsellor(psyId, reason);
       reloadData();
     } catch (err) {
-      alert(err.message || "Failed to reject psychologist.");
+      await showAlert(err.message || "Failed to reject psychologist.");
     }
   };
 
@@ -1526,15 +1528,15 @@ export default function AdminDashboard({ setView }) {
 
   const handleDeleteBooking = async (bookingId) => {
     if (!hasBookingPermission) {
-      alert("Access Denied: You do not have permission to manage bookings.");
+      await showAlert("Access Denied: You do not have permission to manage bookings.");
       return;
     }
-    if (!window.confirm("Are you sure you want to remove this booking?")) return;
+    if (!await showConfirm("Are you sure you want to remove this booking?")) return;
     try {
       await ApiService.deleteAdminAppointment(bookingId);
       reloadData();
     } catch (err) {
-      alert(err.message || "Failed to delete booking.");
+      await showAlert(err.message || "Failed to delete booking.");
     }
   };
 
@@ -1600,9 +1602,9 @@ export default function AdminDashboard({ setView }) {
     }
   };
 
-  const handleDeleteRole = (role) => {
+  const handleDeleteRole = async (role) => {
     if (!isSuperAdmin) {
-      alert("Access Denied: You do not have permission to manage roles.");
+      await showAlert("Access Denied: You do not have permission to manage roles.");
       return;
     }
     setRoleToDelete(role);
@@ -1610,7 +1612,7 @@ export default function AdminDashboard({ setView }) {
 
   const executeDeleteRole = async (roleId) => {
     if (!isSuperAdmin) {
-      alert("Access Denied: You do not have permission to manage roles.");
+      await showAlert("Access Denied: You do not have permission to manage roles.");
       return;
     }
     try {
@@ -1634,10 +1636,10 @@ export default function AdminDashboard({ setView }) {
           }
         }
       } else {
-        alert(res.message || "Failed to delete role.");
+        await showAlert(res.message || "Failed to delete role.");
       }
     } catch (err) {
-      alert(err.message || "An error occurred deleting the role.");
+      await showAlert(err.message || "An error occurred deleting the role.");
     } finally {
       setRoleToDelete(null);
     }
@@ -1757,35 +1759,35 @@ export default function AdminDashboard({ setView }) {
   // Inquiries Actions
   const handleResolveInquiry = async (inqId) => {
     if (!isSuperAdmin) {
-      alert("Access Denied: You do not have permission to manage inquiries.");
+      await showAlert("Access Denied: You do not have permission to manage inquiries.");
       return;
     }
     try {
       await ApiService.resolveInquiry(inqId);
       reloadData();
     } catch (err) {
-      alert(err.message || "Failed to update inquiry.");
+      await showAlert(err.message || "Failed to update inquiry.");
     }
   };
 
   const handleDeleteInquiry = async (inqId) => {
     if (!isSuperAdmin) {
-      alert("Access Denied: You do not have permission to manage inquiries.");
+      await showAlert("Access Denied: You do not have permission to manage inquiries.");
       return;
     }
-    if (!window.confirm("Are you sure you want to delete this student inquiry?")) return;
+    if (!await showConfirm("Are you sure you want to delete this student inquiry?")) return;
     try {
       await ApiService.deleteInquiry(inqId);
       reloadData();
     } catch (err) {
-      alert(err.message || "Failed to delete inquiry.");
+      await showAlert(err.message || "Failed to delete inquiry.");
     }
   };
 
   // Student active/suspended status toggle
   const handleToggleStudentStatus = async (studentId, currentStatus) => {
     if (!hasUserPermission) {
-      alert("Access Denied: You do not have permission to manage students.");
+      await showAlert("Access Denied: You do not have permission to manage students.");
       return;
     }
     const student = usersDb.find(u => u.id === studentId);
@@ -1804,21 +1806,21 @@ export default function AdminDashboard({ setView }) {
       );
       reloadData();
     } catch (err) {
-      alert(err.message || "Failed to update status.");
+      await showAlert(err.message || "Failed to update status.");
     }
   };
 
   // Psychologist verification toggle
   const handleTogglePsyVerification = async (psyId, currentVerified) => {
     if (!hasPsyPermission) {
-      alert("Access Denied: You do not have permission to verify/unverify psychologists.");
+      await showAlert("Access Denied: You do not have permission to verify/unverify psychologists.");
       return;
     }
     try {
       await ApiService.verifyCounsellor(psyId, !currentVerified);
       reloadData();
     } catch (err) {
-      alert(err.message || "Failed to toggle verification.");
+      await showAlert(err.message || "Failed to toggle verification.");
     }
   };
 
@@ -1826,7 +1828,7 @@ export default function AdminDashboard({ setView }) {
   const handleSaveSettings = async (e) => {
     e.preventDefault();
     if (!isSuperAdmin) {
-      alert("Access Denied: You do not have permission to save settings.");
+      await showAlert("Access Denied: You do not have permission to save settings.");
       return;
     }
     setSettingsSuccess('');
@@ -1837,7 +1839,7 @@ export default function AdminDashboard({ setView }) {
       setTimeout(() => setSettingsSuccess(''), 3000);
       reloadData();
     } catch (err) {
-      alert(err.message || "Failed to save settings.");
+      await showAlert(err.message || "Failed to save settings.");
     }
   };
 
@@ -1923,40 +1925,40 @@ export default function AdminDashboard({ setView }) {
   // Inquiry Reply/Notes
   const handleSaveInquiryNote = async (inqId, noteText) => {
     if (!isSuperAdmin) {
-      alert("Access Denied: You do not have permission to manage inquiries.");
+      await showAlert("Access Denied: You do not have permission to manage inquiries.");
       return;
     }
     try {
       await ApiService.saveInquiryNote(inqId, noteText);
       reloadData();
-      alert("Internal note updated!");
+      await showAlert("Internal note updated!");
     } catch (err) {
-      alert(err.message || "Failed to update inquiry note.");
+      await showAlert(err.message || "Failed to update inquiry note.");
     }
   };
 
   const handleBulkClearResolvedInquiries = async () => {
     if (!isSuperAdmin) {
-      alert("Access Denied: You do not have permission to manage inquiries.");
+      await showAlert("Access Denied: You do not have permission to manage inquiries.");
       return;
     }
-    if (!window.confirm("Are you sure you want to delete all resolved inquiries?")) return;
+    if (!await showConfirm("Are you sure you want to delete all resolved inquiries?")) return;
     try {
       await ApiService.clearResolvedInquiries();
       reloadData();
     } catch (err) {
-      alert(err.message || "Failed to clear resolved inquiries.");
+      await showAlert(err.message || "Failed to clear resolved inquiries.");
     }
   };
 
   // Aptitude results export
-  const handleExportAptitudeResults = (res) => {
+  const handleExportAptitudeResults = async (res) => {
     const breakdown = Object.entries(res.scores || {})
       .map(([key, val]) => ` - ${key.toUpperCase()}: ${val}%`)
       .join('\n');
     const txt = `BEHOLD APTITUDE TEST REPORT\n=========================\nStudent Name: ${res.studentName}\nEmail: ${res.studentEmail}\nDate Completed: ${formatDateString(res.date)}\nDominant Domain: ${res.dominantDomain.toUpperCase()}\n\nCognitive Breakdown:\n${breakdown}\n`;
     navigator.clipboard.writeText(txt);
-    alert("Test report copied to clipboard!");
+    await showAlert("Test report copied to clipboard!");
   };
 
   // Bookings Bulk Actions
@@ -1970,7 +1972,7 @@ export default function AdminDashboard({ setView }) {
 
   const handleBulkBookingStatus = async (status) => {
     if (!hasBookingPermission) {
-      alert("Access Denied: You do not have permission to manage bookings.");
+      await showAlert("Access Denied: You do not have permission to manage bookings.");
       return;
     }
     if (selectedBookingIds.length === 0) return;
@@ -1980,43 +1982,43 @@ export default function AdminDashboard({ setView }) {
       );
       setSelectedBookingIds([]);
       reloadData();
-      alert(`Selected bookings updated to ${status}!`);
+      await showAlert(`Selected bookings updated to ${status}!`);
     } catch (err) {
-      alert(err.message || "Failed to update bookings.");
+      await showAlert(err.message || "Failed to update bookings.");
     }
   };
 
   const handleBulkDeleteBookings = async () => {
     if (!hasBookingPermission) {
-      alert("Access Denied: You do not have permission to manage bookings.");
+      await showAlert("Access Denied: You do not have permission to manage bookings.");
       return;
     }
     if (selectedBookingIds.length === 0) return;
-    if (!window.confirm(`Are you sure you want to delete ${selectedBookingIds.length} selected bookings?`)) return;
+    if (!await showConfirm(`Are you sure you want to delete ${selectedBookingIds.length} selected bookings?`)) return;
     try {
       await Promise.all(
         selectedBookingIds.map(id => ApiService.deleteAdminAppointment(id))
       );
       setSelectedBookingIds([]);
       reloadData();
-      alert("Selected bookings deleted!");
+      await showAlert("Selected bookings deleted!");
     } catch (err) {
-      alert(err.message || "Failed to delete bookings.");
+      await showAlert(err.message || "Failed to delete bookings.");
     }
   };
 
   // Test Results Actions
   const handleDeleteTestResult = async (resId) => {
     if (!isSuperAdmin) {
-      alert("Access Denied: You do not have permission to manage test results.");
+      await showAlert("Access Denied: You do not have permission to manage test results.");
       return;
     }
-    if (!window.confirm("Are you sure you want to delete this test result?")) return;
+    if (!await showConfirm("Are you sure you want to delete this test result?")) return;
     try {
       await ApiService.deleteTestResult(resId);
       reloadData();
     } catch (err) {
-      alert(err.message || "Failed to delete test result.");
+      await showAlert(err.message || "Failed to delete test result.");
     }
   };
 
@@ -2094,17 +2096,17 @@ export default function AdminDashboard({ setView }) {
 
   const handleDeleteFaq = async (index) => {
     if (!isSuperAdmin) {
-      alert("Access Denied: You do not have permission to manage FAQs.");
+      await showAlert("Access Denied: You do not have permission to manage FAQs.");
       return;
     }
-    if (!window.confirm("Are you sure you want to delete this FAQ question?")) return;
+    if (!await showConfirm("Are you sure you want to delete this FAQ question?")) return;
     try {
       const faqToDelete = faqsDb[index];
       if (!faqToDelete) return;
       await ApiService.deleteFaq(faqToDelete.id);
       reloadData();
     } catch (err) {
-      alert(err.message || "Failed to delete FAQ.");
+      await showAlert(err.message || "Failed to delete FAQ.");
     }
   };
 
@@ -3118,9 +3120,9 @@ export default function AdminDashboard({ setView }) {
                                     <div className="flex items-center justify-between bg-zinc-950 p-2.5 rounded border border-zinc-900 mt-2">
                                       <span className="truncate text-brand  select-all text-sm pr-2">{b.meetLink}</span>
                                       <button
-                                        onClick={() => {
+                                        onClick={async () => {
                                           navigator.clipboard.writeText(b.meetLink);
-                                          alert("Google Meet Link copied!");
+                                          await showAlert("Google Meet Link copied!", "Success");
                                         }}
                                         className="px-2.5 py-1 bg-zinc-900 border border-zinc-800 hover:border-brand/40 text-white rounded text-sm font-bold cursor-pointer transition shrink-0"
                                       >
@@ -3437,14 +3439,14 @@ export default function AdminDashboard({ setView }) {
 
           {/* TAB 2: STUDENTS DIRECTORY */}
           {currentSection === 'users' && hasUserPermission && (() => {
-            const handleExportStudentsCSV = () => {
+            const handleExportStudentsCSV = async () => {
               const headers = "ID,Name,Email,Status,BookingsCount\n";
               const rows = studentsList.map(s => {
                 const count = bookingsDb.filter(b => b.userId === s.id).length;
                 return `"${s.id}","${s.name}","${s.email}","${s.status || 'ACTIVE'}",${count}`;
               }).join('\n');
               navigator.clipboard.writeText(headers + rows);
-              alert("Student directory CSV copied to clipboard!");
+              await showAlert("Student directory CSV copied to clipboard!");
             };
 
             return (

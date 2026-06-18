@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import App from './App.jsx'
 import { AuthProvider } from './context/AuthContext'
+import { CustomDialogProvider } from './context/CustomDialogContext'
 import ErrorBoundary from './components/ErrorBoundary'
 
 // Intercept localStorage.setItem to trigger custom event for same-tab updates
@@ -24,7 +25,9 @@ createRoot(document.getElementById('root')).render(
     <AuthProvider>
       <BrowserRouter>
         <ErrorBoundary>
-          <App />
+          <CustomDialogProvider>
+            <App />
+          </CustomDialogProvider>
         </ErrorBoundary>
       </BrowserRouter>
     </AuthProvider>

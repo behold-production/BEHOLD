@@ -10,6 +10,7 @@ import {
   CheckCircle2, AlertCircle, Hash, Activity
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useCustomDialog } from '../../context/CustomDialogContext';
 import ApiService from '../../services/api';
 import toast from 'react-hot-toast';
 import { formatDateString } from '../../utils/dateFormatter';
@@ -137,6 +138,7 @@ export default function StudentProfile() {
   const [sessionFilter, setSessionFilter] = useState('all');
   const [sessionSubTab, setSessionSubTab] = useState('upcoming');
   const { user, isLoading: authLoading, updateUser } = useAuth();
+  const { showAlert, showConfirm, showPrompt } = useCustomDialog();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -156,7 +158,7 @@ export default function StudentProfile() {
   // displayName from saved profile (header doesn't change until Save is clicked)
   const displayName = profile.name || user?.name || 'Student';
 
-  const generateReceiptPDFDoc = (bookingDetails) => {
+  const generateReceiptPDFDoc = async (bookingDetails) => {
     try {
       const doc = new jsPDF({
         orientation: 'portrait',
@@ -326,11 +328,11 @@ export default function StudentProfile() {
       doc.save(`Behold_Session_Receipt_${bookingDetails.id}.pdf`);
     } catch (e) {
       console.error(e);
-      alert("Failed to generate PDF receipt. Please contact platform support.");
+      await showAlert("Failed to generate PDF receipt. Please contact platform support.", "Export Error");
     }
   };
 
-  const downloadPDFReceiptForSession = (session) => {
+  const downloadPDFReceiptForSession = async (session) => {
     const toastId = toast.loading('Generating receipt PDF...');
     try {
       let gstEnabled = false;
@@ -381,7 +383,7 @@ export default function StudentProfile() {
         appliedDiscount: appliedDiscount
       };
 
-      generateReceiptPDFDoc(details);
+      await generateReceiptPDFDoc(details);
       toast.success('Receipt downloaded successfully!', { id: toastId });
     } catch (err) {
       console.error(err);
@@ -511,13 +513,13 @@ export default function StudentProfile() {
   };
 
   const handleCancelSession = async (sessionId) => {
-    const reason = window.prompt('Please provide a reason for cancelling this session:');
+    const reason = await showPrompt('Please provide a reason for cancelling this session:', '', 'Cancel Session', 'Enter reason here...');
     if (reason === null) return;
 
     try {
       const session = bookedSessions.find(b => b.id === sessionId);
       if (session && isSessionCompleted(session)) {
-        alert('Cannot cancel a session that is already in the past or completed.');
+        await showAlert('Cannot cancel a session that is already in the past or completed.', 'Error');
         return;
       }
       await ApiService.cancelAppointment(sessionId, reason);
@@ -530,7 +532,7 @@ export default function StudentProfile() {
         setCompletedSessions(list.filter(b => b.status === 'COMPLETED' || isSessionCompleted(b)));
       }
     } catch (error) {
-      alert(error.message || 'Failed to cancel session');
+      await showAlert(error.message || 'Failed to cancel session', 'Error');
     }
   };
 
@@ -1581,7 +1583,7 @@ export default function StudentProfile() {
   };
 
   const handleCigiDelete = async (resultId) => {
-    if (!window.confirm('Are you sure you want to delete this CIGI result?')) return;
+    if (!(await showConfirm('Are you sure you want to delete this CIGI result?', 'Delete CIGI Result'))) return;
     try {
       const res = await ApiService.deleteCigiResult(resultId);
       if (res.success) {

@@ -5,12 +5,14 @@ import {
   X, ChevronRight, Mail, Shield, Menu
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useCustomDialog } from '../../context/CustomDialogContext';
 import LogoutConfirmModal from '../LogoutConfirmModal';
 import ApiService from '../../services/api';
 import { formatDateString } from '../../utils/dateFormatter';
 
 export default function PsychologistDashboard({ setView }) {
   const { user, login, register, logout, isLoading, updateUser } = useAuth();
+  const { showPrompt } = useCustomDialog();
 
   const isCounsellorVerified = () => {
     return user ? user.isVerified !== false : true;
@@ -621,13 +623,13 @@ export default function PsychologistDashboard({ setView }) {
       if (newStatus === 'CONFIRMED' || newStatus === 'APPROVED') {
         res = await ApiService.approveAppointment(bookingId);
       } else if (newStatus === 'CANCELLED') {
-        const reason = window.prompt("Please enter a reason for cancelling this session:");
+        const reason = await showPrompt("Please enter a reason for cancelling this session:", '', 'Cancel Session', 'Enter cancellation reason...');
         if (reason === null) return;
         res = await ApiService.cancelAppointment(bookingId, reason);
       } else if (newStatus === 'COMPLETED') {
         res = await ApiService.completeAppointment(bookingId);
       } else if (newStatus === 'REJECTED') {
-        const reason = window.prompt("Please enter a reason for declining this request:");
+        const reason = await showPrompt("Please enter a reason for declining this request:", '', 'Decline Request', 'Enter decline reason...');
         if (reason === null) return;
         res = await ApiService.rejectAppointment(bookingId, reason);
       }
