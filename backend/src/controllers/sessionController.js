@@ -1,9 +1,11 @@
 const StorageService = require('../services/storageService');
+const { autoExpireSessions } = require('../utils/sessionHelper');
 
 const SessionController = {
   // Get Sessions (List for User or Counsellor)
   async getSessions(req, res, next) {
     try {
+      await autoExpireSessions();
       const filter = req.user.role === 'counsellor'
         ? { counsellorId: req.user.id }
         : { userId: req.user.id };
@@ -45,24 +47,28 @@ const SessionController = {
             if (!isAuthorized) {
               meetLink = '';
             } else if (req.user.role === 'user') {
-              try {
-                let [hours, minutes] = s.time.split(' ')[0].split(':').map(Number);
-                const modifier = s.time.split(' ')[1];
-                if (modifier === 'PM' && hours < 12) hours += 12;
-                if (modifier === 'AM' && hours === 12) hours = 0;
-                
-                const [year, month, day] = s.date.split('-').map(Number);
-                const sessionTime = new Date(year, month - 1, day, hours, minutes);
-                const now = new Date();
-                
-                const diffMinutes = (sessionTime - now) / 60000;
-                
-                // Hide link if more than 10 mins before, or more than 60 mins after
-                if (diffMinutes > 10 || diffMinutes < -60) {
+              if (s.status === 'EXPIRED' || s.status === 'COMPLETED' || s.status === 'CANCELLED') {
+                meetLink = 'LOCKED';
+              } else {
+                try {
+                  let [hours, minutes] = s.time.split(' ')[0].split(':').map(Number);
+                  const modifier = s.time.split(' ')[1];
+                  if (modifier === 'PM' && hours < 12) hours += 12;
+                  if (modifier === 'AM' && hours === 12) hours = 0;
+                  
+                  const [year, month, day] = s.date.split('-').map(Number);
+                  const sessionTime = new Date(year, month - 1, day, hours, minutes);
+                  const now = new Date();
+                  
+                  const diffMinutes = (sessionTime - now) / 60000;
+                  
+                  // Hide link if more than 10 mins before, or more than 60 mins after
+                  if (diffMinutes > 10 || diffMinutes < -60) {
+                    meetLink = 'LOCKED';
+                  }
+                } catch (e) {
                   meetLink = 'LOCKED';
                 }
-              } catch (e) {
-                meetLink = 'LOCKED';
               }
             }
           }
@@ -127,17 +133,28 @@ const SessionController = {
       // Meeting link safety check: only reveal if within 1 hour of scheduled time, or if requested by counsellor/admin
       let meetLink = session.meetLink;
       if (meetLink && req.user.role === 'user') {
-        try {
-          const sessionTime = new Date(`${session.date} ${session.time.split(' ')[0]}`);
-          const now = new Date();
-          const diffMinutes = Math.abs((sessionTime - now) / 60000);
-          
-          // If session is more than 60 minutes away, don't return link to student yet
-          if (diffMinutes > 60 && sessionTime > now) {
+        if (session.status === 'EXPIRED' || session.status === 'COMPLETED' || session.status === 'CANCELLED') {
+          meetLink = 'LOCKED';
+        } else {
+          try {
+            let [hours, minutes] = session.time.split(' ')[0].split(':').map(Number);
+            const modifier = session.time.split(' ')[1];
+            if (modifier === 'PM' && hours < 12) hours += 12;
+            if (modifier === 'AM' && hours === 12) hours = 0;
+            
+            const [year, month, day] = session.date.split('-').map(Number);
+            const sessionTime = new Date(year, month - 1, day, hours, minutes);
+            const now = new Date();
+            
+            const diffMinutes = (sessionTime - now) / 60000;
+            
+            // Hide link if more than 10 mins before, or more than 60 mins after
+            if (diffMinutes > 10 || diffMinutes < -60) {
+              meetLink = 'LOCKED';
+            }
+          } catch {
             meetLink = 'LOCKED';
           }
-        } catch {
-          // fallback if datetime fails to parse
         }
       }
 

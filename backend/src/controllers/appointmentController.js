@@ -1,5 +1,6 @@
 const StorageService = require('../services/storageService');
 const { validateBookingDetails } = require('../utils/bookingValidator');
+const { autoExpireSessions } = require('../utils/sessionHelper');
 
 const AppointmentController = {
   // Create Appointment (User / Student)
@@ -473,6 +474,7 @@ const AppointmentController = {
   // Get User Appointments (List)
   async getUserAppointments(req, res, next) {
     try {
+      await autoExpireSessions();
       const filter = req.user.role === 'counsellor' 
         ? { counsellorId: req.user.id }
         : { userId: req.user.id };

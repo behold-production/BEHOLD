@@ -12,6 +12,7 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import ApiService from '../../services/api';
 import toast from 'react-hot-toast';
+import { formatDateString } from '../../utils/dateFormatter';
 
 const INITIAL_STATE = {
   name: '', email: '', phone: '', schoolName: '', grade: '',
@@ -80,7 +81,7 @@ function formatCountdown(dateStr, timeStr) {
 
 const isSessionCompleted = (booking) => {
   if (booking.status === 'CANCELLED') return false;
-  if (booking.status === 'COMPLETED') return true;
+  if (booking.status === 'COMPLETED' || booking.status === 'EXPIRED') return true;
   if (booking.status === 'CONFIRMED') {
     try {
       const [year, month, day] = booking.date.split('-').map(Number);
@@ -792,7 +793,7 @@ export default function StudentProfile() {
                   </p>
                   <div className="flex items-center gap-2 mt-2 text-xs text-zinc-400">
                     <span className="flex items-center gap-1">
-                      <Calendar className="w-3.5 h-3.5" /> {nextSession.date}
+                      <Calendar className="w-3.5 h-3.5" /> {formatDateString(nextSession.date)}
                     </span>
                     <span>·</span>
                     <span className="flex items-center gap-1">
@@ -904,7 +905,7 @@ export default function StudentProfile() {
             <h4 className="font-semibold text-zinc-900 text-sm">Expert Consultation</h4>
             <p className="text-xs text-zinc-500 mt-1">
               {bookedSessions.length > 0
-                ? `Next session with ${bookedSessions[0].advisorName} on ${bookedSessions[0].date}.`
+                ? `Next session with ${bookedSessions[0].advisorName} on ${formatDateString(bookedSessions[0].date)}.`
                 : 'Connect 1-on-1 with certified psychologists and career mentors.'}
             </p>
             <button
@@ -949,7 +950,7 @@ export default function StudentProfile() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-zinc-900 truncate">{s.advisorName}</p>
-                      <p className="text-xs text-zinc-400 mt-0.5">{s.advisorRole || 'Consultation'} · {s.date}</p>
+                      <p className="text-xs text-zinc-400 mt-0.5">{s.advisorRole || 'Consultation'} · {formatDateString(s.date)}</p>
                     </div>
                     <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
                   </div>
@@ -1285,11 +1286,20 @@ export default function StudentProfile() {
                             {session.mode === 'ONLINE' ? <Video className="w-5 h-5 text-zinc-600" /> : <MapPin className="w-5 h-5 text-zinc-600" />}
                           </div>
                           <div>
-                            <span className={`inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-md font-semibold capitalize  ${isConfirmed
-                              ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                              : 'bg-amber-50 text-amber-700 border border-amber-200'
+                            <span className={`inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-md font-semibold capitalize  ${
+                              session.status === 'EXPIRED'
+                                ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                                : isConfirmed
+                                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                  : 'bg-amber-50 text-amber-700 border border-amber-200'
                               }`}>
-                              <span className={`w-1.5 h-1.5 rounded-full ${isConfirmed ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
+                              <span className={`w-1.5 h-1.5 rounded-full ${
+                                session.status === 'EXPIRED'
+                                  ? 'bg-rose-500'
+                                  : isConfirmed
+                                    ? 'bg-emerald-500 animate-pulse'
+                                    : 'bg-amber-500'
+                              }`} />
                               {session.status}
                             </span>
                             <p className="text-xs text-zinc-400 font-medium mt-1">
@@ -1309,7 +1319,7 @@ export default function StudentProfile() {
                       <div className="mt-3 grid grid-cols-2 gap-2">
                         <div className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-zinc-50 border border-zinc-100 text-xs text-zinc-600">
                           <Calendar className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
-                          <span className="font-medium truncate">{session.date}</span>
+                          <span className="font-medium truncate">{formatDateString(session.date)}</span>
                         </div>
                         <div className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-zinc-50 border border-zinc-100 text-xs text-zinc-600">
                           <Clock className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
@@ -1325,56 +1335,65 @@ export default function StudentProfile() {
                       )}
 
                       <div className="mt-4 pt-3 border-t border-zinc-100 flex flex-wrap gap-2">
-                        {session.mode === 'ONLINE' && meetStatus.status === 'AVAILABLE' ? (
-                          <button
-                            type="button"
-                            onClick={() => window.open(meetStatus.link, '_blank')}
-                            className="flex-1 min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg text-xs font-semibold transition-colors border-none cursor-pointer"
-                          >
-                            <Video className="w-3.5 h-3.5" /> Join Now
-                            <ExternalLink className="w-3 h-3" />
-                          </button>
-                        ) : session.mode === 'ONLINE' ? (
-                          <button
-                            type="button"
-                            disabled
-                            title={meetStatus.status === 'LOCKED' ? 'Link activates 10 min before session' : 'Session has ended'}
-                            className="flex-1 min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-zinc-100 text-zinc-400 border border-zinc-200 rounded-lg text-xs font-medium cursor-not-allowed"
-                          >
-                            <Lock className="w-3.5 h-3.5" /> {meetStatus.label}
-                          </button>
+                        {session.status === 'EXPIRED' ? (
+                          <div className="w-full text-center text-xs font-bold text-rose-650 bg-rose-50 border border-rose-100 py-3 rounded-lg flex items-center justify-center gap-1.5 px-4">
+                            <AlertCircle className="w-4 h-4 text-rose-500 shrink-0" />
+                            <span>This session expired because it wasn't joined within 1 hour.</span>
+                          </div>
                         ) : (
-                          <button
-                            type="button"
-                            className="flex-1 min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-zinc-100 text-zinc-700 border border-zinc-200 rounded-lg text-xs font-medium card-luxury-hover"
-                          >
-                            <MapPin className="w-3.5 h-3.5" /> View Location
-                          </button>
+                          <>
+                            {session.mode === 'ONLINE' && meetStatus.status === 'AVAILABLE' ? (
+                              <button
+                                type="button"
+                                onClick={() => window.open(meetStatus.link, '_blank')}
+                                className="flex-1 min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg text-xs font-semibold transition-colors border-none cursor-pointer"
+                              >
+                                <Video className="w-3.5 h-3.5" /> Join Now
+                                <ExternalLink className="w-3 h-3" />
+                              </button>
+                            ) : session.mode === 'ONLINE' ? (
+                              <button
+                                type="button"
+                                disabled
+                                title={meetStatus.status === 'LOCKED' ? 'Link activates 10 min before session' : 'Session has ended'}
+                                className="flex-1 min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-zinc-100 text-zinc-400 border border-zinc-200 rounded-lg text-xs font-medium cursor-not-allowed"
+                              >
+                                <Lock className="w-3.5 h-3.5" /> {meetStatus.label}
+                              </button>
+                            ) : (
+                              <button
+                                type="button"
+                                className="flex-1 min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-zinc-100 text-zinc-700 border border-zinc-200 rounded-lg text-xs font-medium card-luxury-hover"
+                              >
+                                <MapPin className="w-3.5 h-3.5" /> View Location
+                              </button>
+                            )}
+                            {(session.paymentStatus === 'PAID' || session.amountPaid > 0) && (
+                              <button
+                                type="button"
+                                onClick={() => downloadPDFReceiptForSession(session)}
+                                className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 border border-zinc-200 hover:border-zinc-300 rounded-lg text-xs font-medium text-zinc-600 hover:text-zinc-900 transition-colors bg-white cursor-pointer"
+                                title="Download Receipt PDF"
+                              >
+                                <Download className="w-3.5 h-3.5 text-zinc-500" /> Receipt
+                              </button>
+                            )}
+                            <button
+                              type="button"
+                              onClick={() => navigate('/booking')}
+                              className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 border border-zinc-200 hover:border-zinc-300 rounded-lg text-xs font-medium text-zinc-600 hover:text-zinc-900 transition-colors bg-white"
+                            >
+                              <RefreshCw className="w-3.5 h-3.5" /> Reschedule
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleCancelSession(session.id)}
+                              className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 card-luxury border-none hover:border-rose-200 hover:bg-rose-50 text-zinc-500 hover:text-rose-600 rounded-lg text-xs font-medium transition-colors"
+                            >
+                              <XIcon className="w-3.5 h-3.5" /> Cancel
+                            </button>
+                          </>
                         )}
-                        {(session.paymentStatus === 'PAID' || session.amountPaid > 0) && (
-                          <button
-                            type="button"
-                            onClick={() => downloadPDFReceiptForSession(session)}
-                            className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 border border-zinc-200 hover:border-zinc-300 rounded-lg text-xs font-medium text-zinc-600 hover:text-zinc-900 transition-colors bg-white cursor-pointer"
-                            title="Download Receipt PDF"
-                          >
-                            <Download className="w-3.5 h-3.5 text-zinc-500" /> Receipt
-                          </button>
-                        )}
-                        <button
-                          type="button"
-                          onClick={() => navigate('/booking')}
-                          className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 border border-zinc-200 hover:border-zinc-300 rounded-lg text-xs font-medium text-zinc-600 hover:text-zinc-900 transition-colors bg-white"
-                        >
-                          <RefreshCw className="w-3.5 h-3.5" /> Reschedule
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleCancelSession(session.id)}
-                          className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 card-luxury border-none hover:border-rose-200 hover:bg-rose-50 text-zinc-500 hover:text-rose-600 rounded-lg text-xs font-medium transition-colors"
-                        >
-                          <XIcon className="w-3.5 h-3.5" /> Cancel
-                        </button>
                       </div>
                     </div>
                   );
@@ -1453,7 +1472,7 @@ export default function StudentProfile() {
                           </div>
                           <div className="flex items-center gap-1.5 text-xs text-zinc-500 bg-zinc-50 border border-zinc-200 px-2.5 py-1.5 rounded-lg shrink-0 w-fit">
                             <Clock className="w-3.5 h-3.5 text-zinc-400" />
-                            <span className="font-medium">{session.date}</span>
+                            <span className="font-medium">{formatDateString(session.date)}</span>
                             <span className="text-zinc-300">·</span>
                             <span>{session.time}</span>
                           </div>

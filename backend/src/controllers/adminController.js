@@ -3,11 +3,13 @@ const User = require('../models/User');
 const Counsellor = require('../models/Counsellor');
 const cloudinary = require('../config/cloudinary');
 const { uploadToCloudinary, uploadProfilePicToCloudinary } = require('../utils/cloudinaryHelper');
+const { autoExpireSessions } = require('../utils/sessionHelper');
 
 const AdminController = {
   // Admin Dashboard Statistics
   async getDashboard(req, res, next) {
     try {
+      await autoExpireSessions();
       const [users, counsellors, appointments, sessions] = await Promise.all([
         StorageService.findAll('users'),
         StorageService.findAll('counsellors'),
@@ -164,6 +166,7 @@ const AdminController = {
   // Get All Appointments
   async getAppointments(req, res, next) {
     try {
+      await autoExpireSessions();
       const appointments = await StorageService.findAll('appointments');
       
       const populated = await Promise.all(

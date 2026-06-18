@@ -2,6 +2,7 @@ const StorageService = require('../services/storageService');
 const User = require('../models/User');
 const cloudinary = require('../config/cloudinary');
 const { uploadToCloudinary, uploadProfilePicToCloudinary } = require('../utils/cloudinaryHelper');
+const { autoExpireSessions } = require('../utils/sessionHelper');
 
 const UserController = {
   // Get User Profile
@@ -122,6 +123,7 @@ const UserController = {
   // User Dashboard APIs
   async getDashboard(req, res, next) {
     try {
+      await autoExpireSessions();
       const userId = req.user.id;
 
       // Get appointments

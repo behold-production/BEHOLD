@@ -2,6 +2,7 @@ const StorageService = require('../services/storageService');
 const Counsellor = require('../models/Counsellor');
 const cloudinary = require('../config/cloudinary');
 const { uploadProfilePicToCloudinary } = require('../utils/cloudinaryHelper');
+const { autoExpireSessions } = require('../utils/sessionHelper');
 
 const CounsellorController = {
   // Get Counsellor Profile
@@ -87,6 +88,7 @@ const CounsellorController = {
   // Counsellor Dashboard APIs
   async getDashboard(req, res, next) {
     try {
+      await autoExpireSessions();
       const counsellorId = req.user.id;
 
       // Validate counsellor exists

@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { formatDateString } from '../../utils/dateFormatter';
 
 function getInitials(name) {
   if (!name) return 'EX';
@@ -2500,6 +2501,7 @@ export default function AdminDashboard({ setView }) {
             const confirmedBookingsCount = bookingsDb.filter(b => b.status === 'CONFIRMED').length;
             const pendingBookingsCount = bookingsDb.filter(b => b.status === 'PENDING').length;
             const completedBookingsCount = bookingsDb.filter(b => b.status === 'COMPLETED').length;
+            const expiredBookingsCount = bookingsDb.filter(b => b.status === 'EXPIRED').length;
             const cancelledBookingsCount = bookingsDb.filter(b => b.status === 'CANCELLED').length;
 
             const pendingInquiriesCount = inquiriesDb.filter(i => i.status === 'PENDING' || !i.status).length;
@@ -2508,7 +2510,7 @@ export default function AdminDashboard({ setView }) {
             const inquiryResolutionRate = totalInquiriesCount > 0 ? Math.round((resolvedInquiriesCount / totalInquiriesCount) * 100) : 0;
 
             const totalRevenue = bookingsDb.reduce((acc, b) => {
-              if (b.status !== 'COMPLETED') return acc;
+              if (b.status !== 'COMPLETED' && b.status !== 'EXPIRED') return acc;
               if (b.amountPaid !== undefined && b.amountPaid !== null) {
                 return acc + Number(b.amountPaid);
               }
@@ -2814,6 +2816,10 @@ export default function AdminDashboard({ setView }) {
                                 <span className="text-zinc-400">Completed Sessions</span>
                                 <span className="text-brand font-bold ">{completedBookingsCount}</span>
                               </div>
+                              <div className="flex justify-between border-b border-zinc-950 pb-1">
+                                <span className="text-zinc-400">Expired/No-Show</span>
+                                <span className="text-rose-500 font-bold ">{expiredBookingsCount}</span>
+                              </div>
                               <div className="flex justify-between">
                                 <span className="text-zinc-400">Cancelled/Released</span>
                                 <span className="text-rose-500 font-bold ">{cancelledBookingsCount}</span>
@@ -2913,7 +2919,7 @@ export default function AdminDashboard({ setView }) {
                               <div className="bg-gradient-to-r from-brand to-brand-accent h-full rounded-full transition-all duration-500" style={{ width: `${bookingCompletionRate}%` }} />
                             </div>
                             <p className="text-sm text-zinc-550 leading-relaxed pt-2">
-                              Out of {totalBookingsCount} total scheduled consultations, {completedBookingsCount} sessions have been marked completed. Active/Scheduled sessions total {activeBookings}.
+                              Out of {totalBookingsCount} total scheduled consultations, {completedBookingsCount} sessions have been completed, {expiredBookingsCount} expired, and {cancelledBookingsCount} cancelled. Active/Scheduled sessions total {activeBookings}.
                             </p>
                           </div>
                         </div>
@@ -3070,7 +3076,7 @@ export default function AdminDashboard({ setView }) {
                                 </div>
                                 <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto shrink-0 border-t border-zinc-900/40 sm:border-none pt-2 sm:pt-0">
                                   <div className="text-left sm:text-right">
-                                    <span className="text-zinc-400 font-bold block">{b.date} • {b.time}</span>
+                                    <span className="text-zinc-400 font-bold block">{formatDateString(b.date)} • {b.time}</span>
                                     <span className={`text-sm px-1.5 py-0.2 rounded capitalize font-bold inline-block mt-0.5 border ${b.status === 'CONFIRMED' ? 'bg-emerald-955/20 border-emerald-900/40 text-emerald-450' :
                                       b.status === 'COMPLETED' ? 'bg-brand/10 border-brand/20 text-brand' :
                                         b.status === 'CANCELLED' ? 'bg-rose-955/20 border-rose-900/30 text-rose-500' :
@@ -3133,7 +3139,7 @@ export default function AdminDashboard({ setView }) {
                                     <span className="text-zinc-500  text-sm block mt-0.5">{i.email}</span>
                                   </div>
                                   <div className="flex items-center gap-2">
-                                    <span className="text-zinc-550  text-sm">{i.date}</span>
+                                    <span className="text-zinc-550  text-sm">{formatDateString(i.date)}</span>
                                     <span className={`text-sm px-1.5 py-0.2 rounded capitalize font-bold border ${isResolved ? 'bg-emerald-955/20 border-emerald-900/30 text-emerald-455' : 'bg-amber-955/20 border-amber-900/30 text-amber-500'
                                       }`}>{i.status || 'PENDING'}</span>
                                   </div>
@@ -3183,7 +3189,7 @@ export default function AdminDashboard({ setView }) {
                                   <span className="text-zinc-555  text-sm block mt-0.5">{res.studentEmail}</span>
                                 </div>
                                 <div className="text-right">
-                                  <span className="text-zinc-550  text-sm block">{res.date}</span>
+                                  <span className="text-zinc-550  text-sm block">{formatDateString(res.date)}</span>
                                   <span className="text-sm bg-brand/10 border border-brand/20 text-brand px-1.5 py-0.5 rounded font-bold  capitalize  mt-1 inline-block">
                                     Dominant: {res.dominantDomain.toUpperCase()}
                                   </span>
@@ -4075,7 +4081,7 @@ export default function AdminDashboard({ setView }) {
                 {/* Status Filter Tabs & Revenue Estimate */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-zinc-950 p-4 rounded-xl border border-zinc-850">
                   <div className="flex flex-wrap gap-1.5">
-                    {['ALL', 'PENDING', 'CONFIRMED', 'COMPLETED', 'CANCELLED'].map(status => (
+                    {['ALL', 'PENDING', 'CONFIRMED', 'COMPLETED', 'EXPIRED', 'CANCELLED'].map(status => (
                       <button
                         key={status}
                         onClick={() => { setBookingStatusFilter(status); setSelectedBookingIds([]); }}
@@ -4097,7 +4103,7 @@ export default function AdminDashboard({ setView }) {
                     <span className="text-sm text-zinc-500 font-bold capitalize  block">Estimated Revenue</span>
                     <span className="text-sm font-bold text-emerald-450">₹{
                       filteredBookings.reduce((acc, b) => {
-                        if (b.status !== 'COMPLETED') return acc;
+                        if (b.status !== 'COMPLETED' && b.status !== 'EXPIRED') return acc;
                         if (b.amountPaid !== undefined && b.amountPaid !== null) {
                           return acc + Number(b.amountPaid);
                         }
@@ -4204,7 +4210,7 @@ export default function AdminDashboard({ setView }) {
                               <span className="text-sm text-zinc-550 font-bold capitalize">{booking.mode}</span>
                             </td>
                             <td className="p-3 font-semibold text-zinc-300">
-                              <span className="block">{booking.date}</span>
+                              <span className="block">{formatDateString(booking.date)}</span>
                               <span className="text-sm text-zinc-500 font-bold">{booking.time}</span>
                             </td>
                             <td className="p-3">
@@ -4223,12 +4229,14 @@ export default function AdminDashboard({ setView }) {
                             </td>
                             <td className="p-3 text-center">
                               <span className={`inline-flex items-center px-2 py-0.5 rounded text-sm font-bold capitalize   ${booking.status === 'CONFIRMED'
-                                ? 'bg-emerald-950/30 border border-emerald-900/40 text-emerald-450'
+                                ? 'bg-emerald-955/30 border border-emerald-900/40 text-emerald-450'
                                 : booking.status === 'COMPLETED'
-                                  ? 'bg-indigo-950/30 border border-indigo-900/40 text-indigo-400'
-                                  : booking.status === 'CANCELLED'
-                                    ? 'bg-rose-955/30 border border-rose-900/40 text-rose-500'
-                                    : 'bg-zinc-900 border border-zinc-800 text-zinc-450'
+                                  ? 'bg-indigo-955/30 border border-indigo-900/40 text-indigo-400'
+                                  : booking.status === 'EXPIRED'
+                                    ? 'bg-rose-955/30 border border-rose-900/40 text-rose-400'
+                                    : booking.status === 'CANCELLED'
+                                      ? 'bg-rose-955/20 border border-rose-900/30 text-rose-500'
+                                      : 'bg-zinc-900 border border-zinc-800 text-zinc-450'
                                 }`}>
                                 {booking.status}
                               </span>
@@ -4324,7 +4332,7 @@ export default function AdminDashboard({ setView }) {
                           }`}>
                           {inq.status || 'PENDING'}
                         </span>
-                        <span className="text-sm text-zinc-500 font-bold capitalize ">{inq.date}</span>
+                        <span className="text-sm text-zinc-500 font-bold capitalize ">{formatDateString(inq.date)}</span>
                       </div>
 
                       <div className="space-y-0.5">
@@ -4441,7 +4449,7 @@ export default function AdminDashboard({ setView }) {
                           >
                             Copy Report
                           </button>
-                          <span className="text-sm text-zinc-500 font-bold capitalize">{res.date}</span>
+                          <span className="text-sm text-zinc-500 font-bold capitalize">{formatDateString(res.date)}</span>
                           <button
                             onClick={() => handleDeleteTestResult(res.id)}
                             className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
@@ -5700,6 +5708,7 @@ export default function AdminDashboard({ setView }) {
                     <option value="PENDING">PENDING</option>
                     <option value="CONFIRMED">CONFIRMED</option>
                     <option value="COMPLETED">COMPLETED</option>
+                    <option value="EXPIRED">EXPIRED</option>
                     <option value="CANCELLED">CANCELLED</option>
                   </select>
                 </div>
@@ -6051,7 +6060,7 @@ export default function AdminDashboard({ setView }) {
                           return (
                             <tr key={b.id} className="border-b border-zinc-900/60 hover:bg-zinc-900/30">
                               <td className="p-2.5">
-                                <span className="text-white block font-semibold">{b.date}</span>
+                                <span className="text-white block font-semibold">{formatDateString(b.date)}</span>
                                 <span className="text-zinc-500 text-sm">{b.time}</span>
                               </td>
                               <td className="p-2.5 text-zinc-300 font-medium">
@@ -6100,7 +6109,7 @@ export default function AdminDashboard({ setView }) {
                             <span className="text-sm bg-brand text-zinc-955 px-2 py-0.5 rounded font-bold capitalize  ">
                               Dominant: {res.dominantDomain}
                             </span>
-                            <span className="text-zinc-500 text-sm font-bold block mt-1 capitalize ">Date Completed: {res.date}</span>
+                            <span className="text-zinc-500 text-sm font-bold block mt-1 capitalize ">Date Completed: {formatDateString(res.date)}</span>
                           </div>
                           <button
                             onClick={() => handleExportAptitudeResults(res)}
@@ -6511,7 +6520,7 @@ export default function AdminDashboard({ setView }) {
                                       <span className="text-zinc-500 text-sm truncate block max-w-[150px]">{student ? student.email : ''}</span>
                                     </td>
                                     <td className="p-2.5">
-                                      <span className="text-zinc-300 block font-semibold">{b.date}</span>
+                                      <span className="text-zinc-300 block font-semibold">{formatDateString(b.date)}</span>
                                       <span className="text-zinc-500 text-sm">{b.time}</span>
                                     </td>
                                     <td className="p-2.5 text-zinc-400 capitalize font-medium">

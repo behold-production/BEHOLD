@@ -7,6 +7,7 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import LogoutConfirmModal from '../LogoutConfirmModal';
 import ApiService from '../../services/api';
+import { formatDateString } from '../../utils/dateFormatter';
 
 export default function PsychologistDashboard({ setView }) {
   const { user, login, register, logout, isLoading, updateUser } = useAuth();
@@ -161,7 +162,7 @@ export default function PsychologistDashboard({ setView }) {
 
   const isSessionCompleted = (booking) => {
     if (booking.status === 'CANCELLED') return false;
-    if (booking.status === 'COMPLETED') return true;
+    if (booking.status === 'COMPLETED' || booking.status === 'EXPIRED') return true;
 
     if (booking.status === 'CONFIRMED') {
       try {
@@ -1449,7 +1450,7 @@ export default function PsychologistDashboard({ setView }) {
                             <p className="text-sm text-zinc-400">Session Type: {bookings[0].service === 'counselling' ? 'Emotional Wellbeing' : 'Career Mapping'}</p>
                             <div className="flex items-center gap-1.5 text-sm font-bold text-white">
                               <Clock className="w-3.5 h-3.5 text-zinc-500" />
-                              <span>{bookings[0].date} at {bookings[0].time}</span>
+                              <span>{formatDateString(bookings[0].date)} at {bookings[0].time}</span>
                             </div>
                             <div className="pt-1 flex items-center gap-2">
                               <span className="text-sm capitalize  font-semibold text-zinc-500">Room Status:</span>
@@ -1947,13 +1948,16 @@ export default function PsychologistDashboard({ setView }) {
 
               {currentSection === 'bookings' && (() => {
                 const confirmedCount = bookings.filter(b => !b.status || b.status === 'CONFIRMED' || b.status === 'PENDING').length;
-                const completedCount = bookings.filter(b => b.status === 'COMPLETED').length;
+                const completedCount = bookings.filter(b => b.status === 'COMPLETED' || b.status === 'EXPIRED').length;
                 const cancelledCount = bookings.filter(b => b.status === 'CANCELLED').length;
 
                 const filteredBookings = bookings.filter(b => {
                   const status = b.status || 'CONFIRMED';
                   if (activeBookingTab === 'CONFIRMED') {
                     return status === 'CONFIRMED' || status === 'PENDING';
+                  }
+                  if (activeBookingTab === 'COMPLETED') {
+                    return status === 'COMPLETED' || status === 'EXPIRED';
                   }
                   return status === activeBookingTab;
                 });
@@ -2003,20 +2007,26 @@ export default function PsychologistDashboard({ setView }) {
                         >
                           <div className="space-y-2">
                             <div className="flex items-center gap-2 flex-wrap">
-                              <select
-                                value={booking.status || 'CONFIRMED'}
-                                onChange={(e) => updateBookingStatus(booking.id, e.target.value)}
-                                className={`px-2.5 py-1 border rounded outline-none text-sm font-bold capitalize  cursor-pointer transition-all ${booking.status === 'CONFIRMED'
-                                  ? 'bg-emerald-955 border-emerald-900/40 text-emerald-455'
-                                  : booking.status === 'COMPLETED'
-                                    ? 'bg-indigo-955 border-indigo-900/40 text-indigo-400'
-                                    : 'bg-rose-955 border-rose-900/40 text-rose-400'
-                                  }`}
-                              >
-                                <option value="CONFIRMED" className="bg-zinc-950 text-emerald-400">CONFIRMED</option>
-                                <option value="COMPLETED" className="bg-zinc-950 text-indigo-400">COMPLETED</option>
-                                <option value="CANCELLED" className="bg-zinc-950 text-rose-400">CANCELLED</option>
-                              </select>
+                              {booking.status === 'EXPIRED' ? (
+                                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-rose-955 border border-rose-900/40 text-rose-455 rounded text-xs font-bold uppercase tracking-wider">
+                                  EXPIRED
+                                </span>
+                              ) : (
+                                <select
+                                  value={booking.status || 'CONFIRMED'}
+                                  onChange={(e) => updateBookingStatus(booking.id, e.target.value)}
+                                  className={`px-2.5 py-1 border rounded outline-none text-sm font-bold capitalize  cursor-pointer transition-all ${booking.status === 'CONFIRMED'
+                                    ? 'bg-emerald-955 border-emerald-900/40 text-emerald-455'
+                                    : booking.status === 'COMPLETED'
+                                      ? 'bg-indigo-955 border-indigo-900/40 text-indigo-400'
+                                      : 'bg-rose-955 border-rose-900/40 text-rose-400'
+                                    }`}
+                                >
+                                  <option value="CONFIRMED" className="bg-zinc-950 text-emerald-400">CONFIRMED</option>
+                                  <option value="COMPLETED" className="bg-zinc-950 text-indigo-400">COMPLETED</option>
+                                  <option value="CANCELLED" className="bg-zinc-950 text-rose-400">CANCELLED</option>
+                                </select>
+                              )}
                               <span className="text-sm bg-zinc-900 text-white px-2 py-0.5 rounded font-semibold capitalize  ">
                                 {booking.service === 'counselling' ? 'Psychological Session' : 'Career Session'}
                               </span>
@@ -2027,14 +2037,18 @@ export default function PsychologistDashboard({ setView }) {
                               <h4 className="font-header font-bold text-sm capitalize text-white">{booking.userName}</h4>
                               <div className="flex items-center gap-1.5 text-sm text-zinc-400 font-semibold">
                                 <Clock className="w-3.5 h-3.5 text-zinc-500" />
-                                <span>{booking.date} at {booking.time}</span>
+                                <span>{formatDateString(booking.date)} at {booking.time}</span>
                               </div>
                             </div>
 
                             {/* Room link status block */}
                             <div className="pt-1.5 flex items-center gap-2 flex-wrap">
                               <span className="text-sm capitalize  font-semibold text-zinc-500">Meeting Room:</span>
-                              {booking.meetLink ? (
+                              {booking.status === 'EXPIRED' ? (
+                                <span className="text-xs font-semibold text-rose-500 italic flex items-center gap-1">
+                                  <AlertCircle className="w-3.5 h-3.5 text-rose-500" /> Access Expired
+                                </span>
+                              ) : booking.meetLink ? (
                                 <button
                                   type="button"
                                   onClick={() => window.open(booking.meetLink, '_blank')}
@@ -2050,7 +2064,7 @@ export default function PsychologistDashboard({ setView }) {
                             </div>
 
                             {/* Diagnostic Feedback Editor / Display */}
-                            {booking.status === 'COMPLETED' && (
+                            {(booking.status === 'COMPLETED' || booking.status === 'EXPIRED') && (
                               <div className="pt-3 mt-2 border-t border-zinc-900 space-y-2 w-full max-w-xl">
                                 <span className="text-sm capitalize  font-semibold text-zinc-505 block">Session Feedback & Diagnostic Notes:</span>
 
