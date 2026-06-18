@@ -1,40 +1,48 @@
-export const formatDateString = (dateStr) => {
-  if (!dateStr) return '';
+export const formatDateString = (dateInput) => {
+  if (!dateInput) return '';
   try {
-    let year, month, day;
-    if (dateStr.includes('-')) {
-      const parts = dateStr.split('-');
-      if (parts[0].length === 4) {
-        // YYYY-MM-DD
-        [year, month, day] = parts.map(Number);
-      } else {
-        // MM-DD-YYYY or DD-MM-YYYY
-        // Check if the user specified format matches "06-17-2026" -> MM-DD-YYYY
-        // Usually index 0 is month if it is <= 12, index 1 is day if it is <= 31.
-        // Let's assume MM-DD-YYYY as the user explicitly asked for "06-17-2026" -> "June 17, 2026"
-        [month, day, year] = parts.map(Number);
+    let dateObj;
+    if (dateInput instanceof Date) {
+      dateObj = dateInput;
+    } else if (typeof dateInput === 'number') {
+      dateObj = new Date(dateInput);
+    } else if (typeof dateInput === 'string') {
+      // Extract date portion if it's ISO string (e.g., "YYYY-MM-DDTHH:mm:ss...")
+      const dateStr = dateInput.split('T')[0];
+      
+      let year, month, day;
+      if (dateStr.includes('-')) {
+        const parts = dateStr.split('-');
+        if (parts[0].length === 4) {
+          // YYYY-MM-DD
+          [year, month, day] = parts.map(Number);
+        } else {
+          // MM-DD-YYYY or DD-MM-YYYY
+          [month, day, year] = parts.map(Number);
+        }
+      } else if (dateStr.includes('/')) {
+        const parts = dateStr.split('/');
+        if (parts[0].length === 4) {
+          // YYYY/MM/DD
+          [year, month, day] = parts.map(Number);
+        } else {
+          // MM/DD/YYYY
+          [month, day, year] = parts.map(Number);
+        }
       }
-    } else if (dateStr.includes('/')) {
-      const parts = dateStr.split('/');
-      if (parts[0].length === 4) {
-        // YYYY/MM/DD
-        [year, month, day] = parts.map(Number);
+      
+      if (year && month && day && !isNaN(year) && !isNaN(month) && !isNaN(day)) {
+        dateObj = new Date(year, month - 1, day);
       } else {
-        // MM/DD/YYYY
-        [month, day, year] = parts.map(Number);
+        // Fallback to standard JS parsing
+        dateObj = new Date(dateInput);
       }
     } else {
-      return dateStr;
+      dateObj = new Date(dateInput);
     }
 
-    if (!year || !month || !day || isNaN(year) || isNaN(month) || isNaN(day)) {
-      return dateStr;
-    }
-
-    const dateObj = new Date(year, month - 1, day);
-    // Safe check that the date object is valid
-    if (isNaN(dateObj.getTime())) {
-      return dateStr;
+    if (!dateObj || isNaN(dateObj.getTime())) {
+      return String(dateInput);
     }
 
     return dateObj.toLocaleDateString('en-US', {
@@ -43,6 +51,7 @@ export const formatDateString = (dateStr) => {
       year: 'numeric'
     });
   } catch (e) {
-    return dateStr;
+    return String(dateInput);
   }
 };
+

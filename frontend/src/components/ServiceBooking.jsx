@@ -7,6 +7,7 @@ import TimePicker from './booking/TimePicker';
 import BookingAuthModal from './booking/BookingAuthModal';
 import { jsPDF } from 'jspdf';
 import { FileDown } from 'lucide-react';
+import { formatDateString } from '../utils/dateFormatter';
 
 const BOOKING_DRAFT_KEY = 'behold_booking_draft';
 
@@ -209,7 +210,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
       const displayId = bookingDetails.id ? bookingDetails.id.toString().substring(Math.max(0, bookingDetails.id.toString().length - 6)) : 'N/A';
       doc.text(`Receipt ID: REC-${displayId}`, 120, 52);
       doc.text(`Booking ID: SB-${bookingDetails.id || 'N/A'}`, 120, 58);
-      doc.text(`Date of Issue: ${new Date().toLocaleDateString('en-IN')}`, 120, 64);
+      doc.text(`Date of Issue: ${formatDateString(new Date())}`, 120, 64);
 
       // Divider Line
       doc.line(20, 70, 190, 70);
@@ -225,7 +226,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
       doc.setTextColor(82, 82, 91);
       doc.text(`Service Type: ${bookingDetails.service}`, 20, 86);
       doc.text(`Advisor Assigned: ${bookingDetails.advisorName} (${bookingDetails.advisorRole})`, 20, 92);
-      doc.text(`Session Schedule: ${bookingDetails.date} at ${bookingDetails.time}`, 20, 98);
+      doc.text(`Session Schedule: ${formatDateString(bookingDetails.date)} at ${bookingDetails.time}`, 20, 98);
       doc.text(`Session Mode: ${bookingDetails.mode}`, 20, 104);
 
       // Divider Line
@@ -1076,7 +1077,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                   <div>
                     <span className="text-zinc-400 block font-light">Date & Time Slot</span>
                     <span className="font-bold text-zinc-800 block">
-                      {selectedDate}
+                      {formatDateString(selectedDate)}
                     </span>
                     <span className="text-xs text-zinc-500  block mt-0.5">
                       {selectedTime}
@@ -1780,7 +1781,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                     {selectedDate && selectedTime ? (
                       <div className="space-y-1 bg-white border border-zinc-150 p-2 rounded-lg text-left">
                         <span className="font-bold text-zinc-800 block">
-                          {selectedDate}
+                          {formatDateString(selectedDate)}
                         </span>
                         <span className="text-xs text-zinc-500  block">
                           {selectedTime}

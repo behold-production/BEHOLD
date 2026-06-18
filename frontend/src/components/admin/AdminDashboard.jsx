@@ -210,7 +210,7 @@ export default function AdminDashboard({ setView }) {
       const displayId = booking.id ? booking.id.toString().substring(Math.max(0, booking.id.toString().length - 6)) : 'N/A';
       doc.text(`Receipt ID: REC-${displayId}`, 120, 52);
       doc.text(`Booking ID: SB-${booking.id || 'N/A'}`, 120, 58);
-      doc.text(`Date of Issue: ${new Date().toLocaleDateString('en-IN')}`, 120, 64);
+      doc.text(`Date of Issue: ${formatDateString(new Date())}`, 120, 64);
 
       // Divider Line
       doc.line(20, 70, 190, 70);
@@ -226,7 +226,7 @@ export default function AdminDashboard({ setView }) {
       doc.setTextColor(82, 82, 91);
       doc.text(`Service Type: ${service}`, 20, 86);
       doc.text(`Advisor Assigned: ${booking.advisorName || 'Advisor'} (${booking.advisorRole || 'Consultant'})`, 20, 92);
-      doc.text(`Session Schedule: ${booking.date} at ${booking.time}`, 20, 98);
+      doc.text(`Session Schedule: ${formatDateString(booking.date)} at ${booking.time}`, 20, 98);
       doc.text(`Session Mode: ${mode}`, 20, 104);
 
       // Divider Line
@@ -1943,7 +1943,7 @@ export default function AdminDashboard({ setView }) {
     const breakdown = Object.entries(res.scores || {})
       .map(([key, val]) => ` - ${key.toUpperCase()}: ${val}%`)
       .join('\n');
-    const txt = `BEHOLD APTITUDE TEST REPORT\n=========================\nStudent Name: ${res.studentName}\nEmail: ${res.studentEmail}\nDate Completed: ${res.date}\nDominant Domain: ${res.dominantDomain.toUpperCase()}\n\nCognitive Breakdown:\n${breakdown}\n`;
+    const txt = `BEHOLD APTITUDE TEST REPORT\n=========================\nStudent Name: ${res.studentName}\nEmail: ${res.studentEmail}\nDate Completed: ${formatDateString(res.date)}\nDominant Domain: ${res.dominantDomain.toUpperCase()}\n\nCognitive Breakdown:\n${breakdown}\n`;
     navigator.clipboard.writeText(txt);
     alert("Test report copied to clipboard!");
   };
@@ -3022,7 +3022,7 @@ export default function AdminDashboard({ setView }) {
                   <div className="lg:col-span-8 bg-zinc-955 border border-zinc-850 rounded-xl p-5 space-y-4">
                     <div className="flex justify-between items-center border-b border-zinc-900 pb-2">
                       <span className="text-sm capitalize font-bold  text-zinc-400">Live Activity Feed</span>
-                      <span className="text-sm text-zinc-500  capitalize">Sync OK • {new Date().toLocaleDateString()}</span>
+                      <span className="text-sm text-zinc-500  capitalize">Sync OK • {formatDateString(new Date())}</span>
                     </div>
 
                     {/* Tab Segment Controls */}
@@ -6164,7 +6164,7 @@ export default function AdminDashboard({ setView }) {
                               </span>
                               {(res.testDate || res.testTime) && (
                                 <span className="text-xs text-zinc-400 font-medium">
-                                  Date: {res.testDate} {res.testTime}
+                                  Date: {formatDateString(res.testDate)} {res.testTime}
                                 </span>
                               )}
                             </div>
@@ -6174,7 +6174,7 @@ export default function AdminDashboard({ setView }) {
                               </p>
                             )}
                             <span className="text-[10px] text-zinc-500 block">
-                              Uploaded at: {new Date(res.uploadedAt).toLocaleString()}
+                              Uploaded at: {formatDateString(res.uploadedAt)} {new Date(res.uploadedAt).toLocaleTimeString()}
                             </span>
                           </div>
                           <div className="flex items-center gap-1.5 shrink-0">

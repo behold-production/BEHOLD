@@ -211,7 +211,7 @@ export default function StudentProfile() {
       const displayId = bookingDetails.id ? bookingDetails.id.toString().substring(Math.max(0, bookingDetails.id.toString().length - 6)) : 'N/A';
       doc.text(`Receipt ID: REC-${displayId}`, 120, 52);
       doc.text(`Booking ID: SB-${bookingDetails.id || 'N/A'}`, 120, 58);
-      doc.text(`Date of Issue: ${new Date().toLocaleDateString('en-IN')}`, 120, 64);
+      doc.text(`Date of Issue: ${formatDateString(new Date())}`, 120, 64);
 
       // Divider Line
       doc.line(20, 70, 190, 70);
@@ -227,7 +227,7 @@ export default function StudentProfile() {
       doc.setTextColor(82, 82, 91);
       doc.text(`Service Type: ${bookingDetails.service}`, 20, 86);
       doc.text(`Advisor Assigned: ${bookingDetails.advisorName} (${bookingDetails.advisorRole})`, 20, 92);
-      doc.text(`Session Schedule: ${bookingDetails.date} at ${bookingDetails.time}`, 20, 98);
+      doc.text(`Session Schedule: ${formatDateString(bookingDetails.date)} at ${bookingDetails.time}`, 20, 98);
       doc.text(`Session Mode: ${bookingDetails.mode}`, 20, 104);
 
       // Divider Line
@@ -1829,7 +1829,7 @@ export default function StudentProfile() {
                           </span>
                           {(result.testDate || result.testTime) && (
                             <span className="text-[10px] text-zinc-500">
-                              {result.testDate} {result.testTime}
+                              {formatDateString(result.testDate)} {result.testTime}
                             </span>
                           )}
                         </div>
@@ -1839,7 +1839,7 @@ export default function StudentProfile() {
                           </p>
                         )}
                         <p className="text-[10px] text-zinc-400 mt-0.5">
-                          Uploaded {new Date(result.uploadedAt).toLocaleDateString()}
+                          Uploaded {formatDateString(result.uploadedAt)}
                         </p>
                       </div>
 
