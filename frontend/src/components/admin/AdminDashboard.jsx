@@ -361,6 +361,7 @@ export default function AdminDashboard({ setView }) {
   // Search terms
   const [searchUser, setSearchUser] = useState('');
   const [searchPsy, setSearchPsy] = useState('');
+  const [psyFilter, setPsyFilter] = useState('all');
   const [searchInquiry, setSearchInquiry] = useState('');
   const [searchTestResult, setSearchTestResult] = useState('');
   const [searchBooking, setSearchBooking] = useState('');
@@ -1742,15 +1743,27 @@ export default function AdminDashboard({ setView }) {
     (u.name.toLowerCase().includes(searchUser.toLowerCase()) || u.email.toLowerCase().includes(searchUser.toLowerCase()))
   );
 
-  const psychologistsList = usersDb.filter(u =>
-    u.role === 'PSYCHOLOGIST' &&
-    (u.name.toLowerCase().includes(searchPsy.toLowerCase()) || u.email.toLowerCase().includes(searchPsy.toLowerCase()))
-  ).sort((a, b) => {
-    const aVer = a.status === 'ACTIVE' ? 1 : 0;
-    const bVer = b.status === 'ACTIVE' ? 1 : 0;
-    if (aVer !== bVer) return bVer - aVer;
-    return a.name.localeCompare(b.name);
-  });
+  const psychologistsList = React.useMemo(() => {
+    let list = usersDb.filter(u =>
+      u.role === 'PSYCHOLOGIST' &&
+      (u.name.toLowerCase().includes(searchPsy.toLowerCase()) || u.email.toLowerCase().includes(searchPsy.toLowerCase()))
+    );
+
+    if (psyFilter === 'pending') {
+      list = list.filter(u => u.status !== 'APPROVED' && u.status !== 'ACTIVE' && u.status !== 'REJECTED');
+    } else if (psyFilter === 'approved') {
+      list = list.filter(u => u.status === 'APPROVED' || u.status === 'ACTIVE');
+    } else if (psyFilter === 'rejected') {
+      list = list.filter(u => u.status === 'REJECTED');
+    }
+
+    return list.sort((a, b) => {
+      const aVer = (a.status === 'APPROVED' || a.status === 'ACTIVE') ? 1 : 0;
+      const bVer = (b.status === 'APPROVED' || b.status === 'ACTIVE') ? 1 : 0;
+      if (aVer !== bVer) return bVer - aVer;
+      return a.name.localeCompare(b.name);
+    });
+  }, [usersDb, searchPsy, psyFilter]);
 
   const subAdminsList = usersDb.filter(u =>
     u.role === 'ADMIN' && u.permissions // Only custom sub-admins
@@ -2507,8 +2520,9 @@ export default function AdminDashboard({ setView }) {
             const suspendedStudentsCount = usersDb.filter(u => (u.role === 'USER' || !u.role) && u.status === 'SUSPENDED').length;
 
             const psyCount = usersDb.filter(u => u.role === 'PSYCHOLOGIST').length;
-            const approvedPsyCount = usersDb.filter(u => u.role === 'PSYCHOLOGIST' && u.status === 'ACTIVE').length;
-            const pendingPsyCount = usersDb.filter(u => u.role === 'PSYCHOLOGIST' && u.status === 'PENDING').length;
+            const approvedPsyCount = usersDb.filter(u => u.role === 'PSYCHOLOGIST' && (u.status === 'APPROVED' || u.status === 'ACTIVE')).length;
+            const pendingPsyCount = usersDb.filter(u => u.role === 'PSYCHOLOGIST' && u.status !== 'APPROVED' && u.status !== 'ACTIVE' && u.status !== 'REJECTED').length;
+            const rejectedPsyCount = usersDb.filter(u => u.role === 'PSYCHOLOGIST' && u.status === 'REJECTED').length;
 
             const totalBookingsCount = bookingsDb.length;
             const confirmedBookingsCount = bookingsDb.filter(b => b.status === 'CONFIRMED').length;
@@ -3643,6 +3657,36 @@ export default function AdminDashboard({ setView }) {
                 </div>
               </div>
 
+              {/* Psychologist filter sub-tabs */}
+              <div className="flex flex-wrap gap-2 pb-4">
+                {[
+                  { id: 'all', label: 'All Psychologists', count: usersDb.filter(u => u.role === 'PSYCHOLOGIST').length },
+                  { id: 'pending', label: 'Pending Verification', count: usersDb.filter(u => u.role === 'PSYCHOLOGIST' && u.status !== 'APPROVED' && u.status !== 'ACTIVE' && u.status !== 'REJECTED').length },
+                  { id: 'approved', label: 'Approved', count: usersDb.filter(u => u.role === 'PSYCHOLOGIST' && (u.status === 'APPROVED' || u.status === 'ACTIVE')).length },
+                  { id: 'rejected', label: 'Rejected', count: usersDb.filter(u => u.role === 'PSYCHOLOGIST' && u.status === 'REJECTED').length }
+                ].map(tab => (
+                  <button
+                    key={tab.id}
+                    onClick={() => {
+                      setPsyFilter(tab.id);
+                      setPsyPage(1);
+                    }}
+                    className={`px-4 py-2 text-xs font-bold rounded-lg transition duration-200 cursor-pointer flex items-center gap-1.5 ${
+                      psyFilter === tab.id
+                        ? 'bg-brand text-zinc-955'
+                        : 'bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-850'
+                    }`}
+                  >
+                    <span>{tab.label}</span>
+                    <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${
+                      psyFilter === tab.id ? 'bg-zinc-955/20 text-zinc-955' : 'bg-zinc-800 text-zinc-500'
+                    }`}>
+                      {tab.count}
+                    </span>
+                  </button>
+                ))}
+              </div>
+
               <div className="border border-zinc-850 rounded-lg overflow-hidden bg-zinc-950">
                 <div className="overflow-x-auto w-full">
                   <table id="counsellors-table" className="w-full text-sm border-collapse min-w-[700px]">
@@ -3672,7 +3716,7 @@ export default function AdminDashboard({ setView }) {
                           </td>
                           <td className="p-3 text-zinc-350 font-medium">{psy.email}</td>
                           <td className="p-3 text-center">
-                            {psy.status === 'ACTIVE' ? (
+                            {(psy.status === 'APPROVED' || psy.status === 'ACTIVE') ? (
                               <div className="flex items-center justify-center gap-2">
                                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-955/20 border border-emerald-900/40 text-emerald-450 text-sm font-bold capitalize ">
                                   <Check className="w-3.5 h-3.5 text-emerald-450" /> Approved
@@ -6399,13 +6443,13 @@ export default function AdminDashboard({ setView }) {
                           <span className="font-medium text-zinc-300">{lang}</span>
                         </div>
                         <div className="flex gap-2 items-center pt-1">
-                          <span className={`px-2.5 py-0.5 rounded text-sm font-bold capitalize  ${viewingPsychologist.status === 'ACTIVE'
+                          <span className={`px-2.5 py-0.5 rounded text-sm font-bold capitalize  ${(viewingPsychologist.status === 'APPROVED' || viewingPsychologist.status === 'ACTIVE')
                             ? 'bg-emerald-955/20 border border-emerald-900/30 text-emerald-450'
                             : viewingPsychologist.status === 'REJECTED'
                               ? 'bg-rose-955/20 border border-rose-900/30 text-rose-450'
                               : 'bg-amber-955/20 border border-amber-900/30 text-amber-500'
                             }`}>
-                            {viewingPsychologist.status === 'ACTIVE' ? 'Verified' : viewingPsychologist.status === 'REJECTED' ? 'Rejected' : 'Pending Verification'}
+                            {(viewingPsychologist.status === 'APPROVED' || viewingPsychologist.status === 'ACTIVE') ? 'Verified' : viewingPsychologist.status === 'REJECTED' ? 'Rejected' : 'Pending Verification'}
                           </span>
                           <a
                             href={`#/advisor/${viewingPsychologist.id}`}
@@ -6416,6 +6460,12 @@ export default function AdminDashboard({ setView }) {
                             Preview Profile
                           </a>
                         </div>
+                        {viewingPsychologist.status === 'REJECTED' && viewingPsychologist.rejectionReason && (
+                          <div className="mt-3 p-3 bg-rose-955/20 border border-rose-900/30 rounded-xl text-rose-300 text-xs text-left">
+                            <span className="font-bold block text-rose-450 capitalize mb-0.5">Rejection Reason:</span>
+                            {viewingPsychologist.rejectionReason}
+                          </div>
+                        )}
                       </div>
                     </div>
 

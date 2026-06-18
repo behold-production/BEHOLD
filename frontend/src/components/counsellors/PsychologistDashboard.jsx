@@ -1399,15 +1399,28 @@ export default function PsychologistDashboard({ setView }) {
         </div>
 
         {/* Verification Status Alert Banner */}
-        {!isCounsellorVerified() && (
+        {user?.status === 'REJECTED' ? (
+          <div className="bg-rose-955/20 border border-rose-900/60 p-4 rounded-xl flex items-center gap-3 text-rose-350 text-sm animate-in slide-in-from-top duration-300">
+            <ShieldAlert className="w-5 h-5 text-rose-450 shrink-0" />
+            <div className="text-left">
+              <span className="font-bold capitalize  block mb-0.5 text-rose-450">Application Rejected</span>
+              Your professional counsellor profile application has been rejected by the administrator.
+              {user?.rejectionReason && (
+                <div className="mt-2 text-xs font-semibold text-rose-400">
+                  <span className="font-bold">Reason:</span> {user.rejectionReason}
+                </div>
+              )}
+            </div>
+          </div>
+        ) : !isCounsellorVerified() ? (
           <div className="bg-amber-955/20 border border-amber-900/60 p-4 rounded-xl flex items-center gap-3 text-amber-300 text-sm animate-in slide-in-from-top duration-300">
             <ShieldAlert className="w-5 h-5 text-amber-450 shrink-0" />
-            <div>
+            <div className="text-left">
               <span className="font-bold capitalize  block mb-0.5">Account Pending Verification</span>
               Your consultant profile is registered but pending admin acceptance. It will not be shown on the public Experts directory or Booking engine until verified by an administrator.
             </div>
           </div>
-        )}
+        ) : null}
 
         {/* WORKSPACE CONTENT ROUTER */}
         <div className="bg-zinc-900 border border-zinc-855 rounded-2xl p-5 sm:p-8 shadow-md">
