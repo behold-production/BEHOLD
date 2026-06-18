@@ -2456,14 +2456,6 @@ export default function AdminDashboard({ setView }) {
 
         {/* Sidebar Footer */}
         <div className="space-y-4 pt-4 border-t border-zinc-800 mt-auto shrink-0">
-          <div className="bg-zinc-950/40 p-3 rounded-lg border border-zinc-850">
-            <span className="text-sm capitalize font-bold  text-zinc-500 flex items-center gap-1">
-              <ShieldAlert className="w-3.5 h-3.5 text-brand" /> System Guard
-            </span>
-            <p className="text-sm text-zinc-500 leading-relaxed pt-1.5">
-              Root access matches dynamically with sub-admin permission checklists.
-            </p>
-          </div>
           <button
             onClick={() => setIsLogoutConfirmOpen(true)}
             className="w-full py-2 border border-rose-900/50 hover:border-rose-600 text-rose-500 bg-rose-950/20 hover:bg-rose-900 hover:text-white font-bold text-sm capitalize  rounded-lg flex items-center justify-center gap-1 transition-colors cursor-pointer"
@@ -3324,7 +3316,7 @@ export default function AdminDashboard({ setView }) {
 
                     {/* Security scan console */}
                     <div className="pt-3 border-t border-zinc-900 space-y-2">
-                      <span className="text-sm capitalize font-bold  text-zinc-550 block">System Guard Patrol</span>
+                      <span className="text-sm capitalize font-bold  text-zinc-550 block">Database Security Check</span>
                       {isScanning ? (
                         <div className="space-y-2 bg-zinc-950 p-2.5 rounded border border-zinc-900">
                           <div className="flex justify-between items-center text-sm  text-zinc-455">
