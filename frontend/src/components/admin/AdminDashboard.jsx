@@ -3574,72 +3574,75 @@ export default function AdminDashboard({ setView }) {
                         </tr>
                       </thead>
                       <tbody>
-                        {studentsList.slice((studentPage - 1) * studentLimit, studentPage * studentLimit).map(student => (
-                          <tr key={student.id} className="border-b border-zinc-900 hover:bg-zinc-900/50">
-                            <td className="p-3 flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-lg bg-zinc-900 border border-zinc-800 text-brand flex items-center justify-center font-bold text-sm shrink-0 overflow-hidden">
-                                {student.profilePic || student.image ? (
-                                  <img src={student.profilePic || student.image} alt={student.name} className="w-full h-full object-cover" />
-                                ) : (
-                                  getInitials(student.name)
-                                )}
-                              </div>
-                              <div>
-                                <span className="font-bold text-white block leading-tight">{student.name}</span>
-                                <span className="text-sm text-zinc-500">ID: {student.id}</span>
-                              </div>
-                            </td>
-                            <td className="p-3 text-zinc-350 font-medium">{student.email}</td>
-                            <td className="p-3 text-center">
-                              <button
-                                onClick={() => handleToggleStudentStatus(student.id, student.status || 'ACTIVE')}
-                                className={`px-2 py-0.5 rounded text-sm font-bold capitalize  transition cursor-pointer border ${(student.status || 'ACTIVE') === 'ACTIVE'
-                                  ? 'bg-emerald-955/20 border-emerald-900/40 text-emerald-450 hover:bg-rose-955/20 hover:border-rose-900 hover:text-rose-500'
-                                  : 'bg-rose-955/20 border-rose-900/40 text-rose-500 hover:bg-emerald-955/20 hover:border-emerald-900 hover:text-emerald-450'
-                                  }`}
-                                title={(student.status || 'ACTIVE') === 'ACTIVE' ? "Click to Suspend Student" : "Click to Unsuspend Student"}
-                              >
-                                {student.status || 'ACTIVE'}
-                              </button>
-                            </td>
-                            <td className="p-3 text-center font-bold text-zinc-300">
-                              {bookingsDb.filter(b => b.userId === student.id).length} Booked
-                            </td>
-                            <td className="p-3 text-center flex items-center justify-center gap-2">
-                              <button
-                                onClick={() => setViewingStudent(student)}
-                                className="px-2.5 py-1 bg-zinc-900 text-brand hover:text-white rounded border border-zinc-800 hover:bg-zinc-850 transition cursor-pointer text-sm font-bold capitalize "
-                              >
-                                Details
-                              </button>
-                              <button
-                                onClick={() => handleOpenEditUser(student)}
-                                className="p-1.5 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"
-                                title="Edit Student"
-                              >
-                                <Edit className="w-3.5 h-3.5" />
-                              </button>
-                              <button
-                                onClick={() => handleGenerateResetToken(student.email)}
-                                className="p-1.5 bg-zinc-900 text-amber-500 hover:bg-amber-900/30 hover:text-amber-400 rounded border border-zinc-800 transition cursor-pointer"
-                                title="Generate Password Reset Link"
-                              >
-                                <KeyRound className="w-3.5 h-3.5" />
-                              </button>
-                              <button
-                                onClick={() => handleDeleteUser(student.id)}
-                                className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
-                                title="Delete Student"
-                              >
-                                <Trash className="w-3.5 h-3.5" />
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                        {studentsList.length === 0 && (
+                        {isDbLoading ? (
+                          <SkeletonTableRows cols={5} />
+                        ) : studentsList.length === 0 ? (
                           <tr>
                             <td colSpan={5} className="p-8 text-center text-zinc-500 italic">No student registries match the active query.</td>
                           </tr>
+                        ) : (
+                          studentsList.slice((studentPage - 1) * studentLimit, studentPage * studentLimit).map(student => (
+                            <tr key={student.id} className="border-b border-zinc-900 hover:bg-zinc-900/50">
+                              <td className="p-3 flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-lg bg-zinc-900 border border-zinc-800 text-brand flex items-center justify-center font-bold text-sm shrink-0 overflow-hidden">
+                                  {student.profilePic || student.image ? (
+                                    <img src={student.profilePic || student.image} alt={student.name} className="w-full h-full object-cover" />
+                                  ) : (
+                                    getInitials(student.name)
+                                  )}
+                                </div>
+                                <div>
+                                  <span className="font-bold text-white block leading-tight">{student.name}</span>
+                                  <span className="text-sm text-zinc-500">ID: {student.id}</span>
+                                </div>
+                              </td>
+                              <td className="p-3 text-zinc-350 font-medium">{student.email}</td>
+                              <td className="p-3 text-center">
+                                <button
+                                  onClick={() => handleToggleStudentStatus(student.id, student.status || 'ACTIVE')}
+                                  className={`px-2 py-0.5 rounded text-sm font-bold capitalize  transition cursor-pointer border ${(student.status || 'ACTIVE') === 'ACTIVE'
+                                    ? 'bg-emerald-955/20 border-emerald-900/40 text-emerald-450 hover:bg-rose-955/20 hover:border-rose-900 hover:text-rose-500'
+                                    : 'bg-rose-955/20 border-rose-900/40 text-rose-500 hover:bg-emerald-955/20 hover:border-emerald-900 hover:text-emerald-450'
+                                    }`}
+                                  title={(student.status || 'ACTIVE') === 'ACTIVE' ? "Click to Suspend Student" : "Click to Unsuspend Student"}
+                                >
+                                  {student.status || 'ACTIVE'}
+                                </button>
+                              </td>
+                              <td className="p-3 text-center font-bold text-zinc-300">
+                                {bookingsDb.filter(b => b.userId === student.id).length} Booked
+                              </td>
+                              <td className="p-3 text-center flex items-center justify-center gap-2">
+                                <button
+                                  onClick={() => setViewingStudent(student)}
+                                  className="px-2.5 py-1 bg-zinc-900 text-brand hover:text-white rounded border border-zinc-800 hover:bg-zinc-850 transition cursor-pointer text-sm font-bold capitalize "
+                                >
+                                  Details
+                                </button>
+                                <button
+                                  onClick={() => handleOpenEditUser(student)}
+                                  className="p-1.5 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"
+                                  title="Edit Student"
+                                >
+                                  <Edit className="w-3.5 h-3.5" />
+                                </button>
+                                <button
+                                  onClick={() => handleGenerateResetToken(student.email)}
+                                  className="p-1.5 bg-zinc-900 text-amber-500 hover:bg-amber-900/30 hover:text-amber-400 rounded border border-zinc-800 transition cursor-pointer"
+                                  title="Generate Password Reset Link"
+                                >
+                                  <KeyRound className="w-3.5 h-3.5" />
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteUser(student.id)}
+                                  className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
+                                  title="Delete Student"
+                                >
+                                  <Trash className="w-3.5 h-3.5" />
+                                </button>
+                              </td>
+                            </tr>
+                          ))
                         )}
                       </tbody>
                     </table>
