@@ -28,8 +28,23 @@ const PaymentController = {
       const gstPercent = gstEnabled ? (Number(settings.gstPercent) || 0) : 0;
       const gstAmount = gstPercent > 0 ? Math.round(baseFee * (gstPercent / 100)) : 0;
       
-      // Calculate net total in INR
-      const netTotal = baseFee + gstAmount;
+      // Calculate net total in INR before discount
+      const totalBeforeDiscount = baseFee + gstAmount;
+
+      // Apply coupon code if provided
+      const { couponCode } = req.body;
+      let appliedDiscount = 0;
+      if (couponCode) {
+        const cleanCoupon = couponCode.toUpperCase().trim();
+        if (cleanCoupon === 'BEHOLD100') {
+          appliedDiscount = 100;
+        } else if (cleanCoupon === 'HEALTH30') {
+          appliedDiscount = Math.round(totalBeforeDiscount * 0.3);
+        } else if (cleanCoupon === 'WELCOME50') {
+          appliedDiscount = 50;
+        }
+      }
+      const netTotal = Math.max(1, totalBeforeDiscount - appliedDiscount);
 
       if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
         return res.status(500).json({ 
@@ -55,7 +70,9 @@ const PaymentController = {
           date,
           time,
           mode,
-          service: service || 'counselling'
+          service: service || 'counselling',
+          couponCode: couponCode || '',
+          appliedDiscount: String(appliedDiscount)
         }
       };
 
@@ -162,13 +179,16 @@ const PaymentController = {
       if (!user) return res.status(404).json({ success: false, message: 'Student profile not found' });
       const counsellor = validation.counsellor;
 
-      // 4. Compute price for records
+      // 4. Compute price for records (taking into account any discount from order notes)
+      const appliedDiscount = Number(notes.appliedDiscount) || 0;
+      const couponCode = notes.couponCode || '';
+
       const settings = await StorageService.findOne('settings') || {};
       const baseFee = Number(counsellor.price) || 1200;
       const gstEnabled = settings.gstEnabled === true;
       const gstPercent = gstEnabled ? (Number(settings.gstPercent) || 0) : 0;
       const gstAmount = gstPercent > 0 ? Math.round(baseFee * (gstPercent / 100)) : 0;
-      const netTotal = baseFee + gstAmount;
+      const netTotal = Math.max(1, baseFee + gstAmount - appliedDiscount);
 
       // 4. Create appointment
       const newAppointment = await StorageService.create('appointments', {
@@ -182,7 +202,9 @@ const PaymentController = {
         paymentStatus: 'PAID',
         razorpayOrderId: razorpay_order_id,
         razorpayPaymentId: razorpay_payment_id,
-        amountPaid: netTotal
+        amountPaid: netTotal,
+        appliedDiscount,
+        couponCode
       });
 
       // 5. Send notifications to counsellor

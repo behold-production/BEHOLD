@@ -771,7 +771,8 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
         date: selectedDate,
         time: selectedTime,
         mode: bookingMode,
-        service: bookingService
+        service: bookingService,
+        couponCode: couponInput
       };
 
       // 2. Create order on backend
@@ -802,7 +803,8 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
               date: selectedDate,
               time: selectedTime,
               mode: bookingMode,
-              service: bookingService
+              service: bookingService,
+              couponCode: couponInput
             };
 
             const verifyRes = await ApiService.verifyPaymentAndBook(response, bookingDetails);
@@ -1802,6 +1804,62 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                       </div>
                     ) : (
                       <span className="text-zinc-400 italic font-light text-xs block text-left">No advisor selected</span>
+                    )}
+                  </div>
+
+                  {/* Coupon Promo code input box */}
+                  <div className="pt-3 border-t border-zinc-200 space-y-2 text-left">
+                    <span className="text-[9.5px] text-zinc-400 capitalize tracking-wide block font-semibold">Have a Promo Code?</span>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        placeholder="e.g. BEHOLD100"
+                        value={couponInput}
+                        onChange={(e) => setCouponInput(e.target.value)}
+                        disabled={appliedDiscount > 0}
+                        className="flex-1 px-3 py-1.5 bg-white border border-zinc-200 rounded-lg text-xs font-semibold uppercase outline-none focus:border-brand transition"
+                      />
+                      {appliedDiscount > 0 ? (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setAppliedDiscount(0);
+                            setCouponInput('');
+                            setCouponMsg({ text: '', type: '' });
+                          }}
+                          className="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 rounded-lg text-xs font-bold transition cursor-pointer"
+                        >
+                          Remove
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const code = couponInput.toUpperCase().trim();
+                            if (code === 'BEHOLD100') {
+                              setAppliedDiscount(100);
+                              setCouponMsg({ text: 'Promo code applied successfully!', type: 'success' });
+                            } else if (code === 'HEALTH30') {
+                              const discount = Math.round((baseFee + gstAmount) * 0.3);
+                              setAppliedDiscount(discount);
+                              setCouponMsg({ text: '30% discount applied!', type: 'success' });
+                            } else if (code === 'WELCOME50') {
+                              setAppliedDiscount(50);
+                              setCouponMsg({ text: '₹50 discount applied!', type: 'success' });
+                            } else {
+                              setCouponMsg({ text: 'Invalid promo code', type: 'error' });
+                            }
+                          }}
+                          className="px-3.5 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg text-xs font-bold transition cursor-pointer border-none"
+                        >
+                          Apply
+                        </button>
+                      )}
+                    </div>
+                    {couponMsg.text && (
+                      <p className={`text-[10px] font-bold ${couponMsg.type === 'success' ? 'text-emerald-600' : 'text-rose-500'}`}>
+                        {couponMsg.text}
+                      </p>
                     )}
                   </div>
 

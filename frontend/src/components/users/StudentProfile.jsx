@@ -345,11 +345,14 @@ export default function StudentProfile() {
       } catch (e) {}
 
       const amountPaid = session.amountPaid || 1200;
-      let baseFeeVal = amountPaid;
+      const appliedDiscount = session.appliedDiscount || 0;
+      const totalBeforeDiscount = amountPaid + appliedDiscount;
+
+      let baseFeeVal = totalBeforeDiscount;
       let gstAmountVal = 0;
       if (gstEnabled && gstPercent > 0) {
-        baseFeeVal = Math.round(amountPaid / (1 + gstPercent / 100));
-        gstAmountVal = amountPaid - baseFeeVal;
+        baseFeeVal = Math.round(totalBeforeDiscount / (1 + gstPercent / 100));
+        gstAmountVal = totalBeforeDiscount - baseFeeVal;
       }
 
       const clientName = profile.name || user?.name || 'Student';
@@ -375,7 +378,7 @@ export default function StudentProfile() {
         baseFee: baseFeeVal,
         gstPercent: gstEnabled ? gstPercent : 0,
         gstAmount: gstAmountVal,
-        appliedDiscount: 0
+        appliedDiscount: appliedDiscount
       };
 
       generateReceiptPDFDoc(details);

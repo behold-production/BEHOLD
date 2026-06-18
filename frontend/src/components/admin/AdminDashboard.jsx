@@ -152,14 +152,16 @@ export default function AdminDashboard({ setView }) {
 
       // GST and Amount Math
       const amountPaid = typeof booking.amountPaid === 'number' ? booking.amountPaid : 1200;
+      const appliedDiscount = booking.appliedDiscount || 0;
+      const totalBeforeDiscount = amountPaid + appliedDiscount;
       const gstEnabled = settingsForm.gstEnabled === true;
       const gstPercent = gstEnabled ? (Number(settingsForm.gstPercent) || 0) : 0;
       
-      let baseFeeVal = amountPaid;
+      let baseFeeVal = totalBeforeDiscount;
       let gstAmountVal = 0;
       if (gstEnabled && gstPercent > 0) {
-        baseFeeVal = Math.round(amountPaid / (1 + gstPercent / 100));
-        gstAmountVal = amountPaid - baseFeeVal;
+        baseFeeVal = Math.round(totalBeforeDiscount / (1 + gstPercent / 100));
+        gstAmountVal = totalBeforeDiscount - baseFeeVal;
       }
 
       // Draw PDF Receipt
@@ -262,6 +264,15 @@ export default function AdminDashboard({ setView }) {
         doc.text(`GST (${gstPercent}%)`, 24, tableY);
         doc.text(`Rs. ${gstAmountVal.toFixed(2)}`, 160, tableY);
         tableY += 8;
+      }
+
+      // 3. Discount (if applied)
+      if (appliedDiscount > 0) {
+        doc.setTextColor(22, 163, 74); // green
+        doc.text(`Promo Discount Code`, 24, tableY);
+        doc.text(`-Rs. ${appliedDiscount.toFixed(2)}`, 160, tableY);
+        tableY += 8;
+        doc.setTextColor(82, 82, 91); // reset to zinc-600
       }
 
       // Border line for total
