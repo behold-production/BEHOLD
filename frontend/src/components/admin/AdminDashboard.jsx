@@ -3079,170 +3079,203 @@ export default function AdminDashboard({ setView }) {
                     <div className="space-y-3.5">
                       {overviewActivityTab === 'bookings' && (
                         <div className="space-y-2.5 animate-in fade-in duration-200">
-                          {[...bookingsDb].reverse().slice(0, 3).map(b => (
-                            <div key={b.id} className="bg-zinc-900/40 p-3 rounded-lg border border-zinc-855 flex flex-col justify-between gap-3 text-sm hover:border-zinc-800 transition-colors">
-                              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                                <div>
-                                  <div className="flex flex-wrap items-center gap-2">
-                                    <span className="font-bold text-white capitalize">{b.userName}</span>
-                                    <span className="text-zinc-500"> booked with </span>
-                                    <span className="font-bold text-brand capitalize">{b.advisorName}</span>
-                                  </div>
-                                  <div className="flex items-center gap-2 mt-1">
-                                    <span className="text-xs bg-zinc-950 text-zinc-400 border border-zinc-850 px-1.5 py-0.2 rounded font-bold  capitalize ">{b.mode}</span>
-                                    <span className="text-xs bg-zinc-950 text-zinc-500 border border-zinc-850 px-1.5 py-0.2 rounded font-bold  capitalize  capitalize">{b.service}</span>
-                                  </div>
+                          {isDbLoading ? (
+                            [...Array(3)].map((_, idx) => (
+                              <div key={idx} className="animate-pulse bg-zinc-900/40 p-3 rounded-lg border border-zinc-855 flex items-center justify-between h-[64px]">
+                                <div className="space-y-2 flex-1">
+                                  <div className="h-4 bg-zinc-900 rounded w-1/3" />
+                                  <div className="h-3 bg-zinc-900 rounded w-1/2" />
                                 </div>
-                                <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto shrink-0 border-t border-zinc-900/40 sm:border-none pt-2 sm:pt-0">
-                                  <div className="text-left sm:text-right">
-                                    <span className="text-zinc-400 font-bold block">{formatDateString(b.date)} • {b.time}</span>
-                                    <span className={`text-sm px-1.5 py-0.2 rounded capitalize font-bold inline-block mt-0.5 border ${b.status === 'CONFIRMED' ? 'bg-emerald-955/20 border-emerald-900/40 text-emerald-450' :
-                                      b.status === 'COMPLETED' ? 'bg-brand/10 border-brand/20 text-brand' :
-                                        b.status === 'CANCELLED' ? 'bg-rose-955/20 border-rose-900/30 text-rose-500' :
-                                          'bg-zinc-800 border-zinc-700 text-zinc-400'
-                                      }`}>{b.status}</span>
-                                  </div>
-                                  <button
-                                    onClick={() => setSelectedOverviewBooking(selectedOverviewBooking === b.id ? null : b.id)}
-                                    className="px-2.5 py-1.5 bg-zinc-950 hover:bg-zinc-900 border border-zinc-850 hover:border-brand/40 text-brand rounded text-sm font-bold capitalize  transition-colors cursor-pointer"
-                                  >
-                                    {selectedOverviewBooking === b.id ? 'Hide Details' : 'View Details'}
-                                  </button>
-                                </div>
+                                <div className="h-8 bg-zinc-900 rounded w-20" />
                               </div>
-                              {selectedOverviewBooking === b.id && (
-                                <div className="w-full mt-1.5 pt-2.5 border-t border-zinc-900/60 space-y-2 text-zinc-450 animate-in slide-in-from-top-2 duration-200">
-                                  <div className="grid grid-cols-2 gap-3 text-sm bg-zinc-950/60 p-2.5 rounded border border-zinc-900">
+                            ))
+                          ) : (
+                            <>
+                              {[...bookingsDb].reverse().slice(0, 3).map(b => (
+                                <div key={b.id} className="bg-zinc-900/40 p-3 rounded-lg border border-zinc-855 flex flex-col justify-between gap-3 text-sm hover:border-zinc-800 transition-colors">
+                                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                                     <div>
-                                      <span className="text-zinc-550 block font-bold capitalize text-xs ">Advisor Designation</span>
-                                      <span className="text-white font-medium block mt-0.5">{b.advisorRole || 'Consultant Psychologist'}</span>
+                                      <div className="flex flex-wrap items-center gap-2">
+                                        <span className="font-bold text-white capitalize">{b.userName}</span>
+                                        <span className="text-zinc-500"> booked with </span>
+                                        <span className="font-bold text-brand capitalize">{b.advisorName}</span>
+                                      </div>
+                                      <div className="flex items-center gap-2 mt-1">
+                                        <span className="text-xs bg-zinc-950 text-zinc-400 border border-zinc-850 px-1.5 py-0.2 rounded font-bold  capitalize ">{b.mode}</span>
+                                        <span className="text-xs bg-zinc-950 text-zinc-500 border border-zinc-850 px-1.5 py-0.2 rounded font-bold  capitalize  capitalize">{b.service}</span>
+                                      </div>
                                     </div>
-                                    <div>
-                                      <span className="text-zinc-550 block font-bold capitalize text-xs ">Appointment ID</span>
-                                      <span className="text-zinc-400  block mt-0.5 select-all">{b.id}</span>
-                                    </div>
-                                  </div>
-                                  {b.meetLink ? (
-                                    <div className="flex items-center justify-between bg-zinc-950 p-2.5 rounded border border-zinc-900 mt-2">
-                                      <span className="truncate text-brand  select-all text-sm pr-2">{b.meetLink}</span>
+                                    <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto shrink-0 border-t border-zinc-900/40 sm:border-none pt-2 sm:pt-0">
+                                      <div className="text-left sm:text-right">
+                                        <span className="text-zinc-400 font-bold block">{formatDateString(b.date)} • {b.time}</span>
+                                        <span className={`text-sm px-1.5 py-0.2 rounded capitalize font-bold inline-block mt-0.5 border ${b.status === 'CONFIRMED' ? 'bg-emerald-955/20 border-emerald-900/40 text-emerald-450' :
+                                          b.status === 'COMPLETED' ? 'bg-brand/10 border-brand/20 text-brand' :
+                                            b.status === 'CANCELLED' ? 'bg-rose-955/20 border-rose-900/30 text-rose-500' :
+                                              'bg-zinc-800 border-zinc-700 text-zinc-400'
+                                          }`}>{b.status}</span>
+                                      </div>
                                       <button
-                                        onClick={async () => {
-                                          navigator.clipboard.writeText(b.meetLink);
-                                          await showAlert("Google Meet Link copied!", "Success");
-                                        }}
-                                        className="px-2.5 py-1 bg-zinc-900 border border-zinc-800 hover:border-brand/40 text-white rounded text-sm font-bold cursor-pointer transition shrink-0"
+                                        onClick={() => setSelectedOverviewBooking(selectedOverviewBooking === b.id ? null : b.id)}
+                                        className="px-2.5 py-1.5 bg-zinc-955 hover:bg-zinc-900 border border-zinc-850 hover:border-brand/40 text-brand rounded text-sm font-bold capitalize  transition-colors cursor-pointer"
                                       >
-                                        Copy Link
+                                        {selectedOverviewBooking === b.id ? 'Hide Details' : 'View Details'}
                                       </button>
                                     </div>
-                                  ) : (
-                                    <div className="text-sm text-zinc-555 italic mt-1 pb-1">No video meeting link generated for this booking.</div>
+                                  </div>
+                                  {selectedOverviewBooking === b.id && (
+                                    <div className="w-full mt-1.5 pt-2.5 border-t border-zinc-900/60 space-y-2 text-zinc-455 animate-in slide-in-from-top-2 duration-200">
+                                      <div className="grid grid-cols-2 gap-3 text-sm bg-zinc-955/60 p-2.5 rounded border border-zinc-900">
+                                        <div>
+                                          <span className="text-zinc-550 block font-bold capitalize text-xs ">Advisor Designation</span>
+                                          <span className="text-white font-medium block mt-0.5">{b.advisorRole || 'Consultant Psychologist'}</span>
+                                        </div>
+                                        <div>
+                                          <span className="text-zinc-550 block font-bold capitalize text-xs ">Appointment ID</span>
+                                          <span className="text-zinc-400  block mt-0.5 select-all">{b.id}</span>
+                                        </div>
+                                      </div>
+                                      {b.meetLink ? (
+                                        <div className="flex items-center justify-between bg-zinc-950 p-2.5 rounded border border-zinc-900 mt-2">
+                                          <span className="truncate text-brand  select-all text-sm pr-2">{b.meetLink}</span>
+                                          <button
+                                            onClick={async () => {
+                                              navigator.clipboard.writeText(b.meetLink);
+                                              await showAlert("Google Meet Link copied!", "Success");
+                                            }}
+                                            className="px-2.5 py-1 bg-zinc-900 border border-zinc-800 hover:border-brand/40 text-white rounded text-sm font-bold cursor-pointer transition shrink-0"
+                                          >
+                                            Copy Link
+                                          </button>
+                                        </div>
+                                      ) : (
+                                        <div className="text-sm text-zinc-555 italic mt-1 pb-1">No video meeting link generated for this booking.</div>
+                                      )}
+                                    </div>
                                   )}
                                 </div>
-                              )}
-                            </div>
-                          ))}
-                          {bookingsDb.length === 0 && <p className="text-zinc-550 italic text-sm text-center py-6">No recent bookings recorded.</p>}
+                              ))}
+                              {bookingsDb.length === 0 && <p className="text-zinc-550 italic text-sm text-center py-6">No recent bookings recorded.</p>}
+                            </>
+                          )}
                         </div>
                       )}
 
                       {overviewActivityTab === 'inquiries' && (
                         <div className="space-y-2.5 animate-in fade-in duration-200">
-                          {[...inquiriesDb].reverse().slice(0, 3).map(i => {
-                            const isResolved = i.status === 'RESOLVED';
-                            return (
-                              <div key={i.id} className="bg-zinc-900/40 p-3 rounded-lg border border-zinc-855 text-sm space-y-2.5 hover:border-zinc-800 transition-colors">
-                                <div className="flex justify-between items-start">
-                                  <div>
-                                    <span className="text-white font-bold capitalize block leading-tight">{i.name}</span>
-                                    <span className="text-zinc-500  text-sm block mt-0.5">{i.email}</span>
-                                  </div>
-                                  <div className="flex items-center gap-2">
-                                    <span className="text-zinc-550  text-sm">{formatDateString(i.date)}</span>
-                                    <span className={`text-sm px-1.5 py-0.2 rounded capitalize font-bold border ${isResolved ? 'bg-emerald-955/20 border-emerald-900/30 text-emerald-455' : 'bg-amber-955/20 border-amber-900/30 text-amber-500'
-                                      }`}>{i.status || 'PENDING'}</span>
-                                  </div>
+                          {isDbLoading ? (
+                            [...Array(3)].map((_, idx) => (
+                              <div key={idx} className="animate-pulse bg-zinc-900/40 p-3 rounded-lg border border-zinc-855 flex items-center justify-between h-[64px]">
+                                <div className="space-y-2 flex-1">
+                                  <div className="h-4 bg-zinc-900 rounded w-1/3" />
+                                  <div className="h-3 bg-zinc-900 rounded w-1/2" />
                                 </div>
-                                <p className="text-zinc-350 font-medium italic border-l-2 border-brand/30 pl-2.5 leading-relaxed">"{i.message}"</p>
-
-                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-1.5 border-t border-zinc-900/40">
-                                  <button
-                                    onClick={() => handleResolveInquiry(i.id)}
-                                    className={`px-3 py-1.5 rounded text-sm font-bold capitalize  cursor-pointer border transition-colors shrink-0 ${isResolved
-                                      ? 'bg-zinc-900 hover:bg-zinc-800 border-zinc-800 text-zinc-400 hover:text-white'
-                                      : 'bg-emerald-600 hover:bg-emerald-700 border-none text-white'
-                                      }`}
-                                  >
-                                    {isResolved ? 'Mark Pending' : 'Mark Resolved'}
-                                  </button>
-                                  <div className="flex items-center gap-1.5 w-full sm:w-[60%] shrink-0">
-                                    <input
-                                      type="text"
-                                      placeholder="Add staff summary note..."
-                                      value={inquiryNotesText[i.id] !== undefined ? inquiryNotesText[i.id] : (i.note || '')}
-                                      onChange={(e) => setInquiryNotesText({ ...inquiryNotesText, [i.id]: e.target.value })}
-                                      className="flex-1 px-2.5 py-1.5 bg-zinc-950 border border-zinc-850 focus:border-brand rounded text-sm text-white outline-none"
-                                    />
-                                    <button
-                                      onClick={() => handleSaveInquiryNote(i.id, inquiryNotesText[i.id] || '')}
-                                      className="px-2.5 py-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-brand text-brand font-bold rounded text-sm capitalize  cursor-pointer transition shrink-0"
-                                    >
-                                      Save
-                                    </button>
-                                  </div>
-                                </div>
+                                <div className="h-8 bg-zinc-900 rounded w-20" />
                               </div>
-                            );
-                          })}
-                          {inquiriesDb.length === 0 && <p className="text-zinc-550 italic text-sm text-center py-6">No recent inquiries recorded.</p>}
+                            ))
+                          ) : (
+                            <>
+                              {[...inquiriesDb].reverse().slice(0, 3).map(i => {
+                                const isResolved = i.status === 'RESOLVED';
+                                return (
+                                  <div key={i.id} className="bg-zinc-900/40 p-3 rounded-lg border border-zinc-855 text-sm space-y-2.5 hover:border-zinc-800 transition-colors">
+                                    <div className="flex justify-between items-start">
+                                      <div>
+                                        <span className="text-white font-bold capitalize block leading-tight">{i.name}</span>
+                                        <span className="text-zinc-500  text-sm block mt-0.5">{i.email}</span>
+                                      </div>
+                                      <div className="flex items-center gap-2">
+                                        <span className="text-zinc-550  text-sm">{formatDateString(i.date)}</span>
+                                        <span className={`text-sm px-1.5 py-0.2 rounded capitalize font-bold border ${isResolved ? 'bg-emerald-955/20 border-emerald-900/30 text-emerald-455' : 'bg-amber-955/20 border-amber-900/30 text-amber-500'
+                                          }`}>{i.status || 'PENDING'}</span>
+                                      </div>
+                                    </div>
+                                    <p className="text-zinc-350 font-medium italic border-l-2 border-brand/30 pl-2.5 leading-relaxed">"{i.message}"</p>
+
+                                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-1.5 border-t border-zinc-900/40">
+                                      <button
+                                        onClick={() => handleResolveInquiry(i.id)}
+                                        className={`px-3 py-1.5 rounded text-sm font-bold capitalize  cursor-pointer border transition-colors shrink-0 ${isResolved
+                                          ? 'bg-zinc-900 hover:bg-zinc-800 border-zinc-800 text-zinc-400 hover:text-white'
+                                          : 'bg-emerald-600 hover:bg-emerald-700 border-none text-white'
+                                          }`}
+                                      >
+                                        {isResolved ? 'Mark Pending' : 'Mark Resolved'}
+                                      </button>
+                                      <div className="flex items-center gap-1.5 w-full sm:w-[60%] shrink-0">
+                                        <input
+                                          type="text"
+                                          placeholder="Add staff summary note..."
+                                          value={inquiryNotesText[i.id] !== undefined ? inquiryNotesText[i.id] : (i.note || '')}
+                                          onChange={(e) => setInquiryNotesText({ ...inquiryNotesText, [i.id]: e.target.value })}
+                                          className="flex-1 px-2.5 py-1.5 bg-zinc-950 border border-zinc-850 focus:border-brand rounded text-sm text-white outline-none"
+                                        />
+                                        <button
+                                          onClick={() => handleSaveInquiryNote(i.id, inquiryNotesText[i.id] || '')}
+                                          className="px-2.5 py-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-brand text-brand font-bold rounded text-sm capitalize  cursor-pointer transition shrink-0"
+                                        >
+                                          Save
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                              {inquiriesDb.length === 0 && <p className="text-zinc-550 italic text-sm text-center py-6">No recent inquiries recorded.</p>}
+                            </>
+                          )}
                         </div>
                       )}
 
                       {overviewActivityTab === 'results' && (
                         <div className="space-y-2.5 animate-in fade-in duration-200">
-                          {[...testResultsDb].reverse().slice(0, 3).map(res => (
-                            <div key={res.id} className="bg-zinc-900/40 p-3 rounded-lg border border-zinc-855 text-sm space-y-2.5 hover:border-zinc-800 transition-colors">
-                              <div className="flex justify-between items-start">
-                                <div>
-                                  <span className="text-white font-bold capitalize block leading-tight">{res.studentName}</span>
-                                  <span className="text-zinc-555  text-sm block mt-0.5">{res.studentEmail}</span>
+                          {isDbLoading ? (
+                            [...Array(3)].map((_, idx) => (
+                              <div key={idx} className="animate-pulse bg-zinc-900/40 p-3 rounded-lg border border-zinc-855 flex items-center justify-between h-[64px]">
+                                <div className="space-y-2 flex-1">
+                                  <div className="h-4 bg-zinc-900 rounded w-1/3" />
+                                  <div className="h-3 bg-zinc-900 rounded w-1/2" />
                                 </div>
-                                <div className="text-right">
-                                  <span className="text-zinc-550  text-sm block">{formatDateString(res.date)}</span>
-                                  <span className="text-sm bg-brand/10 border border-brand/20 text-brand px-1.5 py-0.5 rounded font-bold  capitalize  mt-1 inline-block">
-                                    Dominant: {res.dominantDomain.toUpperCase()}
-                                  </span>
-                                </div>
+                                <div className="h-8 bg-zinc-900 rounded w-20" />
                               </div>
-
-                              <div className="border-t border-zinc-900/60 pt-2 space-y-2">
-                                <span className="text-sm capitalize font-bold  text-zinc-550 block">Cognitive Domain Breakdown</span>
-                                <div className="grid grid-cols-3 gap-3">
-                                  {Object.entries(res.scores || {}).slice(0, 3).map(([key, val]) => (
-                                    <div key={key} className="space-y-1">
-                                      <div className="flex justify-between items-center text-sm font-bold text-zinc-400 capitalize">
-                                        <span>{key}</span>
-                                        <span className="text-white ">{val}%</span>
-                                      </div>
-                                      <div className="w-full bg-zinc-950 h-1.5 rounded-full overflow-hidden border border-zinc-850 p-0.2 flex">
-                                        <div className="bg-brand h-full rounded-full transition-all duration-500" style={{ width: `${val}%` }} />
-                                      </div>
+                            ))
+                          ) : (
+                            <>
+                              {[...testResultsDb].reverse().slice(0, 3).map(res => (
+                                <div key={res.id} className="bg-zinc-900/40 p-3 rounded-lg border border-zinc-855 text-sm space-y-2.5 hover:border-zinc-800 transition-colors">
+                                  <div className="flex justify-between items-start">
+                                    <div>
+                                      <span className="text-white font-bold capitalize block leading-tight">{res.studentName}</span>
+                                      <span className="text-zinc-555  text-sm block mt-0.5">{res.studentEmail}</span>
                                     </div>
-                                  ))}
-                                </div>
-                              </div>
+                                    <div className="text-right">
+                                      <span className="text-zinc-550  text-sm block">{formatDateString(res.date)}</span>
+                                      <span className="text-sm bg-brand/10 border border-brand/20 text-brand px-1.5 py-0.5 rounded font-bold  capitalize  mt-1 inline-block">
+                                        Dominant: {res.dominantDomain.toUpperCase()}
+                                      </span>
+                                    </div>
+                                  </div>
 
-                              <div className="flex justify-end pt-1">
-                                <button
-                                  onClick={() => handleExportAptitudeResults(res)}
-                                  className="px-3 py-1.5 bg-zinc-950 hover:bg-zinc-900 border border-zinc-850 hover:border-brand/40 text-zinc-350 hover:text-white rounded text-sm font-bold capitalize  cursor-pointer transition shrink-0"
-                                >
-                                  Export Report
-                                </button>
-                              </div>
-                            </div>
-                          ))}
-                          {testResultsDb.length === 0 && <p className="text-zinc-550 italic text-sm text-center py-6">No assessment results recorded.</p>}
+                                  <div className="border-t border-zinc-900/60 pt-2 space-y-2">
+                                    <span className="text-sm capitalize font-bold  text-zinc-550 block">Cognitive Domain Breakdown</span>
+                                    <div className="grid grid-cols-3 gap-3">
+                                      {Object.entries(res.scores || {}).slice(0, 3).map(([key, val]) => (
+                                        <div key={key} className="space-y-1">
+                                          <div className="flex justify-between items-center text-sm font-bold text-zinc-400 capitalize">
+                                            <span>{key}</span>
+                                            <span className="text-white ">{val}%</span>
+                                          </div>
+                                          <div className="w-full bg-zinc-950 h-1.5 rounded-full overflow-hidden border border-zinc-850 p-0.2 flex">
+                                            <div className="bg-brand h-full rounded-full transition-all duration-500" style={{ width: `${val}%` }} />
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                              {testResultsDb.length === 0 && <p className="text-zinc-550 italic text-sm text-center py-6">No recent aptitude results recorded.</p>}
+                            </>
+                          )}
                         </div>
                       )}
                     </div>
@@ -3691,111 +3724,114 @@ export default function AdminDashboard({ setView }) {
                       </tr>
                     </thead>
                     <tbody>
-                      {psychologistsList.slice((psyPage - 1) * psyLimit, psyPage * psyLimit).map(psy => (
-                        <tr key={psy.id} className="border-b border-zinc-900 hover:bg-zinc-900/50">
-                          <td className="p-3 flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-lg bg-zinc-900 border border-zinc-800 text-brand flex items-center justify-center font-bold text-sm shrink-0 overflow-hidden">
-                              {psy.profilePic || psy.image ? (
-                                <img src={psy.profilePic || psy.image} alt={psy.name} className="w-full h-full object-cover" />
-                              ) : (
-                                getInitials(psy.name)
-                              )}
-                            </div>
-                            <div>
-                              <span className="font-bold text-white block leading-tight">{psy.name}</span>
-                              <span className="text-sm text-zinc-500">ID: {psy.id} • Active Profile</span>
-                            </div>
-                          </td>
-                          <td className="p-3 text-zinc-350 font-medium">{psy.email}</td>
-                          <td className="p-3 text-center">
-                            {(psy.status === 'APPROVED' || psy.status === 'ACTIVE') ? (
-                              <div className="flex items-center justify-center gap-2">
-                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-955/20 border border-emerald-900/40 text-emerald-450 text-sm font-bold capitalize ">
-                                  <Check className="w-3.5 h-3.5 text-emerald-450" /> Approved
-                                </span>
-                                <button
-                                  onClick={() => handleTogglePsyVerification(psy.id, true)}
-                                  className="text-sm text-zinc-500 hover:text-rose-500 underline cursor-pointer bg-transparent border-none p-0 animate-in fade-in duration-200"
-                                  title="Revoke acceptance"
-                                >
-                                  Revoke
-                                </button>
-                              </div>
-                            ) : psy.status === 'REJECTED' ? (
-                              <div className="flex items-center justify-center gap-2">
-                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-rose-955/20 border border-rose-900/40 text-rose-450 text-sm font-bold capitalize ">
-                                  Rejected
-                                </span>
-                                <button
-                                  onClick={() => handleTogglePsyVerification(psy.id, false)}
-                                  className="text-sm text-zinc-500 hover:text-emerald-500 underline cursor-pointer bg-transparent border-none p-0 animate-in fade-in duration-200"
-                                  title="Accept counselor"
-                                >
-                                  Accept
-                                </button>
-                              </div>
-                            ) : (
-                              <div className="flex items-center justify-center gap-1.5">
-                                <button
-                                  onClick={() => handleTogglePsyVerification(psy.id, false)}
-                                  className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-750 text-white rounded text-sm font-bold capitalize  cursor-pointer border-none shadow-sm transition-colors"
-                                  title="Accept and verify counselor"
-                                >
-                                  Accept
-                                </button>
-                                <button
-                                  onClick={() => handleRejectPsy(psy.id)}
-                                  className="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded text-sm font-bold capitalize  cursor-pointer border-none shadow-sm transition-colors"
-                                  title="Reject counselor request"
-                                >
-                                  Reject
-                                </button>
-                              </div>
-                            )}
-                          </td>
-                          <td className="p-3 text-center flex items-center justify-center gap-2">
-                            <button
-                              onClick={() => setViewingPsychologist(psy)}
-                              className="px-2.5 py-1 bg-zinc-900 text-brand hover:text-white rounded border border-zinc-800 hover:bg-zinc-850 transition cursor-pointer text-sm font-bold capitalize "
-                            >
-                              Details
-                            </button>
-                            <button
-                              onClick={() => handleGenerateResetToken(psy.email)}
-                              className="px-2.5 py-1 bg-zinc-900 text-amber-500 hover:text-amber-400 rounded border border-zinc-800 hover:bg-amber-900/30 transition cursor-pointer text-sm font-bold capitalize "
-                              title="Generate Password Reset Link"
-                            >
-                              <KeyRound className="w-4 h-4 inline-block" />
-                            </button>
-                            <a
-                              href={`#/advisor/${psy.id}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="px-2.5 py-1 bg-zinc-900 text-brand hover:text-white rounded border border-zinc-800 hover:bg-zinc-850 transition cursor-pointer text-sm font-bold capitalize  inline-block text-center"
-                            >
-                              Preview
-                            </a>
-                            <button
-                              onClick={() => handleOpenEditPsy(psy)}
-                              className="p-1.5 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"
-                              title="Edit Psychologist"
-                            >
-                              <Edit className="w-3.5 h-3.5" />
-                            </button>
-                            <button
-                              onClick={() => handleDeletePsy(psy.id)}
-                              className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
-                              title="Remove Psychologist"
-                            >
-                              <Trash className="w-3.5 h-3.5" />
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                      {psychologistsList.length === 0 && (
+                      {isDbLoading ? (
+                        <SkeletonTableRows cols={4} />
+                      ) : psychologistsList.length === 0 ? (
                         <tr>
                           <td colSpan={4} className="p-8 text-center text-zinc-500 italic">No psychologist registries match the active query.</td>
                         </tr>
+                      ) : (
+                        psychologistsList.slice((psyPage - 1) * psyLimit, psyPage * psyLimit).map(psy => (
+                          <tr key={psy.id} className="border-b border-zinc-900 hover:bg-zinc-900/50">
+                            <td className="p-3 flex items-center gap-3">
+                              <div className="w-10 h-10 rounded-lg bg-zinc-900 border border-zinc-800 text-brand flex items-center justify-center font-bold text-sm shrink-0 overflow-hidden">
+                                {psy.profilePic || psy.image ? (
+                                  <img src={psy.profilePic || psy.image} alt={psy.name} className="w-full h-full object-cover" />
+                                ) : (
+                                  getInitials(psy.name)
+                                )}
+                              </div>
+                              <div>
+                                <span className="font-bold text-white block leading-tight">{psy.name}</span>
+                                <span className="text-sm text-zinc-500">ID: {psy.id} • Active Profile</span>
+                              </div>
+                            </td>
+                            <td className="p-3 text-zinc-350 font-medium">{psy.email}</td>
+                            <td className="p-3 text-center">
+                              {(psy.status === 'APPROVED' || psy.status === 'ACTIVE') ? (
+                                <div className="flex items-center justify-center gap-2">
+                                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-955/20 border border-emerald-900/40 text-emerald-450 text-sm font-bold capitalize ">
+                                    <Check className="w-3.5 h-3.5 text-emerald-450" /> Approved
+                                  </span>
+                                  <button
+                                    onClick={() => handleTogglePsyVerification(psy.id, true)}
+                                    className="text-sm text-zinc-500 hover:text-rose-500 underline cursor-pointer bg-transparent border-none p-0 animate-in fade-in duration-200"
+                                    title="Revoke acceptance"
+                                  >
+                                    Revoke
+                                  </button>
+                                </div>
+                              ) : psy.status === 'REJECTED' ? (
+                                <div className="flex items-center justify-center gap-2">
+                                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-rose-955/20 border border-rose-900/40 text-rose-450 text-sm font-bold capitalize ">
+                                    Rejected
+                                  </span>
+                                  <button
+                                    onClick={() => handleTogglePsyVerification(psy.id, false)}
+                                    className="text-sm text-zinc-500 hover:text-emerald-500 underline cursor-pointer bg-transparent border-none p-0 animate-in fade-in duration-200"
+                                    title="Accept counselor"
+                                  >
+                                    Accept
+                                  </button>
+                                </div>
+                              ) : (
+                                <div className="flex items-center justify-center gap-1.5">
+                                  <button
+                                    onClick={() => handleTogglePsyVerification(psy.id, false)}
+                                    className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-750 text-white rounded text-sm font-bold capitalize  cursor-pointer border-none shadow-sm transition-colors"
+                                    title="Accept and verify counselor"
+                                  >
+                                    Accept
+                                  </button>
+                                  <button
+                                    onClick={() => handleRejectPsy(psy.id)}
+                                    className="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded text-sm font-bold capitalize  cursor-pointer border-none shadow-sm transition-colors"
+                                    title="Reject counselor request"
+                                  >
+                                    Reject
+                                  </button>
+                                </div>
+                              )}
+                            </td>
+                            <td className="p-3 text-center flex items-center justify-center gap-2">
+                              <button
+                                onClick={() => setViewingPsychologist(psy)}
+                                className="px-2.5 py-1 bg-zinc-900 text-brand hover:text-white rounded border border-zinc-800 hover:bg-zinc-850 transition cursor-pointer text-sm font-bold capitalize "
+                              >
+                                Details
+                              </button>
+                              <button
+                                onClick={() => handleGenerateResetToken(psy.email)}
+                                className="px-2.5 py-1 bg-zinc-900 text-amber-500 hover:text-amber-400 rounded border border-zinc-800 hover:bg-amber-900/30 transition cursor-pointer text-sm font-bold capitalize "
+                                title="Generate Password Reset Link"
+                              >
+                                <KeyRound className="w-4 h-4 inline-block" />
+                              </button>
+                              <a
+                                href={`#/advisor/${psy.id}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-2.5 py-1 bg-zinc-900 text-brand hover:text-white rounded border border-zinc-800 hover:bg-zinc-850 transition cursor-pointer text-sm font-bold capitalize  inline-block text-center"
+                              >
+                                Preview
+                              </a>
+                              <button
+                                onClick={() => handleOpenEditPsy(psy)}
+                                className="p-1.5 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"
+                                title="Edit Psychologist"
+                              >
+                                <Edit className="w-3.5 h-3.5" />
+                              </button>
+                              <button
+                                onClick={() => handleDeletePsy(psy.id)}
+                                className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
+                                title="Remove Psychologist"
+                              >
+                                <Trash className="w-3.5 h-3.5" />
+                              </button>
+                            </td>
+                          </tr>
+                        ))
                       )}
                     </tbody>
                   </table>
@@ -3880,41 +3916,55 @@ export default function AdminDashboard({ setView }) {
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[220px] overflow-y-auto pr-1">
-                    {rolesDb.map(role => {
-                      const isProtected = ['role_hr', 'role_state', 'role_scheduler', 'role_finance'].includes(role.id);
-                      return (
-                        <div key={role.id} className="bg-zinc-900 border border-zinc-850 p-3 rounded-lg flex flex-col justify-between space-y-3">
-                          <div className="space-y-1.5">
-                            <div className="flex justify-between items-start gap-1">
-                              <span className="font-bold text-white capitalize text-xs truncate">{role.name}</span>
-                              {isProtected ? (
-                                <span className="text-xs text-zinc-550 border border-zinc-800 bg-zinc-950 px-1 py-0.2 rounded capitalize font-bold  shrink-0">System</span>
-                              ) : (
-                                <button
-                                  type="button"
-                                  onClick={() => handleDeleteRole(role)}
-                                  className="text-rose-500 hover:text-rose-455 font-bold text-sm capitalize tracking-wide cursor-pointer flex items-center border-none bg-transparent"
-                                  title="Delete role title"
-                                >
-                                  Delete
-                                </button>
-                              )}
-                            </div>
-                            <div className="flex flex-wrap gap-1">
-                              {role.permissions.length > 0 ? (
-                                role.permissions.map(p => (
-                                  <span key={p} className="px-1.5 py-0.5 rounded bg-zinc-950 text-xs text-zinc-450 capitalize   border border-zinc-850">
-                                    {p.replace('MANAGE_', '')}
-                                  </span>
-                                ))
-                              ) : (
-                                <span className="text-sm text-zinc-600 italic">No permissions</span>
-                              )}
-                            </div>
+                    {isDbLoading ? (
+                      [...Array(4)].map((_, i) => (
+                        <div key={i} className="animate-pulse bg-zinc-900 border border-zinc-850 p-3 rounded-lg flex flex-col justify-between space-y-3 h-[72px]">
+                          <div className="h-4 bg-zinc-800 rounded w-1/3" />
+                          <div className="flex gap-1.5">
+                            <div className="h-5 bg-zinc-850 rounded w-16" />
+                            <div className="h-5 bg-zinc-850 rounded w-16" />
                           </div>
                         </div>
-                      );
-                    })}
+                      ))
+                    ) : rolesDb.length === 0 ? (
+                      <div className="col-span-2 text-center text-zinc-550 italic py-4">No custom roles defined yet.</div>
+                    ) : (
+                      rolesDb.map(role => {
+                        const isProtected = ['role_hr', 'role_state', 'role_scheduler', 'role_finance'].includes(role.id);
+                        return (
+                          <div key={role.id} className="bg-zinc-900 border border-zinc-850 p-3 rounded-lg flex flex-col justify-between space-y-3">
+                            <div className="space-y-1.5">
+                              <div className="flex justify-between items-start gap-1">
+                                <span className="font-bold text-white capitalize text-xs truncate">{role.name}</span>
+                                {isProtected ? (
+                                  <span className="text-xs text-zinc-550 border border-zinc-800 bg-zinc-950 px-1 py-0.2 rounded capitalize font-bold  shrink-0">System</span>
+                                ) : (
+                                  <button
+                                    type="button"
+                                    onClick={() => handleDeleteRole(role)}
+                                    className="text-rose-500 hover:text-rose-455 font-bold text-sm capitalize tracking-wide cursor-pointer flex items-center border-none bg-transparent"
+                                    title="Delete role title"
+                                  >
+                                    Delete
+                                  </button>
+                                )}
+                              </div>
+                              <div className="flex flex-wrap gap-1">
+                                {role.permissions.length > 0 ? (
+                                  role.permissions.map(p => (
+                                    <span key={p} className="px-1.5 py-0.5 rounded bg-zinc-955 text-xs text-zinc-450 capitalize   border border-zinc-850">
+                                      {p.replace('MANAGE_', '')}
+                                    </span>
+                                  ))
+                                ) : (
+                                  <span className="text-sm text-zinc-605 italic">No permissions</span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })
+                    )}
                   </div>
                 </div>
               </div>
@@ -4234,93 +4284,96 @@ export default function AdminDashboard({ setView }) {
                         </tr>
                       </thead>
                       <tbody>
-                        {filteredBookings.slice((bookingPage - 1) * bookingLimit, bookingPage * bookingLimit).map(booking => (
-                          <tr key={booking.id} className="border-b border-zinc-900 hover:bg-zinc-900/50">
-                            <td className="p-3 text-center">
-                              <input
-                                type="checkbox"
-                                checked={selectedBookingIds.includes(booking.id)}
-                                onChange={() => handleToggleSelectBooking(booking.id)}
-                                className="cursor-pointer"
-                              />
-                            </td>
-                            <td className="p-3">
-                              <span className="font-bold text-white block leading-tight">{booking.userName}</span>
-                              <span className="text-sm text-zinc-500">ID: {booking.userId}</span>
-                            </td>
-                            <td className="p-3">
-                              <span className="font-bold text-white block leading-tight">{booking.advisorName}</span>
-                              <span className="text-sm text-zinc-500">{booking.advisorRole}</span>
-                            </td>
-                            <td className="p-3">
-                              <span className="font-semibold block capitalize text-white leading-tight">
-                                {booking.service === 'counselling' ? 'Emotional Wellbeing' : 'Career Mapping'}
-                              </span>
-                              <span className="text-sm text-zinc-550 font-bold capitalize">{booking.mode}</span>
-                            </td>
-                            <td className="p-3 font-semibold text-zinc-300">
-                              <span className="block">{formatDateString(booking.date)}</span>
-                              <span className="text-sm text-zinc-500 font-bold">{booking.time}</span>
-                            </td>
-                            <td className="p-3">
-                              {booking.meetLink ? (
-                                <a
-                                  href={booking.meetLink}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="text-brand hover:underline font-bold inline-flex items-center gap-1 text-sm"
-                                >
-                                  <Link className="w-3 h-3" /> Virtual Room
-                                </a>
-                              ) : (
-                                <span className="text-zinc-550 italic text-sm">No Link Set</span>
-                              )}
-                            </td>
-                            <td className="p-3 text-center">
-                              <span className={`inline-flex items-center px-2 py-0.5 rounded text-sm font-bold capitalize   ${booking.status === 'CONFIRMED'
-                                ? 'bg-emerald-955/30 border border-emerald-900/40 text-emerald-450'
-                                : booking.status === 'COMPLETED'
-                                  ? 'bg-indigo-955/30 border border-indigo-900/40 text-indigo-400'
-                                  : booking.status === 'EXPIRED'
-                                    ? 'bg-rose-955/30 border border-rose-900/40 text-rose-400'
-                                    : booking.status === 'CANCELLED'
-                                      ? 'bg-rose-955/20 border border-rose-900/30 text-rose-500'
-                                      : 'bg-zinc-900 border border-zinc-800 text-zinc-450'
-                                }`}>
-                                {booking.status}
-                              </span>
-                            </td>
-                            <td className="p-3 text-center flex items-center justify-center gap-2">
-                              {booking.status !== 'CANCELLED' && (
-                                <button
-                                  onClick={() => downloadPDFReceipt(booking)}
-                                  className="p-1.5 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"
-                                  title="Download Receipt PDF"
-                                >
-                                  <Download className="w-3.5 h-3.5" />
-                                </button>
-                              )}
-                              <button
-                                onClick={() => handleOpenEditBooking(booking)}
-                                className="p-1.5 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"
-                                title="Edit / Reschedule"
-                              >
-                                <Edit className="w-3.5 h-3.5" />
-                              </button>
-                              <button
-                                onClick={() => handleDeleteBooking(booking.id)}
-                                className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
-                                title="Cancel Booking"
-                              >
-                                <Trash className="w-3.5 h-3.5" />
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                        {filteredBookings.length === 0 && (
+                        {isDbLoading ? (
+                          <SkeletonTableRows cols={8} />
+                        ) : filteredBookings.length === 0 ? (
                           <tr>
                             <td colSpan={8} className="p-8 text-center text-zinc-500 italic">No bookings scheduled in the system matching the active filters.</td>
                           </tr>
+                        ) : (
+                          filteredBookings.slice((bookingPage - 1) * bookingLimit, bookingPage * bookingLimit).map(booking => (
+                            <tr key={booking.id} className="border-b border-zinc-900 hover:bg-zinc-900/50">
+                              <td className="p-3 text-center">
+                                <input
+                                  type="checkbox"
+                                  checked={selectedBookingIds.includes(booking.id)}
+                                  onChange={() => handleToggleSelectBooking(booking.id)}
+                                  className="cursor-pointer"
+                                />
+                              </td>
+                              <td className="p-3">
+                                <span className="font-bold text-white block leading-tight">{booking.userName}</span>
+                                <span className="text-sm text-zinc-500">ID: {booking.userId}</span>
+                              </td>
+                              <td className="p-3">
+                                <span className="font-bold text-white block leading-tight">{booking.advisorName}</span>
+                                <span className="text-sm text-zinc-500">{booking.advisorRole}</span>
+                              </td>
+                              <td className="p-3">
+                                <span className="font-semibold block capitalize text-white leading-tight">
+                                  {booking.service === 'counselling' ? 'Emotional Wellbeing' : 'Career Mapping'}
+                                </span>
+                                <span className="text-sm text-zinc-555 font-bold capitalize">{booking.mode}</span>
+                              </td>
+                              <td className="p-3 font-semibold text-zinc-300">
+                                <span className="block">{formatDateString(booking.date)}</span>
+                                <span className="text-sm text-zinc-500 font-bold">{booking.time}</span>
+                              </td>
+                              <td className="p-3">
+                                {booking.meetLink ? (
+                                  <a
+                                    href={booking.meetLink}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-brand hover:underline font-bold inline-flex items-center gap-1 text-sm"
+                                  >
+                                    <Link className="w-3 h-3" /> Virtual Room
+                                  </a>
+                                ) : (
+                                  <span className="text-zinc-555 italic text-sm">No Link Set</span>
+                                )}
+                              </td>
+                              <td className="p-3 text-center">
+                                <span className={`inline-flex items-center px-2 py-0.5 rounded text-sm font-bold capitalize   ${booking.status === 'CONFIRMED'
+                                  ? 'bg-emerald-955/30 border border-emerald-900/40 text-emerald-450'
+                                  : booking.status === 'COMPLETED'
+                                    ? 'bg-indigo-955/30 border border-indigo-900/40 text-indigo-400'
+                                    : booking.status === 'EXPIRED'
+                                      ? 'bg-rose-955/30 border border-rose-900/40 text-rose-400'
+                                      : booking.status === 'CANCELLED'
+                                        ? 'bg-rose-955/20 border border-rose-900/30 text-rose-500'
+                                        : 'bg-zinc-900 border border-zinc-800 text-zinc-455'
+                                  }`}>
+                                  {booking.status}
+                                </span>
+                              </td>
+                              <td className="p-3 text-center flex items-center justify-center gap-2">
+                                {booking.status !== 'CANCELLED' && (
+                                  <button
+                                    onClick={() => downloadPDFReceipt(booking)}
+                                    className="p-1.5 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"
+                                    title="Download Receipt PDF"
+                                  >
+                                    <Download className="w-3.5 h-3.5" />
+                                  </button>
+                                )}
+                                <button
+                                  onClick={() => handleOpenEditBooking(booking)}
+                                  className="p-1.5 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"
+                                  title="Edit / Reschedule"
+                                >
+                                  <Edit className="w-3.5 h-3.5" />
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteBooking(booking.id)}
+                                  className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
+                                  title="Cancel Booking"
+                                >
+                                  <Trash className="w-3.5 h-3.5" />
+                                </button>
+                              </td>
+                            </tr>
+                          ))
                         )}
                       </tbody>
                     </table>
@@ -4368,81 +4421,99 @@ export default function AdminDashboard({ setView }) {
               </div>
 
               <div className="space-y-4">
-                {filteredInquiries.slice((inquiryPage - 1) * inquiryLimit, inquiryPage * inquiryLimit).map((inq) => (
-                  <div
-                    key={inq.id}
-                    className="bg-zinc-955 border border-zinc-850 rounded-xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-5 relative overflow-hidden"
-                  >
-                    <div className="space-y-2 flex-1 min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className={`px-2 py-0.5 rounded text-sm font-bold capitalize  ${inq.status === 'RESOLVED'
-                          ? 'bg-emerald-955/20 border border-emerald-900/40 text-emerald-450'
-                          : 'bg-amber-955/20 border border-amber-900/40 text-amber-500'
-                          }`}>
-                          {inq.status || 'PENDING'}
-                        </span>
-                        <span className="text-sm text-zinc-500 font-bold capitalize ">{formatDateString(inq.date)}</span>
-                      </div>
-
-                      <div className="space-y-0.5">
-                        <h4 className="font-header font-bold text-sm capitalize text-white truncate">{inq.name}</h4>
-                        <p className="text-sm text-brand font-semibold ">{inq.email}</p>
-                      </div>
-
-                      <p className="text-[12.5px] text-zinc-400 font-medium leading-relaxed bg-zinc-900/50 p-3 rounded-lg border border-zinc-850 whitespace-pre-wrap">
-                        {inq.message}
-                      </p>
-
-                      {/* Internal Notes field */}
-                      <div className="pt-3 border-t border-zinc-900 mt-2 space-y-2">
-                        <span className="text-sm capitalize  font-bold text-zinc-500 block">Internal Staff Notes</span>
+                {isDbLoading ? (
+                  [...Array(3)].map((_, idx) => (
+                    <div key={idx} className="animate-pulse bg-zinc-955 border border-zinc-850 rounded-xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-5">
+                      <div className="space-y-2 flex-1">
                         <div className="flex gap-2">
-                          <input
-                            type="text"
-                            placeholder="Add diagnostic notes or followup details..."
-                            defaultValue={inq.note || ''}
-                            id={`note-${inq.id}`}
-                            className="w-full px-3 py-1.5 bg-zinc-900 border border-zinc-850 focus:border-brand rounded text-[12.5px] text-white outline-none font-semibold"
-                          />
+                          <div className="h-4 bg-zinc-900 rounded w-16" />
+                          <div className="h-4 bg-zinc-900 rounded w-24" />
+                        </div>
+                        <div className="h-5 bg-zinc-900 rounded w-1/4" />
+                        <div className="h-4 bg-zinc-900 rounded w-1/3" />
+                        <div className="h-16 bg-zinc-900 rounded w-full mt-2" />
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <>
+                    {filteredInquiries.slice((inquiryPage - 1) * inquiryLimit, inquiryPage * inquiryLimit).map((inq) => (
+                      <div
+                        key={inq.id}
+                        className="bg-zinc-955 border border-zinc-850 rounded-xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-5 relative overflow-hidden"
+                      >
+                        <div className="space-y-2 flex-1 min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className={`px-2 py-0.5 rounded text-sm font-bold capitalize  ${inq.status === 'RESOLVED'
+                              ? 'bg-emerald-955/20 border border-emerald-900/40 text-emerald-450'
+                              : 'bg-amber-955/20 border border-amber-900/40 text-amber-500'
+                              }`}>
+                              {inq.status || 'PENDING'}
+                            </span>
+                            <span className="text-sm text-zinc-500 font-bold capitalize ">{formatDateString(inq.date)}</span>
+                          </div>
+
+                          <div className="space-y-0.5">
+                            <h4 className="font-header font-bold text-sm capitalize text-white truncate">{inq.name}</h4>
+                            <p className="text-sm text-brand font-semibold ">{inq.email}</p>
+                          </div>
+
+                          <p className="text-[12.5px] text-zinc-400 font-medium leading-relaxed bg-zinc-900/50 p-3 rounded-lg border border-zinc-850 whitespace-pre-wrap">
+                            {inq.message}
+                          </p>
+
+                          {/* Internal Notes field */}
+                          <div className="pt-3 border-t border-zinc-900 mt-2 space-y-2">
+                            <span className="text-sm capitalize  font-bold text-zinc-500 block">Internal Staff Notes</span>
+                            <div className="flex gap-2">
+                              <input
+                                type="text"
+                                placeholder="Add diagnostic notes or followup details..."
+                                defaultValue={inq.note || ''}
+                                id={`note-${inq.id}`}
+                                className="w-full px-3 py-1.5 bg-zinc-900 border border-zinc-850 focus:border-brand rounded text-[12.5px] text-white outline-none font-semibold"
+                              />
+                              <button
+                                onClick={() => {
+                                  const noteVal = document.getElementById(`note-${inq.id}`).value;
+                                  handleSaveInquiryNote(inq.id, noteVal);
+                                }}
+                                className="px-3 py-1.5 bg-zinc-900 border border-zinc-800 text-sm text-zinc-300 hover:text-brand hover:border-brand rounded font-bold capitalize transition cursor-pointer"
+                              >
+                                Save Note
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="shrink-0 flex items-center gap-2 self-end md:self-center">
                           <button
-                            onClick={() => {
-                              const noteVal = document.getElementById(`note-${inq.id}`).value;
-                              handleSaveInquiryNote(inq.id, noteVal);
-                            }}
-                            className="px-3 py-1.5 bg-zinc-900 border border-zinc-800 text-sm text-zinc-300 hover:text-brand hover:border-brand rounded font-bold capitalize transition cursor-pointer"
+                            onClick={() => handleResolveInquiry(inq.id)}
+                            className={`px-4.5 py-2.5 rounded-lg text-sm font-bold capitalize  transition cursor-pointer flex items-center gap-1 border border-zinc-800 ${inq.status === 'RESOLVED'
+                              ? 'bg-zinc-900 text-zinc-400 hover:text-white'
+                              : 'bg-brand hover:bg-brand-dark text-zinc-955'
+                              }`}
                           >
-                            Save Note
+                            <Check className="w-3.5 h-3.5" />
+                            <span>{inq.status === 'RESOLVED' ? 'Re-open' : 'Mark Resolved'}</span>
+                          </button>
+                          <button
+                            onClick={() => handleDeleteInquiry(inq.id)}
+                            className="px-3 py-2.5 bg-rose-955/20 hover:bg-rose-900 hover:text-white text-rose-500 rounded-lg border border-rose-900/30 transition cursor-pointer text-sm font-bold capitalize "
+                          >
+                            <Trash className="w-3.5 h-3.5" />
                           </button>
                         </div>
                       </div>
-                    </div>
+                    ))}
 
-                    <div className="shrink-0 flex items-center gap-2 self-end md:self-center">
-                      <button
-                        onClick={() => handleResolveInquiry(inq.id)}
-                        className={`px-4.5 py-2.5 rounded-lg text-sm font-bold capitalize  transition cursor-pointer flex items-center gap-1 border border-zinc-800 ${inq.status === 'RESOLVED'
-                          ? 'bg-zinc-900 text-zinc-400 hover:text-white'
-                          : 'bg-brand hover:bg-brand-dark text-zinc-955'
-                          }`}
-                      >
-                        <Check className="w-3.5 h-3.5" />
-                        <span>{inq.status === 'RESOLVED' ? 'Re-open' : 'Mark Resolved'}</span>
-                      </button>
-                      <button
-                        onClick={() => handleDeleteInquiry(inq.id)}
-                        className="px-3 py-2.5 bg-rose-955/20 hover:bg-rose-900 hover:text-white text-rose-500 rounded-lg border border-rose-900/30 transition cursor-pointer text-sm font-bold capitalize "
-                      >
-                        <Trash className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-
-                {filteredInquiries.length === 0 && (
-                  <div className="text-center py-10 bg-zinc-955 border border-zinc-850 rounded-xl space-y-3">
-                    <MessageSquare className="w-8 h-8 text-zinc-650 mx-auto" />
-                    <p className="text-zinc-500 font-bold text-sm capitalize ">No student inquiries submitted yet.</p>
-                  </div>
+                    {filteredInquiries.length === 0 && (
+                      <div className="text-center py-10 bg-zinc-955 border border-zinc-850 rounded-xl space-y-3">
+                        <MessageSquare className="w-8 h-8 text-zinc-650 mx-auto" />
+                        <p className="text-zinc-500 font-bold text-sm capitalize ">No student inquiries submitted yet.</p>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
               <PaginationBar
@@ -4476,67 +4547,92 @@ export default function AdminDashboard({ setView }) {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                {filteredTestResults.map((res) => (
-                  <div
-                    key={res.id}
-                    className="bg-zinc-950 border border-zinc-850 rounded-xl p-5 space-y-4 relative overflow-hidden flex flex-col justify-between"
-                  >
-                    <div className="space-y-3">
-                      <div className="flex justify-between items-start">
-                        <div className="space-y-1">
-                          <span className="text-sm bg-brand text-zinc-955 px-2 py-0.5 rounded font-bold capitalize  ">
-                            Dominant: {res.dominantDomain}
-                          </span>
-                          <h4 className="font-header font-bold text-sm capitalize text-white truncate pt-1">{res.studentName}</h4>
-                          <span className="text-sm text-zinc-550 block font-medium truncate leading-none">{res.studentEmail}</span>
+                {isDbLoading ? (
+                  [...Array(4)].map((_, idx) => (
+                    <div key={idx} className="animate-pulse bg-zinc-950 border border-zinc-850 rounded-xl p-5 space-y-4 flex flex-col justify-between h-[300px]">
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-start">
+                          <div className="space-y-2 flex-1">
+                            <div className="h-5 bg-zinc-900 rounded w-1/3" />
+                            <div className="h-4 bg-zinc-900 rounded w-1/2" />
+                            <div className="h-3 bg-zinc-900 rounded w-2/3" />
+                          </div>
                         </div>
-                        <div className="flex items-center gap-1.5 shrink-0">
-                          <button
-                            onClick={() => handleExportAptitudeResults(res)}
-                            className="px-2.5 py-1 bg-zinc-900 border border-zinc-800 hover:text-brand rounded font-bold capitalize transition text-sm  shrink-0 cursor-pointer"
-                            title="Export Diagnostic Log"
-                          >
-                            Copy Report
-                          </button>
-                          <span className="text-sm text-zinc-500 font-bold capitalize">{formatDateString(res.date)}</span>
-                          <button
-                            onClick={() => handleDeleteTestResult(res.id)}
-                            className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
-                            title="Delete Result Log"
-                          >
-                            <Trash className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-                      </div>
-
-                      <div className="space-y-3.5 border-t border-zinc-850 pt-3">
-                        <span className="text-sm capitalize  font-bold text-zinc-500 block">Cognitive Profile Breakdown</span>
-                        <div className="space-y-2 text-sm">
-                          {Object.entries(res.scores || {}).map(([key, val]) => (
-                            <div key={key} className="space-y-1">
-                              <div className="flex justify-between items-center font-bold">
-                                <span className="text-zinc-400 capitalize">{key}</span>
-                                <span className="text-brand ">{val}%</span>
-                              </div>
-                              <div className="w-full bg-zinc-900 h-2 rounded-full overflow-hidden border border-zinc-850">
-                                <div
-                                  className="bg-brand h-full rounded-full transition-all duration-500"
-                                  style={{ width: `${val}%` }}
-                                />
-                              </div>
-                            </div>
-                          ))}
+                        <div className="space-y-3 border-t border-zinc-850 pt-3">
+                          <div className="h-4 bg-zinc-900 rounded w-1/4" />
+                          <div className="space-y-2">
+                            <div className="h-5 bg-zinc-900 rounded w-full" />
+                            <div className="h-5 bg-zinc-900 rounded w-full" />
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))
+                ) : (
+                  <>
+                    {filteredTestResults.map((res) => (
+                      <div
+                        key={res.id}
+                        className="bg-zinc-950 border border-zinc-850 rounded-xl p-5 space-y-4 relative overflow-hidden flex flex-col justify-between"
+                      >
+                        <div className="space-y-3">
+                          <div className="flex justify-between items-start">
+                            <div className="space-y-1">
+                              <span className="text-sm bg-brand text-zinc-955 px-2 py-0.5 rounded font-bold capitalize  ">
+                                Dominant: {res.dominantDomain}
+                              </span>
+                              <h4 className="font-header font-bold text-sm capitalize text-white truncate pt-1">{res.studentName}</h4>
+                              <span className="text-sm text-zinc-550 block font-medium truncate leading-none">{res.studentEmail}</span>
+                            </div>
+                            <div className="flex items-center gap-1.5 shrink-0">
+                              <button
+                                onClick={() => handleExportAptitudeResults(res)}
+                                className="px-2.5 py-1 bg-zinc-900 border border-zinc-800 hover:text-brand rounded font-bold capitalize transition text-sm  shrink-0 cursor-pointer"
+                                title="Export Diagnostic Log"
+                              >
+                                Copy Report
+                              </button>
+                              <span className="text-sm text-zinc-500 font-bold capitalize">{formatDateString(res.date)}</span>
+                              <button
+                                onClick={() => handleDeleteTestResult(res.id)}
+                                className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
+                                title="Delete Result Log"
+                              >
+                                <Trash className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </div>
 
-                {filteredTestResults.length === 0 && (
-                  <div className="col-span-2 text-center py-10 bg-zinc-955 border border-zinc-850 rounded-xl space-y-3">
-                    <FileSpreadsheet className="w-8 h-8 text-zinc-655 mx-auto" />
-                    <p className="text-zinc-500 font-bold text-sm capitalize ">No aptitude tests completed yet.</p>
-                  </div>
+                          <div className="space-y-3.5 border-t border-zinc-850 pt-3">
+                            <span className="text-sm capitalize  font-bold text-zinc-500 block">Cognitive Profile Breakdown</span>
+                            <div className="space-y-2 text-sm">
+                              {Object.entries(res.scores || {}).map(([key, val]) => (
+                                <div key={key} className="space-y-1">
+                                  <div className="flex justify-between items-center font-bold">
+                                    <span className="text-zinc-400 capitalize">{key}</span>
+                                    <span className="text-brand ">{val}%</span>
+                                  </div>
+                                  <div className="w-full bg-zinc-900 h-2 rounded-full overflow-hidden border border-zinc-850">
+                                    <div
+                                      className="bg-brand h-full rounded-full transition-all duration-500"
+                                      style={{ width: `${val}%` }}
+                                    />
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+
+                    {filteredTestResults.length === 0 && (
+                      <div className="col-span-2 text-center py-10 bg-zinc-955 border border-zinc-850 rounded-xl space-y-3">
+                        <FileSpreadsheet className="w-8 h-8 text-zinc-655 mx-auto" />
+                        <p className="text-zinc-500 font-bold text-sm capitalize ">No aptitude tests completed yet.</p>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </div>
@@ -4586,67 +4682,85 @@ export default function AdminDashboard({ setView }) {
               </div>
 
               <div className="space-y-4">
-                {aptitudeQuestionsDb
-                  .filter(q => (q.question + q.category).toLowerCase().includes(searchAptitude.toLowerCase()))
-                  .slice((aptitudePage - 1) * aptitudeLimit, aptitudePage * aptitudeLimit)
-                  .map((q, index) => (
-                    <div
-                      key={q.id || index}
-                      className="bg-zinc-950 border border-zinc-850 rounded-xl p-5 flex flex-col sm:flex-row sm:items-start justify-between gap-5"
-                    >
-                      <div className="space-y-2 flex-1 min-w-0">
-                        <div className="flex items-center gap-3 mb-2">
-                          <span className="w-5 h-5 rounded bg-zinc-900 border border-zinc-800 text-sm text-brand flex items-center justify-center font-bold shrink-0">{((aptitudePage - 1) * aptitudeLimit) + index + 1}</span>
-                          <span className="text-xs font-bold capitalize  text-zinc-500 bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800">{q.category}</span>
-                          {!q.isActive && <span className="text-xs font-bold capitalize  text-rose-500 bg-rose-955/20 px-2 py-0.5 rounded border border-rose-900/30">Disabled</span>}
-                        </div>
-                        <h4 className="font-header font-bold text-sm capitalize text-white mb-3">
-                          {q.question}
-                        </h4>
-                        <ul className="space-y-1.5 pl-2 mt-2 border-l border-zinc-850">
-                          {q.options?.map((opt, oIdx) => (
-                            <li key={oIdx} className="text-xs text-zinc-400 font-medium leading-relaxed pl-3 flex items-center justify-between group">
-                              <span>{opt.text}</span>
-                              <span className="text-xs  text-zinc-600 bg-zinc-900 px-1.5 rounded opacity-0 group-hover:opacity-100 transition-opacity">Weight: {opt.weight}</span>
-                            </li>
-                          ))}
-                        </ul>
+                {isDbLoading ? (
+                  [...Array(3)].map((_, idx) => (
+                    <div key={idx} className="animate-pulse bg-zinc-950 border border-zinc-850 rounded-xl p-5 flex flex-col gap-4">
+                      <div className="flex gap-2">
+                        <div className="h-5 bg-zinc-900 border border-zinc-800 rounded w-8" />
+                        <div className="h-5 bg-zinc-900 border border-zinc-800 rounded w-16" />
                       </div>
-
-                      <div className="shrink-0 flex items-center gap-2 self-end sm:self-start">
-                        <button
-                          onClick={() => handleOpenEditAptitudeQuestion(q)}
-                          className="p-2 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"
-                          title="Edit Question"
-                        >
-                          <Edit className="w-3.5 h-3.5" />
-                        </button>
-                        <button
-                          onClick={() => handleDeleteAptitudeQuestion(q.id)}
-                          className="p-2 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
-                          title="Delete Question"
-                        >
-                          <Trash className="w-3.5 h-3.5" />
-                        </button>
+                      <div className="h-5 bg-zinc-900 rounded w-3/4" />
+                      <div className="space-y-2 mt-2">
+                        <div className="h-3 bg-zinc-900 rounded w-1/2" />
+                        <div className="h-3 bg-zinc-900 rounded w-1/3" />
                       </div>
                     </div>
-                  ))}
+                  ))
+                ) : (
+                  <>
+                    {aptitudeQuestionsDb
+                      .filter(q => (q.question + q.category).toLowerCase().includes(searchAptitude.toLowerCase()))
+                      .slice((aptitudePage - 1) * aptitudeLimit, aptitudePage * aptitudeLimit)
+                      .map((q, index) => (
+                        <div
+                          key={q.id || index}
+                          className="bg-zinc-950 border border-zinc-850 rounded-xl p-5 flex flex-col sm:flex-row sm:items-start justify-between gap-5"
+                        >
+                          <div className="space-y-2 flex-1 min-w-0">
+                            <div className="flex items-center gap-3 mb-2">
+                              <span className="w-5 h-5 rounded bg-zinc-900 border border-zinc-800 text-sm text-brand flex items-center justify-center font-bold shrink-0">{((aptitudePage - 1) * aptitudeLimit) + index + 1}</span>
+                              <span className="text-xs font-bold capitalize  text-zinc-500 bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800">{q.category}</span>
+                              {!q.isActive && <span className="text-xs font-bold capitalize  text-rose-500 bg-rose-955/20 px-2 py-0.5 rounded border border-rose-900/30">Disabled</span>}
+                            </div>
+                            <h4 className="font-header font-bold text-sm capitalize text-white mb-3">
+                              {q.question}
+                            </h4>
+                            <ul className="space-y-1.5 pl-2 mt-2 border-l border-zinc-850">
+                              {q.options?.map((opt, oIdx) => (
+                                <li key={oIdx} className="text-xs text-zinc-400 font-medium leading-relaxed pl-3 flex items-center justify-between group">
+                                  <span>{opt.text}</span>
+                                  <span className="text-xs  text-zinc-600 bg-zinc-900 px-1.5 rounded opacity-0 group-hover:opacity-100 transition-opacity">Weight: {opt.weight}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
 
-                {aptitudeQuestionsDb.filter(q => (q.question + q.category).toLowerCase().includes(searchAptitude.toLowerCase())).length === 0 && (
-                  <div className="text-center py-10 bg-zinc-955 border border-zinc-850 rounded-xl space-y-3">
-                    <Brain className="w-8 h-8 text-zinc-650 mx-auto" />
-                    <p className="text-zinc-500 font-bold text-sm capitalize ">No Questions Found.</p>
-                  </div>
-                )}
+                          <div className="shrink-0 flex items-center gap-2 self-end sm:self-start">
+                            <button
+                              onClick={() => handleOpenEditAptitudeQuestion(q)}
+                              className="p-2 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"
+                              title="Edit Question"
+                            >
+                              <Edit className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteAptitudeQuestion(q.id)}
+                              className="p-2 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
+                              title="Delete Question"
+                            >
+                              <Trash className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
 
-                {aptitudeQuestionsDb.filter(q => (q.question + q.category).toLowerCase().includes(searchAptitude.toLowerCase())).length > 0 && (
-                  <PaginationBar
-                    total={aptitudeQuestionsDb.filter(q => (q.question + q.category).toLowerCase().includes(searchAptitude.toLowerCase())).length}
-                    page={aptitudePage}
-                    limit={aptitudeLimit}
-                    onPageChange={setAptitudePage}
-                    onLimitChange={setAptitudeLimit}
-                  />
+                    {aptitudeQuestionsDb.filter(q => (q.question + q.category).toLowerCase().includes(searchAptitude.toLowerCase())).length === 0 && (
+                      <div className="text-center py-10 bg-zinc-955 border border-zinc-850 rounded-xl space-y-3">
+                        <Brain className="w-8 h-8 text-zinc-650 mx-auto" />
+                        <p className="text-zinc-500 font-bold text-sm capitalize ">No Questions Found.</p>
+                      </div>
+                    )}
+
+                    {aptitudeQuestionsDb.filter(q => (q.question + q.category).toLowerCase().includes(searchAptitude.toLowerCase())).length > 0 && (
+                      <PaginationBar
+                        total={aptitudeQuestionsDb.filter(q => (q.question + q.category).toLowerCase().includes(searchAptitude.toLowerCase())).length}
+                        page={aptitudePage}
+                        limit={aptitudeLimit}
+                        onPageChange={setAptitudePage}
+                        onLimitChange={setAptitudeLimit}
+                      />
+                    )}
+                  </>
                 )}
               </div>
             </div>
@@ -4674,45 +4788,59 @@ export default function AdminDashboard({ setView }) {
               </div>
 
               <div className="space-y-4">
-                {faqsDb.map((faq, index) => (
-                  <div
-                    key={index}
-                    className="bg-zinc-950 border border-zinc-850 rounded-xl p-5 flex flex-col sm:flex-row sm:items-start justify-between gap-5"
-                  >
-                    <div className="space-y-2 flex-1 min-w-0">
-                      <h4 className="font-header font-bold text-sm capitalize text-white flex items-center gap-2">
-                        <span className="w-5 h-5 rounded bg-zinc-900 border border-zinc-800 text-sm text-brand flex items-center justify-center font-bold shrink-0">{index + 1}</span>
-                        <span>{faq.question}</span>
-                      </h4>
-                      <p className="text-[12.5px] text-zinc-400 font-medium leading-relaxed pl-7 ">
-                        {faq.answer}
-                      </p>
+                {isDbLoading ? (
+                  [...Array(3)].map((_, idx) => (
+                    <div key={idx} className="animate-pulse bg-zinc-955 border border-zinc-850 rounded-xl p-5 flex flex-col gap-3">
+                      <div className="flex gap-2 items-center">
+                        <div className="h-5 bg-zinc-900 border border-zinc-800 rounded w-5" />
+                        <div className="h-5 bg-zinc-900 rounded w-1/2" />
+                      </div>
+                      <div className="h-4 bg-zinc-900 rounded w-3/4 pl-7" />
                     </div>
-
-                    <div className="shrink-0 flex items-center gap-2 self-end sm:self-start">
-                      <button
-                        onClick={() => handleOpenEditFaq(faq, index)}
-                        className="p-2 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"
-                        title="Edit FAQ"
+                  ))
+                ) : (
+                  <>
+                    {faqsDb.map((faq, index) => (
+                      <div
+                        key={index}
+                        className="bg-zinc-950 border border-zinc-850 rounded-xl p-5 flex flex-col sm:flex-row sm:items-start justify-between gap-5"
                       >
-                        <Edit className="w-3.5 h-3.5" />
-                      </button>
-                      <button
-                        onClick={() => handleDeleteFaq(index)}
-                        className="p-2 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
-                        title="Delete FAQ"
-                      >
-                        <Trash className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  </div>
-                ))}
+                        <div className="space-y-2 flex-1 min-w-0">
+                          <h4 className="font-header font-bold text-sm capitalize text-white flex items-center gap-2">
+                            <span className="w-5 h-5 rounded bg-zinc-900 border border-zinc-800 text-sm text-brand flex items-center justify-center font-bold shrink-0">{index + 1}</span>
+                            <span>{faq.question}</span>
+                          </h4>
+                          <p className="text-[12.5px] text-zinc-400 font-medium leading-relaxed pl-7 ">
+                            {faq.answer}
+                          </p>
+                        </div>
 
-                {faqsDb.length === 0 && (
-                  <div className="text-center py-10 bg-zinc-955 border border-zinc-850 rounded-xl space-y-3">
-                    <HelpCircle className="w-8 h-8 text-zinc-650 mx-auto" />
-                    <p className="text-zinc-500 font-bold text-sm capitalize ">No FAQs defined.</p>
-                  </div>
+                        <div className="shrink-0 flex items-center gap-2 self-end sm:self-start">
+                          <button
+                            onClick={() => handleOpenEditFaq(faq, index)}
+                            className="p-2 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"
+                            title="Edit FAQ"
+                          >
+                            <Edit className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteFaq(index)}
+                            className="p-2 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
+                            title="Delete FAQ"
+                          >
+                            <Trash className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+
+                    {faqsDb.length === 0 && (
+                      <div className="text-center py-10 bg-zinc-955 border border-zinc-850 rounded-xl space-y-3">
+                        <HelpCircle className="w-8 h-8 text-zinc-650 mx-auto" />
+                        <p className="text-zinc-500 font-bold text-sm capitalize ">No FAQs defined.</p>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </div>
