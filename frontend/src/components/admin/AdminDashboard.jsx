@@ -20,6 +20,28 @@ function getInitials(name) {
   return (first + last).toUpperCase();
 }
 
+function SkeletonTableRows({ cols }) {
+  return (
+    <>
+      {[...Array(5)].map((_, i) => (
+        <tr key={i} className="animate-pulse border-b border-zinc-900">
+          <td colSpan={cols} className="p-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-zinc-800 rounded-lg shrink-0" />
+              <div className="flex-1 space-y-2 py-1">
+                <div className="h-4 bg-zinc-800 rounded w-1/4" />
+                <div className="h-3 bg-zinc-855 rounded w-1/2" />
+              </div>
+              <div className="h-4 bg-zinc-855 rounded w-20 justify-self-end hidden sm:block" />
+              <div className="h-8 bg-zinc-855 rounded w-24 justify-self-end" />
+            </div>
+          </td>
+        </tr>
+      ))}
+    </>
+  );
+}
+
 // ─── Reusable Pagination Bar ───────────────────────────────────────────────
 function PaginationBar({ total, page, limit, onPageChange, onLimitChange }) {
   const totalPages = Math.max(1, Math.ceil(total / limit));
@@ -345,6 +367,7 @@ export default function AdminDashboard({ setView }) {
   const [faqsDb, setFaqsDb] = useState([]);
   const [aptitudeQuestionsDb, setAptitudeQuestionsDb] = useState([]);
   const [rolesDb, setRolesDb] = useState([]);
+  const [isDbLoading, setIsDbLoading] = useState(true);
 
   // Custom role title manager states
   const [newRoleName, setNewRoleName] = useState('');
@@ -667,6 +690,9 @@ export default function AdminDashboard({ setView }) {
 
   const reloadData = async () => {
     if (!user || user?.role?.toUpperCase() !== 'ADMIN') return;
+    if (usersDb.length === 0) {
+      setIsDbLoading(true);
+    }
     try {
       const [
         usersRes,
@@ -779,6 +805,8 @@ export default function AdminDashboard({ setView }) {
       }
     } catch (error) {
       console.error("Error reloading admin dashboard data:", error);
+    } finally {
+      setIsDbLoading(false);
     }
   };
 
