@@ -695,7 +695,7 @@ export default function PsychologistDashboard({ setView }) {
             <p className="text-sm text-indigo-400 capitalize  font-bold">COUNSELLOR CENTRAL PORTAL</p>
           </div>
 
-          <div className="bg-zinc-900 border border-zinc-800 p-6 sm:p-8 rounded-2xl shadow-2xl space-y-6">
+          <div className="bg-zinc-900 border border-zinc-800 p-6 sm:p-8 rounded-2xl shadow-deep-blue space-y-6">
             {/* Header Tabs */}
             <div className="flex border-b border-zinc-800 pb-1">
               <button
@@ -794,7 +794,7 @@ export default function PsychologistDashboard({ setView }) {
                       />
                     </div>
 
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div className="space-y-1">
                         <label className="text-sm capitalize  font-bold text-zinc-400">Password</label>
                         <input
@@ -830,7 +830,7 @@ export default function PsychologistDashboard({ setView }) {
 
                 {onboardingStep === 2 && (
                   <form onSubmit={handleStepTwoNext} className="space-y-4 font-medium">
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div className="space-y-1">
                         <label className="text-sm capitalize  font-bold text-zinc-400">Education Details</label>
                         <input
@@ -1368,7 +1368,7 @@ export default function PsychologistDashboard({ setView }) {
       <div className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-8 lg:p-10 space-y-6 relative z-10 text-left">
 
         {/* Workspace Banner */}
-        <div className="bg-zinc-900 border border-zinc-850 p-6 sm:p-8 rounded-2xl shadow-xl flex flex-col sm:flex-row justify-between items-center gap-4 relative overflow-hidden">
+        <div className="bg-zinc-900 border border-zinc-850 p-6 sm:p-8 rounded-2xl shadow-deep-blue flex flex-col sm:flex-row justify-between items-center gap-4 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/5 rounded-full blur-2xl pointer-events-none" />
 
           <div className="space-y-1 relative z-10 w-full sm:w-auto">
@@ -1386,7 +1386,7 @@ export default function PsychologistDashboard({ setView }) {
           </div>
 
           {/* Quick Stats Grid */}
-          <div className="grid grid-cols-2 gap-4 w-full sm:w-auto shrink-0 relative z-10 text-center">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full sm:w-auto shrink-0 relative z-10 text-center">
             <div className="bg-zinc-955 border border-zinc-850 px-5 py-2.5 rounded-xl">
               <span className="text-sm text-zinc-500 font-bold capitalize  block">Upcoming Slots</span>
               <p className="text-sm font-bold text-brand mt-0.5">{bookings.filter(b => b.status === 'CONFIRMED' && !isSessionCompleted(b)).length} Bookings</p>
@@ -1423,7 +1423,7 @@ export default function PsychologistDashboard({ setView }) {
         ) : null}
 
         {/* WORKSPACE CONTENT ROUTER */}
-        <div className="bg-zinc-900 border border-zinc-855 rounded-2xl p-5 sm:p-8 shadow-md">
+        <div className="bg-zinc-900 border border-zinc-855 rounded-2xl p-5 sm:p-8 shadow-deep-blue">
           {isLoadingData ? (
             <div className="animate-pulse space-y-6">
               <div className="border-b border-zinc-800 pb-3 flex justify-between items-center">
