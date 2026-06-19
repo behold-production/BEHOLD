@@ -28,7 +28,8 @@ const counsellorSchema = new mongoose.Schema({
   modes: { type: [String], default: ['ONLINE', 'OFFLINE', 'DOOR_STEP'] },
   title: { type: String, default: 'Consultant Psychologist' },
   profilePic: { type: String, default: '' },
-  profilePicPublicId: { type: String, default: '' }
+  profilePicPublicId: { type: String, default: '' },
+  googleRefreshToken: { type: String, default: '' }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Counsellor', counsellorSchema);

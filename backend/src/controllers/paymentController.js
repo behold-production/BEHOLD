@@ -191,6 +191,65 @@ const PaymentController = {
       const gstAmount = gstPercent > 0 ? Math.round(baseFee * (gstPercent / 100)) : 0;
       const netTotal = Math.max(1, baseFee + gstAmount - appliedDiscount);
 
+      let finalMeetLink = mode === 'ONLINE' ? (counsellor.defaultMeetLink || '') : '';
+
+      if (mode === 'ONLINE' && counsellor.googleRefreshToken) {
+        try {
+          const { google } = require('googleapis');
+          const oauth2Client = new google.auth.OAuth2(
+            process.env.GOOGLE_CLIENT_ID,
+            process.env.GOOGLE_CLIENT_SECRET,
+            process.env.GOOGLE_REDIRECT_URI || 'http://localhost:5000/api/google/callback'
+          );
+          oauth2Client.setCredentials({ refresh_token: counsellor.googleRefreshToken });
+          
+          const calendar = google.calendar({ version: 'v3', auth: oauth2Client });
+          
+          // Construct Start and End Date
+          const [year, month, day] = date.split('-');
+          let [timePart, period] = time.split(' ');
+          let [hours, minutes] = timePart.split(':');
+          hours = parseInt(hours, 10);
+          if (period === 'PM' && hours !== 12) hours += 12;
+          if (period === 'AM' && hours === 12) hours = 0;
+          
+          const startTimeStr = `${year}-${month}-${day}T${hours.toString().padStart(2, '0')}:${minutes}:00+05:30`;
+          const startTime = new Date(startTimeStr);
+          const endTime = new Date(startTime.getTime() + 60 * 60 * 1000); // 1 hour duration
+          
+          const event = {
+            summary: `Counselling Session: ${user.name} & ${counsellor.name}`,
+            description: `Service: ${service || 'Counselling'}\nMode: ONLINE`,
+            start: { dateTime: startTime.toISOString() },
+            end: { dateTime: endTime.toISOString() },
+            attendees: [
+              { email: user.email },
+              { email: counsellor.email }
+            ],
+            conferenceData: {
+              createRequest: {
+                requestId: `meet-${Date.now()}-${Math.random().toString(36).substring(7)}`,
+                conferenceSolutionKey: { type: 'hangoutsMeet' }
+              }
+            }
+          };
+
+          const response = await calendar.events.insert({
+            calendarId: 'primary',
+            resource: event,
+            conferenceDataVersion: 1,
+            sendUpdates: 'all'
+          });
+
+          if (response.data && response.data.hangoutLink) {
+            finalMeetLink = response.data.hangoutLink;
+          }
+        } catch (calError) {
+          console.error('[Google Calendar Error]:', calError);
+          // Fallback to defaultMeetLink if API fails
+        }
+      }
+
       // 4. Create appointment
       const newAppointment = await StorageService.create('appointments', {
         userId,
@@ -198,7 +257,7 @@ const PaymentController = {
         date,
         time,
         mode,
-        meetLink: mode === 'ONLINE' ? (counsellor.defaultMeetLink || '') : '',
+        meetLink: finalMeetLink,
         status: 'PENDING',
         service: service || 'counselling',
         paymentStatus: 'PAID',

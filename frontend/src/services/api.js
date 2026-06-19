@@ -815,6 +815,22 @@ const ApiService = {
       method: 'PUT',
       body: formData
     });
+  },
+
+  // ─── GOOGLE CALENDAR APIs ────────────────────────────────────────────────
+  
+  async getGoogleAuthUrl(counsellorId) {
+    return await request(`/google/url?counsellorId=${counsellorId}`, {
+      method: 'GET'
+    });
+  },
+
+  async disconnectGoogleCalendar(counsellorId) {
+    return await request('/google/disconnect', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ counsellorId })
+    });
   }
 };
 
