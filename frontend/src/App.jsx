@@ -1,6 +1,6 @@
 import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { Routes, Route, Navigate, useNavigate, useLocation, useParams } from 'react-router-dom';
-import { MessageCircle, X } from 'lucide-react';
+import { MessageCircle, X, Download } from 'lucide-react';
 import { Toaster } from 'react-hot-toast';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -260,6 +260,38 @@ export default function App() {
     );
   }
 
+  const handleDownloadPDF = async () => {
+    try {
+      const { jsPDF } = await import('jspdf');
+      const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+      
+      const title = activeDocType === 'terms' ? 'Terms & Conditions' : 'Privacy Policy';
+      const content = activeDocType === 'terms' ? siteSettings.termsOfUse : siteSettings.privacyPolicy;
+      
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(16);
+      doc.text(`BEHOLD - ${title}`, 20, 20);
+      
+      doc.setFont('Helvetica', 'normal');
+      doc.setFontSize(10);
+      
+      const splitText = doc.splitTextToSize(content || 'No content available.', 170);
+      let y = 30;
+      for (let i = 0; i < splitText.length; i++) {
+        if (y > 280) {
+          doc.addPage();
+          y = 20;
+        }
+        doc.text(splitText[i], 20, y);
+        y += 6;
+      }
+      
+      doc.save(`Behold_${activeDocType}.pdf`);
+    } catch (err) {
+      console.error('Failed to generate PDF', err);
+    }
+  };
+
   const hideNavbarAndFooter =
     location.pathname === '/admin' ||
     location.pathname === '/counsellor' ||
@@ -429,10 +461,17 @@ export default function App() {
             </div>
 
             {/* Modal Footer */}
-            <div className="px-6 py-4 border-t border-zinc-800 flex justify-end bg-zinc-955">
+            <div className="px-6 py-4 border-t border-zinc-800 flex justify-end gap-3 bg-zinc-955">
+              <button
+                onClick={handleDownloadPDF}
+                className="px-5 py-2.5 bg-zinc-800 hover:bg-zinc-750 text-zinc-300 hover:text-white font-bold text-xs capitalize rounded-lg cursor-pointer transition border border-zinc-700 shadow-md flex items-center gap-2"
+              >
+                <Download className="w-3.5 h-3.5" />
+                Download PDF
+              </button>
               <button
                 onClick={() => setActiveDocType(null)}
-                className="px-5 py-2.5 bg-zinc-800 hover:bg-zinc-750 text-white hover:text-brand font-bold text-xs capitalize  rounded-lg cursor-pointer transition border-none shadow-md"
+                className="px-5 py-2.5 bg-zinc-800 hover:bg-zinc-750 text-white hover:text-brand font-bold text-xs capitalize rounded-lg cursor-pointer transition border-none shadow-md"
               >
                 Close Document
               </button>

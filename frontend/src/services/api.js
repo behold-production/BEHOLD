@@ -316,9 +316,17 @@ const ApiService = {
     });
   },
 
-  async completeAppointment(id) {
+  async completeAppointment(id, notes) {
     return await request(`/appointments/${id}/complete`, {
-      method: 'PUT'
+      method: 'PUT',
+      body: JSON.stringify({ notes })
+    });
+  },
+
+  async revertToConfirmed(id, reason) {
+    return await request(`/appointments/${id}/revert`, {
+      method: 'PUT',
+      body: JSON.stringify({ reason })
     });
   },
 

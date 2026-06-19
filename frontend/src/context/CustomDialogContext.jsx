@@ -19,6 +19,7 @@ export const CustomDialogProvider = ({ children }) => {
     message: '',
     defaultValue: '',
     placeholder: '',
+    isTextarea: false,
     resolve: null,
   });
 
@@ -52,7 +53,7 @@ export const CustomDialogProvider = ({ children }) => {
     });
   };
 
-  const showPrompt = (message, defaultValue = '', title = 'Input Required', placeholder = '') => {
+  const showPrompt = (message, defaultValue = '', title = 'Input Required', placeholder = '', isTextarea = false) => {
     setInputValue(defaultValue);
     return new Promise((resolve) => {
       setDialogState({
@@ -62,6 +63,7 @@ export const CustomDialogProvider = ({ children }) => {
         message,
         defaultValue,
         placeholder,
+        isTextarea,
         resolve,
       });
     });
@@ -143,18 +145,31 @@ export const CustomDialogProvider = ({ children }) => {
             {/* Input field for Prompts */}
             {dialogState.type === 'prompt' && (
               <div className="mt-4 w-full">
-                <input
-                  type="text"
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  placeholder={dialogState.placeholder || "Enter value..."}
-                  className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 text-zinc-100 rounded-xl focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/10 transition duration-200 placeholder-zinc-500 text-sm font-semibold"
-                  autoFocus
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') handleConfirm();
-                    if (e.key === 'Escape') handleCancel();
-                  }}
-                />
+                {dialogState.isTextarea ? (
+                  <textarea
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    placeholder={dialogState.placeholder || "Enter value..."}
+                    className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 text-zinc-100 rounded-xl focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/10 transition duration-200 placeholder-zinc-500 text-sm font-semibold min-h-[100px] resize-none"
+                    autoFocus
+                    onKeyDown={(e) => {
+                      if (e.key === 'Escape') handleCancel();
+                    }}
+                  />
+                ) : (
+                  <input
+                    type="text"
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    placeholder={dialogState.placeholder || "Enter value..."}
+                    className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 text-zinc-100 rounded-xl focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/10 transition duration-200 placeholder-zinc-500 text-sm font-semibold"
+                    autoFocus
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') handleConfirm();
+                      if (e.key === 'Escape') handleCancel();
+                    }}
+                  />
+                )}
               </div>
             )}
 

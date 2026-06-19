@@ -40,6 +40,7 @@ const AppointmentController = {
         date,
         time,
         mode, // ONLINE or OFFLINE
+        meetLink: mode === 'ONLINE' ? (counsellor.defaultMeetLink || '') : '',
         status: 'PENDING',
         service: service || 'counselling'
       });
@@ -91,9 +92,13 @@ const AppointmentController = {
       // Update appointment status to APPROVED
       const updated = await StorageService.update('appointments', id, { status: 'APPROVED' });
 
+      // Notify User
+      const user = await StorageService.findById('users', appointment.userId);
+      const counsellor = await StorageService.findById('counsellors', appointment.counsellorId);
+
       // Create matching session
       const meetLink = appointment.mode === 'ONLINE' 
-        ? `https://meet.google.com/behold-cdat-${id.split('_')[1] || 'session'}`
+        ? (appointment.meetLink || (counsellor ? counsellor.defaultMeetLink : '') || '')
         : '';
 
       const session = await StorageService.create('sessions', {
@@ -108,10 +113,6 @@ const AppointmentController = {
         notes: '',
         feedback: ''
       });
-
-      // Notify User
-      const user = await StorageService.findById('users', appointment.userId);
-      const counsellor = await StorageService.findById('counsellors', appointment.counsellorId);
 
       await StorageService.create('notifications', {
         recipientId: appointment.userId,
@@ -447,23 +448,60 @@ const AppointmentController = {
   async completeAppointment(req, res, next) {
     try {
       const { id } = req.params;
+      const { notes } = req.body;
+
+      const appointment = await StorageService.findById('appointments', id);
+      if (!appointment) {
+        return res.status(404).json({ success: false, message: 'Appointment not found' });
+      }
+      
+      if (!notes) {
+        return res.status(400).json({ success: false, message: 'Diagnostic notes are required to complete the appointment' });
+      }
+
+      const updated = await StorageService.update('appointments', id, { status: 'COMPLETED', feedback: notes });
+
+      // Also complete matching session if exists
+      const session = await StorageService.findOne('sessions', { appointmentId: id });
+      if (session) {
+        await StorageService.update('sessions', session.id, { status: 'COMPLETED', feedback: notes });
+      }
+
+      res.status(200).json({
+        success: true,
+        message: 'Appointment completed successfully',
+        data: updated
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // Revert Appointment to Confirmed
+  async revertToConfirmed(req, res, next) {
+    try {
+      const { id } = req.params;
+      const { reason } = req.body;
 
       const appointment = await StorageService.findById('appointments', id);
       if (!appointment) {
         return res.status(404).json({ success: false, message: 'Appointment not found' });
       }
 
-      const updated = await StorageService.update('appointments', id, { status: 'COMPLETED' });
+      if (!reason) {
+        return res.status(400).json({ success: false, message: 'Reason is required to revert a completed session' });
+      }
 
-      // Also complete matching session if exists
+      const updated = await StorageService.update('appointments', id, { status: 'APPROVED', revertReason: reason });
+
       const session = await StorageService.findOne('sessions', { appointmentId: id });
       if (session) {
-        await StorageService.update('sessions', session.id, { status: 'COMPLETED' });
+        await StorageService.update('sessions', session.id, { status: 'PENDING' }); // session gets reverted to PENDING
       }
 
       res.status(200).json({
         success: true,
-        message: 'Appointment completed successfully',
+        message: 'Appointment reverted to confirmed successfully',
         data: updated
       });
     } catch (error) {

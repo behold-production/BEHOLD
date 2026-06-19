@@ -120,8 +120,6 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
   const isAdvisorLocked = !!preselectedAdvisorId;
   const [bookingStep, setBookingStep] = useState('config'); // 'config' | 'payment' | 'success'
 
-  // Payment checkout states
-  const [paymentMethod, setPaymentMethod] = useState('card'); // 'card' | 'upi' | 'netbanking'
   const [couponInput, setCouponInput] = useState('');
   const [appliedDiscount, setAppliedDiscount] = useState(0);
   const [couponMsg, setCouponMsg] = useState({ text: '', type: '' }); // type: 'success' | 'error'
@@ -129,28 +127,25 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
   const [paymentStepText, setPaymentStepText] = useState('');
 
   // Payment form states
-  const [cardNum, setCardNum] = useState('');
-  const [cardName, setCardName] = useState('');
-  const [cardExpiry, setCardExpiry] = useState('');
-  const [cardCvv, setCardCvv] = useState('');
-  const [upiAddress, setUpiAddress] = useState('');
-  const [selectedBank, setSelectedBank] = useState('SBI');
+
   const [copiedMeet, setCopiedMeet] = useState(false);
   const [copiedReceipt, setCopiedReceipt] = useState(false);
   const [showSummary, setShowSummary] = useState(false);
   const [downloadingPdf, setDownloadingPdf] = useState(false);
 
-  // Read GST settings from site settings (persisted by App.jsx)
+  // Read GST & Promo settings from site settings (persisted by App.jsx)
   let gstEnabled = false;
   let gstPercent = 0;
+  let sitePromoCodes = [];
   try {
     const stored = localStorage.getItem('behold_site_settings');
     if (stored) {
       const parsed = JSON.parse(stored);
       gstEnabled = parsed.gstEnabled === true;
       gstPercent = typeof parsed.gstPercent === 'number' ? parsed.gstPercent : 0;
+      sitePromoCodes = parsed.promoCodes || [];
     }
-  } catch (e) {}
+  } catch (err) {}
 
   const baseFee = selectedAdvisor ? (selectedAdvisor.price || 0) : 0;
   const gstAmount = gstEnabled && gstPercent > 0 ? Math.round(baseFee * (gstPercent / 100)) : 0;
@@ -883,27 +878,11 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
       }
     }
 
-    // Validate Payment Fields
-    if (paymentMethod === 'card') {
-      if (!cardName.trim()) baseErrors.cardName = "Cardholder name is required";
-      if (!cardNum.trim() || cardNum.replace(/\s/g, '').length !== 16) {
-        baseErrors.cardNum = "Please enter a valid 16-digit card number";
-      }
-      if (!cardExpiry.trim() || !/^\d{2}\/\d{2}$/.test(cardExpiry)) {
-        baseErrors.cardExpiry = "Expiry date must be in MM/YY format";
-      }
-      if (!cardCvv.trim() || cardCvv.length < 3 || cardCvv.length > 4) {
-        baseErrors.cardCvv = "CVV must be 3 or 4 digits";
-      }
-    } else if (paymentMethod === 'upi') {
-      if (!upiAddress.trim() || !upiAddress.includes('@')) {
-        baseErrors.upiAddress = "Please enter a valid UPI address (e.g. name@okhdfc)";
-      }
-    }
+    // (Payment fields removed because Razorpay checkout handles them)
 
     if (Object.keys(baseErrors).length > 0) {
       setErrors(baseErrors);
-      const firstErrorField = ['name', 'phone', 'email', 'cardName', 'cardNum', 'cardExpiry', 'cardCvv', 'upiAddress'].find(
+      const firstErrorField = ['name', 'phone', 'email'].find(
         (k) => baseErrors[k]
       );
       if (firstErrorField) {
@@ -1090,7 +1069,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                   <div>
                     <span className="text-zinc-400 block font-light">Payment</span>
                     <span className="font-semibold text-zinc-800 capitalize block">
-                      {paymentMethod === 'card' ? 'Card' : paymentMethod === 'upi' ? 'UPI' : 'Net Banking'}
+                      Online (Razorpay)
                     </span>
                     <span className="text-xs text-zinc-500 block">Amount Paid: ₹{netTotal}</span>
                   </div>
@@ -1497,214 +1476,21 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                       <form onSubmit={handlePaymentSubmit} className="space-y-6">
                       
                        
-                      {/* Payment Methods tabs selector */}
-                      <div className="space-y-2 text-left">
-                        <label className="text-xs font-bold text-zinc-550 capitalize tracking-wide block">Select Payment Method</label>
-                        <div className="grid grid-cols-3 gap-2 w-full">
-                          {[
-                            { id: 'card', label: 'Card Pay', desc: 'Credit/Debit' },
-                            { id: 'upi', label: 'UPI / QR', desc: 'Instant Pay' },
-                            { id: 'netbanking', label: 'Net Banking', desc: 'Bank Portal' }
-                          ].map((m) => {
-                            return (
-                              <button
-                                key={m.id}
-                                type="button"
-                                onClick={() => {
-                                  setPaymentMethod(m.id);
-                                  setErrors({});
-                                }}
-                                className={`flex flex-col items-center justify-center gap-1 p-2 border rounded-xl transition cursor-pointer text-center min-h-[56px] leading-tight ${
-                                  paymentMethod === m.id
-                                    ? 'bg-zinc-900 border-zinc-900 text-white font-semibold shadow-sm'
-                                    : 'bg-white text-zinc-600 border-zinc-200 hover:border-brand/40'
-                                }`}
-                              >
-                                <div className="flex flex-col items-center">
-                                  <span className="text-xs sm:text-xs capitalize  font-bold">{m.label}</span>
-                                  <span className="text-xs text-zinc-400 font-normal normal-case">{m.desc}</span>
-                                </div>
-                              </button>
-                            );
-                          })}
+                      {/* Simplified Payment Section */}
+                      <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-xl space-y-4">
+                        <div className="flex flex-col sm:flex-row items-center gap-4 text-left">
+                          <div className="w-12 h-12 bg-white border border-zinc-200 rounded-full flex items-center justify-center shrink-0 shadow-sm">
+                            <svg className="w-6 h-6 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
+                          </div>
+                          <div>
+                            <h5 className="text-sm font-bold text-zinc-800">Secure Payment Gateway</h5>
+                            <p className="text-xs text-zinc-500 mt-1">
+                              You will be securely redirected to Razorpay to choose your preferred payment method (UPI, Cards, Netbanking, etc.).
+                            </p>
+                          </div>
                         </div>
-                      </div>
-
-                      {/* Payment inputs fields */}
-                      <div className="p-4 bg-white border border-zinc-200 rounded-xl space-y-4">
-                        
-                        {/* CARD CHECKOUT FORM */}
-                        {paymentMethod === 'card' && (
-                          <div className="space-y-3.5 animate-in fade-in duration-300 text-left">
-                            <span className="text-[9.5px] text-zinc-400 block  capitalize font-semibold">Card Details</span>
-                            
-                            <div className="space-y-1">
-                              <label className="text-xs font-bold text-zinc-550 block">Cardholder Name</label>
-                              <input
-                                type="text"
-                                value={cardName}
-                                onChange={(e) => {
-                                  setCardName(e.target.value);
-                                  if (errors.cardName) setErrors(prev => ({ ...prev, cardName: null }));
-                                }}
-                                placeholder="e.g. John Doe"
-                                className="w-full px-3 py-2 bg-white border border-zinc-200 rounded-lg text-xs font-semibold text-zinc-800 outline-none focus:border-brand focus:ring-1 focus:ring-brand transition"
-                              />
-                              {errors.cardName && <p className="text-xs text-rose-500 font-bold">{errors.cardName}</p>}
-                            </div>
-
-                            <div className="space-y-1">
-                              <label className="text-xs font-bold text-zinc-550 block">16-Digit Card Number</label>
-                              <input
-                                type="text"
-                                maxLength="19"
-                                value={cardNum}
-                                onChange={(e) => {
-                                  // Auto format with spaces: xxxx xxxx xxxx xxxx
-                                  const v = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
-                                  const matches = v.match(/\d{4,16}/g);
-                                  const match = matches && matches[0] || '';
-                                  const parts = [];
-                                  for (let i=0, len=match.length; i<len; i+=4) {
-                                    parts.push(match.substring(i, i+4));
-                                  }
-                                  if (parts.length > 0) {
-                                    setCardNum(parts.join(' '));
-                                  } else {
-                                    setCardNum(v);
-                                  }
-                                  if (errors.cardNum) setErrors(prev => ({ ...prev, cardNum: null }));
-                                }}
-                                placeholder="xxxx xxxx xxxx xxxx"
-                                className="w-full px-3 py-2 bg-white border border-zinc-200 rounded-lg text-xs font-semibold text-zinc-850  outline-none focus:border-brand focus:ring-1 focus:ring-brand transition"
-                              />
-                              {errors.cardNum && <p className="text-xs text-rose-500 font-bold">{errors.cardNum}</p>}
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-3">
-                              <div className="space-y-1">
-                                <label className="text-xs font-bold text-zinc-550 block">Expiry Date</label>
-                                <input
-                                  type="text"
-                                  maxLength="5"
-                                  value={cardExpiry}
-                                  onChange={(e) => {
-                                    // format: MM/YY
-                                    let v = e.target.value.replace(/\D/g, '');
-                                    if (v.length > 2) {
-                                      v = v.substring(0, 2) + '/' + v.substring(2, 4);
-                                    }
-                                    setCardExpiry(v);
-                                    if (errors.cardExpiry) setErrors(prev => ({ ...prev, cardExpiry: null }));
-                                  }}
-                                  placeholder="MM/YY"
-                                  className="w-full px-3 py-2 bg-white border border-zinc-200 rounded-lg text-xs font-semibold text-zinc-850  outline-none focus:border-brand focus:ring-1 focus:ring-brand transition"
-                                />
-                                {errors.cardExpiry && <p className="text-xs text-rose-500 font-bold">{errors.cardExpiry}</p>}
-                              </div>
-
-                              <div className="space-y-1">
-                                <label className="text-xs font-bold text-zinc-555 block">CVV Code</label>
-                                <input
-                                  type="password"
-                                  maxLength="4"
-                                  value={cardCvv}
-                                  onChange={(e) => {
-                                    setCardCvv(e.target.value.replace(/\D/g, ''));
-                                    if (errors.cardCvv) setErrors(prev => ({ ...prev, cardCvv: null }));
-                                  }}
-                                  placeholder="•••"
-                                  className="w-full px-3 py-2 bg-white border border-zinc-200 rounded-lg text-xs font-semibold text-zinc-850  outline-none focus:border-brand focus:ring-1 focus:ring-brand transition"
-                                />
-                                {errors.cardCvv && <p className="text-xs text-rose-500 font-bold">{errors.cardCvv}</p>}
-                              </div>
-                            </div>
-                          </div>
-                        )}
-
-                        {/* UPI CHECKOUT FORM */}
-                        {paymentMethod === 'upi' && (
-                          <div className="space-y-4 animate-in fade-in duration-300 text-left">
-                            <span className="text-[9.5px] text-zinc-400 block  capitalize font-semibold">UPI Payment</span>
-                            
-                            <div className="space-y-1">
-                              <label className="text-xs font-bold text-zinc-550 block">Enter UPI ID</label>
-                              <input
-                                type="text"
-                                value={upiAddress}
-                                onChange={(e) => {
-                                  setUpiAddress(e.target.value);
-                                  if (errors.upiAddress) setErrors(prev => ({ ...prev, upiAddress: null }));
-                                }}
-                                placeholder="name@upi (or name@okhdfc)"
-                                className="w-full px-3 py-2 bg-white border border-zinc-200 rounded-lg text-xs font-semibold text-zinc-850 outline-none focus:border-brand focus:ring-1 focus:ring-brand transition"
-                              />
-                              {errors.upiAddress && <p className="text-xs text-rose-500 font-bold">{errors.upiAddress}</p>}
-                            </div>
-
-                            {/* PREMIUM STYLE QR SCAN CARD */}
-                            <div className="border border-zinc-200/80 bg-zinc-50 rounded-xl p-4 flex flex-col sm:flex-row items-center gap-4 text-left">
-                              {/* QR Image Vector simulation */}
-                              <div className="w-28 h-28 bg-white border border-zinc-250 p-2 rounded-lg relative overflow-hidden shrink-0 flex items-center justify-center shadow-xs">
-                                <div className="absolute inset-0 bg-brand/5 pointer-events-none" />
-                                <div className="absolute top-0 left-0 right-0 h-0.5 bg-brand animate-scan z-10" />
-                                <svg width="84" height="84" viewBox="0 0 100 100" className="text-zinc-900 fill-current">
-                                  <rect x="5" y="5" width="25" height="25" fill="none" stroke="currentColor" strokeWidth="4" />
-                                  <rect x="10" y="10" width="15" height="15" />
-                                  <rect x="70" y="5" width="25" height="25" fill="none" stroke="currentColor" strokeWidth="4" />
-                                  <rect x="75" y="10" width="15" height="15" />
-                                  <rect x="5" y="70" width="25" height="25" fill="none" stroke="currentColor" strokeWidth="4" />
-                                  <rect x="10" y="75" width="15" height="15" />
-                                  
-                                  <rect x="42" y="42" width="16" height="16" fill="#18181b" rx="2" />
-                                  <circle cx="50" cy="50" r="3" fill="#ffffff" />
-                                  
-                                  <rect x="40" y="10" width="8" height="8" />
-                                  <rect x="52" y="15" width="6" height="12" />
-                                  <rect x="15" y="40" width="8" height="12" />
-                                  <rect x="10" y="55" width="12" height="6" />
-                                  <rect x="42" y="70" width="14" height="8" />
-                                  <rect x="72" y="45" width="10" height="15" />
-                                  <rect x="80" y="72" width="15" height="15" />
-                                  <rect x="65" y="65" width="8" height="8" />
-                                  <rect x="50" y="82" width="15" height="6" />
-                                </svg>
-                              </div>
-                              <div className="space-y-1 text-center sm:text-left">
-                                <h5 className="text-xs font-bold capitalize text-zinc-800 ">Scan QR Code</h5>
-                                <p className="text-[9.5px] text-zinc-550 leading-relaxed font-light">
-                                  Open BHIM, GooglePay, Paytm, or PhonePe and scan this code to pay.
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        )}
-
-                        {/* NET BANKING CHECKOUT FORM */}
-                        {paymentMethod === 'netbanking' && (
-                          <div className="space-y-3.5 animate-in fade-in duration-300 text-left">
-                            <span className="text-[9.5px] text-zinc-400 block  capitalize font-semibold">Net Banking</span>
-                            
-                            <div className="space-y-1">
-                              <label className="text-xs font-bold text-zinc-555 block">Select Bank Partner</label>
-                              <select
-                                value={selectedBank}
-                                onChange={(e) => setSelectedBank(e.target.value)}
-                                className="w-full px-4 py-2.5 bg-white border border-zinc-200 rounded-lg text-xs font-semibold text-zinc-800 outline-none focus:border-brand focus:ring-1 focus:ring-brand transition cursor-pointer"
-                              >
-                                <option value="SBI">State Bank of India (SBI)</option>
-                                <option value="HDFC">HDFC Bank</option>
-                                <option value="ICICI">ICICI Bank</option>
-                                <option value="AXIS">Axis Bank</option>
-                                <option value="KOTAK">Kotak Mahindra Bank</option>
-                              </select>
-                              <p className="text-[9.5px] text-zinc-400 mt-1 italic leading-snug">
-                                You will be redirected to {selectedBank === 'SBI' ? 'State Bank of India' : selectedBank === 'HDFC' ? 'HDFC Bank' : selectedBank === 'ICICI' ? 'ICICI Bank' : selectedBank === 'AXIS' ? 'Axis Bank' : 'Kotak Mahindra Bank'}'s portal for authorization.
-                              </p>
-                            </div>
-                          </div>
-                        )}
-
                       </div>
 
 
@@ -1838,16 +1624,17 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                           type="button"
                           onClick={() => {
                             const code = couponInput.toUpperCase().trim();
-                            if (code === 'BEHOLD100') {
-                              setAppliedDiscount(100);
-                              setCouponMsg({ text: 'Promo code applied successfully!', type: 'success' });
-                            } else if (code === 'HEALTH30') {
-                              const discount = Math.round((baseFee + gstAmount) * 0.3);
-                              setAppliedDiscount(discount);
-                              setCouponMsg({ text: '30% discount applied!', type: 'success' });
-                            } else if (code === 'WELCOME50') {
-                              setAppliedDiscount(50);
-                              setCouponMsg({ text: '₹50 discount applied!', type: 'success' });
+                            const foundPromo = sitePromoCodes.find(p => p.code.toUpperCase() === code && p.isActive !== false);
+                            if (foundPromo) {
+                               let discount = 0;
+                               if (foundPromo.type === 'PERCENTAGE') {
+                                   discount = Math.round((baseFee + gstAmount) * (foundPromo.value / 100));
+                                   setCouponMsg({ text: `${foundPromo.value}% discount applied!`, type: 'success' });
+                               } else {
+                                   discount = foundPromo.value;
+                                   setCouponMsg({ text: `₹${foundPromo.value} discount applied!`, type: 'success' });
+                               }
+                               setAppliedDiscount(discount);
                             } else {
                               setCouponMsg({ text: 'Invalid promo code', type: 'error' });
                             }

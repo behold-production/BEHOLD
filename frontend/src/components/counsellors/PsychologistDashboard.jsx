@@ -617,17 +617,28 @@ export default function PsychologistDashboard({ setView }) {
     }
   };
 
-  const updateBookingStatus = async (bookingId, newStatus) => {
+  const updateBookingStatus = async (bookingId, newStatus, currentStatus) => {
     try {
       let res;
       if (newStatus === 'CONFIRMED' || newStatus === 'APPROVED') {
-        res = await ApiService.approveAppointment(bookingId);
+        if (currentStatus === 'COMPLETED') {
+          const reason = await showPrompt("Please enter a reason for reverting this session back to Confirmed:", '', 'Revert Session', 'Enter reason...');
+          if (reason === null) return;
+          res = await ApiService.revertToConfirmed(bookingId, reason);
+        } else {
+          res = await ApiService.approveAppointment(bookingId);
+        }
       } else if (newStatus === 'CANCELLED') {
         const reason = await showPrompt("Please enter a reason for cancelling this session:", '', 'Cancel Session', 'Enter cancellation reason...');
         if (reason === null) return;
         res = await ApiService.cancelAppointment(bookingId, reason);
       } else if (newStatus === 'COMPLETED') {
-        res = await ApiService.completeAppointment(bookingId);
+        const notes = await showPrompt("Please enter diagnostic notes or feedback for this session:", '', 'Complete Session', 'Enter notes...', true);
+        if (!notes) {
+          import('react-hot-toast').then(mod => mod.toast.error('Diagnostic notes are required to complete a session.'));
+          return;
+        }
+        res = await ApiService.completeAppointment(bookingId, notes);
       } else if (newStatus === 'REJECTED') {
         const reason = await showPrompt("Please enter a reason for declining this request:", '', 'Decline Request', 'Enter decline reason...');
         if (reason === null) return;
@@ -1244,9 +1255,6 @@ export default function PsychologistDashboard({ setView }) {
             <span className="font-header font-bold text-base tracking-tighter text-white">
               BEHOLD<span className="text-brand font-bold">.</span>
             </span>
-            <span className="text-xs bg-zinc-850 border border-zinc-800 text-zinc-400 px-1 py-0.2 rounded font-bold  capitalize ">
-              CLINIC
-            </span>
           </div>
         </div>
 
@@ -1279,9 +1287,6 @@ export default function PsychologistDashboard({ setView }) {
             <div className="flex items-center gap-2">
               <span className="font-header font-bold text-lg tracking-tighter text-white">
                 BEHOLD<span className="text-brand font-bold">.</span>
-              </span>
-              <span className="text-sm bg-indigo-950 border border-indigo-900 text-indigo-400 px-1.5 py-0.5 rounded font-bold  capitalize">
-                CLINIC
               </span>
             </div>
             {/* Close Button inside Drawer (Mobile Only) */}
@@ -1347,14 +1352,7 @@ export default function PsychologistDashboard({ setView }) {
 
         {/* Sidebar Footer */}
         <div className="space-y-4 pt-4 border-t border-zinc-800 mt-6 lg:mt-0">
-          <div className="bg-zinc-955/40 p-3 rounded-lg border border-zinc-850">
-            <span className="text-sm capitalize font-bold  text-zinc-500 flex items-center gap-1">
-              <ShieldAlert className="w-3.5 h-3.5 text-indigo-400" /> Psychologist Console
-            </span>
-            <p className="text-sm text-zinc-550 leading-relaxed pt-1.5">
-              Updates to pricing or timing are synced immediately with public advisor slots listings.
-            </p>
-          </div>
+
           <button
             onClick={() => setIsLogoutConfirmOpen(true)}
             className="w-full py-2 border border-rose-900/50 hover:border-rose-600 text-rose-500 bg-rose-955/20 hover:bg-rose-900 hover:text-white font-bold text-sm capitalize  rounded-lg flex items-center justify-center gap-1 transition-colors cursor-pointer"
@@ -1376,9 +1374,6 @@ export default function PsychologistDashboard({ setView }) {
               <h1 className="text-xl sm:text-2xl font-header font-bold tracking-wide capitalize">
                 {profile.name}
               </h1>
-              <span className="text-sm bg-indigo-950 border border-indigo-900 text-indigo-400 px-2 py-0.5 rounded font-bold  capitalize ">
-                CLINICAL STAFF
-              </span>
             </div>
             <p className="text-sm text-zinc-400">
               Role: {profile.role} • Hourly Fee: ₹{profile.price}
@@ -2029,7 +2024,7 @@ export default function PsychologistDashboard({ setView }) {
                               ) : (
                                 <select
                                   value={booking.status || 'CONFIRMED'}
-                                  onChange={(e) => updateBookingStatus(booking.id, e.target.value)}
+                                  onChange={(e) => updateBookingStatus(booking.id, e.target.value, booking.status)}
                                   className={`px-2.5 py-1 border rounded outline-none text-sm font-bold capitalize  cursor-pointer transition-all ${booking.status === 'CONFIRMED'
                                     ? 'bg-emerald-955 border-emerald-900/40 text-emerald-455'
                                     : booking.status === 'COMPLETED'

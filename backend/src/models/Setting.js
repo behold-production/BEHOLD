@@ -16,7 +16,13 @@ const settingSchema = new mongoose.Schema({
   blockedIps: { type: [String], default: [] },
   enablePsychology: { type: Boolean, default: true },
   gstEnabled: { type: Boolean, default: false },
-  gstPercent: { type: Number, default: 0 }
+  gstPercent: { type: Number, default: 0 },
+  promoCodes: [{
+    code: { type: String, required: true },
+    type: { type: String, enum: ['PERCENTAGE', 'FLAT'], required: true },
+    value: { type: Number, required: true },
+    isActive: { type: Boolean, default: true }
+  }]
 }, { timestamps: true });
 
 module.exports = mongoose.model('Setting', settingSchema);

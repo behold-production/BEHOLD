@@ -34,14 +34,15 @@ const PaymentController = {
       // Apply coupon code if provided
       const { couponCode } = req.body;
       let appliedDiscount = 0;
-      if (couponCode) {
+      if (couponCode && settings.promoCodes && Array.isArray(settings.promoCodes)) {
         const cleanCoupon = couponCode.toUpperCase().trim();
-        if (cleanCoupon === 'BEHOLD100') {
-          appliedDiscount = 100;
-        } else if (cleanCoupon === 'HEALTH30') {
-          appliedDiscount = Math.round(totalBeforeDiscount * 0.3);
-        } else if (cleanCoupon === 'WELCOME50') {
-          appliedDiscount = 50;
+        const foundPromo = settings.promoCodes.find(p => p.code.toUpperCase() === cleanCoupon && p.isActive !== false);
+        if (foundPromo) {
+          if (foundPromo.type === 'PERCENTAGE') {
+            appliedDiscount = Math.round(totalBeforeDiscount * (foundPromo.value / 100));
+          } else {
+            appliedDiscount = foundPromo.value;
+          }
         }
       }
       const netTotal = Math.max(1, totalBeforeDiscount - appliedDiscount);
@@ -197,6 +198,7 @@ const PaymentController = {
         date,
         time,
         mode,
+        meetLink: mode === 'ONLINE' ? (counsellor.defaultMeetLink || '') : '',
         status: 'PENDING',
         service: service || 'counselling',
         paymentStatus: 'PAID',

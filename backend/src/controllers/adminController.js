@@ -727,6 +727,8 @@ const AdminController = {
         return res.status(400).json({ success: false, message: 'UserId, advisorId, date, and time are required' });
       }
 
+      const counsellor = await StorageService.findById('users', advisorId);
+
       const newAppointment = await StorageService.create('appointments', {
         userId,
         counsellorId: advisorId,
@@ -735,7 +737,7 @@ const AdminController = {
         date,
         time,
         status: status === 'CONFIRMED' ? 'APPROVED' : (status || 'PENDING'),
-        meetLink: meetLink || ''
+        meetLink: meetLink || (mode === 'ONLINE' && counsellor ? (counsellor.defaultMeetLink || '') : '')
       });
 
       res.status(201).json({

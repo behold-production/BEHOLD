@@ -677,7 +677,8 @@ export default function AdminDashboard({ setView }) {
     privacyPolicy: '',
     cdatGroupCode: '',
     gstEnabled: false,
-    gstPercent: 0
+    gstPercent: 0,
+    promoCodes: []
   });
   const [settingsSuccess, setSettingsSuccess] = useState('');
 
@@ -800,7 +801,8 @@ export default function AdminDashboard({ setView }) {
           cdatGroupCode: settings.cdatGroupCode || 'cdat@behold',
           enablePsychology: settings.enablePsychology !== undefined ? settings.enablePsychology : true,
           gstEnabled: settings.gstEnabled !== undefined ? settings.gstEnabled : false,
-          gstPercent: settings.gstPercent !== undefined ? settings.gstPercent : 0
+          gstPercent: settings.gstPercent !== undefined ? settings.gstPercent : 0,
+          promoCodes: settings.promoCodes || []
         });
       }
     } catch (error) {
@@ -1882,6 +1884,28 @@ export default function AdminDashboard({ setView }) {
     } catch (err) {
       await showAlert(err.message || "Failed to save settings.");
     }
+  };
+
+  const handleAddPromoCode = () => {
+    setSettingsForm(prev => ({
+      ...prev,
+      promoCodes: [...(prev.promoCodes || []), { code: '', type: 'PERCENTAGE', value: 0, isActive: true }]
+    }));
+  };
+
+  const handleUpdatePromoCode = (index, field, value) => {
+    setSettingsForm(prev => {
+      const newCodes = [...(prev.promoCodes || [])];
+      newCodes[index] = { ...newCodes[index], [field]: value };
+      return { ...prev, promoCodes: newCodes };
+    });
+  };
+
+  const handleRemovePromoCode = (index) => {
+    setSettingsForm(prev => ({
+      ...prev,
+      promoCodes: (prev.promoCodes || []).filter((_, i) => i !== index)
+    }));
   };
 
   const handleRunSecurityCheck = () => {
@@ -5109,6 +5133,93 @@ export default function AdminDashboard({ setView }) {
                       placeholder="e.g. cdat@behold"
                     />
                   </div>
+                </div>
+
+                {/* Promotional Codes */}
+                <div className="pt-4 border-t border-zinc-800 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-1">
+                      <h4 className="text-sm font-bold text-white capitalize ">Promotional Codes</h4>
+                      <p className="text-xs text-zinc-500 font-medium">Manage discount codes for service bookings</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleAddPromoCode}
+                      className="flex items-center gap-1.5 px-3 py-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-white rounded-lg text-xs font-bold capitalize transition cursor-pointer"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      Add Code
+                    </button>
+                  </div>
+                  
+                  {settingsForm.promoCodes && settingsForm.promoCodes.length > 0 ? (
+                    <div className="space-y-3">
+                      {settingsForm.promoCodes.map((promo, idx) => (
+                        <div key={idx} className="flex flex-col sm:flex-row items-center gap-3 p-3 bg-zinc-900 border border-zinc-850 rounded-xl relative group">
+                          <button
+                            type="button"
+                            onClick={() => handleRemovePromoCode(idx)}
+                            className="absolute -top-2 -right-2 bg-rose-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition cursor-pointer shadow-md"
+                            title="Remove Promo Code"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                          
+                          <div className="flex-1 w-full space-y-1">
+                            <label className="text-xs font-bold text-zinc-500">Code (e.g. SAVE20)</label>
+                            <input
+                              type="text"
+                              required
+                              value={promo.code}
+                              onChange={(e) => handleUpdatePromoCode(idx, 'code', e.target.value.toUpperCase())}
+                              className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold uppercase"
+                              placeholder="CODE"
+                            />
+                          </div>
+                          
+                          <div className="w-full sm:w-32 space-y-1">
+                            <label className="text-xs font-bold text-zinc-500">Type</label>
+                            <select
+                              value={promo.type}
+                              onChange={(e) => handleUpdatePromoCode(idx, 'type', e.target.value)}
+                              className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold cursor-pointer"
+                            >
+                              <option value="PERCENTAGE">Percentage (%)</option>
+                              <option value="FLAT">Flat (₹)</option>
+                            </select>
+                          </div>
+                          
+                          <div className="w-full sm:w-24 space-y-1">
+                            <label className="text-xs font-bold text-zinc-500">Value</label>
+                            <input
+                              type="number"
+                              required
+                              min={0}
+                              value={promo.value}
+                              onChange={(e) => handleUpdatePromoCode(idx, 'value', Number(e.target.value))}
+                              className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
+                            />
+                          </div>
+                          
+                          <div className="flex items-center gap-2 mt-4 sm:mt-0 pt-2 sm:pt-4 justify-center sm:w-20">
+                            <label className="flex items-center gap-2 cursor-pointer text-sm font-bold text-zinc-300 select-none">
+                              <input
+                                type="checkbox"
+                                checked={promo.isActive !== false}
+                                onChange={(e) => handleUpdatePromoCode(idx, 'isActive', e.target.checked)}
+                                className="w-4 h-4 rounded border-zinc-800 bg-zinc-950 text-brand focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
+                              />
+                              <span className={promo.isActive !== false ? "text-emerald-400" : "text-zinc-500"}>Active</span>
+                            </label>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="py-6 border border-dashed border-zinc-800 rounded-xl bg-zinc-900/50 text-center">
+                      <p className="text-sm text-zinc-500 font-medium">No promotional codes configured.</p>
+                    </div>
+                  )}
                 </div>
 
                 {settingsSuccess && (
