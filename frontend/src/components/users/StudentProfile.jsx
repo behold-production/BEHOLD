@@ -724,7 +724,7 @@ export default function StudentProfile() {
 
       {/* Mobile bottom tab bar */}
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-zinc-200">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 max-w-2xl mx-auto">
+        <div className="grid grid-cols-4 gap-2 max-w-2xl mx-auto">
           {TABS.map(tab => {
             const Icon = tab.icon;
             const isActive = currentSection === tab.id;
@@ -1204,7 +1204,7 @@ export default function StudentProfile() {
             <button
               type="button"
               onClick={() => setSessionSubTab('upcoming')}
-              className={`pb-2 text-sm font-semibold border-b-2 transition-all relative cursor-pointer ${sessionSubTab === 'upcoming'
+              className={`pb-2 text-sm font-semibold border-b-2 transition-all relative cursor-pointer whitespace-nowrap flex items-center ${sessionSubTab === 'upcoming'
                 ? 'border-zinc-900 text-zinc-900 font-bold'
                 : 'border-transparent text-zinc-400 hover:text-zinc-600'
                 }`}
@@ -1220,7 +1220,7 @@ export default function StudentProfile() {
             <button
               type="button"
               onClick={() => setSessionSubTab('history')}
-              className={`pb-2 text-sm font-semibold border-b-2 transition-all relative cursor-pointer ${sessionSubTab === 'history'
+              className={`pb-2 text-sm font-semibold border-b-2 transition-all relative cursor-pointer whitespace-nowrap flex items-center ${sessionSubTab === 'history'
                 ? 'border-zinc-900 text-zinc-900 font-bold'
                 : 'border-transparent text-zinc-400 hover:text-zinc-600'
                 }`}
