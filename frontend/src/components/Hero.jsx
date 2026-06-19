@@ -31,7 +31,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
   return (
     <section
       id="home"
-      className="relative w-full pt-28 pb-40 lg:pt-16 lg:pb-80 px-4 sm:px-6 flex flex-col items-center justify-center min-h-[calc(100vh-72px)] lg:min-h-[85vh] select-none bg-gradient-to-b from-slate-900 to-slate-800"
+      className="relative w-full pt-24 pb-20 lg:pt-16 lg:pb-24 px-4 sm:px-6 flex flex-col items-center justify-center min-h-[calc(100vh-72px)] lg:min-h-[85vh] select-none bg-gradient-to-b from-slate-900 to-slate-800"
     >
       {/* Heavy 3D Background Elements & Particles */}
       <HeroBackgroundElements />

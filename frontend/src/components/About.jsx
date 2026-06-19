@@ -29,7 +29,7 @@ const PILLARS = [
 
 export default function About() {
   return (
-    <section id="about" className="py-8 md:py-24 px-4 sm:px-6 text-zinc-900 text-left grid-bg relative overflow-hidden">
+    <section id="about" className="py-8 md:py-12 px-4 sm:px-6 text-zinc-900 text-left grid-bg relative overflow-hidden">
 
       {/* Glow Effects */}
       <div className="absolute bottom-10 left-10 w-[300px] h-[300px] bg-brand/10 rounded-lg glow-glow pointer-events-none" />

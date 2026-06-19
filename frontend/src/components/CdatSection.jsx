@@ -97,7 +97,7 @@ export default function CdatSection({ setView }) {
   };
 
   return (
-    <section id="cdat" className="max-w-7xl mx-auto px-4 sm:px-6 py-12 md:py-20 text-zinc-900 text-left relative">
+    <section id="cdat" className="max-w-7xl mx-auto px-4 sm:px-6 py-10 md:py-12 text-zinc-900 text-left relative">
       {/* High-End Background Glows */}
       <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-brand/10 rounded-full blur-[100px] pointer-events-none mix-blend-multiply" />
       <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-brand-accent/10 rounded-full blur-[100px] pointer-events-none mix-blend-multiply" />
@@ -123,7 +123,7 @@ export default function CdatSection({ setView }) {
             {/* Flex container for Title and Logo opposite to each other */}
             <div className="flex flex-row items-center justify-between gap-6 w-full">
               <h3 className="text-xl sm:text-3xl md:text-4xl font-header font-black capitalize tracking-tight text-zinc-900 group-hover:text-brand-dark transition-colors duration-500 flex-1 min-w-0">
-                CIGI Differential Aptitude Test (C-DAT)
+                CIGI Differential Aptitude Test <span className="whitespace-nowrap">(C-DAT)</span>
               </h3>
               <div className="w-20 h-20 sm:w-28 sm:h-28 lg:w-36 lg:h-36 flex items-center justify-center shrink-0 pointer-events-none">
                 <img
@@ -220,7 +220,7 @@ export default function CdatSection({ setView }) {
                   <div className="pt-2">
                     <button
                       type="submit"
-                      className="min-h-[52px] px-8 py-3.5 bg-gradient-brand hover:scale-[1.02] active:scale-[0.98] text-zinc-955 font-bold text-sm sm:text-base tracking-wide rounded-xl transition-all duration-300 shadow-sm hover:shadow-md w-full sm:w-auto border-none whitespace-nowrap"
+                      className="min-h-[52px] px-4 sm:px-8 py-3.5 bg-gradient-brand hover:scale-[1.02] active:scale-[0.98] text-zinc-955 font-bold text-[13px] sm:text-sm tracking-wide rounded-xl transition-all duration-300 shadow-sm hover:shadow-md w-full sm:w-auto border-none whitespace-nowrap"
                     >
                       Generate Group Code for C-DAT
                     </button>

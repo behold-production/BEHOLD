@@ -69,7 +69,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen pt-32 pb-20 bg-zinc-50 flex items-center justify-center px-4">
+      <div className="min-h-screen pt-24 pb-16 bg-zinc-50 flex items-center justify-center px-4">
         <p className="text-zinc-600 font-bold">Loading therapist profile...</p>
       </div>
     );
@@ -77,7 +77,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
 
   if (!advisor) {
     return (
-      <div className="min-h-screen pt-32 pb-20 bg-zinc-50 text-center px-4">
+      <div className="min-h-screen pt-24 pb-16 bg-zinc-50 text-center px-4">
         <h2 className="text-2xl font-bold mb-4 text-zinc-900">Therapist Not Found</h2>
         <button
           type="button"
@@ -91,7 +91,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50 text-zinc-900 font-sans pb-32 animate-in fade-in duration-500">
+    <div className="min-h-screen bg-zinc-50 text-zinc-900 font-sans pb-16 animate-in fade-in duration-500">
       {/* Cover Banner */}
       <div className="relative h-48 md:h-80 w-full bg-brand overflow-hidden">
         <button
