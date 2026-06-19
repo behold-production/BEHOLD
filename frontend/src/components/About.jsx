@@ -3,27 +3,27 @@ import React from 'react';
 const PILLARS = [
   {
     title: 'Extended Mentorship',
-    desc: 'We support students across academic quarters, mapping milestones that translate assessment reports into real higher education achievements.'
+    desc: 'We guide students through milestones to turn assessment reports into real achievements.'
   },
   {
     title: 'Doorstep & Online Counseling',
-    desc: 'By visiting students directly inside their homes or providing virtual sessions, we alleviate clinical barriers and ensure complete emotional privacy.'
+    desc: 'We provide at-home and virtual counseling to ensure emotional privacy and comfort.'
   },
   {
     title: 'Personalized School Programs',
-    desc: 'Conducting in-school orientations, student alignments, and focus workshops to configure healthy learning environments.'
+    desc: 'We conduct orientations and workshops to build healthy learning environments in schools.'
   },
   {
     title: 'C-DAT & Career Roadmaps',
-    desc: 'Rigorous stream mapping and aptitude evaluations matching university pathways with individual natural talents.'
+    desc: 'We use aptitude evaluations to match university pathways with individual natural talents.'
   },
   {
     title: 'Goal Tracking',
-    desc: 'Continuous checks and developmental reviews ensuring students stay oriented toward their long-term developmental milestones.'
+    desc: 'We provide continuous reviews to keep students on track with their long-term goals.'
   },
   {
     title: 'Parent Guidance',
-    desc: 'Aligning family environments to reduce academic friction, stream-selection conflicts, and stress.'
+    desc: 'We guide parents to reduce academic friction and relieve student stress.'
   }
 ];
 
@@ -46,7 +46,7 @@ export default function About() {
             What We Offer
           </h2>
           <p className="text-zinc-600 font-sans text-sm md:text-base font-light leading-relaxed">
-            At BEHOLD, we go beyond traditional career guidance by offering extended mentorship, doorstep psychological counselling, and personalized career support directly within schools and student spaces.
+            We go beyond traditional guidance by offering mentorship, doorstep counseling, and personalized support in schools.
           </p>
         </div>
 

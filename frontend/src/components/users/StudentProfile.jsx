@@ -724,7 +724,7 @@ export default function StudentProfile() {
 
       {/* Mobile bottom tab bar */}
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-zinc-200">
-        <div className="grid grid-cols-4 max-w-2xl mx-auto">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 max-w-2xl mx-auto">
           {TABS.map(tab => {
             const Icon = tab.icon;
             const isActive = currentSection === tab.id;
@@ -1321,7 +1321,7 @@ export default function StudentProfile() {
                       <p className="font-semibold text-zinc-900 text-base">{session.advisorName}</p>
                       <p className="text-xs text-zinc-500 mt-0.5">{session.advisorRole || 'Consultation'}</p>
 
-                      <div className="mt-3 grid grid-cols-2 gap-2">
+                      <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
                         <div className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-zinc-50 border border-zinc-100 text-xs text-zinc-600">
                           <Calendar className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
                           <span className="font-medium truncate">{formatDateString(session.date)}</span>
@@ -1428,7 +1428,7 @@ export default function StudentProfile() {
         ) : (
           <div className="space-y-5">
             {/* Completed sessions Stats */}
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {[
                 { label: 'Total Sessions', value: completedSessions.length, icon: CheckCircle2 },
                 { label: 'Hours Coached', value: `${completedSessions.length}h`, icon: Clock },
@@ -1728,7 +1728,7 @@ export default function StudentProfile() {
                   <Briefcase className="w-4 h-4 text-zinc-400" /> Career Alignment
                 </h3>
                 <p className="text-xs text-zinc-400 mb-3">Paths suited for {topDomain} strength.</p>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {CAREER_SUGGESTIONS[topDomain].map((career, i) => (
                     <div key={i} className="bg-zinc-50 border border-zinc-200 rounded-lg p-2.5 flex items-center gap-2">
                       <div className="w-5 h-5 rounded bg-zinc-200 flex items-center justify-center shrink-0">
@@ -1769,7 +1769,7 @@ export default function StudentProfile() {
                   <p className="text-[10px] text-zinc-400 mt-1">Allowed formats: JPG, JPEG, PNG, PDF (Max 5MB)</p>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="text-xs font-medium text-zinc-700 block mb-1">Date Taken</label>
                     <input

@@ -136,7 +136,7 @@ export default function CdatSection({ setView }) {
 
             {/* Paragraph below title & logo */}
             <p className="text-zinc-650 font-sans text-sm md:text-base font-medium leading-relaxed max-w-4xl">
-              C-DAT (CIGI-Differential Aptitude Test). This standardized tool effectively identifies the inherent capacities of high school and higher secondary students. C-DAT has guided many students from various states in India and abroad towards suitable academic and career paths.
+              C-DAT (CIGI-Differential Aptitude Test) effectively identifies the inherent capacities of students, guiding them towards suitable academic and career paths.
             </p>
 
             {/* Scroll navigation button to registration section */}
@@ -149,8 +149,7 @@ export default function CdatSection({ setView }) {
                 }}
                 className="inline-flex items-center gap-2 px-6 py-3.5 bg-zinc-900 hover:bg-zinc-800 text-white font-bold text-sm rounded-xl transition duration-300 cursor-pointer shadow-sm border-none"
               >
-                Register & Get Group Code
-                <ArrowRight className="w-4 h-4 text-brand animate-pulse" />
+                CIGI Aptitude Test
               </button>
             </div>
           </div>
@@ -171,8 +170,8 @@ export default function CdatSection({ setView }) {
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start pt-2">
             <div className="lg:col-span-5 space-y-4">
-              <p className="text-zinc-650 font-sans text-sm md:text-base font-medium leading-relaxed">
-                Enter your details below to generate your unique group code. Once generated and copied, proceed to the official CIGI registration portal to finalize your test access.
+              <p className="text-zinc-600 font-sans text-sm md:text-base font-medium leading-relaxed max-w-2xl mt-3">
+                Enter your details to generate your group code. Then, proceed to the official CIGI portal to finalize registration.
               </p>
             </div>
             <div className="lg:col-span-7 w-full relative">
@@ -221,9 +220,9 @@ export default function CdatSection({ setView }) {
                   <div className="pt-2">
                     <button
                       type="submit"
-                      className="min-h-[52px] px-8 py-3.5 bg-gradient-brand hover:scale-[1.02] active:scale-[0.98] text-zinc-955 font-bold text-sm tracking-wide rounded-xl transition-all duration-300 shadow-sm hover:shadow-md w-full sm:w-auto border-none"
+                      className="min-h-[52px] px-8 py-3.5 bg-gradient-brand hover:scale-[1.02] active:scale-[0.98] text-zinc-955 font-bold text-sm sm:text-base tracking-wide rounded-xl transition-all duration-300 shadow-sm hover:shadow-md w-full sm:w-auto border-none whitespace-nowrap"
                     >
-                      Generate group code for CIGI aptitude
+                      Generate Group Code for C-DAT
                     </button>
                   </div>
                 ) : (
