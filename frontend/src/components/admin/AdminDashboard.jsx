@@ -3120,35 +3120,34 @@ export default function AdminDashboard({ setView }) {
                           ) : (
                             <>
                               {[...bookingsDb].reverse().slice(0, 3).map(b => (
-                                <div key={b.id} className="bg-zinc-900/40 p-3 rounded-lg border border-zinc-855 flex flex-col justify-between gap-3 text-sm hover:border-zinc-800 transition-colors">
-                                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                                    <div>
-                                      <div className="flex flex-wrap items-center gap-2">
-                                        <span className="font-bold text-white capitalize">{b.userName}</span>
-                                        <span className="text-zinc-500"> booked with </span>
-                                        <span className="font-bold text-brand capitalize">{b.advisorName}</span>
-                                      </div>
-                                      <div className="flex items-center gap-2 mt-1">
-                                        <span className="text-xs bg-zinc-950 text-zinc-400 border border-zinc-850 px-1.5 py-0.2 rounded font-bold  capitalize ">{b.mode}</span>
-                                        <span className="text-xs bg-zinc-950 text-zinc-500 border border-zinc-850 px-1.5 py-0.2 rounded font-bold  capitalize  capitalize">{b.service}</span>
-                                      </div>
+                                <div key={b.id} className="bg-zinc-900/40 p-4 rounded-xl border border-zinc-855 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-sm hover:border-zinc-800 transition-colors">
+                                  <div className="space-y-2.5 flex-1 min-w-0">
+                                    <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                                      <span className="font-bold text-white capitalize">{b.userName}</span>
+                                      <span className="text-zinc-550 text-xs">booked with</span>
+                                      <span className="font-bold text-brand capitalize">{b.advisorName}</span>
+                                      <span className="text-xs bg-zinc-950 text-zinc-400 border border-zinc-850 px-2 py-0.5 rounded font-bold uppercase tracking-wider ml-1">
+                                        {formatDateString(b.date)} • {b.time}
+                                      </span>
                                     </div>
-                                    <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto shrink-0 border-t border-zinc-900/40 sm:border-none pt-2 sm:pt-0">
-                                      <div className="text-left sm:text-right">
-                                        <span className="text-zinc-400 font-bold block">{formatDateString(b.date)} • {b.time}</span>
-                                        <span className={`text-sm px-1.5 py-0.2 rounded capitalize font-bold inline-block mt-0.5 border ${b.status === 'CONFIRMED' ? 'bg-emerald-955/20 border-emerald-900/40 text-emerald-450' :
-                                          b.status === 'COMPLETED' ? 'bg-brand/10 border-brand/20 text-brand' :
-                                            b.status === 'CANCELLED' ? 'bg-rose-955/20 border-rose-900/30 text-rose-500' :
-                                              'bg-zinc-800 border-zinc-700 text-zinc-400'
-                                          }`}>{b.status}</span>
-                                      </div>
-                                      <button
-                                        onClick={() => setSelectedOverviewBooking(selectedOverviewBooking === b.id ? null : b.id)}
-                                        className="px-2.5 py-1.5 bg-zinc-955 hover:bg-zinc-900 border border-zinc-850 hover:border-brand/40 text-brand rounded text-sm font-bold capitalize  transition-colors cursor-pointer"
-                                      >
-                                        {selectedOverviewBooking === b.id ? 'Hide Details' : 'View Details'}
-                                      </button>
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-[11px] bg-zinc-950 text-zinc-400 border border-zinc-850 px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">{b.mode}</span>
+                                      <span className="text-[11px] bg-zinc-950 text-zinc-500 border border-zinc-850 px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">{b.service}</span>
+                                      <span className={`text-[11px] px-1.5 py-0.5 rounded uppercase tracking-wider font-bold border ${b.status === 'CONFIRMED' ? 'bg-emerald-955/20 border-emerald-900/40 text-emerald-450' :
+                                        b.status === 'PENDING' ? 'bg-amber-955/20 border-amber-900/40 text-amber-500' :
+                                        b.status === 'COMPLETED' ? 'bg-brand/10 border-brand/20 text-brand' :
+                                        b.status === 'CANCELLED' ? 'bg-rose-955/20 border-rose-900/30 text-rose-500' :
+                                        'bg-zinc-800 border-zinc-700 text-zinc-400'
+                                      }`}>{b.status}</span>
                                     </div>
+                                  </div>
+                                  <div className="shrink-0 self-end sm:self-center">
+                                    <button
+                                      onClick={() => setSelectedOverviewBooking(selectedOverviewBooking === b.id ? null : b.id)}
+                                      className="px-3.5 py-2 bg-zinc-955 hover:bg-zinc-900 border border-zinc-850 hover:border-brand/40 text-brand rounded-lg text-sm font-bold capitalize transition-colors cursor-pointer"
+                                    >
+                                      {selectedOverviewBooking === b.id ? 'Hide Details' : 'View Details'}
+                                    </button>
                                   </div>
                                   {selectedOverviewBooking === b.id && (
                                     <div className="w-full mt-1.5 pt-2.5 border-t border-zinc-900/60 space-y-2 text-zinc-455 animate-in slide-in-from-top-2 duration-200">
@@ -3202,52 +3201,51 @@ export default function AdminDashboard({ setView }) {
                             ))
                           ) : (
                             <>
-                              {[...inquiriesDb].reverse().slice(0, 3).map(i => {
-                                const isResolved = i.status === 'RESOLVED';
-                                return (
-                                  <div key={i.id} className="bg-zinc-900/40 p-3 rounded-lg border border-zinc-855 text-sm space-y-2.5 hover:border-zinc-800 transition-colors">
-                                    <div className="flex justify-between items-start">
-                                      <div>
-                                        <span className="text-white font-bold capitalize block leading-tight">{i.name}</span>
-                                        <span className="text-zinc-500  text-sm block mt-0.5">{i.email}</span>
-                                      </div>
-                                      <div className="flex items-center gap-2">
-                                        <span className="text-zinc-550  text-sm">{formatDateString(i.date)}</span>
-                                        <span className={`text-sm px-1.5 py-0.2 rounded capitalize font-bold border ${isResolved ? 'bg-emerald-955/20 border-emerald-900/30 text-emerald-455' : 'bg-amber-955/20 border-amber-900/30 text-amber-500'
-                                          }`}>{i.status || 'PENDING'}</span>
-                                      </div>
-                                    </div>
-                                    <p className="text-zinc-350 font-medium italic border-l-2 border-brand/30 pl-2.5 leading-relaxed">"{i.message}"</p>
-
-                                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-1.5 border-t border-zinc-900/40">
-                                      <button
-                                        onClick={() => handleResolveInquiry(i.id)}
-                                        className={`px-3 py-1.5 rounded text-sm font-bold capitalize  cursor-pointer border transition-colors shrink-0 ${isResolved
-                                          ? 'bg-zinc-900 hover:bg-zinc-800 border-zinc-800 text-zinc-400 hover:text-white'
-                                          : 'bg-emerald-600 hover:bg-emerald-700 border-none text-white'
-                                          }`}
-                                      >
-                                        {isResolved ? 'Mark Pending' : 'Mark Resolved'}
-                                      </button>
-                                      <div className="flex items-center gap-1.5 w-full sm:w-[60%] shrink-0">
-                                        <input
-                                          type="text"
-                                          placeholder="Add staff summary note..."
-                                          value={inquiryNotesText[i.id] !== undefined ? inquiryNotesText[i.id] : (i.note || '')}
-                                          onChange={(e) => setInquiryNotesText({ ...inquiryNotesText, [i.id]: e.target.value })}
-                                          className="flex-1 px-2.5 py-1.5 bg-zinc-950 border border-zinc-850 focus:border-brand rounded text-sm text-white outline-none"
-                                        />
-                                        <button
-                                          onClick={() => handleSaveInquiryNote(i.id, inquiryNotesText[i.id] || '')}
-                                          className="px-2.5 py-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-brand text-brand font-bold rounded text-sm capitalize  cursor-pointer transition shrink-0"
-                                        >
-                                          Save
-                                        </button>
-                                      </div>
-                                    </div>
-                                  </div>
-                                );
-                              })}
+                                                            {[...inquiriesDb].reverse().slice(0, 3).map(i => {
+                                                              const isResolved = i.status === 'RESOLVED';
+                                                              return (
+                                                                <div key={i.id} className="bg-zinc-900/40 p-4 rounded-xl border border-zinc-855 text-sm space-y-3.5 hover:border-zinc-800 transition-colors">
+                                                                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3.5">
+                                                                    <div>
+                                                                      <span className="text-white font-bold capitalize block leading-tight">{i.name}</span>
+                                                                      <span className="text-zinc-550 text-xs block mt-0.5">{i.email}</span>
+                                                                    </div>
+                                                                    <div className="flex items-center gap-2 shrink-0">
+                                                                      <span className="text-xs bg-zinc-950 text-zinc-400 border border-zinc-850 px-2 py-0.5 rounded font-bold capitalize">{formatDateString(i.date)}</span>
+                                                                      <span className={`text-xs px-2 py-0.5 rounded capitalize font-bold border ${isResolved ? 'bg-emerald-955/20 border-emerald-900/30 text-emerald-455' : 'bg-amber-955/20 border-amber-900/30 text-amber-500'}`}>{i.status || 'PENDING'}</span>
+                                                                    </div>
+                                                                  </div>
+                                                                  <p className="text-zinc-350 font-medium italic border-l-2 border-brand/30 pl-2.5 leading-relaxed bg-zinc-955/20 p-2.5 rounded-r-lg">"{i.message}"</p>
+                              
+                                                                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-zinc-900/40">
+                                                                    <button
+                                                                      onClick={() => handleResolveInquiry(i.id)}
+                                                                      className={`px-3 py-1.5 rounded-lg text-sm font-bold capitalize cursor-pointer border transition-colors shrink-0 ${isResolved
+                                                                        ? 'bg-zinc-900 hover:bg-zinc-800 border-zinc-800 text-zinc-400 hover:text-white'
+                                                                        : 'bg-emerald-600 hover:bg-emerald-700 border-none text-white'
+                                                                        }`}
+                                                                    >
+                                                                      {isResolved ? 'Mark Pending' : 'Mark Resolved'}
+                                                                    </button>
+                                                                    <div className="flex items-center gap-2 w-full sm:max-w-md shrink-0">
+                                                                      <input
+                                                                        type="text"
+                                                                        placeholder="Add staff summary note..."
+                                                                        value={inquiryNotesText[i.id] !== undefined ? inquiryNotesText[i.id] : (i.note || '')}
+                                                                        onChange={(e) => setInquiryNotesText({ ...inquiryNotesText, [i.id]: e.target.value })}
+                                                                        className="flex-1 px-3 py-1.5 bg-zinc-950 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none"
+                                                                      />
+                                                                      <button
+                                                                        onClick={() => handleSaveInquiryNote(i.id, inquiryNotesText[i.id] || '')}
+                                                                        className="px-3 py-1.5 bg-zinc-900 hover:bg-zinc-805 border border-zinc-800 hover:border-brand text-brand font-bold rounded-lg text-sm capitalize cursor-pointer transition shrink-0"
+                                                                      >
+                                                                        Save
+                                                                      </button>
+                                                                    </div>
+                                                                  </div>
+                                                                </div>
+                                                              );
+                                                            })}
                               {inquiriesDb.length === 0 && <p className="text-zinc-550 italic text-sm text-center py-6">No recent inquiries recorded.</p>}
                             </>
                           )}
@@ -3269,30 +3267,30 @@ export default function AdminDashboard({ setView }) {
                           ) : (
                             <>
                               {[...testResultsDb].reverse().slice(0, 3).map(res => (
-                                <div key={res.id} className="bg-zinc-900/40 p-3 rounded-lg border border-zinc-855 text-sm space-y-2.5 hover:border-zinc-800 transition-colors">
-                                  <div className="flex justify-between items-start">
+                                <div key={res.id} className="bg-zinc-900/40 p-4 rounded-xl border border-zinc-855 text-sm space-y-3.5 hover:border-zinc-800 transition-colors">
+                                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3.5">
                                     <div>
                                       <span className="text-white font-bold capitalize block leading-tight">{res.studentName}</span>
-                                      <span className="text-zinc-555  text-sm block mt-0.5">{res.studentEmail}</span>
+                                      <span className="text-zinc-550 text-xs block mt-0.5">{res.studentEmail}</span>
                                     </div>
-                                    <div className="text-right">
-                                      <span className="text-zinc-550  text-sm block">{formatDateString(res.date)}</span>
-                                      <span className="text-sm bg-brand/10 border border-brand/20 text-brand px-1.5 py-0.5 rounded font-bold  capitalize  mt-1 inline-block">
+                                    <div className="flex items-center gap-2 shrink-0">
+                                      <span className="text-xs bg-zinc-950 text-zinc-400 border border-zinc-850 px-2 py-0.5 rounded font-bold capitalize">{formatDateString(res.date)}</span>
+                                      <span className="text-xs bg-brand/10 border border-brand/20 text-brand px-2 py-0.5 rounded font-bold capitalize">
                                         Dominant: {res.dominantDomain.toUpperCase()}
                                       </span>
                                     </div>
                                   </div>
 
-                                  <div className="border-t border-zinc-900/60 pt-2 space-y-2">
-                                    <span className="text-sm capitalize font-bold  text-zinc-550 block">Cognitive Domain Breakdown</span>
-                                    <div className="grid grid-cols-3 gap-3">
+                                  <div className="border-t border-zinc-900/60 pt-3 space-y-2.5">
+                                    <span className="text-[11px] font-bold text-zinc-550 uppercase tracking-wider block">Cognitive Domain Breakdown</span>
+                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                                       {Object.entries(res.scores || {}).slice(0, 3).map(([key, val]) => (
-                                        <div key={key} className="space-y-1">
-                                          <div className="flex justify-between items-center text-sm font-bold text-zinc-400 capitalize">
+                                        <div key={key} className="space-y-1 bg-zinc-950/40 p-2.5 rounded-lg border border-zinc-900">
+                                          <div className="flex justify-between items-center text-xs font-bold text-zinc-400 capitalize">
                                             <span>{key}</span>
-                                            <span className="text-white ">{val}%</span>
+                                            <span className="text-white">{val}%</span>
                                           </div>
-                                          <div className="w-full bg-zinc-950 h-1.5 rounded-full overflow-hidden border border-zinc-850 p-0.2 flex">
+                                          <div className="w-full bg-zinc-950 h-1 rounded-full overflow-hidden border border-zinc-850">
                                             <div className="bg-brand h-full rounded-full transition-all duration-500" style={{ width: `${val}%` }} />
                                           </div>
                                         </div>
@@ -3423,7 +3421,7 @@ export default function AdminDashboard({ setView }) {
 
                 {/* Sub-admins list table */}
                 <div className="pt-4 space-y-3">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col sm:flex-row gap-2 sm:items-center justify-between">
                     <h4 className="font-header font-bold text-zinc-300 text-sm capitalize ">Active Sub-Admin Personnel</h4>
                     <div className="flex gap-2">
                       <button onClick={() => handleExportPDF('subadmins-table', 'SubAdmins_Directory')} className="px-2 py-1 border border-zinc-800 hover:bg-zinc-850 hover:text-white text-zinc-400 text-xs font-bold rounded transition-colors cursor-pointer capitalize">Export PDF</button>
@@ -3463,12 +3461,14 @@ export default function AdminDashboard({ setView }) {
                                     )}
                                   </td>
                                   <td className="p-3 text-zinc-400">{admin.email}</td>
-                                  <td className="p-3 flex flex-wrap gap-1">
-                                    {admin.permissions.map(p => (
-                                      <span key={p} className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-sm font-bold text-zinc-400 capitalize  ">
-                                        {p.replace('MANAGE_', '')}
-                                      </span>
-                                    ))}
+                                  <td className="p-3">
+                                    <div className="flex flex-wrap gap-1">
+                                      {admin.permissions.map(p => (
+                                        <span key={p} className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-sm font-bold text-zinc-400 capitalize  ">
+                                          {p.replace('MANAGE_', '')}
+                                        </span>
+                                      ))}
+                                    </div>
                                   </td>
                                   <td className="p-3 text-center">
                                     <button
@@ -3526,7 +3526,7 @@ export default function AdminDashboard({ setView }) {
                     <h3 className="text-sm font-bold capitalize  text-white font-header">Students Directory</h3>
                     <p className="text-sm text-zinc-500 font-medium pt-1">Register new student accounts, edit profiles, suspend/unsuspend access</p>
                   </div>
-                  <div className="flex items-center gap-3 w-full sm:w-auto">
+                  <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full sm:w-auto">
                     <div className="relative w-full sm:max-w-[200px]">
                       <input
                         type="text"
@@ -3586,17 +3586,19 @@ export default function AdminDashboard({ setView }) {
                         ) : (
                           studentsList.slice((studentPage - 1) * studentLimit, studentPage * studentLimit).map(student => (
                             <tr key={student.id} className="border-b border-zinc-900 hover:bg-zinc-900/50">
-                              <td className="p-3 flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-lg bg-zinc-900 border border-zinc-800 text-brand flex items-center justify-center font-bold text-sm shrink-0 overflow-hidden">
-                                  {student.profilePic || student.image ? (
-                                    <img src={student.profilePic || student.image} alt={student.name} className="w-full h-full object-cover" />
-                                  ) : (
-                                    getInitials(student.name)
-                                  )}
-                                </div>
-                                <div>
-                                  <span className="font-bold text-white block leading-tight">{student.name}</span>
-                                  <span className="text-sm text-zinc-500">ID: {student.id}</span>
+                              <td className="p-3">
+                                <div className="flex items-center gap-3">
+                                  <div className="w-10 h-10 rounded-lg bg-zinc-900 border border-zinc-800 text-brand flex items-center justify-center font-bold text-sm shrink-0 overflow-hidden">
+                                    {student.profilePic || student.image ? (
+                                      <img src={student.profilePic || student.image} alt={student.name} className="w-full h-full object-cover" />
+                                    ) : (
+                                      getInitials(student.name)
+                                    )}
+                                  </div>
+                                  <div>
+                                    <span className="font-bold text-white block leading-tight">{student.name}</span>
+                                    <span className="text-sm text-zinc-500">ID: {student.id}</span>
+                                  </div>
                                 </div>
                               </td>
                               <td className="p-3 text-zinc-350 font-medium">{student.email}</td>
@@ -3615,9 +3617,10 @@ export default function AdminDashboard({ setView }) {
                               <td className="p-3 text-center font-bold text-zinc-300">
                                 {bookingsDb.filter(b => b.userId === student.id).length} Booked
                               </td>
-                              <td className="p-3 text-center flex items-center justify-center gap-2">
-                                <button
-                                  onClick={() => setViewingStudent(student)}
+                              <td className="p-3">
+                                <div className="flex items-center justify-center gap-2">
+                                  <button
+                                    onClick={() => setViewingStudent(student)}
                                   className="px-2.5 py-1 bg-zinc-900 text-brand hover:text-white rounded border border-zinc-800 hover:bg-zinc-850 transition cursor-pointer text-sm font-bold capitalize "
                                 >
                                   Details
@@ -3643,6 +3646,7 @@ export default function AdminDashboard({ setView }) {
                                 >
                                   <Trash className="w-3.5 h-3.5" />
                                 </button>
+                                </div>
                               </td>
                             </tr>
                           ))
@@ -3670,7 +3674,7 @@ export default function AdminDashboard({ setView }) {
                   <h3 className="text-sm font-bold capitalize  text-white font-header">Psychologists Directory</h3>
                   <p className="text-sm text-zinc-500 font-medium pt-1">Register psychologist staff, update clinic credentials, or remove accounts</p>
                 </div>
-                <div className="flex items-center gap-3 w-full sm:w-auto">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full sm:w-auto">
                   <div className="relative w-full sm:max-w-[200px]">
                     <input
                       type="text"
@@ -3767,17 +3771,19 @@ export default function AdminDashboard({ setView }) {
                       ) : (
                         psychologistsList.slice((psyPage - 1) * psyLimit, psyPage * psyLimit).map(psy => (
                           <tr key={psy.id} className="border-b border-zinc-900 hover:bg-zinc-900/50">
-                            <td className="p-3 flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-lg bg-zinc-900 border border-zinc-800 text-brand flex items-center justify-center font-bold text-sm shrink-0 overflow-hidden">
-                                {psy.profilePic || psy.image ? (
-                                  <img src={psy.profilePic || psy.image} alt={psy.name} className="w-full h-full object-cover" />
-                                ) : (
-                                  getInitials(psy.name)
-                                )}
-                              </div>
-                              <div>
-                                <span className="font-bold text-white block leading-tight">{psy.name}</span>
-                                <span className="text-sm text-zinc-500">ID: {psy.id} • Active Profile</span>
+                            <td className="p-3">
+                              <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-lg bg-zinc-900 border border-zinc-800 text-brand flex items-center justify-center font-bold text-sm shrink-0 overflow-hidden">
+                                  {psy.profilePic || psy.image ? (
+                                    <img src={psy.profilePic || psy.image} alt={psy.name} className="w-full h-full object-cover" />
+                                  ) : (
+                                    getInitials(psy.name)
+                                  )}
+                                </div>
+                                <div>
+                                  <span className="font-bold text-white block leading-tight">{psy.name}</span>
+                                  <span className="text-sm text-zinc-500">ID: {psy.id} • Active Profile</span>
+                                </div>
                               </div>
                             </td>
                             <td className="p-3 text-zinc-350 font-medium">{psy.email}</td>
@@ -3827,9 +3833,10 @@ export default function AdminDashboard({ setView }) {
                                 </div>
                               )}
                             </td>
-                            <td className="p-3 text-center flex items-center justify-center gap-2">
-                              <button
-                                onClick={() => setViewingPsychologist(psy)}
+                            <td className="p-3">
+                              <div className="flex items-center justify-center gap-2">
+                                <button
+                                  onClick={() => setViewingPsychologist(psy)}
                                 className="px-2.5 py-1 bg-zinc-900 text-brand hover:text-white rounded border border-zinc-800 hover:bg-zinc-850 transition cursor-pointer text-sm font-bold capitalize "
                               >
                                 Details
@@ -3863,6 +3870,7 @@ export default function AdminDashboard({ setView }) {
                               >
                                 <Trash className="w-3.5 h-3.5" />
                               </button>
+                              </div>
                             </td>
                           </tr>
                         ))
@@ -4170,7 +4178,7 @@ export default function AdminDashboard({ setView }) {
                     <h3 className="text-sm font-bold capitalize  text-white font-header">Consultation Bookings</h3>
                     <p className="text-sm text-zinc-500 font-medium pt-1">Schedule new consultations, manage session statuses, and meeting links</p>
                   </div>
-                  <div className="flex items-center gap-3 w-full sm:w-auto">
+                  <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full sm:w-auto">
                     <div className="relative w-full sm:max-w-[200px]">
                       <input
                         type="text"
@@ -4381,8 +4389,9 @@ export default function AdminDashboard({ setView }) {
                                   {booking.status}
                                 </span>
                               </td>
-                              <td className="p-3 text-center flex items-center justify-center gap-2">
-                                {booking.status !== 'CANCELLED' && (
+                              <td className="p-3">
+                                <div className="flex items-center justify-center gap-2">
+                                  {booking.status !== 'CANCELLED' && (
                                   <button
                                     onClick={() => downloadPDFReceipt(booking)}
                                     className="p-1.5 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"
@@ -4405,6 +4414,7 @@ export default function AdminDashboard({ setView }) {
                                 >
                                   <Trash className="w-3.5 h-3.5" />
                                 </button>
+                                </div>
                               </td>
                             </tr>
                           ))

@@ -399,6 +399,7 @@ export default function App() {
           siteName={siteSettings.siteName}
           siteCopyright={siteSettings.siteCopyright}
           onOpenDocs={(docType) => setActiveDocType(docType)}
+          enablePsychology={siteSettings.enablePsychology !== false}
         />
       )}
 

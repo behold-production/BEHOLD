@@ -14,6 +14,7 @@ const settingSchema = new mongoose.Schema({
   privacyPolicy: { type: String, default: '' },
   cdatGroupCode: { type: String, default: 'cdat@behold' },
   blockedIps: { type: [String], default: [] },
+  enablePsychology: { type: Boolean, default: true },
   gstEnabled: { type: Boolean, default: false },
   gstPercent: { type: Number, default: 0 }
 }, { timestamps: true });

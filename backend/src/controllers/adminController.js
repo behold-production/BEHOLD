@@ -570,7 +570,13 @@ const AdminController = {
           gstPercent: 0
         });
       }
-      res.status(200).json({ success: true, data: settings });
+      res.status(200).json({
+        success: true,
+        data: {
+          ...settings,
+          enablePsychology: settings.enablePsychology !== false
+        }
+      });
     } catch (error) {
       next(error);
     }

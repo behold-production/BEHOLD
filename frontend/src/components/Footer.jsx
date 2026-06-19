@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Footer({ navigateToSection, siteName, siteCopyright, onOpenDocs }) {
+export default function Footer({ navigateToSection, siteName, siteCopyright, onOpenDocs, enablePsychology }) {
   const handleLogoClick = () => {
     navigateToSection('top');
   };
@@ -17,8 +17,12 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
         </button>
 
         <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2  text-sm capitalize  text-zinc-400">
-          <button type="button" onClick={() => navigateToSection('services')} className="py-1 hover:text-brand transition cursor-pointer bg-transparent border-none">Services</button>
-          <button type="button" onClick={() => window.spaNavigate('/booking')} className="py-1 hover:text-brand transition cursor-pointer bg-transparent border-none">Booking</button>
+          {enablePsychology && (
+            <>
+              <button type="button" onClick={() => navigateToSection('services')} className="py-1 hover:text-brand transition cursor-pointer bg-transparent border-none">Services</button>
+              <button type="button" onClick={() => window.spaNavigate('/booking')} className="py-1 hover:text-brand transition cursor-pointer bg-transparent border-none">Booking</button>
+            </>
+          )}
           <button type="button" onClick={() => window.spaNavigate('/sample-test')} className="py-1 hover:text-brand transition cursor-pointer bg-transparent border-none">Sample Test</button>
           <button type="button" onClick={() => navigateToSection('inquiry')} className="py-1 hover:text-brand transition cursor-pointer bg-transparent border-none">Contact</button>
         </nav>

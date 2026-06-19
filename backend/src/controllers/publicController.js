@@ -69,13 +69,17 @@ const PublicController = {
           termsOfUse: 'Welcome to BEHOLD. By accessing or using our platform, you agree to comply with and be bound by the terms and conditions.',
           privacyPolicy: 'Your privacy is extremely important to us. This policy describes how we collect, protect, and use your personal information.',
           cdatGroupCode: 'cdat@behold',
+          enablePsychology: true,
           gstEnabled: false,
           gstPercent: 0
         });
       }
       res.status(200).json({
         success: true,
-        data: settings
+        data: {
+          ...settings,
+          enablePsychology: settings.enablePsychology !== false
+        }
       });
     } catch (error) {
       next(error);
