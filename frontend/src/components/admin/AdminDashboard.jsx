@@ -25,7 +25,7 @@ function SkeletonTableRows({ cols }) {
     <>
       {[...Array(5)].map((_, i) => (
         <tr key={i} className="animate-pulse border-b border-zinc-900">
-          <td colSpan={cols} className="p-4">
+          <td colSpan={cols} className="p-4 whitespace-nowrap">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-zinc-800 rounded-lg shrink-0" />
               <div className="flex-1 space-y-2 py-1">
@@ -2506,7 +2506,7 @@ export default function AdminDashboard({ setView }) {
                 {user.name}
               </h1>
             </div>
-            <p className="text-sm text-zinc-400">
+            <p className="text-sm text-zinc-400 break-all">
               Active Console Session: {user.email}
             </p>
           </div>
@@ -2769,7 +2769,7 @@ export default function AdminDashboard({ setView }) {
                                 <div key={st.id} className="flex justify-between items-center text-sm bg-zinc-955 p-2 rounded border border-zinc-855">
                                   <div>
                                     <span className="font-bold text-white block truncate max-w-[140px]">{st.name}</span>
-                                    <span className="text-sm text-zinc-500  block">{st.email}</span>
+                                    <span className="text-sm text-zinc-500  block break-all">{st.email}</span>
                                   </div>
                                   <span className={`text-sm px-1.5 py-0.2 rounded capitalize font-bold ${st.status === 'SUSPENDED' ? 'bg-rose-955/20 text-rose-500 border border-rose-900/30' : 'bg-emerald-955/20 text-emerald-450 border border-emerald-900/30'
                                     }`}>{st.status || 'ACTIVE'}</span>
@@ -2810,7 +2810,7 @@ export default function AdminDashboard({ setView }) {
                                 <div key={psy.id} className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 bg-zinc-955 p-2.5 rounded border border-zinc-850 text-sm">
                                   <div>
                                     <span className="font-bold text-white capitalize block leading-tight">{psy.name}</span>
-                                    <span className="text-zinc-500  text-sm">{psy.email}</span>
+                                    <span className="text-zinc-500  text-sm break-all">{psy.email}</span>
                                   </div>
                                   <div className="flex items-center gap-1.5 self-end sm:self-auto">
                                     <button
@@ -2927,7 +2927,7 @@ export default function AdminDashboard({ setView }) {
                             {inquiriesDb.filter(i => i.status === 'PENDING' || !i.status).map(inq => (
                               <div key={inq.id} className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-zinc-955 p-2.5 rounded border border-zinc-850 text-sm">
                                 <div className="min-w-0 flex-1">
-                                  <span className="font-bold text-white capitalize block leading-tight">{inq.name} ({inq.email})</span>
+                                  <span className="font-bold text-white capitalize block leading-tight break-all">{inq.name} ({inq.email})</span>
                                   <p className="text-zinc-450 font-medium italic mt-1 ">"{inq.message}"</p>
                                 </div>
                                 <button
@@ -3206,7 +3206,7 @@ export default function AdminDashboard({ setView }) {
                                                                   <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3.5">
                                                                     <div>
                                                                       <span className="text-white font-bold capitalize block leading-tight">{i.name}</span>
-                                                                      <span className="text-zinc-550 text-xs block mt-0.5">{i.email}</span>
+                                                                      <span className="text-zinc-550 text-xs block mt-0.5 break-all">{i.email}</span>
                                                                     </div>
                                                                     <div className="flex items-center gap-2 shrink-0">
                                                                       <span className="text-xs bg-zinc-950 text-zinc-400 border border-zinc-850 px-2 py-0.5 rounded font-bold capitalize">{formatDateString(i.date)}</span>
@@ -3431,11 +3431,11 @@ export default function AdminDashboard({ setView }) {
                       <table id="subadmins-table" className="w-full text-sm border-collapse min-w-[650px]">
                         <thead>
                           <tr className="bg-zinc-900 text-zinc-400 font-bold capitalize  border-b border-zinc-850 text-left">
-                            <th className="p-3">Staff Name</th>
-                            <th className="p-3">Email Address</th>
-                            <th className="p-3">Scopes Enabled</th>
-                            <th className="p-3 text-center">Edit Scopes</th>
-                            <th className="p-3 text-center">Delete</th>
+                            <th className="p-3 whitespace-nowrap">Staff Name</th>
+                            <th className="p-3 whitespace-nowrap">Email Address</th>
+                            <th className="p-3 whitespace-nowrap">Scopes Enabled</th>
+                            <th className="p-3 text-center whitespace-nowrap">Edit Scopes</th>
+                            <th className="p-3 text-center whitespace-nowrap">Delete</th>
                           </tr>
                         </thead>
                          <tbody>
@@ -3443,14 +3443,14 @@ export default function AdminDashboard({ setView }) {
                             <SkeletonTableRows cols={5} />
                           ) : subAdminsList.length === 0 ? (
                             <tr>
-                              <td colSpan={5} className="p-5 text-center text-zinc-500 italic">No sub-admin accounts registered. Create accounts inside the "Roles & Scopes" tab.</td>
+                              <td colSpan={5} className="p-5 text-center text-zinc-500 italic whitespace-nowrap">No sub-admin accounts registered. Create accounts inside the "Roles & Scopes" tab.</td>
                             </tr>
                           ) : (
                             subAdminsList.map(admin => {
                               const { cleanName, roleTitle } = parseStaffDetails(admin);
                               return (
                                 <tr key={admin.id} className="border-b border-zinc-900 hover:bg-zinc-900/50">
-                                  <td className="p-3">
+                                  <td className="p-3 whitespace-nowrap">
                                     <span className="font-bold text-white block">{cleanName}</span>
                                     {roleTitle && (
                                       <span className="text-sm bg-brand/10 border border-brand/20 text-brand px-1.5 py-0.5 rounded font-bold  capitalize  inline-block mt-1">
@@ -3458,8 +3458,8 @@ export default function AdminDashboard({ setView }) {
                                       </span>
                                     )}
                                   </td>
-                                  <td className="p-3 text-zinc-400">{admin.email}</td>
-                                  <td className="p-3">
+                                  <td className="p-3 text-zinc-400 whitespace-nowrap">{admin.email}</td>
+                                  <td className="p-3 whitespace-nowrap">
                                     <div className="flex flex-wrap gap-1">
                                       {admin.permissions.map(p => (
                                         <span key={p} className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-sm font-bold text-zinc-400 capitalize  ">
@@ -3468,7 +3468,7 @@ export default function AdminDashboard({ setView }) {
                                       ))}
                                     </div>
                                   </td>
-                                  <td className="p-3 text-center">
+                                  <td className="p-3 text-center whitespace-nowrap">
                                     <button
                                       onClick={() => handleOpenEditSubAdmin(admin)}
                                       className="px-2.5 py-1 bg-zinc-900 text-brand hover:text-white rounded border border-zinc-800 hover:bg-zinc-855 transition cursor-pointer text-sm font-bold capitalize "
@@ -3476,7 +3476,7 @@ export default function AdminDashboard({ setView }) {
                                       Edit
                                     </button>
                                   </td>
-                                  <td className="p-3 text-center space-x-1">
+                                  <td className="p-3 text-center space-x-1 whitespace-nowrap">
                                     <button
                                       onClick={() => handleGenerateResetToken(admin.email)}
                                       className="p-1.5 bg-zinc-900 text-amber-500 hover:bg-amber-900/30 hover:text-amber-400 rounded border border-zinc-800 transition cursor-pointer inline-flex"
@@ -3567,11 +3567,11 @@ export default function AdminDashboard({ setView }) {
                     <table id="students-table" className="w-full text-sm border-collapse min-w-[700px]">
                       <thead>
                         <tr className="bg-zinc-900 text-zinc-400 font-bold capitalize  border-b border-zinc-850 text-left">
-                          <th className="p-3">Student Name</th>
-                          <th className="p-3">Email Address</th>
-                          <th className="p-3 text-center">Status</th>
-                          <th className="p-3 text-center">Consultations</th>
-                          <th className="p-3 text-center font-bold">Actions</th>
+                          <th className="p-3 whitespace-nowrap">Student Name</th>
+                          <th className="p-3 whitespace-nowrap">Email Address</th>
+                          <th className="p-3 text-center whitespace-nowrap">Status</th>
+                          <th className="p-3 text-center whitespace-nowrap">Consultations</th>
+                          <th className="p-3 text-center font-bold whitespace-nowrap">Actions</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -3579,12 +3579,12 @@ export default function AdminDashboard({ setView }) {
                           <SkeletonTableRows cols={5} />
                         ) : studentsList.length === 0 ? (
                           <tr>
-                            <td colSpan={5} className="p-8 text-center text-zinc-500 italic">No student registries match the active query.</td>
+                            <td colSpan={5} className="p-8 text-center text-zinc-500 italic whitespace-nowrap">No student registries match the active query.</td>
                           </tr>
                         ) : (
                           studentsList.slice((studentPage - 1) * studentLimit, studentPage * studentLimit).map(student => (
                             <tr key={student.id} className="border-b border-zinc-900 hover:bg-zinc-900/50">
-                              <td className="p-3">
+                              <td className="p-3 whitespace-nowrap">
                                 <div className="flex items-center gap-3">
                                   <div className="w-10 h-10 rounded-lg bg-zinc-900 border border-zinc-800 text-brand flex items-center justify-center font-bold text-sm shrink-0 overflow-hidden">
                                     {student.profilePic || student.image ? (
@@ -3595,12 +3595,12 @@ export default function AdminDashboard({ setView }) {
                                   </div>
                                   <div>
                                     <span className="font-bold text-white block leading-tight">{student.name}</span>
-                                    <span className="text-sm text-zinc-500">ID: {student.id}</span>
+                                    <span className="text-sm text-zinc-500 break-all">ID: {student.id}</span>
                                   </div>
                                 </div>
                               </td>
-                              <td className="p-3 text-zinc-350 font-medium">{student.email}</td>
-                              <td className="p-3 text-center">
+                              <td className="p-3 text-zinc-350 font-medium whitespace-nowrap">{student.email}</td>
+                              <td className="p-3 text-center whitespace-nowrap">
                                 <button
                                   onClick={() => handleToggleStudentStatus(student.id, student.status || 'ACTIVE')}
                                   className={`px-2 py-0.5 rounded text-sm font-bold capitalize  transition cursor-pointer border ${(student.status || 'ACTIVE') === 'ACTIVE'
@@ -3612,10 +3612,10 @@ export default function AdminDashboard({ setView }) {
                                   {student.status || 'ACTIVE'}
                                 </button>
                               </td>
-                              <td className="p-3 text-center font-bold text-zinc-300">
+                              <td className="p-3 text-center font-bold text-zinc-300 whitespace-nowrap">
                                 {bookingsDb.filter(b => b.userId === student.id).length} Booked
                               </td>
-                              <td className="p-3">
+                              <td className="p-3 whitespace-nowrap">
                                 <div className="flex items-center justify-center gap-2">
                                   <button
                                     onClick={() => setViewingStudent(student)}
@@ -3753,10 +3753,10 @@ export default function AdminDashboard({ setView }) {
                   <table id="counsellors-table" className="w-full text-sm border-collapse min-w-[700px]">
                     <thead>
                       <tr className="bg-zinc-900 text-zinc-400 font-bold capitalize  border-b border-zinc-850 text-left">
-                        <th className="p-3">Psychologist Name</th>
-                        <th className="p-3">Email Address</th>
-                        <th className="p-3 text-center">Clearance Status</th>
-                        <th className="p-3 text-center font-bold">Actions</th>
+                        <th className="p-3 whitespace-nowrap">Psychologist Name</th>
+                        <th className="p-3 whitespace-nowrap">Email Address</th>
+                        <th className="p-3 text-center whitespace-nowrap">Clearance Status</th>
+                        <th className="p-3 text-center font-bold whitespace-nowrap">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -3764,12 +3764,12 @@ export default function AdminDashboard({ setView }) {
                         <SkeletonTableRows cols={4} />
                       ) : psychologistsList.length === 0 ? (
                         <tr>
-                          <td colSpan={4} className="p-8 text-center text-zinc-500 italic">No psychologist registries match the active query.</td>
+                          <td colSpan={4} className="p-8 text-center text-zinc-500 italic whitespace-nowrap">No psychologist registries match the active query.</td>
                         </tr>
                       ) : (
                         psychologistsList.slice((psyPage - 1) * psyLimit, psyPage * psyLimit).map(psy => (
                           <tr key={psy.id} className="border-b border-zinc-900 hover:bg-zinc-900/50">
-                            <td className="p-3">
+                            <td className="p-3 whitespace-nowrap">
                               <div className="flex items-center gap-3">
                                 <div className="w-10 h-10 rounded-lg bg-zinc-900 border border-zinc-800 text-brand flex items-center justify-center font-bold text-sm shrink-0 overflow-hidden">
                                   {psy.profilePic || psy.image ? (
@@ -3780,12 +3780,12 @@ export default function AdminDashboard({ setView }) {
                                 </div>
                                 <div>
                                   <span className="font-bold text-white block leading-tight">{psy.name}</span>
-                                  <span className="text-sm text-zinc-500">ID: {psy.id} • Active Profile</span>
+                                  <span className="text-sm text-zinc-500 break-all">ID: {psy.id} • Active Profile</span>
                                 </div>
                               </div>
                             </td>
-                            <td className="p-3 text-zinc-350 font-medium">{psy.email}</td>
-                            <td className="p-3 text-center">
+                            <td className="p-3 text-zinc-350 font-medium whitespace-nowrap">{psy.email}</td>
+                            <td className="p-3 text-center whitespace-nowrap">
                               {(psy.status === 'APPROVED' || psy.status === 'ACTIVE') ? (
                                 <div className="flex items-center justify-center gap-2">
                                   <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-955/20 border border-emerald-900/40 text-emerald-450 text-sm font-bold capitalize ">
@@ -3831,7 +3831,7 @@ export default function AdminDashboard({ setView }) {
                                 </div>
                               )}
                             </td>
-                            <td className="p-3">
+                            <td className="p-3 whitespace-nowrap">
                               <div className="flex items-center justify-center gap-2">
                                 <button
                                   onClick={() => setViewingPsychologist(psy)}
@@ -4295,7 +4295,7 @@ export default function AdminDashboard({ setView }) {
                     <table className="w-full text-sm border-collapse min-w-[850px]">
                       <thead>
                         <tr className="bg-zinc-900 text-zinc-400 font-bold capitalize  border-b border-zinc-850 text-left">
-                          <th className="p-3 text-center w-10">
+                          <th className="p-3 text-center w-10 whitespace-nowrap">
                             {(() => {
                               const pagedBookings = filteredBookings.slice((bookingPage - 1) * bookingLimit, bookingPage * bookingLimit);
                               return (
@@ -4314,13 +4314,13 @@ export default function AdminDashboard({ setView }) {
                               );
                             })()}
                           </th>
-                          <th className="p-3">Student</th>
-                          <th className="p-3">Psychologist</th>
-                          <th className="p-3">Service / Mode</th>
-                          <th className="p-3">Schedule</th>
-                          <th className="p-3">Meeting Room</th>
-                          <th className="p-3 text-center">Status</th>
-                          <th className="p-3 text-center font-bold">Actions</th>
+                          <th className="p-3 whitespace-nowrap">Student</th>
+                          <th className="p-3 whitespace-nowrap">Psychologist</th>
+                          <th className="p-3 whitespace-nowrap">Service / Mode</th>
+                          <th className="p-3 whitespace-nowrap">Schedule</th>
+                          <th className="p-3 whitespace-nowrap">Meeting Room</th>
+                          <th className="p-3 text-center whitespace-nowrap">Status</th>
+                          <th className="p-3 text-center font-bold whitespace-nowrap">Actions</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -4328,12 +4328,12 @@ export default function AdminDashboard({ setView }) {
                           <SkeletonTableRows cols={8} />
                         ) : filteredBookings.length === 0 ? (
                           <tr>
-                            <td colSpan={8} className="p-8 text-center text-zinc-500 italic">No bookings scheduled in the system matching the active filters.</td>
+                            <td colSpan={8} className="p-8 text-center text-zinc-500 italic whitespace-nowrap">No bookings scheduled in the system matching the active filters.</td>
                           </tr>
                         ) : (
                           filteredBookings.slice((bookingPage - 1) * bookingLimit, bookingPage * bookingLimit).map(booking => (
                             <tr key={booking.id} className="border-b border-zinc-900 hover:bg-zinc-900/50">
-                              <td className="p-3 text-center">
+                              <td className="p-3 text-center whitespace-nowrap">
                                 <input
                                   type="checkbox"
                                   checked={selectedBookingIds.includes(booking.id)}
@@ -4341,25 +4341,25 @@ export default function AdminDashboard({ setView }) {
                                   className="cursor-pointer"
                                 />
                               </td>
-                              <td className="p-3">
+                              <td className="p-3 whitespace-nowrap">
                                 <span className="font-bold text-white block leading-tight">{booking.userName}</span>
                                 <span className="text-sm text-zinc-500">ID: {booking.userId}</span>
                               </td>
-                              <td className="p-3">
+                              <td className="p-3 whitespace-nowrap">
                                 <span className="font-bold text-white block leading-tight">{booking.advisorName}</span>
                                 <span className="text-sm text-zinc-500">{booking.advisorRole}</span>
                               </td>
-                              <td className="p-3">
+                              <td className="p-3 whitespace-nowrap">
                                 <span className="font-semibold block capitalize text-white leading-tight">
                                   {booking.service === 'counselling' ? 'Emotional Wellbeing' : 'Career Mapping'}
                                 </span>
                                 <span className="text-sm text-zinc-555 font-bold capitalize">{booking.mode}</span>
                               </td>
-                              <td className="p-3 font-semibold text-zinc-300">
+                              <td className="p-3 font-semibold text-zinc-300 whitespace-nowrap">
                                 <span className="block">{formatDateString(booking.date)}</span>
                                 <span className="text-sm text-zinc-500 font-bold">{booking.time}</span>
                               </td>
-                              <td className="p-3">
+                              <td className="p-3 whitespace-nowrap">
                                 {booking.meetLink ? (
                                   <a
                                     href={booking.meetLink}
@@ -4373,7 +4373,7 @@ export default function AdminDashboard({ setView }) {
                                   <span className="text-zinc-555 italic text-sm">No Link Set</span>
                                 )}
                               </td>
-                              <td className="p-3 text-center">
+                              <td className="p-3 text-center whitespace-nowrap">
                                 <span className={`inline-flex items-center px-2 py-0.5 rounded text-sm font-bold capitalize   ${booking.status === 'CONFIRMED'
                                   ? 'bg-emerald-955/30 border border-emerald-900/40 text-emerald-450'
                                   : booking.status === 'COMPLETED'
@@ -4387,7 +4387,7 @@ export default function AdminDashboard({ setView }) {
                                   {booking.status}
                                 </span>
                               </td>
-                              <td className="p-3">
+                              <td className="p-3 whitespace-nowrap">
                                 <div className="flex items-center justify-center gap-2">
                                   {booking.status !== 'CANCELLED' && (
                                   <button
@@ -4497,7 +4497,7 @@ export default function AdminDashboard({ setView }) {
 
                           <div className="space-y-0.5">
                             <h4 className="font-header font-bold text-sm capitalize text-white truncate">{inq.name}</h4>
-                            <p className="text-sm text-brand font-semibold ">{inq.email}</p>
+                            <p className="text-sm text-brand font-semibold  break-all">{inq.email}</p>
                           </div>
 
                           <p className="text-[12.5px] text-zinc-400 font-medium leading-relaxed bg-zinc-900/50 p-3 rounded-lg border border-zinc-850 whitespace-pre-wrap">
@@ -6199,7 +6199,7 @@ export default function AdminDashboard({ setView }) {
                 <div className="space-y-2.5 text-sm">
                   <div>
                     <span className="text-zinc-500 block text-sm capitalize">Account ID</span>
-                    <span className=" text-zinc-300">{viewingStudent.id}</span>
+                    <span className=" text-zinc-300 break-all">{viewingStudent.id}</span>
                   </div>
                   <div>
                     <span className="text-zinc-500 block text-sm capitalize">Full Name</span>
@@ -6207,7 +6207,7 @@ export default function AdminDashboard({ setView }) {
                   </div>
                   <div>
                     <span className="text-zinc-500 block text-sm capitalize">Email Address</span>
-                    <span className="font-bold text-zinc-350">{viewingStudent.email}</span>
+                    <span className="font-bold text-zinc-350 break-all">{viewingStudent.email}</span>
                   </div>
                   <div>
                     <span className="text-zinc-500 block text-sm capitalize">Account Status</span>
@@ -6258,10 +6258,10 @@ export default function AdminDashboard({ setView }) {
                   <table className="w-full text-sm border-collapse text-left min-w-[420px]">
                     <thead>
                       <tr className="bg-zinc-900/50 text-zinc-500 font-bold capitalize  border-b border-zinc-855">
-                        <th className="p-2.5">Date & Time</th>
-                        <th className="p-2.5">Advisor</th>
-                        <th className="p-2.5">Service Type</th>
-                        <th className="p-2.5 text-center">Status</th>
+                        <th className="p-2.5 whitespace-nowrap">Date & Time</th>
+                        <th className="p-2.5 whitespace-nowrap">Advisor</th>
+                        <th className="p-2.5 whitespace-nowrap">Service Type</th>
+                        <th className="p-2.5 text-center whitespace-nowrap">Status</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -6270,7 +6270,7 @@ export default function AdminDashboard({ setView }) {
                         if (studentBookings.length === 0) {
                           return (
                             <tr>
-                              <td colSpan={4} className="p-4 text-center text-zinc-600 italic">No consult history for this student.</td>
+                              <td colSpan={4} className="p-4 text-center text-zinc-600 italic whitespace-nowrap">No consult history for this student.</td>
                             </tr>
                           );
                         }
@@ -6278,17 +6278,17 @@ export default function AdminDashboard({ setView }) {
                           const psychologist = usersDb.find(u => u.id === b.advisorId);
                           return (
                             <tr key={b.id} className="border-b border-zinc-900/60 hover:bg-zinc-900/30">
-                              <td className="p-2.5">
+                              <td className="p-2.5 whitespace-nowrap">
                                 <span className="text-white block font-semibold">{formatDateString(b.date)}</span>
                                 <span className="text-zinc-500 text-sm">{b.time}</span>
                               </td>
-                              <td className="p-2.5 text-zinc-300 font-medium">
+                              <td className="p-2.5 text-zinc-300 font-medium whitespace-nowrap">
                                 {psychologist ? psychologist.name : 'Unknown Advisor'}
                               </td>
-                              <td className="p-2.5 text-zinc-400 capitalize font-medium">
+                              <td className="p-2.5 text-zinc-400 capitalize font-medium whitespace-nowrap">
                                 {b.service === 'counselling' ? 'Wellbeing' : 'Career Mapping'} ({b.mode})
                               </td>
-                              <td className="p-2.5 text-center">
+                              <td className="p-2.5 text-center whitespace-nowrap">
                                 <span className={`px-2 py-0.5 rounded text-sm font-bold capitalize  ${b.status === 'CONFIRMED' ? 'bg-indigo-950/20 border border-indigo-900/30 text-indigo-400' :
                                   b.status === 'COMPLETED' ? 'bg-emerald-955/20 border border-emerald-900/30 text-emerald-450' :
                                     b.status === 'CANCELLED' ? 'bg-rose-955/20 border border-rose-900/30 text-rose-500' :
@@ -6582,7 +6582,7 @@ export default function AdminDashboard({ setView }) {
                         </div>
                         <div>
                           <span className="text-zinc-500 block text-sm capitalize">Email Address</span>
-                          <span className="font-semibold text-zinc-300">{viewingPsychologist.email}</span>
+                          <span className="font-semibold text-zinc-300 break-all">{viewingPsychologist.email}</span>
                         </div>
                         <div>
                           <span className="text-zinc-500 block text-xs capitalize">Phone Number</span>
@@ -6720,10 +6720,10 @@ export default function AdminDashboard({ setView }) {
                         <table className="w-full text-sm border-collapse text-left min-w-[420px]">
                           <thead>
                             <tr className="bg-zinc-900/50 text-zinc-500 font-bold capitalize  border-b border-zinc-855">
-                              <th className="p-2.5">Client Student</th>
-                              <th className="p-2.5">Date & Time</th>
-                              <th className="p-2.5">Type & Mode</th>
-                              <th className="p-2.5 text-center">Status</th>
+                              <th className="p-2.5 whitespace-nowrap">Client Student</th>
+                              <th className="p-2.5 whitespace-nowrap">Date & Time</th>
+                              <th className="p-2.5 whitespace-nowrap">Type & Mode</th>
+                              <th className="p-2.5 text-center whitespace-nowrap">Status</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -6732,7 +6732,7 @@ export default function AdminDashboard({ setView }) {
                               if (psyBookings.length === 0) {
                                 return (
                                   <tr>
-                                    <td colSpan={4} className="p-4 text-center text-zinc-650 italic">No scheduled slot logs.</td>
+                                    <td colSpan={4} className="p-4 text-center text-zinc-650 italic whitespace-nowrap">No scheduled slot logs.</td>
                                   </tr>
                                 );
                               }
@@ -6740,18 +6740,18 @@ export default function AdminDashboard({ setView }) {
                                 const student = usersDb.find(u => u.id === b.userId);
                                 return (
                                   <tr key={b.id} className="border-b border-zinc-900/60 hover:bg-zinc-900/30">
-                                    <td className="p-2.5">
+                                    <td className="p-2.5 whitespace-nowrap">
                                       <span className="text-white block font-semibold">{student ? student.name : 'Unknown Student'}</span>
                                       <span className="text-zinc-500 text-sm truncate block max-w-[150px]">{student ? student.email : ''}</span>
                                     </td>
-                                    <td className="p-2.5">
+                                    <td className="p-2.5 whitespace-nowrap">
                                       <span className="text-zinc-300 block font-semibold">{formatDateString(b.date)}</span>
                                       <span className="text-zinc-500 text-sm">{b.time}</span>
                                     </td>
-                                    <td className="p-2.5 text-zinc-400 capitalize font-medium">
+                                    <td className="p-2.5 text-zinc-400 capitalize font-medium whitespace-nowrap">
                                       {b.service === 'counselling' ? 'Wellbeing' : 'Career'} ({b.mode})
                                     </td>
-                                    <td className="p-2.5 text-center">
+                                    <td className="p-2.5 text-center whitespace-nowrap">
                                       <span className={`px-2 py-0.5 rounded text-sm font-bold capitalize  ${b.status === 'CONFIRMED' ? 'bg-indigo-950/20 border border-indigo-900/30 text-indigo-400' :
                                         b.status === 'COMPLETED' ? 'bg-emerald-955/20 border border-emerald-900/30 text-emerald-450' :
                                           b.status === 'CANCELLED' ? 'bg-rose-955/20 border border-rose-900/30 text-rose-500' :
