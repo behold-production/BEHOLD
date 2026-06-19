@@ -201,9 +201,8 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                 <div className="w-10 h-10 rounded-lg bg-zinc-50 flex items-center justify-center shrink-0 text-zinc-600">
                   <GraduationCap className="w-5 h-5" />
                 </div>
-                <div>
-                  <h4 className="font-bold text-xs sm:text-sm text-zinc-900">{advisor.education}</h4>
-                  <p className="text-xs text-zinc-500 mt-1 capitalize  font-bold">Verified by BEHOLD Quality Assurance</p>
+                <div className="flex items-center">
+                  <h4 className="font-bold text-sm sm:text-base text-zinc-900">{advisor.education}</h4>
                 </div>
               </div>
             </div>
@@ -220,13 +219,13 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
               </div>
 
               <div className="p-3.5 sm:p-4 bg-zinc-50 border border-zinc-200 rounded-lg space-y-3">
-                <div className="flex justify-between items-center text-xs sm:text-sm">
-                  <span className="text-zinc-600 font-semibold">Next Available</span>
+                <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 text-xs sm:text-sm">
+                  <span className="text-zinc-600 font-semibold shrink-0">Next Available</span>
                   <span className="font-semibold text-brand bg-brand-light border border-brand/20 px-2 py-0.5 rounded-md text-xs sm:text-xs">{advisor.nextAvailable}</span>
                 </div>
                 <div className="w-full h-px bg-zinc-200" aria-hidden="true"></div>
                 <div className="flex justify-between items-center text-xs sm:text-sm">
-                  <span className="text-zinc-600 font-semibold">Session Fee</span>
+                  <span className="text-zinc-600 font-semibold shrink-0">Session Fee</span>
                   <span className="font-semibold text-zinc-900">₹{advisor.price.toLocaleString('en-IN')}</span>
                 </div>
               </div>
@@ -238,11 +237,6 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
               >
                 <Calendar className="w-4 h-4" /> Book Now
               </button>
-
-              <p className="text-xs sm:text-xs text-center text-zinc-500 font-bold capitalize  leading-relaxed">
-                You will not be charged until the session is confirmed.
-                Secure transactions via Razorpay.
-              </p>
             </div>
           </div>
 
