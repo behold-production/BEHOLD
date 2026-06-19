@@ -2505,9 +2505,6 @@ export default function AdminDashboard({ setView }) {
               <h1 className="text-xl sm:text-2xl font-header font-bold tracking-wide capitalize">
                 {user.name}
               </h1>
-              <span className="text-sm bg-brand text-zinc-955 px-2 py-0.5 rounded font-bold  capitalize ">
-                {isSuperAdmin ? 'ROOT SECURITY LEVEL' : 'HR DEPT CLEARANCE'}
-              </span>
             </div>
             <p className="text-sm text-zinc-400">
               Active Console Session: {user.email}
@@ -2604,11 +2601,10 @@ export default function AdminDashboard({ setView }) {
               <div className="space-y-6 animate-in fade-in duration-200 text-sm">
                 <div className="border-b border-zinc-800 pb-3 flex justify-between items-center">
                   <h3 className="text-sm font-bold capitalize  text-zinc-400">Super Admin Command Center</h3>
-                  <span className="text-sm bg-brand/10 border border-brand/20 text-brand px-2 py-0.5 rounded font-bold  capitalize ">SYSTEM ROOT</span>
                 </div>
 
                 {/* KPI stats Grid */}
-                <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
                   {/* Students Card */}
                   <div
                     onClick={() => setActiveStatHighlight(activeStatHighlight === 'students' ? null : 'students')}
@@ -2622,7 +2618,7 @@ export default function AdminDashboard({ setView }) {
                       <User className={`w-3.5 h-3.5 ${activeStatHighlight === 'students' ? 'text-brand' : 'text-zinc-500'}`} />
                     </div>
                     <p className="text-xl font-bold text-white text-left pt-0.5">{studentsCount}</p>
-                    <div className="flex justify-between items-center text-xs text-zinc-500 font-semibold pt-0.5">
+                    <div className="flex flex-wrap justify-between items-center text-xs gap-x-2 text-zinc-500 font-semibold pt-0.5">
                       <span className="capitalize text-emerald-450">{activeStudentsCount} Active</span>
                       <span className=" text-zinc-600">{suspendedStudentsCount} Suspended</span>
                     </div>
@@ -2641,7 +2637,7 @@ export default function AdminDashboard({ setView }) {
                       <Award className={`w-3.5 h-3.5 ${activeStatHighlight === 'psychologists' ? 'text-brand' : 'text-zinc-500'}`} />
                     </div>
                     <p className="text-xl font-bold text-white text-left pt-0.5">{psyCount}</p>
-                    <div className="flex justify-between items-center text-xs text-zinc-500 font-semibold pt-0.5">
+                    <div className="flex flex-wrap justify-between items-center text-xs gap-x-2 text-zinc-500 font-semibold pt-0.5">
                       <span className="capitalize text-emerald-450">{approvedPsyCount} Verified</span>
                       <span className=" text-amber-500">{pendingPsyCount} Pending</span>
                     </div>
@@ -2660,7 +2656,7 @@ export default function AdminDashboard({ setView }) {
                       <Calendar className={`w-3.5 h-3.5 ${activeStatHighlight === 'bookings' ? 'text-brand' : 'text-zinc-500'}`} />
                     </div>
                     <p className="text-xl font-bold text-white text-left pt-0.5">{totalBookingsCount}</p>
-                    <div className="flex justify-between items-center text-xs text-zinc-500 font-semibold pt-0.5">
+                    <div className="flex flex-wrap justify-between items-center text-xs gap-x-2 text-zinc-500 font-semibold pt-0.5">
                       <span className="capitalize text-zinc-400">{confirmedBookingsCount} Confirmed</span>
                       <span className=" text-zinc-650">{pendingBookingsCount} Pending</span>
                     </div>
@@ -2679,7 +2675,7 @@ export default function AdminDashboard({ setView }) {
                       <MessageSquare className={`w-3.5 h-3.5 ${activeStatHighlight === 'inquiries' ? 'text-brand' : 'text-zinc-500'}`} />
                     </div>
                     <p className="text-xl font-bold text-amber-500 text-left pt-0.5">{pendingInquiriesCount}</p>
-                    <div className="flex justify-between items-center text-xs text-zinc-550 font-semibold pt-0.5">
+                    <div className="flex flex-wrap justify-between items-center text-xs gap-x-2 text-zinc-550 font-semibold pt-0.5">
                       <span className="capitalize text-amber-900/60 font-bold">Pending</span>
                       <span className=" text-zinc-500">{resolvedInquiriesCount} Solved</span>
                     </div>
@@ -2698,7 +2694,7 @@ export default function AdminDashboard({ setView }) {
                       <Check className={`w-3.5 h-3.5 ${activeStatHighlight === 'completed' ? 'text-brand' : 'text-zinc-500'}`} />
                     </div>
                     <p className="text-xl font-bold text-brand text-left pt-0.5">{completedBookingsCount}</p>
-                    <div className="flex justify-between items-center text-xs text-zinc-500 font-semibold pt-0.5">
+                    <div className="flex flex-wrap justify-between items-center text-xs gap-x-2 text-zinc-500 font-semibold pt-0.5">
                       <span className="capitalize text-brand/70">{bookingCompletionRate}% rate</span>
                       <span className=" text-zinc-650">{totalBookingsCount} total</span>
                     </div>
@@ -2717,7 +2713,7 @@ export default function AdminDashboard({ setView }) {
                       <span className={`text-sm font-bold ${activeStatHighlight === 'revenue' ? 'text-brand' : 'text-zinc-500'}`}>₹</span>
                     </div>
                     <p className="text-xl font-bold text-emerald-450 text-left pt-0.5">₹{totalRevenue}</p>
-                    <div className="flex justify-between items-center text-xs text-zinc-500 font-semibold pt-0.5">
+                    <div className="flex flex-wrap justify-between items-center text-xs gap-x-2 text-zinc-500 font-semibold pt-0.5">
                       <span className="capitalize text-zinc-400">Completed</span>
                       <span className=" text-zinc-600">₹{projectedRevenue} Proj.</span>
                     </div>
@@ -3073,10 +3069,10 @@ export default function AdminDashboard({ setView }) {
                     </div>
 
                     {/* Tab Segment Controls */}
-                    <div className="flex gap-2 bg-zinc-900/60 p-1 rounded-lg border border-zinc-800">
+                    <div className="flex gap-2 bg-zinc-900/60 p-1 rounded-lg border border-zinc-800 overflow-x-auto hide-scrollbar">
                       <button
                         onClick={() => setOverviewActivityTab('bookings')}
-                        className={`flex-1 py-2 rounded-md text-sm font-bold capitalize  transition-all cursor-pointer border-none flex items-center justify-center gap-1 ${overviewActivityTab === 'bookings'
+                        className={`flex-1 px-4 py-2 whitespace-nowrap rounded-md text-sm font-bold capitalize transition-all cursor-pointer border-none flex items-center justify-center gap-1.5 shrink-0 ${overviewActivityTab === 'bookings'
                           ? 'bg-brand text-zinc-955 font-bold shadow-sm'
                           : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-950'
                           }`}
@@ -3085,7 +3081,7 @@ export default function AdminDashboard({ setView }) {
                       </button>
                       <button
                         onClick={() => setOverviewActivityTab('inquiries')}
-                        className={`flex-1 py-2 rounded-md text-sm font-bold capitalize  transition-all cursor-pointer border-none flex items-center justify-center gap-1 ${overviewActivityTab === 'inquiries'
+                        className={`flex-1 px-4 py-2 whitespace-nowrap rounded-md text-sm font-bold capitalize transition-all cursor-pointer border-none flex items-center justify-center gap-1.5 shrink-0 ${overviewActivityTab === 'inquiries'
                           ? 'bg-brand text-zinc-955 font-bold shadow-sm'
                           : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-955'
                           }`}
@@ -3094,7 +3090,7 @@ export default function AdminDashboard({ setView }) {
                       </button>
                       <button
                         onClick={() => setOverviewActivityTab('results')}
-                        className={`flex-1 py-2 rounded-md text-sm font-bold capitalize  transition-all cursor-pointer border-none flex items-center justify-center gap-1 ${overviewActivityTab === 'results'
+                        className={`flex-1 px-4 py-2 whitespace-nowrap rounded-md text-sm font-bold capitalize transition-all cursor-pointer border-none flex items-center justify-center gap-1.5 shrink-0 ${overviewActivityTab === 'results'
                           ? 'bg-brand text-zinc-955 font-bold shadow-sm'
                           : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-955'
                           }`}
@@ -3286,7 +3282,7 @@ export default function AdminDashboard({ setView }) {
                                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                                       {Object.entries(res.scores || {}).slice(0, 3).map(([key, val]) => (
                                         <div key={key} className="space-y-1 bg-zinc-950/40 p-2.5 rounded-lg border border-zinc-900">
-                                          <div className="flex justify-between items-center text-xs font-bold text-zinc-400 capitalize">
+                                          <div className="flex flex-wrap justify-between items-center text-xs gap-x-2 font-bold text-zinc-400 capitalize">
                                             <span>{key}</span>
                                             <span className="text-white">{val}%</span>
                                           </div>

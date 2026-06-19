@@ -156,7 +156,7 @@ export default function CdatSection({ setView }) {
         </div>
 
         {/* MIDDLE: Registration & Group Code */}
-        <div id="registration-section" className="relative z-10 pt-8 border-t border-zinc-200/80 space-y-8">
+        <div id="registration-section" className="relative z-10 pt-8 border-t border-zinc-200/80 space-y-3">
           <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
             <div className="space-y-2">
               <span className="inline-block text-xs bg-zinc-900 text-white px-3 py-1.5 rounded-md capitalize font-bold tracking-wide shadow-md">
@@ -168,9 +168,9 @@ export default function CdatSection({ setView }) {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start pt-2">
-            <div className="lg:col-span-5 space-y-4">
-              <p className="text-zinc-600 font-sans text-sm md:text-base font-medium leading-relaxed max-w-2xl mt-3">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <div className="lg:col-span-5 space-y-2">
+              <p className="text-zinc-600 font-sans text-sm md:text-base font-medium leading-relaxed max-w-2xl">
                 Enter your details to generate your group code. Then, proceed to the official CIGI portal to finalize registration.
               </p>
             </div>
