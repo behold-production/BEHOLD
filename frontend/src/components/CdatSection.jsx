@@ -111,49 +111,53 @@ export default function CdatSection({ setView }) {
         <div className="absolute inset-0 bg-gradient-to-b from-white/60 to-transparent pointer-events-none" />
 
         {/* TOP: CIGI Differential Aptitude Test (C-DAT) */}
-        <div className="relative z-10 flex flex-col lg:flex-row justify-between gap-10 text-left w-full">
-          
-          <div className="flex-1 min-w-0">
-            {/* Header row containing title and logo on mobile */}
-            <div className="flex flex-row items-start justify-between gap-4 w-full">
-              <div className="space-y-3 flex-1 min-w-0">
-                <span className="inline-flex items-center gap-1.5 text-xs bg-brand/10 text-brand-dark border border-brand/20 px-3.5 py-1.5 rounded-full capitalize font-bold shadow-sm whitespace-nowrap">
-                  <span className="w-1.5 h-1.5 rounded-full bg-brand-dark animate-pulse"></span>
-                  Scientific Strengths Mapping
-                </span>
-                <h3 className="text-xl sm:text-3xl md:text-4xl font-header font-black capitalize tracking-tight text-zinc-900 mt-2 group-hover:text-brand-dark transition-colors duration-500">
-                  CIGI Differential Aptitude Test (C-DAT)
-                </h3>
-              </div>
-              
-              {/* Mobile/Tablet Logo (hidden on lg) */}
-              <div className="lg:hidden w-20 h-20 sm:w-28 sm:h-28 flex items-center justify-center shrink-0 pointer-events-none mt-1">
+        <div className="relative z-10 flex flex-col justify-between gap-6 text-left w-full">
+          <div className="space-y-4">
+            <div>
+              <span className="inline-flex items-center gap-1.5 text-xs bg-brand/10 text-brand-dark border border-brand/20 px-3.5 py-1.5 rounded-full capitalize font-bold shadow-sm">
+                <span className="w-1.5 h-1.5 rounded-full bg-brand-dark animate-pulse"></span>
+                Scientific Strengths Mapping
+              </span>
+            </div>
+            
+            {/* Flex container for Title and Logo opposite to each other */}
+            <div className="flex flex-row items-center justify-between gap-6 w-full">
+              <h3 className="text-xl sm:text-3xl md:text-4xl font-header font-black capitalize tracking-tight text-zinc-900 group-hover:text-brand-dark transition-colors duration-500 flex-1 min-w-0">
+                CIGI Differential Aptitude Test (C-DAT)
+              </h3>
+              <div className="w-20 h-20 sm:w-28 sm:h-28 lg:w-36 lg:h-36 flex items-center justify-center shrink-0 pointer-events-none">
                 <img
                   src="/CIGI.png"
                   alt="CIGI Differential Aptitude Test (C-DAT) Logo"
-                  className="w-full h-full object-contain mix-blend-multiply transition-all duration-500"
+                  className="w-full h-full object-contain mix-blend-multiply transition-all duration-500 hover:scale-105"
                 />
               </div>
             </div>
 
             {/* Paragraph below title & logo */}
-            <p className="text-zinc-650 font-sans text-sm md:text-base font-medium leading-relaxed mt-4">
+            <p className="text-zinc-650 font-sans text-sm md:text-base font-medium leading-relaxed max-w-4xl">
               C-DAT (CIGI-Differential Aptitude Test). This standardized tool effectively identifies the inherent capacities of high school and higher secondary students. C-DAT has guided many students from various states in India and abroad towards suitable academic and career paths.
             </p>
-          </div>
 
-          {/* Desktop Logo (hidden on mobile/tablet) */}
-          <div className="hidden lg:flex w-36 h-36 items-center justify-center z-10 shrink-0 pointer-events-none lg:pointer-events-auto">
-            <img
-              src="/CIGI.png"
-              alt="CIGI Differential Aptitude Test (C-DAT) Logo"
-              className="w-full h-full object-contain mix-blend-multiply transition-all duration-500 lg:hover:scale-105"
-            />
+            {/* Scroll navigation button to registration section */}
+            <div className="pt-2 flex">
+              <button
+                type="button"
+                onClick={() => {
+                  const el = document.getElementById('registration-section');
+                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="inline-flex items-center gap-2 px-6 py-3.5 bg-zinc-900 hover:bg-zinc-800 text-white font-bold text-sm rounded-xl transition duration-300 cursor-pointer shadow-sm border-none"
+              >
+                Register & Get Group Code
+                <ArrowRight className="w-4 h-4 text-brand animate-pulse" />
+              </button>
+            </div>
           </div>
         </div>
 
         {/* MIDDLE: Registration & Group Code */}
-        <div className="relative z-10 pt-8 border-t border-zinc-200/80 space-y-8">
+        <div id="registration-section" className="relative z-10 pt-8 border-t border-zinc-200/80 space-y-8">
           <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
             <div className="space-y-2">
               <span className="inline-block text-xs bg-zinc-900 text-white px-3 py-1.5 rounded-md capitalize font-bold tracking-wide shadow-md">
