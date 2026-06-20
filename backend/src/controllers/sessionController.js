@@ -93,7 +93,25 @@ const SessionController = {
             amountPaid: appt ? appt.amountPaid : 0,
             paymentStatus: appt ? appt.paymentStatus : 'PENDING',
             razorpayPaymentId: appt ? appt.razorpayPaymentId : '',
-            razorpayOrderId: appt ? appt.razorpayOrderId : ''
+            razorpayOrderId: appt ? appt.razorpayOrderId : '',
+            student: user ? {
+              name: user.name,
+              email: user.email,
+              phone: user.phone,
+              schoolName: user.schoolName,
+              grade: user.grade,
+              guardianName: user.guardianName,
+              guardianPhone: user.guardianPhone
+            } : null,
+            counsellor: counsellor ? {
+              name: counsellor.name,
+              email: counsellor.email,
+              phone: counsellor.phone,
+              title: counsellor.title,
+              education: counsellor.education,
+              specialties: counsellor.specialties,
+              qualifications: counsellor.qualifications
+            } : null
           };
         })
       );
@@ -182,7 +200,25 @@ const SessionController = {
           amountPaid: appt ? appt.amountPaid : 0,
           paymentStatus: appt ? appt.paymentStatus : 'PENDING',
           razorpayPaymentId: appt ? appt.razorpayPaymentId : '',
-          razorpayOrderId: appt ? appt.razorpayOrderId : ''
+          razorpayOrderId: appt ? appt.razorpayOrderId : '',
+          student: user ? {
+            name: user.name,
+            email: user.email,
+            phone: user.phone,
+            schoolName: user.schoolName,
+            grade: user.grade,
+            guardianName: user.guardianName,
+            guardianPhone: user.guardianPhone
+          } : null,
+          counsellor: counsellor ? {
+            name: counsellor.name,
+            email: counsellor.email,
+            phone: counsellor.phone,
+            title: counsellor.title,
+            education: counsellor.education,
+            specialties: counsellor.specialties,
+            qualifications: counsellor.qualifications
+          } : null
         }
       });
     } catch (error) {

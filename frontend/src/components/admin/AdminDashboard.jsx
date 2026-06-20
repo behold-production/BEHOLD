@@ -3,7 +3,7 @@ import {
   User, ShieldAlert, Award, Trash, Check, Plus, Lock,
   Settings, KeyRound, BarChart3, LogOut, Search, ShieldCheck,
   Calendar, Clock, Link, AlertCircle, Edit, Video, UserPlus,
-  MessageSquare, FileSpreadsheet, HelpCircle, X, ChevronRight, ChevronLeft, Mail, Shield, Menu, Brain, Download
+  MessageSquare, FileSpreadsheet, HelpCircle, X, ChevronRight, ChevronLeft, Mail, Shield, Menu, Brain, Download, FileText
 } from 'lucide-react';
 import html2canvas from 'html2canvas-pro';
 import jsPDF from 'jspdf';
@@ -348,6 +348,179 @@ export default function AdminDashboard({ setView }) {
     }
   };
 
+  const downloadDiagnosticPDF = async (booking) => {
+    try {
+      const doc = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      });
+
+      // Colors
+      const brandDark = '#0f172a'; // slate-900
+      const brandTeal = '#0d9488'; // teal-600
+      const textGray = '#4b5563'; // gray-600
+
+      // Top Accent Line
+      doc.setFillColor(13, 148, 136); // Teal
+      doc.rect(0, 0, 210, 10, 'F');
+
+      // Clinical Header Title
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(22);
+      doc.setTextColor(15, 23, 42); // Slate-900
+      doc.text('BEHOLD.', 20, 25);
+
+      doc.setFontSize(9);
+      doc.setFont('Helvetica', 'normal');
+      doc.setTextColor(100, 116, 139); // slate-500
+      doc.text('Premium Clinical Counselling & Guidance Services', 20, 30);
+
+      // Document Type Tag
+      doc.setFillColor(240, 253, 250); // Light teal bg
+      doc.roundedRect(138, 18, 52, 11, 2, 2, 'F');
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(13, 148, 136); // Teal text
+      doc.text('CLINICAL REPORT', 144, 25);
+
+      // Divider
+      doc.setDrawColor(226, 232, 240); // slate-200
+      doc.line(20, 36, 190, 36);
+
+      // 1. Counsellor (Practitioner) Details - Left side
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(10);
+      doc.setTextColor(15, 23, 42);
+      doc.text('PRACTITIONER DETAILS', 20, 45);
+
+      doc.setFont('Helvetica', 'normal');
+      doc.setFontSize(8.5);
+      doc.setTextColor(71, 85, 105); // slate-600
+
+      const cName = booking.counsellorName || (booking.counsellor && booking.counsellor.name) || 'Consultant Psychologist';
+      const cTitle = (booking.counsellor && booking.counsellor.title) || 'Consultant Psychologist';
+      const cEdu = (booking.counsellor && booking.counsellor.education) || 'Professional Degree';
+      const cPhone = (booking.counsellor && booking.counsellor.phone) || 'N/A';
+      const cEmail = (booking.counsellor && booking.counsellor.email) || 'N/A';
+
+      doc.text(`Name: ${cName}`, 20, 51);
+      doc.text(`Title: ${cTitle}`, 20, 56);
+      doc.text(`Education: ${cEdu}`, 20, 61);
+      doc.text(`Contact: ${cPhone} | ${cEmail}`, 20, 66);
+
+      // 2. Student (Client) Details - Right side
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(10);
+      doc.setTextColor(15, 23, 42);
+      doc.text('STUDENT DETAILS', 115, 45);
+
+      doc.setFont('Helvetica', 'normal');
+      doc.setFontSize(8.5);
+      doc.setTextColor(71, 85, 105);
+
+      const sName = booking.studentName || (booking.student && booking.student.name) || 'N/A';
+      const sSchool = (booking.student && booking.student.schoolName) || 'N/A';
+      const sGrade = (booking.student && booking.student.grade) || 'N/A';
+      const sGName = (booking.student && booking.student.guardianName) || 'N/A';
+      const sGPhone = (booking.student && booking.student.guardianPhone) || 'N/A';
+
+      doc.text(`Name: ${sName}`, 115, 51);
+      doc.text(`School: ${sSchool}`, 115, 56);
+      doc.text(`Grade: ${sGrade}`, 115, 61);
+      doc.text(`Guardian: ${sGName} (${sGPhone})`, 115, 66);
+
+      // Divider
+      doc.line(20, 72, 190, 72);
+
+      // Metadata Info Box
+      doc.setFillColor(248, 250, 252); // slate-50 bg
+      doc.rect(20, 77, 170, 15, 'F');
+      doc.setDrawColor(241, 245, 249);
+      doc.rect(20, 77, 170, 15, 'S');
+
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(8);
+      doc.setTextColor(100, 116, 139); // slate-500
+      doc.text('REPORT ID:', 24, 82);
+      doc.text('SESSION SCHEDULE:', 80, 82);
+      doc.text('DATE GENERATED:', 145, 82);
+
+      doc.setFont('Helvetica', 'normal');
+      doc.setTextColor(15, 23, 42);
+      const displayId = booking.id ? booking.id.toString().substring(Math.max(0, booking.id.toString().length - 6)) : 'N/A';
+      doc.text(`CL-REP-${displayId}`, 24, 88);
+      doc.text(`${formatDateString(booking.date)} at ${booking.time}`, 80, 88);
+      doc.text(`${formatDateString(new Date())}`, 145, 88);
+
+      // Clinical Notes / Diagnostics
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.setTextColor(13, 148, 136); // Teal
+      doc.text('CLINICAL ASSESSMENT & DIAGNOSTICS', 20, 103);
+
+      doc.setDrawColor(13, 148, 136);
+      doc.setLineWidth(0.3);
+      doc.line(20, 105, 190, 105);
+
+      // Section Content
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(15, 23, 42);
+      doc.text('Clinical Assessment & Observation Notes:', 20, 112);
+
+      doc.setFont('Helvetica', 'normal');
+      doc.setTextColor(51, 65, 85); // slate-700
+      doc.setFontSize(8.5);
+      
+      const clinicalNotes = booking.notes || 'No clinical/diagnostic notes recorded for this session.';
+      const notesLines = doc.splitTextToSize(clinicalNotes, 170);
+      doc.text(notesLines, 20, 118);
+
+      // Recommendations & Action Plan
+      let yOffset = 118 + (notesLines.length * 4.5) + 10;
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(15, 23, 42);
+      doc.text('Recommendations & Feedback:', 20, yOffset);
+
+      doc.setFont('Helvetica', 'normal');
+      doc.setTextColor(51, 65, 85);
+      doc.setFontSize(8.5);
+
+      const feedbackText = booking.feedback || 'No student-facing feedback or recommendations recorded.';
+      const feedbackLines = doc.splitTextToSize(feedbackText, 170);
+      doc.text(feedbackLines, 20, yOffset + 6);
+
+      // Footer / Prescription style signature line
+      let sigY = yOffset + (feedbackLines.length * 4.5) + 25;
+      if (sigY > 260) {
+        doc.addPage();
+        sigY = 40;
+      }
+
+      doc.setDrawColor(203, 213, 225); // slate-300
+      doc.line(130, sigY, 190, sigY);
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(8.5);
+      doc.setTextColor(15, 23, 42);
+      doc.text('Authorized Signature', 142, sigY + 5);
+      doc.setFont('Helvetica', 'normal');
+      doc.setTextColor(100, 116, 139);
+      doc.text(`${cName}, ${cTitle}`, 130, sigY + 9, { maxWidth: 60 });
+
+      // Footer Notice
+      doc.setFontSize(8);
+      doc.text('This is a confidential medical-styled diagnostic document issued by the consultant psychologist.', 20, sigY + 18);
+      doc.text('Please secure this document. For inquiries, reach out to contact@beholdaspire.com.', 20, sigY + 22);
+
+      doc.save(`Clinical_Report_${sName.replace(/\s+/g, '_')}_${displayId}.pdf`);
+    } catch (e) {
+      console.error(e);
+      await showAlert("Failed to generate Clinical Diagnostic PDF: " + e.message);
+    }
+  };
+
   const { user, login, register, logout, isLoading } = useAuth();
 
   // Tab Section: default to overview or users if sub-admin
@@ -502,7 +675,8 @@ export default function AdminDashboard({ setView }) {
     hours: 0,
     modes: ['ONLINE', 'OFFLINE', 'DOOR_STEP'],
     title: 'Consultant Psychologist',
-    profilePic: ''
+    profilePic: '',
+    isTopFive: false
   });
   const [psyFormError, setPsyFormError] = useState('');
   const [psyFormSuccess, setPsyFormSuccess] = useState('');
@@ -1239,6 +1413,7 @@ export default function AdminDashboard({ setView }) {
         hours: psyForm.hours,
         modes: psyForm.modes,
         title: psyForm.title,
+        isTopFive: psyForm.isTopFive,
         availability: {
           activeDays: adminActiveDays,
           availableSlots: adminAvailableSlots
@@ -1259,7 +1434,9 @@ export default function AdminDashboard({ setView }) {
         phone: '',
         hours: 0,
         modes: ['ONLINE', 'OFFLINE', 'DOOR_STEP'],
-        title: 'Consultant Psychologist'
+        title: 'Consultant Psychologist',
+        profilePic: '',
+        isTopFive: false
       });
       setAdminActiveDays({
         1: true, 2: true, 3: true, 4: true, 5: true, 6: false, 0: false
@@ -1292,7 +1469,8 @@ export default function AdminDashboard({ setView }) {
       hours: psy.hours !== undefined ? psy.hours : 0,
       modes: psy.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP'],
       title: psy.title || 'Consultant Psychologist',
-      profilePic: psy.profilePic || psy.image || ''
+      profilePic: psy.profilePic || psy.image || '',
+      isTopFive: psy.isTopFive || false
     });
     setPsyProfilePicFile(null);
 
@@ -1361,6 +1539,7 @@ export default function AdminDashboard({ setView }) {
         hours: psyForm.hours,
         modes: psyForm.modes,
         title: psyForm.title,
+        isTopFive: psyForm.isTopFive,
         availability: {
           activeDays: adminActiveDays,
           availableSlots: adminAvailableSlots
@@ -1864,6 +2043,41 @@ export default function AdminDashboard({ setView }) {
       reloadData();
     } catch (err) {
       await showAlert(err.message || "Failed to toggle verification.");
+    }
+  };
+
+  // Toggle Featured status directly from list
+  const handleTogglePsyTopFive = async (psy) => {
+    if (!hasPsyPermission) {
+      await showAlert("Access Denied: You do not have permission to modify psychologists.");
+      return;
+    }
+    try {
+      const nextValue = !psy.isTopFive;
+      const specialtiesStr = Array.isArray(psy.specialties)
+        ? psy.specialties.join(', ')
+        : (psy.specialties || '');
+
+      await ApiService.updateAdminCounsellor(psy.id, {
+        name: psy.name,
+        email: psy.email,
+        education: psy.education || '',
+        specialties: specialtiesStr,
+        price: psy.price || 1200,
+        lang: psy.lang || 'English, Malayalam',
+        bio: psy.bio || '',
+        defaultMeetLink: psy.defaultMeetLink || '',
+        phone: psy.phone || '',
+        hours: psy.hours || 0,
+        modes: psy.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP'],
+        title: psy.title || 'Consultant Psychologist',
+        profilePic: psy.profilePic || psy.image || '',
+        isTopFive: nextValue,
+        availability: psy.availability
+      });
+      reloadData();
+    } catch (err) {
+      await showAlert(err.message || "Failed to update featured status.");
     }
   };
 
@@ -3779,16 +3993,17 @@ export default function AdminDashboard({ setView }) {
                       <tr className="bg-zinc-900 text-zinc-400 font-bold capitalize  border-b border-zinc-850 text-left">
                         <th className="p-3 whitespace-nowrap">Psychologist Name</th>
                         <th className="p-3 whitespace-nowrap">Email Address</th>
+                        <th className="p-3 text-center whitespace-nowrap">Featured (Top 5)</th>
                         <th className="p-3 text-center whitespace-nowrap">Clearance Status</th>
                         <th className="p-3 text-center font-bold whitespace-nowrap">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
                       {isDbLoading ? (
-                        <SkeletonTableRows cols={4} />
+                        <SkeletonTableRows cols={5} />
                       ) : psychologistsList.length === 0 ? (
                         <tr>
-                          <td colSpan={4} className="p-8 text-center text-zinc-500 italic whitespace-nowrap">No psychologist registries match the active query.</td>
+                          <td colSpan={5} className="p-8 text-center text-zinc-500 italic whitespace-nowrap">No psychologist registries match the active query.</td>
                         </tr>
                       ) : (
                         psychologistsList.slice((psyPage - 1) * psyLimit, psyPage * psyLimit).map(psy => (
@@ -3809,6 +4024,19 @@ export default function AdminDashboard({ setView }) {
                               </div>
                             </td>
                             <td className="p-3 text-zinc-350 font-medium whitespace-nowrap">{psy.email}</td>
+                            <td className="p-3 text-center whitespace-nowrap">
+                              <button
+                                onClick={() => handleTogglePsyTopFive(psy)}
+                                className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer border ${
+                                  psy.isTopFive
+                                    ? 'bg-amber-500/20 border-amber-500/40 text-amber-400 hover:bg-amber-500/30'
+                                    : 'bg-zinc-900 border-zinc-800 text-zinc-500 hover:text-zinc-300 hover:bg-zinc-850'
+                                }`}
+                                title="Toggle Top 5 featured status"
+                              >
+                                {psy.isTopFive ? '★ Featured' : '☆ Feature'}
+                              </button>
+                            </td>
                             <td className="p-3 text-center whitespace-nowrap">
                               {(psy.status === 'APPROVED' || psy.status === 'ACTIVE') ? (
                                 <div className="flex items-center justify-center gap-2">
@@ -4420,6 +4648,15 @@ export default function AdminDashboard({ setView }) {
                                     title="Download Receipt PDF"
                                   >
                                     <Download className="w-3.5 h-3.5" />
+                                  </button>
+                                )}
+                                {booking.status === 'COMPLETED' && (
+                                  <button
+                                    onClick={() => downloadDiagnosticPDF(booking)}
+                                    className="p-1.5 bg-zinc-900 text-emerald-500 hover:text-white hover:bg-emerald-900 rounded border border-zinc-800 transition cursor-pointer"
+                                    title="Download Clinical Report PDF"
+                                  >
+                                    <FileText className="w-3.5 h-3.5" />
                                   </button>
                                 )}
                                 <button
@@ -5635,6 +5872,19 @@ export default function AdminDashboard({ setView }) {
                       </label>
                     ))}
                   </div>
+                </div>
+
+                <div className="sm:col-span-2 space-y-1.5 pt-1">
+                  <label className="text-sm capitalize  font-bold text-zinc-400 block mb-1">Featured Psychologist (Top 5)</label>
+                  <label className="flex items-center gap-2 cursor-pointer text-sm text-zinc-300 select-none font-semibold">
+                    <input
+                      type="checkbox"
+                      checked={psyForm.isTopFive || false}
+                      onChange={(e) => setPsyForm({ ...psyForm, isTopFive: e.target.checked })}
+                      className="w-4 h-4 rounded border-zinc-805 bg-zinc-955 text-brand focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
+                    />
+                    <span>Show as Top 5 Featured Counselor on Landing Page</span>
+                  </label>
                 </div>
 
                 <div className="sm:col-span-2 space-y-1">

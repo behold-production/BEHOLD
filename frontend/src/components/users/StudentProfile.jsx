@@ -152,6 +152,17 @@ export default function StudentProfile() {
 
   const currentSection = useMemo(() => searchParams.get('tab') || 'overview', [searchParams]);
 
+  const enablePsychology = useMemo(() => {
+    try {
+      const stored = localStorage.getItem('behold_site_settings');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        return parsed.enablePsychology !== false;
+      }
+    } catch (e) {}
+    return true;
+  }, []);
+
   // Completion bar reflects live formData so users see real-time profile strength
   const completion = useMemo(() => calculateCompletion(formData), [formData]);
   const greeting = useMemo(() => getGreeting(), []);
@@ -518,10 +529,35 @@ export default function StudentProfile() {
 
     try {
       const session = bookedSessions.find(b => b.id === sessionId);
-      if (session && isSessionCompleted(session)) {
-        await showAlert('Cannot cancel a session that is already in the past or completed.', 'Error');
-        return;
+      if (session) {
+        if (isSessionCompleted(session)) {
+          await showAlert('Cannot cancel a session that is already in the past or completed.', 'Error');
+          return;
+        }
+
+        // Enforce 1-hour constraint on frontend
+        try {
+          const [year, month, day] = session.date.split('-').map(Number);
+          const timeParts = session.time.split(' ');
+          let [hours, minutes] = timeParts[0].split(':').map(Number);
+          const meridiem = timeParts[1];
+          if (meridiem === 'PM' && hours < 12) hours += 12;
+          if (meridiem === 'AM' && hours === 12) hours = 0;
+          
+          const sessionTime = new Date(year, month - 1, day, hours, minutes);
+          const now = new Date();
+          const diffMs = sessionTime - now;
+          const diffHours = diffMs / (1000 * 60 * 60);
+          
+          if (diffHours < 1) {
+            await showAlert('Cannot cancel a session less than 1 hour before the scheduled time.', 'Error');
+            return;
+          }
+        } catch (e) {
+          console.error("Error parsing session datetime for cancel check", e);
+        }
       }
+
       await ApiService.cancelAppointment(sessionId, reason);
 
       // Reload sessions list
@@ -771,13 +807,15 @@ export default function StudentProfile() {
               {nextSession ? 'Your next session is coming up.' : 'Ready to start your journey?'}
             </p>
           </div>
-          <button
-            type="button"
-            onClick={() => navigate('/booking')}
-            className="inline-flex items-center gap-1.5 min-h-[40px] px-4 py-2 bg-zinc-900 text-white text-xs font-semibold rounded-lg hover:bg-zinc-800 transition-colors border-none"
-          >
-            <Plus className="w-3.5 h-3.5" /> Book Session
-          </button>
+          {enablePsychology && (
+            <button
+              type="button"
+              onClick={() => navigate('/booking')}
+              className="inline-flex items-center gap-1.5 min-h-[40px] px-4 py-2 bg-zinc-900 text-white text-xs font-semibold rounded-lg hover:bg-zinc-800 transition-colors border-none"
+            >
+              <Plus className="w-3.5 h-3.5" /> Book Session
+            </button>
+          )}
         </div>
 
         {/* Next session card */}
@@ -836,13 +874,15 @@ export default function StudentProfile() {
             <p className="text-xs text-zinc-500 mt-1">
               Schedule a session with one of our certified professionals.
             </p>
-            <button
-              type="button"
-              onClick={() => navigate('/booking')}
-              className="mt-4 inline-flex items-center gap-1.5 min-h-[40px] px-5 py-2 bg-zinc-900 text-white text-xs font-semibold rounded-lg hover:bg-zinc-800 transition-colors border-none"
-            >
-              <Plus className="w-3.5 h-3.5" /> Book a Session
-            </button>
+            {enablePsychology && (
+              <button
+                type="button"
+                onClick={() => navigate('/booking')}
+                className="mt-4 inline-flex items-center gap-1.5 min-h-[40px] px-5 py-2 bg-zinc-900 text-white text-xs font-semibold rounded-lg hover:bg-zinc-800 transition-colors border-none"
+              >
+                <Plus className="w-3.5 h-3.5" /> Book a Session
+              </button>
+            )}
           </div>
         )}
 
@@ -913,20 +953,22 @@ export default function StudentProfile() {
                 ? `Next session with ${bookedSessions[0].advisorName} on ${formatDateString(bookedSessions[0].date)}.`
                 : 'Connect 1-on-1 with certified psychologists and career mentors.'}
             </p>
-            <button
-              type="button"
-              onClick={() => {
-                if (bookedSessions.length > 0) {
-                  handleSectionChange('booked');
-                  setSessionSubTab('upcoming');
-                } else {
-                  navigate('/booking');
-                }
-              }}
-              className="mt-4 w-full min-h-[40px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg text-xs font-semibold transition-colors border-none"
-            >
-              {bookedSessions.length > 0 ? 'View Bookings' : 'Book a Session'}
-            </button>
+            {(bookedSessions.length > 0 || enablePsychology) && (
+              <button
+                type="button"
+                onClick={() => {
+                  if (bookedSessions.length > 0) {
+                    handleSectionChange('booked');
+                    setSessionSubTab('upcoming');
+                  } else {
+                    navigate('/booking');
+                  }
+                }}
+                className="mt-4 w-full min-h-[40px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg text-xs font-semibold transition-colors border-none"
+              >
+                {bookedSessions.length > 0 ? 'View Bookings' : 'Book a Session'}
+              </button>
+            )}
           </div>
         </div>
 
@@ -1235,7 +1277,7 @@ export default function StudentProfile() {
             </button>
           </div>
 
-          {sessionSubTab === 'upcoming' && (
+          {sessionSubTab === 'upcoming' && enablePsychology && (
             <button
               type="button"
               onClick={() => navigate('/booking')}
@@ -1385,8 +1427,36 @@ export default function StudentProfile() {
                             )}
                             <button
                               type="button"
-                              onClick={() => navigate('/booking')}
-                              className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 border border-zinc-200 hover:border-zinc-300 rounded-lg text-xs font-medium text-zinc-600 hover:text-zinc-900 transition-colors bg-white"
+                              onClick={async () => {
+                                // 1. Check 1 hour lead time
+                                try {
+                                  const [year, month, day] = session.date.split('-').map(Number);
+                                  const timeParts = session.time.split(' ');
+                                  let [hours, minutes] = timeParts[0].split(':').map(Number);
+                                  const meridiem = timeParts[1];
+                                  if (meridiem === 'PM' && hours < 12) hours += 12;
+                                  if (meridiem === 'AM' && hours === 12) hours = 0;
+                                  
+                                  const sessionTime = new Date(year, month - 1, day, hours, minutes);
+                                  const now = new Date();
+                                  const diffMs = sessionTime - now;
+                                  const diffHours = diffMs / (1000 * 60 * 60);
+                                  
+                                  if (diffHours < 1) {
+                                    await showAlert('Cannot reschedule a session less than 1 hour before the scheduled time.', 'Error');
+                                    return;
+                                  }
+                                } catch (e) {}
+
+                                // 2. Check per-appointment limit
+                                if ((session.rescheduleCount || 0) >= 3) {
+                                  await showAlert('This session has already reached the maximum rescheduling limit (3 times).', 'Error');
+                                  return;
+                                }
+
+                                navigate(`/booking?reschedule=${session.id}`);
+                              }}
+                              className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 border border-zinc-200 hover:border-zinc-300 rounded-lg text-xs font-medium text-zinc-650 hover:text-zinc-900 transition-colors bg-white cursor-pointer"
                             >
                               <RefreshCw className="w-3.5 h-3.5" /> Reschedule
                             </button>
@@ -1415,13 +1485,15 @@ export default function StudentProfile() {
                     ? 'Book a session with one of our experts.'
                     : `No ${sessionFilter} sessions scheduled.`}
                 </p>
-                <button
-                  type="button"
-                  onClick={() => navigate('/booking')}
-                  className="mt-4 inline-flex items-center gap-1.5 min-h-[36px] px-5 py-2 bg-zinc-900 text-white text-xs font-semibold rounded-lg hover:bg-zinc-800 transition-colors border-none"
-                >
-                  <Plus className="w-3.5 h-3.5" /> Book a Session
-                </button>
+                {enablePsychology && (
+                  <button
+                    type="button"
+                    onClick={() => navigate('/booking')}
+                    className="mt-4 inline-flex items-center gap-1.5 min-h-[36px] px-5 py-2 bg-zinc-900 text-white text-xs font-semibold rounded-lg hover:bg-zinc-800 transition-colors border-none"
+                  >
+                    <Plus className="w-3.5 h-3.5" /> Book a Session
+                  </button>
+                )}
               </div>
             )}
           </div>
@@ -1462,15 +1534,23 @@ export default function StudentProfile() {
                         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-2">
                           <div>
                             <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                              <span className="text-xs px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold capitalize ">
+                              <span className={`text-xs px-2 py-0.5 rounded-md font-semibold capitalize border ${
+                                session.status === 'COMPLETED'
+                                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                  : session.status === 'EXPIRED' || session.status === 'CANCELLED' || session.status === 'REJECTED'
+                                    ? 'bg-rose-50 text-rose-700 border-rose-200'
+                                    : 'bg-amber-50 text-amber-700 border-amber-200'
+                              }`}>
                                 {session.status}
                               </span>
                               <span className="text-xs text-zinc-400 font-medium capitalize ">{session.mode}</span>
-                              <div className="flex items-center gap-0.5">
-                                {[1, 2, 3, 4, 5].map(n => (
-                                  <Star key={n} className="w-3 h-3 fill-amber-400 text-amber-400" />
-                                ))}
-                              </div>
+                              {session.status === 'COMPLETED' && (
+                                <div className="flex items-center gap-0.5">
+                                  {[1, 2, 3, 4, 5].map(n => (
+                                    <Star key={n} className="w-3 h-3 fill-amber-400 text-amber-400" />
+                                  ))}
+                                </div>
+                              )}
                             </div>
                             <p className="font-semibold text-zinc-900">{session.advisorName}</p>
                             <p className="text-xs text-zinc-500 mt-0.5">{session.advisorRole || 'Consultation'}</p>
@@ -1503,13 +1583,15 @@ export default function StudentProfile() {
                                 <Download className="w-3.5 h-3.5" /> Receipt
                               </button>
                             )}
-                            <button
-                              type="button"
-                              className="inline-flex items-center gap-1 text-xs font-medium text-zinc-500 hover:text-zinc-900 transition-colors"
-                              title="Download certificate"
-                            >
-                              <Download className="w-3.5 h-3.5" /> Certificate
-                            </button>
+                            {session.status === 'COMPLETED' && (
+                              <button
+                                type="button"
+                                className="inline-flex items-center gap-1 text-xs font-medium text-zinc-500 hover:text-zinc-900 transition-colors"
+                                title="Download certificate"
+                              >
+                                <Download className="w-3.5 h-3.5" /> Certificate
+                              </button>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -1524,13 +1606,15 @@ export default function StudentProfile() {
                 </div>
                 <p className="text-sm font-semibold text-zinc-700">No completed sessions yet</p>
                 <p className="text-xs text-zinc-500 mt-1">Finished sessions will appear here with counsellor feedback.</p>
-                <button
-                  type="button"
-                  onClick={() => navigate('/booking')}
-                  className="mt-4 inline-flex items-center gap-1.5 min-h-[36px] px-5 py-2 bg-zinc-900 text-white text-xs font-semibold rounded-lg hover:bg-zinc-800 transition-colors border-none"
-                >
-                  <Plus className="w-3.5 h-3.5" /> Book First Session
-                </button>
+                {enablePsychology && (
+                  <button
+                    type="button"
+                    onClick={() => navigate('/booking')}
+                    className="mt-4 inline-flex items-center gap-1.5 min-h-[36px] px-5 py-2 bg-zinc-900 text-white text-xs font-semibold rounded-lg hover:bg-zinc-800 transition-colors border-none"
+                  >
+                    <Plus className="w-3.5 h-3.5" /> Book First Session
+                  </button>
+                )}
               </div>
             )}
           </div>

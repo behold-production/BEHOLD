@@ -32,12 +32,14 @@ export default function AuthModals({ isOpen, onClose }) {
   // Body scroll lock + Esc to close
   useEffect(() => {
     if (!isOpen) return;
+    document.documentElement.classList.add('no-scroll');
     document.body.classList.add('no-scroll');
     const handleEsc = (e) => {
       if (e.key === 'Escape') onClose();
     };
     document.addEventListener('keydown', handleEsc);
     return () => {
+      document.documentElement.classList.remove('no-scroll');
       document.body.classList.remove('no-scroll');
       document.removeEventListener('keydown', handleEsc);
     };

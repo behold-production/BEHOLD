@@ -279,16 +279,18 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
               </button>
             )}
 
-            <button
-              type="button"
-              onClick={() => navigate('/booking')}
-              className={`px-5 h-10 text-sm font-bold rounded-lg border transition-all duration-300 cursor-pointer flex items-center gap-1.5 capitalize  ${currentView === '/booking'
-                ? 'bg-zinc-950 text-white border-zinc-950'
-                : 'bg-brand hover:bg-brand-dark text-zinc-900 shadow-xs border-brand/30'
-                }`}
-            >
-              <span>Book Session</span>
-            </button>
+            {siteSettings.enablePsychology !== false && (
+              <button
+                type="button"
+                onClick={() => navigate('/booking')}
+                className={`px-5 h-10 text-sm font-bold rounded-lg border transition-all duration-300 cursor-pointer flex items-center gap-1.5 capitalize  ${currentView === '/booking'
+                  ? 'bg-zinc-950 text-white border-zinc-950'
+                  : 'bg-brand hover:bg-brand-dark text-zinc-900 shadow-xs border-brand/30'
+                  }`}
+              >
+                <span>Book Session</span>
+              </button>
+            )}
           </div>
 
           {/* Mobile Actions (Avatar only) */}
@@ -430,16 +432,18 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
             <span>Contact</span>
           </button>
 
-          <button
-            type="button"
-            onClick={() => { navigate('/booking'); setIsMenuOpen(false); }}
-            className={`w-full text-left px-3.5 py-3.5 rounded-lg text-sm font-bold capitalize  transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${currentView === '/booking'
-              ? 'bg-brand/10 text-zinc-900 border-brand font-bold'
-              : 'text-zinc-650 hover:text-zinc-900 hover:bg-zinc-50 border-transparent'
-              }`}
-          >
-            <span>Book Session</span>
-          </button>
+          {siteSettings.enablePsychology !== false && (
+            <button
+              type="button"
+              onClick={() => { navigate('/booking'); setIsMenuOpen(false); }}
+              className={`w-full text-left px-3.5 py-3.5 rounded-lg text-sm font-bold capitalize  transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${currentView === '/booking'
+                ? 'bg-brand/10 text-zinc-900 border-brand font-bold'
+                : 'text-zinc-650 hover:text-zinc-900 hover:bg-zinc-50 border-transparent'
+                }`}
+            >
+              <span>Book Session</span>
+            </button>
+          )}
         </div>
 
         {/* Drawer Footer: User Profile Widget */}

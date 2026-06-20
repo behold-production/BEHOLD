@@ -349,7 +349,7 @@ export default function App() {
             <Hero setView={() => { }} navigateToSection={navigateToSection} siteSettings={siteSettings} />
             <CdatSection setView={() => { }} />
             {siteSettings.enablePsychology !== false && <Services setView={() => { }} onBookTherapist={handleBookTherapist} />}
-            <About setView={() => { }} />
+            <About setView={() => { }} enablePsychology={siteSettings.enablePsychology !== false} />
             <Faq />
             <Inquiry testProfile={testProfile} siteSettings={siteSettings} />
           </main>

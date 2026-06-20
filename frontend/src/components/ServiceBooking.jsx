@@ -51,6 +51,66 @@ const CAREER_FLOW = {
 export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedAdvisor, onOpenAuth }) {
   const { user, login, register } = useAuth();
   const { showAlert } = useCustomDialog();
+
+  let enablePsychology = true;
+  try {
+    const stored = localStorage.getItem('behold_site_settings');
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      enablePsychology = parsed.enablePsychology !== false;
+    }
+  } catch (err) {}
+
+  const isRescheduleParam = !!(new URLSearchParams(window.location.search).get('reschedule'));
+
+  if (!enablePsychology && !isRescheduleParam) {
+    return (
+      <div className="min-h-[75vh] flex flex-col items-center justify-center text-center px-4 py-16 bg-zinc-50 font-sans select-none">
+        <div className="max-w-md w-full bg-white/70 backdrop-blur-md border border-zinc-200/80 p-8 rounded-2xl sm:rounded-3xl shadow-lg space-y-6 animate-in fade-in zoom-in-95 duration-500">
+          <div className="w-16 h-16 bg-brand/10 border border-brand/20 rounded-2xl flex items-center justify-center mx-auto text-brand-dark shadow-sm">
+            <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+
+          <div className="space-y-2">
+            <span className="text-[10px] bg-zinc-900 text-white px-3 py-1 rounded-md capitalize font-bold w-fit mx-auto block tracking-wide">
+              system notice
+            </span>
+            <h2 className="text-xl sm:text-2xl font-header font-black tracking-tight text-zinc-900 capitalize">
+              Bookings are Temporarily Paused
+            </h2>
+            <p className="text-xs sm:text-sm text-zinc-650 leading-relaxed font-light">
+              We are currently performing scheduled maintenance on our scheduling database. During this time, booking new consulting sessions is temporarily offline. We apologize for the inconvenience!
+            </p>
+          </div>
+
+          <div className="pt-4 border-t border-zinc-150 flex flex-col sm:flex-row gap-3 justify-center items-center font-semibold">
+            <button
+              type="button"
+              onClick={() => {
+                window.spaNavigate('/');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="px-6 py-3 min-h-[48px] bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-bold capitalize rounded-lg transition-all cursor-pointer shadow-md w-full sm:w-auto text-center border-none"
+            >
+              Go to Home Page
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                window.spaNavigate('/sample-test');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="px-6 py-3 min-h-[48px] bg-white border border-zinc-200 hover:border-zinc-300 text-zinc-700 hover:bg-zinc-50 text-xs font-bold capitalize rounded-lg transition-all cursor-pointer w-full sm:w-auto text-center"
+            >
+              Take Sample Test
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
   
   const getLocalTodayString = () => {
     const today = new Date();
@@ -75,6 +135,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
   const [advisors, setAdvisors] = useState([]);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showNoCounsellorsModal, setShowNoCounsellorsModal] = useState(false);
+  const [rescheduleSession, setRescheduleSession] = useState(null);
 
   const [existingAppointments, setExistingAppointments] = useState([]);
 
@@ -103,6 +164,40 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
           const apptsRes = await ApiService.getAppointments();
           if (apptsRes.success && apptsRes.data) {
             setExistingAppointments(apptsRes.data);
+          }
+        }
+
+        // Process reschedule param if present
+        const queryParams = new URLSearchParams(window.location.search);
+        const rescheduleId = queryParams.get('reschedule');
+        if (rescheduleId) {
+          const sessionsRes = await ApiService.getSessions();
+          if (sessionsRes.success && sessionsRes.data) {
+            const actualSessionId = rescheduleId;
+            const foundSession = sessionsRes.data.find(s => s.id === actualSessionId || s.appointmentId === actualSessionId || s.id === 'mock_session_' + actualSessionId);
+            if (foundSession) {
+              setRescheduleSession(foundSession);
+              setBookingService(foundSession.service || 'counselling');
+              setBookingMode(foundSession.mode || 'ONLINE');
+              
+              // Resolve counsellor object
+              const matchedCounsellor = resolved.find(a => a.id === foundSession.counsellorId);
+              if (matchedCounsellor) {
+                setSelectedAdvisor(matchedCounsellor);
+                setAdvisorConfirmed(true);
+              } else {
+                const tempAdvisor = {
+                  id: foundSession.counsellorId,
+                  name: foundSession.counsellorName || foundSession.advisorName || 'Your Psychologist',
+                  role: foundSession.advisorRole || 'Consultant Psychologist',
+                  price: foundSession.amountPaid || 1200,
+                  modes: [foundSession.mode || 'ONLINE'],
+                  availabilitySlots: {}
+                };
+                setSelectedAdvisor(tempAdvisor);
+                setAdvisorConfirmed(true);
+              }
+            }
           }
         }
       } catch (err) {
@@ -844,6 +939,29 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
     }
   };
 
+  const handleRescheduleConfirm = async () => {
+    if (!selectedDate || !selectedTime) {
+      toast.error("Please select a date and time slot first.");
+      return;
+    }
+    setIsSubmitting(true);
+    try {
+      const apptId = rescheduleSession.appointmentId;
+      const res = await ApiService.rescheduleAppointment(apptId, selectedDate, selectedTime);
+      if (res.success) {
+        toast.success(res.message || "Reschedule requested! Pending counsellor approval.");
+        setIsSuccess(true);
+        setBookingStep('success');
+      } else {
+        toast.error(res.message || "Rescheduling failed.");
+      }
+    } catch (err) {
+      toast.error(err.message || "Failed to reschedule session.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const handleAuthSuccess = (authData) => {
     setShowAuthModal(false);
     setIsSubmitting(false);
@@ -928,13 +1046,15 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
         {/* Header */}
         <div className="text-center flex flex-col items-center space-y-4">
           <span className="text-xs bg-zinc-900 text-white px-3.5 py-1 rounded-md capitalize  font-semibold w-fit block">
-            book a session
+            {rescheduleSession ? 'reschedule session' : 'book a session'}
           </span>
           <h1 className="text-2xl sm:text-3xl md:text-5xl font-header font-black tracking-tight leading-none text-zinc-900 capitalize">
-            Book Your Session
+            {rescheduleSession ? 'Reschedule Your Session' : 'Book Your Session'}
           </h1>
           <p className="text-zinc-650 max-w-xl mx-auto text-xs sm:text-sm md:text-base leading-relaxed font-light">
-            Choose your service, pick a date and time, and confirm with a real advisor — it only takes a few minutes.
+            {rescheduleSession
+              ? `Reschedule your appointment with ${rescheduleSession.advisorName || rescheduleSession.counsellorName}. Pick a new date and time.`
+              : 'Choose your service, pick a date and time, and confirm with a real advisor — it only takes a few minutes.'}
           </p>
         </div>
 
@@ -1029,20 +1149,29 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
               </div>
               <div className="space-y-2">
                 <span className="text-xs bg-emerald-100 text-emerald-800 border border-emerald-200 px-3 py-1 rounded-md capitalize  font-semibold w-fit mx-auto block">
-                  session confirmed
+                  {rescheduleSession ? 'reschedule requested' : 'session confirmed'}
                 </span>
                 <h3 className="text-xl sm:text-2xl font-bold capitalize text-zinc-900 tracking-wide mt-2">
-                  You're All Set!
+                  {rescheduleSession ? 'Reschedule Requested' : "You're All Set!"}
                 </h3>
-                <p className="text-xs text-zinc-600 max-w-md mx-auto leading-relaxed">
-                  Thank you, <strong>{bookingForm.name || 'Student'}</strong>. Your payment is confirmed and your session is booked. Here's your booking summary:
+                <p className="text-xs text-zinc-650 max-w-md mx-auto leading-relaxed">
+                  {rescheduleSession ? (
+                    <>
+                      Your reschedule request for <strong>{bookingForm.name || user?.name || 'Student'}</strong> has been submitted.
+                      The counsellor <strong>{selectedAdvisor?.name}</strong> has been notified and needs to approve this request.
+                    </>
+                  ) : (
+                    <>
+                      Thank you, <strong>{bookingForm.name || 'Student'}</strong>. Your payment is confirmed and your session is booked. Here's your booking summary:
+                    </>
+                  )}
                 </p>
               </div>
 
               {/* Invoice & Meeting Card */}
               <div className="bg-white border border-zinc-200/80 rounded-xl p-5 text-left space-y-4 shadow-xs">
                 <h4 className="text-xs font-semibold capitalize  text-zinc-400 border-b border-zinc-100 pb-2">
-                  Booking Confirmation
+                  {rescheduleSession ? 'Reschedule Details' : 'Booking Confirmation'}
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                   <div>
@@ -1058,7 +1187,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                     <span className="text-xs text-zinc-500 block">Mode: {bookingMode === 'ONLINE' ? 'Video Call' : bookingMode === 'DOOR_STEP' ? 'Home Visit' : 'At Center'}</span>
                   </div>
                   <div>
-                    <span className="text-zinc-400 block font-light">Date & Time Slot</span>
+                    <span className="text-zinc-400 block font-light">New Date & Time Slot</span>
                     <span className="font-bold text-zinc-800 block">
                       {formatDateString(selectedDate)}
                     </span>
@@ -1067,16 +1196,15 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                     </span>
                   </div>
                   <div>
-                    <span className="text-zinc-400 block font-light">Payment</span>
-                    <span className="font-semibold text-zinc-800 capitalize block">
-                      Online (Razorpay)
+                    <span className="text-zinc-400 block font-light">Status</span>
+                    <span className="font-semibold text-zinc-800 capitalize block text-brand-dark">
+                      {rescheduleSession ? 'Pending Approval' : 'Confirmed & Paid'}
                     </span>
-                    <span className="text-xs text-zinc-500 block">Amount Paid: ₹{netTotal}</span>
                   </div>
                 </div>
 
                 {/* Google Meet Link if Online */}
-                {bookingMode === 'ONLINE' && (
+                {bookingMode === 'ONLINE' && !rescheduleSession && (
                   <div className="pt-3 border-t border-zinc-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-zinc-50 p-3 rounded-lg border border-zinc-200 mt-2">
                     <div>
                       <span className="text-xs font-bold text-zinc-700 block capitalize tracking-wide">
@@ -1101,70 +1229,84 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                 )}
               </div>
 
-              {/* Receipt Exporter (PDF) & Restart buttons */}
-              <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
-                <button
-                  type="button"
-                  disabled={downloadingPdf}
-                  onClick={() => {
-                    const bookingId = Date.now();
-                    const advisorName = selectedAdvisor?.name || 'Assigned Advisor';
-                    const advisorRole = selectedAdvisor?.role || 'Consultant Psychologist';
-                    const service = bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring';
-                    const mode = bookingMode === 'ONLINE' ? 'Video Call' : bookingMode === 'DOOR_STEP' ? 'Home Visit' : 'At Center';
-                    const amount = netTotal;
-                    const clientName = bookingForm.name || 'Student';
-                    const clientEmail = bookingForm.email;
-                    const clientPhone = bookingForm.phone;
-                    const meetLink = bookingMode === 'ONLINE' ? (selectedAdvisor?.defaultMeetLink || 'https://meet.google.com/abc-defg-hij') : null;
+              {/* Back to Profile / Restart buttons */}
+              <div className="flex flex-col sm:flex-row gap-3 justify-center items-center font-semibold">
+                {rescheduleSession ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      window.location.href = '/profile?tab=booked';
+                    }}
+                    className="px-6 py-3 bg-zinc-900 text-white hover:bg-zinc-800 text-xs font-semibold capitalize  rounded-lg transition cursor-pointer w-full sm:w-auto text-center border-none shadow-md"
+                  >
+                    Go to My Sessions
+                  </button>
+                ) : (
+                  <>
+                    <button
+                      type="button"
+                      disabled={downloadingPdf}
+                      onClick={() => {
+                        const bookingId = Date.now();
+                        const advisorName = selectedAdvisor?.name || 'Assigned Advisor';
+                        const advisorRole = selectedAdvisor?.role || 'Consultant Psychologist';
+                        const service = bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring';
+                        const mode = bookingMode === 'ONLINE' ? 'Video Call' : bookingMode === 'DOOR_STEP' ? 'Home Visit' : 'At Center';
+                        const amount = netTotal;
+                        const clientName = bookingForm.name || 'Student';
+                        const clientEmail = bookingForm.email;
+                        const clientPhone = bookingForm.phone;
+                        const meetLink = bookingMode === 'ONLINE' ? (selectedAdvisor?.defaultMeetLink || 'https://meet.google.com/abc-defg-hij') : null;
 
-                    downloadPDFReceipt({
-                      id: bookingId,
-                      service,
-                      mode,
-                      advisorName,
-                      advisorRole,
-                      date: selectedDate,
-                      time: selectedTime,
-                      clientName,
-                      clientEmail,
-                      clientPhone,
-                      amount,
-                      meetLink,
-                      baseFee: baseFee,
-                      gstPercent: gstEnabled ? gstPercent : 0,
-                      gstAmount: gstAmount,
-                      appliedDiscount: appliedDiscount
-                    });
-                  }}
-                  className="px-6 py-3 bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 hover:border-zinc-300 text-xs font-bold capitalize rounded-lg transition cursor-pointer w-full sm:w-auto flex items-center justify-center gap-2"
-                >
-                  <FileDown className="w-4 h-4 text-zinc-700" />
-                  {downloadingPdf ? 'Generating PDF...' : 'Download PDF Receipt'}
-                </button>
+                        downloadPDFReceipt({
+                          id: bookingId,
+                          service,
+                          mode,
+                          advisorName,
+                          advisorRole,
+                          date: selectedDate,
+                          time: selectedTime,
+                          clientName,
+                          clientEmail,
+                          clientPhone,
+                          amount,
+                          meetLink,
+                          baseFee: baseFee,
+                          gstPercent: gstEnabled ? gstPercent : 0,
+                          gstAmount: gstAmount,
+                          appliedDiscount: appliedDiscount
+                        });
+                      }}
+                      className="px-6 py-3 bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 hover:border-zinc-300 text-xs font-bold capitalize rounded-lg transition cursor-pointer w-full sm:w-auto flex items-center justify-center gap-2"
+                    >
+                      <FileDown className="w-4 h-4 text-zinc-700" />
+                      {downloadingPdf ? 'Generating PDF...' : 'Download PDF Receipt'}
+                    </button>
 
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsSuccess(false);
-                    setSelectedDate('');
-                    setSelectedTime('');
-                    setSelectedAdvisor(null);
-                    setAdvisorConfirmed(false);
-                    setAppliedDiscount(0);
-                    setCouponInput('');
-                    setCardNum('');
-                    setCardName('');
-                    setCardExpiry('');
-                    setCardCvv('');
-                    setUpiAddress('');
-                    setBookingStep('config');
-                    try { sessionStorage.removeItem(BOOKING_DRAFT_KEY); } catch (e) { /* ignore */ }
-                  }}
-                  className="px-6 py-3 bg-zinc-900 text-white hover:bg-zinc-800 text-xs font-semibold capitalize  rounded-lg transition cursor-pointer w-full sm:w-auto text-center border-none shadow-md"
-                >
-                  Book Another Session
-                </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsSuccess(false);
+                        setSelectedDate('');
+                        setSelectedTime('');
+                        setSelectedAdvisor(null);
+                        setAdvisorConfirmed(false);
+                        setAppliedDiscount(0);
+                        setCouponInput('');
+                        setCardNum('');
+                        setCardName('');
+                        setCardExpiry('');
+                        setCardCvv('');
+                        setUpiAddress('');
+                        setBookingStep('config');
+                        try { sessionStorage.removeItem(BOOKING_DRAFT_KEY); } catch (e) { /* ignore */ }
+                      }}
+                      className="px-6 py-3 bg-zinc-900 text-white hover:bg-zinc-800 text-xs font-semibold capitalize  rounded-lg transition cursor-pointer w-full sm:w-auto text-center border-none shadow-md"
+                    >
+                      Book Another Session
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           ) : (
@@ -1197,12 +1339,15 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                             <button
                               type="button"
                               key={s.id}
-                              onClick={() => setBookingService(s.id)}
+                              onClick={() => {
+                                if (rescheduleSession) return;
+                                setBookingService(s.id);
+                              }}
                               className={`px-3 py-3 text-xs capitalize font-bold border rounded-xl transition cursor-pointer text-center min-h-[56px] leading-tight ${
                                 bookingService === s.id
                                   ? 'bg-zinc-900 border-zinc-900 text-white shadow-xs font-bold'
                                   : 'bg-white text-zinc-600 border-zinc-200 hover:border-brand/40 hover:text-brand-dark'
-                              }`}
+                              } ${rescheduleSession ? 'opacity-65 cursor-not-allowed' : ''}`}
                             >
                               <span className="flex flex-col items-center">
                                 <span>{s.label}</span>
@@ -1226,12 +1371,15 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                             <button
                               type="button"
                               key={m.id}
-                              onClick={() => setBookingMode(m.id)}
+                              onClick={() => {
+                                if (rescheduleSession) return;
+                                setBookingMode(m.id);
+                              }}
                               className={`flex flex-col items-center justify-center gap-1 px-2 py-3.5 text-xs capitalize font-semibold border rounded-xl transition cursor-pointer text-center min-h-[56px] leading-tight ${
                                 bookingMode === m.id
                                   ? 'bg-brand/10 text-brand-dark border-brand/30 shadow-xs font-bold'
                                   : 'bg-white text-zinc-600 border-zinc-200 hover:border-brand/40 hover:text-brand-dark'
-                              }`}
+                              } ${rescheduleSession ? 'opacity-65 cursor-not-allowed' : ''}`}
                             >
                               <span className="flex flex-col items-center">
                                 <span>{m.label}</span>
@@ -1359,14 +1507,25 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
                     {/* Navigation */}
                     <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-8 mt-4 border-t border-zinc-200">
-                      <button
-                        type="button"
-                        disabled={!selectedDate || !selectedTime || !selectedAdvisor}
-                        onClick={() => handleStepChange('payment')}
-                        className="px-6 py-3 min-h-[48px] bg-zinc-900 text-white font-bold capitalize  text-xs rounded-lg transition hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center border-none shadow-xs w-full sm:w-auto"
-                      >
-                        Account & Payment
-                      </button>
+                      {rescheduleSession ? (
+                        <button
+                          type="button"
+                          disabled={!selectedDate || !selectedTime || isSubmitting}
+                          onClick={handleRescheduleConfirm}
+                          className="px-6 py-3 min-h-[48px] bg-zinc-900 text-white font-bold capitalize text-xs rounded-lg transition hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center border-none shadow-xs w-full sm:w-auto"
+                        >
+                          {isSubmitting ? 'Rescheduling...' : 'Confirm Reschedule'}
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          disabled={!selectedDate || !selectedTime || !selectedAdvisor}
+                          onClick={() => handleStepChange('payment')}
+                          className="px-6 py-3 min-h-[48px] bg-zinc-900 text-white font-bold capitalize  text-xs rounded-lg transition hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center border-none shadow-xs w-full sm:w-auto"
+                        >
+                          Account & Payment
+                        </button>
+                      )}
                     </div>
                   </div>
                 )}

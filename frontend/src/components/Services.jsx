@@ -19,6 +19,9 @@ export default function Services({ setView, onBookTherapist }) {
   const [visibleCount, setVisibleCount] = useState(5);
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
 
+  const siteSettings = JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
+  const enablePsychology = siteSettings.enablePsychology !== false;
+
   // Reset visibleCount when search or filter changes
   useEffect(() => {
     setVisibleCount(5);
@@ -48,7 +51,9 @@ export default function Services({ setView, onBookTherapist }) {
               price: c.price || 1200,
               nextAvailable: 'Available Today',
               rating: c.rating || 5.0,
-              modes: c.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP']
+              modes: c.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP'],
+              isTopFive: c.isTopFive || false,
+              bio: c.bio || ''
             };
           });
           setAdvisors(mapped);
@@ -75,6 +80,10 @@ export default function Services({ setView, onBookTherapist }) {
     const matchesFilter = activeFilter === 'All' || adv.role.includes(activeFilter);
     return matchesSearch && matchesFilter;
   }).sort((a, b) => {
+    // Featured Top 5 psychologists always sorted first
+    if (a.isTopFive && !b.isTopFive) return -1;
+    if (!a.isTopFive && b.isTopFive) return 1;
+
     if (sortBy === 'Price: Low to High') return a.price - b.price;
     if (sortBy === 'Price: High to Low') return b.price - a.price;
     if (sortBy === 'Experience') return b.hours - a.hours;
@@ -119,20 +128,22 @@ export default function Services({ setView, onBookTherapist }) {
             </p>
           </div>
 
-          <button
-            type="button"
-            onClick={() => {
-              if (onBookTherapist) {
-                onBookTherapist('career_1');
-              } else {
-                window.spaNavigate('/booking');
-              }
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            className="relative z-10 min-h-[52px] px-8 py-3.5 bg-zinc-900 text-white hover:bg-gradient-brand hover:text-zinc-950 hover:border-transparent border border-zinc-900 rounded-xl text-sm font-bold tracking-wide transition-all duration-300 cursor-pointer w-full sm:w-auto text-center shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98]"
-          >
-            Book a Career Mentoring Session
-          </button>
+          {enablePsychology && (
+            <button
+              type="button"
+              onClick={() => {
+                if (onBookTherapist) {
+                  onBookTherapist('career_1');
+                } else {
+                  window.spaNavigate('/booking');
+                }
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="relative z-10 min-h-[52px] px-8 py-3.5 bg-zinc-900 text-white hover:bg-gradient-brand hover:text-zinc-955 hover:border-transparent border border-zinc-900 rounded-xl text-sm font-bold tracking-wide transition-all duration-300 cursor-pointer w-full sm:w-auto text-center shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98]"
+            >
+              Book a Career Mentoring Session
+            </button>
+          )}
         </div>
 
         {/* SERVICE 3: PSYCHOLOGICAL COUNSELLING */}
@@ -164,21 +175,23 @@ export default function Services({ setView, onBookTherapist }) {
             </p>
           </div>
 
-          <button
-            type="button"
-            onClick={() => {
-              if (onBookTherapist) {
-                onBookTherapist('c3');
-              } else {
-                window.spaNavigate('/booking');
-              }
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            className="relative z-10 min-h-[52px] px-8 py-3.5 bg-zinc-900 text-white hover:bg-gradient-brand hover:text-zinc-950 hover:border-transparent border border-zinc-900 rounded-xl text-sm font-bold tracking-wide transition-all duration-300 cursor-pointer w-full sm:w-auto flex justify-center items-center gap-2 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98]"
-          >
-            <span>Talk to a Counsellor</span>
-            <ChevronRight className="w-4 h-4" />
-          </button>
+          {enablePsychology && (
+            <button
+              type="button"
+              onClick={() => {
+                if (onBookTherapist) {
+                  onBookTherapist('c3');
+                } else {
+                  window.spaNavigate('/booking');
+                }
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="relative z-10 min-h-[52px] px-8 py-3.5 bg-zinc-900 text-white hover:bg-gradient-brand hover:text-zinc-955 hover:border-transparent border border-zinc-900 rounded-xl text-sm font-bold tracking-wide transition-all duration-300 cursor-pointer w-full sm:w-auto flex justify-center items-center gap-2 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98]"
+            >
+              <span>Talk to a Counsellor</span>
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          )}
         </div>
 
       </div>
@@ -329,6 +342,19 @@ export default function Services({ setView, onBookTherapist }) {
                   </div>
                 </div>
 
+                {/* Bio Block */}
+                <div className="px-5 sm:px-6 pt-4 flex items-center justify-between gap-2 text-xs text-zinc-500 font-light w-full">
+                  <span className="italic truncate flex-1 min-w-0">
+                    {advisor.bio || 'Consultant psychologist specializing in guidance and mental wellbeing.'}
+                  </span>
+                  <button
+                    onClick={() => window.spaNavigate(`/advisor/${advisor.id}`)}
+                    className="text-brand font-semibold hover:underline shrink-0 bg-transparent border-none p-0 cursor-pointer text-xs"
+                  >
+                    Read More
+                  </button>
+                </div>
+
                 {/* Specialties Pills */}
                 <div className="p-5 sm:p-6 border-b border-zinc-100 bg-white flex-1 flex flex-col justify-center">
                   <span className="text-xs font-medium text-zinc-400 mb-2.5 block text-left uppercase tracking-wider">Specialties</span>
@@ -362,36 +388,40 @@ export default function Services({ setView, onBookTherapist }) {
 
                 {/* Card Action Footer */}
                 <div className="p-5 sm:p-6 bg-white flex flex-col space-y-4 mt-auto">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-zinc-500 font-medium">Next available</span>
-                    <div className="flex items-center gap-1.5 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">
-                      <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-                      <span className="font-medium text-emerald-700 text-[11px] sm:text-xs">{advisor.nextAvailable}</span>
+                  {enablePsychology && (
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-zinc-500 font-medium">Next available</span>
+                      <div className="flex items-center gap-1.5 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">
+                        <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+                        <span className="font-medium text-emerald-700 text-[11px] sm:text-xs">{advisor.nextAvailable}</span>
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   <div className="flex gap-2.5 w-full pt-1">
                     <button
                       type="button"
                       onClick={() => window.spaNavigate(`/advisor/${advisor.id}`)}
-                      className="flex-1 min-h-[44px] py-2.5 border border-zinc-200 hover:border-zinc-300 hover:bg-zinc-50 rounded-xl text-xs sm:text-sm font-semibold text-zinc-700 transition-all duration-200 cursor-pointer active:scale-95 text-center bg-white flex items-center justify-center"
+                      className={`min-h-[44px] py-2.5 border border-zinc-200 hover:border-zinc-300 hover:bg-zinc-50 rounded-xl text-xs sm:text-sm font-semibold text-zinc-700 transition-all duration-200 cursor-pointer active:scale-95 text-center bg-white flex items-center justify-center ${enablePsychology ? 'flex-1' : 'w-full'}`}
                     >
                       View Profile
                     </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (onBookTherapist) {
-                          onBookTherapist(advisor.id);
-                        } else {
-                          window.spaNavigate('/booking');
-                        }
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                      }}
-                      className="flex-1 min-h-[44px] py-2.5 bg-zinc-900 hover:bg-zinc-800 text-white rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer active:scale-95 shadow-sm border-none flex items-center justify-center"
-                    >
-                      Book Session
-                    </button>
+                    {enablePsychology && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (onBookTherapist) {
+                            onBookTherapist(advisor.id);
+                          } else {
+                            window.spaNavigate('/booking');
+                          }
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                        className="flex-1 min-h-[44px] py-2.5 bg-zinc-900 hover:bg-zinc-800 text-white rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer active:scale-95 shadow-sm border-none flex items-center justify-center"
+                      >
+                        Book Session
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
@@ -423,18 +453,31 @@ export default function Services({ setView, onBookTherapist }) {
                   </div>
                 </div>
 
-                {/* Middle Column: Specialties */}
-                <div className="p-5 sm:p-6 flex-[2] flex flex-col justify-center border-b lg:border-b-0 lg:border-r border-zinc-100 bg-white">
-                  <span className="text-xs font-medium text-zinc-400 mb-2.5 block text-left uppercase tracking-wider">Specialties</span>
-                  <div className="flex flex-wrap gap-2">
-                    {advisor.specialties.map((spec, i) => (
-                      <span
-                        key={i}
-                        className="px-2.5 py-1 bg-zinc-50 border border-zinc-200 text-xs font-medium text-zinc-600 rounded-md"
-                      >
-                        {spec}
-                      </span>
-                    ))}
+                {/* Middle Column: Specialties & Bio */}
+                <div className="p-5 sm:p-6 flex-[2] flex flex-col justify-center gap-3 border-b lg:border-b-0 lg:border-r border-zinc-100 bg-white">
+                  <div>
+                    <span className="text-xs font-medium text-zinc-400 mb-1.5 block text-left uppercase tracking-wider">Specialties</span>
+                    <div className="flex flex-wrap gap-2">
+                      {advisor.specialties.map((spec, i) => (
+                        <span
+                          key={i}
+                          className="px-2.5 py-1 bg-zinc-50 border border-zinc-200 text-xs font-medium text-zinc-600 rounded-md"
+                        >
+                          {spec}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between gap-2 text-xs text-zinc-500 font-light w-full">
+                    <span className="italic truncate flex-1 min-w-0">
+                      {advisor.bio || 'Consultant psychologist specializing in guidance and mental wellbeing.'}
+                    </span>
+                    <button
+                      onClick={() => window.spaNavigate(`/advisor/${advisor.id}`)}
+                      className="text-brand font-semibold hover:underline shrink-0 bg-transparent border-none p-0 cursor-pointer text-xs"
+                    >
+                      Read More
+                    </button>
                   </div>
                 </div>
 
@@ -456,36 +499,40 @@ export default function Services({ setView, onBookTherapist }) {
 
                 {/* Right Column: Actions */}
                 <div className="p-5 sm:p-6 bg-white flex-1 lg:flex-initial lg:basis-[22%] shrink-0 flex flex-col justify-center space-y-4 mt-auto lg:mt-0">
-                  <div className="flex items-center justify-between lg:justify-center gap-2">
-                    <span className="text-xs text-zinc-500 font-medium lg:hidden">Next available</span>
-                    <div className="flex items-center gap-1.5 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100 lg:w-full lg:justify-center">
-                      <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse shrink-0" />
-                      <span className="font-medium text-emerald-700 text-[11px] sm:text-xs text-center">{advisor.nextAvailable}</span>
+                  {enablePsychology && (
+                    <div className="flex items-center justify-between lg:justify-center gap-2">
+                      <span className="text-xs text-zinc-500 font-medium lg:hidden">Next available</span>
+                      <div className="flex items-center gap-1.5 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100 lg:w-full lg:justify-center">
+                        <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse shrink-0" />
+                        <span className="font-medium text-emerald-700 text-[11px] sm:text-xs text-center">{advisor.nextAvailable}</span>
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   <div className="flex lg:flex-col gap-2.5 w-full">
                     <button
                       type="button"
                       onClick={() => window.spaNavigate(`/advisor/${advisor.id}`)}
-                      className="flex-1 min-h-[44px] py-2.5 border border-zinc-200 hover:border-zinc-300 hover:bg-zinc-50 rounded-xl text-xs sm:text-sm font-semibold text-zinc-700 transition-all duration-200 cursor-pointer active:scale-95 text-center bg-white flex items-center justify-center"
+                      className={`min-h-[44px] py-2.5 border border-zinc-200 hover:border-zinc-300 hover:bg-zinc-50 rounded-xl text-xs sm:text-sm font-semibold text-zinc-700 transition-all duration-200 cursor-pointer active:scale-95 text-center bg-white flex items-center justify-center ${enablePsychology ? 'flex-1' : 'w-full lg:w-full'}`}
                     >
                       View Profile
                     </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (onBookTherapist) {
-                          onBookTherapist(advisor.id);
-                        } else {
-                          window.spaNavigate('/booking');
-                        }
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                      }}
-                      className="flex-1 min-h-[44px] py-2.5 bg-zinc-900 hover:bg-zinc-800 text-white rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer active:scale-95 shadow-sm border-none flex items-center justify-center"
-                    >
-                      Book Session
-                    </button>
+                    {enablePsychology && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (onBookTherapist) {
+                            onBookTherapist(advisor.id);
+                          } else {
+                            window.spaNavigate('/booking');
+                          }
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                        className="flex-1 min-h-[44px] py-2.5 bg-zinc-900 hover:bg-zinc-800 text-white rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer active:scale-95 shadow-sm border-none flex items-center justify-center"
+                      >
+                        Book Session
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>

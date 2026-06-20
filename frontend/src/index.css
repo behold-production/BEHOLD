@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Baloo+Chettan+2:wght@400;500;600;700;800&family=Manjari:wght@400;700&family=Noto+Sans+Malayalam:wght@400;500;700&family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -13,8 +13,8 @@
   --color-zinc-900: var(--color-slate-900);
   --color-zinc-800: var(--color-slate-800);
   --color-zinc-700: var(--color-slate-700);
-  --font-sans: 'Poppins', system-ui, sans-serif;
-  --font-header: 'Poppins', sans-serif;
+  --font-sans: 'Poppins', 'Baloo Chettan 2', 'Manjari', 'Noto Sans Malayalam', system-ui, sans-serif;
+  --font-header: 'Poppins', 'Baloo Chettan 2', 'Manjari', 'Noto Sans Malayalam', sans-serif;
   --color-brand: #00D1D1;
   --color-brand-dark: #00b4b4;
   --color-brand-light: #e6fbfb;
@@ -95,14 +95,16 @@ html {
 body {
   background-color: #fafafa;
   color: #18181b;
-  font-family: 'Poppins', system-ui, sans-serif;
+  font-family: 'Poppins', 'Baloo Chettan 2', 'Manjari', 'Noto Sans Malayalam', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 /* Prevent layout shift when modal/drawer locks body scroll */
+html.no-scroll,
 body.no-scroll {
-  overflow: hidden;
+  overflow: hidden !important;
+  height: 100vh !important;
   touch-action: none;
 }
 

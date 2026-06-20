@@ -43,6 +43,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
+          style={{ fontFamily: "'Poppins', 'Baloo Chettan 2', 'Manjari', 'Noto Sans Malayalam', sans-serif" }}
           className="text-4xl sm:text-5xl md:text-6xl lg:text-[5rem] font-black text-white leading-tight sm:leading-[1.1] tracking-tight drop-shadow-lg"
         >
           {renderTitle(rawTitle)}

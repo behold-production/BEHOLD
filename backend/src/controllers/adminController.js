@@ -173,10 +173,31 @@ const AdminController = {
         appointments.map(async (a) => {
           const user = await StorageService.findById('users', a.userId);
           const counsellor = await StorageService.findById('counsellors', a.counsellorId);
+          const session = await StorageService.findOne('sessions', { appointmentId: a.id });
           return {
             ...a,
             studentName: user ? user.name : 'Unknown Student',
-            counsellorName: counsellor ? counsellor.name : 'Unknown Counsellor'
+            counsellorName: counsellor ? counsellor.name : 'Unknown Counsellor',
+            notes: session ? session.notes : '',
+            feedback: session ? session.feedback : '',
+            student: user ? {
+              name: user.name,
+              email: user.email,
+              phone: user.phone,
+              schoolName: user.schoolName,
+              grade: user.grade,
+              guardianName: user.guardianName,
+              guardianPhone: user.guardianPhone
+            } : null,
+            counsellor: counsellor ? {
+              name: counsellor.name,
+              email: counsellor.email,
+              phone: counsellor.phone,
+              title: counsellor.title,
+              education: counsellor.education,
+              specialties: counsellor.specialties,
+              qualifications: counsellor.qualifications
+            } : null
           };
         })
       );
@@ -337,7 +358,7 @@ const AdminController = {
   // Create Counsellor
   async createCounsellor(req, res, next) {
     try {
-      const { name, email, password, education, specialties, price, lang, bio, defaultMeetLink, phone, hours, modes, title, availability } = req.body;
+      const { name, email, password, education, specialties, price, lang, bio, defaultMeetLink, phone, hours, modes, title, availability, isTopFive } = req.body;
       const bcrypt = require('bcryptjs');
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
@@ -371,7 +392,8 @@ const AdminController = {
           : (modes && typeof modes === 'string'
             ? modes.split(',').map(m => m.trim().toUpperCase()).filter(Boolean)
             : ['ONLINE', 'OFFLINE', 'DOOR_STEP']),
-        title: title || 'Consultant Psychologist'
+        title: title || 'Consultant Psychologist',
+        isTopFive: isTopFive === true || isTopFive === 'true'
       });
       const { password: _, ...counsellorData } = newCounsellor;
       res.status(201).json({ success: true, message: 'Counsellor created successfully', data: counsellorData });
@@ -384,7 +406,7 @@ const AdminController = {
   async updateCounsellor(req, res, next) {
     try {
       const { id } = req.params;
-      const { name, email, password, education, specialties, price, lang, bio, defaultMeetLink, phone, hours, modes, title, availability, profilePic, profilePicPublicId } = req.body;
+      const { name, email, password, education, specialties, price, lang, bio, defaultMeetLink, phone, hours, modes, title, availability, profilePic, profilePicPublicId, isTopFive } = req.body;
       const updates = {};
       if (name !== undefined) updates.name = name;
       if (email !== undefined) updates.email = email.toLowerCase();
@@ -419,6 +441,7 @@ const AdminController = {
       if (availability !== undefined) updates.availability = availability;
       if (profilePic !== undefined) updates.profilePic = profilePic;
       if (profilePicPublicId !== undefined) updates.profilePicPublicId = profilePicPublicId;
+      if (isTopFive !== undefined) updates.isTopFive = isTopFive === true || isTopFive === 'true';
       
       if (password) {
         const bcrypt = require('bcryptjs');

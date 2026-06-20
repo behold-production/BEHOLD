@@ -2,13 +2,15 @@ import React, { useState, useEffect } from 'react';
 import {
   User, Calendar, Clock, BookOpen, Link, ShieldAlert, Award, Globe,
   Edit, Video, BarChart3, AlertCircle, Save, LogOut,
-  X, ChevronRight, Mail, Shield, Menu
+  X, ChevronRight, Mail, Shield, Menu, FileText
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useCustomDialog } from '../../context/CustomDialogContext';
 import LogoutConfirmModal from '../LogoutConfirmModal';
 import ApiService from '../../services/api';
 import { formatDateString } from '../../utils/dateFormatter';
+import jsPDF from 'jspdf';
+import toast from 'react-hot-toast';
 
 export default function PsychologistDashboard({ setView }) {
   const { user, login, register, logout, isLoading, updateUser } = useAuth();
@@ -247,6 +249,7 @@ export default function PsychologistDashboard({ setView }) {
       if (bookingsRes.success && bookingsRes.data) {
         const list = bookingsRes.data;
         const myBookings = list.map(b => ({
+          ...b,
           id: b.id,
           userId: b.userId,
           userName: b.studentName || 'Student Name',
@@ -275,6 +278,179 @@ export default function PsychologistDashboard({ setView }) {
       toast.error("Failed to load dashboard data. Please try again.");
     } finally {
       setIsLoadingData(false);
+    }
+  };
+
+  const downloadDiagnosticPDF = async (booking) => {
+    try {
+      const doc = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      });
+
+      // Colors
+      const brandDark = '#0f172a'; // slate-900
+      const brandTeal = '#0d9488'; // teal-600
+      const textGray = '#4b5563'; // gray-600
+
+      // Top Accent Line
+      doc.setFillColor(13, 148, 136); // Teal
+      doc.rect(0, 0, 210, 10, 'F');
+
+      // Clinical Header Title
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(22);
+      doc.setTextColor(15, 23, 42); // Slate-900
+      doc.text('BEHOLD.', 20, 25);
+
+      doc.setFontSize(9);
+      doc.setFont('Helvetica', 'normal');
+      doc.setTextColor(100, 116, 139); // slate-500
+      doc.text('Premium Clinical Counselling & Guidance Services', 20, 30);
+
+      // Document Type Tag
+      doc.setFillColor(240, 253, 250); // Light teal bg
+      doc.roundedRect(138, 18, 52, 11, 2, 2, 'F');
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(13, 148, 136); // Teal text
+      doc.text('CLINICAL REPORT', 144, 25);
+
+      // Divider
+      doc.setDrawColor(226, 232, 240); // slate-200
+      doc.line(20, 36, 190, 36);
+
+      // 1. Counsellor (Practitioner) Details - Left side
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(10);
+      doc.setTextColor(15, 23, 42);
+      doc.text('PRACTITIONER DETAILS', 20, 45);
+
+      doc.setFont('Helvetica', 'normal');
+      doc.setFontSize(8.5);
+      doc.setTextColor(71, 85, 105); // slate-600
+
+      const cName = booking.counsellorName || (booking.counsellor && booking.counsellor.name) || 'Consultant Psychologist';
+      const cTitle = (booking.counsellor && booking.counsellor.title) || 'Consultant Psychologist';
+      const cEdu = (booking.counsellor && booking.counsellor.education) || 'Professional Degree';
+      const cPhone = (booking.counsellor && booking.counsellor.phone) || 'N/A';
+      const cEmail = (booking.counsellor && booking.counsellor.email) || 'N/A';
+
+      doc.text(`Name: ${cName}`, 20, 51);
+      doc.text(`Title: ${cTitle}`, 20, 56);
+      doc.text(`Education: ${cEdu}`, 20, 61);
+      doc.text(`Contact: ${cPhone} | ${cEmail}`, 20, 66);
+
+      // 2. Student (Client) Details - Right side
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(10);
+      doc.setTextColor(15, 23, 42);
+      doc.text('STUDENT DETAILS', 115, 45);
+
+      doc.setFont('Helvetica', 'normal');
+      doc.setFontSize(8.5);
+      doc.setTextColor(71, 85, 105);
+
+      const sName = booking.studentName || (booking.student && booking.student.name) || 'N/A';
+      const sSchool = (booking.student && booking.student.schoolName) || 'N/A';
+      const sGrade = (booking.student && booking.student.grade) || 'N/A';
+      const sGName = (booking.student && booking.student.guardianName) || 'N/A';
+      const sGPhone = (booking.student && booking.student.guardianPhone) || 'N/A';
+
+      doc.text(`Name: ${sName}`, 115, 51);
+      doc.text(`School: ${sSchool}`, 115, 56);
+      doc.text(`Grade: ${sGrade}`, 115, 61);
+      doc.text(`Guardian: ${sGName} (${sGPhone})`, 115, 66);
+
+      // Divider
+      doc.line(20, 72, 190, 72);
+
+      // Metadata Info Box
+      doc.setFillColor(248, 250, 252); // slate-50 bg
+      doc.rect(20, 77, 170, 15, 'F');
+      doc.setDrawColor(241, 245, 249);
+      doc.rect(20, 77, 170, 15, 'S');
+
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(8);
+      doc.setTextColor(100, 116, 139); // slate-500
+      doc.text('REPORT ID:', 24, 82);
+      doc.text('SESSION SCHEDULE:', 80, 82);
+      doc.text('DATE GENERATED:', 145, 82);
+
+      doc.setFont('Helvetica', 'normal');
+      doc.setTextColor(15, 23, 42);
+      const displayId = booking.id ? booking.id.toString().substring(Math.max(0, booking.id.toString().length - 6)) : 'N/A';
+      doc.text(`CL-REP-${displayId}`, 24, 88);
+      doc.text(`${formatDateString(booking.date)} at ${booking.time}`, 80, 88);
+      doc.text(`${formatDateString(new Date())}`, 145, 88);
+
+      // Clinical Notes / Diagnostics
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.setTextColor(13, 148, 136); // Teal
+      doc.text('CLINICAL ASSESSMENT & DIAGNOSTICS', 20, 103);
+
+      doc.setDrawColor(13, 148, 136);
+      doc.setLineWidth(0.3);
+      doc.line(20, 105, 190, 105);
+
+      // Section Content
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(15, 23, 42);
+      doc.text('Clinical Assessment & Observation Notes:', 20, 112);
+
+      doc.setFont('Helvetica', 'normal');
+      doc.setTextColor(51, 65, 85); // slate-700
+      doc.setFontSize(8.5);
+
+      const clinicalNotes = booking.notes || 'No clinical/diagnostic notes recorded for this session.';
+      const notesLines = doc.splitTextToSize(clinicalNotes, 170);
+      doc.text(notesLines, 20, 118);
+
+      // Recommendations & Action Plan
+      let yOffset = 118 + (notesLines.length * 4.5) + 10;
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(15, 23, 42);
+      doc.text('Recommendations & Feedback:', 20, yOffset);
+
+      doc.setFont('Helvetica', 'normal');
+      doc.setTextColor(51, 65, 85);
+      doc.setFontSize(8.5);
+
+      const feedbackText = booking.feedback || 'No student-facing feedback or recommendations recorded.';
+      const feedbackLines = doc.splitTextToSize(feedbackText, 170);
+      doc.text(feedbackLines, 20, yOffset + 6);
+
+      // Footer / Prescription style signature line
+      let sigY = yOffset + (feedbackLines.length * 4.5) + 25;
+      if (sigY > 260) {
+        doc.addPage();
+        sigY = 40;
+      }
+
+      doc.setDrawColor(203, 213, 225); // slate-300
+      doc.line(130, sigY, 190, sigY);
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(8.5);
+      doc.setTextColor(15, 23, 42);
+      doc.text('Authorized Signature', 142, sigY + 5);
+      doc.setFont('Helvetica', 'normal');
+      doc.setTextColor(100, 116, 139);
+      doc.text(`${cName}, ${cTitle}`, 130, sigY + 9, { maxWidth: 60 });
+
+      // Footer Notice
+      doc.setFontSize(8);
+      doc.text('This is a confidential medical-styled diagnostic document issued by the consultant psychologist.', 20, sigY + 18);
+      doc.text('Please secure this document. For inquiries, reach out to contact@beholdaspire.com.', 20, sigY + 22);
+
+      doc.save(`Clinical_Report_${sName.replace(/\s+/g, '_')}_${displayId}.pdf`);
+    } catch (e) {
+      console.error(e);
+      toast.error("Failed to generate Clinical Diagnostic PDF: " + e.message);
     }
   };
 
@@ -2176,16 +2352,29 @@ export default function PsychologistDashboard({ setView }) {
                                     ) : (
                                       <p className="text-sm text-zinc-500 italic">No notes added yet.</p>
                                     )}
-                                    <button
-                                      type="button"
-                                      onClick={() => {
-                                        setEditingFeedbackId(booking.id);
-                                        setFeedbackInput(booking.feedback || '');
-                                      }}
-                                      className="text-sm font-bold text-brand hover:underline capitalize  flex items-center gap-1 cursor-pointer border-none bg-transparent p-0"
-                                    >
-                                      {booking.feedback ? 'Edit Feedback' : '+ Add Diagnostic Notes'}
-                                    </button>
+                                    <div className="flex gap-4 items-center flex-wrap pt-1">
+                                      <button
+                                        type="button"
+                                        onClick={() => {
+                                          setEditingFeedbackId(booking.id);
+                                          setFeedbackInput(booking.feedback || '');
+                                        }}
+                                        className="text-sm font-bold text-brand hover:underline capitalize flex items-center gap-1 cursor-pointer border-none bg-transparent p-0"
+                                      >
+                                        {booking.feedback ? 'Edit Feedback' : '+ Add Diagnostic Notes'}
+                                      </button>
+                                      {booking.status === 'COMPLETED' && (
+                                        <button
+                                          type="button"
+                                          onClick={() => downloadDiagnosticPDF(booking)}
+                                          className="text-sm font-bold text-emerald-400 hover:text-emerald-350 hover:underline capitalize flex items-center gap-1.5 cursor-pointer border-none bg-transparent p-0"
+                                          title="Download Clinical Report PDF"
+                                        >
+                                          <FileText className="w-4 h-4 text-emerald-400" />
+                                          <span>Download Report PDF</span>
+                                        </button>
+                                      )}
+                                    </div>
                                   </div>
                                 )}
                               </div>

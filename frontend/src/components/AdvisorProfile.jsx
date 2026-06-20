@@ -16,6 +16,9 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
   const [advisor, setAdvisor] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const siteSettings = JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
+  const enablePsychology = siteSettings.enablePsychology !== false;
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [advisorId]);
@@ -163,7 +166,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 mt-6 sm:mt-8">
           
           {/* Left Column: Details */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className={enablePsychology ? "lg:col-span-2 space-y-6" : "lg:col-span-3 space-y-6"}>
             
             {/* About Section */}
             <div className="bg-white p-5 sm:p-6 md:p-8 rounded-lg border border-zinc-200 shadow-xs space-y-4">
@@ -210,35 +213,37 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
           </div>
 
           {/* Right Column: Sticky Booking Widget */}
-          <div className="lg:col-span-1">
-            <div className="lg:sticky lg:top-32 bg-white p-5 sm:p-6 rounded-lg border border-zinc-200 shadow-sm space-y-4 sm:space-y-6">
+          {enablePsychology && (
+            <div className="lg:col-span-1">
+              <div className="lg:sticky lg:top-32 bg-white p-5 sm:p-6 rounded-lg border border-zinc-200 shadow-sm space-y-4 sm:space-y-6">
 
-              <div>
-                <h3 className="text-lg sm:text-xl font-bold text-zinc-900 capitalize tracking-wide mb-1">Book a Session</h3>
-                <p className="text-xs text-zinc-600">Schedule your 1-hour session directly with {advisor.name.split(' ')[0]}.</p>
-              </div>
-
-              <div className="p-3.5 sm:p-4 bg-zinc-50 border border-zinc-200 rounded-lg space-y-3">
-                <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 text-xs sm:text-sm">
-                  <span className="text-zinc-600 font-semibold shrink-0">Next Available</span>
-                  <span className="font-semibold text-brand bg-brand-light border border-brand/20 px-2 py-0.5 rounded-md text-xs sm:text-xs">{advisor.nextAvailable}</span>
+                <div>
+                  <h3 className="text-lg sm:text-xl font-bold text-zinc-900 capitalize tracking-wide mb-1">Book a Session</h3>
+                  <p className="text-xs text-zinc-650">Schedule your 1-hour session directly with {advisor.name.split(' ')[0]}.</p>
                 </div>
-                <div className="w-full h-px bg-zinc-200" aria-hidden="true"></div>
-                <div className="flex justify-between items-center text-xs sm:text-sm">
-                  <span className="text-zinc-600 font-semibold shrink-0">Session Fee</span>
-                  <span className="font-semibold text-zinc-900">₹{advisor.price.toLocaleString('en-IN')}</span>
-                </div>
-              </div>
 
-              <button
-                type="button"
-                onClick={() => onBook(advisorId)}
-                className="min-h-[48px] w-full py-3.5 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg text-xs font-bold capitalize  shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <Calendar className="w-4 h-4" /> Book Now
-              </button>
+                <div className="p-3.5 sm:p-4 bg-zinc-50 border border-zinc-200 rounded-lg space-y-3">
+                  <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 text-xs sm:text-sm">
+                    <span className="text-zinc-600 font-semibold shrink-0">Next Available</span>
+                    <span className="font-semibold text-brand bg-brand-light border border-brand/20 px-2 py-0.5 rounded-md text-xs sm:text-xs">{advisor.nextAvailable}</span>
+                  </div>
+                  <div className="w-full h-px bg-zinc-200" aria-hidden="true"></div>
+                  <div className="flex justify-between items-center text-xs sm:text-sm">
+                    <span className="text-zinc-600 font-semibold shrink-0">Session Fee</span>
+                    <span className="font-semibold text-zinc-900">₹{advisor.price.toLocaleString('en-IN')}</span>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => onBook(advisorId)}
+                  className="min-h-[48px] w-full py-3.5 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg text-xs font-bold capitalize  shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <Calendar className="w-4 h-4" /> Book Now
+                </button>
+              </div>
             </div>
-          </div>
+          )}
 
         </div>
       </div>

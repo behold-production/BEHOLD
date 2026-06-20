@@ -29,7 +29,8 @@ const counsellorSchema = new mongoose.Schema({
   title: { type: String, default: 'Consultant Psychologist' },
   profilePic: { type: String, default: '' },
   profilePicPublicId: { type: String, default: '' },
-  googleRefreshToken: { type: String, default: '' }
+  googleRefreshToken: { type: String, default: '' },
+  isTopFive: { type: Boolean, default: false }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Counsellor', counsellorSchema);

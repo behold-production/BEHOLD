@@ -200,6 +200,13 @@ const AppointmentController = {
         return res.status(404).json({ success: false, message: 'Appointment not found' });
       }
 
+      if (appointment.status !== 'PENDING' && appointment.status !== 'APPROVED' && appointment.status !== 'CONFIRMED') {
+        return res.status(400).json({ 
+          success: false, 
+          message: `Cannot reschedule an appointment with status: ${appointment.status}` 
+        });
+      }
+
       // Check current user is authorized (either User, Counsellor or Admin)
       const userAuthorized = 
         req.user.role === 'admin' || 
@@ -240,7 +247,15 @@ const AppointmentController = {
           console.error("Error parsing appointment date/time for reschedule check:", e);
         }
 
-        // 2. Daily limit check (3 reschedules max)
+        // 2. Maximum rescheduling limit check per appointment (3 times max)
+        if ((appointment.rescheduleCount || 0) >= 3) {
+          return res.status(400).json({
+            success: false,
+            message: 'This appointment has reached the maximum rescheduling limit (3 times).'
+          });
+        }
+
+        // 3. Daily limit check (3 reschedules max)
         const User = require('../models/User');
         const studentUser = await User.findOne({ id: appointment.userId });
         if (studentUser) {
@@ -267,6 +282,10 @@ const AppointmentController = {
 
           if (newCount === 2) {
             warning = 'You have only 1 reschedule remaining for today.';
+          } else if (newCount === 3) {
+            warning = 'You have used all daily reschedules for today.';
+          } else {
+            warning = `You have ${3 - newCount} reschedules remaining for today.`;
           }
         }
       }
@@ -287,7 +306,9 @@ const AppointmentController = {
       const updated = await StorageService.update('appointments', id, {
         date,
         time,
-        status: 'PENDING' // reset to pending for re-approval unless modified by admin/counsellor
+        status: 'PENDING', // reset to pending for re-approval unless modified by admin/counsellor
+        rescheduleCount: (appointment.rescheduleCount || 0) + 1,
+        lastRescheduledAt: new Date()
       });
 
       // Update matching session if exists
@@ -334,6 +355,13 @@ const AppointmentController = {
         return res.status(404).json({ success: false, message: 'Appointment not found' });
       }
 
+      if (appointment.status !== 'PENDING' && appointment.status !== 'APPROVED' && appointment.status !== 'CONFIRMED') {
+        return res.status(400).json({ 
+          success: false, 
+          message: `Cannot cancel an appointment with status: ${appointment.status}` 
+        });
+      }
+
       // Authorization check
       const userAuthorized = 
         req.user.role === 'admin' || 
@@ -342,6 +370,35 @@ const AppointmentController = {
 
       if (!userAuthorized) {
         return res.status(403).json({ success: false, message: 'Unauthorized to cancel this appointment' });
+      }
+
+      // Cancellation time constraint for students
+      if (req.user.role === 'user') {
+        try {
+          const appointmentDateStr = appointment.date;
+          const appointmentTimeStr = appointment.time;
+          
+          const [timeParts, modifier] = appointmentTimeStr.split(' ');
+          let [hours, minutes] = timeParts.split(':').map(Number);
+          if (modifier === 'PM' && hours < 12) hours += 12;
+          if (modifier === 'AM' && hours === 12) hours = 0;
+          
+          const [year, month, day] = appointmentDateStr.split('-').map(Number);
+          const appDateTime = new Date(year, month - 1, day, hours, minutes);
+          const now = new Date();
+          
+          const diffMs = appDateTime - now;
+          const diffHours = diffMs / (1000 * 60 * 60);
+          
+          if (diffHours < 1) {
+            return res.status(400).json({ 
+              success: false, 
+              message: 'Cannot cancel a session less than 1 hour before the scheduled time.' 
+            });
+          }
+        } catch (e) {
+          console.error("Error parsing appointment date/time for cancellation check:", e);
+        }
       }
 
       const updated = await StorageService.update('appointments', id, { 
@@ -523,10 +580,31 @@ const AppointmentController = {
         appointments.map(async (a) => {
           const user = await StorageService.findById('users', a.userId);
           const counsellor = await StorageService.findById('counsellors', a.counsellorId);
+          const session = await StorageService.findOne('sessions', { appointmentId: a.id });
           return {
             ...a,
             studentName: user ? user.name : 'Unknown Student',
-            counsellorName: counsellor ? counsellor.name : 'Unknown Counsellor'
+            counsellorName: counsellor ? counsellor.name : 'Unknown Counsellor',
+            notes: session ? session.notes : '',
+            feedback: session ? session.feedback : '',
+            student: user ? {
+              name: user.name,
+              email: user.email,
+              phone: user.phone,
+              schoolName: user.schoolName,
+              grade: user.grade,
+              guardianName: user.guardianName,
+              guardianPhone: user.guardianPhone
+            } : null,
+            counsellor: counsellor ? {
+              name: counsellor.name,
+              email: counsellor.email,
+              phone: counsellor.phone,
+              title: counsellor.title,
+              education: counsellor.education,
+              specialties: counsellor.specialties,
+              qualifications: counsellor.qualifications
+            } : null
           };
         })
       );

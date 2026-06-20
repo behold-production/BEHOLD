@@ -27,7 +27,7 @@ const PILLARS = [
   }
 ];
 
-export default function About() {
+export default function About({ enablePsychology = true }) {
   return (
     <section id="about" className="py-8 md:py-12 px-4 sm:px-6 text-zinc-900 text-left grid-bg relative overflow-hidden">
 
@@ -82,12 +82,16 @@ export default function About() {
           <button
             type="button"
             onClick={() => {
-              window.spaNavigate('/booking');
+              if (enablePsychology) {
+                window.spaNavigate('/booking');
+              } else {
+                window.spaNavigate('/sample-test');
+              }
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
             className="min-h-[48px] px-8 py-4 bg-zinc-900 hover:bg-zinc-800 text-white font-bold text-xs capitalize  rounded-lg transition-all duration-200 cursor-pointer shadow-sm w-full sm:w-auto text-center"
           >
-            Get Started with Behold
+            {enablePsychology ? 'Get Started with Behold' : 'Explore Aptitude Assessment'}
           </button>
         </div>
 
