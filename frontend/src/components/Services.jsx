@@ -103,7 +103,7 @@ export default function Services({ setView, onBookTherapist }) {
         {/* SERVICE 2: CAREER MENTORING */}
         <div
           id="card-career"
-          className="relative bg-white/70 backdrop-blur-2xl shadow-[0_12px_36px_-8px_rgba(11,30,54,0.25),0_4px_20px_-2px_rgba(14,165,233,0.15)] hover:shadow-[0_20px_48px_-6px_rgba(11,30,54,0.4),0_8px_30px_-4px_rgba(14,165,233,0.3)] border-2 border-[#0b1e36]/25 hover:border-[#0b1e36]/50 p-6 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none group rounded-xl sm:rounded-[2rem] transition-all duration-700 min-h-[300px] md:min-h-[360px] overflow-hidden"
+          className="relative bg-white/70 backdrop-blur-2xl shadow-[0_12px_36px_-8px_rgba(11,30,54,0.25),0_4px_20px_-2px_rgba(14,165,233,0.15)] hover:shadow-[0_20px_48px_-6px_rgba(11,30,54,0.4),0_8px_30px_-4px_rgba(14,165,233,0.3)] border-[4px] border-[#0b1424] p-6 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none group rounded-xl sm:rounded-[2rem] transition-all duration-700 min-h-[300px] md:min-h-[360px] overflow-hidden"
         >
           {/* Decorative inner glow */}
           <div className="absolute inset-0 bg-gradient-to-b from-white/60 to-transparent pointer-events-none" />
@@ -150,7 +150,7 @@ export default function Services({ setView, onBookTherapist }) {
         {/* SERVICE 3: PSYCHOLOGICAL COUNSELLING */}
         <div
           id="card-mental"
-          className="relative bg-white/70 backdrop-blur-2xl shadow-[0_12px_36px_-8px_rgba(11,30,54,0.25),0_4px_20px_-2px_rgba(14,165,233,0.15)] hover:shadow-[0_20px_48px_-6px_rgba(11,30,54,0.4),0_8px_30px_-4px_rgba(14,165,233,0.3)] border-2 border-[#0b1e36]/25 hover:border-[#0b1e36]/50 p-6 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none group rounded-xl sm:rounded-[2rem] transition-all duration-700 min-h-[300px] md:min-h-[360px] overflow-hidden"
+          className="relative bg-white/70 backdrop-blur-2xl shadow-[0_12px_36px_-8px_rgba(11,30,54,0.25),0_4px_20px_-2px_rgba(14,165,233,0.15)] hover:shadow-[0_20px_48px_-6px_rgba(11,30,54,0.4),0_8px_30px_-4px_rgba(14,165,233,0.3)] border-[4px] border-[#0b1424] p-6 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none group rounded-xl sm:rounded-[2rem] transition-all duration-700 min-h-[300px] md:min-h-[360px] overflow-hidden"
         >
           {/* Decorative inner glow */}
           <div className="absolute inset-0 bg-gradient-to-b from-white/60 to-transparent pointer-events-none" />
