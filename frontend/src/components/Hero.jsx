@@ -31,12 +31,12 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
   return (
     <section
       id="home"
-      className="relative w-full pt-24 pb-20 lg:pt-16 lg:pb-24 px-4 sm:px-6 flex flex-col items-center justify-center min-h-[calc(100vh-72px)] lg:min-h-[85vh] select-none bg-gradient-to-b from-slate-900 to-slate-800"
+      className="relative w-full pt-20 pb-16 lg:pt-12 lg:pb-16 px-4 sm:px-6 flex flex-col items-center justify-center min-h-[50vh] lg:min-h-[60vh] select-none bg-gradient-to-b from-slate-900 to-slate-800"
     >
       {/* Heavy 3D Background Elements & Particles */}
       <HeroBackgroundElements />
 
-      <div className="max-w-4xl mx-auto w-full flex flex-col items-center justify-center text-center relative z-20 space-y-6 mt-0 lg:mt-0">
+      <div className="max-w-4xl mx-auto w-full flex flex-col items-center justify-center text-center relative z-20 space-y-4 mt-0 lg:mt-0">
 
         {/* Main Headline */}
         <motion.h1
@@ -54,7 +54,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
-          className="text-base sm:text-lg md:text-xl text-zinc-300 max-w-2xl font-medium leading-relaxed mt-6"
+          className="text-base sm:text-lg md:text-xl text-zinc-300 max-w-2xl font-medium leading-relaxed mt-4"
         >
           Professional psychological counseling, aptitude assessment, and career mentorship designed to help individuals thrive with confidence and purpose.
         </motion.p>
@@ -64,7 +64,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut", delay: 0.5 }}
-          className="flex flex-col sm:flex-row items-center gap-4 mt-10 w-full sm:w-auto"
+          className="flex flex-col sm:flex-row items-center gap-4 mt-6 w-full sm:w-auto"
         >
           {settings.enablePsychology !== false && (
             <motion.button

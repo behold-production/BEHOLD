@@ -18,6 +18,7 @@ export default function Services({ setView, onBookTherapist }) {
   const [sortBy, setSortBy] = useState('Recommended');
   const [visibleCount, setVisibleCount] = useState(5);
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
+  const [expandedBios, setExpandedBios] = useState({});
 
   const siteSettings = JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
   const enablePsychology = siteSettings.enablePsychology !== false;
@@ -343,16 +344,18 @@ export default function Services({ setView, onBookTherapist }) {
                 </div>
 
                 {/* Bio Block */}
-                <div className="px-5 sm:px-6 pt-4 flex items-center justify-between gap-2 text-xs text-zinc-500 font-light w-full">
-                  <span className="italic truncate flex-1 min-w-0">
-                    {advisor.bio || 'Consultant psychologist specializing in guidance and mental wellbeing.'}
+                <div className="px-5 sm:px-6 pt-4 flex items-start justify-between gap-2 text-xs text-zinc-500 font-light w-full">
+                  <span className={`italic flex-1 min-w-0 ${expandedBios[advisor.id] ? '' : 'line-clamp-2'}`}>
+                    "{advisor.bio || 'Consultant psychologist specializing in guidance and mental wellbeing.'}"
                   </span>
-                  <button
-                    onClick={() => window.spaNavigate(`/advisor/${advisor.id}`)}
-                    className="text-brand font-semibold hover:underline shrink-0 bg-transparent border-none p-0 cursor-pointer text-xs"
-                  >
-                    Read More
-                  </button>
+                  {(advisor.bio || 'Consultant psychologist specializing in guidance and mental wellbeing.').length > 100 && (
+                    <button
+                      onClick={() => setExpandedBios(prev => ({ ...prev, [advisor.id]: !prev[advisor.id] }))}
+                      className="text-brand font-semibold hover:underline shrink-0 bg-transparent border-none p-0 cursor-pointer text-xs mt-0.5"
+                    >
+                      {expandedBios[advisor.id] ? 'Read Less' : 'Read More'}
+                    </button>
+                  )}
                 </div>
 
                 {/* Specialties Pills */}
@@ -468,16 +471,18 @@ export default function Services({ setView, onBookTherapist }) {
                       ))}
                     </div>
                   </div>
-                  <div className="flex items-center justify-between gap-2 text-xs text-zinc-500 font-light w-full">
-                    <span className="italic truncate flex-1 min-w-0">
-                      {advisor.bio || 'Consultant psychologist specializing in guidance and mental wellbeing.'}
+                  <div className="flex items-start justify-between gap-2 text-xs text-zinc-500 font-light w-full">
+                    <span className={`italic flex-1 min-w-0 ${expandedBios[advisor.id] ? '' : 'line-clamp-2'}`}>
+                      "{advisor.bio || 'Consultant psychologist specializing in guidance and mental wellbeing.'}"
                     </span>
-                    <button
-                      onClick={() => window.spaNavigate(`/advisor/${advisor.id}`)}
-                      className="text-brand font-semibold hover:underline shrink-0 bg-transparent border-none p-0 cursor-pointer text-xs"
-                    >
-                      Read More
-                    </button>
+                    {(advisor.bio || 'Consultant psychologist specializing in guidance and mental wellbeing.').length > 100 && (
+                      <button
+                        onClick={() => setExpandedBios(prev => ({ ...prev, [advisor.id]: !prev[advisor.id] }))}
+                        className="text-brand font-semibold hover:underline shrink-0 bg-transparent border-none p-0 cursor-pointer text-xs mt-0.5"
+                      >
+                        {expandedBios[advisor.id] ? 'Read Less' : 'Read More'}
+                      </button>
+                    )}
                   </div>
                 </div>
 

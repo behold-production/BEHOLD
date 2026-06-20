@@ -137,7 +137,7 @@ export default function AuthModals({ isOpen, onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-[110] flex items-center justify-center p-4 overflow-y-auto"
+      className="fixed inset-0 z-[110] flex items-start justify-center p-4 overflow-y-auto overscroll-contain"
       role="dialog"
       aria-modal="true"
       aria-labelledby="auth-modal-title"

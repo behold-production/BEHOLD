@@ -132,7 +132,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
 
   return (
     <div
-      className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-in fade-in duration-200"
+      className="fixed inset-0 z-[120] flex items-start justify-center p-4 overflow-y-auto overscroll-contain bg-black/70 backdrop-blur-md animate-in fade-in duration-200"
       role="dialog"
       aria-modal="true"
       aria-labelledby="booking-auth-modal-title"
