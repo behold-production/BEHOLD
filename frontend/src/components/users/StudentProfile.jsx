@@ -402,6 +402,126 @@ export default function StudentProfile() {
     }
   };
 
+  const downloadCertificatePDF = async (session) => {
+    const toastId = toast.loading('Generating completion certificate...');
+    try {
+      const doc = new jsPDF({
+        orientation: 'landscape',
+        unit: 'mm',
+        format: 'a4'
+      });
+
+      const studentName = profile.name || user?.name || 'Student';
+      const advisorName = session.advisorName || 'Consultant Psychologist';
+      const serviceTitle = session.service === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring';
+      const dateStr = formatDateString(session.date);
+
+      // Border Design
+      doc.setDrawColor(13, 148, 136); // Teal
+      doc.setLineWidth(1.5);
+      doc.rect(5, 5, 287, 200, 'S');
+
+      doc.setDrawColor(217, 119, 6); // Gold Inner Border
+      doc.setLineWidth(0.5);
+      doc.rect(8, 8, 281, 194, 'S');
+
+      // Top Corner Decorations
+      doc.setFillColor(13, 148, 136);
+      doc.triangle(8, 8, 25, 8, 8, 25, 'F');
+      doc.triangle(289, 8, 272, 8, 289, 25, 'F');
+      doc.triangle(8, 202, 25, 202, 8, 185, 'F');
+      doc.triangle(289, 202, 272, 202, 289, 185, 'F');
+
+      // Brand Header Logo
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(28);
+      doc.setTextColor(15, 23, 42); // Slate-900
+      doc.text('BEHOLD.', 148, 30, { align: 'center' });
+
+      doc.setFontSize(9);
+      doc.setFont('Helvetica', 'normal');
+      doc.setTextColor(100, 116, 139); // slate-500
+      doc.text('Premium Career Guidance & Mental Health Platform', 148, 36, { align: 'center' });
+
+      // Certificate Title
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(24);
+      doc.setTextColor(13, 148, 136); // Teal
+      doc.text('CERTIFICATE OF COMPLETION', 148, 60, { align: 'center' });
+
+      doc.setFont('Helvetica', 'normal');
+      doc.setFontSize(10.5);
+      doc.setTextColor(71, 85, 105); // slate-600
+      doc.text('This is proudly presented to', 148, 75, { align: 'center' });
+
+      // Student Name
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(28);
+      doc.setTextColor(15, 23, 42);
+      doc.text(studentName.toUpperCase(), 148, 92, { align: 'center' });
+
+      // Underline under Student Name
+      doc.setDrawColor(217, 119, 6); // Gold
+      doc.setLineWidth(1.2);
+      doc.line(78, 97, 218, 97);
+
+      // Certificate Body Text
+      doc.setFont('Helvetica', 'normal');
+      doc.setFontSize(11);
+      doc.setTextColor(71, 85, 105);
+      doc.text('for successfully completing a professional career guidance & mental health session.', 148, 112, { align: 'center' });
+
+      // Detail fields
+      doc.setFontSize(10);
+      doc.setFont('Helvetica', 'bold');
+      doc.text('SESSION DETAILS', 148, 126, { align: 'center' });
+
+      doc.setDrawColor(226, 232, 240); // slate-200
+      doc.setLineWidth(0.3);
+      doc.line(90, 130, 206, 130);
+
+      doc.setFont('Helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.setTextColor(100, 116, 139);
+      doc.text(`Service Type: ${serviceTitle}`, 148, 137, { align: 'center' });
+      doc.text(`Consultant Advisor: ${advisorName}`, 148, 143, { align: 'center' });
+      doc.text(`Date of Completion: ${dateStr}`, 148, 149, { align: 'center' });
+
+      // Signatures
+      // Left Signature (Consultant Advisor)
+      doc.setDrawColor(203, 213, 225); // slate-300
+      doc.setLineWidth(0.4);
+      doc.line(40, 178, 100, 178);
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(15, 23, 42);
+      doc.text(advisorName, 70, 183, { align: 'center' });
+      doc.setFont('Helvetica', 'normal');
+      doc.setTextColor(100, 116, 139);
+      doc.text('Consultant Specialist', 70, 187, { align: 'center' });
+
+      // Right Signature (Managing Director)
+      doc.line(197, 178, 257, 178);
+      doc.setFont('Helvetica', 'bold');
+      doc.setTextColor(15, 23, 42);
+      doc.text('Director, BEHOLD.', 227, 183, { align: 'center' });
+      doc.setFont('Helvetica', 'normal');
+      doc.setTextColor(100, 116, 139);
+      doc.text('Authorized Authority', 227, 187, { align: 'center' });
+
+      // Certificate ID Footer
+      const displayId = (session.appointmentId || session.id || 'N/A').toString().substring(0, 8);
+      doc.setFontSize(7.5);
+      doc.text(`Certificate Verification ID: BH-CERT-${displayId}`, 148, 194, { align: 'center' });
+
+      doc.save(`Behold_Certificate_${studentName.replace(/\s+/g, '_')}_${displayId}.pdf`);
+      toast.success('Certificate downloaded successfully!', { id: toastId });
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to generate Certificate PDF.', { id: toastId });
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -1586,7 +1706,8 @@ export default function StudentProfile() {
                             {session.status === 'COMPLETED' && (
                               <button
                                 type="button"
-                                className="inline-flex items-center gap-1 text-xs font-medium text-zinc-500 hover:text-zinc-900 transition-colors"
+                                onClick={() => downloadCertificatePDF(session)}
+                                className="inline-flex items-center gap-1 text-xs font-medium text-zinc-500 hover:text-zinc-900 transition-colors cursor-pointer"
                                 title="Download certificate"
                               >
                                 <Download className="w-3.5 h-3.5" /> Certificate
