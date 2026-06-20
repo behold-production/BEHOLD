@@ -1016,7 +1016,7 @@ export default function StudentProfile() {
           ].map((kpi, i) => {
             const Icon = kpi.icon;
             return (
-              <div key={i} className="card-luxury border-none rounded-xl p-4 card-luxury-hover">
+              <div key={i} className="bg-white/75 backdrop-blur-md border border-[#0b1e36]/15 hover:border-[#0b1e36]/40 shadow-xs rounded-xl p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
                 <div className="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center mb-2.5">
                   <Icon className="w-4 h-4 text-zinc-600" />
                 </div>
@@ -1031,10 +1031,10 @@ export default function StudentProfile() {
         {/* Action cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* C-DAT card */}
-          <div className="card-luxury border-none rounded-xl p-5 card-luxury-hover">
+          <div className="bg-white/75 backdrop-blur-md border border-[#0b1e36]/15 hover:border-[#0b1e36]/40 shadow-xs rounded-xl p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
             <div className="flex items-start justify-between mb-3">
               <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center">
-                <BarChart3 className="w-5 h-5 text-zinc-600" />
+                <BarChart3 className="w-5 h-5 text-zinc-650" />
               </div>
               <span className={`text-xs px-2 py-0.5 rounded-md font-semibold capitalize  ${testProfile ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-zinc-100 text-zinc-500'
                 }`}>
@@ -1057,10 +1057,10 @@ export default function StudentProfile() {
           </div>
 
           {/* Consultation card */}
-          <div className="card-luxury border-none rounded-xl p-5 card-luxury-hover">
+          <div className="bg-white/75 backdrop-blur-md border border-[#0b1e36]/15 hover:border-[#0b1e36]/40 shadow-xs rounded-xl p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
             <div className="flex items-start justify-between mb-3">
               <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center">
-                <Briefcase className="w-5 h-5 text-zinc-600" />
+                <Briefcase className="w-5 h-5 text-zinc-655" />
               </div>
               <span className={`text-xs px-2 py-0.5 rounded-md font-semibold capitalize  ${bookedSessions.length > 0 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-zinc-100 text-zinc-500'
                 }`}>
@@ -1092,10 +1092,82 @@ export default function StudentProfile() {
           </div>
         </div>
 
+        {/* Services Cards */}
+        <div className="space-y-3.5">
+          <h4 className="text-sm font-bold text-zinc-900 capitalize tracking-wide">Available Services</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Career Mentoring Card */}
+            <div className="relative bg-white border border-[#0b1e36]/15 hover:border-[#0b1e36]/40 p-5 rounded-2xl shadow-xs transition-all duration-300 flex flex-col justify-between space-y-4 hover:-translate-y-1 hover:shadow-md">
+              <div className="space-y-2.5">
+                <div className="flex justify-between items-start">
+                  <span className="inline-block text-[10px] sm:text-xs bg-zinc-900 text-white px-2.5 py-1 rounded font-bold uppercase tracking-wide">
+                    Career Mentoring
+                  </span>
+                  <span className="text-[10px] text-zinc-400 font-bold border border-zinc-200 px-1.5 py-0.5 rounded bg-zinc-50">
+                    01
+                  </span>
+                </div>
+                <h4 className="text-sm font-bold text-zinc-900 mt-1">
+                  Career Clarity & Direction
+                </h4>
+                <h5 className="text-[10px] font-bold text-zinc-400 italic">
+                  Feeling Unsure About What’s Next?
+                </h5>
+                <p className="text-zinc-650 text-xs font-normal leading-relaxed">
+                  Whether you’re choosing a stream, exploring career options, or planning your future studies, we help you understand your strengths, interests, and opportunities so you can make confident decisions with clarity and direction.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  navigate('/booking?service=career');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className="w-full min-h-[40px] bg-zinc-900 hover:bg-zinc-800 text-white rounded-xl text-xs font-semibold transition cursor-pointer border-none shadow-xs text-center flex items-center justify-center"
+              >
+                Book Career Session
+              </button>
+            </div>
+
+            {/* Psychological Counselling Card */}
+            <div className="relative bg-white border border-[#0b1e36]/15 hover:border-[#0b1e36]/40 p-5 rounded-2xl shadow-xs transition-all duration-300 flex flex-col justify-between space-y-4 hover:-translate-y-1 hover:shadow-md">
+              <div className="space-y-2.5">
+                <div className="flex justify-between items-start">
+                  <span className="inline-block text-[10px] sm:text-xs bg-zinc-900 text-white px-2.5 py-1 rounded font-bold uppercase tracking-wide">
+                    Psychological Counselling
+                  </span>
+                  <span className="text-[10px] text-zinc-400 font-bold border border-zinc-200 px-1.5 py-0.5 rounded bg-zinc-50">
+                    02
+                  </span>
+                </div>
+                <h4 className="text-sm font-bold text-zinc-900 mt-1">
+                  Emotional Wellbeing & Support
+                </h4>
+                <h5 className="text-[10px] font-bold text-zinc-400 italic">
+                  You Don’t Have to Face It Alone.
+                </h5>
+                <p className="text-zinc-655 text-xs font-normal leading-relaxed">
+                  When stress, anxiety, self-doubt, or personal challenges begin to feel overwhelming, having the right support can make all the difference. Our counselling sessions provide a safe space to reflect, heal, grow, and move forward with confidence.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  navigate('/booking?service=counselling');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className="w-full min-h-[40px] bg-zinc-900 hover:bg-zinc-800 text-white rounded-xl text-xs font-semibold transition cursor-pointer border-none shadow-xs text-center flex items-center justify-center"
+              >
+                Talk to a Counsellor
+              </button>
+            </div>
+          </div>
+        </div>
+
         {/* Recent activity + Achievements */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           {/* Recent activity */}
-          <div className="lg:col-span-2 card-luxury border-none rounded-xl p-5">
+          <div className="lg:col-span-2 bg-white/75 backdrop-blur-md border border-[#0b1e36]/15 rounded-xl p-5 shadow-xs">
             <div className="flex items-center justify-between mb-4">
               <h4 className="text-sm font-semibold text-zinc-900 flex items-center gap-2">
                 <Activity className="w-4 h-4 text-zinc-400" /> Recent Activity
@@ -1132,7 +1204,7 @@ export default function StudentProfile() {
           </div>
 
           {/* Achievements */}
-          <div className="card-luxury border-none rounded-xl p-5">
+          <div className="bg-white/75 backdrop-blur-md border border-[#0b1e36]/15 rounded-xl p-5 shadow-xs">
             <h4 className="text-sm font-semibold text-zinc-900 flex items-center gap-2 mb-4">
               <Trophy className="w-4 h-4 text-zinc-400" /> Achievements
             </h4>

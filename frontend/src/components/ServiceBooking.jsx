@@ -120,7 +120,16 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
     return `${yyyy}-${mm}-${dd}`;
   };
 
-  const [bookingService, setBookingService] = useState('counselling'); // counselling, career
+  const [bookingService, setBookingService] = useState(() => {
+    try {
+      const queryParams = new URLSearchParams(window.location.search);
+      const urlService = queryParams.get('service') || queryParams.get('type');
+      if (urlService === 'career' || urlService === 'counselling') {
+        return urlService;
+      }
+    } catch (e) {}
+    return 'counselling';
+  }); // counselling, career
   const [bookingMode, setBookingMode] = useState('ONLINE'); // ONLINE, DOOR_STEP, OFFLINE
   const [bookingForm, setBookingForm] = useState({
     name: '',
@@ -762,16 +771,15 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
   // Handle preselected advisor redirecting from landing page
   useEffect(() => {
-    if (preselectedAdvisorId && advisors.length > 0) {
-      const found = advisors.find(a => a.id === preselectedAdvisorId);
-      if (found) {
-        setBookingService(found.type); // Dynamically set based on advisor type (counselling or career)
-        setSelectedAdvisor(found);
-        setAdvisorConfirmed(true);
-        if (found.modes && found.modes.length > 0 && !found.modes.includes(bookingMode)) {
-          setBookingMode(found.modes[0]);
+    if (preselectedAdvisorId) {
+      // Check if it's a known service type indicator directly without waiting for advisors load
+      if (preselectedAdvisorId === 'career_1' || preselectedAdvisorId === 'career') {
+        setBookingService('career');
+        setSelectedAdvisor(null);
+        setAdvisorConfirmed(false);
+        if (clearPreselectedAdvisor) {
+          clearPreselectedAdvisor();
         }
-        
         // Auto-scroll to the booking console form
         setTimeout(() => {
           const element = document.getElementById('booking-console');
@@ -787,9 +795,63 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
             });
           }
         }, 150);
+        return;
       }
-      if (clearPreselectedAdvisor) {
-        clearPreselectedAdvisor();
+      if (preselectedAdvisorId === 'c3' || preselectedAdvisorId === 'counselling') {
+        setBookingService('counselling');
+        setSelectedAdvisor(null);
+        setAdvisorConfirmed(false);
+        if (clearPreselectedAdvisor) {
+          clearPreselectedAdvisor();
+        }
+        // Auto-scroll to the booking console form
+        setTimeout(() => {
+          const element = document.getElementById('booking-console');
+          if (element) {
+            const offset = 85;
+            const bodyRect = document.body.getBoundingClientRect().top;
+            const elementRect = element.getBoundingClientRect().top;
+            const elementPosition = elementRect - bodyRect;
+            const offsetPosition = elementPosition - offset;
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: 'smooth'
+            });
+          }
+        }, 150);
+        return;
+      }
+
+      // Otherwise, it is a real advisor ID, wait for advisors to load
+      if (advisors.length > 0) {
+        const found = advisors.find(a => a.id === preselectedAdvisorId);
+        if (found) {
+          setBookingService(found.type); // Dynamically set based on advisor type (counselling or career)
+          setSelectedAdvisor(found);
+          setAdvisorConfirmed(true);
+          if (found.modes && found.modes.length > 0 && !found.modes.includes(bookingMode)) {
+            setBookingMode(found.modes[0]);
+          }
+          
+          // Auto-scroll to the booking console form
+          setTimeout(() => {
+            const element = document.getElementById('booking-console');
+            if (element) {
+              const offset = 85;
+              const bodyRect = document.body.getBoundingClientRect().top;
+              const elementRect = element.getBoundingClientRect().top;
+              const elementPosition = elementRect - bodyRect;
+              const offsetPosition = elementPosition - offset;
+              window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+              });
+            }
+          }, 150);
+        }
+        if (clearPreselectedAdvisor) {
+          clearPreselectedAdvisor();
+        }
       }
     }
   }, [preselectedAdvisorId, clearPreselectedAdvisor, advisors]);
@@ -1377,42 +1439,78 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                       <p className="text-xs text-zinc-500 mt-1">Select a date, choose your advisor, and pick a time.</p>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-6">
                       {/* Service Type Selection */}
-                      <div className="space-y-1">
-                        <label className="text-xs font-bold text-zinc-550 capitalize tracking-wide block">Service Type</label>
-                        <div className="grid grid-cols-2 gap-2 w-full">
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold text-zinc-550 capitalize tracking-wide block">Select Service Type</label>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
                           {[
-                            { id: 'counselling', label: 'Psychological' },
-                            { id: 'career', label: 'Career' }
-                          ].map((s) => (
-                            <button
-                              type="button"
-                              key={s.id}
-                              onClick={() => {
-                                if (rescheduleSession) return;
-                                setBookingService(s.id);
-                              }}
-                              className={`px-3 py-3 text-xs capitalize font-bold border rounded-xl transition cursor-pointer text-center min-h-[56px] leading-tight ${
-                                bookingService === s.id
-                                  ? 'bg-zinc-900 border-zinc-900 text-white shadow-xs font-bold'
-                                  : 'bg-white text-zinc-600 border-zinc-200 hover:border-brand/40 hover:text-brand-dark'
-                              } ${rescheduleSession ? 'opacity-65 cursor-not-allowed' : ''}`}
-                            >
-                              <span className="flex flex-col items-center">
-                                <span>{s.label}</span>
-                                <span className="text-xs font-normal normal-case text-zinc-400">
-                                  {s.id === 'counselling' ? 'Counselling' : 'Mentoring'}
-                                </span>
-                              </span>
-                            </button>
-                          ))}
+                            {
+                              id: 'counselling',
+                              num: '02',
+                              tag: 'Psychological Counselling',
+                              title: 'Emotional Wellbeing & Support',
+                              subtitle: 'You Don’t Have to Face It Alone.',
+                              desc: 'When stress, anxiety, self-doubt, or personal challenges begin to feel overwhelming, having the right support can make all the difference.'
+                            },
+                            {
+                              id: 'career',
+                              num: '01',
+                              tag: 'Career Mentoring',
+                              title: 'Career Clarity & Direction',
+                              subtitle: 'Feeling Unsure About What’s Next?',
+                              desc: 'Whether you’re choosing a stream, exploring career options, or planning your studies, we help you understand your strengths and opportunities.'
+                            }
+                          ].map((s) => {
+                            const isSelected = bookingService === s.id;
+                            return (
+                              <button
+                                type="button"
+                                key={s.id}
+                                disabled={rescheduleSession}
+                                onClick={() => {
+                                  if (rescheduleSession) return;
+                                  setBookingService(s.id);
+                                }}
+                                className={`text-left p-4 rounded-xl transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-3.5 border ${
+                                  isSelected
+                                    ? 'bg-slate-50 border-[#0b1e36] ring-2 ring-[#0b1e36]/10 shadow-sm font-bold'
+                                    : 'bg-white hover:bg-slate-50/50 border-slate-200/80 shadow-xs'
+                                } ${rescheduleSession ? 'opacity-65 cursor-not-allowed' : ''}`}
+                              >
+                                <div className="space-y-2 w-full">
+                                  <div className="flex justify-between items-start w-full">
+                                    <span className={`inline-block text-[9px] sm:text-[10px] px-2 py-0.5 rounded font-extrabold tracking-wide uppercase ${
+                                      isSelected
+                                        ? 'bg-slate-900 text-white'
+                                        : 'bg-slate-100 text-slate-700'
+                                    }`}>
+                                      {s.tag}
+                                    </span>
+                                    <span className="text-[10px] font-bold text-slate-400 border border-slate-200 px-1.5 py-0.5 rounded bg-white">
+                                      {s.num}
+                                    </span>
+                                  </div>
+                                  <h4 className="text-xs sm:text-sm font-bold text-slate-900 tracking-wide mt-1">
+                                    {s.title}
+                                  </h4>
+                                  <h5 className="text-[9px] sm:text-[10px] font-bold text-slate-400 italic">
+                                    {s.subtitle}
+                                  </h5>
+                                  <p className="text-slate-600 text-[10px] sm:text-xs leading-relaxed font-light">
+                                    {s.desc}
+                                  </p>
+                                </div>
+                              </button>
+                            );
+                          })}
                         </div>
                       </div>
+
                       {/* Mode of Session Select */}
-                      <div className="space-y-1">
-                        <label className="text-xs font-bold text-zinc-550 capitalize tracking-wide block">Session Mode</label>
-                        <div className="grid grid-cols-3 gap-2 w-full">
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold text-zinc-550 capitalize tracking-wide block">Select Session Mode</label>
+                        <div className="grid grid-cols-3 gap-2.5 w-full">
                           {[
                             { id: 'ONLINE', label: 'Online', desc: 'Video call' },
                             { id: 'DOOR_STEP', label: 'Doorstep', desc: 'Home visit' },
@@ -1425,15 +1523,15 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                 if (rescheduleSession) return;
                                 setBookingMode(m.id);
                               }}
-                              className={`flex flex-col items-center justify-center gap-1 px-2 py-3.5 text-xs capitalize font-semibold border rounded-xl transition cursor-pointer text-center min-h-[56px] leading-tight ${
+                              className={`flex flex-col items-center justify-center gap-1.5 px-3 py-4 text-xs capitalize font-semibold border rounded-xl transition cursor-pointer text-center min-h-[64px] leading-tight ${
                                 bookingMode === m.id
                                   ? 'bg-brand/10 text-brand-dark border-brand/30 shadow-xs font-bold'
-                                  : 'bg-white text-zinc-600 border-zinc-200 hover:border-brand/40 hover:text-brand-dark'
+                                  : 'bg-white text-zinc-650 border-zinc-200 hover:border-brand/40 hover:text-brand-dark'
                               } ${rescheduleSession ? 'opacity-65 cursor-not-allowed' : ''}`}
                             >
                               <span className="flex flex-col items-center">
-                                <span>{m.label}</span>
-                                <span className="text-xs font-normal normal-case text-zinc-400">{m.desc}</span>
+                                <span className="font-bold text-xs sm:text-sm text-zinc-900">{m.label}</span>
+                                <span className="text-[10px] sm:text-xs font-normal normal-case text-zinc-400 mt-0.5">{m.desc}</span>
                               </span>
                             </button>
                           ))}
