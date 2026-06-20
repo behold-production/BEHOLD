@@ -212,7 +212,7 @@ export default function Services({ setView, onBookTherapist }) {
         </div>
 
         {/* Dashboard-Style Toolbar */}
-        <div className="bg-white border border-zinc-200 p-3 sm:p-4 rounded-lg lg:rounded-2xl flex flex-col xl:flex-row xl:items-center gap-3 sm:gap-4 w-full shadow-[0_12px_36px_-8px_rgba(9,14,26,0.22),0_4px_20px_-2px_rgba(0,209,209,0.08)] hover:shadow-[0_20px_48px_-6px_rgba(9,14,26,0.30),0_8px_30px_-4px_rgba(0,209,209,0.16)] hover:border-brand/30 transition-all duration-300">
+        <div className="bg-white border-[1.5px] border-[#0b1424] p-3 sm:p-4 rounded-lg lg:rounded-2xl flex flex-col xl:flex-row xl:items-center gap-3 sm:gap-4 w-full shadow-dark-blue hover:shadow-dark-blue-hover transition-all duration-300">
           {/* Search Box */}
           <div className="relative w-full xl:w-[260px] shrink-0">
             <input

@@ -105,7 +105,7 @@ export default function CdatSection({ setView }) {
       {/* CDAT CARD */}
       <div
         id="card-aptitude"
-        className="relative bg-white/70 backdrop-blur-2xl shadow-dark-blue-lg border-[1.5px] border-[#0b1424] p-6 sm:p-10 md:p-16 flex flex-col space-y-10 select-none group rounded-[2rem] transition-all duration-700 overflow-hidden"
+        className="relative bg-white/70 backdrop-blur-2xl shadow-dark-blue-lg border-[1.5px] border-[#0b1424] p-6 sm:p-10 md:p-16 flex flex-col space-y-10 select-none group rounded-2xl sm:rounded-[2rem] transition-all duration-700 overflow-hidden"
       >
         {/* Decorative inner glow */}
         <div className="absolute inset-0 bg-gradient-to-b from-white/60 to-transparent pointer-events-none" />
@@ -175,8 +175,8 @@ export default function CdatSection({ setView }) {
               </p>
             </div>
             <div className="lg:col-span-7 w-full relative">
-              <div className="absolute -inset-1 bg-gradient-to-r from-brand/20 to-brand-accent/20 rounded-3xl blur opacity-30 group-hover:opacity-60 transition duration-700"></div>
-              <form onSubmit={handleGenerateCode} className="relative space-y-5 bg-white/80 backdrop-blur-2xl border-[1.5px] border-[#0b1424] shadow-dark-blue p-6 sm:p-8 rounded-2xl w-full">
+              <div className="absolute -inset-1 bg-gradient-to-r from-brand/20 to-brand-accent/20 rounded-3xl blur opacity-30 group-hover:opacity-60 transition duration-700 hidden sm:block"></div>
+              <form onSubmit={handleGenerateCode} className="relative space-y-5 bg-transparent sm:bg-white/80 backdrop-blur-none sm:backdrop-blur-2xl border-none sm:border-[1.5px] border-[#0b1424] shadow-none sm:shadow-dark-blue p-0 sm:p-8 rounded-none sm:rounded-2xl w-full">
                 <div className="text-sm font-black capitalize text-zinc-800 mb-2 flex items-center gap-2">
                   Generate Your Group Code
                 </div>
