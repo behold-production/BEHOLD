@@ -325,7 +325,7 @@ export default function Services({ setView, onBookTherapist }) {
                 className="bg-white border-[1.5px] border-[#0b1424] rounded-lg lg:rounded-2xl shadow-dark-blue hover:shadow-dark-blue-hover hover:-translate-y-1 transition-all duration-300 flex flex-col overflow-hidden group"
               >
                 {/* Profile Card Header */}
-                <div className="p-5 sm:p-6 flex items-start gap-4 border-b border-zinc-100 bg-gradient-to-b from-zinc-50/50 to-white">
+                <div className="p-4 sm:p-5 flex items-start gap-4 border-b border-zinc-100 bg-gradient-to-b from-zinc-50/50 to-white">
                   <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-brand/10 text-brand-dark flex items-center justify-center font-bold text-xl sm:text-2xl shrink-0 group-hover:scale-105 transition-transform duration-300 overflow-hidden">
                     {advisor.profilePic ? (
                       <img src={advisor.profilePic} alt={advisor.name} className="w-full h-full object-cover" />
@@ -344,7 +344,7 @@ export default function Services({ setView, onBookTherapist }) {
                 </div>
 
                 {/* Bio Block */}
-                <div className="px-5 sm:px-6 pt-4 flex items-start justify-between gap-2 text-xs text-zinc-500 font-light w-full">
+                <div className="px-4 sm:px-5 pt-3 flex items-start justify-between gap-2 text-xs text-zinc-500 font-light w-full">
                   <span className={`italic flex-1 min-w-0 ${expandedBios[advisor.id] ? '' : 'line-clamp-2'}`}>
                     "{advisor.bio || 'Consultant psychologist specializing in guidance and mental wellbeing.'}"
                   </span>
@@ -359,13 +359,13 @@ export default function Services({ setView, onBookTherapist }) {
                 </div>
 
                 {/* Specialties Pills */}
-                <div className="p-5 sm:p-6 border-b border-zinc-100 bg-white flex-1 flex flex-col justify-center">
+                <div className="px-4 sm:px-5 pt-3 pb-4 border-b border-zinc-100 bg-white flex flex-col justify-center">
                   <span className="text-xs font-medium text-zinc-400 mb-2.5 block text-left uppercase tracking-wider">Specialties</span>
                   <div className="flex flex-wrap gap-2">
                     {advisor.specialties.map((spec, i) => (
                       <span
                         key={i}
-                        className="px-2.5 py-1 bg-zinc-50 border border-zinc-200 text-xs font-medium text-zinc-600 rounded-md"
+                        className="px-2 py-1 bg-zinc-50 border border-zinc-200 text-xs font-medium text-zinc-600 rounded-md"
                       >
                         {spec}
                       </span>
@@ -374,23 +374,23 @@ export default function Services({ setView, onBookTherapist }) {
                 </div>
 
                 {/* Stats Panel */}
-                <div className="grid grid-cols-3 gap-0 p-4 sm:p-5 border-b border-zinc-100 bg-zinc-50/50 divide-x divide-zinc-200">
-                  <div className="flex flex-col items-center justify-center text-center px-2">
+                <div className="grid grid-cols-3 gap-0 py-3 sm:py-4 px-2 border-b border-zinc-100 bg-zinc-50/50 divide-x divide-zinc-200">
+                  <div className="flex flex-col items-center justify-center text-center px-1">
                     <span className="font-bold text-zinc-900 text-sm sm:text-base tracking-tight">{advisor.hours.toLocaleString()}+</span>
                     <span className="text-[11px] sm:text-xs text-zinc-500 font-medium mt-0.5">Therapy hrs</span>
                   </div>
-                  <div className="flex flex-col items-center justify-center text-center px-2">
+                  <div className="flex flex-col items-center justify-center text-center px-1">
                     <span className="font-bold text-zinc-900 text-sm sm:text-base tracking-tight truncate max-w-full">{advisor.lang}</span>
                     <span className="text-[11px] sm:text-xs text-zinc-500 font-medium mt-0.5">Language</span>
                   </div>
-                  <div className="flex flex-col items-center justify-center text-center px-2">
+                  <div className="flex flex-col items-center justify-center text-center px-1">
                     <span className="font-bold text-zinc-900 text-sm sm:text-base tracking-tight">₹{advisor.price.toLocaleString('en-IN')}</span>
                     <span className="text-[11px] sm:text-xs text-zinc-500 font-medium mt-0.5">Per session</span>
                   </div>
                 </div>
 
                 {/* Card Action Footer */}
-                <div className="p-5 sm:p-6 bg-white flex flex-col space-y-4 mt-auto">
+                <div className="p-4 sm:p-5 bg-white flex flex-col space-y-4 mt-auto">
                   {enablePsychology && (
                     <div className="flex items-center justify-between">
                       <span className="text-xs text-zinc-500 font-medium">Next available</span>
@@ -401,11 +401,11 @@ export default function Services({ setView, onBookTherapist }) {
                     </div>
                   )}
 
-                  <div className="flex gap-2.5 w-full pt-1">
+                  <div className="flex gap-2 w-full pt-1">
                     <button
                       type="button"
                       onClick={() => window.spaNavigate(`/advisor/${advisor.id}`)}
-                      className={`min-h-[44px] py-2.5 border border-zinc-200 hover:border-zinc-300 hover:bg-zinc-50 rounded-xl text-xs sm:text-sm font-semibold text-zinc-700 transition-all duration-200 cursor-pointer active:scale-95 text-center bg-white flex items-center justify-center ${enablePsychology ? 'flex-1' : 'w-full'}`}
+                      className={`min-h-[40px] py-2 border border-zinc-200 hover:border-zinc-300 hover:bg-zinc-50 rounded-xl text-xs sm:text-sm font-semibold text-zinc-700 transition-all duration-200 cursor-pointer active:scale-95 text-center bg-white flex items-center justify-center ${enablePsychology ? 'flex-1' : 'w-full'}`}
                     >
                       View Profile
                     </button>
@@ -420,7 +420,7 @@ export default function Services({ setView, onBookTherapist }) {
                           }
                           window.scrollTo({ top: 0, behavior: 'smooth' });
                         }}
-                        className="flex-1 min-h-[44px] py-2.5 bg-zinc-900 hover:bg-zinc-800 text-white rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer active:scale-95 shadow-sm border-none flex items-center justify-center"
+                        className="flex-1 min-h-[40px] py-2 bg-zinc-900 hover:bg-zinc-800 text-white rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer active:scale-95 shadow-sm border-none flex items-center justify-center"
                       >
                         Book Session
                       </button>
@@ -438,7 +438,7 @@ export default function Services({ setView, onBookTherapist }) {
                 className="bg-white border-[1.5px] border-[#0b1424] rounded-lg lg:rounded-2xl shadow-dark-blue hover:shadow-dark-blue-hover transition-all duration-300 flex flex-col lg:flex-row items-stretch overflow-hidden group"
               >
                 {/* Left Column: Avatar & Name */}
-                <div className="p-5 sm:p-6 flex items-center gap-4 bg-gradient-to-br from-zinc-50/50 to-white border-b lg:border-b-0 lg:border-r border-zinc-100 flex-1 lg:flex-initial lg:basis-[28%] shrink-0">
+                <div className="p-4 sm:p-5 flex items-center gap-4 bg-gradient-to-br from-zinc-50/50 to-white border-b lg:border-b-0 lg:border-r border-zinc-100 flex-1 lg:flex-initial lg:basis-[28%] shrink-0">
                   <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-brand/10 text-brand-dark flex items-center justify-center font-bold text-xl sm:text-2xl shadow-inner shrink-0 group-hover:scale-105 transition-transform duration-300 overflow-hidden">
                     {advisor.profilePic ? (
                       <img src={advisor.profilePic} alt={advisor.name} className="w-full h-full object-cover" />
@@ -457,14 +457,14 @@ export default function Services({ setView, onBookTherapist }) {
                 </div>
 
                 {/* Middle Column: Specialties & Bio */}
-                <div className="p-5 sm:p-6 flex-[2] flex flex-col justify-center gap-3 border-b lg:border-b-0 lg:border-r border-zinc-100 bg-white">
+                <div className="p-4 sm:p-5 flex-[2] flex flex-col justify-center gap-3 border-b lg:border-b-0 lg:border-r border-zinc-100 bg-white">
                   <div>
                     <span className="text-xs font-medium text-zinc-400 mb-1.5 block text-left uppercase tracking-wider">Specialties</span>
                     <div className="flex flex-wrap gap-2">
                       {advisor.specialties.map((spec, i) => (
                         <span
                           key={i}
-                          className="px-2.5 py-1 bg-zinc-50 border border-zinc-200 text-xs font-medium text-zinc-600 rounded-md"
+                          className="px-2 py-1 bg-zinc-50 border border-zinc-200 text-xs font-medium text-zinc-600 rounded-md"
                         >
                           {spec}
                         </span>
@@ -487,7 +487,7 @@ export default function Services({ setView, onBookTherapist }) {
                 </div>
 
                 {/* Stats & Info Panel */}
-                <div className="grid grid-cols-3 lg:flex lg:flex-col lg:items-start lg:justify-center gap-0 lg:gap-3 p-0 sm:p-0 lg:p-6 bg-zinc-50/50 flex-1 lg:flex-initial lg:basis-[20%] shrink-0 border-b lg:border-b-0 lg:border-r border-zinc-100 divide-x divide-zinc-200 lg:divide-x-0">
+                <div className="grid grid-cols-3 lg:flex lg:flex-col lg:items-start lg:justify-center gap-0 lg:gap-3 p-0 sm:p-0 lg:p-4 bg-zinc-50/50 flex-1 lg:flex-initial lg:basis-[20%] shrink-0 border-b lg:border-b-0 lg:border-r border-zinc-100 divide-x divide-zinc-200 lg:divide-x-0">
                   <div className="flex flex-col lg:flex-row lg:items-center gap-0.5 sm:gap-1.5 text-center lg:text-left w-full py-4 lg:py-0 px-2 lg:px-0">
                     <span className="font-bold text-zinc-900 text-sm sm:text-base tracking-tight">{advisor.hours.toLocaleString()}+</span>
                     <span className="text-[11px] sm:text-xs text-zinc-500 font-medium lg:font-medium">therapy hrs</span>
@@ -503,7 +503,7 @@ export default function Services({ setView, onBookTherapist }) {
                 </div>
 
                 {/* Right Column: Actions */}
-                <div className="p-5 sm:p-6 bg-white flex-1 lg:flex-initial lg:basis-[22%] shrink-0 flex flex-col justify-center space-y-4 mt-auto lg:mt-0">
+                <div className="p-4 sm:p-5 bg-white flex-1 lg:flex-initial lg:basis-[22%] shrink-0 flex flex-col justify-center space-y-4 mt-auto lg:mt-0">
                   {enablePsychology && (
                     <div className="flex items-center justify-between lg:justify-center gap-2">
                       <span className="text-xs text-zinc-500 font-medium lg:hidden">Next available</span>
@@ -518,7 +518,7 @@ export default function Services({ setView, onBookTherapist }) {
                     <button
                       type="button"
                       onClick={() => window.spaNavigate(`/advisor/${advisor.id}`)}
-                      className={`min-h-[44px] py-2.5 border border-zinc-200 hover:border-zinc-300 hover:bg-zinc-50 rounded-xl text-xs sm:text-sm font-semibold text-zinc-700 transition-all duration-200 cursor-pointer active:scale-95 text-center bg-white flex items-center justify-center ${enablePsychology ? 'flex-1' : 'w-full lg:w-full'}`}
+                      className={`min-h-[40px] py-2 border border-zinc-200 hover:border-zinc-300 hover:bg-zinc-50 rounded-xl text-xs sm:text-sm font-semibold text-zinc-700 transition-all duration-200 cursor-pointer active:scale-95 text-center bg-white flex items-center justify-center ${enablePsychology ? 'flex-1' : 'w-full lg:w-full'}`}
                     >
                       View Profile
                     </button>
@@ -533,7 +533,7 @@ export default function Services({ setView, onBookTherapist }) {
                           }
                           window.scrollTo({ top: 0, behavior: 'smooth' });
                         }}
-                        className="flex-1 min-h-[44px] py-2.5 bg-zinc-900 hover:bg-zinc-800 text-white rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer active:scale-95 shadow-sm border-none flex items-center justify-center"
+                        className="flex-1 min-h-[40px] py-2 bg-zinc-900 hover:bg-zinc-800 text-white rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer active:scale-95 shadow-sm border-none flex items-center justify-center"
                       >
                         Book Session
                       </button>

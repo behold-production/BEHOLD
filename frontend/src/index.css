@@ -59,10 +59,10 @@
   --text-5xl: clamp(2.5rem, 2.0rem + 1.5vw, 3.25rem);
 
   /* Custom premium dark blue shadows */
-  --shadow-dark-blue-sm: 0 0 16px 0 rgba(11, 20, 36, 0.16);
-  --shadow-dark-blue: 0 0 25px 0 rgba(11, 20, 36, 0.22);
-  --shadow-dark-blue-hover: 0 0 35px 2px rgba(11, 20, 36, 0.32);
-  --shadow-dark-blue-lg: 0 0 32px 0 rgba(11, 20, 36, 0.26);
+  --shadow-dark-blue-sm: 0 0 16px 0 rgba(11, 20, 36, 0.5);
+  --shadow-dark-blue: 0 0 25px 0 rgba(11, 20, 36, 0.7);
+  --shadow-dark-blue-hover: 0 0 35px 2px rgba(11, 20, 36, 0.9);
+  --shadow-dark-blue-lg: 0 0 32px 0 rgba(11, 20, 36, 0.85);
 }
 
 /* Touch target helper – guarantees 44×44px minimum for buttons/inputs on mobile */

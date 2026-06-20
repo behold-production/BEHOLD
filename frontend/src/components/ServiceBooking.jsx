@@ -1443,24 +1443,10 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                       {/* Service Type Selection */}
                       <div className="space-y-2">
                         <label className="text-xs font-bold text-zinc-550 capitalize tracking-wide block">Select Service Type</label>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
                           {[
-                            {
-                              id: 'counselling',
-                              num: '02',
-                              tag: 'Psychological Counselling',
-                              title: 'Emotional Wellbeing & Support',
-                              subtitle: 'You Don’t Have to Face It Alone.',
-                              desc: 'When stress, anxiety, self-doubt, or personal challenges begin to feel overwhelming, having the right support can make all the difference.'
-                            },
-                            {
-                              id: 'career',
-                              num: '01',
-                              tag: 'Career Mentoring',
-                              title: 'Career Clarity & Direction',
-                              subtitle: 'Feeling Unsure About What’s Next?',
-                              desc: 'Whether you’re choosing a stream, exploring career options, or planning your studies, we help you understand your strengths and opportunities.'
-                            }
+                            { id: 'counselling', label: 'Psychological Counselling' },
+                            { id: 'career', label: 'Career Mentoring' }
                           ].map((s) => {
                             const isSelected = bookingService === s.id;
                             return (
@@ -1472,35 +1458,13 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                   if (rescheduleSession) return;
                                   setBookingService(s.id);
                                 }}
-                                className={`text-left p-4 rounded-lg sm:rounded-xl transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-3.5 border-[1.5px] border-[#0b1424] ${
+                                className={`min-h-[48px] px-4 py-3 rounded-lg sm:rounded-xl transition-all duration-300 cursor-pointer flex items-center justify-center text-center border-[1.5px] border-[#0b1424] text-xs sm:text-sm font-bold ${
                                   isSelected
-                                    ? 'bg-slate-50 ring-2 ring-[#0b1424]/10 shadow-dark-blue font-bold'
-                                    : 'bg-white hover:bg-slate-50/50 shadow-dark-blue-sm'
+                                    ? 'bg-[#0b1424] text-white shadow-dark-blue scale-[1.02]'
+                                    : 'bg-white text-zinc-700 hover:bg-zinc-50 shadow-dark-blue-sm'
                                 } ${rescheduleSession ? 'opacity-65 cursor-not-allowed' : ''}`}
                               >
-                                <div className="space-y-2 w-full">
-                                  <div className="flex justify-between items-start w-full">
-                                    <span className={`inline-block text-[9px] sm:text-[10px] px-2 py-0.5 rounded font-extrabold tracking-wide uppercase ${
-                                      isSelected
-                                        ? 'bg-slate-900 text-white'
-                                        : 'bg-slate-100 text-slate-700'
-                                    }`}>
-                                      {s.tag}
-                                    </span>
-                                    <span className="text-[10px] font-bold text-slate-400 border border-slate-200 px-1.5 py-0.5 rounded bg-white">
-                                      {s.num}
-                                    </span>
-                                  </div>
-                                  <h4 className="text-xs sm:text-sm font-bold text-slate-900 tracking-wide mt-1">
-                                    {s.title}
-                                  </h4>
-                                  <h5 className="text-[9px] sm:text-[10px] font-bold text-slate-400 italic">
-                                    {s.subtitle}
-                                  </h5>
-                                  <p className="text-slate-600 text-[10px] sm:text-xs leading-relaxed font-light">
-                                    {s.desc}
-                                  </p>
-                                </div>
+                                {s.label}
                               </button>
                             );
                           })}
