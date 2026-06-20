@@ -476,24 +476,29 @@ const AppointmentController = {
   async updateFeedback(req, res, next) {
     try {
       const { id } = req.params;
-      const { feedback } = req.body;
+      const { notes, feedback, nextSession } = req.body;
 
       const appointment = await StorageService.findById('appointments', id);
       if (!appointment) {
         return res.status(404).json({ success: false, message: 'Appointment not found' });
       }
 
-      const updated = await StorageService.update('appointments', id, { feedback });
+      const updates = {};
+      if (notes !== undefined) updates.notes = notes;
+      if (feedback !== undefined) updates.feedback = feedback;
+      if (nextSession !== undefined) updates.nextSession = nextSession;
+
+      const updated = await StorageService.update('appointments', id, updates);
 
       // Update matching session if exists
       const session = await StorageService.findOne('sessions', { appointmentId: id });
       if (session) {
-        await StorageService.update('sessions', session.id, { feedback });
+        await StorageService.update('sessions', session.id, updates);
       }
 
       res.status(200).json({
         success: true,
-        message: 'Session feedback updated successfully',
+        message: 'Session diagnostic records updated successfully',
         data: updated
       });
     } catch (error) {
@@ -505,7 +510,7 @@ const AppointmentController = {
   async completeAppointment(req, res, next) {
     try {
       const { id } = req.params;
-      const { notes } = req.body;
+      const { notes, feedback, nextSession } = req.body;
 
       const appointment = await StorageService.findById('appointments', id);
       if (!appointment) {
@@ -513,15 +518,25 @@ const AppointmentController = {
       }
       
       if (!notes) {
-        return res.status(400).json({ success: false, message: 'Diagnostic notes are required to complete the appointment' });
+        return res.status(400).json({ success: false, message: 'Clinical Assessment & Observation Notes are required to complete the appointment' });
       }
 
-      const updated = await StorageService.update('appointments', id, { status: 'COMPLETED', feedback: notes });
+      const updated = await StorageService.update('appointments', id, { 
+        status: 'COMPLETED', 
+        notes: notes,
+        feedback: feedback || '',
+        nextSession: nextSession || ''
+      });
 
       // Also complete matching session if exists
       const session = await StorageService.findOne('sessions', { appointmentId: id });
       if (session) {
-        await StorageService.update('sessions', session.id, { status: 'COMPLETED', feedback: notes });
+        await StorageService.update('sessions', session.id, { 
+          status: 'COMPLETED', 
+          notes: notes,
+          feedback: feedback || '',
+          nextSession: nextSession || ''
+        });
       }
 
       res.status(200).json({
@@ -581,8 +596,12 @@ const AppointmentController = {
           const user = await StorageService.findById('users', a.userId);
           const counsellor = await StorageService.findById('counsellors', a.counsellorId);
           const session = await StorageService.findOne('sessions', { appointmentId: a.id });
+          const apptData = { ...a };
+          if (req.user.role !== 'admin') {
+            delete apptData.adminNotes;
+          }
           return {
-            ...a,
+            ...apptData,
             studentName: user ? user.name : 'Unknown Student',
             counsellorName: counsellor ? counsellor.name : 'Unknown Counsellor',
             notes: session ? session.notes : '',

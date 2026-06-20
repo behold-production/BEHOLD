@@ -12,6 +12,8 @@ const sessionSchema = new mongoose.Schema({
   status: { type: String, default: 'PENDING' },
   notes: { type: String, default: '' },
   feedback: { type: String, default: '' },
+  nextSession: { type: String, default: '' },
+  adminNotes: { type: String, default: '' },
   cancellationReason: { type: String, default: '' },
   cancelledBy: { type: String, default: '' }
 }, { timestamps: true });

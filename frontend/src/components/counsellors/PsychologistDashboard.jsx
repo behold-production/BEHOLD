@@ -76,7 +76,9 @@ export default function PsychologistDashboard({ setView }) {
   const setMeetLinkError = (msg) => { if (msg && !msg.includes('Status:')) import('react-hot-toast').then(mod => mod.toast.error(msg)) };
   const meetLinkError = '';
   const [editingFeedbackId, setEditingFeedbackId] = useState(null);
+  const [notesInput, setNotesInput] = useState('');
   const [feedbackInput, setFeedbackInput] = useState('');
+  const [nextSessionInput, setNextSessionInput] = useState('');
   const [activeBookingTab, setActiveBookingTab] = useState('CONFIRMED'); // CONFIRMED, COMPLETED, CANCELLED
 
   // Login form states
@@ -386,53 +388,140 @@ export default function PsychologistDashboard({ setView }) {
       doc.text(`${formatDateString(booking.date)} at ${booking.time}`, 80, 88);
       doc.text(`${formatDateString(new Date())}`, 145, 88);
 
-      // Clinical Notes / Diagnostics
+      // Clinical Notes / Diagnostics Header
       doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(14);
+      doc.setTextColor(13, 148, 136); // Teal Rx symbol
+      doc.text('Rx', 20, 103);
+
       doc.setFontSize(11);
-      doc.setTextColor(13, 148, 136); // Teal
-      doc.text('CLINICAL ASSESSMENT & DIAGNOSTICS', 20, 103);
+      doc.text('CLINICAL ASSESSMENT & DIAGNOSTICS', 27, 103);
 
       doc.setDrawColor(13, 148, 136);
       doc.setLineWidth(0.3);
       doc.line(20, 105, 190, 105);
 
-      // Section Content
-      doc.setFont('Helvetica', 'bold');
-      doc.setFontSize(9);
-      doc.setTextColor(15, 23, 42);
-      doc.text('Clinical Assessment & Observation Notes:', 20, 112);
+      // Section Content Auto-Pagebreak System
+      let y = 112;
+      const bottomLimit = 265;
 
-      doc.setFont('Helvetica', 'normal');
-      doc.setTextColor(51, 65, 85); // slate-700
-      doc.setFontSize(8.5);
+      const printTextSection = (titleText, bodyText, gapBeforeTitle = 10) => {
+        // Check if title fits on current page
+        if (y + gapBeforeTitle > bottomLimit) {
+          doc.addPage();
+          doc.setFillColor(13, 148, 136);
+          doc.rect(0, 0, 210, 8, 'F');
+          
+          doc.setFont('Helvetica', 'normal');
+          doc.setFontSize(7.5);
+          doc.setTextColor(148, 163, 184);
+          doc.text(`Clinical Report ID: CL-REP-${displayId} | Continuation Page`, 20, 15);
+          doc.line(20, 17, 190, 17);
+          
+          y = 25;
+        } else {
+          y += gapBeforeTitle;
+        }
+        
+        doc.setFont('Helvetica', 'bold');
+        doc.setFontSize(9.5);
+        doc.setTextColor(15, 23, 42);
+        doc.text(titleText, 20, y);
+        y += 6;
+        
+        doc.setFont('Helvetica', 'normal');
+        doc.setTextColor(51, 65, 85);
+        doc.setFontSize(8.5);
+        
+        const lines = doc.splitTextToSize(bodyText, 170);
+        for (let i = 0; i < lines.length; i++) {
+          if (y > bottomLimit) {
+            doc.addPage();
+            doc.setFillColor(13, 148, 136);
+            doc.rect(0, 0, 210, 8, 'F');
+            
+            doc.setFont('Helvetica', 'normal');
+            doc.setFontSize(7.5);
+            doc.setTextColor(148, 163, 184);
+            doc.text(`Clinical Report ID: CL-REP-${displayId} | Continuation Page`, 20, 15);
+            doc.line(20, 17, 190, 17);
+            
+            y = 25;
+          }
+          // Restore font style for text lines after page break
+          doc.setFont('Helvetica', 'normal');
+          doc.setTextColor(51, 65, 85);
+          doc.setFontSize(8.5);
 
+          doc.text(lines[i], 20, y);
+          y += 4.5;
+        }
+      };
+
+      // 1. Clinical Assessment Notes
       const clinicalNotes = booking.notes || 'No clinical/diagnostic notes recorded for this session.';
-      const notesLines = doc.splitTextToSize(clinicalNotes, 170);
-      doc.text(notesLines, 20, 118);
+      printTextSection('Clinical Assessment & Observation Notes:', clinicalNotes, 8);
 
-      // Recommendations & Action Plan
-      let yOffset = 118 + (notesLines.length * 4.5) + 10;
-      doc.setFont('Helvetica', 'bold');
-      doc.setFontSize(9);
-      doc.setTextColor(15, 23, 42);
-      doc.text('Recommendations & Feedback:', 20, yOffset);
-
-      doc.setFont('Helvetica', 'normal');
-      doc.setTextColor(51, 65, 85);
-      doc.setFontSize(8.5);
-
+      // 2. Recommendations & Feedback
       const feedbackText = booking.feedback || 'No student-facing feedback or recommendations recorded.';
-      const feedbackLines = doc.splitTextToSize(feedbackText, 170);
-      doc.text(feedbackLines, 20, yOffset + 6);
+      printTextSection('Recommendations & Feedback:', feedbackText, 10);
+
+      // 3. Next Session (Optional)
+      const hasNextSession = booking.nextSession && 
+                             booking.nextSession.trim() !== '' && 
+                             booking.nextSession.trim().toLowerCase() !== 'n/a' && 
+                             booking.nextSession.trim().toLowerCase() !== 'none' && 
+                             booking.nextSession.trim().toLowerCase() !== 'no' && 
+                             booking.nextSession.trim().toLowerCase() !== 'null';
+
+      if (hasNextSession) {
+        if (y + 12 > bottomLimit) {
+          doc.addPage();
+          doc.setFillColor(13, 148, 136);
+          doc.rect(0, 0, 210, 8, 'F');
+          
+          doc.setFont('Helvetica', 'normal');
+          doc.setFontSize(7.5);
+          doc.setTextColor(148, 163, 184);
+          doc.text(`Clinical Report ID: CL-REP-${displayId} | Continuation Page`, 20, 15);
+          doc.line(20, 17, 190, 17);
+          
+          y = 25;
+        } else {
+          y += 10;
+        }
+
+        doc.setFont('Helvetica', 'bold');
+        doc.setFontSize(9.5);
+        doc.setTextColor(15, 23, 42);
+        doc.text('Next Session Approximate Time:', 20, y);
+        y += 5.5;
+
+        doc.setFont('Helvetica', 'normal');
+        doc.setTextColor(51, 65, 85);
+        doc.setFontSize(8.5);
+        doc.text(booking.nextSession.trim(), 20, y);
+        y += 5;
+      }
 
       // Footer / Prescription style signature line
-      let sigY = yOffset + (feedbackLines.length * 4.5) + 25;
-      if (sigY > 260) {
+      let sigY = y + 18;
+      if (sigY > 250) {
         doc.addPage();
-        sigY = 40;
+        doc.setFillColor(13, 148, 136);
+        doc.rect(0, 0, 210, 8, 'F');
+        
+        doc.setFont('Helvetica', 'normal');
+        doc.setFontSize(7.5);
+        doc.setTextColor(148, 163, 184);
+        doc.text(`Clinical Report ID: CL-REP-${displayId} | Continuation Page`, 20, 15);
+        doc.line(20, 17, 190, 17);
+        
+        sigY = 35;
       }
 
       doc.setDrawColor(203, 213, 225); // slate-300
+      doc.setLineWidth(0.3);
       doc.line(130, sigY, 190, sigY);
       doc.setFont('Helvetica', 'bold');
       doc.setFontSize(8.5);
@@ -443,9 +532,19 @@ export default function PsychologistDashboard({ setView }) {
       doc.text(`${cName}, ${cTitle}`, 130, sigY + 9, { maxWidth: 60 });
 
       // Footer Notice
-      doc.setFontSize(8);
+      doc.setFontSize(7.5);
       doc.text('This is a confidential medical-styled diagnostic document issued by the consultant psychologist.', 20, sigY + 18);
       doc.text('Please secure this document. For inquiries, reach out to contact@beholdaspire.com.', 20, sigY + 22);
+
+      // Post-process: Add centered page numbers on all pages
+      const totalPages = doc.internal.getNumberOfPages();
+      for (let i = 1; i <= totalPages; i++) {
+        doc.setPage(i);
+        doc.setFont('Helvetica', 'normal');
+        doc.setFontSize(7.5);
+        doc.setTextColor(148, 163, 184);
+        doc.text(`Page ${i} of ${totalPages}`, 105, 288, { align: 'center' });
+      }
 
       doc.save(`Clinical_Report_${sName.replace(/\s+/g, '_')}_${displayId}.pdf`);
     } catch (e) {
@@ -824,12 +923,16 @@ export default function PsychologistDashboard({ setView }) {
         if (reason === null) return;
         res = await ApiService.cancelAppointment(bookingId, reason);
       } else if (newStatus === 'COMPLETED') {
-        const notes = await showPrompt("Please enter diagnostic notes or feedback for this session:", '', 'Complete Session', 'Enter notes...', true);
+        const notes = await showPrompt("Please enter Clinical Assessment & Observation Notes to complete this session:", '', 'Complete Session', 'Enter Clinical Notes...', true);
         if (!notes) {
-          import('react-hot-toast').then(mod => mod.toast.error('Diagnostic notes are required to complete a session.'));
+          import('react-hot-toast').then(mod => mod.toast.error('Clinical Assessment & Observation Notes are required to complete a session.'));
           return;
         }
-        res = await ApiService.completeAppointment(bookingId, notes);
+        res = await ApiService.completeAppointment(bookingId, {
+          notes: notes.trim(),
+          feedback: '',
+          nextSession: ''
+        });
       } else if (newStatus === 'REJECTED') {
         const reason = await showPrompt("Please enter a reason for declining this request:", '', 'Decline Request', 'Enter decline reason...');
         if (reason === null) return;
@@ -846,7 +949,11 @@ export default function PsychologistDashboard({ setView }) {
 
   const saveFeedback = async (bookingId) => {
     try {
-      const res = await ApiService.updateAppointmentFeedback(bookingId, feedbackInput.trim());
+      const res = await ApiService.updateAppointmentFeedback(bookingId, {
+        notes: notesInput.trim(),
+        feedback: feedbackInput.trim(),
+        nextSession: nextSessionInput.trim()
+      });
       if (res.success) {
         await loadBookingsData();
         setEditingFeedbackId(null);
@@ -2314,63 +2421,121 @@ export default function PsychologistDashboard({ setView }) {
 
                             {/* Diagnostic Feedback Editor / Display */}
                             {(booking.status === 'COMPLETED' || booking.status === 'EXPIRED') && (
-                              <div className="pt-3 mt-2 border-t border-zinc-900 space-y-2 w-full max-w-xl">
-                                <span className="text-sm capitalize  font-semibold text-zinc-505 block">Session Feedback & Diagnostic Notes:</span>
+                              <div className="pt-3 mt-2 border-t border-zinc-900 space-y-3 w-full max-w-xl text-left">
+                                <span className="text-sm capitalize font-bold text-zinc-400 block tracking-wide">
+                                  Diagnostic & Clinical Records:
+                                </span>
 
                                 {editingFeedbackId === booking.id ? (
-                                  <div className="space-y-2">
-                                    <textarea
-                                      value={feedbackInput}
-                                      onChange={(e) => setFeedbackInput(e.target.value)}
-                                      placeholder="Enter session feedback, guidance notes, or key recommendations for the student..."
-                                      rows={3}
-                                      className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 text-white text-sm rounded-lg outline-none focus:border-brand resize-none"
-                                    />
-                                    <div className="flex gap-2">
+                                  <div className="space-y-3 font-sans">
+                                    <div className="space-y-1">
+                                      <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider block">
+                                        Clinical Assessment & Observation Notes
+                                      </label>
+                                      <textarea
+                                        value={notesInput}
+                                        onChange={(e) => setNotesInput(e.target.value)}
+                                        placeholder="Enter clinical assessments, observations, and primary findings..."
+                                        rows={3}
+                                        className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 text-white text-xs rounded-lg outline-none focus:border-brand resize-none font-medium"
+                                      />
+                                    </div>
+
+                                    <div className="space-y-1">
+                                      <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider block">
+                                        Recommendations & Feedback
+                                      </label>
+                                      <textarea
+                                        value={feedbackInput}
+                                        onChange={(e) => setFeedbackInput(e.target.value)}
+                                        placeholder="Enter key recommendations, student guidance, and feedback..."
+                                        rows={3}
+                                        className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 text-white text-xs rounded-lg outline-none focus:border-brand resize-none font-medium"
+                                      />
+                                    </div>
+
+                                    <div className="space-y-1">
+                                      <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider block">
+                                        Next Session Approximate Time (Optional)
+                                      </label>
+                                      <input
+                                        type="text"
+                                        value={nextSessionInput}
+                                        onChange={(e) => setNextSessionInput(e.target.value)}
+                                        placeholder="e.g., In 2 weeks, Mid-July, or specific date"
+                                        className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 text-white text-xs rounded-lg outline-none focus:border-brand font-semibold"
+                                      />
+                                    </div>
+
+                                    <div className="flex gap-2 pt-1">
                                       <button
                                         type="button"
                                         onClick={() => saveFeedback(booking.id)}
-                                        className="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded text-sm font-bold capitalize  cursor-pointer shadow-xs border-none"
+                                        className="px-3.5 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded text-xs font-bold capitalize cursor-pointer shadow-xs border-none"
                                       >
-                                        Save Feedback
+                                        Save Records
                                       </button>
                                       <button
                                         type="button"
                                         onClick={() => setEditingFeedbackId(null)}
-                                        className="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-white rounded text-sm font-bold capitalize  cursor-pointer border-none"
+                                        className="px-3.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-white rounded text-xs font-bold capitalize cursor-pointer border-none"
                                       >
                                         Cancel
                                       </button>
                                     </div>
                                   </div>
                                 ) : (
-                                  <div className="space-y-2">
-                                    {booking.feedback ? (
-                                      <p className="text-[12.5px] text-zinc-300 bg-zinc-900/60 p-2.5 rounded-lg border border-zinc-850/50 italic leading-relaxed font-light">
-                                        "{booking.feedback}"
+                                  <div className="space-y-3 font-sans">
+                                    <div className="space-y-1">
+                                      <span className="text-[10px] font-bold text-zinc-505 uppercase tracking-wider block">
+                                        Clinical Assessment & Observation Notes:
+                                      </span>
+                                      <p className="text-xs text-zinc-300 bg-zinc-900/60 p-2.5 rounded-lg border border-zinc-850/50 italic leading-relaxed font-light">
+                                        {booking.notes ? `"${booking.notes}"` : "No notes recorded yet."}
                                       </p>
-                                    ) : (
-                                      <p className="text-sm text-zinc-500 italic">No notes added yet.</p>
+                                    </div>
+
+                                    <div className="space-y-1">
+                                      <span className="text-[10px] font-bold text-zinc-505 uppercase tracking-wider block">
+                                        Recommendations & Feedback:
+                                      </span>
+                                      <p className="text-xs text-zinc-300 bg-zinc-900/60 p-2.5 rounded-lg border border-zinc-850/50 italic leading-relaxed font-light">
+                                        {booking.feedback ? `"${booking.feedback}"` : "No recommendations recorded yet."}
+                                      </p>
+                                    </div>
+
+                                    {booking.nextSession && booking.nextSession.trim() !== '' && booking.nextSession.trim().toLowerCase() !== 'n/a' && booking.nextSession.trim().toLowerCase() !== 'none' && booking.nextSession.trim().toLowerCase() !== 'no' && booking.nextSession.trim().toLowerCase() !== 'null' && (
+                                      <div className="space-y-1">
+                                        <span className="text-[10px] font-bold text-zinc-505 uppercase tracking-wider block">
+                                          Next Session Approximate Time:
+                                        </span>
+                                        <p className="text-xs text-zinc-300 bg-zinc-900/60 p-2.5 rounded-lg border border-zinc-850/50 leading-relaxed font-semibold">
+                                          {booking.nextSession}
+                                        </p>
+                                      </div>
                                     )}
+
                                     <div className="flex gap-4 items-center flex-wrap pt-1">
                                       <button
                                         type="button"
                                         onClick={() => {
                                           setEditingFeedbackId(booking.id);
+                                          setNotesInput(booking.notes || '');
                                           setFeedbackInput(booking.feedback || '');
+                                          setNextSessionInput(booking.nextSession || '');
                                         }}
-                                        className="text-sm font-bold text-brand hover:underline capitalize flex items-center gap-1 cursor-pointer border-none bg-transparent p-0"
+                                        className="text-xs font-bold text-brand hover:underline capitalize flex items-center gap-1 cursor-pointer border-none bg-transparent p-0"
                                       >
-                                        {booking.feedback ? 'Edit Feedback' : '+ Add Diagnostic Notes'}
+                                        Edit Records
                                       </button>
                                       {booking.status === 'COMPLETED' && (
                                         <button
                                           type="button"
                                           onClick={() => downloadDiagnosticPDF(booking)}
-                                          className="text-sm font-bold text-emerald-400 hover:text-emerald-350 hover:underline capitalize flex items-center gap-1.5 cursor-pointer border-none bg-transparent p-0"
+                                          className="text-xs font-bold text-emerald-400 hover:text-emerald-350 hover:underline capitalize flex items-center gap-1.5 cursor-pointer border-none bg-transparent p-0"
                                           title="Download Clinical Report PDF"
                                         >
-                                          <FileText className="w-4 h-4 text-emerald-400" />
+                                          <FileText className="w-3.5 h-3.5 text-emerald-400" />
                                           <span>Download Report PDF</span>
                                         </button>
                                       )}

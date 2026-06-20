@@ -453,53 +453,140 @@ export default function AdminDashboard({ setView }) {
       doc.text(`${formatDateString(booking.date)} at ${booking.time}`, 80, 88);
       doc.text(`${formatDateString(new Date())}`, 145, 88);
 
-      // Clinical Notes / Diagnostics
+      // Clinical Notes / Diagnostics Header
       doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(14);
+      doc.setTextColor(13, 148, 136); // Teal Rx symbol
+      doc.text('Rx', 20, 103);
+
       doc.setFontSize(11);
-      doc.setTextColor(13, 148, 136); // Teal
-      doc.text('CLINICAL ASSESSMENT & DIAGNOSTICS', 20, 103);
+      doc.text('CLINICAL ASSESSMENT & DIAGNOSTICS', 27, 103);
 
       doc.setDrawColor(13, 148, 136);
       doc.setLineWidth(0.3);
       doc.line(20, 105, 190, 105);
 
-      // Section Content
-      doc.setFont('Helvetica', 'bold');
-      doc.setFontSize(9);
-      doc.setTextColor(15, 23, 42);
-      doc.text('Clinical Assessment & Observation Notes:', 20, 112);
+      // Section Content Auto-Pagebreak System
+      let y = 112;
+      const bottomLimit = 265;
 
-      doc.setFont('Helvetica', 'normal');
-      doc.setTextColor(51, 65, 85); // slate-700
-      doc.setFontSize(8.5);
-      
+      const printTextSection = (titleText, bodyText, gapBeforeTitle = 10) => {
+        // Check if title fits on current page
+        if (y + gapBeforeTitle > bottomLimit) {
+          doc.addPage();
+          doc.setFillColor(13, 148, 136);
+          doc.rect(0, 0, 210, 8, 'F');
+          
+          doc.setFont('Helvetica', 'normal');
+          doc.setFontSize(7.5);
+          doc.setTextColor(148, 163, 184);
+          doc.text(`Clinical Report ID: CL-REP-${displayId} | Continuation Page`, 20, 15);
+          doc.line(20, 17, 190, 17);
+          
+          y = 25;
+        } else {
+          y += gapBeforeTitle;
+        }
+        
+        doc.setFont('Helvetica', 'bold');
+        doc.setFontSize(9.5);
+        doc.setTextColor(15, 23, 42);
+        doc.text(titleText, 20, y);
+        y += 6;
+        
+        doc.setFont('Helvetica', 'normal');
+        doc.setTextColor(51, 65, 85);
+        doc.setFontSize(8.5);
+        
+        const lines = doc.splitTextToSize(bodyText, 170);
+        for (let i = 0; i < lines.length; i++) {
+          if (y > bottomLimit) {
+            doc.addPage();
+            doc.setFillColor(13, 148, 136);
+            doc.rect(0, 0, 210, 8, 'F');
+            
+            doc.setFont('Helvetica', 'normal');
+            doc.setFontSize(7.5);
+            doc.setTextColor(148, 163, 184);
+            doc.text(`Clinical Report ID: CL-REP-${displayId} | Continuation Page`, 20, 15);
+            doc.line(20, 17, 190, 17);
+            
+            y = 25;
+          }
+          // Restore font style for text lines after page break
+          doc.setFont('Helvetica', 'normal');
+          doc.setTextColor(51, 65, 85);
+          doc.setFontSize(8.5);
+
+          doc.text(lines[i], 20, y);
+          y += 4.5;
+        }
+      };
+
+      // 1. Clinical Assessment Notes
       const clinicalNotes = booking.notes || 'No clinical/diagnostic notes recorded for this session.';
-      const notesLines = doc.splitTextToSize(clinicalNotes, 170);
-      doc.text(notesLines, 20, 118);
+      printTextSection('Clinical Assessment & Observation Notes:', clinicalNotes, 8);
 
-      // Recommendations & Action Plan
-      let yOffset = 118 + (notesLines.length * 4.5) + 10;
-      doc.setFont('Helvetica', 'bold');
-      doc.setFontSize(9);
-      doc.setTextColor(15, 23, 42);
-      doc.text('Recommendations & Feedback:', 20, yOffset);
-
-      doc.setFont('Helvetica', 'normal');
-      doc.setTextColor(51, 65, 85);
-      doc.setFontSize(8.5);
-
+      // 2. Recommendations & Feedback
       const feedbackText = booking.feedback || 'No student-facing feedback or recommendations recorded.';
-      const feedbackLines = doc.splitTextToSize(feedbackText, 170);
-      doc.text(feedbackLines, 20, yOffset + 6);
+      printTextSection('Recommendations & Feedback:', feedbackText, 10);
+
+      // 3. Next Session (Optional)
+      const hasNextSession = booking.nextSession && 
+                             booking.nextSession.trim() !== '' && 
+                             booking.nextSession.trim().toLowerCase() !== 'n/a' && 
+                             booking.nextSession.trim().toLowerCase() !== 'none' && 
+                             booking.nextSession.trim().toLowerCase() !== 'no' && 
+                             booking.nextSession.trim().toLowerCase() !== 'null';
+
+      if (hasNextSession) {
+        if (y + 12 > bottomLimit) {
+          doc.addPage();
+          doc.setFillColor(13, 148, 136);
+          doc.rect(0, 0, 210, 8, 'F');
+          
+          doc.setFont('Helvetica', 'normal');
+          doc.setFontSize(7.5);
+          doc.setTextColor(148, 163, 184);
+          doc.text(`Clinical Report ID: CL-REP-${displayId} | Continuation Page`, 20, 15);
+          doc.line(20, 17, 190, 17);
+          
+          y = 25;
+        } else {
+          y += 10;
+        }
+
+        doc.setFont('Helvetica', 'bold');
+        doc.setFontSize(9.5);
+        doc.setTextColor(15, 23, 42);
+        doc.text('Next Session Approximate Time:', 20, y);
+        y += 5.5;
+
+        doc.setFont('Helvetica', 'normal');
+        doc.setTextColor(51, 65, 85);
+        doc.setFontSize(8.5);
+        doc.text(booking.nextSession.trim(), 20, y);
+        y += 5;
+      }
 
       // Footer / Prescription style signature line
-      let sigY = yOffset + (feedbackLines.length * 4.5) + 25;
-      if (sigY > 260) {
+      let sigY = y + 18;
+      if (sigY > 250) {
         doc.addPage();
-        sigY = 40;
+        doc.setFillColor(13, 148, 136);
+        doc.rect(0, 0, 210, 8, 'F');
+        
+        doc.setFont('Helvetica', 'normal');
+        doc.setFontSize(7.5);
+        doc.setTextColor(148, 163, 184);
+        doc.text(`Clinical Report ID: CL-REP-${displayId} | Continuation Page`, 20, 15);
+        doc.line(20, 17, 190, 17);
+        
+        sigY = 35;
       }
 
       doc.setDrawColor(203, 213, 225); // slate-300
+      doc.setLineWidth(0.3);
       doc.line(130, sigY, 190, sigY);
       doc.setFont('Helvetica', 'bold');
       doc.setFontSize(8.5);
@@ -510,9 +597,19 @@ export default function AdminDashboard({ setView }) {
       doc.text(`${cName}, ${cTitle}`, 130, sigY + 9, { maxWidth: 60 });
 
       // Footer Notice
-      doc.setFontSize(8);
+      doc.setFontSize(7.5);
       doc.text('This is a confidential medical-styled diagnostic document issued by the consultant psychologist.', 20, sigY + 18);
       doc.text('Please secure this document. For inquiries, reach out to contact@beholdaspire.com.', 20, sigY + 22);
+
+      // Post-process: Add centered page numbers on all pages
+      const totalPages = doc.internal.getNumberOfPages();
+      for (let i = 1; i <= totalPages; i++) {
+        doc.setPage(i);
+        doc.setFont('Helvetica', 'normal');
+        doc.setFontSize(7.5);
+        doc.setTextColor(148, 163, 184);
+        doc.text(`Page ${i} of ${totalPages}`, 105, 288, { align: 'center' });
+      }
 
       doc.save(`Clinical_Report_${sName.replace(/\s+/g, '_')}_${displayId}.pdf`);
     } catch (e) {
@@ -1691,7 +1788,8 @@ export default function AdminDashboard({ setView }) {
       date: booking.date || '',
       time: booking.time || '',
       meetLink: booking.meetLink || '',
-      status: booking.status || 'CONFIRMED'
+      status: booking.status || 'CONFIRMED',
+      adminNotes: booking.adminNotes || ''
     });
 
     setBookingFormError('');
@@ -1722,7 +1820,8 @@ export default function AdminDashboard({ setView }) {
         date: bookingForm.date,
         time: bookingForm.time,
         meetLink: bookingForm.meetLink.trim(),
-        status: bookingForm.status
+        status: bookingForm.status,
+        adminNotes: bookingForm.adminNotes ? bookingForm.adminNotes.trim() : ''
       });
 
       setBookingFormSuccess("Appointment details updated!");
@@ -6278,7 +6377,7 @@ export default function AdminDashboard({ setView }) {
                   />
                 </div>
 
-                <div className="space-y-1">
+                 <div className="space-y-1">
                   <label className="text-sm capitalize  font-bold text-zinc-400">Booking Status</label>
                   <select
                     value={bookingForm.status}
@@ -6291,6 +6390,17 @@ export default function AdminDashboard({ setView }) {
                     <option value="EXPIRED">EXPIRED</option>
                     <option value="CANCELLED">CANCELLED</option>
                   </select>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-sm capitalize  font-bold text-zinc-400">Office / Admin Internal Notes</label>
+                  <textarea
+                    placeholder="Enter internal staff/followup notes (only visible to admin staff)..."
+                    value={bookingForm.adminNotes || ''}
+                    onChange={(e) => setBookingForm({ ...bookingForm, adminNotes: e.target.value })}
+                    rows={2}
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none resize-none font-semibold"
+                  />
                 </div>
               </div>
 

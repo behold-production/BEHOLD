@@ -776,7 +776,7 @@ const AdminController = {
   async updateAppointment(req, res, next) {
     try {
       const { id } = req.params;
-      const { userId, advisorId, service, mode, date, time, status, meetLink, cancellationReason } = req.body;
+      const { userId, advisorId, service, mode, date, time, status, meetLink, cancellationReason, notes, feedback, nextSession, adminNotes } = req.body;
       
       const updates = {};
       if (userId !== undefined) updates.userId = userId;
@@ -793,21 +793,35 @@ const AdminController = {
         }
       }
       if (meetLink !== undefined) updates.meetLink = meetLink;
+      if (notes !== undefined) updates.notes = notes;
+      if (feedback !== undefined) updates.feedback = feedback;
+      if (nextSession !== undefined) updates.nextSession = nextSession;
+      if (adminNotes !== undefined) updates.adminNotes = adminNotes;
 
       const updated = await StorageService.update('appointments', id, updates);
       if (!updated) {
         return res.status(404).json({ success: false, message: 'Appointment not found' });
       }
 
-      if (status === 'CANCELLED') {
-        const session = await StorageService.findOne('sessions', { appointmentId: id });
-        if (session) {
-          await StorageService.update('sessions', session.id, { 
-            status: 'CANCELLED',
-            cancellationReason: cancellationReason || 'Cancelled by administrator.',
-            cancelledBy: req.user.role || 'admin'
-          });
-        }
+      // Keep matching session in sync if it exists
+      const session = await StorageService.findOne('sessions', { appointmentId: id });
+      if (session) {
+        const sessionUpdates = {};
+        if (updates.counsellorId !== undefined) sessionUpdates.counsellorId = updates.counsellorId;
+        if (updates.userId !== undefined) sessionUpdates.userId = updates.userId;
+        if (updates.date !== undefined) sessionUpdates.date = updates.date;
+        if (updates.time !== undefined) sessionUpdates.time = updates.time;
+        if (updates.mode !== undefined) sessionUpdates.mode = updates.mode;
+        if (updates.status !== undefined) sessionUpdates.status = updates.status;
+        if (updates.meetLink !== undefined) sessionUpdates.meetLink = updates.meetLink;
+        if (updates.notes !== undefined) sessionUpdates.notes = updates.notes;
+        if (updates.feedback !== undefined) sessionUpdates.feedback = updates.feedback;
+        if (updates.nextSession !== undefined) sessionUpdates.nextSession = updates.nextSession;
+        if (updates.adminNotes !== undefined) sessionUpdates.adminNotes = updates.adminNotes;
+        if (updates.cancellationReason !== undefined) sessionUpdates.cancellationReason = updates.cancellationReason;
+        if (updates.cancelledBy !== undefined) sessionUpdates.cancelledBy = updates.cancelledBy;
+
+        await StorageService.update('sessions', session.id, sessionUpdates);
       }
 
       res.status(200).json({

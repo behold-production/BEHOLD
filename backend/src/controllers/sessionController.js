@@ -80,9 +80,13 @@ const SessionController = {
           } else if (s.status === 'APPROVED') {
             frontendStatus = 'CONFIRMED';
           }
+          const sessionData = { ...s };
+          if (req.user.role !== 'admin') {
+            delete sessionData.adminNotes;
+          }
 
           return {
-            ...s,
+            ...sessionData,
             studentName: user ? user.name : 'Unknown Student',
             counsellorName: counsellor ? counsellor.name : 'Unknown Counsellor',
             advisorName: counsellor ? counsellor.name : 'Unknown Counsellor',
@@ -185,11 +189,16 @@ const SessionController = {
         frontendStatus = 'CONFIRMED';
       }
 
+      const sessionData = { ...session };
+      if (req.user.role !== 'admin') {
+        delete sessionData.adminNotes;
+      }
+
       res.status(200).json({
         success: true,
         message: 'Session retrieved successfully',
         data: {
-          ...session,
+          ...sessionData,
           studentName: user ? user.name : 'Unknown Student',
           counsellorName: counsellor ? counsellor.name : 'Unknown Counsellor',
           advisorName: counsellor ? counsellor.name : 'Unknown Counsellor',

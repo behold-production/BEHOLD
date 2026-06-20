@@ -316,10 +316,10 @@ const ApiService = {
     });
   },
 
-  async completeAppointment(id, notes) {
+  async completeAppointment(id, payload) {
     return await request(`/appointments/${id}/complete`, {
       method: 'PUT',
-      body: JSON.stringify({ notes })
+      body: JSON.stringify(typeof payload === 'string' ? { notes: payload } : payload)
     });
   },
 
@@ -515,10 +515,10 @@ const ApiService = {
     });
   },
 
-  async updateAppointmentFeedback(id, feedback) {
+  async updateAppointmentFeedback(id, payload) {
     return await request(`/appointments/${id}/feedback`, {
       method: 'PUT',
-      body: JSON.stringify({ feedback })
+      body: JSON.stringify(payload)
     });
   },
 
