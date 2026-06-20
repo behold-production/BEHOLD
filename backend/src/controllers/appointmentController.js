@@ -624,7 +624,7 @@ const AppointmentController = {
         return res.status(400).json({ success: false, message: 'Reason is required to revert a completed session' });
       }
 
-      const updated = await StorageService.update('appointments', id, { status: 'APPROVED', revertReason: reason });
+      const updated = await StorageService.update('appointments', id, { status: 'APPROVED', revertReason: reason, sentToAdmin: false });
 
       const session = await StorageService.findOne('sessions', { appointmentId: id });
       if (session) {
@@ -634,6 +634,39 @@ const AppointmentController = {
       res.status(200).json({
         success: true,
         message: 'Appointment reverted to confirmed successfully',
+        data: updated
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // Send Report to Admin
+  async sendReportToAdmin(req, res, next) {
+    try {
+      const { id } = req.params;
+
+      const appointment = await StorageService.findById('appointments', id);
+      if (!appointment) {
+        return res.status(404).json({ success: false, message: 'Appointment not found' });
+      }
+
+      const updated = await StorageService.update('appointments', id, { sentToAdmin: true });
+
+      const counsellor = await StorageService.findById('counsellors', appointment.counsellorId);
+
+      await StorageService.create('notifications', {
+        recipientId: 'admin',
+        recipientRole: 'admin',
+        title: 'Clinical Report Submitted',
+        message: `Counsellor ${counsellor ? counsellor.name : 'Unknown'} has submitted a clinical report for appointment on ${appointment.date}.`,
+        type: 'report_submitted',
+        isRead: false
+      });
+
+      res.status(200).json({
+        success: true,
+        message: 'Report sent to administration successfully',
         data: updated
       });
     } catch (error) {

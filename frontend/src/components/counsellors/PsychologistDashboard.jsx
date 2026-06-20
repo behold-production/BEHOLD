@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   User, Calendar, Clock, BookOpen, Link, ShieldAlert, Award, Globe,
   Edit, Video, BarChart3, AlertCircle, Save, LogOut,
-  X, ChevronRight, Mail, Shield, Menu, FileText
+  X, ChevronRight, Mail, Shield, Menu, FileText, Send
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useCustomDialog } from '../../context/CustomDialogContext';
@@ -2531,15 +2531,42 @@ export default function PsychologistDashboard({ setView }) {
                                         Edit Records
                                       </button>
                                       {booking.status === 'COMPLETED' && (
-                                        <button
-                                          type="button"
-                                          onClick={() => downloadDiagnosticPDF(booking)}
-                                          className="text-xs font-bold text-emerald-400 hover:text-emerald-350 hover:underline capitalize flex items-center gap-1.5 cursor-pointer border-none bg-transparent p-0"
-                                          title="Download Clinical Report PDF"
-                                        >
-                                          <FileText className="w-3.5 h-3.5 text-emerald-400" />
-                                          <span>Download Report PDF</span>
-                                        </button>
+                                        <>
+                                          <button
+                                            type="button"
+                                            onClick={() => downloadDiagnosticPDF(booking)}
+                                            className="text-xs font-bold text-emerald-400 hover:text-emerald-350 hover:underline capitalize flex items-center gap-1.5 cursor-pointer border-none bg-transparent p-0"
+                                            title="Download Clinical Report PDF"
+                                          >
+                                            <FileText className="w-3.5 h-3.5 text-emerald-400" />
+                                            <span>Download Report PDF</span>
+                                          </button>
+                                          
+                                          <button
+                                            type="button"
+                                            onClick={async () => {
+                                              try {
+                                                const res = await ApiService.sendReportToAdmin(booking.id);
+                                                if(res.success) {
+                                                  toast.success('Report successfully submitted to administration.');
+                                                  const loadBookingsData = async () => {
+                                                    const appointments = await ApiService.getAppointments();
+                                                    if (appointments.success) setBookings(appointments.data.sort((a, b) => new Date(b.date) - new Date(a.date)));
+                                                  };
+                                                  loadBookingsData();
+                                                }
+                                              } catch (e) {
+                                                console.error(e);
+                                              }
+                                            }}
+                                            disabled={booking.sentToAdmin}
+                                            className={`text-xs font-bold capitalize flex items-center gap-1.5 border-none p-0 ml-2 ${booking.sentToAdmin ? 'text-zinc-500 cursor-not-allowed bg-transparent' : 'text-blue-400 hover:text-blue-350 hover:underline cursor-pointer bg-transparent'}`}
+                                            title="Send Report to Admin"
+                                          >
+                                            <Send className={`w-3.5 h-3.5 ${booking.sentToAdmin ? 'text-zinc-500' : 'text-blue-400'}`} />
+                                            <span>{booking.sentToAdmin ? 'Report Sent to Admin' : 'Send Report to Admin'}</span>
+                                          </button>
+                                        </>
                                       )}
                                     </div>
                                   </div>

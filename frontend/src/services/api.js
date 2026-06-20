@@ -323,6 +323,12 @@ const ApiService = {
     });
   },
 
+  async sendReportToAdmin(id) {
+    return await request(`/appointments/${id}/send-report`, {
+      method: 'PUT'
+    });
+  },
+
   async revertToConfirmed(id, reason) {
     return await request(`/appointments/${id}/revert`, {
       method: 'PUT',
