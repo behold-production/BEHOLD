@@ -1016,7 +1016,7 @@ export default function StudentProfile() {
           ].map((kpi, i) => {
             const Icon = kpi.icon;
             return (
-              <div key={i} className="bg-white/75 backdrop-blur-md border border-[#0b1e36]/15 hover:border-[#0b1e36]/40 shadow-xs rounded-xl p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
+              <div key={i} className="bg-white/75 backdrop-blur-md border-2 border-[#0b1e36]/20 hover:border-[#0b1e36]/45 shadow-[0_8px_20px_rgba(11,30,54,0.06),0_4px_12px_rgba(14,165,233,0.06)] hover:shadow-[0_16px_36px_rgba(11,30,54,0.14),0_6px_20px_rgba(14,165,233,0.12)] rounded-lg sm:rounded-xl p-4 transition-all duration-300 hover:-translate-y-1">
                 <div className="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center mb-2.5">
                   <Icon className="w-4 h-4 text-zinc-600" />
                 </div>
@@ -1031,7 +1031,7 @@ export default function StudentProfile() {
         {/* Action cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* C-DAT card */}
-          <div className="bg-white/75 backdrop-blur-md border border-[#0b1e36]/15 hover:border-[#0b1e36]/40 shadow-xs rounded-xl p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
+          <div className="bg-white/75 backdrop-blur-md border-2 border-[#0b1e36]/20 hover:border-[#0b1e36]/45 shadow-[0_8px_20px_rgba(11,30,54,0.06),0_4px_12px_rgba(14,165,233,0.06)] hover:shadow-[0_16px_36px_rgba(11,30,54,0.14),0_6px_20px_rgba(14,165,233,0.12)] rounded-lg sm:rounded-xl p-5 transition-all duration-300 hover:-translate-y-1">
             <div className="flex items-start justify-between mb-3">
               <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center">
                 <BarChart3 className="w-5 h-5 text-zinc-650" />
@@ -1057,7 +1057,7 @@ export default function StudentProfile() {
           </div>
 
           {/* Consultation card */}
-          <div className="bg-white/75 backdrop-blur-md border border-[#0b1e36]/15 hover:border-[#0b1e36]/40 shadow-xs rounded-xl p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
+          <div className="bg-white/75 backdrop-blur-md border-2 border-[#0b1e36]/20 hover:border-[#0b1e36]/45 shadow-[0_8px_20px_rgba(11,30,54,0.06),0_4px_12px_rgba(14,165,233,0.06)] hover:shadow-[0_16px_36px_rgba(11,30,54,0.14),0_6px_20px_rgba(14,165,233,0.12)] rounded-lg sm:rounded-xl p-5 transition-all duration-300 hover:-translate-y-1">
             <div className="flex items-start justify-between mb-3">
               <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center">
                 <Briefcase className="w-5 h-5 text-zinc-655" />
@@ -1097,7 +1097,7 @@ export default function StudentProfile() {
           <h4 className="text-sm font-bold text-zinc-900 capitalize tracking-wide">Available Services</h4>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Career Mentoring Card */}
-            <div className="relative bg-white border border-[#0b1e36]/15 hover:border-[#0b1e36]/40 p-5 rounded-2xl shadow-xs transition-all duration-300 flex flex-col justify-between space-y-4 hover:-translate-y-1 hover:shadow-md">
+            <div className="relative bg-white border-2 border-[#0b1e36]/20 hover:border-[#0b1e36]/45 p-5 rounded-lg sm:rounded-xl shadow-[0_8px_20px_rgba(11,30,54,0.06),0_4px_12px_rgba(14,165,233,0.06)] hover:shadow-[0_16px_36px_rgba(11,30,54,0.14),0_6px_20px_rgba(14,165,233,0.12)] transition-all duration-300 flex flex-col justify-between space-y-4 hover:-translate-y-1">
               <div className="space-y-2.5">
                 <div className="flex justify-between items-start">
                   <span className="inline-block text-[10px] sm:text-xs bg-zinc-900 text-white px-2.5 py-1 rounded font-bold uppercase tracking-wide">
@@ -1130,7 +1130,7 @@ export default function StudentProfile() {
             </div>
 
             {/* Psychological Counselling Card */}
-            <div className="relative bg-white border border-[#0b1e36]/15 hover:border-[#0b1e36]/40 p-5 rounded-2xl shadow-xs transition-all duration-300 flex flex-col justify-between space-y-4 hover:-translate-y-1 hover:shadow-md">
+            <div className="relative bg-white border-2 border-[#0b1e36]/20 hover:border-[#0b1e36]/45 p-5 rounded-lg sm:rounded-xl shadow-[0_8px_20px_rgba(11,30,54,0.06),0_4px_12px_rgba(14,165,233,0.06)] hover:shadow-[0_16px_36px_rgba(11,30,54,0.14),0_6px_20px_rgba(14,165,233,0.12)] transition-all duration-300 flex flex-col justify-between space-y-4 hover:-translate-y-1">
               <div className="space-y-2.5">
                 <div className="flex justify-between items-start">
                   <span className="inline-block text-[10px] sm:text-xs bg-zinc-900 text-white px-2.5 py-1 rounded font-bold uppercase tracking-wide">
@@ -1167,7 +1167,7 @@ export default function StudentProfile() {
         {/* Recent activity + Achievements */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           {/* Recent activity */}
-          <div className="lg:col-span-2 bg-white/75 backdrop-blur-md border border-[#0b1e36]/15 rounded-xl p-5 shadow-xs">
+          <div className="lg:col-span-2 bg-white/75 backdrop-blur-md border-2 border-[#0b1e36]/20 shadow-[0_8px_20px_rgba(11,30,54,0.06),0_4px_12px_rgba(14,165,233,0.06)] rounded-lg sm:rounded-xl p-5">
             <div className="flex items-center justify-between mb-4">
               <h4 className="text-sm font-semibold text-zinc-900 flex items-center gap-2">
                 <Activity className="w-4 h-4 text-zinc-400" /> Recent Activity
@@ -1204,7 +1204,7 @@ export default function StudentProfile() {
           </div>
 
           {/* Achievements */}
-          <div className="bg-white/75 backdrop-blur-md border border-[#0b1e36]/15 rounded-xl p-5 shadow-xs">
+          <div className="bg-white/75 backdrop-blur-md border-2 border-[#0b1e36]/20 shadow-[0_8px_20px_rgba(11,30,54,0.06),0_4px_12px_rgba(14,165,233,0.06)] rounded-lg sm:rounded-xl p-5">
             <h4 className="text-sm font-semibold text-zinc-900 flex items-center gap-2 mb-4">
               <Trophy className="w-4 h-4 text-zinc-400" /> Achievements
             </h4>

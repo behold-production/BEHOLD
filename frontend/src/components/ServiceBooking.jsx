@@ -1472,10 +1472,10 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                   if (rescheduleSession) return;
                                   setBookingService(s.id);
                                 }}
-                                className={`text-left p-4 rounded-xl transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-3.5 border ${
+                                className={`text-left p-4 rounded-lg sm:rounded-xl transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-3.5 border-2 ${
                                   isSelected
-                                    ? 'bg-slate-50 border-[#0b1e36] ring-2 ring-[#0b1e36]/10 shadow-sm font-bold'
-                                    : 'bg-white hover:bg-slate-50/50 border-slate-200/80 shadow-xs'
+                                    ? 'bg-slate-50 border-[#0b1e36] ring-2 ring-[#0b1e36]/10 shadow-[0_10px_25px_rgba(11,30,54,0.14),0_2px_8px_rgba(14,165,233,0.12)] font-bold'
+                                    : 'bg-white hover:bg-slate-50/50 border-[#0b1e36]/20 hover:border-[#0b1e36]/45 shadow-[0_8px_20px_rgba(11,30,54,0.06),0_4px_12px_rgba(14,165,233,0.06)]'
                                 } ${rescheduleSession ? 'opacity-65 cursor-not-allowed' : ''}`}
                               >
                                 <div className="space-y-2 w-full">
