@@ -43,6 +43,7 @@ export default function TimePicker({
   selectedTime,
   onTimeChange,
   availableSlots = [],
+  bookedSlots = [],
   errors = {}
 }) {
   const groupedSlots = useMemo(() => {
@@ -82,18 +83,28 @@ export default function TimePicker({
                   <div className="grid grid-cols-2 gap-1.5">
                     {items.map(time => {
                       const isSelected = selectedTime === time;
+                      const isBooked = bookedSlots && bookedSlots.includes(time);
                       return (
                         <button
                           key={time}
                           type="button"
-                          onClick={() => onTimeChange(time)}
+                          onClick={() => {
+                            if (isBooked) {
+                              import('react-hot-toast').then(mod => mod.toast.error("This time slot is already booked by another user."));
+                              return;
+                            }
+                            onTimeChange(time);
+                          }}
                           className={`min-h-[48px] py-2.5 px-2 text-xs capitalize font-bold border rounded-lg transition cursor-pointer text-center ${
                             isSelected
                               ? 'bg-gradient-brand text-zinc-955 border-transparent shadow-xs font-bold ring-1 ring-brand/40'
-                              : 'bg-white border-zinc-200 text-zinc-700 hover:border-brand/40 hover:bg-brand/5'
+                              : isBooked
+                                ? 'bg-zinc-100 border-zinc-200 text-zinc-400 cursor-not-allowed opacity-60'
+                                : 'bg-white border-zinc-200 text-zinc-700 hover:border-brand/40 hover:bg-brand/5'
                           }`}
                         >
                           {time}
+                          {isBooked && <span className="block text-[8px] text-rose-500 font-semibold mt-0.5">Booked</span>}
                         </button>
                       );
                     })}

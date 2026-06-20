@@ -178,8 +178,9 @@ const AdminController = {
             ...a,
             studentName: user ? user.name : 'Unknown Student',
             counsellorName: counsellor ? counsellor.name : 'Unknown Counsellor',
-            notes: session ? session.notes : '',
-            feedback: session ? session.feedback : '',
+            notes: session ? (session.notes || a.notes || '') : (a.notes || ''),
+            feedback: session ? (session.feedback || a.feedback || '') : (a.feedback || ''),
+            nextSession: session ? (session.nextSession || a.nextSession || '') : (a.nextSession || ''),
             student: user ? {
               name: user.name,
               email: user.email,

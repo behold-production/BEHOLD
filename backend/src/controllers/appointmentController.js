@@ -521,11 +521,14 @@ const AppointmentController = {
         return res.status(400).json({ success: false, message: 'Clinical Assessment & Observation Notes are required to complete the appointment' });
       }
 
+      const feedbackVal = (feedback !== undefined && feedback !== '') ? feedback : (appointment.feedback || '');
+      const nextSessionVal = (nextSession !== undefined && nextSession !== '') ? nextSession : (appointment.nextSession || '');
+
       const updated = await StorageService.update('appointments', id, { 
         status: 'COMPLETED', 
         notes: notes,
-        feedback: feedback || '',
-        nextSession: nextSession || ''
+        feedback: feedbackVal,
+        nextSession: nextSessionVal
       });
 
       // Also complete matching session if exists
@@ -534,8 +537,8 @@ const AppointmentController = {
         await StorageService.update('sessions', session.id, { 
           status: 'COMPLETED', 
           notes: notes,
-          feedback: feedback || '',
-          nextSession: nextSession || ''
+          feedback: feedbackVal,
+          nextSession: nextSessionVal
         });
       }
 
@@ -604,8 +607,9 @@ const AppointmentController = {
             ...apptData,
             studentName: user ? user.name : 'Unknown Student',
             counsellorName: counsellor ? counsellor.name : 'Unknown Counsellor',
-            notes: session ? session.notes : '',
-            feedback: session ? session.feedback : '',
+            notes: session ? (session.notes || a.notes || '') : (a.notes || ''),
+            feedback: session ? (session.feedback || a.feedback || '') : (a.feedback || ''),
+            nextSession: session ? (session.nextSession || a.nextSession || '') : (a.nextSession || ''),
             student: user ? {
               name: user.name,
               email: user.email,

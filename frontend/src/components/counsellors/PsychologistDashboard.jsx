@@ -170,7 +170,7 @@ export default function PsychologistDashboard({ setView }) {
     if (booking.status === 'CANCELLED') return false;
     if (booking.status === 'COMPLETED' || booking.status === 'EXPIRED') return true;
 
-    if (booking.status === 'CONFIRMED') {
+    if (booking.status === 'CONFIRMED' || booking.status === 'APPROVED' || booking.status === 'PENDING') {
       try {
         const [year, month, day] = booking.date.split('-').map(Number);
         const timeParts = booking.time.split(' ');
@@ -267,8 +267,10 @@ export default function PsychologistDashboard({ setView }) {
         })).sort((a, b) => {
           if (a.status === 'PENDING' && b.status !== 'PENDING') return -1;
           if (a.status !== 'PENDING' && b.status === 'PENDING') return 1;
-          if (a.status === 'CONFIRMED' && b.status !== 'CONFIRMED' && b.status !== 'PENDING') return -1;
-          if (b.status === 'CONFIRMED' && a.status !== 'CONFIRMED' && a.status !== 'PENDING') return 1;
+          const isAConfirmed = a.status === 'CONFIRMED' || a.status === 'APPROVED';
+          const isBConfirmed = b.status === 'CONFIRMED' || b.status === 'APPROVED';
+          if (isAConfirmed && !isBConfirmed && b.status !== 'PENDING') return -1;
+          if (isBConfirmed && !isAConfirmed && a.status !== 'PENDING') return 1;
           return (b.date || '').localeCompare(a.date || '');
         });
         setBookings(myBookings);
@@ -1682,7 +1684,7 @@ export default function PsychologistDashboard({ setView }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full sm:w-auto shrink-0 relative z-10 text-center">
             <div className="bg-zinc-955 border border-zinc-850 px-5 py-2.5 rounded-xl">
               <span className="text-sm text-zinc-500 font-bold capitalize  block">Upcoming Slots</span>
-              <p className="text-sm font-bold text-brand mt-0.5">{bookings.filter(b => b.status === 'CONFIRMED' && !isSessionCompleted(b)).length} Bookings</p>
+              <p className="text-sm font-bold text-brand mt-0.5">{bookings.filter(b => (b.status === 'CONFIRMED' || b.status === 'APPROVED' || b.status === 'PENDING') && !isSessionCompleted(b)).length} Bookings</p>
             </div>
             <div className="bg-zinc-955 border border-zinc-850 px-5 py-2.5 rounded-xl">
               <span className="text-sm text-zinc-500 font-bold capitalize  block">Hours Completed</span>
@@ -2303,14 +2305,14 @@ export default function PsychologistDashboard({ setView }) {
               )}
 
               {currentSection === 'bookings' && (() => {
-                const confirmedCount = bookings.filter(b => !b.status || b.status === 'CONFIRMED' || b.status === 'PENDING').length;
+                const confirmedCount = bookings.filter(b => !b.status || b.status === 'CONFIRMED' || b.status === 'PENDING' || b.status === 'APPROVED').length;
                 const completedCount = bookings.filter(b => b.status === 'COMPLETED' || b.status === 'EXPIRED').length;
                 const cancelledCount = bookings.filter(b => b.status === 'CANCELLED').length;
 
                 const filteredBookings = bookings.filter(b => {
                   const status = b.status || 'CONFIRMED';
                   if (activeBookingTab === 'CONFIRMED') {
-                    return status === 'CONFIRMED' || status === 'PENDING';
+                    return status === 'CONFIRMED' || status === 'PENDING' || status === 'APPROVED';
                   }
                   if (activeBookingTab === 'COMPLETED') {
                     return status === 'COMPLETED' || status === 'EXPIRED';
@@ -2369,9 +2371,9 @@ export default function PsychologistDashboard({ setView }) {
                                 </span>
                               ) : (
                                 <select
-                                  value={booking.status || 'CONFIRMED'}
+                                  value={(booking.status === 'APPROVED' || booking.status === 'PENDING') ? 'CONFIRMED' : (booking.status || 'CONFIRMED')}
                                   onChange={(e) => updateBookingStatus(booking.id, e.target.value, booking.status)}
-                                  className={`px-2.5 py-1 border rounded outline-none text-sm font-bold capitalize  cursor-pointer transition-all ${booking.status === 'CONFIRMED'
+                                  className={`px-2.5 py-1 border rounded outline-none text-sm font-bold capitalize  cursor-pointer transition-all ${(booking.status === 'CONFIRMED' || booking.status === 'APPROVED' || booking.status === 'PENDING' || !booking.status)
                                     ? 'bg-emerald-955 border-emerald-900/40 text-emerald-455'
                                     : booking.status === 'COMPLETED'
                                       ? 'bg-indigo-955 border-indigo-900/40 text-indigo-400'

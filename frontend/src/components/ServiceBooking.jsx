@@ -573,6 +573,56 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
     }
     return [];
   };
+  
+  const getAdvisorAllSlotsForDate = (advisor, dateStr) => {
+    if (!dateStr || !advisor) return [];
+    if (advisor.modes && !advisor.modes.includes(bookingMode)) {
+      return [];
+    }
+    const dayOfWeek = new Date(dateStr).getDay();
+    const parsed = advisor.availabilitySlots;
+    if (!parsed) return [];
+    try {
+      const dayActive = parsed.activeDays && parsed.activeDays[dayOfWeek];
+      if (dayActive && parsed.availableSlots && parsed.availableSlots.length > 0) {
+        const todayStr = getLocalTodayString();
+        const isSlotInPast = (timeStr) => {
+          try {
+            const [time, modifier] = timeStr.split(' ');
+            let [hours, minutes] = time.split(':').map(Number);
+            if (modifier === 'PM' && hours < 12) hours += 12;
+            if (modifier === 'AM' && hours === 12) hours = 0;
+            const now = new Date();
+            const slotDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+            return now >= slotDate;
+          } catch (e) {
+            return false;
+          }
+        };
+        return parsed.availableSlots.filter(slot => {
+          if (dateStr === todayStr && isSlotInPast(slot)) {
+            return false;
+          }
+          return true;
+        });
+      }
+    } catch (e) {
+      console.error("Error checking all slots for advisor:", e);
+    }
+    return [];
+  };
+
+  const getAdvisorBookedSlotsForDate = (advisor, dateStr) => {
+    if (!dateStr || !advisor) return [];
+    const bookings = existingAppointments;
+    return bookings
+      .filter(b => 
+        b.counsellorId === advisor.id && 
+        b.date === dateStr && 
+        (b.status === 'APPROVED' || b.status === 'PENDING' || b.status === 'CONFIRMED')
+      )
+      .map(b => b.time);
+  };
 
   const handleDateChange = (newDate) => {
     setSelectedDate(newDate);
@@ -1499,7 +1549,8 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                             setSelectedTime(t);
                             if (errors.time) setErrors(prev => ({ ...prev, time: null }));
                           }}
-                          availableSlots={getAdvisorSlotsForDate(selectedAdvisor, selectedDate)}
+                          availableSlots={getAdvisorAllSlotsForDate(selectedAdvisor, selectedDate)}
+                          bookedSlots={getAdvisorBookedSlotsForDate(selectedAdvisor, selectedDate)}
                           errors={errors}
                         />
                       </div>

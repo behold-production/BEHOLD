@@ -87,6 +87,9 @@ const SessionController = {
 
           return {
             ...sessionData,
+            notes: s.notes || (appt ? appt.notes : ''),
+            feedback: s.feedback || (appt ? appt.feedback : ''),
+            nextSession: s.nextSession || (appt ? appt.nextSession : ''),
             studentName: user ? user.name : 'Unknown Student',
             counsellorName: counsellor ? counsellor.name : 'Unknown Counsellor',
             advisorName: counsellor ? counsellor.name : 'Unknown Counsellor',
@@ -199,6 +202,9 @@ const SessionController = {
         message: 'Session retrieved successfully',
         data: {
           ...sessionData,
+          notes: session.notes || (appt ? appt.notes : ''),
+          feedback: session.feedback || (appt ? appt.feedback : ''),
+          nextSession: session.nextSession || (appt ? appt.nextSession : ''),
           studentName: user ? user.name : 'Unknown Student',
           counsellorName: counsellor ? counsellor.name : 'Unknown Counsellor',
           advisorName: counsellor ? counsellor.name : 'Unknown Counsellor',
