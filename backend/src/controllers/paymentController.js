@@ -217,9 +217,10 @@ const PaymentController = {
           const startTime = new Date(startTimeStr);
           const endTime = new Date(startTime.getTime() + 60 * 60 * 1000); // 1 hour duration
           
+          const frontendUrl = process.env.FRONTEND_URL || 'https://behold-aspire.vercel.app';
           const event = {
             summary: `Counselling Session: ${user.name} & ${counsellor.name}`,
-            description: `Service: ${service || 'Counselling'}\nMode: ONLINE`,
+            description: `Service: ${service || 'Counselling'}\nMode: ONLINE\n\nAccess your session details, reports, and portal on BEHOLD:\n- Student Portal: ${frontendUrl}/profile\n- Advisor Portal: ${frontendUrl}/counsellor`,
             start: { dateTime: startTime.toISOString() },
             end: { dateTime: endTime.toISOString() },
             attendees: [

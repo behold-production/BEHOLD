@@ -23,6 +23,11 @@ router.get('/url', verifyJWT, async (req, res) => {
       return res.status(400).json({ success: false, message: 'counsellorId is required' });
     }
 
+    // Security: Enforce ownership or admin privilege
+    if (req.user.id !== counsellorId && req.user.role !== 'admin') {
+      return res.status(403).json({ success: false, message: 'Forbidden: Access denied' });
+    }
+
     const oauth2Client = getOAuth2Client();
     
     // Generate an auth URL
@@ -72,18 +77,18 @@ router.get('/callback', async (req, res) => {
       
       // Redirect back to the frontend settings page with a success flag
       const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
-      return res.redirect(`${frontendUrl}/dashboard/settings?google=success`);
+      return res.redirect(`${frontendUrl}/counsellor?google=success`);
     } else {
       // If we didn't get a refresh token, it means they might have previously authorized
       // and we need to force prompt: 'consent' (which we do above, so this should rarely happen)
       const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
-      return res.redirect(`${frontendUrl}/dashboard/settings?google=no_refresh_token`);
+      return res.redirect(`${frontendUrl}/counsellor?google=no_refresh_token`);
     }
 
   } catch (error) {
     console.error('Error in Google OAuth callback:', error);
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
-    return res.redirect(`${frontendUrl}/dashboard/settings?google=error`);
+    return res.redirect(`${frontendUrl}/counsellor?google=error`);
   }
 });
 
@@ -95,6 +100,11 @@ router.post('/disconnect', verifyJWT, async (req, res) => {
     const { counsellorId } = req.body;
     if (!counsellorId) {
       return res.status(400).json({ success: false, message: 'counsellorId is required' });
+    }
+
+    // Security: Enforce ownership or admin privilege
+    if (req.user.id !== counsellorId && req.user.role !== 'admin') {
+      return res.status(403).json({ success: false, message: 'Forbidden: Access denied' });
     }
 
     const counsellor = await Counsellor.findOne({ id: counsellorId });

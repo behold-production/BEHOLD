@@ -374,7 +374,7 @@ export default function AdminDashboard({ setView }) {
       doc.setFontSize(9);
       doc.setFont('Helvetica', 'normal');
       doc.setTextColor(100, 116, 139); // slate-500
-      doc.text('Premium Clinical Counselling & Guidance Services', 20, 30);
+      doc.text('A Personal Development and Mentoring Ecosystem', 20, 30);
 
       // Document Type Tag
       doc.setFillColor(240, 253, 250); // Light teal bg

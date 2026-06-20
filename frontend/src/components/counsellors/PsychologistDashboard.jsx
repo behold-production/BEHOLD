@@ -311,7 +311,7 @@ export default function PsychologistDashboard({ setView }) {
       doc.setFontSize(9);
       doc.setFont('Helvetica', 'normal');
       doc.setTextColor(100, 116, 139); // slate-500
-      doc.text('Premium Clinical Counselling & Guidance Services', 20, 30);
+      doc.text('A Personal Development and Mentoring Ecosystem', 20, 30);
 
       // Document Type Tag
       doc.setFillColor(240, 253, 250); // Light teal bg
@@ -2586,9 +2586,9 @@ export default function PsychologistDashboard({ setView }) {
                                     href={booking.meetLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-bold capitalize  transition cursor-pointer flex items-center gap-1.5 shadow-xs"
+                                    className="px-4 py-3 bg-brand text-zinc-955 hover:bg-brand-dark rounded-lg text-sm font-black tracking-widest uppercase transition-all duration-300 shadow-[0_4px_12px_rgba(0,209,209,0.25)] hover:shadow-[0_6px_16px_rgba(0,209,209,0.4)] hover:scale-[1.02] active:scale-[0.98] cursor-pointer flex items-center gap-1.5 border-none animate-pulse"
                                   >
-                                    <Video className="w-3.5 h-3.5 text-white" />
+                                    <Video className="w-3.5 h-3.5 text-zinc-955" />
                                     <span>Join Meet</span>
                                   </a>
                                 )}
