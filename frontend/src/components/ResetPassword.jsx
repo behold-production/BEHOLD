@@ -58,7 +58,7 @@ export default function ResetPassword() {
     <div className="min-h-screen flex items-center justify-center bg-zinc-50 relative overflow-hidden">
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
       
-      <div className="w-full max-w-md p-8 bg-white/80 backdrop-blur-xl border border-white rounded-3xl shadow-2xl relative z-10">
+      <div className="w-full max-w-md p-8 bg-white/80 backdrop-blur-xl border border-white rounded-2xl sm:rounded-[2rem] shadow-2xl relative z-10">
         <div className="text-center mb-8">
           <h2 className="text-2xl font-bold text-brand font-header">Reset Password</h2>
           <p className="text-sm text-zinc-500 mt-2 font-medium">Create a new password for your account</p>

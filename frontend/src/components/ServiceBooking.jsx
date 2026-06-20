@@ -66,7 +66,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
   if (!enablePsychology && !isRescheduleParam) {
     return (
       <div className="min-h-[75vh] flex flex-col items-center justify-center text-center px-4 py-16 bg-zinc-50 font-sans select-none">
-        <div className="max-w-md w-full bg-white/70 backdrop-blur-md border border-zinc-200/80 p-8 rounded-2xl sm:rounded-3xl shadow-lg space-y-6 animate-in fade-in zoom-in-95 duration-500">
+        <div className="max-w-md w-full bg-white/70 backdrop-blur-md border border-zinc-200/80 p-8 rounded-2xl sm:rounded-[2rem] shadow-lg space-y-6 animate-in fade-in zoom-in-95 duration-500">
           <div className="w-16 h-16 bg-brand/10 border border-brand/20 rounded-2xl flex items-center justify-center mx-auto text-brand-dark shadow-sm">
             <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
