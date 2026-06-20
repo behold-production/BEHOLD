@@ -59,7 +59,7 @@ export default function Faq() {
           return (
             <div 
               key={idx} 
-              className="bg-white border-[3px] border-[#0b1424] rounded-xl p-3 sm:p-4 md:p-5 shadow-[0_4px_20px_-6px_rgba(11,20,36,0.12),0_2px_10px_-2px_rgba(14,165,233,0.08)] hover:shadow-[0_8px_30px_-6px_rgba(11,20,36,0.24),0_4px_16px_-3px_rgba(14,165,233,0.18)] transition-all duration-500"
+              className="bg-white border-[1.5px] border-[#0b1424] rounded-xl p-3 sm:p-4 md:p-5 shadow-dark-blue-sm hover:shadow-dark-blue transition-all duration-500"
             >
               <button
                 type="button"
