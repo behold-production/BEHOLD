@@ -136,21 +136,27 @@ export default function AuthModals({ isOpen, onClose }) {
   };
 
   return (
-    <div
-      className="fixed inset-0 z-[110] flex items-start justify-center p-4 overflow-y-auto overscroll-contain"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="auth-modal-title"
-    >
+    <>
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-zinc-900/50 backdrop-blur-sm animate-in fade-in duration-300"
+        className="fixed inset-0 z-[110] bg-zinc-900/50 backdrop-blur-sm animate-in fade-in duration-300"
         onClick={onClose}
         aria-hidden="true"
       />
 
-      {/* Modal Card */}
-      <div className="relative w-full max-w-md my-auto bg-white rounded-xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 border border-zinc-200">
+      {/* Modal Container */}
+      <div
+        className="fixed inset-0 z-[115] flex items-start justify-center p-4 overflow-y-auto overscroll-contain"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="auth-modal-title"
+        onClick={onClose}
+      >
+        {/* Modal Card */}
+        <div 
+          className="relative w-full max-w-md my-auto bg-white rounded-xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 border border-zinc-200"
+          onClick={(e) => e.stopPropagation()}
+        >
 
         {/* Header */}
         <div className="flex justify-between items-start gap-4 p-5 sm:p-6 border-b border-zinc-100">
@@ -444,7 +450,8 @@ export default function AuthModals({ isOpen, onClose }) {
         </div>
         )}
 
+        </div>
       </div>
-    </div>
+    </>
   );
 }

@@ -131,17 +131,27 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
   };
 
   return (
-    <div
-      className="fixed inset-0 z-[120] flex items-start justify-center p-4 overflow-y-auto overscroll-contain bg-black/70 backdrop-blur-md animate-in fade-in duration-200"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="booking-auth-modal-title"
-      onClick={onClose}
-    >
+    <>
+      {/* Backdrop */}
       <div
-        className="relative w-full max-w-md my-auto bg-white border border-zinc-200 rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto"
-        onClick={(e) => e.stopPropagation()}
+        className="fixed inset-0 z-[120] bg-black/70 backdrop-blur-md animate-in fade-in duration-200"
+        onClick={onClose}
+        aria-hidden="true"
+      />
+
+      {/* Modal Container */}
+      <div
+        className="fixed inset-0 z-[125] flex items-start justify-center p-4 overflow-y-auto overscroll-contain"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="booking-auth-modal-title"
+        onClick={onClose}
       >
+        {/* Modal Card */}
+        <div
+          className="relative w-full max-w-md my-auto bg-white border border-zinc-200 rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200"
+          onClick={(e) => e.stopPropagation()}
+        >
         <div className="h-1.5 w-full bg-gradient-to-r from-brand via-brand-accent to-brand" />
 
         <button
@@ -323,7 +333,8 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
             </span>
           </div>
         </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
