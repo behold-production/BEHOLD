@@ -56,7 +56,7 @@ export default function About({ enablePsychology = true }) {
             return (
               <div
                 key={idx}
-                className="bg-white hover:bg-zinc-50/70 border-[1.5px] border-[#0b1424] rounded-lg lg:rounded-2xl p-5 sm:p-6 shadow-dark-blue hover:shadow-dark-blue-hover transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between group font-sans"
+                className="bg-white hover:bg-zinc-50/70 border-[1.5px] border-[#0b1424] rounded-2xl sm:rounded-[2rem] p-5 sm:p-6 shadow-dark-blue hover:shadow-dark-blue-hover transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between group font-sans"
               >
                 <div className="space-y-4 sm:space-y-6">
                   {/* Typographic numbers instead of generic icons */}

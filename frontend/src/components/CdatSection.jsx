@@ -175,7 +175,7 @@ export default function CdatSection({ setView }) {
               </p>
             </div>
             <div className="lg:col-span-7 w-full relative">
-              <div className="absolute -inset-1 bg-gradient-to-r from-brand/20 to-brand-accent/20 rounded-3xl blur opacity-30 group-hover:opacity-60 transition duration-700 hidden sm:block"></div>
+              <div className="absolute -inset-1 bg-gradient-to-r from-brand/20 to-brand-accent/20 rounded-2xl sm:rounded-[2rem] blur opacity-30 group-hover:opacity-60 transition duration-700 hidden sm:block"></div>
               <form onSubmit={handleGenerateCode} className="relative space-y-5 bg-transparent sm:bg-white/80 backdrop-blur-none sm:backdrop-blur-2xl border-none sm:border-[1.5px] border-[#0b1424] shadow-none sm:shadow-dark-blue p-0 sm:p-8 rounded-none sm:rounded-2xl w-full">
                 <div className="text-sm font-black capitalize text-zinc-800 mb-2 flex items-center gap-2">
                   Generate Your Group Code

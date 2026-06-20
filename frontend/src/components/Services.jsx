@@ -103,7 +103,7 @@ export default function Services({ setView, onBookTherapist }) {
         {/* SERVICE 2: CAREER MENTORING */}
         <div
           id="card-career"
-          className="relative bg-white/70 backdrop-blur-2xl shadow-dark-blue hover:shadow-dark-blue-hover border-[1.5px] border-[#0b1424] p-6 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none group rounded-xl sm:rounded-[2rem] transition-all duration-700 min-h-[300px] md:min-h-[360px] overflow-hidden"
+          className="relative bg-white/70 backdrop-blur-2xl shadow-dark-blue hover:shadow-dark-blue-hover border-[1.5px] border-[#0b1424] p-6 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none group rounded-2xl sm:rounded-[2rem] transition-all duration-700 min-h-[300px] md:min-h-[360px] overflow-hidden"
         >
           {/* Decorative inner glow */}
           <div className="absolute inset-0 bg-gradient-to-b from-white/60 to-transparent pointer-events-none" />
@@ -150,7 +150,7 @@ export default function Services({ setView, onBookTherapist }) {
         {/* SERVICE 3: PSYCHOLOGICAL COUNSELLING */}
         <div
           id="card-mental"
-          className="relative bg-white/70 backdrop-blur-2xl shadow-dark-blue hover:shadow-dark-blue-hover border-[1.5px] border-[#0b1424] p-6 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none group rounded-xl sm:rounded-[2rem] transition-all duration-700 min-h-[300px] md:min-h-[360px] overflow-hidden"
+          className="relative bg-white/70 backdrop-blur-2xl shadow-dark-blue hover:shadow-dark-blue-hover border-[1.5px] border-[#0b1424] p-6 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none group rounded-2xl sm:rounded-[2rem] transition-all duration-700 min-h-[300px] md:min-h-[360px] overflow-hidden"
         >
           {/* Decorative inner glow */}
           <div className="absolute inset-0 bg-gradient-to-b from-white/60 to-transparent pointer-events-none" />
@@ -212,7 +212,7 @@ export default function Services({ setView, onBookTherapist }) {
         </div>
 
         {/* Dashboard-Style Toolbar */}
-        <div className="bg-white border-[1.5px] border-[#0b1424] p-3 sm:p-4 rounded-lg lg:rounded-2xl flex flex-col xl:flex-row xl:items-center gap-3 sm:gap-4 w-full shadow-dark-blue hover:shadow-dark-blue-hover transition-all duration-300">
+        <div className="bg-white border-[1.5px] border-[#0b1424] p-3 sm:p-4 rounded-2xl sm:rounded-[2rem] flex flex-col xl:flex-row xl:items-center gap-3 sm:gap-4 w-full shadow-dark-blue hover:shadow-dark-blue-hover transition-all duration-300">
           {/* Search Box */}
           <div className="relative w-full xl:w-[260px] shrink-0">
             <input
@@ -322,7 +322,7 @@ export default function Services({ setView, onBookTherapist }) {
             {filteredAndSortedAdvisors.slice(0, visibleCount).map(advisor => (
               <div 
                 key={advisor.id}
-                className="bg-white border-[1.5px] border-[#0b1424] rounded-lg lg:rounded-2xl shadow-dark-blue hover:shadow-dark-blue-hover hover:-translate-y-1 transition-all duration-300 flex flex-col overflow-hidden group"
+                className="bg-white border-[1.5px] border-[#0b1424] rounded-2xl sm:rounded-[2rem] shadow-dark-blue hover:shadow-dark-blue-hover hover:-translate-y-1 transition-all duration-300 flex flex-col overflow-hidden group"
               >
                 {/* Profile Card Header */}
                 <div className="p-4 sm:p-5 flex items-start gap-4 border-b border-zinc-100 bg-gradient-to-b from-zinc-50/50 to-white">
@@ -435,7 +435,7 @@ export default function Services({ setView, onBookTherapist }) {
             {filteredAndSortedAdvisors.slice(0, visibleCount).map(advisor => (
               <div 
                 key={advisor.id}
-                className="bg-white border-[1.5px] border-[#0b1424] rounded-lg lg:rounded-2xl shadow-dark-blue hover:shadow-dark-blue-hover transition-all duration-300 flex flex-col lg:flex-row items-stretch overflow-hidden group"
+                className="bg-white border-[1.5px] border-[#0b1424] rounded-2xl sm:rounded-[2rem] shadow-dark-blue hover:shadow-dark-blue-hover transition-all duration-300 flex flex-col lg:flex-row items-stretch overflow-hidden group"
               >
                 {/* Left Column: Avatar & Name */}
                 <div className="p-4 sm:p-5 flex items-center gap-4 bg-gradient-to-br from-zinc-50/50 to-white border-b lg:border-b-0 lg:border-r border-zinc-100 flex-1 lg:flex-initial lg:basis-[28%] shrink-0">
