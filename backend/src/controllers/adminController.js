@@ -177,45 +177,52 @@ const AdminController = {
   async getAppointments(req, res, next) {
     try {
       await autoExpireSessions();
-      const appointments = await StorageService.findAll('appointments');
+      const [appointments, users, counsellors, sessions] = await Promise.all([
+        StorageService.findAll('appointments'),
+        StorageService.findAll('users'),
+        StorageService.findAll('counsellors'),
+        StorageService.findAll('sessions')
+      ]);
 
-      const populated = await Promise.all(
-        appointments.map(async (a) => {
-          const user = await StorageService.findById('users', a.userId);
-          const counsellor = await StorageService.findById('counsellors', a.counsellorId);
-          const session = await StorageService.findOne('sessions', { appointmentId: a.id });
-          return {
-            ...a,
-            studentName: user ? user.name : 'Unknown Student',
-            counsellorName: counsellor ? counsellor.name : 'Unknown Counsellor',
-            notes: session ? session.notes || a.notes || '' : a.notes || '',
-            feedback: session ? session.feedback || a.feedback || '' : a.feedback || '',
-            nextSession: session ? session.nextSession || a.nextSession || '' : a.nextSession || '',
-            student: user
-              ? {
-                  name: user.name,
-                  email: user.email,
-                  phone: user.phone,
-                  schoolName: user.schoolName,
-                  grade: user.grade,
-                  guardianName: user.guardianName,
-                  guardianPhone: user.guardianPhone
-                }
-              : null,
-            counsellor: counsellor
-              ? {
-                  name: counsellor.name,
-                  email: counsellor.email,
-                  phone: counsellor.phone,
-                  title: counsellor.title,
-                  education: counsellor.education,
-                  specialties: counsellor.specialties,
-                  qualifications: counsellor.qualifications
-                }
-              : null
-          };
-        })
-      );
+      const userMap = new Map(users.map(u => [u.id, u]));
+      const counsellorMap = new Map(counsellors.map(c => [c.id, c]));
+      const sessionMap = new Map(sessions.map(s => [s.appointmentId, s]));
+
+      const populated = appointments.map((a) => {
+        const user = userMap.get(a.userId);
+        const counsellor = counsellorMap.get(a.counsellorId);
+        const session = sessionMap.get(a.id);
+        return {
+          ...a,
+          studentName: user ? user.name : 'Unknown Student',
+          counsellorName: counsellor ? counsellor.name : 'Unknown Counsellor',
+          notes: session ? session.notes || a.notes || '' : a.notes || '',
+          feedback: session ? session.feedback || a.feedback || '' : a.feedback || '',
+          nextSession: session ? session.nextSession || a.nextSession || '' : a.nextSession || '',
+          student: user
+            ? {
+                name: user.name,
+                email: user.email,
+                phone: user.phone,
+                schoolName: user.schoolName,
+                grade: user.grade,
+                guardianName: user.guardianName,
+                guardianPhone: user.guardianPhone
+              }
+            : null,
+          counsellor: counsellor
+            ? {
+                name: counsellor.name,
+                email: counsellor.email,
+                phone: counsellor.phone,
+                title: counsellor.title,
+                education: counsellor.education,
+                specialties: counsellor.specialties,
+                qualifications: counsellor.qualifications
+              }
+            : null
+        };
+      });
 
       res.status(200).json({
         success: true,

@@ -1057,7 +1057,8 @@ export default function AdminDashboard({ setView }) {
 
   const reloadData = async () => {
     if (!user || user?.role?.toUpperCase() !== 'ADMIN') return;
-    if (usersDb.length === 0) {
+    const hasCache = ApiService.hasCachedData && ApiService.hasCachedData('/admin/users');
+    if (usersDb.length === 0 && !hasCache) {
       setIsDbLoading(true);
     }
     try {

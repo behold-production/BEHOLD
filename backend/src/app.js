@@ -5,6 +5,7 @@ const fs = require('fs');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const mongoSanitize = require('express-mongo-sanitize');
+const compression = require('compression');
 const { connectDB } = require('./config/db');
 const { ipBlockMiddleware } = require('./middleware/ipBlockMiddleware');
 
@@ -22,6 +23,9 @@ const googleAuthRoutes = require('./routes/googleAuthRoutes');
 const errorHandler = require('./middleware/errorMiddleware');
 
 const app = express();
+
+// ─── Compress Responses ──────────────────────────────────────────────────────
+app.use(compression());
 
 // ─── Trust Proxy for Rate Limiting ──────────────────────────────────────────
 app.set('trust proxy', 1); // Essential for rate limiters behind a reverse proxy/load balancer (e.g., Vercel, AWS, Render)

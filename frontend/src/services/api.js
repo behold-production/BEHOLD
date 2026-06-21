@@ -14,7 +14,7 @@ function onRefreshed(token) {
   refreshSubscribers = [];
 }
 
-async function request(endpoint, options = {}) {
+async function executeRequest(endpoint, options = {}) {
   const token = localStorage.getItem('behold_token');
   const headers = {
     'Content-Type': 'application/json',
@@ -115,7 +115,7 @@ async function request(endpoint, options = {}) {
             ...headers,
             'Authorization': `Bearer ${newToken}`
           };
-          request(endpoint, { ...options, headers: retryHeaders }).then(resolve).catch(reject);
+          request(endpoint, { ...options, forceRefresh: true, headers: retryHeaders }).then(resolve).catch(reject);
         });
       });
     }
@@ -149,7 +149,132 @@ async function request(endpoint, options = {}) {
   return data;
 }
 
+// ─── Cache Layer ─────────────────────────────────────────────────────────────
+const cache = new Map();
+const activeRequests = new Map();
+
+function clearCache() {
+  cache.clear();
+}
+
+function hasCachedData(endpoint) {
+  const cached = cache.get(endpoint);
+  return !!(cached && (Date.now() - cached.timestamp < 30 * 1000));
+}
+
+function invalidateCache(endpoint) {
+  const normalized = endpoint.toLowerCase();
+
+  if (normalized.includes('/admin/users') || normalized.includes('/admin/counsellors') || normalized.includes('/auth/register')) {
+    for (const key of cache.keys()) {
+      if (key.includes('/admin/users') || key.includes('/admin/counsellors') || key.includes('/users/counsellors')) {
+        cache.delete(key);
+      }
+    }
+  } else if (normalized.includes('/admin/appointments') || normalized.includes('/appointments') || normalized.includes('/payments')) {
+    for (const key of cache.keys()) {
+      if (key.includes('/admin/appointments') || key.includes('/appointments') || key.includes('/sessions')) {
+        cache.delete(key);
+      }
+    }
+  } else if (normalized.includes('/admin/inquiries') || normalized.includes('/inquiries')) {
+    for (const key of cache.keys()) {
+      if (key.includes('/admin/inquiries') || key.includes('/inquiries')) {
+        cache.delete(key);
+      }
+    }
+  } else if (normalized.includes('/admin/faqs') || normalized.includes('/faqs')) {
+    for (const key of cache.keys()) {
+      if (key.includes('/admin/faqs') || key.includes('/faqs')) {
+        cache.delete(key);
+      }
+    }
+  } else if (normalized.includes('/admin/settings') || normalized.includes('/settings')) {
+    for (const key of cache.keys()) {
+      if (key.includes('/admin/settings') || key.includes('/settings')) {
+        cache.delete(key);
+      }
+    }
+  } else if (normalized.includes('/admin/roles')) {
+    for (const key of cache.keys()) {
+      if (key.includes('/admin/roles')) {
+        cache.delete(key);
+      }
+    }
+  } else if (normalized.includes('/admin/aptitude-questions') || normalized.includes('/aptitude-questions')) {
+    for (const key of cache.keys()) {
+      if (key.includes('/admin/aptitude-questions') || key.includes('/aptitude-questions')) {
+        cache.delete(key);
+      }
+    }
+  } else if (normalized.includes('/admin/test-results') || normalized.includes('/test-results')) {
+    for (const key of cache.keys()) {
+      if (key.includes('/admin/test-results') || key.includes('/test-results')) {
+        cache.delete(key);
+      }
+    }
+  } else {
+    cache.clear();
+  }
+}
+
+async function request(endpoint, options = {}) {
+  const method = options.method || 'GET';
+  const forceRefresh = options.forceRefresh || false;
+
+  // Invalidate cache on mutations
+  if (method !== 'GET') {
+    invalidateCache(endpoint);
+  }
+
+  // Handle cache lookups for GET requests
+  if (method === 'GET' && !forceRefresh) {
+    // Check completed cache
+    const cached = cache.get(endpoint);
+    if (cached && (Date.now() - cached.timestamp < 30 * 1000)) {
+      return JSON.parse(JSON.stringify(cached.data));
+    }
+
+    // Deduplicate active requests
+    if (activeRequests.has(endpoint)) {
+      return activeRequests.get(endpoint).then(data => JSON.parse(JSON.stringify(data)));
+    }
+  }
+
+  if (method === 'GET') {
+    const promise = executeRequest(endpoint, options).then(
+      (data) => {
+        activeRequests.delete(endpoint);
+        if (data && data.success) {
+          cache.set(endpoint, {
+            data,
+            timestamp: Date.now()
+          });
+        }
+        return data;
+      },
+      (err) => {
+        activeRequests.delete(endpoint);
+        throw err;
+      }
+    );
+    activeRequests.set(endpoint, promise);
+    return promise.then(data => JSON.parse(JSON.stringify(data)));
+  }
+
+  return executeRequest(endpoint, options);
+}
+
 const ApiService = {
+  // Cache utility
+  hasCachedData(endpoint) {
+    return hasCachedData(endpoint);
+  },
+
+  clearCache() {
+    clearCache();
+  },
+
   // Authentication
   async login(email, password) {
     const res = await request('/auth/login', {
