@@ -12,8 +12,9 @@ export default function Inquiry({ testProfile, siteSettings }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
 
-  // If the user completed the test and was redirected here, pre-populate their profile
-  useEffect(() => {
+  const [prevTestProfile, setPrevTestProfile] = useState(testProfile);
+  if (testProfile !== prevTestProfile) {
+    setPrevTestProfile(testProfile);
     if (testProfile) {
       const scoresString = Object.entries(testProfile.scores || {})
         .map(([cat, score]) => `${cat} ${score}%`)
@@ -24,7 +25,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
         message: `I completed the online assessment! My dominant profile is: ${testProfile.dominantDomain}. Scores: ${scoresString}. I would like to book a detailed consultation.`
       }));
     }
-  }, [testProfile]);
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;

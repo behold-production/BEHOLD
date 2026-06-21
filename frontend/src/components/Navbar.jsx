@@ -27,7 +27,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
 
   useEffect(() => {
     if (currentView !== '/') {
-      setActiveSection('');
+      setTimeout(() => setActiveSection(''), 0);
       return;
     }
 
@@ -80,8 +80,10 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
 
   // Close mobile drawer & dropdown automatically when route changes
   useEffect(() => {
-    setIsMenuOpen(false);
-    setShowDropdown(false);
+    setTimeout(() => {
+      setIsMenuOpen(false);
+      setShowDropdown(false);
+    }, 0);
   }, [currentView]);
 
   // Close dropdown when clicking outside of it

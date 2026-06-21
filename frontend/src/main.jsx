@@ -1,11 +1,17 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
+import { registerSW } from 'virtual:pwa-register'
 import './index.css'
 import App from './App.jsx'
 import { AuthProvider } from './context/AuthContext'
 import { CustomDialogProvider } from './context/CustomDialogContext'
 import ErrorBoundary from './components/ErrorBoundary'
+
+// Register PWA service worker
+if ('serviceWorker' in navigator) {
+  registerSW({ immediate: true });
+}
 
 // Intercept localStorage.setItem to trigger custom event for same-tab updates
 const originalSetItem = localStorage.setItem;

@@ -3,9 +3,36 @@ import { ArrowRight, Copy, AlertCircle } from 'lucide-react';
 import ApiService from '../services/api';
 
 export default function CdatSection({ setView }) {
-  const [groupRegName, setGroupRegName] = useState('');
-  const [groupRegPhone, setGroupRegPhone] = useState('');
-  const [groupRegEmail, setGroupRegEmail] = useState('');
+  const [groupRegName, setGroupRegName] = useState(() => {
+    try {
+      const saved = localStorage.getItem('behold_student_profile');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        return parsed.name || '';
+      }
+    } catch (e) {}
+    return '';
+  });
+  const [groupRegPhone, setGroupRegPhone] = useState(() => {
+    try {
+      const saved = localStorage.getItem('behold_student_profile');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        return parsed.phone || '';
+      }
+    } catch (e) {}
+    return '';
+  });
+  const [groupRegEmail, setGroupRegEmail] = useState(() => {
+    try {
+      const saved = localStorage.getItem('behold_student_profile');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        return parsed.email || '';
+      }
+    } catch (e) {}
+    return '';
+  });
 
   const [generatedCode, setGeneratedCode] = useState(null);
   const [copyMessage, setCopyMessage] = useState('');
@@ -17,18 +44,6 @@ export default function CdatSection({ setView }) {
 
   // Auto-fill from local storage if available
   useEffect(() => {
-    const saved = localStorage.getItem('behold_student_profile');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        if (parsed.name) setGroupRegName(parsed.name);
-        if (parsed.phone) setGroupRegPhone(parsed.phone);
-        if (parsed.email) setGroupRegEmail(parsed.email);
-      } catch (e) {
-        console.error("Error reading student profile", e);
-      }
-    }
-
     // Fetch settings to get dynamic group code
     ApiService.getSettings()
       .then(data => {

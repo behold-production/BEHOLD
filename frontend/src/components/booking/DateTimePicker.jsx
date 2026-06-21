@@ -154,7 +154,9 @@ export default function DateTimePicker({
   }, [selectedDate, viewType]);
 
   // Adjust current month when selectedDate changes from outside (e.g. quick-jump)
-  useEffect(() => {
+  const [prevSelectedDate, setPrevSelectedDate] = useState(selectedDate);
+  if (selectedDate !== prevSelectedDate) {
+    setPrevSelectedDate(selectedDate);
     if (selectedDate) {
       const [y, m, d] = selectedDate.split('-').map(Number);
       const targetMonth = new Date(y, m - 1, 1);
@@ -165,7 +167,7 @@ export default function DateTimePicker({
         setCurrentMonth(targetMonth);
       }
     }
-  }, [selectedDate]);
+  }
 
   const scrollBy = (dir) => {
     if (scrollRef.current) {

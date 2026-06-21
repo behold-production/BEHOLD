@@ -62,55 +62,6 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
   } catch (err) {}
 
   const isRescheduleParam = !!(new URLSearchParams(window.location.search).get('reschedule'));
-
-  if (!enablePsychology && !isRescheduleParam) {
-    return (
-      <div className="min-h-[75vh] flex flex-col items-center justify-center text-center px-4 py-16 bg-zinc-50 font-sans select-none">
-        <div className="max-w-md w-full bg-white/70 backdrop-blur-md border border-zinc-200/80 p-8 rounded-2xl sm:rounded-[2rem] shadow-lg space-y-6 animate-in fade-in zoom-in-95 duration-500">
-          <div className="w-16 h-16 bg-brand/10 border border-brand/20 rounded-2xl flex items-center justify-center mx-auto text-brand-dark shadow-sm">
-            <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
-          </div>
-
-          <div className="space-y-2">
-            <span className="text-[10px] bg-zinc-900 text-white px-3 py-1 rounded-md capitalize font-bold w-fit mx-auto block tracking-wide">
-              system notice
-            </span>
-            <h2 className="text-xl sm:text-2xl font-header font-black tracking-tight text-zinc-900 capitalize">
-              Bookings are Temporarily Paused
-            </h2>
-            <p className="text-xs sm:text-sm text-zinc-650 leading-relaxed font-light">
-              We are currently performing scheduled maintenance on our scheduling database. During this time, booking new consulting sessions is temporarily offline. We apologize for the inconvenience!
-            </p>
-          </div>
-
-          <div className="pt-4 border-t border-zinc-150 flex flex-col sm:flex-row gap-3 justify-center items-center font-semibold">
-            <button
-              type="button"
-              onClick={() => {
-                window.spaNavigate('/');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              className="px-6 py-3 min-h-[48px] bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-bold capitalize rounded-lg transition-all cursor-pointer shadow-md w-full sm:w-auto text-center border-none"
-            >
-              Go to Home Page
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                window.spaNavigate('/sample-test');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              className="px-6 py-3 min-h-[48px] bg-white border border-zinc-200 hover:border-zinc-300 text-zinc-700 hover:bg-zinc-50 text-xs font-bold capitalize rounded-lg transition-all cursor-pointer w-full sm:w-auto text-center"
-            >
-              Take Sample Test
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
   
   const getLocalTodayString = () => {
     const today = new Date();
@@ -122,6 +73,11 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
   const [bookingService, setBookingService] = useState(() => {
     try {
+      const raw = sessionStorage.getItem(BOOKING_DRAFT_KEY);
+      if (raw) {
+        const draft = JSON.parse(raw);
+        if (draft.bookingService) return draft.bookingService;
+      }
       const queryParams = new URLSearchParams(window.location.search);
       const urlService = queryParams.get('service') || queryParams.get('type');
       if (urlService === 'career' || urlService === 'counselling') {
@@ -130,17 +86,63 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
     } catch (e) {}
     return 'counselling';
   }); // counselling, career
-  const [bookingMode, setBookingMode] = useState('ONLINE'); // ONLINE, DOOR_STEP, OFFLINE
-  const [bookingForm, setBookingForm] = useState({
-    name: '',
-    phone: '',
-    email: '',
-    groupCode: ''
+  const [bookingMode, setBookingMode] = useState(() => {
+    try {
+      const raw = sessionStorage.getItem(BOOKING_DRAFT_KEY);
+      if (raw) {
+        const draft = JSON.parse(raw);
+        if (draft.bookingMode) return draft.bookingMode;
+      }
+    } catch (e) {}
+    return 'ONLINE';
+  }); // ONLINE, DOOR_STEP, OFFLINE
+  const [bookingForm, setBookingForm] = useState(() => {
+    const defaultForm = {
+      name: '',
+      phone: '',
+      email: '',
+      groupCode: ''
+    };
+    try {
+      const raw = sessionStorage.getItem(BOOKING_DRAFT_KEY);
+      if (raw) {
+        const draft = JSON.parse(raw);
+        if (draft.bookingForm) return { ...defaultForm, ...draft.bookingForm };
+      }
+    } catch (e) {}
+    return defaultForm;
   });
-  const [selectedDate, setSelectedDate] = useState('');
-  const [selectedTime, setSelectedTime] = useState('');
+  const [selectedDate, setSelectedDate] = useState(() => {
+    try {
+      const raw = sessionStorage.getItem(BOOKING_DRAFT_KEY);
+      if (raw) {
+        const draft = JSON.parse(raw);
+        if (draft.selectedDate) return draft.selectedDate;
+      }
+    } catch (e) {}
+    return '';
+  });
+  const [selectedTime, setSelectedTime] = useState(() => {
+    try {
+      const raw = sessionStorage.getItem(BOOKING_DRAFT_KEY);
+      if (raw) {
+        const draft = JSON.parse(raw);
+        if (draft.selectedTime) return draft.selectedTime;
+      }
+    } catch (e) {}
+    return '';
+  });
   const [selectedAdvisor, setSelectedAdvisor] = useState(null);
-  const [advisorConfirmed, setAdvisorConfirmed] = useState(false);
+  const [advisorConfirmed, setAdvisorConfirmed] = useState(() => {
+    try {
+      const raw = sessionStorage.getItem(BOOKING_DRAFT_KEY);
+      if (raw) {
+        const draft = JSON.parse(raw);
+        if (typeof draft.advisorConfirmed === 'boolean') return draft.advisorConfirmed;
+      }
+    } catch (e) {}
+    return false;
+  });
   const [advisors, setAdvisors] = useState([]);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showNoCounsellorsModal, setShowNoCounsellorsModal] = useState(false);
@@ -151,9 +153,10 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
   useEffect(() => {
     const initBookingData = async () => {
       try {
+        let resolved = [];
         const res = await ApiService.getCounsellors();
         if (res.success && res.data) {
-          const resolved = res.data.map(c => {
+          resolved = res.data.map(c => {
             return {
               id: c.id || c._id,
               name: c.name,
@@ -711,36 +714,20 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
   // Autofill form from Auth user
   useEffect(() => {
     if (user) {
-      setBookingForm(prev => {
-        const merged = {
-          name: prev.name && prev.name.trim().length > 0 ? prev.name : user.name,
-          email: user.email,
-          phone: prev.phone || '',
-          groupCode: prev.groupCode || ''
-        };
-        return merged;
-      });
-      setIsAutofilled(true);
+      setTimeout(() => {
+        setBookingForm(prev => {
+          const merged = {
+            name: prev.name && prev.name.trim().length > 0 ? prev.name : user.name,
+            email: user.email,
+            phone: prev.phone || '',
+            groupCode: prev.groupCode || ''
+          };
+          return merged;
+        });
+        setIsAutofilled(true);
+      }, 0);
     }
   }, [user]);
-
-  // Restore booking draft from session storage (date, time, advisor, mode, service)
-  useEffect(() => {
-    try {
-      const raw = sessionStorage.getItem(BOOKING_DRAFT_KEY);
-      if (raw) {
-        const draft = JSON.parse(raw);
-        if (draft.bookingService) setBookingService(draft.bookingService);
-        if (draft.bookingMode) setBookingMode(draft.bookingMode);
-        if (draft.selectedDate) setSelectedDate(draft.selectedDate);
-        if (draft.selectedTime) setSelectedTime(draft.selectedTime);
-        if (typeof draft.advisorConfirmed === 'boolean') setAdvisorConfirmed(draft.advisorConfirmed);
-        if (draft.bookingForm) {
-          setBookingForm(prev => ({ ...prev, ...draft.bookingForm }));
-        }
-      }
-    } catch (e) { /* ignore */ }
-  }, []);
 
   // Persist booking draft whenever core selections change
   useEffect(() => {
@@ -774,9 +761,11 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
     if (preselectedAdvisorId) {
       // Check if it's a known service type indicator directly without waiting for advisors load
       if (preselectedAdvisorId === 'career_1' || preselectedAdvisorId === 'career') {
-        setBookingService('career');
-        setSelectedAdvisor(null);
-        setAdvisorConfirmed(false);
+        setTimeout(() => {
+          setBookingService('career');
+          setSelectedAdvisor(null);
+          setAdvisorConfirmed(false);
+        }, 0);
         if (clearPreselectedAdvisor) {
           clearPreselectedAdvisor();
         }
@@ -798,9 +787,11 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
         return;
       }
       if (preselectedAdvisorId === 'c3' || preselectedAdvisorId === 'counselling') {
-        setBookingService('counselling');
-        setSelectedAdvisor(null);
-        setAdvisorConfirmed(false);
+        setTimeout(() => {
+          setBookingService('counselling');
+          setSelectedAdvisor(null);
+          setAdvisorConfirmed(false);
+        }, 0);
         if (clearPreselectedAdvisor) {
           clearPreselectedAdvisor();
         }
@@ -826,12 +817,14 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
       if (advisors.length > 0) {
         const found = advisors.find(a => a.id === preselectedAdvisorId);
         if (found) {
-          setBookingService(found.type); // Dynamically set based on advisor type (counselling or career)
-          setSelectedAdvisor(found);
-          setAdvisorConfirmed(true);
-          if (found.modes && found.modes.length > 0 && !found.modes.includes(bookingMode)) {
-            setBookingMode(found.modes[0]);
-          }
+          setTimeout(() => {
+            setBookingService(found.type); // Dynamically set based on advisor type (counselling or career)
+            setSelectedAdvisor(found);
+            setAdvisorConfirmed(true);
+            if (found.modes && found.modes.length > 0 && !found.modes.includes(bookingMode)) {
+              setBookingMode(found.modes[0]);
+            }
+          }, 0);
           
           // Auto-scroll to the booking console form
           setTimeout(() => {
@@ -854,7 +847,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
         }
       }
     }
-  }, [preselectedAdvisorId, clearPreselectedAdvisor, advisors]);
+  }, [preselectedAdvisorId, clearPreselectedAdvisor, advisors, bookingMode]);
 
   // Reset advisor if service type or mode changes to avoid invalid combinations
   useEffect(() => {
@@ -862,12 +855,14 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
       const isServiceMatch = selectedAdvisor.type === bookingService;
       const isModeMatch = !selectedAdvisor.modes || selectedAdvisor.modes.includes(bookingMode);
       if (!isServiceMatch || !isModeMatch) {
-        setSelectedAdvisor(null);
-        setAdvisorConfirmed(false);
-        setSelectedTime('');
+        setTimeout(() => {
+          setSelectedAdvisor(null);
+          setAdvisorConfirmed(false);
+          setSelectedTime('');
+        }, 0);
       }
     }
-  }, [bookingService, bookingMode]);
+  }, [bookingService, bookingMode, selectedAdvisor]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -1151,6 +1146,55 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
   const flowKey = bookingMode === 'DOOR_STEP' ? 'doorstep' : bookingMode.toLowerCase();
   const activeSteps = bookingService === 'counselling' ? COUNSELLING_FLOW[flowKey] : CAREER_FLOW[flowKey];
 
+  if (!enablePsychology && !isRescheduleParam) {
+    return (
+      <div className="min-h-[75vh] flex flex-col items-center justify-center text-center px-4 py-16 bg-zinc-50 font-sans select-none">
+        <div className="max-w-md w-full bg-white/70 backdrop-blur-md border border-zinc-200/80 p-8 rounded-2xl sm:rounded-[2rem] shadow-lg space-y-6 animate-in fade-in zoom-in-95 duration-500">
+          <div className="w-16 h-16 bg-brand/10 border border-brand/20 rounded-2xl flex items-center justify-center mx-auto text-brand-dark shadow-sm">
+            <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+
+          <div className="space-y-2">
+            <span className="text-[10px] bg-zinc-900 text-white px-3 py-1 rounded-md capitalize font-bold w-fit mx-auto block tracking-wide">
+              system notice
+            </span>
+            <h2 className="text-xl sm:text-2xl font-header font-black tracking-tight text-zinc-900 capitalize">
+              Bookings are Temporarily Paused
+            </h2>
+            <p className="text-xs sm:text-sm text-zinc-650 leading-relaxed font-light">
+              We are currently performing scheduled maintenance on our scheduling database. During this time, booking new consulting sessions is temporarily offline. We apologize for the inconvenience!
+            </p>
+          </div>
+
+          <div className="pt-4 border-t border-zinc-150 flex flex-col sm:flex-row gap-3 justify-center items-center font-semibold">
+            <button
+              type="button"
+              onClick={() => {
+                window.spaNavigate('/');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="px-6 py-3 min-h-[48px] bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-bold capitalize rounded-lg transition-all cursor-pointer shadow-md w-full sm:w-auto text-center border-none"
+            >
+              Go to Home Page
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                window.spaNavigate('/sample-test');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="px-6 py-3 min-h-[48px] bg-white border border-zinc-200 hover:border-zinc-300 text-zinc-700 hover:bg-zinc-50 text-xs font-bold capitalize rounded-lg transition-all cursor-pointer w-full sm:w-auto text-center"
+            >
+              Take Sample Test
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen pt-20 sm:pt-24 pb-12 sm:pb-20 bg-white text-zinc-900 text-left font-sans border-b border-zinc-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-8 sm:space-y-10">
@@ -1405,11 +1449,6 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                         setAdvisorConfirmed(false);
                         setAppliedDiscount(0);
                         setCouponInput('');
-                        setCardNum('');
-                        setCardName('');
-                        setCardExpiry('');
-                        setCardCvv('');
-                        setUpiAddress('');
                         setBookingStep('config');
                         try { sessionStorage.removeItem(BOOKING_DRAFT_KEY); } catch (e) { /* ignore */ }
                       }}
@@ -1898,12 +1937,12 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                             const code = couponInput.toUpperCase().trim();
                             const foundPromo = sitePromoCodes.find(p => p.code.toUpperCase() === code && p.isActive !== false);
                             if (foundPromo) {
-                               let discount = 0;
+                               const discount = foundPromo.type === 'PERCENTAGE'
+                                 ? Math.round((baseFee + gstAmount) * (foundPromo.value / 100))
+                                 : foundPromo.value;
                                if (foundPromo.type === 'PERCENTAGE') {
-                                   discount = Math.round((baseFee + gstAmount) * (foundPromo.value / 100));
                                    setCouponMsg({ text: `${foundPromo.value}% discount applied!`, type: 'success' });
                                } else {
-                                   discount = foundPromo.value;
                                    setCouponMsg({ text: `₹${foundPromo.value} discount applied!`, type: 'success' });
                                }
                                setAppliedDiscount(discount);

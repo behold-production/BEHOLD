@@ -571,11 +571,11 @@ export default function StudentProfile() {
     const isStudent = user && user.role?.toUpperCase() === 'USER';
 
     if (isStudent && hasToken && !authLoading) {
-      setIsLoading(true);
+      setTimeout(() => setIsLoading(true), 0);
       fetchData();
     } else if (!authLoading) {
       // Not logged in or not a student — stop the spinner
-      setIsLoading(false);
+      setTimeout(() => setIsLoading(false), 0);
     }
   }, [user, authLoading]);
 

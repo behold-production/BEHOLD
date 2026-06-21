@@ -35,7 +35,7 @@ async function request(endpoint, options = {}) {
   } catch (err) {
     const errorMsg = 'Network error occurred. Please verify your connection.';
     toast.error(errorMsg, { id: 'network-error' });
-    throw new Error(errorMsg);
+    throw new Error(errorMsg, { cause: err });
   }
 
   const text = await response.text();
@@ -682,10 +682,17 @@ const ApiService = {
     return await request('/admin/roles');
   },
 
-  async createRole(name, permissions) {
+  async createRole(name, permissions, description = '') {
     return await request('/admin/roles', {
       method: 'POST',
-      body: JSON.stringify({ name, permissions })
+      body: JSON.stringify({ name, permissions, description })
+    });
+  },
+
+  async updateRole(id, name, permissions, description = '') {
+    return await request(`/admin/roles/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify({ name, permissions, description })
     });
   },
 

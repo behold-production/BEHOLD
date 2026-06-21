@@ -111,6 +111,108 @@ import { useAuth } from '../../context/AuthContext';
 import LogoutConfirmModal from '../LogoutConfirmModal';
 import ApiService from '../../services/api';
 
+const PRIVILEGE_MODULES = [
+  {
+    id: 'manage_users',
+    name: 'Student Management',
+    actions: [
+      { id: 'view_students', name: 'View Students' },
+      { id: 'add_students', name: 'Add Student' },
+      { id: 'edit_students', name: 'Edit Student' },
+      { id: 'delete_students', name: 'Delete Student' },
+      { id: 'verify_students', name: 'Verify Student' }
+    ]
+  },
+  {
+    id: 'manage_psychologists',
+    name: 'Psychologist Management',
+    actions: [
+      { id: 'view_psychologists', name: 'View Psychologists' },
+      { id: 'add_psychologists', name: 'Add Psychologist' },
+      { id: 'edit_psychologists', name: 'Edit Psychologist' },
+      { id: 'delete_psychologists', name: 'Delete Psychologist' },
+      { id: 'verify_psychologists', name: 'Verify Psychologist' }
+    ]
+  },
+  {
+    id: 'manage_bookings',
+    name: 'Booking Management',
+    actions: [
+      { id: 'view_bookings', name: 'View Bookings' },
+      { id: 'add_bookings', name: 'Add Booking' },
+      { id: 'edit_bookings', name: 'Edit Booking' },
+      { id: 'delete_bookings', name: 'Delete Booking' },
+      { id: 'verify_bookings', name: 'Verify Booking' }
+    ]
+  },
+  {
+    id: 'manage_aptitude',
+    name: 'Aptitude Questions',
+    actions: [
+      { id: 'view_aptitude', name: 'View Questions' },
+      { id: 'add_aptitude', name: 'Add Question' },
+      { id: 'edit_aptitude', name: 'Edit Question' },
+      { id: 'delete_aptitude', name: 'Delete Question' },
+      { id: 'verify_aptitude', name: 'Verify Question' }
+    ]
+  },
+  {
+    id: 'manage_inquiries',
+    name: 'Inquiries & Leads',
+    actions: [
+      { id: 'view_inquiries', name: 'View Inquiries' },
+      { id: 'add_inquiries', name: 'Add Inquiry' },
+      { id: 'edit_inquiries', name: 'Edit Inquiry' },
+      { id: 'delete_inquiries', name: 'Delete Inquiry' },
+      { id: 'verify_inquiries', name: 'Verify Inquiry' }
+    ]
+  },
+  {
+    id: 'manage_faqs',
+    name: 'FAQ Management',
+    actions: [
+      { id: 'view_faqs', name: 'View FAQs' },
+      { id: 'add_faqs', name: 'Add FAQ' },
+      { id: 'edit_faqs', name: 'Edit FAQ' },
+      { id: 'delete_faqs', name: 'Delete FAQ' },
+      { id: 'verify_faqs', name: 'Verify FAQ' }
+    ]
+  },
+  {
+    id: 'manage_settings',
+    name: 'System Settings',
+    actions: [
+      { id: 'view_settings', name: 'View Settings' },
+      { id: 'add_settings', name: 'Add Setting' },
+      { id: 'edit_settings', name: 'Edit Setting' },
+      { id: 'delete_settings', name: 'Delete Setting' },
+      { id: 'verify_settings', name: 'Verify Setting' }
+    ]
+  },
+  {
+    id: 'manage_testresults',
+    name: 'Test Results',
+    actions: [
+      { id: 'view_testresults', name: 'View Results' },
+      { id: 'add_testresults', name: 'Add Result' },
+      { id: 'edit_testresults', name: 'Edit Result' },
+      { id: 'delete_testresults', name: 'Delete Result' },
+      { id: 'verify_testresults', name: 'Verify Result' }
+    ]
+  },
+  {
+    id: 'manage_staff',
+    name: 'Staff & Roles',
+    actions: [
+      { id: 'view_staff', name: 'View Staff' },
+      { id: 'add_staff', name: 'Add Staff' },
+      { id: 'edit_staff', name: 'Edit Staff' },
+      { id: 'delete_staff', name: 'Delete Staff' },
+      { id: 'verify_staff', name: 'Verify Staff' }
+    ]
+  }
+];
+
 export default function AdminDashboard({ setView }) {
   const { showAlert, showConfirm, showPrompt } = useCustomDialog();
   const getLocalTodayString = () => {
@@ -641,12 +743,11 @@ export default function AdminDashboard({ setView }) {
 
   // Custom role title manager states
   const [newRoleName, setNewRoleName] = useState('');
+  const [newRoleDescription, setNewRoleDescription] = useState('');
+  const [editingRoleId, setEditingRoleId] = useState(null);
+  const [activeRoleTab, setActiveRoleTab] = useState('roles');
 
-  const [newRolePermissions, setNewRolePermissions] = useState({
-    MANAGE_USERS: false,
-    MANAGE_PSYCHOLOGISTS: false,
-    MANAGE_BOOKINGS: false
-  });
+  const [newRolePermissions, setNewRolePermissions] = useState({});
   const [roleError, setRoleError] = useState('');
   const [roleSuccess, setRoleSuccess] = useState('');
   const [roleToDelete, setRoleToDelete] = useState(null);
@@ -679,23 +780,23 @@ export default function AdminDashboard({ setView }) {
 
   // Reset page pagination on search/filter mutations
   useEffect(() => {
-    setStudentPage(1);
+    setTimeout(() => setStudentPage(1), 0);
   }, [searchUser]);
 
   useEffect(() => {
-    setPsyPage(1);
+    setTimeout(() => setPsyPage(1), 0);
   }, [searchPsy]);
 
   useEffect(() => {
-    setBookingPage(1);
+    setTimeout(() => setBookingPage(1), 0);
   }, [searchBooking, bookingStatusFilter]);
 
   useEffect(() => {
-    setInquiryPage(1);
+    setTimeout(() => setInquiryPage(1), 0);
   }, [searchInquiry]);
 
   useEffect(() => {
-    setAptitudePage(1);
+    setTimeout(() => setAptitudePage(1), 0);
   }, [searchAptitude]);
 
   // FAQ Modal/Form states
@@ -736,11 +837,7 @@ export default function AdminDashboard({ setView }) {
     password: '',
     roleName: ''
   });
-  const [selectedPermissions, setSelectedPermissions] = useState({
-    MANAGE_USERS: false,
-    MANAGE_PSYCHOLOGISTS: false,
-    MANAGE_BOOKINGS: false
-  });
+  const [selectedPermissions, setSelectedPermissions] = useState([]);
   const [subAdminError, setSubAdminError] = useState('');
   const [subAdminSuccess, setSubAdminSuccess] = useState('');
   const [isRegistering, setIsRegistering] = useState(false);
@@ -1036,23 +1133,20 @@ export default function AdminDashboard({ setView }) {
             const currentRoleExists = roles.some(r => r.name === prev.roleName);
             if (!prev.roleName || !currentRoleExists) {
               const defaultRole = roles[0];
-              const nextPerms = {
-                MANAGE_USERS: defaultRole.permissions.includes('MANAGE_USERS'),
-                MANAGE_PSYCHOLOGISTS: defaultRole.permissions.includes('MANAGE_PSYCHOLOGISTS'),
-                MANAGE_BOOKINGS: defaultRole.permissions.includes('MANAGE_BOOKINGS')
-              };
+              const nextPerms = defaultRole.permissions || [];
               setTimeout(() => setSelectedPermissions(nextPerms), 0);
               return { ...prev, roleName: defaultRole.name };
+            } else {
+              const currentRole = roles.find(r => r.name === prev.roleName);
+              if (currentRole) {
+                setTimeout(() => setSelectedPermissions(currentRole.permissions || []), 0);
+              }
             }
             return prev;
           });
         } else {
           setSubAdminForm(prev => ({ ...prev, roleName: '' }));
-          setTimeout(() => setSelectedPermissions({
-            MANAGE_USERS: false,
-            MANAGE_PSYCHOLOGISTS: false,
-            MANAGE_BOOKINGS: false
-          }), 0);
+          setTimeout(() => setSelectedPermissions([]), 0);
         }
       }
 
@@ -1120,7 +1214,9 @@ export default function AdminDashboard({ setView }) {
   };
 
   useEffect(() => {
-    reloadData();
+    setTimeout(() => {
+      reloadData();
+    }, 0);
   }, [user]);
 
   // Determine sub-admin permissions
@@ -1134,19 +1230,19 @@ export default function AdminDashboard({ setView }) {
     if (user && user?.role?.toUpperCase() === 'ADMIN') {
       if (!isSuperAdmin) {
         if (hasUserPermission) {
-          setCurrentSection('users');
+          setTimeout(() => setCurrentSection('users'), 0);
         } else if (hasPsyPermission) {
-          setCurrentSection('psychologists');
+          setTimeout(() => setCurrentSection('psychologists'), 0);
         } else if (hasBookingPermission) {
-          setCurrentSection('bookings');
+          setTimeout(() => setCurrentSection('bookings'), 0);
         } else {
-          setCurrentSection('users');
+          setTimeout(() => setCurrentSection('users'), 0);
         }
       } else {
-        setCurrentSection('overview');
+        setTimeout(() => setCurrentSection('overview'), 0);
       }
     }
-  }, [user]);
+  }, [user, isSuperAdmin, hasUserPermission, hasPsyPermission, hasBookingPermission]);
 
   const handleNavClick = (section) => {
     setCurrentSection(section);
@@ -1853,12 +1949,7 @@ export default function AdminDashboard({ setView }) {
     setSubAdminForm(prev => ({ ...prev, roleName }));
     const foundRole = rolesDb.find(r => r.name === roleName);
     if (foundRole) {
-      const nextPerms = {
-        MANAGE_USERS: foundRole.permissions.includes('MANAGE_USERS'),
-        MANAGE_PSYCHOLOGISTS: foundRole.permissions.includes('MANAGE_PSYCHOLOGISTS'),
-        MANAGE_BOOKINGS: foundRole.permissions.includes('MANAGE_BOOKINGS')
-      };
-      setSelectedPermissions(nextPerms);
+      setSelectedPermissions(foundRole.permissions || []);
     }
   };
 
@@ -1879,35 +1970,39 @@ export default function AdminDashboard({ setView }) {
 
     try {
       const permissions = Object.keys(newRolePermissions).filter(p => newRolePermissions[p]);
-      const res = await ApiService.createRole(trimmed, permissions);
+      let res;
+      if (editingRoleId) {
+        res = await ApiService.updateRole(editingRoleId, trimmed, permissions, newRoleDescription);
+      } else {
+        res = await ApiService.createRole(trimmed, permissions, newRoleDescription);
+      }
 
       if (res.success && res.data) {
-        setRolesDb(prev => [...prev, res.data]);
+        if (editingRoleId) {
+          setRolesDb(prev => prev.map(r => (r._id === editingRoleId || r.id === editingRoleId) ? res.data : r));
+          setRoleSuccess(`Role "${trimmed}" updated successfully!`);
+        } else {
+          setRolesDb(prev => [...prev, res.data]);
+          setRoleSuccess(`Role "${trimmed}" created successfully!`);
+        }
 
         // Auto-select if no role is currently selected
         if (!subAdminForm.roleName) {
           setSubAdminForm(prev => ({ ...prev, roleName: trimmed }));
-          const nextPerms = {
-            MANAGE_USERS: permissions.includes('MANAGE_USERS'),
-            MANAGE_PSYCHOLOGISTS: permissions.includes('MANAGE_PSYCHOLOGISTS'),
-            MANAGE_BOOKINGS: permissions.includes('MANAGE_BOOKINGS')
-          };
-          setSelectedPermissions(nextPerms);
+          setSelectedPermissions(permissions);
         }
 
-        setRoleSuccess(`Role "${trimmed}" created successfully!`);
         setNewRoleName('');
-        setNewRolePermissions({
-          MANAGE_USERS: false,
-          MANAGE_PSYCHOLOGISTS: false,
-          MANAGE_BOOKINGS: false
-        });
+        setNewRoleDescription('');
+        setNewRolePermissions({});
+        setEditingRoleId(null);
+        setActiveRoleTab('roles');
         setTimeout(() => setRoleSuccess(''), 3000);
       } else {
-        setRoleError(res.message || "Failed to create role.");
+        setRoleError(res.message || "Failed to save role.");
       }
     } catch (err) {
-      setRoleError(err.message || "An error occurred creating the role.");
+      setRoleError(err.message || "An error occurred saving the role.");
     }
   };
 
@@ -1937,11 +2032,7 @@ export default function AdminDashboard({ setView }) {
           // Reset selection if the deleted role was currently selected
           if (subAdminForm.roleName === deletedRole.name) {
             setSubAdminForm(prev => ({ ...prev, roleName: '' }));
-            setSelectedPermissions({
-              MANAGE_USERS: false,
-              MANAGE_PSYCHOLOGISTS: false,
-              MANAGE_BOOKINGS: false
-            });
+            setSelectedPermissions([]);
           }
         }
       } else {
@@ -1977,7 +2068,7 @@ export default function AdminDashboard({ setView }) {
       return;
     }
 
-    const permissionsArray = Object.keys(selectedPermissions).filter(p => selectedPermissions[p]);
+    const permissionsArray = selectedPermissions;
     if (permissionsArray.length === 0) {
       setSubAdminError("Please select a role title that has at least one permission scope, or configure permissions for this role.");
       setIsRegistering(false);
@@ -2006,11 +2097,7 @@ export default function AdminDashboard({ setView }) {
       if (defaultRole) {
         handleRoleChangeInForm(defaultRole.name);
       } else {
-        setSelectedPermissions({
-          MANAGE_USERS: false,
-          MANAGE_PSYCHOLOGISTS: false,
-          MANAGE_BOOKINGS: false
-        });
+        setSelectedPermissions([]);
       }
       reloadData();
     } catch (err) {
@@ -2021,11 +2108,83 @@ export default function AdminDashboard({ setView }) {
   };
 
   const togglePermission = (perm) => {
-    setSelectedPermissions(prev => ({ ...prev, [perm]: !prev[perm] }));
+    setSelectedPermissions(prev => {
+      if (prev.includes(perm)) {
+        return prev.filter(p => p !== perm);
+      } else {
+        return [...prev, perm];
+      }
+    });
   };
 
   const toggleNewRolePermission = (perm) => {
-    setNewRolePermissions(prev => ({ ...prev, [perm]: !prev[perm] }));
+    setNewRolePermissions(prev => {
+      const next = { ...prev };
+      next[perm] = !next[perm];
+      
+      // If legacy keys are toggled, sync them
+      if (perm === 'MANAGE_USERS') next['manage_users'] = next[perm];
+      if (perm === 'MANAGE_PSYCHOLOGISTS') next['manage_psychologists'] = next[perm];
+      if (perm === 'MANAGE_BOOKINGS') next['manage_bookings'] = next[perm];
+      
+      if (perm === 'manage_users') next['MANAGE_USERS'] = next[perm];
+      if (perm === 'manage_psychologists') next['MANAGE_PSYCHOLOGISTS'] = next[perm];
+      if (perm === 'manage_bookings') next['MANAGE_BOOKINGS'] = next[perm];
+      
+      return next;
+    });
+  };
+
+  const toggleModuleAllPermissions = (moduleId, actionsList, turnOn) => {
+    setNewRolePermissions(prev => {
+      const next = { ...prev };
+      next[moduleId] = turnOn;
+      actionsList.forEach(act => {
+        next[act.id] = turnOn;
+      });
+      // Legacy compatibility keys
+      if (moduleId === 'manage_users') next['MANAGE_USERS'] = turnOn;
+      if (moduleId === 'manage_psychologists') next['MANAGE_PSYCHOLOGISTS'] = turnOn;
+      if (moduleId === 'manage_bookings') next['MANAGE_BOOKINGS'] = turnOn;
+      return next;
+    });
+  };
+
+  const toggleChildAction = (moduleId, actionId, actionsList) => {
+    setNewRolePermissions(prev => {
+      const next = { ...prev };
+      next[actionId] = !next[actionId];
+      
+      // If the child is checked, the parent should also be checked
+      if (next[actionId]) {
+        next[moduleId] = true;
+      } else {
+        // If all children of this module are unchecked, uncheck the parent
+        const anyChecked = actionsList.some(act => next[act.id]);
+        if (!anyChecked) {
+          next[moduleId] = false;
+        }
+      }
+      
+      // Legacy compatibility keys
+      if (moduleId === 'manage_users') next['MANAGE_USERS'] = next[moduleId];
+      if (moduleId === 'manage_psychologists') next['MANAGE_PSYCHOLOGISTS'] = next[moduleId];
+      if (moduleId === 'manage_bookings') next['MANAGE_BOOKINGS'] = next[moduleId];
+      
+      return next;
+    });
+  };
+
+  const handleEditRoleClick = (role) => {
+    setEditingRoleId(role._id || role.id);
+    setNewRoleName(role.name);
+    setNewRoleDescription(role.description || '');
+    const permsObj = {};
+    (role.permissions || []).forEach(p => {
+      permsObj[p] = true;
+    });
+    setNewRolePermissions(permsObj);
+    setActiveRoleTab('new_role');
   };
 
   const parseStaffDetails = (admin) => {
@@ -2050,7 +2209,7 @@ export default function AdminDashboard({ setView }) {
     (u.role === 'USER' || !u.role) &&
     (u.name.toLowerCase().includes(searchUser.toLowerCase()) || u.email.toLowerCase().includes(searchUser.toLowerCase()))
   );
-
+  /* eslint-disable react-hooks/preserve-manual-memoization */
   const psychologistsList = React.useMemo(() => {
     let list = usersDb.filter(u =>
       u.role === 'PSYCHOLOGIST' &&
@@ -2072,6 +2231,7 @@ export default function AdminDashboard({ setView }) {
       return a.name.localeCompare(b.name);
     });
   }, [usersDb, searchPsy, psyFilter]);
+  /* eslint-enable react-hooks/preserve-manual-memoization */
 
   const subAdminsList = usersDb.filter(u =>
     u.role === 'ADMIN' && u.permissions // Only custom sub-admins
@@ -2928,7 +3088,7 @@ export default function AdminDashboard({ setView }) {
             // Storage usage calculation
             let totalChars = 0;
             for (let key in localStorage) {
-              if (localStorage.hasOwnProperty(key)) {
+              if (Object.prototype.hasOwnProperty.call(localStorage, key)) {
                 totalChars += key.length + localStorage[key].length;
               }
             }
@@ -4246,17 +4406,288 @@ export default function AdminDashboard({ setView }) {
                 <p className="text-sm text-zinc-500 font-medium pt-1">Create sub-admin staff, configure dynamic role titles, and adjust access permissions</p>
               </div>
 
-              {/* Dynamic Roles Definition Section */}
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start border-b border-zinc-800 pb-6 mb-2">
-                {/* Role Creator Form */}
-                <form onSubmit={handleCreateRole} className="lg:col-span-5 bg-zinc-950 border border-zinc-850 p-5 rounded-xl space-y-4 text-left">
-                  <div className="text-sm font-bold capitalize  text-zinc-400 pb-1.5 border-b border-zinc-850 flex items-center gap-1.5">
-                    <Plus className="w-4 h-4 text-brand" /> Create Custom Role Title
+              {/* Sub-tab navigation */}
+              <div className="flex gap-2 border-b border-zinc-800 pb-px">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveRoleTab('roles');
+                    setEditingRoleId(null);
+                    setNewRoleName('');
+                    setNewRoleDescription('');
+                    setNewRolePermissions({});
+                  }}
+                  className={`px-4 py-2 border-b-2 text-sm font-bold capitalize transition-all cursor-pointer border-none bg-transparent ${activeRoleTab === 'roles'
+                    ? 'border-brand text-brand font-bold'
+                    : 'border-transparent text-zinc-400 hover:text-white'
+                    }`}
+                >
+                  Roles & Staff Registry
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveRoleTab('new_role');
+                  }}
+                  className={`px-4 py-2 border-b-2 text-sm font-bold capitalize transition-all cursor-pointer border-none bg-transparent ${activeRoleTab === 'new_role'
+                    ? 'border-brand text-brand font-bold'
+                    : 'border-transparent text-zinc-400 hover:text-white'
+                    }`}
+                >
+                  {editingRoleId ? 'Edit Role' : 'Create Custom Role'}
+                </button>
+              </div>
+
+              {activeRoleTab === 'roles' ? (
+                <div className="space-y-6">
+                  {/* Roles Registry List (Grid of roles) */}
+                  <div className="border border-zinc-850 p-5 rounded-xl bg-zinc-955/40 space-y-4 text-left">
+                    <div className="text-sm font-bold capitalize text-zinc-400 pb-1.5 border-b border-zinc-855 flex items-center justify-between">
+                      <div className="flex items-center gap-1.5">
+                        <Settings className="w-4 h-4 text-brand" /> Active Custom Roles Registry
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setEditingRoleId(null);
+                          setNewRoleName('');
+                          setNewRoleDescription('');
+                          setNewRolePermissions({});
+                          setActiveRoleTab('new_role');
+                        }}
+                        className="text-xs bg-brand/10 hover:bg-brand text-brand hover:text-zinc-955 px-2.5 py-1 rounded border border-brand/20 hover:border-brand font-bold capitalize transition-all cursor-pointer"
+                      >
+                        + Add Custom Role
+                      </button>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 max-h-[350px] overflow-y-auto pr-1">
+                      {isDbLoading ? (
+                        [...Array(6)].map((_, i) => (
+                          <div key={i} className="animate-pulse bg-zinc-900 border border-zinc-850 p-4 rounded-lg flex flex-col justify-between space-y-3 h-[110px]">
+                            <div className="h-4 bg-zinc-800 rounded w-1/3" />
+                            <div className="h-3 bg-zinc-850 rounded w-2/3" />
+                            <div className="flex gap-1.5">
+                              <div className="h-5 bg-zinc-850 rounded w-16" />
+                              <div className="h-5 bg-zinc-850 rounded w-16" />
+                            </div>
+                          </div>
+                        ))
+                      ) : rolesDb.length === 0 ? (
+                        <div className="col-span-3 text-center text-zinc-550 italic py-6">No custom roles defined yet.</div>
+                      ) : (
+                        rolesDb.map(role => {
+                          const isProtected = ['role_hr', 'role_state', 'role_scheduler', 'role_finance'].includes(role.id);
+                          const enabledModules = PRIVILEGE_MODULES.filter(m =>
+                            role.permissions.includes(m.id) ||
+                            m.actions.some(act => role.permissions.includes(act.id)) ||
+                            (m.id === 'manage_users' && role.permissions.includes('MANAGE_USERS')) ||
+                            (m.id === 'manage_psychologists' && role.permissions.includes('MANAGE_PSYCHOLOGISTS')) ||
+                            (m.id === 'manage_bookings' && role.permissions.includes('MANAGE_BOOKINGS'))
+                          );
+                          return (
+                            <div key={role.id} className="bg-zinc-900 border border-zinc-850 p-4 rounded-xl flex flex-col justify-between space-y-4 hover:border-zinc-700 transition-colors">
+                              <div className="space-y-2">
+                                <div className="flex justify-between items-start gap-1">
+                                  <span className="font-header font-bold text-white capitalize text-sm truncate">{role.name}</span>
+                                  <div className="flex items-center gap-2 shrink-0">
+                                    <button
+                                      type="button"
+                                      onClick={() => handleEditRoleClick(role)}
+                                      className="text-brand hover:underline font-bold text-xs capitalize cursor-pointer border-none bg-transparent"
+                                    >
+                                      Edit
+                                    </button>
+                                    {!isProtected && (
+                                      <button
+                                        type="button"
+                                        onClick={() => handleDeleteRole(role)}
+                                        className="text-rose-500 hover:text-rose-455 font-bold text-xs capitalize cursor-pointer border-none bg-transparent"
+                                      >
+                                        Delete
+                                      </button>
+                                    )}
+                                    {isProtected && (
+                                      <span className="text-[10px] text-zinc-550 border border-zinc-800 bg-zinc-950 px-1 py-0.2 rounded capitalize font-bold">System</span>
+                                    )}
+                                  </div>
+                                </div>
+                                {role.description ? (
+                                  <p className="text-xs text-zinc-400 font-medium leading-normal line-clamp-2">{role.description}</p>
+                                ) : (
+                                  <p className="text-xs text-zinc-600 font-medium italic">No description provided</p>
+                                )}
+                              </div>
+
+                              <div className="space-y-1.5 border-t border-zinc-900/60 pt-3">
+                                <span className="text-[10px] text-zinc-500 font-bold capitalize block">Inherited Modules ({enabledModules.length})</span>
+                                <div className="flex flex-wrap gap-1">
+                                  {enabledModules.length > 0 ? (
+                                    enabledModules.map(m => (
+                                      <span key={m.id} className="px-1.5 py-0.5 rounded bg-zinc-955 text-[10px] text-zinc-400 capitalize border border-zinc-850">
+                                        {m.name.replace(' Management', '').replace(' & Leads', '')}
+                                      </span>
+                                    ))
+                                  ) : (
+                                    <span className="text-xs text-zinc-650 italic">No access permissions</span>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })
+                      )}
+                    </div>
                   </div>
 
-                  <div className="space-y-3">
+                  {/* Staff Provisioning Section */}
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                    {/* Registration form */}
+                    <form onSubmit={handleCreateSubAdmin} className="lg:col-span-7 bg-zinc-950 border border-zinc-850 p-5 rounded-xl space-y-4 text-left">
+                      <div className="text-sm font-bold capitalize text-zinc-400 pb-1.5 border-b border-zinc-850 flex items-center gap-1.5">
+                        <Settings className="w-4 h-4 text-brand" /> Register Staff Profile
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                        <div className="space-y-1">
+                          <label className="text-zinc-400 font-bold capitalize text-sm ">Staff Name</label>
+                          <input
+                            type="text"
+                            required
+                            placeholder="e.g. Sandra Tomy"
+                            value={subAdminForm.name}
+                            onChange={(e) => setSubAdminForm({ ...subAdminForm, name: e.target.value })}
+                            className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none"
+                          />
+                        </div>
+
+                        <div className="space-y-1">
+                          <label className="text-zinc-400 font-bold capitalize text-sm ">Role Title</label>
+                          <select
+                            value={subAdminForm.roleName}
+                            onChange={(e) => handleRoleChangeInForm(e.target.value)}
+                            disabled={rolesDb.length === 0}
+                            className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            {rolesDb.length === 0 ? (
+                              <option value="">-- No Roles Defined --</option>
+                            ) : (
+                              rolesDb.map(r => (
+                                <option key={r.id} value={r.name}>{r.name}</option>
+                              ))
+                            )}
+                          </select>
+                        </div>
+
+                        <div className="sm:col-span-2 space-y-1">
+                          <label className="text-zinc-400 font-bold capitalize text-sm ">Email Address</label>
+                          <input
+                            type="email"
+                            required
+                            placeholder="staff@example.com"
+                            value={subAdminForm.email}
+                            onChange={(e) => setSubAdminForm({ ...subAdminForm, email: e.target.value })}
+                            className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none"
+                          />
+                        </div>
+
+                        <div className="sm:col-span-2 space-y-1">
+                          <label className="text-zinc-400 font-bold capitalize text-sm ">Password</label>
+                          <input
+                            type="password"
+                            required
+                            placeholder="••••••••"
+                            value={subAdminForm.password}
+                            onChange={(e) => setSubAdminForm({ ...subAdminForm, password: e.target.value })}
+                            className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none"
+                          />
+                        </div>
+                      </div>
+
+                      {subAdminError && (
+                        <p className="text-sm text-rose-500 font-bold capitalize ">{subAdminError}</p>
+                      )}
+
+                      {subAdminSuccess && (
+                        <p className="text-sm text-emerald-500 font-bold capitalize">{subAdminSuccess}</p>
+                      )}
+
+                      <button
+                        type="submit"
+                        disabled={isRegistering}
+                        className="w-full py-3 bg-brand hover:bg-brand-dark text-zinc-950 font-bold text-sm capitalize rounded-lg cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1"
+                      >
+                        <Plus className="w-3.5 h-3.5 text-zinc-955" /> Register Sub-Admin Profile
+                      </button>
+                    </form>
+
+                    {/* Role Scopes Viewer */}
+                    <div className="lg:col-span-5 border border-zinc-850 p-5 rounded-xl bg-zinc-955/40 space-y-4 text-left">
+                      <div className="text-sm font-bold capitalize text-zinc-400 pb-1.5 border-b border-zinc-850 flex items-center gap-1.5">
+                        <Lock className="w-4 h-4 text-brand" /> Role Scope Permissions
+                      </div>
+
+                      {rolesDb.length === 0 ? (
+                        <div className="p-4 bg-amber-500/10 border border-amber-500/20 text-amber-500 text-sm rounded-xl space-y-2">
+                          <p className="font-bold">No Custom Roles Defined</p>
+                          <p className="text-sm text-zinc-400 leading-normal">
+                            To register sub-admin staff, you must first define a role title and assign its permission scopes using the "Create Custom Role Title" form above.
+                          </p>
+                        </div>
+                      ) : (
+                        <div className="space-y-4">
+                          <p className="text-sm text-zinc-450 font-bold capitalize">Inherited Scopes for {subAdminForm.roleName}</p>
+
+                          <div className="grid grid-cols-1 gap-2.5 max-h-[300px] overflow-y-auto pr-1">
+                            {PRIVILEGE_MODULES.map(module => {
+                              const isModuleEnabled = selectedPermissions.includes(module.id) ||
+                                                     module.actions.some(act => selectedPermissions.includes(act.id)) ||
+                                                     (module.id === 'manage_users' && selectedPermissions.includes('MANAGE_USERS')) ||
+                                                     (module.id === 'manage_psychologists' && selectedPermissions.includes('MANAGE_PSYCHOLOGISTS')) ||
+                                                     (module.id === 'manage_bookings' && selectedPermissions.includes('MANAGE_BOOKINGS'));
+
+                              const activeActions = module.actions.filter(act => selectedPermissions.includes(act.id));
+
+                              return (
+                                <div key={module.id} className={`p-3 border rounded-xl flex items-center justify-between transition-colors duration-200 ${isModuleEnabled ? 'border-brand/30 bg-brand/5 text-white' : 'border-zinc-800 bg-zinc-950/20 text-zinc-500'}`}>
+                                  <div className="text-sm min-w-0">
+                                    <span className={`font-bold block ${isModuleEnabled ? 'text-white' : 'text-zinc-500'}`}>{module.name}</span>
+                                    {isModuleEnabled && activeActions.length > 0 ? (
+                                      <span className="text-xs text-zinc-400 block mt-0.5 capitalize">
+                                        Privileges: {activeActions.map(act => act.name.split(' ')[0]).join(', ')}
+                                      </span>
+                                    ) : isModuleEnabled ? (
+                                      <span className="text-xs text-zinc-400 block mt-0.5 capitalize">
+                                        Full Access (All Privileges)
+                                      </span>
+                                    ) : (
+                                      <span className="text-xs text-zinc-600 block mt-0.5">No Access</span>
+                                    )}
+                                  </div>
+                                  <div className={`w-5 h-5 rounded-full border transition flex items-center justify-center shrink-0 ml-2 ${isModuleEnabled ? 'border-brand bg-brand text-zinc-955' : 'border-zinc-800 text-zinc-800'}`}>
+                                    {isModuleEnabled && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                /* NEW ROLE / EDIT ROLE FORM */
+                <form onSubmit={handleCreateRole} className="bg-zinc-950 border border-zinc-850 p-6 rounded-xl space-y-6 text-left">
+                  <div className="text-sm font-bold capitalize text-zinc-400 pb-1.5 border-b border-zinc-850 flex items-center justify-between">
+                    <div className="flex items-center gap-1.5">
+                      <Plus className="w-4 h-4 text-brand" /> {editingRoleId ? 'Modify Custom Role details' : 'Define New Custom Role'}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-1">
-                      <label className="text-zinc-400 font-bold capitalize text-sm ">Role Title Name</label>
+                      <label className="text-zinc-400 font-bold capitalize text-sm">Role Title Name</label>
                       <input
                         type="text"
                         required
@@ -4267,241 +4698,96 @@ export default function AdminDashboard({ setView }) {
                       />
                     </div>
 
-                    <div className="space-y-1.5">
-                      <label className="text-zinc-400 font-bold capitalize text-sm  block mb-1">Default Scope Permissions</label>
-                      <div className="space-y-2">
-                        {['MANAGE_USERS', 'MANAGE_PSYCHOLOGISTS', 'MANAGE_BOOKINGS'].map(scope => (
-                          <label key={scope} className="flex items-center gap-2 cursor-pointer text-sm text-zinc-350 select-none">
-                            <input
-                              type="checkbox"
-                              checked={newRolePermissions[scope]}
-                              onChange={() => toggleNewRolePermission(scope)}
-                              className="w-4 h-4 rounded border-zinc-800 bg-zinc-900 text-brand focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
-                            />
-                            <span>{scope === 'MANAGE_USERS' ? 'Manage Students' : scope === 'MANAGE_PSYCHOLOGISTS' ? 'Manage Psychologists' : 'Manage Bookings'}</span>
-                          </label>
-                        ))}
-                      </div>
+                    <div className="space-y-1">
+                      <label className="text-zinc-400 font-bold capitalize text-sm">Role Description</label>
+                      <input
+                        type="text"
+                        placeholder="Provide a brief summary description of this role's access area..."
+                        value={newRoleDescription}
+                        onChange={(e) => setNewRoleDescription(e.target.value)}
+                        className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <label className="text-zinc-400 font-bold capitalize text-sm block">All Privileges & Scope Toggles</label>
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                      {PRIVILEGE_MODULES.map(module => {
+                        const isParentChecked = !!newRolePermissions[module.id] ||
+                                               (module.id === 'manage_users' && !!newRolePermissions['MANAGE_USERS']) ||
+                                               (module.id === 'manage_psychologists' && !!newRolePermissions['MANAGE_PSYCHOLOGISTS']) ||
+                                               (module.id === 'manage_bookings' && !!newRolePermissions['MANAGE_BOOKINGS']);
+                        return (
+                          <div key={module.id} className={`bg-zinc-950 border rounded-xl overflow-hidden shadow-md text-left transition-colors duration-200 ${isParentChecked ? 'border-brand/40 bg-brand/5' : 'border-zinc-850 bg-zinc-950'}`}>
+                            {/* Header */}
+                            <div className="flex items-center justify-between p-4 border-b border-zinc-900/60 bg-zinc-900/40">
+                              <span className="font-header font-bold text-sm text-white capitalize">{module.name}</span>
+                              {/* Parent Toggle Switch */}
+                              <label className="relative inline-flex items-center cursor-pointer select-none">
+                                <input
+                                  type="checkbox"
+                                  checked={isParentChecked}
+                                  onChange={(e) => toggleModuleAllPermissions(module.id, module.actions, e.target.checked)}
+                                  className="sr-only peer"
+                                />
+                                <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand peer-checked:after:bg-zinc-950 peer-checked:after:border-zinc-955"></div>
+                              </label>
+                            </div>
+
+                            {/* Body (granular checkboxes) */}
+                            <div className="p-4 space-y-2">
+                              {module.actions.map(action => {
+                                const isChecked = !!newRolePermissions[action.id];
+                                return (
+                                  <label key={action.id} className="flex items-center justify-between cursor-pointer text-sm select-none hover:text-white text-zinc-400 transition-colors">
+                                    <span className="capitalize">{action.name.split(' ')[0]}</span>
+                                    <input
+                                      type="checkbox"
+                                      checked={isChecked}
+                                      onChange={() => toggleChildAction(module.id, action.id, module.actions)}
+                                      className="w-4 h-4 rounded border-zinc-800 bg-zinc-900 text-brand focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
+                                    />
+                                  </label>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
 
                   {roleError && (
-                    <p className="text-sm text-rose-500 font-bold capitalize ">{roleError}</p>
+                    <p className="text-sm text-rose-500 font-bold capitalize">{roleError}</p>
                   )}
                   {roleSuccess && (
                     <p className="text-sm text-emerald-500 font-bold capitalize">{roleSuccess}</p>
                   )}
 
-                  <button
-                    type="submit"
-                    className="w-full py-2.5 bg-brand/10 hover:bg-brand text-brand hover:text-zinc-955 font-bold text-sm capitalize  rounded-lg cursor-pointer transition border border-brand/20 hover:border-brand flex items-center justify-center gap-1"
-                  >
-                    <Plus className="w-3.5 h-3.5" /> Save Custom Role
-                  </button>
+                  <div className="flex items-center justify-end gap-3 pt-4 border-t border-zinc-900">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEditingRoleId(null);
+                        setNewRoleName('');
+                        setNewRoleDescription('');
+                        setNewRolePermissions({});
+                        setActiveRoleTab('roles');
+                      }}
+                      className="px-4 py-2.5 bg-zinc-900 hover:bg-zinc-850 text-zinc-400 hover:text-white rounded-lg border border-zinc-800 text-sm font-bold capitalize transition cursor-pointer"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-6 py-2.5 bg-brand hover:bg-brand-dark text-zinc-950 font-bold text-sm capitalize rounded-lg cursor-pointer transition shadow-md flex items-center gap-1.5"
+                    >
+                      <Plus className="w-4 h-4 text-zinc-955" /> {editingRoleId ? 'Update Role' : 'Save Custom Role'}
+                    </button>
+                  </div>
                 </form>
-
-                {/* Roles Registry List */}
-                <div className="lg:col-span-7 border border-zinc-850 p-5 rounded-xl bg-zinc-950/40 space-y-4 text-left">
-                  <div className="text-sm font-bold capitalize  text-zinc-400 pb-1.5 border-b border-zinc-850 flex items-center gap-1.5">
-                    <Settings className="w-4 h-4 text-brand" /> Active Custom Roles Registry
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[220px] overflow-y-auto pr-1">
-                    {isDbLoading ? (
-                      [...Array(4)].map((_, i) => (
-                        <div key={i} className="animate-pulse bg-zinc-900 border border-zinc-850 p-3 rounded-lg flex flex-col justify-between space-y-3 h-[72px]">
-                          <div className="h-4 bg-zinc-800 rounded w-1/3" />
-                          <div className="flex gap-1.5">
-                            <div className="h-5 bg-zinc-850 rounded w-16" />
-                            <div className="h-5 bg-zinc-850 rounded w-16" />
-                          </div>
-                        </div>
-                      ))
-                    ) : rolesDb.length === 0 ? (
-                      <div className="col-span-2 text-center text-zinc-550 italic py-4">No custom roles defined yet.</div>
-                    ) : (
-                      rolesDb.map(role => {
-                        const isProtected = ['role_hr', 'role_state', 'role_scheduler', 'role_finance'].includes(role.id);
-                        return (
-                          <div key={role.id} className="bg-zinc-900 border border-zinc-850 p-3 rounded-lg flex flex-col justify-between space-y-3">
-                            <div className="space-y-1.5">
-                              <div className="flex justify-between items-start gap-1">
-                                <span className="font-bold text-white capitalize text-xs truncate">{role.name}</span>
-                                {isProtected ? (
-                                  <span className="text-xs text-zinc-550 border border-zinc-800 bg-zinc-950 px-1 py-0.2 rounded capitalize font-bold  shrink-0">System</span>
-                                ) : (
-                                  <button
-                                    type="button"
-                                    onClick={() => handleDeleteRole(role)}
-                                    className="text-rose-500 hover:text-rose-455 font-bold text-sm capitalize tracking-wide cursor-pointer flex items-center border-none bg-transparent"
-                                    title="Delete role title"
-                                  >
-                                    Delete
-                                  </button>
-                                )}
-                              </div>
-                              <div className="flex flex-wrap gap-1">
-                                {role.permissions.length > 0 ? (
-                                  role.permissions.map(p => (
-                                    <span key={p} className="px-1.5 py-0.5 rounded bg-zinc-955 text-xs text-zinc-450 capitalize   border border-zinc-850">
-                                      {p.replace('MANAGE_', '')}
-                                    </span>
-                                  ))
-                                ) : (
-                                  <span className="text-sm text-zinc-605 italic">No permissions</span>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* Staff Provisioning Section */}
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-                {/* Registration form */}
-                <form onSubmit={handleCreateSubAdmin} className="lg:col-span-7 bg-zinc-950 border border-zinc-850 p-5 rounded-xl space-y-4 text-left">
-                  <div className="text-sm font-bold capitalize  text-zinc-400 pb-1.5 border-b border-zinc-850 flex items-center gap-1.5">
-                    <Settings className="w-4 h-4 text-brand" /> Register Staff Profile
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                    <div className="space-y-1">
-                      <label className="text-zinc-400 font-bold capitalize text-sm ">Staff Name</label>
-                      <input
-                        type="text"
-                        required
-                        placeholder="e.g. Sandra Tomy"
-                        value={subAdminForm.name}
-                        onChange={(e) => setSubAdminForm({ ...subAdminForm, name: e.target.value })}
-                        className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none"
-                      />
-                    </div>
-
-                    <div className="space-y-1">
-                      <label className="text-zinc-400 font-bold capitalize text-sm ">Role Title</label>
-                      <select
-                        value={subAdminForm.roleName}
-                        onChange={(e) => handleRoleChangeInForm(e.target.value)}
-                        disabled={rolesDb.length === 0}
-                        className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        {rolesDb.length === 0 ? (
-                          <option value="">-- No Roles Defined --</option>
-                        ) : (
-                          rolesDb.map(r => (
-                            <option key={r.id} value={r.name}>{r.name}</option>
-                          ))
-                        )}
-                      </select>
-                    </div>
-
-                    <div className="sm:col-span-2 space-y-1">
-                      <label className="text-zinc-400 font-bold capitalize text-sm ">Email Address</label>
-                      <input
-                        type="email"
-                        required
-                        placeholder="staff@example.com"
-                        value={subAdminForm.email}
-                        onChange={(e) => setSubAdminForm({ ...subAdminForm, email: e.target.value })}
-                        className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none"
-                      />
-                    </div>
-
-                    <div className="sm:col-span-2 space-y-1">
-                      <label className="text-zinc-400 font-bold capitalize text-sm ">Password</label>
-                      <input
-                        type="password"
-                        required
-                        placeholder="••••••••"
-                        value={subAdminForm.password}
-                        onChange={(e) => setSubAdminForm({ ...subAdminForm, password: e.target.value })}
-                        className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none"
-                      />
-                    </div>
-                  </div>
-
-                  {subAdminError && (
-                    <p className="text-sm text-rose-500 font-bold capitalize ">{subAdminError}</p>
-                  )}
-
-                  {subAdminSuccess && (
-                    <p className="text-sm text-emerald-500 font-bold capitalize">{subAdminSuccess}</p>
-                  )}
-
-                  <button
-                    type="submit"
-                    disabled={isRegistering}
-                    className="w-full py-3 bg-brand hover:bg-brand-dark text-zinc-950 font-bold text-sm capitalize  rounded-lg cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1"
-                  >
-                    <Plus className="w-3.5 h-3.5 text-zinc-950" /> Register Sub-Admin Profile
-                  </button>
-                </form>
-
-                {/* Role Scopes Viewer */}
-                <div className="lg:col-span-5 border border-zinc-850 p-5 rounded-xl bg-zinc-955/40 space-y-4 text-left">
-                  <div className="text-sm font-bold capitalize  text-zinc-400 pb-1.5 border-b border-zinc-850 flex items-center gap-1.5">
-                    <Lock className="w-4 h-4 text-brand" /> Role Scope Permissions
-                  </div>
-
-                  {rolesDb.length === 0 ? (
-                    <div className="p-4 bg-amber-500/10 border border-amber-500/20 text-amber-500 text-sm rounded-xl space-y-2">
-                      <p className="font-bold">No Custom Roles Defined</p>
-                      <p className="text-sm text-zinc-400 leading-normal">
-                        To register sub-admin staff, you must first define a role title and assign its permission scopes using the "Create Custom Role Title" form above.
-                      </p>
-                    </div>
-                  ) : (
-                    <div className="space-y-3">
-                      <p className="text-sm capitalize  text-zinc-500 font-bold ">Inherited Scopes for {subAdminForm.roleName}</p>
-
-                      <div className="space-y-2.5">
-                        {/* MANAGE_USERS */}
-                        <div className={`p-3 border rounded-xl flex items-center justify-between transition-colors duration-200 ${selectedPermissions.MANAGE_USERS ? 'border-brand/30 bg-brand/5 text-white' : 'border-zinc-900 bg-zinc-950/20 text-zinc-500'
-                          }`}>
-                          <div className="text-sm">
-                            <span className="font-bold block">Manage Students</span>
-                            <span className="text-sm text-zinc-500 leading-tight block mt-0.5">List, search, delete student directory.</span>
-                          </div>
-                          <div className={`w-4 h-4 rounded-full border transition flex items-center justify-center shrink-0 ml-2 ${selectedPermissions.MANAGE_USERS ? 'border-brand bg-brand text-zinc-955' : 'border-zinc-800 text-zinc-800'
-                            }`}>
-                            {selectedPermissions.MANAGE_USERS && <Check className="w-3 h-3 stroke-[3]" />}
-                          </div>
-                        </div>
-
-                        {/* MANAGE_PSYCHOLOGISTS */}
-                        <div className={`p-3 border rounded-xl flex items-center justify-between transition-colors duration-200 ${selectedPermissions.MANAGE_PSYCHOLOGISTS ? 'border-brand/30 bg-brand/5 text-white' : 'border-zinc-900 bg-zinc-950/20 text-zinc-500'
-                          }`}>
-                          <div className="text-sm">
-                            <span className="font-bold block">Manage Psychologists</span>
-                            <span className="text-sm text-zinc-500 leading-tight block mt-0.5">Configure credentials, verify/unverify accounts.</span>
-                          </div>
-                          <div className={`w-4 h-4 rounded-full border transition flex items-center justify-center shrink-0 ml-2 ${selectedPermissions.MANAGE_PSYCHOLOGISTS ? 'border-brand bg-brand text-zinc-955' : 'border-zinc-800 text-zinc-800'
-                            }`}>
-                            {selectedPermissions.MANAGE_PSYCHOLOGISTS && <Check className="w-3 h-3 stroke-[3]" />}
-                          </div>
-                        </div>
-
-                        {/* MANAGE_BOOKINGS */}
-                        <div className={`p-3 border rounded-xl flex items-center justify-between transition-colors duration-200 ${selectedPermissions.MANAGE_BOOKINGS ? 'border-brand/30 bg-brand/5 text-white' : 'border-zinc-900 bg-zinc-950/20 text-zinc-500'
-                          }`}>
-                          <div className="text-sm">
-                            <span className="font-bold block">Manage Bookings</span>
-                            <span className="text-sm text-zinc-555 leading-tight block mt-0.5">Monitor and reschedule session bookings.</span>
-                          </div>
-                          <div className={`w-4 h-4 rounded-full border transition flex items-center justify-center shrink-0 ml-2 ${selectedPermissions.MANAGE_BOOKINGS ? 'border-brand bg-brand text-zinc-955' : 'border-zinc-800 text-zinc-800'
-                            }`}>
-                            {selectedPermissions.MANAGE_BOOKINGS && <Check className="w-3 h-3 stroke-[3]" />}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
+              )}
             </div>
           )}
 

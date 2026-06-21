@@ -24,9 +24,16 @@ export default function Services({ setView, onBookTherapist }) {
   const enablePsychology = siteSettings.enablePsychology !== false;
 
   // Reset visibleCount when search or filter changes
-  useEffect(() => {
+  const [prevSearch, setPrevSearch] = useState(searchTerm);
+  const [prevFilter, setPrevFilter] = useState(activeFilter);
+  const [prevSort, setPrevSort] = useState(sortBy);
+
+  if (searchTerm !== prevSearch || activeFilter !== prevFilter || sortBy !== prevSort) {
+    setPrevSearch(searchTerm);
+    setPrevFilter(activeFilter);
+    setPrevSort(sortBy);
     setVisibleCount(5);
-  }, [searchTerm, activeFilter, sortBy]);
+  }
 
   const [advisors, setAdvisors] = useState([]);
   const [isLoading, setIsLoading] = useState(true);

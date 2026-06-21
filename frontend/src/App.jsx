@@ -1,7 +1,7 @@
 import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { Routes, Route, Navigate, useNavigate, useLocation, useParams } from 'react-router-dom';
 import { MessageCircle, X, Download } from 'lucide-react';
-import { Toaster } from 'react-hot-toast';
+import { Toaster, useToasterStore, toast } from 'react-hot-toast';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import CdatSection from './components/CdatSection';
@@ -23,6 +23,17 @@ import { useAuth } from './context/AuthContext';
 import ApiService from './services/api';
 import { requestNotificationPermission, syncAndNotifyLocal } from './services/notificationHelper';
 
+function ToastLimitManager() {
+  const { toasts } = useToasterStore();
+  useEffect(() => {
+    const visibleToasts = toasts.filter((t) => t.visible);
+    if (visibleToasts.length > 1) {
+      visibleToasts.slice(0, -1).forEach((t) => toast.dismiss(t.id));
+    }
+  }, [toasts]);
+  return null;
+}
+
 function AdvisorProfileWrapper({ handleBookTherapist, setPendingScrollSection }) {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -43,21 +54,29 @@ export default function App() {
   const [testProfile, setTestProfile] = useState(null);
   const [bookingAdvisor, setBookingAdvisor] = useState(null);
   const [pendingScrollSection, setPendingScrollSection] = useState(null);
-  const [pendingRedirect, setPendingRedirect] = useState(false);
 
   // Expanded site settings sync state
-  const [siteSettings, setSiteSettings] = useState({
-    siteName: 'BEHOLD',
-    siteCopyright: '© BEHOLD Ltd., 2026. All rights reserved.',
-    showBanner: false,
-    bannerNotice: '',
-    termsOfUse: '',
-    privacyPolicy: '',
-    whatsapp: 'https://wa.me/919497174011',
-    contactEmail: 'support@behold.com',
-    enablePsychology: true,
-    gstEnabled: false,
-    gstPercent: 0
+  const [siteSettings, setSiteSettings] = useState(() => {
+    const defaultSettings = {
+      siteName: 'BEHOLD',
+      siteCopyright: '© BEHOLD Ltd., 2026. All rights reserved.',
+      showBanner: false,
+      bannerNotice: '',
+      termsOfUse: '',
+      privacyPolicy: '',
+      whatsapp: 'https://wa.me/919497174011',
+      contactEmail: 'support@behold.com',
+      enablePsychology: true,
+      gstEnabled: false,
+      gstPercent: 0
+    };
+    try {
+      const stored = localStorage.getItem('behold_site_settings');
+      if (stored) {
+        return { ...defaultSettings, ...JSON.parse(stored) };
+      }
+    } catch (e) { }
+    return defaultSettings;
   });
   const [activeDocType, setActiveDocType] = useState(null); // 'terms' or 'privacy'
 
@@ -75,7 +94,6 @@ export default function App() {
   };
 
   useEffect(() => {
-    loadSettings();
 
     const fetchGlobalSettings = async () => {
       try {
@@ -161,7 +179,7 @@ export default function App() {
     } else {
       if (path === '/profile') {
         navigate('/', { replace: true, state: { from: '/profile' } });
-        setIsAuthModalOpen(true);
+        setTimeout(() => setIsAuthModalOpen(true), 0);
       }
     }
   }, [user, isLoading, location.pathname, navigate]);
@@ -171,7 +189,7 @@ export default function App() {
     if (location.pathname === '/' && pendingScrollSection) {
       if (pendingScrollSection === 'top') {
         window.scrollTo({ top: 0, behavior: 'smooth' });
-        setPendingScrollSection(null);
+        setTimeout(() => setPendingScrollSection(null), 0);
         return;
       }
 
@@ -315,6 +333,7 @@ export default function App() {
           },
         }}
       />
+      <ToastLimitManager />
 
       {/* Top Banner Notice Alert */}
       {!hideNavbarAndFooter && siteSettings.showBanner && siteSettings.bannerNotice && (

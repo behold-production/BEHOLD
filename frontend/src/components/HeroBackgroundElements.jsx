@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
 
 const FloatingSphere = ({ className, delay = 0, size = 100, color1 = '#00D1D1', color2 = '#0ea5e9' }) => (
@@ -93,16 +93,25 @@ const FloatingPill = ({ className, delay = 0, size = 150, color1 = '#0ea5e9' }) 
   </motion.div>
 );
 
+const PARTICLE_DATA = [...Array(12)].map((_, i) => ({
+  id: i,
+  top: `${Math.random() * 100}%`,
+  left: `${Math.random() * 105}%`, // use left coordinate variations
+  duration: Math.random() * 4 + 6,
+  delay: Math.random() * 3
+}));
+
 const DecorativeParticles = () => {
+
   return (
     <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-      {[...Array(12)].map((_, i) => (
+      {PARTICLE_DATA.map((p) => (
         <motion.div
-          key={`particle-${i}`}
+          key={`particle-${p.id}`}
           className="absolute w-2 h-2 bg-brand rounded-full"
           style={{
-            top: `${Math.random() * 100}%`,
-            left: `${Math.random() * 100}%`,
+            top: p.top,
+            left: p.left,
             willChange: "transform, opacity"
           }}
           animate={{
@@ -110,9 +119,9 @@ const DecorativeParticles = () => {
             opacity: [0, 0.6, 0]
           }}
           transition={{
-            duration: Math.random() * 4 + 6,
+            duration: p.duration,
             repeat: Infinity,
-            delay: Math.random() * 3,
+            delay: p.delay,
             ease: "linear"
           }}
         />

@@ -1,4 +1,5 @@
-import React, { createContext, useState, useContext } from 'react';
+/* eslint-disable react-refresh/only-export-components */
+import { createContext, useState, useContext } from 'react';
 import { AlertCircle, HelpCircle, Info, CheckCircle2, X } from 'lucide-react';
 
 const CustomDialogContext = createContext(null);
