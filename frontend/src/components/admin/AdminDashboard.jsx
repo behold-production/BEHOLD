@@ -1020,11 +1020,9 @@ export default function AdminDashboard({ setView }) {
 
   // Mobile menu state
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [editPermissions, setEditPermissions] = useState({
-    MANAGE_USERS: false,
-    MANAGE_PSYCHOLOGISTS: false,
-    MANAGE_BOOKINGS: false
-  });
+  // Edit sub-admin: uses the new role-based permission system
+  const [editSubAdminRoleName, setEditSubAdminRoleName] = useState('');
+  const [editSubAdminPermissionsObj, setEditSubAdminPermissionsObj] = useState({});
   const [editSubAdminError, setEditSubAdminError] = useState('');
   const [editSubAdminSuccess, setEditSubAdminSuccess] = useState('');
 
@@ -1221,9 +1219,33 @@ export default function AdminDashboard({ setView }) {
 
   // Determine sub-admin permissions
   const isSuperAdmin = user?.role?.toUpperCase() === 'ADMIN' && !user?.permissions;
-  const hasUserPermission = isSuperAdmin || (user?.permissions && user.permissions.includes('MANAGE_USERS'));
-  const hasPsyPermission = isSuperAdmin || (user?.permissions && user.permissions.includes('MANAGE_PSYCHOLOGISTS'));
-  const hasBookingPermission = isSuperAdmin || (user?.permissions && user.permissions.includes('MANAGE_BOOKINGS'));
+  const _p = user?.permissions || [];
+
+  // Module-level access (broad) — legacy keys OR any action key in that module
+  const hasUserPermission = isSuperAdmin || _p.includes('MANAGE_USERS') || _p.includes('manage_users') ||
+    ['view_students','add_students','edit_students','delete_students','verify_students'].some(k => _p.includes(k));
+  const hasPsyPermission = isSuperAdmin || _p.includes('MANAGE_PSYCHOLOGISTS') || _p.includes('manage_psychologists') ||
+    ['view_psychologists','add_psychologists','edit_psychologists','delete_psychologists','verify_psychologists'].some(k => _p.includes(k));
+  const hasBookingPermission = isSuperAdmin || _p.includes('MANAGE_BOOKINGS') || _p.includes('manage_bookings') ||
+    ['view_bookings','add_bookings','edit_bookings','delete_bookings','verify_bookings'].some(k => _p.includes(k));
+
+  // Granular per-action permission helpers
+  const _hasModuleOrAction = (legacyKey, actionKey) =>
+    isSuperAdmin || _p.includes(legacyKey) || _p.includes(legacyKey.toLowerCase().replace('manage_', 'manage_')) || _p.includes(actionKey);
+
+  const canAddStudents    = isSuperAdmin || _p.includes('MANAGE_USERS') || _p.includes('manage_users') || _p.includes('add_students');
+  const canEditStudents   = isSuperAdmin || _p.includes('MANAGE_USERS') || _p.includes('manage_users') || _p.includes('edit_students');
+  const canDeleteStudents = isSuperAdmin || _p.includes('MANAGE_USERS') || _p.includes('manage_users') || _p.includes('delete_students');
+  const canVerifyStudents = isSuperAdmin || _p.includes('MANAGE_USERS') || _p.includes('manage_users') || _p.includes('verify_students');
+
+  const canAddPsy    = isSuperAdmin || _p.includes('MANAGE_PSYCHOLOGISTS') || _p.includes('manage_psychologists') || _p.includes('add_psychologists');
+  const canEditPsy   = isSuperAdmin || _p.includes('MANAGE_PSYCHOLOGISTS') || _p.includes('manage_psychologists') || _p.includes('edit_psychologists');
+  const canDeletePsy = isSuperAdmin || _p.includes('MANAGE_PSYCHOLOGISTS') || _p.includes('manage_psychologists') || _p.includes('delete_psychologists');
+  const canVerifyPsy = isSuperAdmin || _p.includes('MANAGE_PSYCHOLOGISTS') || _p.includes('manage_psychologists') || _p.includes('verify_psychologists');
+
+  const canAddBookings    = isSuperAdmin || _p.includes('MANAGE_BOOKINGS') || _p.includes('manage_bookings') || _p.includes('add_bookings');
+  const canEditBookings   = isSuperAdmin || _p.includes('MANAGE_BOOKINGS') || _p.includes('manage_bookings') || _p.includes('edit_bookings');
+  const canDeleteBookings = isSuperAdmin || _p.includes('MANAGE_BOOKINGS') || _p.includes('manage_bookings') || _p.includes('delete_bookings');
 
   // Automatically switch tab if sub-admin doesn't have permission for Overview
   useEffect(() => {
@@ -2011,7 +2033,25 @@ export default function AdminDashboard({ setView }) {
       await showAlert("Access Denied: You do not have permission to manage roles.");
       return;
     }
+    // Safety check: warn if staff members are currently using this role
+    const staffUsingRole = subAdminsList.filter(a => a.customRoleTitle === role.name);
+    if (staffUsingRole.length > 0) {
+      const confirmed = await showConfirm(
+        `${staffUsingRole.length} staff member${staffUsingRole.length > 1 ? 's are' : ' is'} currently assigned to "${role.name}". Deleting this role will not revoke their current permissions, but they will lose role association. Continue?`
+      );
+      if (!confirmed) return;
+    }
     setRoleToDelete(role);
+  };
+
+  const handleDuplicateRole = (role) => {
+    setEditingRoleId(null);
+    setNewRoleName(`Copy of ${role.name}`);
+    setNewRoleDescription(role.description || '');
+    const permsObj = {};
+    (role.permissions || []).forEach(p => { permsObj[p] = true; });
+    setNewRolePermissions(permsObj);
+    setActiveRoleTab('new_role');
   };
 
   const executeDeleteRole = async (roleId) => {
@@ -2408,15 +2448,58 @@ export default function AdminDashboard({ setView }) {
     }, 120);
   };
 
-  // Sub-Admin edit permissions
+  // Sub-Admin edit permissions — uses the full role-based granular permission system
   const handleOpenEditSubAdmin = (admin) => {
     setEditingSubAdmin(admin);
     setEditSubAdminError('');
     setEditSubAdminSuccess('');
-    setEditPermissions({
-      MANAGE_USERS: admin.permissions ? admin.permissions.includes('MANAGE_USERS') : false,
-      MANAGE_PSYCHOLOGISTS: admin.permissions ? admin.permissions.includes('MANAGE_PSYCHOLOGISTS') : false,
-      MANAGE_BOOKINGS: admin.permissions ? admin.permissions.includes('MANAGE_BOOKINGS') : false
+    // Set role name from the admin's assigned role
+    const roleName = admin.customRoleTitle || '';
+    setEditSubAdminRoleName(roleName);
+    // Build permissions object from the admin's current permissions array
+    const permsObj = {};
+    (admin.permissions || []).forEach(p => { permsObj[p] = true; });
+    setEditSubAdminPermissionsObj(permsObj);
+  };
+
+  const handleEditSubAdminRoleChange = (roleName) => {
+    setEditSubAdminRoleName(roleName);
+    const foundRole = rolesDb.find(r => r.name === roleName);
+    if (foundRole) {
+      const permsObj = {};
+      (foundRole.permissions || []).forEach(p => { permsObj[p] = true; });
+      setEditSubAdminPermissionsObj(permsObj);
+    } else {
+      setEditSubAdminPermissionsObj({});
+    }
+  };
+
+  const toggleEditSubAdminModuleAll = (moduleId, actionsList, turnOn) => {
+    setEditSubAdminPermissionsObj(prev => {
+      const next = { ...prev };
+      next[moduleId] = turnOn;
+      actionsList.forEach(act => { next[act.id] = turnOn; });
+      if (moduleId === 'manage_users') next['MANAGE_USERS'] = turnOn;
+      if (moduleId === 'manage_psychologists') next['MANAGE_PSYCHOLOGISTS'] = turnOn;
+      if (moduleId === 'manage_bookings') next['MANAGE_BOOKINGS'] = turnOn;
+      return next;
+    });
+  };
+
+  const toggleEditSubAdminChildAction = (moduleId, actionId, actionsList) => {
+    setEditSubAdminPermissionsObj(prev => {
+      const next = { ...prev };
+      next[actionId] = !next[actionId];
+      if (next[actionId]) {
+        next[moduleId] = true;
+      } else {
+        const anyChecked = actionsList.some(act => next[act.id]);
+        if (!anyChecked) next[moduleId] = false;
+      }
+      if (moduleId === 'manage_users') next['MANAGE_USERS'] = next[moduleId];
+      if (moduleId === 'manage_psychologists') next['MANAGE_PSYCHOLOGISTS'] = next[moduleId];
+      if (moduleId === 'manage_bookings') next['MANAGE_BOOKINGS'] = next[moduleId];
+      return next;
     });
   };
 
@@ -2429,13 +2512,10 @@ export default function AdminDashboard({ setView }) {
     setEditSubAdminError('');
     setEditSubAdminSuccess('');
 
-    const permsArray = [];
-    if (editPermissions.MANAGE_USERS) permsArray.push('MANAGE_USERS');
-    if (editPermissions.MANAGE_PSYCHOLOGISTS) permsArray.push('MANAGE_PSYCHOLOGISTS');
-    if (editPermissions.MANAGE_BOOKINGS) permsArray.push('MANAGE_BOOKINGS');
+    const permsArray = Object.keys(editSubAdminPermissionsObj).filter(k => editSubAdminPermissionsObj[k]);
 
     if (permsArray.length === 0) {
-      setEditSubAdminError("Please select at least one permission scope.");
+      setEditSubAdminError("Please enable at least one permission for this staff member.");
       return;
     }
 
@@ -2447,16 +2527,16 @@ export default function AdminDashboard({ setView }) {
         undefined,
         'ADMIN',
         permsArray,
-        editingSubAdmin.customRoleTitle
+        editSubAdminRoleName || editingSubAdmin.customRoleTitle
       );
-      setEditSubAdminSuccess("Permissions updated successfully!");
+      setEditSubAdminSuccess('Permissions updated successfully!');
       reloadData();
       setTimeout(() => {
         setEditingSubAdmin(null);
         setEditSubAdminSuccess('');
       }, 1500);
     } catch (err) {
-      setEditSubAdminError(err.message || "Failed to save permissions.");
+      setEditSubAdminError(err.message || 'Failed to save permissions.');
     }
   };
 
@@ -3958,11 +4038,35 @@ export default function AdminDashboard({ setView }) {
                                   <td className="p-3 text-zinc-400 whitespace-nowrap">{admin.email}</td>
                                   <td className="p-3 whitespace-nowrap">
                                     <div className="flex flex-wrap gap-1">
-                                      {admin.permissions.map(p => (
-                                        <span key={p} className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-sm font-bold text-zinc-400 capitalize  ">
-                                          {p.replace('MANAGE_', '')}
-                                        </span>
-                                      ))}
+                                      {(() => {
+                                        const perms = admin.permissions || [];
+                                        const activeModules = PRIVILEGE_MODULES.filter(m =>
+                                          perms.includes(m.id) ||
+                                          m.actions.some(act => perms.includes(act.id)) ||
+                                          (m.id === 'manage_users' && perms.includes('MANAGE_USERS')) ||
+                                          (m.id === 'manage_psychologists' && perms.includes('MANAGE_PSYCHOLOGISTS')) ||
+                                          (m.id === 'manage_bookings' && perms.includes('MANAGE_BOOKINGS'))
+                                        );
+                                        if (activeModules.length === 0) {
+                                          return <span className="text-xs text-zinc-600 italic">No permissions</span>;
+                                        }
+                                        const visible = activeModules.slice(0, 3);
+                                        const hidden = activeModules.length - 3;
+                                        return (
+                                          <>
+                                            {visible.map(m => (
+                                              <span key={m.id} className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-[10px] font-bold text-zinc-400 capitalize">
+                                                {m.name.replace(' Management', '').replace(' & Leads', '')}
+                                              </span>
+                                            ))}
+                                            {hidden > 0 && (
+                                              <span className="px-2 py-0.5 rounded bg-brand/10 border border-brand/20 text-[10px] font-bold text-brand capitalize">
+                                                +{hidden} more
+                                              </span>
+                                            )}
+                                          </>
+                                        );
+                                      })()}
                                     </div>
                                   </td>
                                   <td className="p-3 text-center whitespace-nowrap">
@@ -4044,18 +4148,20 @@ export default function AdminDashboard({ setView }) {
                     <button onClick={() => handleExportImage('students-table', 'Students_Directory')} className="px-3 py-2 border border-zinc-800 hover:bg-zinc-850 hover:text-white text-zinc-400 text-sm font-bold rounded-lg transition-colors cursor-pointer capitalize shrink-0">
                       Export Image
                     </button>
-                    <button
-                      onClick={() => {
-                        setUserForm({ id: '', name: '', email: '', password: '', phone: '', schoolName: '', grade: '', guardianName: '', guardianPhone: '', groupCode: '' });
-                        setUserProfilePicFile(null);
-                        setUserFormError('');
-                        setUserFormSuccess('');
-                        setIsAddUserOpen(true);
-                      }}
-                      className="px-4 py-2 bg-brand hover:bg-brand-dark text-zinc-950 text-sm font-bold rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 capitalize shrink-0"
-                    >
-                      <Plus className="w-3.5 h-3.5 text-zinc-955" /> Add Student
-                    </button>
+                    {canAddStudents && (
+                      <button
+                        onClick={() => {
+                          setUserForm({ id: '', name: '', email: '', password: '', phone: '', schoolName: '', grade: '', guardianName: '', guardianPhone: '', groupCode: '' });
+                          setUserProfilePicFile(null);
+                          setUserFormError('');
+                          setUserFormSuccess('');
+                          setIsAddUserOpen(true);
+                        }}
+                        className="px-4 py-2 bg-brand hover:bg-brand-dark text-zinc-950 text-sm font-bold rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 capitalize shrink-0"
+                      >
+                        <Plus className="w-3.5 h-3.5 text-zinc-955" /> Add Student
+                      </button>
+                    )}
                   </div>
                 </div>
 
@@ -4112,7 +4218,7 @@ export default function AdminDashboard({ setView }) {
                               <td className="p-3 text-center font-bold text-zinc-300 whitespace-nowrap">
                                 {bookingsDb.filter(b => b.userId === student.id).length} Booked
                               </td>
-                              <td className="p-3 whitespace-nowrap">
+                                <td className="p-3 whitespace-nowrap">
                                 <div className="flex items-center justify-center gap-2">
                                   <button
                                     onClick={() => setViewingStudent(student)}
@@ -4120,27 +4226,33 @@ export default function AdminDashboard({ setView }) {
                                 >
                                   Details
                                 </button>
-                                <button
-                                  onClick={() => handleOpenEditUser(student)}
-                                  className="p-1.5 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"
-                                  title="Edit Student"
-                                >
-                                  <Edit className="w-3.5 h-3.5" />
-                                </button>
-                                <button
-                                  onClick={() => handleGenerateResetToken(student.email)}
-                                  className="p-1.5 bg-zinc-900 text-amber-500 hover:bg-amber-900/30 hover:text-amber-400 rounded border border-zinc-800 transition cursor-pointer"
-                                  title="Generate Password Reset Link"
-                                >
-                                  <KeyRound className="w-3.5 h-3.5" />
-                                </button>
-                                <button
-                                  onClick={() => handleDeleteUser(student.id)}
-                                  className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
-                                  title="Delete Student"
-                                >
-                                  <Trash className="w-3.5 h-3.5" />
-                                </button>
+                                {canEditStudents && (
+                                  <button
+                                    onClick={() => handleOpenEditUser(student)}
+                                    className="p-1.5 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"
+                                    title="Edit Student"
+                                  >
+                                    <Edit className="w-3.5 h-3.5" />
+                                  </button>
+                                )}
+                                {canEditStudents && (
+                                  <button
+                                    onClick={() => handleGenerateResetToken(student.email)}
+                                    className="p-1.5 bg-zinc-900 text-amber-500 hover:bg-amber-900/30 hover:text-amber-400 rounded border border-zinc-800 transition cursor-pointer"
+                                    title="Generate Password Reset Link"
+                                  >
+                                    <KeyRound className="w-3.5 h-3.5" />
+                                  </button>
+                                )}
+                                {canDeleteStudents && (
+                                  <button
+                                    onClick={() => handleDeleteUser(student.id)}
+                                    className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
+                                    title="Delete Student"
+                                  >
+                                    <Trash className="w-3.5 h-3.5" />
+                                  </button>
+                                )}
                                 </div>
                               </td>
                             </tr>
@@ -4186,32 +4298,34 @@ export default function AdminDashboard({ setView }) {
                   <button onClick={() => handleExportImage('counsellors-table', 'Psychologists_Directory')} className="px-3 py-2 border border-zinc-800 hover:bg-zinc-850 hover:text-white text-zinc-400 text-sm font-bold rounded-lg transition-colors cursor-pointer capitalize shrink-0">
                     Export Image
                   </button>
-                  <button
-                    onClick={() => {
-                      setPsyForm({
-                        id: '',
-                        name: '',
-                        email: '',
-                        password: '',
-                        education: 'MPhil Clinical Psychology',
-                        specialties: 'Anxiety Stress & Panic, Depression & Mood Concerns, Relationship',
-                        price: 1250,
-                        lang: 'Malayalam, English',
-                        bio: ''
-                      });
-                      setAdminActiveDays({
-                        1: true, 2: true, 3: true, 4: true, 5: true, 6: false, 0: false
-                      });
-                      setAdminAvailableSlots([]);
-                      setAdminAllSlots([]);
-                      setPsyFormError('');
-                      setPsyFormSuccess('');
-                      setIsAddPsyOpen(true);
-                    }}
-                    className="px-4 py-2 bg-brand hover:bg-brand-dark text-zinc-955 text-sm font-bold rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 capitalize shrink-0"
-                  >
-                    <Plus className="w-3.5 h-3.5 text-zinc-955" /> Add Psychologist
-                  </button>
+                  {canAddPsy && (
+                    <button
+                      onClick={() => {
+                        setPsyForm({
+                          id: '',
+                          name: '',
+                          email: '',
+                          password: '',
+                          education: 'MPhil Clinical Psychology',
+                          specialties: 'Anxiety Stress & Panic, Depression & Mood Concerns, Relationship',
+                          price: 1250,
+                          lang: 'Malayalam, English',
+                          bio: ''
+                        });
+                        setAdminActiveDays({
+                          1: true, 2: true, 3: true, 4: true, 5: true, 6: false, 0: false
+                        });
+                        setAdminAvailableSlots([]);
+                        setAdminAllSlots([]);
+                        setPsyFormError('');
+                        setPsyFormSuccess('');
+                        setIsAddPsyOpen(true);
+                      }}
+                      className="px-4 py-2 bg-brand hover:bg-brand-dark text-zinc-955 text-sm font-bold rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 capitalize shrink-0"
+                    >
+                      <Plus className="w-3.5 h-3.5 text-zinc-955" /> Add Psychologist
+                    </button>
+                  )}
                 </div>
               </div>
 
@@ -4350,13 +4464,15 @@ export default function AdminDashboard({ setView }) {
                               >
                                 Details
                               </button>
-                              <button
-                                onClick={() => handleGenerateResetToken(psy.email)}
-                                className="px-2.5 py-1 bg-zinc-900 text-amber-500 hover:text-amber-400 rounded border border-zinc-800 hover:bg-amber-900/30 transition cursor-pointer text-sm font-bold capitalize "
-                                title="Generate Password Reset Link"
-                              >
-                                <KeyRound className="w-4 h-4 inline-block" />
-                              </button>
+                              {canEditPsy && (
+                                <button
+                                  onClick={() => handleGenerateResetToken(psy.email)}
+                                  className="px-2.5 py-1 bg-zinc-900 text-amber-500 hover:text-amber-400 rounded border border-zinc-800 hover:bg-amber-900/30 transition cursor-pointer text-sm font-bold capitalize "
+                                  title="Generate Password Reset Link"
+                                >
+                                  <KeyRound className="w-4 h-4 inline-block" />
+                                </button>
+                              )}
                               <a
                                 href={`#/advisor/${psy.id}`}
                                 target="_blank"
@@ -4365,20 +4481,24 @@ export default function AdminDashboard({ setView }) {
                               >
                                 Preview
                               </a>
-                              <button
-                                onClick={() => handleOpenEditPsy(psy)}
-                                className="p-1.5 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"
-                                title="Edit Psychologist"
-                              >
-                                <Edit className="w-3.5 h-3.5" />
-                              </button>
-                              <button
-                                onClick={() => handleDeletePsy(psy.id)}
-                                className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
-                                title="Remove Psychologist"
-                              >
-                                <Trash className="w-3.5 h-3.5" />
-                              </button>
+                              {canEditPsy && (
+                                <button
+                                  onClick={() => handleOpenEditPsy(psy)}
+                                  className="p-1.5 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"
+                                  title="Edit Psychologist"
+                                >
+                                  <Edit className="w-3.5 h-3.5" />
+                                </button>
+                              )}
+                              {canDeletePsy && (
+                                <button
+                                  onClick={() => handleDeletePsy(psy.id)}
+                                  className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
+                                  title="Remove Psychologist"
+                                >
+                                  <Trash className="w-3.5 h-3.5" />
+                                </button>
+                              )}
                               </div>
                             </td>
                           </tr>
@@ -4485,18 +4605,36 @@ export default function AdminDashboard({ setView }) {
                             (m.id === 'manage_psychologists' && role.permissions.includes('MANAGE_PSYCHOLOGISTS')) ||
                             (m.id === 'manage_bookings' && role.permissions.includes('MANAGE_BOOKINGS'))
                           );
+                          const memberCount = subAdminsList.filter(a => a.customRoleTitle === role.name).length;
                           return (
                             <div key={role.id} className="bg-zinc-900 border border-zinc-850 p-4 rounded-xl flex flex-col justify-between space-y-4 hover:border-zinc-700 transition-colors">
                               <div className="space-y-2">
                                 <div className="flex justify-between items-start gap-1">
-                                  <span className="font-header font-bold text-white capitalize text-sm truncate">{role.name}</span>
-                                  <div className="flex items-center gap-2 shrink-0">
+                                  <div className="min-w-0">
+                                    <span className="font-header font-bold text-white capitalize text-sm truncate block">{role.name}</span>
+                                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded border inline-block mt-1 ${
+                                      memberCount > 0
+                                        ? 'bg-brand/10 border-brand/20 text-brand'
+                                        : 'bg-zinc-950 border-zinc-800 text-zinc-550'
+                                    }`}>
+                                      {memberCount} {memberCount === 1 ? 'staff' : 'staff'} assigned
+                                    </span>
+                                  </div>
+                                  <div className="flex items-center gap-1.5 shrink-0">
                                     <button
                                       type="button"
                                       onClick={() => handleEditRoleClick(role)}
                                       className="text-brand hover:underline font-bold text-xs capitalize cursor-pointer border-none bg-transparent"
                                     >
                                       Edit
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => handleDuplicateRole(role)}
+                                      className="text-zinc-400 hover:text-white font-bold text-xs capitalize cursor-pointer border-none bg-transparent"
+                                      title="Duplicate this role"
+                                    >
+                                      Clone
                                     </button>
                                     {!isProtected && (
                                       <button
@@ -4520,7 +4658,7 @@ export default function AdminDashboard({ setView }) {
                               </div>
 
                               <div className="space-y-1.5 border-t border-zinc-900/60 pt-3">
-                                <span className="text-[10px] text-zinc-500 font-bold capitalize block">Inherited Modules ({enabledModules.length})</span>
+                                <span className="text-[10px] text-zinc-500 font-bold capitalize block">Modules ({enabledModules.length})</span>
                                 <div className="flex flex-wrap gap-1">
                                   {enabledModules.length > 0 ? (
                                     enabledModules.map(m => (
@@ -4824,33 +4962,35 @@ export default function AdminDashboard({ setView }) {
                       />
                       <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-2.5" />
                     </div>
-                    <button
-                      onClick={() => {
-                        const firstStudent = usersDb.find(u => u.role === 'USER' || !u.role);
-                        const firstPsy = usersDb.find(u => u.role === 'PSYCHOLOGIST');
-                        let firstSlot = '';
-                        if (firstPsy && firstPsy.availability?.availableSlots?.length > 0) {
-                          firstSlot = firstPsy.availability.availableSlots[0];
-                        }
-                        setBookingForm({
-                          id: '',
-                          userId: firstStudent?.id || '',
-                          advisorId: firstPsy?.id || '',
-                          service: 'counselling',
-                          mode: 'ONLINE',
-                          date: getLocalTodayString(),
-                          time: firstSlot,
-                          meetLink: '',
-                          status: 'CONFIRMED'
-                        });
-                        setBookingFormError('');
-                        setBookingFormSuccess('');
-                        setIsAddBookingOpen(true);
-                      }}
-                      className="px-4 py-2 bg-brand hover:bg-brand-dark text-zinc-950 text-sm font-bold rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 capitalize shrink-0"
-                    >
-                      <Plus className="w-3.5 h-3.5 text-zinc-955" /> Schedule Booking
-                    </button>
+                    {canAddBookings && (
+                      <button
+                        onClick={() => {
+                          const firstStudent = usersDb.find(u => u.role === 'USER' || !u.role);
+                          const firstPsy = usersDb.find(u => u.role === 'PSYCHOLOGIST');
+                          let firstSlot = '';
+                          if (firstPsy && firstPsy.availability?.availableSlots?.length > 0) {
+                            firstSlot = firstPsy.availability.availableSlots[0];
+                          }
+                          setBookingForm({
+                            id: '',
+                            userId: firstStudent?.id || '',
+                            advisorId: firstPsy?.id || '',
+                            service: 'counselling',
+                            mode: 'ONLINE',
+                            date: getLocalTodayString(),
+                            time: firstSlot,
+                            meetLink: '',
+                            status: 'CONFIRMED'
+                          });
+                          setBookingFormError('');
+                          setBookingFormSuccess('');
+                          setIsAddBookingOpen(true);
+                        }}
+                        className="px-4 py-2 bg-brand hover:bg-brand-dark text-zinc-950 text-sm font-bold rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 capitalize shrink-0"
+                      >
+                        <Plus className="w-3.5 h-3.5 text-zinc-955" /> Schedule Booking
+                      </button>
+                    )}
                   </div>
                 </div>
 
@@ -5044,6 +5184,7 @@ export default function AdminDashboard({ setView }) {
                                     <FileText className="w-3.5 h-3.5" />
                                   </button>
                                 )}
+                                {canEditBookings && (
                                 <button
                                   onClick={() => handleOpenEditBooking(booking)}
                                   className="p-1.5 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"
@@ -5051,6 +5192,8 @@ export default function AdminDashboard({ setView }) {
                                 >
                                   <Edit className="w-3.5 h-3.5" />
                                 </button>
+                                )}
+                                {canDeleteBookings && (
                                 <button
                                   onClick={() => handleDeleteBooking(booking.id)}
                                   className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
@@ -5058,6 +5201,7 @@ export default function AdminDashboard({ setView }) {
                                 >
                                   <Trash className="w-3.5 h-3.5" />
                                 </button>
+                                )}
                                 </div>
                               </td>
                             </tr>
@@ -7544,80 +7688,103 @@ export default function AdminDashboard({ setView }) {
 
       {/* 7. SUB-ADMIN EDIT PERMISSIONS MODAL */}
       {editingSubAdmin && (() => {
-        const { cleanName, roleTitle } = parseStaffDetails(editingSubAdmin);
+        const { cleanName } = parseStaffDetails(editingSubAdmin);
         return (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div
               className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
               onClick={() => setEditingSubAdmin(null)}
             />
-            <div className="relative w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
+            <div className="relative w-full max-w-xl bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
               <div>
-                <h3 className="text-base font-bold text-white capitalize  font-header flex items-center gap-2">
-                  <Lock className="w-4 h-4 text-brand" /> Edit Access Scopes
+                <h3 className="text-base font-bold text-white capitalize font-header flex items-center gap-2">
+                  <Lock className="w-4 h-4 text-brand" /> Edit Staff Permissions
                 </h3>
                 <p className="text-sm text-zinc-500 leading-none mt-1">
-                  Modify permission scopes for sub-admin: <span className="text-zinc-300 font-bold">{cleanName}</span> {roleTitle && <span className="text-brand font-semibold  text-sm capitalize ml-1">({roleTitle})</span>}
+                  Editing access for <span className="text-zinc-300 font-bold">{cleanName}</span>
                 </p>
               </div>
 
               <form onSubmit={handleSaveSubAdminPermissions} className="space-y-5 font-medium">
-                <div className="space-y-3">
-                  <label className="text-sm capitalize  font-bold text-zinc-400">Assigned Scopes</label>
 
-                  <div className="space-y-2.5">
-                    {/* MANAGE_USERS */}
-                    <label className="flex items-start gap-3 p-3 bg-zinc-950/60 hover:bg-zinc-950 border border-zinc-850 rounded-xl cursor-pointer transition-colors select-none">
-                      <input
-                        type="checkbox"
-                        checked={editPermissions.MANAGE_USERS}
-                        onChange={(e) => setEditPermissions({ ...editPermissions, MANAGE_USERS: e.target.checked })}
-                        className="mt-0.5 accent-brand rounded cursor-pointer"
-                      />
-                      <div className="text-sm">
-                        <span className="font-bold text-white block">Students Registry</span>
-                        <span className="text-sm text-zinc-500 leading-tight block mt-0.5">
-                          Permission to view, add, modify details, and toggle suspension status on students.
-                        </span>
-                      </div>
-                    </label>
+                {/* Role Selector */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-zinc-400 capitalize">Assigned Role</label>
+                  {rolesDb.length === 0 ? (
+                    <p className="text-xs text-zinc-550 italic">No roles created yet. Create a role in the Roles & Scopes tab first.</p>
+                  ) : (
+                    <select
+                      value={editSubAdminRoleName}
+                      onChange={(e) => handleEditSubAdminRoleChange(e.target.value)}
+                      className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none cursor-pointer"
+                    >
+                      <option value="">— Select a role —</option>
+                      {rolesDb.map(r => (
+                        <option key={r.id || r._id} value={r.name}>{r.name}</option>
+                      ))}
+                    </select>
+                  )}
+                </div>
 
-                    {/* MANAGE_PSYCHOLOGISTS */}
-                    <label className="flex items-start gap-3 p-3 bg-zinc-950/60 hover:bg-zinc-950 border border-zinc-850 rounded-xl cursor-pointer transition-colors select-none">
-                      <input
-                        type="checkbox"
-                        checked={editPermissions.MANAGE_PSYCHOLOGISTS}
-                        onChange={(e) => setEditPermissions({ ...editPermissions, MANAGE_PSYCHOLOGISTS: e.target.checked })}
-                        className="mt-0.5 accent-brand rounded cursor-pointer"
-                      />
-                      <div className="text-sm">
-                        <span className="font-bold text-white block">Psychologists Registry</span>
-                        <span className="text-sm text-zinc-500 leading-tight block mt-0.5">
-                          Permission to register profiles, edit credentials, and toggle staff verification status.
-                        </span>
-                      </div>
-                    </label>
-
-                    {/* MANAGE_BOOKINGS */}
-                    <label className="flex items-start gap-3 p-3 bg-zinc-950/60 hover:bg-zinc-950 border border-zinc-850 rounded-xl cursor-pointer transition-colors select-none">
-                      <input
-                        type="checkbox"
-                        checked={editPermissions.MANAGE_BOOKINGS}
-                        onChange={(e) => setEditPermissions({ ...editPermissions, MANAGE_BOOKINGS: e.target.checked })}
-                        className="mt-0.5 accent-brand rounded cursor-pointer"
-                      />
-                      <div className="text-sm">
-                        <span className="font-bold text-white block">Consultation Bookings</span>
-                        <span className="text-sm text-zinc-555 leading-tight block mt-0.5">
-                          Permission to schedule new appointments, update slots/meet links, and manage statuses.
-                        </span>
-                      </div>
-                    </label>
+                {/* Permission Modules Builder */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-bold text-zinc-400 capitalize">Granular Permissions</label>
+                    <span className="text-[10px] text-zinc-550">Toggle modules or individual actions</span>
+                  </div>
+                  <div className="space-y-2 max-h-[340px] overflow-y-auto pr-1">
+                    {PRIVILEGE_MODULES.map(module => {
+                      const isModuleOn = !!editSubAdminPermissionsObj[module.id];
+                      const enabledCount = module.actions.filter(a => editSubAdminPermissionsObj[a.id]).length;
+                      return (
+                        <div key={module.id} className="bg-zinc-950 border border-zinc-850 rounded-xl overflow-hidden">
+                          {/* Module Header */}
+                          <div
+                            className="flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-zinc-900/60 transition-colors"
+                            onClick={() => toggleEditSubAdminModuleAll(module.id, module.actions, !isModuleOn)}
+                          >
+                            <div className="flex items-center gap-2.5">
+                              <span className="text-brand text-base">{module.icon}</span>
+                              <div>
+                                <span className="text-sm font-bold text-white capitalize">{module.name}</span>
+                                <span className="text-[10px] text-zinc-550 block leading-none">{enabledCount}/{module.actions.length} actions</span>
+                              </div>
+                            </div>
+                            {/* Toggle switch */}
+                            <div
+                              className={`w-9 h-5 rounded-full transition-colors cursor-pointer flex items-center px-0.5 shrink-0 ${isModuleOn ? 'bg-brand' : 'bg-zinc-700'}`}
+                              onClick={(e) => { e.stopPropagation(); toggleEditSubAdminModuleAll(module.id, module.actions, !isModuleOn); }}
+                            >
+                              <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${isModuleOn ? 'translate-x-4' : 'translate-x-0'}`} />
+                            </div>
+                          </div>
+                          {/* Action Checkboxes */}
+                          {isModuleOn && (
+                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-1 px-4 pb-3 pt-1 border-t border-zinc-850">
+                              {module.actions.map(action => (
+                                <label
+                                  key={action.id}
+                                  className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-zinc-900 cursor-pointer select-none"
+                                >
+                                  <input
+                                    type="checkbox"
+                                    checked={!!editSubAdminPermissionsObj[action.id]}
+                                    onChange={() => toggleEditSubAdminChildAction(module.id, action.id, module.actions)}
+                                    className="accent-brand rounded cursor-pointer w-3.5 h-3.5 shrink-0"
+                                  />
+                                  <span className="text-xs text-zinc-350 font-medium capitalize">{action.name}</span>
+                                </label>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
 
                 {editSubAdminError && (
-                  <p className="text-sm text-rose-500 font-bold capitalize tracking-wide ">{editSubAdminError}</p>
+                  <p className="text-sm text-rose-500 font-bold capitalize tracking-wide">{editSubAdminError}</p>
                 )}
 
                 {editSubAdminSuccess && (
@@ -7628,15 +7795,15 @@ export default function AdminDashboard({ setView }) {
                   <button
                     type="button"
                     onClick={() => setEditingSubAdmin(null)}
-                    className="flex-1 py-3 border border-zinc-800 hover:bg-zinc-855 text-white font-bold text-sm capitalize  rounded-lg cursor-pointer transition text-center border-none"
+                    className="flex-1 py-3 border border-zinc-800 hover:bg-zinc-855 text-white font-bold text-sm capitalize rounded-lg cursor-pointer transition text-center border-none"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize  rounded-lg cursor-pointer transition border-none shadow-md"
+                    className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize rounded-lg cursor-pointer transition border-none shadow-md"
                   >
-                    Save Scopes
+                    Save Permissions
                   </button>
                 </div>
               </form>
