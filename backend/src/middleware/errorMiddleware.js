@@ -7,12 +7,11 @@ const errorHandler = (err, req, res, next) => {
   // Handle Mongoose Connection & Buffering Timeouts (Serverless/Network issues)
   if (
     err.name === 'MongooseServerSelectionError' ||
-    (err.message && (
-      err.message.includes('buffering timed out') ||
-      err.message.includes('ECONNREFUSED') ||
-      err.message.includes('ENOTFOUND') ||
-      err.message.includes('connection timed out')
-    ))
+    (err.message &&
+      (err.message.includes('buffering timed out') ||
+        err.message.includes('ECONNREFUSED') ||
+        err.message.includes('ENOTFOUND') ||
+        err.message.includes('connection timed out')))
   ) {
     statusCode = 503; // Service Unavailable
     message = 'Database connection error. Please verify the database is running or try again later.';
@@ -21,7 +20,9 @@ const errorHandler = (err, req, res, next) => {
   // Handle Mongoose Validation Errors
   if (err.name === 'ValidationError') {
     statusCode = 400;
-    message = Object.values(err.errors).map(val => val.message).join(', ');
+    message = Object.values(err.errors)
+      .map((val) => val.message)
+      .join(', ');
   }
 
   // Handle Mongoose/MongoDB Duplicate Key Errors

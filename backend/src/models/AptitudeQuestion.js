@@ -1,14 +1,19 @@
 const mongoose = require('mongoose');
 
-const aptitudeQuestionSchema = new mongoose.Schema({
-  question: { type: String, required: true },
-  category: { type: String, required: true },
-  options: [{
-    text: { type: String, required: true },
-    weight: { type: Number, required: true }
-  }],
-  isActive: { type: Boolean, default: true }
-}, { timestamps: true });
+const aptitudeQuestionSchema = new mongoose.Schema(
+  {
+    question: { type: String, required: true },
+    category: { type: String, required: true },
+    options: [
+      {
+        text: { type: String, required: true },
+        weight: { type: Number, required: true }
+      }
+    ],
+    isActive: { type: Boolean, default: true }
+  },
+  { timestamps: true }
+);
 
 // Optional: Transform the JSON output to include 'id' instead of '_id'
 aptitudeQuestionSchema.set('toJSON', {

@@ -27,7 +27,21 @@ const CounsellorController = {
   // Update Counsellor Profile
   async updateProfile(req, res, next) {
     try {
-      const { name, phone, specialties, qualifications, experience, modePreference, bio, education, price, lang, defaultMeetLink, hours, modes } = req.body;
+      const {
+        name,
+        phone,
+        specialties,
+        qualifications,
+        experience,
+        modePreference,
+        bio,
+        education,
+        price,
+        lang,
+        defaultMeetLink,
+        hours,
+        modes
+      } = req.body;
       const updates = {};
 
       if (name !== undefined) updates.name = name;
@@ -104,11 +118,11 @@ const CounsellorController = {
       const appointments = await StorageService.findAll('appointments', { counsellorId });
 
       // Today's sessions
-      const todaySessions = sessions.filter(s => s.date === todayStr && s.status !== 'CANCELLED');
+      const todaySessions = sessions.filter((s) => s.date === todayStr && s.status !== 'CANCELLED');
 
       // Upcoming sessions
       const now = new Date();
-      const upcomingAppointments = appointments.filter(a => {
+      const upcomingAppointments = appointments.filter((a) => {
         try {
           const appointmentDate = new Date(`${a.date} ${a.time.split(' ')[0]}`);
           return appointmentDate >= now && (a.status === 'PENDING' || a.status === 'APPROVED');
@@ -118,14 +132,15 @@ const CounsellorController = {
       });
 
       // Total clients (distinct users)
-      const clientIds = new Set(appointments.map(a => a.userId));
+      const clientIds = new Set(appointments.map((a) => a.userId));
       const totalClients = clientIds.size;
 
       // Feedbacks summary
       const feedbacks = await StorageService.findAll('feedbacks', { counsellorId, isModerated: false });
-      const avgRating = feedbacks.length > 0 
-        ? parseFloat((feedbacks.reduce((sum, f) => sum + f.rating, 0) / feedbacks.length).toFixed(1))
-        : 5.0;
+      const avgRating =
+        feedbacks.length > 0
+          ? parseFloat((feedbacks.reduce((sum, f) => sum + f.rating, 0) / feedbacks.length).toFixed(1))
+          : 5.0;
 
       res.status(200).json({
         success: true,
@@ -136,7 +151,7 @@ const CounsellorController = {
           totalClients,
           avgRating,
           feedbackSummary: feedbacks.slice(0, 5),
-          earningsPlaceholder: `$${sessions.filter(s => s.status === 'COMPLETED').length * 50}` // Dev mock
+          earningsPlaceholder: `$${sessions.filter((s) => s.status === 'COMPLETED').length * 50}` // Dev mock
         }
       });
     } catch (error) {

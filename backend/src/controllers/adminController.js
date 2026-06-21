@@ -17,15 +17,25 @@ const AdminController = {
         StorageService.findAll('sessions')
       ]);
 
-      const pendingRequests = counsellors.filter(c => !c.isVerified).length;
+      const pendingRequests = counsellors.filter((c) => !c.isVerified).length;
 
       // Calculate mock monthly statistics
       const monthlyStats = {
-        Jan: 0, Feb: 0, Mar: 0, Apr: 0, May: 0, Jun: 0,
-        Jul: 0, Aug: 0, Sep: 0, Oct: 0, Nov: 0, Dec: 0
+        Jan: 0,
+        Feb: 0,
+        Mar: 0,
+        Apr: 0,
+        May: 0,
+        Jun: 0,
+        Jul: 0,
+        Aug: 0,
+        Sep: 0,
+        Oct: 0,
+        Nov: 0,
+        Dec: 0
       };
-      
-      appointments.forEach(a => {
+
+      appointments.forEach((a) => {
         try {
           const monthIndex = new Date(a.date).getMonth();
           const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -94,7 +104,7 @@ const AdminController = {
         return res.status(400).json({ success: false, message: 'isVerified status is required' });
       }
 
-      const updated = await StorageService.update('counsellors', id, { 
+      const updated = await StorageService.update('counsellors', id, {
         isVerified,
         status: isVerified ? 'APPROVED' : 'PENDING',
         rejectionReason: isVerified ? '' : ''
@@ -108,8 +118,8 @@ const AdminController = {
         recipientId: id,
         recipientRole: 'counsellor',
         title: isVerified ? 'Account Verified' : 'Account Verification Revoked',
-        message: isVerified 
-          ? 'Congratulations! Your professional counsellor profile has been verified by the administrator.' 
+        message: isVerified
+          ? 'Congratulations! Your professional counsellor profile has been verified by the administrator.'
           : 'Your professional counsellor verification has been revoked. Please check with administrator.',
         type: 'verification_update',
         isRead: false
@@ -168,7 +178,7 @@ const AdminController = {
     try {
       await autoExpireSessions();
       const appointments = await StorageService.findAll('appointments');
-      
+
       const populated = await Promise.all(
         appointments.map(async (a) => {
           const user = await StorageService.findById('users', a.userId);
@@ -178,27 +188,31 @@ const AdminController = {
             ...a,
             studentName: user ? user.name : 'Unknown Student',
             counsellorName: counsellor ? counsellor.name : 'Unknown Counsellor',
-            notes: session ? (session.notes || a.notes || '') : (a.notes || ''),
-            feedback: session ? (session.feedback || a.feedback || '') : (a.feedback || ''),
-            nextSession: session ? (session.nextSession || a.nextSession || '') : (a.nextSession || ''),
-            student: user ? {
-              name: user.name,
-              email: user.email,
-              phone: user.phone,
-              schoolName: user.schoolName,
-              grade: user.grade,
-              guardianName: user.guardianName,
-              guardianPhone: user.guardianPhone
-            } : null,
-            counsellor: counsellor ? {
-              name: counsellor.name,
-              email: counsellor.email,
-              phone: counsellor.phone,
-              title: counsellor.title,
-              education: counsellor.education,
-              specialties: counsellor.specialties,
-              qualifications: counsellor.qualifications
-            } : null
+            notes: session ? session.notes || a.notes || '' : a.notes || '',
+            feedback: session ? session.feedback || a.feedback || '' : a.feedback || '',
+            nextSession: session ? session.nextSession || a.nextSession || '' : a.nextSession || '',
+            student: user
+              ? {
+                  name: user.name,
+                  email: user.email,
+                  phone: user.phone,
+                  schoolName: user.schoolName,
+                  grade: user.grade,
+                  guardianName: user.guardianName,
+                  guardianPhone: user.guardianPhone
+                }
+              : null,
+            counsellor: counsellor
+              ? {
+                  name: counsellor.name,
+                  email: counsellor.email,
+                  phone: counsellor.phone,
+                  title: counsellor.title,
+                  education: counsellor.education,
+                  specialties: counsellor.specialties,
+                  qualifications: counsellor.qualifications
+                }
+              : null
           };
         })
       );
@@ -309,9 +323,22 @@ const AdminController = {
   async updateUser(req, res, next) {
     try {
       const { id } = req.params;
-      const { 
-        name, email, password, role, permissions, customRoleTitle, status,
-        phone, schoolName, grade, guardianName, guardianPhone, groupCode, profilePic, profilePicPublicId
+      const {
+        name,
+        email,
+        password,
+        role,
+        permissions,
+        customRoleTitle,
+        status,
+        phone,
+        schoolName,
+        grade,
+        guardianName,
+        guardianPhone,
+        groupCode,
+        profilePic,
+        profilePicPublicId
       } = req.body;
       const updates = {};
       if (name !== undefined) updates.name = name;
@@ -359,7 +386,23 @@ const AdminController = {
   // Create Counsellor
   async createCounsellor(req, res, next) {
     try {
-      const { name, email, password, education, specialties, price, lang, bio, defaultMeetLink, phone, hours, modes, title, availability, isTopFive } = req.body;
+      const {
+        name,
+        email,
+        password,
+        education,
+        specialties,
+        price,
+        lang,
+        bio,
+        defaultMeetLink,
+        phone,
+        hours,
+        modes,
+        title,
+        availability,
+        isTopFive
+      } = req.body;
       const bcrypt = require('bcryptjs');
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
@@ -372,9 +415,12 @@ const AdminController = {
         education: education || '',
         specialties: Array.isArray(specialties)
           ? specialties
-          : (specialties && typeof specialties === 'string'
-            ? specialties.split(',').map(s => s.trim()).filter(Boolean)
-            : []),
+          : specialties && typeof specialties === 'string'
+            ? specialties
+                .split(',')
+                .map((s) => s.trim())
+                .filter(Boolean)
+            : [],
         qualifications: education ? [education] : [],
         experience: bio || '',
         bio: bio || '',
@@ -390,9 +436,12 @@ const AdminController = {
         hours: Number(hours) || 0,
         modes: Array.isArray(modes)
           ? modes
-          : (modes && typeof modes === 'string'
-            ? modes.split(',').map(m => m.trim().toUpperCase()).filter(Boolean)
-            : ['ONLINE', 'OFFLINE', 'DOOR_STEP']),
+          : modes && typeof modes === 'string'
+            ? modes
+                .split(',')
+                .map((m) => m.trim().toUpperCase())
+                .filter(Boolean)
+            : ['ONLINE', 'OFFLINE', 'DOOR_STEP'],
         title: title || 'Consultant Psychologist',
         isTopFive: isTopFive === true || isTopFive === 'true'
       });
@@ -407,7 +456,25 @@ const AdminController = {
   async updateCounsellor(req, res, next) {
     try {
       const { id } = req.params;
-      const { name, email, password, education, specialties, price, lang, bio, defaultMeetLink, phone, hours, modes, title, availability, profilePic, profilePicPublicId, isTopFive } = req.body;
+      const {
+        name,
+        email,
+        password,
+        education,
+        specialties,
+        price,
+        lang,
+        bio,
+        defaultMeetLink,
+        phone,
+        hours,
+        modes,
+        title,
+        availability,
+        profilePic,
+        profilePicPublicId,
+        isTopFive
+      } = req.body;
       const updates = {};
       if (name !== undefined) updates.name = name;
       if (email !== undefined) updates.email = email.toLowerCase();
@@ -418,9 +485,12 @@ const AdminController = {
       if (specialties !== undefined) {
         updates.specialties = Array.isArray(specialties)
           ? specialties
-          : (typeof specialties === 'string'
-            ? specialties.split(',').map(s => s.trim()).filter(Boolean)
-            : []);
+          : typeof specialties === 'string'
+            ? specialties
+                .split(',')
+                .map((s) => s.trim())
+                .filter(Boolean)
+            : [];
       }
       if (price !== undefined) updates.price = Number(price);
       if (lang !== undefined) updates.lang = lang;
@@ -433,17 +503,20 @@ const AdminController = {
       if (hours !== undefined) updates.hours = Number(hours) || 0;
       if (modes !== undefined) {
         updates.modes = Array.isArray(modes)
-          ? updates.modes = modes
-          : (typeof modes === 'string'
-            ? updates.modes = modes.split(',').map(m => m.trim().toUpperCase()).filter(Boolean)
-            : []);
+          ? (updates.modes = modes)
+          : typeof modes === 'string'
+            ? (updates.modes = modes
+                .split(',')
+                .map((m) => m.trim().toUpperCase())
+                .filter(Boolean))
+            : [];
       }
       if (title !== undefined) updates.title = title;
       if (availability !== undefined) updates.availability = availability;
       if (profilePic !== undefined) updates.profilePic = profilePic;
       if (profilePicPublicId !== undefined) updates.profilePicPublicId = profilePicPublicId;
       if (isTopFive !== undefined) updates.isTopFive = isTopFive === true || isTopFive === 'true';
-      
+
       if (password) {
         const bcrypt = require('bcryptjs');
         const salt = await bcrypt.genSalt(10);
@@ -580,15 +653,19 @@ const AdminController = {
       if (!settings) {
         settings = await StorageService.create('settings', {
           heroTitle: 'Bridging You \nTo Your {True Growth.}',
-          heroSub: 'Professional psychological counseling, aptitude assessment, and career mentorship designed to help individuals thrive with confidence and purpose.',
+          heroSub:
+            'Professional psychological counseling, aptitude assessment, and career mentorship designed to help individuals thrive with confidence and purpose.',
           whatsapp: 'https://wa.me/919497174011',
           contactEmail: 'support@behold.com',
           siteName: 'BEHOLD',
           siteCopyright: '© BEHOLD Ltd., 2026. All rights reserved.',
           showBanner: false,
-          bannerNotice: '🚨 Maintenance Notice: Schedulers undergoing maintenance tonight between 12:00 AM - 02:00 AM IST.',
-          termsOfUse: 'Welcome to BEHOLD. By accessing or using our platform, you agree to comply with and be bound by the terms and conditions.',
-          privacyPolicy: 'Your privacy is extremely important to us. This policy describes how we collect, protect, and use your personal information.',
+          bannerNotice:
+            '🚨 Maintenance Notice: Schedulers undergoing maintenance tonight between 12:00 AM - 02:00 AM IST.',
+          termsOfUse:
+            'Welcome to BEHOLD. By accessing or using our platform, you agree to comply with and be bound by the terms and conditions.',
+          privacyPolicy:
+            'Your privacy is extremely important to us. This policy describes how we collect, protect, and use your personal information.',
           enablePsychology: true,
           gstEnabled: false,
           gstPercent: 0
@@ -661,7 +738,9 @@ const AdminController = {
         });
       }
       invalidateIpCache();
-      res.status(200).json({ success: true, message: `IP ${ipTrimmed} blocked successfully`, data: settings.blockedIps });
+      res
+        .status(200)
+        .json({ success: true, message: `IP ${ipTrimmed} blocked successfully`, data: settings.blockedIps });
     } catch (error) {
       next(error);
     }
@@ -681,10 +760,12 @@ const AdminController = {
         return res.status(404).json({ success: false, message: 'IP not found in blocklist' });
       }
       settings = await StorageService.update('settings', settings.id, {
-        blockedIps: current.filter(i => i !== ipToRemove)
+        blockedIps: current.filter((i) => i !== ipToRemove)
       });
       invalidateIpCache();
-      res.status(200).json({ success: true, message: `IP ${ipToRemove} unblocked successfully`, data: settings.blockedIps });
+      res
+        .status(200)
+        .json({ success: true, message: `IP ${ipToRemove} unblocked successfully`, data: settings.blockedIps });
     } catch (error) {
       next(error);
     }
@@ -702,10 +783,31 @@ const AdminController = {
 
   async createRole(req, res, next) {
     try {
-      const { name, permissions } = req.body;
+      const { name, permissions, description } = req.body;
       if (!name) return res.status(400).json({ success: false, message: 'Role name is required' });
-      const newRole = await StorageService.create('roles', { name, permissions: permissions || [] });
+      const newRole = await StorageService.create('roles', {
+        name,
+        description: description || '',
+        permissions: permissions || []
+      });
       res.status(201).json({ success: true, message: 'Role created successfully', data: newRole });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async updateRole(req, res, next) {
+    try {
+      const { id } = req.params;
+      const { name, permissions, description } = req.body;
+      const updates = {};
+      if (name !== undefined) updates.name = name;
+      if (description !== undefined) updates.description = description;
+      if (permissions !== undefined) updates.permissions = permissions;
+
+      const updated = await StorageService.update('roles', id, updates);
+      if (!updated) return res.status(404).json({ success: false, message: 'Role not found' });
+      res.status(200).json({ success: true, message: 'Role updated successfully', data: updated });
     } catch (error) {
       next(error);
     }
@@ -760,8 +862,8 @@ const AdminController = {
         mode: mode || 'ONLINE',
         date,
         time,
-        status: status === 'CONFIRMED' ? 'APPROVED' : (status || 'PENDING'),
-        meetLink: meetLink || (mode === 'ONLINE' && counsellor ? (counsellor.defaultMeetLink || '') : '')
+        status: status === 'CONFIRMED' ? 'APPROVED' : status || 'PENDING',
+        meetLink: meetLink || (mode === 'ONLINE' && counsellor ? counsellor.defaultMeetLink || '' : '')
       });
 
       res.status(201).json({
@@ -777,8 +879,22 @@ const AdminController = {
   async updateAppointment(req, res, next) {
     try {
       const { id } = req.params;
-      const { userId, advisorId, service, mode, date, time, status, meetLink, cancellationReason, notes, feedback, nextSession, adminNotes } = req.body;
-      
+      const {
+        userId,
+        advisorId,
+        service,
+        mode,
+        date,
+        time,
+        status,
+        meetLink,
+        cancellationReason,
+        notes,
+        feedback,
+        nextSession,
+        adminNotes
+      } = req.body;
+
       const updates = {};
       if (userId !== undefined) updates.userId = userId;
       if (advisorId !== undefined) updates.counsellorId = advisorId;
@@ -865,7 +981,10 @@ const AdminController = {
         return res.status(400).json({ success: false, message: 'Question, category, and options are required' });
       }
       const newQuestion = await StorageService.create('aptitudequestions', {
-        question, category, options, isActive: isActive !== false
+        question,
+        category,
+        options,
+        isActive: isActive !== false
       });
       res.status(201).json({ success: true, message: 'Aptitude question created successfully', data: newQuestion });
     } catch (error) {
@@ -882,7 +1001,7 @@ const AdminController = {
       if (category !== undefined) updates.category = category;
       if (options !== undefined) updates.options = options;
       if (isActive !== undefined) updates.isActive = isActive;
-      
+
       const updated = await StorageService.update('aptitudequestions', id, updates);
       if (!updated) return res.status(404).json({ success: false, message: 'Aptitude question not found' });
       res.status(200).json({ success: true, message: 'Aptitude question updated successfully', data: updated });
@@ -964,7 +1083,7 @@ const AdminController = {
       }
 
       const Cigis = user.cigiResults || [];
-      const resultIndex = Cigis.findIndex(r => r.id === resultId);
+      const resultIndex = Cigis.findIndex((r) => r.id === resultId);
       if (resultIndex === -1) {
         return res.status(404).json({ success: false, message: 'Result record not found' });
       }
@@ -1021,7 +1140,7 @@ const AdminController = {
       }
 
       const Cigis = user.cigiResults || [];
-      const resultIndex = Cigis.findIndex(r => r.id === resultId);
+      const resultIndex = Cigis.findIndex((r) => r.id === resultId);
       if (resultIndex === -1) {
         return res.status(404).json({ success: false, message: 'Result record not found' });
       }

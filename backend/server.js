@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 5000;
 // For local dev with node/nodemon, we call app.listen().
 if (process.env.VERCEL) {
   // Vercel serverless — connect on each cold start, export app
-  connectDB().catch(err => {
+  connectDB().catch((err) => {
     console.error('[Database] Failed to connect to MongoDB:', err.message);
   });
   module.exports = app;
@@ -17,10 +17,12 @@ if (process.env.VERCEL) {
   connectDB()
     .then(() => {
       app.listen(PORT, () => {
-        console.log(`[Server] Behold Aspire backend running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
+        console.log(
+          `[Server] Behold Aspire backend running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`
+        );
       });
     })
-    .catch(err => {
+    .catch((err) => {
       console.error('[Database] Failed to connect to MongoDB:', err.message);
       process.exit(1);
     });

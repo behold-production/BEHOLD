@@ -9,7 +9,7 @@ const uploadToCloudinary = (fileBuffer, folder = 'cigi_results') => {
     const stream = cloudinary.uploader.upload_stream(
       {
         folder: folder,
-        resource_type: 'auto',
+        resource_type: 'auto'
       },
       (error, result) => {
         if (error) {

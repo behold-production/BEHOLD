@@ -29,16 +29,13 @@ router.get('/url', verifyJWT, async (req, res) => {
     }
 
     const oauth2Client = getOAuth2Client();
-    
+
     // Generate an auth URL
     // We pass the counsellorId as 'state' so we can associate the token with the correct user in the callback
     const url = oauth2Client.generateAuthUrl({
       access_type: 'offline', // Required to receive a refresh token
       prompt: 'consent', // Force consent to ensure we always get a refresh token
-      scope: [
-        'https://www.googleapis.com/auth/calendar.events',
-        'https://www.googleapis.com/auth/calendar'
-      ],
+      scope: ['https://www.googleapis.com/auth/calendar.events', 'https://www.googleapis.com/auth/calendar'],
       state: counsellorId
     });
 
@@ -74,7 +71,7 @@ router.get('/callback', async (req, res) => {
 
       counsellor.googleRefreshToken = tokens.refresh_token;
       await counsellor.save();
-      
+
       // Redirect back to the frontend settings page with a success flag
       const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
       return res.redirect(`${frontendUrl}/counsellor?google=success`);
@@ -84,7 +81,6 @@ router.get('/callback', async (req, res) => {
       const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
       return res.redirect(`${frontendUrl}/counsellor?google=no_refresh_token`);
     }
-
   } catch (error) {
     console.error('Error in Google OAuth callback:', error);
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';

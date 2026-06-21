@@ -7,9 +7,9 @@ const autoExpireSessions = async () => {
     // Find all sessions/appointments with active status
     const activeSessions = await Session.find({ status: { $in: ['PENDING', 'APPROVED', 'CONFIRMED'] } });
     const activeAppointments = await Appointment.find({ status: { $in: ['PENDING', 'APPROVED', 'CONFIRMED'] } });
-    
+
     const now = new Date();
-    
+
     const parseSessionDateTime = (dateStr, timeStr) => {
       try {
         if (!dateStr || !timeStr) return null;
@@ -19,19 +19,19 @@ const autoExpireSessions = async () => {
         let hours = Number(hoursStr || 0);
         const minutes = Number(minutesStr || 0);
         const modifier = (timeParts[1] || 'AM').toUpperCase();
-        
+
         if (modifier === 'PM' && hours < 12) hours += 12;
         if (modifier === 'AM' && hours === 12) hours = 0;
-        
+
         const [year, month, day] = dateStr.split('-').map(Number);
         // Start time + 1 hour duration. After 1 hour from start, it is expired if not joined/completed
         return new Date(year, month - 1, day, hours + 1, minutes);
       } catch (e) {
-        console.error("[Auto-Expire] Error parsing date/time:", dateStr, timeStr, e);
+        console.error('[Auto-Expire] Error parsing date/time:', dateStr, timeStr, e);
         return null;
       }
     };
-    
+
     // Expire Sessions
     for (const session of activeSessions) {
       const expiryTime = parseSessionDateTime(session.date, session.time);
@@ -41,7 +41,7 @@ const autoExpireSessions = async () => {
 
         await Session.updateOne({ id: session.id }, { $set: { status: 'EXPIRED' } });
         console.log(`[Auto-Expire] Session ${session.id} marked as EXPIRED.`);
-        
+
         // Also update corresponding appointment to EXPIRED
         await Appointment.updateOne({ id: session.appointmentId }, { $set: { status: 'EXPIRED' } });
 
@@ -66,7 +66,7 @@ const autoExpireSessions = async () => {
         });
       }
     }
-    
+
     // Expire Appointments
     for (const appt of activeAppointments) {
       const expiryTime = parseSessionDateTime(appt.date, appt.time);
@@ -76,7 +76,7 @@ const autoExpireSessions = async () => {
 
         await Appointment.updateOne({ id: appt.id }, { $set: { status: 'EXPIRED' } });
         console.log(`[Auto-Expire] Appointment ${appt.id} marked as EXPIRED.`);
-        
+
         // Also check if there's a session for it and update it
         await Session.updateOne({ appointmentId: appt.id }, { $set: { status: 'EXPIRED' } });
 
@@ -102,7 +102,7 @@ const autoExpireSessions = async () => {
       }
     }
   } catch (error) {
-    console.error("[Auto-Expire Error]:", error);
+    console.error('[Auto-Expire Error]:', error);
   }
 };
 

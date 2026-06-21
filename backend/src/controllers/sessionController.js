@@ -6,14 +6,12 @@ const SessionController = {
   async getSessions(req, res, next) {
     try {
       await autoExpireSessions();
-      const filter = req.user.role === 'counsellor'
-        ? { counsellorId: req.user.id }
-        : { userId: req.user.id };
+      const filter = req.user.role === 'counsellor' ? { counsellorId: req.user.id } : { userId: req.user.id };
 
       const sessions = await StorageService.findAll('sessions', filter);
       const appointments = await StorageService.findAll('appointments', filter);
 
-      const sessionAppIds = new Set(sessions.map(s => s.appointmentId));
+      const sessionAppIds = new Set(sessions.map((s) => s.appointmentId));
       const mergedSessions = [...sessions];
 
       for (const a of appointments) {
@@ -33,17 +31,18 @@ const SessionController = {
           });
         }
       }
-      
+
       const populated = await Promise.all(
         mergedSessions.map(async (s) => {
           const user = await StorageService.findById('users', s.userId);
           const counsellor = await StorageService.findById('counsellors', s.counsellorId);
-          const appt = appointments.find(a => a.id === s.appointmentId);
-          
+          const appt = appointments.find((a) => a.id === s.appointmentId);
+
           // Filter meeting link based on session access rules (only return link if session is today/upcoming)
           let meetLink = s.meetLink;
           if (meetLink) {
-            const isAuthorized = req.user.id === s.userId || req.user.id === s.counsellorId || req.user.role === 'admin';
+            const isAuthorized =
+              req.user.id === s.userId || req.user.id === s.counsellorId || req.user.role === 'admin';
             if (!isAuthorized) {
               meetLink = '';
             } else if (req.user.role === 'user') {
@@ -55,13 +54,13 @@ const SessionController = {
                   const modifier = s.time.split(' ')[1];
                   if (modifier === 'PM' && hours < 12) hours += 12;
                   if (modifier === 'AM' && hours === 12) hours = 0;
-                  
+
                   const [year, month, day] = s.date.split('-').map(Number);
                   const sessionTime = new Date(year, month - 1, day, hours, minutes);
                   const now = new Date();
-                  
+
                   const diffMinutes = (sessionTime - now) / 60000;
-                  
+
                   // Hide link if more than 10 mins before, or more than 60 mins after
                   if (diffMinutes > 10 || diffMinutes < -60) {
                     meetLink = 'LOCKED';
@@ -93,32 +92,36 @@ const SessionController = {
             studentName: user ? user.name : 'Unknown Student',
             counsellorName: counsellor ? counsellor.name : 'Unknown Counsellor',
             advisorName: counsellor ? counsellor.name : 'Unknown Counsellor',
-            advisorRole: counsellor ? (counsellor.role || 'Consultation') : 'Consultation',
-            service: appt ? appt.service : (s.service || 'counselling'),
+            advisorRole: counsellor ? counsellor.role || 'Consultation' : 'Consultation',
+            service: appt ? appt.service : s.service || 'counselling',
             status: frontendStatus,
             meetLink,
             amountPaid: appt ? appt.amountPaid : 0,
             paymentStatus: appt ? appt.paymentStatus : 'PENDING',
             razorpayPaymentId: appt ? appt.razorpayPaymentId : '',
             razorpayOrderId: appt ? appt.razorpayOrderId : '',
-            student: user ? {
-              name: user.name,
-              email: user.email,
-              phone: user.phone,
-              schoolName: user.schoolName,
-              grade: user.grade,
-              guardianName: user.guardianName,
-              guardianPhone: user.guardianPhone
-            } : null,
-            counsellor: counsellor ? {
-              name: counsellor.name,
-              email: counsellor.email,
-              phone: counsellor.phone,
-              title: counsellor.title,
-              education: counsellor.education,
-              specialties: counsellor.specialties,
-              qualifications: counsellor.qualifications
-            } : null
+            student: user
+              ? {
+                  name: user.name,
+                  email: user.email,
+                  phone: user.phone,
+                  schoolName: user.schoolName,
+                  grade: user.grade,
+                  guardianName: user.guardianName,
+                  guardianPhone: user.guardianPhone
+                }
+              : null,
+            counsellor: counsellor
+              ? {
+                  name: counsellor.name,
+                  email: counsellor.email,
+                  phone: counsellor.phone,
+                  title: counsellor.title,
+                  education: counsellor.education,
+                  specialties: counsellor.specialties,
+                  qualifications: counsellor.qualifications
+                }
+              : null
           };
         })
       );
@@ -143,10 +146,8 @@ const SessionController = {
       }
 
       // Check authorization
-      const isAuthorized = 
-        req.user.role === 'admin' || 
-        req.user.id === session.userId || 
-        req.user.id === session.counsellorId;
+      const isAuthorized =
+        req.user.role === 'admin' || req.user.id === session.userId || req.user.id === session.counsellorId;
 
       if (!isAuthorized) {
         return res.status(403).json({ success: false, message: 'Unauthorized access to this session' });
@@ -166,13 +167,13 @@ const SessionController = {
             const modifier = session.time.split(' ')[1];
             if (modifier === 'PM' && hours < 12) hours += 12;
             if (modifier === 'AM' && hours === 12) hours = 0;
-            
+
             const [year, month, day] = session.date.split('-').map(Number);
             const sessionTime = new Date(year, month - 1, day, hours, minutes);
             const now = new Date();
-            
+
             const diffMinutes = (sessionTime - now) / 60000;
-            
+
             // Hide link if more than 10 mins before, or more than 60 mins after
             if (diffMinutes > 10 || diffMinutes < -60) {
               meetLink = 'LOCKED';
@@ -184,7 +185,7 @@ const SessionController = {
       }
 
       const appt = await StorageService.findById('appointments', session.appointmentId);
-      
+
       let frontendStatus = session.status;
       if (session.status === 'PENDING' && appt && appt.status === 'APPROVED') {
         frontendStatus = 'CONFIRMED';
@@ -208,32 +209,36 @@ const SessionController = {
           studentName: user ? user.name : 'Unknown Student',
           counsellorName: counsellor ? counsellor.name : 'Unknown Counsellor',
           advisorName: counsellor ? counsellor.name : 'Unknown Counsellor',
-          advisorRole: counsellor ? (counsellor.role || 'Consultation') : 'Consultation',
-          service: appt ? appt.service : (session.service || 'counselling'),
+          advisorRole: counsellor ? counsellor.role || 'Consultation' : 'Consultation',
+          service: appt ? appt.service : session.service || 'counselling',
           status: frontendStatus,
           meetLink,
           amountPaid: appt ? appt.amountPaid : 0,
           paymentStatus: appt ? appt.paymentStatus : 'PENDING',
           razorpayPaymentId: appt ? appt.razorpayPaymentId : '',
           razorpayOrderId: appt ? appt.razorpayOrderId : '',
-          student: user ? {
-            name: user.name,
-            email: user.email,
-            phone: user.phone,
-            schoolName: user.schoolName,
-            grade: user.grade,
-            guardianName: user.guardianName,
-            guardianPhone: user.guardianPhone
-          } : null,
-          counsellor: counsellor ? {
-            name: counsellor.name,
-            email: counsellor.email,
-            phone: counsellor.phone,
-            title: counsellor.title,
-            education: counsellor.education,
-            specialties: counsellor.specialties,
-            qualifications: counsellor.qualifications
-          } : null
+          student: user
+            ? {
+                name: user.name,
+                email: user.email,
+                phone: user.phone,
+                schoolName: user.schoolName,
+                grade: user.grade,
+                guardianName: user.guardianName,
+                guardianPhone: user.guardianPhone
+              }
+            : null,
+          counsellor: counsellor
+            ? {
+                name: counsellor.name,
+                email: counsellor.email,
+                phone: counsellor.phone,
+                title: counsellor.title,
+                education: counsellor.education,
+                specialties: counsellor.specialties,
+                qualifications: counsellor.qualifications
+              }
+            : null
         }
       });
     } catch (error) {
@@ -274,7 +279,8 @@ const SessionController = {
           recipientId: session.userId,
           recipientRole: 'user',
           title: 'Session Completed & Feedback Available',
-          message: 'Your session has been marked as completed. You can view your counsellor feedback and leave a rating.',
+          message:
+            'Your session has been marked as completed. You can view your counsellor feedback and leave a rating.',
           type: 'session_completed',
           isRead: false
         });

@@ -27,9 +27,11 @@ const app = express();
 app.set('trust proxy', 1); // Essential for rate limiters behind a reverse proxy/load balancer (e.g., Vercel, AWS, Render)
 
 // ─── Security Headers ────────────────────────────────────────────────────────
-app.use(helmet({
-  crossOriginResourcePolicy: { policy: 'cross-origin' }, // allow images/uploads from other origins
-}));
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: 'cross-origin' } // allow images/uploads from other origins
+  })
+);
 
 // ─── Database Connection Middleware for Serverless / Cold Starts ───────────
 app.use(async (req, res, next) => {
@@ -49,24 +51,26 @@ const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
   /^http:\/\/192\.168\.29\.45:\d+$/, // Allow specific LAN IP for development
-  /^https:\/\/.*\.vercel\.app$/,     // All Vercel preview deployments
-  process.env.FRONTEND_URL           // Set this in Vercel env vars to your production URL
+  /^https:\/\/.*\.vercel\.app$/, // All Vercel preview deployments
+  process.env.FRONTEND_URL // Set this in Vercel env vars to your production URL
 ].filter(Boolean);
 
-app.use(cors({
-  origin: (origin, callback) => {
-    // Allow requests with no origin (mobile apps, curl, server-to-server)
-    if (!origin) return callback(null, true);
-    const isAllowed = allowedOrigins.some(allowed =>
-      typeof allowed === 'string' ? allowed === origin : allowed.test(origin)
-    );
-    if (isAllowed) return callback(null, true);
-    callback(new Error(`CORS policy: Origin ${origin} not allowed`));
-  },
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow requests with no origin (mobile apps, curl, server-to-server)
+      if (!origin) return callback(null, true);
+      const isAllowed = allowedOrigins.some((allowed) =>
+        typeof allowed === 'string' ? allowed === origin : allowed.test(origin)
+      );
+      if (isAllowed) return callback(null, true);
+      callback(new Error(`CORS policy: Origin ${origin} not allowed`));
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+  })
+);
 
 // ─── Rate Limiters ────────────────────────────────────────────────────────
 // General API limiter: 200 requests per 15 minutes per IP
@@ -102,11 +106,13 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // ─── MongoDB Injection Sanitization ──────────────────────────────────────
 // Strips keys starting with '$' or containing '.' from request body/query/params
-app.use(mongoSanitize({
-  onSanitize: ({ req, key }) => {
-    console.warn(`[Security] Sanitized key "${key}" from ${req.ip}`);
-  }
-}));
+app.use(
+  mongoSanitize({
+    onSanitize: ({ req, key }) => {
+      console.warn(`[Security] Sanitized key "${key}" from ${req.ip}`);
+    }
+  })
+);
 
 // ─── Static File Serving ──────────────────────────────────────────────────
 const uploadsDir = path.join(__dirname, '..', 'uploads');

@@ -9,11 +9,14 @@ const NotificationController = {
 
       // Find direct notifications + global notifications
       const list = await StorageService.findAll('notifications');
-      
-      const filtered = list.filter(n => 
-        (n.recipientId === recipientId && n.recipientRole === recipientRole) || 
-        (n.recipientId === 'ALL' && n.recipientRole === recipientRole)
-      ).sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+
+      const filtered = list
+        .filter(
+          (n) =>
+            (n.recipientId === recipientId && n.recipientRole === recipientRole) ||
+            (n.recipientId === 'ALL' && n.recipientRole === recipientRole)
+        )
+        .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
 
       res.status(200).json({
         success: true,
@@ -36,9 +39,7 @@ const NotificationController = {
       }
 
       // Check authorization (recipient must match user id or be a global notification)
-      const isAuthorized = 
-        notification.recipientId === 'ALL' || 
-        notification.recipientId === req.user.id;
+      const isAuthorized = notification.recipientId === 'ALL' || notification.recipientId === req.user.id;
 
       if (!isAuthorized) {
         return res.status(403).json({ success: false, message: 'Unauthorized' });
@@ -63,13 +64,11 @@ const NotificationController = {
       const recipientRole = req.user.role;
 
       const list = await StorageService.findAll('notifications');
-      
+
       let updatedCount = 0;
       for (const n of list) {
-        const isMatch = 
-          (n.recipientId === recipientId || n.recipientId === 'ALL') && 
-          n.recipientRole === recipientRole &&
-          !n.isRead;
+        const isMatch =
+          (n.recipientId === recipientId || n.recipientId === 'ALL') && n.recipientRole === recipientRole && !n.isRead;
 
         if (isMatch) {
           await StorageService.update('notifications', n.id, { isRead: true });

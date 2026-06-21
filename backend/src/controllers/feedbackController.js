@@ -32,7 +32,9 @@ const FeedbackController = {
       // Check if feedback already submitted
       const existing = await StorageService.findOne('feedbacks', { sessionId });
       if (existing) {
-        return res.status(400).json({ success: false, message: 'Feedback has already been submitted for this session' });
+        return res
+          .status(400)
+          .json({ success: false, message: 'Feedback has already been submitted for this session' });
       }
 
       // Create feedback
@@ -49,7 +51,7 @@ const FeedbackController = {
       // Recalculate counsellor's rating
       const counsellorId = session.counsellorId;
       const allCounsellorReviews = await StorageService.findAll('feedbacks', { counsellorId, isModerated: false });
-      
+
       const totalRatingsCount = allCounsellorReviews.length;
       const sumRatings = allCounsellorReviews.reduce((sum, f) => sum + f.rating, 0);
       const newAverageRating = parseFloat((sumRatings / totalRatingsCount).toFixed(1));
@@ -85,7 +87,7 @@ const FeedbackController = {
     try {
       const { counsellorId } = req.params;
       const reviews = await StorageService.findAll('feedbacks', { counsellorId, isModerated: false });
-      
+
       const populated = await Promise.all(
         reviews.map(async (r) => {
           const student = await StorageService.findById('users', r.userId);

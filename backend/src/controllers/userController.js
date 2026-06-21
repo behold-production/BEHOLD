@@ -29,7 +29,7 @@ const UserController = {
     try {
       const { name, phone, schoolName, grade, guardianName, guardianPhone, groupCode } = req.body;
       const updates = {};
-      
+
       if (name !== undefined) updates.name = name;
       if (phone !== undefined) updates.phone = phone;
       if (schoolName !== undefined) updates.schoolName = schoolName;
@@ -58,25 +58,26 @@ const UserController = {
   async searchCounsellors(req, res, next) {
     try {
       const { specialty, mode, search } = req.query;
-      
+
       const allCounsellors = await StorageService.findAll('counsellors', { isVerified: true, isActive: true });
 
       let filtered = allCounsellors;
 
       if (specialty) {
-        filtered = filtered.filter(c => c.specialties && c.specialties.includes(specialty));
+        filtered = filtered.filter((c) => c.specialties && c.specialties.includes(specialty));
       }
 
       if (mode) {
         // e.g. ONLINE or OFFLINE
-        filtered = filtered.filter(c => c.modePreference === mode || !c.modePreference || c.modePreference === 'BOTH');
+        filtered = filtered.filter(
+          (c) => c.modePreference === mode || !c.modePreference || c.modePreference === 'BOTH'
+        );
       }
 
       if (search) {
         const query = search.toLowerCase();
-        filtered = filtered.filter(c => 
-          c.name.toLowerCase().includes(query) || 
-          (c.experience && c.experience.toLowerCase().includes(query))
+        filtered = filtered.filter(
+          (c) => c.name.toLowerCase().includes(query) || (c.experience && c.experience.toLowerCase().includes(query))
         );
       }
 
@@ -103,7 +104,7 @@ const UserController = {
       }
 
       const { password, ...counsellorData } = counsellor;
-      
+
       // Load feedbacks
       const feedbacks = await StorageService.findAll('feedbacks', { counsellorId: id, isModerated: false });
 
@@ -128,24 +129,26 @@ const UserController = {
 
       // Get appointments
       const appointments = await StorageService.findAll('appointments', { userId });
-      
+
       // Get sessions (upcoming & historical)
       const sessions = await StorageService.findAll('sessions', { userId });
       const now = new Date();
 
-      const upcomingSessions = sessions.filter(s => {
-        try {
-          const sessionDate = new Date(`${s.date} ${s.time.split(' ')[0]}`);
-          return sessionDate >= now && s.status !== 'CANCELLED';
-        } catch {
-          return s.status === 'PENDING';
-        }
-      }).sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+      const upcomingSessions = sessions
+        .filter((s) => {
+          try {
+            const sessionDate = new Date(`${s.date} ${s.time.split(' ')[0]}`);
+            return sessionDate >= now && s.status !== 'CANCELLED';
+          } catch {
+            return s.status === 'PENDING';
+          }
+        })
+        .sort((a, b) => (a.date || '').localeCompare(b.date || ''));
 
       const appointmentHistory = appointments.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
 
       // Get notifications
-      const notifications = await StorageService.findAll('notifications', { 
+      const notifications = await StorageService.findAll('notifications', {
         recipientId: userId,
         recipientRole: 'user'
       });
@@ -175,10 +178,7 @@ const UserController = {
       }
 
       const results = await StorageService.findAll('testresults', {
-        $or: [
-          { userId: userId },
-          { studentEmail: user.email.toLowerCase() }
-        ]
+        $or: [{ userId: userId }, { studentEmail: user.email.toLowerCase() }]
       });
 
       res.status(200).json({
@@ -254,7 +254,7 @@ const UserController = {
         return res.status(404).json({ success: false, message: 'User not found' });
       }
 
-      const resultIndex = user.cigiResults.findIndex(r => r.id === resultId);
+      const resultIndex = user.cigiResults.findIndex((r) => r.id === resultId);
       if (resultIndex === -1) {
         return res.status(404).json({ success: false, message: 'Result record not found' });
       }

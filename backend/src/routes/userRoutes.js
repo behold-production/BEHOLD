@@ -13,7 +13,13 @@ router.get('/test-results', verifyJWT, requireRole('user'), UserController.getMy
 const upload = require('../middleware/uploadMiddleware');
 router.post('/cigi-results', verifyJWT, requireRole('user'), upload.single('file'), UserController.addCigiResult);
 router.delete('/cigi-results/:resultId', verifyJWT, requireRole('user'), UserController.deleteCigiResult);
-router.put('/profile-pic', verifyJWT, requireRole('user'), upload.single('profilePic'), UserController.updateProfilePic);
+router.put(
+  '/profile-pic',
+  verifyJWT,
+  requireRole('user'),
+  upload.single('profilePic'),
+  UserController.updateProfilePic
+);
 router.delete('/profile', verifyJWT, requireRole('user'), UserController.deleteProfile);
 
 // Counsellor search and details (accessible by users, and optionally others)

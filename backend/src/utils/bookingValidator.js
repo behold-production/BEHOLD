@@ -46,8 +46,8 @@ const validateBookingDetails = async (counsellorId, date, time, mode, service, a
     date,
     time
   });
-  
-  const isDoubleBooked = existingAppts.some(appt => {
+
+  const isDoubleBooked = existingAppts.some((appt) => {
     if (appointmentIdToExclude && appt.id === appointmentIdToExclude) {
       return false;
     }

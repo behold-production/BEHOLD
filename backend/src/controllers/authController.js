@@ -7,29 +7,25 @@ const REFRESH_EXPIRY = '7d';
 
 const generateTokens = (user) => {
   const payload = { id: user.id, email: user.email, role: user.role };
-  const accessToken = jwt.sign(
-    payload,
-    process.env.JWT_SECRET || 'behold_jwt_secret_key_2026_xyz',
-    { expiresIn: ACCESS_EXPIRY }
-  );
-  const refreshToken = jwt.sign(
-    payload,
-    process.env.JWT_REFRESH_SECRET || 'behold_jwt_refresh_secret_key_2026_abc',
-    { expiresIn: REFRESH_EXPIRY }
-  );
+  const accessToken = jwt.sign(payload, process.env.JWT_SECRET || 'behold_jwt_secret_key_2026_xyz', {
+    expiresIn: ACCESS_EXPIRY
+  });
+  const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET || 'behold_jwt_refresh_secret_key_2026_abc', {
+    expiresIn: REFRESH_EXPIRY
+  });
   return { accessToken, refreshToken };
 };
 
 // Helper to find any user across all tables by email
 async function findAnyUserByEmail(email) {
   const emailLower = email.toLowerCase();
-  
+
   const admin = await StorageService.findOne('admins', { email: emailLower });
   if (admin) return { user: admin, table: 'admins' };
-  
+
   const counsellor = await StorageService.findOne('counsellors', { email: emailLower, status: { $ne: 'DELETED' } });
   if (counsellor) return { user: counsellor, table: 'counsellors' };
-  
+
   const student = await StorageService.findOne('users', { email: emailLower, status: { $ne: 'DELETED' } });
   if (student) return { user: student, table: 'users' };
 
@@ -85,9 +81,20 @@ const AuthController = {
   async registerCounsellor(req, res, next) {
     try {
       const {
-        name, email, password, phone, specialties,
-        education, price, lang, bio, defaultMeetLink,
-        hours, modes, title, availability
+        name,
+        email,
+        password,
+        phone,
+        specialties,
+        education,
+        price,
+        lang,
+        bio,
+        defaultMeetLink,
+        hours,
+        modes,
+        title,
+        availability
       } = req.body;
 
       if (!name || !email || !password) {
@@ -112,9 +119,12 @@ const AuthController = {
         education: education || '',
         specialties: Array.isArray(specialties)
           ? specialties
-          : (specialties && typeof specialties === 'string'
-            ? specialties.split(',').map(s => s.trim()).filter(Boolean)
-            : []),
+          : specialties && typeof specialties === 'string'
+            ? specialties
+                .split(',')
+                .map((s) => s.trim())
+                .filter(Boolean)
+            : [],
         qualifications: education ? [education] : [],
         experience: bio || '',
         bio: bio || '',
@@ -130,9 +140,12 @@ const AuthController = {
         hours: Number(hours) || 0,
         modes: Array.isArray(modes)
           ? modes
-          : (modes && typeof modes === 'string'
-            ? modes.split(',').map(m => m.trim().toUpperCase()).filter(Boolean)
-            : ['ONLINE', 'OFFLINE', 'DOOR_STEP']),
+          : modes && typeof modes === 'string'
+            ? modes
+                .split(',')
+                .map((m) => m.trim().toUpperCase())
+                .filter(Boolean)
+            : ['ONLINE', 'OFFLINE', 'DOOR_STEP'],
         title: title || 'Consultant Psychologist'
       });
 
@@ -164,7 +177,7 @@ const AuthController = {
       }
 
       const { user, table } = match;
-      
+
       const isPasswordMatch = await bcrypt.compare(password, user.password);
       if (!isPasswordMatch) {
         return res.status(401).json({ success: false, message: 'Invalid credentials' });
@@ -192,8 +205,11 @@ const AuthController = {
       }
 
       try {
-        const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET || 'behold_jwt_refresh_secret_key_2026_abc');
-        
+        const decoded = jwt.verify(
+          refreshToken,
+          process.env.JWT_REFRESH_SECRET || 'behold_jwt_refresh_secret_key_2026_abc'
+        );
+
         // Find user
         let userRecord = null;
         if (decoded.role === 'admin') userRecord = await StorageService.findById('admins', decoded.id);

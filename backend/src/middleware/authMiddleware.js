@@ -39,7 +39,9 @@ const requireRole = (...allowedRoles) => {
       });
     }
 
-    if (!allowedRoles.includes(req.user.role)) {
+    const userRole = req.user.role.toLowerCase();
+    const allowed = allowedRoles.map((r) => r.toLowerCase());
+    if (!allowed.includes(userRole)) {
       return res.status(403).json({
         success: false,
         message: `Access Denied: Requires one of these roles: ${allowedRoles.join(', ')}`

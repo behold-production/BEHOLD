@@ -33,9 +33,21 @@ const PublicController = {
       let faqs = await StorageService.findAll('faqs');
       if (faqs.length === 0) {
         const defaultFaqs = [
-          { question: "What is C-DAT and who should take it?", answer: "C-DAT (Cognitive Domain Aptitude Test) is an assessment designed for students between grades 8-12 to align their cognitive strengths with specific stream preferences." },
-          { question: "How can I book an appointment with a counsellor?", answer: "Sign in to your student dashboard, navigate to services, choose your preferred counsellor and schedule from their available slots." },
-          { question: "Can I cancel a scheduled appointment?", answer: "Yes, you can cancel appointments up to 2 hours before the scheduled session directly from your student profile drawer." }
+          {
+            question: 'What is C-DAT and who should take it?',
+            answer:
+              'C-DAT (Cognitive Domain Aptitude Test) is an assessment designed for students between grades 8-12 to align their cognitive strengths with specific stream preferences.'
+          },
+          {
+            question: 'How can I book an appointment with a counsellor?',
+            answer:
+              'Sign in to your student dashboard, navigate to services, choose your preferred counsellor and schedule from their available slots.'
+          },
+          {
+            question: 'Can I cancel a scheduled appointment?',
+            answer:
+              'Yes, you can cancel appointments up to 2 hours before the scheduled session directly from your student profile drawer.'
+          }
         ];
         for (const item of defaultFaqs) {
           await StorageService.create('faqs', item);
@@ -59,15 +71,19 @@ const PublicController = {
       if (!settings) {
         settings = await StorageService.create('settings', {
           heroTitle: 'Bridging You \nTo Your {True Growth.}',
-          heroSub: 'Professional psychological counseling, aptitude assessment, and career mentorship designed to help individuals thrive with confidence and purpose.',
+          heroSub:
+            'Professional psychological counseling, aptitude assessment, and career mentorship designed to help individuals thrive with confidence and purpose.',
           whatsapp: 'https://wa.me/919497174011',
           contactEmail: 'support@behold.com',
           siteName: 'BEHOLD',
           siteCopyright: '© BEHOLD Ltd., 2026. All rights reserved.',
           showBanner: false,
-          bannerNotice: '🚨 Maintenance Notice: Schedulers undergoing maintenance tonight between 12:00 AM - 02:00 AM IST.',
-          termsOfUse: 'Welcome to BEHOLD. By accessing or using our platform, you agree to comply with and be bound by the terms and conditions.',
-          privacyPolicy: 'Your privacy is extremely important to us. This policy describes how we collect, protect, and use your personal information.',
+          bannerNotice:
+            '🚨 Maintenance Notice: Schedulers undergoing maintenance tonight between 12:00 AM - 02:00 AM IST.',
+          termsOfUse:
+            'Welcome to BEHOLD. By accessing or using our platform, you agree to comply with and be bound by the terms and conditions.',
+          privacyPolicy:
+            'Your privacy is extremely important to us. This policy describes how we collect, protect, and use your personal information.',
           cdatGroupCode: 'cdat@behold',
           enablePsychology: true,
           gstEnabled: false,
@@ -120,33 +136,33 @@ const PublicController = {
       if (questions.length === 0) {
         const defaultQuestions = [
           {
-            question: "How do you prefer to solve a complex puzzle?",
-            category: "Logical",
+            question: 'How do you prefer to solve a complex puzzle?',
+            category: 'Logical',
             options: [
-              { text: "Analyzing patterns and breaking them down systematically", weight: 5 },
+              { text: 'Analyzing patterns and breaking them down systematically', weight: 5 },
               { text: "Visualizing the completed picture in my mind's eye", weight: 3 },
-              { text: "Talking it through with someone else to generate ideas", weight: 2 },
-              { text: "Trial and error until the pieces fit together", weight: 1 }
+              { text: 'Talking it through with someone else to generate ideas', weight: 2 },
+              { text: 'Trial and error until the pieces fit together', weight: 1 }
             ]
           },
           {
-            question: "Which of these activities sounds most exciting to you?",
-            category: "Career",
+            question: 'Which of these activities sounds most exciting to you?',
+            category: 'Career',
             options: [
-              { text: "Coding a logic-based math game or grid puzzle", weight: 5 },
-              { text: "Writing a persuasive short story, essay, or poem", weight: 4 },
-              { text: "Designing an architectural or interior floor plan", weight: 3 },
-              { text: "Leading a lively group debate on social issues", weight: 2 }
+              { text: 'Coding a logic-based math game or grid puzzle', weight: 5 },
+              { text: 'Writing a persuasive short story, essay, or poem', weight: 4 },
+              { text: 'Designing an architectural or interior floor plan', weight: 3 },
+              { text: 'Leading a lively group debate on social issues', weight: 2 }
             ]
           },
           {
-            question: "When learning something new, you prefer:",
-            category: "Personality",
+            question: 'When learning something new, you prefer:',
+            category: 'Personality',
             options: [
-              { text: "Reflecting in private on how it applies to your personal goals", weight: 5 },
-              { text: "Drawing visual diagrams, color-coded mindmaps, or charts", weight: 4 },
-              { text: "Following a structured, step-by-step programming manual", weight: 3 },
-              { text: "Practicing the skill immediately in a collaborative group", weight: 2 }
+              { text: 'Reflecting in private on how it applies to your personal goals', weight: 5 },
+              { text: 'Drawing visual diagrams, color-coded mindmaps, or charts', weight: 4 },
+              { text: 'Following a structured, step-by-step programming manual', weight: 3 },
+              { text: 'Practicing the skill immediately in a collaborative group', weight: 2 }
             ]
           }
         ];

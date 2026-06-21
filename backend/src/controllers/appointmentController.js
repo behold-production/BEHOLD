@@ -40,7 +40,7 @@ const AppointmentController = {
         date,
         time,
         mode, // ONLINE or OFFLINE
-        meetLink: mode === 'ONLINE' ? (counsellor.defaultMeetLink || '') : '',
+        meetLink: mode === 'ONLINE' ? counsellor.defaultMeetLink || '' : '',
         status: 'PENDING',
         service: service || 'counselling'
       });
@@ -79,14 +79,16 @@ const AppointmentController = {
   async approveAppointment(req, res, next) {
     try {
       const { id } = req.params;
-      
+
       const appointment = await StorageService.findById('appointments', id);
       if (!appointment) {
         return res.status(404).json({ success: false, message: 'Appointment not found' });
       }
 
       if (appointment.status !== 'PENDING') {
-        return res.status(400).json({ success: false, message: `Cannot approve appointment with status: ${appointment.status}` });
+        return res
+          .status(400)
+          .json({ success: false, message: `Cannot approve appointment with status: ${appointment.status}` });
       }
 
       // Update appointment status to APPROVED
@@ -97,11 +99,17 @@ const AppointmentController = {
       const counsellor = await StorageService.findById('counsellors', appointment.counsellorId);
 
       // Create matching session
-      let meetLink = appointment.mode === 'ONLINE' 
-        ? (appointment.meetLink || (counsellor ? counsellor.defaultMeetLink : '') || '')
-        : '';
+      let meetLink =
+        appointment.mode === 'ONLINE'
+          ? appointment.meetLink || (counsellor ? counsellor.defaultMeetLink : '') || ''
+          : '';
 
-      if (appointment.mode === 'ONLINE' && counsellor && counsellor.googleRefreshToken && (!appointment.meetLink || appointment.meetLink === counsellor.defaultMeetLink)) {
+      if (
+        appointment.mode === 'ONLINE' &&
+        counsellor &&
+        counsellor.googleRefreshToken &&
+        (!appointment.meetLink || appointment.meetLink === counsellor.defaultMeetLink)
+      ) {
         try {
           const { google } = require('googleapis');
           const oauth2Client = new google.auth.OAuth2(
@@ -129,10 +137,7 @@ const AppointmentController = {
             description: `Service: ${appointment.service || 'Counselling'}\nMode: ONLINE\n\nAccess your session details, reports, and portal on BEHOLD:\n- Student Portal: ${frontendUrl}/profile\n- Advisor Portal: ${frontendUrl}/counsellor`,
             start: { dateTime: startTime.toISOString() },
             end: { dateTime: endTime.toISOString() },
-            attendees: [
-              { email: user ? user.email : '' },
-              { email: counsellor.email }
-            ].filter(a => a.email),
+            attendees: [{ email: user ? user.email : '' }, { email: counsellor.email }].filter((a) => a.email),
             conferenceData: {
               createRequest: {
                 requestId: `meet-${Date.now()}-${Math.random().toString(36).substring(7)}`,
@@ -212,10 +217,12 @@ const AppointmentController = {
       }
 
       if (appointment.status !== 'PENDING') {
-        return res.status(400).json({ success: false, message: `Cannot reject appointment with status: ${appointment.status}` });
+        return res
+          .status(400)
+          .json({ success: false, message: `Cannot reject appointment with status: ${appointment.status}` });
       }
 
-      const updated = await StorageService.update('appointments', id, { 
+      const updated = await StorageService.update('appointments', id, {
         status: 'REJECTED',
         cancellationReason: reason || 'Declined by counsellor.',
         cancelledBy: req.user.role || 'counsellor'
@@ -258,15 +265,15 @@ const AppointmentController = {
       }
 
       if (appointment.status !== 'PENDING' && appointment.status !== 'APPROVED' && appointment.status !== 'CONFIRMED') {
-        return res.status(400).json({ 
-          success: false, 
-          message: `Cannot reschedule an appointment with status: ${appointment.status}` 
+        return res.status(400).json({
+          success: false,
+          message: `Cannot reschedule an appointment with status: ${appointment.status}`
         });
       }
 
       // Check current user is authorized (either User, Counsellor or Admin)
-      const userAuthorized = 
-        req.user.role === 'admin' || 
+      const userAuthorized =
+        req.user.role === 'admin' ||
         (req.user.role === 'user' && appointment.userId === req.user.id) ||
         (req.user.role === 'counsellor' && appointment.counsellorId === req.user.id);
 
@@ -281,27 +288,27 @@ const AppointmentController = {
         try {
           const appointmentDateStr = appointment.date;
           const appointmentTimeStr = appointment.time;
-          
+
           const [timeParts, modifier] = appointmentTimeStr.split(' ');
           let [hours, minutes] = timeParts.split(':').map(Number);
           if (modifier === 'PM' && hours < 12) hours += 12;
           if (modifier === 'AM' && hours === 12) hours = 0;
-          
+
           const [year, month, day] = appointmentDateStr.split('-').map(Number);
           const appDateTime = new Date(year, month - 1, day, hours, minutes);
           const now = new Date();
-          
+
           const diffMs = appDateTime - now;
           const diffHours = diffMs / (1000 * 60 * 60);
-          
+
           if (diffHours < 1) {
-            return res.status(400).json({ 
-              success: false, 
-              message: 'Cannot reschedule a session less than 1 hour before the scheduled time.' 
+            return res.status(400).json({
+              success: false,
+              message: 'Cannot reschedule a session less than 1 hour before the scheduled time.'
             });
           }
         } catch (e) {
-          console.error("Error parsing appointment date/time for reschedule check:", e);
+          console.error('Error parsing appointment date/time for reschedule check:', e);
         }
 
         // 2. Maximum rescheduling limit check per appointment (3 times max)
@@ -319,12 +326,12 @@ const AppointmentController = {
           const todayStr = new Date().toISOString().split('T')[0];
           let count = studentUser.rescheduleCountToday || 0;
           const lastDate = studentUser.lastRescheduleDate || '';
-          
+
           if (lastDate === todayStr) {
             if (count >= 3) {
-              return res.status(400).json({ 
-                success: false, 
-                message: 'Daily limit exceeded. You can only reschedule up to 3 times per day.' 
+              return res.status(400).json({
+                success: false,
+                message: 'Daily limit exceeded. You can only reschedule up to 3 times per day.'
               });
             }
           } else {
@@ -413,15 +420,15 @@ const AppointmentController = {
       }
 
       if (appointment.status !== 'PENDING' && appointment.status !== 'APPROVED' && appointment.status !== 'CONFIRMED') {
-        return res.status(400).json({ 
-          success: false, 
-          message: `Cannot cancel an appointment with status: ${appointment.status}` 
+        return res.status(400).json({
+          success: false,
+          message: `Cannot cancel an appointment with status: ${appointment.status}`
         });
       }
 
       // Authorization check
-      const userAuthorized = 
-        req.user.role === 'admin' || 
+      const userAuthorized =
+        req.user.role === 'admin' ||
         (req.user.role === 'user' && appointment.userId === req.user.id) ||
         (req.user.role === 'counsellor' && appointment.counsellorId === req.user.id);
 
@@ -434,31 +441,31 @@ const AppointmentController = {
         try {
           const appointmentDateStr = appointment.date;
           const appointmentTimeStr = appointment.time;
-          
+
           const [timeParts, modifier] = appointmentTimeStr.split(' ');
           let [hours, minutes] = timeParts.split(':').map(Number);
           if (modifier === 'PM' && hours < 12) hours += 12;
           if (modifier === 'AM' && hours === 12) hours = 0;
-          
+
           const [year, month, day] = appointmentDateStr.split('-').map(Number);
           const appDateTime = new Date(year, month - 1, day, hours, minutes);
           const now = new Date();
-          
+
           const diffMs = appDateTime - now;
           const diffHours = diffMs / (1000 * 60 * 60);
-          
+
           if (diffHours < 1) {
-            return res.status(400).json({ 
-              success: false, 
-              message: 'Cannot cancel a session less than 1 hour before the scheduled time.' 
+            return res.status(400).json({
+              success: false,
+              message: 'Cannot cancel a session less than 1 hour before the scheduled time.'
             });
           }
         } catch (e) {
-          console.error("Error parsing appointment date/time for cancellation check:", e);
+          console.error('Error parsing appointment date/time for cancellation check:', e);
         }
       }
 
-      const updated = await StorageService.update('appointments', id, { 
+      const updated = await StorageService.update('appointments', id, {
         status: 'CANCELLED',
         cancellationReason: reason || 'No reason specified.',
         cancelledBy
@@ -467,7 +474,7 @@ const AppointmentController = {
       // Cancel matching session if exists
       const session = await StorageService.findOne('sessions', { appointmentId: id });
       if (session) {
-        await StorageService.update('sessions', session.id, { 
+        await StorageService.update('sessions', session.id, {
           status: 'CANCELLED',
           cancellationReason: reason || 'No reason specified.',
           cancelledBy
@@ -478,7 +485,8 @@ const AppointmentController = {
       const isStudentCancelling = req.user.id === appointment.userId;
       const targetId = isStudentCancelling ? appointment.counsellorId : appointment.userId;
       const targetRole = isStudentCancelling ? 'counsellor' : 'user';
-      const cancellerName = req.user.role === 'user' ? 'Student' : req.user.role === 'admin' ? 'Administrator' : 'Counsellor';
+      const cancellerName =
+        req.user.role === 'user' ? 'Student' : req.user.role === 'admin' ? 'Administrator' : 'Counsellor';
       const reasonText = reason ? ` Reason: "${reason}"` : '';
 
       await StorageService.create('notifications', {
@@ -573,16 +581,22 @@ const AppointmentController = {
       if (!appointment) {
         return res.status(404).json({ success: false, message: 'Appointment not found' });
       }
-      
+
       if (!notes) {
-        return res.status(400).json({ success: false, message: 'Clinical Assessment & Observation Notes are required to complete the appointment' });
+        return res
+          .status(400)
+          .json({
+            success: false,
+            message: 'Clinical Assessment & Observation Notes are required to complete the appointment'
+          });
       }
 
-      const feedbackVal = (feedback !== undefined && feedback !== '') ? feedback : (appointment.feedback || '');
-      const nextSessionVal = (nextSession !== undefined && nextSession !== '') ? nextSession : (appointment.nextSession || '');
+      const feedbackVal = feedback !== undefined && feedback !== '' ? feedback : appointment.feedback || '';
+      const nextSessionVal =
+        nextSession !== undefined && nextSession !== '' ? nextSession : appointment.nextSession || '';
 
-      const updated = await StorageService.update('appointments', id, { 
-        status: 'COMPLETED', 
+      const updated = await StorageService.update('appointments', id, {
+        status: 'COMPLETED',
         notes: notes,
         feedback: feedbackVal,
         nextSession: nextSessionVal
@@ -591,8 +605,8 @@ const AppointmentController = {
       // Also complete matching session if exists
       const session = await StorageService.findOne('sessions', { appointmentId: id });
       if (session) {
-        await StorageService.update('sessions', session.id, { 
-          status: 'COMPLETED', 
+        await StorageService.update('sessions', session.id, {
+          status: 'COMPLETED',
           notes: notes,
           feedback: feedbackVal,
           nextSession: nextSessionVal
@@ -624,7 +638,11 @@ const AppointmentController = {
         return res.status(400).json({ success: false, message: 'Reason is required to revert a completed session' });
       }
 
-      const updated = await StorageService.update('appointments', id, { status: 'APPROVED', revertReason: reason, sentToAdmin: false });
+      const updated = await StorageService.update('appointments', id, {
+        status: 'APPROVED',
+        revertReason: reason,
+        sentToAdmin: false
+      });
 
       const session = await StorageService.findOne('sessions', { appointmentId: id });
       if (session) {
@@ -678,12 +696,10 @@ const AppointmentController = {
   async getUserAppointments(req, res, next) {
     try {
       await autoExpireSessions();
-      const filter = req.user.role === 'counsellor' 
-        ? { counsellorId: req.user.id }
-        : { userId: req.user.id };
+      const filter = req.user.role === 'counsellor' ? { counsellorId: req.user.id } : { userId: req.user.id };
 
       const appointments = await StorageService.findAll('appointments', filter);
-      
+
       const populated = await Promise.all(
         appointments.map(async (a) => {
           const user = await StorageService.findById('users', a.userId);
@@ -697,27 +713,31 @@ const AppointmentController = {
             ...apptData,
             studentName: user ? user.name : 'Unknown Student',
             counsellorName: counsellor ? counsellor.name : 'Unknown Counsellor',
-            notes: session ? (session.notes || a.notes || '') : (a.notes || ''),
-            feedback: session ? (session.feedback || a.feedback || '') : (a.feedback || ''),
-            nextSession: session ? (session.nextSession || a.nextSession || '') : (a.nextSession || ''),
-            student: user ? {
-              name: user.name,
-              email: user.email,
-              phone: user.phone,
-              schoolName: user.schoolName,
-              grade: user.grade,
-              guardianName: user.guardianName,
-              guardianPhone: user.guardianPhone
-            } : null,
-            counsellor: counsellor ? {
-              name: counsellor.name,
-              email: counsellor.email,
-              phone: counsellor.phone,
-              title: counsellor.title,
-              education: counsellor.education,
-              specialties: counsellor.specialties,
-              qualifications: counsellor.qualifications
-            } : null
+            notes: session ? session.notes || a.notes || '' : a.notes || '',
+            feedback: session ? session.feedback || a.feedback || '' : a.feedback || '',
+            nextSession: session ? session.nextSession || a.nextSession || '' : a.nextSession || '',
+            student: user
+              ? {
+                  name: user.name,
+                  email: user.email,
+                  phone: user.phone,
+                  schoolName: user.schoolName,
+                  grade: user.grade,
+                  guardianName: user.guardianName,
+                  guardianPhone: user.guardianPhone
+                }
+              : null,
+            counsellor: counsellor
+              ? {
+                  name: counsellor.name,
+                  email: counsellor.email,
+                  phone: counsellor.phone,
+                  title: counsellor.title,
+                  education: counsellor.education,
+                  specialties: counsellor.specialties,
+                  qualifications: counsellor.qualifications
+                }
+              : null
           };
         })
       );
