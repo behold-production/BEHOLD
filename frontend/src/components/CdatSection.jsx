@@ -128,12 +128,7 @@ export default function CdatSection({ setView }) {
         {/* TOP: CIGI Differential Aptitude Test (C-DAT) */}
         <div className="relative z-10 flex flex-col justify-between gap-6 text-left w-full">
           <div className="space-y-4">
-            <div>
-              <span className="inline-flex items-center gap-1.5 text-xs bg-brand/10 text-brand-dark border border-brand/20 px-3.5 py-1.5 rounded-full capitalize font-bold shadow-sm">
-                <span className="w-1.5 h-1.5 rounded-full bg-brand-dark animate-pulse"></span>
-                Scientific Strengths Mapping
-              </span>
-            </div>
+
             
             {/* Flex container for Title and Logo opposite to each other */}
             <div className="flex flex-row items-center justify-between gap-6 w-full">
