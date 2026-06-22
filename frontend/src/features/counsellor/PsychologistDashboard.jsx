@@ -1620,7 +1620,13 @@ export default function PsychologistDashboard({ setView }) {
             >
               <LogOut className="w-4 h-4" /> Sign Out
             </button>
-          <  // --- 2. DEDICATED LOGGED-IN COUNSELLOR CONSOLE ---
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // --- 2. DEDICATED LOGGED-IN COUNSELLOR CONSOLE ---
   return (
     <div className="h-screen overflow-hidden bg-zinc-955 text-white text-left flex flex-col lg:flex-row relative">
 
@@ -1746,8 +1752,6 @@ export default function PsychologistDashboard({ setView }) {
                   <div className="h-4 bg-zinc-800 rounded w-full"></div>
                 </div>
               </div>
-            </div>
-          ) : (             </div>
             </div>
           ) : (
             <>
