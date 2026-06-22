@@ -428,15 +428,15 @@ export default function SettingsTab(props) {
                   <div className="space-y-5 animate-in fade-in duration-200">
                     <div className="space-y-1">
                       <label className="text-sm capitalize  font-bold text-zinc-400">Hero Section Heading</label>
-                      <input
-                        type="text"
+                      <textarea
+                        rows={2}
                         required
                         value={settingsForm.heroTitle}
                         onChange={(e) => setSettingsForm({ ...settingsForm, heroTitle: e.target.value })}
-                        className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none"
+                        className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none font-semibold resize-none"
                         placeholder="e.g. Bridging You To Your {True Growth.}"
                       />
-                      <span className="text-sm text-zinc-550 block font-medium">Use curly braces `{ }` around words you want highlighted with the neon gradient.</span>
+                      <span className="text-sm text-zinc-550 block font-medium">Use curly braces `{ }` around words you want highlighted with the neon gradient. Press Enter or use `\n` to start a new line.</span>
                     </div>
 
                     <div className="space-y-1">

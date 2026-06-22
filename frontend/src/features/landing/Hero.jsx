@@ -14,18 +14,30 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
   const heroSub = settings.heroSub || "Professional psychological counseling, aptitude assessment, and career mentorship designed to help individuals thrive with confidence and purpose.";
 
   const renderTitle = (text) => {
-    const match = text.match(/\{([^}]+)\}/);
-    if (match) {
-      const parts = text.split(match[0]);
+    if (!text) return null;
+    const lines = text.split(/\r?\n|\\n/g);
+    return lines.map((line, index) => {
+      const match = line.match(/\{([^}]+)\}/);
+      let content;
+      if (match) {
+        const parts = line.split(match[0]);
+        content = (
+          <>
+            {parts[0]}<span className="relative whitespace-nowrap text-brand">
+              {match[1]}
+            </span>{parts[1]}
+          </>
+        );
+      } else {
+        content = line;
+      }
       return (
-        <span>
-          {parts[0]}<span className="relative whitespace-nowrap text-brand">
-            {match[1]}
-          </span>{parts[1]}
-        </span>
+        <React.Fragment key={index}>
+          {index > 0 && <br />}
+          {content}
+        </React.Fragment>
       );
-    }
-    return <span>{text}</span>;
+    });
   };
 
   return (
