@@ -3154,7 +3154,6 @@ export default function AdminDashboard({ setView }) {
     setIsProfileDrawerOpen,
     isLogoutConfirmOpen,
     setIsLogoutConfirmOpen,
-    getPageNumbers,
     getLocalTodayString,
     handleExportPDF,
     handleExportImage,
