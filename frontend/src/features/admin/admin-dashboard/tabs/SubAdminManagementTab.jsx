@@ -337,7 +337,7 @@ export default function SubAdminManagementTab(props) {
     subAdminsList
   } = props;
 
-
+  return (
             <div className="space-y-6 animate-in fade-in duration-200 text-sm">
               <div className="border-b border-zinc-805 pb-3">
                 <h3 className="text-sm font-bold capitalize  text-white font-header">Staff Roles & Permissions Scopes</h3>
@@ -841,6 +841,5 @@ export default function SubAdminManagementTab(props) {
                 </form>
               )}
             </div>
-          
-
+  );
 }
