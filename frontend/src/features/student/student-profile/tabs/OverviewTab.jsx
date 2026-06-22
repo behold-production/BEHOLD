@@ -2,7 +2,8 @@ import React from 'react';
 import {
   Plus, Video, MapPin, Calendar, Clock, CalendarDays,
   CheckCircle2, BarChart3, Briefcase, Users, Activity,
-  ChevronRight, Award, Trophy, User, Mail, Phone, Check
+  ChevronRight, Award, Trophy, User, Mail, Phone, Check,
+  History
 } from 'lucide-react';
 import { formatDateString } from '../../../../shared/utils/dateFormatter';
 import { formatCountdown } from '../utils';
