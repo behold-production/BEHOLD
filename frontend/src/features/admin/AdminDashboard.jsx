@@ -3264,7 +3264,7 @@ export default function AdminDashboard({ setView }) {
   };
 
   return (
-    <div className="min-h-screen lg:h-screen lg:overflow-hidden bg-zinc-955 text-white text-left flex flex-col lg:flex-row relative overflow-hidden">
+    <div className="h-screen overflow-hidden bg-zinc-955 text-white text-left flex flex-col lg:flex-row relative">
       
       {/* Background Soft Glows */}
       <div className="absolute top-1/4 left-1/3 w-[350px] h-[350px] bg-brand/5 rounded-full blur-3xl pointer-events-none" />
@@ -3273,8 +3273,8 @@ export default function AdminDashboard({ setView }) {
       <SidebarNav {...tabProps} />
 
       {/* 2. Main Scrollable Content Area */}
-      <div className="flex-1 flex flex-col min-h-screen lg:min-h-0 relative lg:overflow-hidden bg-zinc-955 z-10 lg:z-auto">
-        <main className="flex-1 p-5 md:p-8 lg:overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-800 hover:scrollbar-thumb-zinc-700 pb-24">
+      <div className="flex-1 flex flex-col min-h-0 relative overflow-hidden bg-zinc-955 z-10 lg:z-auto">
+        <main className="flex-1 p-5 md:p-8 overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-800 hover:scrollbar-thumb-zinc-700 pb-24">
           <div className="max-w-7xl mx-auto space-y-6">
             {currentSection === 'overview' && isSuperAdmin && <OverviewTab {...tabProps} />}
             {currentSection === 'users' && hasUserPermission && <StudentManagementTab {...tabProps} />}
@@ -3290,6 +3290,93 @@ export default function AdminDashboard({ setView }) {
           </div>
         </main>
       </div>
+
+      {/* ── ADMIN PROFILE DRAWER ──────────────────────────────── */}
+      {isProfileDrawerOpen && (
+        <div className="fixed inset-0 z-[60] flex">
+          {/* Backdrop */}
+          <div
+            className="flex-1 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
+            onClick={() => setIsProfileDrawerOpen(false)}
+          />
+          {/* Drawer panel */}
+          <div className="w-80 bg-zinc-900 border-l border-zinc-800 h-full overflow-y-auto animate-in slide-in-from-right duration-300 flex flex-col text-left text-white">
+            {/* Header */}
+            <div className="flex items-center justify-between px-6 py-5 border-b border-zinc-800">
+              <div>
+                <h3 className="text-sm font-bold text-white capitalize font-header">My Profile</h3>
+                <p className="text-sm text-zinc-555 mt-0.5">Admin Security Clearance</p>
+              </div>
+              <button
+                onClick={() => setIsProfileDrawerOpen(false)}
+                className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition cursor-pointer border-none bg-transparent"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Avatar + Name */}
+            {(() => {
+              const { cleanName, roleTitle } = parseStaffDetails(user);
+              return (
+                <div className="px-6 py-6 flex flex-col items-center text-center space-y-3 border-b border-zinc-800">
+                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-brand to-brand-accent text-zinc-955 flex items-center justify-center font-header font-bold text-2xl shadow-xl">
+                    {(cleanName || '').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
+                  </div>
+                  <div>
+                    <h2 className="text-base font-bold text-white capitalize tracking-wide font-header">{cleanName}</h2>
+                    <span className="inline-block mt-1 text-sm px-2.5 py-1 rounded-full font-bold capitalize bg-brand/10 border border-brand/20 text-brand">
+                      {isSuperAdmin ? 'SUPER ADMIN' : (roleTitle || 'SUB ADMIN')}
+                    </span>
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* Details */}
+            <div className="px-6 py-5 space-y-4 flex-1">
+              <p className="text-sm font-bold text-zinc-555 uppercase tracking-wider">Clearance & Details</p>
+              <div className="bg-zinc-955/60 rounded-xl p-4 space-y-3 border border-zinc-850">
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center shrink-0 mt-0.5">
+                    <Mail className="w-3.5 h-3.5 text-brand" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-bold text-zinc-555">Email Address</p>
+                    <p className="text-sm text-zinc-300 font-semibold truncate">{user?.email}</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center shrink-0 mt-0.5">
+                    <Shield className="w-3.5 h-3.5 text-brand" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-bold text-zinc-555">Role Authority</p>
+                    <p className="text-sm text-zinc-300 font-semibold">{isSuperAdmin ? 'Full Access Policy' : 'Granular Permissions'}</p>
+                  </div>
+                </div>
+              </div>
+
+              {!isSuperAdmin && (
+                <div className="space-y-2">
+                  <p className="text-sm font-bold text-zinc-555 uppercase tracking-wider">Assigned Privilege Scopes</p>
+                  <div className="bg-zinc-955/60 border border-zinc-850 rounded-xl p-4 space-y-2 max-h-48 overflow-y-auto scrollbar-thin">
+                    {(user?.permissions || []).map((perm, idx) => (
+                      <div key={idx} className="flex items-center gap-2 text-xs font-bold text-zinc-300 bg-zinc-900 px-2.5 py-1.5 rounded border border-zinc-850">
+                        <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+                        <span className="capitalize">{perm.replace(/_/g, ' ')}</span>
+                      </div>
+                    ))}
+                    {(user?.permissions || []).length === 0 && (
+                      <p className="text-xs text-zinc-500 italic">No explicit privileges assigned.</p>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ── LOGOUT CONFIRMATION ─────────────────────────────────────── */}
       <LogoutConfirmModal

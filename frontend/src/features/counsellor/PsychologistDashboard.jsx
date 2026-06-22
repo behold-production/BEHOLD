@@ -1627,7 +1627,7 @@ export default function PsychologistDashboard({ setView }) {
 
   // --- 2. DEDICATED LOGGED-IN COUNSELLOR CONSOLE ---
   return (
-    <div className="min-h-screen lg:h-screen lg:overflow-hidden bg-[#fafafa] text-zinc-900 text-left flex flex-col lg:flex-row relative overflow-hidden">
+    <div className="h-screen overflow-hidden bg-[#fafafa] text-zinc-900 text-left flex flex-col lg:flex-row relative">
 
       {/* Background Soft Glows */}
       <div className="absolute top-1/4 left-1/3 w-[350px] h-[350px] bg-indigo-500/5 rounded-full blur-3xl pointer-events-none" />

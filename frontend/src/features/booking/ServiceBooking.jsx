@@ -53,6 +53,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
     setBookingForm,
     selectedDate,
     selectedTime,
+    setSelectedTime,
     selectedAdvisor,
     setSelectedAdvisor,
     advisorConfirmed,
