@@ -127,7 +127,7 @@ const ProfileDetailsTab = ({
               <div className="absolute left-0 top-4 bottom-4 w-1 rounded-r-full" style={{ background: section.accentColor }} />
               <div className="flex items-center gap-3 mb-5 pb-3 border-b border-zinc-100 pl-3">
                 <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: section.accentBg, border: `1px solid ${section.accentColor}25` }}>
-                  <SIcon className="w-4.5 h-4.5" style={{ color: section.accentColor }} />
+                  <SIcon className="w-[18px] h-[18px]" style={{ color: section.accentColor }} />
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-zinc-900">{section.title}</h3>
@@ -142,7 +142,7 @@ const ProfileDetailsTab = ({
                   const hasValue = !!formData[field.name];
                   return (
                     <div key={field.name} className="space-y-1.5">
-                      <label htmlFor={`sp-${field.name}`} className="text-xs text-zinc-600 font-medium block flex items-center gap-1">
+                      <label htmlFor={`sp-${field.name}`} className="text-xs text-zinc-600 font-medium flex items-center gap-1">
                         {field.label}
                         {field.required && <span className="text-rose-500">*</span>}
                       </label>
@@ -244,7 +244,7 @@ const ProfileDetailsTab = ({
                         : 'Disabled'}
                 </span>
               </div>
-              <p className="text-xs text-zinc-505 font-medium leading-relaxed">
+              <p className="text-xs text-zinc-500 font-medium leading-relaxed">
                 {!isNotificationSupported()
                   ? 'Your browser does not support native desktop alerts.'
                   : permissionState === 'granted'
@@ -283,7 +283,7 @@ const ProfileDetailsTab = ({
           </div>
         </div>
 
-        <div className="sticky bottom-16 lg:bottom-0 z-30 flex items-center justify-end gap-2 p-3 card-luxury border-none rounded-xl shadow-sm">
+        <div className="sticky bottom-[72px] lg:bottom-0 z-30 flex items-center justify-end gap-2 p-3 card-luxury border-none rounded-xl shadow-sm">
           <button
             type="button"
             onClick={handleDiscard}
@@ -307,7 +307,7 @@ const ProfileDetailsTab = ({
       </form>
 
       {isSaved && (
-        <div className="fixed bottom-24 lg:bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-4 py-2.5 bg-zinc-900 text-white rounded-xl shadow-xl" role="status">
+        <div className="fixed bottom-[90px] lg:bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-4 py-2.5 bg-zinc-900 text-white rounded-xl shadow-xl" role="status">
           <CheckCircle2 className="w-4 h-4 text-emerald-400" />
           <span className="text-sm font-medium">Profile saved successfully!</span>
         </div>

@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   Plus, Video, MapPin, Calendar, Clock, CalendarDays,
-  CheckCircle2, BarChart3, Briefcase, Users, Activity,
+  CheckCircle2, BarChart3, Briefcase, Activity,
   ChevronRight, Award, Trophy, User, Mail, Phone, Check,
   History
 } from 'lucide-react';
@@ -260,78 +260,7 @@ const OverviewTab = ({
         </div>
       </div>
 
-      {/* ── Available Services — differentiated dual-theme cards ── */}
-      <div className="space-y-4">
-        <div className="flex items-center gap-3">
-          <h4 className="text-sm font-bold text-zinc-900 tracking-tight">Available Services</h4>
-          <div className="h-px flex-1 bg-gradient-to-r from-zinc-200 to-transparent" />
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Career Mentoring — light cream theme */}
-          <div
-            className="relative overflow-hidden rounded-2xl p-5 flex flex-col justify-between gap-5 transition-all duration-300 hover:-translate-y-1 group"
-            style={{
-              background: 'linear-gradient(145deg, #fffdf7 0%, #fefce8 100%)',
-              boxShadow: 'inset 0 0 0 1px rgba(217,119,6,0.12), 0 2px 4px rgba(11,20,36,0.04), 0 6px 24px -6px rgba(217,119,6,0.1)'
-            }}
-          >
-            <div className="absolute top-0 right-0 w-32 h-32 rounded-full opacity-10 -translate-y-8 translate-x-8" style={{ background: 'radial-gradient(circle, #f59e0b 0%, transparent 70%)' }} />
-            <div className="space-y-3">
-              <div className="flex justify-between items-start">
-                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest" style={{ background: 'rgba(217,119,6,0.12)', color: '#b45309', border: '1px solid rgba(217,119,6,0.2)' }}>
-                  <Briefcase className="w-3 h-3" /> Career Mentoring
-                </div>
-                <span className="text-[10px] text-amber-400 font-black border border-amber-200 px-1.5 py-0.5 rounded-md bg-amber-50">01</span>
-              </div>
-              <h4 className="text-sm font-black text-zinc-900 leading-snug">Career Clarity<br />&amp; Direction</h4>
-              <p className="text-[10px] font-bold text-amber-600/70 italic">Feeling Unsure About What's Next?</p>
-              <p className="text-zinc-600 text-xs leading-relaxed">
-                Whether you're choosing a stream, exploring career options, or planning your future studies — we help you make confident, informed decisions.
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={() => { navigate('/booking?service=career'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-              className="w-full min-h-[40px] rounded-xl text-xs font-black tracking-wide transition-all cursor-pointer border-none flex items-center justify-center gap-2"
-              style={{ background: 'linear-gradient(135deg, #d97706 0%, #b45309 100%)', color: 'white', boxShadow: '0 4px 14px rgba(217,119,6,0.35)' }}
-            >
-              🎯 Book Career Session
-            </button>
-          </div>
 
-          {/* Psychological Counselling — deep navy theme */}
-          <div
-            className="relative overflow-hidden rounded-2xl p-5 flex flex-col justify-between gap-5 transition-all duration-300 hover:-translate-y-1 group"
-            style={{
-              background: 'linear-gradient(145deg, #0f172a 0%, #1e1b4b 100%)',
-              boxShadow: 'inset 0 0 0 1px rgba(99,102,241,0.15), 0 4px 12px rgba(10,20,60,0.15), 0 12px 32px -8px rgba(99,102,241,0.12)'
-            }}
-          >
-            <div className="absolute top-0 right-0 w-32 h-32 rounded-full opacity-10 -translate-y-8 translate-x-8" style={{ background: 'radial-gradient(circle, #818cf8 0%, transparent 70%)' }} />
-            <div className="space-y-3">
-              <div className="flex justify-between items-start">
-                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest" style={{ background: 'rgba(99,102,241,0.15)', color: '#a5b4fc', border: '1px solid rgba(99,102,241,0.25)' }}>
-                  <Users className="w-3 h-3" /> Psychological Counselling
-                </div>
-                <span className="text-[10px] text-indigo-400 font-black border border-indigo-800 px-1.5 py-0.5 rounded-md bg-indigo-950/50">02</span>
-              </div>
-              <h4 className="text-sm font-black text-white leading-snug">Emotional Wellbeing<br />&amp; Support</h4>
-              <p className="text-[10px] font-bold text-indigo-400/70 italic">You Don't Have to Face It Alone.</p>
-              <p className="text-zinc-400 text-xs leading-relaxed">
-                A safe space to reflect, heal, and grow. Our counselling sessions provide professional emotional and mental health support.
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={() => { navigate('/booking?service=counselling'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-              className="w-full min-h-[40px] rounded-xl text-xs font-black tracking-wide transition-all cursor-pointer border-none flex items-center justify-center gap-2"
-              style={{ background: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)', color: 'white', boxShadow: '0 4px 14px rgba(99,102,241,0.4)' }}
-            >
-              💬 Talk to a Counsellor
-            </button>
-          </div>
-        </div>
-      </div>
 
       {/* ── Recent Activity + Achievements ── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
