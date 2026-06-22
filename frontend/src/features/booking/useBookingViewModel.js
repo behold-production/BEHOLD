@@ -123,11 +123,12 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
               name: c.name,
               role: c.title || 'Consultant Psychologist',
               availability: 'Available Today',
-              type: c.type || 'counselling',
+              type: c.type || (c.title?.toLowerCase().includes('career') || c.title?.toLowerCase().includes('mentor') ? 'career' : 'counselling'),
               defaultMeetLink: c.defaultMeetLink || '',
               price: Number(c.price) || 1200,
               modes: Array.isArray(c.modes) ? c.modes : ['ONLINE', 'OFFLINE'],
-              availabilitySlots: c.availability || {}
+              availabilitySlots: c.availability || {},
+              bookedSlots: c.bookedSlots || []
             };
           });
           setAdvisors(resolved);
@@ -165,7 +166,8 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
                   role: foundSession.advisorRole || 'Consultant Psychologist',
                   price: foundSession.amountPaid || 1200,
                   modes: [foundSession.mode || 'ONLINE'],
-                  availabilitySlots: {}
+                  availabilitySlots: {},
+                  bookedSlots: []
                 };
                 setSelectedAdvisor(tempAdvisor);
                 setAdvisorConfirmed(true);
@@ -415,7 +417,8 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     };
 
     try {
-      const dayOfWeek = new Date(dateStr).getDay(); // 0 to 6
+      const [year, month, day] = dateStr.split('-').map(Number);
+      const dayOfWeek = new Date(Date.UTC(year, month - 1, day)).getUTCDay(); // 0 to 6
 
       // If a specific advisor is selected, prioritize their schedule
       if (selectedAdvisor) {
@@ -424,16 +427,14 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
           try {
             const dayActive = parsed.activeDays && parsed.activeDays[dayOfWeek];
             if (dayActive && parsed.availableSlots && parsed.availableSlots.length > 0) {
-              const bookings = existingAppointments;
+              const bookings = selectedAdvisor.bookedSlots || [];
               const list = parsed.availableSlots.filter(slot => {
                 if (dateStr === todayStr && isSlotInPast(slot)) {
                   return false;
                 }
                 return !bookings.some(b => 
-                  b.counsellorId === selectedAdvisor.id && 
                   b.date === dateStr && 
-                  b.time === slot && 
-                  (b.status === 'APPROVED' || b.status === 'PENDING')
+                  b.time === slot
                 );
               });
               const parseTimeToMinutes = (timeStr) => {
@@ -463,16 +464,14 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
           try {
             const dayActive = parsed.activeDays && parsed.activeDays[dayOfWeek];
             if (dayActive && parsed.availableSlots && parsed.availableSlots.length > 0) {
-              const bookings = existingAppointments;
+              const bookings = advisor.bookedSlots || [];
               parsed.availableSlots.forEach(slot => {
                 if (dateStr === todayStr && isSlotInPast(slot)) {
                   return;
                 }
                 const isBooked = bookings.some(b => 
-                  b.counsellorId === advisor.id && 
                   b.date === dateStr && 
-                  b.time === slot && 
-                  (b.status === 'APPROVED' || b.status === 'PENDING')
+                  b.time === slot
                 );
                 if (!isBooked) {
                   activeSlotsSet.add(slot);
@@ -507,13 +506,14 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     if (advisor.modes && !advisor.modes.includes(bookingMode)) {
       return [];
     }
-    const dayOfWeek = new Date(dateStr).getDay();
+    const [year, month, day] = dateStr.split('-').map(Number);
+    const dayOfWeek = new Date(Date.UTC(year, month - 1, day)).getUTCDay();
     const parsed = advisor.availabilitySlots;
     if (!parsed) return [];
     try {
       const dayActive = parsed.activeDays && parsed.activeDays[dayOfWeek];
       if (dayActive && parsed.availableSlots && parsed.availableSlots.length > 0) {
-        const bookings = existingAppointments;
+        const bookings = advisor.bookedSlots || [];
         const todayStr = getLocalTodayString();
         const isSlotInPast = (timeStr) => {
           try {
@@ -533,10 +533,8 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
             return false;
           }
           return !bookings.some(b => 
-            b.counsellorId === advisor.id && 
             b.date === dateStr && 
-            b.time === slot && 
-            (b.status === 'APPROVED' || b.status === 'PENDING')
+            b.time === slot
           );
         });
       }
@@ -551,7 +549,8 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     if (advisor.modes && !advisor.modes.includes(bookingMode)) {
       return [];
     }
-    const dayOfWeek = new Date(dateStr).getDay();
+    const [year, month, day] = dateStr.split('-').map(Number);
+    const dayOfWeek = new Date(Date.UTC(year, month - 1, day)).getUTCDay();
     const parsed = advisor.availabilitySlots;
     if (!parsed) return [];
     try {
@@ -586,13 +585,9 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
 
   const getAdvisorBookedSlotsForDate = (advisor, dateStr) => {
     if (!dateStr || !advisor) return [];
-    const bookings = existingAppointments;
+    const bookings = advisor.bookedSlots || [];
     return bookings
-      .filter(b => 
-        b.counsellorId === advisor.id && 
-        b.date === dateStr && 
-        (b.status === 'APPROVED' || b.status === 'PENDING' || b.status === 'CONFIRMED')
-      )
+      .filter(b => b.date === dateStr)
       .map(b => b.time);
   };
 
@@ -612,7 +607,8 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
 
   const getAdvisorAvailabilityStatus = (advisorId, dateStr, timeStr) => {
     if (!dateStr || !timeStr) return 'Available';
-    const dayOfWeek = new Date(dateStr).getDay();
+    const [year, month, day] = dateStr.split('-').map(Number);
+    const dayOfWeek = new Date(Date.UTC(year, month - 1, day)).getUTCDay();
 
     const advisor = advisors.find(a => a.id === advisorId);
     if (!advisor || !advisor.availabilitySlots) {
@@ -624,12 +620,10 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       const isDayActive = parsed.activeDays && parsed.activeDays[dayOfWeek];
       const isSlotActive = parsed.availableSlots && parsed.availableSlots.includes(timeStr);
       if (isDayActive && isSlotActive) {
-        const bookings = existingAppointments;
+        const bookings = advisor.bookedSlots || [];
         const isAlreadyBooked = bookings.some(b => 
-          b.counsellorId === advisorId && 
           b.date === dateStr && 
-          b.time === timeStr && 
-          (b.status === 'APPROVED' || b.status === 'PENDING')
+          b.time === timeStr
         );
         if (isAlreadyBooked) {
           return 'Booked';

@@ -330,7 +330,11 @@ export default function StudentManagementTab(props) {
     isSuperAdmin,
     hasUserPermission,
     hasPsyPermission,
-    hasBookingPermission
+    hasBookingPermission,
+    studentsList,
+    canAddStudents,
+    canEditStudents,
+    canDeleteStudents
   } = props;
 
 

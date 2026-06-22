@@ -3257,7 +3257,11 @@ export default function AdminDashboard({ setView }) {
     canDeleteBookings,
     canAddPsy,
     canEditPsy,
-    canDeletePsy
+    canDeletePsy,
+    studentsList,
+    canAddStudents,
+    canEditStudents,
+    canDeleteStudents
   };
 
   return (

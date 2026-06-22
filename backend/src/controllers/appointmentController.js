@@ -295,7 +295,8 @@ const AppointmentController = {
           if (modifier === 'AM' && hours === 12) hours = 0;
 
           const [year, month, day] = appointmentDateStr.split('-').map(Number);
-          const appDateTime = new Date(year, month - 1, day, hours, minutes);
+          const isoStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}T${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:00+05:30`;
+          const appDateTime = new Date(isoStr);
           const now = new Date();
 
           const diffMs = appDateTime - now;
@@ -448,7 +449,8 @@ const AppointmentController = {
           if (modifier === 'AM' && hours === 12) hours = 0;
 
           const [year, month, day] = appointmentDateStr.split('-').map(Number);
-          const appDateTime = new Date(year, month - 1, day, hours, minutes);
+          const isoStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}T${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:00+05:30`;
+          const appDateTime = new Date(isoStr);
           const now = new Date();
 
           const diffMs = appDateTime - now;

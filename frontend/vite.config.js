@@ -11,6 +11,9 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'CIGI.png', 'children-learning.png'],
+      workbox: {
+        importScripts: ['sw-custom.js']
+      },
       manifest: {
         name: 'Behold Aspire',
         short_name: 'Behold',

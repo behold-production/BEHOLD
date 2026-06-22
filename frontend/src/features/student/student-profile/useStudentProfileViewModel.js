@@ -13,7 +13,7 @@ import {
   sendLocalNotification
 } from '../../../shared/services/notificationHelper';
 
-import { INITIAL_STATE } from './constants';
+import { INITIAL_STATE } from './studentProfileConstants';
 import {
   getGreeting, calculateCompletion, isSessionCompleted, getMeetLinkStatus,
   downloadPDFReceiptForSession

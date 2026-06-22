@@ -81,8 +81,21 @@ const UserController = {
         );
       }
 
+      // Get all active appointments
+      const allActiveAppointments = await StorageService.findAll('appointments', {
+        status: { $in: ['APPROVED', 'PENDING', 'CONFIRMED'] }
+      });
+
       // Format response to hide sensitive details
-      const responseData = filtered.map(({ password, ...data }) => data);
+      const responseData = filtered.map(({ password, ...data }) => {
+        const booked = allActiveAppointments
+          .filter((appt) => appt.counsellorId === data.id)
+          .map((appt) => ({ date: appt.date, time: appt.time }));
+        return {
+          ...data,
+          bookedSlots: booked
+        };
+      });
 
       res.status(200).json({
         success: true,
@@ -108,12 +121,20 @@ const UserController = {
       // Load feedbacks
       const feedbacks = await StorageService.findAll('feedbacks', { counsellorId: id, isModerated: false });
 
+      // Load booked slots
+      const activeAppointments = await StorageService.findAll('appointments', {
+        counsellorId: id,
+        status: { $in: ['APPROVED', 'PENDING', 'CONFIRMED'] }
+      });
+      const bookedSlots = activeAppointments.map((appt) => ({ date: appt.date, time: appt.time }));
+
       res.status(200).json({
         success: true,
         message: 'Counsellor details retrieved successfully',
         data: {
           ...counsellorData,
-          feedbacks
+          feedbacks,
+          bookedSlots
         }
       });
     } catch (error) {

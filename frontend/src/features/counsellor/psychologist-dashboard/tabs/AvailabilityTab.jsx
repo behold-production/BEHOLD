@@ -1,6 +1,6 @@
 import React from 'react';
 import { Save } from 'lucide-react';
-import { DAYS_OF_WEEK } from '../constants';
+import { DAYS_OF_WEEK } from '../counsellorDashboardConstants';
 
 const AvailabilityTab = ({
   activeDays,

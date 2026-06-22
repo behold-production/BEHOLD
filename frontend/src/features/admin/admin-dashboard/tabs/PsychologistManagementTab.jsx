@@ -333,7 +333,10 @@ export default function PsychologistManagementTab(props) {
     hasUserPermission,
     hasPsyPermission,
     hasBookingPermission,
-    canAddPsy
+    canAddPsy,
+    psychologistsList,
+    canEditPsy,
+    canDeletePsy
   } = props;
 
   return (

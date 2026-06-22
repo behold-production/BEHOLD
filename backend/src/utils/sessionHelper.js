@@ -24,8 +24,10 @@ const autoExpireSessions = async () => {
         if (modifier === 'AM' && hours === 12) hours = 0;
 
         const [year, month, day] = dateStr.split('-').map(Number);
-        // Start time + 1 hour duration. After 1 hour from start, it is expired if not joined/completed
-        return new Date(year, month - 1, day, hours + 1, minutes);
+        const isoStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}T${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:00+05:30`;
+        const dt = new Date(isoStr);
+        dt.setUTCHours(dt.getUTCHours() + 1);
+        return dt;
       } catch (e) {
         console.error('[Auto-Expire] Error parsing date/time:', dateStr, timeStr, e);
         return null;

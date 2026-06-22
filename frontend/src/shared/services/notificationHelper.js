@@ -19,18 +19,39 @@ export const requestNotificationPermission = async () => {
   }
 };
 
-export const sendLocalNotification = (title, body, options = {}) => {
+export const sendLocalNotification = async (title, body, options = {}) => {
   if (!isNotificationSupported()) return null;
   if (Notification.permission !== 'granted') return null;
 
-  try {
-    const notification = new Notification(title, {
-      body,
-      tag: options.tag || 'behold-alert',
-      renotify: options.renotify !== false,
-      ...options
-    });
+  // Prepare standard notification options
+  const notificationOptions = {
+    body,
+    tag: options.tag || 'behold-alert',
+    renotify: options.renotify !== false,
+    icon: options.icon || '/favicon.svg',
+    badge: options.badge || '/favicon.svg',
+    data: {
+      onClickUrl: options.onClickUrl || '/'
+    },
+    ...options
+  };
 
+  // Try service worker first (required for mobile devices)
+  if ('serviceWorker' in navigator) {
+    try {
+      const registration = await navigator.serviceWorker.ready;
+      if (registration && 'showNotification' in registration) {
+        await registration.showNotification(title, notificationOptions);
+        return true;
+      }
+    } catch (e) {
+      console.warn('Service Worker notification failed, trying fallback', e);
+    }
+  }
+
+  // Fallback for desktop browsers
+  try {
+    const notification = new Notification(title, notificationOptions);
     notification.onclick = () => {
       window.focus();
       if (options.onClickUrl && window.spaNavigate) {
@@ -38,10 +59,9 @@ export const sendLocalNotification = (title, body, options = {}) => {
       }
       notification.close();
     };
-
     return notification;
   } catch (e) {
-    console.error('Failed to show notification', e);
+    console.error('Failed to show standard notification fallback', e);
     return null;
   }
 };

@@ -37,10 +37,6 @@ export default function PsychologistDashboard({ setView }) {
   const { user, login, register, logout, isLoading, updateUser } = useAuth();
   const { showPrompt } = useCustomDialog();
 
-  const isCounsellorVerified = () => {
-    return user ? user.isVerified !== false : true;
-  };
-
   const [currentSection, setCurrentSection] = useState('overview'); // overview, profile, availability, bookings
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileDrawerOpen, setIsProfileDrawerOpen] = useState(false);
@@ -89,6 +85,10 @@ export default function PsychologistDashboard({ setView }) {
   const [counsellorRejectionReason, setCounsellorRejectionReason] = useState(user?.rejectionReason || '');
   // Separate edit state — what the form binds to, so background refreshes don't clear the user's typing
   const [editProfile, setEditProfile] = useState(null);
+
+  const isCounsellorVerified = () => {
+    return counsellorStatus === 'APPROVED' || counsellorStatus === 'ACTIVE' || (user && (user.isVerified === true || user.status === 'APPROVED' || user.status === 'ACTIVE'));
+  };
 
   const [isProfileSaved, setIsProfileSaved] = useState(false);
   const [bookings, setBookings] = useState([]);
@@ -1707,15 +1707,15 @@ export default function PsychologistDashboard({ setView }) {
         </div>
 
         {/* Verification Status Alert Banner */}
-        {user?.status === 'REJECTED' ? (
+        {counsellorStatus === 'REJECTED' || user?.status === 'REJECTED' ? (
           <div className="bg-rose-955/20 border border-rose-900/60 p-4 rounded-xl flex items-center gap-3 text-rose-350 text-sm animate-in slide-in-from-top duration-300">
             <ShieldAlert className="w-5 h-5 text-rose-450 shrink-0" />
             <div className="text-left">
               <span className="font-bold capitalize  block mb-0.5 text-rose-450">Application Rejected</span>
               Your professional counsellor profile application has been rejected by the administrator.
-              {user?.rejectionReason && (
+              {(counsellorRejectionReason || user?.rejectionReason) && (
                 <div className="mt-2 text-xs font-semibold text-rose-400">
-                  <span className="font-bold">Reason:</span> {user.rejectionReason}
+                  <span className="font-bold">Reason:</span> {counsellorRejectionReason || user.rejectionReason}
                 </div>
               )}
             </div>

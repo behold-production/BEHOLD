@@ -1,6 +1,6 @@
 import React from 'react';
 import { Bell, LayoutDashboard, User, Calendar, BarChart3 } from 'lucide-react';
-import { TABS } from '../constants';
+import { TABS } from '../studentProfileConstants';
 
 const ICON_MAP = {
   LayoutDashboard,

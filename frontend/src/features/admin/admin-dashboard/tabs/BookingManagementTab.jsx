@@ -334,7 +334,9 @@ export default function BookingManagementTab(props) {
     hasUserPermission,
     hasPsyPermission,
     hasBookingPermission,
-    canAddBookings
+    canAddBookings,
+    canEditBookings,
+    canDeleteBookings
   } = props;
 
 

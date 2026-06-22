@@ -7,7 +7,8 @@ const parseDateTime = (dateStr, timeStr) => {
     let [hours, minutes] = timeParts.split(':').map(Number);
     if (modifier === 'PM' && hours < 12) hours += 12;
     if (modifier === 'AM' && hours === 12) hours = 0;
-    return new Date(year, month - 1, day, hours, minutes);
+    const isoStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}T${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:00+05:30`;
+    return new Date(isoStr);
   } catch (e) {
     return null;
   }
@@ -64,10 +65,11 @@ const validateBookingDetails = async (counsellorId, date, time, mode, service, a
     return { valid: false, message: 'Counsellor has no availability configured.' };
   }
 
-  const dayOfWeek = selectedDateTime.getDay(); // 0 = Sunday, 6 = Saturday
+  const [year, month, day] = date.split('-').map(Number);
+  const dayOfWeek = new Date(Date.UTC(year, month - 1, day)).getUTCDay(); // 0 = Sunday, 6 = Saturday
   const isDayActive = availability.activeDays[dayOfWeek];
   if (!isDayActive) {
-    const weekdayName = selectedDateTime.toLocaleDateString('en-IN', { weekday: 'long' });
+    const weekdayName = new Date(Date.UTC(year, month - 1, day)).toLocaleDateString('en-IN', { weekday: 'long', timeZone: 'UTC' });
     return { valid: false, message: `Counsellor is not available on ${weekdayName}s.` };
   }
 
