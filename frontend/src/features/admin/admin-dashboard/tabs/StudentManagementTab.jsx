@@ -1,5 +1,6 @@
 import React from 'react';
 import { User, ShieldAlert, Award, Trash, Check, Plus, Lock, Settings, KeyRound, BarChart3, LogOut, Search, ShieldCheck, Calendar, Clock, Link, AlertCircle, Edit, Video, UserPlus, MessageSquare, FileSpreadsheet, HelpCircle, X, ChevronRight, ChevronLeft, Mail, Shield, Menu, Brain, Download, FileText, Eye, EyeOff, Bell, Send } from 'lucide-react';
+import { SkeletonTableRows, PaginationBar } from '../components/SharedAdminUI';
 
 export default function StudentManagementTab(props) {
     const {
@@ -501,7 +502,4 @@ export default function StudentManagementTab(props) {
                 />
               </div>
             );
-          
-
-          {/* TAB 3: PSYCHOLOGISTS DIRECTORY */}
-}
+          }

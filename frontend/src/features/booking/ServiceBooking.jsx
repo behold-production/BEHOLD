@@ -67,6 +67,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
     errors,
     setErrors,
     isSubmitting,
+    setIsSubmitting,
     isSuccess,
     bookingStep,
     setBookingStep,

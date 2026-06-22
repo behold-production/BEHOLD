@@ -1,3 +1,4 @@
+/* global clients */
 // Custom Service Worker script to handle push notification click events
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();

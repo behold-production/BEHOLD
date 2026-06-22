@@ -540,14 +540,6 @@ export default function PsychologistManagementTab(props) {
                                   <KeyRound className="w-4 h-4 inline-block" />
                                 </button>
                               )}
-                              <a
-                                href={`#/advisor/${psy.id}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="px-2.5 py-1 bg-zinc-900 text-brand hover:text-white rounded border border-zinc-800 hover:bg-zinc-850 transition cursor-pointer text-sm font-bold capitalize  inline-block text-center"
-                              >
-                                Preview
-                              </a>
                               {canEditPsy && (
                                 <button
                                   onClick={() => handleOpenEditPsy(psy)}

@@ -1089,6 +1089,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     errors,
     setErrors,
     isSubmitting,
+    setIsSubmitting,
     isSuccess,
     isAutofilled,
     bookingStep,

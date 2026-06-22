@@ -630,7 +630,4 @@ export default function BookingManagementTab(props) {
                 />
               </div>
             );
-          
-
-          {/* TAB: STUDENT INQUIRIES & LEADS */}
 }

@@ -14,6 +14,7 @@ import { useAuth } from '../../shared/context/AuthContext';
 import { useCustomDialog } from '../../shared/context/CustomDialogContext';
 import LogoutConfirmModal from '../../shared/components/LogoutConfirmModal';
 import ApiService from '../../shared/services/api';
+import jsPDF from 'jspdf';
 
 // Extracted Components
 import SidebarNav from './psychologist-dashboard/tabs/SidebarNav';

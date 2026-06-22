@@ -13,6 +13,9 @@ import AptitudeQuestionsTab from './admin-dashboard/tabs/AptitudeQuestionsTab';
 import FaqsTab from './admin-dashboard/tabs/FaqsTab';
 import SettingsTab from './admin-dashboard/tabs/SettingsTab';
 import AnalyticsTab from './admin-dashboard/tabs/AnalyticsTab';
+import { getInitials } from './admin-dashboard/utils';
+
+const printTextSection = undefined;
 
 import {
   User, ShieldAlert, Award, Trash, Check, Plus, Lock,
