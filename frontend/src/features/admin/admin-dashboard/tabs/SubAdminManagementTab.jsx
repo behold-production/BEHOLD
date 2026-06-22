@@ -656,6 +656,14 @@ export default function SubAdminManagementTab(props) {
                           <tbody>
                             {subAdminsList.map(admin => {
                               const { cleanName, roleTitle } = parseStaffDetails(admin);
+                              const perms = admin.permissions || [];
+                              const enabledModules = PRIVILEGE_MODULES.filter(m =>
+                                perms.includes(m.id) ||
+                                m.actions.some(act => perms.includes(act.id)) ||
+                                (m.id === 'manage_users' && perms.includes('MANAGE_USERS')) ||
+                                (m.id === 'manage_psychologists' && perms.includes('MANAGE_PSYCHOLOGISTS')) ||
+                                (m.id === 'manage_bookings' && perms.includes('MANAGE_BOOKINGS'))
+                              );
                               return (
                                 <tr key={admin.id} className="border-b border-zinc-900 hover:bg-zinc-900/50">
                                   <td className="p-3">
@@ -669,11 +677,14 @@ export default function SubAdminManagementTab(props) {
                                   <td className="p-3 text-zinc-400">{admin.email}</td>
                                   <td className="p-3">
                                     <div className="flex flex-wrap gap-1">
-                                      {(admin.permissions || []).map(p => (
-                                        <span key={p} className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-sm font-bold text-zinc-400 capitalize">
-                                          {p.replace('MANAGE_', '')}
+                                      {enabledModules.map(m => (
+                                        <span key={m.id} className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-xs font-bold text-zinc-400 capitalize">
+                                          {m.name.replace(' Management', '').replace(' & Leads', '')}
                                         </span>
                                       ))}
+                                      {enabledModules.length === 0 && (
+                                        <span className="text-xs text-zinc-650 italic">No access permissions</span>
+                                      )}
                                     </div>
                                   </td>
                                   <td className="p-3 text-center">

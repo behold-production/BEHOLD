@@ -1925,11 +1925,11 @@ export default function PsychologistDashboard({ setView }) {
               {/* Specialties */}
               {profile.specialties && (
                 <div className="space-y-2">
-                  <p className="text-sm font-bold capitalize  text-zinc-500 ">Specialties</p>
+                  <p className="text-sm font-bold capitalize text-zinc-500">Specialties</p>
                   <div className="flex flex-wrap gap-1.5">
-                    {profile.specialties.split(',').map((s, i) => (
-                      <span key={i} className="text-sm px-2 py-1 bg-indigo-955 border border-indigo-900 text-indigo-300 rounded-full font-semibold ">
-                        {s.trim()}
+                    {(Array.isArray(profile.specialties) ? profile.specialties : (typeof profile.specialties === 'string' ? profile.specialties.split(',') : [])).map((s, i) => (
+                      <span key={i} className="text-sm px-2 py-1 bg-indigo-955 border border-indigo-900 text-indigo-300 rounded-full font-semibold">
+                        {typeof s === 'string' ? s.trim() : s}
                       </span>
                     ))}
                   </div>

@@ -4701,9 +4701,11 @@ export default function AdminDashboard({ setView }) {
               const title = viewingPsychologist.title || 'Consultant Psychologist';
               const phone = viewingPsychologist.phone || 'N/A';
               const hours = viewingPsychologist.hours !== undefined ? viewingPsychologist.hours : 0;
-              const modes = viewingPsychologist.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP'];
+              const rawModes = viewingPsychologist.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP'];
+              const modes = Array.isArray(rawModes) ? rawModes : (typeof rawModes === 'string' ? rawModes.split(',').map(m => m.trim()) : []);
               const education = viewingPsychologist.education || 'MPhil Clinical Psychology';
-              const specialties = viewingPsychologist.specialties || 'Anxiety, Stress Management, Mood Disorders';
+              const rawSpecialties = viewingPsychologist.specialties || 'Anxiety, Stress Management, Mood Disorders';
+              const specialtiesList = Array.isArray(rawSpecialties) ? rawSpecialties : (typeof rawSpecialties === 'string' ? rawSpecialties.split(',').map(s => s.trim()) : []);
               const price = viewingPsychologist.price || 1200;
               const lang = viewingPsychologist.lang || 'English, Malayalam';
               const bio = viewingPsychologist.bio || viewingPsychologist.experience || 'Professional clinical therapist committed to student wellbeing.';
@@ -4783,12 +4785,12 @@ export default function AdminDashboard({ setView }) {
                       <div className="bg-zinc-955 border border-zinc-850 rounded-xl p-4 space-y-2">
                         <span className="text-sm capitalize font-bold text-zinc-500 block">Areas of Expertise</span>
                         <div className="flex flex-wrap gap-1.5 pt-1">
-                          {specialties.split(',').map(spec => (
+                          {specialtiesList.map(spec => (
                             <span
-                              key={spec.trim()}
+                              key={spec}
                               className="px-2.5 py-0.5 rounded-full bg-zinc-900 border border-zinc-800 text-sm font-bold text-zinc-400 capitalize tracking-wide"
                             >
-                              {spec.trim()}
+                              {spec}
                             </span>
                           ))}
                         </div>
