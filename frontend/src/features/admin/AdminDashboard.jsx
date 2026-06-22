@@ -3381,6 +3381,1656 @@ export default function AdminDashboard({ setView }) {
         </div>
       )}
 
+      {/* 1. STUDENT ADD / EDIT MODAL */}
+      {(isAddUserOpen || isEditUserOpen) && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
+            onClick={() => { setIsAddUserOpen(false); setIsEditUserOpen(false); }}
+          />
+          <div className="relative w-full max-w-lg bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
+            <div>
+              <h3 className="text-base font-bold text-white capitalize font-header">
+                {isAddUserOpen ? 'Register Student' : 'Edit Student Details'}
+              </h3>
+              <p className="text-sm text-zinc-500 leading-none mt-1">
+                {isAddUserOpen ? 'Provision a new student account.' : 'Modify account registry records.'}
+              </p>
+            </div>
+            <form onSubmit={isAddUserOpen ? handleCreateUser : handleUpdateUser} className="space-y-4 font-medium">
+              {isEditUserOpen && (
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Profile Picture</label>
+                  <div className="flex items-center gap-3">
+                    <div className="w-14 h-14 rounded-xl bg-zinc-950 border border-zinc-800 overflow-hidden shrink-0 flex items-center justify-center text-brand font-bold text-lg">
+                      {userProfilePicFile ? (
+                        <img src={URL.createObjectURL(userProfilePicFile)} alt="Preview" className="w-full h-full object-cover" />
+                      ) : userForm.profilePic ? (
+                        <img src={userForm.profilePic} alt="Profile" className="w-full h-full object-cover" />
+                      ) : (
+                        getInitials(userForm.name)
+                      )}
+                    </div>
+                    <div className="flex-1 space-y-1">
+                      <input ref={userProfilePicRef} type="file" accept="image/jpeg,image/png,image/jpg" className="hidden" onChange={(e) => { const file = e.target.files?.[0]; if (file) setUserProfilePicFile(file); }} />
+                      <button type="button" onClick={() => userProfilePicRef.current?.click()} className="px-3 py-2 text-xs font-bold bg-zinc-955 border border-zinc-800 hover:border-brand text-zinc-300 hover:text-white rounded-lg cursor-pointer transition bg-transparent">
+                        {userProfilePicFile ? 'Change Image' : 'Upload Photo'}
+                      </button>
+                      {userProfilePicFile && (<p className="text-xs text-zinc-500 truncate max-w-[180px]">{userProfilePicFile.name}</p>)}
+                    </div>
+                  </div>
+                </div>
+              )}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Full Name</label>
+                  <input type="text" required placeholder="e.g. John Doe" value={userForm.name} onChange={(e) => setUserForm({ ...userForm, name: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors" />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Email Address</label>
+                  <input type="email" required placeholder="john@example.com" value={userForm.email} onChange={(e) => setUserForm({ ...userForm, email: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors" />
+                </div>
+              </div>
+              <div className="space-y-1">
+                <label className="text-sm capitalize font-bold text-zinc-400">
+                  Password {isEditUserOpen && <span className="text-zinc-500 lowercase font-normal">(leave blank to keep unchanged)</span>}
+                </label>
+                <input type="password" required={isAddUserOpen} placeholder={isEditUserOpen ? "••••••••" : "Enter password"} value={userForm.password} onChange={(e) => setUserForm({ ...userForm, password: e.target.value })} className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors" />
+              </div>
+              {isEditUserOpen && (
+                <>
+                  <div className="border-t border-zinc-800 pt-3">
+                    <p className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-3">Student Information</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div className="space-y-1">
+                        <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Phone Number</label>
+                        <input type="tel" placeholder="e.g. 9876543210" value={userForm.phone} onChange={(e) => setUserForm({ ...userForm, phone: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors" />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Grade / Class</label>
+                        <input type="text" placeholder="e.g. Grade 10" value={userForm.grade} onChange={(e) => setUserForm({ ...userForm, grade: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors" />
+                      </div>
+                      <div className="sm:col-span-2 space-y-1">
+                        <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">School Name</label>
+                        <input type="text" placeholder="e.g. St. Mary's School" value={userForm.schoolName} onChange={(e) => setUserForm({ ...userForm, schoolName: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors" />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="border-t border-zinc-800 pt-3">
+                    <p className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-3">Guardian Information</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div className="space-y-1">
+                        <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Guardian Name</label>
+                        <input type="text" placeholder="e.g. Mary Doe" value={userForm.guardianName} onChange={(e) => setUserForm({ ...userForm, guardianName: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors" />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Guardian Phone</label>
+                        <input type="tel" placeholder="e.g. 9876543211" value={userForm.guardianPhone} onChange={(e) => setUserForm({ ...userForm, guardianPhone: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors" />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Group / Batch Code</label>
+                        <input type="text" placeholder="e.g. CIGI-2024-A" value={userForm.groupCode} onChange={(e) => setUserForm({ ...userForm, groupCode: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors" />
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+              {userFormError && (<p className="text-sm text-rose-500 font-bold capitalize tracking-wide">{userFormError}</p>)}
+              {userFormSuccess && (<p className="text-sm text-emerald-500 font-bold capitalize tracking-wide">{userFormSuccess}</p>)}
+              {isUserPicUploading && (<p className="text-xs text-brand font-bold animate-pulse">Uploading profile picture...</p>)}
+              <div className="flex gap-3 pt-2">
+                <button type="button" onClick={() => { setIsAddUserOpen(false); setIsEditUserOpen(false); }} className="flex-1 py-3 border border-zinc-800 hover:bg-zinc-855 text-white font-bold text-sm capitalize rounded-lg cursor-pointer transition text-center bg-transparent">Cancel</button>
+                <button type="submit" className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-950 font-bold text-sm capitalize rounded-lg cursor-pointer transition border-none shadow-md">
+                  {isAddUserOpen ? 'Create Account' : 'Save Changes'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* 2. PSYCHOLOGIST ADD / EDIT MODAL */}
+      {(isAddPsyOpen || isEditPsyOpen) && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
+            onClick={() => { setIsAddPsyOpen(false); setIsEditPsyOpen(false); }}
+          />
+          <div className="relative w-full max-w-lg bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200 overflow-y-auto max-h-[90vh]">
+            <div>
+              <h3 className="text-base font-bold text-white capitalize font-header">
+                {isAddPsyOpen ? 'Register Psychologist' : 'Edit Psychologist details'}
+              </h3>
+              <p className="text-sm text-zinc-500 leading-none mt-1">
+                {isAddPsyOpen ? 'Register a clinical professional profile.' : 'Modify credentials, rates, and bios.'}
+              </p>
+            </div>
+
+            <form onSubmit={isAddPsyOpen ? handleCreatePsy : handleUpdatePsy} className="space-y-4 font-medium">
+              {isEditPsyOpen && (
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Profile Picture</label>
+                  <div className="flex items-center gap-3">
+                    <div className="w-14 h-14 rounded-xl bg-zinc-950 border border-zinc-800 overflow-hidden shrink-0 flex items-center justify-center text-brand font-bold text-lg">
+                      {psyProfilePicFile ? (
+                        <img src={URL.createObjectURL(psyProfilePicFile)} alt="Preview" className="w-full h-full object-cover" />
+                      ) : psyForm.profilePic ? (
+                        <img src={psyForm.profilePic} alt="Profile" className="w-full h-full object-cover" />
+                      ) : (
+                        getInitials(psyForm.name)
+                      )}
+                    </div>
+                    <div className="flex-1 space-y-1">
+                      <input ref={psyProfilePicRef} type="file" accept="image/jpeg,image/png,image/jpg" className="hidden" onChange={(e) => { const file = e.target.files?.[0]; if (file) setPsyProfilePicFile(file); }} />
+                      <button type="button" onClick={() => psyProfilePicRef.current?.click()} className="px-3 py-2 text-xs font-bold bg-zinc-955 border border-zinc-800 hover:border-brand text-zinc-300 hover:text-white rounded-lg cursor-pointer transition bg-transparent">
+                        {psyProfilePicFile ? 'Change Image' : 'Upload Photo'}
+                      </button>
+                      {psyProfilePicFile && (<p className="text-xs text-zinc-500 truncate max-w-[180px]">{psyProfilePicFile.name}</p>)}
+                    </div>
+                  </div>
+                </div>
+              )}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div className="space-y-1">
+                  <label className="text-sm capitalize font-bold text-zinc-400">Full Name</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Dr. Sandra Tomy"
+                    value={psyForm.name}
+                    onChange={(e) => setPsyForm({ ...psyForm, name: e.target.value })}
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-sm capitalize font-bold text-zinc-400">Email Address</label>
+                  <input
+                    type="email"
+                    required
+                    placeholder="counsellor@example.com"
+                    value={psyForm.email}
+                    onChange={(e) => setPsyForm({ ...psyForm, email: e.target.value })}
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-sm capitalize font-bold text-zinc-400">
+                    Password {isEditPsyOpen && <span className="text-zinc-500 lowercase font-normal">(blank keeps same)</span>}
+                  </label>
+                  <input
+                    type="password"
+                    required={isAddPsyOpen}
+                    placeholder={isEditPsyOpen ? "••••••••" : "Enter password"}
+                    value={psyForm.password}
+                    onChange={(e) => setPsyForm({ ...psyForm, password: e.target.value })}
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-sm capitalize font-bold text-zinc-400">Education qualifications</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. MPhil Clinical Psychology"
+                    value={psyForm.education}
+                    onChange={(e) => setPsyForm({ ...psyForm, education: e.target.value })}
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-sm capitalize font-bold text-zinc-400">Professional Title</label>
+                  <select
+                    value={psyForm.title}
+                    onChange={(e) => setPsyForm({ ...psyForm, title: e.target.value })}
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none cursor-pointer"
+                  >
+                    <option value="Consultant Psychologist">Consultant Psychologist</option>
+                    <option value="Clinical Psychologist">Clinical Psychologist</option>
+                    <option value="Psychiatrist">Psychiatrist</option>
+                    <option value="Career Mentor">Career Mentor</option>
+                  </select>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-sm capitalize font-bold text-zinc-400">Phone Number</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. +91 94971 74011"
+                    value={psyForm.phone}
+                    onChange={(e) => setPsyForm({ ...psyForm, phone: e.target.value })}
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-sm capitalize font-bold text-zinc-400">Hourly price (INR)</label>
+                  <input
+                    type="number"
+                    placeholder="e.g. 1250"
+                    value={psyForm.price}
+                    onChange={(e) => setPsyForm({ ...psyForm, price: e.target.value })}
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-sm capitalize font-bold text-zinc-400">Languages Spoken</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Malayalam, English"
+                    value={psyForm.lang}
+                    onChange={(e) => setPsyForm({ ...psyForm, lang: e.target.value })}
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-sm capitalize font-bold text-zinc-400">Experience Hours</label>
+                  <input
+                    type="number"
+                    placeholder="e.g. 150"
+                    value={psyForm.hours}
+                    onChange={(e) => setPsyForm({ ...psyForm, hours: Number(e.target.value) || 0 })}
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                  />
+                </div>
+
+                <div className="sm:col-span-2 space-y-1">
+                  <label className="text-sm capitalize font-bold text-zinc-400">Default Google Meet Link (optional)</label>
+                  <input
+                    type="text"
+                    placeholder="https://meet.google.com/abc-defg-hij"
+                    value={psyForm.defaultMeetLink}
+                    onChange={(e) => setPsyForm({ ...psyForm, defaultMeetLink: e.target.value })}
+                    className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                  />
+                </div>
+
+                <div className="sm:col-span-2 space-y-1.5 pt-1">
+                  <label className="text-sm capitalize font-bold text-zinc-400 block mb-1">Supported Session Modes</label>
+                  <div className="flex flex-wrap gap-4">
+                    {['ONLINE', 'OFFLINE', 'DOOR_STEP'].map(mode => (
+                      <label key={mode} className="flex items-center gap-2 cursor-pointer text-sm text-zinc-300 select-none font-semibold">
+                        <input
+                          type="checkbox"
+                          checked={psyForm.modes ? psyForm.modes.includes(mode) : false}
+                          onChange={() => {
+                            const currentModes = psyForm.modes || [];
+                            const nextModes = currentModes.includes(mode)
+                              ? currentModes.filter(m => m !== mode)
+                              : [...currentModes, mode];
+                            setPsyForm({ ...psyForm, modes: nextModes });
+                          }}
+                          className="w-4 h-4 rounded border-zinc-805 bg-zinc-955 text-brand focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
+                        />
+                        <span>{mode === 'DOOR_STEP' ? 'Doorstep' : mode.charAt(0) + mode.slice(1).toLowerCase()}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="sm:col-span-2 space-y-1">
+                  <label className="text-sm capitalize font-bold text-zinc-400">Specialties (comma-separated)</label>
+                  <input
+                    type="text"
+                    placeholder="Anxiety, Stress Management, Mood Disorders"
+                    value={psyForm.specialties}
+                    onChange={(e) => setPsyForm({ ...psyForm, specialties: e.target.value })}
+                    className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                  />
+                </div>
+
+                <div className="sm:col-span-2 space-y-1">
+                  <label className="text-sm capitalize font-bold text-zinc-400">Professional Bio</label>
+                  <textarea
+                    rows={4}
+                    placeholder="Write clinical experience details..."
+                    value={psyForm.bio}
+                    onChange={(e) => setPsyForm({ ...psyForm, bio: e.target.value })}
+                    className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors resize-none"
+                  />
+                </div>
+
+                {/* Availability Timings */}
+                <div className="sm:col-span-2 border-t border-zinc-800 pt-4 space-y-4">
+                  <h4 className="text-sm font-bold text-zinc-300 capitalize font-header">Availability Timings</h4>
+
+                  {/* Operational Days */}
+                  <div className="space-y-1.5">
+                    <label className="text-xs capitalize font-bold text-zinc-400 block">Operational Days</label>
+                    <div className="flex flex-wrap gap-1.5">
+                      {[
+                        { label: 'Mon', index: 1 },
+                        { label: 'Tue', index: 2 },
+                        { label: 'Wed', index: 3 },
+                        { label: 'Thu', index: 4 },
+                        { label: 'Fri', index: 5 },
+                        { label: 'Sat', index: 6 },
+                        { label: 'Sun', index: 0 }
+                      ].map(day => {
+                        const active = adminActiveDays[day.index];
+                        return (
+                          <button
+                            key={day.index}
+                            type="button"
+                            onClick={() => toggleAdminDay(day.index)}
+                            className={`px-3 py-1.5 border rounded-lg text-xs font-bold capitalize transition-all duration-200 cursor-pointer ${active
+                              ? 'bg-brand text-zinc-955 font-bold border-none'
+                              : 'bg-zinc-955 border-zinc-850 text-zinc-500 hover:border-zinc-750'
+                              }`}
+                          >
+                            {day.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Active Timing Slots */}
+                  <div className="space-y-1.5">
+                    <label className="text-xs capitalize font-bold text-zinc-400 block">Timing Slots (Active)</label>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[200px] overflow-y-auto pr-1">
+                      {adminAllSlots.map(slot => {
+                        const exists = adminAvailableSlots.includes(slot);
+                        return (
+                          <div key={slot} className="flex items-center gap-1.5 w-full">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (exists) {
+                                  setAdminAvailableSlots(prev => prev.filter(s => s !== slot));
+                                } else {
+                                  setAdminAvailableSlots(prev => [...prev, slot]);
+                                }
+                              }}
+                              className={`flex-1 py-2 border rounded-lg font-bold transition cursor-pointer text-xs ${exists
+                                ? 'bg-brand/10 border-brand text-brand'
+                                : 'bg-zinc-955 border-zinc-850 text-zinc-400 hover:border-zinc-750'
+                                }`}
+                            >
+                              {slot}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveAdminSlot(slot)}
+                              className="px-2 py-2 bg-zinc-950 border border-zinc-850 hover:bg-rose-955/40 hover:border-rose-900 text-zinc-500 hover:text-rose-400 rounded-lg text-xs font-bold transition cursor-pointer shrink-0 font-header"
+                              title="Remove Slot"
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        );
+                      })}
+                      {adminAllSlots.length === 0 && (
+                        <div className="col-span-2 py-4 bg-zinc-955/40 border border-dashed border-zinc-850 rounded-xl text-zinc-550 italic text-xs text-center w-full">
+                          No timing slots configured. Use the controls below to add custom slots or generate from a time range.
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Add Custom Timing Slot */}
+                  <div className="space-y-1.5 bg-zinc-955/50 border border-zinc-850/60 p-3.5 rounded-xl">
+                    <label className="text-xs capitalize font-bold text-zinc-350 block">Add Custom Timing Slot</label>
+                    <div className="flex gap-2 items-end">
+                      <div className="flex-1 space-y-0.5">
+                        <label className="text-[10px] text-zinc-500 capitalize font-bold block">Hour</label>
+                        <select
+                          value={adminCustomHour}
+                          onChange={(e) => setAdminCustomHour(e.target.value)}
+                          className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+                        >
+                          {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map(h => (
+                            <option key={h} value={h}>{h}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="flex-1 space-y-0.5">
+                        <label className="text-[10px] text-zinc-500 capitalize font-bold block">Minute</label>
+                        <select
+                          value={adminCustomMinute}
+                          onChange={(e) => setAdminCustomMinute(e.target.value)}
+                          className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-855 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+                        >
+                          {['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55'].map(m => (
+                            <option key={m} value={m}>{m}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="flex-1 space-y-0.5">
+                        <label className="text-[10px] text-zinc-500 capitalize font-bold block">AM/PM</label>
+                        <select
+                          value={adminCustomPeriod}
+                          onChange={(e) => setAdminCustomPeriod(e.target.value)}
+                          className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-855 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+                        >
+                          <option value="AM">AM</option>
+                          <option value="PM">PM</option>
+                        </select>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={handleAddAdminCustomSlot}
+                        className="bg-brand/10 hover:bg-brand text-brand hover:text-zinc-955 px-3 py-1.5 text-xs font-bold capitalize rounded-lg transition-colors border border-brand/30 hover:border-brand cursor-pointer shrink-0 h-[30px] flex items-center justify-center font-header"
+                      >
+                        Add Slot
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Add Custom Time Range */}
+                  <div className="space-y-1.5 bg-zinc-955/50 border border-zinc-850/60 p-3.5 rounded-xl">
+                    <label className="text-xs capitalize font-bold text-zinc-350 block">Generate Timing Slots from Range</label>
+                    <div className="flex flex-col gap-2">
+                      <div className="flex gap-1.5 items-end">
+                        <span className="text-xs text-zinc-500 font-bold pb-1.5 capitalize tracking-wide w-10 text-left">From:</span>
+                        <div className="flex-1 space-y-0.5">
+                          <select
+                            value={adminFromHour}
+                            onChange={(e) => setAdminFromHour(e.target.value)}
+                            className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+                          >
+                            {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map(h => (
+                              <option key={h} value={h}>{h}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="flex-1 space-y-0.5">
+                          <select
+                            value={adminFromMinute}
+                            onChange={(e) => setAdminFromMinute(e.target.value)}
+                            className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+                          >
+                            {['00', '15', '30', '45'].map(m => (
+                              <option key={m} value={m}>{m}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="flex-1 space-y-0.5">
+                          <select
+                            value={adminFromPeriod}
+                            onChange={(e) => setAdminFromPeriod(e.target.value)}
+                            className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-855 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+                          >
+                            <option value="AM">AM</option>
+                            <option value="PM">PM</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-1.5 items-end">
+                        <span className="text-xs text-zinc-500 font-bold pb-1.5 capitalize tracking-wide w-10 text-left">To:</span>
+                        <div className="flex-1 space-y-0.5">
+                          <select
+                            value={adminToHour}
+                            onChange={(e) => setAdminToHour(e.target.value)}
+                            className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+                          >
+                            {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map(h => (
+                              <option key={h} value={h}>{h}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="flex-1 space-y-0.5">
+                          <select
+                            value={adminToMinute}
+                            onChange={(e) => setAdminToMinute(e.target.value)}
+                            className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+                          >
+                            {['00', '15', '30', '45'].map(m => (
+                              <option key={m} value={m}>{m}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="flex-1 space-y-0.5">
+                          <select
+                            value={adminToPeriod}
+                            onChange={(e) => setAdminToPeriod(e.target.value)}
+                            className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-855 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+                          >
+                            <option value="AM">AM</option>
+                            <option value="PM">PM</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const fromStr = `${adminFromHour}:${adminFromMinute} ${adminFromPeriod}`;
+                          const toStr = `${adminToHour}:${adminToMinute} ${adminToPeriod}`;
+                          addAdminTimeRangeSlots(fromStr, toStr);
+                        }}
+                        className="w-full mt-1 bg-brand/10 hover:bg-brand text-brand hover:text-zinc-955 py-2 text-xs font-bold capitalize rounded-lg transition-colors border border-brand/30 hover:border-brand cursor-pointer flex items-center justify-center font-header"
+                      >
+                        Generate Hourly Slots from Range
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {psyFormError && (
+                <p className="text-sm text-rose-500 font-bold capitalize tracking-wide">{psyFormError}</p>
+              )}
+
+              {psyFormSuccess && (
+                <p className="text-sm text-emerald-500 font-bold capitalize tracking-wide">{psyFormSuccess}</p>
+              )}
+
+              <div className="flex gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => { setIsAddPsyOpen(false); setIsEditPsyOpen(false); }}
+                  className="flex-1 py-3 border border-zinc-800 hover:bg-zinc-850 text-white font-bold text-sm capitalize rounded-lg cursor-pointer transition text-center bg-transparent"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize rounded-lg cursor-pointer transition border-none shadow-md"
+                >
+                  {isAddPsyOpen ? 'Save Psychologist' : 'Update Details'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* 3. BOOKING ADD / EDIT MODAL */}
+      {(isAddBookingOpen || isEditBookingOpen) && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
+            onClick={() => { setIsAddBookingOpen(false); setIsEditBookingOpen(false); }}
+          />
+          <div className="relative w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200">
+            <div>
+              <h3 className="text-base font-bold text-white capitalize font-header">
+                {isAddBookingOpen ? 'Schedule Consultation' : 'Update Appointment'}
+              </h3>
+              <p className="text-sm text-zinc-500 leading-none mt-1">
+                {isAddBookingOpen ? 'Configure slot details and associate clients.' : 'Edit scheduled date, time slot, and meeting link.'}
+              </p>
+            </div>
+
+            <form onSubmit={isAddBookingOpen ? handleCreateBooking : handleUpdateBooking} className="space-y-4 font-medium">
+              <div className="space-y-1">
+                <label className="text-sm capitalize font-bold text-zinc-400">Select Student</label>
+                <select
+                  required
+                  disabled={isEditBookingOpen}
+                  value={bookingForm.userId}
+                  onChange={(e) => setBookingForm({ ...bookingForm, userId: e.target.value })}
+                  className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none cursor-pointer"
+                >
+                  <option value="" disabled>-- Select a student --</option>
+                  {usersDb.filter(u => u.role === 'USER' || !u.role).map(student => (
+                    <option key={student.id} value={student.id}>{student.name} ({student.email})</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-sm capitalize font-bold text-zinc-400">Select Psychologist</label>
+                <select
+                  required
+                  disabled={isEditBookingOpen}
+                  value={bookingForm.advisorId}
+                  onChange={(e) => {
+                    const nextAdvisorId = e.target.value;
+                    const nextPsy = usersDb.find(u => u.id === nextAdvisorId);
+                    let firstSlot = '';
+                    if (nextPsy && nextPsy.availability?.availableSlots?.length > 0) {
+                      firstSlot = nextPsy.availability.availableSlots[0];
+                    }
+                    setBookingForm({ ...bookingForm, advisorId: nextAdvisorId, time: firstSlot });
+                  }}
+                  className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none cursor-pointer"
+                >
+                  <option value="" disabled>-- Select psychologist --</option>
+                  {usersDb.filter(u => u.role === 'PSYCHOLOGIST').map(psy => (
+                    <option key={psy.id} value={psy.id}>{psy.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="text-sm capitalize font-bold text-zinc-400">Service Category</label>
+                  <select
+                    value={bookingForm.service}
+                    onChange={(e) => setBookingForm({ ...bookingForm, service: e.target.value })}
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none cursor-pointer"
+                  >
+                    <option value="counselling">Emotional Wellbeing</option>
+                    <option value="career">Career Mapping</option>
+                  </select>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-sm capitalize font-bold text-zinc-400">Mode</label>
+                  <select
+                    value={bookingForm.mode}
+                    onChange={(e) => setBookingForm({ ...bookingForm, mode: e.target.value })}
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none cursor-pointer"
+                  >
+                    <option value="ONLINE">ONLINE</option>
+                    <option value="OFFLINE">OFFLINE</option>
+                  </select>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-sm capitalize font-bold text-zinc-400">Booking Date</label>
+                  <input
+                    type="date"
+                    required
+                    min={getLocalTodayString()}
+                    value={bookingForm.date}
+                    onChange={(e) => setBookingForm({ ...bookingForm, date: e.target.value })}
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-sm capitalize font-bold text-zinc-400">Time Slot</label>
+                  <select
+                    value={bookingForm.time}
+                    onChange={(e) => setBookingForm({ ...bookingForm, time: e.target.value })}
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none cursor-pointer"
+                  >
+                    <option value="" disabled>-- Select time slot --</option>
+                    {getAdvisorSlotsForBookingForm().map(slot => (
+                      <option key={slot} value={slot}>{slot}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-3">
+                <div className="space-y-1">
+                  <label className="text-sm capitalize font-bold text-zinc-400">Meeting Room URL (Optional)</label>
+                  <input
+                    type="text"
+                    placeholder="https://meet.google.com/abc-def-ghi"
+                    value={bookingForm.meetLink}
+                    onChange={(e) => setBookingForm({ ...bookingForm, meetLink: e.target.value })}
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-sm capitalize font-bold text-zinc-400">Booking Status</label>
+                  <select
+                    value={bookingForm.status}
+                    onChange={(e) => setBookingForm({ ...bookingForm, status: e.target.value })}
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-sm text-white outline-none cursor-pointer"
+                  >
+                    <option value="PENDING">PENDING</option>
+                    <option value="CONFIRMED">CONFIRMED</option>
+                    <option value="COMPLETED">COMPLETED</option>
+                    <option value="CANCELLED">CANCELLED</option>
+                  </select>
+                </div>
+              </div>
+
+              {bookingFormError && (
+                <p className="text-sm text-rose-500 font-bold capitalize tracking-wide">{bookingFormError}</p>
+              )}
+
+              {bookingFormSuccess && (
+                <p className="text-sm text-emerald-500 font-bold capitalize tracking-wide">{bookingFormSuccess}</p>
+              )}
+
+              <div className="flex gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => { setIsAddBookingOpen(false); setIsEditBookingOpen(false); }}
+                  className="flex-1 py-3 border border-zinc-800 hover:bg-zinc-850 text-white font-bold text-sm capitalize rounded-lg cursor-pointer transition text-center bg-transparent"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize rounded-lg cursor-pointer transition border-none shadow-md"
+                >
+                  {isAddBookingOpen ? 'Confirm Slot' : 'Update Appointment'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* 4. FAQ ADD / EDIT MODAL */}
+      {(isAddFaqOpen || isEditFaqOpen) && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
+            onClick={() => { setIsAddFaqOpen(false); setIsEditFaqOpen(false); }}
+          />
+          <div className="relative w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200">
+            <div>
+              <h3 className="text-base font-bold text-white capitalize font-header">
+                {isAddFaqOpen ? 'Create FAQ Record' : 'Update FAQ Record'}
+              </h3>
+              <p className="text-sm text-zinc-500 leading-none mt-1">
+                {isAddFaqOpen ? 'Publish a new question and answer to the public landing page.' : 'Modify the existing question or answer detail.'}
+              </p>
+            </div>
+
+            <form onSubmit={isAddFaqOpen ? handleCreateFaq : handleUpdateFaq} className="space-y-4 font-medium">
+              <div className="space-y-1">
+                <label className="text-sm capitalize font-bold text-zinc-400">FAQ Question</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. How does the aptitude assessment work?"
+                  value={faqForm.question}
+                  onChange={(e) => setFaqForm({ ...faqForm, question: e.target.value })}
+                  className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-sm capitalize font-bold text-zinc-400">Detailed Answer</label>
+                <textarea
+                  rows={5}
+                  required
+                  placeholder="Provide a detailed, helpful answer..."
+                  value={faqForm.answer}
+                  onChange={(e) => setFaqForm({ ...faqForm, answer: e.target.value })}
+                  className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors resize-none"
+                />
+              </div>
+
+              {faqFormError && (
+                <p className="text-sm text-rose-500 font-bold capitalize tracking-wide">{faqFormError}</p>
+              )}
+
+              {faqFormSuccess && (
+                <p className="text-sm text-emerald-500 font-bold capitalize tracking-wide">{faqFormSuccess}</p>
+              )}
+
+              <div className="flex gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => { setIsAddFaqOpen(false); setIsEditFaqOpen(false); }}
+                  className="flex-1 py-3 border border-zinc-800 hover:bg-zinc-850 text-white font-bold text-sm capitalize rounded-lg cursor-pointer transition text-center bg-transparent"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize rounded-lg cursor-pointer transition border-none shadow-md"
+                >
+                  {isAddFaqOpen ? 'Create FAQ' : 'Save Changes'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* 4.5 APTITUDE QUESTION ADD / EDIT MODAL */}
+      {(isAddAptitudeOpen || isEditAptitudeOpen) && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
+            onClick={() => { setIsAddAptitudeOpen(false); setIsEditAptitudeOpen(false); }}
+          />
+          <div className="relative w-full max-w-xl bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
+            <div>
+              <h3 className="text-base font-bold text-white capitalize font-header flex items-center gap-2">
+                <Brain className="w-5 h-5 text-brand" />
+                {isAddAptitudeOpen ? 'Create Aptitude Question' : 'Update Aptitude Question'}
+              </h3>
+              <p className="text-sm text-zinc-500 leading-none mt-1">
+                {isAddAptitudeOpen ? 'Add a new question to the assessment database.' : 'Modify the selected question details.'}
+              </p>
+            </div>
+
+            <form onSubmit={isAddAptitudeOpen ? handleCreateAptitudeQuestion : handleUpdateAptitudeQuestion} className="space-y-5 font-medium">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-sm capitalize font-bold text-zinc-400">Category / Domain</label>
+                  <select
+                    value={aptitudeForm.category}
+                    onChange={(e) => setAptitudeForm({ ...aptitudeForm, category: e.target.value })}
+                    className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                  >
+                    <option value="Logical">Logical</option>
+                    <option value="Verbal">Verbal</option>
+                    <option value="Numerical">Numerical</option>
+                    <option value="Spatial">Spatial</option>
+                    <option value="Abstract">Abstract</option>
+                  </select>
+                </div>
+                <div className="space-y-1 flex flex-col justify-end">
+                  <label className="flex items-center gap-2 cursor-pointer bg-zinc-955 border border-zinc-850 p-3 rounded-lg">
+                    <input
+                      type="checkbox"
+                      checked={aptitudeForm.isActive}
+                      onChange={(e) => setAptitudeForm({ ...aptitudeForm, isActive: e.target.checked })}
+                      className="w-4 h-4 text-brand bg-zinc-900 border-zinc-800 rounded focus:ring-brand focus:ring-2"
+                    />
+                    <span className="text-sm capitalize font-bold text-zinc-400">Active</span>
+                  </label>
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-sm capitalize font-bold text-zinc-400">Question Text</label>
+                <textarea
+                  rows={3}
+                  required
+                  placeholder="e.g. Which number comes next in the sequence?"
+                  value={aptitudeForm.question}
+                  onChange={(e) => setAptitudeForm({ ...aptitudeForm, question: e.target.value })}
+                  className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors resize-none"
+                />
+              </div>
+
+              <div className="space-y-3 pt-2">
+                <label className="text-sm capitalize font-bold text-zinc-400 flex items-center justify-between">
+                  <span>Answer Options</span>
+                  <span className="text-xs text-zinc-500 font-normal normal-case">Assign higher weights to correct answers.</span>
+                </label>
+
+                {aptitudeForm.options.map((opt, idx) => (
+                  <div key={idx} className="flex items-start gap-3">
+                    <div className="w-8 h-10 shrink-0 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center justify-center font-bold text-zinc-500 text-sm">
+                      {String.fromCharCode(65 + idx)}
+                    </div>
+                    <input
+                      type="text"
+                      required
+                      placeholder={`Option ${idx + 1}`}
+                      value={opt.text}
+                      onChange={(e) => {
+                        const newOpts = [...aptitudeForm.options];
+                        newOpts[idx].text = e.target.value;
+                        setAptitudeForm({ ...aptitudeForm, options: newOpts });
+                      }}
+                      className="flex-1 px-3.5 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                    />
+                    <input
+                      type="number"
+                      required
+                      min="0"
+                      step="1"
+                      placeholder="Weight"
+                      value={opt.weight}
+                      onChange={(e) => {
+                        const newOpts = [...aptitudeForm.options];
+                        newOpts[idx].weight = Number(e.target.value) || 0;
+                        setAptitudeForm({ ...aptitudeForm, options: newOpts });
+                      }}
+                      className="w-20 px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                      title="Weight (Score value)"
+                    />
+                  </div>
+                ))}
+              </div>
+
+              {aptitudeFormError && (
+                <p className="text-sm text-rose-500 font-bold capitalize tracking-wide">{aptitudeFormError}</p>
+              )}
+
+              {aptitudeFormSuccess && (
+                <p className="text-sm text-emerald-500 font-bold capitalize tracking-wide">{aptitudeFormSuccess}</p>
+              )}
+
+              <div className="flex gap-3 pt-4 border-t border-zinc-800">
+                <button
+                  type="button"
+                  onClick={() => { setIsAddAptitudeOpen(false); setIsEditAptitudeOpen(false); }}
+                  className="flex-1 py-3 border border-zinc-800 hover:bg-zinc-850 text-white font-bold text-sm capitalize rounded-lg cursor-pointer transition text-center bg-transparent"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize rounded-lg cursor-pointer transition border-none shadow-md"
+                >
+                  {isAddAptitudeOpen ? 'Create Question' : 'Save Changes'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* 5. STUDENT VIEW DETAILS MODAL */}
+      {viewingStudent && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
+            onClick={() => setViewingStudent(null)}
+          />
+          <div className="relative w-full max-w-2xl bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6 text-left text-white z-10 animate-in zoom-in-95 duration-200 overflow-y-auto max-h-[85vh]">
+            <div className="flex justify-between items-start">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-xl bg-brand/10 border border-brand/20 text-brand flex items-center justify-center font-bold text-lg shrink-0 overflow-hidden">
+                  {viewingStudent.profilePic || viewingStudent.image ? (
+                    <img src={viewingStudent.profilePic || viewingStudent.image} alt={viewingStudent.name} className="w-full h-full object-cover" />
+                  ) : (
+                    getInitials(viewingStudent.name)
+                  )}
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-white capitalize font-header flex items-center gap-2">
+                    <User className="w-5 h-5 text-brand" /> Student Profile Details
+                  </h3>
+                  <p className="text-sm text-zinc-500 mt-1">Registry records, booking history, and diagnostic aptitude profiles.</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setViewingStudent(null)}
+                className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition cursor-pointer border-none bg-transparent"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Account details */}
+              <div className="bg-zinc-955 border border-zinc-850 rounded-xl p-4 space-y-3">
+                <span className="text-sm capitalize font-bold text-zinc-500 block">Registry Metadata</span>
+                <div className="space-y-2.5 text-sm">
+                  <div>
+                    <span className="text-zinc-500 block text-sm capitalize">Account ID</span>
+                    <span className="text-zinc-300">{viewingStudent.id}</span>
+                  </div>
+                  <div>
+                    <span className="text-zinc-500 block text-sm capitalize">Full Name</span>
+                    <span className="font-bold text-white">{viewingStudent.name}</span>
+                  </div>
+                  <div>
+                    <span className="text-zinc-500 block text-sm capitalize">Email Address</span>
+                    <span className="font-bold text-zinc-350">{viewingStudent.email}</span>
+                  </div>
+                  <div>
+                    <span className="text-zinc-500 block text-sm capitalize">Account Status</span>
+                    <span className={`inline-block mt-0.5 px-2 py-0.5 rounded text-sm font-bold capitalize ${(viewingStudent.status || 'ACTIVE') === 'ACTIVE'
+                      ? 'bg-emerald-955/20 border border-emerald-900/30 text-emerald-450'
+                      : 'bg-rose-955/20 border border-rose-900/30 text-rose-500'
+                      }`}>
+                      {viewingStudent.status || 'ACTIVE'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Consultation Stats */}
+              <div className="bg-zinc-955 border border-zinc-850 rounded-xl p-4 flex flex-col justify-between">
+                <div>
+                  <span className="text-sm capitalize font-bold text-zinc-500 block mb-3">Consultation Summary</span>
+                  <div className="grid grid-cols-2 gap-2 text-center">
+                    <div className="bg-zinc-900 rounded-lg p-3 border border-zinc-850">
+                      <p className="text-xl font-bold text-brand">
+                        {bookingsDb.filter(b => b.userId === viewingStudent.id).length}
+                      </p>
+                      <p className="text-sm text-zinc-500 font-bold capitalize mt-0.5">Total Bookings</p>
+                    </div>
+                    <div className="bg-zinc-900 rounded-lg p-3 border border-zinc-850">
+                      <p className="text-xl font-bold text-emerald-400">
+                        {bookingsDb.filter(b => b.userId === viewingStudent.id && b.status === 'COMPLETED').length}
+                      </p>
+                      <p className="text-sm text-zinc-500 font-bold capitalize mt-0.5">Completed</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="pt-3 border-t border-zinc-900 text-sm text-zinc-400">
+                  {(() => {
+                    const pendingBookings = bookingsDb.filter(b => b.userId === viewingStudent.id && b.status === 'PENDING').length;
+                    const confirmedBookings = bookingsDb.filter(b => b.userId === viewingStudent.id && b.status === 'CONFIRMED').length;
+                    return `Scheduled slots: ${confirmedBookings} active, ${pendingBookings} awaiting approval`;
+                  })()}
+                </div>
+              </div>
+            </div>
+
+            {/* Booking History List */}
+            <div className="space-y-2">
+              <span className="text-sm capitalize font-bold text-zinc-500 block">Consultation History Log</span>
+              <div className="border border-zinc-850 rounded-xl overflow-hidden bg-zinc-955 max-h-[160px] overflow-y-auto">
+                <div className="overflow-x-auto w-full">
+                  <table className="w-full text-sm border-collapse text-left min-w-[420px]">
+                    <thead>
+                      <tr className="bg-zinc-900/50 text-zinc-500 font-bold capitalize border-b border-zinc-855">
+                        <th className="p-2.5">Date & Time</th>
+                        <th className="p-2.5">Advisor</th>
+                        <th className="p-2.5">Service Type</th>
+                        <th className="p-2.5 text-center">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {(() => {
+                        const studentBookings = bookingsDb.filter(b => b.userId === viewingStudent.id);
+                        if (studentBookings.length === 0) {
+                          return (
+                            <tr>
+                              <td colSpan={4} className="p-4 text-center text-zinc-650 italic">No consult history for this student.</td>
+                            </tr>
+                          );
+                        }
+                        return studentBookings.map(b => {
+                          const psychologist = usersDb.find(u => u.id === b.advisorId);
+                          return (
+                            <tr key={b.id} className="border-b border-zinc-900/60 hover:bg-zinc-900/30">
+                              <td className="p-2.5">
+                                <span className="text-white block font-semibold">{b.date}</span>
+                                <span className="text-zinc-500 text-sm">{b.time}</span>
+                              </td>
+                              <td className="p-2.5 text-zinc-300 font-medium">
+                                {psychologist ? psychologist.name : 'Unknown Advisor'}
+                              </td>
+                              <td className="p-2.5 text-zinc-400 capitalize font-medium">
+                                {b.service === 'counselling' ? 'Wellbeing' : 'Career Mapping'} ({b.mode})
+                              </td>
+                              <td className="p-2.5 text-center">
+                                <span className={`px-2 py-0.5 rounded text-sm font-bold capitalize ${b.status === 'CONFIRMED' ? 'bg-indigo-950/20 border border-indigo-900/30 text-indigo-400' :
+                                  b.status === 'COMPLETED' ? 'bg-emerald-955/20 border border-emerald-900/30 text-emerald-450' :
+                                    b.status === 'CANCELLED' ? 'bg-rose-955/20 border border-rose-900/30 text-rose-500' :
+                                      'bg-zinc-800 border border-zinc-700 text-zinc-400'
+                                  }`}>
+                                  {b.status}
+                                </span>
+                              </td>
+                            </tr>
+                          );
+                        });
+                      })()}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            {/* Aptitude Results Details */}
+            <div className="space-y-3">
+              <span className="text-sm capitalize font-bold text-zinc-500 block">Diagnostic Aptitude Reports</span>
+              {(() => {
+                const studentTests = testResultsDb.filter(res => res.studentEmail?.toLowerCase() === viewingStudent.email?.toLowerCase());
+                if (studentTests.length === 0) {
+                  return (
+                    <div className="p-5 bg-zinc-950/30 border border-zinc-850/60 rounded-xl text-center text-zinc-650 italic text-sm">
+                      No aptitude assessment reports logged.
+                    </div>
+                  );
+                }
+                return (
+                  <div className="space-y-4">
+                    {studentTests.map(res => (
+                      <div key={res.id} className="bg-zinc-955 border border-zinc-850 rounded-xl p-4 space-y-3">
+                        <div className="flex justify-between items-center pb-2 border-b border-zinc-900">
+                          <div>
+                            <span className="text-sm bg-brand text-zinc-955 px-2 py-0.5 rounded font-bold capitalize">
+                              Dominant: {res.dominantDomain}
+                            </span>
+                            <span className="text-zinc-500 text-sm font-bold block mt-1 capitalize">Date Completed: {res.date}</span>
+                          </div>
+                          <button
+                            onClick={() => handleExportAptitudeResults(res)}
+                            className="px-2.5 py-1 bg-zinc-900 border border-zinc-800 hover:text-brand rounded font-bold capitalize text-sm cursor-pointer border-none bg-transparent"
+                          >
+                            Copy Report
+                          </button>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                          {Object.entries(res.scores || {}).map(([key, val]) => (
+                            <div key={key} className="space-y-1">
+                              <div className="flex justify-between items-center font-bold">
+                                <span className="text-zinc-400 capitalize">{key}</span>
+                                <span className="text-brand">{val}%</span>
+                              </div>
+                              <div className="w-full bg-zinc-900 h-1.5 rounded-full overflow-hidden border border-zinc-850">
+                                <div
+                                  className="bg-brand h-full rounded-full transition-all duration-500"
+                                  style={{ width: `${val}%` }}
+                                />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                );
+              })()}
+            </div>
+
+            {/* CIGI Differential Aptitude Test Results Management */}
+            <div className="space-y-4 pt-4 border-t border-zinc-800">
+              <span className="text-sm capitalize font-bold text-zinc-550 block">CIGI Differential Aptitude Test (C-DAT) Results</span>
+
+              {/* Existing uploads */}
+              <div className="space-y-2">
+                {(!viewingStudent.cigiResults || viewingStudent.cigiResults.length === 0) ? (
+                  <div className="p-4 bg-zinc-950/30 border border-zinc-850/60 rounded-xl text-center text-zinc-650 italic text-xs">
+                    No CIGI results uploaded for this student yet.
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 gap-2.5 max-h-[200px] overflow-y-auto pr-1">
+                    {viewingStudent.cigiResults.map(res => (
+                      <div key={res.id} className="p-3 bg-zinc-955 border border-zinc-850 rounded-xl flex items-center justify-between gap-3 text-sm">
+                        <div className="min-w-0 flex-1 space-y-1">
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold uppercase ${res.fileType === 'pdf' ? 'bg-rose-955/40 border border-rose-900/30 text-rose-450' : 'bg-blue-955/40 border border-blue-900/30 text-blue-400'}`}>
+                              {res.fileType}
+                            </span>
+                            {(res.testDate || res.testTime) && (
+                              <span className="text-xs text-zinc-400 font-medium">
+                                Date: {res.testDate} {res.testTime}
+                              </span>
+                            )}
+                          </div>
+                          {res.note && (
+                            <p className="text-xs text-zinc-400 italic truncate" title={res.note}>
+                              "{res.note}"
+                            </p>
+                          )}
+                          <span className="text-[10px] text-zinc-500 block">
+                            Uploaded at: {new Date(res.uploadedAt).toLocaleString()}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          <a
+                            href={res.fileUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-lg text-zinc-300 hover:text-white transition"
+                            title="View File"
+                          >
+                            <Link className="w-3.5 h-3.5" />
+                          </a>
+                          <button
+                            type="button"
+                            onClick={() => handleAdminStartEditCigi(res)}
+                            className="p-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-lg text-brand hover:text-brand-light transition cursor-pointer border-none"
+                            title="Edit Result Info"
+                          >
+                            <Edit className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleAdminCigiDelete(res.id)}
+                            className="p-1.5 bg-zinc-900 hover:bg-rose-955/20 border border-zinc-800 hover:border-rose-900/30 rounded-lg text-rose-500 hover:text-rose-455 transition cursor-pointer border-none"
+                            title="Delete Result"
+                          >
+                            <Trash className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Form to Add/Edit Result */}
+              <form onSubmit={handleAdminCigiUpload} className="bg-zinc-955 border border-zinc-850 rounded-xl p-4 space-y-3">
+                <span className="text-xs font-bold text-zinc-400 block">
+                  {adminCigiEditingId ? 'Edit CIGI Result Metadata / Replace File' : 'Add CIGI Result Record'}
+                </span>
+
+                <div className="space-y-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-[10px] uppercase font-bold text-zinc-500 block mb-1">
+                        Result File {adminCigiEditingId ? '(Optional)' : '(Required)'}
+                      </label>
+                      <input
+                        type="file"
+                        ref={adminCigiFileInputRef}
+                        onChange={(e) => setAdminCigiFile(e.target.files[0])}
+                        accept="image/*,application/pdf"
+                        required={!adminCigiEditingId}
+                        className="w-full text-xs text-zinc-400 file:mr-2.5 file:py-1 file:px-2.5 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-zinc-800 file:text-zinc-300 hover:file:bg-zinc-700 file:cursor-pointer p-1.5 border border-zinc-800 rounded bg-zinc-900 focus:outline-none"
+                      />
+                      <p className="text-[9px] text-zinc-500 mt-0.5">Images and PDFs up to 5MB</p>
+                    </div>
+                    <div>
+                      <label className="text-[10px] uppercase font-bold text-zinc-500 block mb-1">Remarks / Notes</label>
+                      <input
+                        type="text"
+                        placeholder="e.g. Scored 85% logical"
+                        value={adminCigiNote}
+                        onChange={(e) => setAdminCigiNote(e.target.value)}
+                        className="w-full p-2 bg-zinc-900 border border-zinc-800 focus:border-brand rounded text-xs text-white outline-none transition-colors"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-[10px] uppercase font-bold text-zinc-500 block mb-1">Date Taken</label>
+                      <input
+                        type="date"
+                        value={adminCigiDate}
+                        onChange={(e) => setAdminCigiDate(e.target.value)}
+                        className="w-full p-2 bg-zinc-900 border border-zinc-800 focus:border-brand rounded text-xs text-white outline-none transition-colors"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[10px] uppercase font-bold text-zinc-500 block mb-1">Time Taken</label>
+                      <input
+                        type="time"
+                        value={adminCigiTime}
+                        onChange={(e) => setAdminCigiTime(e.target.value)}
+                        className="w-full p-2 bg-zinc-900 border border-zinc-800 focus:border-brand rounded text-xs text-white outline-none transition-colors"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex gap-2 pt-1.5 justify-end">
+                    {adminCigiEditingId && (
+                      <button
+                        type="button"
+                        onClick={handleAdminCancelEditCigi}
+                        className="px-3.5 py-1.5 border border-zinc-800 hover:bg-zinc-800 text-zinc-400 hover:text-white rounded text-xs font-semibold cursor-pointer border-none bg-transparent"
+                      >
+                        Cancel
+                      </button>
+                    )}
+                    <button
+                      type="submit"
+                      disabled={isAdminCigiUploading}
+                      className="px-4 py-1.5 bg-brand hover:bg-brand-dark disabled:bg-zinc-700 text-zinc-950 font-bold rounded text-xs cursor-pointer border-none flex items-center gap-1 shadow"
+                    >
+                      {isAdminCigiUploading ? (
+                        <><span className="w-3 h-3 border-2 border-zinc-955/30 border-t-zinc-955 rounded-full animate-spin" /> Saving...</>
+                      ) : (
+                        <>{adminCigiEditingId ? 'Update Result' : 'Upload Result'}</>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <div className="pt-2 flex justify-end">
+              <button
+                onClick={() => setViewingStudent(null)}
+                className="px-6 py-2.5 border border-zinc-800 hover:bg-zinc-855 text-white font-bold text-sm capitalize rounded-lg cursor-pointer transition text-center border-none bg-transparent"
+              >
+                Close Profile
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 6. PSYCHOLOGIST VIEW DETAILS MODAL */}
+      {viewingPsychologist && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
+            onClick={() => setViewingPsychologist(null)}
+          />
+          <div className="relative w-full max-w-2xl bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6 text-left text-white z-10 animate-in zoom-in-95 duration-200 overflow-y-auto max-h-[85vh]">
+            <div className="flex justify-between items-start">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-xl bg-brand/10 border border-brand/20 text-brand flex items-center justify-center font-bold text-lg shrink-0 overflow-hidden">
+                  {viewingPsychologist.profilePic || viewingPsychologist.image ? (
+                    <img src={viewingPsychologist.profilePic || viewingPsychologist.image} alt={viewingPsychologist.name} className="w-full h-full object-cover" />
+                  ) : (
+                    getInitials(viewingPsychologist.name)
+                  )}
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-white capitalize font-header flex items-center gap-2">
+                    <Award className="w-5 h-5 text-brand" /> Psychologist Profile Details
+                  </h3>
+                  <p className="text-sm text-zinc-500 mt-1">Credentials, availability, rates, and booking history logs.</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setViewingPsychologist(null)}
+                className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition cursor-pointer border-none bg-transparent"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {(() => {
+              const title = viewingPsychologist.title || 'Consultant Psychologist';
+              const phone = viewingPsychologist.phone || 'N/A';
+              const hours = viewingPsychologist.hours !== undefined ? viewingPsychologist.hours : 0;
+              const modes = viewingPsychologist.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP'];
+              const education = viewingPsychologist.education || 'MPhil Clinical Psychology';
+              const specialties = viewingPsychologist.specialties || 'Anxiety, Stress Management, Mood Disorders';
+              const price = viewingPsychologist.price || 1200;
+              const lang = viewingPsychologist.lang || 'English, Malayalam';
+              const bio = viewingPsychologist.bio || viewingPsychologist.experience || 'Professional clinical therapist committed to student wellbeing.';
+
+              return (
+                <div className="space-y-6">
+                  {/* Grid details */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Professional Info */}
+                    <div className="bg-zinc-955 border border-zinc-850 rounded-xl p-4 space-y-3.5 text-sm">
+                      <span className="text-sm capitalize font-bold text-zinc-500 block">Advisor Credentials</span>
+                      <div className="space-y-2.5">
+                        <div>
+                          <span className="text-zinc-500 block text-xs capitalize">Professional Title</span>
+                          <span className="font-bold text-white">{title}</span>
+                        </div>
+                        <div>
+                          <span className="text-zinc-500 block text-sm capitalize">Full Name</span>
+                          <span className="font-bold text-white">{viewingPsychologist.name}</span>
+                        </div>
+                        <div>
+                          <span className="text-zinc-500 block text-sm capitalize">Email Address</span>
+                          <span className="font-semibold text-zinc-300">{viewingPsychologist.email}</span>
+                        </div>
+                        <div>
+                          <span className="text-zinc-500 block text-xs capitalize">Phone Number</span>
+                          <span className="font-semibold text-zinc-300">{phone}</span>
+                        </div>
+                        <div>
+                          <span className="text-zinc-550 block text-sm capitalize">Education Qualification</span>
+                          <span className="font-bold text-zinc-350">{education}</span>
+                        </div>
+                        <div>
+                          <span className="text-zinc-500 block text-xs capitalize">Experience Hours</span>
+                          <span className="font-bold text-zinc-300">{hours} hours</span>
+                        </div>
+                        <div>
+                          <span className="text-zinc-500 block text-sm capitalize">Consultation Fee</span>
+                          <span className="font-bold text-brand">₹{price} / hour</span>
+                        </div>
+                        <div>
+                          <span className="text-zinc-500 block text-sm capitalize">Languages Spoken</span>
+                          <span className="font-medium text-zinc-300">{lang}</span>
+                        </div>
+                        <div className="flex gap-2 items-center pt-1">
+                          <span className={`px-2.5 py-0.5 rounded text-sm font-bold capitalize ${viewingPsychologist.status === 'ACTIVE'
+                            ? 'bg-emerald-955/20 border border-emerald-900/30 text-emerald-450'
+                            : viewingPsychologist.status === 'REJECTED'
+                              ? 'bg-rose-955/20 border border-rose-900/30 text-rose-455'
+                              : 'bg-amber-955/20 border border-amber-900/30 text-amber-500'
+                            }`}>
+                            {viewingPsychologist.status === 'ACTIVE' ? 'Verified' : viewingPsychologist.status === 'REJECTED' ? 'Rejected' : 'Pending Verification'}
+                          </span>
+                          <a
+                            href={`#/advisor/${viewingPsychologist.id}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-2.5 py-0.5 bg-zinc-900 border border-zinc-800 hover:text-brand rounded text-sm font-bold capitalize transition"
+                          >
+                            Preview Profile
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Bio & Availability */}
+                    <div className="space-y-4">
+                      {/* Bio */}
+                      <div className="bg-zinc-955 border border-zinc-850 rounded-xl p-4 space-y-2 text-sm">
+                        <span className="text-sm capitalize font-bold text-zinc-500 block">Therapist Bio</span>
+                        <p className="text-zinc-300 leading-relaxed italic text-[12.5px]">
+                          "{bio}"
+                        </p>
+                      </div>
+
+                      {/* Specialties List */}
+                      <div className="bg-zinc-955 border border-zinc-850 rounded-xl p-4 space-y-2">
+                        <span className="text-sm capitalize font-bold text-zinc-500 block">Areas of Expertise</span>
+                        <div className="flex flex-wrap gap-1.5 pt-1">
+                          {specialties.split(',').map(spec => (
+                            <span
+                              key={spec.trim()}
+                              className="px-2.5 py-0.5 rounded-full bg-zinc-900 border border-zinc-800 text-sm font-bold text-zinc-400 capitalize tracking-wide"
+                            >
+                              {spec.trim()}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Supported Session Modes */}
+                      <div className="bg-zinc-955 border border-zinc-850 rounded-xl p-4 space-y-2">
+                        <span className="text-sm capitalize font-bold text-zinc-500 block">Supported Session Modes</span>
+                        <div className="flex flex-wrap gap-1.5 pt-1">
+                          {modes.map(mode => (
+                            <span
+                              key={mode}
+                              className="px-2.5 py-0.5 rounded-full bg-zinc-900 border border-zinc-800 text-xs font-bold text-zinc-400 capitalize tracking-wide"
+                            >
+                              {mode === 'DOOR_STEP' ? 'Doorstep' : mode.charAt(0) + mode.slice(1).toLowerCase()}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Active Availability Timings */}
+                      <div className="bg-zinc-955 border border-zinc-850 rounded-xl p-4 space-y-2.5 text-sm">
+                        <span className="text-sm capitalize font-bold text-zinc-500 block">Active Availability Timings</span>
+                        <div>
+                          <span className="text-zinc-500 block text-xs capitalize">Operational Days</span>
+                          <span className="font-semibold text-zinc-300">
+                            {viewingPsychologist.availability?.activeDays
+                              ? Object.entries(viewingPsychologist.availability.activeDays)
+                                .filter(([_, active]) => active)
+                                .map(([dayIndex]) => {
+                                  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                                  return days[Number(dayIndex)];
+                                })
+                                .join(', ') || 'None'
+                              : 'Monday, Tuesday, Wednesday, Thursday, Friday'}
+                          </span>
+                        </div>
+                        <div className="pt-1.5">
+                          <span className="text-zinc-500 block text-xs capitalize">Available Time Slots</span>
+                          <div className="flex flex-wrap gap-1 mt-1.5 max-h-[100px] overflow-y-auto pr-1">
+                            {viewingPsychologist.availability?.availableSlots?.length > 0 ? (
+                              viewingPsychologist.availability.availableSlots.map(slot => (
+                                <span key={slot} className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-xs font-bold text-zinc-400">
+                                  {slot}
+                                </span>
+                              ))
+                            ) : (
+                              <span className="text-zinc-550 italic text-xs">No timing slots configured.</span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Consult bookings count */}
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm capitalize font-bold text-zinc-500 block">Consultation Schedule History</span>
+                      <span className="text-sm text-brand font-bold capitalize">
+                        {bookingsDb.filter(b => b.advisorId === viewingPsychologist.id || (b.advisorName && b.advisorName.toLowerCase() === viewingPsychologist.name.toLowerCase())).length} consultations booked
+                      </span>
+                    </div>
+
+                    <div className="border border-zinc-850 rounded-xl overflow-hidden bg-zinc-955 max-h-[160px] overflow-y-auto">
+                      <div className="overflow-x-auto w-full">
+                        <table className="w-full text-sm border-collapse text-left min-w-[420px]">
+                          <thead>
+                            <tr className="bg-zinc-900/50 text-zinc-500 font-bold capitalize border-b border-zinc-855">
+                              <th className="p-2.5">Client Student</th>
+                              <th className="p-2.5">Date & Time</th>
+                              <th className="p-2.5">Type & Mode</th>
+                              <th className="p-2.5 text-center">Status</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {(() => {
+                              const psyBookings = bookingsDb.filter(b => b.advisorId === viewingPsychologist.id || (b.advisorName && b.advisorName.toLowerCase() === viewingPsychologist.name.toLowerCase()));
+                              if (psyBookings.length === 0) {
+                                  return (
+                                    <tr>
+                                      <td colSpan={4} className="p-4 text-center text-zinc-650 italic">No scheduled slot logs.</td>
+                                    </tr>
+                                  );
+                                }
+                                return psyBookings.map(b => {
+                                  const student = usersDb.find(u => u.id === b.userId);
+                                  return (
+                                    <tr key={b.id} className="border-b border-zinc-900/60 hover:bg-zinc-900/30">
+                                      <td className="p-2.5">
+                                        <span className="text-white block font-semibold">{student ? student.name : 'Unknown Student'}</span>
+                                        <span className="text-zinc-500 text-sm truncate block max-w-[150px]">{student ? student.email : ''}</span>
+                                      </td>
+                                      <td className="p-2.5">
+                                        <span className="text-zinc-300 block font-semibold">{b.date}</span>
+                                        <span className="text-zinc-500 text-sm">{b.time}</span>
+                                      </td>
+                                      <td className="p-2.5 text-zinc-400 capitalize font-medium">
+                                        {b.service === 'counselling' ? 'Wellbeing' : 'Career'} ({b.mode})
+                                      </td>
+                                      <td className="p-2.5 text-center">
+                                        <span className={`px-2 py-0.5 rounded text-sm font-bold capitalize ${b.status === 'CONFIRMED' ? 'bg-indigo-950/20 border border-indigo-900/30 text-indigo-400' :
+                                          b.status === 'COMPLETED' ? 'bg-emerald-955/20 border border-emerald-900/30 text-emerald-450' :
+                                            b.status === 'CANCELLED' ? 'bg-rose-955/20 border border-rose-900/30 text-rose-500' :
+                                              'bg-zinc-800 border border-zinc-700 text-zinc-400'
+                                          }`}>
+                                          {b.status}
+                                        </span>
+                                      </td>
+                                    </tr>
+                                  );
+                                });
+                              })()}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+
+            <div className="pt-2 flex justify-end">
+              <button
+                onClick={() => setViewingPsychologist(null)}
+                className="px-6 py-2.5 border border-zinc-800 hover:bg-zinc-855 text-white font-bold text-sm capitalize rounded-lg cursor-pointer transition text-center border-none bg-transparent"
+              >
+                Close Profile
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 7. SUB-ADMIN EDIT PERMISSIONS MODAL */}
+      {editingSubAdmin && (() => {
+        const { cleanName, roleTitle } = parseStaffDetails(editingSubAdmin);
+        return (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div
+              className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
+              onClick={() => setEditingSubAdmin(null)}
+            />
+            <div className="relative w-full max-w-xl bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
+              <div>
+                <h3 className="text-base font-bold text-white capitalize font-header flex items-center gap-2">
+                  <Lock className="w-4 h-4 text-brand" /> Edit Access Scopes
+                </h3>
+                <p className="text-sm text-zinc-555 leading-none mt-1">
+                  Modify permission scopes for sub-admin: <span className="text-zinc-300 font-bold">{cleanName}</span> {roleTitle && <span className="text-brand font-semibold text-sm capitalize ml-1">({roleTitle})</span>}
+                </p>
+              </div>
+
+              <form onSubmit={handleSaveSubAdminPermissions} className="space-y-5 font-medium">
+                <div className="space-y-1">
+                  <label className="text-zinc-400 font-bold capitalize text-sm">Role Title</label>
+                  <select
+                    value={editSubAdminRoleName}
+                    onChange={(e) => handleEditSubAdminRoleChange(e.target.value)}
+                    className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none cursor-pointer"
+                  >
+                    <option value="">-- Custom / No Role --</option>
+                    {rolesDb.map(r => (
+                      <option key={r.id} value={r.name}>{r.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="space-y-3">
+                  <label className="text-sm capitalize font-bold text-zinc-400 block">Assigned Scopes</label>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[350px] overflow-y-auto pr-1">
+                    {PRIVILEGE_MODULES.map(module => {
+                      const isParentChecked = !!editSubAdminPermissionsObj[module.id] ||
+                                             (module.id === 'manage_users' && !!editSubAdminPermissionsObj['MANAGE_USERS']) ||
+                                             (module.id === 'manage_psychologists' && !!editSubAdminPermissionsObj['MANAGE_PSYCHOLOGISTS']) ||
+                                             (module.id === 'manage_bookings' && !!editSubAdminPermissionsObj['MANAGE_BOOKINGS']);
+                      return (
+                        <div key={module.id} className={`bg-zinc-950 border rounded-xl overflow-hidden shadow-md text-left transition-colors duration-200 ${isParentChecked ? 'border-brand/40 bg-brand/5' : 'border-zinc-850 bg-zinc-950'}`}>
+                          <div className="flex items-center justify-between p-3 border-b border-zinc-900/60 bg-zinc-900/40">
+                            <span className="font-header font-bold text-xs text-white capitalize">{module.name}</span>
+                            <label className="relative inline-flex items-center cursor-pointer select-none">
+                              <input
+                                type="checkbox"
+                                checked={isParentChecked}
+                                onChange={(e) => toggleEditSubAdminModuleAll(module.id, module.actions, e.target.checked)}
+                                className="sr-only peer"
+                              />
+                              <div className="w-8 h-4.5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-3.5 after:w-3.5 after:transition-all peer-checked:bg-brand peer-checked:after:bg-zinc-955 peer-checked:after:border-zinc-955"></div>
+                            </label>
+                          </div>
+                          <div className="p-3 space-y-1.5">
+                            {module.actions.map(action => {
+                              const isChecked = !!editSubAdminPermissionsObj[action.id];
+                              return (
+                                <label key={action.id} className="flex items-center justify-between cursor-pointer text-xs select-none hover:text-white text-zinc-400 transition-colors">
+                                  <span className="capitalize">{action.name.split(' ')[0]}</span>
+                                  <input
+                                    type="checkbox"
+                                    checked={isChecked}
+                                    onChange={() => toggleEditSubAdminChildAction(module.id, action.id, module.actions)}
+                                    className="w-3.5 h-3.5 rounded border-zinc-800 bg-zinc-900 text-brand focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
+                                  />
+                                </label>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {editSubAdminError && (
+                  <p className="text-sm text-rose-500 font-bold capitalize tracking-wide">{editSubAdminError}</p>
+                )}
+
+                {editSubAdminSuccess && (
+                  <p className="text-sm text-emerald-500 font-bold capitalize tracking-wide">{editSubAdminSuccess}</p>
+                )}
+
+                <div className="flex gap-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setEditingSubAdmin(null)}
+                    className="flex-1 py-3 border border-zinc-800 hover:bg-zinc-855 text-white font-bold text-sm capitalize rounded-lg cursor-pointer transition text-center border-none bg-transparent"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize rounded-lg cursor-pointer transition border-none shadow-md"
+                  >
+                    Save Scopes
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        );
+      })()}
+
       {/* ── LOGOUT CONFIRMATION ─────────────────────────────────────── */}
       <LogoutConfirmModal
         isOpen={isLogoutConfirmOpen}
