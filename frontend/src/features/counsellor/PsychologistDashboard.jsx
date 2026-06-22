@@ -1620,35 +1620,29 @@ export default function PsychologistDashboard({ setView }) {
             >
               <LogOut className="w-4 h-4" /> Sign Out
             </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // --- 2. DEDICATED LOGGED-IN COUNSELLOR CONSOLE ---
+          <  // --- 2. DEDICATED LOGGED-IN COUNSELLOR CONSOLE ---
   return (
-    <div className="h-screen overflow-hidden bg-[#fafafa] text-zinc-900 text-left flex flex-col lg:flex-row relative">
+    <div className="h-screen overflow-hidden bg-zinc-955 text-white text-left flex flex-col lg:flex-row relative">
 
       {/* Background Soft Glows */}
-      <div className="absolute top-1/4 left-1/3 w-[350px] h-[350px] bg-indigo-500/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/4 left-1/3 w-[350px] h-[350px] bg-brand/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-1/3 right-1/4 w-[350px] h-[350px] bg-brand-accent/5 rounded-full blur-3xl pointer-events-none" />
 
       {/* Mobile Top Navbar (Visible only on lg:hidden) */}
-      <div className="lg:hidden sticky top-0 z-30 flex items-center justify-between bg-white border-b border-zinc-200 px-5 py-4 w-full shadow-sm">
+      <div className="lg:hidden sticky top-0 z-30 flex items-center justify-between bg-zinc-900 border-b border-zinc-805 px-5 py-4 w-full shadow-sm">
         <div className="flex items-center gap-3">
           {/* Hamburger Menu Icon */}
           <button
             type="button"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="p-1.5 bg-zinc-50 border border-zinc-200 text-zinc-500 hover:text-zinc-700 rounded-lg transition-colors cursor-pointer border-none"
+            className="p-1.5 bg-zinc-955 border border-zinc-850 text-zinc-400 hover:text-white rounded-lg transition-colors cursor-pointer border-none"
             title={isMobileMenuOpen ? "Close Navigation Menu" : "Open Navigation Menu"}
           >
             {isMobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
           </button>
 
           <div className="flex items-center gap-1.5">
-            <span className="font-header font-bold text-base tracking-tighter text-zinc-900">
+            <span className="font-header font-bold text-base tracking-tighter text-white">
               BEHOLD<span className="text-brand font-bold">.</span>
             </span>
           </div>
@@ -1658,7 +1652,7 @@ export default function PsychologistDashboard({ setView }) {
         <button
           type="button"
           onClick={() => setIsProfileDrawerOpen(true)}
-          className="w-8 h-8 rounded-lg bg-zinc-50 border border-zinc-200 text-zinc-500 hover:text-zinc-700 hover:border-brand/30 flex items-center justify-center shadow-sm cursor-pointer hover:opacity-90 active:scale-95 transition-all shrink-0"
+          className="w-8 h-8 rounded-lg bg-zinc-950 border border-zinc-850 text-zinc-400 hover:text-white hover:border-brand/30 flex items-center justify-center shadow-sm cursor-pointer hover:opacity-90 active:scale-95 transition-all shrink-0"
           title="Open Profile Menu"
         >
           <User className="w-4 h-4 text-brand" />
@@ -1680,27 +1674,27 @@ export default function PsychologistDashboard({ setView }) {
       <div className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-8 lg:p-10 space-y-6 relative z-10 text-left">
 
         {/* Workspace Banner */}
-        <div className="bg-white border border-zinc-200 p-6 sm:p-8 rounded-2xl shadow-[inset_0_0_0_1px_rgba(11,20,36,0.05),_0_1px_3px_rgba(11,20,36,0.04),_0_6px_20px_-6px_rgba(11,20,36,0.08)] flex flex-col sm:flex-row justify-between items-center gap-4 relative overflow-hidden">
+        <div className="bg-zinc-900 border border-zinc-850 p-6 sm:p-8 rounded-2xl shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),_0_1px_3px_rgba(11,20,36,0.04),_0_6px_20px_-6px_rgba(11,20,36,0.08)] flex flex-col sm:flex-row justify-between items-center gap-4 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/5 rounded-full blur-2xl pointer-events-none" />
 
           <div className="space-y-1 relative z-10 w-full sm:w-auto">
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-header font-bold tracking-wide capitalize">
+              <h1 className="text-xl sm:text-2xl font-header font-bold tracking-wide capitalize text-white">
                 {profile.name}
               </h1>
             </div>
-            <p className="text-sm text-zinc-500">
+            <p className="text-sm text-zinc-500 font-medium">
               Role: {profile.role} • Hourly Fee: ₹{profile.price}
             </p>
           </div>
 
           {/* Quick Stats Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full sm:w-auto shrink-0 relative z-10 text-center">
-            <div className="bg-zinc-955 border border-zinc-850 px-5 py-2.5 rounded-xl">
+            <div className="bg-zinc-950 border border-zinc-850 px-5 py-2.5 rounded-xl">
               <span className="text-sm text-zinc-500 font-bold capitalize  block">Upcoming Slots</span>
               <p className="text-sm font-bold text-brand mt-0.5">{bookings.filter(b => (b.status === 'CONFIRMED' || b.status === 'APPROVED' || b.status === 'PENDING') && !isSessionCompleted(b)).length} Bookings</p>
             </div>
-            <div className="bg-zinc-955 border border-zinc-850 px-5 py-2.5 rounded-xl">
+            <div className="bg-zinc-950 border border-zinc-850 px-5 py-2.5 rounded-xl">
               <span className="text-sm text-zinc-500 font-bold capitalize  block">Hours Completed</span>
               <p className="text-sm font-bold text-brand mt-0.5">{bookings.filter(isSessionCompleted).length + Number(profile.hours || 0)}+ Hrs</p>
             </div>
@@ -1710,9 +1704,9 @@ export default function PsychologistDashboard({ setView }) {
         {/* Verification Status Alert Banner */}
         {counsellorStatus === 'REJECTED' || user?.status === 'REJECTED' ? (
           <div className="bg-rose-955/20 border border-rose-900/60 p-4 rounded-xl flex items-center gap-3 text-rose-350 text-sm animate-in slide-in-from-top duration-300">
-            <ShieldAlert className="w-5 h-5 text-rose-450 shrink-0" />
+            <ShieldAlert className="w-5 h-5 text-rose-455 shrink-0" />
             <div className="text-left">
-              <span className="font-bold capitalize  block mb-0.5 text-rose-450">Application Rejected</span>
+              <span className="font-bold capitalize  block mb-0.5 text-rose-455">Application Rejected</span>
               Your professional counsellor profile application has been rejected by the administrator.
               {(counsellorRejectionReason || user?.rejectionReason) && (
                 <div className="mt-2 text-xs font-semibold text-rose-400">
@@ -1732,26 +1726,28 @@ export default function PsychologistDashboard({ setView }) {
         ) : null}
 
         {/* WORKSPACE CONTENT ROUTER */}
-        <div className="bg-white border border-zinc-200 rounded-2xl p-5 sm:p-8 shadow-[inset_0_0_0_1px_rgba(11,20,36,0.05),_0_1px_3px_rgba(11,20,36,0.04),_0_6px_20px_-6px_rgba(11,20,36,0.08)]">
+        <div className="bg-zinc-900 border border-zinc-850 rounded-2xl p-5 sm:p-8 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),_0_1px_3px_rgba(11,20,36,0.04),_0_6px_20px_-6px_rgba(11,20,36,0.08)]">
           {isLoadingData ? (
             <div className="animate-pulse space-y-6">
-              <div className="border-b border-zinc-200/60 pb-3 flex justify-between items-center">
-                <div className="h-4 bg-zinc-200 rounded w-48"></div>
-                <div className="h-6 bg-zinc-200 rounded w-24"></div>
+              <div className="border-b border-zinc-800 pb-3 flex justify-between items-center">
+                <div className="h-4 bg-zinc-800 rounded w-48"></div>
+                <div className="h-6 bg-zinc-800 rounded w-24"></div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div className="bg-white border border-zinc-200 rounded-xl p-5 min-h-[160px] space-y-4">
-                  <div className="h-6 bg-zinc-200 rounded w-1/3"></div>
-                  <div className="h-5 bg-zinc-200 rounded w-2/3"></div>
-                  <div className="h-4 bg-zinc-200 rounded w-1/2 mt-6"></div>
+                <div className="bg-zinc-955 border border-zinc-850 rounded-xl p-5 min-h-[160px] space-y-4">
+                  <div className="h-6 bg-zinc-800 rounded w-1/3"></div>
+                  <div className="h-5 bg-zinc-800 rounded w-2/3"></div>
+                  <div className="h-4 bg-zinc-800 rounded w-1/2 mt-6"></div>
                 </div>
-                <div className="bg-white border border-zinc-200 rounded-xl p-5 min-h-[160px] space-y-4">
-                  <div className="h-6 bg-zinc-200 rounded w-1/3"></div>
-                  <div className="h-4 bg-zinc-200 rounded w-full mt-4"></div>
-                  <div className="h-4 bg-zinc-200 rounded w-full"></div>
-                  <div className="h-4 bg-zinc-200 rounded w-full"></div>
+                <div className="bg-zinc-955 border border-zinc-850 rounded-xl p-5 min-h-[160px] space-y-4">
+                  <div className="h-6 bg-zinc-800 rounded w-1/3"></div>
+                  <div className="h-4 bg-zinc-800 rounded w-full mt-4"></div>
+                  <div className="h-4 bg-zinc-800 rounded w-full"></div>
+                  <div className="h-4 bg-zinc-800 rounded w-full"></div>
                 </div>
               </div>
+            </div>
+          ) : (             </div>
             </div>
           ) : (
             <>

@@ -22,14 +22,14 @@ const SidebarNav = ({
       )}
 
       {/* Left Fixed Sidebar */}
-      <div className={`fixed lg:sticky lg:top-0 h-screen lg:h-screen overflow-hidden inset-y-0 left-0 z-50 w-64 lg:w-64 bg-white border-r border-zinc-200 flex flex-col justify-between shrink-0 p-5 transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+      <div className={`fixed lg:sticky lg:top-0 h-screen lg:h-screen overflow-hidden inset-y-0 left-0 z-50 w-64 lg:w-64 bg-zinc-900 border-r border-zinc-800 flex flex-col justify-between shrink-0 p-5 transition-transform duration-300 ease-in-out lg:translate-x-0 ${
         isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
       } lg:flex shadow-sm lg:shadow-none`}>
         <div className="flex flex-col flex-1 min-h-0 space-y-6">
           {/* Logo & Header */}
-          <div className="flex items-center justify-between border-b border-zinc-100 pb-4">
+          <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
             <div className="flex items-center gap-2">
-              <span className="font-header font-bold text-lg tracking-tighter text-zinc-900">
+              <span className="font-header font-bold text-lg tracking-tighter text-white">
                 BEHOLD<span className="text-brand font-bold">.</span>
               </span>
             </div>
@@ -37,7 +37,7 @@ const SidebarNav = ({
             <button
               type="button"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="lg:hidden p-1.5 bg-zinc-50 hover:bg-zinc-100 text-zinc-500 hover:text-zinc-700 rounded-lg transition-colors cursor-pointer border-none"
+              className="lg:hidden p-1.5 bg-zinc-950 border border-zinc-850 text-zinc-400 hover:text-white rounded-lg transition-colors cursor-pointer border-none"
               title="Close Navigation Drawer"
             >
               <X className="w-4 h-4" />
@@ -48,9 +48,9 @@ const SidebarNav = ({
           <button
             type="button"
             onClick={() => setIsProfileDrawerOpen(true)}
-            className="w-full flex items-center gap-3 bg-zinc-50 hover:bg-zinc-100/80 p-3 rounded-xl border border-zinc-200/60 transition-all cursor-pointer text-left"
+            className="w-full flex items-center gap-3 bg-zinc-955/60 hover:bg-zinc-950 p-3 rounded-xl border border-zinc-850 hover:border-brand/30 transition-all cursor-pointer text-left"
           >
-            <div className="w-10 h-10 rounded-lg bg-brand/10 text-brand flex items-center justify-center font-header font-bold text-sm border border-brand/20 shrink-0 overflow-hidden">
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-brand to-brand-accent text-zinc-955 flex items-center justify-center font-header font-bold text-sm shrink-0 overflow-hidden">
               {user?.profilePic ? (
                 <img src={user.profilePic} alt={profile.name} className="w-full h-full object-cover" />
               ) : (
@@ -58,17 +58,17 @@ const SidebarNav = ({
               )}
             </div>
             <div className="min-w-0 flex-1">
-              <h4 className="text-sm font-bold text-zinc-900 truncate leading-tight capitalize font-header">
+              <h4 className="text-sm font-bold text-white truncate leading-tight capitalize font-header">
                 {profile.name || 'Counsellor'}
               </h4>
-              <span className="text-xs text-zinc-500 font-medium capitalize truncate block">
+              <span className="text-xs text-zinc-500 font-bold capitalize truncate block">
                 {profile.education || 'Consultant'}
               </span>
             </div>
           </button>
 
           {/* Nav Links */}
-          <nav className="flex flex-col gap-1.5 flex-1 overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-zinc-200 hover:scrollbar-thumb-zinc-300">
+          <nav className="flex flex-col gap-1.5 flex-1 overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-zinc-800 hover:scrollbar-thumb-zinc-700">
             {[
               { id: 'overview', label: 'Overview', icon: BarChart3 },
               { id: 'profile', label: 'Consultant Profile', icon: User },
@@ -83,8 +83,8 @@ const SidebarNav = ({
                   onClick={() => handleNavClick(sec.id)}
                   className={`flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-bold capitalize transition-all text-left cursor-pointer border-none ${
                     isActive
-                      ? 'bg-brand text-zinc-900 shadow-sm'
-                      : 'bg-transparent text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100/80'
+                      ? 'bg-brand text-zinc-955 shadow-sm'
+                      : 'bg-transparent text-zinc-450 hover:text-white hover:bg-zinc-850/60'
                   }`}
                 >
                   <Icon className="w-4 h-4 shrink-0" />
@@ -96,10 +96,10 @@ const SidebarNav = ({
         </div>
 
         {/* Sidebar Footer */}
-        <div className="space-y-4 pt-4 border-t border-zinc-100 mt-6 lg:mt-0">
+        <div className="space-y-4 pt-4 border-t border-zinc-800 mt-6 lg:mt-0">
           <button
             onClick={() => setIsLogoutConfirmOpen(true)}
-            className="w-full py-2.5 border border-rose-200 hover:border-rose-300 text-rose-600 bg-rose-50 hover:bg-rose-100 font-bold text-sm capitalize rounded-lg flex items-center justify-center gap-2 transition-colors cursor-pointer"
+            className="w-full py-2.5 border border-rose-900/50 hover:border-rose-650 text-rose-500 bg-rose-955/20 hover:bg-rose-900/40 hover:text-white font-bold text-sm capitalize rounded-lg flex items-center justify-center gap-2 transition-colors cursor-pointer"
           >
             <LogOut className="w-4 h-4" /> Exit Console
           </button>
