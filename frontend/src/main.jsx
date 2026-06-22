@@ -4,9 +4,9 @@ import { BrowserRouter } from 'react-router-dom'
 import { registerSW } from 'virtual:pwa-register'
 import './index.css'
 import App from './App.jsx'
-import { AuthProvider } from './context/AuthContext'
-import { CustomDialogProvider } from './context/CustomDialogContext'
-import ErrorBoundary from './components/ErrorBoundary'
+import { AuthProvider } from './shared/context/AuthContext'
+import { CustomDialogProvider } from './shared/context/CustomDialogContext'
+import ErrorBoundary from './shared/components/ErrorBoundary'
 
 // Register PWA service worker
 if ('serviceWorker' in navigator) {
