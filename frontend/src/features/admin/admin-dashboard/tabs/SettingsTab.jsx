@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SkeletonTableRows, PaginationBar } from '../components/SharedAdminUI';
 import { User, ShieldAlert, Award, Trash, Check, Plus, Lock, Settings, KeyRound, BarChart3, LogOut, Search, ShieldCheck, Calendar, Clock, Link, AlertCircle, Edit, Video, UserPlus, MessageSquare, FileSpreadsheet, HelpCircle, X, ChevronRight, ChevronLeft, Mail, Shield, Menu, Brain, Download, FileText, Eye, EyeOff, Bell, Send } from 'lucide-react';
 
@@ -332,10 +332,19 @@ export default function SettingsTab(props) {
     getInitials,
     PRIVILEGE_MODULES,
     isSuperAdmin,
-    hasUserPermission,
-    hasPsyPermission,
     hasBookingPermission
   } = props;
+
+  const [activeSettingsTab, setActiveSettingsTab] = useState('general');
+
+  const settingsTabs = [
+    { id: 'general', label: 'General & Branding', icon: Settings },
+    { id: 'hero', label: 'Hero Content', icon: Brain },
+    { id: 'features', label: 'Features & Taxation', icon: KeyRound },
+    { id: 'contact', label: 'Support & Alerts', icon: Bell },
+    { id: 'promo', label: 'Promo Codes', icon: FileSpreadsheet },
+    { id: 'legal', label: 'Policies & Legal', icon: ShieldCheck }
+  ];
 
   return (
     <>
@@ -346,307 +355,359 @@ export default function SettingsTab(props) {
                 <p className="text-sm text-zinc-500 font-medium pt-1">Manage global landing page titles, subheadings, and contact support endpoints</p>
               </div>
 
+              {/* Sub-tabs Navigation */}
+              <div className="flex flex-wrap gap-2 pb-1">
+                {settingsTabs.map((tab) => {
+                  const Icon = tab.icon;
+                  const isActive = activeSettingsTab === tab.id;
+                  return (
+                    <button
+                      key={tab.id}
+                      type="button"
+                      onClick={() => setActiveSettingsTab(tab.id)}
+                      className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold transition duration-155 border cursor-pointer select-none ${
+                        isActive
+                          ? 'bg-brand/10 border-brand/40 text-brand shadow-sm shadow-brand/5'
+                          : 'bg-zinc-900/40 hover:bg-zinc-800/60 border-zinc-800 text-zinc-400 hover:text-zinc-200'
+                      }`}
+                    >
+                      <Icon className={`w-4 h-4 ${isActive ? 'text-brand' : 'text-zinc-500'}`} />
+                      {tab.label}
+                    </button>
+                  );
+                })}
+              </div>
+
               <form onSubmit={handleSaveSettings} className="bg-zinc-955 border border-zinc-850 p-6 rounded-xl space-y-5">
-                <div className="space-y-1">
-                  <label className="text-sm capitalize  font-bold text-zinc-400">Hero Section Heading</label>
-                  <input
-                    type="text"
-                    required
-                    value={settingsForm.heroTitle}
-                    onChange={(e) => setSettingsForm({ ...settingsForm, heroTitle: e.target.value })}
-                    className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none"
-                    placeholder="e.g. Bridging You To Your {True Growth.}"
-                  />
-                  <span className="text-sm text-zinc-550 block font-medium">Use curly braces `{ }` around words you want highlighted with the neon gradient.</span>
-                </div>
+                
+                {/* TAB 1: General & Branding */}
+                {activeSettingsTab === 'general' && (
+                  <div className="space-y-5 animate-in fade-in duration-200">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="space-y-1">
+                        <label className="text-sm capitalize  font-bold text-zinc-400">Custom Site Brand Name</label>
+                        <input
+                          type="text"
+                          required
+                          value={settingsForm.siteName}
+                          onChange={(e) => setSettingsForm({ ...settingsForm, siteName: e.target.value })}
+                          className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
+                          placeholder="e.g. BEHOLD"
+                        />
+                      </div>
 
-                <div className="space-y-1">
-                  <label className="text-sm capitalize  font-bold text-zinc-400">Hero Section Subtitle</label>
-                  <textarea
-                    rows={3}
-                    required
-                    value={settingsForm.heroSub}
-                    onChange={(e) => setSettingsForm({ ...settingsForm, heroSub: e.target.value })}
-                    className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none resize-none font-semibold"
-                    placeholder="Write a compelling landing subheading..."
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="text-sm capitalize  font-bold text-zinc-400">Custom Site Brand Name</label>
-                    <input
-                      type="text"
-                      required
-                      value={settingsForm.siteName}
-                      onChange={(e) => setSettingsForm({ ...settingsForm, siteName: e.target.value })}
-                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
-                      placeholder="e.g. BEHOLD"
-                    />
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="text-sm capitalize  font-bold text-zinc-400">Footer Copyright Text</label>
-                    <input
-                      type="text"
-                      required
-                      value={settingsForm.siteCopyright}
-                      onChange={(e) => setSettingsForm({ ...settingsForm, siteCopyright: e.target.value })}
-                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
-                      placeholder="e.g. © BEHOLD Ltd., 2026. All rights reserved."
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="text-sm capitalize  font-bold text-zinc-400">WhatsApp Support Endpoint Link</label>
-                    <input
-                      type="url"
-                      required
-                      value={settingsForm.whatsapp}
-                      onChange={(e) => setSettingsForm({ ...settingsForm, whatsapp: e.target.value })}
-                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none  font-semibold"
-                      placeholder="e.g. https://wa.me/919497174011"
-                    />
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="text-sm capitalize  font-bold text-zinc-400">Contact Support Email Address</label>
-                    <input
-                      type="email"
-                      required
-                      value={settingsForm.contactEmail}
-                      onChange={(e) => setSettingsForm({ ...settingsForm, contactEmail: e.target.value })}
-                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none  font-semibold"
-                      placeholder="e.g. support@behold.com"
-                    />
-                  </div>
-                </div>
-
-                {/* Top Alert Banner Notice */}
-                <div className="border border-zinc-850 p-4 rounded-xl space-y-4 bg-zinc-900/40">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <span className="text-sm capitalize  font-bold text-zinc-400 block">System Banner Notification Bar</span>
-                      <span className="text-sm text-zinc-550 block font-medium">Display an alert message at the very top of all student-facing views.</span>
+                      <div className="space-y-1">
+                        <label className="text-sm capitalize  font-bold text-zinc-400">Footer Copyright Text</label>
+                        <input
+                          type="text"
+                          required
+                          value={settingsForm.siteCopyright}
+                          onChange={(e) => setSettingsForm({ ...settingsForm, siteCopyright: e.target.value })}
+                          className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
+                          placeholder="e.g. © BEHOLD Ltd., 2026. All rights reserved."
+                        />
+                      </div>
                     </div>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={settingsForm.showBanner}
-                        onChange={(e) => setSettingsForm({ ...settingsForm, showBanner: e.target.checked })}
-                        className="sr-only peer"
-                      />
-                      <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
-                    </label>
-                  </div>
 
-                  {settingsForm.showBanner && (
-                    <div className="space-y-1 animate-in slide-in-from-top duration-200">
-                      <label className="text-sm capitalize  font-bold text-zinc-500">Alert Message Text</label>
+                    <div className="space-y-1">
+                      <label className="text-sm capitalize font-bold text-zinc-400">C-DAT Default Group Code</label>
                       <input
                         type="text"
-                        value={settingsForm.bannerNotice}
-                        onChange={(e) => setSettingsForm({ ...settingsForm, bannerNotice: e.target.value })}
-                        className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
-                        placeholder="Write dynamic alert banner message..."
-                      />
-                    </div>
-                  )}
-                </div>
-
-                {/* Feature Toggles */}
-                <div className="border border-zinc-850 p-4 rounded-xl space-y-4 bg-zinc-900/40">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <span className="text-sm capitalize  font-bold text-brand block">Enable Psychology & Booking Services</span>
-                      <span className="text-sm text-zinc-550 block font-medium mt-1">If disabled, the site will only display Aptitude Test features. Psychologists and booking sections will be hidden from the public website.</span>
-                    </div>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={settingsForm.enablePsychology}
-                        onChange={(e) => setSettingsForm({ ...settingsForm, enablePsychology: e.target.checked })}
-                        className="sr-only peer"
-                      />
-                      <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
-                    </label>
-                  </div>
-                </div>
-
-                {/* GST / Tax Configuration */}
-                <div className="bg-zinc-900/60 border border-zinc-800 rounded-xl p-4 space-y-4">
-                  <h4 className="text-sm font-bold text-zinc-300 capitalize tracking-wide flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-amber-500" />
-                    Tax / GST Configuration
-                  </h4>
-
-                  <div className="flex items-center justify-between gap-3">
-                    <div>
-                      <span className="text-sm capitalize font-bold text-brand block">Enable GST on Bookings</span>
-                      <span className="text-sm text-zinc-550 block font-medium mt-1">When enabled, GST will be applied to the session fee on the booking checkout page.</span>
-                    </div>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={settingsForm.gstEnabled}
-                        onChange={(e) => setSettingsForm({ ...settingsForm, gstEnabled: e.target.checked })}
-                        className="sr-only peer"
-                      />
-                      <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
-                    </label>
-                  </div>
-
-                  {settingsForm.gstEnabled && (
-                    <div className="space-y-1 max-w-xs animate-in slide-in-from-top-2 duration-200">
-                      <label className="text-sm capitalize font-bold text-zinc-400">GST Percentage (%)</label>
-                      <input
-                        type="number"
-                        min={0}
-                        max={100}
-                        step={0.5}
-                        value={settingsForm.gstPercent}
-                        onChange={(e) => {
-                          let val = parseFloat(e.target.value);
-                          if (isNaN(val)) val = 0;
-                          if (val < 0) val = 0;
-                          if (val > 100) val = 100;
-                          setSettingsForm({ ...settingsForm, gstPercent: val });
-                        }}
+                        required
+                        value={settingsForm.cdatGroupCode}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, cdatGroupCode: e.target.value })}
                         className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
-                        placeholder="e.g. 18"
+                        placeholder="e.g. cdat@behold"
                       />
-                      <p className="text-xs text-zinc-550 font-medium">Set to 0 to show ₹0 for GST. Common values: 5%, 12%, 18%, 28%</p>
                     </div>
-                  )}
-                </div>
-
-                {/* Policies & Documents */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="text-sm capitalize  font-bold text-zinc-400">Terms of Use Document</label>
-                    <textarea
-                      rows={6}
-                      required
-                      value={settingsForm.termsOfUse}
-                      onChange={(e) => setSettingsForm({ ...settingsForm, termsOfUse: e.target.value })}
-                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none font-semibold "
-                      placeholder="Write Platform Terms & Conditions..."
-                    />
                   </div>
+                )}
 
-                  <div className="space-y-1">
-                    <label className="text-sm capitalize  font-bold text-zinc-400">Privacy Policy Document</label>
-                    <textarea
-                      rows={6}
-                      required
-                      value={settingsForm.privacyPolicy}
-                      onChange={(e) => setSettingsForm({ ...settingsForm, privacyPolicy: e.target.value })}
-                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none font-semibold "
-                      placeholder="Write Platform Privacy Policy..."
-                    />
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="text-sm capitalize font-bold text-zinc-400">C-DAT Default Group Code</label>
-                    <input
-                      type="text"
-                      required
-                      value={settingsForm.cdatGroupCode}
-                      onChange={(e) => setSettingsForm({ ...settingsForm, cdatGroupCode: e.target.value })}
-                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
-                      placeholder="e.g. cdat@behold"
-                    />
-                  </div>
-                </div>
-
-                {/* Promotional Codes */}
-                <div className="pt-4 border-t border-zinc-800 space-y-4">
-                  <div className="flex items-center justify-between">
+                {/* TAB 2: Hero Content */}
+                {activeSettingsTab === 'hero' && (
+                  <div className="space-y-5 animate-in fade-in duration-200">
                     <div className="space-y-1">
-                      <h4 className="text-sm font-bold text-white capitalize ">Promotional Codes</h4>
-                      <p className="text-xs text-zinc-500 font-medium">Manage discount codes for service bookings</p>
+                      <label className="text-sm capitalize  font-bold text-zinc-400">Hero Section Heading</label>
+                      <input
+                        type="text"
+                        required
+                        value={settingsForm.heroTitle}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, heroTitle: e.target.value })}
+                        className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none"
+                        placeholder="e.g. Bridging You To Your {True Growth.}"
+                      />
+                      <span className="text-sm text-zinc-550 block font-medium">Use curly braces `{ }` around words you want highlighted with the neon gradient.</span>
                     </div>
-                    <button
-                      type="button"
-                      onClick={handleAddPromoCode}
-                      className="flex items-center gap-1.5 px-3 py-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-white rounded-lg text-xs font-bold capitalize transition cursor-pointer"
-                    >
-                      <Plus className="w-3.5 h-3.5" />
-                      Add Code
-                    </button>
+
+                    <div className="space-y-1">
+                      <label className="text-sm capitalize  font-bold text-zinc-400">Hero Section Subtitle</label>
+                      <textarea
+                        rows={3}
+                        required
+                        value={settingsForm.heroSub}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, heroSub: e.target.value })}
+                        className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none resize-none font-semibold"
+                        placeholder="Write a compelling landing subheading..."
+                      />
+                    </div>
                   </div>
-                  
-                  {settingsForm.promoCodes && settingsForm.promoCodes.length > 0 ? (
-                    <div className="space-y-3">
-                      {settingsForm.promoCodes.map((promo, idx) => (
-                        <div key={idx} className="flex flex-col sm:flex-row items-center gap-3 p-3 bg-zinc-900 border border-zinc-850 rounded-xl relative group">
-                          <button
-                            type="button"
-                            onClick={() => handleRemovePromoCode(idx)}
-                            className="absolute -top-2 -right-2 bg-rose-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition cursor-pointer shadow-md"
-                            title="Remove Promo Code"
-                          >
-                            <X className="w-3 h-3" />
-                          </button>
-                          
-                          <div className="flex-1 w-full space-y-1">
-                            <label className="text-xs font-bold text-zinc-500">Code (e.g. SAVE20)</label>
-                            <input
-                              type="text"
-                              required
-                              value={promo.code}
-                              onChange={(e) => handleUpdatePromoCode(idx, 'code', e.target.value.toUpperCase())}
-                              className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold uppercase"
-                              placeholder="CODE"
-                            />
-                          </div>
-                          
-                          <div className="w-full sm:w-32 space-y-1">
-                            <label className="text-xs font-bold text-zinc-500">Type</label>
-                            <select
-                              value={promo.type}
-                              onChange={(e) => handleUpdatePromoCode(idx, 'type', e.target.value)}
-                              className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold cursor-pointer"
-                            >
-                              <option value="PERCENTAGE">Percentage (%)</option>
-                              <option value="FLAT">Flat (₹)</option>
-                            </select>
-                          </div>
-                          
-                          <div className="w-full sm:w-24 space-y-1">
-                            <label className="text-xs font-bold text-zinc-500">Value</label>
-                            <input
-                              type="number"
-                              required
-                              min={0}
-                              value={promo.value}
-                              onChange={(e) => handleUpdatePromoCode(idx, 'value', Number(e.target.value))}
-                              className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
-                            />
-                          </div>
-                          
-                          <div className="flex items-center gap-2 mt-4 sm:mt-0 pt-2 sm:pt-4 justify-center sm:w-20">
-                            <label className="flex items-center gap-2 cursor-pointer text-sm font-bold text-zinc-300 select-none">
-                              <input
-                                type="checkbox"
-                                checked={promo.isActive !== false}
-                                onChange={(e) => handleUpdatePromoCode(idx, 'isActive', e.target.checked)}
-                                className="w-4 h-4 rounded border-zinc-800 bg-zinc-950 text-brand focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
-                              />
-                              <span className={promo.isActive !== false ? "text-emerald-400" : "text-zinc-500"}>Active</span>
-                            </label>
-                          </div>
+                )}
+
+                {/* TAB 3: Features & Taxation */}
+                {activeSettingsTab === 'features' && (
+                  <div className="space-y-5 animate-in fade-in duration-200">
+                    {/* Feature Toggles */}
+                    <div className="border border-zinc-850 p-4 rounded-xl space-y-4 bg-zinc-900/40">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <span className="text-sm capitalize  font-bold text-brand block">Enable Psychology & Booking Services</span>
+                          <span className="text-sm text-zinc-550 block font-medium mt-1">If disabled, the site will only display Aptitude Test features. Psychologists and booking sections will be hidden from the public website.</span>
                         </div>
-                      ))}
+                        <label className="relative inline-flex items-center cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={settingsForm.enablePsychology}
+                            onChange={(e) => setSettingsForm({ ...settingsForm, enablePsychology: e.target.checked })}
+                            className="sr-only peer"
+                          />
+                          <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
+                        </label>
+                      </div>
                     </div>
-                  ) : (
-                    <div className="py-6 border border-dashed border-zinc-800 rounded-xl bg-zinc-900/50 text-center">
-                      <p className="text-sm text-zinc-500 font-medium">No promotional codes configured.</p>
+
+                    {/* GST / Tax Configuration */}
+                    <div className="bg-zinc-900/60 border border-zinc-800 rounded-xl p-4 space-y-4">
+                      <h4 className="text-sm font-bold text-zinc-300 capitalize tracking-wide flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-amber-500" />
+                        Tax / GST Configuration
+                      </h4>
+
+                      <div className="flex items-center justify-between gap-3">
+                        <div>
+                          <span className="text-sm capitalize font-bold text-brand block">Enable GST on Bookings</span>
+                          <span className="text-sm text-zinc-550 block font-medium mt-1">When enabled, GST will be applied to the session fee on the booking checkout page.</span>
+                        </div>
+                        <label className="relative inline-flex items-center cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={settingsForm.gstEnabled}
+                            onChange={(e) => setSettingsForm({ ...settingsForm, gstEnabled: e.target.checked })}
+                            className="sr-only peer"
+                          />
+                          <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
+                        </label>
+                      </div>
+
+                      {settingsForm.gstEnabled && (
+                        <div className="space-y-1 max-w-xs animate-in slide-in-from-top-2 duration-200">
+                          <label className="text-sm capitalize font-bold text-zinc-400">GST Percentage (%)</label>
+                          <input
+                            type="number"
+                            min={0}
+                            max={100}
+                            step={0.5}
+                            value={settingsForm.gstPercent}
+                            onChange={(e) => {
+                              let val = parseFloat(e.target.value);
+                              if (isNaN(val)) val = 0;
+                              if (val < 0) val = 0;
+                              if (val > 100) val = 100;
+                              setSettingsForm({ ...settingsForm, gstPercent: val });
+                            }}
+                            className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
+                            placeholder="e.g. 18"
+                          />
+                          <p className="text-xs text-zinc-550 font-medium">Set to 0 to show ₹0 for GST. Common values: 5%, 12%, 18%, 28%</p>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
+                  </div>
+                )}
+
+                {/* TAB 4: Support & Alerts */}
+                {activeSettingsTab === 'contact' && (
+                  <div className="space-y-5 animate-in fade-in duration-200">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="space-y-1">
+                        <label className="text-sm capitalize  font-bold text-zinc-400">WhatsApp Support Endpoint Link</label>
+                        <input
+                          type="url"
+                          required
+                          value={settingsForm.whatsapp}
+                          onChange={(e) => setSettingsForm({ ...settingsForm, whatsapp: e.target.value })}
+                          className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none  font-semibold"
+                          placeholder="e.g. https://wa.me/919497174011"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-sm capitalize  font-bold text-zinc-400">Contact Support Email Address</label>
+                        <input
+                          type="email"
+                          required
+                          value={settingsForm.contactEmail}
+                          onChange={(e) => setSettingsForm({ ...settingsForm, contactEmail: e.target.value })}
+                          className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none  font-semibold"
+                          placeholder="e.g. support@behold.com"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Top Alert Banner Notice */}
+                    <div className="border border-zinc-850 p-4 rounded-xl space-y-4 bg-zinc-900/40">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <span className="text-sm capitalize  font-bold text-zinc-400 block">System Banner Notification Bar</span>
+                          <span className="text-sm text-zinc-550 block font-medium">Display an alert message at the very top of all student-facing views.</span>
+                        </div>
+                        <label className="relative inline-flex items-center cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={settingsForm.showBanner}
+                            onChange={(e) => setSettingsForm({ ...settingsForm, showBanner: e.target.checked })}
+                            className="sr-only peer"
+                          />
+                          <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
+                        </label>
+                      </div>
+
+                      {settingsForm.showBanner && (
+                        <div className="space-y-1 animate-in slide-in-from-top duration-200">
+                          <label className="text-sm capitalize  font-bold text-zinc-500">Alert Message Text</label>
+                          <input
+                            type="text"
+                            value={settingsForm.bannerNotice}
+                            onChange={(e) => setSettingsForm({ ...settingsForm, bannerNotice: e.target.value })}
+                            className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
+                            placeholder="Write dynamic alert banner message..."
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* TAB 5: Promo Codes */}
+                {activeSettingsTab === 'promo' && (
+                  <div className="space-y-5 animate-in fade-in duration-200">
+                    <div className="pt-2 space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div className="space-y-1">
+                          <h4 className="text-sm font-bold text-white capitalize ">Promotional Codes</h4>
+                          <p className="text-xs text-zinc-500 font-medium">Manage discount codes for service bookings</p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={handleAddPromoCode}
+                          className="flex items-center gap-1.5 px-3 py-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-white rounded-lg text-xs font-bold capitalize transition cursor-pointer"
+                        >
+                          <Plus className="w-3.5 h-3.5" />
+                          Add Code
+                        </button>
+                      </div>
+                      
+                      {settingsForm.promoCodes && settingsForm.promoCodes.length > 0 ? (
+                        <div className="space-y-3">
+                          {settingsForm.promoCodes.map((promo, idx) => (
+                            <div key={idx} className="flex flex-col sm:flex-row items-center gap-3 p-3 bg-zinc-900 border border-zinc-850 rounded-xl relative group">
+                              <button
+                                type="button"
+                                onClick={() => handleRemovePromoCode(idx)}
+                                className="absolute -top-2 -right-2 bg-rose-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition cursor-pointer shadow-md"
+                                title="Remove Promo Code"
+                              >
+                                <X className="w-3 h-3" />
+                              </button>
+                              
+                              <div className="flex-1 w-full space-y-1">
+                                <label className="text-xs font-bold text-zinc-500">Code (e.g. SAVE20)</label>
+                                <input
+                                  type="text"
+                                  required
+                                  value={promo.code}
+                                  onChange={(e) => handleUpdatePromoCode(idx, 'code', e.target.value.toUpperCase())}
+                                  className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold uppercase"
+                                  placeholder="CODE"
+                                />
+                              </div>
+                              
+                              <div className="w-full sm:w-32 space-y-1">
+                                <label className="text-xs font-bold text-zinc-500">Type</label>
+                                <select
+                                  value={promo.type}
+                                  onChange={(e) => handleUpdatePromoCode(idx, 'type', e.target.value)}
+                                  className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold cursor-pointer"
+                                >
+                                  <option value="PERCENTAGE">Percentage (%)</option>
+                                  <option value="FLAT">Flat (₹)</option>
+                                </select>
+                              </div>
+                              
+                              <div className="w-full sm:w-24 space-y-1">
+                                <label className="text-xs font-bold text-zinc-500">Value</label>
+                                <input
+                                  type="number"
+                                  required
+                                  min={0}
+                                  value={promo.value}
+                                  onChange={(e) => handleUpdatePromoCode(idx, 'value', Number(e.target.value))}
+                                  className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
+                                />
+                              </div>
+                              
+                              <div className="flex items-center gap-2 mt-4 sm:mt-0 pt-2 sm:pt-4 justify-center sm:w-20">
+                                <label className="flex items-center gap-2 cursor-pointer text-sm font-bold text-zinc-300 select-none">
+                                  <input
+                                    type="checkbox"
+                                    checked={promo.isActive !== false}
+                                    onChange={(e) => handleUpdatePromoCode(idx, 'isActive', e.target.checked)}
+                                    className="w-4 h-4 rounded border-zinc-800 bg-zinc-955 text-brand focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
+                                  />
+                                  <span className={promo.isActive !== false ? "text-emerald-400" : "text-zinc-500"}>Active</span>
+                                </label>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="py-6 border border-dashed border-zinc-800 rounded-xl bg-zinc-900/50 text-center">
+                          <p className="text-sm text-zinc-500 font-medium">No promotional codes configured.</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* TAB 6: Policies & Legal */}
+                {activeSettingsTab === 'legal' && (
+                  <div className="space-y-5 animate-in fade-in duration-200">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="space-y-1">
+                        <label className="text-sm capitalize  font-bold text-zinc-400">Terms of Use Document</label>
+                        <textarea
+                          rows={12}
+                          required
+                          value={settingsForm.termsOfUse}
+                          onChange={(e) => setSettingsForm({ ...settingsForm, termsOfUse: e.target.value })}
+                          className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none font-semibold "
+                          placeholder="Write Platform Terms & Conditions..."
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-sm capitalize  font-bold text-zinc-400">Privacy Policy Document</label>
+                        <textarea
+                          rows={12}
+                          required
+                          value={settingsForm.privacyPolicy}
+                          onChange={(e) => setSettingsForm({ ...settingsForm, privacyPolicy: e.target.value })}
+                          className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none font-semibold "
+                          placeholder="Write Platform Privacy Policy..."
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 {settingsSuccess && (
                   <p className="text-sm text-emerald-500 font-bold capitalize tracking-wide">{settingsSuccess}</p>
