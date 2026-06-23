@@ -363,15 +363,19 @@ export default function DateTimePicker({
                       : isSelected
                         ? 'bg-zinc-900 border-zinc-900 text-white shadow-md font-bold scale-[1.03]'
                         : meta.isAvailable
-                          ? 'bg-white border-zinc-200 text-zinc-800 hover:border-zinc-900 hover:shadow-xs cursor-pointer'
-                          : 'bg-zinc-50 border-zinc-100 text-zinc-450 cursor-not-allowed opacity-50'
+                          ? isToday
+                            ? 'bg-white border-neon-glow text-zinc-800 hover:border-zinc-900 hover:shadow-xs cursor-pointer'
+                            : 'bg-white border-zinc-200 text-zinc-800 hover:border-zinc-900 hover:shadow-xs cursor-pointer'
+                          : isToday
+                            ? 'bg-zinc-50 border-neon-glow text-zinc-450 cursor-not-allowed opacity-50'
+                            : 'bg-zinc-50 border-zinc-100 text-zinc-450 cursor-not-allowed opacity-50'
                     }
                     ${!cell.isCurrentMonth && !meta.isPast && !isSelected ? 'opacity-40 text-zinc-400' : ''}
                   `}
                 >
                   {/* Day Number */}
                   <span className={`text-sm sm:text-base font-black leading-none ${
-                    isSelected ? 'text-white' : isToday ? 'text-zinc-900 underline decoration-2 underline-offset-4' : ''
+                    isSelected ? 'text-white' : isToday ? 'text-zinc-900' : ''
                   }`}>
                     {cell.dayNum}
                   </span>
@@ -450,8 +454,12 @@ export default function DateTimePicker({
                       : isSelected
                         ? 'bg-zinc-900 border-zinc-900 text-white shadow-lg scale-[1.04] cursor-pointer'
                         : meta.isAvailable
-                          ? 'bg-white border-zinc-200 text-zinc-800 hover:border-zinc-900 hover:shadow-sm cursor-pointer'
-                          : 'bg-zinc-50 border-zinc-150 text-zinc-350 cursor-not-allowed opacity-50'
+                          ? isToday
+                            ? 'bg-white border-neon-glow text-zinc-800 hover:border-zinc-900 hover:shadow-sm cursor-pointer'
+                            : 'bg-white border-zinc-200 text-zinc-800 hover:border-zinc-900 hover:shadow-sm cursor-pointer'
+                          : isToday
+                            ? 'bg-zinc-50 border-neon-glow text-zinc-350 cursor-not-allowed opacity-50'
+                            : 'bg-zinc-50 border-zinc-150 text-zinc-350 cursor-not-allowed opacity-50'
                     }
                   `}
                 >
