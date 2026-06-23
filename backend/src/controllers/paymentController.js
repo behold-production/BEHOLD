@@ -7,13 +7,13 @@ const PaymentController = {
   // Create Razorpay Order
   async createOrder(req, res, next) {
     try {
-      const { counsellorId, date, time, mode, service } = req.body;
+      const { counsellorId, date, time, mode, service, clientLatitude, clientLongitude } = req.body;
       if (!counsellorId || !date || !time || !mode) {
         return res.status(400).json({ success: false, message: 'Counsellor ID, date, time, and mode are required' });
       }
 
       // 1. Validate booking details (availability, double booking, past date)
-      const validation = await validateBookingDetails(counsellorId, date, time, mode, service || 'counselling');
+      const validation = await validateBookingDetails(counsellorId, date, time, mode, service || 'counselling', null, clientLatitude, clientLongitude);
       if (!validation.valid) {
         return res.status(400).json({ success: false, message: validation.message });
       }
@@ -109,7 +109,7 @@ const PaymentController = {
         });
       }
 
-      const { counsellorId, date, time, mode, service } = bookingDetails;
+      const { counsellorId, date, time, mode, service, clientLocationName, clientLatitude, clientLongitude } = bookingDetails;
       const userId = req.user.id;
 
       if (!counsellorId || !date || !time || !mode) {
@@ -168,7 +168,7 @@ const PaymentController = {
       }
 
       // 3. Final validation check (double booking, past date, counsellor availability)
-      const validation = await validateBookingDetails(counsellorId, date, time, mode, service || 'counselling');
+      const validation = await validateBookingDetails(counsellorId, date, time, mode, service || 'counselling', null, clientLatitude, clientLongitude);
       if (!validation.valid) {
         return res.status(400).json({ success: false, message: validation.message });
       }
@@ -260,7 +260,10 @@ const PaymentController = {
         razorpayPaymentId: razorpay_payment_id,
         amountPaid: netTotal,
         appliedDiscount,
-        couponCode
+        couponCode,
+        clientLocationName: clientLocationName || '',
+        clientLatitude: Number(clientLatitude) || 0,
+        clientLongitude: Number(clientLongitude) || 0
       });
 
       // 5. Send notifications to counsellor

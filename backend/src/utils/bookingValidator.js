@@ -14,7 +14,7 @@ const parseDateTime = (dateStr, timeStr) => {
   }
 };
 
-const validateBookingDetails = async (counsellorId, date, time, mode, service, appointmentIdToExclude = null) => {
+const validateBookingDetails = async (counsellorId, date, time, mode, service, appointmentIdToExclude = null, clientLatitude = null, clientLongitude = null) => {
   // 1. Past date check
   const now = new Date();
   const selectedDateTime = parseDateTime(date, time);
@@ -39,6 +39,38 @@ const validateBookingDetails = async (counsellorId, date, time, mode, service, a
   const availableModes = Array.isArray(counsellor.modes) ? counsellor.modes : ['ONLINE', 'OFFLINE'];
   if (!availableModes.includes(mode)) {
     return { valid: false, message: `Counsellor does not support session mode: ${mode}` };
+  }
+
+  // 3.1 Doorstep location distance check (10 km limit)
+  if (mode === 'DOOR_STEP') {
+    if (clientLatitude === undefined || clientLatitude === null || clientLongitude === undefined || clientLongitude === null) {
+      return { valid: false, message: 'Your location coordinates (latitude and longitude) are required for doorstep sessions.' };
+    }
+    const lat1 = Number(clientLatitude);
+    const lon1 = Number(clientLongitude);
+    const lat2 = Number(counsellor.latitude);
+    const lon2 = Number(counsellor.longitude);
+    if (isNaN(lat1) || isNaN(lon1)) {
+      return { valid: false, message: 'Invalid client location coordinates.' };
+    }
+    if (!lat2 && !lon2) {
+      return { valid: false, message: 'Doorstep booking is temporarily unavailable for this psychologist (counsellor has not set their location center).' };
+    }
+
+    // Haversine formula
+    const R = 6371; // Radius of Earth in km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c;
+
+    if (distance > 10) {
+      return { valid: false, message: `Your location is ${distance.toFixed(2)} km away. Doorstep service is only available within a 10 km radius of the counsellor's location (${counsellor.locationName || 'their center'}).` };
+    }
   }
 
   // 4. Double booking check

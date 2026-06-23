@@ -94,7 +94,10 @@ const AuthController = {
         hours,
         modes,
         title,
-        availability
+        availability,
+        locationName,
+        latitude,
+        longitude
       } = req.body;
 
       if (!name || !email || !password) {
@@ -146,7 +149,10 @@ const AuthController = {
                 .map((m) => m.trim().toUpperCase())
                 .filter(Boolean)
             : ['ONLINE', 'OFFLINE', 'DOOR_STEP'],
-        title: title || 'Consultant Psychologist'
+        title: title || 'Consultant Psychologist',
+        locationName: locationName || '',
+        latitude: Number(latitude) || 0,
+        longitude: Number(longitude) || 0
       });
 
       const { password: _, ...counsellorData } = newCounsellor;

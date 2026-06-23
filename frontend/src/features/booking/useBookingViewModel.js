@@ -862,7 +862,10 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         time: selectedTime,
         mode: bookingMode,
         service: bookingService,
-        couponCode: couponInput
+        couponCode: couponInput,
+        clientLocationName: bookingForm.clientLocationName || '',
+        clientLatitude: Number(bookingForm.clientLatitude) || 0,
+        clientLongitude: Number(bookingForm.clientLongitude) || 0
       };
 
       const orderRes = await ApiService.createPaymentOrder(selectedAdvisor ? selectedAdvisor.id : '', bookingDetails);
@@ -892,7 +895,10 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
               time: selectedTime,
               mode: bookingMode,
               service: bookingService,
-              couponCode: couponInput
+              couponCode: couponInput,
+              clientLocationName: bookingForm.clientLocationName || '',
+              clientLatitude: Number(bookingForm.clientLatitude) || 0,
+              clientLongitude: Number(bookingForm.clientLongitude) || 0
             };
 
             const verifyRes = await ApiService.verifyPaymentAndBook(response, bookingDetails);

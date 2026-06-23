@@ -879,7 +879,7 @@ const AdminController = {
   // Appointments management
   async createAppointment(req, res, next) {
     try {
-      const { userId, advisorId, service, mode, date, time, status, meetLink } = req.body;
+      const { userId, advisorId, service, mode, date, time, status, meetLink, clientLocationName, clientLatitude, clientLongitude } = req.body;
       if (!userId || !advisorId || !date || !time) {
         return res.status(400).json({ success: false, message: 'UserId, advisorId, date, and time are required' });
       }
@@ -894,7 +894,10 @@ const AdminController = {
         date,
         time,
         status: status === 'CONFIRMED' ? 'APPROVED' : status || 'PENDING',
-        meetLink: meetLink || (mode === 'ONLINE' && counsellor ? counsellor.defaultMeetLink || '' : '')
+        meetLink: meetLink || (mode === 'ONLINE' && counsellor ? counsellor.defaultMeetLink || '' : ''),
+        clientLocationName: clientLocationName || '',
+        clientLatitude: Number(clientLatitude) || 0,
+        clientLongitude: Number(clientLongitude) || 0
       });
 
       res.status(201).json({
@@ -923,7 +926,10 @@ const AdminController = {
         notes,
         feedback,
         nextSession,
-        adminNotes
+        adminNotes,
+        clientLocationName,
+        clientLatitude,
+        clientLongitude
       } = req.body;
 
       const updates = {};
@@ -945,6 +951,9 @@ const AdminController = {
       if (feedback !== undefined) updates.feedback = feedback;
       if (nextSession !== undefined) updates.nextSession = nextSession;
       if (adminNotes !== undefined) updates.adminNotes = adminNotes;
+      if (clientLocationName !== undefined) updates.clientLocationName = clientLocationName;
+      if (clientLatitude !== undefined) updates.clientLatitude = Number(clientLatitude) || 0;
+      if (clientLongitude !== undefined) updates.clientLongitude = Number(clientLongitude) || 0;
 
       const updated = await StorageService.update('appointments', id, updates);
       if (!updated) {
@@ -968,6 +977,9 @@ const AdminController = {
         if (updates.adminNotes !== undefined) sessionUpdates.adminNotes = updates.adminNotes;
         if (updates.cancellationReason !== undefined) sessionUpdates.cancellationReason = updates.cancellationReason;
         if (updates.cancelledBy !== undefined) sessionUpdates.cancelledBy = updates.cancelledBy;
+        if (updates.clientLocationName !== undefined) sessionUpdates.clientLocationName = updates.clientLocationName;
+        if (updates.clientLatitude !== undefined) sessionUpdates.clientLatitude = updates.clientLatitude;
+        if (updates.clientLongitude !== undefined) sessionUpdates.clientLongitude = updates.clientLongitude;
 
         await StorageService.update('sessions', session.id, sessionUpdates);
       }

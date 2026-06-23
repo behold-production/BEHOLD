@@ -40,7 +40,10 @@ const CounsellorController = {
         lang,
         defaultMeetLink,
         hours,
-        modes
+        modes,
+        locationName,
+        latitude,
+        longitude
       } = req.body;
       const updates = {};
 
@@ -57,6 +60,9 @@ const CounsellorController = {
       if (defaultMeetLink !== undefined) updates.defaultMeetLink = defaultMeetLink;
       if (hours !== undefined) updates.hours = hours;
       if (modes !== undefined) updates.modes = modes;
+      if (locationName !== undefined) updates.locationName = locationName;
+      if (latitude !== undefined) updates.latitude = Number(latitude);
+      if (longitude !== undefined) updates.longitude = Number(longitude);
 
       const updated = await StorageService.update('counsellors', req.user.id, updates);
       if (!updated) {

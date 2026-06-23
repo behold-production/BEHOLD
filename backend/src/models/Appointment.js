@@ -22,7 +22,10 @@ const appointmentSchema = new mongoose.Schema(
     paymentStatus: { type: String, default: 'PENDING', enum: ['PENDING', 'PAID', 'FAILED'] },
     razorpayOrderId: { type: String, default: '' },
     razorpayPaymentId: { type: String, default: '' },
-    amountPaid: { type: Number, default: 0 }
+    amountPaid: { type: Number, default: 0 },
+    clientLocationName: { type: String, default: '' },
+    clientLatitude: { type: Number, default: 0 },
+    clientLongitude: { type: Number, default: 0 }
   },
   { timestamps: true }
 );

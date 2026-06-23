@@ -6,7 +6,7 @@ const AppointmentController = {
   // Create Appointment (User / Student)
   async createAppointment(req, res, next) {
     try {
-      const { counsellorId, date, time, mode, service } = req.body;
+      const { counsellorId, date, time, mode, service, clientLocationName, clientLatitude, clientLongitude } = req.body;
       const userId = req.user.id;
 
       if (!counsellorId || !date || !time || !mode) {
@@ -18,7 +18,7 @@ const AppointmentController = {
       if (!user) return res.status(404).json({ success: false, message: 'Student profile not found' });
 
       // Check details validation (availability, double booking, past date)
-      const validation = await validateBookingDetails(counsellorId, date, time, mode, service || 'counselling');
+      const validation = await validateBookingDetails(counsellorId, date, time, mode, service || 'counselling', null, clientLatitude, clientLongitude);
       if (!validation.valid) {
         return res.status(400).json({ success: false, message: validation.message });
       }
@@ -42,7 +42,10 @@ const AppointmentController = {
         mode, // ONLINE or OFFLINE
         meetLink: mode === 'ONLINE' ? counsellor.defaultMeetLink || '' : '',
         status: 'PENDING',
-        service: service || 'counselling'
+        service: service || 'counselling',
+        clientLocationName: clientLocationName || '',
+        clientLatitude: Number(clientLatitude) || 0,
+        clientLongitude: Number(clientLongitude) || 0
       });
 
       // Send notification to counsellor
@@ -173,7 +176,10 @@ const AppointmentController = {
         meetLink,
         status: 'PENDING',
         notes: '',
-        feedback: ''
+        feedback: '',
+        clientLocationName: appointment.clientLocationName || '',
+        clientLatitude: Number(appointment.clientLatitude) || 0,
+        clientLongitude: Number(appointment.clientLongitude) || 0
       });
 
       await StorageService.create('notifications', {

@@ -16,7 +16,10 @@ const sessionSchema = new mongoose.Schema(
     nextSession: { type: String, default: '' },
     adminNotes: { type: String, default: '' },
     cancellationReason: { type: String, default: '' },
-    cancelledBy: { type: String, default: '' }
+    cancelledBy: { type: String, default: '' },
+    clientLocationName: { type: String, default: '' },
+    clientLatitude: { type: Number, default: 0 },
+    clientLongitude: { type: Number, default: 0 }
   },
   { timestamps: true }
 );

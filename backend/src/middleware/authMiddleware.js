@@ -13,6 +13,9 @@ const verifyJWT = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'behold_jwt_secret_key_2026_xyz');
+    if (decoded && decoded.role) {
+      decoded.role = decoded.role.toLowerCase();
+    }
     req.user = decoded; // { id, email, role }
     next();
   } catch (error) {
