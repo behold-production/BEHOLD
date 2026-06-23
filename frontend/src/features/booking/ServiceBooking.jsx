@@ -5,6 +5,7 @@ import TimePicker from './TimePicker';
 import BookingAuthModal from './BookingAuthModal';
 import { FileDown } from 'lucide-react';
 import { formatDateString } from '../../shared/utils/dateFormatter';
+import toast from 'react-hot-toast';
 
 const COUNSELLING_FLOW = {
   online: [
