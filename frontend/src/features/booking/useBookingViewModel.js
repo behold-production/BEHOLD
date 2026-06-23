@@ -677,7 +677,10 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
             name: prev.name && prev.name.trim().length > 0 ? prev.name : user.name,
             email: user.email,
             phone: prev.phone || '',
-            groupCode: prev.groupCode || ''
+            groupCode: prev.groupCode || '',
+            clientLocationName: prev.clientLocationName || user.locationName || '',
+            clientLatitude: prev.clientLatitude || user.latitude || '',
+            clientLongitude: prev.clientLongitude || user.longitude || ''
           };
           return merged;
         });

@@ -257,6 +257,7 @@ export default function StudentManagementTab(props) {
     handleNavClick,
     handleAdminLogin,
     handleCreateUser,
+    handleOpenAddUser,
     handleOpenEditUser,
     handleUpdateUser,
     handleDeleteUser,
@@ -381,13 +382,7 @@ export default function StudentManagementTab(props) {
                     </button>
                     {canAddStudents && (
                       <button
-                        onClick={() => {
-                          setUserForm({ id: '', name: '', email: '', password: '', phone: '', schoolName: '', grade: '', guardianName: '', guardianPhone: '', groupCode: '' });
-                          setUserProfilePicFile(null);
-                          setUserFormError('');
-                          setUserFormSuccess('');
-                          setIsAddUserOpen(true);
-                        }}
+                        onClick={handleOpenAddUser}
                         className="px-4 py-2 bg-brand hover:bg-brand-dark text-zinc-950 text-sm font-bold rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 capitalize shrink-0"
                       >
                         <Plus className="w-3.5 h-3.5 text-zinc-955" /> Add Student

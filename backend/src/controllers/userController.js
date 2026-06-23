@@ -27,7 +27,7 @@ const UserController = {
   // Update User Profile
   async updateProfile(req, res, next) {
     try {
-      const { name, phone, schoolName, grade, guardianName, guardianPhone, groupCode } = req.body;
+      const { name, phone, schoolName, grade, guardianName, guardianPhone, groupCode, locationName, latitude, longitude } = req.body;
       const updates = {};
 
       if (name !== undefined) updates.name = name;
@@ -37,6 +37,9 @@ const UserController = {
       if (guardianName !== undefined) updates.guardianName = guardianName;
       if (guardianPhone !== undefined) updates.guardianPhone = guardianPhone;
       if (groupCode !== undefined) updates.groupCode = groupCode;
+      if (locationName !== undefined) updates.locationName = locationName;
+      if (latitude !== undefined) updates.latitude = Number(latitude) || 0;
+      if (longitude !== undefined) updates.longitude = Number(longitude) || 0;
 
       const updatedUser = await StorageService.update('users', req.user.id, updates);
       if (!updatedUser) {

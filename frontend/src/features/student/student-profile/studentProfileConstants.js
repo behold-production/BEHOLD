@@ -1,6 +1,7 @@
 export const INITIAL_STATE = {
   name: '', email: '', phone: '', schoolName: '', grade: '',
-  guardianName: '', guardianPhone: '', groupCode: ''
+  guardianName: '', guardianPhone: '', groupCode: '',
+  locationName: '', latitude: 0, longitude: 0
 };
 
 export const TABS = [

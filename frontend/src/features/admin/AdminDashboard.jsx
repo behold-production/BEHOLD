@@ -930,7 +930,7 @@ export default function AdminDashboard({ setView }) {
   // Modals / Add / Edit states
   const [isAddUserOpen, setIsAddUserOpen] = useState(false);
   const [isEditUserOpen, setIsEditUserOpen] = useState(false);
-  const [userForm, setUserForm] = useState({ id: '', name: '', email: '', password: '', phone: '', schoolName: '', grade: '', guardianName: '', guardianPhone: '', groupCode: '', profilePic: '' });
+  const [userForm, setUserForm] = useState({ id: '', name: '', email: '', password: '', phone: '', schoolName: '', grade: '', guardianName: '', guardianPhone: '', groupCode: '', profilePic: '', locationName: '', latitude: 0, longitude: 0 });
   const [userFormError, setUserFormError] = useState('');
   const [userFormSuccess, setUserFormSuccess] = useState('');
   const [userProfilePicFile, setUserProfilePicFile] = useState(null);
@@ -964,6 +964,68 @@ export default function AdminDashboard({ setView }) {
   const [adminSearchResults, setAdminSearchResults] = useState([]);
   const [isAdminSearching, setIsAdminSearching] = useState(false);
   const [isAdminLocating, setIsAdminLocating] = useState(false);
+
+  const [adminUserSearchQuery, setAdminUserSearchQuery] = useState('');
+  const [adminUserSearchResults, setAdminUserSearchResults] = useState([]);
+  const [isAdminUserSearching, setIsAdminUserSearching] = useState(false);
+  const [isAdminUserLocating, setIsAdminUserLocating] = useState(false);
+
+  const handleAdminUserAddressSearch = async () => {
+    if (!adminUserSearchQuery.trim()) return;
+    setIsAdminUserSearching(true);
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(adminUserSearchQuery)}`);
+      const data = await res.json();
+      setAdminUserSearchResults(data);
+      if (data.length === 0) {
+        import('react-hot-toast').then(m => m.toast.error("No locations found."));
+      }
+    } catch (err) {
+      console.error("Geocoding error", err);
+      import('react-hot-toast').then(m => m.toast.error("Failed to search location."));
+    } finally {
+      setIsAdminUserSearching(false);
+    }
+  };
+
+  const handleAdminUserDetectLocation = () => {
+    if (!navigator.geolocation) {
+      import('react-hot-toast').then(m => m.toast.error("Geolocation not supported."));
+      return;
+    }
+    setIsAdminUserLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        
+        try {
+          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+          const data = await res.json();
+          if (data && data.display_name) {
+            setUserForm(prev => ({
+              ...prev,
+              latitude: lat,
+              longitude: lng,
+              locationName: data.display_name
+            }));
+            setAdminUserSearchQuery(data.display_name);
+          } else {
+            setUserForm(prev => ({ ...prev, latitude: lat, longitude: lng }));
+          }
+        } catch (err) {
+          console.error("Reverse geocoding error", err);
+          setUserForm(prev => ({ ...prev, latitude: lat, longitude: lng }));
+        }
+        import('react-hot-toast').then(m => m.toast.success("Location auto-detected!"));
+        setIsAdminUserLocating(false);
+      },
+      (err) => {
+        import('react-hot-toast').then(m => m.toast.error("Failed to detect coordinates: " + err.message));
+        setIsAdminUserLocating(false);
+      }
+    );
+  };
 
   const handleAdminAddressSearch = async () => {
     if (!adminSearchQuery.trim()) return;
@@ -1506,10 +1568,24 @@ export default function AdminDashboard({ setView }) {
       await ApiService.createAdminUser(
         userForm.name.trim(),
         userForm.email.trim(),
-        userForm.password
+        userForm.password,
+        'user',
+        [],
+        '',
+        {
+          phone: userForm.phone,
+          schoolName: userForm.schoolName,
+          grade: userForm.grade,
+          guardianName: userForm.guardianName,
+          guardianPhone: userForm.guardianPhone,
+          groupCode: userForm.groupCode,
+          locationName: userForm.locationName,
+          latitude: userForm.latitude,
+          longitude: userForm.longitude
+        }
       );
       setUserFormSuccess("Student created successfully!");
-      setUserForm({ id: '', name: '', email: '', password: '', phone: '', schoolName: '', grade: '', guardianName: '', guardianPhone: '', groupCode: '', profilePic: '' });
+      setUserForm({ id: '', name: '', email: '', password: '', phone: '', schoolName: '', grade: '', guardianName: '', guardianPhone: '', groupCode: '', profilePic: '', locationName: '', latitude: 0, longitude: 0 });
       setUserProfilePicFile(null);
       reloadData();
       setTimeout(() => {
@@ -1519,6 +1595,16 @@ export default function AdminDashboard({ setView }) {
     } catch (err) {
       setUserFormError(err.message || "Failed to create user.");
     }
+  };
+
+  const handleOpenAddUser = () => {
+    setUserForm({ id: '', name: '', email: '', password: '', phone: '', schoolName: '', grade: '', guardianName: '', guardianPhone: '', groupCode: '', profilePic: '', locationName: '', latitude: 0, longitude: 0 });
+    setAdminUserSearchQuery('');
+    setAdminUserSearchResults([]);
+    setUserProfilePicFile(null);
+    setUserFormError('');
+    setUserFormSuccess('');
+    setIsAddUserOpen(true);
   };
 
   const handleOpenEditUser = (student) => {
@@ -1533,7 +1619,10 @@ export default function AdminDashboard({ setView }) {
       guardianName: student.guardianName || '',
       guardianPhone: student.guardianPhone || '',
       groupCode: student.groupCode || '',
-      profilePic: student.profilePic || student.image || ''
+      profilePic: student.profilePic || student.image || '',
+      locationName: student.locationName || '',
+      latitude: student.latitude || 0,
+      longitude: student.longitude || 0
     });
     setUserProfilePicFile(null);
     setUserFormError('');
@@ -1571,7 +1660,10 @@ export default function AdminDashboard({ setView }) {
           grade: userForm.grade,
           guardianName: userForm.guardianName,
           guardianPhone: userForm.guardianPhone,
-          groupCode: userForm.groupCode
+          groupCode: userForm.groupCode,
+          locationName: userForm.locationName,
+          latitude: userForm.latitude,
+          longitude: userForm.longitude
         }
       );
       if (userProfilePicFile) {
@@ -3298,6 +3390,7 @@ export default function AdminDashboard({ setView }) {
     handleNavClick,
     handleAdminLogin,
     handleCreateUser,
+    handleOpenAddUser,
     handleOpenEditUser,
     handleUpdateUser,
     handleDeleteUser,
@@ -3593,6 +3686,115 @@ export default function AdminDashboard({ setView }) {
                       <div className="space-y-1">
                         <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Group / Batch Code</label>
                         <input type="text" placeholder="e.g. CIGI-2024-A" value={userForm.groupCode} onChange={(e) => setUserForm({ ...userForm, groupCode: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="border-t border-zinc-800 pt-3 text-left">
+                    <div className="flex items-center justify-between mb-3">
+                      <p className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Home Location & Address</p>
+                      <button
+                        type="button"
+                        onClick={handleAdminUserDetectLocation}
+                        disabled={isAdminUserLocating}
+                        className="px-2 py-1 bg-zinc-950 border border-zinc-850 hover:border-brand text-zinc-300 hover:text-white rounded-lg text-xs font-bold cursor-pointer transition flex items-center gap-1"
+                      >
+                        {isAdminUserLocating ? 'Locating...' : 'Detect GPS'}
+                      </button>
+                    </div>
+
+                    <div className="space-y-3.5">
+                      {/* Search Input */}
+                      <div className="space-y-1.5 relative">
+                        <label className="text-zinc-400 capitalize font-bold text-xs tracking-wide block">Search Location Address</label>
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            placeholder="Type to search address... (e.g. Kozhikode, Kerala)"
+                            value={adminUserSearchQuery}
+                            onChange={(e) => setAdminUserSearchQuery(e.target.value)}
+                            className="flex-1 px-3 py-2 bg-zinc-955 border border-zinc-850 text-sm text-white rounded-lg outline-none focus:border-brand transition-colors"
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                e.preventDefault();
+                                handleAdminUserAddressSearch();
+                              }
+                            }}
+                          />
+                          <button
+                            type="button"
+                            onClick={handleAdminUserAddressSearch}
+                            disabled={isAdminUserSearching}
+                            className="px-3 py-2 bg-brand text-zinc-950 text-xs font-bold rounded-lg hover:bg-brand-dark transition cursor-pointer border-none"
+                          >
+                            {isAdminUserSearching ? 'Searching...' : 'Search'}
+                          </button>
+                        </div>
+
+                        {/* Search results dropdown */}
+                        {adminUserSearchResults.length > 0 && (
+                          <div className="absolute left-0 right-0 mt-1 bg-zinc-950 border border-zinc-850 rounded-lg max-h-40 overflow-y-auto z-50 shadow-xl divide-y divide-zinc-850">
+                            {adminUserSearchResults.map((res, index) => (
+                              <button
+                                key={index}
+                                type="button"
+                                onClick={() => {
+                                  setUserForm({
+                                    ...userForm,
+                                    locationName: res.display_name,
+                                    latitude: parseFloat(res.lat) || 0,
+                                    longitude: parseFloat(res.lon) || 0
+                                  });
+                                  setAdminUserSearchQuery(res.display_name);
+                                  setAdminUserSearchResults([]);
+                                }}
+                                className="w-full text-left px-3.5 py-2.5 text-xs text-zinc-350 hover:text-white hover:bg-zinc-850 transition-colors block truncate border-none cursor-pointer"
+                              >
+                                {res.display_name}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Display / edit fields */}
+                      <div className="space-y-1.5">
+                        <label className="text-zinc-400 capitalize font-bold text-xs tracking-wide">Selected Address Name</label>
+                        <input
+                          type="text"
+                          placeholder="Address Name"
+                          value={userForm.locationName || ''}
+                          onChange={(e) => {
+                            setUserForm({ ...userForm, locationName: e.target.value });
+                            setAdminUserSearchQuery(e.target.value);
+                          }}
+                          className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="space-y-1.5">
+                          <label className="text-zinc-400 capitalize font-bold text-xs tracking-wide">Latitude</label>
+                          <input
+                            type="number"
+                            step="any"
+                            placeholder="e.g. 11.2588"
+                            value={userForm.latitude || ''}
+                            onChange={(e) => setUserForm({ ...userForm, latitude: parseFloat(e.target.value) || 0 })}
+                            className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                          />
+                        </div>
+                        <div className="space-y-1.5">
+                          <label className="text-zinc-400 capitalize font-bold text-xs tracking-wide">Longitude</label>
+                          <input
+                            type="number"
+                            step="any"
+                            placeholder="e.g. 75.7804"
+                            value={userForm.longitude || ''}
+                            onChange={(e) => setUserForm({ ...userForm, longitude: parseFloat(e.target.value) || 0 })}
+                            className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>

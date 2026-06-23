@@ -300,7 +300,7 @@ const AdminController = {
   // Create User
   async createUser(req, res, next) {
     try {
-      const { name, email, password, role, permissions, customRoleTitle } = req.body;
+      const { name, email, password, role, permissions, customRoleTitle, locationName, latitude, longitude } = req.body;
       const bcrypt = require('bcryptjs');
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
@@ -317,6 +317,9 @@ const AdminController = {
         role: role || 'user',
         permissions: permissions || [],
         customRoleTitle: customRoleTitle || '',
+        locationName: locationName || '',
+        latitude: Number(latitude) || 0,
+        longitude: Number(longitude) || 0,
         status: 'ACTIVE'
       });
       const { password: _, ...userData } = newUser;
@@ -345,7 +348,10 @@ const AdminController = {
         guardianPhone,
         groupCode,
         profilePic,
-        profilePicPublicId
+        profilePicPublicId,
+        locationName,
+        latitude,
+        longitude
       } = req.body;
       const updates = {};
       if (name !== undefined) updates.name = name;
@@ -353,6 +359,9 @@ const AdminController = {
       if (role !== undefined) updates.role = role;
       if (permissions !== undefined) updates.permissions = permissions;
       if (customRoleTitle !== undefined) updates.customRoleTitle = customRoleTitle;
+      if (locationName !== undefined) updates.locationName = locationName;
+      if (latitude !== undefined) updates.latitude = Number(latitude) || 0;
+      if (longitude !== undefined) updates.longitude = Number(longitude) || 0;
       if (status !== undefined) updates.status = status;
       if (phone !== undefined) updates.phone = phone;
       if (schoolName !== undefined) updates.schoolName = schoolName;

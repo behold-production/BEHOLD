@@ -534,10 +534,10 @@ const ApiService = {
     return await request('/admin/users');
   },
 
-  async createAdminUser(name, email, password, role = 'user', permissions = [], customRoleTitle = '') {
+  async createAdminUser(name, email, password, role = 'user', permissions = [], customRoleTitle = '', extraFields = {}) {
     return await request('/admin/users', {
       method: 'POST',
-      body: JSON.stringify({ name, email, password, role, permissions, customRoleTitle })
+      body: JSON.stringify({ name, email, password, role, permissions, customRoleTitle, ...extraFields })
     });
   },
 

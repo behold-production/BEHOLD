@@ -21,6 +21,9 @@ const userSchema = new mongoose.Schema(
     profilePicPublicId: { type: String, default: '' },
     rescheduleCountToday: { type: Number, default: 0 },
     lastRescheduleDate: { type: String, default: '' },
+    locationName: { type: String, default: '' },
+    latitude: { type: Number, default: 0 },
+    longitude: { type: Number, default: 0 },
     cigiResults: {
       type: [
         {

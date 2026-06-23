@@ -1,7 +1,8 @@
 import React from 'react';
 import {
   User, GraduationCap, Users, Shield, Mail, Phone,
-  BookOpen, Hash, Check, AlertCircle, Bell, Save, CheckCircle2
+  BookOpen, Hash, Check, AlertCircle, Bell, Save, CheckCircle2,
+  MapPin, Navigation, Search
 } from 'lucide-react';
 import { isNotificationSupported } from '../../../../shared/services/notificationHelper';
 
@@ -18,6 +19,75 @@ const ProfileDetailsTab = ({
   isSaving,
   isSaved
 }) => {
+  const [searchQuery, setSearchQuery] = React.useState(formData.locationName || '');
+  const [searchResults, setSearchResults] = React.useState([]);
+  const [isSearching, setIsSearching] = React.useState(false);
+  const [isLocating, setIsLocating] = React.useState(false);
+
+  React.useEffect(() => {
+    if (formData.locationName && !searchQuery) {
+      setSearchQuery(formData.locationName);
+    }
+  }, [formData.locationName]);
+
+  const setLocationFields = (locationName, latitude, longitude) => {
+    handleChange({ target: { name: 'locationName', value: locationName } });
+    handleChange({ target: { name: 'latitude', value: latitude } });
+    handleChange({ target: { name: 'longitude', value: longitude } });
+  };
+
+  const handleAddressSearch = async () => {
+    if (!searchQuery.trim()) return;
+    setIsSearching(true);
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}`);
+      const data = await res.json();
+      setSearchResults(data);
+      if (data.length === 0) {
+        import('react-hot-toast').then(m => m.toast.error("No locations found."));
+      }
+    } catch (err) {
+      console.error("Geocoding error", err);
+      import('react-hot-toast').then(m => m.toast.error("Failed to search location."));
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const handleDetectLocation = () => {
+    if (!navigator.geolocation) {
+      import('react-hot-toast').then(m => m.toast.error("Geolocation not supported."));
+      return;
+    }
+    setIsLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        
+        try {
+          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+          const data = await res.json();
+          if (data && data.display_name) {
+            setLocationFields(data.display_name, lat, lng);
+            setSearchQuery(data.display_name);
+          } else {
+            setLocationFields('', lat, lng);
+          }
+        } catch (err) {
+          console.error("Reverse geocoding error", err);
+          setLocationFields('', lat, lng);
+        }
+        import('react-hot-toast').then(m => m.toast.success("Location auto-detected!"));
+        setIsLocating(false);
+      },
+      (err) => {
+        import('react-hot-toast').then(m => m.toast.error("Failed to detect coordinates: " + err.message));
+        setIsLocating(false);
+      }
+    );
+  };
+
   const sections = [
     {
       title: 'Personal Info',
@@ -209,6 +279,140 @@ const ProfileDetailsTab = ({
             </div>
           );
         })}
+
+        {/* Home Location & Address Card */}
+        <div
+          className="relative overflow-hidden rounded-2xl p-5"
+          style={{
+            background: '#ffffff',
+            boxShadow: `inset 0 0 0 1px rgba(11,20,36,0.05), 0 1px 2px rgba(11,20,36,0.03), 0 4px 16px -4px rgba(11,20,36,0.07)`
+          }}
+        >
+          {/* Left accent border */}
+          <div className="absolute left-0 top-4 bottom-4 w-1 rounded-r-full bg-amber-500" />
+          <div className="flex items-center justify-between mb-5 pb-3 border-b border-zinc-100 pl-3">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center bg-amber-55/20 border border-amber-200/25">
+                <MapPin className="w-[18px] h-[18px] text-amber-600" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-zinc-900">Home Location & Address</h3>
+                <p className="text-xs text-zinc-400 mt-0.5">Used for calculating doorstep session booking feasibility (10 km limit)</p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={handleDetectLocation}
+              disabled={isLocating}
+              className="min-h-[32px] inline-flex items-center gap-1 px-3 py-1 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg text-xs font-semibold transition cursor-pointer border-none shadow-xs disabled:opacity-50"
+            >
+              <Navigation className={`w-3.5 h-3.5 ${isLocating ? 'animate-spin' : ''}`} />
+              {isLocating ? 'Locating...' : 'Detect Location'}
+            </button>
+          </div>
+
+          <div className="space-y-4 animate-in fade-in duration-200">
+            {/* Address Search Autocomplete Input */}
+            <div className="space-y-1.5 text-left relative">
+              <label htmlFor="student-location-search" className="text-xs text-zinc-650 font-medium flex items-center gap-1">
+                Search Home Address
+              </label>
+              <div className="relative flex gap-2">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+                  <input
+                    id="student-location-search"
+                    type="text"
+                    placeholder="Type to search and select your address... (e.g. Kozhikode, Kerala)"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full min-h-[44px] pl-10 pr-9 py-2.5 text-sm rounded-lg outline-none transition-all bg-white border border-zinc-200 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-100 text-zinc-900"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        handleAddressSearch();
+                      }
+                    }}
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={handleAddressSearch}
+                  disabled={isSearching}
+                  className="px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-semibold rounded-lg transition cursor-pointer border-none"
+                >
+                  {isSearching ? 'Searching...' : 'Search'}
+                </button>
+              </div>
+
+              {/* Autocomplete Dropdown */}
+              {searchResults.length > 0 && (
+                <div className="absolute left-0 right-0 mt-1 bg-white border border-zinc-200 rounded-lg max-h-48 overflow-y-auto z-50 shadow-xl divide-y divide-zinc-100">
+                  {searchResults.map((res, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      onClick={() => {
+                        setLocationFields(res.display_name, parseFloat(res.lat) || 0, parseFloat(res.lon) || 0);
+                        setSearchQuery(res.display_name);
+                        setSearchResults([]);
+                      }}
+                      className="w-full text-left px-3.5 py-2.5 text-xs text-zinc-700 hover:text-zinc-900 hover:bg-zinc-50 transition-colors block truncate border-none cursor-pointer"
+                    >
+                      {res.display_name}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Read/Write Coordinates Form Fields */}
+            <div className="space-y-1.5">
+              <label htmlFor="sp-locationName" className="text-xs text-zinc-650 font-medium">Selected / Current Address</label>
+              <input
+                id="sp-locationName"
+                type="text"
+                name="locationName"
+                placeholder="Selected address details"
+                value={formData.locationName || ''}
+                onChange={(e) => {
+                  handleChange(e);
+                  setSearchQuery(e.target.value);
+                }}
+                className="w-full min-h-[44px] px-3.5 py-2.5 text-sm rounded-lg outline-none transition-all bg-white border border-zinc-200 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-100 text-zinc-900"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <label htmlFor="sp-latitude" className="text-xs text-zinc-650 font-medium">Latitude</label>
+                <input
+                  id="sp-latitude"
+                  type="number"
+                  step="any"
+                  name="latitude"
+                  placeholder="e.g., 11.2588"
+                  value={formData.latitude || ''}
+                  onChange={(e) => handleChange({ target: { name: 'latitude', value: parseFloat(e.target.value) || 0 } })}
+                  className="w-full min-h-[44px] px-3.5 py-2.5 text-sm rounded-lg outline-none transition-all bg-white border border-zinc-200 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-100 text-zinc-900"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label htmlFor="sp-longitude" className="text-xs text-zinc-650 font-medium">Longitude</label>
+                <input
+                  id="sp-longitude"
+                  type="number"
+                  step="any"
+                  name="longitude"
+                  placeholder="e.g., 75.7804"
+                  value={formData.longitude || ''}
+                  onChange={(e) => handleChange({ target: { name: 'longitude', value: parseFloat(e.target.value) || 0 } })}
+                  className="w-full min-h-[44px] px-3.5 py-2.5 text-sm rounded-lg outline-none transition-all bg-white border border-zinc-200 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-100 text-zinc-900"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
 
         {/* Browser Notification Settings Widget */}
         <div className="bg-white/75 backdrop-blur-md border-[1.5px] border-[#0b1424] shadow-dark-blue rounded-lg sm:rounded-xl p-5 space-y-4">
