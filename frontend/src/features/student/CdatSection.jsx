@@ -120,7 +120,7 @@ export default function CdatSection({ setView }) {
       {/* CDAT CARD */}
       <div
         id="card-aptitude"
-        className="relative bg-white/70 backdrop-blur-2xl shadow-dark-blue-lg border-[1.5px] border-[#0b1424] p-5 sm:p-8 md:p-10 flex flex-col select-none group rounded-2xl sm:rounded-[2rem] transition-all duration-700 overflow-hidden"
+        className="relative bg-white/70 backdrop-blur-2xl border-neon-glow border-neon-glow-hover p-5 sm:p-8 md:p-10 flex flex-col select-none group rounded-2xl sm:rounded-[2rem] transition-all duration-700 overflow-hidden"
       >
         {/* Decorative inner glow */}
         <div className="absolute inset-0 bg-gradient-to-b from-white/60 to-transparent pointer-events-none" />
@@ -184,10 +184,9 @@ export default function CdatSection({ setView }) {
                 Enter your details to generate your group code. Then, proceed to the official CIGI portal to finalize registration.
               </p>
             </div>
-            <div className="lg:col-span-7 w-full relative">
-              <div className="absolute -inset-1 bg-gradient-to-r from-brand/20 to-brand-accent/20 rounded-2xl sm:rounded-[2rem] blur opacity-30 group-hover:opacity-60 transition duration-700 hidden sm:block"></div>
-              <form onSubmit={handleGenerateCode} className="relative space-y-5 bg-transparent sm:bg-white/80 backdrop-blur-none sm:backdrop-blur-2xl border-none sm:border-[1.5px] border-[#0b1424] shadow-none sm:shadow-dark-blue p-0 sm:p-8 rounded-none sm:rounded-2xl w-full">
-                <div className="text-sm font-black capitalize text-zinc-800 mb-2 flex items-center gap-2">
+            <div className="lg:col-span-7 w-full">
+              <form onSubmit={handleGenerateCode} className="space-y-4 w-full text-left">
+                <div className="text-sm font-black capitalize text-zinc-800 mb-2">
                   Generate Your Group Code
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
@@ -236,70 +235,39 @@ export default function CdatSection({ setView }) {
                     </button>
                   </div>
                 ) : (
-                  <div className="pt-2 space-y-4 animate-in fade-in zoom-in-95 duration-500">
-                    <div className="p-5 border border-brand/20 bg-gradient-to-r from-brand-light/50 to-brand-light/10 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-inner text-center sm:text-left">
-                      <div className="w-full sm:w-auto">
-                        <span className="text-xs uppercase tracking-widest text-brand-dark/60 font-black block mb-1">Your Group Code</span>
-                        <span className="text-2xl font-black text-zinc-900 tracking-tight">{generatedCode}</span>
+                  <div className="pt-2 space-y-4 animate-in fade-in duration-300">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-3 w-full">
+                      {/* Group Code Display */}
+                      <div className="flex-1 p-3 bg-brand-light border border-brand/20 rounded-xl flex items-center justify-between min-h-[48px]">
+                        <div>
+                          <span className="text-[10px] uppercase tracking-wider text-brand-dark/70 font-bold block">Your Group Code</span>
+                          <span className="text-lg font-bold text-zinc-900">{generatedCode}</span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={copyManually}
+                          className="px-3.5 py-1.5 bg-white border border-zinc-200 hover:border-brand/40 text-xs font-bold rounded-lg cursor-pointer transition-all flex items-center gap-1.5"
+                        >
+                          <Copy className="w-3.5 h-3.5" />
+                          {copied ? 'Copied!' : 'Copy'}
+                        </button>
                       </div>
+
+                      {/* Proceed button */}
                       <button
                         type="button"
-                        onClick={copyManually}
-                        className={`min-h-[44px] flex items-center justify-center gap-2 px-5 py-2.5 border rounded-xl text-sm font-bold transition-all duration-300 cursor-pointer shadow-sm ${copied
-                          ? 'bg-rose-500 border-rose-500 text-white shadow-rose-500/25'
-                          : 'bg-white border-zinc-200 hover:border-brand/30 hover:bg-brand/5 text-zinc-900 hover:text-brand-dark'
-                          }`}
+                        onClick={() => {
+                          window.open("https://cigicareer.com/cdat-registration/", "_blank", "noopener,noreferrer");
+                        }}
+                        className="px-6 min-h-[48px] bg-brand text-zinc-950 hover:bg-brand-dark font-bold text-sm rounded-xl cursor-pointer transition-all flex items-center justify-center gap-1.5 shadow-md shadow-brand/10 border-none shrink-0"
                       >
-                        {copied ? (
-                          <>
-                            <span className="animate-in fade-in">Copied Successfully!</span>
-                          </>
-                        ) : (
-                          <>
-                            <Copy className="w-4 h-4" /> Copy Group Code
-                          </>
-                        )}
+                        Proceed to Registration
                       </button>
                     </div>
-
-                    <button
-                      type="button"
-                      disabled={!hasCopied}
-                      onClick={() => {
-                        if (hasCopied) {
-                          window.open("https://cigicareer.com/cdat-registration/", "_blank", "noopener,noreferrer");
-                        }
-                      }}
-                      className={`relative overflow-hidden min-h-[52px] flex items-center justify-center gap-2 w-full px-8 py-3.5 font-bold text-sm tracking-wide rounded-xl transition-all duration-300 shadow-lg ${hasCopied
-                        ? 'bg-brand text-zinc-950 cursor-pointer border-none hover:scale-[1.01] hover:shadow-brand/20 active:scale-100'
-                        : 'bg-zinc-100/50 text-zinc-400 cursor-not-allowed border border-zinc-200 shadow-none'
-                        }`}
-                    >
-                      {hasCopied && <div className="absolute inset-0 bg-white/20 w-1/2 -skew-x-12 -translate-x-full animate-[shimmer_2s_infinite]"></div>}
-                      <span className={`relative z-10 ${hasCopied ? 'text-zinc-950' : 'text-zinc-400'}`}>Proceed to Official Registration</span>
-                    </button>
-                    {!hasCopied && (
-                      <div className="mt-4 p-3.5 bg-amber-50/80 border border-amber-200/60 text-amber-800 text-sm rounded-xl flex items-start sm:items-center gap-2.5 text-left animate-in fade-in slide-in-from-top-2 duration-500 shadow-sm backdrop-blur-sm">
-                        <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 sm:mt-0 text-amber-600" />
-                        <span className="font-semibold leading-relaxed">Please enter your group id on the dedicated column without fail.</span>
-                      </div>
-                    )}
+                    <p className="text-xs text-zinc-500 font-medium">
+                      * Please copy this group code and enter it on the official CIGI portal during registration.
+                    </p>
                   </div>
-                )}
-
-                {copyMessage && (
-                  <p
-                    className={`mt-2 text-xs font-bold text-center sm:text-left ${
-                      isError 
-                        ? 'text-rose-650' 
-                        : copyMessage.includes('copied') 
-                          ? 'text-emerald-650' 
-                          : 'text-amber-600'
-                    }`}
-                    role={isError ? 'alert' : 'status'}
-                  >
-                    {copyMessage}
-                  </p>
                 )}
               </form>
             </div>

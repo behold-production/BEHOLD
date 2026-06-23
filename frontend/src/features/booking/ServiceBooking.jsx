@@ -101,12 +101,93 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
     handlePaymentSubmit,
     resetBookingState,
     handleApplyCoupon,
-    handleRemoveCoupon
+    handleRemoveCoupon,
+    getCalculatedDistance,
+    getHaversineDistance
   } = useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvisor });
 
   const isAdvisorLocked = !!preselectedAdvisorId;
   const flowKey = bookingMode === 'DOOR_STEP' ? 'doorstep' : bookingMode.toLowerCase();
   const activeSteps = bookingService === 'counselling' ? COUNSELLING_FLOW[flowKey] : CAREER_FLOW[flowKey];
+
+  const [clientSearchQuery, setClientSearchQuery] = useState(bookingForm.clientLocationName || '');
+  const [clientSearchResults, setClientSearchResults] = useState([]);
+  const [isClientSearching, setIsClientSearching] = useState(false);
+  const [isClientLocating, setIsClientLocating] = useState(false);
+
+  const handleClientAddressSearch = async () => {
+    if (!clientSearchQuery.trim()) return;
+    setIsClientSearching(true);
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(clientSearchQuery)}`);
+      const data = await res.json();
+      setClientSearchResults(data);
+      if (data.length === 0) {
+        toast.error("No locations found.");
+      }
+    } catch (err) {
+      console.error("Geocoding error", err);
+      toast.error("Failed to search location.");
+    } finally {
+      setIsClientSearching(false);
+    }
+  };
+
+  const handleClientDetectLocation = () => {
+    if (!navigator.geolocation) {
+      toast.error("Geolocation not supported.");
+      return;
+    }
+    setIsClientLocating(true);
+    const toastId = toast.loading("Detecting current coordinates...");
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        toast.dismiss(toastId);
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        
+        try {
+          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+          const data = await res.json();
+          if (data && data.display_name) {
+            setBookingForm(prev => ({
+              ...prev,
+              clientLatitude: lat.toString(),
+              clientLongitude: lng.toString(),
+              clientLocationName: data.display_name
+            }));
+            setClientSearchQuery(data.display_name);
+          } else {
+            setBookingForm(prev => ({
+              ...prev,
+              clientLatitude: lat.toString(),
+              clientLongitude: lng.toString()
+            }));
+          }
+        } catch (err) {
+          console.error("Reverse geocoding error", err);
+          setBookingForm(prev => ({
+            ...prev,
+            clientLatitude: lat.toString(),
+            clientLongitude: lng.toString()
+          }));
+        }
+        toast.success("Location coordinates & address detected!");
+        setIsClientLocating(false);
+      },
+      (err) => {
+        toast.dismiss(toastId);
+        toast.error("Failed to detect coordinates: " + err.message);
+        setIsClientLocating(false);
+      }
+    );
+  };
+
+  React.useEffect(() => {
+    if (bookingMode === 'DOOR_STEP' && !bookingForm.clientLatitude && !bookingForm.clientLongitude) {
+      handleClientDetectLocation();
+    }
+  }, [bookingMode]);
 
   if (!enablePsychology && !isRescheduleParam) {
     return (
@@ -492,26 +573,178 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                           ))}
                         </div>
                       </div>
+
+                      {/* DOORSTEP LOCATION INPUTS - CONFIG STEP */}
+                      {bookingMode === 'DOOR_STEP' && (
+                        <div className="space-y-4 p-5 bg-zinc-50 border border-zinc-200 rounded-2xl animate-in fade-in slide-in-from-top-2 duration-300 text-left">
+                          <div className="border-b border-zinc-200 pb-2 mb-2">
+                            <h4 className="text-xs font-extrabold text-zinc-800 uppercase tracking-wider flex items-center gap-1.5">
+                              <span className="w-1.5 h-3 bg-brand rounded-full"></span>
+                              Doorstep Visit Address & Geolocation
+                            </h4>
+                            <p className="text-[11px] text-zinc-500 mt-1">
+                              Please provide your location to check for nearby psychologists within a 10 km service radius.
+                            </p>
+                          </div>
+
+                          {/* Search Location Address field */}
+                          <div className="space-y-1.5 text-left relative">
+                            <label className="text-xs font-bold text-zinc-500 capitalize tracking-wide block">Search Location Address</label>
+                            <div className="flex gap-2">
+                              <input
+                                type="text"
+                                placeholder="Type your address to search... (e.g. Kozhikode, Kerala)"
+                                value={clientSearchQuery}
+                                onChange={(e) => setClientSearchQuery(e.target.value)}
+                                className="flex-1 px-3.5 py-2.5 bg-white border border-zinc-200 text-xs font-medium text-zinc-855 outline-none focus:border-brand rounded-lg transition"
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter') {
+                                    e.preventDefault();
+                                    handleClientAddressSearch();
+                                  }
+                                }}
+                              />
+                              <button
+                                type="button"
+                                onClick={handleClientAddressSearch}
+                                disabled={isClientSearching}
+                                className="px-4 py-2 bg-[#0b1424] text-white text-xs font-extrabold rounded-lg hover:bg-zinc-800 transition cursor-pointer shrink-0"
+                              >
+                                {isClientSearching ? 'Searching...' : 'Search'}
+                              </button>
+                            </div>
+
+                            {/* Autocomplete Dropdown */}
+                            {clientSearchResults.length > 0 && (
+                              <div className="absolute left-0 right-0 mt-1 bg-white border border-zinc-250 rounded-lg max-h-40 overflow-y-auto z-50 shadow-xl divide-y divide-zinc-100">
+                                {clientSearchResults.map((res, index) => (
+                                  <button
+                                    key={index}
+                                    type="button"
+                                    onClick={() => {
+                                      setBookingForm(prev => ({
+                                        ...prev,
+                                        clientLocationName: res.display_name,
+                                        clientLatitude: parseFloat(res.lat).toString() || '0',
+                                        clientLongitude: parseFloat(res.lon).toString() || '0'
+                                      }));
+                                      setClientSearchQuery(res.display_name);
+                                      setClientSearchResults([]);
+                                      if (errors.clientLocationName) setErrors(prev => ({ ...prev, clientLocationName: null }));
+                                      if (errors.clientLatitude) setErrors(prev => ({ ...prev, clientLatitude: null }));
+                                      if (errors.clientLongitude) setErrors(prev => ({ ...prev, clientLongitude: null }));
+                                    }}
+                                    className="w-full text-left px-3.5 py-2.5 text-xs text-zinc-655 hover:text-zinc-900 hover:bg-zinc-50 transition-colors block truncate"
+                                  >
+                                    {res.display_name}
+                                  </button>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+
+                          <div className="space-y-1 text-left">
+                            <label className="text-xs font-bold text-zinc-500 capitalize tracking-wide block">Your Delivery / Visit Address</label>
+                            <input
+                              type="text"
+                              name="clientLocationName"
+                              value={bookingForm.clientLocationName || ''}
+                              onChange={(e) => {
+                                handleInputChange(e);
+                                setClientSearchQuery(e.target.value);
+                              }}
+                              placeholder="e.g. Apartment/House No, Street Name, City, Pincode"
+                              className={`w-full px-3.5 py-2.5 bg-white border rounded-lg text-xs font-medium text-zinc-855 outline-none focus:border-brand transition ${
+                                errors.clientLocationName ? 'border-rose-300' : 'border-zinc-200'
+                              }`}
+                            />
+                            {errors.clientLocationName && <p className="text-[9.5px] text-rose-500 font-bold">{errors.clientLocationName}</p>}
+                          </div>
+
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-1 text-left">
+                              <label className="text-xs font-bold text-zinc-500 capitalize tracking-wide block">Latitude</label>
+                              <input
+                                type="number"
+                                step="any"
+                                name="clientLatitude"
+                                value={bookingForm.clientLatitude || ''}
+                                onChange={handleInputChange}
+                                placeholder="e.g. 11.2588"
+                                className={`w-full px-3.5 py-2.5 bg-white border rounded-lg text-xs font-medium text-zinc-855 outline-none focus:border-brand transition ${
+                                  errors.clientLatitude ? 'border-rose-300' : 'border-zinc-200'
+                                }`}
+                              />
+                              {errors.clientLatitude && <p className="text-[9.5px] text-rose-500 font-bold">{errors.clientLatitude}</p>}
+                            </div>
+                            <div className="space-y-1 text-left">
+                              <label className="text-xs font-bold text-zinc-500 capitalize tracking-wide block">Longitude</label>
+                              <input
+                                type="number"
+                                step="any"
+                                name="clientLongitude"
+                                value={bookingForm.clientLongitude || ''}
+                                onChange={handleInputChange}
+                                placeholder="e.g. 75.7804"
+                                className={`w-full px-3.5 py-2.5 bg-white border rounded-lg text-xs font-medium text-zinc-855 outline-none focus:border-brand transition ${
+                                  errors.clientLongitude ? 'border-rose-300' : 'border-zinc-200'
+                                }`}
+                              />
+                              {errors.clientLongitude && <p className="text-[9.5px] text-rose-500 font-bold">{errors.clientLongitude}</p>}
+                            </div>
+                          </div>
+
+                          <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                            <button
+                              type="button"
+                              disabled={isClientLocating}
+                              onClick={handleClientDetectLocation}
+                              className="px-4 py-2 border border-zinc-200 hover:border-brand text-zinc-650 hover:text-brand bg-white font-bold text-xs rounded-lg transition cursor-pointer flex items-center justify-center gap-1.5 shadow-xs disabled:opacity-50"
+                            >
+                              {isClientLocating ? (
+                                <>
+                                  <div className="w-3 h-3 border border-zinc-400 border-t-brand rounded-full animate-spin" />
+                                  Locating...
+                                </>
+                              ) : (
+                                <>
+                                  <svg className="w-3.5 h-3.5 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                  </svg>
+                                  Detect My Location & Address
+                                </>
+                              )}
+                            </button>
+                          </div>
+                        </div>
+                      )}
                     </div>
 
                     {/* Step 1: Select Date */}
-                    <div className="space-y-2 pt-4 border-t border-zinc-100">
-                      <label className="text-sm font-bold text-zinc-700 block">1. Select Date</label>
-                      <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-lg">
-                        <DateTimePicker
-                          selectedDate={selectedDate}
-                          selectedTime={selectedTime}
-                          onDateChange={handleDateChange}
-                          onTimeChange={(t) => {
-                            setSelectedTime(t);
-                            if (errors.time) setErrors(prev => ({ ...prev, time: null }));
-                          }}
-                          getAvailableSlotsForDate={(date) => getAvailableSlotsForDate(date, bookingService)}
-                          errors={errors}
-                          selectedMode={bookingMode}
-                        />
+                    {!(bookingMode === 'DOOR_STEP' && (!bookingForm.clientLatitude || !bookingForm.clientLongitude)) ? (
+                      <div className="space-y-2 pt-4 border-t border-zinc-100 animate-in fade-in duration-300">
+                        <label className="text-sm font-bold text-zinc-700 block">1. Select Date</label>
+                        <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-lg">
+                          <DateTimePicker
+                            selectedDate={selectedDate}
+                            selectedTime={selectedTime}
+                            onDateChange={handleDateChange}
+                            onTimeChange={(t) => {
+                              setSelectedTime(t);
+                              if (errors.time) setErrors(prev => ({ ...prev, time: null }));
+                            }}
+                            getAvailableSlotsForDate={(date) => getAvailableSlotsForDate(date, bookingService)}
+                            errors={errors}
+                            selectedMode={bookingMode}
+                          />
+                        </div>
                       </div>
-                    </div>
+                    ) : (
+                      <div className="p-6 border border-dashed border-zinc-200 rounded-2xl bg-zinc-50 text-zinc-505 text-center font-bold text-xs mt-4">
+                        Please search or detect your location address to show available psychologists within 10 km.
+                      </div>
+                    )}
 
                     {/* Step 2: Advisor Selection */}
                     {(selectedDate || isAdvisorLocked) && (
@@ -534,10 +767,32 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                           </div>
                         ) : (
                           <div className="space-y-3">
-                            {advisors
-                              .filter(advisor => advisor.type === bookingService)
-                              .filter(advisor => !advisor.modes || advisor.modes.includes(bookingMode))
-                              .map((advisor) => {
+                            {(() => {
+                              const filteredAdvisors = advisors
+                                .filter(advisor => advisor.type === bookingService)
+                                .filter(advisor => !advisor.modes || advisor.modes.includes(bookingMode))
+                                .filter(advisor => {
+                                  if (bookingMode !== 'DOOR_STEP') return true;
+                                  const clientLat = parseFloat(bookingForm.clientLatitude);
+                                  const clientLng = parseFloat(bookingForm.clientLongitude);
+                                  const advLat = Number(advisor.latitude);
+                                  const advLng = Number(advisor.longitude);
+                                  if (isNaN(clientLat) || isNaN(clientLng) || !advLat || !advLng) return false;
+                                  const distance = getHaversineDistance(clientLat, clientLng, advLat, advLng);
+                                  return distance <= 10;
+                                });
+
+                              if (filteredAdvisors.length === 0) {
+                                return (
+                                  <div className="p-6 border border-dashed border-rose-200 rounded-2xl bg-rose-50 text-rose-800 text-center font-bold text-xs">
+                                    {bookingMode === 'DOOR_STEP'
+                                      ? "No psychologists are available within a 10 km radius of your location. Try a different visit address or switch to Online mode."
+                                      : "No psychologists are available matching the selected service type and mode."}
+                                  </div>
+                                );
+                              }
+
+                              return filteredAdvisors.map((advisor) => {
                                 const slots = getAdvisorSlotsForDate(advisor, selectedDate);
                                 const isAvailable = slots.length > 0;
 
@@ -569,6 +824,21 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                           {advisor.name}
                                         </h4>
                                         <p className="text-xs sm:text-xs text-zinc-500 font-medium">{advisor.role}</p>
+                                        {bookingMode === 'DOOR_STEP' && (() => {
+                                          const clientLat = parseFloat(bookingForm.clientLatitude);
+                                          const clientLng = parseFloat(bookingForm.clientLongitude);
+                                          const advLat = Number(advisor.latitude);
+                                          const advLng = Number(advisor.longitude);
+                                          if (!isNaN(clientLat) && !isNaN(clientLng) && advLat && advLng) {
+                                            const distance = getHaversineDistance(clientLat, clientLng, advLat, advLng);
+                                            return (
+                                              <span className="text-[11px] text-brand-dark font-extrabold mt-1 block">
+                                                📍 Distance: {distance.toFixed(2)} km away
+                                              </span>
+                                            );
+                                          }
+                                          return null;
+                                        })()}
                                         {!isAvailable && (
                                           <span className="text-[10px] text-rose-500 font-semibold mt-1 inline-block">
                                             Unavailable on this date
@@ -583,7 +853,8 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                     </div>
                                   </div>
                                 );
-                              })}
+                              });
+                            })()}
                             {errors.advisor && <p className="text-xs text-rose-500 font-semibold mt-1">{errors.advisor}</p>}
                           </div>
                         )}
@@ -657,6 +928,30 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                         <span className="shrink-0 text-xs font-bold capitalize  bg-emerald-100 border border-emerald-300 text-emerald-700 px-2.5 py-1 rounded-lg">
                           ✓ Authenticated
                         </span>
+                      </div>
+                    )}
+
+                    {/* DOORSTEP LOCATION SUMMARY - PAYMENT STEP */}
+                    {bookingMode === 'DOOR_STEP' && (
+                      <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-xl text-left text-xs text-zinc-600 space-y-1 animate-in fade-in duration-300">
+                        <span className="font-bold text-zinc-800 block uppercase tracking-wider text-[10px]">
+                          Doorstep Visit Location
+                        </span>
+                        <p className="font-semibold text-zinc-900">{bookingForm.clientLocationName}</p>
+                        <p className="text-zinc-500">
+                          Coordinates: {bookingForm.clientLatitude}, {bookingForm.clientLongitude}
+                        </p>
+                        {(() => {
+                          const distance = getCalculatedDistance();
+                          if (distance !== null) {
+                            return (
+                              <span className="inline-block mt-1.5 font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded">
+                                ✓ Distance to Psychologist: {distance.toFixed(2)} km (Within 10 km limit)
+                              </span>
+                            );
+                          }
+                          return null;
+                        })()}
                       </div>
                     )}
 

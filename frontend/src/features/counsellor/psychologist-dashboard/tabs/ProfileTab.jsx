@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Edit, Bell } from 'lucide-react';
 import { isNotificationSupported } from '../../../../shared/services/notificationHelper';
 import ApiService from '../../../../shared/services/api';
@@ -25,6 +25,67 @@ const ProfileTab = ({
 
   const ep = editProfile || profile;
   const setEp = (updater) => setEditProfile(prev => ({ ...(prev || profile), ...updater }));
+
+  const [searchQuery, setSearchQuery] = useState(ep.locationName || '');
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [isLocating, setIsLocating] = useState(false);
+
+  const handleAddressSearch = async () => {
+    if (!searchQuery.trim()) return;
+    setIsSearching(true);
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}`);
+      const data = await res.json();
+      setSearchResults(data);
+      if (data.length === 0) {
+        import('react-hot-toast').then(m => m.toast.error("No locations found."));
+      }
+    } catch (err) {
+      console.error("Geocoding error", err);
+      import('react-hot-toast').then(m => m.toast.error("Failed to search location."));
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const handleDetectLocation = () => {
+    if (!navigator.geolocation) {
+      import('react-hot-toast').then(m => m.toast.error("Geolocation not supported."));
+      return;
+    }
+    setIsLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        
+        try {
+          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+          const data = await res.json();
+          if (data && data.display_name) {
+            setEp({
+              latitude: lat,
+              longitude: lng,
+              locationName: data.display_name
+            });
+            setSearchQuery(data.display_name);
+          } else {
+            setEp({ latitude: lat, longitude: lng });
+          }
+        } catch (err) {
+          console.error("Reverse geocoding error", err);
+          setEp({ latitude: lat, longitude: lng });
+        }
+        import('react-hot-toast').then(m => m.toast.success("Location auto-detected!"));
+        setIsLocating(false);
+      },
+      (err) => {
+        import('react-hot-toast').then(m => m.toast.error("Failed to detect coordinates: " + err.message));
+        setIsLocating(false);
+      }
+    );
+  };
 
   return (
     <div className="space-y-6 animate-in fade-in duration-200 text-sm">
@@ -157,6 +218,121 @@ const ProfileTab = ({
               onChange={(e) => setEp({ defaultMeetLink: e.target.value })}
               className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
             />
+          </div>
+
+          <div className="sm:col-span-2 space-y-4 p-5 bg-zinc-900 border border-zinc-800 rounded-xl">
+            <h4 className="text-xs font-bold text-brand uppercase tracking-wider">Practice / Geographic Location</h4>
+            
+            {/* Search address input */}
+            <div className="space-y-1.5 text-left relative">
+              <label className="text-zinc-400 capitalize font-bold text-xs tracking-wide block">Search Location Address</label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  placeholder="Type an address to search... (e.g. Kozhikode, Kerala)"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="flex-1 px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      handleAddressSearch();
+                    }
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={handleAddressSearch}
+                  disabled={isSearching}
+                  className="px-4 py-2 bg-brand text-zinc-955 text-xs font-extrabold rounded-lg hover:bg-brand-dark transition cursor-pointer"
+                >
+                  {isSearching ? 'Searching...' : 'Search'}
+                </button>
+              </div>
+
+              {/* Search results dropdown */}
+              {searchResults.length > 0 && (
+                <div className="absolute left-0 right-0 mt-1 bg-zinc-950 border border-zinc-800 rounded-lg max-h-48 overflow-y-auto z-50 shadow-xl divide-y divide-zinc-850">
+                  {searchResults.map((res, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      onClick={() => {
+                        setEp({
+                          locationName: res.display_name,
+                          latitude: parseFloat(res.lat) || 0,
+                          longitude: parseFloat(res.lon) || 0
+                        });
+                        setSearchQuery(res.display_name);
+                        setSearchResults([]);
+                      }}
+                      className="w-full text-left px-3.5 py-2.5 text-xs text-zinc-300 hover:text-white hover:bg-zinc-850 transition-colors block truncate"
+                    >
+                      {res.display_name}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-zinc-400 capitalize font-bold text-xs tracking-wide">Clinic / Center Address</label>
+              <input
+                type="text"
+                placeholder="e.g. 123 Main St, Calicut, Kerala"
+                value={ep.locationName || ''}
+                onChange={(e) => {
+                  setEp({ locationName: e.target.value });
+                  setSearchQuery(e.target.value);
+                }}
+                className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <label className="text-zinc-400 capitalize font-bold text-xs tracking-wide">Latitude</label>
+                <input
+                  type="number"
+                  step="any"
+                  placeholder="e.g. 11.2588"
+                  value={ep.latitude || ''}
+                  onChange={(e) => setEp({ latitude: parseFloat(e.target.value) || 0 })}
+                  className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-zinc-400 capitalize font-bold text-xs tracking-wide">Longitude</label>
+                <input
+                  type="number"
+                  step="any"
+                  placeholder="e.g. 75.7804"
+                  value={ep.longitude || ''}
+                  onChange={(e) => setEp({ longitude: parseFloat(e.target.value) || 0 })}
+                  className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
+                />
+              </div>
+            </div>
+            <button
+              type="button"
+              disabled={isLocating}
+              onClick={handleDetectLocation}
+              className="px-3.5 py-2 bg-zinc-950 hover:bg-zinc-850 border border-zinc-800 text-zinc-305 text-xs font-bold capitalize rounded-lg transition cursor-pointer flex items-center justify-center gap-1.5 disabled:opacity-50"
+            >
+              {isLocating ? (
+                <>
+                  <div className="w-3 h-3 border border-zinc-400 border-t-brand rounded-full animate-spin" />
+                  Auto-Locating...
+                </>
+              ) : (
+                <>
+                  <svg className="w-3.5 h-3.5 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  Detect My Location & Address
+                </>
+              )}
+            </button>
           </div>
 
           <div className="sm:col-span-2 space-y-2">

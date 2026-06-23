@@ -85,7 +85,7 @@ export default function About({ enablePsychology = true, siteSettings }) {
             return (
               <div
                 key={idx}
-                className="bg-white hover:bg-zinc-50/70 border-[1.5px] border-[#0b1424] rounded-xl sm:rounded-2xl p-3 sm:p-4 shadow-dark-blue hover:shadow-dark-blue-hover transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between group font-sans"
+                className="bg-white hover:bg-zinc-50/70 border-neon-glow border-neon-glow-hover rounded-xl sm:rounded-2xl p-3 sm:p-4 transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between group font-sans"
               >
                 <div className="space-y-1">
                   {/* Typographic numbers instead of generic icons */}

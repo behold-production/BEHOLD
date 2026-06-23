@@ -955,8 +955,73 @@ export default function AdminDashboard({ setView }) {
     modes: ['ONLINE', 'OFFLINE', 'DOOR_STEP'],
     title: 'Consultant Psychologist',
     profilePic: '',
-    isTopFive: false
+    isTopFive: false,
+    locationName: '',
+    latitude: 0,
+    longitude: 0
   });
+  const [adminSearchQuery, setAdminSearchQuery] = useState('');
+  const [adminSearchResults, setAdminSearchResults] = useState([]);
+  const [isAdminSearching, setIsAdminSearching] = useState(false);
+  const [isAdminLocating, setIsAdminLocating] = useState(false);
+
+  const handleAdminAddressSearch = async () => {
+    if (!adminSearchQuery.trim()) return;
+    setIsAdminSearching(true);
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(adminSearchQuery)}`);
+      const data = await res.json();
+      setAdminSearchResults(data);
+      if (data.length === 0) {
+        import('react-hot-toast').then(m => m.toast.error("No locations found."));
+      }
+    } catch (err) {
+      console.error("Geocoding error", err);
+      import('react-hot-toast').then(m => m.toast.error("Failed to search location."));
+    } finally {
+      setIsAdminSearching(false);
+    }
+  };
+
+  const handleAdminDetectLocation = () => {
+    if (!navigator.geolocation) {
+      import('react-hot-toast').then(m => m.toast.error("Geolocation not supported."));
+      return;
+    }
+    setIsAdminLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        
+        try {
+          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+          const data = await res.json();
+          if (data && data.display_name) {
+            setPsyForm(prev => ({
+              ...prev,
+              latitude: lat,
+              longitude: lng,
+              locationName: data.display_name
+            }));
+            setAdminSearchQuery(data.display_name);
+          } else {
+            setPsyForm(prev => ({ ...prev, latitude: lat, longitude: lng }));
+          }
+        } catch (err) {
+          console.error("Reverse geocoding error", err);
+          setPsyForm(prev => ({ ...prev, latitude: lat, longitude: lng }));
+        }
+        import('react-hot-toast').then(m => m.toast.success("Location auto-detected!"));
+        setIsAdminLocating(false);
+      },
+      (err) => {
+        import('react-hot-toast').then(m => m.toast.error("Failed to detect coordinates: " + err.message));
+        setIsAdminLocating(false);
+      }
+    );
+  };
+
   const [psyFormError, setPsyFormError] = useState('');
   const [psyFormSuccess, setPsyFormSuccess] = useState('');
   const [psyProfilePicFile, setPsyProfilePicFile] = useState(null);
@@ -1757,11 +1822,13 @@ export default function AdminDashboard({ setView }) {
         lang: psyForm.lang,
         bio: psyForm.bio,
         defaultMeetLink: psyForm.defaultMeetLink,
-        phone: psyForm.phone,
         hours: psyForm.hours,
         modes: psyForm.modes,
         title: psyForm.title,
         isTopFive: psyForm.isTopFive,
+        locationName: psyForm.locationName,
+        latitude: Number(psyForm.latitude) || 0,
+        longitude: Number(psyForm.longitude) || 0,
         availability: {
           activeDays: adminActiveDays,
           availableSlots: adminAvailableSlots
@@ -1784,7 +1851,10 @@ export default function AdminDashboard({ setView }) {
         modes: ['ONLINE', 'OFFLINE', 'DOOR_STEP'],
         title: 'Consultant Psychologist',
         profilePic: '',
-        isTopFive: false
+        isTopFive: false,
+        locationName: '',
+        latitude: 0,
+        longitude: 0
       });
       setAdminActiveDays({
         1: true, 2: true, 3: true, 4: true, 5: true, 6: false, 0: false
@@ -1815,11 +1885,15 @@ export default function AdminDashboard({ setView }) {
       defaultMeetLink: psy.defaultMeetLink || '',
       phone: psy.phone || '',
       hours: psy.hours !== undefined ? psy.hours : 0,
-      modes: psy.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP'],
       title: psy.title || 'Consultant Psychologist',
       profilePic: psy.profilePic || psy.image || '',
-      isTopFive: psy.isTopFive || false
+      isTopFive: psy.isTopFive || false,
+      locationName: psy.locationName || '',
+      latitude: psy.latitude || 0,
+      longitude: psy.longitude || 0
     });
+    setAdminSearchQuery(psy.locationName || '');
+    setAdminSearchResults([]);
     setPsyProfilePicFile(null);
 
     // Load availability
@@ -1884,10 +1958,12 @@ export default function AdminDashboard({ setView }) {
         bio: psyForm.bio,
         defaultMeetLink: psyForm.defaultMeetLink,
         phone: psyForm.phone,
-        hours: psyForm.hours,
         modes: psyForm.modes,
         title: psyForm.title,
         isTopFive: psyForm.isTopFive,
+        locationName: psyForm.locationName,
+        latitude: Number(psyForm.latitude) || 0,
+        longitude: Number(psyForm.longitude) || 0,
         availability: {
           activeDays: adminActiveDays,
           availableSlots: adminAvailableSlots
@@ -3694,6 +3770,122 @@ export default function AdminDashboard({ setView }) {
                     onChange={(e) => setPsyForm({ ...psyForm, defaultMeetLink: e.target.value })}
                     className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
                   />
+                </div>
+
+                <div className="sm:col-span-2 space-y-3.5 p-4 bg-zinc-950 border border-zinc-800 rounded-lg mt-2 text-left">
+                  <h4 className="text-xs font-bold text-brand uppercase tracking-wider">Practice / Geographic Location</h4>
+                  
+                  {/* Address search field */}
+                  <div className="space-y-1.5 relative">
+                    <label className="text-zinc-400 capitalize font-bold text-xs tracking-wide block">Search Location Address</label>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        placeholder="Type an address to search..."
+                        value={adminSearchQuery}
+                        onChange={(e) => setAdminSearchQuery(e.target.value)}
+                        className="flex-1 px-3 py-2 bg-zinc-900 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            handleAdminAddressSearch();
+                          }
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={handleAdminAddressSearch}
+                        disabled={isAdminSearching}
+                        className="px-4 py-2 bg-brand text-zinc-955 text-xs font-bold rounded-lg hover:bg-brand-dark transition cursor-pointer"
+                      >
+                        {isAdminSearching ? 'Searching...' : 'Search'}
+                      </button>
+                    </div>
+
+                    {/* Autocomplete Dropdown */}
+                    {adminSearchResults.length > 0 && (
+                      <div className="absolute left-0 right-0 mt-1 bg-zinc-900 border border-zinc-800 rounded-lg max-h-40 overflow-y-auto z-50 shadow-xl divide-y divide-zinc-800">
+                        {adminSearchResults.map((res, index) => (
+                          <button
+                            key={index}
+                            type="button"
+                            onClick={() => {
+                              setPsyForm({
+                                ...psyForm,
+                                locationName: res.display_name,
+                                latitude: parseFloat(res.lat) || 0,
+                                longitude: parseFloat(res.lon) || 0
+                              });
+                              setAdminSearchQuery(res.display_name);
+                              setAdminSearchResults([]);
+                            }}
+                            className="w-full text-left px-3.5 py-2.5 text-xs text-zinc-300 hover:text-white hover:bg-zinc-800 transition-colors block truncate"
+                          >
+                            {res.display_name}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-zinc-400 capitalize font-bold text-xs tracking-wide">Clinic / Center Address</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. 123 Main St, Calicut, Kerala"
+                      value={psyForm.locationName || ''}
+                      onChange={(e) => {
+                        setPsyForm({ ...psyForm, locationName: e.target.value });
+                        setAdminSearchQuery(e.target.value);
+                      }}
+                      className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1.5">
+                      <label className="text-zinc-400 capitalize font-bold text-xs tracking-wide">Latitude</label>
+                      <input
+                        type="number"
+                        step="any"
+                        placeholder="e.g. 11.2588"
+                        value={psyForm.latitude || ''}
+                        onChange={(e) => setPsyForm({ ...psyForm, latitude: parseFloat(e.target.value) || 0 })}
+                        className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-zinc-400 capitalize font-bold text-xs tracking-wide">Longitude</label>
+                      <input
+                        type="number"
+                        step="any"
+                        placeholder="e.g. 75.7804"
+                        value={psyForm.longitude || ''}
+                        onChange={(e) => setPsyForm({ ...psyForm, longitude: parseFloat(e.target.value) || 0 })}
+                        className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
+                      />
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    disabled={isAdminLocating}
+                    onClick={handleAdminDetectLocation}
+                    className="px-3.5 py-2 bg-zinc-900 hover:bg-zinc-850 border border-zinc-800 text-zinc-300 text-xs font-bold capitalize rounded-lg transition cursor-pointer flex items-center justify-center gap-1.5 disabled:opacity-50"
+                  >
+                    {isAdminLocating ? (
+                      <>
+                        <div className="w-3 h-3 border border-zinc-400 border-t-brand rounded-full animate-spin" />
+                        Locating...
+                      </>
+                    ) : (
+                      <>
+                        <svg className="w-3.5 h-3.5 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        Detect Location & Address
+                      </>
+                    )}
+                  </button>
                 </div>
 
                 <div className="sm:col-span-2 space-y-1.5 pt-1">

@@ -89,7 +89,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
     <div className="text-zinc-900 text-left">
       {/* 3. CALL TO ACTION BLOCK WITH INQUIRY FORM */}
       <section id="inquiry" className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-        <div className="bg-white rounded-2xl sm:rounded-[2rem] overflow-hidden grid grid-cols-1 md:grid-cols-2 items-center border-[1.5px] border-[#0b1424] shadow-dark-blue-lg">
+        <div className="bg-white rounded-2xl sm:rounded-[2rem] overflow-hidden grid grid-cols-1 md:grid-cols-2 items-center border-neon-glow border-neon-glow-hover">
           <div className="p-5 sm:p-8 md:p-12 space-y-6">
             <div className="space-y-4 flex flex-col items-center md:items-start text-center md:text-left">
               <span className="text-xs bg-brand-light text-brand-dark border border-brand/20 px-3.5 py-1 rounded-md capitalize  font-semibold w-fit block">

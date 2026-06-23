@@ -62,7 +62,10 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       name: '',
       phone: '',
       email: '',
-      groupCode: ''
+      groupCode: '',
+      clientLocationName: '',
+      clientLatitude: '',
+      clientLongitude: ''
     };
     try {
       const raw = sessionStorage.getItem(BOOKING_DRAFT_KEY);
@@ -126,9 +129,12 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
               type: c.type || (c.title?.toLowerCase().includes('career') || c.title?.toLowerCase().includes('mentor') ? 'career' : 'counselling'),
               defaultMeetLink: c.defaultMeetLink || '',
               price: Number(c.price) || 1200,
-              modes: Array.isArray(c.modes) ? c.modes : ['ONLINE', 'OFFLINE'],
+              modes: Array.isArray(c.modes) ? c.modes : ['ONLINE', 'OFFLINE', 'DOOR_STEP'],
               availabilitySlots: c.availability || {},
-              bookedSlots: c.bookedSlots || []
+              bookedSlots: c.bookedSlots || [],
+              locationName: c.locationName || '',
+              latitude: Number(c.latitude) || 0,
+              longitude: Number(c.longitude) || 0
             };
           });
           setAdvisors(resolved);
@@ -966,6 +972,29 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     processPayment();
   };
 
+  const getHaversineDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371; // Radius of the Earth in km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const d = R * c; // Distance in km
+    return d;
+  };
+
+  const getCalculatedDistance = () => {
+    if (bookingMode !== 'DOOR_STEP' || !selectedAdvisor) return null;
+    const clientLat = parseFloat(bookingForm.clientLatitude);
+    const clientLng = parseFloat(bookingForm.clientLongitude);
+    const advLat = Number(selectedAdvisor.latitude);
+    const advLng = Number(selectedAdvisor.longitude);
+    if (isNaN(clientLat) || isNaN(clientLng) || !advLat || !advLng) return null;
+    return getHaversineDistance(clientLat, clientLng, advLat, advLng);
+  };
+
   const handlePaymentSubmit = (e) => {
     e.preventDefault();
     setErrors({});
@@ -993,9 +1022,41 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       }
     }
 
+    if (bookingMode === 'DOOR_STEP') {
+      const clientLat = parseFloat(bookingForm.clientLatitude);
+      const clientLng = parseFloat(bookingForm.clientLongitude);
+      
+      if (!bookingForm.clientLocationName?.trim()) {
+        baseErrors.clientLocationName = 'Location Address is required for Doorstep sessions';
+      }
+      
+      if (isNaN(clientLat) || clientLat < -90 || clientLat > 90) {
+        baseErrors.clientLatitude = 'Please enter a valid Latitude (-90 to 90)';
+      }
+      if (isNaN(clientLng) || clientLng < -180 || clientLng > 180) {
+        baseErrors.clientLongitude = 'Please enter a valid Longitude (-180 to 180)';
+      }
+      
+      if (Object.keys(baseErrors).length === 0) {
+        if (selectedAdvisor) {
+          const advLat = Number(selectedAdvisor.latitude);
+          const advLng = Number(selectedAdvisor.longitude);
+          
+          if (!advLat && !advLng) {
+            baseErrors.clientLocationName = 'Doorstep booking is temporarily unavailable for this psychologist (missing coordinates)';
+          } else {
+            const distance = getHaversineDistance(clientLat, clientLng, advLat, advLng);
+            if (distance > 10) {
+              baseErrors.clientLocationName = `Your location is ${distance.toFixed(2)} km away. Doorstep service is only available within 10 km of the psychologist's location (${selectedAdvisor.locationName || 'their center'}).`;
+            }
+          }
+        }
+      }
+    }
+
     if (Object.keys(baseErrors).length > 0) {
       setErrors(baseErrors);
-      const firstErrorField = ['name', 'phone', 'email'].find(
+      const firstErrorField = ['name', 'phone', 'email', 'clientLocationName', 'clientLatitude', 'clientLongitude'].find(
         (k) => baseErrors[k]
       );
       if (firstErrorField) {
@@ -1132,6 +1193,8 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     handlePaymentSubmit,
     resetBookingState,
     handleApplyCoupon,
-    handleRemoveCoupon
+    handleRemoveCoupon,
+    getCalculatedDistance,
+    getHaversineDistance
   };
 }

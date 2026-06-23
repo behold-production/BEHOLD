@@ -83,7 +83,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleBookNowClick}
-              className="px-10 py-4 min-h-[50px] bg-brand text-zinc-950 hover:bg-brand-dark text-xs sm:text-sm font-black tracking-widest uppercase rounded-full shadow-[0_8px_20px_rgba(0,209,209,0.3)] border border-transparent w-full sm:w-auto"
+              className="px-10 py-4 min-h-[50px] bg-brand text-zinc-950 hover:bg-brand-dark text-xs sm:text-sm font-black tracking-widest uppercase rounded-full shadow-[0_0_20px_rgba(0,209,209,0.65)] hover:shadow-[0_0_30px_rgba(0,209,209,0.95)] border border-transparent w-full sm:w-auto transition-all"
             >
               Book a Session
             </motion.button>
