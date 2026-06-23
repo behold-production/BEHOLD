@@ -59,24 +59,24 @@ export default function Faq() {
           return (
             <div 
               key={idx} 
-              className="bg-white border-[1.5px] border-[#0b1424] rounded-2xl sm:rounded-[2rem] p-3 sm:p-4 md:p-5 shadow-dark-blue-sm hover:shadow-dark-blue transition-all duration-500"
+              className="bg-white border-[1.5px] border-[#0b1424] rounded-xl sm:rounded-2xl py-2.5 px-4 shadow-dark-blue-sm hover:shadow-dark-blue transition-all duration-500"
             >
               <button
                 type="button"
                 onClick={() => toggleFaq(idx)}
-                className="w-full min-h-[40px] text-left font-medium text-zinc-900 flex items-start justify-between hover:text-zinc-900 transition cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 rounded-md"
+                className="w-full min-h-[32px] text-left font-medium text-zinc-900 flex items-center justify-between hover:text-zinc-900 transition cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 rounded-md"
                 aria-expanded={isOpen}
               >
-                <div className="flex items-start gap-3 sm:gap-4">
-                  <div className={`w-8 h-8 rounded-md flex items-center justify-center shrink-0 transition-colors mt-0.5 ${
+                <div className="flex items-center gap-3 sm:gap-4">
+                  <div className={`w-7 h-7 rounded-md flex items-center justify-center shrink-0 transition-colors ${
                     isOpen ? 'bg-zinc-900 text-brand' : 'bg-zinc-100 text-zinc-900'
                   }`}>
-                    <HelpCircle className="w-4 h-4" />
+                    <HelpCircle className="w-3.5 h-3.5" />
                   </div>
-                  <span className="text-xs sm:text-sm md:text-base font-header font-bold capitalize tracking-wide leading-tight pt-1">{faq.question}</span>
+                  <span className="text-xs sm:text-sm md:text-base font-header font-bold capitalize tracking-wide leading-tight">{faq.question}</span>
                 </div>
                 <ChevronDown 
-                  className={`w-5 h-5 text-zinc-400 shrink-0 transition-transform duration-500 mt-1.5 ${
+                  className={`w-4 h-4 text-zinc-400 shrink-0 transition-transform duration-500 ${
                     isOpen ? 'rotate-180 text-zinc-900' : ''
                   }`} 
                 />
@@ -84,10 +84,10 @@ export default function Faq() {
               
               <div 
                 className={`transition-all duration-500 ease-out overflow-hidden ${
-                  isOpen ? 'max-h-60 opacity-100 mt-4 pt-4 border-t border-zinc-100' : 'max-h-0 opacity-0'
+                  isOpen ? 'max-h-60 opacity-100 mt-2.5 pt-2.5 border-t border-zinc-100' : 'max-h-0 opacity-0'
                 }`}
               >
-                <p className="text-zinc-650 text-xs md:text-sm font-light leading-relaxed pl-12">
+                <p className="text-zinc-650 text-xs md:text-sm font-light leading-relaxed pl-10">
                   {faq.answer}
                 </p>
               </div>

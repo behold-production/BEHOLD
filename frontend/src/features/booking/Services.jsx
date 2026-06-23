@@ -6,13 +6,17 @@ function getInitials(name) {
   if (!name) return 'EX';
   const clean = name.trim();
   if (clean.length === 0) return 'EX';
-  if (clean.length === 1) return clean.toUpperCase();
-  const first = clean[0];
-  const last = clean[clean.length - 1];
-  return (first + last).toUpperCase();
+  const words = clean.split(/\s+/).filter(Boolean);
+  if (words.length >= 2) {
+    return (words[0][0] + words[1][0]).toUpperCase();
+  }
+  if (words[0].length >= 2) {
+    return words[0].slice(0, 2).toUpperCase();
+  }
+  return words[0].toUpperCase();
 }
 
-export default function Services({ setView, onBookTherapist }) {
+export default function Services({ setView, onBookTherapist, siteSettings }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState('All');
   const [sortBy, setSortBy] = useState('Recommended');
@@ -20,8 +24,8 @@ export default function Services({ setView, onBookTherapist }) {
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
   const [expandedBios, setExpandedBios] = useState({});
 
-  const siteSettings = JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
-  const enablePsychology = siteSettings.enablePsychology !== false;
+  const settings = siteSettings || JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
+  const enablePsychology = settings.enablePsychology !== false;
 
   // Reset visibleCount when search or filter changes
   const [prevSearch, setPrevSearch] = useState(searchTerm);
@@ -118,13 +122,13 @@ export default function Services({ setView, onBookTherapist }) {
             <div className="flex justify-between items-start">
               <div className="space-y-2">
                 <span className="inline-block text-sm sm:text-base bg-zinc-900 text-white px-4 py-1.5 rounded-md capitalize font-bold tracking-wide">
-                  Career Mentoring
+                  {settings.careerBadge || 'Career Mentoring'}
                 </span>
                 <h3 className="text-lg sm:text-xl md:text-2xl font-header font-bold capitalize tracking-wide text-zinc-900 mt-1 group-hover:text-brand transition-colors duration-500">
-                  Career Clarity & Direction
+                  {settings.careerTitle || 'Career Clarity & Direction'}
                 </h3>
                 <h4 className="text-xs font-bold text-zinc-400 italic mt-0.5">
-                  Feeling Unsure About What’s Next?
+                  {settings.careerSubtitle || 'Feeling Unsure About What’s Next?'}
                 </h4>
               </div>
               <span className="text-xs text-zinc-400 font-bold capitalize  border border-zinc-200 px-2 py-0.5 rounded-md bg-white/50 backdrop-blur-xs ">
@@ -132,7 +136,7 @@ export default function Services({ setView, onBookTherapist }) {
               </span>
             </div>
             <p className="text-zinc-650 font-sans text-xs md:text-sm font-light leading-relaxed">
-              Whether you’re choosing a stream, exploring career options, or planning your future studies, we help you understand your strengths, interests, and opportunities so you can make confident decisions with clarity and direction.
+              {settings.careerDesc || 'Whether you’re choosing a stream, exploring career options, or planning your future studies, we help you understand your strengths, interests, and opportunities so you can make confident decisions with clarity and direction.'}
             </p>
           </div>
 
@@ -149,7 +153,7 @@ export default function Services({ setView, onBookTherapist }) {
               }}
               className="relative z-10 min-h-[52px] px-8 py-3.5 bg-zinc-900 text-white hover:bg-gradient-brand hover:text-zinc-955 hover:border-transparent border border-zinc-900 rounded-xl text-sm font-bold tracking-wide transition-all duration-300 cursor-pointer w-full sm:w-auto text-center shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98]"
             >
-              Book a Career Mentoring Session
+              {settings.careerBtnText || 'Book Your Mentor'}
             </button>
           )}
         </div>
@@ -165,13 +169,13 @@ export default function Services({ setView, onBookTherapist }) {
             <div className="flex justify-between items-start">
               <div className="space-y-2">
                 <span className="inline-block text-sm sm:text-base bg-zinc-900 text-white px-4 py-1.5 rounded-md capitalize font-bold tracking-wide">
-                  Psychological Counselling
+                  {settings.counselBadge || 'Psychological Counselling'}
                 </span>
                 <h3 className="text-lg sm:text-xl md:text-2xl font-header font-bold capitalize tracking-wide text-zinc-900 mt-1 group-hover:text-brand transition-colors duration-500">
-                  Emotional Wellbeing & Support
+                  {settings.counselTitle || 'Emotional Wellbeing & Support'}
                 </h3>
                 <h4 className="text-xs font-bold text-zinc-400 italic mt-0.5">
-                  You Don’t Have to Face It Alone.
+                  {settings.counselSubtitle || 'You Don’t Have to Face It Alone.'}
                 </h4>
               </div>
               <span className="text-xs text-zinc-400 font-bold capitalize  border border-zinc-200 px-2 py-0.5 rounded-md bg-white/50 backdrop-blur-xs ">
@@ -179,7 +183,7 @@ export default function Services({ setView, onBookTherapist }) {
               </span>
             </div>
             <p className="text-zinc-650 font-sans text-xs md:text-sm font-light leading-relaxed">
-              When stress, anxiety, self-doubt, or personal challenges begin to feel overwhelming, having the right support can make all the difference. Our counselling sessions provide a safe space to reflect, heal, grow, and move forward with confidence.
+              {settings.counselDesc || 'When stress, anxiety, self-doubt, or personal challenges begin to feel overwhelming, having the right support can make all the difference. Our counselling sessions provide a safe space to reflect, heal, grow, and move forward with confidence.'}
             </p>
           </div>
 
@@ -194,10 +198,9 @@ export default function Services({ setView, onBookTherapist }) {
                 }
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className="relative z-10 min-h-[52px] px-8 py-3.5 bg-zinc-900 text-white hover:bg-gradient-brand hover:text-zinc-955 hover:border-transparent border border-zinc-900 rounded-xl text-sm font-bold tracking-wide transition-all duration-300 cursor-pointer w-full sm:w-auto flex justify-center items-center gap-2 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98]"
+              className="relative z-10 min-h-[52px] px-8 py-3.5 bg-zinc-900 text-white hover:bg-gradient-brand hover:text-zinc-955 hover:border-transparent border border-zinc-900 rounded-xl text-sm font-bold tracking-wide transition-all duration-300 cursor-pointer w-full sm:w-auto text-center shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98]"
             >
-              <span>Talk to a Counsellor</span>
-              <ChevronRight className="w-4 h-4" />
+              {settings.counselBtnText || 'Book Your Therapist'}
             </button>
           )}
         </div>

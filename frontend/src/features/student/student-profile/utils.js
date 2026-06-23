@@ -18,10 +18,14 @@ export function calculateCompletion(profile) {
 export function getInitials(name, fallback) {
   const clean = (name || fallback || 'ST').trim();
   if (clean.length === 0) return 'ST';
-  if (clean.length === 1) return clean.toUpperCase();
-  const first = clean[0];
-  const last = clean[clean.length - 1];
-  return (first + last).toUpperCase();
+  const words = clean.split(/\s+/).filter(Boolean);
+  if (words.length >= 2) {
+    return (words[0][0] + words[1][0]).toUpperCase();
+  }
+  if (words[0].length >= 2) {
+    return words[0].slice(0, 2).toUpperCase();
+  }
+  return words[0].toUpperCase();
 }
 
 export function formatCountdown(dateStr, timeStr) {

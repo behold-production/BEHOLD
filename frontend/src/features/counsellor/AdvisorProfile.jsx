@@ -6,10 +6,14 @@ function getInitials(name) {
   if (!name) return 'EX';
   const clean = name.trim();
   if (clean.length === 0) return 'EX';
-  if (clean.length === 1) return clean.toUpperCase();
-  const first = clean[0];
-  const last = clean[clean.length - 1];
-  return (first + last).toUpperCase();
+  const words = clean.split(/\s+/).filter(Boolean);
+  if (words.length >= 2) {
+    return (words[0][0] + words[1][0]).toUpperCase();
+  }
+  if (words[0].length >= 2) {
+    return words[0].slice(0, 2).toUpperCase();
+  }
+  return words[0].toUpperCase();
 }
 
 export default function AdvisorProfile({ advisorId, onBack, onBook }) {

@@ -340,6 +340,7 @@ export default function SettingsTab(props) {
   const settingsTabs = [
     { id: 'general', label: 'General & Branding', icon: Settings },
     { id: 'hero', label: 'Hero Content', icon: Brain },
+    { id: 'sections', label: 'Landing Sections', icon: FileText },
     { id: 'features', label: 'Features & Taxation', icon: KeyRound },
     { id: 'contact', label: 'Support & Alerts', icon: Bell },
     { id: 'promo', label: 'Promo Codes', icon: FileSpreadsheet },
@@ -448,6 +449,284 @@ export default function SettingsTab(props) {
                   className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none resize-none font-semibold"
                   placeholder="Write a compelling landing subheading..."
                 />
+              </div>
+            </div>
+          )}
+
+          {/* TAB 7: Landing Sections Customization */}
+          {activeSettingsTab === 'sections' && (
+            <div className="space-y-5 animate-in fade-in duration-200">
+              {/* Career Mentoring Section */}
+              <div className="bg-zinc-900/40 border border-zinc-800 rounded-xl p-4 space-y-4">
+                <h4 className="text-sm font-bold text-brand capitalize tracking-wide flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-brand" />
+                  Career Mentoring Card Customization
+                </h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-zinc-400 capitalize">Badge / Category</label>
+                    <input
+                      type="text"
+                      required
+                      value={settingsForm.careerBadge || ''}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, careerBadge: e.target.value })}
+                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-zinc-400 capitalize">Title / Header</label>
+                    <input
+                      type="text"
+                      required
+                      value={settingsForm.careerTitle || ''}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, careerTitle: e.target.value })}
+                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-zinc-400 capitalize">Subtitle / Hook</label>
+                    <input
+                      type="text"
+                      required
+                      value={settingsForm.careerSubtitle || ''}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, careerSubtitle: e.target.value })}
+                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-zinc-400 capitalize">Button Text</label>
+                    <input
+                      type="text"
+                      required
+                      value={settingsForm.careerBtnText || ''}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, careerBtnText: e.target.value })}
+                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
+                    />
+                  </div>
+                  <div className="sm:col-span-2 space-y-1">
+                    <label className="text-xs font-bold text-zinc-400 capitalize">Description</label>
+                    <textarea
+                      rows={3}
+                      required
+                      value={settingsForm.careerDesc || ''}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, careerDesc: e.target.value })}
+                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none resize-none font-semibold"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Psychological Counselling Section */}
+              <div className="bg-zinc-900/40 border border-zinc-800 rounded-xl p-4 space-y-4">
+                <h4 className="text-sm font-bold text-brand capitalize tracking-wide flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-brand" />
+                  Psychological Counselling Card Customization
+                </h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-zinc-400 capitalize">Badge / Category</label>
+                    <input
+                      type="text"
+                      required
+                      value={settingsForm.counselBadge || ''}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, counselBadge: e.target.value })}
+                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-zinc-400 capitalize">Title / Header</label>
+                    <input
+                      type="text"
+                      required
+                      value={settingsForm.counselTitle || ''}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, counselTitle: e.target.value })}
+                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-zinc-400 capitalize">Subtitle / Hook</label>
+                    <input
+                      type="text"
+                      required
+                      value={settingsForm.counselSubtitle || ''}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, counselSubtitle: e.target.value })}
+                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-zinc-400 capitalize">Button Text</label>
+                    <input
+                      type="text"
+                      required
+                      value={settingsForm.counselBtnText || ''}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, counselBtnText: e.target.value })}
+                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
+                    />
+                  </div>
+                  <div className="sm:col-span-2 space-y-1">
+                    <label className="text-xs font-bold text-zinc-400 capitalize">Description</label>
+                    <textarea
+                      rows={3}
+                      required
+                      value={settingsForm.counselDesc || ''}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, counselDesc: e.target.value })}
+                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-855 focus:border-brand rounded-lg text-sm text-white outline-none resize-none font-semibold"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* What We Offer Section */}
+              <div className="bg-zinc-900/40 border border-zinc-800 rounded-xl p-4 space-y-4">
+                <h4 className="text-sm font-bold text-brand capitalize tracking-wide flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-brand" />
+                  "What We Offer" Section Customization
+                </h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-zinc-400 capitalize">Section Title</label>
+                    <input
+                      type="text"
+                      required
+                      value={settingsForm.aboutTitle || ''}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, aboutTitle: e.target.value })}
+                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-zinc-400 capitalize">Section Subheading</label>
+                    <input
+                      type="text"
+                      required
+                      value={settingsForm.aboutSub || ''}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, aboutSub: e.target.value })}
+                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
+                    />
+                  </div>
+
+                  <div className="sm:col-span-2 border-t border-zinc-800/80 pt-4 mt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Offer 1 */}
+                    <div className="space-y-2 border border-zinc-800/40 p-3 rounded-lg bg-zinc-900/20">
+                      <h5 className="font-bold text-zinc-350 text-xs">Card 01</h5>
+                      <input
+                        type="text"
+                        required
+                        placeholder="Title"
+                        value={settingsForm.offer1Title || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, offer1Title: e.target.value })}
+                        className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold mb-2"
+                      />
+                      <textarea
+                        rows={2}
+                        required
+                        placeholder="Description"
+                        value={settingsForm.offer1Desc || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, offer1Desc: e.target.value })}
+                        className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none resize-none font-semibold"
+                      />
+                    </div>
+                    {/* Offer 2 */}
+                    <div className="space-y-2 border border-zinc-800/40 p-3 rounded-lg bg-zinc-900/20">
+                      <h5 className="font-bold text-zinc-355 text-xs">Card 02</h5>
+                      <input
+                        type="text"
+                        required
+                        placeholder="Title"
+                        value={settingsForm.offer2Title || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, offer2Title: e.target.value })}
+                        className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold mb-2"
+                      />
+                      <textarea
+                        rows={2}
+                        required
+                        placeholder="Description"
+                        value={settingsForm.offer2Desc || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, offer2Desc: e.target.value })}
+                        className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none resize-none font-semibold"
+                      />
+                    </div>
+                    {/* Offer 3 */}
+                    <div className="space-y-2 border border-zinc-800/40 p-3 rounded-lg bg-zinc-900/20">
+                      <h5 className="font-bold text-zinc-355 text-xs">Card 03</h5>
+                      <input
+                        type="text"
+                        required
+                        placeholder="Title"
+                        value={settingsForm.offer3Title || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, offer3Title: e.target.value })}
+                        className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold mb-2"
+                      />
+                      <textarea
+                        rows={2}
+                        required
+                        placeholder="Description"
+                        value={settingsForm.offer3Desc || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, offer3Desc: e.target.value })}
+                        className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none resize-none font-semibold"
+                      />
+                    </div>
+                    {/* Offer 4 */}
+                    <div className="space-y-2 border border-zinc-800/40 p-3 rounded-lg bg-zinc-900/20">
+                      <h5 className="font-bold text-zinc-355 text-xs">Card 04</h5>
+                      <input
+                        type="text"
+                        required
+                        placeholder="Title"
+                        value={settingsForm.offer4Title || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, offer4Title: e.target.value })}
+                        className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold mb-2"
+                      />
+                      <textarea
+                        rows={2}
+                        required
+                        placeholder="Description"
+                        value={settingsForm.offer4Desc || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, offer4Desc: e.target.value })}
+                        className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none resize-none font-semibold"
+                      />
+                    </div>
+                    {/* Offer 5 */}
+                    <div className="space-y-2 border border-zinc-800/40 p-3 rounded-lg bg-zinc-900/20">
+                      <h5 className="font-bold text-zinc-355 text-xs">Card 05</h5>
+                      <input
+                        type="text"
+                        required
+                        placeholder="Title"
+                        value={settingsForm.offer5Title || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, offer5Title: e.target.value })}
+                        className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold mb-2"
+                      />
+                      <textarea
+                        rows={2}
+                        required
+                        placeholder="Description"
+                        value={settingsForm.offer5Desc || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, offer5Desc: e.target.value })}
+                        className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none resize-none font-semibold"
+                      />
+                    </div>
+                    {/* Offer 6 */}
+                    <div className="space-y-2 border border-zinc-800/40 p-3 rounded-lg bg-zinc-900/20">
+                      <h5 className="font-bold text-zinc-355 text-xs">Card 06</h5>
+                      <input
+                        type="text"
+                        required
+                        placeholder="Title"
+                        value={settingsForm.offer6Title || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, offer6Title: e.target.value })}
+                        className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold mb-2"
+                      />
+                      <textarea
+                        rows={2}
+                        required
+                        placeholder="Description"
+                        value={settingsForm.offer6Desc || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, offer6Desc: e.target.value })}
+                        className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none resize-none font-semibold"
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           )}

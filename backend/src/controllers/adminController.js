@@ -675,7 +675,31 @@ const AdminController = {
             'Your privacy is extremely important to us. This policy describes how we collect, protect, and use your personal information.',
           enablePsychology: true,
           gstEnabled: false,
-          gstPercent: 0
+          gstPercent: 0,
+          careerBadge: 'Career Mentoring',
+          careerTitle: 'Career Clarity & Direction',
+          careerSubtitle: 'Feeling Unsure About What’s Next?',
+          careerDesc: 'Whether you’re choosing a stream, exploring career options, or planning your future studies, we help you understand your strengths, interests, and opportunities so you can make confident decisions with clarity and direction.',
+          careerBtnText: 'Book Your Mentor',
+          counselBadge: 'Psychological Counselling',
+          counselTitle: 'Emotional Wellbeing & Support',
+          counselSubtitle: 'You Don’t Have to Face It Alone.',
+          counselDesc: 'When stress, anxiety, self-doubt, or personal challenges begin to feel overwhelming, having the right support can make all the difference. Our counselling sessions provide a safe space to reflect, heal, grow, and move forward with confidence.',
+          counselBtnText: 'Book Your Therapist',
+          aboutTitle: 'What We Offer',
+          aboutSub: 'We go beyond traditional guidance by offering mentorship, doorstep counseling, and personalized support in schools.',
+          offer1Title: 'Extended Mentorship',
+          offer1Desc: 'We guide students through milestones to turn assessment reports into real achievements.',
+          offer2Title: 'Doorstep & Online Counseling',
+          offer2Desc: 'We provide at-home and virtual counseling to ensure emotional privacy and comfort.',
+          offer3Title: 'Personalized School Programs',
+          offer3Desc: 'We conduct orientations and workshops to build healthy learning environments in schools.',
+          offer4Title: 'C-DAT & Career Roadmaps',
+          offer4Desc: 'We use aptitude evaluations to match university pathways with individual natural talents.',
+          offer5Title: 'Goal Tracking',
+          offer5Desc: 'We provide continuous reviews to keep students on track with their long-term goals.',
+          offer6Title: 'Parent Guidance',
+          offer6Desc: 'We guide parents to reduce academic friction and relieve student stress.'
         });
       }
       res.status(200).json({

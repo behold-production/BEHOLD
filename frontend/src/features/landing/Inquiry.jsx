@@ -142,7 +142,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
               <div className="space-y-1">
                 <label htmlFor="message-textarea" className="font-bold text-zinc-500 capitalize tracking-wide text-xs">Your Message</label>
                 <textarea
-                  rows={4}
+                  rows={7}
                   name="message"
                   id="message-textarea"
                   value={formData.message}

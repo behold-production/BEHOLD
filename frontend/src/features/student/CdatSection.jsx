@@ -120,22 +120,22 @@ export default function CdatSection({ setView }) {
       {/* CDAT CARD */}
       <div
         id="card-aptitude"
-        className="relative bg-white/70 backdrop-blur-2xl shadow-dark-blue-lg border-[1.5px] border-[#0b1424] p-6 sm:p-10 md:p-16 flex flex-col select-none group rounded-2xl sm:rounded-[2rem] transition-all duration-700 overflow-hidden"
+        className="relative bg-white/70 backdrop-blur-2xl shadow-dark-blue-lg border-[1.5px] border-[#0b1424] p-5 sm:p-8 md:p-10 flex flex-col select-none group rounded-2xl sm:rounded-[2rem] transition-all duration-700 overflow-hidden"
       >
         {/* Decorative inner glow */}
         <div className="absolute inset-0 bg-gradient-to-b from-white/60 to-transparent pointer-events-none" />
 
         {/* TOP: CIGI Differential Aptitude Test (C-DAT) */}
-        <div className="relative z-10 flex flex-col justify-between gap-6 text-left w-full">
-          <div className="space-y-4">
+        <div className="relative z-10 flex flex-col justify-between gap-4 text-left w-full">
+          <div className="space-y-3">
 
             
             {/* Flex container for Title and Logo opposite to each other */}
-            <div className="flex flex-row items-center justify-between gap-6 w-full">
-              <h3 className="text-xl sm:text-3xl md:text-4xl font-header font-black capitalize tracking-tight text-zinc-900 group-hover:text-brand-dark transition-colors duration-500 flex-1 min-w-0">
+            <div className="flex flex-row items-center justify-between gap-4 w-full">
+              <h3 className="text-lg sm:text-2xl md:text-3xl font-header font-black capitalize tracking-tight text-zinc-900 group-hover:text-brand-dark transition-colors duration-500 flex-1 min-w-0">
                 CIGI Differential Aptitude Test <span className="whitespace-nowrap">(C-DAT)</span>
               </h3>
-              <div className="w-20 h-20 sm:w-28 sm:h-28 lg:w-36 lg:h-36 flex items-center justify-center shrink-0 pointer-events-none">
+              <div className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 flex items-center justify-center shrink-0 pointer-events-none">
                 <img
                   src="/CIGI.png"
                   alt="CIGI Differential Aptitude Test (C-DAT) Logo"

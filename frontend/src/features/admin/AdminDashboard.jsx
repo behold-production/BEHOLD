@@ -1114,7 +1114,6 @@ export default function AdminDashboard({ setView }) {
   // Bookings enhancements
   const [selectedBookingIds, setSelectedBookingIds] = useState([]);
 
-  // Site Settings state
   const [settingsForm, setSettingsForm] = useState({
     heroTitle: '',
     heroSub: '',
@@ -1129,7 +1128,31 @@ export default function AdminDashboard({ setView }) {
     cdatGroupCode: '',
     gstEnabled: false,
     gstPercent: 0,
-    promoCodes: []
+    promoCodes: [],
+    careerBadge: '',
+    careerTitle: '',
+    careerSubtitle: '',
+    careerDesc: '',
+    careerBtnText: '',
+    counselBadge: '',
+    counselTitle: '',
+    counselSubtitle: '',
+    counselDesc: '',
+    counselBtnText: '',
+    aboutTitle: '',
+    aboutSub: '',
+    offer1Title: '',
+    offer1Desc: '',
+    offer2Title: '',
+    offer2Desc: '',
+    offer3Title: '',
+    offer3Desc: '',
+    offer4Title: '',
+    offer4Desc: '',
+    offer5Title: '',
+    offer5Desc: '',
+    offer6Title: '',
+    offer6Desc: ''
   });
   const [settingsSuccess, setSettingsSuccess] = useState('');
 
@@ -1251,7 +1274,31 @@ export default function AdminDashboard({ setView }) {
           enablePsychology: settings.enablePsychology !== undefined ? settings.enablePsychology : true,
           gstEnabled: settings.gstEnabled !== undefined ? settings.gstEnabled : false,
           gstPercent: settings.gstPercent !== undefined ? settings.gstPercent : 0,
-          promoCodes: settings.promoCodes || []
+          promoCodes: settings.promoCodes || [],
+          careerBadge: settings.careerBadge || 'Career Mentoring',
+          careerTitle: settings.careerTitle || 'Career Clarity & Direction',
+          careerSubtitle: settings.careerSubtitle || 'Feeling Unsure About What’s Next?',
+          careerDesc: settings.careerDesc || 'Whether you’re choosing a stream, exploring career options, or planning your future studies, we help you understand your strengths, interests, and opportunities so you can make confident decisions with clarity and direction.',
+          careerBtnText: settings.careerBtnText || 'Book Your Mentor',
+          counselBadge: settings.counselBadge || 'Psychological Counselling',
+          counselTitle: settings.counselTitle || 'Emotional Wellbeing & Support',
+          counselSubtitle: settings.counselSubtitle || 'You Don’t Have to Face It Alone.',
+          counselDesc: settings.counselDesc || 'When stress, anxiety, self-doubt, or personal challenges begin to feel overwhelming, having the right support can make all the difference. Our counselling sessions provide a safe space to reflect, heal, grow, and move forward with confidence.',
+          counselBtnText: settings.counselBtnText || 'Book Your Therapist',
+          aboutTitle: settings.aboutTitle || 'What We Offer',
+          aboutSub: settings.aboutSub || 'We go beyond traditional guidance by offering mentorship, doorstep counseling, and personalized support in schools.',
+          offer1Title: settings.offer1Title || 'Extended Mentorship',
+          offer1Desc: settings.offer1Desc || 'We guide students through milestones to turn assessment reports into real achievements.',
+          offer2Title: settings.offer2Title || 'Doorstep & Online Counseling',
+          offer2Desc: settings.offer2Desc || 'We provide at-home and virtual counseling to ensure emotional privacy and comfort.',
+          offer3Title: settings.offer3Title || 'Personalized School Programs',
+          offer3Desc: settings.offer3Desc || 'We conduct orientations and workshops to build healthy learning environments in schools.',
+          offer4Title: settings.offer4Title || 'C-DAT & Career Roadmaps',
+          offer4Desc: settings.offer4Desc || 'We use aptitude evaluations to match university pathways with individual natural talents.',
+          offer5Title: settings.offer5Title || 'Goal Tracking',
+          offer5Desc: settings.offer5Desc || 'We provide continuous reviews to keep students on track with their long-term goals.',
+          offer6Title: settings.offer6Title || 'Parent Guidance',
+          offer6Desc: settings.offer6Desc || 'We guide parents to reduce academic friction and relieve student stress.'
         });
       }
     } catch (error) {

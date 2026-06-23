@@ -367,8 +367,8 @@ export default function App() {
           <main className="fade-in-up">
             <Hero setView={() => { }} navigateToSection={navigateToSection} siteSettings={siteSettings} />
             <CdatSection setView={() => { }} />
-            {siteSettings.enablePsychology !== false && <Services setView={() => { }} onBookTherapist={handleBookTherapist} />}
-            <About setView={() => { }} enablePsychology={siteSettings.enablePsychology !== false} />
+            {siteSettings.enablePsychology !== false && <Services setView={() => { }} onBookTherapist={handleBookTherapist} siteSettings={siteSettings} />}
+            <About setView={() => { }} enablePsychology={siteSettings.enablePsychology !== false} siteSettings={siteSettings} />
             <Faq />
             <Inquiry testProfile={testProfile} siteSettings={siteSettings} />
           </main>
