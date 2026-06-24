@@ -81,7 +81,7 @@ const PaymentController = {
 
       if (counsellor.razorpayAccountId && counsellor.razorpayAccountId.trim()) {
         const splitPercent = settings.counsellorSplitPercent !== undefined ? Number(settings.counsellorSplitPercent) : 50;
-        const counsellorAmount = Math.round(netTotal * (splitPercent / 100)) * 100; // split in paise
+        const counsellorAmount = Math.round(netTotal * (splitPercent / 100) * 100); // split in paise
         options.transfers = [
           {
             account: counsellor.razorpayAccountId.trim(),
@@ -92,7 +92,21 @@ const PaymentController = {
         ];
       }
 
-      const order = await razorpay.orders.create(options);
+      let order;
+      try {
+        order = await razorpay.orders.create(options);
+      } catch (err) {
+        // If it failed and we had split transfers, try creating it WITHOUT transfers as a fallback
+        if (options.transfers) {
+          console.warn('[Razorpay Route Fallback]: Split transfer failed to initialize. Creating standard order without transfer split. Error:', err.message);
+          delete options.transfers;
+          options.notes.splitError = 'true';
+          options.notes.splitErrorMessage = err.message || 'Razorpay account linking issue';
+          order = await razorpay.orders.create(options);
+        } else {
+          throw err;
+        }
+      }
 
       res.status(200).json({
         success: true,
@@ -276,7 +290,8 @@ const PaymentController = {
         couponCode,
         clientLocationName: clientLocationName || '',
         clientLatitude: Number(clientLatitude) || 0,
-        clientLongitude: Number(clientLongitude) || 0
+        clientLongitude: Number(clientLongitude) || 0,
+        razorpaySplitError: notes.splitError === 'true' ? (notes.splitErrorMessage || 'Split routing failed') : ''
       });
 
       // 5. Send notifications to counsellor

@@ -99,7 +99,7 @@ export default function SidebarNav(props) {
           })()}
 
           {/* Nav Links organized into categories with cleaner font weights */}
-          <nav className="flex flex-col gap-1.5 flex-1 overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-zinc-800 hover:scrollbar-thumb-zinc-700">
+          <nav className="flex flex-col gap-1.5 flex-1 overflow-y-auto pr-2.5 scrollbar-thin scrollbar-thumb-zinc-800 hover:scrollbar-thumb-zinc-700">
             {(() => {
               const categories = [
                 {

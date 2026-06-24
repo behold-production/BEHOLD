@@ -29,6 +29,7 @@ const appointmentSchema = new mongoose.Schema(
     refundStatus: { type: String, enum: ['NONE', 'PENDING', 'REFUNDED', 'REJECTED'], default: 'NONE' },
     refundId: { type: String, default: '' },
     refundedAt: { type: Date, default: null },
+    razorpaySplitError: { type: String, default: '' },
     isDeleted: { type: Boolean, default: false },
     deletedAt: { type: Date, default: null }
   },

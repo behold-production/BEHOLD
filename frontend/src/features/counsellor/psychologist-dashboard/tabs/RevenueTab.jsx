@@ -9,6 +9,14 @@ import { formatDateString } from '../../../../shared/utils/dateFormatter';
 import { generateReceiptPDFDoc } from '../../../student/student-profile/utils';
 import toast from 'react-hot-toast';
 
+const formatAmount = (num) => {
+  const val = Number(num) || 0;
+  return Number(val.toFixed(2)).toLocaleString('en-IN', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2
+  });
+};
+
 export default function RevenueTab(props) {
   const {
     bookings = [],
@@ -241,7 +249,7 @@ export default function RevenueTab(props) {
             <DollarSign className="w-4 h-4 text-brand" />
           </div>
           <div className="text-2xl font-bold text-brand font-header">
-            ₹{Math.round(metrics.netPayoutEarned).toLocaleString('en-IN')}
+            ₹{formatAmount(metrics.netPayoutEarned)}
           </div>
           <p className="text-[11px] text-zinc-500 font-medium">Your absolute net share ({splitPercent}%) from completed bookings</p>
         </div>
@@ -253,7 +261,7 @@ export default function RevenueTab(props) {
             <TrendingUp className="w-4 h-4 text-emerald-450" />
           </div>
           <div className="text-2xl font-bold text-white font-header">
-            ₹{metrics.grossEarnings.toLocaleString('en-IN')}
+            ₹{formatAmount(metrics.grossEarnings)}
           </div>
           <p className="text-[11px] text-zinc-500 font-medium">Total student payment volume for completed sessions</p>
         </div>
@@ -277,7 +285,7 @@ export default function RevenueTab(props) {
             <AlertCircle className="w-4 h-4 text-amber-500" />
           </div>
           <div className="text-2xl font-bold text-amber-550 font-header">
-            ₹{Math.round(metrics.pendingPayouts).toLocaleString('en-IN')}
+            ₹{formatAmount(metrics.pendingPayouts)}
           </div>
           <p className="text-[11px] text-zinc-500 font-medium">{metrics.pendingPaidCount} booked sessions (Paid, pending completion)</p>
         </div>
@@ -296,10 +304,10 @@ export default function RevenueTab(props) {
             {/* Gridlines */}
             <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
               <div className="w-full border-t border-dashed border-zinc-800/60 text-[10px] text-zinc-600 pt-0.5 font-bold">
-                ₹{Math.round(monthlyChartData.maxVal * (splitPercent / 100)).toLocaleString('en-IN')}
+                ₹{formatAmount(monthlyChartData.maxVal * (splitPercent / 100))}
               </div>
               <div className="w-full border-t border-dashed border-zinc-800/60 text-[10px] text-zinc-600 pt-0.5 font-bold">
-                ₹{Math.round(monthlyChartData.maxVal * (splitPercent / 100) / 2).toLocaleString('en-IN')}
+                ₹{formatAmount(monthlyChartData.maxVal * (splitPercent / 100) / 2)}
               </div>
               <div className="w-full border-t border-dashed border-zinc-800/60 text-[10px] text-zinc-600 pt-0.5 font-bold">₹0</div>
             </div>
@@ -315,8 +323,8 @@ export default function RevenueTab(props) {
                   <div key={i} className="flex flex-col items-center flex-1 group relative">
                     {/* Tooltip */}
                     <div className="absolute bottom-full mb-2 bg-zinc-955 border border-zinc-800 rounded px-2.5 py-1 text-[10px] text-zinc-300 opacity-0 group-hover:opacity-100 transition duration-150 pointer-events-none z-20 whitespace-nowrap shadow-md">
-                      <div>Gross Bookings: ₹{Math.round(d.gross)}</div>
-                      <div className="text-brand font-bold">Your Share: ₹{Math.round(d.payout)}</div>
+                      <div>Gross Bookings: ₹{formatAmount(d.gross)}</div>
+                      <div className="text-brand font-bold">Your Share: ₹{formatAmount(d.payout)}</div>
                     </div>
                     {/* Visual Bar representation */}
                     <div className="w-6 bg-zinc-850 border border-zinc-800 rounded-t relative overflow-hidden transition-all duration-300 hover:bg-zinc-800" style={{ height: `${Math.max(grossHeight, 2)}%` }}>
@@ -497,18 +505,25 @@ export default function RevenueTab(props) {
                             {b.mode}
                           </span>
                         </td>
-                        <td className="p-3 text-right font-semibold text-zinc-450">₹{gross}</td>
-                        <td className="p-3 text-right font-bold text-emerald-450">₹{Math.round(myPayout)}</td>
+                        <td className="p-3 text-right font-semibold text-zinc-450">₹{formatAmount(gross)}</td>
+                        <td className="p-3 text-right font-bold text-emerald-450">₹{formatAmount(myPayout)}</td>
                         <td className="p-3 text-center">
-                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded text-[10px] font-bold capitalize border ${
-                            isRefunded
-                              ? 'bg-rose-955/30 border-rose-900/40 text-rose-455'
-                              : b.paymentStatus === 'PAID'
-                                ? 'bg-emerald-955/30 border-emerald-900/40 text-emerald-400'
-                                : 'bg-yellow-955/30 border-yellow-900/40 text-yellow-450'
-                          }`}>
-                            {isRefunded ? 'Refunded' : b.paymentStatus || 'Pending'}
-                          </span>
+                          <div className="flex flex-col items-center gap-1">
+                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded text-[10px] font-bold capitalize border ${
+                              isRefunded
+                                ? 'bg-rose-955/30 border-rose-900/40 text-rose-455'
+                                : b.paymentStatus === 'PAID'
+                                  ? 'bg-emerald-955/30 border-emerald-900/40 text-emerald-400'
+                                  : 'bg-yellow-955/30 border-yellow-900/40 text-yellow-450'
+                            }`}>
+                              {isRefunded ? 'Refunded' : b.paymentStatus || 'Pending'}
+                            </span>
+                            {b.razorpaySplitError && (
+                              <span className="text-[9px] text-rose-450 font-semibold bg-rose-955/10 border border-rose-900/20 px-1 py-0.2 rounded" title={b.razorpaySplitError}>
+                                ⚠️ Split Failed
+                              </span>
+                            )}
+                          </div>
                         </td>
                         
                         {/* Clinical assessment report download */}

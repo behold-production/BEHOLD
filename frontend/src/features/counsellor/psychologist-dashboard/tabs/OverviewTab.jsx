@@ -2,6 +2,14 @@ import React from 'react';
 import { Clock, AlertCircle, Video } from 'lucide-react';
 import { formatDateString } from '../../../../shared/utils/dateFormatter';
 
+const formatAmount = (num) => {
+  const val = Number(num) || 0;
+  return Number(val.toFixed(2)).toLocaleString('en-IN', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2
+  });
+};
+
 const OverviewTab = ({ profile, bookings, isSessionCompleted, setCurrentSection }) => {
   const shadowStyle = {
     background: '#18181b', // zinc-900
@@ -124,11 +132,11 @@ const OverviewTab = ({ profile, bookings, isSessionCompleted, setCurrentSection 
             <div className="space-y-1.5 pt-2">
               <div className="flex justify-between font-bold text-zinc-400">
                 <span>Completed Earnings</span>
-                <span className="text-emerald-400">₹{Math.round(completedEarnings)}</span>
+                <span className="text-emerald-400">₹{formatAmount(completedEarnings)}</span>
               </div>
               <div className="flex justify-between font-bold text-zinc-400">
                 <span>Pending Payouts</span>
-                <span className="text-amber-500">₹{Math.round(pendingPayouts)}</span>
+                <span className="text-amber-500">₹{formatAmount(pendingPayouts)}</span>
               </div>
               <div className="flex justify-between font-bold text-zinc-400 items-center">
                 <span>Payout Account</span>

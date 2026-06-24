@@ -3,6 +3,14 @@ import { User, ShieldAlert, Award, Trash, Check, Plus, Lock, Settings, KeyRound,
 import { SkeletonTableRows, PaginationBar } from '../components/SharedAdminUI';
 import { formatDateString } from '../utils';
 
+const formatAmount = (num) => {
+  const val = Number(num) || 0;
+  return Number(val.toFixed(2)).toLocaleString('en-IN', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2
+  });
+};
+
 export default function OverviewTab(props) {
     const {
     currentSection,
@@ -798,12 +806,12 @@ export default function OverviewTab(props) {
                             </div>
                             <div className="bg-zinc-900/60 p-4.5 rounded-lg border border-zinc-850 space-y-1">
                               <span className="text-sm text-zinc-500 font-bold capitalize  block">Platform Share ({100 - splitPercent}% Split)</span>
-                              <p className="text-xl font-bold text-brand ">₹{Math.round(totalRevenue * platformRatio)}</p>
+                              <p className="text-xl font-bold text-brand ">₹{formatAmount(totalRevenue * platformRatio)}</p>
                               <span className="text-xs text-zinc-650 font-bold block capitalize mt-1">{100 - splitPercent}% Platform service share</span>
                             </div>
                             <div className="bg-zinc-900/60 p-4.5 rounded-lg border border-zinc-850 space-y-1">
                               <span className="text-sm text-zinc-500 font-bold capitalize  block">Counsellor Payouts ({splitPercent}% Split)</span>
-                              <p className="text-xl font-bold text-emerald-400 ">₹{Math.round(totalRevenue * splitRatio)}</p>
+                              <p className="text-xl font-bold text-emerald-400 ">₹{formatAmount(totalRevenue * splitRatio)}</p>
                               <span className="text-xs text-zinc-650 font-bold block capitalize mt-1">{splitPercent}% routed to Linked Accounts</span>
                             </div>
                           </div>

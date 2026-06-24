@@ -1582,7 +1582,8 @@ const AdminController = {
             key_secret: process.env.RAZORPAY_KEY_SECRET
           });
           const refund = await razorpay.payments.refund(appointment.razorpayPaymentId, {
-            amount: Math.round(appointment.amountPaid * 100)
+            amount: Math.round(appointment.amountPaid * 100),
+            reverse_all: true
           });
           refundId = refund.id;
         } catch (err) {
