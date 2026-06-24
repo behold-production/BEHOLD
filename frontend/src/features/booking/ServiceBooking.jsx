@@ -591,13 +591,13 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                           {/* Search Location Address field */}
                           <div className="space-y-1.5 text-left relative">
                             <label className="text-xs font-bold text-zinc-500 capitalize tracking-wide block">Search Location Address</label>
-                            <div className="flex gap-2">
+                            <div className="flex flex-col sm:flex-row gap-2">
                               <input
                                 type="text"
                                 placeholder="Type your address to search... (e.g. Kozhikode, Kerala)"
                                 value={clientSearchQuery}
                                 onChange={(e) => setClientSearchQuery(e.target.value)}
-                                className="flex-1 px-3.5 py-2.5 bg-white border border-zinc-200 text-xs font-medium text-zinc-855 outline-none focus:border-brand rounded-lg transition"
+                                className="flex-1 min-w-0 px-3.5 py-2.5 bg-white border border-zinc-200 text-xs font-medium text-zinc-855 outline-none focus:border-brand rounded-lg transition"
                                 onKeyDown={(e) => {
                                   if (e.key === 'Enter') {
                                     e.preventDefault();
@@ -609,7 +609,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                 type="button"
                                 onClick={handleClientAddressSearch}
                                 disabled={isClientSearching}
-                                className="px-4 py-2 bg-[#0b1424] text-white text-xs font-extrabold rounded-lg hover:bg-zinc-800 transition cursor-pointer shrink-0"
+                                className="w-full sm:w-auto px-4 py-2.5 bg-[#0b1424] text-white text-xs font-extrabold rounded-lg hover:bg-zinc-800 transition cursor-pointer shrink-0 text-center"
                               >
                                 {isClientSearching ? 'Searching...' : 'Search'}
                               </button>
