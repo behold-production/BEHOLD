@@ -22,6 +22,7 @@ import OverviewTab from './psychologist-dashboard/tabs/OverviewTab';
 import ProfileTab from './psychologist-dashboard/tabs/ProfileTab';
 import AvailabilityTab from './psychologist-dashboard/tabs/AvailabilityTab';
 import BookingsTab from './psychologist-dashboard/tabs/BookingsTab';
+import RevenueTab from './psychologist-dashboard/tabs/RevenueTab';
 
 // Shared Utils
 import {
@@ -1851,6 +1852,14 @@ export default function PsychologistDashboard({ setView }) {
                   setMeetLinkError={setMeetLinkError}
                   saveMeetLink={saveMeetLink}
                   startEditMeetLink={startEditMeetLink}
+                />
+              )}
+
+              {currentSection === 'revenue' && (
+                <RevenueTab
+                  bookings={bookings}
+                  profile={profile}
+                  downloadDiagnosticPDF={downloadDiagnosticPDF}
                 />
               )}
             </>

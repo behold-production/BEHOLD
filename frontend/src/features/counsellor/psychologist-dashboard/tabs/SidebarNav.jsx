@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, Clock, Video, BarChart3, LogOut, X } from 'lucide-react';
+import { User, Clock, Video, BarChart3, LogOut, X, CreditCard } from 'lucide-react';
 
 const SidebarNav = ({
   user,
@@ -67,31 +67,54 @@ const SidebarNav = ({
             </div>
           </button>
 
-          {/* Nav Links */}
+          {/* Nav Links organized into categories with clean typography */}
           <nav className="flex flex-col gap-1.5 flex-1 overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-zinc-800 hover:scrollbar-thumb-zinc-700">
-            {[
-              { id: 'overview', label: 'Overview', icon: BarChart3 },
-              { id: 'profile', label: 'Consultant Profile', icon: User },
-              { id: 'availability', label: 'Manage Timings', icon: Clock },
-              { id: 'bookings', label: 'Client Bookings', icon: Video }
-            ].map(sec => {
-              const Icon = sec.icon;
-              const isActive = currentSection === sec.id;
-              return (
-                <button
-                  key={sec.id}
-                  onClick={() => handleNavClick(sec.id)}
-                  className={`flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-bold capitalize transition-all text-left cursor-pointer border-none ${
-                    isActive
-                      ? 'bg-brand text-zinc-955 shadow-sm'
-                      : 'bg-transparent text-zinc-450 hover:text-white hover:bg-zinc-850/60'
-                  }`}
-                >
-                  <Icon className="w-4 h-4 shrink-0" />
-                  <span>{sec.label}</span>
-                </button>
-              );
-            })}
+            {(() => {
+              const categories = [
+                {
+                  title: "Core Console",
+                  items: [
+                    { id: 'overview', label: 'Overview', icon: BarChart3 },
+                    { id: 'revenue', label: 'Revenue Console', icon: CreditCard }
+                  ]
+                },
+                {
+                  title: "My Workspace",
+                  items: [
+                    { id: 'profile', label: 'Consultant Profile', icon: User },
+                    { id: 'availability', label: 'Manage Timings', icon: Clock },
+                    { id: 'bookings', label: 'Client Bookings', icon: Video }
+                  ]
+                }
+              ];
+
+              return categories.map((cat, catIdx) => (
+                <div key={catIdx} className="space-y-1 mt-3 first:mt-0">
+                  <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest px-3.5 mb-1.5 mt-2">
+                    {cat.title}
+                  </div>
+                  {cat.items.map(item => {
+                    const Icon = item.icon;
+                    const isActive = currentSection === item.id;
+
+                    return (
+                      <button
+                        key={item.id}
+                        onClick={() => handleNavClick(item.id)}
+                        className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-lg text-[13px] capitalize transition-all text-left cursor-pointer border-none ${
+                          isActive
+                            ? 'bg-brand text-zinc-955 font-semibold shadow-sm'
+                            : 'bg-transparent text-zinc-450 hover:text-white hover:bg-zinc-850/60 font-medium'
+                        }`}
+                      >
+                        <Icon className="w-4 h-4 shrink-0" />
+                        <span>{item.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              ));
+            })()}
           </nav>
         </div>
 
@@ -99,9 +122,9 @@ const SidebarNav = ({
         <div className="space-y-4 pt-4 border-t border-zinc-800 mt-6 lg:mt-0">
           <button
             onClick={() => setIsLogoutConfirmOpen(true)}
-            className="w-full py-2.5 border border-rose-900/50 hover:border-rose-650 text-rose-500 bg-rose-955/20 hover:bg-rose-900/40 hover:text-white font-bold text-sm capitalize rounded-lg flex items-center justify-center gap-2 transition-colors cursor-pointer"
+            className="w-full py-2 border border-rose-900/50 hover:border-rose-650 text-rose-500 bg-rose-955/20 hover:bg-rose-900/40 hover:text-white font-semibold text-xs capitalize rounded-lg flex items-center justify-center gap-2 transition-colors cursor-pointer"
           >
-            <LogOut className="w-4 h-4" /> Exit Console
+            <LogOut className="w-3.5 h-3.5" /> Exit Console
           </button>
         </div>
       </div>

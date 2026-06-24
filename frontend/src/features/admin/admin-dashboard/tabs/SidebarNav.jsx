@@ -1,6 +1,6 @@
 import React from 'react';
 import { SkeletonTableRows, PaginationBar } from '../components/SharedAdminUI';
-import { X, Menu, User, ShieldAlert, Award, Trash, Check, Plus, Lock, Settings, KeyRound, BarChart3, LogOut, Search, ShieldCheck, Calendar, Clock, Link, AlertCircle, Edit, Video, UserPlus, MessageSquare, FileSpreadsheet, HelpCircle, ChevronRight, ChevronLeft, Mail, Shield, Brain, Download, FileText, Eye, EyeOff, Bell, Send } from 'lucide-react';
+import { X, Menu, User, ShieldAlert, Award, Trash, Check, Plus, Lock, Settings, KeyRound, BarChart3, LogOut, Search, ShieldCheck, Calendar, Clock, Link, AlertCircle, Edit, Video, UserPlus, MessageSquare, FileSpreadsheet, HelpCircle, ChevronRight, ChevronLeft, Mail, Shield, Brain, Download, FileText, Eye, EyeOff, Bell, Send, CreditCard } from 'lucide-react';
 
 export default function SidebarNav(props) {
   const {
@@ -87,10 +87,10 @@ export default function SidebarNav(props) {
                   {(cleanName || '').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h4 className="text-sm font-bold text-white truncate leading-tight capitalize">
+                  <h4 className="text-sm font-semibold text-white truncate leading-tight capitalize">
                     {cleanName}
                   </h4>
-                  <span className="text-sm text-zinc-500 font-bold  capitalize">
+                  <span className="text-xs text-zinc-550 font-bold capitalize">
                     {isSuperAdmin ? 'SUPER ADMIN' : (roleTitle || 'SUB ADMIN')}
                   </span>
                 </div>
@@ -98,162 +98,90 @@ export default function SidebarNav(props) {
             );
           })()}
 
-          {/* Nav Links */}
-          <nav className="flex flex-col gap-1 flex-1 overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-zinc-800 hover:scrollbar-thumb-zinc-700">
-            {isSuperAdmin && (
-              <button
-                onClick={() => handleNavClick('overview')}
-                className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-bold capitalize  transition-all text-left cursor-pointer border-none ${currentSection === 'overview'
-                  ? 'bg-brand text-zinc-955 font-bold'
-                  : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
-                  }`}
-              >
-                <BarChart3 className="w-4 h-4 font-bold" />
-                <span>Overview</span>
-              </button>
-            )}
+          {/* Nav Links organized into categories with cleaner font weights */}
+          <nav className="flex flex-col gap-1.5 flex-1 overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-zinc-800 hover:scrollbar-thumb-zinc-700">
+            {(() => {
+              const categories = [
+                {
+                  title: "Core Console",
+                  items: [
+                    { id: 'overview', label: 'Overview', icon: BarChart3, visible: isSuperAdmin },
+                    { id: 'analytics', label: 'Analytics Console', icon: BarChart3, visible: isSuperAdmin },
+                    { id: 'revenue', label: 'Revenue Console', icon: CreditCard, visible: isSuperAdmin },
+                  ]
+                },
+                {
+                  title: "User Directories",
+                  items: [
+                    { id: 'users', label: 'Student Database', icon: User, visible: hasUserPermission },
+                    { id: 'psychologists', label: 'Psychologists DB', icon: Award, visible: hasPsyPermission },
+                    { id: 'subadmins', label: 'Roles & Scopes', icon: KeyRound, visible: isSuperAdmin },
+                  ]
+                },
+                {
+                  title: "Operations",
+                  items: [
+                    { id: 'bookings', label: 'Client Bookings', icon: Calendar, visible: hasBookingPermission },
+                    { id: 'refunds', label: 'Refund Requests', icon: ShieldAlert, visible: isSuperAdmin },
+                  ]
+                },
+                {
+                  title: "Academics & Helpdesk",
+                  items: [
+                    { id: 'aptitude', label: 'Aptitude Questions', icon: Brain, visible: isSuperAdmin },
+                    { id: 'testresults', label: 'Aptitude Results', icon: FileSpreadsheet, visible: isSuperAdmin },
+                    { id: 'inquiries', label: 'Student Inquiries', icon: MessageSquare, visible: isSuperAdmin },
+                    { id: 'faqs', label: 'FAQ Manager', icon: HelpCircle, visible: isSuperAdmin },
+                  ]
+                },
+                {
+                  title: "System settings",
+                  items: [
+                    { id: 'settings', label: 'Site Settings', icon: Settings, visible: isSuperAdmin },
+                    { id: 'trash', label: 'Trash', icon: Trash, visible: isSuperAdmin, isTrash: true },
+                  ]
+                }
+              ];
 
-            {hasUserPermission && (
-              <button
-                onClick={() => handleNavClick('users')}
-                className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-bold capitalize  transition-all text-left cursor-pointer border-none ${currentSection === 'users'
-                  ? 'bg-brand text-zinc-955 font-bold'
-                  : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
-                  }`}
-              >
-                <User className="w-4 h-4" />
-                <span>Student Database</span>
-              </button>
-            )}
+              return categories.map((cat, catIdx) => {
+                const visibleItems = cat.items.filter(item => item.visible);
+                if (visibleItems.length === 0) return null;
 
-            {hasPsyPermission && (
-              <button
-                onClick={() => handleNavClick('psychologists')}
-                className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-bold capitalize  transition-all text-left cursor-pointer border-none ${currentSection === 'psychologists'
-                  ? 'bg-brand text-zinc-955 font-bold'
-                  : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
-                  }`}
-              >
-                <Award className="w-4 h-4" />
-                <span>Psychologists DB</span>
-              </button>
-            )}
+                return (
+                  <div key={catIdx} className="space-y-1 mt-3 first:mt-0">
+                    <div className="text-[10px] font-bold text-zinc-550 uppercase tracking-widest px-3.5 mb-1.5 mt-2">
+                      {cat.title}
+                    </div>
+                    {visibleItems.map(item => {
+                      const Icon = item.icon;
+                      const isActive = currentSection === item.id;
 
-            {hasBookingPermission && (
-              <button
-                onClick={() => handleNavClick('bookings')}
-                className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-bold capitalize  transition-all text-left cursor-pointer border-none ${currentSection === 'bookings'
-                  ? 'bg-brand text-zinc-955 font-bold'
-                  : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
-                  }`}
-              >
-                <Calendar className="w-4 h-4" />
-                <span>Client Bookings</span>
-              </button>
-            )}
+                      let btnClass = "";
+                      if (item.isTrash) {
+                        btnClass = isActive
+                          ? 'bg-rose-955/30 border border-rose-905 text-rose-455 font-semibold'
+                          : 'bg-transparent text-zinc-500 hover:text-rose-400 hover:bg-rose-950/20 font-medium';
+                      } else {
+                        btnClass = isActive
+                          ? 'bg-brand text-zinc-955 font-semibold shadow-sm'
+                          : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-850/60 font-medium';
+                      }
 
-            {isSuperAdmin && (
-              <>
-                <button
-                  onClick={() => handleNavClick('refunds')}
-                  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-bold capitalize  transition-all text-left cursor-pointer border-none ${currentSection === 'refunds'
-                    ? 'bg-brand text-zinc-955 font-bold'
-                    : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
-                    }`}
-                >
-                  <ShieldAlert className="w-4 h-4" />
-                  <span>Refund Requests</span>
-                </button>
-
-                <button
-                  onClick={() => handleNavClick('trash')}
-                  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-bold capitalize  transition-all text-left cursor-pointer border-none ${currentSection === 'trash'
-                    ? 'bg-red-600 text-white font-bold'
-                    : 'bg-transparent text-zinc-500 hover:text-red-400 hover:bg-red-950/30'
-                    }`}
-                >
-                  <Trash className="w-4 h-4" />
-                  <span>Trash</span>
-                </button>
-
-                <button
-                  onClick={() => handleNavClick('subadmins')}
-                  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-bold capitalize  transition-all text-left cursor-pointer border-none ${currentSection === 'subadmins'
-                    ? 'bg-brand text-zinc-955 font-bold'
-                    : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
-                    }`}
-                >
-                  <KeyRound className="w-4 h-4" />
-                  <span>Roles & Scopes</span>
-                </button>
-
-                <button
-                  onClick={() => handleNavClick('inquiries')}
-                  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-bold capitalize  transition-all text-left cursor-pointer border-none ${currentSection === 'inquiries'
-                    ? 'bg-brand text-zinc-955 font-bold'
-                    : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
-                    }`}
-                >
-                  <MessageSquare className="w-4 h-4" />
-                  <span>Student Inquiries</span>
-                </button>
-
-                <button
-                  onClick={() => handleNavClick('testresults')}
-                  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-bold capitalize  transition-all text-left cursor-pointer border-none ${currentSection === 'testresults'
-                    ? 'bg-brand text-zinc-955 font-bold'
-                    : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
-                    }`}
-                >
-                  <FileSpreadsheet className="w-4 h-4" />
-                  <span>Aptitude Results</span>
-                </button>
-
-                <button
-                  onClick={() => handleNavClick('aptitude')}
-                  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-bold capitalize  transition-all text-left cursor-pointer border-none ${currentSection === 'aptitude'
-                    ? 'bg-brand text-zinc-955 font-bold'
-                    : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
-                    }`}
-                >
-                  <Brain className="w-4 h-4" />
-                  <span>Aptitude Questions</span>
-                </button>
-
-                <button
-                  onClick={() => handleNavClick('faqs')}
-                  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-bold capitalize  transition-all text-left cursor-pointer border-none ${currentSection === 'faqs'
-                    ? 'bg-brand text-zinc-955 font-bold'
-                    : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
-                    }`}
-                >
-                  <HelpCircle className="w-4 h-4" />
-                  <span>FAQ Manager</span>
-                </button>
-
-                <button
-                  onClick={() => handleNavClick('analytics')}
-                  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-bold capitalize  transition-all text-left cursor-pointer border-none ${currentSection === 'analytics'
-                    ? 'bg-brand text-zinc-955 font-bold'
-                    : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
-                    }`}
-                >
-                  <BarChart3 className="w-4 h-4" />
-                  <span>Analytics Console</span>
-                </button>
-
-                <button
-                  onClick={() => handleNavClick('settings')}
-                  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-bold capitalize  transition-all text-left cursor-pointer border-none ${currentSection === 'settings'
-                    ? 'bg-brand text-zinc-955 font-bold'
-                    : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
-                    }`}
-                >
-                  <Settings className="w-4 h-4" />
-                  <span>Site Settings</span>
-                </button>
-              </>
-            )}
+                      return (
+                        <button
+                          key={item.id}
+                          onClick={() => handleNavClick(item.id)}
+                          className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-lg text-[13px] transition-all text-left cursor-pointer border-none ${btnClass}`}
+                        >
+                          <Icon className="w-4 h-4 shrink-0" />
+                          <span>{item.label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                );
+              });
+            })()}
           </nav>
         </div>
 
@@ -261,7 +189,7 @@ export default function SidebarNav(props) {
         <div className="space-y-4 pt-4 border-t border-zinc-800 mt-auto shrink-0">
           <button
             onClick={() => setIsLogoutConfirmOpen(true)}
-            className="w-full py-2 border border-rose-900/50 hover:border-rose-600 text-rose-500 bg-rose-950/20 hover:bg-rose-900 hover:text-white font-bold text-sm capitalize  rounded-lg flex items-center justify-center gap-1 transition-colors cursor-pointer"
+            className="w-full py-2 border border-rose-900/50 hover:border-rose-600 text-rose-500 bg-rose-950/20 hover:bg-rose-900 hover:text-white font-semibold text-xs capitalize rounded-lg flex items-center justify-center gap-1 transition-colors cursor-pointer"
           >
             <LogOut className="w-3.5 h-3.5" /> Sign Out Portal
           </button>
