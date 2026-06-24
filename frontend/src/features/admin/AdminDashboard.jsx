@@ -3504,7 +3504,7 @@ export default function AdminDashboard({ setView }) {
 
       {/* 2. Main Scrollable Content Area */}
       <div className="flex-1 flex flex-col min-h-0 relative overflow-hidden bg-zinc-955 z-10 lg:z-auto">
-        <main className="flex-1 p-0 sm:p-5 md:p-8 overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-800 hover:scrollbar-thumb-zinc-700 pb-24">
+        <main className="flex-1 p-4 sm:p-5 md:p-8 overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-800 hover:scrollbar-thumb-zinc-700 pb-24">
           <div className="max-w-7xl mx-auto space-y-6">
             {currentSection === 'overview' && isSuperAdmin && <OverviewTab {...tabProps} />}
             {currentSection === 'users' && hasUserPermission && <StudentManagementTab {...tabProps} />}
