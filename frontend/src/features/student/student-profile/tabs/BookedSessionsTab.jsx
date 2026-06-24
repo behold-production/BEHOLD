@@ -196,7 +196,21 @@ const BookedSessionsTab = ({
                           ) : (
                             <button
                               type="button"
-                              className="flex-1 min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-zinc-100 text-zinc-700 border border-zinc-200 rounded-lg text-xs font-medium card-luxury-hover"
+                              onClick={() => {
+                                if (session.mode === 'DOOR_STEP') {
+                                  showAlert(
+                                    `Your doorstep visit address: \n\n${session.clientLocationName || 'No address specified'}\n\nCoordinates: ${session.clientLatitude || 0}, ${session.clientLongitude || 0}`,
+                                    'Doorstep Visit Location'
+                                  );
+                                } else {
+                                  const address = session.counsellor?.locationName || session.clientLocationName || 'No address specified';
+                                  showAlert(
+                                    `Psychologist Office / Clinic Address: \n\n${address}`,
+                                    'Center Visit Location'
+                                  );
+                                }
+                              }}
+                              className="flex-1 min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-zinc-100 text-zinc-700 border border-zinc-200 rounded-lg text-xs font-medium card-luxury-hover cursor-pointer"
                             >
                               <MapPin className="w-3.5 h-3.5" /> View Location
                             </button>

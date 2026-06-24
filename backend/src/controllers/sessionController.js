@@ -273,6 +273,20 @@ const SessionController = {
       // If status changes to COMPLETED, also update matching appointment status
       if (status === 'COMPLETED') {
         await StorageService.update('appointments', session.appointmentId, { status: 'COMPLETED' });
+      }
+
+      if (status === 'CANCELLED') {
+        const appointment = await StorageService.findById('appointments', session.appointmentId);
+        if (appointment) {
+          const isPaid = appointment.paymentStatus === 'PAID';
+          await StorageService.update('appointments', session.appointmentId, {
+            status: 'CANCELLED',
+            cancellationReason: 'Session cancelled by counsellor/admin.',
+            cancelledBy: req.user.role || 'counsellor',
+            refundStatus: isPaid ? 'PENDING' : 'NONE'
+          });
+        }
+      }
 
         // Notify student that session feedback is ready
         await StorageService.create('notifications', {

@@ -186,7 +186,10 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
   React.useEffect(() => {
     if (bookingMode === 'DOOR_STEP' && !bookingForm.clientLatitude && !bookingForm.clientLongitude) {
-      handleClientDetectLocation();
+      const timer = setTimeout(() => {
+        handleClientDetectLocation();
+      }, 0);
+      return () => clearTimeout(timer);
     }
   }, [bookingMode]);
 
@@ -759,6 +762,11 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                               <div className="space-y-1.5 text-left min-w-0 flex-1">
                                 <h4 className="font-semibold text-zinc-900 text-sm sm:text-base leading-tight">{selectedAdvisor.name}</h4>
                                 <p className="text-xs sm:text-xs text-zinc-500 font-medium">{selectedAdvisor.role}</p>
+                                {bookingMode === 'OFFLINE' && selectedAdvisor.locationName && (
+                                  <span className="text-[11px] text-zinc-650 font-bold mt-1 block">
+                                    📍 Center: {selectedAdvisor.locationName}
+                                  </span>
+                                )}
                                 <span className="text-xs font-semibold text-brand-dark mt-1 inline-block">Pre-selected</span>
                               </div>
                               <div className="flex flex-col items-end gap-2 shrink-0">
@@ -825,6 +833,11 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                           {advisor.name}
                                         </h4>
                                         <p className="text-xs sm:text-xs text-zinc-500 font-medium">{advisor.role}</p>
+                                        {bookingMode === 'OFFLINE' && advisor.locationName && (
+                                          <span className="text-[11px] text-zinc-650 font-bold mt-1 block leading-tight">
+                                            📍 Center: {advisor.locationName}
+                                          </span>
+                                        )}
                                         {bookingMode === 'DOOR_STEP' && (() => {
                                           const clientLat = parseFloat(bookingForm.clientLatitude);
                                           const clientLng = parseFloat(bookingForm.clientLongitude);
@@ -953,6 +966,22 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                           }
                           return null;
                         })()}
+                      </div>
+                    )}
+
+                    {/* OFFLINE LOCATION SUMMARY - PAYMENT STEP */}
+                    {bookingMode === 'OFFLINE' && selectedAdvisor && (
+                      <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-xl text-left text-xs text-zinc-600 space-y-1.5 animate-in fade-in duration-300">
+                        <span className="font-bold text-zinc-800 block uppercase tracking-wider text-[10px]">
+                          Office / Center Visit Address
+                        </span>
+                        <p className="font-semibold text-zinc-900 flex items-start gap-1.5 leading-relaxed">
+                          <svg className="w-3.5 h-3.5 text-zinc-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                          </svg>
+                          <span>{selectedAdvisor.locationName || 'Clinic/Center address not set by counsellor'}</span>
+                        </p>
                       </div>
                     )}
 

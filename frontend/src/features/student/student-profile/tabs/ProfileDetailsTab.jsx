@@ -19,16 +19,16 @@ const ProfileDetailsTab = ({
   isSaving,
   isSaved
 }) => {
+  const [prevLocationName, setPrevLocationName] = React.useState(formData.locationName);
   const [searchQuery, setSearchQuery] = React.useState(formData.locationName || '');
   const [searchResults, setSearchResults] = React.useState([]);
   const [isSearching, setIsSearching] = React.useState(false);
   const [isLocating, setIsLocating] = React.useState(false);
 
-  React.useEffect(() => {
-    if (formData.locationName && !searchQuery) {
-      setSearchQuery(formData.locationName);
-    }
-  }, [formData.locationName]);
+  if (formData.locationName !== prevLocationName) {
+    setPrevLocationName(formData.locationName);
+    setSearchQuery(formData.locationName || '');
+  }
 
   const setLocationFields = (locationName, latitude, longitude) => {
     handleChange({ target: { name: 'locationName', value: locationName } });

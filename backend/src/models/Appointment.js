@@ -25,7 +25,10 @@ const appointmentSchema = new mongoose.Schema(
     amountPaid: { type: Number, default: 0 },
     clientLocationName: { type: String, default: '' },
     clientLatitude: { type: Number, default: 0 },
-    clientLongitude: { type: Number, default: 0 }
+    clientLongitude: { type: Number, default: 0 },
+    refundStatus: { type: String, enum: ['NONE', 'PENDING', 'REFUNDED', 'REJECTED'], default: 'NONE' },
+    refundId: { type: String, default: '' },
+    refundedAt: { type: Date, default: null }
   },
   { timestamps: true }
 );

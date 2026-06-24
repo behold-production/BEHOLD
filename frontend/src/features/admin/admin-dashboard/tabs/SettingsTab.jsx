@@ -799,6 +799,75 @@ export default function SettingsTab(props) {
                   </div>
                 )}
               </div>
+
+              {/* Razorpay Route Commission Split Configuration */}
+              <div className="bg-zinc-900/60 border border-zinc-800 rounded-xl p-4 space-y-4">
+                <h4 className="text-sm font-bold text-zinc-300 capitalize tracking-wide flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                  Razorpay Route Split Configuration
+                </h4>
+
+                <div className="space-y-1 max-w-xs animate-in slide-in-from-top-2 duration-200">
+                  <label className="text-sm capitalize font-bold text-zinc-400">Counsellor Payment Share (%)</label>
+                  <input
+                    type="number"
+                    min={0}
+                    max={100}
+                    value={settingsForm.counsellorSplitPercent !== undefined ? settingsForm.counsellorSplitPercent : 50}
+                    onChange={(e) => {
+                      let val = parseInt(e.target.value);
+                      if (isNaN(val)) val = 0;
+                      if (val < 0) val = 0;
+                      if (val > 100) val = 100;
+                      setSettingsForm({ ...settingsForm, counsellorSplitPercent: val });
+                    }}
+                    className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
+                    placeholder="e.g. 50"
+                  />
+                  <p className="text-xs text-zinc-550 font-medium pt-1">Configure the percentage of the booking payment routed automatically to the counsellor's Razorpay linked account. The remaining percentage will be kept by the platform.</p>
+                </div>
+              </div>
+
+              {/* Platform Payout Bank Details */}
+              <div className="bg-zinc-900/60 border border-zinc-800 rounded-xl p-4 space-y-4 animate-in slide-in-from-top-2 duration-200">
+                <h4 className="text-sm font-bold text-zinc-300 capitalize tracking-wide flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                  Platform Payout Bank Account Details
+                </h4>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-sm capitalize font-bold text-zinc-400">Bank Account Name</label>
+                    <input
+                      type="text"
+                      value={settingsForm.adminBankAccountName || ''}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, adminBankAccountName: e.target.value })}
+                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05)] focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
+                      placeholder="e.g. BEHOLD Platform Pvt Ltd"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-sm capitalize font-bold text-zinc-400">Bank Account Number</label>
+                    <input
+                      type="text"
+                      value={settingsForm.adminBankAccountNumber || ''}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, adminBankAccountNumber: e.target.value })}
+                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05)] focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
+                      placeholder="e.g. 50200012345678"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-sm capitalize font-bold text-zinc-400">IFSC Code</label>
+                    <input
+                      type="text"
+                      value={settingsForm.adminBankIfscCode || ''}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, adminBankIfscCode: e.target.value })}
+                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05)] focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
+                      placeholder="e.g. HDFC0000123"
+                    />
+                  </div>
+                </div>
+                <p className="text-xs text-zinc-550 font-medium">Used for platform reference, manual transfers, or share split bookkeeping when offline sessions are repayed.</p>
+              </div>
             </div>
           )}
 

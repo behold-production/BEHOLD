@@ -473,10 +473,12 @@ const AppointmentController = {
         }
       }
 
+      const isPaid = appointment.paymentStatus === 'PAID';
       const updated = await StorageService.update('appointments', id, {
         status: 'CANCELLED',
         cancellationReason: reason || 'No reason specified.',
-        cancelledBy
+        cancelledBy,
+        refundStatus: isPaid ? 'PENDING' : 'NONE'
       });
 
       // Cancel matching session if exists
@@ -743,7 +745,10 @@ const AppointmentController = {
                   title: counsellor.title,
                   education: counsellor.education,
                   specialties: counsellor.specialties,
-                  qualifications: counsellor.qualifications
+                  qualifications: counsellor.qualifications,
+                  locationName: counsellor.locationName || '',
+                  latitude: counsellor.latitude || 0,
+                  longitude: counsellor.longitude || 0
                 }
               : null
           };

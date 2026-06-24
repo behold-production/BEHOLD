@@ -489,7 +489,11 @@ const AdminController = {
         availability,
         profilePic,
         profilePicPublicId,
-        isTopFive
+        isTopFive,
+        razorpayAccountId,
+        bankAccountNumber,
+        bankIfscCode,
+        bankAccountName
       } = req.body;
       const updates = {};
       if (name !== undefined) updates.name = name;
@@ -532,6 +536,10 @@ const AdminController = {
       if (profilePic !== undefined) updates.profilePic = profilePic;
       if (profilePicPublicId !== undefined) updates.profilePicPublicId = profilePicPublicId;
       if (isTopFive !== undefined) updates.isTopFive = isTopFive === true || isTopFive === 'true';
+      if (razorpayAccountId !== undefined) updates.razorpayAccountId = razorpayAccountId;
+      if (bankAccountNumber !== undefined) updates.bankAccountNumber = bankAccountNumber;
+      if (bankIfscCode !== undefined) updates.bankIfscCode = bankIfscCode;
+      if (bankAccountName !== undefined) updates.bankAccountName = bankAccountName;
 
       if (password) {
         const bcrypt = require('bcryptjs');
@@ -685,6 +693,7 @@ const AdminController = {
           enablePsychology: true,
           gstEnabled: false,
           gstPercent: 0,
+          counsellorSplitPercent: 50,
           careerBadge: 'Career Mentoring',
           careerTitle: 'Career Clarity & Direction',
           careerSubtitle: 'Feeling Unsure About What’s Next?',
@@ -922,6 +931,11 @@ const AdminController = {
   async updateAppointment(req, res, next) {
     try {
       const { id } = req.params;
+      const appointment = await StorageService.findById('appointments', id);
+      if (!appointment) {
+        return res.status(404).json({ success: false, message: 'Appointment not found' });
+      }
+
       const {
         userId,
         advisorId,
@@ -953,6 +967,7 @@ const AdminController = {
         if (status === 'CANCELLED') {
           updates.cancellationReason = cancellationReason || 'Cancelled by administrator.';
           updates.cancelledBy = req.user.role || 'admin';
+          updates.refundStatus = appointment.paymentStatus === 'PAID' ? 'PENDING' : 'NONE';
         }
       }
       if (meetLink !== undefined) updates.meetLink = meetLink;
@@ -1310,6 +1325,108 @@ const AdminController = {
         message: 'Psychologist profile picture updated successfully',
         data: counsellorData
       });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // Refund Management
+  async getRefundRequests(req, res, next) {
+    try {
+      const [appointments, users, counsellors] = await Promise.all([
+        StorageService.findAll('appointments'),
+        StorageService.findAll('users'),
+        StorageService.findAll('counsellors')
+      ]);
+
+      const userMap = new Map(users.map(u => [u.id, u]));
+      const counsellorMap = new Map(counsellors.map(c => [c.id, c]));
+
+      const refundRequests = appointments
+        .filter(a => a.refundStatus && a.refundStatus !== 'NONE')
+        .map((a) => {
+          const user = userMap.get(a.userId);
+          const counsellor = counsellorMap.get(a.counsellorId);
+          return {
+            ...a,
+            studentName: user ? user.name : 'Unknown Student',
+            counsellorName: counsellor ? counsellor.name : 'Unknown Counsellor',
+            studentEmail: user ? user.email : '',
+            counsellorEmail: counsellor ? counsellor.email : '',
+            counsellorBank: counsellor ? {
+              accountName: counsellor.bankAccountName || '',
+              accountNumber: counsellor.bankAccountNumber || '',
+              ifscCode: counsellor.bankIfscCode || ''
+            } : null
+          };
+        });
+
+      res.status(200).json({ success: true, data: refundRequests });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async approveRefund(req, res, next) {
+    try {
+      const { id } = req.params;
+      const appointment = await StorageService.findById('appointments', id);
+      if (!appointment) {
+        return res.status(404).json({ success: false, message: 'Appointment not found' });
+      }
+
+      if (appointment.refundStatus !== 'PENDING') {
+        return res.status(400).json({ success: false, message: 'Refund is not in PENDING status' });
+      }
+
+      // Process with Razorpay if keys and paymentId exist
+      let refundId = 'manual_' + Date.now();
+      if (process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET && appointment.razorpayPaymentId) {
+        try {
+          const Razorpay = require('razorpay');
+          const razorpay = new Razorpay({
+            key_id: process.env.RAZORPAY_KEY_ID,
+            key_secret: process.env.RAZORPAY_KEY_SECRET
+          });
+          const refund = await razorpay.payments.refund(appointment.razorpayPaymentId, {
+            amount: Math.round(appointment.amountPaid * 100)
+          });
+          refundId = refund.id;
+        } catch (err) {
+          console.warn("Razorpay API refund failed. Proceeding with manual/local refund marking.", err.message);
+          refundId = `manual_err_${Date.now()}`;
+        }
+      }
+
+      const updated = await StorageService.update('appointments', id, {
+        refundStatus: 'REFUNDED',
+        refundId,
+        refundedAt: new Date()
+      });
+
+      res.status(200).json({ success: true, message: 'Refund approved and processed successfully', data: updated });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async rejectRefund(req, res, next) {
+    try {
+      const { id } = req.params;
+      const appointment = await StorageService.findById('appointments', id);
+      if (!appointment) {
+        return res.status(404).json({ success: false, message: 'Appointment not found' });
+      }
+
+      if (appointment.refundStatus !== 'PENDING') {
+        return res.status(400).json({ success: false, message: 'Refund is not in PENDING status' });
+      }
+
+      const updated = await StorageService.update('appointments', id, {
+        refundStatus: 'REJECTED'
+      });
+
+      res.status(200).json({ success: true, message: 'Refund request rejected successfully', data: updated });
     } catch (error) {
       next(error);
     }

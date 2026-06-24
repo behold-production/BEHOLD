@@ -775,31 +775,41 @@ export default function OverviewTab(props) {
                       </div>
                     )}
 
-                    {activeStatHighlight === 'revenue' && (
-                      <div className="space-y-4">
-                        <div className="flex items-center gap-2 border-b border-zinc-900 pb-2">
-                          <span className="text-brand font-bold text-sm">₹</span>
-                          <h4 className="font-header font-bold text-sm capitalize text-white">Revenue Audits</h4>
+                    {activeStatHighlight === 'revenue' && (() => {
+                      const splitPercent = settingsForm && settingsForm.counsellorSplitPercent !== undefined ? Number(settingsForm.counsellorSplitPercent) : 50;
+                      const splitRatio = splitPercent / 100;
+                      const platformRatio = (100 - splitPercent) / 100;
+                      return (
+                        <div className="space-y-4">
+                          <div className="flex items-center gap-2 border-b border-zinc-900 pb-2">
+                            <span className="text-brand font-bold text-sm">₹</span>
+                            <h4 className="font-header font-bold text-sm capitalize text-white">Revenue Audits</h4>
+                          </div>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                            <div className="bg-zinc-900/60 p-4.5 rounded-lg border border-zinc-850 space-y-1">
+                              <span className="text-sm text-zinc-500 font-bold capitalize  block">Completed Gross Revenue</span>
+                              <p className="text-xl font-bold text-emerald-450 ">₹{totalRevenue}</p>
+                              <span className="text-xs text-zinc-650 font-bold block capitalize mt-1">INR Fulfilled</span>
+                            </div>
+                            <div className="bg-zinc-900/60 p-4.5 rounded-lg border border-zinc-850 space-y-1">
+                              <span className="text-sm text-zinc-500 font-bold capitalize  block">Projected Booked Revenue</span>
+                              <p className="text-xl font-bold text-white ">₹{projectedRevenue}</p>
+                              <span className="text-xs text-zinc-650 font-bold block capitalize mt-1">Scheduled (CONFIRMED/PENDING)</span>
+                            </div>
+                            <div className="bg-zinc-900/60 p-4.5 rounded-lg border border-zinc-850 space-y-1">
+                              <span className="text-sm text-zinc-500 font-bold capitalize  block">Platform Share ({100 - splitPercent}% Split)</span>
+                              <p className="text-xl font-bold text-brand ">₹{Math.round(totalRevenue * platformRatio)}</p>
+                              <span className="text-xs text-zinc-650 font-bold block capitalize mt-1">{100 - splitPercent}% Platform service share</span>
+                            </div>
+                            <div className="bg-zinc-900/60 p-4.5 rounded-lg border border-zinc-850 space-y-1">
+                              <span className="text-sm text-zinc-500 font-bold capitalize  block">Counsellor Payouts ({splitPercent}% Split)</span>
+                              <p className="text-xl font-bold text-emerald-400 ">₹{Math.round(totalRevenue * splitRatio)}</p>
+                              <span className="text-xs text-zinc-650 font-bold block capitalize mt-1">{splitPercent}% routed to Linked Accounts</span>
+                            </div>
+                          </div>
                         </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-                          <div className="bg-zinc-900/60 p-4.5 rounded-lg border border-zinc-850 space-y-1">
-                            <span className="text-sm text-zinc-500 font-bold capitalize  block">Completed Gross Revenue</span>
-                            <p className="text-xl font-bold text-emerald-450 ">₹{totalRevenue}</p>
-                            <span className="text-xs text-zinc-650 font-bold block capitalize mt-1">INR Fulfilled</span>
-                          </div>
-                          <div className="bg-zinc-900/60 p-4.5 rounded-lg border border-zinc-850 space-y-1">
-                            <span className="text-sm text-zinc-500 font-bold capitalize  block">Projected Booked Revenue</span>
-                            <p className="text-xl font-bold text-white ">₹{projectedRevenue}</p>
-                            <span className="text-xs text-zinc-650 font-bold block capitalize mt-1">Scheduled (CONFIRMED/PENDING)</span>
-                          </div>
-                          <div className="bg-zinc-900/60 p-4.5 rounded-lg border border-zinc-850 space-y-1">
-                            <span className="text-sm text-zinc-500 font-bold capitalize  block">Est. Commission & Margins</span>
-                            <p className="text-xl font-bold text-brand ">₹{Math.round(totalRevenue * 0.15)}</p>
-                            <span className="text-xs text-zinc-650 font-bold block capitalize mt-1">15% Platform service share</span>
-                          </div>
-                        </div>
-                      </div>
-                    )}
+                      );
+                    })()}
                   </div>
                 )}
 

@@ -276,7 +276,9 @@ const ProfileTab = ({
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-zinc-400 capitalize font-bold text-xs tracking-wide">Clinic / Center Address</label>
+              <label className="text-zinc-400 capitalize font-bold text-xs tracking-wide">
+                Clinic / Center / Office Address {(ep.modes?.includes('OFFLINE') || ep.modes?.includes('DOOR_STEP')) && <span className="text-rose-500 font-bold">*</span>}
+              </label>
               <input
                 type="text"
                 placeholder="e.g. 123 Main St, Calicut, Kerala"
@@ -285,33 +287,59 @@ const ProfileTab = ({
                   setEp({ locationName: e.target.value });
                   setSearchQuery(e.target.value);
                 }}
-                className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
+                className={`w-full px-3.5 py-2.5 bg-zinc-950 border text-sm text-white rounded-lg outline-none focus:border-brand transition-all ${
+                  (ep.modes?.includes('OFFLINE') || ep.modes?.includes('DOOR_STEP')) && !ep.locationName?.trim()
+                    ? 'border-rose-800 focus:border-rose-600'
+                    : 'border-zinc-800'
+                }`}
               />
+              {(ep.modes?.includes('OFFLINE') || ep.modes?.includes('DOOR_STEP')) && !ep.locationName?.trim() && (
+                <p className="text-[11px] text-rose-500 font-semibold mt-1">
+                  * Address is required for Offline (At center) / Doorstep sessions.
+                </p>
+              )}
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="text-zinc-400 capitalize font-bold text-xs tracking-wide">Latitude</label>
+                <label className="text-zinc-400 capitalize font-bold text-xs tracking-wide">
+                  Latitude {(ep.modes?.includes('OFFLINE') || ep.modes?.includes('DOOR_STEP')) && <span className="text-rose-500 font-bold">*</span>}
+                </label>
                 <input
                   type="number"
                   step="any"
                   placeholder="e.g. 11.2588"
                   value={ep.latitude || ''}
                   onChange={(e) => setEp({ latitude: parseFloat(e.target.value) || 0 })}
-                  className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
+                  className={`w-full px-3.5 py-2.5 bg-zinc-950 border text-sm text-white rounded-lg outline-none focus:border-brand transition-all ${
+                    (ep.modes?.includes('OFFLINE') || ep.modes?.includes('DOOR_STEP')) && !ep.latitude
+                      ? 'border-rose-800 focus:border-rose-600'
+                      : 'border-zinc-800'
+                  }`}
                 />
               </div>
               <div className="space-y-1.5">
-                <label className="text-zinc-400 capitalize font-bold text-xs tracking-wide">Longitude</label>
+                <label className="text-zinc-400 capitalize font-bold text-xs tracking-wide">
+                  Longitude {(ep.modes?.includes('OFFLINE') || ep.modes?.includes('DOOR_STEP')) && <span className="text-rose-500 font-bold">*</span>}
+                </label>
                 <input
                   type="number"
                   step="any"
                   placeholder="e.g. 75.7804"
                   value={ep.longitude || ''}
                   onChange={(e) => setEp({ longitude: parseFloat(e.target.value) || 0 })}
-                  className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
+                  className={`w-full px-3.5 py-2.5 bg-zinc-950 border text-sm text-white rounded-lg outline-none focus:border-brand transition-all ${
+                    (ep.modes?.includes('OFFLINE') || ep.modes?.includes('DOOR_STEP')) && !ep.longitude
+                      ? 'border-rose-800 focus:border-rose-600'
+                      : 'border-zinc-800'
+                  }`}
                 />
               </div>
             </div>
+            {(ep.modes?.includes('OFFLINE') || ep.modes?.includes('DOOR_STEP')) && (!ep.latitude || !ep.longitude) && (
+              <p className="text-[11px] text-rose-500 font-semibold mt-1">
+                * Coordinates are required. Please select a search result or use "Detect My Location".
+              </p>
+            )}
             <button
               type="button"
               disabled={isLocating}
@@ -360,6 +388,58 @@ const ProfileTab = ({
                   </label>
                 );
               })}
+            </div>
+          </div>
+
+          <div className="sm:col-span-2 space-y-1.5">
+            <label className="text-zinc-400 capitalize font-bold text-xs tracking-wide">
+              Razorpay Linked Account ID (for split payouts)
+            </label>
+            <input
+              type="text"
+              placeholder="e.g. acc_N1z829Snd023"
+              value={ep.razorpayAccountId || ''}
+              onChange={(e) => setEp({ razorpayAccountId: e.target.value })}
+              className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all font-semibold"
+            />
+            <p className="text-[11px] text-zinc-500 mt-1">
+              Required to receive direct split payouts. Create a linked account in your Razorpay Dashboard.
+            </p>
+          </div>
+
+          <div className="sm:col-span-2 border-t border-zinc-850 pt-4">
+            <h4 className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-3">Bank Account Details (Alternative / Payout Repay)</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 animate-in fade-in duration-200">
+              <div className="space-y-1.5">
+                <label className="text-zinc-400 capitalize font-bold text-xs tracking-wide">Account Holder Name</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Dr. Jane Doe"
+                  value={ep.bankAccountName || ''}
+                  onChange={(e) => setEp({ bankAccountName: e.target.value })}
+                  className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all font-semibold"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-zinc-400 capitalize font-bold text-xs tracking-wide">Account Number</label>
+                <input
+                  type="text"
+                  placeholder="e.g. 5010023485938"
+                  value={ep.bankAccountNumber || ''}
+                  onChange={(e) => setEp({ bankAccountNumber: e.target.value })}
+                  className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all font-semibold"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-zinc-400 capitalize font-bold text-xs tracking-wide">IFSC Code</label>
+                <input
+                  type="text"
+                  placeholder="e.g. HDFC0000123"
+                  value={ep.bankIfscCode || ''}
+                  onChange={(e) => setEp({ bankIfscCode: e.target.value })}
+                  className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all font-semibold"
+                />
+              </div>
             </div>
           </div>
 

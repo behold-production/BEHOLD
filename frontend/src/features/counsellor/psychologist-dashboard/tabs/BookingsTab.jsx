@@ -127,6 +127,18 @@ const BookingsTab = ({
                   <Clock className="w-3.5 h-3.5 text-zinc-550" />
                   <span>{formatDateString(booking.date)} at {booking.time}</span>
                 </div>
+                {booking.mode === 'DOOR_STEP' && booking.clientLocationName && (
+                  <p className="text-xs text-zinc-400 mt-1 font-semibold flex items-start gap-1">
+                    <span className="text-zinc-500 shrink-0">📍 Doorstep Address:</span>
+                    <span className="text-zinc-300 leading-normal">{booking.clientLocationName}</span>
+                  </p>
+                )}
+                {booking.mode === 'OFFLINE' && (
+                  <p className="text-xs text-zinc-400 mt-1 font-semibold flex items-start gap-1">
+                    <span className="text-zinc-500 shrink-0">🏢 Session Location:</span>
+                    <span className="text-zinc-300 leading-normal">{booking.counsellor?.locationName || 'Your clinic address'}</span>
+                  </p>
+                )}
               </div>
 
               {/* Room link status block */}

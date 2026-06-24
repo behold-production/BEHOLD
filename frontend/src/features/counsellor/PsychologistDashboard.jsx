@@ -80,7 +80,11 @@ export default function PsychologistDashboard({ setView }) {
     bio: '',
     defaultMeetLink: '',
     hours: 0,
-    modes: ['ONLINE', 'OFFLINE', 'DOOR_STEP']
+    modes: ['ONLINE', 'OFFLINE', 'DOOR_STEP'],
+    locationName: '',
+    latitude: 0,
+    longitude: 0,
+    razorpayAccountId: ''
   });
   const [counsellorStatus, setCounsellorStatus] = useState(user?.status || 'PENDING');
   const [counsellorRejectionReason, setCounsellorRejectionReason] = useState(user?.rejectionReason || '');
@@ -270,7 +274,11 @@ export default function PsychologistDashboard({ setView }) {
           bio: c.bio || '',
           defaultMeetLink: c.defaultMeetLink || '',
           hours: c.hours || 0,
-          modes: c.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP']
+          modes: c.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP'],
+          locationName: c.locationName || '',
+          latitude: c.latitude || 0,
+          longitude: c.longitude || 0,
+          razorpayAccountId: c.razorpayAccountId || ''
         });
 
         // Load availability
@@ -786,8 +794,20 @@ export default function PsychologistDashboard({ setView }) {
         bio: formData.bio,
         defaultMeetLink: formData.defaultMeetLink,
         hours: Number(formData.hours) || 0,
-        modes: formData.modes
+        modes: formData.modes,
+        locationName: formData.locationName || '',
+        latitude: Number(formData.latitude) || 0,
+        longitude: Number(formData.longitude) || 0,
+        razorpayAccountId: formData.razorpayAccountId || '',
+        bankAccountNumber: formData.bankAccountNumber || '',
+        bankIfscCode: formData.bankIfscCode || '',
+        bankAccountName: formData.bankAccountName || ''
       };
+
+      if ((payload.modes.includes('DOOR_STEP') || payload.modes.includes('OFFLINE')) && (!payload.locationName.trim() || !payload.latitude || !payload.longitude)) {
+        toast.error("Clinic / Office Address and coordinates are required when Offline or Doorstep modes are enabled.");
+        return;
+      }
 
       const res = await ApiService.updateCounsellorProfile(payload);
       if (res.success) {

@@ -969,6 +969,23 @@ const ApiService = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ counsellorId })
     });
+  },
+
+  // ─── REFUND MANAGEMENT APIs ──────────────────────────────────────────────
+  async getRefundRequests() {
+    return await request('/admin/refunds');
+  },
+
+  async approveRefund(id) {
+    return await request(`/admin/appointments/${id}/approve-refund`, {
+      method: 'POST'
+    });
+  },
+
+  async rejectRefund(id) {
+    return await request(`/admin/appointments/${id}/reject-refund`, {
+      method: 'POST'
+    });
   }
 };
 

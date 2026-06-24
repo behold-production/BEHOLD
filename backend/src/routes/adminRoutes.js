@@ -78,4 +78,9 @@ router.post('/aptitude-questions', AdminController.createAptitudeQuestion);
 router.put('/aptitude-questions/:id', AdminController.updateAptitudeQuestion);
 router.delete('/aptitude-questions/:id', AdminController.deleteAptitudeQuestion);
 
+// Refund management routes
+router.get('/refunds', AdminController.getRefundRequests);
+router.post('/appointments/:id/approve-refund', AdminController.approveRefund);
+router.post('/appointments/:id/reject-refund', AdminController.rejectRefund);
+
 module.exports = router;

@@ -79,6 +79,19 @@ const PaymentController = {
         }
       };
 
+      if (counsellor.razorpayAccountId && counsellor.razorpayAccountId.trim()) {
+        const splitPercent = settings.counsellorSplitPercent !== undefined ? Number(settings.counsellorSplitPercent) : 50;
+        const counsellorAmount = Math.round(netTotal * (splitPercent / 100)) * 100; // split in paise
+        options.transfers = [
+          {
+            account: counsellor.razorpayAccountId.trim(),
+            amount: counsellorAmount,
+            currency: 'INR',
+            on_hold: false
+          }
+        ];
+      }
+
       const order = await razorpay.orders.create(options);
 
       res.status(200).json({

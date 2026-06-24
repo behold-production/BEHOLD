@@ -155,6 +155,17 @@ export default function SidebarNav(props) {
             {isSuperAdmin && (
               <>
                 <button
+                  onClick={() => handleNavClick('refunds')}
+                  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-bold capitalize  transition-all text-left cursor-pointer border-none ${currentSection === 'refunds'
+                    ? 'bg-brand text-zinc-955 font-bold'
+                    : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-855'
+                    }`}
+                >
+                  <ShieldAlert className="w-4 h-4" />
+                  <span>Refund Requests</span>
+                </button>
+
+                <button
                   onClick={() => handleNavClick('subadmins')}
                   className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-bold capitalize  transition-all text-left cursor-pointer border-none ${currentSection === 'subadmins'
                     ? 'bg-brand text-zinc-955 font-bold'

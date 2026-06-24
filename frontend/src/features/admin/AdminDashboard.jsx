@@ -13,6 +13,7 @@ import AptitudeQuestionsTab from './admin-dashboard/tabs/AptitudeQuestionsTab';
 import FaqsTab from './admin-dashboard/tabs/FaqsTab';
 import SettingsTab from './admin-dashboard/tabs/SettingsTab';
 import AnalyticsTab from './admin-dashboard/tabs/AnalyticsTab';
+import RefundRequestsTab from './admin-dashboard/tabs/RefundRequestsTab';
 import { getInitials } from './admin-dashboard/utils';
 
 const printTextSection = undefined;
@@ -1255,6 +1256,10 @@ export default function AdminDashboard({ setView }) {
     cdatGroupCode: '',
     gstEnabled: false,
     gstPercent: 0,
+    counsellorSplitPercent: 50,
+    adminBankAccountName: '',
+    adminBankAccountNumber: '',
+    adminBankIfscCode: '',
     promoCodes: [],
     careerBadge: '',
     careerTitle: '',
@@ -1401,6 +1406,10 @@ export default function AdminDashboard({ setView }) {
           enablePsychology: settings.enablePsychology !== undefined ? settings.enablePsychology : true,
           gstEnabled: settings.gstEnabled !== undefined ? settings.gstEnabled : false,
           gstPercent: settings.gstPercent !== undefined ? settings.gstPercent : 0,
+          counsellorSplitPercent: settings.counsellorSplitPercent !== undefined ? settings.counsellorSplitPercent : 50,
+          adminBankAccountName: settings.adminBankAccountName || '',
+          adminBankAccountNumber: settings.adminBankAccountNumber || '',
+          adminBankIfscCode: settings.adminBankIfscCode || '',
           promoCodes: settings.promoCodes || [],
           careerBadge: settings.careerBadge || 'Career Mentoring',
           careerTitle: settings.careerTitle || 'Career Clarity & Direction',
@@ -3504,6 +3513,7 @@ export default function AdminDashboard({ setView }) {
             {currentSection === 'testresults' && isSuperAdmin && <TestResultsTab {...tabProps} />}
             {currentSection === 'aptitude' && isSuperAdmin && <AptitudeQuestionsTab {...tabProps} />}
             {currentSection === 'faqs' && isSuperAdmin && <FaqsTab {...tabProps} />}
+            {currentSection === 'refunds' && isSuperAdmin && <RefundRequestsTab {...tabProps} />}
             {currentSection === 'settings' && isSuperAdmin && <SettingsTab {...tabProps} />}
             {currentSection === 'analytics' && isSuperAdmin && <AnalyticsTab {...tabProps} />}
           </div>

@@ -34,7 +34,11 @@ const counsellorSchema = new mongoose.Schema(
     isTopFive: { type: Boolean, default: false },
     locationName: { type: String, default: '' },
     latitude: { type: Number, default: 0 },
-    longitude: { type: Number, default: 0 }
+    longitude: { type: Number, default: 0 },
+    razorpayAccountId: { type: String, default: '' },
+    bankAccountNumber: { type: String, default: '' },
+    bankIfscCode: { type: String, default: '' },
+    bankAccountName: { type: String, default: '' }
   },
   { timestamps: true }
 );
