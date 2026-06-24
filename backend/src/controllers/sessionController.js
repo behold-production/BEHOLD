@@ -273,6 +273,17 @@ const SessionController = {
       // If status changes to COMPLETED, also update matching appointment status
       if (status === 'COMPLETED') {
         await StorageService.update('appointments', session.appointmentId, { status: 'COMPLETED' });
+
+        // Notify student that session feedback is ready
+        await StorageService.create('notifications', {
+          recipientId: session.userId,
+          recipientRole: 'user',
+          title: 'Session Completed & Feedback Available',
+          message:
+            'Your session has been marked as completed. You can view your counsellor feedback and leave a rating.',
+          type: 'session_completed',
+          isRead: false
+        });
       }
 
       if (status === 'CANCELLED') {
@@ -286,18 +297,6 @@ const SessionController = {
             refundStatus: isPaid ? 'PENDING' : 'NONE'
           });
         }
-      }
-
-        // Notify student that session feedback is ready
-        await StorageService.create('notifications', {
-          recipientId: session.userId,
-          recipientRole: 'user',
-          title: 'Session Completed & Feedback Available',
-          message:
-            'Your session has been marked as completed. You can view your counsellor feedback and leave a rating.',
-          type: 'session_completed',
-          isRead: false
-        });
       }
 
       res.status(200).json({
