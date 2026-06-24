@@ -447,41 +447,41 @@ export default function PsychologistDashboard({ setView }) {
           doc.addPage();
           doc.setFillColor(13, 148, 136);
           doc.rect(0, 0, 210, 8, 'F');
-          
+
           doc.setFont('Helvetica', 'normal');
           doc.setFontSize(7.5);
           doc.setTextColor(148, 163, 184);
           doc.text(`Clinical Report ID: CL-REP-${displayId} | Continuation Page`, 20, 15);
           doc.line(20, 17, 190, 17);
-          
+
           y = 25;
         } else {
           y += gapBeforeTitle;
         }
-        
+
         doc.setFont('Helvetica', 'bold');
         doc.setFontSize(9.5);
         doc.setTextColor(15, 23, 42);
         doc.text(titleText, 20, y);
         y += 6;
-        
+
         doc.setFont('Helvetica', 'normal');
         doc.setTextColor(51, 65, 85);
         doc.setFontSize(8.5);
-        
+
         const lines = doc.splitTextToSize(bodyText, 170);
         for (let i = 0; i < lines.length; i++) {
           if (y > bottomLimit) {
             doc.addPage();
             doc.setFillColor(13, 148, 136);
             doc.rect(0, 0, 210, 8, 'F');
-            
+
             doc.setFont('Helvetica', 'normal');
             doc.setFontSize(7.5);
             doc.setTextColor(148, 163, 184);
             doc.text(`Clinical Report ID: CL-REP-${displayId} | Continuation Page`, 20, 15);
             doc.line(20, 17, 190, 17);
-            
+
             y = 25;
           }
           // Restore font style for text lines after page break
@@ -503,25 +503,25 @@ export default function PsychologistDashboard({ setView }) {
       printTextSection('Recommendations & Feedback:', feedbackText, 10);
 
       // 3. Next Session (Optional)
-      const hasNextSession = booking.nextSession && 
-                             booking.nextSession.trim() !== '' && 
-                             booking.nextSession.trim().toLowerCase() !== 'n/a' && 
-                             booking.nextSession.trim().toLowerCase() !== 'none' && 
-                             booking.nextSession.trim().toLowerCase() !== 'no' && 
-                             booking.nextSession.trim().toLowerCase() !== 'null';
+      const hasNextSession = booking.nextSession &&
+        booking.nextSession.trim() !== '' &&
+        booking.nextSession.trim().toLowerCase() !== 'n/a' &&
+        booking.nextSession.trim().toLowerCase() !== 'none' &&
+        booking.nextSession.trim().toLowerCase() !== 'no' &&
+        booking.nextSession.trim().toLowerCase() !== 'null';
 
       if (hasNextSession) {
         if (y + 12 > bottomLimit) {
           doc.addPage();
           doc.setFillColor(13, 148, 136);
           doc.rect(0, 0, 210, 8, 'F');
-          
+
           doc.setFont('Helvetica', 'normal');
           doc.setFontSize(7.5);
           doc.setTextColor(148, 163, 184);
           doc.text(`Clinical Report ID: CL-REP-${displayId} | Continuation Page`, 20, 15);
           doc.line(20, 17, 190, 17);
-          
+
           y = 25;
         } else {
           y += 10;
@@ -546,13 +546,13 @@ export default function PsychologistDashboard({ setView }) {
         doc.addPage();
         doc.setFillColor(13, 148, 136);
         doc.rect(0, 0, 210, 8, 'F');
-        
+
         doc.setFont('Helvetica', 'normal');
         doc.setFontSize(7.5);
         doc.setTextColor(148, 163, 184);
         doc.text(`Clinical Report ID: CL-REP-${displayId} | Continuation Page`, 20, 15);
         doc.line(20, 17, 190, 17);
-        
+
         sigY = 35;
       }
 

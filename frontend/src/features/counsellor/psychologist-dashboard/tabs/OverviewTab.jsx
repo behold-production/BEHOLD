@@ -19,9 +19,9 @@ const OverviewTab = ({ profile, bookings, isSessionCompleted, setCurrentSection 
   const completedPaidBookings = bookings.filter(b => isSessionCompleted(b) && b.paymentStatus === 'PAID');
   const completedEarnings = completedPaidBookings.reduce((acc, b) => acc + (Number(b.amountPaid || 0) * splitRatio), 0);
 
-  const pendingPaidBookings = bookings.filter(b => 
-    (b.status === 'CONFIRMED' || b.status === 'APPROVED' || b.status === 'PENDING') && 
-    !isSessionCompleted(b) && 
+  const pendingPaidBookings = bookings.filter(b =>
+    (b.status === 'CONFIRMED' || b.status === 'APPROVED' || b.status === 'PENDING') &&
+    !isSessionCompleted(b) &&
     b.paymentStatus === 'PAID'
   );
   const pendingPayouts = pendingPaidBookings.reduce((acc, b) => acc + (Number(b.amountPaid || 0) * splitRatio), 0);
@@ -35,7 +35,7 @@ const OverviewTab = ({ profile, bookings, isSessionCompleted, setCurrentSection 
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         {/* Next session card */}
-        <div 
+        <div
           className="rounded-2xl p-5 relative overflow-hidden flex flex-col justify-between group min-h-[160px] transition-all hover:-translate-y-1"
           style={shadowStyle}
         >
@@ -85,7 +85,7 @@ const OverviewTab = ({ profile, bookings, isSessionCompleted, setCurrentSection 
         </div>
 
         {/* Pricing stats card */}
-        <div 
+        <div
           className="rounded-2xl p-5 relative overflow-hidden flex flex-col justify-between min-h-[160px] transition-all hover:-translate-y-1"
           style={shadowStyle}
         >
@@ -115,7 +115,7 @@ const OverviewTab = ({ profile, bookings, isSessionCompleted, setCurrentSection 
         </div>
 
         {/* Earnings & Revenue split card */}
-        <div 
+        <div
           className="rounded-2xl p-5 relative overflow-hidden flex flex-col justify-between min-h-[160px] transition-all hover:-translate-y-1"
           style={shadowStyle}
         >

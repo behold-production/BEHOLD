@@ -349,862 +349,972 @@ export default function SettingsTab(props) {
 
   return (
     <>
-
       <div className="space-y-6 animate-in fade-in duration-200 text-sm">
         <div className="border-b border-zinc-800 pb-3">
-          <h3 className="text-sm font-bold capitalize  text-white font-header">Site Configuration Panel</h3>
+          <h3 className="text-sm font-bold capitalize text-white font-header">Site Configuration Panel</h3>
           <p className="text-sm text-zinc-500 font-medium pt-1">Manage global landing page titles, subheadings, and contact support endpoints</p>
         </div>
 
-        {/* Sub-tabs Navigation */}
-        <div className="flex flex-wrap gap-2 pb-1">
-          {settingsTabs.map((tab) => {
-            const Icon = tab.icon;
-            const isActive = activeSettingsTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => setActiveSettingsTab(tab.id)}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold transition duration-155 border cursor-pointer select-none ${isActive
-                  ? 'bg-brand/10 border-brand/40 text-brand shadow-sm shadow-brand/5'
-                  : 'bg-zinc-900/40 hover:bg-zinc-800/60 border-zinc-800 text-zinc-400 hover:text-zinc-200'
-                  }`}
-              >
-                <Icon className={`w-4 h-4 ${isActive ? 'text-brand' : 'text-zinc-500'}`} />
-                {tab.label}
-              </button>
-            );
-          })}
-        </div>
+        <div className="flex flex-col md:flex-row gap-6 items-start">
+          {/* Tabs Sidebar Nav */}
+          <div className="w-full md:w-64 shrink-0 flex md:flex-col gap-1.5 overflow-x-auto md:overflow-x-visible pb-3 md:pb-0 border-b md:border-b-0 border-zinc-800/60 md:border-r md:border-zinc-800/60 md:pr-4 scrollbar-none flex-nowrap">
+            {settingsTabs.map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeSettingsTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setActiveSettingsTab(tab.id)}
+                  className={`flex items-center gap-2.5 px-4 py-3 rounded-lg text-xs font-bold transition-all duration-155 border cursor-pointer select-none text-left w-auto md:w-full shrink-0 ${isActive
+                    ? 'bg-brand/10 border-brand/40 text-brand shadow-sm shadow-brand/5 md:border-l-4 md:border-l-brand'
+                    : 'bg-zinc-900/40 hover:bg-zinc-800/60 border-zinc-800 text-zinc-400 hover:text-zinc-200'
+                    }`}
+                >
+                  <Icon className={`w-4.5 h-4.5 shrink-0 ${isActive ? 'text-brand' : 'text-zinc-500'}`} />
+                  <span className="truncate">{tab.label}</span>
+                </button>
+              );
+            })}
+          </div>
 
-        <form onSubmit={handleSaveSettings} className="bg-zinc-955 border border-zinc-850 p-6 rounded-xl space-y-5">
+          {/* Form / Content Panel */}
+          <div className="flex-1 w-full min-w-0">
+            {/* TAB 1: General & Branding */}
+            {activeSettingsTab === 'general' && (
+              <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-xl space-y-5 animate-in fade-in duration-200 shadow-lg">
+                <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
+                  <Settings className="w-4 h-4 text-brand" />
+                  <h4 className="text-sm font-bold text-white uppercase tracking-wider">General & Branding</h4>
+                </div>
 
-          {/* TAB 1: General & Branding */}
-          {activeSettingsTab === 'general' && (
-            <div className="space-y-5 animate-in fade-in duration-200">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Custom Site Brand Name</label>
+                    <input
+                      type="text"
+                      required
+                      value={settingsForm.siteName}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, siteName: e.target.value })}
+                      className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                      placeholder="e.g. BEHOLD"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Footer Copyright Text</label>
+                    <input
+                      type="text"
+                      required
+                      value={settingsForm.siteCopyright}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, siteCopyright: e.target.value })}
+                      className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                      placeholder="e.g. © BEHOLD Ltd., 2026. All rights reserved."
+                    />
+                  </div>
+                </div>
+
                 <div className="space-y-1">
-                  <label className="text-sm capitalize  font-bold text-zinc-400">Custom Site Brand Name</label>
+                  <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">C-DAT Default Group Code</label>
                   <input
                     type="text"
                     required
-                    value={settingsForm.siteName}
-                    onChange={(e) => setSettingsForm({ ...settingsForm, siteName: e.target.value })}
-                    className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
-                    placeholder="e.g. BEHOLD"
+                    value={settingsForm.cdatGroupCode}
+                    onChange={(e) => setSettingsForm({ ...settingsForm, cdatGroupCode: e.target.value })}
+                    className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                    placeholder="e.g. cdat@behold"
                   />
+                </div>
+
+                {settingsSuccess && (
+                  <p className="text-xs text-emerald-500 font-bold capitalize tracking-wide">{settingsSuccess}</p>
+                )}
+
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    className="px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-lg cursor-pointer transition shadow-md border-none"
+                  >
+                    Save General Settings
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {/* TAB 2: Hero Content */}
+            {activeSettingsTab === 'hero' && (
+              <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-xl space-y-5 animate-in fade-in duration-200 shadow-lg">
+                <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
+                  <Brain className="w-4 h-4 text-brand" />
+                  <h4 className="text-sm font-bold text-white uppercase tracking-wider">Hero Content</h4>
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-sm capitalize  font-bold text-zinc-400">Footer Copyright Text</label>
+                  <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Hero Section Heading</label>
                   <input
                     type="text"
                     required
-                    value={settingsForm.siteCopyright}
-                    onChange={(e) => setSettingsForm({ ...settingsForm, siteCopyright: e.target.value })}
-                    className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
-                    placeholder="e.g. © BEHOLD Ltd., 2026. All rights reserved."
+                    value={settingsForm.heroTitle}
+                    onChange={(e) => setSettingsForm({ ...settingsForm, heroTitle: e.target.value })}
+                    className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                    placeholder="e.g. Bridging You To Your {True Growth.}"
+                  />
+                  <span className="text-[11px] text-zinc-500 block font-medium">Use curly braces `{ }` around words you want highlighted with the neon gradient.</span>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Hero Section Subtitle</label>
+                  <textarea
+                    rows={4}
+                    required
+                    value={settingsForm.heroSub}
+                    onChange={(e) => setSettingsForm({ ...settingsForm, heroSub: e.target.value })}
+                    className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none resize-none font-semibold transition-colors"
+                    placeholder="Write a compelling landing subheading..."
                   />
                 </div>
-              </div>
 
-              <div className="space-y-1">
-                <label className="text-sm capitalize font-bold text-zinc-400">C-DAT Default Group Code</label>
-                <input
-                  type="text"
-                  required
-                  value={settingsForm.cdatGroupCode}
-                  onChange={(e) => setSettingsForm({ ...settingsForm, cdatGroupCode: e.target.value })}
-                  className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
-                  placeholder="e.g. cdat@behold"
-                />
-              </div>
-            </div>
-          )}
+                {settingsSuccess && (
+                  <p className="text-xs text-emerald-500 font-bold capitalize tracking-wide">{settingsSuccess}</p>
+                )}
 
-          {/* TAB 2: Hero Content */}
-          {activeSettingsTab === 'hero' && (
-            <div className="space-y-5 animate-in fade-in duration-200">
-              <div className="space-y-1">
-                <label className="text-sm capitalize  font-bold text-zinc-400">Hero Section Heading</label>
-                <input
-                  type="text"
-                  required
-                  value={settingsForm.heroTitle}
-                  onChange={(e) => setSettingsForm({ ...settingsForm, heroTitle: e.target.value })}
-                  className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none"
-                  placeholder="e.g. Bridging You To Your {True Growth.}"
-                />
-                <span className="text-sm text-zinc-550 block font-medium">Use curly braces `{ }` around words you want highlighted with the neon gradient.</span>
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-sm capitalize  font-bold text-zinc-400">Hero Section Subtitle</label>
-                <textarea
-                  rows={3}
-                  required
-                  value={settingsForm.heroSub}
-                  onChange={(e) => setSettingsForm({ ...settingsForm, heroSub: e.target.value })}
-                  className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none resize-none font-semibold"
-                  placeholder="Write a compelling landing subheading..."
-                />
-              </div>
-            </div>
-          )}
-
-          {/* TAB 7: Landing Sections Customization */}
-          {activeSettingsTab === 'sections' && (
-            <div className="space-y-5 animate-in fade-in duration-200">
-              {/* Career Mentoring Section */}
-              <div className="bg-zinc-900/40 border border-zinc-800 rounded-xl p-4 space-y-4">
-                <h4 className="text-sm font-bold text-brand capitalize tracking-wide flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-brand" />
-                  Career Mentoring Card Customization
-                </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-zinc-400 capitalize">Badge / Category</label>
-                    <input
-                      type="text"
-                      required
-                      value={settingsForm.careerBadge || ''}
-                      onChange={(e) => setSettingsForm({ ...settingsForm, careerBadge: e.target.value })}
-                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-zinc-400 capitalize">Title / Header</label>
-                    <input
-                      type="text"
-                      required
-                      value={settingsForm.careerTitle || ''}
-                      onChange={(e) => setSettingsForm({ ...settingsForm, careerTitle: e.target.value })}
-                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-zinc-400 capitalize">Subtitle / Hook</label>
-                    <input
-                      type="text"
-                      required
-                      value={settingsForm.careerSubtitle || ''}
-                      onChange={(e) => setSettingsForm({ ...settingsForm, careerSubtitle: e.target.value })}
-                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-zinc-400 capitalize">Button Text</label>
-                    <input
-                      type="text"
-                      required
-                      value={settingsForm.careerBtnText || ''}
-                      onChange={(e) => setSettingsForm({ ...settingsForm, careerBtnText: e.target.value })}
-                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
-                    />
-                  </div>
-                  <div className="sm:col-span-2 space-y-1">
-                    <label className="text-xs font-bold text-zinc-400 capitalize">Description</label>
-                    <textarea
-                      rows={3}
-                      required
-                      value={settingsForm.careerDesc || ''}
-                      onChange={(e) => setSettingsForm({ ...settingsForm, careerDesc: e.target.value })}
-                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none resize-none font-semibold"
-                    />
-                  </div>
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    className="px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-lg cursor-pointer transition shadow-md border-none"
+                  >
+                    Save Hero Content
+                  </button>
                 </div>
-              </div>
+              </form>
+            )}
 
-              {/* Psychological Counselling Section */}
-              <div className="bg-zinc-900/40 border border-zinc-800 rounded-xl p-4 space-y-4">
-                <h4 className="text-sm font-bold text-brand capitalize tracking-wide flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-brand" />
-                  Psychological Counselling Card Customization
-                </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-zinc-400 capitalize">Badge / Category</label>
-                    <input
-                      type="text"
-                      required
-                      value={settingsForm.counselBadge || ''}
-                      onChange={(e) => setSettingsForm({ ...settingsForm, counselBadge: e.target.value })}
-                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-zinc-400 capitalize">Title / Header</label>
-                    <input
-                      type="text"
-                      required
-                      value={settingsForm.counselTitle || ''}
-                      onChange={(e) => setSettingsForm({ ...settingsForm, counselTitle: e.target.value })}
-                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-zinc-400 capitalize">Subtitle / Hook</label>
-                    <input
-                      type="text"
-                      required
-                      value={settingsForm.counselSubtitle || ''}
-                      onChange={(e) => setSettingsForm({ ...settingsForm, counselSubtitle: e.target.value })}
-                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-zinc-400 capitalize">Button Text</label>
-                    <input
-                      type="text"
-                      required
-                      value={settingsForm.counselBtnText || ''}
-                      onChange={(e) => setSettingsForm({ ...settingsForm, counselBtnText: e.target.value })}
-                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
-                    />
-                  </div>
-                  <div className="sm:col-span-2 space-y-1">
-                    <label className="text-xs font-bold text-zinc-400 capitalize">Description</label>
-                    <textarea
-                      rows={3}
-                      required
-                      value={settingsForm.counselDesc || ''}
-                      onChange={(e) => setSettingsForm({ ...settingsForm, counselDesc: e.target.value })}
-                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-855 focus:border-brand rounded-lg text-sm text-white outline-none resize-none font-semibold"
-                    />
-                  </div>
+            {/* TAB 3: Landing Sections */}
+            {activeSettingsTab === 'sections' && (
+              <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-xl space-y-6 animate-in fade-in duration-200 shadow-lg">
+                <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
+                  <FileText className="w-4 h-4 text-brand" />
+                  <h4 className="text-sm font-bold text-white uppercase tracking-wider">Landing Sections</h4>
                 </div>
-              </div>
 
-              {/* What We Offer Section */}
-              <div className="bg-zinc-900/40 border border-zinc-800 rounded-xl p-4 space-y-4">
-                <h4 className="text-sm font-bold text-brand capitalize tracking-wide flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-brand" />
-                  "What We Offer" Section Customization
-                </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-zinc-400 capitalize">Section Title</label>
-                    <input
-                      type="text"
-                      required
-                      value={settingsForm.aboutTitle || ''}
-                      onChange={(e) => setSettingsForm({ ...settingsForm, aboutTitle: e.target.value })}
-                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-zinc-400 capitalize">Section Subheading</label>
-                    <input
-                      type="text"
-                      required
-                      value={settingsForm.aboutSub || ''}
-                      onChange={(e) => setSettingsForm({ ...settingsForm, aboutSub: e.target.value })}
-                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
-                    />
-                  </div>
-
-                  <div className="sm:col-span-2 border-t border-zinc-800/80 pt-4 mt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* Offer 1 */}
-                    <div className="space-y-2 border border-zinc-800/40 p-3 rounded-lg bg-zinc-900/20">
-                      <h5 className="font-bold text-zinc-350 text-xs">Card 01</h5>
+                {/* Career Mentoring Section */}
+                <div className="bg-zinc-950/40 border border-zinc-800 p-5 rounded-xl space-y-4">
+                  <h4 className="text-xs font-bold text-brand uppercase tracking-wider flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+                    Career Mentoring Card Customization
+                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-zinc-500 uppercase">Badge / Category</label>
                       <input
                         type="text"
                         required
-                        placeholder="Title"
-                        value={settingsForm.offer1Title || ''}
-                        onChange={(e) => setSettingsForm({ ...settingsForm, offer1Title: e.target.value })}
-                        className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold mb-2"
-                      />
-                      <textarea
-                        rows={2}
-                        required
-                        placeholder="Description"
-                        value={settingsForm.offer1Desc || ''}
-                        onChange={(e) => setSettingsForm({ ...settingsForm, offer1Desc: e.target.value })}
-                        className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none resize-none font-semibold"
+                        value={settingsForm.careerBadge || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, careerBadge: e.target.value })}
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800/80 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
                       />
                     </div>
-                    {/* Offer 2 */}
-                    <div className="space-y-2 border border-zinc-800/40 p-3 rounded-lg bg-zinc-900/20">
-                      <h5 className="font-bold text-zinc-355 text-xs">Card 02</h5>
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-zinc-500 uppercase">Title / Header</label>
                       <input
                         type="text"
                         required
-                        placeholder="Title"
-                        value={settingsForm.offer2Title || ''}
-                        onChange={(e) => setSettingsForm({ ...settingsForm, offer2Title: e.target.value })}
-                        className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold mb-2"
-                      />
-                      <textarea
-                        rows={2}
-                        required
-                        placeholder="Description"
-                        value={settingsForm.offer2Desc || ''}
-                        onChange={(e) => setSettingsForm({ ...settingsForm, offer2Desc: e.target.value })}
-                        className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none resize-none font-semibold"
+                        value={settingsForm.careerTitle || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, careerTitle: e.target.value })}
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800/80 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
                       />
                     </div>
-                    {/* Offer 3 */}
-                    <div className="space-y-2 border border-zinc-800/40 p-3 rounded-lg bg-zinc-900/20">
-                      <h5 className="font-bold text-zinc-355 text-xs">Card 03</h5>
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-zinc-500 uppercase">Subtitle / Hook</label>
                       <input
                         type="text"
                         required
-                        placeholder="Title"
-                        value={settingsForm.offer3Title || ''}
-                        onChange={(e) => setSettingsForm({ ...settingsForm, offer3Title: e.target.value })}
-                        className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold mb-2"
-                      />
-                      <textarea
-                        rows={2}
-                        required
-                        placeholder="Description"
-                        value={settingsForm.offer3Desc || ''}
-                        onChange={(e) => setSettingsForm({ ...settingsForm, offer3Desc: e.target.value })}
-                        className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none resize-none font-semibold"
+                        value={settingsForm.careerSubtitle || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, careerSubtitle: e.target.value })}
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800/80 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
                       />
                     </div>
-                    {/* Offer 4 */}
-                    <div className="space-y-2 border border-zinc-800/40 p-3 rounded-lg bg-zinc-900/20">
-                      <h5 className="font-bold text-zinc-355 text-xs">Card 04</h5>
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-zinc-500 uppercase">Button Text</label>
                       <input
                         type="text"
                         required
-                        placeholder="Title"
-                        value={settingsForm.offer4Title || ''}
-                        onChange={(e) => setSettingsForm({ ...settingsForm, offer4Title: e.target.value })}
-                        className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold mb-2"
-                      />
-                      <textarea
-                        rows={2}
-                        required
-                        placeholder="Description"
-                        value={settingsForm.offer4Desc || ''}
-                        onChange={(e) => setSettingsForm({ ...settingsForm, offer4Desc: e.target.value })}
-                        className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none resize-none font-semibold"
+                        value={settingsForm.careerBtnText || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, careerBtnText: e.target.value })}
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800/80 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
                       />
                     </div>
-                    {/* Offer 5 */}
-                    <div className="space-y-2 border border-zinc-800/40 p-3 rounded-lg bg-zinc-900/20">
-                      <h5 className="font-bold text-zinc-355 text-xs">Card 05</h5>
-                      <input
-                        type="text"
-                        required
-                        placeholder="Title"
-                        value={settingsForm.offer5Title || ''}
-                        onChange={(e) => setSettingsForm({ ...settingsForm, offer5Title: e.target.value })}
-                        className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold mb-2"
-                      />
+                    <div className="sm:col-span-2 space-y-1">
+                      <label className="text-xs font-bold text-zinc-500 uppercase">Description</label>
                       <textarea
-                        rows={2}
+                        rows={3}
                         required
-                        placeholder="Description"
-                        value={settingsForm.offer5Desc || ''}
-                        onChange={(e) => setSettingsForm({ ...settingsForm, offer5Desc: e.target.value })}
-                        className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none resize-none font-semibold"
-                      />
-                    </div>
-                    {/* Offer 6 */}
-                    <div className="space-y-2 border border-zinc-800/40 p-3 rounded-lg bg-zinc-900/20">
-                      <h5 className="font-bold text-zinc-355 text-xs">Card 06</h5>
-                      <input
-                        type="text"
-                        required
-                        placeholder="Title"
-                        value={settingsForm.offer6Title || ''}
-                        onChange={(e) => setSettingsForm({ ...settingsForm, offer6Title: e.target.value })}
-                        className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold mb-2"
-                      />
-                      <textarea
-                        rows={2}
-                        required
-                        placeholder="Description"
-                        value={settingsForm.offer6Desc || ''}
-                        onChange={(e) => setSettingsForm({ ...settingsForm, offer6Desc: e.target.value })}
-                        className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none resize-none font-semibold"
+                        value={settingsForm.careerDesc || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, careerDesc: e.target.value })}
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800/80 focus:border-brand rounded-lg text-xs text-white outline-none resize-none font-semibold transition-colors"
                       />
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          )}
 
-          {/* TAB 3: Features & Taxation */}
-          {activeSettingsTab === 'features' && (
-            <div className="space-y-5 animate-in fade-in duration-200">
-              {/* Feature Toggles */}
-              <div className="border border-zinc-850 p-4 rounded-xl space-y-4 bg-zinc-900/40">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <span className="text-sm capitalize  font-bold text-brand block">Enable Psychology & Booking Services</span>
-                    <span className="text-sm text-zinc-550 block font-medium mt-1">If disabled, the site will only display Aptitude Test features. Psychologists and booking sections will be hidden from the public website.</span>
+                {/* Psychological Counselling Section */}
+                <div className="bg-zinc-950/40 border border-zinc-800 p-5 rounded-xl space-y-4">
+                  <h4 className="text-xs font-bold text-brand uppercase tracking-wider flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+                    Psychological Counselling Card Customization
+                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-zinc-500 uppercase">Badge / Category</label>
+                      <input
+                        type="text"
+                        required
+                        value={settingsForm.counselBadge || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, counselBadge: e.target.value })}
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800/80 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-zinc-500 uppercase">Title / Header</label>
+                      <input
+                        type="text"
+                        required
+                        value={settingsForm.counselTitle || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, counselTitle: e.target.value })}
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800/80 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-zinc-500 uppercase">Subtitle / Hook</label>
+                      <input
+                        type="text"
+                        required
+                        value={settingsForm.counselSubtitle || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, counselSubtitle: e.target.value })}
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800/80 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-zinc-500 uppercase">Button Text</label>
+                      <input
+                        type="text"
+                        required
+                        value={settingsForm.counselBtnText || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, counselBtnText: e.target.value })}
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800/80 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
+                      />
+                    </div>
+                    <div className="sm:col-span-2 space-y-1">
+                      <label className="text-xs font-bold text-zinc-500 uppercase">Description</label>
+                      <textarea
+                        rows={3}
+                        required
+                        value={settingsForm.counselDesc || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, counselDesc: e.target.value })}
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800/80 focus:border-brand rounded-lg text-xs text-white outline-none resize-none font-semibold transition-colors"
+                      />
+                    </div>
                   </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={settingsForm.enablePsychology}
-                      onChange={(e) => setSettingsForm({ ...settingsForm, enablePsychology: e.target.checked })}
-                      className="sr-only peer"
-                    />
-                    <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
-                  </label>
                 </div>
-              </div>
 
-              {/* GST / Tax Configuration */}
-              <div className="bg-zinc-900/60 border border-zinc-800 rounded-xl p-4 space-y-4">
-                <h4 className="text-sm font-bold text-zinc-300 capitalize tracking-wide flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-amber-500" />
-                  Tax / GST Configuration
-                </h4>
+                {/* What We Offer Section */}
+                <div className="bg-zinc-955/40 border border-zinc-800 p-5 rounded-xl space-y-4">
+                  <h4 className="text-xs font-bold text-brand uppercase tracking-wider flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+                    "What We Offer" Section Customization
+                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-zinc-500 uppercase">Section Title</label>
+                      <input
+                        type="text"
+                        required
+                        value={settingsForm.aboutTitle || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, aboutTitle: e.target.value })}
+                        className="w-full px-3.5 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-zinc-500 uppercase">Section Subheading</label>
+                      <input
+                        type="text"
+                        required
+                        value={settingsForm.aboutSub || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, aboutSub: e.target.value })}
+                        className="w-full px-3.5 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
+                      />
+                    </div>
 
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <span className="text-sm capitalize font-bold text-brand block">Enable GST on Bookings</span>
-                    <span className="text-sm text-zinc-550 block font-medium mt-1">When enabled, GST will be applied to the session fee on the booking checkout page.</span>
+                    <div className="sm:col-span-2 border-t border-zinc-800/80 pt-4 mt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {/* Offer 1 */}
+                      <div className="space-y-2 border border-zinc-800/40 p-3 rounded-lg bg-zinc-950/20">
+                        <h5 className="font-bold text-zinc-500 text-xs">Card 01</h5>
+                        <input
+                          type="text"
+                          required
+                          placeholder="Title"
+                          value={settingsForm.offer1Title || ''}
+                          onChange={(e) => setSettingsForm({ ...settingsForm, offer1Title: e.target.value })}
+                          className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold mb-2 transition-colors"
+                        />
+                        <textarea
+                          rows={2}
+                          required
+                          placeholder="Description"
+                          value={settingsForm.offer1Desc || ''}
+                          onChange={(e) => setSettingsForm({ ...settingsForm, offer1Desc: e.target.value })}
+                          className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none resize-none font-semibold transition-colors"
+                        />
+                      </div>
+                      {/* Offer 2 */}
+                      <div className="space-y-2 border border-zinc-800/40 p-3 rounded-lg bg-zinc-950/20">
+                        <h5 className="font-bold text-zinc-500 text-xs">Card 02</h5>
+                        <input
+                          type="text"
+                          required
+                          placeholder="Title"
+                          value={settingsForm.offer2Title || ''}
+                          onChange={(e) => setSettingsForm({ ...settingsForm, offer2Title: e.target.value })}
+                          className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold mb-2 transition-colors"
+                        />
+                        <textarea
+                          rows={2}
+                          required
+                          placeholder="Description"
+                          value={settingsForm.offer2Desc || ''}
+                          onChange={(e) => setSettingsForm({ ...settingsForm, offer2Desc: e.target.value })}
+                          className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none resize-none font-semibold transition-colors"
+                        />
+                      </div>
+                      {/* Offer 3 */}
+                      <div className="space-y-2 border border-zinc-800/40 p-3 rounded-lg bg-zinc-950/20">
+                        <h5 className="font-bold text-zinc-500 text-xs">Card 03</h5>
+                        <input
+                          type="text"
+                          required
+                          placeholder="Title"
+                          value={settingsForm.offer3Title || ''}
+                          onChange={(e) => setSettingsForm({ ...settingsForm, offer3Title: e.target.value })}
+                          className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold mb-2 transition-colors"
+                        />
+                        <textarea
+                          rows={2}
+                          required
+                          placeholder="Description"
+                          value={settingsForm.offer3Desc || ''}
+                          onChange={(e) => setSettingsForm({ ...settingsForm, offer3Desc: e.target.value })}
+                          className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none resize-none font-semibold transition-colors"
+                        />
+                      </div>
+                      {/* Offer 4 */}
+                      <div className="space-y-2 border border-zinc-800/40 p-3 rounded-lg bg-zinc-950/20">
+                        <h5 className="font-bold text-zinc-500 text-xs">Card 04</h5>
+                        <input
+                          type="text"
+                          required
+                          placeholder="Title"
+                          value={settingsForm.offer4Title || ''}
+                          onChange={(e) => setSettingsForm({ ...settingsForm, offer4Title: e.target.value })}
+                          className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold mb-2 transition-colors"
+                        />
+                        <textarea
+                          rows={2}
+                          required
+                          placeholder="Description"
+                          value={settingsForm.offer4Desc || ''}
+                          onChange={(e) => setSettingsForm({ ...settingsForm, offer4Desc: e.target.value })}
+                          className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none resize-none font-semibold transition-colors"
+                        />
+                      </div>
+                      {/* Offer 5 */}
+                      <div className="space-y-2 border border-zinc-800/40 p-3 rounded-lg bg-zinc-950/20">
+                        <h5 className="font-bold text-zinc-500 text-xs">Card 05</h5>
+                        <input
+                          type="text"
+                          required
+                          placeholder="Title"
+                          value={settingsForm.offer5Title || ''}
+                          onChange={(e) => setSettingsForm({ ...settingsForm, offer5Title: e.target.value })}
+                          className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold mb-2 transition-colors"
+                        />
+                        <textarea
+                          rows={2}
+                          required
+                          placeholder="Description"
+                          value={settingsForm.offer5Desc || ''}
+                          onChange={(e) => setSettingsForm({ ...settingsForm, offer5Desc: e.target.value })}
+                          className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none resize-none font-semibold transition-colors"
+                        />
+                      </div>
+                      {/* Offer 6 */}
+                      <div className="space-y-2 border border-zinc-800/40 p-3 rounded-lg bg-zinc-950/20">
+                        <h5 className="font-bold text-zinc-500 text-xs">Card 06</h5>
+                        <input
+                          type="text"
+                          required
+                          placeholder="Title"
+                          value={settingsForm.offer6Title || ''}
+                          onChange={(e) => setSettingsForm({ ...settingsForm, offer6Title: e.target.value })}
+                          className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold mb-2 transition-colors"
+                        />
+                        <textarea
+                          rows={2}
+                          required
+                          placeholder="Description"
+                          value={settingsForm.offer6Desc || ''}
+                          onChange={(e) => setSettingsForm({ ...settingsForm, offer6Desc: e.target.value })}
+                          className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none resize-none font-semibold transition-colors"
+                        />
+                      </div>
+                    </div>
                   </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={settingsForm.gstEnabled}
-                      onChange={(e) => setSettingsForm({ ...settingsForm, gstEnabled: e.target.checked })}
-                      className="sr-only peer"
-                    />
-                    <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
-                  </label>
                 </div>
 
-                {settingsForm.gstEnabled && (
+                {settingsSuccess && (
+                  <p className="text-xs text-emerald-500 font-bold capitalize tracking-wide">{settingsSuccess}</p>
+                )}
+
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    className="px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-lg cursor-pointer transition shadow-md border-none"
+                  >
+                    Save Landing Sections
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {/* TAB 4: Features & Taxation */}
+            {activeSettingsTab === 'features' && (
+              <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-xl space-y-6 animate-in fade-in duration-200 shadow-lg">
+                <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
+                  <KeyRound className="w-4 h-4 text-brand" />
+                  <h4 className="text-sm font-bold text-white uppercase tracking-wider">Features & Taxation</h4>
+                </div>
+
+                {/* Feature Toggles */}
+                <div className="border border-zinc-800 p-5 rounded-xl space-y-4 bg-zinc-950/20">
+                  <div className="flex items-center justify-between gap-4">
+                    <div>
+                      <span className="text-sm font-bold text-brand block">Enable Psychology & Booking Services</span>
+                      <span className="text-xs text-zinc-500 block font-medium mt-1 leading-relaxed">If disabled, the site will only display Aptitude Test features. Psychologists and booking sections will be hidden from the public website.</span>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer shrink-0">
+                      <input
+                        type="checkbox"
+                        checked={settingsForm.enablePsychology}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, enablePsychology: e.target.checked })}
+                        className="sr-only peer"
+                      />
+                      <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
+                    </label>
+                  </div>
+                </div>
+
+                {/* GST / Tax Configuration */}
+                <div className="bg-zinc-955/20 border border-zinc-800 rounded-xl p-5 space-y-4">
+                  <h4 className="text-xs font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                    Tax / GST Configuration
+                  </h4>
+
+                  <div className="flex items-center justify-between gap-4">
+                    <div>
+                      <span className="text-sm font-bold text-brand block">Enable GST on Bookings</span>
+                      <span className="text-xs text-zinc-500 block font-medium mt-1 leading-relaxed">When enabled, GST will be applied to the session fee on the booking checkout page.</span>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer shrink-0">
+                      <input
+                        type="checkbox"
+                        checked={settingsForm.gstEnabled}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, gstEnabled: e.target.checked })}
+                        className="sr-only peer"
+                      />
+                      <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
+                    </label>
+                  </div>
+
+                  {settingsForm.gstEnabled && (
+                    <div className="space-y-1 max-w-xs animate-in slide-in-from-top-2 duration-200 pt-2">
+                      <label className="text-xs font-bold text-zinc-400 uppercase">GST Percentage (%)</label>
+                      <input
+                        type="number"
+                        min={0}
+                        max={100}
+                        step={0.5}
+                        value={settingsForm.gstPercent}
+                        onChange={(e) => {
+                          let val = parseFloat(e.target.value);
+                          if (isNaN(val)) val = 0;
+                          if (val < 0) val = 0;
+                          if (val > 100) val = 100;
+                          setSettingsForm({ ...settingsForm, gstPercent: val });
+                        }}
+                        className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                        placeholder="e.g. 18"
+                      />
+                      <p className="text-[11px] text-zinc-500 font-medium">Set to 0 to show ₹0 for GST. Common values: 5%, 12%, 18%, 28%</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Razorpay Route Commission Split Configuration */}
+                <div className="bg-zinc-955/20 border border-zinc-800 rounded-xl p-5 space-y-4">
+                  <h4 className="text-xs font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                    Razorpay Route Split Configuration
+                  </h4>
+
                   <div className="space-y-1 max-w-xs animate-in slide-in-from-top-2 duration-200">
-                    <label className="text-sm capitalize font-bold text-zinc-400">GST Percentage (%)</label>
+                    <label className="text-xs font-bold text-zinc-400 uppercase">Counsellor Payment Share (%)</label>
                     <input
                       type="number"
                       min={0}
                       max={100}
-                      step={0.5}
-                      value={settingsForm.gstPercent}
+                      value={settingsForm.counsellorSplitPercent !== undefined ? settingsForm.counsellorSplitPercent : 50}
                       onChange={(e) => {
-                        let val = parseFloat(e.target.value);
+                        let val = parseInt(e.target.value);
                         if (isNaN(val)) val = 0;
                         if (val < 0) val = 0;
                         if (val > 100) val = 100;
-                        setSettingsForm({ ...settingsForm, gstPercent: val });
+                        setSettingsForm({ ...settingsForm, counsellorSplitPercent: val });
                       }}
-                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
-                      placeholder="e.g. 18"
+                      className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                      placeholder="e.g. 50"
                     />
-                    <p className="text-xs text-zinc-550 font-medium">Set to 0 to show ₹0 for GST. Common values: 5%, 12%, 18%, 28%</p>
+                    <p className="text-[11px] text-zinc-500 font-medium leading-relaxed pt-1">Configure the percentage of the booking payment routed automatically to the counsellor's Razorpay linked account. The remaining percentage will be kept by the platform.</p>
                   </div>
+                </div>
+
+                {/* Platform Payout Bank Details */}
+                <div className="bg-zinc-955/20 border border-zinc-800 rounded-xl p-5 space-y-4 animate-in slide-in-from-top-2 duration-200">
+                  <h4 className="text-xs font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                    Platform Payout Bank Account Details
+                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-zinc-400 uppercase">Bank Account Name</label>
+                      <input
+                        type="text"
+                        value={settingsForm.adminBankAccountName || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, adminBankAccountName: e.target.value })}
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
+                        placeholder="e.g. BEHOLD Platform Pvt Ltd"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-zinc-400 uppercase">Bank Account Number</label>
+                      <input
+                        type="text"
+                        value={settingsForm.adminBankAccountNumber || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, adminBankAccountNumber: e.target.value })}
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
+                        placeholder="e.g. 50200012345678"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-zinc-400 uppercase">IFSC Code</label>
+                      <input
+                        type="text"
+                        value={settingsForm.adminBankIfscCode || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, adminBankIfscCode: e.target.value })}
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
+                        placeholder="e.g. HDFC0000123"
+                      />
+                    </div>
+                  </div>
+                  <p className="text-[11px] text-zinc-500 font-medium">Used for platform reference, manual transfers, or share split bookkeeping when offline sessions are repaid.</p>
+                </div>
+
+                {settingsSuccess && (
+                  <p className="text-xs text-emerald-500 font-bold capitalize tracking-wide">{settingsSuccess}</p>
                 )}
-              </div>
 
-              {/* Razorpay Route Commission Split Configuration */}
-              <div className="bg-zinc-900/60 border border-zinc-800 rounded-xl p-4 space-y-4">
-                <h4 className="text-sm font-bold text-zinc-300 capitalize tracking-wide flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                  Razorpay Route Split Configuration
-                </h4>
-
-                <div className="space-y-1 max-w-xs animate-in slide-in-from-top-2 duration-200">
-                  <label className="text-sm capitalize font-bold text-zinc-400">Counsellor Payment Share (%)</label>
-                  <input
-                    type="number"
-                    min={0}
-                    max={100}
-                    value={settingsForm.counsellorSplitPercent !== undefined ? settingsForm.counsellorSplitPercent : 50}
-                    onChange={(e) => {
-                      let val = parseInt(e.target.value);
-                      if (isNaN(val)) val = 0;
-                      if (val < 0) val = 0;
-                      if (val > 100) val = 100;
-                      setSettingsForm({ ...settingsForm, counsellorSplitPercent: val });
-                    }}
-                    className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
-                    placeholder="e.g. 50"
-                  />
-                  <p className="text-xs text-zinc-550 font-medium pt-1">Configure the percentage of the booking payment routed automatically to the counsellor's Razorpay linked account. The remaining percentage will be kept by the platform.</p>
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    className="px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-lg cursor-pointer transition shadow-md border-none"
+                  >
+                    Save Features & Taxation
+                  </button>
                 </div>
-              </div>
+              </form>
+            )}
 
-              {/* Platform Payout Bank Details */}
-              <div className="bg-zinc-900/60 border border-zinc-800 rounded-xl p-4 space-y-4 animate-in slide-in-from-top-2 duration-200">
-                <h4 className="text-sm font-bold text-zinc-300 capitalize tracking-wide flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                  Platform Payout Bank Account Details
-                </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div className="space-y-1">
-                    <label className="text-sm capitalize font-bold text-zinc-400">Bank Account Name</label>
-                    <input
-                      type="text"
-                      value={settingsForm.adminBankAccountName || ''}
-                      onChange={(e) => setSettingsForm({ ...settingsForm, adminBankAccountName: e.target.value })}
-                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05)] focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
-                      placeholder="e.g. BEHOLD Platform Pvt Ltd"
-                    />
+            {/* TAB 5: Support & Alerts */}
+            {activeSettingsTab === 'contact' && (
+              <div className="space-y-6">
+                <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-xl space-y-5 animate-in fade-in duration-200 shadow-lg">
+                  <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
+                    <Bell className="w-4 h-4 text-brand" />
+                    <h4 className="text-sm font-bold text-white uppercase tracking-wider">Support & Alerts</h4>
                   </div>
-                  <div className="space-y-1">
-                    <label className="text-sm capitalize font-bold text-zinc-400">Bank Account Number</label>
-                    <input
-                      type="text"
-                      value={settingsForm.adminBankAccountNumber || ''}
-                      onChange={(e) => setSettingsForm({ ...settingsForm, adminBankAccountNumber: e.target.value })}
-                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05)] focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
-                      placeholder="e.g. 50200012345678"
-                    />
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-zinc-400 uppercase">WhatsApp Support Endpoint Link</label>
+                      <input
+                        type="url"
+                        required
+                        value={settingsForm.whatsapp}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, whatsapp: e.target.value })}
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                        placeholder="e.g. https://wa.me/919497174011"
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-zinc-400 uppercase">Contact Support Email Address</label>
+                      <input
+                        type="email"
+                        required
+                        value={settingsForm.contactEmail}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, contactEmail: e.target.value })}
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                        placeholder="e.g. support@behold.com"
+                      />
+                    </div>
                   </div>
-                  <div className="space-y-1">
-                    <label className="text-sm capitalize font-bold text-zinc-400">IFSC Code</label>
-                    <input
-                      type="text"
-                      value={settingsForm.adminBankIfscCode || ''}
-                      onChange={(e) => setSettingsForm({ ...settingsForm, adminBankIfscCode: e.target.value })}
-                      className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05)] focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
-                      placeholder="e.g. HDFC0000123"
-                    />
+
+                  {/* Top Alert Banner Notice */}
+                  <div className="border border-zinc-800 p-5 rounded-xl space-y-4 bg-zinc-955/20">
+                    <div className="flex items-center justify-between gap-4">
+                      <div>
+                        <span className="text-sm font-bold text-zinc-300 block">System Banner Notification Bar</span>
+                        <span className="text-xs text-zinc-500 block font-medium mt-1 leading-relaxed">Display an alert message at the very top of all student-facing views.</span>
+                      </div>
+                      <label className="relative inline-flex items-center cursor-pointer shrink-0">
+                        <input
+                          type="checkbox"
+                          checked={settingsForm.showBanner}
+                          onChange={(e) => setSettingsForm({ ...settingsForm, showBanner: e.target.checked })}
+                          className="sr-only peer"
+                        />
+                        <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
+                      </label>
+                    </div>
+
+                    {settingsForm.showBanner && (
+                      <div className="space-y-1 animate-in slide-in-from-top duration-200">
+                        <label className="text-xs font-bold text-zinc-400 uppercase">Alert Message Text</label>
+                        <input
+                          type="text"
+                          value={settingsForm.bannerNotice}
+                          onChange={(e) => setSettingsForm({ ...settingsForm, bannerNotice: e.target.value })}
+                          className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                          placeholder="Write dynamic alert banner message..."
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  {settingsSuccess && (
+                    <p className="text-xs text-emerald-500 font-bold capitalize tracking-wide">{settingsSuccess}</p>
+                  )}
+
+                  <div className="pt-2">
+                    <button
+                      type="submit"
+                      className="px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-lg cursor-pointer transition shadow-md border-none"
+                    >
+                      Save Support & Alerts
+                    </button>
+                  </div>
+                </form>
+
+                {/* Browser Notification Settings Widget */}
+                <div className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-xl space-y-4 shadow-lg">
+                  <div className="flex items-center gap-2.5 pb-3 border-b border-zinc-800/60">
+                    <div className="w-8 h-8 rounded-lg bg-zinc-955 border border-zinc-800/60 flex items-center justify-center">
+                      <Bell className="w-4 h-4 text-indigo-400" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-semibold text-white">Desktop Alerts & Reminders</h3>
+                      <p className="text-xs text-zinc-500 font-medium mt-0.5">Receive real-time notifications for system alerts and platform events</p>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-zinc-955/20 p-4 rounded-xl border border-zinc-800 text-left">
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span className={`w-2.5 h-2.5 rounded-full ${!isNotificationSupported()
+                          ? 'bg-rose-500'
+                          : permissionState === 'granted'
+                            ? 'bg-emerald-555'
+                            : permissionState === 'denied'
+                              ? 'bg-rose-500'
+                              : 'bg-zinc-600'
+                          }`} />
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">
+                          {!isNotificationSupported()
+                            ? 'Not Supported'
+                            : permissionState === 'granted'
+                              ? 'Active / Enabled'
+                              : permissionState === 'denied'
+                                ? 'Blocked'
+                                : 'Disabled'}
+                        </span>
+                      </div>
+                      <p className="text-xs text-zinc-500 font-medium leading-relaxed">
+                        {!isNotificationSupported()
+                          ? 'Your browser does not support native desktop alerts.'
+                          : permissionState === 'granted'
+                            ? 'You will receive native desktop notifications for session updates, confirmations, and alerts.'
+                            : permissionState === 'denied'
+                              ? 'Desktop notifications are blocked. Reset permission in your browser address bar to enable alerts.'
+                              : 'Enable browser notifications to stay updated about your coaching schedules and session links.'}
+                      </p>
+                    </div>
+
+                    <div className="flex gap-2 shrink-0">
+                      {isNotificationSupported() && permissionState === 'default' && (
+                        <button
+                          type="button"
+                          onClick={handleEnableNotifications}
+                          className="min-h-[36px] px-4 py-2 bg-brand hover:bg-brand-dark text-zinc-955 rounded-lg text-xs font-semibold transition cursor-pointer border-none shadow-md"
+                        >
+                          Enable Notifications
+                        </button>
+                      )}
+                      {isNotificationSupported() && permissionState === 'granted' && (
+                        <button
+                          type="button"
+                          onClick={handleTestNotification}
+                          className="min-h-[36px] px-4 py-2 bg-zinc-955 border border-zinc-800 text-zinc-300 hover:text-white rounded-lg text-xs font-semibold transition cursor-pointer"
+                        >
+                          Test Alert Notification
+                        </button>
+                      )}
+                      {isNotificationSupported() && permissionState === 'denied' && (
+                        <span className="text-[10px] text-rose-500 font-bold bg-rose-955/25 border border-rose-900/30 p-2 rounded-lg block max-w-[200px]">
+                          🔒 Unblock in browser settings
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
-                <p className="text-xs text-zinc-550 font-medium">Used for platform reference, manual transfers, or share split bookkeeping when offline sessions are repayed.</p>
-              </div>
-            </div>
-          )}
 
-          {/* TAB 4: Support & Alerts */}
-          {activeSettingsTab === 'contact' && (
-            <div className="space-y-5 animate-in fade-in duration-200">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-1">
-                  <label className="text-sm capitalize  font-bold text-zinc-400">WhatsApp Support Endpoint Link</label>
-                  <input
-                    type="url"
-                    required
-                    value={settingsForm.whatsapp}
-                    onChange={(e) => setSettingsForm({ ...settingsForm, whatsapp: e.target.value })}
-                    className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none  font-semibold"
-                    placeholder="e.g. https://wa.me/919497174011"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-sm capitalize  font-bold text-zinc-400">Contact Support Email Address</label>
-                  <input
-                    type="email"
-                    required
-                    value={settingsForm.contactEmail}
-                    onChange={(e) => setSettingsForm({ ...settingsForm, contactEmail: e.target.value })}
-                    className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none  font-semibold"
-                    placeholder="e.g. support@behold.com"
-                  />
-                </div>
-              </div>
-
-              {/* Top Alert Banner Notice */}
-              <div className="border border-zinc-850 p-4 rounded-xl space-y-4 bg-zinc-900/40">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <span className="text-sm capitalize  font-bold text-zinc-400 block">System Banner Notification Bar</span>
-                    <span className="text-sm text-zinc-550 block font-medium">Display an alert message at the very top of all student-facing views.</span>
+                {/* Broadcast Announcement Dispatcher */}
+                <form onSubmit={handleSendAnnouncement} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-xl space-y-4 shadow-lg">
+                  <div className="flex items-center gap-2.5 pb-3 border-b border-zinc-800/60">
+                    <div className="w-8 h-8 rounded-lg bg-zinc-955 border border-zinc-800/60 flex items-center justify-center">
+                      <Send className="w-4 h-4 text-indigo-400" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-semibold text-white">Broadcast System Announcement</h3>
+                      <p className="text-xs text-zinc-500 font-medium mt-0.5">Send real-time push/desktop local alerts to active users and consultants</p>
+                    </div>
                   </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={settingsForm.showBanner}
-                      onChange={(e) => setSettingsForm({ ...settingsForm, showBanner: e.target.checked })}
-                      className="sr-only peer"
-                    />
-                    <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
-                  </label>
-                </div>
 
-                {settingsForm.showBanner && (
-                  <div className="space-y-1 animate-in slide-in-from-top duration-200">
-                    <label className="text-sm capitalize  font-bold text-zinc-500">Alert Message Text</label>
-                    <input
-                      type="text"
-                      value={settingsForm.bannerNotice}
-                      onChange={(e) => setSettingsForm({ ...settingsForm, bannerNotice: e.target.value })}
-                      className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
-                      placeholder="Write dynamic alert banner message..."
-                    />
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="space-y-1">
+                        <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Target Audience</label>
+                        <select
+                          value={announcementRole}
+                          onChange={(e) => setAnnouncementRole(e.target.value)}
+                          className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold cursor-pointer transition-colors"
+                        >
+                          <option value="user">All Students / Users</option>
+                          <option value="counsellor">All Counsellors / Psychologists</option>
+                          <option value="everyone">Everyone (Students & Counsellors)</option>
+                        </select>
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Announcement Title</label>
+                        <input
+                          type="text"
+                          required
+                          value={announcementTitle}
+                          onChange={(e) => setAnnouncementTitle(e.target.value)}
+                          className="w-full px-3.5 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
+                          placeholder="e.g. Schedule Maintenance"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Announcement Message</label>
+                      <textarea
+                        rows={3}
+                        required
+                        value={announcementMessage}
+                        onChange={(e) => setAnnouncementMessage(e.target.value)}
+                        className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none resize-none font-semibold transition-colors"
+                        placeholder="Write message content here..."
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={isSendingAnnouncement}
+                      className="px-6 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-lg cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1.5 disabled:opacity-50"
+                    >
+                      {isSendingAnnouncement ? 'Broadcasting...' : 'Broadcast Announcement'}
+                    </button>
                   </div>
-                )}
+                </form>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* TAB 5: Promo Codes */}
-          {activeSettingsTab === 'promo' && (
-            <div className="space-y-5 animate-in fade-in duration-200">
-              <div className="pt-2 space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="space-y-1">
-                    <h4 className="text-sm font-bold text-white capitalize ">Promotional Codes</h4>
-                    <p className="text-xs text-zinc-500 font-medium">Manage discount codes for service bookings</p>
+            {/* TAB 6: Promo Codes */}
+            {activeSettingsTab === 'promo' && (
+              <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-xl space-y-5 animate-in fade-in duration-200 shadow-lg">
+                <div className="flex items-center justify-between pb-2 border-b border-zinc-800/60">
+                  <div className="flex items-center gap-2">
+                    <FileSpreadsheet className="w-4 h-4 text-brand" />
+                    <h4 className="text-sm font-bold text-white uppercase tracking-wider">Promotional Codes</h4>
                   </div>
                   <button
                     type="button"
                     onClick={handleAddPromoCode}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-white rounded-lg text-xs font-bold capitalize transition cursor-pointer"
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-zinc-955 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-white rounded-lg text-xs font-bold capitalize transition cursor-pointer"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     Add Code
                   </button>
                 </div>
 
-                {settingsForm.promoCodes && settingsForm.promoCodes.length > 0 ? (
-                  <div className="space-y-3">
-                    {settingsForm.promoCodes.map((promo, idx) => (
-                      <div key={idx} className="flex flex-col sm:flex-row items-center gap-3 p-3 bg-zinc-900 border border-zinc-850 rounded-xl relative group">
-                        <button
-                          type="button"
-                          onClick={() => handleRemovePromoCode(idx)}
-                          className="absolute -top-2 -right-2 bg-rose-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition cursor-pointer shadow-md"
-                          title="Remove Promo Code"
-                        >
-                          <X className="w-3 h-3" />
-                        </button>
-
-                        <div className="flex-1 w-full space-y-1">
-                          <label className="text-xs font-bold text-zinc-500">Code (e.g. SAVE20)</label>
-                          <input
-                            type="text"
-                            required
-                            value={promo.code}
-                            onChange={(e) => handleUpdatePromoCode(idx, 'code', e.target.value.toUpperCase())}
-                            className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold uppercase"
-                            placeholder="CODE"
-                          />
-                        </div>
-
-                        <div className="w-full sm:w-32 space-y-1">
-                          <label className="text-xs font-bold text-zinc-500">Type</label>
-                          <select
-                            value={promo.type}
-                            onChange={(e) => handleUpdatePromoCode(idx, 'type', e.target.value)}
-                            className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold cursor-pointer"
+                <div className="pt-2 space-y-4">
+                  {settingsForm.promoCodes && settingsForm.promoCodes.length > 0 ? (
+                    <div className="space-y-3">
+                      {settingsForm.promoCodes.map((promo, idx) => (
+                        <div key={idx} className="flex flex-col sm:flex-row items-center gap-3 p-3 bg-zinc-955/40 border border-zinc-800 rounded-xl relative group">
+                          <button
+                            type="button"
+                            onClick={() => handleRemovePromoCode(idx)}
+                            className="absolute -top-2 -right-2 bg-rose-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition cursor-pointer shadow-md border-none"
+                            title="Remove Promo Code"
                           >
-                            <option value="PERCENTAGE">Percentage (%)</option>
-                            <option value="FLAT">Flat (₹)</option>
-                          </select>
-                        </div>
+                            <X className="w-3 h-3" />
+                          </button>
 
-                        <div className="w-full sm:w-24 space-y-1">
-                          <label className="text-xs font-bold text-zinc-500">Value</label>
-                          <input
-                            type="number"
-                            required
-                            min={0}
-                            value={promo.value}
-                            onChange={(e) => handleUpdatePromoCode(idx, 'value', Number(e.target.value))}
-                            className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold"
-                          />
-                        </div>
-
-                        <div className="flex items-center gap-2 mt-4 sm:mt-0 pt-2 sm:pt-4 justify-center sm:w-20">
-                          <label className="flex items-center gap-2 cursor-pointer text-sm font-bold text-zinc-300 select-none">
+                          <div className="flex-1 w-full space-y-1">
+                            <label className="text-xs font-bold text-zinc-500 uppercase">Code (e.g. SAVE20)</label>
                             <input
-                              type="checkbox"
-                              checked={promo.isActive !== false}
-                              onChange={(e) => handleUpdatePromoCode(idx, 'isActive', e.target.checked)}
-                              className="w-4 h-4 rounded border-zinc-800 bg-zinc-955 text-brand focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
+                              type="text"
+                              required
+                              value={promo.code}
+                              onChange={(e) => handleUpdatePromoCode(idx, 'code', e.target.value.toUpperCase())}
+                              className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold uppercase transition-colors"
+                              placeholder="CODE"
                             />
-                            <span className={promo.isActive !== false ? "text-emerald-400" : "text-zinc-500"}>Active</span>
-                          </label>
+                          </div>
+
+                          <div className="w-full sm:w-32 space-y-1">
+                            <label className="text-xs font-bold text-zinc-500 uppercase">Type</label>
+                            <select
+                              value={promo.type}
+                              onChange={(e) => handleUpdatePromoCode(idx, 'type', e.target.value)}
+                              className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold cursor-pointer transition-colors"
+                            >
+                              <option value="PERCENTAGE">Percentage (%)</option>
+                              <option value="FLAT">Flat (₹)</option>
+                            </select>
+                          </div>
+
+                          <div className="w-full sm:w-24 space-y-1">
+                            <label className="text-xs font-bold text-zinc-500 uppercase">Value</label>
+                            <input
+                              type="number"
+                              required
+                              min={0}
+                              value={promo.value}
+                              onChange={(e) => handleUpdatePromoCode(idx, 'value', Number(e.target.value))}
+                              className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                            />
+                          </div>
+
+                          <div className="flex items-center gap-2 mt-4 sm:mt-0 pt-2 sm:pt-4 justify-center sm:w-20">
+                            <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-zinc-300 select-none">
+                              <input
+                                type="checkbox"
+                                checked={promo.isActive !== false}
+                                onChange={(e) => handleUpdatePromoCode(idx, 'isActive', e.target.checked)}
+                                className="w-4 h-4 rounded border-zinc-800 bg-zinc-955 text-brand focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
+                              />
+                              <span className={promo.isActive !== false ? "text-emerald-400" : "text-zinc-500"}>Active</span>
+                            </label>
+                          </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="py-6 border border-dashed border-zinc-800 rounded-xl bg-zinc-900/50 text-center">
-                    <p className="text-sm text-zinc-500 font-medium">No promotional codes configured.</p>
-                  </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="py-8 border border-dashed border-zinc-800 rounded-xl bg-zinc-955/20 text-center">
+                      <p className="text-xs text-zinc-500 font-medium">No promotional codes configured.</p>
+                    </div>
+                  )}
+                </div>
+
+                {settingsSuccess && (
+                  <p className="text-xs text-emerald-500 font-bold capitalize tracking-wide">{settingsSuccess}</p>
                 )}
-              </div>
-            </div>
-          )}
 
-          {/* TAB 6: Policies & Legal */}
-          {activeSettingsTab === 'legal' && (
-            <div className="space-y-5 animate-in fade-in duration-200">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-1">
-                  <label className="text-sm capitalize  font-bold text-zinc-400">Terms of Use Document</label>
-                  <textarea
-                    rows={12}
-                    required
-                    value={settingsForm.termsOfUse}
-                    onChange={(e) => setSettingsForm({ ...settingsForm, termsOfUse: e.target.value })}
-                    className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none font-semibold "
-                    placeholder="Write Platform Terms & Conditions..."
-                  />
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    className="px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-lg cursor-pointer transition shadow-md border-none"
+                  >
+                    Save Promo Codes
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {/* TAB 7: Policies & Legal */}
+            {activeSettingsTab === 'legal' && (
+              <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-xl space-y-5 animate-in fade-in duration-200 shadow-lg">
+                <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
+                  <ShieldCheck className="w-4 h-4 text-brand" />
+                  <h4 className="text-sm font-bold text-white uppercase tracking-wider">Policies & Legal</h4>
                 </div>
 
-                <div className="space-y-1">
-                  <label className="text-sm capitalize  font-bold text-zinc-400">Privacy Policy Document</label>
-                  <textarea
-                    rows={12}
-                    required
-                    value={settingsForm.privacyPolicy}
-                    onChange={(e) => setSettingsForm({ ...settingsForm, privacyPolicy: e.target.value })}
-                    className="w-full px-3.5 py-3 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none font-semibold "
-                    placeholder="Write Platform Privacy Policy..."
-                  />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-zinc-400 uppercase">Terms of Use Document</label>
+                    <textarea
+                      rows={12}
+                      required
+                      value={settingsForm.termsOfUse}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, termsOfUse: e.target.value })}
+                      className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold resize-y transition-colors font-mono text-xs leading-relaxed"
+                      placeholder="Write Platform Terms & Conditions..."
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-zinc-400 uppercase">Privacy Policy Document</label>
+                    <textarea
+                      rows={12}
+                      required
+                      value={settingsForm.privacyPolicy}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, privacyPolicy: e.target.value })}
+                      className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold resize-y transition-colors font-mono text-xs leading-relaxed"
+                      placeholder="Write Platform Privacy Policy..."
+                    />
+                  </div>
                 </div>
-              </div>
-            </div>
-          )}
 
-          {settingsSuccess && (
-            <p className="text-sm text-emerald-500 font-bold capitalize tracking-wide">{settingsSuccess}</p>
-          )}
+                {settingsSuccess && (
+                  <p className="text-xs text-emerald-500 font-bold capitalize tracking-wide">{settingsSuccess}</p>
+                )}
 
-          <button
-            type="submit"
-            className="px-6 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize  rounded-lg cursor-pointer transition border-none shadow-md animate-in fade-in duration-300"
-          >
-            Save Global Configurations
-          </button>
-        </form>
-
-        {/* Browser Notification Settings Widget */}
-        <div className="bg-zinc-955 border border-zinc-850 p-6 rounded-xl mt-6 space-y-4">
-          <div className="flex items-center gap-2.5 pb-3 border-b border-zinc-800">
-            <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] flex items-center justify-center">
-              <Bell className="w-4 h-4 text-indigo-400" />
-            </div>
-            <div>
-              <h3 className="text-sm font-semibold text-white font-header">Desktop Alerts & Reminders</h3>
-              <p className="text-xs text-zinc-500 font-medium">Receive real-time notifications for system alerts and platform events</p>
-            </div>
-          </div>
-
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-zinc-900/40 p-4 rounded-xl border border-zinc-850 text-left">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <span className={`w-2.5 h-2.5 rounded-full ${!isNotificationSupported()
-                  ? 'bg-rose-500'
-                  : permissionState === 'granted'
-                    ? 'bg-emerald-555'
-                    : permissionState === 'denied'
-                      ? 'bg-rose-500'
-                      : 'bg-zinc-600'
-                  }`} />
-                <span className="text-xs font-bold uppercase tracking-wider text-zinc-400">
-                  {!isNotificationSupported()
-                    ? 'Not Supported'
-                    : permissionState === 'granted'
-                      ? 'Active / Enabled'
-                      : permissionState === 'denied'
-                        ? 'Blocked'
-                        : 'Disabled'}
-                </span>
-              </div>
-              <p className="text-xs text-zinc-500 font-medium leading-relaxed">
-                {!isNotificationSupported()
-                  ? 'Your browser does not support native desktop alerts.'
-                  : permissionState === 'granted'
-                    ? 'You will receive native desktop notifications for session updates, confirmations, and alerts.'
-                    : permissionState === 'denied'
-                      ? 'Desktop notifications are blocked. Reset permission in your browser address bar to enable alerts.'
-                      : 'Enable browser notifications to stay updated about your coaching schedules and session links.'}
-              </p>
-            </div>
-
-            <div className="flex gap-2 shrink-0">
-              {isNotificationSupported() && permissionState === 'default' && (
-                <button
-                  type="button"
-                  onClick={handleEnableNotifications}
-                  className="min-h-[36px] px-4 py-2 bg-brand hover:bg-brand-dark text-zinc-955 rounded-lg text-xs font-semibold transition cursor-pointer border-none shadow-md"
-                >
-                  Enable Notifications
-                </button>
-              )}
-              {isNotificationSupported() && permissionState === 'granted' && (
-                <button
-                  type="button"
-                  onClick={handleTestNotification}
-                  className="min-h-[36px] px-4 py-2 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] text-zinc-355 hover:text-white rounded-lg text-xs font-semibold transition cursor-pointer"
-                >
-                  Test Alert Notification
-                </button>
-              )}
-              {isNotificationSupported() && permissionState === 'denied' && (
-                <span className="text-[10px] text-rose-500 font-bold bg-rose-955/25 border border-rose-900/30 p-2 rounded-lg block max-w-[200px]">
-                  🔒 Unblock in browser settings
-                </span>
-              )}
-            </div>
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    className="px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-lg cursor-pointer transition shadow-md border-none"
+                  >
+                    Save Policies & Legal
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
         </div>
-
-        {/* Broadcast Announcement Dispatcher */}
-        <form onSubmit={handleSendAnnouncement} className="bg-zinc-955 border border-zinc-850 p-6 rounded-xl mt-6 space-y-4">
-          <div className="flex items-center gap-2.5 pb-3 border-b border-zinc-800">
-            <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] flex items-center justify-center">
-              <Send className="w-4 h-4 text-indigo-400" />
-            </div>
-            <div>
-              <h3 className="text-sm font-semibold text-white font-header">Broadcast System Announcement</h3>
-              <p className="text-xs text-zinc-500 font-medium">Send real-time push/desktop local alerts to active users and consultants</p>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-1">
-                <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Target Audience</label>
-                <select
-                  value={announcementRole}
-                  onChange={(e) => setAnnouncementRole(e.target.value)}
-                  className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-xs text-white outline-none font-semibold cursor-pointer"
-                >
-                  <option value="user">All Students / Users</option>
-                  <option value="counsellor">All Counsellors / Psychologists</option>
-                  <option value="everyone">Everyone (Students & Counsellors)</option>
-                </select>
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Announcement Title</label>
-                <input
-                  type="text"
-                  required
-                  value={announcementTitle}
-                  onChange={(e) => setAnnouncementTitle(e.target.value)}
-                  className="w-full px-3.5 py-2 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-xs text-white outline-none font-semibold"
-                  placeholder="e.g. Schedule Maintenance"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-1">
-              <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Announcement Message</label>
-              <textarea
-                rows={3}
-                required
-                value={announcementMessage}
-                onChange={(e) => setAnnouncementMessage(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-xs text-white outline-none resize-none font-semibold"
-                placeholder="Write message content here..."
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={isSendingAnnouncement}
-              className="px-6 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-lg cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1.5"
-            >
-              {isSendingAnnouncement ? 'Broadcasting...' : 'Broadcast Announcement'}
-            </button>
-          </div>
-        </form>
       </div>
-
-
-      {/* TAB: ANALYTICS COMMAND CENTER */}
     </>
   );
 }
