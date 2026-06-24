@@ -332,7 +332,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
             {filteredAndSortedAdvisors.slice(0, visibleCount).map(advisor => (
               <div 
                 key={advisor.id}
-                className="bg-white border-neon-glow border-neon-glow-hover rounded-2xl sm:rounded-[2rem] hover:-translate-y-1 transition-all duration-300 flex flex-col overflow-hidden group"
+                className="bg-transparent sm:bg-white border-0 sm:border border-zinc-150 rounded-none sm:rounded-2xl lg:rounded-[2rem] sm:hover:-translate-y-1 transition-all duration-300 flex flex-col overflow-hidden group"
               >
                 {/* Profile Card Header */}
                 <div className="p-4 sm:p-5 flex items-start gap-4 border-b border-zinc-100 bg-gradient-to-b from-zinc-50/50 to-white">
@@ -445,7 +445,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
             {filteredAndSortedAdvisors.slice(0, visibleCount).map(advisor => (
               <div 
                 key={advisor.id}
-                className="bg-white border-neon-glow border-neon-glow-hover rounded-2xl sm:rounded-[2rem] transition-all duration-300 flex flex-col lg:flex-row items-stretch overflow-hidden group"
+                className="bg-transparent sm:bg-white border-0 sm:border border-zinc-150 rounded-none sm:rounded-2xl lg:rounded-[2rem] transition-all duration-300 flex flex-col lg:flex-row items-stretch overflow-hidden group"
               >
                 {/* Left Column: Avatar & Name */}
                 <div className="p-4 sm:p-5 flex items-center gap-4 bg-gradient-to-br from-zinc-50/50 to-white border-b lg:border-b-0 lg:border-r border-zinc-100 flex-1 lg:flex-initial lg:basis-[28%] shrink-0">

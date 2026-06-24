@@ -9,6 +9,19 @@ import { sendLocalNotification } from '../../shared/services/notificationHelper'
 
 export const BOOKING_DRAFT_KEY = 'behold_booking_draft';
 
+export const getHaversineDistance = (lat1, lon1, lat2, lon2) => {
+  const R = 6371; // Radius of the Earth in km
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const d = R * c; // Distance in km
+  return d;
+};
+
 export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvisor }) {
   const { user, login, register } = useAuth();
   const { showAlert } = useCustomDialog();
@@ -804,20 +817,38 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     }
   }, [preselectedAdvisorId, clearPreselectedAdvisor, advisors, bookingMode]);
 
-  // Reset advisor if service type or mode changes to avoid invalid combinations
+  // Reset advisor if service type, mode, or location changes to avoid invalid combinations
   useEffect(() => {
     if (selectedAdvisor) {
       const isServiceMatch = selectedAdvisor.type === bookingService;
       const isModeMatch = !selectedAdvisor.modes || selectedAdvisor.modes.includes(bookingMode);
-      if (!isServiceMatch || !isModeMatch) {
+      
+      let isDistanceMatch = true;
+      if (bookingMode === 'DOOR_STEP') {
+        const clientLat = parseFloat(bookingForm.clientLatitude);
+        const clientLng = parseFloat(bookingForm.clientLongitude);
+        const advLat = Number(selectedAdvisor.latitude);
+        const advLng = Number(selectedAdvisor.longitude);
+        if (isNaN(clientLat) || isNaN(clientLng) || !advLat || !advLng) {
+          isDistanceMatch = false;
+        } else {
+          const distance = getHaversineDistance(clientLat, clientLng, advLat, advLng);
+          if (distance > 10) {
+            isDistanceMatch = false;
+          }
+        }
+      }
+
+      if (!isServiceMatch || !isModeMatch || !isDistanceMatch) {
         setTimeout(() => {
           setSelectedAdvisor(null);
           setAdvisorConfirmed(false);
+          setSelectedDate('');
           setSelectedTime('');
         }, 0);
       }
     }
-  }, [bookingService, bookingMode, selectedAdvisor]);
+  }, [bookingService, bookingMode, selectedAdvisor, bookingForm.clientLatitude, bookingForm.clientLongitude]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -981,18 +1012,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     processPayment();
   };
 
-  const getHaversineDistance = (lat1, lon1, lat2, lon2) => {
-    const R = 6371; // Radius of the Earth in km
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLon = (lon2 - lon1) * Math.PI / 180;
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-      Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const d = R * c; // Distance in km
-    return d;
-  };
+  // getHaversineDistance moved to top of file
 
   const getCalculatedDistance = () => {
     if (bookingMode !== 'DOOR_STEP' || !selectedAdvisor) return null;

@@ -477,7 +477,7 @@ export default function BookingManagementTab(props) {
                   </div>
                 )}
 
-                <div className="border border-zinc-850 rounded-lg overflow-hidden bg-zinc-950">
+                <div className="border-0 sm:border border-zinc-850 rounded-none sm:rounded-lg overflow-hidden bg-transparent sm:bg-zinc-955">
                   <div className="overflow-x-auto w-full">
                     <table className="w-full text-sm border-collapse min-w-[850px]">
                       <thead>

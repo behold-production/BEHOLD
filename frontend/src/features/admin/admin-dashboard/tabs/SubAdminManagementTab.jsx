@@ -641,7 +641,7 @@ export default function SubAdminManagementTab(props) {
                         <button type="button" onClick={() => handleExportImage('subadmins-table', 'SubAdmins_Directory')} className="px-2 py-1 border border-zinc-800 hover:bg-zinc-850 hover:text-white text-zinc-400 text-xs font-bold rounded transition-colors cursor-pointer capitalize bg-transparent">Export Image</button>
                       </div>
                     </div>
-                    <div className="border border-zinc-850 rounded-lg overflow-hidden bg-zinc-955">
+                    <div className="border-0 sm:border border-zinc-850 rounded-none sm:rounded-lg overflow-hidden bg-transparent sm:bg-zinc-955">
                       <div className="overflow-x-auto w-full">
                         <table id="subadmins-table" className="w-full text-sm border-collapse min-w-[650px]">
                           <thead>

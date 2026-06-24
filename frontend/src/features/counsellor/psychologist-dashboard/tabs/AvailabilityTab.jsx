@@ -46,7 +46,7 @@ const AvailabilityTab = ({
         <span className="text-sm text-zinc-500 font-medium">Set Standard Hours</span>
       </div>
 
-      <div className="space-y-6 text-left font-medium p-5 rounded-xl transition-all" style={shadowStyle}>
+      <div className="space-y-6 text-left font-medium p-0 sm:p-5 bg-transparent sm:bg-zinc-900 border-0 sm:border sm:border-zinc-800 rounded-none sm:rounded-xl shadow-none sm:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(0,0,0,0.4),0_6px_20px_-6px_rgba(0,0,0,0.6)] transition-all">
         {/* Select Days */}
         <div className="space-y-2.5">
           <label className="text-zinc-400 capitalize font-bold block text-xs tracking-wide">Active Operational Days</label>

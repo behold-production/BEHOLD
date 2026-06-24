@@ -96,7 +96,7 @@ const ProfileTab = ({
 
       <form onSubmit={handleProfileSave} className="space-y-6">
         {/* Profile Picture Upload */}
-        <div className="flex items-center gap-5 p-5 rounded-xl transition-all" style={shadowStyle}>
+        <div className="flex items-center gap-5 p-0 sm:p-5 bg-transparent sm:bg-zinc-900 border-0 sm:border sm:border-zinc-800 rounded-none sm:rounded-xl shadow-none sm:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(0,0,0,0.4),0_6px_20px_-6px_rgba(0,0,0,0.6)] transition-all">
           <div className="relative group shrink-0">
             <div className="w-20 h-20 rounded-xl overflow-hidden border border-zinc-800 group-hover:border-brand/50 transition-colors shadow-sm">
               {user?.profilePic ? (
@@ -142,7 +142,7 @@ const ProfileTab = ({
         </div>
 
         {/* Profile Info Form */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-left font-medium p-5 rounded-xl transition-all" style={shadowStyle}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-left font-medium p-0 sm:p-5 bg-transparent sm:bg-zinc-900 border-0 sm:border sm:border-zinc-800 rounded-none sm:rounded-xl shadow-none sm:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(0,0,0,0.4),0_6px_20px_-6px_rgba(0,0,0,0.6)] transition-all">
           <div className="space-y-1.5">
             <label className="text-zinc-400 capitalize font-bold text-xs tracking-wide">Display Name</label>
             <input
@@ -226,13 +226,13 @@ const ProfileTab = ({
             {/* Search address input */}
             <div className="space-y-1.5 text-left relative">
               <label className="text-zinc-400 capitalize font-bold text-xs tracking-wide block">Search Location Address</label>
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-2">
                 <input
                   type="text"
                   placeholder="Type an address to search... (e.g. Kozhikode, Kerala)"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="flex-1 px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
+                  className="flex-1 min-w-0 px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') {
                       e.preventDefault();
@@ -244,7 +244,7 @@ const ProfileTab = ({
                   type="button"
                   onClick={handleAddressSearch}
                   disabled={isSearching}
-                  className="px-4 py-2 bg-brand text-zinc-955 text-xs font-extrabold rounded-lg hover:bg-brand-dark transition cursor-pointer"
+                  className="w-full sm:w-auto px-4 py-2.5 bg-brand text-zinc-955 text-xs font-extrabold rounded-lg hover:bg-brand-dark transition cursor-pointer shrink-0 flex items-center justify-center"
                 >
                   {isSearching ? 'Searching...' : 'Search'}
                 </button>
@@ -466,7 +466,7 @@ const ProfileTab = ({
       </form>
 
       {/* Google Calendar Connection */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-5 p-5 rounded-xl transition-all" style={shadowStyle}>
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-5 p-0 sm:p-5 bg-transparent sm:bg-zinc-900 border-0 sm:border sm:border-zinc-800 rounded-none sm:rounded-xl shadow-none sm:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(0,0,0,0.4),0_6px_20px_-6px_rgba(0,0,0,0.6)] transition-all">
         <div className="space-y-1 text-left">
           <h4 className="text-sm font-bold text-white capitalize">Google Calendar Sync</h4>
           <p className="text-xs text-zinc-500 font-medium">Automatically create Google Meet links for online bookings.</p>
@@ -514,7 +514,7 @@ const ProfileTab = ({
       </div>
 
       {/* Browser Notification Settings Widget */}
-      <div className="p-5 rounded-xl transition-all space-y-4" style={shadowStyle}>
+      <div className="p-0 sm:p-5 bg-transparent sm:bg-zinc-900 border-0 sm:border sm:border-zinc-800 rounded-none sm:rounded-xl shadow-none sm:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(0,0,0,0.4),0_6px_20px_-6px_rgba(0,0,0,0.6)] transition-all space-y-4">
         <div className="flex items-center gap-3 pb-4 border-b border-zinc-800 text-left">
           <div className="w-10 h-10 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center">
             <Bell className="w-5 h-5 text-brand" />

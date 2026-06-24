@@ -275,7 +275,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
             const currentStepIdx = stepMapping[bookingStep] || 0;
             const stepLabels = ['Schedule & Advisor', 'Account & Payment', 'Session Confirmed'];
             return (
-            <div className="bg-zinc-50 border border-zinc-200 p-3 sm:p-5 rounded-lg space-y-3 animate-in fade-in duration-300">
+            <div className="bg-transparent sm:bg-zinc-50 border-0 sm:border border-zinc-200 p-0 sm:p-5 rounded-none sm:rounded-lg space-y-3 animate-in fade-in duration-300">
               {/* Mobile: compact progress bar */}
               <div className="flex sm:hidden items-center gap-2">
                 <div className="flex items-center gap-1.5 flex-1 min-w-0">
@@ -613,7 +613,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
                       {/* DOORSTEP LOCATION INPUTS - CONFIG STEP */}
                       {bookingMode === 'DOOR_STEP' && (
-                        <div className="space-y-4 p-5 bg-zinc-50 border border-zinc-200 rounded-2xl animate-in fade-in slide-in-from-top-2 duration-300 text-left">
+                        <div className="space-y-4 p-0 sm:p-5 bg-transparent sm:bg-zinc-50 border-0 sm:border border-zinc-200 rounded-none sm:rounded-2xl animate-in fade-in slide-in-from-top-2 duration-300 text-left">
                           <div className="border-b border-zinc-200 pb-2 mb-2">
                             <h4 className="text-xs font-extrabold text-zinc-800 uppercase tracking-wider flex items-center gap-1.5">
                               <span className="w-1.5 h-3 bg-brand rounded-full"></span>
@@ -762,7 +762,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                     {!(bookingMode === 'DOOR_STEP' && (!bookingForm.clientLatitude || !bookingForm.clientLongitude)) ? (
                       <div className="space-y-2 pt-4 border-t border-zinc-100 animate-in fade-in duration-300">
                         <label className="text-sm font-bold text-zinc-700 block">1. Select Date</label>
-                        <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-lg">
+                        <div className="p-0 sm:p-4 bg-transparent sm:bg-zinc-50 border-0 sm:border border-zinc-200 rounded-none sm:rounded-lg">
                           <DateTimePicker
                             selectedDate={selectedDate}
                             selectedTime={selectedTime}
@@ -778,7 +778,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                         </div>
                       </div>
                     ) : (
-                      <div className="p-6 border border-dashed border-zinc-200 rounded-2xl bg-zinc-50 text-zinc-505 text-center font-bold text-xs mt-4">
+                      <div className="p-4 sm:p-6 border border-dashed border-zinc-200 rounded-xl sm:rounded-2xl bg-zinc-50 text-zinc-505 text-center font-bold text-xs mt-4">
                         Please search or detect your location address to show available psychologists within 10 km.
                       </div>
                     )}
@@ -980,7 +980,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
                     {/* DOORSTEP LOCATION SUMMARY - PAYMENT STEP */}
                     {bookingMode === 'DOOR_STEP' && (
-                      <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-xl text-left text-xs text-zinc-600 space-y-1 animate-in fade-in duration-300">
+                      <div className="p-0 sm:p-4 bg-transparent sm:bg-zinc-50 border-0 sm:border border-zinc-200 rounded-none sm:rounded-xl text-left text-xs text-zinc-600 space-y-1 animate-in fade-in duration-300">
                         <span className="font-bold text-zinc-800 block uppercase tracking-wider text-[10px]">
                           Doorstep Visit Location
                         </span>
@@ -1004,7 +1004,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
                     {/* OFFLINE LOCATION SUMMARY - PAYMENT STEP */}
                     {bookingMode === 'OFFLINE' && selectedAdvisor && (
-                      <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-xl text-left text-xs text-zinc-600 space-y-1.5 animate-in fade-in duration-300">
+                      <div className="p-0 sm:p-4 bg-transparent sm:bg-zinc-50 border-0 sm:border border-zinc-200 rounded-none sm:rounded-xl text-left text-xs text-zinc-600 space-y-1.5 animate-in fade-in duration-300">
                         <span className="font-bold text-zinc-800 block uppercase tracking-wider text-[10px]">
                           Office / Center Visit Address
                         </span>

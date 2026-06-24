@@ -51,16 +51,16 @@ const BookingsTab = ({
 
   return (
     <div className="space-y-6 animate-in fade-in duration-200 text-sm text-left">
-      <div className="border-b border-zinc-800 pb-3 flex justify-between items-center">
-        <div>
+      <div className="border-b border-zinc-800 pb-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div className="min-w-0 flex-1">
           <h3 className="text-sm font-bold capitalize text-zinc-500 font-header">Student Booking Details & Rooms</h3>
-          <p className="text-sm text-zinc-400 mt-1 font-medium">Manage virtual consultations, update appointment statuses, and log clinic summaries.</p>
+          <p className="text-sm text-zinc-400 mt-1 font-medium break-words">Manage virtual consultations, update appointment statuses, and log clinic summaries.</p>
         </div>
-        <span className="text-sm bg-brand/10 text-brand border border-brand/20 px-2 py-0.5 rounded font-bold capitalize">{bookings.length} Total</span>
+        <span className="text-sm bg-brand/10 text-brand border border-brand/20 px-2 py-0.5 rounded font-bold capitalize shrink-0">{bookings.length} Total</span>
       </div>
 
       {/* Tab switcher */}
-      <div className="flex gap-2 p-1.5 bg-zinc-950 border border-zinc-800 rounded-xl max-w-md">
+      <div className="flex flex-wrap sm:flex-nowrap gap-2 p-1.5 bg-zinc-950 border border-zinc-800 rounded-xl max-w-md w-full">
         {[
           { id: 'CONFIRMED', label: 'Confirmed', count: confirmedCount },
           { id: 'COMPLETED', label: 'Completed', count: completedCount },
@@ -72,13 +72,13 @@ const BookingsTab = ({
               key={tab.id}
               type="button"
               onClick={() => setActiveBookingTab(tab.id)}
-              className={`flex-1 py-2 rounded-lg text-sm font-bold capitalize transition-all duration-300 cursor-pointer flex items-center justify-center gap-1.5 border ${isActive
+              className={`flex-1 min-w-[85px] sm:min-w-0 py-2 px-2 sm:px-3 rounded-lg text-xs sm:text-sm font-bold capitalize transition-all duration-300 cursor-pointer flex items-center justify-center gap-1 sm:gap-1.5 border ${isActive
                 ? 'bg-brand text-zinc-955 border-brand shadow-sm'
                 : 'bg-transparent border-transparent text-zinc-400 hover:text-white hover:bg-zinc-850/60'
                 }`}
             >
               <span>{tab.label}</span>
-              <span className={`px-1.5 py-0.5 rounded text-xs ${isActive ? 'bg-zinc-955 text-brand font-bold' : 'bg-zinc-800 text-zinc-500'}`}>
+              <span className={`px-1.5 py-0.5 rounded text-xs shrink-0 ${isActive ? 'bg-zinc-955 text-brand font-bold' : 'bg-zinc-800 text-zinc-500'}`}>
                 {tab.count}
               </span>
             </button>
@@ -90,8 +90,7 @@ const BookingsTab = ({
         {filteredBookings.map((booking) => (
           <div
             key={booking.id}
-            className="rounded-xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-5 relative overflow-hidden transition-all hover:-translate-y-0.5"
-            style={shadowStyle}
+            className="p-4 sm:p-5 bg-transparent border-b border-zinc-800 sm:bg-zinc-900 sm:border sm:border-zinc-850 rounded-none sm:rounded-xl shadow-none sm:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(0,0,0,0.4),0_6px_20px_-6px_rgba(0,0,0,0.6)] flex flex-col sm:flex-row sm:items-center justify-between gap-5 relative overflow-hidden transition-all sm:hover:-translate-y-0.5"
           >
             <div className="space-y-2">
               <div className="flex items-center gap-2 flex-wrap text-left">

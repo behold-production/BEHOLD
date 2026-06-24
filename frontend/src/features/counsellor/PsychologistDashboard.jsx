@@ -1748,7 +1748,7 @@ export default function PsychologistDashboard({ setView }) {
         ) : null}
 
         {/* WORKSPACE CONTENT ROUTER */}
-        <div className="bg-zinc-900 border border-zinc-850 rounded-2xl p-5 sm:p-8 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),_0_1px_3px_rgba(11,20,36,0.04),_0_6px_20px_-6px_rgba(11,20,36,0.08)]">
+        <div className="bg-transparent sm:bg-zinc-900 border-0 sm:border sm:border-zinc-850 rounded-none sm:rounded-2xl p-0 sm:p-8 shadow-none sm:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),_0_1px_3px_rgba(11,20,36,0.04),_0_6px_20px_-6px_rgba(11,20,36,0.08)]">
           {isLoadingData ? (
             <div className="animate-pulse space-y-6">
               <div className="border-b border-zinc-800 pb-3 flex justify-between items-center">

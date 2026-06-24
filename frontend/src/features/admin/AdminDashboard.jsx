@@ -3504,7 +3504,7 @@ export default function AdminDashboard({ setView }) {
 
       {/* 2. Main Scrollable Content Area */}
       <div className="flex-1 flex flex-col min-h-0 relative overflow-hidden bg-zinc-955 z-10 lg:z-auto">
-        <main className="flex-1 p-5 md:p-8 overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-800 hover:scrollbar-thumb-zinc-700 pb-24">
+        <main className="flex-1 p-0 sm:p-5 md:p-8 overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-800 hover:scrollbar-thumb-zinc-700 pb-24">
           <div className="max-w-7xl mx-auto space-y-6">
             {currentSection === 'overview' && isSuperAdmin && <OverviewTab {...tabProps} />}
             {currentSection === 'users' && hasUserPermission && <StudentManagementTab {...tabProps} />}
@@ -3721,13 +3721,13 @@ export default function AdminDashboard({ setView }) {
                       {/* Search Input */}
                       <div className="space-y-1.5 relative">
                         <label className="text-zinc-400 capitalize font-bold text-xs tracking-wide block">Search Location Address</label>
-                        <div className="flex gap-2">
+                        <div className="flex flex-col sm:flex-row gap-2">
                           <input
                             type="text"
                             placeholder="Type to search address... (e.g. Kozhikode, Kerala)"
                             value={adminUserSearchQuery}
                             onChange={(e) => setAdminUserSearchQuery(e.target.value)}
-                            className="flex-1 px-3 py-2 bg-zinc-955 border border-zinc-850 text-sm text-white rounded-lg outline-none focus:border-brand transition-colors"
+                            className="flex-1 min-w-0 px-3 py-2 bg-zinc-955 border border-zinc-850 text-sm text-white rounded-lg outline-none focus:border-brand transition-colors"
                             onKeyDown={(e) => {
                               if (e.key === 'Enter') {
                                 e.preventDefault();
@@ -3739,7 +3739,7 @@ export default function AdminDashboard({ setView }) {
                             type="button"
                             onClick={handleAdminUserAddressSearch}
                             disabled={isAdminUserSearching}
-                            className="px-3 py-2 bg-brand text-zinc-950 text-xs font-bold rounded-lg hover:bg-brand-dark transition cursor-pointer border-none"
+                            className="w-full sm:w-auto px-3 py-2 bg-brand text-zinc-950 text-xs font-bold rounded-lg hover:bg-brand-dark transition cursor-pointer border-none shrink-0 flex items-center justify-center"
                           >
                             {isAdminUserSearching ? 'Searching...' : 'Search'}
                           </button>
@@ -3994,13 +3994,13 @@ export default function AdminDashboard({ setView }) {
                   {/* Address search field */}
                   <div className="space-y-1.5 relative">
                     <label className="text-zinc-400 capitalize font-bold text-xs tracking-wide block">Search Location Address</label>
-                    <div className="flex gap-2">
+                    <div className="flex flex-col sm:flex-row gap-2">
                       <input
                         type="text"
                         placeholder="Type an address to search..."
                         value={adminSearchQuery}
                         onChange={(e) => setAdminSearchQuery(e.target.value)}
-                        className="flex-1 px-3 py-2 bg-zinc-900 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
+                        className="flex-1 min-w-0 px-3 py-2 bg-zinc-900 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
                         onKeyDown={(e) => {
                           if (e.key === 'Enter') {
                             e.preventDefault();
@@ -4012,7 +4012,7 @@ export default function AdminDashboard({ setView }) {
                         type="button"
                         onClick={handleAdminAddressSearch}
                         disabled={isAdminSearching}
-                        className="px-4 py-2 bg-brand text-zinc-955 text-xs font-bold rounded-lg hover:bg-brand-dark transition cursor-pointer"
+                        className="w-full sm:w-auto px-4 py-2 bg-brand text-zinc-955 text-xs font-bold rounded-lg hover:bg-brand-dark transition cursor-pointer shrink-0 flex items-center justify-center"
                       >
                         {isAdminSearching ? 'Searching...' : 'Search'}
                       </button>
