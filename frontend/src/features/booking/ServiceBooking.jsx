@@ -346,18 +346,51 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
           {bookingStep === 'success' ? (
             /* STEP 5: Success & Confirmation View */
-            <div className="p-4 sm:p-10 bg-transparent sm:bg-zinc-50 border-0 sm:border border-zinc-200 rounded-none sm:rounded-xl max-w-2xl mx-auto animate-in fade-in duration-500 space-y-6 text-center">
-              <div className="w-16 h-16 bg-emerald-50 border border-emerald-200 rounded-full flex items-center justify-center mx-auto text-emerald-650 shadow-sm text-2xl font-bold">
-                ✓
+            <div className="p-6 sm:p-10 bg-white border border-zinc-200/80 rounded-2xl max-w-2xl mx-auto shadow-[0_10px_30px_rgba(0,0,0,0.03),0_1px_3px_rgba(0,0,0,0.01)] space-y-6 text-center animate-in fade-in duration-300">
+              <style>{`
+                @keyframes checkmark-circle {
+                  0% { transform: scale(0); opacity: 0; }
+                  100% { transform: scale(1); opacity: 1; }
+                }
+                @keyframes checkmark-draw {
+                  100% { stroke-dashoffset: 0; }
+                }
+                @keyframes scale-pop {
+                  0% { transform: translateY(15px); opacity: 0; }
+                  100% { transform: translateY(0); opacity: 1; }
+                }
+                .animate-checkmark-circle {
+                  animation: checkmark-circle 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+                }
+                .animate-checkmark-path {
+                  stroke-dasharray: 48;
+                  stroke-dashoffset: 48;
+                  animation: checkmark-draw 0.5s cubic-bezier(0.65, 0, 0.45, 1) 0.3s forwards;
+                }
+                .animate-scale-pop {
+                  opacity: 0;
+                  animation: scale-pop 0.5s cubic-bezier(0.34, 1.3, 0.64, 1) 0.5s forwards;
+                }
+                .animate-card-fade {
+                  opacity: 0;
+                  animation: scale-pop 0.5s cubic-bezier(0.34, 1.3, 0.64, 1) 0.7s forwards;
+                }
+              `}</style>
+
+              <div className="w-20 h-20 bg-emerald-50 border border-emerald-100 rounded-full flex items-center justify-center mx-auto text-emerald-600 shadow-[0_4px_20px_rgba(16,185,129,0.15)] animate-checkmark-circle">
+                <svg className="w-10 h-10 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                  <path className="animate-checkmark-path" strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
               </div>
-              <div className="space-y-2">
-                <span className="text-xs bg-emerald-100 text-emerald-800 border border-emerald-200 px-3 py-1 rounded-md capitalize  font-semibold w-fit mx-auto block">
+
+              <div className="space-y-2 animate-scale-pop">
+                <span className="text-[11px] uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-100 px-3 py-1 rounded-full font-bold w-fit mx-auto block">
                   {rescheduleSession ? 'reschedule requested' : 'session confirmed'}
                 </span>
-                <h3 className="text-xl sm:text-2xl font-bold capitalize text-zinc-900 tracking-wide mt-2">
+                <h3 className="text-xl sm:text-2xl font-bold capitalize text-zinc-900 tracking-tight mt-2">
                   {rescheduleSession ? 'Reschedule Requested' : "You're All Set!"}
                 </h3>
-                <p className="text-xs text-zinc-655 max-w-md mx-auto leading-relaxed">
+                <p className="text-xs text-zinc-505 max-w-md mx-auto leading-relaxed font-medium">
                   {rescheduleSession ? (
                     <>
                       Your reschedule request for <strong>{bookingForm.name || user?.name || 'Student'}</strong> has been submitted.
@@ -372,7 +405,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
               </div>
 
               {/* Invoice & Meeting Card */}
-              <div className="bg-white border border-zinc-200/80 rounded-xl p-5 text-left space-y-4 shadow-xs">
+              <div className="bg-zinc-50 border border-zinc-200/60 rounded-xl p-5 text-left space-y-4 shadow-[inset_0_1px_2px_rgba(0,0,0,0.01)] animate-card-fade">
                 <h4 className="text-xs font-semibold capitalize  text-zinc-400 border-b border-zinc-100 pb-2">
                   {rescheduleSession ? 'Reschedule Details' : 'Booking Confirmation'}
                 </h4>
@@ -433,7 +466,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
               </div>
 
               {/* Back to Profile / Restart buttons */}
-              <div className="flex flex-col sm:flex-row gap-3 justify-center items-center font-semibold">
+              <div className="flex flex-col sm:flex-row gap-3 justify-center items-center font-semibold animate-card-fade">
                 {rescheduleSession ? (
                   <button
                     type="button"
