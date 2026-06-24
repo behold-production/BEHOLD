@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   User, Calendar, Clock, BookOpen, Link, ShieldAlert, Award, Globe,
   Edit, Video, BarChart3, AlertCircle, Save, LogOut,
-  X, ChevronRight, Mail, Shield, Menu, FileText, Send, Eye, EyeOff, Bell
+  X, ChevronRight, Mail, Shield, Menu, FileText, Send, Eye, EyeOff, Bell, Check
 } from 'lucide-react';
 import {
   isNotificationSupported,
@@ -1685,8 +1685,23 @@ export default function PsychologistDashboard({ setView }) {
 
           <div className="space-y-1 relative z-10 w-full sm:w-auto">
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-header font-bold tracking-wide capitalize text-white">
+              <h1 className="text-xl sm:text-2xl font-header font-bold tracking-wide capitalize text-white flex items-center gap-2">
                 {profile.name}
+                {counsellorStatus === 'PENDING' && (
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-955/20 border border-amber-900/30 text-amber-500 uppercase tracking-wider">
+                    Pending
+                  </span>
+                )}
+                {(counsellorStatus === 'APPROVED' || counsellorStatus === 'ACTIVE') && (
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-955/20 border border-emerald-900/30 text-emerald-450 uppercase tracking-wider">
+                    Verified
+                  </span>
+                )}
+                {counsellorStatus === 'REJECTED' && (
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-955/20 border border-rose-900/30 text-rose-500 uppercase tracking-wider">
+                    Rejected
+                  </span>
+                )}
               </h1>
             </div>
             <p className="text-sm text-zinc-500 font-medium">
