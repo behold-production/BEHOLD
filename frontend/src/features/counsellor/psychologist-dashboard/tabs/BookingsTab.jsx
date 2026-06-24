@@ -90,7 +90,8 @@ const BookingsTab = ({
         {filteredBookings.map((booking) => (
           <div
             key={booking.id}
-            className="p-4 sm:p-5 bg-transparent border-b border-zinc-800 sm:bg-zinc-900 sm:border sm:border-zinc-850 rounded-none sm:rounded-xl shadow-none sm:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(0,0,0,0.4),0_6px_20px_-6px_rgba(0,0,0,0.6)] flex flex-col sm:flex-row sm:items-center justify-between gap-5 relative overflow-hidden transition-all sm:hover:-translate-y-0.5"
+            className="rounded-xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-5 relative overflow-hidden transition-all hover:-translate-y-0.5"
+            style={shadowStyle}
           >
             <div className="space-y-2">
               <div className="flex items-center gap-2 flex-wrap text-left">

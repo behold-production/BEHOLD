@@ -44,7 +44,8 @@ const OverviewTab = ({ profile, bookings, isSessionCompleted, setCurrentSection 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         {/* Next session card */}
         <div
-          className="bg-transparent sm:bg-zinc-900 border-b border-zinc-800 sm:border sm:border-zinc-800 rounded-none sm:rounded-2xl p-4 sm:p-5 relative overflow-hidden flex flex-col justify-between group min-h-[160px] transition-all sm:hover:-translate-y-1 shadow-none sm:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(0,0,0,0.4),0_6px_20px_-6px_rgba(0,0,0,0.6)]"
+          className="rounded-2xl p-5 relative overflow-hidden flex flex-col justify-between group min-h-[160px] transition-all hover:-translate-y-1"
+          style={shadowStyle}
         >
           <div className="space-y-3">
             <span className="text-xs bg-brand/10 text-brand border border-brand/20 px-2 py-0.5 rounded font-bold capitalize">Next Client Session</span>
@@ -93,7 +94,8 @@ const OverviewTab = ({ profile, bookings, isSessionCompleted, setCurrentSection 
 
         {/* Pricing stats card */}
         <div
-          className="bg-transparent sm:bg-zinc-900 border-b border-zinc-800 sm:border sm:border-zinc-800 rounded-none sm:rounded-2xl p-4 sm:p-5 relative overflow-hidden flex flex-col justify-between min-h-[160px] transition-all sm:hover:-translate-y-1 shadow-none sm:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(0,0,0,0.4),0_6px_20px_-6px_rgba(0,0,0,0.6)]"
+          className="rounded-2xl p-5 relative overflow-hidden flex flex-col justify-between min-h-[160px] transition-all hover:-translate-y-1"
+          style={shadowStyle}
         >
           <div className="space-y-2">
             <span className="text-xs bg-zinc-800/80 border border-zinc-700 text-zinc-400 px-2 py-0.5 rounded font-bold capitalize">Financial Rate Card</span>
@@ -122,7 +124,8 @@ const OverviewTab = ({ profile, bookings, isSessionCompleted, setCurrentSection 
 
         {/* Earnings & Revenue split card */}
         <div
-          className="bg-transparent sm:bg-zinc-900 border-b border-zinc-800 sm:border sm:border-zinc-800 rounded-none sm:rounded-2xl p-4 sm:p-5 relative overflow-hidden flex flex-col justify-between min-h-[160px] transition-all sm:hover:-translate-y-1 shadow-none sm:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(0,0,0,0.4),0_6px_20px_-6px_rgba(0,0,0,0.6)]"
+          className="rounded-2xl p-5 relative overflow-hidden flex flex-col justify-between min-h-[160px] transition-all hover:-translate-y-1"
+          style={shadowStyle}
         >
           <div className="space-y-2">
             <span className="text-xs bg-emerald-950/50 border border-emerald-900/50 text-emerald-400 px-2 py-0.5 rounded font-bold capitalize">Earnings & Payouts ({splitPercent}% Split)</span>
