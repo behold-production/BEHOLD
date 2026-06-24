@@ -1681,10 +1681,10 @@ export default function PsychologistDashboard({ setView }) {
       <div className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-8 lg:p-10 space-y-6 relative z-10 text-left">
 
         {/* Workspace Banner */}
-        <div className="bg-zinc-900 border border-zinc-850 p-6 sm:p-8 rounded-2xl shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),_0_1px_3px_rgba(11,20,36,0.04),_0_6px_20px_-6px_rgba(11,20,36,0.08)] flex flex-col sm:flex-row justify-between items-center gap-4 relative overflow-hidden">
+        <div className="bg-transparent sm:bg-zinc-900 border-0 sm:border sm:border-zinc-850 p-0 sm:p-8 rounded-none sm:rounded-2xl shadow-none sm:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),_0_1px_3px_rgba(11,20,36,0.04),_0_6px_20px_-6px_rgba(11,20,36,0.08)] flex flex-col sm:flex-row justify-between items-center gap-4 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/5 rounded-full blur-2xl pointer-events-none" />
 
-          <div className="space-y-1 relative z-10 w-full sm:w-auto">
+          <div className="space-y-1 relative z-10 w-full sm:w-auto text-left">
             <div className="flex flex-wrap items-center gap-2">
               <h1 className="text-xl sm:text-2xl font-header font-bold tracking-wide capitalize text-white flex items-center gap-2">
                 {profile.name}
@@ -1705,20 +1705,23 @@ export default function PsychologistDashboard({ setView }) {
                 )}
               </h1>
             </div>
-            <p className="text-sm text-zinc-500 font-medium">
+            <p className="text-sm text-zinc-550 font-medium">
               Role: {profile.role} • Hourly Fee: ₹{profile.price}
             </p>
           </div>
 
           {/* Quick Stats Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full sm:w-auto shrink-0 relative z-10 text-center">
-            <div className="bg-zinc-950 border border-zinc-850 px-5 py-2.5 rounded-xl">
-              <span className="text-sm text-zinc-500 font-bold capitalize  block">Upcoming Slots</span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full sm:w-auto shrink-0 relative z-10 text-left sm:text-center pb-4 border-b border-zinc-800 sm:border-b-0 sm:pb-0">
+            <div className="bg-transparent sm:bg-zinc-950 border-0 sm:border sm:border-zinc-850 p-0 sm:px-5 sm:py-2.5 rounded-none sm:rounded-xl">
+              <span className="text-sm text-zinc-500 font-bold capitalize block">Upcoming Slots</span>
               <p className="text-sm font-bold text-brand mt-0.5">{bookings.filter(b => (b.status === 'CONFIRMED' || b.status === 'APPROVED' || b.status === 'PENDING') && !isSessionCompleted(b)).length} Bookings</p>
             </div>
-            <div className="bg-zinc-950 border border-zinc-850 px-5 py-2.5 rounded-xl">
-              <span className="text-sm text-zinc-500 font-bold capitalize  block">Hours Completed</span>
+            <div className="bg-transparent sm:bg-zinc-955 border-0 sm:border sm:border-zinc-850 p-0 sm:px-5 sm:py-2.5 rounded-none sm:rounded-xl">
+              <span className="text-sm text-zinc-500 font-bold capitalize block">Hours Completed</span>
               <p className="text-sm font-bold text-brand mt-0.5">{bookings.filter(isSessionCompleted).length + Number(profile.hours || 0)}+ Hrs</p>
+            </div>
+          </div>
+        </div>p>
             </div>
           </div>
         </div>
