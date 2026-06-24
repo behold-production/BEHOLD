@@ -166,6 +166,17 @@ export default function SidebarNav(props) {
                 </button>
 
                 <button
+                  onClick={() => handleNavClick('trash')}
+                  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-bold capitalize  transition-all text-left cursor-pointer border-none ${currentSection === 'trash'
+                    ? 'bg-red-600 text-white font-bold'
+                    : 'bg-transparent text-zinc-500 hover:text-red-400 hover:bg-red-950/30'
+                    }`}
+                >
+                  <Trash className="w-4 h-4" />
+                  <span>Trash</span>
+                </button>
+
+                <button
                   onClick={() => handleNavClick('subadmins')}
                   className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-bold capitalize  transition-all text-left cursor-pointer border-none ${currentSection === 'subadmins'
                     ? 'bg-brand text-zinc-955 font-bold'

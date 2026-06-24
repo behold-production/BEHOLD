@@ -13,7 +13,7 @@ const counsellorSchema = new mongoose.Schema(
     experience: { type: String, default: '' },
     availability: { type: mongoose.Schema.Types.Mixed, default: {} },
     isVerified: { type: Boolean, default: false },
-    status: { type: String, enum: ['PENDING', 'APPROVED', 'REJECTED'], default: 'PENDING' },
+    status: { type: String, enum: ['PENDING', 'APPROVED', 'REJECTED', 'ACTIVE', 'DELETED'], default: 'PENDING' },
     rejectionReason: { type: String, default: '' },
     isActive: { type: Boolean, default: true },
     rating: { type: Number, default: 5.0 },
@@ -38,7 +38,9 @@ const counsellorSchema = new mongoose.Schema(
     razorpayAccountId: { type: String, default: '' },
     bankAccountNumber: { type: String, default: '' },
     bankIfscCode: { type: String, default: '' },
-    bankAccountName: { type: String, default: '' }
+    bankAccountName: { type: String, default: '' },
+    isDeleted: { type: Boolean, default: false },
+    deletedAt: { type: Date, default: null }
   },
   { timestamps: true }
 );

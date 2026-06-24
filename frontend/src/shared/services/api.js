@@ -986,6 +986,39 @@ const ApiService = {
     return await request(`/admin/appointments/${id}/reject-refund`, {
       method: 'POST'
     });
+  },
+
+  // ─── TRASH & RESTORE APIs (Meta-style 30-day soft delete) ─────────────────
+  async getTrashItems() {
+    return await request('/admin/trash');
+  },
+
+  async restoreCounsellor(id) {
+    return await request(`/admin/counsellors/${id}/restore`, { method: 'POST' });
+  },
+
+  async restoreUser(id) {
+    return await request(`/admin/users/${id}/restore`, { method: 'POST' });
+  },
+
+  async restoreAppointment(id) {
+    return await request(`/admin/appointments/${id}/restore`, { method: 'POST' });
+  },
+
+  async permanentDeleteCounsellor(id) {
+    return await request(`/admin/counsellors/${id}/permanent`, { method: 'DELETE' });
+  },
+
+  async permanentDeleteUser(id) {
+    return await request(`/admin/users/${id}/permanent`, { method: 'DELETE' });
+  },
+
+  async permanentDeleteAppointment(id) {
+    return await request(`/admin/appointments/${id}/permanent`, { method: 'DELETE' });
+  },
+
+  async purgeExpiredTrash() {
+    return await request('/admin/trash/purge', { method: 'POST' });
   }
 };
 

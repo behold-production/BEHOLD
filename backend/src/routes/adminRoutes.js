@@ -83,4 +83,14 @@ router.get('/refunds', AdminController.getRefundRequests);
 router.post('/appointments/:id/approve-refund', AdminController.approveRefund);
 router.post('/appointments/:id/reject-refund', AdminController.rejectRefund);
 
+// Trash & Restore (Meta-style 30-day soft delete)
+router.get('/trash', AdminController.getTrashItems);
+router.post('/counsellors/:id/restore', AdminController.restoreCounsellor);
+router.post('/users/:id/restore', AdminController.restoreUser);
+router.post('/appointments/:id/restore', AdminController.restoreAppointment);
+router.delete('/counsellors/:id/permanent', AdminController.permanentDeleteCounsellor);
+router.delete('/users/:id/permanent', AdminController.permanentDeleteUser);
+router.delete('/appointments/:id/permanent', AdminController.permanentDeleteAppointment);
+router.post('/trash/purge', AdminController.purgeExpiredTrash);
+
 module.exports = router;

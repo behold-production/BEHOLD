@@ -84,7 +84,10 @@ export default function PsychologistDashboard({ setView }) {
     locationName: '',
     latitude: 0,
     longitude: 0,
-    razorpayAccountId: ''
+    razorpayAccountId: '',
+    bankAccountNumber: '',
+    bankIfscCode: '',
+    bankAccountName: ''
   });
   const [counsellorStatus, setCounsellorStatus] = useState(user?.status || 'PENDING');
   const [counsellorRejectionReason, setCounsellorRejectionReason] = useState(user?.rejectionReason || '');
@@ -215,32 +218,6 @@ export default function PsychologistDashboard({ setView }) {
     }
   };
 
-
-  const isSessionCompleted = (booking) => {
-    if (booking.status === 'CANCELLED') return false;
-    if (booking.status === 'COMPLETED' || booking.status === 'EXPIRED') return true;
-
-    if (booking.status === 'CONFIRMED' || booking.status === 'APPROVED' || booking.status === 'PENDING') {
-      try {
-        const [year, month, day] = booking.date.split('-').map(Number);
-        const timeParts = booking.time.split(' ');
-        const [hoursStr, minutesStr] = timeParts[0].split(':');
-        let hours = Number(hoursStr);
-        const minutes = Number(minutesStr);
-        const meridiem = timeParts[1];
-
-        if (meridiem === 'PM' && hours < 12) hours += 12;
-        if (meridiem === 'AM' && hours === 12) hours = 0;
-
-        const sessionEnd = new Date(year, month - 1, day, hours + 1, minutes);
-        return new Date() > sessionEnd;
-      } catch (e) {
-        console.error("Error checking session completion", e);
-      }
-    }
-    return false;
-  };
-
   const [isLoadingData, setIsLoadingData] = useState(true);
 
   const loadBookingsData = async (silent = false) => {
@@ -278,7 +255,10 @@ export default function PsychologistDashboard({ setView }) {
           locationName: c.locationName || '',
           latitude: c.latitude || 0,
           longitude: c.longitude || 0,
-          razorpayAccountId: c.razorpayAccountId || ''
+          razorpayAccountId: c.razorpayAccountId || '',
+          bankAccountNumber: c.bankAccountNumber || '',
+          bankIfscCode: c.bankIfscCode || '',
+          bankAccountName: c.bankAccountName || ''
         });
 
         // Load availability

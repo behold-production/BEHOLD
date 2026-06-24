@@ -28,7 +28,9 @@ const appointmentSchema = new mongoose.Schema(
     clientLongitude: { type: Number, default: 0 },
     refundStatus: { type: String, enum: ['NONE', 'PENDING', 'REFUNDED', 'REJECTED'], default: 'NONE' },
     refundId: { type: String, default: '' },
-    refundedAt: { type: Date, default: null }
+    refundedAt: { type: Date, default: null },
+    isDeleted: { type: Boolean, default: false },
+    deletedAt: { type: Date, default: null }
   },
   { timestamps: true }
 );

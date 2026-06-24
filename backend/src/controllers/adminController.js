@@ -65,7 +65,7 @@ const AdminController = {
   // Manage Users - List
   async getUsers(req, res, next) {
     try {
-      const users = await StorageService.findAll('users', { status: { $ne: 'DELETED' } });
+      const users = await StorageService.findAll('users', { status: { $ne: 'DELETED' }, isDeleted: { $ne: true } });
       const safeUsers = users.map(({ password, ...data }) => data);
 
       res.status(200).json({
@@ -81,7 +81,7 @@ const AdminController = {
   // Manage Counsellors - List
   async getCounsellors(req, res, next) {
     try {
-      const counsellors = await StorageService.findAll('counsellors', { status: { $ne: 'DELETED' } });
+      const counsellors = await StorageService.findAll('counsellors', { isDeleted: { $ne: true } });
       const safeCounsellors = counsellors.map(({ password, ...data }) => data);
 
       res.status(200).json({
@@ -178,7 +178,7 @@ const AdminController = {
     try {
       await autoExpireSessions();
       const [appointments, users, counsellors, sessions] = await Promise.all([
-        StorageService.findAll('appointments'),
+        StorageService.findAll('appointments', { isDeleted: { $ne: true } }),
         StorageService.findAll('users'),
         StorageService.findAll('counsellors'),
         StorageService.findAll('sessions')
@@ -386,19 +386,26 @@ const AdminController = {
     }
   },
 
-  // Delete User
+  // Delete User (Soft Delete - 30-day trash window)
   async deleteUser(req, res, next) {
     try {
       const { id } = req.params;
-      const updated = await StorageService.update('users', id, { status: 'DELETED' });
+      const now = new Date();
+      const updated = await StorageService.update('users', id, {
+        status: 'DELETED',
+        isDeleted: true,
+        deletedAt: now
+      });
       if (!updated) return res.status(404).json({ success: false, message: 'User not found' });
-      res.status(200).json({ success: true, message: 'User deleted successfully' });
+      // Cascade soft-delete: mark all related appointments
+      const Appointment = require('../models/Appointment');
+      await Appointment.updateMany({ userId: id, isDeleted: { $ne: true } }, { $set: { isDeleted: true, deletedAt: now } });
+      res.status(200).json({ success: true, message: 'User moved to trash. Can be restored within 30 days.' });
     } catch (error) {
       next(error);
     }
   },
 
-  // Create Counsellor
   // Create Counsellor
   async createCounsellor(req, res, next) {
     try {
@@ -555,13 +562,196 @@ const AdminController = {
     }
   },
 
-  // Delete Counsellor
+  // Delete Counsellor (Soft Delete - 30-day trash window)
   async deleteCounsellor(req, res, next) {
     try {
       const { id } = req.params;
-      const updated = await StorageService.update('counsellors', id, { status: 'DELETED', isVerified: false });
+      const now = new Date();
+      const updated = await StorageService.update('counsellors', id, {
+        status: 'DELETED',
+        isVerified: false,
+        isDeleted: true,
+        deletedAt: now
+      });
       if (!updated) return res.status(404).json({ success: false, message: 'Counsellor not found' });
-      res.status(200).json({ success: true, message: 'Counsellor deleted successfully' });
+      // Cascade soft-delete: mark all related appointments as deleted too
+      const Appointment = require('../models/Appointment');
+      await Appointment.updateMany({ counsellorId: id, isDeleted: { $ne: true } }, { $set: { isDeleted: true, deletedAt: now } });
+      res.status(200).json({ success: true, message: 'Psychologist moved to trash. Can be restored within 30 days.' });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // ── Trash & Restore System ───────────────────────────────────────────────
+
+  // Get all soft-deleted items (within 30 days)
+  async getTrashItems(req, res, next) {
+    try {
+      const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+      const [counsellors, users, appointments] = await Promise.all([
+        StorageService.findAll('counsellors', { isDeleted: true, deletedAt: { $gte: thirtyDaysAgo } }),
+        StorageService.findAll('users', { isDeleted: true, deletedAt: { $gte: thirtyDaysAgo } }),
+        StorageService.findAll('appointments', { isDeleted: true, deletedAt: { $gte: thirtyDaysAgo } })
+      ]);
+
+      const safeCounsellors = counsellors.map(({ password, ...data }) => data);
+      const safeUsers = users.map(({ password, ...data }) => data);
+
+      res.status(200).json({
+        success: true,
+        data: {
+          counsellors: safeCounsellors,
+          users: safeUsers,
+          appointments
+        }
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // Restore Counsellor from trash
+  async restoreCounsellor(req, res, next) {
+    try {
+      const { id } = req.params;
+      const counsellor = await StorageService.findOne('counsellors', { id, isDeleted: true });
+      if (!counsellor) {
+        return res.status(404).json({ success: false, message: 'Counsellor not found in trash' });
+      }
+      const restored = await StorageService.update('counsellors', id, {
+        isDeleted: false,
+        deletedAt: null,
+        status: 'APPROVED',
+        isVerified: true
+      });
+      // Also restore their appointments that were deleted at the same time
+      const Appointment = require('../models/Appointment');
+      await Appointment.updateMany(
+        { counsellorId: id, isDeleted: true, deletedAt: counsellor.deletedAt },
+        { $set: { isDeleted: false, deletedAt: null } }
+      );
+      const { password, ...data } = restored;
+      res.status(200).json({ success: true, message: 'Psychologist restored successfully', data });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // Restore User from trash
+  async restoreUser(req, res, next) {
+    try {
+      const { id } = req.params;
+      const user = await StorageService.findOne('users', { id, isDeleted: true });
+      if (!user) {
+        return res.status(404).json({ success: false, message: 'User not found in trash' });
+      }
+      const restored = await StorageService.update('users', id, {
+        isDeleted: false,
+        deletedAt: null,
+        status: 'ACTIVE'
+      });
+      // Also restore their appointments deleted at same time
+      const Appointment = require('../models/Appointment');
+      await Appointment.updateMany(
+        { userId: id, isDeleted: true, deletedAt: user.deletedAt },
+        { $set: { isDeleted: false, deletedAt: null } }
+      );
+      const { password, ...data } = restored;
+      res.status(200).json({ success: true, message: 'User restored successfully', data });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // Restore a single appointment from trash
+  async restoreAppointment(req, res, next) {
+    try {
+      const { id } = req.params;
+      const appt = await StorageService.findOne('appointments', { id, isDeleted: true });
+      if (!appt) {
+        return res.status(404).json({ success: false, message: 'Appointment not found in trash' });
+      }
+      const restored = await StorageService.update('appointments', id, {
+        isDeleted: false,
+        deletedAt: null
+      });
+      res.status(200).json({ success: true, message: 'Appointment restored successfully', data: restored });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // Permanently delete counsellor (admin manual hard-delete)
+  async permanentDeleteCounsellor(req, res, next) {
+    try {
+      const { id } = req.params;
+      const counsellor = await StorageService.findOne('counsellors', { id, isDeleted: true });
+      if (!counsellor) {
+        return res.status(404).json({ success: false, message: 'Counsellor not found in trash' });
+      }
+      // Also hard-delete their soft-deleted appointments
+      const Appointment = require('../models/Appointment');
+      await Appointment.deleteMany({ counsellorId: id, isDeleted: true });
+      await StorageService.delete('counsellors', id);
+      res.status(200).json({ success: true, message: 'Psychologist permanently deleted.' });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // Permanently delete user (admin manual hard-delete)
+  async permanentDeleteUser(req, res, next) {
+    try {
+      const { id } = req.params;
+      const user = await StorageService.findOne('users', { id, isDeleted: true });
+      if (!user) {
+        return res.status(404).json({ success: false, message: 'User not found in trash' });
+      }
+      // Also hard-delete their soft-deleted appointments
+      const Appointment = require('../models/Appointment');
+      await Appointment.deleteMany({ userId: id, isDeleted: true });
+      await StorageService.delete('users', id);
+      res.status(200).json({ success: true, message: 'User permanently deleted.' });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // Permanently delete appointment (admin manual hard-delete)
+  async permanentDeleteAppointment(req, res, next) {
+    try {
+      const { id } = req.params;
+      const appt = await StorageService.findOne('appointments', { id, isDeleted: true });
+      if (!appt) {
+        return res.status(404).json({ success: false, message: 'Appointment not found in trash' });
+      }
+      const Session = require('../models/Session');
+      await Session.deleteMany({ appointmentId: id });
+      await StorageService.delete('appointments', id);
+      res.status(200).json({ success: true, message: 'Appointment permanently deleted.' });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // Purge all items expired beyond 30 days from trash
+  async purgeExpiredTrash(req, res, next) {
+    try {
+      const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+      const Counsellor = require('../models/Counsellor');
+      const User = require('../models/User');
+      const Appointment = require('../models/Appointment');
+      const [c, u, a] = await Promise.all([
+        Counsellor.deleteMany({ isDeleted: true, deletedAt: { $lt: thirtyDaysAgo } }),
+        User.deleteMany({ isDeleted: true, deletedAt: { $lt: thirtyDaysAgo } }),
+        Appointment.deleteMany({ isDeleted: true, deletedAt: { $lt: thirtyDaysAgo } })
+      ]);
+      res.status(200).json({
+        success: true,
+        message: 'Expired trash purged successfully',
+        data: { counsellorsRemoved: c.deletedCount, usersRemoved: u.deletedCount, appointmentsRemoved: a.deletedCount }
+      });
     } catch (error) {
       next(error);
     }
@@ -1021,11 +1211,14 @@ const AdminController = {
   async deleteAppointment(req, res, next) {
     try {
       const { id } = req.params;
-      const deleted = await StorageService.delete('appointments', id);
-      if (!deleted) {
+      const updated = await StorageService.update('appointments', id, {
+        isDeleted: true,
+        deletedAt: new Date()
+      });
+      if (!updated) {
         return res.status(404).json({ success: false, message: 'Appointment not found' });
       }
-      res.status(200).json({ success: true, message: 'Appointment deleted successfully' });
+      res.status(200).json({ success: true, message: 'Appointment moved to trash. Can be restored within 30 days.' });
     } catch (error) {
       next(error);
     }

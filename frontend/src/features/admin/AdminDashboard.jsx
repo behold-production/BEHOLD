@@ -14,6 +14,7 @@ import FaqsTab from './admin-dashboard/tabs/FaqsTab';
 import SettingsTab from './admin-dashboard/tabs/SettingsTab';
 import AnalyticsTab from './admin-dashboard/tabs/AnalyticsTab';
 import RefundRequestsTab from './admin-dashboard/tabs/RefundRequestsTab';
+import TrashTab from './admin-dashboard/tabs/TrashTab';
 import { getInitials } from './admin-dashboard/utils';
 
 const printTextSection = undefined;
@@ -3514,6 +3515,7 @@ export default function AdminDashboard({ setView }) {
             {currentSection === 'aptitude' && isSuperAdmin && <AptitudeQuestionsTab {...tabProps} />}
             {currentSection === 'faqs' && isSuperAdmin && <FaqsTab {...tabProps} />}
             {currentSection === 'refunds' && isSuperAdmin && <RefundRequestsTab {...tabProps} />}
+            {currentSection === 'trash' && isSuperAdmin && <TrashTab showAlert={showAlert} showConfirm={showConfirm} reloadData={reloadData} />}
             {currentSection === 'settings' && isSuperAdmin && <SettingsTab {...tabProps} />}
             {currentSection === 'analytics' && isSuperAdmin && <AnalyticsTab {...tabProps} />}
           </div>
