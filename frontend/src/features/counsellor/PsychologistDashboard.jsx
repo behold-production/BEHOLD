@@ -1721,9 +1721,6 @@ export default function PsychologistDashboard({ setView }) {
               <p className="text-sm font-bold text-brand mt-0.5">{bookings.filter(isSessionCompleted).length + Number(profile.hours || 0)}+ Hrs</p>
             </div>
           </div>
-        </div>p>
-            </div>
-          </div>
         </div>
 
         {/* Verification Status Alert Banner */}
