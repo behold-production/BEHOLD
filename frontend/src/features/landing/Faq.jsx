@@ -36,6 +36,22 @@ export default function Faq() {
 
   return (
     <section id="faqs" className="max-w-4xl mx-auto px-4 sm:px-6 py-8 md:py-12 text-zinc-900 text-left select-none relative overflow-hidden">
+      <style>{`
+        .faq-neon-card {
+          transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .faq-neon-card-active {
+          border-color: #10b981 !important;
+          box-shadow: 0 0 15px rgba(16, 185, 129, 0.4), inset 0 0 8px rgba(16, 185, 129, 0.1) !important;
+          background: rgba(16, 185, 129, 0.01) !important;
+          transform: translateY(-2px);
+        }
+        .faq-neon-card-hover:hover:not(.faq-neon-card-active) {
+          border-color: rgba(16, 185, 129, 0.5) !important;
+          box-shadow: 0 0 10px rgba(16, 185, 129, 0.2) !important;
+          transform: translateY(-1px);
+        }
+      `}</style>
       {/* Background glow */}
       <div className="absolute top-1/3 left-1/2 w-[250px] h-[250px] bg-brand/10 rounded-lg glow-glow pointer-events-none" />
 
@@ -59,7 +75,9 @@ export default function Faq() {
           return (
             <div 
               key={idx} 
-              className="bg-white border-[1.5px] border-[#0b1424] rounded-xl sm:rounded-2xl py-2.5 px-4 shadow-dark-blue-sm hover:shadow-dark-blue transition-all duration-500"
+              className={`bg-white border-[1.5px] border-[#0b1424] rounded-xl sm:rounded-2xl py-2.5 px-4 shadow-dark-blue-sm transition-all duration-500 faq-neon-card faq-neon-card-hover ${
+                isOpen ? 'faq-neon-card-active' : ''
+              }`}
             >
               <button
                 type="button"
