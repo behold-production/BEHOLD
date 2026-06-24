@@ -1072,7 +1072,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                           <div>
                             <h5 className="text-sm font-bold text-zinc-800">Secure Payment Gateway</h5>
                             <p className="text-xs text-zinc-505 mt-1">
-                              You will be securely redirected to Razorpay to choose your preferred payment method (UPI, Cards, Netbanking, etc.).
+                              A secure Razorpay checkout overlay will open to complete your payment using UPI, Cards, Netbanking, or Wallet.
                             </p>
                           </div>
                         </div>
