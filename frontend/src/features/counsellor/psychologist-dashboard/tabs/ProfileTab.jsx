@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Edit, Bell } from 'lucide-react';
 import { isNotificationSupported } from '../../../../shared/services/notificationHelper';
 import ApiService from '../../../../shared/services/api';
@@ -30,6 +30,26 @@ const ProfileTab = ({
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [isLocating, setIsLocating] = useState(false);
+
+  useEffect(() => {
+    if (!searchQuery.trim() || searchQuery.trim().length < 3 || searchQuery === ep.locationName) {
+      setSearchResults([]);
+      return;
+    }
+    const timer = setTimeout(async () => {
+      setIsSearching(true);
+      try {
+        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}`);
+        const data = await res.json();
+        setSearchResults(data);
+      } catch (err) {
+        console.error("Geocoding error", err);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 600);
+    return () => clearTimeout(timer);
+  }, [searchQuery, ep.locationName]);
 
   const handleAddressSearch = async () => {
     if (!searchQuery.trim()) return;

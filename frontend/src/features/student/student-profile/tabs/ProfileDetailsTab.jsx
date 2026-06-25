@@ -25,6 +25,26 @@ const ProfileDetailsTab = ({
   const [isSearching, setIsSearching] = React.useState(false);
   const [isLocating, setIsLocating] = React.useState(false);
 
+  React.useEffect(() => {
+    if (!searchQuery.trim() || searchQuery.trim().length < 3 || searchQuery === formData.locationName) {
+      setSearchResults([]);
+      return;
+    }
+    const timer = setTimeout(async () => {
+      setIsSearching(true);
+      try {
+        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}`);
+        const data = await res.json();
+        setSearchResults(data);
+      } catch (err) {
+        console.error("Geocoding error", err);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 600);
+    return () => clearTimeout(timer);
+  }, [searchQuery, formData.locationName]);
+
   if (formData.locationName !== prevLocationName) {
     setPrevLocationName(formData.locationName);
     setSearchQuery(formData.locationName || '');

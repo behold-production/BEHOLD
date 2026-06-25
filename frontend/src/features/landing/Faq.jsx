@@ -39,6 +39,8 @@ export default function Faq() {
       <style>{`
         .faq-neon-card {
           transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+          border: 1.5px solid rgba(0, 209, 209, 0.35) !important;
+          box-shadow: 0 0 12px rgba(0, 209, 209, 0.2), inset 0 0 4px rgba(0, 209, 209, 0.08) !important;
         }
         .faq-neon-card-active {
           border-color: rgba(0, 209, 209, 0.95) !important;

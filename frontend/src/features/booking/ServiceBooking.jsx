@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useBookingViewModel } from './useBookingViewModel';
 import DateTimePicker from './DateTimePicker';
 import TimePicker from './TimePicker';
@@ -115,6 +115,26 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
   const [clientSearchResults, setClientSearchResults] = useState([]);
   const [isClientSearching, setIsClientSearching] = useState(false);
   const [isClientLocating, setIsClientLocating] = useState(false);
+
+  useEffect(() => {
+    if (!clientSearchQuery.trim() || clientSearchQuery.trim().length < 3 || clientSearchQuery === bookingForm.clientLocationName) {
+      setClientSearchResults([]);
+      return;
+    }
+    const timer = setTimeout(async () => {
+      setIsClientSearching(true);
+      try {
+        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(clientSearchQuery)}`);
+        const data = await res.json();
+        setClientSearchResults(data);
+      } catch (err) {
+        console.error("Geocoding error", err);
+      } finally {
+        setIsClientSearching(false);
+      }
+    }, 600);
+    return () => clearTimeout(timer);
+  }, [clientSearchQuery, bookingForm.clientLocationName]);
 
   const handleClientAddressSearch = async () => {
     if (!clientSearchQuery.trim()) return;

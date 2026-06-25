@@ -399,12 +399,16 @@ export default function App() {
 
         {/* Admin Dashboard */}
         <Route path="/admin" element={
-          <AdminDashboard setView={() => { }} />
+          <div className="admin-console-theme">
+            <AdminDashboard setView={() => { }} />
+          </div>
         } />
 
         {/* Counsellor Dashboard */}
         <Route path="/counsellor" element={
-          <PsychologistDashboard setView={() => { }} />
+          <div className="counsellor-console-theme">
+            <PsychologistDashboard setView={() => { }} />
+          </div>
         } />
         <Route path="/conceller" element={<Navigate to="/counsellor" replace />} />
 

@@ -973,6 +973,46 @@ export default function AdminDashboard({ setView }) {
   const [isAdminUserSearching, setIsAdminUserSearching] = useState(false);
   const [isAdminUserLocating, setIsAdminUserLocating] = useState(false);
 
+  useEffect(() => {
+    if (!adminUserSearchQuery.trim() || adminUserSearchQuery.trim().length < 3 || adminUserSearchQuery === userForm.locationName) {
+      setAdminUserSearchResults([]);
+      return;
+    }
+    const timer = setTimeout(async () => {
+      setIsAdminUserSearching(true);
+      try {
+        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(adminUserSearchQuery)}`);
+        const data = await res.json();
+        setAdminUserSearchResults(data);
+      } catch (err) {
+        console.error("Geocoding error", err);
+      } finally {
+        setIsAdminUserSearching(false);
+      }
+    }, 600);
+    return () => clearTimeout(timer);
+  }, [adminUserSearchQuery, userForm.locationName]);
+
+  useEffect(() => {
+    if (!adminSearchQuery.trim() || adminSearchQuery.trim().length < 3 || adminSearchQuery === psyForm.locationName) {
+      setAdminSearchResults([]);
+      return;
+    }
+    const timer = setTimeout(async () => {
+      setIsAdminSearching(true);
+      try {
+        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(adminSearchQuery)}`);
+        const data = await res.json();
+        setAdminSearchResults(data);
+      } catch (err) {
+        console.error("Geocoding error", err);
+      } finally {
+        setIsAdminSearching(false);
+      }
+    }, 600);
+    return () => clearTimeout(timer);
+  }, [adminSearchQuery, psyForm.locationName]);
+
   const handleAdminUserAddressSearch = async () => {
     if (!adminUserSearchQuery.trim()) return;
     setIsAdminUserSearching(true);
