@@ -497,6 +497,7 @@ const AdminController = {
         profilePic,
         profilePicPublicId,
         isTopFive,
+        isActive,
         razorpayAccountId,
         bankAccountNumber,
         bankIfscCode,
@@ -543,6 +544,7 @@ const AdminController = {
       if (profilePic !== undefined) updates.profilePic = profilePic;
       if (profilePicPublicId !== undefined) updates.profilePicPublicId = profilePicPublicId;
       if (isTopFive !== undefined) updates.isTopFive = isTopFive === true || isTopFive === 'true';
+      if (isActive !== undefined) updates.isActive = isActive === true || isActive === 'true';
       if (razorpayAccountId !== undefined) updates.razorpayAccountId = razorpayAccountId;
       if (bankAccountNumber !== undefined) updates.bankAccountNumber = bankAccountNumber;
       if (bankIfscCode !== undefined) updates.bankIfscCode = bankIfscCode;
@@ -881,6 +883,9 @@ const AdminController = {
           privacyPolicy:
             'Your privacy is extremely important to us. This policy describes how we collect, protect, and use your personal information.',
           enablePsychology: true,
+          enableOnline: true,
+          enableOffline: true,
+          enableDoorstep: true,
           gstEnabled: false,
           gstPercent: 0,
           counsellorSplitPercent: 50,
@@ -914,7 +919,10 @@ const AdminController = {
         success: true,
         data: {
           ...settings,
-          enablePsychology: settings.enablePsychology !== false
+          enablePsychology: settings.enablePsychology !== false,
+          enableOnline: settings.enableOnline !== false,
+          enableOffline: settings.enableOffline !== false,
+          enableDoorstep: settings.enableDoorstep !== false
         }
       });
     } catch (error) {

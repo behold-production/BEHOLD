@@ -109,6 +109,33 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     } catch (e) {}
     return '';
   });
+
+  // Auto-fallback booking mode if selected mode is disabled
+  useEffect(() => {
+    let settings = {};
+    try {
+      const stored = localStorage.getItem('behold_site_settings');
+      if (stored) settings = JSON.parse(stored);
+    } catch (e) {}
+
+    const isOnlineEnabled = settings.enableOnline !== false;
+    const isOfflineEnabled = settings.enableOffline !== false;
+    const isDoorstepEnabled = settings.enableDoorstep !== false;
+
+    const timer = setTimeout(() => {
+      if (bookingMode === 'ONLINE' && !isOnlineEnabled) {
+        if (isOfflineEnabled) setBookingMode('OFFLINE');
+        else if (isDoorstepEnabled) setBookingMode('DOOR_STEP');
+      } else if (bookingMode === 'OFFLINE' && !isOfflineEnabled) {
+        if (isOnlineEnabled) setBookingMode('ONLINE');
+        else if (isDoorstepEnabled) setBookingMode('DOOR_STEP');
+      } else if (bookingMode === 'DOOR_STEP' && !isDoorstepEnabled) {
+        if (isOnlineEnabled) setBookingMode('ONLINE');
+        else if (isOfflineEnabled) setBookingMode('OFFLINE');
+      }
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [bookingMode]);
   const [selectedAdvisor, setSelectedAdvisor] = useState(null);
   const [advisorConfirmed, setAdvisorConfirmed] = useState(() => {
     try {
@@ -142,7 +169,13 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
               type: c.type || (c.title?.toLowerCase().includes('career') || c.title?.toLowerCase().includes('mentor') ? 'career' : 'counselling'),
               defaultMeetLink: c.defaultMeetLink || '',
               price: Number(c.price) || 1200,
-              modes: Array.isArray(c.modes) ? c.modes : ['ONLINE', 'OFFLINE', 'DOOR_STEP'],
+              modes: (Array.isArray(c.modes) ? c.modes : ['ONLINE', 'OFFLINE', 'DOOR_STEP']).filter(m => {
+                const settings = JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
+                if (m === 'ONLINE') return settings.enableOnline !== false;
+                if (m === 'OFFLINE') return settings.enableOffline !== false;
+                if (m === 'DOOR_STEP') return settings.enableDoorstep !== false;
+                return true;
+              }),
               availabilitySlots: c.availability || {},
               bookedSlots: c.bookedSlots || [],
               locationName: c.locationName || '',

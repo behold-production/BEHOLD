@@ -130,7 +130,12 @@ export default function TrashTab({ showAlert, showConfirm, reloadData }) {
     setIsLoading(false);
   }, []);
 
-  useEffect(() => { loadTrash(); }, [loadTrash]);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      loadTrash();
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [loadTrash]);
 
   const setAction = (id, key, val) => setActionState(prev => ({ ...prev, [id]: { ...(prev[id] || {}), [key]: val } }));
 

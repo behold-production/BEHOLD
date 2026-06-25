@@ -25,7 +25,7 @@ import {
   Settings, KeyRound, BarChart3, LogOut, Search, ShieldCheck,
   Calendar, Clock, Link, AlertCircle, Edit, Video, UserPlus,
   MessageSquare, FileSpreadsheet, HelpCircle, X, ChevronRight, ChevronLeft, Mail, Shield, Menu, Brain, Download, FileText,
-  Eye, EyeOff, Bell, Send
+  Eye, EyeOff, Bell, Send, Loader2
 } from 'lucide-react';
 import html2canvas from 'html2canvas-pro';
 import jsPDF from 'jspdf';
@@ -975,8 +975,10 @@ export default function AdminDashboard({ setView }) {
 
   useEffect(() => {
     if (!adminUserSearchQuery.trim() || adminUserSearchQuery.trim().length < 3 || adminUserSearchQuery === userForm.locationName) {
-      setAdminUserSearchResults([]);
-      return;
+      const timer = setTimeout(() => {
+        setAdminUserSearchResults([]);
+      }, 0);
+      return () => clearTimeout(timer);
     }
     const timer = setTimeout(async () => {
       setIsAdminUserSearching(true);
@@ -995,8 +997,10 @@ export default function AdminDashboard({ setView }) {
 
   useEffect(() => {
     if (!adminSearchQuery.trim() || adminSearchQuery.trim().length < 3 || adminSearchQuery === psyForm.locationName) {
-      setAdminSearchResults([]);
-      return;
+      const timer = setTimeout(() => {
+        setAdminSearchResults([]);
+      }, 0);
+      return () => clearTimeout(timer);
     }
     const timer = setTimeout(async () => {
       setIsAdminSearching(true);
@@ -1282,6 +1286,9 @@ export default function AdminDashboard({ setView }) {
   const [editSubAdminSuccess, setEditSubAdminSuccess] = useState('');
 
   // Bookings enhancements
+  const [isSavingSettings, setIsSavingSettings] = useState(false);
+  const [updatingPsyIds, setUpdatingPsyIds] = useState({});
+  const [isSavingForm, setIsSavingForm] = useState(false);
   const [selectedBookingIds, setSelectedBookingIds] = useState([]);
 
   const [settingsForm, setSettingsForm] = useState({
@@ -1296,6 +1303,9 @@ export default function AdminDashboard({ setView }) {
     termsOfUse: '',
     privacyPolicy: '',
     cdatGroupCode: '',
+    enableOnline: true,
+    enableOffline: true,
+    enableDoorstep: true,
     gstEnabled: false,
     gstPercent: 0,
     counsellorSplitPercent: 50,
@@ -1446,6 +1456,9 @@ export default function AdminDashboard({ setView }) {
           privacyPolicy: settings.privacyPolicy || '',
           cdatGroupCode: settings.cdatGroupCode || 'cdat@behold',
           enablePsychology: settings.enablePsychology !== undefined ? settings.enablePsychology : true,
+          enableOnline: settings.enableOnline !== undefined ? settings.enableOnline : true,
+          enableOffline: settings.enableOffline !== undefined ? settings.enableOffline : true,
+          enableDoorstep: settings.enableDoorstep !== undefined ? settings.enableDoorstep : true,
           gstEnabled: settings.gstEnabled !== undefined ? settings.gstEnabled : false,
           gstPercent: settings.gstPercent !== undefined ? settings.gstPercent : 0,
           counsellorSplitPercent: settings.counsellorSplitPercent !== undefined ? settings.counsellorSplitPercent : 50,
@@ -1615,6 +1628,7 @@ export default function AdminDashboard({ setView }) {
       return;
     }
 
+    setIsSavingForm(true);
     try {
       await ApiService.createAdminUser(
         userForm.name.trim(),
@@ -1645,6 +1659,8 @@ export default function AdminDashboard({ setView }) {
       }, 1500);
     } catch (err) {
       setUserFormError(err.message || "Failed to create user.");
+    } finally {
+      setIsSavingForm(false);
     }
   };
 
@@ -1695,6 +1711,7 @@ export default function AdminDashboard({ setView }) {
       return;
     }
 
+    setIsSavingForm(true);
     try {
       await ApiService.updateAdminUser(
         userForm.id,
@@ -1734,6 +1751,8 @@ export default function AdminDashboard({ setView }) {
     } catch (err) {
       setIsUserPicUploading(false);
       setUserFormError(err.message || "Failed to update user.");
+    } finally {
+      setIsSavingForm(false);
     }
   };
 
@@ -1783,6 +1802,7 @@ export default function AdminDashboard({ setView }) {
       return;
     }
 
+    setIsSavingForm(true);
     try {
       await ApiService.createAptitudeQuestion({
         question: aptitudeForm.question,
@@ -1798,6 +1818,8 @@ export default function AdminDashboard({ setView }) {
       }, 1500);
     } catch (err) {
       setAptitudeFormError(err.message || "Failed to create question.");
+    } finally {
+      setIsSavingForm(false);
     }
   };
 
@@ -1833,6 +1855,7 @@ export default function AdminDashboard({ setView }) {
       return;
     }
 
+    setIsSavingForm(true);
     try {
       await ApiService.updateAptitudeQuestion(aptitudeForm.id, {
         question: aptitudeForm.question,
@@ -1848,6 +1871,8 @@ export default function AdminDashboard({ setView }) {
       }, 1500);
     } catch (err) {
       setAptitudeFormError(err.message || "Failed to update question.");
+    } finally {
+      setIsSavingForm(false);
     }
   };
 
@@ -1954,6 +1979,7 @@ export default function AdminDashboard({ setView }) {
       return;
     }
 
+    setIsSavingForm(true);
     try {
       await ApiService.createAdminCounsellor({
         name: psyForm.name.trim(),
@@ -1969,6 +1995,7 @@ export default function AdminDashboard({ setView }) {
         modes: psyForm.modes,
         title: psyForm.title,
         isTopFive: psyForm.isTopFive,
+        isActive: psyForm.isActive !== false,
         locationName: psyForm.locationName,
         latitude: Number(psyForm.latitude) || 0,
         longitude: Number(psyForm.longitude) || 0,
@@ -1995,6 +2022,7 @@ export default function AdminDashboard({ setView }) {
         title: 'Consultant Psychologist',
         profilePic: '',
         isTopFive: false,
+        isActive: true,
         locationName: '',
         latitude: 0,
         longitude: 0
@@ -2011,6 +2039,8 @@ export default function AdminDashboard({ setView }) {
       }, 1500);
     } catch (err) {
       setPsyFormError(err.message || "Failed to add psychologist.");
+    } finally {
+      setIsSavingForm(false);
     }
   };
 
@@ -2031,6 +2061,7 @@ export default function AdminDashboard({ setView }) {
       title: psy.title || 'Consultant Psychologist',
       profilePic: psy.profilePic || psy.image || '',
       isTopFive: psy.isTopFive || false,
+      isActive: psy.isActive !== false,
       locationName: psy.locationName || '',
       latitude: psy.latitude || 0,
       longitude: psy.longitude || 0
@@ -2082,6 +2113,7 @@ export default function AdminDashboard({ setView }) {
       return;
     }
 
+    setIsSavingForm(true);
     try {
       if (psyProfilePicFile) {
         setIsPsyPicUploading(true);
@@ -2097,6 +2129,7 @@ export default function AdminDashboard({ setView }) {
         education: psyForm.education,
         specialties: psyForm.specialties,
         price: psyForm.price,
+        text: undefined,
         lang: psyForm.lang,
         bio: psyForm.bio,
         defaultMeetLink: psyForm.defaultMeetLink,
@@ -2104,6 +2137,7 @@ export default function AdminDashboard({ setView }) {
         modes: psyForm.modes,
         title: psyForm.title,
         isTopFive: psyForm.isTopFive,
+        isActive: psyForm.isActive,
         locationName: psyForm.locationName,
         latitude: Number(psyForm.latitude) || 0,
         longitude: Number(psyForm.longitude) || 0,
@@ -2122,6 +2156,8 @@ export default function AdminDashboard({ setView }) {
     } catch (err) {
       setIsPsyPicUploading(false);
       setPsyFormError(err.message || "Failed to update psychologist.");
+    } finally {
+      setIsSavingForm(false);
     }
   };
 
@@ -2211,6 +2247,7 @@ export default function AdminDashboard({ setView }) {
       return;
     }
 
+    setIsSavingForm(true);
     try {
       await ApiService.createAdminAppointment({
         userId: bookingForm.userId,
@@ -2242,6 +2279,8 @@ export default function AdminDashboard({ setView }) {
       }, 1500);
     } catch (err) {
       setBookingFormError(err.message || "Failed to create booking.");
+    } finally {
+      setIsSavingForm(false);
     }
   };
 
@@ -2281,6 +2320,7 @@ export default function AdminDashboard({ setView }) {
       return;
     }
 
+    setIsSavingForm(true);
     try {
       await ApiService.updateAdminAppointment(bookingForm.id, {
         userId: bookingForm.userId,
@@ -2302,6 +2342,8 @@ export default function AdminDashboard({ setView }) {
       }, 1500);
     } catch (err) {
       setBookingFormError(err.message || "Failed to update booking.");
+    } finally {
+      setIsSavingForm(false);
     }
   };
 
@@ -2342,6 +2384,7 @@ export default function AdminDashboard({ setView }) {
       return;
     }
 
+    setIsSavingForm(true);
     try {
       const permissions = Object.keys(newRolePermissions).filter(p => newRolePermissions[p]);
       let res;
@@ -2377,6 +2420,8 @@ export default function AdminDashboard({ setView }) {
       }
     } catch (err) {
       setRoleError(err.message || "An error occurred saving the role.");
+    } finally {
+      setIsSavingForm(false);
     }
   };
 
@@ -2732,6 +2777,44 @@ export default function AdminDashboard({ setView }) {
     }
   };
 
+  const handleTogglePsyActiveStatus = async (psy) => {
+    if (!hasPsyPermission) {
+      await showAlert("Access Denied: You do not have permission to modify psychologists.");
+      return;
+    }
+    setUpdatingPsyIds(prev => ({ ...prev, [psy.id]: true }));
+    try {
+      const nextValue = psy.isActive === false ? true : false;
+      const specialtiesStr = Array.isArray(psy.specialties)
+        ? psy.specialties.join(', ')
+        : (psy.specialties || '');
+
+      await ApiService.updateAdminCounsellor(psy.id, {
+        name: psy.name,
+        email: psy.email,
+        education: psy.education || '',
+        specialties: specialtiesStr,
+        price: psy.price || 1200,
+        lang: psy.lang || 'English, Malayalam',
+        bio: psy.bio || '',
+        defaultMeetLink: psy.defaultMeetLink || '',
+        phone: psy.phone || '',
+        hours: psy.hours || 0,
+        modes: psy.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP'],
+        title: psy.title || 'Consultant Psychologist',
+        profilePic: psy.profilePic || psy.image || '',
+        isTopFive: psy.isTopFive || false,
+        isActive: nextValue,
+        availability: psy.availability
+      });
+      reloadData();
+    } catch (err) {
+      await showAlert(err.message || "Failed to update active status.");
+    } finally {
+      setUpdatingPsyIds(prev => ({ ...prev, [psy.id]: false }));
+    }
+  };
+
   // Site Settings save handler
   const handleSaveSettings = async (e) => {
     e.preventDefault();
@@ -2739,6 +2822,7 @@ export default function AdminDashboard({ setView }) {
       await showAlert("Access Denied: You do not have permission to save settings.");
       return;
     }
+    setIsSavingSettings(true);
     setSettingsSuccess('');
     try {
       await ApiService.updateAdminSettings(settingsForm);
@@ -2748,6 +2832,8 @@ export default function AdminDashboard({ setView }) {
       reloadData();
     } catch (err) {
       await showAlert(err.message || "Failed to save settings.");
+    } finally {
+      setIsSavingSettings(false);
     }
   };
 
@@ -2871,6 +2957,7 @@ export default function AdminDashboard({ setView }) {
       return;
     }
 
+    setIsSavingForm(true);
     try {
       await ApiService.updateAdminUser(
         editingSubAdmin.id,
@@ -2889,6 +2976,8 @@ export default function AdminDashboard({ setView }) {
       }, 1500);
     } catch (err) {
       setEditSubAdminError(err.message || 'Failed to save permissions.');
+    } finally {
+      setIsSavingForm(false);
     }
   };
 
@@ -3007,6 +3096,7 @@ export default function AdminDashboard({ setView }) {
       return;
     }
 
+    setIsSavingForm(true);
     try {
       await ApiService.createFaq(faqForm.question.trim(), faqForm.answer.trim());
       setFaqFormSuccess("FAQ added successfully!");
@@ -3018,6 +3108,8 @@ export default function AdminDashboard({ setView }) {
       }, 1500);
     } catch (err) {
       setFaqFormError(err.message || "Failed to add FAQ.");
+    } finally {
+      setIsSavingForm(false);
     }
   };
 
@@ -3046,6 +3138,7 @@ export default function AdminDashboard({ setView }) {
       return;
     }
 
+    setIsSavingForm(true);
     try {
       const faqToUpdate = faqsDb[faqForm.index];
       if (!faqToUpdate) {
@@ -3061,6 +3154,8 @@ export default function AdminDashboard({ setView }) {
       }, 1500);
     } catch (err) {
       setFaqFormError(err.message || "Failed to update FAQ.");
+    } finally {
+      setIsSavingForm(false);
     }
   };
 
@@ -3189,6 +3284,8 @@ export default function AdminDashboard({ setView }) {
 
   // --- DEDICATED LOGGED-IN ADMIN DASHBOARD UI ---
   const tabProps = {
+    isSavingForm,
+    setIsSavingForm,
     currentSection,
     setCurrentSection,
     permissionState,
@@ -3527,6 +3624,9 @@ export default function AdminDashboard({ setView }) {
     canAddPsy,
     canEditPsy,
     canDeletePsy,
+    handleTogglePsyActiveStatus,
+    updatingPsyIds,
+    isSavingSettings,
     studentsList,
     canAddStudents,
     canEditStudents,
@@ -3859,7 +3959,12 @@ export default function AdminDashboard({ setView }) {
               {isUserPicUploading && (<p className="text-xs text-brand font-bold animate-pulse">Uploading profile picture...</p>)}
               <div className="flex gap-3 pt-2">
                 <button type="button" onClick={() => { setIsAddUserOpen(false); setIsEditUserOpen(false); }} className="flex-1 py-3 border border-zinc-800 hover:bg-zinc-855 text-white font-bold text-sm capitalize rounded-lg cursor-pointer transition text-center bg-transparent">Cancel</button>
-                <button type="submit" className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-950 font-bold text-sm capitalize rounded-lg cursor-pointer transition border-none shadow-md">
+                <button
+                  type="submit"
+                  disabled={isSavingForm}
+                  className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize rounded-lg cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isSavingForm && <Loader2 className="w-4 h-4 animate-spin" />}
                   {isAddUserOpen ? 'Create Account' : 'Save Changes'}
                 </button>
               </div>
@@ -4144,7 +4249,7 @@ export default function AdminDashboard({ setView }) {
                   </button>
                 </div>
 
-                <div className="sm:col-span-2 space-y-1.5 pt-1">
+                 <div className="sm:col-span-2 space-y-1.5 pt-1">
                   <label className="text-sm capitalize font-bold text-zinc-400 block mb-1">Supported Session Modes</label>
                   <div className="flex flex-wrap gap-4">
                     {['ONLINE', 'OFFLINE', 'DOOR_STEP'].map(mode => (
@@ -4164,6 +4269,31 @@ export default function AdminDashboard({ setView }) {
                         <span>{mode === 'DOOR_STEP' ? 'Doorstep' : mode.charAt(0) + mode.slice(1).toLowerCase()}</span>
                       </label>
                     ))}
+                  </div>
+                </div>
+
+                <div className="sm:col-span-2 space-y-1.5 pt-2">
+                  <label className="text-sm capitalize font-bold text-zinc-400 block mb-1">Account & Feature Status</label>
+                  <div className="flex flex-wrap gap-5">
+                    <label className="flex items-center gap-2 cursor-pointer text-sm text-zinc-300 select-none font-semibold">
+                      <input
+                        type="checkbox"
+                        checked={psyForm.isActive !== false}
+                        onChange={(e) => setPsyForm({ ...psyForm, isActive: e.target.checked })}
+                        className="w-4 h-4 rounded border-zinc-805 bg-zinc-955 text-brand focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
+                      />
+                      <span>Active Profile (Accept Bookings)</span>
+                    </label>
+
+                    <label className="flex items-center gap-2 cursor-pointer text-sm text-zinc-300 select-none font-semibold">
+                      <input
+                        type="checkbox"
+                        checked={psyForm.isTopFive || false}
+                        onChange={(e) => setPsyForm({ ...psyForm, isTopFive: e.target.checked })}
+                        className="w-4 h-4 rounded border-zinc-805 bg-zinc-955 text-brand focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
+                      />
+                      <span>Featured Psychologist (Top 5)</span>
+                    </label>
                   </div>
                 </div>
 
@@ -4426,8 +4556,10 @@ export default function AdminDashboard({ setView }) {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize rounded-lg cursor-pointer transition border-none shadow-md"
+                  disabled={isSavingForm}
+                  className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize rounded-lg cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
+                  {isSavingForm && <Loader2 className="w-4 h-4 animate-spin" />}
                   {isAddPsyOpen ? 'Save Psychologist' : 'Update Details'}
                 </button>
               </div>
@@ -4591,8 +4723,10 @@ export default function AdminDashboard({ setView }) {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize rounded-lg cursor-pointer transition border-none shadow-md"
+                  disabled={isSavingForm}
+                  className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize rounded-lg cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
+                  {isSavingForm && <Loader2 className="w-4 h-4 animate-spin" />}
                   {isAddBookingOpen ? 'Confirm Slot' : 'Update Appointment'}
                 </button>
               </div>
@@ -4661,8 +4795,10 @@ export default function AdminDashboard({ setView }) {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize rounded-lg cursor-pointer transition border-none shadow-md"
+                  disabled={isSavingForm}
+                  className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize rounded-lg cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
+                  {isSavingForm && <Loader2 className="w-4 h-4 animate-spin" />}
                   {isAddFaqOpen ? 'Create FAQ' : 'Save Changes'}
                 </button>
               </div>
@@ -4790,8 +4926,10 @@ export default function AdminDashboard({ setView }) {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize rounded-lg cursor-pointer transition border-none shadow-md"
+                  disabled={isSavingForm}
+                  className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize rounded-lg cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
+                  {isSavingForm && <Loader2 className="w-4 h-4 animate-spin" />}
                   {isAddAptitudeOpen ? 'Create Question' : 'Save Changes'}
                 </button>
               </div>
@@ -5517,8 +5655,10 @@ export default function AdminDashboard({ setView }) {
                   </button>
                   <button
                     type="submit"
-                    className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize rounded-lg cursor-pointer transition border-none shadow-md"
+                    disabled={isSavingForm}
+                    className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize rounded-lg cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
+                    {isSavingForm && <Loader2 className="w-4 h-4 animate-spin" />}
                     Save Scopes
                   </button>
                 </div>

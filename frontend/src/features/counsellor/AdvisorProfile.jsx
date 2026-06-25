@@ -46,6 +46,15 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             }
           }
 
+          const settings = JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
+          const rawModes = psy.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP'];
+          const filteredModes = rawModes.filter(m => {
+            if (m === 'ONLINE') return settings.enableOnline !== false;
+            if (m === 'OFFLINE') return settings.enableOffline !== false;
+            if (m === 'DOOR_STEP') return settings.enableDoorstep !== false;
+            return true;
+          });
+
           setAdvisor({
             id: psy._id || psy.id,
             name: psy.name,
@@ -59,7 +68,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             education: psy.education || 'MPhil Clinical Psychology',
             bio: psy.experience || 'Dedicated consultant psychologist.',
             type: 'counselling',
-            modes: psy.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP']
+            modes: filteredModes
           });
         }
       } catch (err) {

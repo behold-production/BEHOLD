@@ -34,6 +34,22 @@ const validateBookingDetails = async (counsellorId, date, time, mode, service, a
   if (!counsellor) {
     return { valid: false, message: 'Counsellor not found' };
   }
+  if (counsellor.isActive === false) {
+    return { valid: false, message: 'This psychologist is temporarily suspended or unavailable.' };
+  }
+
+  // Check global mode constraints
+  const settingsList = await StorageService.findAll('settings');
+  const settings = settingsList[0] || {};
+  if (mode === 'ONLINE' && settings.enableOnline === false) {
+    return { valid: false, message: 'Online video consultation sessions are temporarily disabled by the administrator.' };
+  }
+  if (mode === 'OFFLINE' && settings.enableOffline === false) {
+    return { valid: false, message: 'Offline at-center sessions are temporarily disabled by the administrator.' };
+  }
+  if (mode === 'DOOR_STEP' && settings.enableDoorstep === false) {
+    return { valid: false, message: 'Doorstep home visit sessions are temporarily disabled by the administrator.' };
+  }
 
   // 3. Mode preference compatibility check
   const availableModes = Array.isArray(counsellor.modes) ? counsellor.modes : ['ONLINE', 'OFFLINE'];

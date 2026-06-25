@@ -156,16 +156,13 @@ export default function SidebarNav(props) {
                       const Icon = item.icon;
                       const isActive = currentSection === item.id;
 
-                      let btnClass = "";
-                      if (item.isTrash) {
-                        btnClass = isActive
+                      const btnClass = item.isTrash
+                        ? (isActive
                           ? 'bg-rose-955/30 border border-rose-905 text-rose-455 font-semibold'
-                          : 'bg-transparent text-zinc-500 hover:text-rose-400 hover:bg-rose-950/20 font-medium';
-                      } else {
-                        btnClass = isActive
+                          : 'bg-transparent text-zinc-500 hover:text-rose-400 hover:bg-rose-950/20 font-medium')
+                        : (isActive
                           ? 'bg-brand text-zinc-955 font-semibold shadow-sm'
-                          : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-850/60 font-medium';
-                      }
+                          : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-850/60 font-medium');
 
                       return (
                         <button

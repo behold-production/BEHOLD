@@ -1,6 +1,6 @@
 import React from 'react';
 import { SkeletonTableRows, PaginationBar } from '../components/SharedAdminUI';
-import { User, ShieldAlert, Award, Trash, Check, Plus, Lock, Settings, KeyRound, BarChart3, LogOut, Search, ShieldCheck, Calendar, Clock, Link, AlertCircle, Edit, Video, UserPlus, MessageSquare, FileSpreadsheet, HelpCircle, X, ChevronRight, ChevronLeft, Mail, Shield, Menu, Brain, Download, FileText, Eye, EyeOff, Bell, Send } from 'lucide-react';
+import { User, ShieldAlert, Award, Trash, Check, Plus, Lock, Settings, KeyRound, BarChart3, LogOut, Search, ShieldCheck, Calendar, Clock, Link, AlertCircle, Edit, Video, UserPlus, MessageSquare, FileSpreadsheet, HelpCircle, X, ChevronRight, ChevronLeft, Mail, Shield, Menu, Brain, Download, FileText, Eye, EyeOff, Bell, Send, Loader2 } from 'lucide-react';
 import { formatDateString } from '../utils';
 
 export default function SubAdminManagementTab(props) {
@@ -137,6 +137,7 @@ export default function SubAdminManagementTab(props) {
     setSubAdminSuccess,
     isRegistering,
     setIsRegistering,
+    isSavingForm,
     isAddUserOpen,
     setIsAddUserOpen,
     isEditUserOpen,
@@ -570,10 +571,15 @@ export default function SubAdminManagementTab(props) {
 
                       <button
                         type="submit"
-                        disabled={isRegistering}
-                        className="w-full py-3 bg-brand hover:bg-brand-dark text-zinc-950 font-bold text-sm capitalize rounded-lg cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1"
+                        disabled={isRegistering || isSavingForm}
+                        className="w-full py-3 bg-brand hover:bg-brand-dark text-zinc-950 font-bold text-sm capitalize rounded-lg cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        <Plus className="w-3.5 h-3.5 text-zinc-955" /> Register Sub-Admin Profile
+                        {isRegistering || isSavingForm ? (
+                          <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-955" />
+                        ) : (
+                          <Plus className="w-3.5 h-3.5 text-zinc-955" />
+                        )}
+                        Register Sub-Admin Profile
                       </button>
                     </form>
 
@@ -833,9 +839,15 @@ export default function SubAdminManagementTab(props) {
                     </button>
                     <button
                       type="submit"
-                      className="px-6 py-2.5 bg-brand hover:bg-brand-dark text-zinc-950 font-bold text-sm capitalize rounded-lg cursor-pointer transition shadow-md flex items-center gap-1.5"
+                      disabled={isSavingForm}
+                      className="px-6 py-2.5 bg-brand hover:bg-brand-dark text-zinc-950 font-bold text-sm capitalize rounded-lg cursor-pointer transition shadow-md flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      <Plus className="w-4 h-4 text-zinc-955" /> {editingRoleId ? 'Update Role' : 'Save Custom Role'}
+                      {isSavingForm ? (
+                        <Loader2 className="w-4 h-4 animate-spin text-zinc-955" />
+                      ) : (
+                        <Plus className="w-4 h-4 text-zinc-955" />
+                      )}
+                      {editingRoleId ? 'Update Role' : 'Save Custom Role'}
                     </button>
                   </div>
                 </form>

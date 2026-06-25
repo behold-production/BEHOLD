@@ -118,8 +118,10 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
   useEffect(() => {
     if (!clientSearchQuery.trim() || clientSearchQuery.trim().length < 3 || clientSearchQuery === bookingForm.clientLocationName) {
-      setClientSearchResults([]);
-      return;
+      const timer = setTimeout(() => {
+        setClientSearchResults([]);
+      }, 0);
+      return () => clearTimeout(timer);
     }
     const timer = setTimeout(async () => {
       setIsClientSearching(true);
@@ -599,35 +601,47 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                           })}
                         </div>
                       </div>
-
                       {/* Mode of Session Select */}
                       <div className="space-y-2">
                         <label className="text-xs font-bold text-zinc-550 capitalize tracking-wide block">Select Session Mode</label>
                         <div className="grid grid-cols-3 gap-2.5 w-full">
-                          {[
-                            { id: 'ONLINE', label: 'Online', desc: 'Video call' },
-                            { id: 'DOOR_STEP', label: 'Doorstep', desc: 'Home visit' },
-                            { id: 'OFFLINE', label: 'Offline', desc: 'At center' }
-                          ].map((m) => (
-                            <button
-                              type="button"
-                              key={m.id}
-                              onClick={() => {
-                                if (rescheduleSession) return;
-                                setBookingMode(m.id);
-                              }}
-                              className={`flex flex-col items-center justify-center gap-1.5 px-3 py-4 text-xs capitalize font-semibold border rounded-xl transition cursor-pointer text-center min-h-[64px] leading-tight ${
-                                bookingMode === m.id
-                                  ? 'bg-brand/10 text-brand-dark border-brand/30 shadow-xs font-bold'
-                                  : 'bg-white text-zinc-655 border-zinc-200 hover:border-brand/40 hover:text-brand-dark'
-                              } ${rescheduleSession ? 'opacity-65 cursor-not-allowed' : ''}`}
-                            >
-                              <span className="flex flex-col items-center">
-                                <span className="font-bold text-xs sm:text-sm text-zinc-900">{m.label}</span>
-                                <span className="text-[10px] sm:text-xs font-normal normal-case text-zinc-400 mt-0.5">{m.desc}</span>
-                              </span>
-                            </button>
-                          ))}
+                          {(() => {
+                            let siteSettings = {};
+                            try {
+                              const stored = localStorage.getItem('behold_site_settings');
+                              if (stored) siteSettings = JSON.parse(stored);
+                            } catch (e) {}
+
+                            return [
+                              { id: 'ONLINE', label: 'Online', desc: 'Video call', active: siteSettings.enableOnline !== false },
+                              { id: 'DOOR_STEP', label: 'Doorstep', desc: 'Home visit', active: siteSettings.enableDoorstep !== false },
+                              { id: 'OFFLINE', label: 'Offline', desc: 'At center', active: siteSettings.enableOffline !== false }
+                            ].map((m) => {
+                              const isAvailable = m.active;
+                              return (
+                                <button
+                                  type="button"
+                                  key={m.id}
+                                  disabled={!isAvailable || rescheduleSession}
+                                  onClick={() => {
+                                    if (rescheduleSession) return;
+                                    setBookingMode(m.id);
+                                  }}
+                                  className={`flex flex-col items-center justify-center gap-1.5 px-3 py-4 text-xs capitalize font-semibold border rounded-xl transition cursor-pointer text-center min-h-[64px] leading-tight ${
+                                    bookingMode === m.id
+                                      ? 'bg-brand/10 text-brand-dark border-brand/30 shadow-xs font-bold'
+                                      : 'bg-white text-zinc-655 border-zinc-200 hover:border-brand/40 hover:text-brand-dark'
+                                  } ${(!isAvailable || rescheduleSession) ? 'opacity-40 cursor-not-allowed' : ''}`}
+                                >
+                                  <span className="flex flex-col items-center">
+                                    <span className="font-bold text-xs sm:text-sm text-zinc-900">{m.label}</span>
+                                    <span className="text-[10px] sm:text-xs font-normal normal-case text-zinc-400 mt-0.5">{m.desc}</span>
+                                    {!isAvailable && <span className="text-[9px] text-red-500 font-bold mt-1">Disabled</span>}
+                                  </span>
+                                </button>
+                              );
+                            });
+                          })()}
                         </div>
                       </div>
 

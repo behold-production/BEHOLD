@@ -86,6 +86,9 @@ const PublicController = {
             'Your privacy is extremely important to us. This policy describes how we collect, protect, and use your personal information.',
           cdatGroupCode: 'cdat@behold',
           enablePsychology: true,
+          enableOnline: true,
+          enableOffline: true,
+          enableDoorstep: true,
           gstEnabled: false,
           gstPercent: 0,
           careerBadge: 'Career Mentoring',
@@ -118,7 +121,10 @@ const PublicController = {
         success: true,
         data: {
           ...settings,
-          enablePsychology: settings.enablePsychology !== false
+          enablePsychology: settings.enablePsychology !== false,
+          enableOnline: settings.enableOnline !== false,
+          enableOffline: settings.enableOffline !== false,
+          enableDoorstep: settings.enableDoorstep !== false
         }
       });
     } catch (error) {

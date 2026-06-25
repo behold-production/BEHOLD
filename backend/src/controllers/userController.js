@@ -89,13 +89,27 @@ const UserController = {
         status: { $in: ['APPROVED', 'PENDING', 'CONFIRMED'] }
       });
 
+      // Get settings for global session modes
+      const settingsList = await StorageService.findAll('settings');
+      const settings = settingsList[0] || {};
+      const globalOnline = settings.enableOnline !== false;
+      const globalOffline = settings.enableOffline !== false;
+      const globalDoorstep = settings.enableDoorstep !== false;
+
       // Format response to hide sensitive details
       const responseData = filtered.map(({ password, ...data }) => {
+        const allowedModes = (data.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP']).filter(m => {
+          if (m === 'ONLINE') return globalOnline;
+          if (m === 'OFFLINE') return globalOffline;
+          if (m === 'DOOR_STEP') return globalDoorstep;
+          return true;
+        });
         const booked = allActiveAppointments
           .filter((appt) => appt.counsellorId === data.id)
           .map((appt) => ({ date: appt.date, time: appt.time }));
         return {
           ...data,
+          modes: allowedModes,
           bookedSlots: booked
         };
       });
@@ -115,11 +129,25 @@ const UserController = {
     try {
       const { id } = req.params;
       const counsellor = await StorageService.findById('counsellors', id);
-      if (!counsellor) {
-        return res.status(404).json({ success: false, message: 'Counsellor not found' });
+      if (!counsellor || counsellor.isActive === false || counsellor.isDeleted === true) {
+        return res.status(404).json({ success: false, message: 'Counsellor not found or currently suspended' });
       }
 
       const { password, ...counsellorData } = counsellor;
+
+      // Get settings for global session modes
+      const settingsList = await StorageService.findAll('settings');
+      const settings = settingsList[0] || {};
+      const globalOnline = settings.enableOnline !== false;
+      const globalOffline = settings.enableOffline !== false;
+      const globalDoorstep = settings.enableDoorstep !== false;
+
+      counsellorData.modes = (counsellorData.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP']).filter(m => {
+        if (m === 'ONLINE') return globalOnline;
+        if (m === 'OFFLINE') return globalOffline;
+        if (m === 'DOOR_STEP') return globalDoorstep;
+        return true;
+      });
 
       // Load feedbacks
       const feedbacks = await StorageService.findAll('feedbacks', { counsellorId: id, isModerated: false });

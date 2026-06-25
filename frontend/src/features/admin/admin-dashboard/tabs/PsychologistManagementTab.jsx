@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, ShieldAlert, Award, Trash, Check, Plus, Lock, Settings, KeyRound, BarChart3, LogOut, Search, ShieldCheck, Calendar, Clock, Link, AlertCircle, Edit, Video, UserPlus, MessageSquare, FileSpreadsheet, HelpCircle, X, ChevronRight, ChevronLeft, Mail, Shield, Menu, Brain, Download, FileText, Eye, EyeOff, Bell, Send } from 'lucide-react';
+import { User, ShieldAlert, Award, Trash, Check, Plus, Lock, Settings, KeyRound, BarChart3, LogOut, Search, ShieldCheck, Calendar, Clock, Link, AlertCircle, Edit, Video, UserPlus, MessageSquare, FileSpreadsheet, HelpCircle, X, ChevronRight, ChevronLeft, Mail, Shield, Menu, Brain, Download, FileText, Eye, EyeOff, Bell, Send, Loader2 } from 'lucide-react';
 import { SkeletonTableRows, PaginationBar } from '../components/SharedAdminUI';
 
 export default function PsychologistManagementTab(props) {
@@ -334,9 +334,11 @@ export default function PsychologistManagementTab(props) {
     hasPsyPermission,
     hasBookingPermission,
     canAddPsy,
-    psychologistsList,
     canEditPsy,
-    canDeletePsy
+    psychologistsList,
+    canDeletePsy,
+    handleTogglePsyActiveStatus,
+    updatingPsyIds
   } = props;
 
   return (
@@ -377,7 +379,13 @@ export default function PsychologistManagementTab(props) {
                           specialties: 'Anxiety Stress & Panic, Depression & Mood Concerns, Relationship',
                           price: 1250,
                           lang: 'Malayalam, English',
-                          bio: ''
+                          bio: '',
+                          isTopFive: false,
+                          isActive: true,
+                          locationName: '',
+                          latitude: 0,
+                          longitude: 0,
+                          modes: ['ONLINE', 'OFFLINE', 'DOOR_STEP']
                         });
                         setAdminActiveDays({
                           1: true, 2: true, 3: true, 4: true, 5: true, 6: false, 0: false
@@ -458,9 +466,16 @@ export default function PsychologistManagementTab(props) {
                                   )}
                                 </div>
                                 <div>
-                                  <span className="font-bold text-white block leading-tight">{psy.name}</span>
-                                  <span className="text-sm text-zinc-500 break-all">ID: {psy.id} • Active Profile</span>
-                                </div>
+                                   <span className="font-bold text-white block leading-tight">{psy.name}</span>
+                                   <span className="text-sm text-zinc-505 break-all">
+                                     ID: {psy.id} •{' '}
+                                     {psy.isActive !== false ? (
+                                       <span className="text-emerald-400 font-semibold">Active</span>
+                                     ) : (
+                                       <span className="text-rose-400 font-semibold">Paused</span>
+                                     )}
+                                   </span>
+                                 </div>
                               </div>
                             </td>
                             <td className="p-3 text-zinc-350 font-medium whitespace-nowrap">{psy.email}</td>
@@ -538,6 +553,27 @@ export default function PsychologistManagementTab(props) {
                                   title="Generate Password Reset Link"
                                 >
                                   <KeyRound className="w-4 h-4 inline-block" />
+                                </button>
+                              )}
+                              {canEditPsy && (
+                                <button
+                                  disabled={updatingPsyIds && updatingPsyIds[psy.id]}
+                                  onClick={() => handleTogglePsyActiveStatus(psy)}
+                                  className={`px-2.5 py-1 rounded border text-xs font-bold transition cursor-pointer select-none flex items-center gap-1.5 justify-center min-w-[70px] ${
+                                    psy.isActive !== false
+                                      ? 'bg-zinc-900 border-emerald-900/60 text-emerald-450 hover:bg-emerald-950/20'
+                                      : 'bg-zinc-900 border-rose-900/60 text-rose-450 hover:bg-rose-955/20'
+                                  } ${updatingPsyIds && updatingPsyIds[psy.id] ? 'opacity-40 cursor-not-allowed' : ''}`}
+                                  title={psy.isActive !== false ? "Pause Profile" : "Activate Profile"}
+                                >
+                                  {updatingPsyIds && updatingPsyIds[psy.id] ? (
+                                    <>
+                                      <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-400" />
+                                      <span>...</span>
+                                    </>
+                                  ) : (
+                                    psy.isActive !== false ? 'Pause' : 'Resume'
+                                  )}
                                 </button>
                               )}
                               {canEditPsy && (

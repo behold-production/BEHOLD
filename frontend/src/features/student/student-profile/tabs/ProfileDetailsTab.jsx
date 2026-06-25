@@ -27,8 +27,10 @@ const ProfileDetailsTab = ({
 
   React.useEffect(() => {
     if (!searchQuery.trim() || searchQuery.trim().length < 3 || searchQuery === formData.locationName) {
-      setSearchResults([]);
-      return;
+      const timer = setTimeout(() => {
+        setSearchResults([]);
+      }, 0);
+      return () => clearTimeout(timer);
     }
     const timer = setTimeout(async () => {
       setIsSearching(true);

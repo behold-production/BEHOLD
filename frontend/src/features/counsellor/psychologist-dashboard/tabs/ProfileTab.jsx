@@ -33,8 +33,10 @@ const ProfileTab = ({
 
   useEffect(() => {
     if (!searchQuery.trim() || searchQuery.trim().length < 3 || searchQuery === ep.locationName) {
-      setSearchResults([]);
-      return;
+      const timer = setTimeout(() => {
+        setSearchResults([]);
+      }, 0);
+      return () => clearTimeout(timer);
     }
     const timer = setTimeout(async () => {
       setIsSearching(true);
@@ -388,11 +390,21 @@ const ProfileTab = ({
             <div className="flex flex-wrap gap-4 pt-1">
               {['ONLINE', 'OFFLINE', 'DOOR_STEP'].map(mode => {
                 const isSelected = ep.modes?.includes(mode);
+                let siteSettings = {};
+                try {
+                  const stored = localStorage.getItem('behold_site_settings');
+                  if (stored) siteSettings = JSON.parse(stored);
+                } catch (e) {}
+                const isGloballyEnabled = 
+                  mode === 'ONLINE' ? siteSettings.enableOnline !== false :
+                  mode === 'OFFLINE' ? siteSettings.enableOffline !== false :
+                  mode === 'DOOR_STEP' ? siteSettings.enableDoorstep !== false : true;
                 return (
-                  <label key={mode} className="flex items-center gap-2 cursor-pointer text-sm text-zinc-300 select-none">
+                  <label key={mode} className={`flex items-center gap-2 text-sm select-none ${isGloballyEnabled ? 'cursor-pointer text-zinc-300' : 'cursor-not-allowed text-zinc-500'}`}>
                     <input
                       type="checkbox"
-                      checked={isSelected}
+                      checked={isSelected && isGloballyEnabled}
+                      disabled={!isGloballyEnabled}
                       onChange={(e) => {
                         let nextModes = [...(ep.modes || [])];
                         if (e.target.checked) {
@@ -402,9 +414,12 @@ const ProfileTab = ({
                         }
                         setEp({ modes: nextModes });
                       }}
-                      className="w-4 h-4 rounded border-zinc-800 bg-zinc-955 text-brand focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
+                      className="w-4 h-4 rounded border-zinc-800 bg-zinc-955 text-brand focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand disabled:opacity-50 disabled:cursor-not-allowed"
                     />
-                    <span className="font-semibold">{mode === 'DOOR_STEP' ? 'Doorstep' : mode.charAt(0) + mode.slice(1).toLowerCase()}</span>
+                    <span className="font-semibold">
+                      {mode === 'DOOR_STEP' ? 'Doorstep' : mode.charAt(0) + mode.slice(1).toLowerCase()}
+                      {!isGloballyEnabled && <span className="text-[10px] text-red-500 font-bold ml-1">(Paused by Admin)</span>}
+                    </span>
                   </label>
                 );
               })}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { SkeletonTableRows, PaginationBar } from '../components/SharedAdminUI';
-import { User, ShieldAlert, Award, Trash, Check, Plus, Lock, Settings, KeyRound, BarChart3, LogOut, Search, ShieldCheck, Calendar, Clock, Link, AlertCircle, Edit, Video, UserPlus, MessageSquare, FileSpreadsheet, HelpCircle, X, ChevronRight, ChevronLeft, Mail, Shield, Menu, Brain, Download, FileText, Eye, EyeOff, Bell, Send } from 'lucide-react';
+import { User, ShieldAlert, Award, Trash, Check, Plus, Lock, Settings, KeyRound, BarChart3, LogOut, Search, ShieldCheck, Calendar, Clock, Link, AlertCircle, Edit, Video, UserPlus, MessageSquare, FileSpreadsheet, HelpCircle, X, ChevronRight, ChevronLeft, Mail, Shield, Menu, Brain, Download, FileText, Eye, EyeOff, Bell, Send, Loader2 } from 'lucide-react';
 
 const isNotificationSupported = () => 'Notification' in window;
 
@@ -234,6 +234,7 @@ export default function SettingsTab(props) {
     setSettingsForm,
     settingsSuccess,
     setSettingsSuccess,
+    isSavingSettings,
     inquiryNotesText,
     setInquiryNotesText,
     isProfileDrawerOpen,
@@ -338,13 +339,13 @@ export default function SettingsTab(props) {
   const [activeSettingsTab, setActiveSettingsTab] = useState('general');
 
   const settingsTabs = [
-    { id: 'general', label: 'General & Branding', icon: Settings },
-    { id: 'hero', label: 'Hero Content', icon: Brain },
-    { id: 'sections', label: 'Landing Sections', icon: FileText },
-    { id: 'features', label: 'Features & Taxation', icon: KeyRound },
-    { id: 'contact', label: 'Support & Alerts', icon: Bell },
+    { id: 'general', label: 'General & Contact', icon: Settings },
+    { id: 'landing', label: 'Landing Page Content', icon: Brain },
+    { id: 'modes', label: 'Services & Session Modes', icon: Video },
+    { id: 'payments', label: 'Payments & Taxation', icon: KeyRound },
+    { id: 'security', label: 'Security & System', icon: ShieldCheck },
     { id: 'promo', label: 'Promo Codes', icon: FileSpreadsheet },
-    { id: 'legal', label: 'Policies & Legal', icon: ShieldCheck }
+    { id: 'legal', label: 'Policies & Legal', icon: Shield }
   ];
 
   return (
@@ -352,7 +353,7 @@ export default function SettingsTab(props) {
       <div className="space-y-6 animate-in fade-in duration-200 text-sm">
         <div className="border-b border-zinc-800 pb-3">
           <h3 className="text-sm font-bold capitalize text-white font-header">Site Configuration Panel</h3>
-          <p className="text-sm text-zinc-500 font-medium pt-1">Manage global landing page titles, subheadings, and contact support endpoints</p>
+          <p className="text-sm text-zinc-500 font-medium pt-1">Manage global landing page titles, support endpoints, and booking behavior</p>
         </div>
 
         <div className="flex flex-col md:flex-row gap-6 items-start">
@@ -380,121 +381,165 @@ export default function SettingsTab(props) {
 
           {/* Form / Content Panel */}
           <div className="flex-1 w-full min-w-0">
-            {/* TAB 1: General & Branding */}
+            {/* TAB 1: General & Contact */}
             {activeSettingsTab === 'general' && (
-              <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-xl space-y-5 animate-in fade-in duration-200 shadow-lg">
-                <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
-                  <Settings className="w-4 h-4 text-brand" />
-                  <h4 className="text-sm font-bold text-white uppercase tracking-wider">General & Branding</h4>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Custom Site Brand Name</label>
-                    <input
-                      type="text"
-                      required
-                      value={settingsForm.siteName}
-                      onChange={(e) => setSettingsForm({ ...settingsForm, siteName: e.target.value })}
-                      className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
-                      placeholder="e.g. BEHOLD"
-                    />
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Footer Copyright Text</label>
-                    <input
-                      type="text"
-                      required
-                      value={settingsForm.siteCopyright}
-                      onChange={(e) => setSettingsForm({ ...settingsForm, siteCopyright: e.target.value })}
-                      className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
-                      placeholder="e.g. © BEHOLD Ltd., 2026. All rights reserved."
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">C-DAT Default Group Code</label>
-                  <input
-                    type="text"
-                    required
-                    value={settingsForm.cdatGroupCode}
-                    onChange={(e) => setSettingsForm({ ...settingsForm, cdatGroupCode: e.target.value })}
-                    className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
-                    placeholder="e.g. cdat@behold"
-                  />
-                </div>
-
-                {settingsSuccess && (
-                  <p className="text-xs text-emerald-500 font-bold capitalize tracking-wide">{settingsSuccess}</p>
-                )}
-
-                <div className="pt-2">
-                  <button
-                    type="submit"
-                    className="px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-lg cursor-pointer transition shadow-md border-none"
-                  >
-                    Save General Settings
-                  </button>
-                </div>
-              </form>
-            )}
-
-            {/* TAB 2: Hero Content */}
-            {activeSettingsTab === 'hero' && (
-              <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-xl space-y-5 animate-in fade-in duration-200 shadow-lg">
-                <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
-                  <Brain className="w-4 h-4 text-brand" />
-                  <h4 className="text-sm font-bold text-white uppercase tracking-wider">Hero Content</h4>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Hero Section Heading</label>
-                  <input
-                    type="text"
-                    required
-                    value={settingsForm.heroTitle}
-                    onChange={(e) => setSettingsForm({ ...settingsForm, heroTitle: e.target.value })}
-                    className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
-                    placeholder="e.g. Bridging You To Your {True Growth.}"
-                  />
-                  <span className="text-[11px] text-zinc-500 block font-medium">Use curly braces `{ }` around words you want highlighted with the neon gradient.</span>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Hero Section Subtitle</label>
-                  <textarea
-                    rows={4}
-                    required
-                    value={settingsForm.heroSub}
-                    onChange={(e) => setSettingsForm({ ...settingsForm, heroSub: e.target.value })}
-                    className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none resize-none font-semibold transition-colors"
-                    placeholder="Write a compelling landing subheading..."
-                  />
-                </div>
-
-                {settingsSuccess && (
-                  <p className="text-xs text-emerald-500 font-bold capitalize tracking-wide">{settingsSuccess}</p>
-                )}
-
-                <div className="pt-2">
-                  <button
-                    type="submit"
-                    className="px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-lg cursor-pointer transition shadow-md border-none"
-                  >
-                    Save Hero Content
-                  </button>
-                </div>
-              </form>
-            )}
-
-            {/* TAB 3: Landing Sections */}
-            {activeSettingsTab === 'sections' && (
               <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-xl space-y-6 animate-in fade-in duration-200 shadow-lg">
                 <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
-                  <FileText className="w-4 h-4 text-brand" />
-                  <h4 className="text-sm font-bold text-white uppercase tracking-wider">Landing Sections</h4>
+                  <Settings className="w-4 h-4 text-brand" />
+                  <h4 className="text-sm font-bold text-white uppercase tracking-wider">General & Contact Settings</h4>
+                </div>
+
+                <div className="bg-zinc-950/20 border border-zinc-800 p-5 rounded-xl space-y-4">
+                  <h4 className="text-xs font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+                    Branding Details
+                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Custom Site Brand Name</label>
+                      <input
+                        type="text"
+                        required
+                        value={settingsForm.siteName}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, siteName: e.target.value })}
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                        placeholder="e.g. BEHOLD"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Site Footer Copyright Notice</label>
+                      <input
+                        type="text"
+                        required
+                        value={settingsForm.siteCopyright}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, siteCopyright: e.target.value })}
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                        placeholder="e.g. © 2026 Behold. All rights reserved."
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-zinc-955/20 border border-zinc-800 p-5 rounded-xl space-y-4">
+                  <h4 className="text-xs font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+                    Contact & Support Endpoints
+                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-zinc-400 uppercase">WhatsApp Support Endpoint Link</label>
+                      <input
+                        type="url"
+                        required
+                        value={settingsForm.whatsapp}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, whatsapp: e.target.value })}
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                        placeholder="e.g. https://wa.me/919497174011"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-zinc-400 uppercase">Contact Support Email Address</label>
+                      <input
+                        type="email"
+                        required
+                        value={settingsForm.contactEmail}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, contactEmail: e.target.value })}
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                        placeholder="e.g. support@behold.com"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Top Alert Banner Notice */}
+                <div className="border border-zinc-800 p-5 rounded-xl space-y-4 bg-zinc-955/20">
+                  <div className="flex items-center justify-between gap-4">
+                    <div>
+                      <span className="text-sm font-bold text-zinc-300 block">System Banner Notification Bar</span>
+                      <span className="text-xs text-zinc-500 block font-medium mt-1 leading-relaxed">Display an alert message at the very top of all student-facing views.</span>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer shrink-0">
+                      <input
+                        type="checkbox"
+                        checked={settingsForm.showBanner}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, showBanner: e.target.checked })}
+                        className="sr-only peer"
+                      />
+                      <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
+                    </label>
+                  </div>
+
+                  {settingsForm.showBanner && (
+                    <div className="space-y-1 animate-in slide-in-from-top duration-200">
+                      <label className="text-xs font-bold text-zinc-400 uppercase">Alert Message Text</label>
+                      <input
+                        type="text"
+                        value={settingsForm.bannerNotice}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, bannerNotice: e.target.value })}
+                        className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                        placeholder="Write dynamic alert banner message..."
+                      />
+                    </div>
+                  )}
+                </div>
+
+                {settingsSuccess && (
+                  <p className="text-xs text-emerald-500 font-bold capitalize tracking-wide">{settingsSuccess}</p>
+                )}
+
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    disabled={isSavingSettings}
+                    className={`px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-lg cursor-pointer transition shadow-md border-none flex items-center justify-center gap-1.5 ${isSavingSettings ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  >
+                    {isSavingSettings && <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-955" />}
+                    <span>Save General & Contact Settings</span>
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {/* TAB 2: Landing Page Content */}
+            {activeSettingsTab === 'landing' && (
+              <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-xl space-y-6 animate-in fade-in duration-200 shadow-lg">
+                <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
+                  <Brain className="w-4 h-4 text-brand" />
+                  <h4 className="text-sm font-bold text-white uppercase tracking-wider">Landing Page Content</h4>
+                </div>
+
+                {/* Hero Section */}
+                <div className="bg-zinc-950/40 border border-zinc-800 p-5 rounded-xl space-y-4">
+                  <h4 className="text-xs font-bold text-brand uppercase tracking-wider flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+                    Hero Banner Text Configuration
+                  </h4>
+                  <div className="space-y-4">
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Hero Section Heading</label>
+                      <input
+                        type="text"
+                        required
+                        value={settingsForm.heroTitle}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, heroTitle: e.target.value })}
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                        placeholder="e.g. Bridging You To Your {True Growth.}"
+                      />
+                      <span className="text-[11px] text-zinc-500 block font-medium">Use curly braces `{ }` around words you want highlighted with the neon gradient.</span>
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Hero Section Subtitle</label>
+                      <textarea
+                        rows={3}
+                        required
+                        value={settingsForm.heroSub}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, heroSub: e.target.value })}
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none resize-none font-semibold transition-colors"
+                        placeholder="Write a compelling landing subheading..."
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 {/* Career Mentoring Section */}
@@ -777,25 +822,25 @@ export default function SettingsTab(props) {
                 <div className="pt-2">
                   <button
                     type="submit"
-                    className="px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-lg cursor-pointer transition shadow-md border-none"
+                    disabled={isSavingSettings}
+                    className={`px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-lg cursor-pointer transition shadow-md border-none flex items-center justify-center gap-1.5 ${isSavingSettings ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
-                    Save Landing Sections
+                    {isSavingSettings && <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-955" />}
+                    <span>Save Landing Page Content</span>
                   </button>
                 </div>
               </form>
             )}
-
-            {/* TAB 4: Features & Taxation */}
-            {activeSettingsTab === 'features' && (
+            {/* TAB 3: Services & Session Modes */}
+            {activeSettingsTab === 'modes' && (
               <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-xl space-y-6 animate-in fade-in duration-200 shadow-lg">
                 <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
-                  <KeyRound className="w-4 h-4 text-brand" />
-                  <h4 className="text-sm font-bold text-white uppercase tracking-wider">Features & Taxation</h4>
+                  <Video className="w-4 h-4 text-brand" />
+                  <h4 className="text-sm font-bold text-white uppercase tracking-wider">Services & Session Modes</h4>
                 </div>
-
                 {/* Feature Toggles */}
-                <div className="border border-zinc-800 p-5 rounded-xl space-y-4 bg-zinc-950/20">
-                  <div className="flex items-center justify-between gap-4">
+                <div className="border border-zinc-800 p-5 rounded-xl space-y-4 bg-zinc-955/20">
+                  <div className="flex items-center justify-between gap-4 py-2 border-b border-zinc-800/40">
                     <div>
                       <span className="text-sm font-bold text-brand block">Enable Psychology & Booking Services</span>
                       <span className="text-xs text-zinc-500 block font-medium mt-1 leading-relaxed">If disabled, the site will only display Aptitude Test features. Psychologists and booking sections will be hidden from the public website.</span>
@@ -810,6 +855,79 @@ export default function SettingsTab(props) {
                       <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
                     </label>
                   </div>
+
+                  <div className="flex items-center justify-between gap-4 py-2 border-b border-zinc-800/40">
+                    <div>
+                      <span className="text-sm font-bold text-brand block">Enable Online Sessions (Video Call)</span>
+                      <span className="text-xs text-zinc-500 block font-medium mt-1 leading-relaxed">If disabled, Online / Video booking options will be disabled and hidden everywhere.</span>
+                    </div>
+                    <label className="relative inline-flex inline-flex items-center cursor-pointer shrink-0">
+                      <input
+                        type="checkbox"
+                        checked={settingsForm.enableOnline}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, enableOnline: e.target.checked })}
+                        className="sr-only peer"
+                      />
+                      <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
+                    </label>
+                  </div>
+
+                  <div className="flex items-center justify-between gap-4 py-2 border-b border-zinc-800/40">
+                    <div>
+                      <span className="text-sm font-bold text-brand block">Enable Offline Sessions (At Center)</span>
+                      <span className="text-xs text-zinc-500 block font-medium mt-1 leading-relaxed">If disabled, Offline At Center booking options will be disabled and hidden everywhere.</span>
+                    </div>
+                    <label className="relative inline-flex inline-flex items-center cursor-pointer shrink-0">
+                      <input
+                        type="checkbox"
+                        checked={settingsForm.enableOffline}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, enableOffline: e.target.checked })}
+                        className="sr-only peer"
+                      />
+                      <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
+                    </label>
+                  </div>
+
+                  <div className="flex items-center justify-between gap-4 py-2">
+                    <div>
+                      <span className="text-sm font-bold text-brand block">Enable Doorstep Sessions (Home Visit)</span>
+                      <span className="text-xs text-zinc-500 block font-medium mt-1 leading-relaxed">If disabled, Doorstep Home Visit booking options will be disabled and hidden everywhere.</span>
+                    </div>
+                    <label className="relative inline-flex inline-flex items-center cursor-pointer shrink-0">
+                      <input
+                        type="checkbox"
+                        checked={settingsForm.enableDoorstep}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, enableDoorstep: e.target.checked })}
+                        className="sr-only peer"
+                      />
+                      <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
+                    </label>
+                  </div>
+                </div>
+
+                {settingsSuccess && (
+                  <p className="text-xs text-emerald-500 font-bold capitalize tracking-wide">{settingsSuccess}</p>
+                )}
+
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    disabled={isSavingSettings}
+                    className={`px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-lg cursor-pointer transition shadow-md border-none flex items-center justify-center gap-1.5 ${isSavingSettings ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  >
+                    {isSavingSettings && <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-955" />}
+                    <span>Save Services & Session Modes</span>
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {/* TAB 4: Payments & Taxation */}
+            {activeSettingsTab === 'payments' && (
+              <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-xl space-y-6 animate-in fade-in duration-200 shadow-lg">
+                <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
+                  <KeyRound className="w-4 h-4 text-brand" />
+                  <h4 className="text-sm font-bold text-white uppercase tracking-wider">Payments & Taxation</h4>
                 </div>
 
                 {/* GST / Tax Configuration */}
@@ -935,79 +1053,42 @@ export default function SettingsTab(props) {
                 <div className="pt-2">
                   <button
                     type="submit"
-                    className="px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-lg cursor-pointer transition shadow-md border-none"
+                    disabled={isSavingSettings}
+                    className={`px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-lg cursor-pointer transition shadow-md border-none flex items-center justify-center gap-1.5 ${isSavingSettings ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
-                    Save Features & Taxation
+                    {isSavingSettings && <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-955" />}
+                    <span>Save Payments & Taxation Settings</span>
                   </button>
                 </div>
               </form>
             )}
 
-            {/* TAB 5: Support & Alerts */}
-            {activeSettingsTab === 'contact' && (
+            {/* TAB 5: Security & System */}
+            {activeSettingsTab === 'security' && (
               <div className="space-y-6">
                 <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-xl space-y-5 animate-in fade-in duration-200 shadow-lg">
                   <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
-                    <Bell className="w-4 h-4 text-brand" />
-                    <h4 className="text-sm font-bold text-white uppercase tracking-wider">Support & Alerts</h4>
+                    <ShieldCheck className="w-4 h-4 text-brand" />
+                    <h4 className="text-sm font-bold text-white uppercase tracking-wider">Security & System</h4>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="bg-zinc-955/20 border border-zinc-800 p-5 rounded-xl space-y-4">
+                    <h4 className="text-xs font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+                      CDAT Group Integration Code
+                    </h4>
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-zinc-400 uppercase">WhatsApp Support Endpoint Link</label>
+                      <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">CDAT Group / School Code</label>
                       <input
-                        type="url"
+                        type="text"
                         required
-                        value={settingsForm.whatsapp}
-                        onChange={(e) => setSettingsForm({ ...settingsForm, whatsapp: e.target.value })}
+                        value={settingsForm.cdatGroupCode || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, cdatGroupCode: e.target.value })}
                         className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
-                        placeholder="e.g. https://wa.me/919497174011"
+                        placeholder="e.g. cdat@behold"
                       />
+                      <span className="text-[11px] text-zinc-500 block font-medium">Global group/school referral code for CDAT registrations.</span>
                     </div>
-
-                    <div className="space-y-1">
-                      <label className="text-xs font-bold text-zinc-400 uppercase">Contact Support Email Address</label>
-                      <input
-                        type="email"
-                        required
-                        value={settingsForm.contactEmail}
-                        onChange={(e) => setSettingsForm({ ...settingsForm, contactEmail: e.target.value })}
-                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
-                        placeholder="e.g. support@behold.com"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Top Alert Banner Notice */}
-                  <div className="border border-zinc-800 p-5 rounded-xl space-y-4 bg-zinc-955/20">
-                    <div className="flex items-center justify-between gap-4">
-                      <div>
-                        <span className="text-sm font-bold text-zinc-300 block">System Banner Notification Bar</span>
-                        <span className="text-xs text-zinc-500 block font-medium mt-1 leading-relaxed">Display an alert message at the very top of all student-facing views.</span>
-                      </div>
-                      <label className="relative inline-flex items-center cursor-pointer shrink-0">
-                        <input
-                          type="checkbox"
-                          checked={settingsForm.showBanner}
-                          onChange={(e) => setSettingsForm({ ...settingsForm, showBanner: e.target.checked })}
-                          className="sr-only peer"
-                        />
-                        <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
-                      </label>
-                    </div>
-
-                    {settingsForm.showBanner && (
-                      <div className="space-y-1 animate-in slide-in-from-top duration-200">
-                        <label className="text-xs font-bold text-zinc-400 uppercase">Alert Message Text</label>
-                        <input
-                          type="text"
-                          value={settingsForm.bannerNotice}
-                          onChange={(e) => setSettingsForm({ ...settingsForm, bannerNotice: e.target.value })}
-                          className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
-                          placeholder="Write dynamic alert banner message..."
-                        />
-                      </div>
-                    )}
                   </div>
 
                   {settingsSuccess && (
@@ -1017,9 +1098,11 @@ export default function SettingsTab(props) {
                   <div className="pt-2">
                     <button
                       type="submit"
-                      className="px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-lg cursor-pointer transition shadow-md border-none"
+                      disabled={isSavingSettings}
+                      className={`px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-lg cursor-pointer transition shadow-md border-none flex items-center justify-center gap-1.5 ${isSavingSettings ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >
-                      Save Support & Alerts
+                      {isSavingSettings && <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-955" />}
+                      <span>Save Security Settings</span>
                     </button>
                   </div>
                 </form>
@@ -1153,7 +1236,8 @@ export default function SettingsTab(props) {
                       disabled={isSendingAnnouncement}
                       className="px-6 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-lg cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1.5 disabled:opacity-50"
                     >
-                      {isSendingAnnouncement ? 'Broadcasting...' : 'Broadcast Announcement'}
+                      {isSendingAnnouncement && <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-955" />}
+                      <span>{isSendingAnnouncement ? 'Broadcasting...' : 'Broadcast Announcement'}</span>
                     </button>
                   </div>
                 </form>
@@ -1256,9 +1340,11 @@ export default function SettingsTab(props) {
                 <div className="pt-2">
                   <button
                     type="submit"
-                    className="px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-lg cursor-pointer transition shadow-md border-none"
+                    disabled={isSavingSettings}
+                    className={`px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-lg cursor-pointer transition shadow-md border-none flex items-center justify-center gap-1.5 ${isSavingSettings ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
-                    Save Promo Codes
+                    {isSavingSettings && <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-955" />}
+                    <span>Save Promo Codes</span>
                   </button>
                 </div>
               </form>
@@ -1305,9 +1391,11 @@ export default function SettingsTab(props) {
                 <div className="pt-2">
                   <button
                     type="submit"
-                    className="px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-lg cursor-pointer transition shadow-md border-none"
+                    disabled={isSavingSettings}
+                    className={`px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-lg cursor-pointer transition shadow-md border-none flex items-center justify-center gap-1.5 ${isSavingSettings ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
-                    Save Policies & Legal
+                    {isSavingSettings && <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-955" />}
+                    <span>Save Policies & Legal</span>
                   </button>
                 </div>
               </form>
