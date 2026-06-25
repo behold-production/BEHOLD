@@ -97,74 +97,58 @@ const OverviewTab = ({
         </div>
       </div>
 
-      {/* ── Next Session Card — deep slate gradient with cyan glow ── */}
+      {/* ── Next Session Card ── */}
       {nextSession ? (
-        <div
-          className="relative overflow-hidden rounded-2xl p-5 text-white"
-          style={{
-            background: 'linear-gradient(135deg, #0a0f1e 0%, #111827 60%, #0f172a 100%)',
-            boxShadow: '0 8px 32px -4px rgba(0,209,209,0.18), 0 4px 16px -4px rgba(10,20,60,0.4), inset 0 1px 0 rgba(255,255,255,0.06)'
-          }}
-        >
-          {/* Decorative glow blobs */}
-          <div className="absolute -top-8 -right-8 w-36 h-36 rounded-full opacity-10" style={{ background: 'radial-gradient(circle, #00D1D1 0%, transparent 70%)' }} />
-          <div className="absolute -bottom-6 left-10 w-24 h-24 rounded-full opacity-8" style={{ background: 'radial-gradient(circle, #0ea5e9 0%, transparent 70%)' }} />
-
-          <p className="relative text-xs font-bold uppercase tracking-widest text-cyan-400 mb-3 flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_6px_rgba(52,211,153,0.8)]" />
-            Next Scheduled Session
-          </p>
-          <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <div
-                className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 border border-white/10"
-                style={{ background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(8px)' }}
-              >
-                {nextSession.mode === 'ONLINE'
-                  ? <Video className="w-5 h-5 text-cyan-300" />
-                  : <MapPin className="w-5 h-5 text-cyan-300" />}
+        <div className="group relative overflow-hidden rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all duration-300 hover:shadow-md">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-zinc-100 border border-zinc-200/60 flex items-center justify-center shrink-0">
+              {nextSession.mode === 'ONLINE'
+                ? <Video className="w-5 h-5 text-zinc-650" />
+                : <MapPin className="w-5 h-5 text-zinc-650" />}
+            </div>
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-1 flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_4px_rgba(16,185,129,0.5)]" />
+                Next Scheduled Session
+              </p>
+              <p className="font-bold text-zinc-900 text-base tracking-tight">{nextSession.advisorName}</p>
+              <p className="text-xs text-zinc-500 mt-0.5">
+                {nextSession.advisorRole || 'Consultation'}
+                <span className="mx-1.5 text-zinc-300">·</span>
+                <span className="text-zinc-700 font-semibold">{nextSession.mode === 'ONLINE' ? 'Online' : 'In-Person'}</span>
+              </p>
+              <div className="flex items-center gap-2 mt-2.5 text-xs text-zinc-650">
+                <span className="flex items-center gap-1 bg-zinc-50 px-2.5 py-1 rounded-lg border border-zinc-100">
+                  <Calendar className="w-3.5 h-3.5 text-zinc-400" /> {formatDateString(nextSession.date)}
+                </span>
+                <span className="flex items-center gap-1 bg-zinc-50 px-2.5 py-1 rounded-lg border border-zinc-100">
+                  <Clock className="w-3.5 h-3.5 text-zinc-400" /> {nextSession.time}
+                </span>
               </div>
-              <div>
-                <p className="font-bold text-white text-base tracking-tight">{nextSession.advisorName}</p>
-                <p className="text-xs text-zinc-400 mt-0.5">
-                  {nextSession.advisorRole || 'Consultation'}
-                  <span className="mx-1.5 text-zinc-600">·</span>
-                  <span className="text-cyan-400 font-semibold">{nextSession.mode === 'ONLINE' ? 'Online' : 'In-Person'}</span>
-                </p>
-                <div className="flex items-center gap-3 mt-2 text-xs text-zinc-400">
-                  <span className="flex items-center gap-1 bg-white/5 px-2 py-1 rounded-md border border-white/8">
-                    <Calendar className="w-3.5 h-3.5 text-cyan-500" /> {formatDateString(nextSession.date)}
-                  </span>
-                  <span className="flex items-center gap-1 bg-white/5 px-2 py-1 rounded-md border border-white/8">
-                    <Clock className="w-3.5 h-3.5 text-cyan-500" /> {nextSession.time}
-                  </span>
+            </div>
+          </div>
+          <div className="flex items-center justify-between sm:justify-end gap-5 shrink-0 pt-3 sm:pt-0 border-t sm:border-t-0 border-zinc-100">
+            {(() => {
+              const cd = formatCountdown(nextSession.date, nextSession.time);
+              return (
+                <div className="text-left sm:text-right">
+                  <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-widest">Starts in</p>
+                  <p className={`text-xl sm:text-2xl font-black tracking-tight ${cd.urgent ? 'text-amber-600' : 'text-zinc-900'}`}>{cd.text}</p>
                 </div>
-              </div>
-            </div>
-            <div className="flex items-center gap-4 shrink-0">
-              {(() => {
-                const cd = formatCountdown(nextSession.date, nextSession.time);
-                return (
-                  <div className="text-right">
-                    <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">Starts in</p>
-                    <p className={`text-2xl font-black tracking-tight ${cd.urgent ? 'text-amber-400' : 'text-white'}`}>{cd.text}</p>
-                  </div>
-                );
-              })()}
-              <button
-                type="button"
-                onClick={() => { handleSectionChange('booked'); setSessionSubTab('upcoming'); }}
-                className="min-h-[38px] px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border text-white border-white/15 hover:bg-white/10 hover:border-white/25"
-              >
-                View Details
-              </button>
-            </div>
+              );
+            })()}
+            <button
+              type="button"
+              onClick={() => { handleSectionChange('booked'); setSessionSubTab('upcoming'); }}
+              className="min-h-[38px] px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border border-zinc-200 hover:border-zinc-300 bg-white hover:bg-zinc-50 text-zinc-700 shadow-xs"
+            >
+              View Details
+            </button>
           </div>
         </div>
       ) : (
         <div
-          className="rounded-2xl p-7 text-center border border-dashed border-zinc-300"
-          style={{ background: 'linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%)' }}
+          className="rounded-2xl p-7 text-center border border-dashed border-zinc-200 bg-white"
         >
           <div className="w-14 h-14 mx-auto rounded-2xl bg-white border border-zinc-200 shadow-sm flex items-center justify-center mb-4">
             <CalendarDays className="w-6 h-6 text-zinc-400" />
@@ -221,47 +205,6 @@ const OverviewTab = ({
 
       {/* ── Action Cards — gradient border reveal on hover ── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {/* C-DAT Action Card */}
-        <div
-          className="group relative overflow-hidden rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1"
-          style={{
-            background: '#ffffff',
-            boxShadow: 'inset 0 0 0 1px rgba(11,20,36,0.05), 0 1px 3px rgba(11,20,36,0.04), 0 6px 20px -6px rgba(11,20,36,0.08)'
-          }}
-        >
-          {/* Gradient hover overlay */}
-          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: 'linear-gradient(135deg, rgba(139,92,246,0.04) 0%, rgba(14,165,233,0.04) 100%)' }} />
-          <div className="relative flex items-start justify-between mb-4">
-            <div className="w-11 h-11 rounded-2xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%)', border: '1px solid rgba(139,92,246,0.15)' }}>
-              <BarChart3 className="w-5 h-5" style={{ color: '#7c3aed' }} />
-            </div>
-            <span className={`text-xs px-2.5 py-1 rounded-lg font-bold ${testProfile
-                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                : 'bg-amber-50 text-amber-700 border border-amber-200'
-              }`}>
-              {testProfile ? '✓ Completed' : '⏳ Pending'}
-            </span>
-          </div>
-          <h4 className="relative font-bold text-zinc-900 text-base tracking-tight">Aptitude Test</h4>
-          <p className="relative text-xs text-zinc-500 mt-1.5 leading-relaxed">
-            {testProfile
-              ? `Your dominant domain is ${testProfile.dominantDomain}. View your full results.`
-              : 'Map your natural strengths across 7 key domains. Takes ~15 minutes.'}
-          </p>
-          <button
-            type="button"
-            onClick={() => testProfile ? handleSectionChange('results') : navigate('/sample-test')}
-            className="relative mt-5 w-full min-h-[40px] inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all border-none cursor-pointer"
-            style={{
-              background: testProfile ? 'linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)' : 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)',
-              color: 'white',
-              boxShadow: testProfile ? '0 4px 12px rgba(124,58,237,0.3)' : '0 4px 12px rgba(15,23,42,0.25)'
-            }}
-          >
-            {testProfile ? '📊 View Full Results' : '🎯 Start Test Now'}
-          </button>
-        </div>
-
         {/* Expert Consultation Card */}
         <div
           className="group relative overflow-hidden rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1"
@@ -276,8 +219,8 @@ const OverviewTab = ({
               <Briefcase className="w-5 h-5" style={{ color: '#059669' }} />
             </div>
             <span className={`text-xs px-2.5 py-1 rounded-lg font-bold ${bookedSessions.length > 0
-                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                : 'bg-zinc-50 text-zinc-500 border border-zinc-200'
+              ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+              : 'bg-zinc-50 text-zinc-500 border border-zinc-200'
               }`}>
               {bookedSessions.length > 0 ? `${bookedSessions.length} scheduled` : 'None booked'}
             </span>
@@ -357,7 +300,6 @@ const OverviewTab = ({
                   </div>
                   <div className="flex items-center gap-1.5 shrink-0">
                     <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">Completed</span>
-                    <CheckCircle2 className="w-4 h-4 text-emerald-500" />
                   </div>
                 </div>
               ))}
@@ -375,9 +317,8 @@ const OverviewTab = ({
 
         {/* Achievements — milestone badge design */}
         <div
-          className="rounded-2xl p-5"
+          className="rounded-2xl p-5 bg-white border border-zinc-200"
           style={{
-            background: 'linear-gradient(145deg, #fafafa 0%, #f4f4f5 100%)',
             boxShadow: 'inset 0 0 0 1px rgba(11,20,36,0.05), 0 1px 2px rgba(11,20,36,0.03), 0 4px 12px -4px rgba(11,20,36,0.06)'
           }}
         >
@@ -399,8 +340,8 @@ const OverviewTab = ({
               <div
                 key={i}
                 className={`flex items-center gap-2.5 text-xs px-3 py-2.5 rounded-xl transition-all duration-200 ${a.done
-                    ? 'bg-white border border-zinc-200 shadow-sm'
-                    : 'bg-zinc-100/60 border border-transparent'
+                  ? 'bg-white border border-zinc-200 shadow-sm'
+                  : 'bg-zinc-100/60 border border-transparent'
                   }`}
               >
                 <div
