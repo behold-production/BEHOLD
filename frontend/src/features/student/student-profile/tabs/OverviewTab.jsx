@@ -41,6 +41,62 @@ const OverviewTab = ({
         )}
       </div>
 
+      {/* ── Welcome Hero Banner ─────────────────────────── */}
+      <div className="group relative overflow-hidden rounded-2xl border border-zinc-200 bg-white p-5 sm:p-6 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6 transition-all duration-300 hover:shadow-md">
+        {/* Left Content */}
+        <div className="space-y-3.5 max-w-lg text-left">
+          <div className="space-y-1.5">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-brand-light text-brand-dark border border-brand/10 w-fit">
+              🚀 Getting Started
+            </span>
+            <h3 className="text-2xl font-header font-black tracking-tight text-zinc-900 leading-tight">
+              Welcome back, <span className="text-brand-dark">{profile.name || 'Student'}</span>!
+            </h3>
+            <p className="text-zinc-650 text-xs sm:text-sm leading-relaxed">
+              Explore your educational potential. Complete the CIGI Differential Aptitude Test (C-DAT) to scientifically map your career path, or schedule a 1-on-1 session with our certified counsellors.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3">
+            {!testProfile ? (
+              <button
+                type="button"
+                onClick={() => navigate('/sample-test')}
+                className="min-h-[40px] px-5 py-2 bg-zinc-950 hover:bg-zinc-800 text-white font-bold text-xs rounded-xl transition duration-200 cursor-pointer border-none shadow-sm"
+              >
+                Start Aptitude Test
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => handleSectionChange('results')}
+                className="min-h-[40px] px-5 py-2 bg-zinc-950 hover:bg-zinc-800 text-white font-bold text-xs rounded-xl transition duration-200 cursor-pointer border-none shadow-sm"
+              >
+                View C-DAT Report
+              </button>
+            )}
+            {enablePsychology && (
+              <button
+                type="button"
+                onClick={() => navigate('/booking')}
+                className="min-h-[40px] px-5 py-2 bg-white border border-zinc-200 hover:border-zinc-300 text-zinc-700 font-bold text-xs rounded-xl transition duration-200 cursor-pointer shadow-xs"
+              >
+                Consult a Mentor
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Right Collage Graphic */}
+        <div className="relative shrink-0 w-full md:w-56 lg:w-64 h-36 sm:h-40 rounded-xl overflow-hidden bg-zinc-50 border border-zinc-150 flex items-center justify-center">
+          <img
+            src="/dashboard_hero.png"
+            alt="Career exploration illustration"
+            className="w-full h-full object-cover grayscale-[10%] contrast-[105%] group-hover:scale-[1.03] transition-all duration-500"
+          />
+        </div>
+      </div>
+
       {/* ── Next Session Card — deep slate gradient with cyan glow ── */}
       {nextSession ? (
         <div
@@ -179,11 +235,10 @@ const OverviewTab = ({
             <div className="w-11 h-11 rounded-2xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%)', border: '1px solid rgba(139,92,246,0.15)' }}>
               <BarChart3 className="w-5 h-5" style={{ color: '#7c3aed' }} />
             </div>
-            <span className={`text-xs px-2.5 py-1 rounded-lg font-bold ${
-              testProfile
+            <span className={`text-xs px-2.5 py-1 rounded-lg font-bold ${testProfile
                 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                 : 'bg-amber-50 text-amber-700 border border-amber-200'
-            }`}>
+              }`}>
               {testProfile ? '✓ Completed' : '⏳ Pending'}
             </span>
           </div>
@@ -220,11 +275,10 @@ const OverviewTab = ({
             <div className="w-11 h-11 rounded-2xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)', border: '1px solid rgba(16,185,129,0.15)' }}>
               <Briefcase className="w-5 h-5" style={{ color: '#059669' }} />
             </div>
-            <span className={`text-xs px-2.5 py-1 rounded-lg font-bold ${
-              bookedSessions.length > 0
+            <span className={`text-xs px-2.5 py-1 rounded-lg font-bold ${bookedSessions.length > 0
                 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                 : 'bg-zinc-50 text-zinc-500 border border-zinc-200'
-            }`}>
+              }`}>
               {bookedSessions.length > 0 ? `${bookedSessions.length} scheduled` : 'None booked'}
             </span>
           </div>
@@ -344,22 +398,19 @@ const OverviewTab = ({
             ].map((a, i) => (
               <div
                 key={i}
-                className={`flex items-center gap-2.5 text-xs px-3 py-2.5 rounded-xl transition-all duration-200 ${
-                  a.done
+                className={`flex items-center gap-2.5 text-xs px-3 py-2.5 rounded-xl transition-all duration-200 ${a.done
                     ? 'bg-white border border-zinc-200 shadow-sm'
                     : 'bg-zinc-100/60 border border-transparent'
-                }`}
+                  }`}
               >
                 <div
-                  className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 text-sm ${
-                    a.done ? 'bg-zinc-900 shadow-sm' : 'bg-zinc-200'
-                  }`}
+                  className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 text-sm ${a.done ? 'bg-zinc-900 shadow-sm' : 'bg-zinc-200'
+                    }`}
                 >
                   {a.done ? <Check className="w-3 h-3 text-white" strokeWidth={3} /> : <span className="text-[10px] opacity-40">{a.emoji}</span>}
                 </div>
-                <span className={`font-semibold ${
-                  a.done ? 'text-zinc-900' : 'text-zinc-400 line-through'
-                }`}>{a.label}</span>
+                <span className={`font-semibold ${a.done ? 'text-zinc-900' : 'text-zinc-400 line-through'
+                  }`}>{a.label}</span>
                 {a.done && <span className="ml-auto text-[10px] text-emerald-600 font-bold">✓</span>}
               </div>
             ))}

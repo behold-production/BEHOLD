@@ -68,8 +68,44 @@ export default function StudentProfile() {
   const nextSession = bookedSessions[0];
 
   return (
-    <div className="pt-5 sm:pt-20 pb-24 lg:pb-12 min-h-screen bg-zinc-50 text-zinc-900 font-sans text-left">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-5 sm:space-y-6">
+    <div className="pt-5 sm:pt-20 pb-24 lg:pb-12 min-h-screen bg-zinc-50 text-zinc-900 font-sans text-left relative overflow-hidden">
+      {/* Decorative Grid Background */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#e4e4e7_1px,transparent_1px),linear-gradient(to_bottom,#e4e4e7_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-45 pointer-events-none" />
+
+      {/* Decorative Line Drawings (Faint career icons) */}
+      <div className="absolute inset-0 pointer-events-none select-none overflow-hidden opacity-[0.03] text-zinc-900">
+        {/* Graduation Cap - top left */}
+        <svg className="absolute left-[3%] top-[15%] w-48 h-48" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+          <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5" />
+        </svg>
+
+        {/* Compass/Target - top right */}
+        <svg className="absolute right-[3%] top-[25%] w-56 h-56" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" />
+          <circle cx="12" cy="12" r="6" />
+          <circle cx="12" cy="12" r="2" />
+          <path d="M12 2v20M2 12h20" />
+        </svg>
+
+        {/* Lightbulb - middle left */}
+        <svg className="absolute left-[4%] top-[55%] w-52 h-52" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+          <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .6 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" />
+          <path d="M9 18h6M10 22h4" />
+        </svg>
+
+        {/* Career Map / Connected Nodes - bottom right */}
+        <svg className="absolute right-[5%] top-[70%] w-60 h-60" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+          <circle cx="4" cy="4" r="2" />
+          <circle cx="20" cy="4" r="2" />
+          <circle cx="12" cy="12" r="2" />
+          <circle cx="8" cy="20" r="2" />
+          <circle cx="16" cy="20" r="2" />
+          <path d="M6 4h12M12 10V6M4 6l6 5M20 6l-6 5M10 13l-2 5M14 13l2 5" />
+        </svg>
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 space-y-5 sm:space-y-6">
         {(isLoading || authLoading) ? (
           <div className="animate-pulse space-y-5 sm:space-y-6">
             <div className="bg-white rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-center sm:items-start gap-6 border border-zinc-200">
