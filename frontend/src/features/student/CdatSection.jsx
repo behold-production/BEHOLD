@@ -39,6 +39,7 @@ export default function CdatSection({ setView }) {
   const [isError, setIsError] = useState(false);
   const [copied, setCopied] = useState(false);
   const [hasCopied, setHasCopied] = useState(false);
+  const [errors, setErrors] = useState({ name: '', phone: '', email: '' });
 
   const [fetchedGroupCode, setFetchedGroupCode] = useState('cdat@behold');
 
@@ -54,24 +55,63 @@ export default function CdatSection({ setView }) {
       .catch(err => console.error("Error fetching settings:", err));
   }, []);
 
+  const handleNameChange = (val) => {
+    setGroupRegName(val);
+    if (errors.name) {
+      setErrors(prev => ({ ...prev, name: '' }));
+    }
+  };
+
+  const handlePhoneChange = (val) => {
+    setGroupRegPhone(val);
+    if (errors.phone) {
+      setErrors(prev => ({ ...prev, phone: '' }));
+    }
+  };
+
+  const handleEmailChange = (val) => {
+    setGroupRegEmail(val);
+    if (errors.email) {
+      setErrors(prev => ({ ...prev, email: '' }));
+    }
+  };
+
   const handleGenerateCode = (e) => {
     e.preventDefault();
-    if (!groupRegName.trim() || !groupRegPhone.trim() || !groupRegEmail.trim()) {
-      setCopyMessage("Please fill in all fields.");
-      setIsError(true);
-      return;
+    const newErrors = { name: '', phone: '', email: '' };
+    let hasErr = false;
+
+    if (!groupRegName.trim()) {
+      newErrors.name = "Full Name is required.";
+      hasErr = true;
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(groupRegEmail.trim())) {
-      setCopyMessage("Please enter a valid email address.");
-      setIsError(true);
-      return;
+    if (!groupRegPhone.trim()) {
+      newErrors.phone = "Phone Number is required.";
+      hasErr = true;
+    } else {
+      const phoneRegex = /^(\+?\d{1,4}[- ]?)?[6-9]\d{9}$/;
+      if (!phoneRegex.test(groupRegPhone.trim())) {
+        newErrors.phone = "Please enter a valid 10-digit phone number.";
+        hasErr = true;
+      }
     }
 
-    const phoneRegex = /^(\+?\d{1,4}[- ]?)?[6-9]\d{9}$/;
-    if (!phoneRegex.test(groupRegPhone.trim())) {
-      setCopyMessage("Please enter a valid 10-digit phone number.");
+    if (!groupRegEmail.trim()) {
+      newErrors.email = "Email Address is required.";
+      hasErr = true;
+    } else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(groupRegEmail.trim())) {
+        newErrors.email = "Please enter a valid email address.";
+        hasErr = true;
+      }
+    }
+
+    setErrors(newErrors);
+
+    if (hasErr) {
+      setCopyMessage("Please correct the errors in the form.");
       setIsError(true);
       return;
     }
@@ -189,7 +229,7 @@ export default function CdatSection({ setView }) {
                 <div className="text-sm font-black capitalize text-zinc-800 mb-2">
                   Generate Your Group Code
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-left">
                   <div>
                     <label htmlFor="cdat-name" className="sr-only">Full Name</label>
                     <input
@@ -197,9 +237,19 @@ export default function CdatSection({ setView }) {
                       type="text"
                       placeholder="Full Name"
                       value={groupRegName}
-                      onChange={(e) => setGroupRegName(e.target.value)}
-                      className="w-full px-5 py-3.5 min-h-[48px] rounded-xl bg-zinc-50/50 backdrop-blur-sm border border-zinc-200/80 text-zinc-900 text-sm font-semibold placeholder-zinc-400 outline-none focus:border-brand focus:ring-4 focus:ring-brand/10 transition-all shadow-sm hover:bg-zinc-50"
+                      onChange={(e) => handleNameChange(e.target.value)}
+                      className={`w-full px-5 py-3.5 min-h-[48px] rounded-xl border text-zinc-900 text-sm font-semibold placeholder-zinc-400 outline-none transition-all shadow-sm ${
+                        errors.name
+                          ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10'
+                          : 'border-zinc-200/80 bg-zinc-50/50 focus:border-brand focus:ring-4 focus:ring-brand/10 hover:bg-zinc-50'
+                      }`}
                     />
+                    {errors.name && (
+                      <p className="text-xs text-rose-600 font-bold mt-1.5 flex items-center gap-1">
+                        <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                        {errors.name}
+                      </p>
+                    )}
                   </div>
                   <div>
                     <label htmlFor="cdat-phone" className="sr-only">Phone Number</label>
@@ -208,9 +258,19 @@ export default function CdatSection({ setView }) {
                       type="tel"
                       placeholder="Phone Number"
                       value={groupRegPhone}
-                      onChange={(e) => setGroupRegPhone(e.target.value)}
-                      className="w-full px-5 py-3.5 min-h-[48px] rounded-xl bg-zinc-50/50 backdrop-blur-sm border border-zinc-200/80 text-zinc-900 text-sm font-semibold placeholder-zinc-400 outline-none focus:border-brand focus:ring-4 focus:ring-brand/10 transition-all shadow-sm hover:bg-zinc-50"
+                      onChange={(e) => handlePhoneChange(e.target.value)}
+                      className={`w-full px-5 py-3.5 min-h-[48px] rounded-xl border text-zinc-900 text-sm font-semibold placeholder-zinc-400 outline-none transition-all shadow-sm ${
+                        errors.phone
+                          ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10'
+                          : 'border-zinc-200/80 bg-zinc-50/50 focus:border-brand focus:ring-4 focus:ring-brand/10 hover:bg-zinc-50'
+                      }`}
                     />
+                    {errors.phone && (
+                      <p className="text-xs text-rose-600 font-bold mt-1.5 flex items-center gap-1">
+                        <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                        {errors.phone}
+                      </p>
+                    )}
                   </div>
                   <div className="sm:col-span-2">
                     <label htmlFor="cdat-email" className="sr-only">Email Address</label>
@@ -219,11 +279,32 @@ export default function CdatSection({ setView }) {
                       type="email"
                       placeholder="Email Address"
                       value={groupRegEmail}
-                      onChange={(e) => setGroupRegEmail(e.target.value)}
-                      className="w-full px-5 py-3.5 min-h-[48px] rounded-xl bg-zinc-50/50 backdrop-blur-sm border border-zinc-200/80 text-zinc-900 text-sm font-semibold placeholder-zinc-400 outline-none focus:border-brand focus:ring-4 focus:ring-brand/10 transition-all shadow-sm hover:bg-zinc-50"
+                      onChange={(e) => handleEmailChange(e.target.value)}
+                      className={`w-full px-5 py-3.5 min-h-[48px] rounded-xl border text-zinc-900 text-sm font-semibold placeholder-zinc-400 outline-none transition-all shadow-sm ${
+                        errors.email
+                          ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10'
+                          : 'border-zinc-200/80 bg-zinc-50/50 focus:border-brand focus:ring-4 focus:ring-brand/10 hover:bg-zinc-50'
+                      }`}
                     />
+                    {errors.email && (
+                      <p className="text-xs text-rose-600 font-bold mt-1.5 flex items-center gap-1">
+                        <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                        {errors.email}
+                      </p>
+                    )}
                   </div>
                 </div>
+
+                {copyMessage && (
+                  <div className={`p-4 rounded-xl text-xs font-semibold leading-relaxed border flex items-start gap-2 ${
+                    isError 
+                      ? 'bg-rose-50 border-rose-100 text-rose-700' 
+                      : 'bg-emerald-50 border-emerald-100 text-emerald-700'
+                  }`}>
+                    <AlertCircle className={`w-4 h-4 shrink-0 ${isError ? 'text-rose-500' : 'text-emerald-500'}`} />
+                    <span>{copyMessage}</span>
+                  </div>
+                )}
 
                 {!generatedCode ? (
                   <div className="pt-2">

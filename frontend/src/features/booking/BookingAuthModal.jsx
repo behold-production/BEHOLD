@@ -214,8 +214,10 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                     onChange={handleChange}
                     placeholder="Your full legal name"
                     autoComplete="name"
-                    className={`w-full px-3.5 py-2.5 min-h-[44px] bg-zinc-50 border rounded-lg text-xs font-medium text-zinc-850 outline-none focus:bg-white transition ${
-                      fieldErrors.name ? 'border-rose-300 focus:border-rose-400' : 'border-zinc-200 focus:border-brand'
+                    className={`w-full px-3.5 py-2.5 min-h-[44px] border rounded-lg text-xs font-medium text-zinc-855 outline-none transition ${
+                      fieldErrors.name
+                        ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:bg-rose-50/50 focus:ring-4 focus:ring-rose-500/10'
+                        : 'bg-zinc-50 border-zinc-200 focus:bg-white focus:border-brand'
                     }`}
                   />
                   {fieldErrors.name && <p className="text-xs text-rose-500 font-bold">{fieldErrors.name}</p>}
@@ -230,8 +232,10 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                     onChange={handleChange}
                     placeholder="e.g. 9876543210"
                     autoComplete="tel"
-                    className={`w-full px-3.5 py-2.5 min-h-[44px] bg-zinc-50 border rounded-lg text-xs font-medium text-zinc-850 outline-none focus:bg-white transition ${
-                      fieldErrors.phone ? 'border-rose-300 focus:border-rose-400' : 'border-zinc-200 focus:border-brand'
+                    className={`w-full px-3.5 py-2.5 min-h-[44px] border rounded-lg text-xs font-medium text-zinc-855 outline-none transition ${
+                      fieldErrors.phone
+                        ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:bg-rose-50/50 focus:ring-4 focus:ring-rose-500/10'
+                        : 'bg-zinc-50 border-zinc-200 focus:bg-white focus:border-brand'
                     }`}
                   />
                   {fieldErrors.phone && <p className="text-xs text-rose-500 font-bold">{fieldErrors.phone}</p>}
@@ -248,8 +252,10 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                 onChange={handleChange}
                 placeholder="you@example.com"
                 autoComplete="email"
-                className={`w-full px-3.5 py-2.5 min-h-[44px] bg-zinc-50 border rounded-lg text-xs font-medium text-zinc-850 outline-none focus:bg-white transition ${
-                  fieldErrors.email ? 'border-rose-300 focus:border-rose-400' : 'border-zinc-200 focus:border-brand'
+                className={`w-full px-3.5 py-2.5 min-h-[44px] border rounded-lg text-xs font-medium text-zinc-855 outline-none transition ${
+                  fieldErrors.email
+                    ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:bg-rose-50/50 focus:ring-4 focus:ring-rose-500/10'
+                    : 'bg-zinc-50 border-zinc-200 focus:bg-white focus:border-brand'
                 }`}
               />
               {fieldErrors.email && <p className="text-xs text-rose-500 font-bold">{fieldErrors.email}</p>}
@@ -264,8 +270,10 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                 onChange={handleChange}
                 placeholder="••••••••"
                 autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
-                className={`w-full px-3.5 py-2.5 min-h-[44px] bg-zinc-50 border rounded-lg text-xs font-semibold text-zinc-850 outline-none focus:bg-white transition ${
-                  fieldErrors.password ? 'border-rose-300 focus:border-rose-400' : 'border-zinc-200 focus:border-brand'
+                className={`w-full px-3.5 py-2.5 min-h-[44px] border rounded-lg text-xs font-semibold text-zinc-855 outline-none transition ${
+                  fieldErrors.password
+                    ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:bg-rose-50/50 focus:ring-4 focus:ring-rose-500/10'
+                    : 'bg-zinc-50 border-zinc-200 focus:bg-white focus:border-brand'
                 }`}
               />
               {fieldErrors.password && <p className="text-xs text-rose-500 font-bold">{fieldErrors.password}</p>}
@@ -281,8 +289,10 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                   onChange={handleChange}
                   placeholder="••••••••"
                   autoComplete="new-password"
-                  className={`w-full px-3.5 py-2.5 min-h-[44px] bg-zinc-50 border rounded-lg text-xs font-semibold text-zinc-850 outline-none focus:bg-white transition ${
-                    fieldErrors.confirmPassword ? 'border-rose-300 focus:border-rose-400' : 'border-zinc-200 focus:border-brand'
+                  className={`w-full px-3.5 py-2.5 min-h-[44px] border rounded-lg text-xs font-semibold text-zinc-855 outline-none transition ${
+                    fieldErrors.confirmPassword
+                      ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:bg-rose-50/50 focus:ring-4 focus:ring-rose-500/10'
+                      : 'bg-zinc-50 border-zinc-200 focus:bg-white focus:border-brand'
                   }`}
                 />
                 {fieldErrors.confirmPassword && <p className="text-xs text-rose-500 font-bold">{fieldErrors.confirmPassword}</p>}

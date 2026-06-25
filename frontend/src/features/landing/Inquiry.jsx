@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { ArrowRight, Loader2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { Loader2 } from 'lucide-react';
 import ApiService from '../../shared/services/api';
 
 export default function Inquiry({ testProfile, siteSettings }) {
@@ -119,9 +119,13 @@ export default function Inquiry({ testProfile, siteSettings }) {
                     onChange={handleChange}
                     placeholder="Student Name"
                     autoComplete="name"
-                    className="w-full px-4 py-3 min-h-[44px] bg-white border border-zinc-200 rounded-lg text-sm outline-none focus:border-brand transition text-zinc-900"
+                    className={`w-full px-4 py-3 min-h-[44px] rounded-lg text-sm outline-none transition text-zinc-900 ${
+                      formErrors.name
+                        ? 'border border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10'
+                        : 'bg-white border border-zinc-200 focus:border-brand'
+                    }`}
                   />
-                  {formErrors.name && <p className="text-red-500 font-bold text-xs mt-0.5" role="alert">{formErrors.name}</p>}
+                  {formErrors.name && <p className="text-rose-500 font-bold text-xs mt-0.5" role="alert">{formErrors.name}</p>}
                 </div>
                 <div className="space-y-1">
                   <label htmlFor="email-input" className="font-bold text-zinc-500 capitalize tracking-wide text-xs">Email Address</label>
@@ -133,9 +137,13 @@ export default function Inquiry({ testProfile, siteSettings }) {
                     onChange={handleChange}
                     placeholder="name@email.com"
                     autoComplete="email"
-                    className="w-full px-4 py-3 min-h-[44px] bg-white border border-zinc-200 rounded-lg text-sm outline-none focus:border-brand transition text-zinc-900"
+                    className={`w-full px-4 py-3 min-h-[44px] rounded-lg text-sm outline-none transition text-zinc-900 ${
+                      formErrors.email
+                        ? 'border border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10'
+                        : 'bg-white border border-zinc-200 focus:border-brand'
+                    }`}
                   />
-                  {formErrors.email && <p className="text-red-500 font-bold text-xs mt-0.5" role="alert">{formErrors.email}</p>}
+                  {formErrors.email && <p className="text-rose-500 font-bold text-xs mt-0.5" role="alert">{formErrors.email}</p>}
                 </div>
               </div>
 

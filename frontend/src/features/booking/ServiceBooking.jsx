@@ -725,8 +725,10 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                 setClientSearchQuery(e.target.value);
                               }}
                               placeholder="e.g. Apartment/House No, Street Name, City, Pincode"
-                              className={`w-full px-3.5 py-2.5 bg-white border rounded-lg text-xs font-medium text-zinc-855 outline-none focus:border-brand transition ${
-                                errors.clientLocationName ? 'border-rose-300' : 'border-zinc-200'
+                              className={`w-full px-3.5 py-2.5 border rounded-lg text-xs font-medium text-zinc-855 outline-none focus:border-brand transition ${
+                                errors.clientLocationName
+                                  ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10'
+                                  : 'border-zinc-200 bg-white'
                               }`}
                             />
                             {errors.clientLocationName && <p className="text-[9.5px] text-rose-500 font-bold">{errors.clientLocationName}</p>}
@@ -742,9 +744,11 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                 value={bookingForm.clientLatitude || ''}
                                 onChange={handleInputChange}
                                 placeholder="e.g. 11.2588"
-                                className={`w-full px-3.5 py-2.5 bg-white border rounded-lg text-xs font-medium text-zinc-855 outline-none focus:border-brand transition ${
-                                  errors.clientLatitude ? 'border-rose-300' : 'border-zinc-200'
-                                }`}
+                                className={`w-full px-3.5 py-2.5 border rounded-lg text-xs font-medium text-zinc-855 outline-none focus:border-brand transition ${
+                                    errors.clientLatitude
+                                      ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10'
+                                      : 'border-zinc-200 bg-white'
+                                  }`}
                               />
                               {errors.clientLatitude && <p className="text-[9.5px] text-rose-500 font-bold">{errors.clientLatitude}</p>}
                             </div>
@@ -757,8 +761,10 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                 value={bookingForm.clientLongitude || ''}
                                 onChange={handleInputChange}
                                 placeholder="e.g. 75.7804"
-                                className={`w-full px-3.5 py-2.5 bg-white border rounded-lg text-xs font-medium text-zinc-855 outline-none focus:border-brand transition ${
-                                  errors.clientLongitude ? 'border-rose-300' : 'border-zinc-200'
+                                className={`w-full px-3.5 py-2.5 border rounded-lg text-xs font-medium text-zinc-855 outline-none focus:border-brand transition ${
+                                  errors.clientLongitude
+                                    ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10'
+                                    : 'border-zinc-200 bg-white'
                                 }`}
                               />
                               {errors.clientLongitude && <p className="text-[9.5px] text-rose-500 font-bold">{errors.clientLongitude}</p>}
@@ -1061,8 +1067,10 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                           value={bookingForm.name}
                           onChange={handleInputChange}
                           placeholder="Your full name"
-                          className={`w-full px-3.5 py-2.5 bg-white border rounded-lg text-xs font-medium text-zinc-855 outline-none focus:border-brand transition ${
-                            errors.name ? 'border-rose-300' : 'border-zinc-200'
+                          className={`w-full px-3.5 py-2.5 border rounded-lg text-xs font-medium text-zinc-855 outline-none focus:border-brand transition ${
+                            errors.name
+                              ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10'
+                              : 'border-zinc-200 bg-white'
                           }`}
                         />
                         {errors.name && <p className="text-[9.5px] text-rose-500 font-bold">{errors.name}</p>}
@@ -1075,8 +1083,10 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                           value={bookingForm.phone}
                           onChange={handleInputChange}
                           placeholder="e.g. 9876543210"
-                          className={`w-full px-3.5 py-2.5 bg-white border rounded-lg text-xs font-medium text-zinc-855 outline-none focus:border-brand transition ${
-                            errors.phone ? 'border-rose-300' : 'border-zinc-200'
+                          className={`w-full px-3.5 py-2.5 border rounded-lg text-xs font-medium text-zinc-855 outline-none focus:border-brand transition ${
+                            errors.phone
+                              ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10'
+                              : 'border-zinc-200 bg-white'
                           }`}
                         />
                         {errors.phone && <p className="text-[9.5px] text-rose-500 font-bold">{errors.phone}</p>}
@@ -1095,7 +1105,9 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                           className={`w-full px-3.5 py-2.5 border rounded-lg text-xs font-medium outline-none transition ${
                             user
                               ? 'bg-zinc-50 border-zinc-200 text-zinc-500 cursor-not-allowed'
-                              : `bg-white text-zinc-855 ${errors.email ? 'border-rose-300 focus:border-rose-400' : 'border-zinc-200 focus:border-brand'}`
+                              : errors.email
+                                ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10 text-zinc-855'
+                                : 'border-zinc-200 bg-white text-zinc-855 focus:border-brand'
                           }`}
                         />
                         {errors.email && !user && <p className="text-[9.5px] text-rose-500 font-bold">{errors.email}</p>}

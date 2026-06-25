@@ -249,9 +249,9 @@ const ProfileDetailsTab = ({
                             name={field.name}
                             value={formData[field.name]}
                             onChange={handleChange}
-                            className={`w-full min-h-[44px] pl-10 pr-9 py-2.5 bg-white border text-sm text-zinc-900 rounded-lg outline-none transition-all appearance-none cursor-pointer ${hasError
-                              ? 'border-rose-300 focus:border-rose-400 focus:ring-2 focus:ring-rose-100'
-                              : 'border-zinc-200 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-100'
+                            className={`w-full min-h-[44px] pl-10 pr-9 py-2.5 border text-sm text-zinc-900 rounded-lg outline-none transition-all appearance-none cursor-pointer ${hasError
+                              ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10'
+                              : 'bg-white border-zinc-200 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-100'
                               }`}
                           >
                             {field.options.map((o, i) => (
@@ -271,7 +271,7 @@ const ProfileDetailsTab = ({
                             className={`w-full min-h-[44px] pl-10 pr-9 py-2.5 text-sm rounded-lg outline-none transition-all ${field.disabled
                                 ? 'bg-zinc-50 border-zinc-200 text-zinc-400 cursor-not-allowed'
                                 : hasError
-                                  ? 'bg-white border-rose-300 focus:border-rose-400 focus:ring-2 focus:ring-rose-100 text-zinc-900'
+                                  ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10 text-zinc-900'
                                   : 'bg-white border-zinc-200 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-100 text-zinc-900'
                               }`}
                           />
