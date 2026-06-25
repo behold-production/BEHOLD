@@ -185,8 +185,8 @@ export default function Inquiry({ testProfile, siteSettings }) {
             </form>
           </div>
 
-          <div className="h-full min-h-[320px] bg-zinc-100 hidden md:block">
-            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=600&q=80" alt="Students meeting" className="w-full h-full object-cover grayscale-[10%] contrast-[105%]" />
+          <div className="h-full min-h-[320px] bg-zinc-150 hidden md:block">
+            <img src="/students_kerala.png" alt="Kerala students learning" className="w-full h-full object-cover" />
           </div>
         </div>
       </section>

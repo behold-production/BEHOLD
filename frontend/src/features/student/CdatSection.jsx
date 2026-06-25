@@ -10,7 +10,7 @@ export default function CdatSection({ setView }) {
         const parsed = JSON.parse(saved);
         return parsed.name || '';
       }
-    } catch (e) {}
+    } catch (e) { }
     return '';
   });
   const [groupRegPhone, setGroupRegPhone] = useState(() => {
@@ -20,7 +20,7 @@ export default function CdatSection({ setView }) {
         const parsed = JSON.parse(saved);
         return parsed.phone || '';
       }
-    } catch (e) {}
+    } catch (e) { }
     return '';
   });
   const [groupRegEmail, setGroupRegEmail] = useState(() => {
@@ -30,13 +30,11 @@ export default function CdatSection({ setView }) {
         const parsed = JSON.parse(saved);
         return parsed.email || '';
       }
-    } catch (e) {}
+    } catch (e) { }
     return '';
   });
 
   const [generatedCode, setGeneratedCode] = useState(null);
-  const [copyMessage, setCopyMessage] = useState('');
-  const [isError, setIsError] = useState(false);
   const [copied, setCopied] = useState(false);
   const [hasCopied, setHasCopied] = useState(false);
   const [errors, setErrors] = useState({ name: '', phone: '', email: '' });
@@ -111,8 +109,6 @@ export default function CdatSection({ setView }) {
     setErrors(newErrors);
 
     if (hasErr) {
-      setCopyMessage("Please correct the errors in the form.");
-      setIsError(true);
       return;
     }
 
@@ -134,16 +130,11 @@ export default function CdatSection({ setView }) {
     profileData.confirmEmail = groupRegEmail.trim();
     profileData.groupCode = HARDCODED_CODE;
     localStorage.setItem('behold_student_profile', JSON.stringify(profileData));
-
-    setCopyMessage("Action Required: Please copy your group code first to unlock the registration portal.");
-    setIsError(false);
   };
 
   const copyManually = () => {
     if (generatedCode) {
       navigator.clipboard.writeText(generatedCode).then(() => {
-        setCopyMessage("Code copied to clipboard! You can now register on CIGI.");
-        setIsError(false);
         setCopied(true);
         setHasCopied(true);
         setTimeout(() => setCopied(false), 2000);
@@ -169,7 +160,7 @@ export default function CdatSection({ setView }) {
         <div className="relative z-10 flex flex-col justify-between gap-4 text-left w-full">
           <div className="space-y-3">
 
-            
+
             {/* Flex container for Title and Logo opposite to each other */}
             <div className="flex flex-row items-center justify-between gap-4 w-full">
               <h3 className="text-lg sm:text-2xl md:text-3xl font-header font-black capitalize tracking-tight text-zinc-900 group-hover:text-brand-dark transition-colors duration-500 flex-1 min-w-0">
@@ -238,11 +229,10 @@ export default function CdatSection({ setView }) {
                       placeholder="Full Name"
                       value={groupRegName}
                       onChange={(e) => handleNameChange(e.target.value)}
-                      className={`w-full px-5 py-3.5 min-h-[48px] rounded-xl border text-zinc-900 text-sm font-semibold placeholder-zinc-400 outline-none transition-all shadow-sm ${
-                        errors.name
-                          ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10'
-                          : 'border-zinc-200/80 bg-zinc-50/50 focus:border-brand focus:ring-4 focus:ring-brand/10 hover:bg-zinc-50'
-                      }`}
+                      className={`w-full px-5 py-3.5 min-h-[48px] rounded-xl border text-zinc-900 text-sm font-semibold placeholder-zinc-400 outline-none transition-all shadow-sm ${errors.name
+                        ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10'
+                        : 'border-zinc-200/80 bg-zinc-50/50 focus:border-brand focus:ring-4 focus:ring-brand/10 hover:bg-zinc-50'
+                        }`}
                     />
                     {errors.name && (
                       <p className="text-xs text-rose-600 font-bold mt-1.5 flex items-center gap-1">
@@ -259,11 +249,10 @@ export default function CdatSection({ setView }) {
                       placeholder="Phone Number"
                       value={groupRegPhone}
                       onChange={(e) => handlePhoneChange(e.target.value)}
-                      className={`w-full px-5 py-3.5 min-h-[48px] rounded-xl border text-zinc-900 text-sm font-semibold placeholder-zinc-400 outline-none transition-all shadow-sm ${
-                        errors.phone
-                          ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10'
-                          : 'border-zinc-200/80 bg-zinc-50/50 focus:border-brand focus:ring-4 focus:ring-brand/10 hover:bg-zinc-50'
-                      }`}
+                      className={`w-full px-5 py-3.5 min-h-[48px] rounded-xl border text-zinc-900 text-sm font-semibold placeholder-zinc-400 outline-none transition-all shadow-sm ${errors.phone
+                        ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10'
+                        : 'border-zinc-200/80 bg-zinc-50/50 focus:border-brand focus:ring-4 focus:ring-brand/10 hover:bg-zinc-50'
+                        }`}
                     />
                     {errors.phone && (
                       <p className="text-xs text-rose-600 font-bold mt-1.5 flex items-center gap-1">
@@ -280,11 +269,10 @@ export default function CdatSection({ setView }) {
                       placeholder="Email Address"
                       value={groupRegEmail}
                       onChange={(e) => handleEmailChange(e.target.value)}
-                      className={`w-full px-5 py-3.5 min-h-[48px] rounded-xl border text-zinc-900 text-sm font-semibold placeholder-zinc-400 outline-none transition-all shadow-sm ${
-                        errors.email
-                          ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10'
-                          : 'border-zinc-200/80 bg-zinc-50/50 focus:border-brand focus:ring-4 focus:ring-brand/10 hover:bg-zinc-50'
-                      }`}
+                      className={`w-full px-5 py-3.5 min-h-[48px] rounded-xl border text-zinc-900 text-sm font-semibold placeholder-zinc-400 outline-none transition-all shadow-sm ${errors.email
+                        ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10'
+                        : 'border-zinc-200/80 bg-zinc-50/50 focus:border-brand focus:ring-4 focus:ring-brand/10 hover:bg-zinc-50'
+                        }`}
                     />
                     {errors.email && (
                       <p className="text-xs text-rose-600 font-bold mt-1.5 flex items-center gap-1">
@@ -294,17 +282,6 @@ export default function CdatSection({ setView }) {
                     )}
                   </div>
                 </div>
-
-                {copyMessage && (
-                  <div className={`p-4 rounded-xl text-xs font-semibold leading-relaxed border flex items-start gap-2 ${
-                    isError 
-                      ? 'bg-rose-50 border-rose-100 text-rose-700' 
-                      : 'bg-emerald-50 border-emerald-100 text-emerald-700'
-                  }`}>
-                    <AlertCircle className={`w-4 h-4 shrink-0 ${isError ? 'text-rose-500' : 'text-emerald-500'}`} />
-                    <span>{copyMessage}</span>
-                  </div>
-                )}
 
                 {!generatedCode ? (
                   <div className="pt-2">
@@ -316,7 +293,11 @@ export default function CdatSection({ setView }) {
                     </button>
                   </div>
                 ) : (
-                  <div className="pt-2 space-y-4 animate-in fade-in duration-300">
+                  <div className="pt-2 space-y-3 animate-in fade-in duration-300">
+                    <p className="text-xs text-rose-600 font-bold flex items-center gap-1.5">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                      Please copy this group code and enter it on the official CIGI portal during registration.
+                    </p>
                     <div className="flex flex-col sm:flex-row sm:items-center gap-3 w-full">
                       {/* Group Code Display */}
                       <div className="flex-1 p-3 bg-brand-light border border-brand/20 rounded-xl flex items-center justify-between min-h-[48px]">
@@ -340,14 +321,11 @@ export default function CdatSection({ setView }) {
                         onClick={() => {
                           window.open("https://cigicareer.com/cdat-registration/", "_blank", "noopener,noreferrer");
                         }}
-                        className="px-6 min-h-[48px] bg-brand text-zinc-950 hover:bg-brand-dark font-bold text-sm rounded-xl cursor-pointer transition-all flex items-center justify-center gap-1.5 shadow-md shadow-brand/10 border-none shrink-0"
+                        className="px-6 min-h-[48px] bg-brand text-zinc-955 hover:bg-brand-dark font-bold text-sm rounded-xl cursor-pointer transition-all flex items-center justify-center gap-1.5 shadow-md shadow-brand/10 border-none shrink-0"
                       >
                         Proceed to Registration
                       </button>
                     </div>
-                    <p className="text-xs text-zinc-500 font-medium">
-                      * Please copy this group code and enter it on the official CIGI portal during registration.
-                    </p>
                   </div>
                 )}
               </form>

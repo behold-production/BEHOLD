@@ -4,7 +4,7 @@ import { useCustomDialog } from '../../shared/context/CustomDialogContext';
 import toast from 'react-hot-toast';
 import ApiService from '../../shared/services/api';
 import { jsPDF } from 'jspdf';
-import { formatDateString } from '../../shared/utils/dateFormatter';
+import { formatDateString, calculateNextAvailable } from '../../shared/utils/dateFormatter';
 import { sendLocalNotification } from '../../shared/services/notificationHelper';
 
 export const BOOKING_DRAFT_KEY = 'behold_booking_draft';
@@ -165,7 +165,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
               id: c.id || c._id,
               name: c.name,
               role: c.title || 'Consultant Psychologist',
-              availability: 'Available Today',
+              availability: calculateNextAvailable(c.availability, c.bookedSlots || []),
               type: c.type || (c.title?.toLowerCase().includes('career') || c.title?.toLowerCase().includes('mentor') ? 'career' : 'counselling'),
               defaultMeetLink: c.defaultMeetLink || '',
               price: Number(c.price) || 1200,

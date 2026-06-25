@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ChevronLeft, Clock, Globe, Award, BookOpen, Calendar, MapPin, Heart, GraduationCap } from 'lucide-react';
 import ApiService from '../../shared/services/api';
+import { calculateNextAvailable } from '../../shared/utils/dateFormatter';
 
 function getInitials(name) {
   if (!name) return 'EX';
@@ -35,16 +36,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
         if (res.success && res.data) {
           const psy = res.data;
           
-          let nextAvailable = 'No Active Days';
-          if (psy.availability && psy.availability.activeDays) {
-            const daysMap = { 1: 'Mon', 2: 'Tue', 3: 'Wed', 4: 'Thu', 5: 'Fri', 6: 'Sat', 0: 'Sun' };
-            const activeDaysList = Object.keys(psy.availability.activeDays)
-              .filter(d => psy.availability.activeDays[d])
-              .map(d => daysMap[d]);
-            if (activeDaysList.length > 0) {
-              nextAvailable = `Available: ${activeDaysList.join(', ')}`;
-            }
-          }
+          const nextAvailable = calculateNextAvailable(psy.availability, psy.bookedSlots || []);
 
           const settings = JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
           const rawModes = psy.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP'];

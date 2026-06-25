@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search, LayoutGrid, List, ChevronRight } from 'lucide-react';
 import ApiService from '../../shared/services/api';
+import { calculateNextAvailable } from '../../shared/utils/dateFormatter';
 
 function getInitials(name) {
   if (!name) return 'EX';
@@ -61,7 +62,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
               hours: c.hours || 0,
               lang: c.lang || 'English, Malayalam',
               price: c.price || 1200,
-              nextAvailable: 'Available Today',
+              nextAvailable: calculateNextAvailable(c.availability, c.bookedSlots || []),
               rating: c.rating || 5.0,
               modes: c.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP'],
               isTopFive: c.isTopFive || false,
