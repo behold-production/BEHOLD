@@ -41,61 +41,7 @@ const OverviewTab = ({
         )}
       </div>
 
-      {/* ── Welcome Hero Banner ─────────────────────────── */}
-      <div className="group relative overflow-hidden rounded-none border border-surface-200 bg-white p-5 sm:p-6 shadow-none flex flex-col md:flex-row items-center justify-between gap-6 transition-all duration-300">
-        {/* Left Content */}
-        <div className="space-y-3.5 max-w-lg text-left">
-          <div className="space-y-1.5">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-none uppercase tracking-widest text-[10px] font-black bg-brand-light text-brand-dark border border-brand/10 w-fit">
-              🚀 Getting Started
-            </span>
-            <h3 className="text-2xl font-header font-black tracking-tight text-surface-900 leading-tight">
-              Welcome back, <span className="text-brand-dark">{profile.name || 'Student'}</span>!
-            </h3>
-            <p className="text-surface-600 text-xs sm:text-sm leading-relaxed">
-              Explore your educational potential. Complete the CIGI Differential Aptitude Test (C-DAT) to scientifically map your career path, or schedule a 1-on-1 session with our certified counsellors.
-            </p>
-          </div>
 
-          <div className="flex flex-wrap items-center gap-3">
-            {!testProfile ? (
-              <button
-                type="button"
-                onClick={() => navigate('/sample-test')}
-                className="min-h-[40px] px-5 py-2 bg-surface-900 hover:bg-surface-800 text-white font-black uppercase tracking-widest text-[10px] rounded-none transition duration-200 cursor-pointer border-none shadow-none"
-              >
-                Start Aptitude Test
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={() => handleSectionChange('results')}
-                className="min-h-[40px] px-5 py-2 bg-surface-900 hover:bg-surface-800 text-white font-black uppercase tracking-widest text-[10px] rounded-none transition duration-200 cursor-pointer border-none shadow-none"
-              >
-                View C-DAT Report
-              </button>
-            )}
-            {enablePsychology && (
-              <button
-                type="button"
-                onClick={() => navigate('/booking')}
-                className="min-h-[40px] px-5 py-2 bg-white border border-surface-200 hover:border-surface-300 text-surface-900 font-black uppercase tracking-widest text-[10px] rounded-none transition duration-200 cursor-pointer shadow-none"
-              >
-                Consult a Mentor
-              </button>
-            )}
-          </div>
-        </div>
-
-        {/* Right Collage Graphic */}
-        <div className="relative shrink-0 w-full md:w-56 lg:w-64 h-36 sm:h-40 rounded-none overflow-hidden bg-surface-50 border border-surface-200 flex items-center justify-center">
-          <img
-            src="/dashboard_hero.png"
-            alt="Career exploration illustration"
-            className="w-full h-full object-cover grayscale-[10%] contrast-[105%] group-hover:scale-[1.03] transition-all duration-500"
-          />
-        </div>
-      </div>
 
       {/* ── Next Session Card ── */}
       {nextSession ? (

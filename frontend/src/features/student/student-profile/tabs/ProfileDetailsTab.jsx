@@ -199,7 +199,7 @@ const ProfileDetailsTab = ({
         </div>
       </div>
 
-      <form onSubmit={handleSave} className="space-y-4">
+      <form onSubmit={handleSave} className="space-y-4 pb-24 lg:pb-16">
         {sections.map((section, sIdx) => {
           const SIcon = section.icon;
           return (
