@@ -50,17 +50,17 @@ export default function About({ enablePsychology = true, siteSettings }) {
         </div>
 
         {/* 6-Card Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 items-stretch">
           {pillars.map((pillar, idx) => {
             return (
               <div
                 key={idx}
-                className="square-card p-6 sm:p-8 bg-white shadow-square-light hover:shadow-square-hover flex flex-col group transition-all duration-300 hover:-translate-y-2 relative overflow-hidden"
+                className="h-full p-5 sm:p-6 bg-white border border-surface-200 shadow-square-light hover:shadow-square-hover flex flex-col group transition-all duration-300 hover:-translate-y-1 relative overflow-hidden"
               >
                 {/* Decorative Accent */}
                 <div className="absolute top-0 right-0 w-16 h-16 bg-surface-50 border-l border-b border-surface-200 transform translate-x-8 -translate-y-8 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-500"></div>
 
-                <div className="space-y-6 relative z-10">
+                <div className="space-y-4 relative z-10 flex-1">
                   <span className="font-heading font-black text-5xl text-surface-200 group-hover:text-brand transition-colors duration-300 block leading-none">
                     {`0${idx + 1}`}
                   </span>
@@ -74,7 +74,7 @@ export default function About({ enablePsychology = true, siteSettings }) {
                   </div>
                 </div>
                 
-                <div className="mt-6 flex justify-end">
+                <div className="mt-5 flex justify-end">
                     <div className="w-8 h-8 bg-surface-50 border border-surface-200 flex items-center justify-center text-surface-900 group-hover:bg-brand group-hover:border-brand transition-colors">
                         <ArrowRight className="w-4 h-4" />
                     </div>

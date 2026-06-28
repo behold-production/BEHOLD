@@ -145,10 +145,10 @@ export default function CdatSection({ setView }) {
   return (
     <section id="cdat" className="py-20 px-6 border-t border-surface-200 bg-surface-50">
       <div className="max-w-7xl mx-auto">
-        <div className="bg-white border-2 border-surface-900 shadow-[8px_8px_0_0_rgba(15,23,42,1)] overflow-hidden flex flex-col md:flex-row rounded-none mb-10">
+        <div className="bg-white border border-surface-200 shadow-square-light overflow-hidden flex flex-col md:flex-row rounded-none mb-10">
           
           {/* Text Side */}
-          <div className="p-6 sm:p-8 md:p-12 flex-1 flex flex-col justify-center border-b-2 md:border-b-0 md:border-r-2 border-surface-900 bg-white">
+          <div className="p-6 sm:p-8 md:p-12 flex-1 flex flex-col justify-center border-b md:border-b-0 md:border-r border-surface-200 bg-white">
             <div className="flex flex-row items-center justify-between gap-4 mb-4">
               <h2 className="text-3xl md:text-4xl font-black uppercase tracking-widest text-surface-900">
                 CIGI Differential Aptitude Test (C-DAT)
@@ -161,7 +161,7 @@ export default function CdatSection({ setView }) {
             <button
               type="button"
               onClick={() => document.getElementById('cdat-form')?.scrollIntoView({ behavior: 'smooth' })}
-              className="w-full sm:w-max px-6 py-3 bg-surface-900 text-white font-black uppercase tracking-widest text-[10px] rounded-none hover:bg-brand hover:text-surface-900 hover:-translate-y-1 hover:shadow-[4px_4px_0_0_rgba(15,23,42,1)] transition-all cursor-pointer border-2 border-surface-900"
+              className="w-full sm:w-max px-6 py-3 bg-surface-900 text-white font-black uppercase tracking-widest text-[10px] rounded-none hover:bg-surface-800 transition-colors cursor-pointer border-none shadow-none"
             >
               CIGI Aptitude Test
             </button>
@@ -224,7 +224,7 @@ export default function CdatSection({ setView }) {
               </div>
 
               {!generatedCode ? (
-                <button type="submit" className="w-full mt-4 px-6 py-3 bg-brand text-surface-900 font-black uppercase tracking-widest text-[10px] rounded-none hover:bg-brand-dark hover:-translate-y-1 hover:shadow-[4px_4px_0_0_rgba(15,23,42,1)] transition-all cursor-pointer border-2 border-surface-900">
+                <button type="submit" className="w-full mt-4 px-6 py-3 bg-brand text-surface-900 font-black uppercase tracking-widest text-[10px] rounded-none hover:bg-brand-dark transition-all cursor-pointer border-none shadow-none">
                   Generate Code
                 </button>
               ) : (
@@ -256,12 +256,12 @@ export default function CdatSection({ setView }) {
               )}
             </form>
             
-            <div className="mt-8 pt-6 border-t-2 border-surface-900 border-dashed">
+            <div className="mt-8 pt-6 border-t border-surface-200">
               <p className="text-[10px] text-surface-500 font-bold uppercase tracking-widest mb-3 text-center">Want to try a practice test?</p>
               <button 
                 type="button"
                 onClick={() => window.spaNavigate('/sample-test')}
-                className="w-full px-6 py-3 bg-white border-2 border-surface-900 text-surface-900 font-black uppercase tracking-widest text-[10px] rounded-none hover:bg-surface-100 hover:-translate-y-1 hover:shadow-[4px_4px_0_0_rgba(15,23,42,1)] transition-all cursor-pointer flex justify-center text-center"
+                className="w-full px-6 py-3 bg-white border border-surface-200 text-surface-900 font-black uppercase tracking-widest text-[10px] rounded-none hover:bg-surface-50 transition-all cursor-pointer flex justify-center text-center shadow-none"
               >
                 Sample Test
               </button>
