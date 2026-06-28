@@ -302,9 +302,9 @@ const BookedSessionsTab = ({
           {/* Completed sessions Stats */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {[
-              { label: 'Total Sessions', value: completedSessions.length, icon: CheckCircle2 },
-              { label: 'Hours Coached', value: `${completedSessions.length}h`, icon: Clock },
-              { label: 'Avg. Rating', value: '4.8', icon: Star, suffix: '/5' },
+              { label: 'Total Sessions', value: completedSessions.length + bookedSessions.length, icon: CalendarDays },
+              { label: 'Completed', value: completedSessions.length, icon: CheckCircle2 },
+              { label: 'Upcoming', value: bookedSessions.length, icon: Clock },
             ].map((s, i) => {
               const Icon = s.icon;
               return (
