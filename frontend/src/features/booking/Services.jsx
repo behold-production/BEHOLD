@@ -111,7 +111,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
         {/* SERVICE 2: CAREER MENTORING */}
         <div
           id="card-career"
-          className="bg-white border border-surface-200 rounded-none shadow-none p-6 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none group"
+          className="bg-white border border-surface-200 rounded-none shadow-square-light p-6 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none group"
         >
           <div className="space-y-4">
             <div className="flex justify-between items-start">
@@ -155,8 +155,8 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
 
         {/* SERVICE 3: PSYCHOLOGICAL COUNSELLING */}
         <div
-          id="card-mental"
-          className="bg-surface-50 border border-surface-200 rounded-none shadow-none p-6 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none group"
+          id="card-psychology"
+          className="bg-surface-50 border border-surface-200 rounded-none shadow-square-light p-6 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none group"
         >
           <div className="space-y-4">
             <div className="flex justify-between items-start">
@@ -313,7 +313,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
             {filteredAndSortedAdvisors.slice(0, visibleCount).map(advisor => (
               <div
                 key={advisor.id}
-                className="bg-white border border-surface-200 rounded-none p-0 flex flex-col group shadow-none hover:border-surface-300 transition-all duration-300"
+                className="bg-white border border-surface-200 rounded-none p-0 flex flex-col group shadow-square-light hover:border-surface-300 transition-all duration-300"
               >
                 {/* Profile Card Header */}
                 <div className="p-6 flex items-start gap-4 border-b border-surface-200 bg-surface-50">
@@ -427,7 +427,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
             {filteredAndSortedAdvisors.slice(0, visibleCount).map(advisor => (
               <div
                 key={advisor.id}
-                className="bg-white border border-surface-200 rounded-none p-0 flex flex-col lg:flex-row group shadow-none hover:border-surface-300 transition-all duration-300"
+                className="bg-white border border-surface-200 rounded-none p-0 flex flex-col lg:flex-row group shadow-square-light hover:border-surface-300 transition-all duration-300"
               >
                 {/* Left Column: Avatar & Name */}
                 <div className="p-6 flex lg:flex-col items-center lg:items-start gap-4 border-b lg:border-b-0 lg:border-r border-surface-200 bg-surface-50 lg:w-[250px] shrink-0">
