@@ -179,7 +179,7 @@ const BookedSessionsTab = ({
                             <button
                               type="button"
                               onClick={() => window.open(meetStatus.link, '_blank')}
-                              className="flex-1 min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-brand text-surface-900 hover:bg-brand-dark rounded-none text-[10px] font-black tracking-widest uppercase transition-all duration-300 shadow-none border-none cursor-pointer animate-pulse"
+                              className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-brand text-surface-900 hover:bg-brand-dark rounded-none text-[10px] font-black tracking-widest uppercase transition-all duration-300 shadow-none border-none cursor-pointer animate-pulse"
                             >
                               <Video className="w-3.5 h-3.5" /> Join Now
                               <ExternalLink className="w-3 h-3" />
@@ -189,7 +189,7 @@ const BookedSessionsTab = ({
                               type="button"
                               disabled
                               title={meetStatus.status === 'LOCKED' ? 'Link activates 10 min before session' : 'Session has ended'}
-                              className="flex-1 min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-surface-100 text-surface-400 border border-surface-200 rounded-none text-[10px] uppercase tracking-widest font-black cursor-not-allowed"
+                              className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-surface-100 text-surface-400 border border-surface-200 rounded-none text-[10px] uppercase tracking-widest font-black cursor-not-allowed"
                             >
                               <Lock className="w-3.5 h-3.5" /> {meetStatus.label}
                             </button>
@@ -210,7 +210,7 @@ const BookedSessionsTab = ({
                                   );
                                 }
                               }}
-                              className="flex-1 min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-surface-100 text-surface-700 border border-surface-200 rounded-none text-[10px] uppercase tracking-widest font-black shadow-none cursor-pointer"
+                              className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-surface-100 text-surface-700 border border-surface-200 rounded-none text-[10px] uppercase tracking-widest font-black shadow-none cursor-pointer"
                             >
                               <MapPin className="w-3.5 h-3.5" /> View Location
                             </button>

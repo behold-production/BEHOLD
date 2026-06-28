@@ -24,6 +24,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
   const [visibleCount, setVisibleCount] = useState(5);
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
   const [expandedBios, setExpandedBios] = useState({});
+  const [expandedSpecialties, setExpandedSpecialties] = useState({});
 
   const settings = siteSettings || JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
   const enablePsychology = settings.enablePsychology !== false;
@@ -317,7 +318,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
               >
                 {/* Profile Card Header */}
                 <div className="p-6 flex items-start gap-4 border-b border-surface-200 bg-surface-50">
-                  <div className="w-16 h-16 bg-surface-200 text-surface-900 flex items-center justify-center font-black text-2xl shrink-0 overflow-hidden border border-surface-300 rounded-none">
+                  <div className="w-16 h-16 bg-surface-200 text-surface-900 flex items-center justify-center font-black text-2xl shrink-0 overflow-hidden border border-surface-300 rounded-full">
                     {advisor.profilePic ? (
                       <img src={advisor.profilePic} alt={advisor.name} className="w-full h-full object-cover" />
                     ) : (
@@ -339,7 +340,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                   <div className="mb-4">
                     <span className="text-[10px] font-black text-surface-900 mb-2 block uppercase tracking-widest">Specialties</span>
                     <div className="flex flex-wrap gap-2">
-                      {advisor.specialties.map((spec, i) => (
+                      {(expandedSpecialties[advisor.id] ? advisor.specialties : advisor.specialties.slice(0, 2)).map((spec, i) => (
                         <span
                           key={i}
                           className="px-2 py-1 bg-surface-50 border border-surface-200 text-[10px] font-bold text-surface-600 rounded-none uppercase tracking-widest"
@@ -347,6 +348,15 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                           {spec}
                         </span>
                       ))}
+                      {advisor.specialties.length > 2 && (
+                        <button
+                          type="button"
+                          onClick={() => setExpandedSpecialties(prev => ({ ...prev, [advisor.id]: !prev[advisor.id] }))}
+                          className="px-2 py-1 bg-white border border-surface-200 text-[10px] font-black text-brand-dark rounded-none uppercase tracking-widest hover:bg-surface-50 transition-colors cursor-pointer"
+                        >
+                          {expandedSpecialties[advisor.id] ? '- Less' : `+ ${advisor.specialties.length - 2} More`}
+                        </button>
+                      )}
                     </div>
                   </div>
                   
@@ -431,7 +441,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
               >
                 {/* Left Column: Avatar & Name */}
                 <div className="p-6 flex lg:flex-col items-center lg:items-start gap-4 border-b lg:border-b-0 lg:border-r border-surface-200 bg-surface-50 lg:w-[250px] shrink-0">
-                  <div className="w-16 h-16 lg:w-20 lg:h-20 bg-surface-200 text-surface-900 flex items-center justify-center font-black text-2xl lg:text-3xl shrink-0 overflow-hidden border border-surface-300 rounded-none">
+                  <div className="w-16 h-16 lg:w-20 lg:h-20 bg-surface-200 text-surface-900 flex items-center justify-center font-black text-2xl lg:text-3xl shrink-0 overflow-hidden border border-surface-300 rounded-full">
                     {advisor.profilePic ? (
                       <img src={advisor.profilePic} alt={advisor.name} className="w-full h-full object-cover" />
                     ) : (
@@ -453,7 +463,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                   <div className="mb-4">
                     <span className="text-[10px] font-black text-surface-900 mb-2 block uppercase tracking-widest">Specialties</span>
                     <div className="flex flex-wrap gap-2">
-                      {advisor.specialties.map((spec, i) => (
+                      {(expandedSpecialties[advisor.id] ? advisor.specialties : advisor.specialties.slice(0, 2)).map((spec, i) => (
                         <span
                           key={i}
                           className="px-2 py-1 bg-surface-50 border border-surface-200 text-[10px] font-bold text-surface-600 rounded-none uppercase tracking-widest"
@@ -461,6 +471,15 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                           {spec}
                         </span>
                       ))}
+                      {advisor.specialties.length > 2 && (
+                        <button
+                          type="button"
+                          onClick={() => setExpandedSpecialties(prev => ({ ...prev, [advisor.id]: !prev[advisor.id] }))}
+                          className="px-2 py-1 bg-white border border-surface-200 text-[10px] font-black text-brand-dark rounded-none uppercase tracking-widest hover:bg-surface-50 transition-colors cursor-pointer"
+                        >
+                          {expandedSpecialties[advisor.id] ? '- Less' : `+ ${advisor.specialties.length - 2} More`}
+                        </button>
+                      )}
                     </div>
                   </div>
                   <div className="text-xs text-surface-600 leading-relaxed">

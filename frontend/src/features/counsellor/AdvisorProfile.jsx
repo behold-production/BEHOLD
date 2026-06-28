@@ -105,7 +105,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
         <button
           type="button"
           onClick={onBack}
-          className="absolute top-20 md:top-32 left-4 md:left-10 z-10 min-h-[44px] flex items-center gap-2 px-4 py-2.5 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg text-xs font-bold capitalize  transition-all cursor-pointer shadow-sm"
+          className="absolute top-20 md:top-32 left-4 md:left-10 z-10 min-h-[44px] flex items-center gap-2 px-4 py-2.5 bg-surface-900 hover:bg-surface-800 text-white rounded-none text-[10px] font-black tracking-widest uppercase transition-all cursor-pointer shadow-none"
         >
           <ChevronLeft className="w-4 h-4" /> Back to Experts
         </button>
@@ -113,11 +113,11 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 relative -mt-12 md:-mt-32">
         {/* Profile Card Main */}
-        <div className="bg-white rounded-lg shadow-sm border border-zinc-200 p-4.5 sm:p-6 md:p-10 relative overflow-hidden">
+        <div className="bg-white rounded-none shadow-square-light border border-surface-200 p-4.5 sm:p-6 md:p-10 relative overflow-hidden">
           
           <div className="flex flex-col md:flex-row gap-6 md:gap-8 items-start md:items-center relative z-10">
             {/* Avatar */}
-            <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-48 md:h-48 rounded-full bg-white border border-zinc-200 shadow-sm flex items-center justify-center text-zinc-900 shrink-0 overflow-hidden">
+            <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-48 md:h-48 rounded-full bg-white border border-surface-300 shadow-none flex items-center justify-center text-surface-900 shrink-0 overflow-hidden">
               {advisor.profilePic ? (
                 <img src={advisor.profilePic} alt={advisor.name} className="w-full h-full object-cover" />
               ) : (
@@ -129,7 +129,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             <div className="space-y-4 flex-1">
               <div>
                 <div className="flex flex-wrap items-center gap-2.5 mb-1.5">
-                  <span className="px-3 py-1 bg-zinc-900 text-white text-xs font-bold capitalize  rounded-md">
+                  <span className="px-3 py-1 bg-surface-900 text-white text-[10px] font-black tracking-widest uppercase rounded-none">
                     Verified Expert
                   </span>
                   <span className="flex items-center gap-1 text-xs sm:text-xs font-bold text-zinc-500 capitalize">
@@ -174,7 +174,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
           <div className={enablePsychology ? "lg:col-span-2 space-y-6" : "lg:col-span-3 space-y-6"}>
             
             {/* About Section */}
-            <div className="bg-white p-5 sm:p-6 md:p-8 rounded-lg border border-zinc-200 shadow-xs space-y-4">
+            <div className="bg-white p-5 sm:p-6 md:p-8 rounded-none border border-surface-200 shadow-square-light space-y-4">
               <div className="flex items-center gap-2 text-zinc-900">
                 <BookOpen className="w-5 h-5 text-brand" />
                 <h3 className="text-sm sm:text-lg font-bold capitalize tracking-wide">About {advisor.name.split(' ')[0]}</h3>
@@ -185,28 +185,28 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             </div>
 
             {/* Specializations */}
-            <div className="bg-white p-5 sm:p-6 md:p-8 rounded-lg border border-zinc-200 shadow-xs space-y-5">
+            <div className="bg-white p-5 sm:p-6 md:p-8 rounded-none border border-surface-200 shadow-square-light space-y-5">
               <div className="flex items-center gap-2 text-zinc-900">
                 <Heart className="w-5 h-5 text-brand" />
                 <h3 className="text-sm sm:text-lg font-bold capitalize tracking-wide">Core Specialties</h3>
               </div>
               <div className="flex flex-wrap gap-3">
                 {advisor.specialties.map((spec, i) => (
-                  <div key={i} className="px-4 py-2 bg-zinc-50 border border-zinc-200 rounded-lg">
-                    <span className="text-xs font-bold text-zinc-900">{spec}</span>
+                  <div key={i} className="px-4 py-2 bg-surface-50 border border-surface-200 rounded-none">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-surface-900">{spec}</span>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Education & Qualifications */}
-            <div className="bg-white p-5 sm:p-6 md:p-8 rounded-lg border border-zinc-200 shadow-xs space-y-4">
+            <div className="bg-white p-5 sm:p-6 md:p-8 rounded-none border border-surface-200 shadow-square-light space-y-4">
               <div className="flex items-center gap-2 text-zinc-900">
                 <Award className="w-5 h-5 text-brand" />
                 <h3 className="text-sm sm:text-lg font-bold capitalize tracking-wide">Qualifications</h3>
               </div>
-              <div className="flex items-start gap-4 p-4 border border-zinc-200 rounded-lg bg-white">
-                <div className="w-10 h-10 rounded-lg bg-zinc-50 flex items-center justify-center shrink-0 text-zinc-600">
+              <div className="flex items-start gap-4 p-4 border border-surface-200 rounded-none bg-surface-50 shadow-square-light">
+                <div className="w-10 h-10 rounded-none bg-white border border-surface-200 flex items-center justify-center shrink-0 text-surface-600">
                   <GraduationCap className="w-5 h-5" />
                 </div>
                 <div className="flex items-center">
@@ -220,14 +220,14 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
           {/* Right Column: Sticky Booking Widget */}
           {enablePsychology && (
             <div className="lg:col-span-1">
-              <div className="lg:sticky lg:top-32 bg-white p-5 sm:p-6 rounded-lg border border-zinc-200 shadow-sm space-y-4 sm:space-y-6">
+              <div className="lg:sticky lg:top-32 bg-white p-5 sm:p-6 rounded-none border border-surface-200 shadow-square-light space-y-4 sm:space-y-6">
 
                 <div>
                   <h3 className="text-lg sm:text-xl font-bold text-zinc-900 capitalize tracking-wide mb-1">Book a Session</h3>
                   <p className="text-xs text-zinc-650">Schedule your 1-hour session directly with {advisor.name.split(' ')[0]}.</p>
                 </div>
 
-                <div className="p-3.5 sm:p-4 bg-zinc-50 border border-zinc-200 rounded-lg space-y-3">
+                <div className="p-3.5 sm:p-4 bg-surface-50 border border-surface-200 rounded-none space-y-3">
                   <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 text-xs sm:text-sm">
                     <span className="text-zinc-600 font-semibold shrink-0">Next Available</span>
                     <span className="font-semibold text-brand bg-brand-light border border-brand/20 px-2 py-0.5 rounded-md text-xs sm:text-xs">{advisor.nextAvailable}</span>
@@ -242,7 +242,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                 <button
                   type="button"
                   onClick={() => onBook(advisorId)}
-                  className="min-h-[48px] w-full py-3.5 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg text-xs font-bold capitalize  shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  className="min-h-[48px] w-full py-3.5 bg-surface-900 hover:bg-surface-800 text-white rounded-none text-[10px] font-black uppercase tracking-widest shadow-none transition-all flex items-center justify-center gap-2 cursor-pointer border-none"
                 >
                   <Calendar className="w-4 h-4" /> Book Now
                 </button>
