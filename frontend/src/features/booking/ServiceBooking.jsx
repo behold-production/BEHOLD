@@ -924,7 +924,6 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                           </span>
                                         )}
                                       </div>
-                                      </div>
                                       <div className="flex flex-col items-end gap-2 shrink-0">
                                         <span className={`text-sm font-black tracking-widest ${!isAvailable ? 'text-surface-400' : (selectedAdvisor?.id === advisor.id ? 'text-white' : 'text-surface-900')}`}>
                                           ₹{advisor.price}

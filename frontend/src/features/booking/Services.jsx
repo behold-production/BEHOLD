@@ -105,7 +105,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
   });
 
   return (
-    <section id="services" className="max-w-7xl mx-auto px-4 sm:px-6 py-16 md:py-24 text-surface-900 relative">
+    <section id="services" className="max-w-7xl mx-auto px-4 sm:px-6 py-10 md:py-24 text-surface-900 relative">
       {/* DUAL COUPLING ROW */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch w-full">
 
@@ -207,7 +207,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
           <span className="inline-block bg-surface-900 text-white px-3 py-1 text-[10px] font-black uppercase tracking-widest">
             Our Experts
           </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-widest text-surface-900 leading-tight">
+          <h2 className="text-2xl sm:text-3xl md:text-5xl font-black uppercase tracking-widest text-surface-900 leading-tight">
             Meet Our Professionals
           </h2>
           <p className="text-surface-600 font-medium text-sm md:text-base">

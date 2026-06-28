@@ -32,16 +32,16 @@ export default function About({ enablePsychology = true, siteSettings }) {
   ];
 
   return (
-    <section id="about" className="py-24 px-6 bg-surface-50 relative border-t border-surface-200">
+    <section id="about" className="py-12 md:py-24 px-6 bg-surface-50 relative">
 
       <div className="max-w-7xl mx-auto space-y-16">
 
         {/* Header Column */}
-        <div className="max-w-3xl mx-auto text-center space-y-6">
+        <div className="mb-8 md:mb-20 max-w-3xl mx-auto text-center space-y-6">
           <div className="inline-block bg-surface-900 text-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest shadow-[4px_4px_0px_0px_rgba(0,229,255,1)]">
             Why Choose Us
           </div>
-          <h2 className="text-4xl md:text-5xl font-heading font-black text-surface-900 uppercase">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-black text-surface-900 uppercase leading-tight">
             {settings.aboutTitle || 'What We Offer'}
           </h2>
           <p className="text-slate-600 text-lg font-light leading-relaxed max-w-2xl mx-auto">

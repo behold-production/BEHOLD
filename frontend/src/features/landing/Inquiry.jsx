@@ -88,14 +88,14 @@ export default function Inquiry({ testProfile, siteSettings }) {
   return (
     <div className="bg-surface-50">
       {/* 3. CALL TO ACTION BLOCK WITH INQUIRY FORM */}
-      <section id="inquiry" className="py-20 px-6 max-w-7xl mx-auto">
+      <section id="inquiry" className="py-10 md:py-20 px-6 max-w-7xl mx-auto">
         <div className="square-card p-0 flex flex-col md:flex-row overflow-hidden shadow-square-light bg-white border-surface-200">
           <div className="p-8 md:p-12 space-y-8 flex-1 border-b md:border-b-0 md:border-r border-surface-200">
             <div className="space-y-4 flex flex-col items-start text-left">
               <span className="inline-block bg-surface-900 text-white px-3 py-1 text-xs font-bold uppercase tracking-wider">
                 Get in touch
               </span>
-              <h2 className="text-3xl sm:text-4xl font-heading font-black tracking-tight text-surface-900 uppercase">Want to Know More</h2>
+              <h2 className="text-2xl sm:text-3xl font-heading font-black tracking-tight text-surface-900 uppercase leading-tight">Want to Know More</h2>
               <p className="text-slate-600 font-light text-sm max-w-md">
                 Submit your request to align parents, students, and coordinators for assessments and counselling sessions.
               </p>
@@ -188,7 +188,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
       </section>
 
       {/* 4. Stay Informed & Community */}
-      <section className="py-20 px-6 border-t border-surface-200 bg-white">
+      <section className="py-10 md:py-20 px-6 bg-white">
         <div className="max-w-3xl mx-auto text-center space-y-8 flex flex-col items-center">
           <span className="inline-block bg-surface-900 text-white px-3 py-1 text-xs font-bold uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(0,229,255,1)]">
             Stay Informed

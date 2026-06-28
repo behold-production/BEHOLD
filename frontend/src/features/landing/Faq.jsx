@@ -35,13 +35,13 @@ export default function Faq() {
   };
 
   return (
-    <section id="faqs" className="py-20 px-6 bg-white">
+    <section id="faqs" className="py-10 md:py-20 px-6 bg-white">
       <div className="max-w-4xl mx-auto">
         <div className="mb-12 space-y-4 text-center border-b border-surface-200 pb-8">
           <span className="inline-block bg-surface-900 text-white px-3 py-1 text-xs font-bold uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(0,229,255,1)]">
             Clarity Desk
           </span>
-          <h2 className="text-4xl md:text-5xl font-heading font-black text-surface-900 uppercase">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-black text-surface-900 uppercase leading-tight">
             Frequently Asked
           </h2>
           <p className="text-slate-600 font-light text-lg">

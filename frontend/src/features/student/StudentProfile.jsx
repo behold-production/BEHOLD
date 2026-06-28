@@ -141,16 +141,18 @@ export default function StudentProfile() {
           </div>
         ) : (
           <>
-            <HeroHeader
-              profile={profile}
-              user={user}
-              displayName={displayName}
-              greeting={greeting}
-              completion={completion}
-              testProfile={testProfile}
-              stats={stats}
-              handleProfilePicUpload={handleProfilePicUpload}
-            />
+            <div className={currentSection === 'overview' ? 'block' : 'hidden lg:block'}>
+              <HeroHeader
+                profile={profile}
+                user={user}
+                displayName={displayName}
+                greeting={greeting}
+                completion={completion}
+                testProfile={testProfile}
+                stats={stats}
+                handleProfilePicUpload={handleProfilePicUpload}
+              />
+            </div>
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
               <aside className="lg:col-span-3">
                 <SidebarNav
