@@ -15,10 +15,10 @@
   --color-zinc-700: var(--color-slate-700);
   --font-sans: 'Poppins', 'Baloo Chettan 2', 'Manjari', 'Noto Sans Malayalam', system-ui, sans-serif;
   --font-heading: 'Poppins', 'Baloo Chettan 2', 'Manjari', 'Noto Sans Malayalam', sans-serif;
-  --color-brand: #2563EB; /* Royal Blue */
-  --color-brand-dark: #1D4ED8; /* Deep Blue */
-  --color-brand-light: #EFF6FF;
-  --color-brand-accent: #3B82F6;
+  --color-brand: #00E5FF;
+  --color-brand-dark: #00B3CC;
+  --color-brand-light: #e6fbfb;
+  --color-brand-accent: #0ea5e9;
 
   --color-surface-50: #F8FAFC;
   --color-surface-100: #F1F5F9;
@@ -26,8 +26,8 @@
   --color-surface-800: #1E293B;
   --color-surface-900: #0F172A;
 
-  --shadow-square: 8px 8px 0px 0px rgba(37, 99, 235, 0.15);
-  --shadow-square-hover: 12px 12px 0px 0px rgba(37, 99, 235, 0.3);
+  --shadow-square: 8px 8px 0px 0px rgba(0, 229, 255, 0.2);
+  --shadow-square-hover: 12px 12px 0px 0px rgba(0, 229, 255, 0.4);
   --shadow-square-dark: 8px 8px 0px 0px rgba(15, 23, 42, 1);
   --shadow-square-light: 8px 8px 0px 0px rgba(226, 232, 240, 1);
 
