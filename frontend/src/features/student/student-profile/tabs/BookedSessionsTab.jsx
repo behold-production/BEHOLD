@@ -179,7 +179,7 @@ const BookedSessionsTab = ({
                             <button
                               type="button"
                               onClick={() => window.open(meetStatus.link, '_blank')}
-                              className="flex-1 min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-brand text-zinc-950 hover:bg-brand-dark rounded-none text-[10px] font-black tracking-widest uppercase transition-all duration-300 shadow-none border-none cursor-pointer animate-pulse"
+                              className="flex-1 min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-brand text-surface-900 hover:bg-brand-dark rounded-none text-[10px] font-black tracking-widest uppercase transition-all duration-300 shadow-none border-none cursor-pointer animate-pulse"
                             >
                               <Video className="w-3.5 h-3.5" /> Join Now
                               <ExternalLink className="w-3 h-3" />

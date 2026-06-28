@@ -366,7 +366,6 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
           {bookingStep === 'success' ? (
             /* STEP 5: Success & Confirmation View */
-            /* STEP 5: Success & Confirmation View */
             <div className="p-6 sm:p-10 bg-white border border-surface-200 rounded-none max-w-2xl mx-auto shadow-none space-y-6 text-center animate-in fade-in duration-300">
               <style>{`
                 @keyframes checkmark-circle {
@@ -986,26 +985,35 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
                 {/* STEP 3: Account & Payment */}
                 {bookingStep === 'payment' && (
-                  <div className="space-y-6 animate-in fade-in duration-300">
-                    <div className="border-b border-zinc-100 pb-3">
-                      <h3 className="text-sm font-semibold capitalize  text-zinc-850 flex items-center gap-2">
-                        <span className="w-6 h-6 rounded-full bg-zinc-900 text-white text-xs flex items-center justify-center shrink-0 font-bold">3</span>
-                        Your Details & Account
-                      </h3>
-                      <p className="text-xs text-zinc-500 mt-1">
-                        {user
-                          ? 'Signed in. Confirm your details, then proceed to payment.'
-                          : 'Fill your details, then sign in or create a free account to continue.'}
-                      </p>
+                  <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+                    <div className="border-b border-surface-200 pb-3 flex items-center justify-between">
+                      <div>
+                        <h3 className="text-[10px] font-black uppercase tracking-widest text-surface-900 flex items-center gap-2">
+                          <span className="w-6 h-6 rounded-none bg-surface-900 text-white text-[10px] flex items-center justify-center shrink-0 font-black">2</span>
+                          Account Details
+                        </h3>
+                        <p className="text-[10px] font-bold uppercase tracking-widest text-surface-500 mt-1">
+                          {user
+                            ? 'Signed in. Confirm your details, then proceed to payment.'
+                            : 'Fill your details, then sign in or create a free account to continue.'}
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleStepChange('config')}
+                        className="text-[10px] text-surface-900 hover:text-black font-black uppercase tracking-widest transition"
+                      >
+                        ← Back to Schedule
+                      </button>
                     </div>
 
                     {user && (
-                      <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center justify-between gap-3 animate-in fade-in duration-300">
+                      <div className="bg-surface-50 border border-surface-200 rounded-none p-4 flex items-center justify-between gap-3 animate-in fade-in duration-300 shadow-none">
                         <div className="flex-1 min-w-0">
-                          <span className="text-xs font-semibold text-emerald-800 block truncate">{user.name}</span>
-                          <span className="text-xs text-emerald-600  truncate block">{user.email}</span>
+                          <span className="text-[10px] font-black uppercase tracking-widest text-surface-900 block truncate">{user.name}</span>
+                          <span className="text-[10px] font-bold tracking-widest text-surface-600 truncate block">{user.email}</span>
                         </div>
-                        <span className="shrink-0 text-xs font-bold capitalize  bg-emerald-100 border border-emerald-300 text-emerald-700 px-2.5 py-1 rounded-lg">
+                        <span className="shrink-0 text-[10px] font-black uppercase tracking-widest bg-surface-900 text-white px-2.5 py-1 rounded-none">
                           ✓ Authenticated
                         </span>
                       </div>
@@ -1013,20 +1021,20 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
                     {/* DOORSTEP LOCATION SUMMARY - PAYMENT STEP */}
                     {bookingMode === 'DOOR_STEP' && (
-                      <div className="p-0 sm:p-4 bg-transparent sm:bg-zinc-50 border-0 sm:border border-zinc-200 rounded-none sm:rounded-xl text-left text-xs text-zinc-600 space-y-1 animate-in fade-in duration-300">
-                        <span className="font-bold text-zinc-800 block uppercase tracking-wider text-[10px]">
+                      <div className="p-0 sm:p-4 bg-transparent sm:bg-surface-50 border-0 sm:border border-surface-200 rounded-none text-left space-y-1 animate-in fade-in duration-300">
+                        <span className="font-black text-surface-900 block uppercase tracking-widest text-[10px]">
                           Doorstep Visit Location
                         </span>
-                        <p className="font-semibold text-zinc-900">{bookingForm.clientLocationName}</p>
-                        <p className="text-zinc-500">
+                        <p className="font-bold text-[10px] uppercase tracking-widest text-surface-900">{bookingForm.clientLocationName}</p>
+                        <p className="text-[10px] text-surface-500 uppercase tracking-widest font-bold">
                           Coordinates: {bookingForm.clientLatitude}, {bookingForm.clientLongitude}
                         </p>
                         {(() => {
                           const distance = getCalculatedDistance();
                           if (distance !== null) {
                             return (
-                              <span className="inline-block mt-1.5 font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded">
-                                ✓ Distance to Psychologist: {distance.toFixed(2)} km (Within 10 km limit)
+                              <span className="inline-block mt-1.5 font-black uppercase tracking-widest text-surface-900 bg-surface-50 border border-surface-200 px-2 py-0.5 rounded-none text-[10px]">
+                                ✓ Distance: {distance.toFixed(2)} km away
                               </span>
                             );
                           }
@@ -1037,54 +1045,54 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
                     {/* OFFLINE LOCATION SUMMARY - PAYMENT STEP */}
                     {bookingMode === 'OFFLINE' && selectedAdvisor && (
-                      <div className="p-0 sm:p-4 bg-transparent sm:bg-zinc-50 border-0 sm:border border-zinc-200 rounded-none sm:rounded-xl text-left text-xs text-zinc-600 space-y-1.5 animate-in fade-in duration-300">
-                        <span className="font-bold text-zinc-800 block uppercase tracking-wider text-[10px]">
+                      <div className="p-0 sm:p-4 bg-transparent sm:bg-surface-50 border-0 sm:border border-surface-200 rounded-none text-left space-y-1.5 animate-in fade-in duration-300">
+                        <span className="font-black text-surface-900 block uppercase tracking-widest text-[10px]">
                           Office / Center Visit Address
                         </span>
-                        <p className="font-semibold text-zinc-900 flex items-start gap-1.5 leading-relaxed">
-                          <svg className="w-3.5 h-3.5 text-zinc-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <p className="font-bold text-[10px] text-surface-900 flex items-start gap-1.5 leading-relaxed uppercase tracking-widest">
+                          <svg className="w-3.5 h-3.5 text-surface-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                           </svg>
-                          <span>{selectedAdvisor.locationName || 'Clinic/Center address not set by counsellor'}</span>
+                          <span>{selectedAdvisor.locationName || 'Clinic/Center address not set'}</span>
                         </p>
                       </div>
                     )}
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-1 text-left">
-                        <label className="text-xs font-bold text-zinc-500 capitalize tracking-wide block">Full Name</label>
+                        <label className="text-[10px] font-black uppercase tracking-widest text-surface-500 block">Full Name</label>
                         <input
                           type="text"
                           name="name"
                           value={bookingForm.name}
                           onChange={handleInputChange}
                           placeholder="Your full name"
-                          className={`w-full px-3.5 py-2.5 border rounded-lg text-xs font-medium text-zinc-855 outline-none focus:border-brand transition ${errors.name
-                              ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10'
-                              : 'border-zinc-200 bg-white'
+                          className={`w-full px-3.5 py-2.5 border rounded-none text-xs font-bold text-surface-900 outline-none focus:border-surface-900 transition ${errors.name
+                              ? 'border-rose-500 bg-rose-50/50'
+                              : 'border-surface-200 bg-white'
                             }`}
                         />
-                        {errors.name && <p className="text-[9.5px] text-rose-500 font-bold">{errors.name}</p>}
+                        {errors.name && <p className="text-[9.5px] text-rose-500 font-bold uppercase tracking-widest mt-1">{errors.name}</p>}
                       </div>
                       <div className="space-y-1 text-left">
-                        <label className="text-xs font-bold text-zinc-500 capitalize tracking-wide block">WhatsApp / Mobile</label>
+                        <label className="text-[10px] font-black uppercase tracking-widest text-surface-500 block">WhatsApp / Mobile</label>
                         <input
                           type="tel"
                           name="phone"
                           value={bookingForm.phone}
                           onChange={handleInputChange}
                           placeholder="e.g. 9876543210"
-                          className={`w-full px-3.5 py-2.5 border rounded-lg text-xs font-medium text-zinc-855 outline-none focus:border-brand transition ${errors.phone
-                              ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10'
-                              : 'border-zinc-200 bg-white'
+                          className={`w-full px-3.5 py-2.5 border rounded-none text-xs font-bold text-surface-900 outline-none focus:border-surface-900 transition ${errors.phone
+                              ? 'border-rose-500 bg-rose-50/50'
+                              : 'border-surface-200 bg-white'
                             }`}
                         />
-                        {errors.phone && <p className="text-[9.5px] text-rose-500 font-bold">{errors.phone}</p>}
+                        {errors.phone && <p className="text-[9.5px] text-rose-500 font-bold uppercase tracking-widest mt-1">{errors.phone}</p>}
                       </div>
                       <div className="space-y-1 sm:col-span-2 text-left">
-                        <label className="text-xs font-bold text-zinc-500 capitalize tracking-wide block">
-                          Email Address {user && <span className="text-emerald-600 normal-case font-bold">(verified)</span>}
+                        <label className="text-[10px] font-black uppercase tracking-widest text-surface-500 block">
+                          Email Address {user && <span className="text-surface-900 font-bold">(verified)</span>}
                         </label>
                         <input
                           type="email"
@@ -1093,54 +1101,53 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                           onChange={handleInputChange}
                           disabled={!!user}
                           placeholder="you@example.com"
-                          className={`w-full px-3.5 py-2.5 border rounded-lg text-xs font-medium outline-none transition ${user
-                              ? 'bg-zinc-50 border-zinc-200 text-zinc-500 cursor-not-allowed'
+                          className={`w-full px-3.5 py-2.5 border rounded-none text-xs font-bold outline-none transition ${user
+                              ? 'bg-surface-50 border-surface-200 text-surface-500 cursor-not-allowed'
                               : errors.email
-                                ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10 text-zinc-855'
-                                : 'border-zinc-200 bg-white text-zinc-855 focus:border-brand'
+                                ? 'border-rose-500 bg-rose-50/50 text-surface-900'
+                                : 'border-surface-200 bg-white text-surface-900 focus:border-surface-900'
                             }`}
                         />
-                        {errors.email && !user && <p className="text-[9.5px] text-rose-500 font-bold">{errors.email}</p>}
+                        {errors.email && !user && <p className="text-[9.5px] text-rose-500 font-bold uppercase tracking-widest mt-1">{errors.email}</p>}
                       </div>
                     </div>
 
                     {!user && (
-                      <div className="bg-zinc-50 border border-zinc-200 p-3 rounded-lg text-xs text-zinc-500 text-left">
-                        <span className="text-zinc-800 font-semibold block">Account Required to Continue</span>
+                      <div className="bg-surface-50 border border-surface-200 p-3 rounded-none text-[10px] font-bold uppercase tracking-widest text-surface-500 text-left">
+                        <span className="text-surface-900 font-black block">Account Required to Continue</span>
                         You'll be asked to sign in or create a free account when you click "Proceed to Payment" — your booking details are saved automatically.
                       </div>
                     )}
 
                     {user && (
-                      <div className="bg-zinc-50 border border-zinc-200 p-3 rounded-lg text-xs text-zinc-500 text-left">
-                        <span className="text-zinc-800 font-semibold block">Notification Reminders</span>
+                      <div className="bg-surface-50 border border-surface-200 p-3 rounded-none text-[10px] font-bold uppercase tracking-widest text-surface-500 text-left">
+                        <span className="text-surface-900 font-black block">Notification Reminders</span>
                         Live session reminders will be sent to your verified email &amp; WhatsApp number.
                       </div>
                     )}
 
-
                     {/* --- PAYMENT SECTION --- */}
-                    <div className="pt-4 border-t border-zinc-200 mt-6">
-                      <div className="border-b border-zinc-100 pb-3 mb-6">
-                        <h3 className="text-sm font-semibold capitalize  text-zinc-850 flex items-center gap-2">
-                          <span className="w-6 h-6 rounded-full bg-zinc-900 text-white text-xs flex items-center justify-center shrink-0 font-bold">4</span>
+                    <div className="pt-4 border-t border-surface-200 mt-6">
+                      <div className="border-b border-surface-200 pb-3 mb-6">
+                        <h3 className="text-[10px] font-black uppercase tracking-widest text-surface-900 flex items-center gap-2">
+                          <span className="w-6 h-6 rounded-none bg-surface-900 text-white text-[10px] flex items-center justify-center shrink-0 font-black">3</span>
                           Payment & Confirm
                         </h3>
-                        <p className="text-xs text-zinc-500 mt-1">Choose payment method, apply any promo codes, and confirm your booking.</p>
+                        <p className="text-[10px] text-surface-500 font-bold uppercase tracking-widest mt-1">Choose payment method, apply any promo codes, and confirm your booking.</p>
                       </div>
 
                       <form onSubmit={handlePaymentSubmit} className="space-y-6">
 
-                        <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-xl space-y-4">
+                        <div className="p-4 bg-surface-50 border border-surface-200 rounded-none space-y-4">
                           <div className="flex flex-col sm:flex-row items-center gap-4 text-left">
-                            <div className="w-12 h-12 bg-white border border-zinc-200 rounded-full flex items-center justify-center shrink-0 shadow-sm">
-                              <svg className="w-6 h-6 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <div className="w-12 h-12 bg-white border border-surface-200 rounded-none flex items-center justify-center shrink-0 shadow-none">
+                              <svg className="w-6 h-6 text-surface-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                               </svg>
                             </div>
                             <div>
-                              <h5 className="text-sm font-bold text-zinc-800">Secure Payment Gateway</h5>
-                              <p className="text-xs text-zinc-505 mt-1">
+                              <h5 className="text-[10px] font-black text-surface-900 uppercase tracking-widest">Secure Payment Gateway</h5>
+                              <p className="text-[10px] text-surface-500 font-bold uppercase tracking-widest mt-1">
                                 A secure Razorpay checkout overlay will open to complete your payment using UPI, Cards, Netbanking, or Wallet.
                               </p>
                             </div>
@@ -1182,16 +1189,16 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                   onClick={() => setShowSummary(!showSummary)}
                   className="flex lg:hidden items-center justify-between w-full bg-surface-50 border border-surface-200 p-3 rounded-none text-left shadow-none mb-3 hover:bg-surface-100 transition cursor-pointer"
                 >
-                  <span className="text-xs font-bold uppercase tracking-widest text-surface-900 flex items-center gap-2">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-surface-900 flex items-center gap-2">
                     <span>Booking Summary</span>
                     {selectedAdvisor && (
-                      <span className="text-[9px] bg-brand/10 text-brand-dark px-2 py-0.5 rounded-none font-bold uppercase tracking-widest">
+                      <span className="text-[9px] bg-surface-900 text-white px-2 py-0.5 rounded-none font-black uppercase tracking-widest">
                         {bookingService === 'counselling' ? 'Counselling' : 'Career'}
                       </span>
                     )}
                   </span>
                   <svg
-                    className={`w-4 h-4 text-zinc-400 transition-transform duration-200 ${showSummary ? 'rotate-180' : ''}`}
+                    className={`w-4 h-4 text-surface-400 transition-transform duration-200 ${showSummary ? 'rotate-180' : ''}`}
                     fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
@@ -1200,12 +1207,12 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
                 <div className={`space-y-5 ${showSummary ? 'block' : 'hidden'} lg:block`}>
                   <div>
-                    <h3 className="text-xs font-bold capitalize  text-zinc-850 border-b border-zinc-200 pb-2 hidden lg:block">
+                    <h3 className="text-[10px] font-black uppercase tracking-widest text-surface-900 border-b border-surface-200 pb-2 hidden lg:block">
                       Booking Summary
                     </h3>
                   </div>
 
-                  <div className="space-y-4 text-xs font-semibold">
+                  <div className="space-y-4 text-[10px] font-bold uppercase tracking-widest">
                     {/* Service type & Mode */}
                     <div>
                       <span className="text-[9.5px] text-surface-400 uppercase tracking-widest block font-bold mb-0.5">Service & Mode</span>
@@ -1248,8 +1255,8 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                     </div>
 
                     {/* Coupon Promo code input box */}
-                    <div className="pt-3 border-t border-zinc-200 space-y-2 text-left">
-                      <span className="text-[9.5px] text-zinc-400 capitalize tracking-wide block font-semibold">Have a Promo Code?</span>
+                    <div className="pt-3 border-t border-surface-200 space-y-2 text-left">
+                      <span className="text-[9.5px] text-surface-500 uppercase tracking-widest block font-black">Have a Promo Code?</span>
                       <div className="flex gap-2">
                         <input
                           type="text"
@@ -1257,7 +1264,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                           value={couponInput}
                           onChange={(e) => setCouponInput(e.target.value)}
                           disabled={appliedDiscount > 0}
-                          className="flex-1 px-3 py-1.5 bg-white border border-surface-200 rounded-none text-xs font-semibold uppercase outline-none focus:border-brand transition"
+                          className="flex-1 px-3 py-1.5 bg-white border border-surface-200 rounded-none text-[10px] font-bold uppercase outline-none focus:border-surface-900 transition"
                         />
                         {appliedDiscount > 0 ? (
                           <button
@@ -1278,7 +1285,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                         )}
                       </div>
                       {couponMsg.text && (
-                        <p className={`text-[10px] font-bold ${couponMsg.type === 'success' ? 'text-emerald-600' : 'text-rose-500'}`}>
+                        <p className={`text-[10px] font-bold uppercase tracking-widest ${couponMsg.type === 'success' ? 'text-surface-900' : 'text-rose-500'}`}>
                           {couponMsg.text}
                         </p>
                       )}
@@ -1302,15 +1309,15 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                         )}
 
                         {appliedDiscount > 0 && (
-                          <div className="flex justify-between text-emerald-600 font-bold">
+                          <div className="flex justify-between text-surface-900 font-bold">
                             <span>Promo Discount</span>
                             <span>-₹{appliedDiscount}</span>
                           </div>
                         )}
 
-                        <div className="flex justify-between text-xs font-bold text-surface-900 border-t border-surface-200 pt-2 mt-1">
+                        <div className="flex justify-between text-[10px] font-black text-surface-900 border-t border-surface-200 pt-2 mt-1">
                           <span>Net Total</span>
-                          <span className="text-brand-dark">₹{netTotal}</span>
+                          <span className="text-surface-900">₹{netTotal}</span>
                         </div>
                       </div>
                     </div>

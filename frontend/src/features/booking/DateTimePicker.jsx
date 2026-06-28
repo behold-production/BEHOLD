@@ -497,7 +497,7 @@ export default function DateTimePicker({
           <button
             type="button"
             onClick={() => scrollBy(1)}
-            className="absolute -right-1 top-1/2 -translate-y-1/2 z-10 w-7 h-7 rounded-full bg-white border border-zinc-200 shadow-md hover:bg-zinc-50 items-center justify-center text-zinc-500 hover:text-zinc-800 transition cursor-pointer hidden sm:flex"
+            className="absolute -right-1 top-1/2 -translate-y-1/2 z-10 w-7 h-7 rounded-none bg-white border border-surface-200 shadow-md hover:bg-surface-50 items-center justify-center text-surface-500 hover:text-surface-900 transition cursor-pointer hidden sm:flex"
             aria-label="Scroll right"
           >
             <ChevronRight className="w-3.5 h-3.5" />
@@ -507,15 +507,15 @@ export default function DateTimePicker({
 
       {/* Selected date summary */}
       {selectedDate && (
-        <div className="bg-gradient-to-br from-brand/8 via-white to-brand-accent/8 border border-brand/20 rounded-xl p-3 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2 animate-in slide-in-from-top-2 duration-300">
+        <div className="bg-surface-50 border border-surface-200 rounded-none p-3 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2 animate-in slide-in-from-top-2 duration-300">
           <div className="text-left">
-            <div className="text-[10px] font-semibold capitalize text-brand-dark tracking-wide">
+            <div className="text-[10px] font-black uppercase text-surface-900 tracking-widest">
               Your Selection
             </div>
-            <div className="text-xs sm:text-sm font-bold text-zinc-900 mt-0.5">
+            <div className="text-xs sm:text-sm font-bold text-surface-900 mt-0.5">
               {formatHumanDate(selectedDate)}
             </div>
-            <div className="text-[11px] text-zinc-500 mt-0.5">
+            <div className="text-[10px] font-bold uppercase tracking-widest text-surface-500 mt-0.5">
               {selectedTime
                 ? `${selectedTime} • ${bookingModeLabel(selectedMode)}`
                 : 'No time slot picked yet'}
@@ -525,7 +525,7 @@ export default function DateTimePicker({
             <button
               type="button"
               onClick={() => onTimeChange('')}
-              className="min-h-[32px] px-3 inline-flex items-center text-[11px] font-semibold text-zinc-500 hover:text-rose-600 transition cursor-pointer self-start sm:self-auto"
+              className="min-h-[32px] px-3 inline-flex items-center text-[10px] font-black uppercase tracking-widest text-surface-500 hover:text-surface-900 transition cursor-pointer self-start sm:self-auto"
             >
               Clear Time
             </button>
@@ -536,8 +536,8 @@ export default function DateTimePicker({
       {/* Errors */}
       {(errors.date || errors.time) && (
         <div className="space-y-1">
-          {errors.date && <p className="text-xs text-rose-500 font-bold" role="alert">{errors.date}</p>}
-          {errors.time && <p className="text-xs text-rose-500 font-bold" role="alert">{errors.time}</p>}
+          {errors.date && <p className="text-[9.5px] uppercase tracking-widest text-rose-500 font-bold" role="alert">{errors.date}</p>}
+          {errors.time && <p className="text-[9.5px] uppercase tracking-widest text-rose-500 font-bold" role="alert">{errors.time}</p>}
         </div>
       )}
     </div>

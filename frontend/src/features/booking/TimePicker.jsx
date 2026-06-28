@@ -56,13 +56,13 @@ export default function TimePicker({
 
   return (
     <div className="bg-transparent sm:bg-white border-0 sm:border border-surface-200 rounded-none p-0 sm:p-5 h-full">
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center justify-between mb-3 border-b border-surface-200 pb-2">
         <div className="flex items-center gap-1.5">
-          <span className="text-xs font-semibold capitalize text-surface-700">
+          <span className="text-[10px] font-black uppercase tracking-widest text-surface-900">
             Available Time Slots
           </span>
         </div>
-        <span className="text-xs font-semibold text-surface-900 bg-surface-100 border border-surface-200 px-2 py-0.5 rounded-none capitalize tracking-widest uppercase">
+        <span className="text-[9px] font-black text-surface-900 bg-surface-100 border border-surface-200 px-2 py-0.5 rounded-none uppercase tracking-widest">
           1 Hour
         </span>
       </div>
@@ -115,26 +115,26 @@ export default function TimePicker({
           </div>
         ) : (
           <div className="py-8 text-center space-y-2">
-            <p className="text-xs font-semibold text-rose-600 capitalize">
+            <p className="text-[10px] font-black text-rose-600 uppercase tracking-widest">
               No Slots Available
             </p>
-            <p className="text-xs text-zinc-500 leading-relaxed px-4">
+            <p className="text-[10px] font-bold text-surface-500 uppercase tracking-widest leading-relaxed px-4 mt-2">
               No advisors have availability on {formatHumanDate(selectedDate)}. Try a different day.
             </p>
           </div>
         )
       ) : (
         <div className="py-10 text-center space-y-2">
-          <p className="text-xs font-semibold text-zinc-500 capitalize">
+          <p className="text-[10px] font-black text-surface-500 uppercase tracking-widest">
             Pick an Advisor First
           </p>
-          <p className="text-xs text-zinc-400 leading-relaxed px-4">
+          <p className="text-[10px] font-bold text-surface-400 uppercase tracking-widest leading-relaxed px-4 mt-2">
             Select an advisor to see available 1-hour time slots.
           </p>
         </div>
       )}
       
-      {errors.time && <p className="text-xs text-rose-500 font-bold mt-2" role="alert">{errors.time}</p>}
+      {errors.time && <p className="text-[9.5px] uppercase tracking-widest text-rose-500 font-bold mt-2" role="alert">{errors.time}</p>}
     </div>
   );
 }
