@@ -130,7 +130,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                 01
               </span>
             </div>
-            <p className="text-surface-600 font-bold text-[10px] uppercase tracking-widest leading-relaxed">
+            <p className="text-surface-600 text-xs leading-relaxed">
               {settings.careerDesc || 'Whether you’re choosing a stream, exploring career options, or planning your future studies, we help you understand your strengths, interests, and opportunities so you can make confident decisions with clarity and direction.'}
             </p>
           </div>
@@ -175,7 +175,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                 02
               </span>
             </div>
-            <p className="text-surface-600 font-bold text-[10px] uppercase tracking-widest leading-relaxed">
+            <p className="text-surface-600 text-xs leading-relaxed">
               {settings.counselDesc || 'When stress, anxiety, self-doubt, or personal challenges begin to feel overwhelming, having the right support can make all the difference. Our counselling sessions provide a safe space to reflect, heal, grow, and move forward with confidence.'}
             </p>
           </div>
@@ -350,14 +350,14 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                     </div>
                   </div>
                   
-                  <div className="text-[10px] text-surface-600 font-bold uppercase tracking-widest leading-relaxed relative">
-                    <p className={`${expandedBios[advisor.id] ? '' : 'line-clamp-3'}`}>
-                      {advisor.bio || 'Consultant psychologist specializing in guidance and mental wellbeing.'}
+                  <div className="text-xs text-surface-600 leading-relaxed relative">
+                    <p className={`italic ${expandedBios[advisor.id] ? '' : 'line-clamp-3'}`}>
+                      "{advisor.bio || 'Consultant psychologist specializing in guidance and mental wellbeing.'}"
                     </p>
                     {(advisor.bio || 'Consultant psychologist specializing in guidance and mental wellbeing.').length > 100 && (
                       <button
                         onClick={() => setExpandedBios(prev => ({ ...prev, [advisor.id]: !prev[advisor.id] }))}
-                        className="text-surface-900 font-black hover:underline cursor-pointer text-[10px] mt-2 uppercase tracking-widest"
+                        className="text-brand-dark font-black hover:underline cursor-pointer text-[10px] mt-2 uppercase tracking-widest"
                       >
                         {expandedBios[advisor.id] ? 'Read Less' : 'Read More'}
                       </button>
@@ -463,14 +463,14 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                       ))}
                     </div>
                   </div>
-                  <div className="text-[10px] text-surface-600 font-bold uppercase tracking-widest leading-relaxed">
-                    <p className={`${expandedBios[advisor.id] ? '' : 'line-clamp-3'}`}>
-                      {advisor.bio || 'Consultant psychologist specializing in guidance and mental wellbeing.'}
+                  <div className="text-xs text-surface-600 leading-relaxed">
+                    <p className={`italic ${expandedBios[advisor.id] ? '' : 'line-clamp-3'}`}>
+                      "{advisor.bio || 'Consultant psychologist specializing in guidance and mental wellbeing.'}"
                     </p>
                     {(advisor.bio || 'Consultant psychologist specializing in guidance and mental wellbeing.').length > 100 && (
                       <button
                         onClick={() => setExpandedBios(prev => ({ ...prev, [advisor.id]: !prev[advisor.id] }))}
-                        className="text-surface-900 font-black hover:underline cursor-pointer text-[10px] mt-2 uppercase tracking-widest"
+                        className="text-brand-dark font-black hover:underline cursor-pointer text-[10px] mt-2 uppercase tracking-widest"
                       >
                         {expandedBios[advisor.id] ? 'Read Less' : 'Read More'}
                       </button>
