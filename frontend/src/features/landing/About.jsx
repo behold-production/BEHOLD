@@ -60,18 +60,18 @@ export default function About({ enablePsychology = true, siteSettings }) {
                 {/* Decorative Accent */}
                 <div className="absolute top-0 right-0 w-16 h-16 bg-surface-50 border-l border-b border-surface-200 transform translate-x-8 -translate-y-8 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-500"></div>
 
-                <div className="space-y-4 relative z-10 flex-1">
-                  <span className="font-heading font-black text-5xl text-surface-200 group-hover:text-brand transition-colors duration-300 block leading-none">
-                    {`0${idx + 1}`}
-                  </span>
-                  <div className="space-y-3">
-                    <h4 className="font-heading font-bold text-xl uppercase text-surface-900 leading-tight">
+                <div className="relative z-10 flex-1 flex flex-col">
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="font-heading font-black text-4xl text-surface-200 group-hover:text-brand transition-colors duration-300 leading-none shrink-0">
+                      {`0${idx + 1}`}
+                    </span>
+                    <h4 className="font-heading font-bold text-lg uppercase text-surface-900 leading-tight">
                       {pillar.title}
                     </h4>
-                    <p className="text-slate-600 font-light leading-relaxed text-sm">
-                      {pillar.desc}
-                    </p>
                   </div>
+                  <p className="text-slate-600 font-light leading-relaxed text-sm">
+                    {pillar.desc}
+                  </p>
                 </div>
                 
                 <div className="mt-5 flex justify-end">

@@ -181,7 +181,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
             </form>
           </div>
 
-          <div className="h-[300px] md:h-auto md:w-[350px] lg:w-[450px] shrink-0 bg-surface-200">
+          <div className="hidden md:block h-[300px] md:h-auto md:w-[350px] lg:w-[450px] shrink-0 bg-surface-200">
             <img src="/students_kerala.png" alt="Kerala students learning" className="w-full h-full object-cover mix-blend-multiply opacity-90" />
           </div>
         </div>
@@ -209,8 +209,8 @@ export default function Inquiry({ testProfile, siteSettings }) {
                 >
                   Connect with Our Community
                 </a>
-                <p className="text-sm text-slate-500 font-bold uppercase tracking-wider">
-                  Or email us directly at: <br className="sm:hidden" /> <a href={`mailto:${emailAddr}`} className="text-surface-900 underline hover:text-brand transition-colors break-all mt-1 inline-block">{emailAddr}</a>
+                <p className="text-sm md:text-base text-slate-600">
+                  Or email us directly at: <br className="sm:hidden" /> <a href={`mailto:${emailAddr}`} className="text-surface-900 font-medium underline hover:text-brand transition-colors break-all mt-1 inline-block">{emailAddr}</a>
                 </p>
               </div>
             );

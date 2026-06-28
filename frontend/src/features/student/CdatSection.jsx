@@ -155,7 +155,7 @@ export default function CdatSection({ setView }) {
               </h2>
               <img src="/CIGI.png" alt="CIGI Logo" className="h-16 sm:h-20 object-contain shrink-0" />
             </div>
-            <p className="text-surface-600 font-bold text-[10px] uppercase tracking-widest leading-relaxed mb-8 max-w-lg">
+            <p className="text-surface-600 text-sm md:text-base leading-relaxed mb-8 max-w-lg">
               C-DAT effectively identifies the inherent capacities of students, guiding them towards suitable academic and career paths with scientific precision.
             </p>
             <button

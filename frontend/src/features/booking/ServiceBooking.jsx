@@ -924,12 +924,40 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                           </span>
                                         )}
                                       </div>
+                                      </div>
                                       <div className="flex flex-col items-end gap-2 shrink-0">
                                         <span className={`text-sm font-black tracking-widest ${!isAvailable ? 'text-surface-400' : (selectedAdvisor?.id === advisor.id ? 'text-white' : 'text-surface-900')}`}>
                                           ₹{advisor.price}
                                         </span>
                                       </div>
                                     </div>
+
+                                    {/* EXPANDED DETAILS */}
+                                    {selectedAdvisor?.id === advisor.id && (
+                                      <div className="mt-4 pt-4 border-t border-surface-700 animate-in fade-in slide-in-from-top-2">
+                                        {advisor.bio && (
+                                          <p className="text-surface-300 text-xs mb-3 leading-relaxed">
+                                            {advisor.bio}
+                                          </p>
+                                        )}
+                                        
+                                        {advisor.specialties && advisor.specialties.length > 0 && (
+                                          <div className="flex flex-wrap gap-2 mb-3">
+                                            {advisor.specialties.map((spec, i) => (
+                                              <span key={i} className="px-2 py-1 bg-surface-800 text-surface-200 text-[9px] uppercase tracking-widest font-bold rounded-none">
+                                                {spec}
+                                              </span>
+                                            ))}
+                                          </div>
+                                        )}
+                                        
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[10px] text-surface-300 uppercase tracking-widest font-bold mt-3">
+                                           {advisor.lang && <div className="flex items-center gap-1.5"><span className="text-brand">🗣️</span> {advisor.lang}</div>}
+                                           {advisor.hours > 0 && <div className="flex items-center gap-1.5"><span className="text-brand">⏳</span> {advisor.hours}+ Hours</div>}
+                                           {advisor.rating && <div className="flex items-center gap-1.5"><span className="text-brand">⭐</span> {advisor.rating}/5 Rating</div>}
+                                        </div>
+                                      </div>
+                                    )}
                                   </div>
                                 );
                               });

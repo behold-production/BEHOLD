@@ -67,7 +67,7 @@ export default function Faq() {
                     <div className={`w-8 h-8 flex items-center justify-center shrink-0 border ${isOpen ? 'bg-brand text-surface-900 border-brand' : 'bg-surface-50 text-slate-500 border-surface-200'}`}>
                       <HelpCircle className="w-4 h-4" />
                     </div>
-                    <span className={`font-heading font-bold text-lg uppercase transition-colors ${isOpen ? 'text-brand-dark' : 'text-surface-900'}`}>
+                    <span className={`font-heading font-bold text-lg transition-colors ${isOpen ? 'text-brand-dark' : 'text-surface-900'}`}>
                       {faq.question}
                     </span>
                   </div>

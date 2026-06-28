@@ -147,7 +147,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                 }
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className="w-full sm:w-auto px-6 py-3 bg-white border border-surface-200 text-surface-900 font-black uppercase tracking-widest text-[10px] rounded-none hover:bg-surface-50 hover:border-surface-300 transition-colors cursor-pointer text-center shadow-none"
+              className="w-full sm:w-auto px-6 py-3 bg-brand text-surface-900 font-black uppercase tracking-widest text-[10px] rounded-none hover:bg-brand-dark transition-colors cursor-pointer text-center shadow-none border-none"
             >
               {settings.careerBtnText || 'Book Your Mentor'}
             </button>
@@ -192,7 +192,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                 }
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className="w-full sm:w-auto px-6 py-3 bg-surface-900 text-white font-black uppercase tracking-widest text-[10px] rounded-none hover:bg-surface-800 transition-colors cursor-pointer text-center border-none shadow-none"
+              className="w-full sm:w-auto px-6 py-3 bg-brand text-surface-900 font-black uppercase tracking-widest text-[10px] rounded-none hover:bg-brand-dark transition-colors cursor-pointer text-center border-none shadow-none"
             >
               {settings.counselBtnText || 'Book Your Therapist'}
             </button>
@@ -210,7 +210,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-widest text-surface-900 leading-tight">
             Meet Our Professionals
           </h2>
-          <p className="text-surface-600 font-bold text-[10px] uppercase tracking-widest">
+          <p className="text-surface-600 font-medium text-sm md:text-base">
             Book a personalized session directly with our highly qualified consultant psychologists and career advisors.
           </p>
         </div>
