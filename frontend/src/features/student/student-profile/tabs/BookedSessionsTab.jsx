@@ -189,7 +189,7 @@ const BookedSessionsTab = ({
                               type="button"
                               disabled
                               title={meetStatus.status === 'LOCKED' ? 'Link activates 10 min before session' : 'Session has ended'}
-                              className="flex-1 min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-surface-100 text-surface-400 border border-surface-200 rounded-none text-[10px] uppercase tracking-widest font-black shadow-square-light cursor-not-allowed"
+                              className="flex-1 min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-surface-100 text-surface-400 border border-surface-200 rounded-none text-[10px] uppercase tracking-widest font-black cursor-not-allowed"
                             >
                               <Lock className="w-3.5 h-3.5" /> {meetStatus.label}
                             </button>
@@ -263,9 +263,9 @@ const BookedSessionsTab = ({
                             <button
                               type="button"
                               onClick={() => handleCancelSession(session.id)}
-                              className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-white border border-surface-200 shadow-square-light hover:border-rose-200 hover:bg-rose-50 text-surface-500 hover:text-rose-600 rounded-none text-[10px] uppercase tracking-widest font-black transition-colors"
+                              className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-white border border-surface-200 hover:border-rose-200 hover:bg-rose-50 text-surface-500 hover:text-rose-600 rounded-none text-[10px] uppercase tracking-widest font-black transition-colors"
                             >
-                              <XIcon className="w-3.5 h-3.5" /> Cancel
+                              <Trash2 className="w-3.5 h-3.5" /> Cancel
                             </button>
                         </>
                       )}

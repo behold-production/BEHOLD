@@ -97,7 +97,7 @@ export default function TimePicker({
                           }}
                           className={`min-h-[48px] py-2.5 px-2 text-xs font-bold uppercase tracking-widest border rounded-none transition cursor-pointer text-center ${
                             isSelected
-                              ? 'bg-surface-900 text-white border-surface-900 shadow-square-light'
+                              ? 'bg-surface-900 text-white border-surface-900'
                               : isBooked
                                 ? 'bg-surface-50 border-surface-200 text-surface-400 cursor-not-allowed opacity-60'
                                 : 'bg-white border-surface-200 text-surface-700 hover:border-surface-400 hover:bg-surface-50'

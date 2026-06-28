@@ -179,7 +179,7 @@ export default function DateTimePicker({
     const isSelected = selectedDate === targetStr;
     const base = "shrink-0 px-3 min-h-[34px] rounded-none text-[11px] font-semibold capitalize transition-all duration-200 cursor-pointer flex items-center border";
     if (isSelected) {
-      return `${base} bg-surface-900 border-surface-900 text-white shadow-square-light`;
+      return `${base} bg-surface-900 border-surface-900 text-white`;
     }
     return `${base} bg-white border-surface-200 text-surface-600 hover:border-surface-400 hover:bg-surface-50`;
   };
