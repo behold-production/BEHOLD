@@ -177,11 +177,11 @@ export default function DateTimePicker({
 
   const getChipClass = (targetStr) => {
     const isSelected = selectedDate === targetStr;
-    const base = "shrink-0 px-3 min-h-[34px] rounded-full text-[11px] font-semibold capitalize transition-all duration-200 cursor-pointer flex items-center border";
+    const base = "shrink-0 px-3 min-h-[34px] rounded-none text-[11px] font-semibold capitalize transition-all duration-200 cursor-pointer flex items-center border";
     if (isSelected) {
-      return `${base} bg-zinc-900 border-zinc-900 text-white shadow-sm`;
+      return `${base} bg-surface-900 border-surface-900 text-white shadow-square-light`;
     }
-    return `${base} bg-white border-zinc-200 text-zinc-600 hover:border-zinc-400 hover:bg-zinc-50`;
+    return `${base} bg-white border-surface-200 text-surface-600 hover:border-surface-400 hover:bg-surface-50`;
   };
 
   const handleQuickJump = (dateStr) => {
@@ -270,15 +270,14 @@ export default function DateTimePicker({
           <button type="button" onClick={() => handleQuickJump(nextWeekStr)} className={getChipClass(nextWeekStr)}>Next Week</button>
         </div>
 
-        {/* View Switcher toggle */}
-        <div className="flex items-center bg-zinc-100 p-0.5 rounded-lg border border-zinc-200 shrink-0 self-start sm:self-auto">
+        <div className="flex items-center bg-surface-100 p-0.5 rounded-none border border-surface-200 shrink-0 self-start sm:self-auto">
           <button
             type="button"
             onClick={() => setViewType('calendar')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-md transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-none transition-all cursor-pointer ${
               viewType === 'calendar'
-                ? 'bg-white text-zinc-950 shadow-xs'
-                : 'text-zinc-550 hover:text-zinc-900'
+                ? 'bg-white text-surface-950 shadow-sm border border-surface-200'
+                : 'text-surface-500 hover:text-surface-900 border border-transparent'
             }`}
           >
             <CalendarIcon className="w-3.5 h-3.5" />
@@ -287,10 +286,10 @@ export default function DateTimePicker({
           <button
             type="button"
             onClick={() => setViewType('strip')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-md transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-none transition-all cursor-pointer ${
               viewType === 'strip'
-                ? 'bg-white text-zinc-950 shadow-xs'
-                : 'text-zinc-550 hover:text-zinc-900'
+                ? 'bg-white text-surface-950 shadow-sm border border-surface-200'
+                : 'text-surface-500 hover:text-surface-900 border border-transparent'
             }`}
           >
             <ListIcon className="w-3.5 h-3.5" />
@@ -301,38 +300,34 @@ export default function DateTimePicker({
 
       {viewType === 'calendar' ? (
         /* Calendar Grid View */
-        <div className="bg-white border border-zinc-200/80 rounded-2xl overflow-hidden shadow-xs animate-in fade-in duration-300 w-full max-w-full md:max-w-[450px] md:mx-auto">
+        <div className="bg-white border border-surface-200 rounded-none overflow-hidden shadow-xs animate-in fade-in duration-300 w-full max-w-full md:max-w-[450px] md:mx-auto">
           {/* Calendar Header / Navigation */}
-          <div className="flex items-center justify-between px-4 py-3 bg-zinc-50 border-b border-zinc-150">
-            <span className="text-xs sm:text-sm font-black text-zinc-800 uppercase tracking-wide">
+          <div className="flex items-center justify-between px-4 py-3 bg-surface-50 border-b border-surface-100">
+            <button
+              type="button"
+              onClick={handlePrevMonth}
+              disabled={isPrevMonthDisabled}
+              className="p-1.5 rounded-none hover:bg-surface-100 text-surface-600 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <span className="text-xs font-bold w-32 text-center text-surface-900 capitalize tracking-wide">
               {currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
             </span>
-            <div className="flex items-center gap-1.5">
-              <button
-                type="button"
-                onClick={handlePrevMonth}
-                disabled={isPrevMonthDisabled}
-                className="w-8 h-8 rounded-lg flex items-center justify-center border border-zinc-200 hover:bg-zinc-100 disabled:opacity-30 disabled:hover:bg-transparent text-zinc-650 transition cursor-pointer"
-                aria-label="Previous month"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-              <button
-                type="button"
-                onClick={handleNextMonth}
-                disabled={isNextMonthDisabled}
-                className="w-8 h-8 rounded-lg flex items-center justify-center border border-zinc-200 hover:bg-zinc-100 disabled:opacity-30 disabled:hover:bg-transparent text-zinc-650 transition cursor-pointer"
-                aria-label="Next month"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={handleNextMonth}
+              disabled={isNextMonthDisabled}
+              className="p-1.5 rounded-none hover:bg-surface-100 text-surface-600 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
           </div>
 
           {/* Grid Weekdays Labels */}
-          <div className="grid grid-cols-7 gap-1 px-3 py-2 text-center border-b border-zinc-100 bg-zinc-50/30">
+          <div className="grid grid-cols-7 gap-1 px-3 py-2 text-center border-b border-surface-100 bg-surface-50/30">
             {['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map((wd, i) => (
-              <span key={i} className="text-[9px] sm:text-[10px] font-bold uppercase text-zinc-400 tracking-wider">
+              <span key={i} className="text-[9px] sm:text-[10px] font-bold uppercase text-surface-400 tracking-wider">
                 {wd.substring(0, 3)}
               </span>
             ))}
@@ -357,25 +352,25 @@ export default function DateTimePicker({
                     }
                   }}
                   className={`
-                    relative flex flex-col items-center justify-center h-11 sm:h-12 w-full rounded-xl transition-all duration-200 select-none border-2
+                    relative flex flex-col items-center justify-center h-11 sm:h-12 w-full rounded-none transition-all duration-200 select-none border-2
                     ${meta.isPast
-                      ? 'bg-zinc-50 border-zinc-50 text-zinc-300 cursor-not-allowed opacity-40'
+                      ? 'bg-surface-50 border-surface-50 text-surface-300 cursor-not-allowed opacity-40'
                       : isSelected
-                        ? 'bg-zinc-900 border-zinc-900 text-white shadow-md font-bold scale-[1.03]'
+                        ? 'bg-surface-900 border-surface-900 text-white shadow-md font-bold'
                         : meta.isAvailable
                           ? isToday
-                            ? 'bg-white border-neon-glow text-zinc-800 hover:border-zinc-900 hover:shadow-xs cursor-pointer'
-                            : 'bg-white border-zinc-200 text-zinc-800 hover:border-zinc-900 hover:shadow-xs cursor-pointer'
+                            ? 'bg-white border-surface-900 text-surface-800 hover:border-surface-900'
+                            : 'bg-white border-surface-200 text-surface-800 hover:border-surface-900'
                           : isToday
-                            ? 'bg-zinc-50 border-neon-glow text-zinc-450 cursor-not-allowed opacity-50'
-                            : 'bg-zinc-50 border-zinc-100 text-zinc-450 cursor-not-allowed opacity-50'
+                            ? 'bg-surface-50 border-surface-900 text-surface-400 cursor-not-allowed opacity-50'
+                            : 'bg-surface-50 border-surface-100 text-surface-400 cursor-not-allowed opacity-50'
                     }
-                    ${!cell.isCurrentMonth && !meta.isPast && !isSelected ? 'opacity-40 text-zinc-400' : ''}
+                    ${!cell.isCurrentMonth && !meta.isPast && !isSelected ? 'opacity-40 text-surface-400' : ''}
                   `}
                 >
                   {/* Day Number */}
                   <span className={`text-sm sm:text-base font-black leading-none ${
-                    isSelected ? 'text-white' : isToday ? 'text-zinc-900' : ''
+                    isSelected ? 'text-white' : isToday ? 'text-surface-900' : ''
                   }`}>
                     {cell.dayNum}
                   </span>
@@ -398,7 +393,7 @@ export default function DateTimePicker({
           </div>
 
           {/* Calendar Color Legend */}
-          <div className="flex flex-wrap items-center gap-4 px-4 py-2.5 bg-zinc-50/50 border-t border-zinc-150 text-[10px] sm:text-xs text-zinc-500 font-medium">
+          <div className="flex flex-wrap items-center gap-4 px-4 py-2.5 bg-surface-50/50 border-t border-surface-150 text-[10px] sm:text-xs text-surface-500 font-medium">
             <span className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-emerald-500" /> High Availability (3+ slots)
             </span>
@@ -417,7 +412,7 @@ export default function DateTimePicker({
           <button
             type="button"
             onClick={() => scrollBy(-1)}
-            className="absolute -left-1 top-1/2 -translate-y-1/2 z-10 w-7 h-7 rounded-full bg-white border border-zinc-200 shadow-md hover:bg-zinc-50 items-center justify-center text-zinc-500 hover:text-zinc-800 transition cursor-pointer hidden sm:flex"
+            className="absolute -left-1 top-1/2 -translate-y-1/2 z-10 w-7 h-7 rounded-none bg-white border border-surface-200 shadow-md hover:bg-surface-50 items-center justify-center text-surface-500 hover:text-surface-900 transition cursor-pointer hidden sm:flex"
             aria-label="Scroll left"
           >
             <ChevronLeft className="w-3.5 h-3.5" />
@@ -448,31 +443,31 @@ export default function DateTimePicker({
                   className={`
                     flex flex-col items-center justify-center snap-start
                     min-w-[60px] sm:min-w-[66px] h-[82px] sm:h-[88px]
-                    rounded-xl border-2 transition-all duration-200 select-none
+                    rounded-none border-2 transition-all duration-200 select-none
                     ${meta.isPast
-                      ? 'bg-zinc-50 border-zinc-100 text-zinc-300 cursor-not-allowed opacity-40'
+                      ? 'bg-surface-50 border-surface-100 text-surface-300 cursor-not-allowed opacity-40'
                       : isSelected
-                        ? 'bg-zinc-900 border-zinc-900 text-white shadow-lg scale-[1.04] cursor-pointer'
+                        ? 'bg-surface-900 border-surface-900 text-white shadow-lg cursor-pointer'
                         : meta.isAvailable
                           ? isToday
-                            ? 'bg-white border-neon-glow text-zinc-800 hover:border-zinc-900 hover:shadow-sm cursor-pointer'
-                            : 'bg-white border-zinc-200 text-zinc-800 hover:border-zinc-900 hover:shadow-sm cursor-pointer'
+                            ? 'bg-white border-surface-900 text-surface-800 hover:border-surface-900 hover:shadow-sm cursor-pointer'
+                            : 'bg-white border-surface-200 text-surface-800 hover:border-surface-900 hover:shadow-sm cursor-pointer'
                           : isToday
-                            ? 'bg-zinc-50 border-neon-glow text-zinc-350 cursor-not-allowed opacity-50'
-                            : 'bg-zinc-50 border-zinc-150 text-zinc-350 cursor-not-allowed opacity-50'
+                            ? 'bg-surface-50 border-surface-900 text-surface-400 cursor-not-allowed opacity-50'
+                            : 'bg-surface-50 border-surface-150 text-surface-400 cursor-not-allowed opacity-50'
                     }
                   `}
                 >
                   {/* Weekday */}
                   <span className={`text-[9px] sm:text-[10px] font-bold tracking-widest uppercase leading-none ${
-                    isSelected ? 'text-zinc-400' : 'text-zinc-400'
+                    isSelected ? 'text-surface-400' : 'text-surface-400'
                   }`}>
                     {day.weekday}
                   </span>
 
                   {/* Day Number */}
                   <span className={`text-xl sm:text-2xl font-black leading-none mt-1 ${
-                    isSelected ? 'text-white' : isToday ? 'text-zinc-900' : ''
+                    isSelected ? 'text-white' : isToday ? 'text-surface-900' : ''
                   }`}>
                     {day.day}
                   </span>
@@ -480,7 +475,7 @@ export default function DateTimePicker({
                   {/* Month + availability dot */}
                   <span className="flex items-center gap-1 mt-1.5">
                     <span className={`text-[9px] sm:text-[10px] font-semibold leading-none ${
-                      isSelected ? 'text-zinc-400' : 'text-zinc-455'
+                      isSelected ? 'text-surface-400' : 'text-surface-400'
                     }`}>
                       {day.month}
                     </span>

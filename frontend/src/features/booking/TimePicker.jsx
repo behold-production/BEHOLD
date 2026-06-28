@@ -55,14 +55,14 @@ export default function TimePicker({
   }, [availableSlots]);
 
   return (
-    <div className="bg-white border border-zinc-200 rounded-xl p-4 sm:p-5 shadow-xs h-full">
+    <div className="bg-transparent sm:bg-white border-0 sm:border border-surface-200 rounded-none p-0 sm:p-5 h-full">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-1.5">
-          <span className="text-xs font-semibold capitalize text-zinc-700">
+          <span className="text-xs font-semibold capitalize text-surface-700">
             Available Time Slots
           </span>
         </div>
-        <span className="text-xs font-semibold text-brand-dark bg-brand-light border border-brand/20 px-2 py-0.5 rounded capitalize">
+        <span className="text-xs font-semibold text-surface-900 bg-surface-100 border border-surface-200 px-2 py-0.5 rounded-none capitalize tracking-widest uppercase">
           1 Hour
         </span>
       </div>
@@ -76,9 +76,9 @@ export default function TimePicker({
               const meta = BUCKET_META[bucket];
               return (
                 <div key={bucket} className="space-y-2">
-                  <div className={`flex items-center gap-1.5 text-xs font-semibold capitalize ${meta.color}`}>
+                  <div className={`flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest ${meta.color}`}>
                     <span>{meta.label}</span>
-                    <span className="text-zinc-400">({items.length})</span>
+                    <span className="text-surface-400 normal-case">({items.length})</span>
                   </div>
                   <div className="grid grid-cols-2 gap-1.5">
                     {items.map(time => {
@@ -95,12 +95,12 @@ export default function TimePicker({
                             }
                             onTimeChange(time);
                           }}
-                          className={`min-h-[48px] py-2.5 px-2 text-xs capitalize font-bold border rounded-lg transition cursor-pointer text-center ${
+                          className={`min-h-[48px] py-2.5 px-2 text-xs font-bold uppercase tracking-widest border rounded-none transition cursor-pointer text-center ${
                             isSelected
-                              ? 'bg-gradient-brand text-zinc-955 border-transparent shadow-xs font-bold ring-1 ring-brand/40'
+                              ? 'bg-surface-900 text-white border-surface-900 shadow-square-light'
                               : isBooked
-                                ? 'bg-zinc-100 border-zinc-200 text-zinc-400 cursor-not-allowed opacity-60'
-                                : 'bg-white border-zinc-200 text-zinc-700 hover:border-brand/40 hover:bg-brand/5'
+                                ? 'bg-surface-50 border-surface-200 text-surface-400 cursor-not-allowed opacity-60'
+                                : 'bg-white border-surface-200 text-surface-700 hover:border-surface-400 hover:bg-surface-50'
                           }`}
                         >
                           {time}

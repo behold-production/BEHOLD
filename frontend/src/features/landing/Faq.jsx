@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronDown, HelpCircle } from 'lucide-react';
+import { ChevronDown, HelpCircle, ArrowRight } from 'lucide-react';
 import ApiService from '../../shared/services/api';
 
 export default function Faq() {
@@ -35,87 +35,59 @@ export default function Faq() {
   };
 
   return (
-    <section id="faqs" className="max-w-4xl mx-auto px-4 sm:px-6 py-8 md:py-12 text-zinc-900 text-left select-none relative overflow-hidden">
-      <style>{`
-        .faq-neon-card {
-          transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-          border: 1.5px solid rgba(0, 209, 209, 0.35) !important;
-          box-shadow: 0 0 12px rgba(0, 209, 209, 0.2), inset 0 0 4px rgba(0, 209, 209, 0.08) !important;
-        }
-        .faq-neon-card-active {
-          border-color: rgba(0, 209, 209, 0.95) !important;
-          box-shadow: 0 0 20px rgba(0, 209, 209, 0.55), inset 0 0 8px rgba(0, 209, 209, 0.25) !important;
-          background: rgba(0, 209, 209, 0.01) !important;
-          transform: translateY(-2px);
-        }
-        .faq-neon-card-hover:hover:not(.faq-neon-card-active) {
-          border-color: rgba(0, 209, 209, 0.75) !important;
-          box-shadow: 0 0 15px rgba(0, 209, 209, 0.35) !important;
-          transform: translateY(-1px);
-        }
-      `}</style>
-      {/* Background glow */}
-      <div className="absolute top-1/3 left-1/2 w-[250px] h-[250px] bg-brand/10 rounded-lg glow-glow pointer-events-none" />
+    <section id="faqs" className="py-20 px-6 bg-white">
+      <div className="max-w-4xl mx-auto">
+        <div className="mb-12 space-y-4 text-center border-b border-surface-200 pb-8">
+          <span className="inline-block bg-surface-900 text-white px-3 py-1 text-xs font-bold uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(0,229,255,1)]">
+            Clarity Desk
+          </span>
+          <h2 className="text-4xl md:text-5xl font-heading font-black text-surface-900 uppercase">
+            Frequently Asked
+          </h2>
+          <p className="text-slate-600 font-light text-lg">
+            Explore key information about the BEHOLD mentorship model, deliverables, and student tracking scopes.
+          </p>
+        </div>
 
-      {/* Section Header */}
-      <div className="mb-6 md:mb-12 space-y-4 text-center">
-        <span className="text-xs bg-zinc-900 text-white px-3.5 py-1 rounded-md capitalize  font-semibold w-fit mx-auto block">
-          clarity desk
-        </span>
-        <h2 className="text-2xl sm:text-3xl md:text-5xl font-header font-black tracking-tight text-zinc-900 leading-tight capitalize">
-          Frequently Asked
-        </h2>
-        <p className="text-zinc-600 font-sans text-xs sm:text-sm md:text-base font-light max-w-xl mx-auto">
-          Explore key information about the BEHOLD mentorship model, deliverables, and student tracking scopes.
-        </p>
-      </div>
-
-      {/* Accordion List */}
-      <div className="space-y-4 sm:space-y-6">
-        {faqs.map((faq, idx) => {
-          const isOpen = openIndex === idx;
-          return (
-            <div 
-              key={idx} 
-              className={`bg-white border-neon-glow border-neon-glow-hover rounded-xl sm:rounded-2xl py-3.5 px-5 transition-all duration-500 faq-neon-card faq-neon-card-hover ${
-                isOpen ? 'faq-neon-card-active' : ''
-              }`}
-            >
-              <button
-                type="button"
-                onClick={() => toggleFaq(idx)}
-                className="w-full min-h-[32px] text-left font-medium text-zinc-900 flex items-center justify-between hover:text-zinc-900 transition cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 rounded-md"
-                aria-expanded={isOpen}
-              >
-                <div className="flex items-center gap-3 sm:gap-4">
-                  <div className={`w-7 h-7 rounded-md flex items-center justify-center shrink-0 transition-colors ${
-                    isOpen ? 'bg-zinc-900 text-brand' : 'bg-zinc-100 text-zinc-900'
-                  }`}>
-                    <HelpCircle className="w-3.5 h-3.5" />
-                  </div>
-                  <span className="text-xs sm:text-sm md:text-base font-header font-bold capitalize tracking-wide leading-tight">{faq.question}</span>
-                </div>
-                <ChevronDown 
-                  className={`w-4 h-4 text-zinc-400 shrink-0 transition-transform duration-500 ${
-                    isOpen ? 'rotate-180 text-zinc-900' : ''
-                  }`} 
-                />
-              </button>
-              
+        <div className="space-y-4">
+          {faqs.map((faq, idx) => {
+            const isOpen = openIndex === idx;
+            return (
               <div 
-                className={`transition-all duration-500 ease-out overflow-hidden ${
-                  isOpen ? 'max-h-60 opacity-100 mt-2.5 pt-2.5 border-t border-zinc-100' : 'max-h-0 opacity-0'
-                }`}
+                key={idx} 
+                className={`square-card p-0 transition-all duration-300 ${isOpen ? 'shadow-square-hover border-brand bg-brand/5' : 'shadow-none bg-white border-surface-200'}`}
               >
-                <p className="text-zinc-650 text-xs md:text-sm font-light leading-relaxed pl-10">
-                  {faq.answer}
-                </p>
+                <button
+                  type="button"
+                  onClick={() => toggleFaq(idx)}
+                  className="w-full p-6 text-left flex items-center justify-between cursor-pointer focus:outline-none"
+                  aria-expanded={isOpen}
+                >
+                  <div className="flex items-center gap-4">
+                    <div className={`w-8 h-8 flex items-center justify-center shrink-0 border ${isOpen ? 'bg-brand text-surface-900 border-brand' : 'bg-surface-50 text-slate-500 border-surface-200'}`}>
+                      <HelpCircle className="w-4 h-4" />
+                    </div>
+                    <span className={`font-heading font-bold text-lg uppercase transition-colors ${isOpen ? 'text-brand-dark' : 'text-surface-900'}`}>
+                      {faq.question}
+                    </span>
+                  </div>
+                  <div className={`w-8 h-8 flex items-center justify-center shrink-0 border transition-transform duration-300 ${isOpen ? 'rotate-180 bg-surface-900 text-brand border-surface-900' : 'bg-white text-slate-400 border-surface-200'}`}>
+                    <ChevronDown className="w-4 h-4" />
+                  </div>
+                </button>
+                
+                <div 
+                  className={`transition-all duration-300 overflow-hidden ${isOpen ? 'max-h-96 opacity-100 border-t border-brand/20' : 'max-h-0 opacity-0'}`}
+                >
+                  <p className="text-slate-600 font-light leading-relaxed p-6 pt-4 ml-12">
+                    {faq.answer}
+                  </p>
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
-
     </section>
   );
 }

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Baloo+Chettan+2:wght@400;500;600;700;800&family=Manjari:wght@400;700&family=Noto+Sans+Malayalam:wght@400;500;700&family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Baloo+Chettan+2:wght@400;500;600;700;800&family=Manjari:wght@400;700&family=Noto+Sans+Malayalam:wght@400;500;700&family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -13,12 +13,23 @@
   --color-zinc-900: var(--color-slate-900);
   --color-zinc-800: var(--color-slate-800);
   --color-zinc-700: var(--color-slate-700);
-  --font-sans: 'Poppins', 'Baloo Chettan 2', 'Manjari', 'Noto Sans Malayalam', system-ui, sans-serif;
-  --font-header: 'Poppins', 'Baloo Chettan 2', 'Manjari', 'Noto Sans Malayalam', sans-serif;
-  --color-brand: #00D1D1;
-  --color-brand-dark: #00b4b4;
+  --font-sans: 'Inter', 'Poppins', 'Baloo Chettan 2', 'Manjari', 'Noto Sans Malayalam', system-ui, sans-serif;
+  --font-heading: 'Poppins', 'Baloo Chettan 2', 'Manjari', 'Noto Sans Malayalam', sans-serif;
+  --color-brand: #00E5FF;
+  --color-brand-dark: #00B3CC;
   --color-brand-light: #e6fbfb;
   --color-brand-accent: #0ea5e9;
+
+  --color-surface-50: #F8FAFC;
+  --color-surface-100: #F1F5F9;
+  --color-surface-200: #E2E8F0;
+  --color-surface-800: #1E293B;
+  --color-surface-900: #0F172A;
+
+  --shadow-square: 8px 8px 0px 0px rgba(0, 229, 255, 0.2);
+  --shadow-square-hover: 12px 12px 0px 0px rgba(0, 229, 255, 0.4);
+  --shadow-square-dark: 8px 8px 0px 0px rgba(15, 23, 42, 1);
+  --shadow-square-light: 8px 8px 0px 0px rgba(226, 232, 240, 1);
 
   /* Extended zinc palette – fills the gaps Tailwind v4 doesn't ship */
   --color-zinc-150: #ececef;
@@ -100,8 +111,8 @@ html {
 
 body {
   background-color: #fafafa;
-  color: #18181b;
-  font-family: 'Poppins', 'Baloo Chettan 2', 'Manjari', 'Noto Sans Malayalam', system-ui, sans-serif;
+  color: var(--color-surface-900);
+  font-family: 'Inter', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -329,8 +340,9 @@ textarea:focus {
   outline: none !important;
   box-shadow: 0 0 0 3px rgba(0, 209, 209, 0.15), inset 0 1px 2px rgba(0, 0, 0, 0.05) !important;
 }
+
 @utility shadow-deep-blue {
-  box-shadow: 
+  box-shadow:
     0 16px 40px rgba(10, 20, 60, 0.25),
     0 4px 12px rgba(10, 20, 60, 0.15);
 }
@@ -341,11 +353,93 @@ textarea:focus {
   & .font-bold {
     font-weight: 600 !important;
   }
+
   & .font-semibold {
     font-weight: 500 !important;
   }
+
   & .font-extrabold,
   & .font-black {
     font-weight: 700 !important;
   }
+}
+
+/* Super Square Card Defaults - Light Mode */
+@utility square-card {
+  background: #FFFFFF;
+  border: 1px solid var(--color-surface-200);
+  border-radius: 0; /* Enforcing square corners */
+  transition: all 0.3s ease;
+  
+  &:hover {
+    border-color: var(--color-brand);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-square);
+  }
+}
+
+/* Sharp, blocky buttons */
+@utility btn-primary {
+  background-color: var(--color-brand);
+  color: var(--color-surface-900);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.75rem 2rem;
+  border-radius: 0;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--color-brand);
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.35), inset 0 0 4px rgba(0, 229, 255, 0.1);
+  
+  &:hover {
+    background-color: transparent;
+    color: var(--color-brand-dark);
+    border-color: var(--color-brand-dark);
+    box-shadow: 0 0 20px rgba(0, 229, 255, 0.65), inset 0 0 8px rgba(0, 229, 255, 0.25);
+  }
+}
+
+/* Outline button adapted for light background */
+@utility btn-outline {
+  background-color: transparent;
+  color: var(--color-surface-900);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.75rem 2rem;
+  border-radius: 0;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--color-surface-900);
+  
+  &:hover {
+    border-color: var(--color-brand);
+    background-color: var(--color-brand);
+    color: var(--color-surface-900);
+  }
+}
+
+/* Specific logo styling - dark text, cyan dot for light mode */
+@utility logo-text {
+  font-family: var(--font-heading);
+  font-weight: 900;
+  font-size: 28px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--color-surface-900); /* Changed to dark for light bg */
+  text-transform: uppercase;
+  display: flex;
+  align-items: baseline;
+}
+
+@utility logo-dot {
+  color: var(--color-brand);
+  font-size: 32px;
+  line-height: 0;
+  margin-left: 2px;
 }

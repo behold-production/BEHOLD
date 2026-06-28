@@ -1,31 +1,5 @@
 import React from 'react';
-
-const PILLARS = [
-  {
-    title: 'Extended Mentorship',
-    desc: 'We guide students through milestones to turn assessment reports into real achievements.'
-  },
-  {
-    title: 'Doorstep & Online Counseling',
-    desc: 'We provide at-home and virtual counseling to ensure emotional privacy and comfort.'
-  },
-  {
-    title: 'Personalized School Programs',
-    desc: 'We conduct orientations and workshops to build healthy learning environments in schools.'
-  },
-  {
-    title: 'C-DAT & Career Roadmaps',
-    desc: 'We use aptitude evaluations to match university pathways with individual natural talents.'
-  },
-  {
-    title: 'Goal Tracking',
-    desc: 'We provide continuous reviews to keep students on track with their long-term goals.'
-  },
-  {
-    title: 'Parent Guidance',
-    desc: 'We guide parents to reduce academic friction and relieve student stress.'
-  }
-];
+import { ArrowRight } from 'lucide-react';
 
 export default function About({ enablePsychology = true, siteSettings }) {
   const settings = siteSettings || JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
@@ -58,48 +32,52 @@ export default function About({ enablePsychology = true, siteSettings }) {
   ];
 
   return (
-    <section id="about" className="py-4 md:py-6 px-4 sm:px-6 text-zinc-900 text-left grid-bg relative overflow-hidden">
+    <section id="about" className="py-24 px-6 bg-surface-50 relative border-t border-surface-200">
 
-      {/* Glow Effects */}
-      <div className="absolute bottom-10 left-10 w-[300px] h-[300px] bg-brand/10 rounded-lg glow-glow pointer-events-none" />
-      <div className="absolute top-10 right-10 w-[300px] h-[300px] bg-brand/10 rounded-lg glow-glow pointer-events-none" />
-
-      <div className="max-w-7xl mx-auto space-y-4 md:space-y-6">
+      <div className="max-w-7xl mx-auto space-y-16">
 
         {/* Header Column */}
-        <div className="max-w-3xl mx-auto text-center space-y-1.5">
-          <span className="text-xs bg-zinc-900 text-white px-3.5 py-1 rounded-md capitalize  font-semibold w-fit mx-auto block">
+        <div className="max-w-3xl mx-auto text-center space-y-6">
+          <div className="inline-block bg-surface-900 text-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest shadow-[4px_4px_0px_0px_rgba(0,229,255,1)]">
             Why Choose Us
-          </span>
-          <h2 className="text-2xl md:text-3xl font-header font-black tracking-tight text-zinc-900 leading-[1.1] capitalize">
+          </div>
+          <h2 className="text-4xl md:text-5xl font-heading font-black text-surface-900 uppercase">
             {settings.aboutTitle || 'What We Offer'}
           </h2>
-          <p className="text-zinc-650 font-sans text-xs sm:text-sm font-light leading-relaxed">
+          <p className="text-slate-600 text-lg font-light leading-relaxed max-w-2xl mx-auto">
             {settings.aboutSub || 'We go beyond traditional guidance by offering mentorship, doorstep counseling, and personalized support in schools.'}
           </p>
         </div>
 
         {/* 6-Card Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
           {pillars.map((pillar, idx) => {
             return (
               <div
                 key={idx}
-                className="bg-white hover:bg-zinc-50/70 border-neon-glow border-neon-glow-hover rounded-xl sm:rounded-2xl p-3 sm:p-4 transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between group font-sans"
+                className="square-card p-6 sm:p-8 bg-white shadow-square-light hover:shadow-square-hover flex flex-col group transition-all duration-300 hover:-translate-y-2 relative overflow-hidden"
               >
-                <div className="space-y-1">
-                  {/* Typographic numbers instead of generic icons */}
-                  <span className="font-header font-bold text-base sm:text-lg text-zinc-300 group-hover:text-brand transition-colors duration-300 block">
+                {/* Decorative Accent */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-surface-50 border-l border-b border-surface-200 transform translate-x-8 -translate-y-8 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-500"></div>
+
+                <div className="space-y-6 relative z-10">
+                  <span className="font-heading font-black text-5xl text-surface-200 group-hover:text-brand transition-colors duration-300 block leading-none">
                     {`0${idx + 1}`}
                   </span>
-                  <div className="space-y-0.5">
-                    <h4 className="font-header font-bold text-sm sm:text-base capitalize  text-zinc-900 group-hover:text-brand-dark transition-colors duration-300">
+                  <div className="space-y-3">
+                    <h4 className="font-heading font-bold text-xl uppercase text-surface-900 leading-tight">
                       {pillar.title}
                     </h4>
-                    <p className="text-zinc-550 font-sans text-xs font-normal leading-relaxed">
+                    <p className="text-slate-600 font-light leading-relaxed text-sm">
                       {pillar.desc}
                     </p>
                   </div>
+                </div>
+                
+                <div className="mt-6 flex justify-end">
+                    <div className="w-8 h-8 bg-surface-50 border border-surface-200 flex items-center justify-center text-surface-900 group-hover:bg-brand group-hover:border-brand transition-colors">
+                        <ArrowRight className="w-4 h-4" />
+                    </div>
                 </div>
               </div>
             );
@@ -107,7 +85,7 @@ export default function About({ enablePsychology = true, siteSettings }) {
         </div>
 
         {/* CTA Button */}
-        <div className="pt-1 flex justify-center w-full">
+        <div className="flex justify-center w-full pt-8">
           <button
             type="button"
             onClick={() => {
@@ -118,7 +96,7 @@ export default function About({ enablePsychology = true, siteSettings }) {
               }
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className="min-h-[40px] px-6 py-2 bg-zinc-900 hover:bg-zinc-800 text-white font-bold text-xs capitalize  rounded-lg transition-all duration-200 cursor-pointer shadow-sm w-full sm:w-auto text-center border-none"
+            className="btn-primary w-full sm:w-auto px-12"
           >
             {enablePsychology ? 'Get Started with Behold' : 'Explore Aptitude Assessment'}
           </button>

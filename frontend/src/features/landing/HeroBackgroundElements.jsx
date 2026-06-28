@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 const FloatingSphere = ({ className, delay = 0, size = 100, color1 = '#00D1D1', color2 = '#0ea5e9' }) => (
   <motion.div
     className={`absolute pointer-events-none z-0 ${className}`}
-    animate={{ 
+    animate={{
       y: [0, -30, 0],
       x: [0, 10, 0]
     }}
@@ -27,7 +27,7 @@ const FloatingSphere = ({ className, delay = 0, size = 100, color1 = '#00D1D1', 
 const FloatingRing = ({ className, delay = 0, size = 120, color1 = '#00D1D1' }) => (
   <motion.div
     className={`absolute pointer-events-none z-0 ${className}`}
-    animate={{ 
+    animate={{
       y: [0, 40, 0],
       rotate: [0, 360]
     }}
@@ -50,7 +50,7 @@ const FloatingRing = ({ className, delay = 0, size = 120, color1 = '#00D1D1' }) 
 const FloatingDiamond = ({ className, delay = 0, size = 90, color1 = '#0ea5e9' }) => (
   <motion.div
     className={`absolute pointer-events-none z-0 ${className}`}
-    animate={{ 
+    animate={{
       y: [0, -25, 0],
       rotate: [0, 180, 360]
     }}
@@ -73,7 +73,7 @@ const FloatingDiamond = ({ className, delay = 0, size = 90, color1 = '#0ea5e9' }
 const FloatingPill = ({ className, delay = 0, size = 150, color1 = '#0ea5e9' }) => (
   <motion.div
     className={`absolute pointer-events-none z-0 ${className}`}
-    animate={{ 
+    animate={{
       y: [0, 30, 0],
       rotate: [-15, 15, -15]
     }}
@@ -135,14 +135,14 @@ export default function HeroBackgroundElements() {
     <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
       {/* Small subtle particles rising */}
       <DecorativeParticles />
-      
+
       {/* 3D Objects Scattered for depth - Removed CSS blurs and drop-shadows for 60fps performance */}
       <FloatingSphere className="top-[15%] left-[5%] lg:left-[10%] opacity-70" size={120} delay={0} color1="#00D1D1" color2="#0284c7" />
       <FloatingRing className="top-[60%] left-[-2%] lg:left-[8%] opacity-50" size={160} delay={1.5} color1="#0ea5e9" />
-      
+
       <FloatingDiamond className="top-[20%] right-[5%] lg:right-[15%] opacity-60" size={100} delay={0.5} color1="#00D1D1" />
       <FloatingSphere className="top-[65%] right-[2%] lg:right-[12%] opacity-80" size={140} delay={2} color1="#0ea5e9" color2="#0369a1" />
-      
+
       <FloatingPill className="top-[75%] left-[30%] lg:left-[40%] opacity-40" size={160} delay={1} color1="#00D1D1" />
     </div>
   );

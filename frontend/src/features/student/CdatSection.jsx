@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, Copy, AlertCircle } from 'lucide-react';
+import { Copy, AlertCircle } from 'lucide-react';
 import ApiService from '../../shared/services/api';
 
 export default function CdatSection({ setView }) {
@@ -143,213 +143,131 @@ export default function CdatSection({ setView }) {
   };
 
   return (
-    <section id="cdat" className="max-w-7xl mx-auto px-4 sm:px-6 py-10 md:py-12 text-zinc-900 text-left relative">
-      {/* High-End Background Glows */}
-      <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-brand/10 rounded-full blur-[100px] pointer-events-none mix-blend-multiply" />
-      <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-brand-accent/10 rounded-full blur-[100px] pointer-events-none mix-blend-multiply" />
-
-      {/* CDAT CARD */}
-      <div
-        id="card-aptitude"
-        className="relative bg-white/70 backdrop-blur-2xl border-neon-glow border-neon-glow-hover p-5 sm:p-8 md:p-10 flex flex-col select-none group rounded-2xl sm:rounded-[2rem] transition-all duration-700 overflow-hidden"
-      >
-        {/* Decorative inner glow */}
-        <div className="absolute inset-0 bg-gradient-to-b from-white/60 to-transparent pointer-events-none" />
-
-        {/* TOP: CIGI Differential Aptitude Test (C-DAT) */}
-        <div className="relative z-10 flex flex-col justify-between gap-4 text-left w-full">
-          <div className="space-y-3">
-
-
-            {/* Flex container for Title and Logo opposite to each other */}
-            <div className="flex flex-row items-center justify-between gap-4 w-full">
-              <h3 className="text-lg sm:text-2xl md:text-3xl font-header font-black capitalize tracking-tight text-zinc-900 group-hover:text-brand-dark transition-colors duration-500 flex-1 min-w-0">
-                CIGI Differential Aptitude Test <span className="whitespace-nowrap">(C-DAT)</span>
-              </h3>
-              <div className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 flex items-center justify-center shrink-0 pointer-events-none">
-                <img
-                  src="/CIGI.png"
-                  alt="CIGI Differential Aptitude Test (C-DAT) Logo"
-                  className="w-full h-full object-contain mix-blend-multiply transition-all duration-500 hover:scale-105"
-                />
-              </div>
+    <section id="cdat" className="py-20 px-6 border-t border-surface-200 bg-surface-50">
+      <div className="max-w-7xl mx-auto">
+        <div className="square-card p-0 overflow-hidden flex flex-col md:flex-row shadow-square-light hover:shadow-square-hover">
+          
+          {/* Text Side */}
+          <div className="p-6 sm:p-8 md:p-12 flex-1 flex flex-col justify-center border-b md:border-b-0 md:border-r border-surface-200 bg-white">
+            <div className="flex flex-row items-center justify-between gap-4 mb-4">
+              <h2 className="text-3xl md:text-4xl font-heading font-black uppercase text-surface-900">
+                CIGI Differential Aptitude Test (C-DAT)
+              </h2>
+              <img src="/CIGI.png" alt="CIGI Logo" className="h-16 sm:h-20 object-contain shrink-0" />
             </div>
-
-            {/* Paragraph below title & logo */}
-            <p className="text-zinc-650 font-sans text-sm md:text-base font-medium leading-relaxed max-w-4xl">
-              C-DAT (CIGI-Differential Aptitude Test) effectively identifies the inherent capacities of students, guiding them towards suitable academic and career paths.
+            <p className="text-slate-600 leading-relaxed mb-8 max-w-lg">
+              C-DAT effectively identifies the inherent capacities of students, guiding them towards suitable academic and career paths with scientific precision.
             </p>
+            <button
+              type="button"
+              onClick={() => document.getElementById('cdat-form')?.scrollIntoView({ behavior: 'smooth' })}
+              className="btn-primary w-full sm:w-max cursor-pointer"
+            >
+              CIGI Aptitude Test
+            </button>
+          </div>
+          
+          {/* Form Side */}
+          <div id="cdat-form" className="p-8 md:p-12 bg-surface-50 w-full md:w-[450px] lg:w-[500px] shrink-0">
+            <h3 className="font-heading font-bold text-xl mb-6 text-surface-900">Generate Group Code</h3>
+            <form onSubmit={handleGenerateCode} className="space-y-5">
+              
+              <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2" htmlFor="cdat-name">Full Name</label>
+                <input
+                  id="cdat-name"
+                  type="text"
+                  placeholder="Enter name"
+                  value={groupRegName}
+                  onChange={(e) => handleNameChange(e.target.value)}
+                  className={`w-full bg-white border rounded-none px-4 py-3 text-surface-900 focus:outline-none transition-colors ${errors.name ? 'border-red-500 focus:border-red-500' : 'border-surface-200 focus:border-brand'}`}
+                />
+                {errors.name && (
+                  <p className="text-xs text-red-600 font-bold mt-1.5 flex items-center gap-1">
+                    <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {errors.name}
+                  </p>
+                )}
+              </div>
+              
+              <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2" htmlFor="cdat-phone">Phone Number</label>
+                <input
+                  id="cdat-phone"
+                  type="tel"
+                  placeholder="Enter phone"
+                  value={groupRegPhone}
+                  onChange={(e) => handlePhoneChange(e.target.value)}
+                  className={`w-full bg-white border rounded-none px-4 py-3 text-surface-900 focus:outline-none transition-colors ${errors.phone ? 'border-red-500 focus:border-red-500' : 'border-surface-200 focus:border-brand'}`}
+                />
+                {errors.phone && (
+                  <p className="text-xs text-red-600 font-bold mt-1.5 flex items-center gap-1">
+                    <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {errors.phone}
+                  </p>
+                )}
+              </div>
+              
+              <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2" htmlFor="cdat-email">Email Address</label>
+                <input
+                  id="cdat-email"
+                  type="email"
+                  placeholder="Enter email"
+                  value={groupRegEmail}
+                  onChange={(e) => handleEmailChange(e.target.value)}
+                  className={`w-full bg-white border rounded-none px-4 py-3 text-surface-900 focus:outline-none transition-colors ${errors.email ? 'border-red-500 focus:border-red-500' : 'border-surface-200 focus:border-brand'}`}
+                />
+                {errors.email && (
+                  <p className="text-xs text-red-600 font-bold mt-1.5 flex items-center gap-1">
+                    <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {errors.email}
+                  </p>
+                )}
+              </div>
 
-            {/* Scroll navigation button to registration section */}
-            <div className="pt-2 flex">
-              <button
+              {!generatedCode ? (
+                <button type="submit" className="btn-primary w-full mt-4 cursor-pointer">
+                  Generate Code
+                </button>
+              ) : (
+                <div className="pt-2 space-y-4 animate-in fade-in duration-300">
+                  <div className="p-4 bg-brand-light border-2 border-brand flex items-center justify-between">
+                    <div>
+                      <span className="text-xs uppercase tracking-wider text-surface-900 font-bold block mb-1">Your Code</span>
+                      <span className="text-xl font-heading font-black text-surface-900">{generatedCode}</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={copyManually}
+                      className="px-4 py-2 bg-white border-2 border-surface-900 hover:bg-surface-900 hover:text-white text-xs font-bold uppercase cursor-pointer transition-colors flex items-center gap-2"
+                    >
+                      <Copy className="w-4 h-4" />
+                      {copied ? 'Copied' : 'Copy'}
+                    </button>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      window.open("https://cigicareer.com/cdat-registration/", "_blank", "noopener,noreferrer");
+                    }}
+                    className="btn-primary w-full cursor-pointer flex justify-center"
+                  >
+                    Proceed to Portal
+                  </button>
+                </div>
+              )}
+            </form>
+            
+            <div className="mt-8 pt-6 border-t border-surface-200">
+              <p className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-3 text-center">Want to try a practice test?</p>
+              <button 
                 type="button"
-                onClick={() => {
-                  const el = document.getElementById('registration-section');
-                  if (el) el.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className="inline-flex items-center gap-2 px-6 py-3.5 bg-zinc-900 hover:bg-zinc-800 text-white font-bold text-sm rounded-xl transition duration-300 cursor-pointer shadow-sm border-none"
+                onClick={() => window.spaNavigate('/sample-test')}
+                className="btn-outline w-full cursor-pointer flex justify-center text-center"
               >
-                CIGI Aptitude Test
+                Sample Test
               </button>
             </div>
           </div>
-        </div>
 
-        {/* MIDDLE: Registration & Group Code */}
-        <div id="registration-section" className="relative z-10 pt-8 border-t border-zinc-200/80 space-y-3">
-          <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
-            <div className="space-y-2">
-              <span className="inline-block text-xs bg-zinc-900 text-white px-3 py-1.5 rounded-md capitalize font-bold tracking-wide shadow-md">
-                School & Institution Access
-              </span>
-              <h4 className="text-lg sm:text-2xl font-header font-black capitalize tracking-tight text-zinc-900 mt-1">
-                Registration & Group Code
-              </h4>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            <div className="lg:col-span-5 space-y-2">
-              <p className="text-zinc-600 font-sans text-sm md:text-base font-medium leading-relaxed max-w-2xl">
-                Enter your details to generate your group code. Then, proceed to the official CIGI portal to finalize registration.
-              </p>
-            </div>
-            <div className="lg:col-span-7 w-full">
-              <form onSubmit={handleGenerateCode} className="space-y-4 w-full text-left">
-                <div className="text-sm font-black capitalize text-zinc-800 mb-2">
-                  Generate Your Group Code
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-left">
-                  <div>
-                    <label htmlFor="cdat-name" className="sr-only">Full Name</label>
-                    <input
-                      id="cdat-name"
-                      type="text"
-                      placeholder="Full Name"
-                      value={groupRegName}
-                      onChange={(e) => handleNameChange(e.target.value)}
-                      className={`w-full px-5 py-3.5 min-h-[48px] rounded-xl border text-zinc-900 text-sm font-semibold placeholder-zinc-400 outline-none transition-all shadow-sm ${errors.name
-                        ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10'
-                        : 'border-zinc-200/80 bg-zinc-50/50 focus:border-brand focus:ring-4 focus:ring-brand/10 hover:bg-zinc-50'
-                        }`}
-                    />
-                    {errors.name && (
-                      <p className="text-xs text-rose-600 font-bold mt-1.5 flex items-center gap-1">
-                        <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                        {errors.name}
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <label htmlFor="cdat-phone" className="sr-only">Phone Number</label>
-                    <input
-                      id="cdat-phone"
-                      type="tel"
-                      placeholder="Phone Number"
-                      value={groupRegPhone}
-                      onChange={(e) => handlePhoneChange(e.target.value)}
-                      className={`w-full px-5 py-3.5 min-h-[48px] rounded-xl border text-zinc-900 text-sm font-semibold placeholder-zinc-400 outline-none transition-all shadow-sm ${errors.phone
-                        ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10'
-                        : 'border-zinc-200/80 bg-zinc-50/50 focus:border-brand focus:ring-4 focus:ring-brand/10 hover:bg-zinc-50'
-                        }`}
-                    />
-                    {errors.phone && (
-                      <p className="text-xs text-rose-600 font-bold mt-1.5 flex items-center gap-1">
-                        <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                        {errors.phone}
-                      </p>
-                    )}
-                  </div>
-                  <div className="sm:col-span-2">
-                    <label htmlFor="cdat-email" className="sr-only">Email Address</label>
-                    <input
-                      id="cdat-email"
-                      type="email"
-                      placeholder="Email Address"
-                      value={groupRegEmail}
-                      onChange={(e) => handleEmailChange(e.target.value)}
-                      className={`w-full px-5 py-3.5 min-h-[48px] rounded-xl border text-zinc-900 text-sm font-semibold placeholder-zinc-400 outline-none transition-all shadow-sm ${errors.email
-                        ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10'
-                        : 'border-zinc-200/80 bg-zinc-50/50 focus:border-brand focus:ring-4 focus:ring-brand/10 hover:bg-zinc-50'
-                        }`}
-                    />
-                    {errors.email && (
-                      <p className="text-xs text-rose-600 font-bold mt-1.5 flex items-center gap-1">
-                        <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                        {errors.email}
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                {!generatedCode ? (
-                  <div className="pt-2">
-                    <button
-                      type="submit"
-                      className="min-h-[52px] px-4 sm:px-8 py-3.5 bg-gradient-brand hover:scale-[1.02] active:scale-[0.98] text-zinc-955 font-bold text-[13px] sm:text-sm tracking-wide rounded-xl transition-all duration-300 shadow-sm hover:shadow-md w-full sm:w-auto border-none whitespace-nowrap"
-                    >
-                      Generate Group Code for C-DAT
-                    </button>
-                  </div>
-                ) : (
-                  <div className="pt-2 space-y-3 animate-in fade-in duration-300">
-                    <p className="text-xs text-rose-600 font-bold flex items-center gap-1.5">
-                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                      Please copy this group code and enter it on the official CIGI portal during registration.
-                    </p>
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-3 w-full">
-                      {/* Group Code Display */}
-                      <div className="flex-1 p-3 bg-brand-light border border-brand/20 rounded-xl flex items-center justify-between min-h-[48px]">
-                        <div>
-                          <span className="text-[10px] uppercase tracking-wider text-brand-dark/70 font-bold block">Your Group Code</span>
-                          <span className="text-lg font-bold text-zinc-900">{generatedCode}</span>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={copyManually}
-                          className="px-3.5 py-1.5 bg-white border border-zinc-200 hover:border-brand/40 text-xs font-bold rounded-lg cursor-pointer transition-all flex items-center gap-1.5"
-                        >
-                          <Copy className="w-3.5 h-3.5" />
-                          {copied ? 'Copied!' : 'Copy'}
-                        </button>
-                      </div>
-
-                      {/* Proceed button */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          window.open("https://cigicareer.com/cdat-registration/", "_blank", "noopener,noreferrer");
-                        }}
-                        className="px-6 min-h-[48px] bg-brand text-zinc-955 hover:bg-brand-dark font-bold text-sm rounded-xl cursor-pointer transition-all flex items-center justify-center gap-1.5 shadow-md shadow-brand/10 border-none shrink-0"
-                      >
-                        Proceed to Registration
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </form>
-            </div>
-          </div>
-        </div>
-
-        {/* BOTTOM: Sample Test */}
-        <div className="pt-6 border-t border-zinc-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="space-y-1">
-            <span className="text-xs font-bold text-zinc-450 capitalize tracking-wide block">
-              Try a demo of our scientific assessment
-            </span>
-            <p className="text-xs text-zinc-550 font-light leading-relaxed">
-              Experience the type of questions asked in the C-DAT exam with our simplified sample test.
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={() => window.spaNavigate('/sample-test')}
-            className="min-h-[48px] px-8 py-3.5 bg-zinc-900 hover:bg-zinc-800 text-white font-bold text-xs capitalize  rounded-lg transition cursor-pointer shadow-sm text-center shrink-0 w-full sm:w-auto flex items-center justify-center border-none"
-          >
-            Sample Test
-          </button>
         </div>
       </div>
     </section>

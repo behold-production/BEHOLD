@@ -75,7 +75,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
   // Track scroll position for dynamic styling
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      setIsScrolled(window.scrollY > 50);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll(); // Check initial state
@@ -139,177 +139,84 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
 
   return (
     <>
-      <header className={`sticky top-0 w-full z-50 transition-all duration-300 ${
-        isDarkTheme 
-          ? 'bg-slate-900 text-white shadow-none py-1' 
-          : 'bg-white/70 backdrop-blur-md text-zinc-900 shadow-xs'
-      }`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3">
-          {/* Left Column: Logo & Nav Links */}
-          <div className="flex items-center gap-2 sm:gap-3 lg:gap-12 min-w-0">
-            {/* Hamburger Menu Toggle on Left of Logo for Mobile */}
-            <button
-              id="mobile-menu-toggle"
-              type="button"
-              aria-label={isMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
-              aria-expanded={isMenuOpen}
-              className={`lg:hidden transition rounded-lg w-11 h-11 -ml-2 flex items-center justify-center cursor-pointer ${
-                isDarkTheme ? 'text-white hover:bg-slate-800' : 'text-zinc-900 hover:text-brand-dark hover:bg-zinc-50'
-              }`}
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
+      <header className={`fixed top-0 w-full z-50 transition-all duration-300 ${isDarkTheme ? 'bg-transparent border-transparent' : 'bg-white/90 backdrop-blur-md border-b border-surface-200 shadow-sm'}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+            {/* Mobile Left Side: Hamburger + Logo */}
+            <div className="flex items-center gap-3 lg:gap-0">
+              {/* Mobile Menu Toggle (Moved to left) */}
+              <button
+                id="mobile-menu-toggle"
+                type="button"
+                className={`lg:hidden p-2 -ml-2 cursor-pointer transition-colors ${isDarkTheme ? 'text-white' : 'text-surface-900'}`}
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+              >
+                {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </button>
 
-            <span
-              onClick={handleLogoClick}
-              className={`font-header font-black text-lg sm:text-xl tracking-tighter cursor-pointer transition duration-300 select-none truncate ${
-                isDarkTheme ? 'text-white hover:text-zinc-200' : 'text-zinc-900 hover:text-brand'
-              }`}
-              id="nav-logo"
-            >
-              {siteName || 'BEHOLD'}<span className="text-brand font-black">.</span>
-            </span>
+              {/* Logo */}
+              <span
+                onClick={handleLogoClick}
+                className={`logo-text cursor-pointer select-none ${isDarkTheme ? 'text-white' : ''}`}
+                id="nav-logo"
+              >
+                {siteName || 'BEHOLD'}<span className="logo-dot">.</span>
+              </span>
+            </div>
 
-            <nav className={`hidden lg:flex items-center gap-8 text-sm font-bold ${isDarkTheme ? 'text-zinc-300' : 'text-zinc-500'}`}>
+            {/* Desktop Navigation */}
+            <nav className={`hidden lg:flex items-center gap-8 font-heading font-semibold text-sm tracking-wide ${isDarkTheme ? 'text-zinc-300' : 'text-slate-600'}`}>
               <button
                 onClick={handleLogoClick}
-                className={`transition-all duration-300 cursor-pointer pb-1 relative capitalize ${
-                  currentView === '/' && (activeSection === 'home' || activeSection === 'cdat' || activeSection === '') 
-                    ? (isDarkTheme ? 'text-white' : 'text-zinc-900 font-bold') 
-                    : (isDarkTheme ? 'hover:text-white' : 'hover:text-zinc-900')
-                  }`}
+                className={`relative group transition-colors uppercase cursor-pointer ${isDarkTheme ? 'hover:text-white' : 'hover:text-surface-900'}`}
               >
-                Home
-                {currentView === '/' && (activeSection === 'home' || activeSection === 'cdat' || activeSection === '') && (
-                  <span className="absolute bottom-0 left-0 w-full h-[2px] bg-brand" />
-                )}
+                HOME
+                <span className={`absolute -bottom-2 left-0 w-full h-[2px] bg-brand transition-transform origin-left ${currentView === '/' && (activeSection === 'home' || activeSection === 'cdat' || activeSection === '') ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`} />
               </button>
 
               {siteSettings.enablePsychology !== false && (
                 <button
                   onClick={() => scrollToSection('services')}
-                  className={`transition-all duration-300 cursor-pointer pb-1 relative capitalize ${
-                    activeSection === 'services' && currentView === '/' 
-                      ? (isDarkTheme ? 'text-white' : 'text-zinc-900 font-bold') 
-                      : (isDarkTheme ? 'hover:text-white' : 'hover:text-zinc-900')
-                    }`}
+                  className={`relative group transition-colors uppercase cursor-pointer ${isDarkTheme ? 'hover:text-white' : 'hover:text-surface-900'}`}
                 >
-                  Services
-                  {activeSection === 'services' && currentView === '/' && (
-                    <span className="absolute bottom-0 left-0 w-full h-[2px] bg-brand" />
-                  )}
+                  SERVICES
+                  <span className={`absolute -bottom-2 left-0 w-full h-[2px] bg-brand transition-transform origin-left ${activeSection === 'services' && currentView === '/' ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`} />
                 </button>
               )}
 
               <button
                 onClick={() => navigate('/sample-test')}
-                className={`transition-all duration-300 cursor-pointer pb-1 relative capitalize ${
-                  currentView === '/sample-test' 
-                    ? (isDarkTheme ? 'text-white' : 'text-zinc-900 font-bold') 
-                    : (isDarkTheme ? 'hover:text-white' : 'hover:text-zinc-900')
-                  }`}
+                className={`relative group transition-colors uppercase cursor-pointer ${isDarkTheme ? 'hover:text-white' : 'hover:text-surface-900'}`}
               >
-                Sample Test
-                {currentView === '/sample-test' && (
-                  <span className="absolute bottom-0 left-0 w-full h-[2px] bg-brand" />
-                )}
+                SAMPLE TEST
+                <span className={`absolute -bottom-2 left-0 w-full h-[2px] bg-brand transition-transform origin-left ${currentView === '/sample-test' ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`} />
               </button>
 
               <button
                 onClick={() => scrollToSection('inquiry')}
-                className={`transition-all duration-300 cursor-pointer pb-1 relative capitalize ${
-                  activeSection === 'inquiry' && currentView === '/' 
-                    ? (isDarkTheme ? 'text-white' : 'text-zinc-900 font-bold') 
-                    : (isDarkTheme ? 'hover:text-white' : 'hover:text-zinc-900')
-                  }`}
+                className={`relative group transition-colors uppercase cursor-pointer ${isDarkTheme ? 'hover:text-white' : 'hover:text-surface-900'}`}
               >
-                Contact
-                {activeSection === 'inquiry' && currentView === '/' && (
-                  <span className="absolute bottom-0 left-0 w-full h-[2px] bg-brand" />
-                )}
+                CONTACT
+                <span className={`absolute -bottom-2 left-0 w-full h-[2px] bg-brand transition-transform origin-left ${activeSection === 'inquiry' && currentView === '/' ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`} />
               </button>
             </nav>
-          </div>
 
-          {/* Right Column: Actions */}
-          <div className="hidden lg:flex items-center gap-3 relative">
-            {user ? (
-              <div className="relative" ref={desktopDropdownRef}>
+            {/* Right Column: Actions */}
+            <div className="flex items-center gap-3 lg:gap-4 relative">
+              {!user ? (
                 <button
                   type="button"
-                  onClick={() => setShowDropdown(!showDropdown)}
-                  aria-label="Account menu"
-                  aria-expanded={showDropdown}
-                  className="w-10 h-10 rounded-full overflow-hidden bg-brand/10 text-brand-dark font-bold flex items-center justify-center capitalize  text-sm shadow-xs border border-brand/20 hover:scale-105 transition-transform cursor-pointer"
+                  onClick={onOpenAuth}
+                  className={`w-9 h-9 lg:w-10 lg:h-10 rounded-full overflow-hidden flex items-center justify-center border-2 transition-colors cursor-pointer ${isDarkTheme ? 'bg-white/10 text-white border-white/20 hover:border-brand' : 'bg-surface-50 text-surface-900 border-surface-200 hover:border-brand'}`}
+                  aria-label="Sign In"
                 >
-                  {user.profilePic || user.image ? (
-                    <img src={user.profilePic || user.image} alt={user.name} className="w-full h-full object-cover" />
-                  ) : (
-                    getInitials(user.name)
-                  )}
+                  <User className="w-4 h-4 lg:w-5 lg:h-5" />
                 </button>
-
-                {showDropdown && (
-                  <div className="absolute top-full right-0 mt-3 w-52 bg-white border border-zinc-200 shadow-xl rounded-lg overflow-hidden py-1 z-50 animate-in fade-in zoom-in-95 duration-200">
-                    <div className="px-4 py-3 border-b border-zinc-150">
-                      <p className="text-sm font-bold text-zinc-900 truncate">{user.name}</p>
-                      <p className="text-sm text-zinc-500 truncate mt-0.5">{user.email}</p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={handleProfileClick}
-                      className="w-full text-left px-4 py-3 text-sm font-semibold text-zinc-650 hover:bg-zinc-50 hover:text-zinc-900 transition-colors flex items-center gap-2 cursor-pointer"
-                    >
-                      <User className="w-3.5 h-3.5 text-zinc-400" /> Your Profile
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => { setShowDropdown(false); setIsLogoutConfirmOpen(true); }}
-                      className="w-full text-left px-4 py-3 text-sm font-semibold text-rose-600 hover:bg-rose-50 transition-colors flex items-center gap-2 cursor-pointer"
-                    >
-                      <LogOut className="w-3.5 h-3.5 text-rose-500" /> Sign Out
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <button
-                type="button"
-                onClick={onOpenAuth}
-                className={`px-4 h-10 text-sm font-bold transition-colors cursor-pointer capitalize rounded-lg flex items-center ${
-                  isDarkTheme ? 'text-white hover:bg-slate-800' : 'text-zinc-900 hover:text-brand hover:bg-zinc-50'
-                }`}
-              >
-                Sign In
-              </button>
-            )}
-
-            {siteSettings.enablePsychology !== false && (
-              <button
-                type="button"
-                onClick={() => navigate('/booking')}
-                className={`px-5 h-10 text-sm font-bold rounded-lg border transition-all duration-300 cursor-pointer flex items-center gap-1.5 capitalize  ${currentView === '/booking'
-                  ? 'bg-zinc-950 text-white border-zinc-950'
-                  : 'bg-brand hover:bg-brand-dark text-zinc-900 shadow-xs border-brand/30'
-                  }`}
-              >
-                <span>Book Session</span>
-              </button>
-            )}
-          </div>
-
-          {/* Mobile Actions (Avatar only) */}
-          <div className="flex items-center lg:hidden relative">
-            <div className="relative" ref={mobileDropdownRef}>
-              {user ? (
-                <>
+              ) : (
+                <div className="relative" ref={desktopDropdownRef}>
                   <button
                     type="button"
                     onClick={() => setShowDropdown(!showDropdown)}
-                    aria-label="Account menu"
-                    aria-expanded={showDropdown}
-                    className="w-10 h-10 rounded-full overflow-hidden bg-brand/10 text-brand-dark font-bold flex items-center justify-center capitalize  text-sm shadow-xs border border-brand/20 cursor-pointer"
+                    className={`w-9 h-9 lg:w-10 lg:h-10 rounded-full overflow-hidden font-bold flex items-center justify-center text-sm border-2 transition-colors cursor-pointer ${isDarkTheme ? 'bg-white/10 text-white border-white/20 hover:border-brand' : 'bg-surface-50 text-surface-900 border-surface-200 hover:border-brand'}`}
                   >
                     {user.profilePic || user.image ? (
                       <img src={user.profilePic || user.image} alt={user.name} className="w-full h-full object-cover" />
@@ -317,42 +224,42 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                       getInitials(user.name)
                     )}
                   </button>
+
                   {showDropdown && (
-                    <div className="absolute top-full right-0 mt-3 w-52 bg-white border border-zinc-200 shadow-xl rounded-lg overflow-hidden py-1 z-50 animate-in fade-in zoom-in-95 duration-200">
-                      <div className="px-4 py-3 border-b border-zinc-150">
-                        <p className="text-sm font-bold text-zinc-900 truncate">{user.name}</p>
-                        <p className="text-sm text-zinc-500 truncate mt-0.5">{user.email}</p>
+                    <div className="absolute top-full right-0 mt-3 w-52 bg-white border-2 border-surface-200 shadow-square-light py-1 z-50">
+                      <div className="px-4 py-3 border-b border-surface-200">
+                        <p className="text-sm font-heading font-bold text-surface-900 truncate">{user.name}</p>
+                        <p className="text-xs text-slate-500 truncate mt-0.5">{user.email}</p>
                       </div>
                       <button
                         type="button"
                         onClick={handleProfileClick}
-                        className="w-full text-left px-4 py-3 text-sm font-semibold text-zinc-650 hover:bg-zinc-50 hover:text-zinc-900 transition-colors flex items-center gap-2 cursor-pointer"
+                        className="w-full text-left px-4 py-3 text-xs font-bold text-slate-600 uppercase hover:bg-surface-50 hover:text-brand transition-colors flex items-center gap-2 cursor-pointer"
                       >
-                        <User className="w-3.5 h-3.5 text-zinc-400" /> Your Profile
+                        <User className="w-3.5 h-3.5" /> Your Profile
                       </button>
                       <button
                         type="button"
                         onClick={() => { setShowDropdown(false); setIsLogoutConfirmOpen(true); }}
-                        className="w-full text-left px-4 py-3 text-sm font-semibold text-rose-600 hover:bg-rose-50 transition-colors flex items-center gap-2 cursor-pointer"
+                        className="w-full text-left px-4 py-3 text-xs font-bold text-red-500 uppercase hover:bg-red-50 transition-colors flex items-center gap-2 cursor-pointer"
                       >
-                        <LogOut className="w-3.5 h-3.5 text-rose-500" /> Sign Out
+                        <LogOut className="w-3.5 h-3.5" /> Sign Out
                       </button>
                     </div>
                   )}
-                </>
-              ) : (
+                </div>
+              )}
+
+              {siteSettings.enablePsychology !== false && (
                 <button
                   type="button"
-                  onClick={onOpenAuth}
-                  className="w-10 h-10 rounded-full bg-brand text-zinc-900 flex items-center justify-center shadow-xs border border-brand/30 hover:scale-105 transition-transform cursor-pointer"
-                  title="Sign In"
-                  aria-label="Sign In"
+                  onClick={() => navigate('/booking')}
+                  className="hidden lg:block btn-primary text-xs py-2.5 px-6"
                 >
-                  <User className="w-4 h-4" />
+                  Book Session
                 </button>
               )}
             </div>
-          </div>
         </div>
       </header>
 
@@ -364,40 +271,39 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
         />
       )}
 
-      {/* Mobile Side Drawer - Glassmorphism UI */}
+      {/* Mobile Side Drawer */}
       <aside
         id="mobile-drawer"
         aria-hidden={!isMenuOpen}
-        className={`fixed top-0 left-0 bottom-0 w-[300px] max-w-[85vw] bg-white z-50 lg:hidden shadow-2xl transition-all duration-300 ease-in-out transform flex flex-col p-5 border-r border-zinc-200 ${
-          isMenuOpen ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0 pointer-events-none'
-        }`}
+        className={`fixed top-0 left-0 bottom-0 w-[300px] max-w-[85vw] bg-white z-50 lg:hidden shadow-square-dark transition-all duration-300 ease-in-out transform flex flex-col p-6 border-r border-surface-200 ${isMenuOpen ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0 pointer-events-none'
+          }`}
       >
         {/* Drawer Header */}
-        <div className="flex items-center justify-between pb-4 border-b border-zinc-150 mb-5">
+        <div className="flex items-center justify-between pb-6 border-b border-surface-200 mb-6">
           <span
             onClick={() => { setIsMenuOpen(false); handleLogoClick(); }}
-            className="font-header font-black text-lg tracking-tighter cursor-pointer text-zinc-900 hover:text-brand transition duration-300"
+            className="logo-text cursor-pointer"
           >
-            {siteName || 'BEHOLD'}<span className="text-brand font-black">.</span>
+            {siteName || 'BEHOLD'}<span className="logo-dot">.</span>
           </span>
           <button
             type="button"
             onClick={() => setIsMenuOpen(false)}
             aria-label="Close navigation menu"
-            className="w-10 h-10 flex items-center justify-center hover:bg-zinc-100 rounded-lg transition-colors cursor-pointer"
+            className="w-10 h-10 flex items-center justify-center border border-surface-200 hover:border-surface-900 transition-colors cursor-pointer"
           >
-            <X className="w-5 h-5 text-zinc-900" />
+            <X className="w-5 h-5 text-surface-900" />
           </button>
         </div>
 
         {/* Drawer Navigation Links */}
-        <div className="flex flex-col gap-2 overflow-y-auto flex-1">
+        <div className="flex flex-col gap-1 overflow-y-auto flex-1 font-heading">
           <button
             type="button"
             onClick={handleLogoClick}
-            className={`w-full text-left px-3.5 py-3.5 rounded-lg text-sm font-bold capitalize  transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${currentView === '/' && (activeSection === 'home' || activeSection === 'cdat' || activeSection === '')
-              ? 'bg-brand/10 text-zinc-900 border-brand font-bold'
-              : 'text-zinc-650 hover:text-zinc-900 hover:bg-zinc-50 border-transparent'
+            className={`w-full text-left px-4 py-4 text-sm font-bold uppercase transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${currentView === '/' && (activeSection === 'home' || activeSection === 'cdat' || activeSection === '')
+              ? 'bg-surface-50 text-brand border-brand'
+              : 'text-slate-600 hover:text-surface-900 hover:bg-surface-50 border-transparent'
               }`}
           >
             <span>Home</span>
@@ -407,9 +313,9 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
             <button
               type="button"
               onClick={() => scrollToSection('services')}
-              className={`w-full text-left px-3.5 py-3.5 rounded-lg text-sm font-bold capitalize  transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${activeSection === 'services' && currentView === '/'
-                ? 'bg-brand/10 text-zinc-900 border-brand font-bold'
-                : 'text-zinc-650 hover:text-zinc-900 hover:bg-zinc-50 border-transparent'
+              className={`w-full text-left px-4 py-4 text-sm font-bold uppercase transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${activeSection === 'services' && currentView === '/'
+                ? 'bg-surface-50 text-brand border-brand'
+                : 'text-slate-600 hover:text-surface-900 hover:bg-surface-50 border-transparent'
                 }`}
             >
               <span>Services</span>
@@ -419,9 +325,9 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
           <button
             type="button"
             onClick={() => { navigate('/sample-test'); setIsMenuOpen(false); }}
-            className={`w-full text-left px-3.5 py-3.5 rounded-lg text-sm font-bold capitalize  transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${currentView === '/sample-test'
-              ? 'bg-brand/10 text-zinc-900 border-brand font-bold'
-              : 'text-zinc-650 hover:text-zinc-900 hover:bg-zinc-50 border-transparent'
+            className={`w-full text-left px-4 py-4 text-sm font-bold uppercase transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${currentView === '/sample-test'
+              ? 'bg-surface-50 text-brand border-brand'
+              : 'text-slate-600 hover:text-surface-900 hover:bg-surface-50 border-transparent'
               }`}
           >
             <span>Sample Test</span>
@@ -430,9 +336,9 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
           <button
             type="button"
             onClick={() => scrollToSection('inquiry')}
-            className={`w-full text-left px-3.5 py-3.5 rounded-lg text-sm font-bold capitalize  transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${activeSection === 'inquiry' && currentView === '/'
-              ? 'bg-brand/10 text-zinc-900 border-brand font-bold'
-              : 'text-zinc-650 hover:text-zinc-900 hover:bg-zinc-50 border-transparent'
+            className={`w-full text-left px-4 py-4 text-sm font-bold uppercase transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${activeSection === 'inquiry' && currentView === '/'
+              ? 'bg-surface-50 text-brand border-brand'
+              : 'text-slate-600 hover:text-surface-900 hover:bg-surface-50 border-transparent'
               }`}
           >
             <span>Contact</span>
@@ -442,9 +348,9 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
             <button
               type="button"
               onClick={() => { navigate('/booking'); setIsMenuOpen(false); }}
-              className={`w-full text-left px-3.5 py-3.5 rounded-lg text-sm font-bold capitalize  transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${currentView === '/booking'
-                ? 'bg-brand/10 text-zinc-900 border-brand font-bold'
-                : 'text-zinc-650 hover:text-zinc-900 hover:bg-zinc-50 border-transparent'
+              className={`w-full text-left px-4 py-4 text-sm font-bold uppercase transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${currentView === '/booking'
+                ? 'bg-surface-50 text-brand border-brand'
+                : 'text-slate-600 hover:text-surface-900 hover:bg-surface-50 border-transparent'
                 }`}
             >
               <span>Book Session</span>
@@ -453,11 +359,11 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
         </div>
 
         {/* Drawer Footer: User Profile Widget */}
-        <div className="pt-4 border-t border-zinc-150 mt-auto">
+        <div className="pt-6 border-t border-surface-200 mt-auto">
           {user ? (
-            <div className="bg-zinc-50 p-3 rounded-lg border border-zinc-200 flex flex-col gap-3">
+            <div className="bg-surface-50 p-4 border border-surface-200 flex flex-col gap-4">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-brand/10 text-brand-dark font-bold flex items-center justify-center text-sm shrink-0 shadow-inner border border-brand/20 overflow-hidden">
+                <div className="w-10 h-10 border border-surface-200 text-surface-900 font-bold flex items-center justify-center text-sm shrink-0 overflow-hidden bg-white">
                   {user.profilePic || user.image ? (
                     <img src={user.profilePic || user.image} alt={user.name} className="w-full h-full object-cover" />
                   ) : (
@@ -465,23 +371,23 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                   )}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm font-bold text-zinc-900 truncate leading-tight">{user.name}</p>
-                  <p className="text-sm text-zinc-500 truncate mt-0.5 leading-none">{user.email}</p>
+                  <p className="text-sm font-heading font-bold text-surface-900 truncate">{user.name}</p>
+                  <p className="text-xs text-slate-500 truncate mt-0.5">{user.email}</p>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-3">
                 <button
                   type="button"
                   onClick={handleProfileClick}
-                  className="py-2.5 text-sm font-bold text-zinc-700 bg-white border border-zinc-200 hover:border-zinc-900 rounded-md transition-colors text-center cursor-pointer capitalize  min-h-[40px]"
+                  className="py-2.5 text-xs font-bold text-surface-900 bg-white border-2 border-surface-200 hover:border-brand transition-colors text-center cursor-pointer uppercase min-h-[40px]"
                 >
                   Profile
                 </button>
                 <button
                   type="button"
                   onClick={() => { setIsLogoutConfirmOpen(true); setIsMenuOpen(false); }}
-                  className="py-2.5 text-sm font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 rounded-md transition-colors text-center cursor-pointer capitalize  flex items-center justify-center gap-1 min-h-[40px]"
+                  className="py-2.5 text-xs font-bold text-surface-900 bg-white border-2 border-surface-200 hover:bg-red-50 hover:border-red-500 hover:text-red-500 transition-colors text-center cursor-pointer uppercase flex items-center justify-center gap-1 min-h-[40px]"
                 >
                   <LogOut className="w-3 h-3" /> Sign Out
                 </button>
@@ -491,9 +397,9 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
             <button
               type="button"
               onClick={() => { onOpenAuth(); setIsMenuOpen(false); }}
-              className="w-full py-3.5 bg-brand hover:bg-brand-dark text-zinc-900 font-semibold text-sm capitalize  rounded-lg text-center transition cursor-pointer shadow-xs"
+              className="btn-primary w-full"
             >
-              Sign In to Account
+              Sign In
             </button>
           )}
         </div>
