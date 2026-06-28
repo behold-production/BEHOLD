@@ -215,8 +215,8 @@ export default function AptitudeTest({ onFinishTest }) {
 
   if (isLoading || shuffledQuestions.length === 0) {
     return (
-      <div className="pt-24 pb-16 min-h-screen bg-zinc-50 text-zinc-900 flex items-center justify-center font-sans">
-        <p className="text-sm font-semibold capitalize  text-zinc-400 animate-pulse">Initializing quiz console...</p>
+      <div className="pt-24 pb-16 min-h-screen bg-surface-50 text-surface-900 flex items-center justify-center font-sans">
+        <p className="text-[10px] font-black uppercase tracking-widest text-surface-500 animate-pulse">Initializing quiz console...</p>
       </div>
     );
   }
@@ -225,13 +225,13 @@ export default function AptitudeTest({ onFinishTest }) {
   if (!currentQObj) return null;
 
   return (
-    <div className="pt-20 sm:pt-24 pb-12 sm:pb-16 min-h-screen bg-zinc-50 text-zinc-900 relative overflow-hidden font-sans border-b border-zinc-200 text-left">
+    <div className="pt-20 sm:pt-24 pb-12 sm:pb-16 min-h-screen bg-surface-50 text-surface-900 relative overflow-hidden font-sans border-b border-surface-200 text-left">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
 
         {!testFinished ? (
           /* Quiz Interface Card */
           <div
-            className={`card-luxury p-5 sm:p-8 md:p-14 select-none border border-zinc-200 bg-white rounded-lg transition-all duration-300 ${
+            className={`bg-white border border-surface-200 rounded-none shadow-none p-5 sm:p-8 md:p-14 select-none transition-all duration-300 ${
               isAnimating ? 'opacity-0 scale-95 translate-y-2' : 'opacity-100 scale-100 translate-y-0'
             }`}
             id="quiz-card"
@@ -240,22 +240,22 @@ export default function AptitudeTest({ onFinishTest }) {
             <div className="mb-8 sm:mb-12">
               <div className="flex flex-col sm:flex-row justify-between sm:items-end gap-4 mb-4">
                 <div>
-                  <h2 className="text-2xl sm:text-3xl font-header font-bold text-zinc-900 capitalize tracking-wide">
+                  <h2 className="text-2xl sm:text-3xl font-black text-surface-900 uppercase tracking-widest leading-none">
                     Aptitude Profiling
                   </h2>
-                  <p className="text-zinc-550 font-sans text-xs font-light mt-1">
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-surface-500 mt-2">
                     Discover your core cognitive affinities across 8 dimensions.
                   </p>
                 </div>
-                <span className="text-zinc-900 font-header font-bold text-sm sm:text-lg self-start sm:self-auto">
-                  {currentQuestion + 1} <span className="text-zinc-300">/</span> {shuffledQuestions.length}
+                <span className="text-surface-900 font-black text-sm sm:text-lg self-start sm:self-auto">
+                  {currentQuestion + 1} <span className="text-surface-300">/</span> {shuffledQuestions.length}
                 </span>
               </div>
 
               {/* Progress Bar Container */}
-              <div className="h-1.5 w-full bg-zinc-100 rounded-md overflow-hidden">
+              <div className="h-1.5 w-full bg-surface-100 rounded-none overflow-hidden">
                 <div
-                  className="h-full bg-gradient-brand transition-all duration-500 ease-out"
+                  className="h-full bg-surface-900 transition-all duration-500 ease-out"
                   style={{ width: `${((currentQuestion + 1) / dbQuestions.length) * 100}%` }}
                 ></div>
               </div>
@@ -264,10 +264,10 @@ export default function AptitudeTest({ onFinishTest }) {
             {/* Question Text */}
             <div className="mb-6 sm:mb-10">
               <div className="flex gap-4 items-start mb-6">
-                <span className="flex items-center justify-center w-7 h-7 rounded-md bg-zinc-100 text-zinc-900 font-bold text-xs shrink-0 mt-0.5 ">
+                <span className="flex items-center justify-center w-7 h-7 rounded-none bg-surface-100 text-surface-900 font-black text-[10px] uppercase tracking-widest shrink-0 mt-0.5 ">
                   Q
                 </span>
-                <h3 className="text-base sm:text-lg md:text-xl font-header font-bold text-zinc-900 leading-snug">
+                <h3 className="text-base sm:text-lg md:text-xl font-black text-surface-900 uppercase tracking-widest leading-snug">
                   {currentQObj.question}
                 </h3>
               </div>
@@ -279,13 +279,13 @@ export default function AptitudeTest({ onFinishTest }) {
                     key={i}
                     id={`opt-btn-${i}`}
                     onClick={() => handleAnswer(currentQObj.category, opt.weight)}
-                    className="w-full text-left p-4 sm:p-5 rounded-lg border border-zinc-200 bg-white/50 hover:bg-white hover:border-brand transition-all duration-200 flex items-center justify-between group cursor-pointer text-zinc-900"
+                    className="w-full text-left p-4 sm:p-5 rounded-none border border-surface-200 bg-surface-50 hover:bg-surface-100 hover:border-surface-300 transition-all duration-200 flex items-center justify-between group cursor-pointer text-surface-900 shadow-none"
                   >
-                    <span className="text-xs sm:text-sm font-semibold text-zinc-700 group-hover:text-zinc-900 transition-colors">
+                    <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-surface-600 group-hover:text-surface-900 transition-colors pr-4">
                       {opt.text}
                     </span>
-                    <div className="w-4 h-4 rounded-md border border-zinc-200 group-hover:border-brand group-hover:bg-brand transition-all duration-200 flex items-center justify-center shrink-0 ml-4">
-                      <div className="w-1.5 h-1.5 rounded-sm bg-white opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div className="w-4 h-4 rounded-none border border-surface-300 group-hover:border-surface-900 group-hover:bg-surface-900 transition-all duration-200 flex items-center justify-center shrink-0 ml-4">
+                      <div className="w-1.5 h-1.5 rounded-none bg-white opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     </div>
                   </button>
                 ))}
@@ -295,20 +295,20 @@ export default function AptitudeTest({ onFinishTest }) {
         ) : (
           /* Results Panel */
           <div
-            className="card-luxury p-5 sm:p-8 md:p-14 border border-zinc-200 bg-white rounded-lg relative overflow-hidden animate-in zoom-in-95 duration-500"
+            className="bg-white border border-surface-200 rounded-none shadow-none p-5 sm:p-8 md:p-14 relative overflow-hidden animate-in zoom-in-95 duration-500 text-left"
             id="results-panel"
           >
             {/* Header Shield */}
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-6 sm:pb-8 border-b border-zinc-100 mb-6 sm:mb-10">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-6 sm:pb-8 border-b border-surface-100 mb-6 sm:mb-10">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-zinc-950 text-brand rounded-xl flex items-center justify-center shadow-md shrink-0">
+                <div className="w-12 h-12 bg-surface-900 text-white rounded-none flex items-center justify-center shadow-none shrink-0">
                   <Brain className="w-6 h-6" />
                 </div>
                 <div>
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-zinc-50 border border-zinc-200 text-zinc-900 text-xs font-semibold capitalize  mb-1">
-                    <Award className="w-3.5 h-3.5 text-zinc-900" /> CIGI Framework Certified
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-none bg-surface-50 border border-surface-200 text-surface-900 text-[10px] uppercase tracking-widest font-black mb-1">
+                    <Award className="w-3.5 h-3.5 text-surface-900" /> CIGI Framework Certified
                   </div>
-                  <h2 className="text-2xl sm:text-3xl font-header font-bold text-zinc-900 leading-none">
+                  <h2 className="text-2xl sm:text-3xl font-black text-surface-900 uppercase tracking-widest leading-none">
                     Assessment Completed
                   </h2>
                 </div>
@@ -316,7 +316,7 @@ export default function AptitudeTest({ onFinishTest }) {
               <button
                 id="btn-restart-test"
                 onClick={handleRestart}
-                className="px-5 py-2.5 bg-white border border-zinc-200 hover:border-zinc-900 text-zinc-900 rounded-lg font-bold text-xs capitalize  transition-colors flex items-center gap-2 cursor-pointer shadow-xs w-full md:w-auto justify-center"
+                className="px-5 py-2.5 bg-white border border-surface-200 hover:border-surface-900 hover:bg-surface-50 text-surface-900 rounded-none font-black text-[10px] uppercase tracking-widest transition-colors flex items-center gap-2 cursor-pointer shadow-none w-full md:w-auto justify-center"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 <span>Retake Test</span>
@@ -328,17 +328,17 @@ export default function AptitudeTest({ onFinishTest }) {
 
               {/* Dominant Affinity Profile Card */}
               <div className="lg:col-span-7 space-y-6">
-                <h3 className="text-xs font-semibold text-zinc-400 capitalize">
+                <h3 className="text-[10px] font-bold text-surface-500 uppercase tracking-widest">
                   Your Dominant Affinity Profile
                 </h3>
 
-                <div className="p-5 sm:p-6 rounded-lg border border-zinc-200 bg-zinc-50/50 flex gap-4 text-zinc-900 shadow-xs">
+                <div className="p-5 sm:p-6 rounded-none border border-surface-200 bg-surface-50 flex gap-4 text-surface-900 shadow-none">
                   <div className="shrink-0 mt-1">{dominantInfo.icon}</div>
                   <div>
-                    <h4 className="text-base sm:text-lg font-header font-bold text-zinc-900 leading-tight mb-2 capitalize">
+                    <h4 className="text-base sm:text-lg font-black text-surface-900 uppercase tracking-widest leading-tight mb-2">
                       {dominantInfo.title}
                     </h4>
-                    <p className="text-zinc-650 text-xs font-light leading-relaxed">
+                    <p className="text-surface-600 text-[10px] font-bold uppercase tracking-widest leading-relaxed">
                       {dominantInfo.desc}
                     </p>
                   </div>
@@ -347,22 +347,22 @@ export default function AptitudeTest({ onFinishTest }) {
 
               {/* Recommendations and Call-to-Action */}
               <div className="lg:col-span-5 lg:row-span-2 space-y-6">
-                <div className="p-5 sm:p-6 bg-zinc-50/50 border border-zinc-200 rounded-lg space-y-6 shadow-xs">
-                  <h4 className="font-header font-semibold text-zinc-900 text-xs capitalize  border-b border-zinc-200 pb-3">
+                <div className="p-5 sm:p-6 bg-surface-50 border border-surface-200 rounded-none space-y-6 shadow-none">
+                  <h4 className="font-black text-surface-900 text-[10px] uppercase tracking-widest border-b border-surface-200 pb-3">
                     Recommended Pathways
                   </h4>
                   <ul className="space-y-3">
                     {recommendedCareers.map((item, cIdx) => (
                       <li
                         key={cIdx}
-                        className="flex flex-col bg-white p-3 sm:p-4 rounded-lg border border-zinc-200 hover:border-zinc-400 hover:scale-[1.01] transition-all duration-200 group text-left"
+                        className="flex flex-col bg-white p-3 sm:p-4 rounded-none border border-surface-200 hover:border-surface-400 transition-all duration-200 group text-left"
                       >
                         <div className="flex justify-between items-center">
-                          <span className="text-xs font-semibold text-zinc-900">
+                          <span className="text-[10px] font-black text-surface-900 uppercase tracking-widest">
                             {item.career}
                           </span>
                         </div>
-                        <span className="text-xs text-zinc-500 font-light mt-1 leading-relaxed">
+                        <span className="text-[10px] text-surface-500 font-bold uppercase tracking-widest mt-1 leading-relaxed">
                           {item.reason}
                         </span>
                       </li>
@@ -375,18 +375,18 @@ export default function AptitudeTest({ onFinishTest }) {
                       id="btn-results-consult"
                       onClick={handleClaimMentoring}
                       disabled={isClaiming}
-                      className="w-full py-3.5 sm:py-4 bg-brand hover:bg-brand-dark text-zinc-955 font-semibold text-xs capitalize  rounded-lg transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm hover:scale-[1.02] active:scale-[0.98] border-none disabled:opacity-70 disabled:cursor-not-allowed disabled:scale-100"
+                      className="w-full py-3.5 sm:py-4 bg-surface-900 hover:bg-surface-800 text-white font-black text-[10px] uppercase tracking-widest rounded-none transition-all flex items-center justify-center gap-2 cursor-pointer shadow-none border-none disabled:opacity-70 disabled:cursor-not-allowed disabled:scale-100"
                     >
                       {isClaiming ? (
                         <>
-                          <Loader2 className="w-4 h-4 animate-spin text-zinc-955" />
+                          <Loader2 className="w-4 h-4 animate-spin text-white" />
                           <span>Claiming...</span>
                         </>
                       ) : (
                         <span>Claim Free Mentoring</span>
                       )}
                     </button>
-                    <p className="text-xs text-zinc-450 text-center mt-3 font-semibold flex items-center justify-center gap-1">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-surface-500 text-center mt-3 flex items-center justify-center gap-1">
                       Schedules with a State Coordinator.
                     </p>
                   </div>
@@ -395,7 +395,7 @@ export default function AptitudeTest({ onFinishTest }) {
 
               {/* Detailed Metrics Breakdown */}
               <div className="lg:col-span-7 space-y-4">
-                <h4 className="font-header font-semibold text-zinc-900 text-xs capitalize">
+                <h4 className="font-black text-surface-900 text-[10px] uppercase tracking-widest">
                   Cognitive Distribution Metrics
                 </h4>
 
@@ -403,14 +403,14 @@ export default function AptitudeTest({ onFinishTest }) {
                   {CATEGORIES.map(({ key, label }) => {
                     const pct = scorePercentages[key];
                     return (
-                      <div key={key} className="space-y-1 bg-white p-3 rounded-lg border border-zinc-200" id={`score-metric-${key.toLowerCase()}`}>
-                        <div className="flex justify-between text-xs font-bold text-zinc-550">
+                      <div key={key} className="space-y-1 bg-white p-3 rounded-none border border-surface-200" id={`score-metric-${key.toLowerCase()}`}>
+                        <div className="flex justify-between text-[10px] font-bold text-surface-500 uppercase tracking-widest">
                           <span>{label}</span>
-                          <span className="font-semibold text-zinc-900">{pct}%</span>
+                          <span className="font-black text-surface-900">{pct}%</span>
                         </div>
-                        <div className="h-2 w-full bg-zinc-100 rounded-md overflow-hidden">
+                        <div className="h-2 w-full bg-surface-100 rounded-none overflow-hidden">
                           <div
-                            className="h-full bg-gradient-brand rounded-md transition-all duration-1000 ease-out"
+                            className="h-full bg-surface-900 rounded-none transition-all duration-1000 ease-out"
                             style={{ width: `${pct}%` }}
                           ></div>
                         </div>

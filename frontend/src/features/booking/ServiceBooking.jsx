@@ -217,36 +217,36 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
   if (!enablePsychology && !isRescheduleParam) {
     return (
-      <div className="min-h-[75vh] flex flex-col items-center justify-center text-center px-4 py-16 bg-zinc-50 font-sans select-none">
-        <div className="max-w-md w-full bg-white/70 backdrop-blur-md border border-zinc-200/80 p-8 rounded-2xl sm:rounded-[2rem] shadow-lg space-y-6 animate-in fade-in zoom-in-95 duration-500">
-          <div className="w-16 h-16 bg-brand/10 border border-brand/20 rounded-2xl flex items-center justify-center mx-auto text-brand-dark shadow-sm">
+      <div className="min-h-[75vh] flex flex-col items-center justify-center text-center px-4 py-16 bg-surface-50 font-sans select-none">
+        <div className="max-w-md w-full bg-white border border-surface-200 p-8 rounded-none shadow-none space-y-6 animate-in fade-in zoom-in-95 duration-500">
+          <div className="w-16 h-16 bg-surface-100 border border-surface-200 rounded-none flex items-center justify-center mx-auto text-surface-900 shadow-none">
             <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
           </div>
 
           <div className="space-y-2">
-            <span className="text-[10px] bg-zinc-900 text-white px-3 py-1 rounded-md capitalize font-bold w-fit mx-auto block tracking-wide">
-              system notice
+            <span className="text-[10px] bg-surface-900 text-white px-3 py-1 rounded-none uppercase font-bold tracking-widest w-fit mx-auto block">
+              System Notice
             </span>
-            <h2 className="text-xl sm:text-2xl font-header font-black tracking-tight text-zinc-900 capitalize">
-              Bookings are Temporarily Paused
+            <h2 className="text-xl sm:text-2xl font-black tracking-tight text-surface-900 uppercase">
+              Bookings Paused
             </h2>
-            <p className="text-xs sm:text-sm text-zinc-655 leading-relaxed font-light">
-              We are currently performing scheduled maintenance on our scheduling database. During this time, booking new consulting sessions is temporarily offline. We apologize for the inconvenience!
+            <p className="text-xs sm:text-sm text-surface-600 leading-relaxed font-bold tracking-widest uppercase">
+              We are currently performing scheduled maintenance. Booking new sessions is temporarily offline.
             </p>
           </div>
 
-          <div className="pt-4 border-t border-zinc-150 flex flex-col sm:flex-row gap-3 justify-center items-center font-semibold">
+          <div className="pt-4 border-t border-surface-200 flex flex-col sm:flex-row gap-3 justify-center items-center">
             <button
               type="button"
               onClick={() => {
                 window.spaNavigate('/');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className="px-6 py-3 min-h-[48px] bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-bold capitalize rounded-lg transition-all cursor-pointer shadow-md w-full sm:w-auto text-center border-none"
+              className="px-6 py-3 min-h-[48px] bg-surface-900 hover:bg-surface-800 text-white text-[10px] font-black uppercase tracking-widest rounded-none transition-all cursor-pointer shadow-none w-full sm:w-auto text-center border-none"
             >
-              Go to Home Page
+              Home Page
             </button>
             <button
               type="button"
@@ -254,7 +254,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                 window.spaNavigate('/sample-test');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className="px-6 py-3 min-h-[48px] bg-white border border-zinc-200 hover:border-zinc-300 text-zinc-700 hover:bg-zinc-50 text-xs font-bold capitalize rounded-lg transition-all cursor-pointer w-full sm:w-auto text-center"
+              className="px-6 py-3 min-h-[48px] bg-white border border-surface-200 hover:bg-surface-50 text-surface-900 text-[10px] font-black uppercase tracking-widest rounded-none transition-all cursor-pointer w-full sm:w-auto text-center"
             >
               Take Sample Test
             </button>
@@ -265,18 +265,18 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
   }
 
   return (
-    <div className="min-h-screen pt-20 sm:pt-24 pb-12 sm:pb-20 bg-white text-zinc-900 text-left font-sans border-b border-zinc-200">
+    <div className="min-h-screen pt-20 sm:pt-24 pb-12 sm:pb-20 bg-white text-surface-900 text-left font-sans border-b border-surface-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-8 sm:space-y-10">
 
         {/* Header */}
         <div className="text-center flex flex-col items-center space-y-4">
-          <span className="inline-block bg-surface-900 text-white px-3 py-1.5 text-xs font-bold uppercase tracking-widest block mx-auto">
+          <span className="inline-block bg-surface-900 text-white px-3 py-1.5 text-[10px] font-black uppercase tracking-widest block mx-auto rounded-none">
             {rescheduleSession ? 'reschedule session' : 'book a session'}
           </span>
-          <h1 className="text-2xl sm:text-3xl md:text-5xl font-heading font-black tracking-tight leading-none text-surface-900 uppercase">
+          <h1 className="text-2xl sm:text-3xl md:text-5xl font-black tracking-tight leading-none text-surface-900 uppercase">
             {rescheduleSession ? 'Reschedule Your Session' : 'Book Your Session'}
           </h1>
-          <p className="text-slate-600 max-w-xl mx-auto text-xs sm:text-sm md:text-base leading-relaxed">
+          <p className="text-surface-600 max-w-xl mx-auto text-[10px] sm:text-xs md:text-xs font-bold uppercase tracking-widest leading-relaxed">
             {rescheduleSession
               ? `Reschedule your appointment with ${rescheduleSession.advisorName || rescheduleSession.counsellorName}. Pick a new date and time.`
               : 'Choose your service, pick a date and time, and confirm with a real advisor — it only takes a few minutes.'}
@@ -286,7 +286,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
         {/* BOOKING FORM */}
         <div id="booking-console" className="space-y-6 sm:space-y-8 w-full">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-surface-200 pb-4">
-            <h2 className="text-lg sm:text-xl font-heading font-bold uppercase tracking-wide text-surface-900">
+            <h2 className="text-lg sm:text-xl font-black uppercase tracking-widest text-surface-900">
               Your Booking
             </h2>
           </div>
@@ -297,30 +297,30 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
             const currentStepIdx = stepMapping[bookingStep] || 0;
             const stepLabels = ['Schedule & Advisor', 'Account & Payment', 'Session Confirmed'];
             return (
-              <div className="bg-surface-50 border-y sm:border border-surface-200 p-4 sm:p-5 space-y-3 animate-in fade-in duration-300">
+              <div className="bg-surface-50 border border-surface-200 p-4 sm:p-5 space-y-3 rounded-none animate-in fade-in duration-300">
                 {/* Mobile: compact progress bar */}
                 <div className="flex sm:hidden items-center gap-2">
                   <div className="flex items-center gap-1.5 flex-1 min-w-0">
-                    <span className="text-xs font-bold text-surface-900 shrink-0">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-surface-900 shrink-0">
                       Step {currentStepIdx + 1} of 3
                     </span>
-                    <div className="h-1.5 flex-1 bg-zinc-200 rounded-full overflow-hidden">
+                    <div className="h-1 flex-1 bg-surface-200 rounded-none overflow-hidden">
                       <div
-                        className="h-full bg-zinc-900 rounded-full transition-all duration-500"
+                        className="h-full bg-surface-900 rounded-none transition-all duration-500"
                         style={{ width: `${(currentStepIdx / 3) * 100}%` }}
                       />
                     </div>
                   </div>
-                  <span className="text-xs font-bold text-brand-dark truncate">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-surface-900 truncate">
                     {stepLabels[currentStepIdx]}
                   </span>
                 </div>
 
                 {/* Desktop/tablet: full stepper */}
                 <div className="hidden sm:block">
-                  <div className="flex items-center justify-between gap-2 border-b border-zinc-200 pb-3">
+                  <div className="flex items-center justify-between gap-2 border-b border-surface-200 pb-3">
                     <div className="flex items-center gap-2">
-                      <h3 className="font-bold capitalize  text-xs text-zinc-900">
+                      <h3 className="font-black uppercase tracking-widest text-[10px] text-surface-900">
                         {bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring'} &middot; {bookingMode === 'ONLINE' ? 'Video Call' : bookingMode === 'DOOR_STEP' ? 'Home Visit' : 'At Center'}
                       </h3>
                     </div>
@@ -334,24 +334,24 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                       return (
                         <div key={idx} className="flex lg:flex-col items-start gap-3 lg:gap-2 relative shrink-0 snap-start w-[200px] sm:w-[220px] lg:w-auto">
                           <div className="flex items-center lg:w-full">
-                            <div className={`flex items-center justify-center w-8 h-8 rounded-none font-bold text-xs border transition-all duration-300 shrink-0 ${isCompleted
+                            <div className={`flex items-center justify-center w-8 h-8 rounded-none font-black text-xs border transition-all duration-300 shrink-0 ${isCompleted
                                 ? 'bg-surface-900 border-surface-900 text-white'
                                 : isActive
-                                  ? 'bg-brand border-brand text-surface-900 font-bold'
-                                  : 'bg-white border-surface-200 text-slate-400'
+                                  ? 'bg-surface-100 border-surface-900 text-surface-900'
+                                  : 'bg-white border-surface-200 text-surface-400'
                               }`}>
                               {isCompleted ? '✓' : idx + 1}
                             </div>
                             {idx < activeSteps.length - 1 && (
-                              <div className={`hidden lg:block h-0.5 w-full ml-2 transition-all duration-300 ${isCompleted ? 'bg-zinc-900' : 'bg-zinc-200'
+                              <div className={`hidden lg:block h-[1px] w-full ml-2 transition-all duration-300 ${isCompleted ? 'bg-surface-900' : 'bg-surface-200'
                                 }`} />
                             )}
                           </div>
                           <div className="flex flex-col text-left min-w-0">
-                            <span className={`text-xs font-bold capitalize  ${isActive ? 'text-brand-dark' : isCompleted ? 'text-zinc-900' : 'text-zinc-400'}`}>
+                            <span className={`text-[10px] font-black uppercase tracking-widest ${isActive ? 'text-surface-900' : isCompleted ? 'text-surface-600' : 'text-surface-400'}`}>
                               {stepLabels[idx]}
                             </span>
-                            <span className={`text-xs font-light leading-snug transition-colors duration-300 mt-0.5 ${isActive ? 'text-zinc-900 font-normal' : 'text-zinc-655'}`}>
+                            <span className={`text-[10px] font-bold uppercase tracking-widest transition-colors duration-300 mt-0.5 ${isActive ? 'text-surface-900' : 'text-surface-500'}`}>
                               {step}
                             </span>
                           </div>
@@ -366,7 +366,8 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
           {bookingStep === 'success' ? (
             /* STEP 5: Success & Confirmation View */
-            <div className="p-6 sm:p-10 bg-white border border-surface-200 rounded-none max-w-2xl mx-auto shadow-square-light space-y-6 text-center animate-in fade-in duration-300">
+            /* STEP 5: Success & Confirmation View */
+            <div className="p-6 sm:p-10 bg-white border border-surface-200 rounded-none max-w-2xl mx-auto shadow-none space-y-6 text-center animate-in fade-in duration-300">
               <style>{`
                 @keyframes checkmark-circle {
                   0% { transform: scale(0); opacity: 0; }
@@ -397,20 +398,20 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                 }
               `}</style>
 
-              <div className="w-20 h-20 bg-emerald-50 border border-emerald-100 rounded-full flex items-center justify-center mx-auto text-emerald-600 shadow-[0_4px_20px_rgba(16,185,129,0.15)] animate-checkmark-circle">
-                <svg className="w-10 h-10 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+              <div className="w-20 h-20 bg-surface-50 border border-surface-200 rounded-none flex items-center justify-center mx-auto text-surface-900 shadow-none animate-checkmark-circle">
+                <svg className="w-10 h-10 text-surface-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                   <path className="animate-checkmark-path" strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
               </div>
 
               <div className="space-y-2 animate-scale-pop">
-                <span className="text-[11px] uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-100 px-3 py-1 rounded-none font-bold w-fit mx-auto block">
+                <span className="text-[10px] uppercase tracking-widest bg-surface-900 text-white border border-surface-900 px-3 py-1 rounded-none font-black w-fit mx-auto block">
                   {rescheduleSession ? 'reschedule requested' : 'session confirmed'}
                 </span>
-                <h3 className="text-xl sm:text-2xl font-bold capitalize text-zinc-900 tracking-tight mt-2">
+                <h3 className="text-xl sm:text-2xl font-black uppercase tracking-widest text-surface-900 mt-2">
                   {rescheduleSession ? 'Reschedule Requested' : "You're All Set!"}
                 </h3>
-                <p className="text-xs text-zinc-505 max-w-md mx-auto leading-relaxed font-medium">
+                <p className="text-xs text-surface-600 max-w-md mx-auto leading-relaxed font-bold tracking-widest uppercase mt-2">
                   {rescheduleSession ? (
                     <>
                       Your reschedule request for <strong>{bookingForm.name || user?.name || 'Student'}</strong> has been submitted.
@@ -426,34 +427,34 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
               {/* Invoice & Meeting Card */}
               <div className="bg-surface-50 border border-surface-200 rounded-none p-5 text-left space-y-4 shadow-none animate-card-fade">
-                <h4 className="text-xs font-semibold capitalize  text-zinc-400 border-b border-zinc-100 pb-2">
+                <h4 className="text-[10px] font-black uppercase tracking-widest text-surface-900 border-b border-surface-200 pb-2">
                   {rescheduleSession ? 'Reschedule Details' : 'Booking Confirmation'}
                 </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-[10px] uppercase tracking-widest">
                   <div>
-                    <span className="text-zinc-400 block font-light">Advisor</span>
-                    <span className="font-bold text-zinc-800">{selectedAdvisor?.name || 'Assigned Advisor'}</span>
-                    <span className="text-xs text-zinc-505 block">{selectedAdvisor?.role || 'Consultant Psychologist'}</span>
+                    <span className="text-surface-500 block font-bold mb-1">Advisor</span>
+                    <span className="font-black text-surface-900 text-xs block">{selectedAdvisor?.name || 'Assigned Advisor'}</span>
+                    <span className="text-surface-500 block font-bold">{selectedAdvisor?.role || 'Consultant Psychologist'}</span>
                   </div>
                   <div>
-                    <span className="text-zinc-400 block font-light">Service</span>
-                    <span className="font-semibold text-zinc-800 capitalize">
+                    <span className="text-surface-500 block font-bold mb-1">Service</span>
+                    <span className="font-black text-surface-900 text-xs block">
                       {bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring'}
                     </span>
-                    <span className="text-xs text-zinc-505 block">Mode: {bookingMode === 'ONLINE' ? 'Video Call' : bookingMode === 'DOOR_STEP' ? 'Home Visit' : 'At Center'}</span>
+                    <span className="text-surface-500 block font-bold">Mode: {bookingMode === 'ONLINE' ? 'Video Call' : bookingMode === 'DOOR_STEP' ? 'Home Visit' : 'At Center'}</span>
                   </div>
                   <div>
-                    <span className="text-zinc-400 block font-light">New Date & Time Slot</span>
-                    <span className="font-bold text-zinc-800 block">
+                    <span className="text-surface-500 block font-bold mb-1">New Date & Time Slot</span>
+                    <span className="font-black text-surface-900 text-xs block">
                       {formatDateString(selectedDate)}
                     </span>
-                    <span className="text-xs text-zinc-505  block mt-0.5">
+                    <span className="text-surface-500 block font-bold mt-0.5">
                       {selectedTime}
                     </span>
                   </div>
                   <div>
-                    <span className="text-zinc-400 block font-light">Status</span>
-                    <span className="font-semibold text-zinc-800 capitalize block text-brand-dark">
+                    <span className="text-surface-500 block font-bold mb-1">Status</span>
+                    <span className="font-black text-surface-900 text-xs block">
                       {rescheduleSession ? 'Pending Approval' : 'Confirmed & Paid'}
                     </span>
                   </div>
@@ -461,12 +462,12 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
                 {/* Google Meet Link if Online */}
                 {bookingMode === 'ONLINE' && !rescheduleSession && (
-                  <div className="pt-3 border-t border-zinc-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-zinc-50 p-3 rounded-lg border border-zinc-200 mt-2">
+                  <div className="pt-4 border-t border-surface-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-none border border-surface-200 mt-2">
                     <div>
-                      <span className="text-xs font-bold text-zinc-700 block capitalize tracking-wide">
+                      <span className="text-[10px] font-black text-surface-900 block uppercase tracking-widest mb-1">
                         Google Meet Session Link
                       </span>
-                      <span className="text-xs text-zinc-505 truncate block  max-w-[280px] sm:max-w-xs">
+                      <span className="text-[10px] text-surface-600 font-bold truncate block max-w-[280px] sm:max-w-xs">
                         {selectedAdvisor?.defaultMeetLink || 'https://meet.google.com/abc-defg-hij'}
                       </span>
                     </div>
@@ -477,7 +478,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                         setCopiedMeet(true);
                         setTimeout(() => setCopiedMeet(false), 2000);
                       }}
-                      className="px-4 py-2.5 min-h-[40px] bg-surface-900 text-white text-xs font-bold uppercase tracking-widest rounded-none hover:bg-black transition cursor-pointer flex items-center justify-center border-none shadow-square-light whitespace-nowrap"
+                      className="px-4 py-2.5 min-h-[40px] bg-surface-900 hover:bg-surface-800 text-white text-[10px] font-black uppercase tracking-widest rounded-none transition cursor-pointer flex items-center justify-center border-none shadow-none whitespace-nowrap"
                     >
                       {copiedMeet ? 'Copied!' : 'Copy Link'}
                     </button>
@@ -493,7 +494,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                     onClick={() => {
                       window.location.href = '/profile?tab=booked';
                     }}
-                    className="px-6 py-3 bg-surface-900 text-white hover:bg-black text-xs font-bold uppercase tracking-widest rounded-none transition cursor-pointer w-full sm:w-auto text-center border-none shadow-square-light"
+                    className="px-6 py-3 bg-surface-900 hover:bg-surface-800 text-white text-[10px] font-black uppercase tracking-widest rounded-none transition cursor-pointer w-full sm:w-auto text-center border-none shadow-none"
                   >
                     Go to My Sessions
                   </button>
@@ -533,16 +534,16 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                           appliedDiscount: appliedDiscount
                         });
                       }}
-                      className="px-6 py-3 bg-white border border-surface-200 text-surface-900 hover:bg-surface-50 text-xs font-bold uppercase tracking-widest rounded-none transition cursor-pointer w-full sm:w-auto flex items-center justify-center gap-2"
+                      className="px-6 py-3 bg-white border border-surface-200 text-surface-900 hover:bg-surface-50 text-[10px] font-black uppercase tracking-widest rounded-none transition cursor-pointer w-full sm:w-auto flex items-center justify-center gap-2"
                     >
-                      <FileDown className="w-4 h-4 text-zinc-700" />
+                      <FileDown className="w-4 h-4 text-surface-700" />
                       {downloadingPdf ? 'Generating PDF...' : 'Download PDF Receipt'}
                     </button>
 
                     <button
                       type="button"
                       onClick={resetBookingState}
-                      className="px-6 py-3 bg-surface-900 text-white hover:bg-black text-xs font-bold uppercase tracking-widest rounded-none transition cursor-pointer w-full sm:w-auto text-center border-none shadow-square-light"
+                      className="px-6 py-3 bg-surface-900 hover:bg-surface-800 text-white text-[10px] font-black uppercase tracking-widest rounded-none transition cursor-pointer w-full sm:w-auto text-center border-none shadow-none"
                     >
                       Book Another Session
                     </button>
@@ -560,18 +561,18 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                 {/* STEP 1: Schedule & Advisor */}
                 {bookingStep === 'config' && (
                   <div className="space-y-6 animate-in fade-in duration-300">
-                    <div className="border-b border-zinc-100 pb-3">
-                      <h3 className="text-sm font-semibold capitalize  text-zinc-850 flex items-center gap-2">
-                        <span className="w-6 h-6 rounded-full bg-zinc-900 text-white text-xs flex items-center justify-center shrink-0 font-bold">1</span>
+                    <div className="border-b border-surface-200 pb-3">
+                      <h3 className="text-[10px] font-black uppercase tracking-widest text-surface-900 flex items-center gap-2">
+                        <span className="w-6 h-6 rounded-none bg-surface-900 text-white text-[10px] flex items-center justify-center shrink-0 font-black">1</span>
                         Schedule & Advisor
                       </h3>
-                      <p className="text-xs text-zinc-500 mt-1">Select a date, choose your advisor, and pick a time.</p>
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-surface-500 mt-1">Select a date, choose your advisor, and pick a time.</p>
                     </div>
 
                     <div className="space-y-6">
                       {/* Service Type Selection */}
                       <div className="space-y-2">
-                        <label className="text-xs font-bold text-zinc-550 capitalize tracking-wide block">Select Service Type</label>
+                        <label className="text-[10px] font-black uppercase tracking-widest text-surface-500 block">Select Service Type</label>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
                           {[
                             { id: 'counselling', label: 'Psychological Counselling' },
@@ -587,7 +588,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                   if (rescheduleSession) return;
                                   setBookingService(s.id);
                                 }}
-                                className={`min-h-[48px] px-4 py-3 rounded-none transition-all duration-300 cursor-pointer flex items-center justify-center text-center border-[2px] border-surface-900 text-xs sm:text-sm font-bold uppercase tracking-widest ${isSelected
+                                className={`min-h-[48px] px-4 py-3 rounded-none transition-all duration-300 cursor-pointer flex items-center justify-center text-center border-[2px] border-surface-900 text-[10px] font-black uppercase tracking-widest ${isSelected
                                     ? 'bg-surface-900 text-white'
                                     : 'bg-white text-surface-900 hover:bg-surface-50'
                                   } ${rescheduleSession ? 'opacity-65 cursor-not-allowed' : ''}`}
@@ -600,7 +601,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                       </div>
                       {/* Mode of Session Select */}
                       <div className="space-y-2">
-                        <label className="text-xs font-bold text-zinc-550 capitalize tracking-wide block">Select Session Mode</label>
+                        <label className="text-[10px] font-black uppercase tracking-widest text-surface-500 block">Select Session Mode</label>
                         <div className="grid grid-cols-3 gap-2.5 w-full">
                           {(() => {
                             let siteSettings = {};
@@ -624,15 +625,15 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                     if (rescheduleSession) return;
                                     setBookingMode(m.id);
                                   }}
-                                  className={`flex flex-col items-center justify-center gap-1.5 px-3 py-4 text-xs capitalize font-semibold border-[2px] rounded-none transition cursor-pointer text-center min-h-[64px] leading-tight ${bookingMode === m.id
-                                      ? 'bg-brand-light text-brand-dark border-brand font-bold'
-                                      : 'bg-white text-surface-600 border-surface-200 hover:border-brand hover:text-brand-dark'
+                                  className={`flex flex-col items-center justify-center gap-1.5 px-3 py-4 border-[2px] rounded-none transition cursor-pointer text-center min-h-[64px] leading-tight ${bookingMode === m.id
+                                      ? 'bg-surface-100 text-surface-900 border-surface-900'
+                                      : 'bg-white text-surface-600 border-surface-200 hover:border-surface-900 hover:text-surface-900'
                                     } ${(!isAvailable || rescheduleSession) ? 'opacity-40 cursor-not-allowed' : ''}`}
                                 >
                                   <span className="flex flex-col items-center">
-                                    <span className="font-bold text-xs sm:text-sm text-surface-900 uppercase tracking-widest">{m.label}</span>
-                                    <span className="text-[10px] sm:text-xs font-normal normal-case text-slate-500 mt-0.5">{m.desc}</span>
-                                    {!isAvailable && <span className="text-[9px] text-red-500 font-bold mt-1">Disabled</span>}
+                                    <span className="font-black text-[10px] text-surface-900 uppercase tracking-widest">{m.label}</span>
+                                    <span className="text-[10px] font-bold uppercase tracking-widest text-surface-500 mt-0.5">{m.desc}</span>
+                                    {!isAvailable && <span className="text-[9px] text-rose-500 font-bold mt-1 uppercase tracking-widest">Disabled</span>}
                                   </span>
                                 </button>
                               );
@@ -643,27 +644,27 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
                       {/* DOORSTEP LOCATION INPUTS - CONFIG STEP */}
                       {bookingMode === 'DOOR_STEP' && (
-                        <div className="space-y-4 p-0 sm:p-5 bg-transparent sm:bg-zinc-50 border-0 sm:border border-zinc-200 rounded-none sm:rounded-2xl animate-in fade-in slide-in-from-top-2 duration-300 text-left">
-                          <div className="border-b border-zinc-200 pb-2 mb-2">
-                            <h4 className="text-xs font-extrabold text-zinc-800 uppercase tracking-wider flex items-center gap-1.5">
-                              <span className="w-1.5 h-3 bg-brand rounded-full"></span>
+                        <div className="space-y-4 p-0 sm:p-5 bg-transparent sm:bg-surface-50 border-0 sm:border border-surface-200 rounded-none animate-in fade-in slide-in-from-top-2 duration-300 text-left">
+                          <div className="border-b border-surface-200 pb-2 mb-2">
+                            <h4 className="text-[10px] font-black text-surface-900 uppercase tracking-widest flex items-center gap-1.5">
+                              <span className="w-1.5 h-3 bg-surface-900 rounded-none"></span>
                               Doorstep Visit Address & Geolocation
                             </h4>
-                            <p className="text-[11px] text-zinc-500 mt-1">
+                            <p className="text-[10px] font-bold uppercase tracking-widest text-surface-500 mt-1">
                               Please provide your location to check for nearby psychologists within a 10 km service radius.
                             </p>
                           </div>
 
                           {/* Search Location Address field */}
                           <div className="space-y-1.5 text-left relative">
-                            <label className="text-xs font-bold text-zinc-500 capitalize tracking-wide block">Search Location Address</label>
+                            <label className="text-[10px] font-black uppercase tracking-widest text-surface-500 block">Search Location Address</label>
                             <div className="flex flex-col sm:flex-row gap-2">
                               <input
                                 type="text"
                                 placeholder="Type your address to search... (e.g. Kozhikode, Kerala)"
                                 value={clientSearchQuery}
                                 onChange={(e) => setClientSearchQuery(e.target.value)}
-                                className="flex-1 min-w-0 px-3.5 py-2.5 bg-white border border-surface-200 text-xs font-medium text-surface-900 outline-none focus:border-brand rounded-none transition"
+                                className="flex-1 min-w-0 px-3.5 py-2.5 bg-white border border-surface-200 text-xs font-bold text-surface-900 outline-none focus:border-surface-900 rounded-none transition"
                                 onKeyDown={(e) => {
                                   if (e.key === 'Enter') {
                                     e.preventDefault();
@@ -675,7 +676,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                 type="button"
                                 onClick={handleClientAddressSearch}
                                 disabled={isClientSearching}
-                                className="w-full sm:w-auto px-4 py-2.5 bg-surface-900 text-white text-xs font-extrabold rounded-none hover:bg-black transition cursor-pointer shrink-0 text-center uppercase tracking-widest"
+                                className="w-full sm:w-auto px-4 py-2.5 bg-surface-900 text-white text-[10px] font-black rounded-none hover:bg-black transition cursor-pointer shrink-0 text-center uppercase tracking-widest border-none"
                               >
                                 {isClientSearching ? 'Searching...' : 'Search'}
                               </button>
@@ -683,7 +684,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
                             {/* Autocomplete Dropdown */}
                             {clientSearchResults.length > 0 && (
-                              <div className="absolute left-0 right-0 mt-1 bg-white border border-zinc-250 rounded-lg max-h-40 overflow-y-auto z-50 shadow-xl divide-y divide-zinc-100">
+                              <div className="absolute left-0 right-0 mt-1 bg-white border border-surface-200 rounded-none max-h-40 overflow-y-auto z-50 shadow-none divide-y divide-surface-100">
                                 {clientSearchResults.map((res, index) => (
                                   <button
                                     key={index}
@@ -701,7 +702,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                       if (errors.clientLatitude) setErrors(prev => ({ ...prev, clientLatitude: null }));
                                       if (errors.clientLongitude) setErrors(prev => ({ ...prev, clientLongitude: null }));
                                     }}
-                                    className="w-full text-left px-3.5 py-2.5 text-xs text-zinc-655 hover:text-zinc-900 hover:bg-zinc-50 transition-colors block truncate"
+                                    className="w-full text-left px-3.5 py-2.5 text-xs text-surface-600 font-bold hover:text-surface-900 hover:bg-surface-50 transition-colors block truncate"
                                   >
                                     {res.display_name}
                                   </button>
@@ -711,7 +712,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                           </div>
 
                           <div className="space-y-1 text-left">
-                            <label className="text-xs font-bold text-zinc-500 capitalize tracking-wide block">Your Delivery / Visit Address</label>
+                            <label className="text-[10px] font-black uppercase tracking-widest text-surface-500 block">Your Delivery / Visit Address</label>
                             <input
                               type="text"
                               name="clientLocationName"
@@ -721,17 +722,17 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                 setClientSearchQuery(e.target.value);
                               }}
                               placeholder="e.g. Apartment/House No, Street Name, City, Pincode"
-                              className={`w-full px-3.5 py-2.5 border rounded-none text-xs font-medium text-surface-900 outline-none focus:border-brand transition ${errors.clientLocationName
-                                  ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10'
+                              className={`w-full px-3.5 py-2.5 border rounded-none text-xs font-bold text-surface-900 outline-none focus:border-surface-900 transition ${errors.clientLocationName
+                                  ? 'border-rose-500 bg-rose-50/50'
                                   : 'border-surface-200 bg-white'
                                 }`}
                             />
-                            {errors.clientLocationName && <p className="text-[9.5px] text-rose-500 font-bold">{errors.clientLocationName}</p>}
+                            {errors.clientLocationName && <p className="text-[9.5px] text-rose-500 font-bold uppercase tracking-widest mt-1">{errors.clientLocationName}</p>}
                           </div>
 
                           <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-1 text-left">
-                              <label className="text-xs font-bold text-zinc-500 capitalize tracking-wide block">Latitude</label>
+                              <label className="text-[10px] font-black uppercase tracking-widest text-surface-500 block">Latitude</label>
                               <input
                                 type="number"
                                 step="any"
@@ -739,15 +740,15 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                 value={bookingForm.clientLatitude || ''}
                                 onChange={handleInputChange}
                                 placeholder="e.g. 11.2588"
-                                className={`w-full px-3.5 py-2.5 border rounded-none text-xs font-medium text-surface-900 outline-none focus:border-brand transition ${errors.clientLatitude
-                                    ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10'
+                                className={`w-full px-3.5 py-2.5 border rounded-none text-xs font-bold text-surface-900 outline-none focus:border-surface-900 transition ${errors.clientLatitude
+                                    ? 'border-rose-500 bg-rose-50/50'
                                     : 'border-surface-200 bg-white'
                                   }`}
                               />
-                              {errors.clientLatitude && <p className="text-[9.5px] text-rose-500 font-bold">{errors.clientLatitude}</p>}
+                              {errors.clientLatitude && <p className="text-[9.5px] text-rose-500 font-bold uppercase tracking-widest mt-1">{errors.clientLatitude}</p>}
                             </div>
                             <div className="space-y-1 text-left">
-                              <label className="text-xs font-bold text-zinc-500 capitalize tracking-wide block">Longitude</label>
+                              <label className="text-[10px] font-black uppercase tracking-widest text-surface-500 block">Longitude</label>
                               <input
                                 type="number"
                                 step="any"
@@ -755,12 +756,12 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                 value={bookingForm.clientLongitude || ''}
                                 onChange={handleInputChange}
                                 placeholder="e.g. 75.7804"
-                                className={`w-full px-3.5 py-2.5 border rounded-none text-xs font-medium text-surface-900 outline-none focus:border-brand transition ${errors.clientLongitude
-                                    ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10'
+                                className={`w-full px-3.5 py-2.5 border rounded-none text-xs font-bold text-surface-900 outline-none focus:border-surface-900 transition ${errors.clientLongitude
+                                    ? 'border-rose-500 bg-rose-50/50'
                                     : 'border-surface-200 bg-white'
                                   }`}
                               />
-                              {errors.clientLongitude && <p className="text-[9.5px] text-rose-500 font-bold">{errors.clientLongitude}</p>}
+                              {errors.clientLongitude && <p className="text-[9.5px] text-rose-500 font-bold uppercase tracking-widest mt-1">{errors.clientLongitude}</p>}
                             </div>
                           </div>
 
@@ -769,7 +770,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                               type="button"
                               disabled={isClientLocating}
                               onClick={handleClientDetectLocation}
-                              className="px-4 py-2 border border-surface-200 hover:border-brand text-surface-600 hover:text-brand bg-white font-bold text-xs rounded-none transition cursor-pointer flex items-center justify-center gap-1.5 shadow-square-light disabled:opacity-50 uppercase tracking-widest"
+                              className="px-4 py-2 border border-surface-200 hover:border-surface-300 text-surface-900 bg-white font-black text-[10px] rounded-none transition cursor-pointer flex items-center justify-center gap-1.5 shadow-none disabled:opacity-50 uppercase tracking-widest"
                             >
                               {isClientLocating ? (
                                 <>
@@ -793,8 +794,8 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
                     {/* Step 1: Select Date */}
                     {!(bookingMode === 'DOOR_STEP' && (!bookingForm.clientLatitude || !bookingForm.clientLongitude)) ? (
-                      <div className="space-y-2 pt-4 border-t border-zinc-100 animate-in fade-in duration-300">
-                        <label className="text-sm font-bold text-zinc-700 block">1. Select Date</label>
+                      <div className="space-y-2 pt-4 border-t border-surface-200 animate-in fade-in duration-300">
+                        <label className="text-[10px] font-black text-surface-900 block uppercase tracking-widest">1. Select Date</label>
                         <div className="p-0 sm:p-4 bg-transparent sm:bg-surface-50 border-0 sm:border border-surface-200 rounded-none">
                           <DateTimePicker
                             selectedDate={selectedDate}
@@ -811,32 +812,32 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                         </div>
                       </div>
                     ) : (
-                      <div className="p-4 sm:p-6 border border-dashed border-zinc-200 rounded-xl sm:rounded-2xl bg-zinc-50 text-zinc-505 text-center font-bold text-xs mt-4">
+                      <div className="p-4 sm:p-6 border border-dashed border-surface-200 rounded-none bg-surface-50 text-surface-500 text-center font-bold text-[10px] uppercase tracking-widest mt-4">
                         Please search or detect your location address to show available psychologists within 10 km.
                       </div>
                     )}
 
                     {/* Step 2: Advisor Selection */}
                     {(selectedDate || isAdvisorLocked) && (
-                      <div className="space-y-3 pt-6 border-t border-zinc-100 animate-in fade-in slide-in-from-top-2 duration-300">
-                        <label className="text-sm font-bold text-zinc-700 block">
+                      <div className="space-y-3 pt-6 border-t border-surface-200 animate-in fade-in slide-in-from-top-2 duration-300">
+                        <label className="text-[10px] font-black text-surface-900 block uppercase tracking-widest">
                           2. {isAdvisorLocked ? 'Advisor Pre-Selected' : 'Choose Advisor'}
                         </label>
                         {isAdvisorLocked && selectedAdvisor ? (
-                          <div className="p-4 border border-brand bg-brand-light shadow-square-light rounded-none">
+                          <div className="p-4 border border-surface-900 bg-surface-50 shadow-none rounded-none">
                             <div className="flex items-start justify-between gap-3">
                               <div className="space-y-1.5 text-left min-w-0 flex-1">
-                                <h4 className="font-semibold text-zinc-900 text-sm sm:text-base leading-tight">{selectedAdvisor.name}</h4>
-                                <p className="text-xs sm:text-xs text-zinc-500 font-medium">{selectedAdvisor.role}</p>
+                                <h4 className="font-black text-surface-900 text-sm sm:text-base leading-tight uppercase tracking-widest">{selectedAdvisor.name}</h4>
+                                <p className="text-[10px] text-surface-500 font-bold uppercase tracking-widest">{selectedAdvisor.role}</p>
                                 {bookingMode === 'OFFLINE' && selectedAdvisor.locationName && (
-                                  <span className="text-[11px] text-zinc-650 font-bold mt-1 block">
+                                  <span className="text-[10px] text-surface-600 font-bold mt-1 block uppercase tracking-widest">
                                     📍 Center: {selectedAdvisor.locationName}
                                   </span>
                                 )}
-                                <span className="text-xs font-semibold text-brand-dark mt-1 inline-block">Pre-selected</span>
+                                <span className="text-[10px] font-black text-surface-900 mt-1 inline-block uppercase tracking-widest">Pre-selected</span>
                               </div>
                               <div className="flex flex-col items-end gap-2 shrink-0">
-                                <span className="text-sm font-bold text-zinc-900">₹{selectedAdvisor.price}</span>
+                                <span className="text-sm font-black text-surface-900 tracking-widest">₹{selectedAdvisor.price}</span>
                               </div>
                             </div>
                           </div>
@@ -859,7 +860,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
                               if (filteredAdvisors.length === 0) {
                                 return (
-                                  <div className="p-6 border border-dashed border-rose-200 rounded-none bg-rose-50 text-rose-800 text-center font-bold text-xs">
+                                  <div className="p-6 border border-dashed border-rose-200 rounded-none bg-rose-50 text-rose-800 text-center font-bold text-[10px] uppercase tracking-widest">
                                     {bookingMode === 'DOOR_STEP'
                                       ? "No psychologists are available within a 10 km radius of your location. Try a different visit address or switch to Online mode."
                                       : "No psychologists are available matching the selected service type and mode."}
@@ -888,18 +889,18 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                     className={`p-4 border rounded-none transition ${!isAvailable
                                         ? 'bg-surface-50 border-surface-200 opacity-50 cursor-not-allowed'
                                         : selectedAdvisor?.id === advisor.id
-                                          ? 'bg-surface-900 border-surface-900 shadow-square-light text-white cursor-pointer active:scale-[0.98]'
+                                          ? 'bg-surface-900 border-surface-900 shadow-none text-white cursor-pointer active:scale-[0.98]'
                                           : 'bg-white border-surface-200 hover:border-surface-400 hover:bg-surface-50 cursor-pointer active:scale-[0.98]'
                                       }`}
                                   >
                                     <div className="flex items-start justify-between gap-3">
                                       <div className="space-y-1.5 text-left min-w-0 flex-1">
-                                        <h4 className={`font-semibold text-sm sm:text-base leading-tight ${!isAvailable ? 'text-surface-400' : (selectedAdvisor?.id === advisor.id ? 'text-white' : 'text-surface-900')}`}>
+                                        <h4 className={`font-black text-sm sm:text-base leading-tight uppercase tracking-widest ${!isAvailable ? 'text-surface-400' : (selectedAdvisor?.id === advisor.id ? 'text-white' : 'text-surface-900')}`}>
                                           {advisor.name}
                                         </h4>
-                                        <p className={`text-xs sm:text-xs font-medium ${selectedAdvisor?.id === advisor.id ? 'text-surface-300' : 'text-surface-500'}`}>{advisor.role}</p>
+                                        <p className={`text-[10px] sm:text-[10px] font-bold uppercase tracking-widest ${selectedAdvisor?.id === advisor.id ? 'text-surface-300' : 'text-surface-500'}`}>{advisor.role}</p>
                                         {bookingMode === 'OFFLINE' && advisor.locationName && (
-                                          <span className="text-[11px] text-zinc-650 font-bold mt-1 block leading-tight">
+                                          <span className="text-[10px] font-bold mt-1 block leading-tight uppercase tracking-widest">
                                             📍 Center: {advisor.locationName}
                                           </span>
                                         )}
@@ -911,7 +912,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                           if (!isNaN(clientLat) && !isNaN(clientLng) && advLat && advLng) {
                                             const distance = getHaversineDistance(clientLat, clientLng, advLat, advLng);
                                             return (
-                                              <span className="text-[11px] text-brand-dark font-extrabold mt-1 block">
+                                              <span className="text-[10px] text-surface-900 font-black mt-1 block uppercase tracking-widest">
                                                 📍 Distance: {distance.toFixed(2)} km away
                                               </span>
                                             );
@@ -919,13 +920,13 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                           return null;
                                         })()}
                                         {!isAvailable && (
-                                          <span className="text-[10px] text-rose-500 font-semibold mt-1 inline-block">
+                                          <span className="text-[10px] text-rose-500 font-bold mt-1 inline-block uppercase tracking-widest">
                                             Unavailable on this date
                                           </span>
                                         )}
                                       </div>
                                       <div className="flex flex-col items-end gap-2 shrink-0">
-                                        <span className={`text-sm font-bold ${!isAvailable ? 'text-surface-400' : (selectedAdvisor?.id === advisor.id ? 'text-white' : 'text-surface-900')}`}>
+                                        <span className={`text-sm font-black tracking-widest ${!isAvailable ? 'text-surface-400' : (selectedAdvisor?.id === advisor.id ? 'text-white' : 'text-surface-900')}`}>
                                           ₹{advisor.price}
                                         </span>
                                       </div>
@@ -934,7 +935,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                 );
                               });
                             })()}
-                            {errors.advisor && <p className="text-xs text-rose-500 font-semibold mt-1">{errors.advisor}</p>}
+                            {errors.advisor && <p className="text-[10px] text-rose-500 font-bold mt-1 uppercase tracking-widest">{errors.advisor}</p>}
                           </div>
                         )}
                       </div>
@@ -942,8 +943,8 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
                     {/* Step 3: Time Selection */}
                     {selectedDate && selectedAdvisor && (
-                      <div className="space-y-3 pt-6 border-t border-zinc-100 animate-in fade-in slide-in-from-top-2 duration-300">
-                        <label className="text-sm font-bold text-zinc-700 block">3. Select Time</label>
+                      <div className="space-y-3 pt-6 border-t border-surface-200 animate-in fade-in slide-in-from-top-2 duration-300">
+                        <label className="text-[10px] font-black text-surface-900 block uppercase tracking-widest">3. Select Time</label>
                         <TimePicker
                           selectedDate={selectedDate}
                           selectedTime={selectedTime}
@@ -959,13 +960,13 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                     )}
 
                     {/* Navigation */}
-                    <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-8 mt-4 border-t border-zinc-200">
+                    <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-8 mt-4 border-t border-surface-200">
                       {rescheduleSession ? (
                         <button
                           type="button"
                           disabled={!selectedDate || !selectedTime || isSubmitting}
                           onClick={handleRescheduleConfirm}
-                          className="px-6 py-3 min-h-[48px] bg-surface-900 text-white font-bold uppercase tracking-widest text-xs rounded-none transition hover:bg-black disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center border-none shadow-square-light w-full sm:w-auto"
+                          className="px-6 py-3 min-h-[48px] bg-surface-900 text-white font-black uppercase tracking-widest text-[10px] rounded-none transition hover:bg-black disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center border-none shadow-none w-full sm:w-auto"
                         >
                           {isSubmitting ? 'Rescheduling...' : 'Confirm Reschedule'}
                         </button>
@@ -974,7 +975,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                           type="button"
                           disabled={!selectedDate || !selectedTime || !selectedAdvisor}
                           onClick={() => handleStepChange('payment')}
-                          className="px-6 py-3 min-h-[48px] bg-surface-900 text-white font-bold uppercase tracking-widest text-xs rounded-none transition hover:bg-black disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center border-none shadow-square-light w-full sm:w-auto"
+                          className="px-6 py-3 min-h-[48px] bg-surface-900 text-white font-black uppercase tracking-widest text-[10px] rounded-none transition hover:bg-black disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center border-none shadow-none w-full sm:w-auto"
                         >
                           Account & Payment
                         </button>

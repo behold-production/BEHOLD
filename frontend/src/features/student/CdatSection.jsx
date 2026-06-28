@@ -145,99 +145,99 @@ export default function CdatSection({ setView }) {
   return (
     <section id="cdat" className="py-20 px-6 border-t border-surface-200 bg-surface-50">
       <div className="max-w-7xl mx-auto">
-        <div className="square-card p-0 overflow-hidden flex flex-col md:flex-row shadow-square-light hover:shadow-square-hover">
+        <div className="bg-white border border-surface-200 shadow-none overflow-hidden flex flex-col md:flex-row rounded-none">
           
           {/* Text Side */}
           <div className="p-6 sm:p-8 md:p-12 flex-1 flex flex-col justify-center border-b md:border-b-0 md:border-r border-surface-200 bg-white">
             <div className="flex flex-row items-center justify-between gap-4 mb-4">
-              <h2 className="text-3xl md:text-4xl font-heading font-black uppercase text-surface-900">
+              <h2 className="text-3xl md:text-4xl font-black uppercase tracking-widest text-surface-900">
                 CIGI Differential Aptitude Test (C-DAT)
               </h2>
               <img src="/CIGI.png" alt="CIGI Logo" className="h-16 sm:h-20 object-contain shrink-0" />
             </div>
-            <p className="text-slate-600 leading-relaxed mb-8 max-w-lg">
+            <p className="text-surface-600 font-bold text-[10px] uppercase tracking-widest leading-relaxed mb-8 max-w-lg">
               C-DAT effectively identifies the inherent capacities of students, guiding them towards suitable academic and career paths with scientific precision.
             </p>
             <button
               type="button"
               onClick={() => document.getElementById('cdat-form')?.scrollIntoView({ behavior: 'smooth' })}
-              className="btn-primary w-full sm:w-max cursor-pointer"
+              className="w-full sm:w-max px-6 py-3 bg-surface-900 text-white font-black uppercase tracking-widest text-[10px] rounded-none hover:bg-surface-800 transition-colors cursor-pointer border-none shadow-none"
             >
               CIGI Aptitude Test
             </button>
           </div>
           
           {/* Form Side */}
-          <div id="cdat-form" className="p-8 md:p-12 bg-surface-50 w-full md:w-[450px] lg:w-[500px] shrink-0">
-            <h3 className="font-heading font-bold text-xl mb-6 text-surface-900">Generate Group Code</h3>
+          <div id="cdat-form" className="p-8 md:p-12 bg-surface-50 w-full md:w-[450px] lg:w-[500px] shrink-0 border-l border-surface-200">
+            <h3 className="font-black text-xl mb-6 text-surface-900 uppercase tracking-widest">Generate Group Code</h3>
             <form onSubmit={handleGenerateCode} className="space-y-5">
               
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2" htmlFor="cdat-name">Full Name</label>
+                <label className="block text-[10px] font-bold text-surface-500 uppercase tracking-widest mb-2" htmlFor="cdat-name">Full Name</label>
                 <input
                   id="cdat-name"
                   type="text"
                   placeholder="Enter name"
                   value={groupRegName}
                   onChange={(e) => handleNameChange(e.target.value)}
-                  className={`w-full bg-white border rounded-none px-4 py-3 text-surface-900 focus:outline-none transition-colors ${errors.name ? 'border-red-500 focus:border-red-500' : 'border-surface-200 focus:border-brand'}`}
+                  className={`w-full bg-white border rounded-none px-4 py-3 text-sm font-medium text-surface-900 focus:outline-none transition-colors ${errors.name ? 'border-red-500 focus:border-red-500' : 'border-surface-200 focus:border-surface-900'}`}
                 />
                 {errors.name && (
-                  <p className="text-xs text-red-600 font-bold mt-1.5 flex items-center gap-1">
+                  <p className="text-[10px] uppercase tracking-widest text-red-600 font-bold mt-1.5 flex items-center gap-1">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {errors.name}
                   </p>
                 )}
               </div>
               
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2" htmlFor="cdat-phone">Phone Number</label>
+                <label className="block text-[10px] font-bold text-surface-500 uppercase tracking-widest mb-2" htmlFor="cdat-phone">Phone Number</label>
                 <input
                   id="cdat-phone"
                   type="tel"
                   placeholder="Enter phone"
                   value={groupRegPhone}
                   onChange={(e) => handlePhoneChange(e.target.value)}
-                  className={`w-full bg-white border rounded-none px-4 py-3 text-surface-900 focus:outline-none transition-colors ${errors.phone ? 'border-red-500 focus:border-red-500' : 'border-surface-200 focus:border-brand'}`}
+                  className={`w-full bg-white border rounded-none px-4 py-3 text-sm font-medium text-surface-900 focus:outline-none transition-colors ${errors.phone ? 'border-red-500 focus:border-red-500' : 'border-surface-200 focus:border-surface-900'}`}
                 />
                 {errors.phone && (
-                  <p className="text-xs text-red-600 font-bold mt-1.5 flex items-center gap-1">
+                  <p className="text-[10px] uppercase tracking-widest text-red-600 font-bold mt-1.5 flex items-center gap-1">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {errors.phone}
                   </p>
                 )}
               </div>
               
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2" htmlFor="cdat-email">Email Address</label>
+                <label className="block text-[10px] font-bold text-surface-500 uppercase tracking-widest mb-2" htmlFor="cdat-email">Email Address</label>
                 <input
                   id="cdat-email"
                   type="email"
                   placeholder="Enter email"
                   value={groupRegEmail}
                   onChange={(e) => handleEmailChange(e.target.value)}
-                  className={`w-full bg-white border rounded-none px-4 py-3 text-surface-900 focus:outline-none transition-colors ${errors.email ? 'border-red-500 focus:border-red-500' : 'border-surface-200 focus:border-brand'}`}
+                  className={`w-full bg-white border rounded-none px-4 py-3 text-sm font-medium text-surface-900 focus:outline-none transition-colors ${errors.email ? 'border-red-500 focus:border-red-500' : 'border-surface-200 focus:border-surface-900'}`}
                 />
                 {errors.email && (
-                  <p className="text-xs text-red-600 font-bold mt-1.5 flex items-center gap-1">
+                  <p className="text-[10px] uppercase tracking-widest text-red-600 font-bold mt-1.5 flex items-center gap-1">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {errors.email}
                   </p>
                 )}
               </div>
 
               {!generatedCode ? (
-                <button type="submit" className="btn-primary w-full mt-4 cursor-pointer">
+                <button type="submit" className="w-full mt-4 px-6 py-3 bg-surface-900 text-white font-black uppercase tracking-widest text-[10px] rounded-none hover:bg-surface-800 transition-colors cursor-pointer border-none shadow-none">
                   Generate Code
                 </button>
               ) : (
                 <div className="pt-2 space-y-4 animate-in fade-in duration-300">
-                  <div className="p-4 bg-brand-light border-2 border-brand flex items-center justify-between">
+                  <div className="p-4 bg-surface-100 border border-surface-200 flex items-center justify-between rounded-none">
                     <div>
-                      <span className="text-xs uppercase tracking-wider text-surface-900 font-bold block mb-1">Your Code</span>
-                      <span className="text-xl font-heading font-black text-surface-900">{generatedCode}</span>
+                      <span className="text-[10px] uppercase tracking-widest text-surface-500 font-bold block mb-1">Your Code</span>
+                      <span className="text-xl font-black tracking-widest text-surface-900">{generatedCode}</span>
                     </div>
                     <button
                       type="button"
                       onClick={copyManually}
-                      className="px-4 py-2 bg-white border-2 border-surface-900 hover:bg-surface-900 hover:text-white text-xs font-bold uppercase cursor-pointer transition-colors flex items-center gap-2"
+                      className="px-4 py-2 bg-white border border-surface-200 hover:border-surface-900 hover:bg-surface-50 text-surface-900 text-[10px] font-black uppercase tracking-widest cursor-pointer transition-colors flex items-center gap-2 rounded-none shadow-none"
                     >
                       <Copy className="w-4 h-4" />
                       {copied ? 'Copied' : 'Copy'}
@@ -248,7 +248,7 @@ export default function CdatSection({ setView }) {
                     onClick={() => {
                       window.open("https://cigicareer.com/cdat-registration/", "_blank", "noopener,noreferrer");
                     }}
-                    className="btn-primary w-full cursor-pointer flex justify-center"
+                    className="w-full px-6 py-3 bg-surface-900 text-white font-black uppercase tracking-widest text-[10px] rounded-none hover:bg-surface-800 transition-colors cursor-pointer flex justify-center border-none shadow-none"
                   >
                     Proceed to Portal
                   </button>
@@ -257,11 +257,11 @@ export default function CdatSection({ setView }) {
             </form>
             
             <div className="mt-8 pt-6 border-t border-surface-200">
-              <p className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-3 text-center">Want to try a practice test?</p>
+              <p className="text-[10px] text-surface-500 font-bold uppercase tracking-widest mb-3 text-center">Want to try a practice test?</p>
               <button 
                 type="button"
                 onClick={() => window.spaNavigate('/sample-test')}
-                className="btn-outline w-full cursor-pointer flex justify-center text-center"
+                className="w-full px-6 py-3 bg-white border border-surface-200 text-surface-900 font-black uppercase tracking-widest text-[10px] rounded-none hover:bg-surface-50 hover:border-surface-300 transition-colors cursor-pointer flex justify-center text-center shadow-none"
               >
                 Sample Test
               </button>

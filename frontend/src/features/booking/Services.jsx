@@ -111,26 +111,26 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
         {/* SERVICE 2: CAREER MENTORING */}
         <div
           id="card-career"
-          className="square-card p-6 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none group bg-white shadow-square-light hover:shadow-square-hover"
+          className="bg-white border border-surface-200 rounded-none shadow-none p-6 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none group"
         >
           <div className="space-y-4">
             <div className="flex justify-between items-start">
               <div className="space-y-3">
-                <span className="inline-block bg-surface-900 text-white px-3 py-1 text-xs font-bold uppercase tracking-wider">
+                <span className="inline-block bg-surface-900 text-white px-3 py-1 text-[10px] font-black uppercase tracking-widest">
                   {settings.careerBadge || 'Career Mentoring'}
                 </span>
-                <h3 className="text-2xl font-heading font-black uppercase text-surface-900 group-hover:text-brand transition-colors duration-300">
+                <h3 className="text-2xl font-black uppercase tracking-widest text-surface-900 group-hover:text-surface-600 transition-colors duration-300">
                   {settings.careerTitle || 'Career Clarity & Direction'}
                 </h3>
-                <h4 className="text-sm font-medium text-slate-500 uppercase tracking-widest">
+                <h4 className="text-[10px] font-bold text-surface-500 uppercase tracking-widest">
                   {settings.careerSubtitle || 'Feeling Unsure About What’s Next?'}
                 </h4>
               </div>
-              <span className="font-heading font-bold text-4xl text-surface-200 group-hover:text-surface-300 transition-colors">
+              <span className="font-black text-4xl text-surface-200 group-hover:text-surface-300 transition-colors">
                 01
               </span>
             </div>
-            <p className="text-slate-600 font-light leading-relaxed">
+            <p className="text-surface-600 font-bold text-[10px] uppercase tracking-widest leading-relaxed">
               {settings.careerDesc || 'Whether you’re choosing a stream, exploring career options, or planning your future studies, we help you understand your strengths, interests, and opportunities so you can make confident decisions with clarity and direction.'}
             </p>
           </div>
@@ -146,7 +146,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                 }
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className="btn-outline w-full sm:w-auto text-center"
+              className="w-full sm:w-auto px-6 py-3 bg-white border border-surface-200 text-surface-900 font-black uppercase tracking-widest text-[10px] rounded-none hover:bg-surface-50 hover:border-surface-300 transition-colors cursor-pointer text-center shadow-none"
             >
               {settings.careerBtnText || 'Book Your Mentor'}
             </button>
@@ -156,26 +156,26 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
         {/* SERVICE 3: PSYCHOLOGICAL COUNSELLING */}
         <div
           id="card-mental"
-          className="square-card p-6 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none group bg-surface-50 shadow-square-light hover:shadow-square-hover"
+          className="bg-surface-50 border border-surface-200 rounded-none shadow-none p-6 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none group"
         >
           <div className="space-y-4">
             <div className="flex justify-between items-start">
               <div className="space-y-3">
-                <span className="inline-block bg-brand text-surface-900 px-3 py-1 text-xs font-bold uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
+                <span className="inline-block bg-surface-200 text-surface-900 px-3 py-1 text-[10px] font-black uppercase tracking-widest">
                   {settings.counselBadge || 'Psychological Counselling'}
                 </span>
-                <h3 className="text-2xl font-heading font-black uppercase text-surface-900 group-hover:text-brand-dark transition-colors duration-300">
+                <h3 className="text-2xl font-black uppercase tracking-widest text-surface-900 group-hover:text-surface-600 transition-colors duration-300">
                   {settings.counselTitle || 'Emotional Wellbeing & Support'}
                 </h3>
-                <h4 className="text-sm font-medium text-slate-500 uppercase tracking-widest">
+                <h4 className="text-[10px] font-bold text-surface-500 uppercase tracking-widest">
                   {settings.counselSubtitle || 'You Don’t Have to Face It Alone.'}
                 </h4>
               </div>
-              <span className="font-heading font-bold text-4xl text-surface-200 group-hover:text-surface-300 transition-colors">
+              <span className="font-black text-4xl text-surface-200 group-hover:text-surface-300 transition-colors">
                 02
               </span>
             </div>
-            <p className="text-slate-600 font-light leading-relaxed">
+            <p className="text-surface-600 font-bold text-[10px] uppercase tracking-widest leading-relaxed">
               {settings.counselDesc || 'When stress, anxiety, self-doubt, or personal challenges begin to feel overwhelming, having the right support can make all the difference. Our counselling sessions provide a safe space to reflect, heal, grow, and move forward with confidence.'}
             </p>
           </div>
@@ -191,7 +191,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                 }
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className="btn-primary w-full sm:w-auto text-center"
+              className="w-full sm:w-auto px-6 py-3 bg-surface-900 text-white font-black uppercase tracking-widest text-[10px] rounded-none hover:bg-surface-800 transition-colors cursor-pointer text-center border-none shadow-none"
             >
               {settings.counselBtnText || 'Book Your Therapist'}
             </button>
@@ -202,20 +202,20 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
 
       {/* OUR EXPERTS SECTION */}
       <div id="our-experts" className="mt-20 md:mt-24 space-y-8">
-        <div className="space-y-4 max-w-3xl border-l-4 border-brand pl-4 sm:pl-6">
-          <span className="inline-block bg-surface-900 text-white px-3 py-1 text-xs font-bold uppercase tracking-wider">
+        <div className="space-y-4 max-w-3xl border-l-4 border-surface-900 pl-4 sm:pl-6">
+          <span className="inline-block bg-surface-900 text-white px-3 py-1 text-[10px] font-black uppercase tracking-widest">
             Our Experts
           </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-black uppercase text-surface-900 leading-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-widest text-surface-900 leading-tight">
             Meet Our Professionals
           </h2>
-          <p className="text-slate-600 font-light text-base sm:text-lg">
+          <p className="text-surface-600 font-bold text-[10px] uppercase tracking-widest">
             Book a personalized session directly with our highly qualified consultant psychologists and career advisors.
           </p>
         </div>
 
         {/* Dashboard-Style Toolbar */}
-        <div className="bg-white border-2 border-surface-200 p-4 flex flex-col xl:flex-row xl:items-center gap-4 w-full">
+        <div className="bg-white border border-surface-200 p-4 flex flex-col xl:flex-row xl:items-center gap-4 w-full rounded-none">
           {/* Search Box */}
           <div className="relative w-full xl:w-[260px] shrink-0">
             <input
@@ -223,9 +223,9 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
               placeholder="Search experts or skills..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-surface-200 text-sm font-semibold focus:outline-none focus:border-brand bg-white text-surface-900 transition-colors rounded-none"
+              className="w-full pl-10 pr-4 py-3 border border-surface-200 text-[10px] font-black uppercase tracking-widest focus:outline-none focus:border-surface-900 bg-white text-surface-900 transition-colors rounded-none placeholder:text-surface-400 placeholder:normal-case placeholder:tracking-normal placeholder:font-medium"
             />
-            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-surface-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
           </div>
 
           {/* Filter Tabs - scrollable horizontally on all sizes if needed */}
@@ -235,9 +235,9 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                 key={filter}
                 type="button"
                 onClick={() => setActiveFilter(filter)}
-                className={`flex items-center justify-center px-4 py-2 text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-colors cursor-pointer shrink-0 snap-start border ${activeFilter === filter
-                    ? 'bg-surface-900 text-white border-surface-900 shadow-[2px_2px_0px_0px_rgba(0,229,255,1)]'
-                    : 'bg-surface-50 text-slate-600 border-transparent hover:border-surface-200'
+                className={`flex items-center justify-center px-4 py-3 text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-colors cursor-pointer shrink-0 snap-start border rounded-none shadow-none ${activeFilter === filter
+                    ? 'bg-surface-900 text-white border-surface-900'
+                    : 'bg-surface-50 text-surface-500 border-surface-200 hover:border-surface-400'
                   }`}
               >
                 {filter === 'All' ? 'All Roles' : filter}
@@ -251,24 +251,24 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="w-full px-4 pr-10 py-3 border border-surface-200 text-sm font-semibold bg-white text-surface-900 focus:outline-none focus:border-brand cursor-pointer appearance-none transition-colors rounded-none"
+                className="w-full px-4 pr-10 py-3 border border-surface-200 text-[10px] font-black uppercase tracking-widest bg-white text-surface-900 focus:outline-none focus:border-surface-900 cursor-pointer appearance-none transition-colors rounded-none"
               >
                 <option value="Recommended">Sort: Recommended</option>
                 <option value="Price: Low to High">Price: Low to High</option>
                 <option value="Price: High to Low">Price: High to Low</option>
                 <option value="Experience">Experience (Most Hours)</option>
               </select>
-              <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+              <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-surface-400">
                 <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" /></svg>
               </div>
             </div>
 
-            <div className="flex border border-surface-200 bg-white shrink-0">
+            <div className="flex border border-surface-200 bg-white shrink-0 rounded-none">
               <button
                 type="button"
                 onClick={() => setViewMode('grid')}
                 aria-label="Grid view"
-                className={`w-12 h-[46px] transition-colors cursor-pointer flex items-center justify-center border-r border-surface-200 ${viewMode === 'grid' ? 'bg-surface-900 text-brand' : 'text-slate-400 hover:text-surface-900 hover:bg-surface-50'}`}
+                className={`w-12 h-[38px] transition-colors cursor-pointer flex items-center justify-center border-r border-surface-200 rounded-none ${viewMode === 'grid' ? 'bg-surface-900 text-white' : 'text-surface-400 hover:text-surface-900 hover:bg-surface-50'}`}
                 title="Grid View"
               >
                 <LayoutGrid className="w-4 h-4" />
@@ -277,7 +277,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                 type="button"
                 onClick={() => setViewMode('list')}
                 aria-label="List view"
-                className={`w-12 h-[46px] transition-colors cursor-pointer flex items-center justify-center ${viewMode === 'list' ? 'bg-surface-900 text-brand' : 'text-slate-400 hover:text-surface-900 hover:bg-surface-50'}`}
+                className={`w-12 h-[38px] transition-colors cursor-pointer flex items-center justify-center rounded-none ${viewMode === 'list' ? 'bg-surface-900 text-white' : 'text-surface-400 hover:text-surface-900 hover:bg-surface-50'}`}
                 title="List View"
               >
                 <List className="w-4 h-4" />
@@ -313,11 +313,11 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
             {filteredAndSortedAdvisors.slice(0, visibleCount).map(advisor => (
               <div
                 key={advisor.id}
-                className="square-card p-0 flex flex-col group bg-white shadow-square-light hover:shadow-square-hover hover:-translate-y-1 transition-all duration-300"
+                className="bg-white border border-surface-200 rounded-none p-0 flex flex-col group shadow-none hover:border-surface-300 transition-all duration-300"
               >
                 {/* Profile Card Header */}
                 <div className="p-6 flex items-start gap-4 border-b border-surface-200 bg-surface-50">
-                  <div className="w-16 h-16 bg-surface-200 text-surface-900 flex items-center justify-center font-heading font-bold text-2xl shrink-0 overflow-hidden border border-surface-300">
+                  <div className="w-16 h-16 bg-surface-200 text-surface-900 flex items-center justify-center font-black text-2xl shrink-0 overflow-hidden border border-surface-300 rounded-none">
                     {advisor.profilePic ? (
                       <img src={advisor.profilePic} alt={advisor.name} className="w-full h-full object-cover" />
                     ) : (
@@ -325,10 +325,10 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                     )}
                   </div>
                   <div className="flex flex-col text-left space-y-1 flex-1 min-w-0 pt-1">
-                    <h4 className="font-heading font-black text-surface-900 text-xl leading-tight truncate group-hover:text-brand transition-colors duration-300 uppercase">
+                    <h4 className="font-black text-surface-900 text-xl leading-tight truncate group-hover:text-surface-600 transition-colors duration-300 uppercase tracking-widest">
                       {advisor.name}
                     </h4>
-                    <span className="inline-block text-[11px] font-bold tracking-widest text-slate-500 uppercase">
+                    <span className="inline-block text-[10px] font-bold tracking-widest text-surface-500 uppercase">
                       {advisor.role}
                     </span>
                   </div>
@@ -337,12 +337,12 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                 {/* Bio Block */}
                 <div className="p-6 border-b border-surface-200 flex-1">
                   <div className="mb-4">
-                    <span className="text-xs font-bold text-surface-900 mb-2 block uppercase tracking-wider">Specialties</span>
+                    <span className="text-[10px] font-black text-surface-900 mb-2 block uppercase tracking-widest">Specialties</span>
                     <div className="flex flex-wrap gap-2">
                       {advisor.specialties.map((spec, i) => (
                         <span
                           key={i}
-                          className="px-2 py-1 bg-surface-50 border border-surface-200 text-xs font-semibold text-slate-600 rounded-none"
+                          className="px-2 py-1 bg-surface-50 border border-surface-200 text-[10px] font-bold text-surface-600 rounded-none uppercase tracking-widest"
                         >
                           {spec}
                         </span>
@@ -350,14 +350,14 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                     </div>
                   </div>
                   
-                  <div className="text-sm text-slate-600 font-light leading-relaxed relative">
+                  <div className="text-[10px] text-surface-600 font-bold uppercase tracking-widest leading-relaxed relative">
                     <p className={`${expandedBios[advisor.id] ? '' : 'line-clamp-3'}`}>
                       {advisor.bio || 'Consultant psychologist specializing in guidance and mental wellbeing.'}
                     </p>
                     {(advisor.bio || 'Consultant psychologist specializing in guidance and mental wellbeing.').length > 100 && (
                       <button
                         onClick={() => setExpandedBios(prev => ({ ...prev, [advisor.id]: !prev[advisor.id] }))}
-                        className="text-brand font-bold hover:underline cursor-pointer text-xs mt-2 uppercase tracking-wider"
+                        className="text-surface-900 font-black hover:underline cursor-pointer text-[10px] mt-2 uppercase tracking-widest"
                       >
                         {expandedBios[advisor.id] ? 'Read Less' : 'Read More'}
                       </button>
@@ -368,16 +368,16 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                 {/* Stats Panel */}
                 <div className="grid grid-cols-3 gap-0 p-4 border-b border-surface-200 bg-surface-50 divide-x divide-surface-200">
                   <div className="flex flex-col items-center justify-center text-center px-1">
-                    <span className="font-heading font-bold text-surface-900 text-lg tracking-tight">{advisor.hours.toLocaleString()}+</span>
-                    <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500 mt-1">Hours</span>
+                    <span className="font-black text-surface-900 text-lg tracking-tight">{advisor.hours.toLocaleString()}+</span>
+                    <span className="text-[10px] uppercase font-bold tracking-widest text-surface-500 mt-1">Hours</span>
                   </div>
                   <div className="flex flex-col items-center justify-center text-center px-1">
-                    <span className="font-heading font-bold text-surface-900 text-sm tracking-tight truncate w-full">{advisor.lang.split(',')[0]}</span>
-                    <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500 mt-1">Lang</span>
+                    <span className="font-black text-surface-900 text-sm tracking-tight truncate w-full">{advisor.lang.split(',')[0]}</span>
+                    <span className="text-[10px] uppercase font-bold tracking-widest text-surface-500 mt-1">Lang</span>
                   </div>
                   <div className="flex flex-col items-center justify-center text-center px-1">
-                    <span className="font-heading font-bold text-surface-900 text-lg tracking-tight">₹{advisor.price.toLocaleString('en-IN')}</span>
-                    <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500 mt-1">Session</span>
+                    <span className="font-black text-surface-900 text-lg tracking-tight">₹{advisor.price.toLocaleString('en-IN')}</span>
+                    <span className="text-[10px] uppercase font-bold tracking-widest text-surface-500 mt-1">Session</span>
                   </div>
                 </div>
 
@@ -385,10 +385,10 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                 <div className="p-6 bg-white flex flex-col space-y-4">
                   {enablePsychology && (
                     <div className="flex items-center justify-between">
-                      <span className="text-xs uppercase font-bold text-slate-500">Next available</span>
-                      <div className="flex items-center gap-2 bg-surface-50 px-3 py-1 border border-surface-200">
-                        <span className="w-2 h-2 bg-brand rounded-full animate-pulse" />
-                        <span className="font-bold text-surface-900 text-xs uppercase">{advisor.nextAvailable}</span>
+                      <span className="text-[10px] uppercase font-bold tracking-widest text-surface-500">Next available</span>
+                      <div className="flex items-center gap-2 bg-surface-50 px-3 py-1 border border-surface-200 rounded-none">
+                        <span className="w-2 h-2 bg-surface-900 rounded-none animate-pulse" />
+                        <span className="font-black text-surface-900 text-[10px] uppercase tracking-widest">{advisor.nextAvailable}</span>
                       </div>
                     </div>
                   )}
@@ -397,7 +397,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                     <button
                       type="button"
                       onClick={() => window.spaNavigate(`/advisor/${advisor.id}`)}
-                      className={`btn-outline text-xs px-2 py-3 flex items-center justify-center text-center ${enablePsychology ? 'flex-1' : 'w-full'}`}
+                      className={`px-4 py-3 bg-white border border-surface-200 text-surface-900 font-black uppercase tracking-widest text-[10px] rounded-none hover:bg-surface-50 hover:border-surface-300 transition-colors cursor-pointer flex items-center justify-center text-center shadow-none ${enablePsychology ? 'flex-1' : 'w-full'}`}
                     >
                       Profile
                     </button>
@@ -412,7 +412,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                           }
                           window.scrollTo({ top: 0, behavior: 'smooth' });
                         }}
-                        className="btn-primary text-xs px-2 py-3 flex-1 flex items-center justify-center text-center"
+                        className="px-4 py-3 bg-surface-900 text-white font-black uppercase tracking-widest text-[10px] rounded-none hover:bg-surface-800 transition-colors cursor-pointer flex-1 flex items-center justify-center text-center border-none shadow-none"
                       >
                         Book Now
                       </button>
@@ -427,11 +427,11 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
             {filteredAndSortedAdvisors.slice(0, visibleCount).map(advisor => (
               <div
                 key={advisor.id}
-                className="square-card p-0 flex flex-col lg:flex-row group bg-white shadow-square-light hover:shadow-square-hover transition-all duration-300"
+                className="bg-white border border-surface-200 rounded-none p-0 flex flex-col lg:flex-row group shadow-none hover:border-surface-300 transition-all duration-300"
               >
                 {/* Left Column: Avatar & Name */}
                 <div className="p-6 flex lg:flex-col items-center lg:items-start gap-4 border-b lg:border-b-0 lg:border-r border-surface-200 bg-surface-50 lg:w-[250px] shrink-0">
-                  <div className="w-16 h-16 lg:w-20 lg:h-20 bg-surface-200 text-surface-900 flex items-center justify-center font-heading font-bold text-2xl lg:text-3xl shrink-0 overflow-hidden border border-surface-300">
+                  <div className="w-16 h-16 lg:w-20 lg:h-20 bg-surface-200 text-surface-900 flex items-center justify-center font-black text-2xl lg:text-3xl shrink-0 overflow-hidden border border-surface-300 rounded-none">
                     {advisor.profilePic ? (
                       <img src={advisor.profilePic} alt={advisor.name} className="w-full h-full object-cover" />
                     ) : (
@@ -439,10 +439,10 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                     )}
                   </div>
                   <div className="flex flex-col text-left space-y-1 min-w-0">
-                    <h4 className="font-heading font-black text-surface-900 text-xl leading-tight group-hover:text-brand transition-colors duration-300 uppercase">
+                    <h4 className="font-black text-surface-900 text-xl leading-tight group-hover:text-surface-600 transition-colors duration-300 uppercase tracking-widest">
                       {advisor.name}
                     </h4>
-                    <span className="inline-block text-[11px] font-bold tracking-widest text-slate-500 uppercase">
+                    <span className="inline-block text-[10px] font-bold tracking-widest text-surface-500 uppercase">
                       {advisor.role}
                     </span>
                   </div>
@@ -451,26 +451,26 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                 {/* Middle Column: Specialties & Bio */}
                 <div className="p-6 flex-1 border-b lg:border-b-0 lg:border-r border-surface-200 bg-white">
                   <div className="mb-4">
-                    <span className="text-xs font-bold text-surface-900 mb-2 block uppercase tracking-wider">Specialties</span>
+                    <span className="text-[10px] font-black text-surface-900 mb-2 block uppercase tracking-widest">Specialties</span>
                     <div className="flex flex-wrap gap-2">
                       {advisor.specialties.map((spec, i) => (
                         <span
                           key={i}
-                          className="px-2 py-1 bg-surface-50 border border-surface-200 text-xs font-semibold text-slate-600 rounded-none"
+                          className="px-2 py-1 bg-surface-50 border border-surface-200 text-[10px] font-bold text-surface-600 rounded-none uppercase tracking-widest"
                         >
                           {spec}
                         </span>
                       ))}
                     </div>
                   </div>
-                  <div className="text-sm text-slate-600 font-light leading-relaxed">
+                  <div className="text-[10px] text-surface-600 font-bold uppercase tracking-widest leading-relaxed">
                     <p className={`${expandedBios[advisor.id] ? '' : 'line-clamp-3'}`}>
                       {advisor.bio || 'Consultant psychologist specializing in guidance and mental wellbeing.'}
                     </p>
                     {(advisor.bio || 'Consultant psychologist specializing in guidance and mental wellbeing.').length > 100 && (
                       <button
                         onClick={() => setExpandedBios(prev => ({ ...prev, [advisor.id]: !prev[advisor.id] }))}
-                        className="text-brand font-bold hover:underline cursor-pointer text-xs mt-2 uppercase tracking-wider"
+                        className="text-surface-900 font-black hover:underline cursor-pointer text-[10px] mt-2 uppercase tracking-widest"
                       >
                         {expandedBios[advisor.id] ? 'Read Less' : 'Read More'}
                       </button>
@@ -482,26 +482,26 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                 <div className="flex flex-col lg:w-[220px] shrink-0 bg-surface-50">
                   <div className="grid grid-cols-3 lg:grid-cols-1 lg:divide-y lg:divide-x-0 divide-x divide-surface-200 border-b border-surface-200 p-4">
                     <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center py-2 px-1 lg:px-2 text-center lg:text-left">
-                      <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500 order-last lg:order-first mt-1 lg:mt-0">Hours</span>
-                      <span className="font-heading font-bold text-surface-900 text-lg tracking-tight">{advisor.hours.toLocaleString()}+</span>
+                      <span className="text-[10px] uppercase font-bold tracking-widest text-surface-500 order-last lg:order-first mt-1 lg:mt-0">Hours</span>
+                      <span className="font-black text-surface-900 text-lg tracking-tight">{advisor.hours.toLocaleString()}+</span>
                     </div>
                     <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center py-2 px-1 lg:px-2 text-center lg:text-left">
-                      <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500 order-last lg:order-first mt-1 lg:mt-0">Lang</span>
-                      <span className="font-heading font-bold text-surface-900 text-sm tracking-tight truncate max-w-[80px]">{advisor.lang.split(',')[0]}</span>
+                      <span className="text-[10px] uppercase font-bold tracking-widest text-surface-500 order-last lg:order-first mt-1 lg:mt-0">Lang</span>
+                      <span className="font-black text-surface-900 text-sm tracking-tight truncate max-w-[80px]">{advisor.lang.split(',')[0]}</span>
                     </div>
                     <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center py-2 px-1 lg:px-2 text-center lg:text-left">
-                      <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500 order-last lg:order-first mt-1 lg:mt-0">Cost</span>
-                      <span className="font-heading font-bold text-surface-900 text-lg tracking-tight">₹{advisor.price.toLocaleString('en-IN')}</span>
+                      <span className="text-[10px] uppercase font-bold tracking-widest text-surface-500 order-last lg:order-first mt-1 lg:mt-0">Cost</span>
+                      <span className="font-black text-surface-900 text-lg tracking-tight">₹{advisor.price.toLocaleString('en-IN')}</span>
                     </div>
                   </div>
                   
                   <div className="p-4 flex flex-col justify-center space-y-4 flex-1">
                     {enablePsychology && (
                       <div className="flex items-center justify-between gap-2">
-                        <span className="text-xs uppercase font-bold text-slate-500">Next open</span>
-                        <div className="flex items-center gap-2 bg-white px-2 py-1 border border-surface-200">
-                          <span className="w-2 h-2 bg-brand rounded-full animate-pulse" />
-                          <span className="font-bold text-surface-900 text-[10px] uppercase">{advisor.nextAvailable}</span>
+                        <span className="text-[10px] uppercase font-bold tracking-widest text-surface-500">Next open</span>
+                        <div className="flex items-center gap-2 bg-white px-2 py-1 border border-surface-200 rounded-none">
+                          <span className="w-2 h-2 bg-surface-900 rounded-none animate-pulse" />
+                          <span className="font-black text-surface-900 text-[10px] uppercase tracking-widest">{advisor.nextAvailable}</span>
                         </div>
                       </div>
                     )}
@@ -509,7 +509,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                       <button
                         type="button"
                         onClick={() => window.spaNavigate(`/advisor/${advisor.id}`)}
-                        className={`btn-outline text-xs py-2.5 text-center flex items-center justify-center`}
+                        className={`px-4 py-3 bg-white border border-surface-200 text-surface-900 font-black uppercase tracking-widest text-[10px] rounded-none hover:bg-surface-50 hover:border-surface-300 transition-colors cursor-pointer text-center flex items-center justify-center shadow-none`}
                       >
                         Profile
                       </button>
@@ -524,7 +524,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                             }
                             window.scrollTo({ top: 0, behavior: 'smooth' });
                           }}
-                          className="btn-primary text-xs py-2.5 text-center flex items-center justify-center"
+                          className="px-4 py-3 bg-surface-900 text-white font-black uppercase tracking-widest text-[10px] rounded-none hover:bg-surface-800 transition-colors cursor-pointer text-center flex items-center justify-center border-none shadow-none"
                         >
                           Book
                         </button>
@@ -551,7 +551,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
               onClick={() => {
                 setVisibleCount(prev => prev + 5);
               }}
-              className="btn-outline px-10 cursor-pointer"
+              className="px-6 py-3 bg-white border border-surface-200 text-surface-900 font-black uppercase tracking-widest text-[10px] rounded-none hover:bg-surface-50 hover:border-surface-300 transition-colors cursor-pointer text-center shadow-none"
             >
               Load More Professionals
             </button>

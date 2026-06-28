@@ -23,7 +23,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
         const parts = line.split(match[0]);
         content = (
           <React.Fragment key={`span-${index}`}>
-            {parts[0]}<span className="relative whitespace-nowrap text-brand">
+            {parts[0]}<span className="relative text-brand font-black drop-shadow-[0_0_15px_rgba(6,182,212,0.5)]">
               {match[1]}
             </span>{parts[1]}
           </React.Fragment>
@@ -43,7 +43,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
   return (
     <section
       id="home"
-      className="relative w-full pt-32 pb-32 sm:pb-36 md:pb-40 lg:pt-36 lg:pb-48 px-4 sm:px-6 flex flex-col items-center justify-center min-h-[100svh] select-none bg-gradient-to-b from-slate-900 to-slate-800"
+      className="relative w-full pt-32 pb-32 sm:pb-36 md:pb-40 lg:pt-36 lg:pb-48 px-4 sm:px-6 flex flex-col items-center justify-center min-h-[100svh] select-none bg-gradient-to-b from-slate-900 to-slate-800 overflow-hidden"
     >
       {/* Heavy 3D Background Elements & Particles */}
       <HeroBackgroundElements />
@@ -56,7 +56,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
           style={{ fontFamily: "'Poppins', 'Baloo Chettan 2', 'Manjari', 'Noto Sans Malayalam', sans-serif" }}
-          className="text-[2.75rem] leading-[1.1] sm:text-6xl md:text-[4rem] lg:text-[5rem] font-black text-white sm:leading-[1.1] tracking-tight drop-shadow-lg"
+          className="text-[clamp(1.75rem,8vw,3rem)] leading-[1.25] sm:text-5xl md:text-6xl lg:text-[5rem] lg:leading-[1.1] font-black text-white tracking-tight drop-shadow-lg px-6 sm:px-0 text-pretty"
         >
           {renderTitle(rawTitle)}
         </motion.h1>
@@ -66,7 +66,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
-          className="text-base sm:text-lg md:text-xl text-zinc-300 max-w-2xl font-medium leading-relaxed mt-5"
+          className="text-[clamp(0.875rem,4vw,1rem)] sm:text-base md:text-xl text-zinc-300 max-w-2xl font-medium leading-relaxed mt-4 sm:mt-5 px-6 sm:px-0 text-pretty"
         >
           {heroSub}
         </motion.p>

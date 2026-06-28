@@ -25,8 +25,8 @@ const OverviewTab = ({
       {/* ── Header ─────────────────────────────────────── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h2 className="text-xl font-bold text-zinc-900 tracking-tight">Overview</h2>
-          <p className="text-sm text-zinc-500 mt-0.5">
+          <h2 className="text-xl font-bold text-surface-900 tracking-tight">Overview</h2>
+          <p className="text-sm text-surface-500 mt-0.5">
             {nextSession ? 'Your next session is coming up.' : 'Ready to start your journey?'}
           </p>
         </div>
@@ -34,7 +34,7 @@ const OverviewTab = ({
           <button
             type="button"
             onClick={() => navigate('/booking')}
-            className="inline-flex items-center gap-1.5 min-h-[40px] px-5 py-2 bg-zinc-950 text-white text-xs font-bold rounded-xl hover:bg-zinc-800 transition-all duration-200 border-none shadow-md hover:shadow-lg hover:-translate-y-0.5"
+            className="inline-flex items-center gap-1.5 min-h-[40px] px-5 py-2 bg-surface-900 text-white text-[10px] uppercase tracking-widest font-black rounded-none hover:bg-surface-800 transition-all duration-200 border-none shadow-none"
           >
             <Plus className="w-3.5 h-3.5" /> Book Session
           </button>
@@ -42,17 +42,17 @@ const OverviewTab = ({
       </div>
 
       {/* ── Welcome Hero Banner ─────────────────────────── */}
-      <div className="group relative overflow-hidden rounded-2xl border border-zinc-200 bg-white p-5 sm:p-6 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6 transition-all duration-300 hover:shadow-md">
+      <div className="group relative overflow-hidden rounded-none border border-surface-200 bg-white p-5 sm:p-6 shadow-none flex flex-col md:flex-row items-center justify-between gap-6 transition-all duration-300">
         {/* Left Content */}
         <div className="space-y-3.5 max-w-lg text-left">
           <div className="space-y-1.5">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-brand-light text-brand-dark border border-brand/10 w-fit">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-none uppercase tracking-widest text-[10px] font-black bg-brand-light text-brand-dark border border-brand/10 w-fit">
               🚀 Getting Started
             </span>
-            <h3 className="text-2xl font-header font-black tracking-tight text-zinc-900 leading-tight">
+            <h3 className="text-2xl font-header font-black tracking-tight text-surface-900 leading-tight">
               Welcome back, <span className="text-brand-dark">{profile.name || 'Student'}</span>!
             </h3>
-            <p className="text-zinc-650 text-xs sm:text-sm leading-relaxed">
+            <p className="text-surface-600 text-xs sm:text-sm leading-relaxed">
               Explore your educational potential. Complete the CIGI Differential Aptitude Test (C-DAT) to scientifically map your career path, or schedule a 1-on-1 session with our certified counsellors.
             </p>
           </div>
@@ -62,7 +62,7 @@ const OverviewTab = ({
               <button
                 type="button"
                 onClick={() => navigate('/sample-test')}
-                className="min-h-[40px] px-5 py-2 bg-zinc-950 hover:bg-zinc-800 text-white font-bold text-xs rounded-xl transition duration-200 cursor-pointer border-none shadow-sm"
+                className="min-h-[40px] px-5 py-2 bg-surface-900 hover:bg-surface-800 text-white font-black uppercase tracking-widest text-[10px] rounded-none transition duration-200 cursor-pointer border-none shadow-none"
               >
                 Start Aptitude Test
               </button>
@@ -70,7 +70,7 @@ const OverviewTab = ({
               <button
                 type="button"
                 onClick={() => handleSectionChange('results')}
-                className="min-h-[40px] px-5 py-2 bg-zinc-950 hover:bg-zinc-800 text-white font-bold text-xs rounded-xl transition duration-200 cursor-pointer border-none shadow-sm"
+                className="min-h-[40px] px-5 py-2 bg-surface-900 hover:bg-surface-800 text-white font-black uppercase tracking-widest text-[10px] rounded-none transition duration-200 cursor-pointer border-none shadow-none"
               >
                 View C-DAT Report
               </button>
@@ -79,7 +79,7 @@ const OverviewTab = ({
               <button
                 type="button"
                 onClick={() => navigate('/booking')}
-                className="min-h-[40px] px-5 py-2 bg-white border border-zinc-200 hover:border-zinc-300 text-zinc-700 font-bold text-xs rounded-xl transition duration-200 cursor-pointer shadow-xs"
+                className="min-h-[40px] px-5 py-2 bg-white border border-surface-200 hover:border-surface-300 text-surface-900 font-black uppercase tracking-widest text-[10px] rounded-none transition duration-200 cursor-pointer shadow-none"
               >
                 Consult a Mentor
               </button>
@@ -88,7 +88,7 @@ const OverviewTab = ({
         </div>
 
         {/* Right Collage Graphic */}
-        <div className="relative shrink-0 w-full md:w-56 lg:w-64 h-36 sm:h-40 rounded-xl overflow-hidden bg-zinc-50 border border-zinc-150 flex items-center justify-center">
+        <div className="relative shrink-0 w-full md:w-56 lg:w-64 h-36 sm:h-40 rounded-none overflow-hidden bg-surface-50 border border-surface-200 flex items-center justify-center">
           <img
             src="/dashboard_hero.png"
             alt="Career exploration illustration"
@@ -99,48 +99,48 @@ const OverviewTab = ({
 
       {/* ── Next Session Card ── */}
       {nextSession ? (
-        <div className="group relative overflow-hidden rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all duration-300 hover:shadow-md">
+        <div className="group relative overflow-hidden rounded-none border border-surface-200 bg-white p-5 shadow-none flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all duration-300">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-zinc-100 border border-zinc-200/60 flex items-center justify-center shrink-0">
+            <div className="w-12 h-12 rounded-none bg-surface-100 border border-surface-200 flex items-center justify-center shrink-0">
               {nextSession.mode === 'ONLINE'
-                ? <Video className="w-5 h-5 text-zinc-650" />
-                : <MapPin className="w-5 h-5 text-zinc-650" />}
+                ? <Video className="w-5 h-5 text-surface-600" />
+                : <MapPin className="w-5 h-5 text-surface-600" />}
             </div>
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-1 flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_4px_rgba(16,185,129,0.5)]" />
+              <p className="text-[10px] font-black uppercase tracking-widest text-surface-400 mb-1 flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-none bg-emerald-500 animate-pulse shadow-[0_0_4px_rgba(16,185,129,0.5)]" />
                 Next Scheduled Session
               </p>
-              <p className="font-bold text-zinc-900 text-base tracking-tight">{nextSession.advisorName}</p>
-              <p className="text-xs text-zinc-500 mt-0.5">
+              <p className="font-black text-surface-900 text-base tracking-tight">{nextSession.advisorName}</p>
+              <p className="text-xs text-surface-500 mt-0.5 font-medium">
                 {nextSession.advisorRole || 'Consultation'}
-                <span className="mx-1.5 text-zinc-300">·</span>
-                <span className="text-zinc-700 font-semibold">{nextSession.mode === 'ONLINE' ? 'Online' : 'In-Person'}</span>
+                <span className="mx-1.5 text-surface-300">·</span>
+                <span className="text-surface-700 font-bold">{nextSession.mode === 'ONLINE' ? 'Online' : 'In-Person'}</span>
               </p>
-              <div className="flex items-center gap-2 mt-2.5 text-xs text-zinc-650">
-                <span className="flex items-center gap-1 bg-zinc-50 px-2.5 py-1 rounded-lg border border-zinc-100">
-                  <Calendar className="w-3.5 h-3.5 text-zinc-400" /> {formatDateString(nextSession.date)}
+              <div className="flex flex-wrap items-center gap-2 mt-2.5 text-[10px] uppercase tracking-widest font-bold text-surface-600">
+                <span className="flex items-center gap-1 bg-surface-50 px-2 py-1 rounded-none border border-surface-200">
+                  <Calendar className="w-3.5 h-3.5 text-surface-400" /> {formatDateString(nextSession.date)}
                 </span>
-                <span className="flex items-center gap-1 bg-zinc-50 px-2.5 py-1 rounded-lg border border-zinc-100">
-                  <Clock className="w-3.5 h-3.5 text-zinc-400" /> {nextSession.time}
+                <span className="flex items-center gap-1 bg-surface-50 px-2 py-1 rounded-none border border-surface-200">
+                  <Clock className="w-3.5 h-3.5 text-surface-400" /> {nextSession.time}
                 </span>
               </div>
             </div>
           </div>
-          <div className="flex items-center justify-between sm:justify-end gap-5 shrink-0 pt-3 sm:pt-0 border-t sm:border-t-0 border-zinc-100">
+          <div className="flex items-center justify-between sm:justify-end gap-5 shrink-0 pt-3 sm:pt-0 border-t sm:border-t-0 border-surface-100">
             {(() => {
               const cd = formatCountdown(nextSession.date, nextSession.time);
               return (
                 <div className="text-left sm:text-right">
-                  <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-widest">Starts in</p>
-                  <p className={`text-xl sm:text-2xl font-black tracking-tight ${cd.urgent ? 'text-amber-600' : 'text-zinc-900'}`}>{cd.text}</p>
+                  <p className="text-[10px] text-surface-400 font-black uppercase tracking-widest">Starts in</p>
+                  <p className={`text-xl sm:text-2xl font-black tracking-tight ${cd.urgent ? 'text-amber-600' : 'text-surface-900'}`}>{cd.text}</p>
                 </div>
               );
             })()}
             <button
               type="button"
               onClick={() => { handleSectionChange('booked'); setSessionSubTab('upcoming'); }}
-              className="min-h-[38px] px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border border-zinc-200 hover:border-zinc-300 bg-white hover:bg-zinc-50 text-zinc-700 shadow-xs"
+              className="min-h-[38px] px-4 py-2 rounded-none text-[10px] uppercase tracking-widest font-black transition-all cursor-pointer border border-surface-200 hover:border-surface-300 bg-white hover:bg-surface-50 text-surface-900 shadow-none"
             >
               View Details
             </button>
@@ -148,20 +148,20 @@ const OverviewTab = ({
         </div>
       ) : (
         <div
-          className="rounded-2xl p-7 text-center border border-dashed border-zinc-200 bg-white"
+          className="rounded-none p-7 text-center border border-dashed border-surface-200 bg-white"
         >
-          <div className="w-14 h-14 mx-auto rounded-2xl bg-white border border-zinc-200 shadow-sm flex items-center justify-center mb-4">
-            <CalendarDays className="w-6 h-6 text-zinc-400" />
+          <div className="w-14 h-14 mx-auto rounded-none bg-white border border-surface-200 shadow-none flex items-center justify-center mb-4">
+            <CalendarDays className="w-6 h-6 text-surface-400" />
           </div>
-          <p className="text-sm font-bold text-zinc-800">No upcoming sessions</p>
-          <p className="text-xs text-zinc-500 mt-1.5 max-w-xs mx-auto leading-relaxed">
+          <p className="text-sm font-black text-surface-900">No upcoming sessions</p>
+          <p className="text-xs text-surface-500 mt-1.5 max-w-xs mx-auto leading-relaxed">
             Schedule a session with one of our certified professionals to get started.
           </p>
           {enablePsychology && (
             <button
               type="button"
               onClick={() => navigate('/booking')}
-              className="mt-5 inline-flex items-center gap-1.5 min-h-[40px] px-6 py-2 bg-zinc-950 text-white text-xs font-bold rounded-xl hover:bg-zinc-800 transition-all border-none shadow-md"
+              className="mt-5 inline-flex items-center gap-1.5 min-h-[40px] px-6 py-2 bg-surface-900 text-white text-[10px] uppercase tracking-widest font-black rounded-none hover:bg-surface-800 transition-all border-none shadow-none"
             >
               <Plus className="w-3.5 h-3.5" /> Book a Session
             </button>
@@ -181,23 +181,19 @@ const OverviewTab = ({
           return (
             <div
               key={i}
-              className="relative overflow-hidden rounded-xl p-4 transition-all duration-300 hover:-translate-y-1 cursor-default group"
-              style={{
-                background: '#ffffff',
-                boxShadow: `inset 0 0 0 1px rgba(11,20,36,0.05), 0 1px 2px rgba(11,20,36,0.04), 0 4px 16px -4px rgba(11,20,36,0.07)`
-              }}
+              className="relative overflow-hidden rounded-none p-4 transition-all duration-300 hover:-translate-y-1 cursor-default group border border-surface-200 bg-white"
             >
               {/* Accent top bar */}
-              <div className="absolute top-0 left-0 right-0 h-0.5 rounded-t-xl transition-all duration-300" style={{ background: kpi.dot }} />
+              <div className="absolute top-0 left-0 right-0 h-0.5 rounded-none transition-all duration-300" style={{ background: kpi.dot }} />
               <div
-                className="w-9 h-9 rounded-xl flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110"
+                className="w-9 h-9 rounded-none flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110"
                 style={{ background: kpi.bg }}
               >
                 <Icon className="w-4 h-4" style={{ color: kpi.accent }} />
               </div>
-              <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider">{kpi.label}</p>
-              <p className="text-2xl font-black text-zinc-900 mt-0.5 tracking-tight">{kpi.value}</p>
-              <p className="text-[10px] text-zinc-400 mt-0.5 font-medium">{kpi.sub}</p>
+              <p className="text-[10px] text-surface-500 font-bold uppercase tracking-wider">{kpi.label}</p>
+              <p className="text-2xl font-black text-surface-900 mt-0.5 tracking-tight">{kpi.value}</p>
+              <p className="text-[10px] text-surface-400 mt-0.5 font-medium">{kpi.sub}</p>
             </div>
           );
         })}
@@ -207,26 +203,22 @@ const OverviewTab = ({
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {/* Expert Consultation Card */}
         <div
-          className="group relative overflow-hidden rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1"
-          style={{
-            background: '#ffffff',
-            boxShadow: 'inset 0 0 0 1px rgba(11,20,36,0.05), 0 1px 3px rgba(11,20,36,0.04), 0 6px 20px -6px rgba(11,20,36,0.08)'
-          }}
+          className="group relative overflow-hidden rounded-none p-5 transition-all duration-300 hover:-translate-y-1 border border-surface-200 bg-white"
         >
           <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: 'linear-gradient(135deg, rgba(16,185,129,0.04) 0%, rgba(6,182,212,0.04) 100%)' }} />
           <div className="relative flex items-start justify-between mb-4">
-            <div className="w-11 h-11 rounded-2xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)', border: '1px solid rgba(16,185,129,0.15)' }}>
+            <div className="w-11 h-11 rounded-none flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)', border: '1px solid rgba(16,185,129,0.15)' }}>
               <Briefcase className="w-5 h-5" style={{ color: '#059669' }} />
             </div>
-            <span className={`text-xs px-2.5 py-1 rounded-lg font-bold ${bookedSessions.length > 0
+            <span className={`text-[10px] uppercase tracking-widest px-2 py-1 rounded-none font-bold ${bookedSessions.length > 0
               ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-              : 'bg-zinc-50 text-zinc-500 border border-zinc-200'
+              : 'bg-surface-50 text-surface-500 border border-surface-200'
               }`}>
               {bookedSessions.length > 0 ? `${bookedSessions.length} scheduled` : 'None booked'}
             </span>
           </div>
-          <h4 className="relative font-bold text-zinc-900 text-base tracking-tight">Expert Consultation</h4>
-          <p className="relative text-xs text-zinc-500 mt-1.5 leading-relaxed">
+          <h4 className="relative font-black text-surface-900 text-base tracking-tight">Expert Consultation</h4>
+          <p className="relative text-xs text-surface-500 mt-1.5 leading-relaxed font-medium">
             {bookedSessions.length > 0
               ? `Next session with ${bookedSessions[0].advisorName} on ${formatDateString(bookedSessions[0].date)}.`
               : 'Connect 1-on-1 with certified psychologists and career mentors.'}
@@ -242,16 +234,15 @@ const OverviewTab = ({
                   navigate('/booking');
                 }
               }}
-              className="relative mt-5 w-full min-h-[40px] inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all border-none cursor-pointer"
+              className="relative mt-5 w-full min-h-[40px] inline-flex items-center justify-center gap-2 px-4 py-2 rounded-none text-[10px] uppercase tracking-widest font-black transition-all border-none cursor-pointer"
               style={{
                 background: bookedSessions.length > 0
                   ? 'linear-gradient(135deg, #059669 0%, #047857 100%)'
-                  : 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)',
-                color: 'white',
-                boxShadow: bookedSessions.length > 0 ? '0 4px 12px rgba(5,150,105,0.3)' : '0 4px 12px rgba(15,23,42,0.25)'
+                  : '#18181b',
+                color: 'white'
               }}
             >
-              {bookedSessions.length > 0 ? '📅 View My Bookings' : '✨ Book a Session'}
+              {bookedSessions.length > 0 ? 'View My Bookings' : 'Book a Session'}
             </button>
           )}
         </div>
@@ -263,72 +254,65 @@ const OverviewTab = ({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Recent Activity — timeline style */}
         <div
-          className="lg:col-span-2 rounded-2xl p-5"
-          style={{
-            background: '#ffffff',
-            boxShadow: 'inset 0 0 0 1px rgba(11,20,36,0.05), 0 1px 2px rgba(11,20,36,0.03), 0 4px 16px -4px rgba(11,20,36,0.07)'
-          }}
+          className="lg:col-span-2 rounded-none p-5 bg-white border border-surface-200 shadow-none"
         >
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-zinc-100 flex items-center justify-center">
-                <Activity className="w-4 h-4 text-zinc-500" />
+              <div className="w-8 h-8 rounded-none bg-surface-100 flex items-center justify-center">
+                <Activity className="w-4 h-4 text-surface-500" />
               </div>
-              <h4 className="text-sm font-bold text-zinc-900">Recent Activity</h4>
+              <h4 className="text-sm font-black text-surface-900">Recent Activity</h4>
             </div>
             <button
               type="button"
               onClick={() => { handleSectionChange('booked'); setSessionSubTab('history'); }}
-              className="text-xs text-zinc-400 hover:text-zinc-900 transition-colors flex items-center gap-1 font-semibold"
+              className="text-[10px] text-surface-400 hover:text-surface-900 transition-colors flex items-center gap-1 font-bold uppercase tracking-widest"
             >
-              View all <ChevronRight className="w-3.5 h-3.5" />
+              View all <ChevronRight className="w-3 h-3" />
             </button>
           </div>
           {completedSessions.length > 0 ? (
-            <div className="space-y-3">
+            <div className="space-y-0 border border-surface-200">
               {completedSessions.slice(0, 3).map((s, i) => (
-                <div key={i} className="flex items-center gap-3.5 p-3.5 rounded-xl transition-all duration-200 hover:bg-zinc-50 group" style={{ border: '1px solid transparent' }}>
+                <div key={i} className="flex items-center gap-3.5 p-3.5 rounded-none transition-all duration-200 hover:bg-surface-50 border-b border-surface-100 last:border-b-0 group">
                   <div
-                    className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
+                    className="w-9 h-9 rounded-none flex items-center justify-center shrink-0"
                     style={{ background: 'linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)', border: '1px solid rgba(16,185,129,0.2)' }}
                   >
                     <Award className="w-4 h-4" style={{ color: '#059669' }} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-bold text-zinc-900 truncate">{s.advisorName}</p>
-                    <p className="text-xs text-zinc-400 mt-0.5">{s.advisorRole || 'Consultation'} · {formatDateString(s.date)}</p>
+                    <p className="text-sm font-black text-surface-900 truncate">{s.advisorName}</p>
+                    <p className="text-xs text-surface-500 mt-0.5 font-medium">{s.advisorRole || 'Consultation'} · {formatDateString(s.date)}</p>
                   </div>
                   <div className="flex items-center gap-1.5 shrink-0">
-                    <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">Completed</span>
+                    <span className="text-[10px] uppercase tracking-widest font-black text-emerald-600 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-none">Completed</span>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="text-center py-10 text-zinc-400 space-y-3">
-              <div className="w-14 h-14 mx-auto rounded-2xl bg-zinc-50 border border-zinc-100 flex items-center justify-center">
+            <div className="text-center py-10 text-surface-400 space-y-3">
+              <div className="w-14 h-14 mx-auto rounded-none bg-surface-50 border border-surface-200 flex items-center justify-center">
                 <History className="w-6 h-6 opacity-40" />
               </div>
-              <p className="text-sm font-medium text-zinc-500">No sessions yet</p>
-              <p className="text-xs text-zinc-400">Completed sessions will appear here.</p>
+              <p className="text-[10px] uppercase tracking-widest font-bold text-surface-500">No sessions yet</p>
+              <p className="text-xs text-surface-400 font-medium">Completed sessions will appear here.</p>
             </div>
           )}
         </div>
 
         {/* Achievements — milestone badge design */}
         <div
-          className="rounded-2xl p-5 bg-white border border-zinc-200"
-          style={{
-            boxShadow: 'inset 0 0 0 1px rgba(11,20,36,0.05), 0 1px 2px rgba(11,20,36,0.03), 0 4px 12px -4px rgba(11,20,36,0.06)'
-          }}
+          className="rounded-none p-5 bg-white border border-surface-200 shadow-none"
         >
           <div className="flex items-center gap-2.5 mb-5">
-            <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)', border: '1px solid rgba(217,119,6,0.2)' }}>
+            <div className="w-8 h-8 rounded-none flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)', border: '1px solid rgba(217,119,6,0.2)' }}>
               <Trophy className="w-4 h-4" style={{ color: '#d97706' }} />
             </div>
-            <h4 className="text-sm font-bold text-zinc-900">Achievements</h4>
+            <h4 className="text-sm font-black text-surface-900">Achievements</h4>
           </div>
-          <div className="space-y-2.5">
+          <div className="space-y-2">
             {[
               { icon: User, label: 'Profile Created', done: !!profile.name, emoji: '👤' },
               { icon: Mail, label: 'Email Added', done: !!profile.email, emoji: '📧' },
@@ -339,20 +323,20 @@ const OverviewTab = ({
             ].map((a, i) => (
               <div
                 key={i}
-                className={`flex items-center gap-2.5 text-xs px-3 py-2.5 rounded-xl transition-all duration-200 ${a.done
-                  ? 'bg-white border border-zinc-200 shadow-sm'
-                  : 'bg-zinc-100/60 border border-transparent'
+                className={`flex items-center gap-2.5 text-[10px] uppercase tracking-widest px-3 py-2.5 rounded-none transition-all duration-200 border ${a.done
+                  ? 'bg-white border-surface-200 shadow-none'
+                  : 'bg-surface-50 border-surface-100'
                   }`}
               >
                 <div
-                  className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 text-sm ${a.done ? 'bg-zinc-900 shadow-sm' : 'bg-zinc-200'
+                  className={`w-6 h-6 rounded-none flex items-center justify-center shrink-0 text-sm ${a.done ? 'bg-surface-900' : 'bg-surface-200'
                     }`}
                 >
                   {a.done ? <Check className="w-3 h-3 text-white" strokeWidth={3} /> : <span className="text-[10px] opacity-40">{a.emoji}</span>}
                 </div>
-                <span className={`font-semibold ${a.done ? 'text-zinc-900' : 'text-zinc-400 line-through'
+                <span className={`font-bold ${a.done ? 'text-surface-900' : 'text-surface-400 line-through'
                   }`}>{a.label}</span>
-                {a.done && <span className="ml-auto text-[10px] text-emerald-600 font-bold">✓</span>}
+                {a.done && <span className="ml-auto text-lg text-emerald-600 font-bold leading-none">✓</span>}
               </div>
             ))}
           </div>

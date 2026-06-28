@@ -27,19 +27,19 @@ const BookedSessionsTab = ({
   return (
     <div className="space-y-5">
       {/* Sub-tab Navigation Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-200 pb-1.5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-surface-200 pb-1.5">
         <div className="flex gap-4">
           <button
             type="button"
             onClick={() => setSessionSubTab('upcoming')}
-            className={`pb-2 text-sm font-semibold border-b-2 transition-all relative cursor-pointer whitespace-nowrap flex items-center ${sessionSubTab === 'upcoming'
-              ? 'border-zinc-900 text-zinc-900 font-bold'
-              : 'border-transparent text-zinc-400 hover:text-zinc-600'
+            className={`pb-2 text-[10px] uppercase tracking-widest border-b-2 transition-all relative cursor-pointer whitespace-nowrap flex items-center ${sessionSubTab === 'upcoming'
+              ? 'border-surface-900 text-surface-900 font-black'
+              : 'border-transparent text-surface-400 hover:text-surface-600 font-bold'
               }`}
           >
             Upcoming Sessions
             {bookedSessions.length > 0 && (
-              <span className={`ml-1.5 text-xs font-bold px-1.5 py-0.5 rounded-full ${sessionSubTab === 'upcoming' ? 'bg-zinc-900 text-white' : 'bg-zinc-100 text-zinc-500'
+              <span className={`ml-1.5 text-[10px] font-black px-1.5 py-0.5 rounded-none ${sessionSubTab === 'upcoming' ? 'bg-surface-900 text-white' : 'bg-surface-100 text-surface-500'
                 }`}>
                 {bookedSessions.length}
               </span>
@@ -48,14 +48,14 @@ const BookedSessionsTab = ({
           <button
             type="button"
             onClick={() => setSessionSubTab('history')}
-            className={`pb-2 text-sm font-semibold border-b-2 transition-all relative cursor-pointer whitespace-nowrap flex items-center ${sessionSubTab === 'history'
-              ? 'border-zinc-900 text-zinc-900 font-bold'
-              : 'border-transparent text-zinc-400 hover:text-zinc-600'
+            className={`pb-2 text-[10px] uppercase tracking-widest border-b-2 transition-all relative cursor-pointer whitespace-nowrap flex items-center ${sessionSubTab === 'history'
+              ? 'border-surface-900 text-surface-900 font-black'
+              : 'border-transparent text-surface-400 hover:text-surface-600 font-bold'
               }`}
           >
             History & Timeline
             {completedSessions.length > 0 && (
-              <span className={`ml-1.5 text-xs font-bold px-1.5 py-0.5 rounded-full ${sessionSubTab === 'history' ? 'bg-zinc-900 text-white' : 'bg-zinc-100 text-zinc-500'
+              <span className={`ml-1.5 text-[10px] font-black px-1.5 py-0.5 rounded-none ${sessionSubTab === 'history' ? 'bg-surface-900 text-white' : 'bg-surface-100 text-surface-500'
                 }`}>
                 {completedSessions.length}
               </span>
@@ -67,7 +67,7 @@ const BookedSessionsTab = ({
           <button
             type="button"
             onClick={() => navigate('/booking')}
-            className="inline-flex items-center gap-1.5 min-h-[36px] px-3.5 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-semibold rounded-lg transition-colors border-none sm:self-center"
+            className="inline-flex items-center gap-1.5 min-h-[36px] px-3.5 py-1.5 bg-surface-900 hover:bg-surface-800 text-white uppercase tracking-widest text-[10px] font-black rounded-none transition-colors border-none sm:self-center"
           >
             <Plus className="w-3.5 h-3.5" /> New Booking
           </button>
@@ -84,14 +84,14 @@ const BookedSessionsTab = ({
                   key={chip.id}
                   type="button"
                   onClick={() => setSessionFilter(chip.id)}
-                  className={`shrink-0 inline-flex items-center gap-1.5 px-3 min-h-[32px] rounded-lg text-xs font-medium transition-all border ${sessionFilter === chip.id
-                    ? 'bg-zinc-900 text-white border-zinc-900'
-                    : 'bg-white text-zinc-600 border-zinc-200 hover:border-zinc-300'
+                  className={`shrink-0 inline-flex items-center gap-1.5 px-3 min-h-[32px] rounded-none uppercase tracking-widest text-[10px] font-bold transition-all border ${sessionFilter === chip.id
+                    ? 'bg-surface-900 text-white border-surface-900'
+                    : 'bg-white text-surface-600 border-surface-200 hover:border-surface-300'
                     }`}
                 >
                   {chip.label}
                   {chip.count > 0 && (
-                    <span className={`text-xs font-semibold px-1.5 min-w-[18px] h-4 rounded-full flex items-center justify-center ${sessionFilter === chip.id ? 'bg-white/20' : 'bg-zinc-100 text-zinc-600'
+                    <span className={`text-[10px] font-black px-1.5 min-w-[18px] h-4 rounded-none flex items-center justify-center ${sessionFilter === chip.id ? 'bg-white/20' : 'bg-surface-100 text-surface-600'
                       }`}>
                       {chip.count}
                     </span>
@@ -110,23 +110,23 @@ const BookedSessionsTab = ({
                 return (
                   <div
                     key={session.id || idx}
-                    className="card-luxury border-none rounded-xl p-5 card-luxury-hover text-left"
+                    className="bg-white border border-surface-200 rounded-none shadow-none p-5 text-left"
                   >
                     {/* Status indicator */}
                     <div className="flex items-start justify-between gap-3 mb-4">
                       <div className="flex items-center gap-2.5">
-                        <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center shrink-0">
-                          {session.mode === 'ONLINE' ? <Video className="w-5 h-5 text-zinc-600" /> : <MapPin className="w-5 h-5 text-zinc-600" />}
+                        <div className="w-10 h-10 rounded-none bg-surface-100 flex items-center justify-center shrink-0">
+                          {session.mode === 'ONLINE' ? <Video className="w-5 h-5 text-surface-600" /> : <MapPin className="w-5 h-5 text-surface-600" />}
                         </div>
                         <div>
-                          <span className={`inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-md font-semibold capitalize  ${
+                          <span className={`inline-flex items-center gap-1 uppercase tracking-widest text-[10px] px-2 py-0.5 rounded-none font-bold ${
                             session.status === 'EXPIRED'
                               ? 'bg-rose-50 text-rose-700 border border-rose-200'
                               : isConfirmed
                                 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                                 : 'bg-amber-50 text-amber-700 border border-amber-200'
                             }`}>
-                            <span className={`w-1.5 h-1.5 rounded-full ${
+                            <span className={`w-1.5 h-1.5 rounded-none ${
                               session.status === 'EXPIRED'
                                 ? 'bg-rose-500'
                                 : isConfirmed
@@ -135,41 +135,41 @@ const BookedSessionsTab = ({
                             }`} />
                             {session.status}
                           </span>
-                          <p className="text-xs text-zinc-400 font-medium mt-1">
+                          <p className="text-[10px] uppercase tracking-widest text-surface-500 font-bold mt-1">
                             {session.service === 'counselling' ? 'Psychological' : 'Career'} · {session.mode}
                           </p>
                         </div>
                       </div>
                       <div className="text-right shrink-0">
-                        <p className="text-xs text-zinc-400">In</p>
-                        <p className={`text-sm font-bold ${cd.urgent ? 'text-amber-600' : 'text-zinc-900'}`}>{cd.text}</p>
+                        <p className="text-[10px] uppercase tracking-widest text-surface-500 font-bold">In</p>
+                        <p className={`text-sm font-black ${cd.urgent ? 'text-amber-600' : 'text-surface-900'}`}>{cd.text}</p>
                       </div>
                     </div>
 
-                    <p className="font-semibold text-zinc-900 text-base">{session.advisorName}</p>
-                    <p className="text-xs text-zinc-500 mt-0.5">{session.advisorRole || 'Consultation'}</p>
+                    <p className="font-black uppercase tracking-widest text-surface-900 text-lg">{session.advisorName}</p>
+                    <p className="text-[10px] uppercase tracking-widest text-surface-500 font-bold mt-0.5">{session.advisorRole || 'Consultation'}</p>
 
                     <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      <div className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-zinc-50 border border-zinc-100 text-xs text-zinc-600">
-                        <Calendar className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
-                        <span className="font-medium truncate">{formatDateString(session.date)}</span>
+                      <div className="flex items-center gap-1.5 px-3 py-2 rounded-none bg-surface-50 border border-surface-200 text-[10px] uppercase tracking-widest text-surface-600 font-bold">
+                        <Calendar className="w-3.5 h-3.5 text-surface-400 shrink-0" />
+                        <span className="font-black truncate">{formatDateString(session.date)}</span>
                       </div>
-                      <div className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-zinc-50 border border-zinc-100 text-xs text-zinc-600">
-                        <Clock className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
-                        <span className="font-medium truncate">{session.time}</span>
+                      <div className="flex items-center gap-1.5 px-3 py-2 rounded-none bg-surface-50 border border-surface-200 text-[10px] uppercase tracking-widest text-surface-600 font-bold">
+                        <Clock className="w-3.5 h-3.5 text-surface-400 shrink-0" />
+                        <span className="font-black truncate">{session.time}</span>
                       </div>
                     </div>
 
                     {session.mode === 'ONLINE' && !session.meetLink && (
-                      <div className="mt-3 p-2.5 bg-amber-50 border border-amber-200 text-amber-700 text-xs rounded-lg flex items-center gap-2">
+                      <div className="mt-3 p-2.5 bg-amber-50 border border-amber-200 text-amber-700 text-[10px] uppercase tracking-widest font-bold rounded-none flex items-center gap-2">
                         <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                         <span>Meet link pending from counsellor.</span>
                       </div>
                     )}
 
-                    <div className="mt-4 pt-3 border-t border-zinc-100 flex flex-wrap gap-2">
+                    <div className="mt-4 pt-3 border-t border-surface-100 flex flex-wrap gap-2">
                       {session.status === 'EXPIRED' ? (
-                        <div className="w-full text-center text-xs font-bold text-rose-650 bg-rose-50 border border-rose-100 py-3 rounded-lg flex items-center justify-center gap-1.5 px-4">
+                        <div className="w-full text-center text-[10px] uppercase tracking-widest font-black text-rose-650 bg-rose-50 border border-rose-100 py-3 rounded-none flex items-center justify-center gap-1.5 px-4">
                           <AlertCircle className="w-4 h-4 text-rose-500 shrink-0" />
                           <span>This session expired because it wasn't joined within 1 hour.</span>
                         </div>
@@ -179,7 +179,7 @@ const BookedSessionsTab = ({
                             <button
                               type="button"
                               onClick={() => window.open(meetStatus.link, '_blank')}
-                              className="flex-1 min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-brand text-zinc-950 hover:bg-brand-dark rounded-lg text-xs font-black tracking-widest uppercase transition-all duration-300 shadow-[0_4px_12px_rgba(0,209,209,0.25)] hover:shadow-[0_6px_16px_rgba(0,209,209,0.4)] hover:scale-[1.02] active:scale-[0.98] border-none cursor-pointer animate-pulse"
+                              className="flex-1 min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-brand text-zinc-950 hover:bg-brand-dark rounded-none text-[10px] font-black tracking-widest uppercase transition-all duration-300 shadow-none border-none cursor-pointer animate-pulse"
                             >
                               <Video className="w-3.5 h-3.5" /> Join Now
                               <ExternalLink className="w-3 h-3" />
@@ -189,7 +189,7 @@ const BookedSessionsTab = ({
                               type="button"
                               disabled
                               title={meetStatus.status === 'LOCKED' ? 'Link activates 10 min before session' : 'Session has ended'}
-                              className="flex-1 min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-zinc-100 text-zinc-400 border border-zinc-200 rounded-lg text-xs font-medium cursor-not-allowed"
+                              className="flex-1 min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-surface-100 text-surface-400 border border-surface-200 rounded-none text-[10px] uppercase tracking-widest font-black shadow-none cursor-not-allowed"
                             >
                               <Lock className="w-3.5 h-3.5" /> {meetStatus.label}
                             </button>
@@ -210,7 +210,7 @@ const BookedSessionsTab = ({
                                   );
                                 }
                               }}
-                              className="flex-1 min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-zinc-100 text-zinc-700 border border-zinc-200 rounded-lg text-xs font-medium card-luxury-hover cursor-pointer"
+                              className="flex-1 min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-surface-100 text-surface-700 border border-surface-200 rounded-none text-[10px] uppercase tracking-widest font-black shadow-none cursor-pointer"
                             >
                               <MapPin className="w-3.5 h-3.5" /> View Location
                             </button>
@@ -219,54 +219,54 @@ const BookedSessionsTab = ({
                             <button
                               type="button"
                               onClick={() => downloadPDFReceiptForSession(session)}
-                              className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 border border-zinc-200 hover:border-zinc-300 rounded-lg text-xs font-medium text-zinc-600 hover:text-zinc-900 transition-colors bg-white cursor-pointer"
+                              className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 border border-surface-200 hover:border-surface-300 rounded-none text-[10px] uppercase tracking-widest font-black shadow-none text-surface-600 hover:text-surface-900 transition-colors bg-white cursor-pointer"
                               title="Download Receipt PDF"
                             >
-                              <Download className="w-3.5 h-3.5 text-zinc-500" /> Receipt
+                              <Download className="w-3.5 h-3.5 text-surface-500" /> Receipt
                             </button>
                           )}
-                          <button
-                            type="button"
-                            onClick={async () => {
-                              // 1. Check 1 hour lead time
-                              try {
-                                const [year, month, day] = session.date.split('-').map(Number);
-                                const timeParts = session.time.split(' ');
-                                let [hours, minutes] = timeParts[0].split(':').map(Number);
-                                const meridiem = timeParts[1];
-                                if (meridiem === 'PM' && hours < 12) hours += 12;
-                                if (meridiem === 'AM' && hours === 12) hours = 0;
-                                
-                                const sessionTime = new Date(year, month - 1, day, hours, minutes);
-                                const now = new Date();
-                                const diffMs = sessionTime - now;
-                                const diffHours = diffMs / (1000 * 60 * 60);
-                                
-                                if (diffHours < 1) {
-                                  await showAlert('Cannot reschedule a session less than 1 hour before the scheduled time.', 'Error');
+                            <button
+                              type="button"
+                              onClick={async () => {
+                                // 1. Check 1 hour lead time
+                                try {
+                                  const [year, month, day] = session.date.split('-').map(Number);
+                                  const timeParts = session.time.split(' ');
+                                  let [hours, minutes] = timeParts[0].split(':').map(Number);
+                                  const meridiem = timeParts[1];
+                                  if (meridiem === 'PM' && hours < 12) hours += 12;
+                                  if (meridiem === 'AM' && hours === 12) hours = 0;
+                                  
+                                  const sessionTime = new Date(year, month - 1, day, hours, minutes);
+                                  const now = new Date();
+                                  const diffMs = sessionTime - now;
+                                  const diffHours = diffMs / (1000 * 60 * 60);
+                                  
+                                  if (diffHours < 1) {
+                                    await showAlert('Cannot reschedule a session less than 1 hour before the scheduled time.', 'Error');
+                                    return;
+                                  }
+                                } catch (e) {}
+
+                                // 2. Check per-appointment limit
+                                if ((session.rescheduleCount || 0) >= 3) {
+                                  await showAlert('This session has already reached the maximum rescheduling limit (3 times).', 'Error');
                                   return;
                                 }
-                              } catch (e) {}
 
-                              // 2. Check per-appointment limit
-                              if ((session.rescheduleCount || 0) >= 3) {
-                                await showAlert('This session has already reached the maximum rescheduling limit (3 times).', 'Error');
-                                return;
-                              }
-
-                              navigate(`/booking?reschedule=${session.id}`);
-                            }}
-                            className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 border border-zinc-200 hover:border-zinc-300 rounded-lg text-xs font-medium text-zinc-650 hover:text-zinc-900 transition-colors bg-white cursor-pointer"
-                          >
-                            <RefreshCw className="w-3.5 h-3.5" /> Reschedule
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => handleCancelSession(session.id)}
-                            className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 card-luxury border-none hover:border-rose-200 hover:bg-rose-50 text-zinc-500 hover:text-rose-600 rounded-lg text-xs font-medium transition-colors"
-                          >
-                            <XIcon className="w-3.5 h-3.5" /> Cancel
-                          </button>
+                                navigate(`/booking?reschedule=${session.id}`);
+                              }}
+                              className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 border border-surface-200 hover:border-surface-300 rounded-none text-[10px] uppercase tracking-widest font-black text-surface-650 hover:text-surface-900 shadow-none transition-colors bg-white cursor-pointer"
+                            >
+                              <RefreshCw className="w-3.5 h-3.5" /> Reschedule
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleCancelSession(session.id)}
+                              className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-white border border-surface-200 shadow-none hover:border-rose-200 hover:bg-rose-50 text-surface-500 hover:text-rose-600 rounded-none text-[10px] uppercase tracking-widest font-black transition-colors"
+                            >
+                              <XIcon className="w-3.5 h-3.5" /> Cancel
+                            </button>
                         </>
                       )}
                     </div>
@@ -275,12 +275,12 @@ const BookedSessionsTab = ({
               })}
             </div>
           ) : (
-            <div className="bg-zinc-50 border border-dashed border-zinc-300 rounded-xl p-8 text-center">
-              <div className="w-12 h-12 mx-auto rounded-xl bg-zinc-200 flex items-center justify-center mb-3">
-                <CalendarDays className="w-6 h-6 text-zinc-500" />
+            <div className="bg-surface-50 border border-dashed border-surface-300 rounded-none p-8 text-center">
+              <div className="w-12 h-12 mx-auto rounded-none bg-surface-200 flex items-center justify-center mb-3">
+                <CalendarDays className="w-6 h-6 text-surface-500" />
               </div>
-              <p className="text-sm font-semibold text-zinc-700">No sessions found</p>
-              <p className="text-xs text-zinc-500 mt-1">
+              <p className="text-sm font-black text-surface-900 uppercase tracking-widest">No sessions found</p>
+              <p className="text-xs text-surface-500 mt-1">
                 {sessionFilter === 'all'
                   ? 'Book a session with one of our experts.'
                   : `No ${sessionFilter} sessions scheduled.`}
@@ -289,7 +289,7 @@ const BookedSessionsTab = ({
                 <button
                   type="button"
                   onClick={() => navigate('/booking')}
-                  className="mt-4 inline-flex items-center gap-1.5 min-h-[36px] px-5 py-2 bg-zinc-900 text-white text-xs font-semibold rounded-lg hover:bg-zinc-800 transition-colors border-none"
+                  className="mt-4 inline-flex items-center gap-1.5 min-h-[36px] px-5 py-2 bg-surface-900 text-white uppercase tracking-widest text-[10px] font-black rounded-none hover:bg-surface-800 transition-colors border-none"
                 >
                   <Plus className="w-3.5 h-3.5" /> Book a Session
                 </button>
@@ -308,14 +308,14 @@ const BookedSessionsTab = ({
             ].map((s, i) => {
               const Icon = s.icon;
               return (
-                <div key={i} className="card-luxury border-none rounded-xl p-4 text-left">
-                  <div className="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center mb-2">
-                    <Icon className="w-4 h-4 text-zinc-600" />
+                <div key={i} className="bg-white border border-surface-200 rounded-none shadow-none p-4 text-left">
+                  <div className="w-8 h-8 rounded-none bg-surface-100 flex items-center justify-center mb-2">
+                    <Icon className="w-4 h-4 text-surface-600" />
                   </div>
-                  <p className="text-lg font-bold text-zinc-900">
-                    {s.value}{s.suffix && <span className="text-sm text-zinc-400 font-medium">{s.suffix}</span>}
+                  <p className="text-lg font-black text-surface-900">
+                    {s.value}{s.suffix && <span className="text-sm text-surface-400 font-bold">{s.suffix}</span>}
                   </p>
-                  <p className="text-xs text-zinc-500 font-semibold capitalize  mt-0.5">{s.label}</p>
+                  <p className="text-[10px] text-surface-500 font-bold uppercase tracking-widest mt-0.5">{s.label}</p>
                 </div>
               );
             })}
@@ -323,18 +323,18 @@ const BookedSessionsTab = ({
 
           {completedSessions.length > 0 ? (
             <div className="relative">
-              <div className="absolute left-4 top-0 bottom-0 w-px bg-zinc-200" />
+              <div className="absolute left-4 top-0 bottom-0 w-px bg-surface-200" />
               <div className="space-y-4">
                 {completedSessions.map((session, sIdx) => (
                   <div key={session.id || sIdx} className="relative pl-12 text-left">
-                    <div className="absolute left-0 top-3 w-8 h-8 rounded-lg card-luxury border-none flex items-center justify-center shadow-sm">
-                      <Award className="w-4 h-4 text-zinc-500" />
+                    <div className="absolute left-0 top-3 w-8 h-8 rounded-none border border-surface-200 bg-white flex items-center justify-center shadow-none">
+                      <Award className="w-4 h-4 text-surface-500" />
                     </div>
-                    <div className="card-luxury border-none rounded-xl p-4 card-luxury-hover">
+                    <div className="bg-white border border-surface-200 rounded-none shadow-none p-4">
                       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-2">
                         <div>
                           <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                            <span className={`text-xs px-2 py-0.5 rounded-md font-semibold capitalize border ${
+                            <span className={`text-[10px] px-2 py-0.5 rounded-none font-bold uppercase tracking-widest border ${
                               session.status === 'COMPLETED'
                                 ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
                                 : session.status === 'EXPIRED' || session.status === 'CANCELLED' || session.status === 'REJECTED'
@@ -343,7 +343,7 @@ const BookedSessionsTab = ({
                             }`}>
                               {session.status}
                             </span>
-                            <span className="text-xs text-zinc-400 font-medium capitalize ">{session.mode}</span>
+                            <span className="text-[10px] text-surface-500 font-bold uppercase tracking-widest">{session.mode}</span>
                             {session.status === 'COMPLETED' && (
                               <div className="flex items-center gap-0.5">
                                 {[1, 2, 3, 4, 5].map(n => (
@@ -352,32 +352,32 @@ const BookedSessionsTab = ({
                               </div>
                             )}
                           </div>
-                          <p className="font-semibold text-zinc-900">{session.advisorName}</p>
-                          <p className="text-xs text-zinc-500 mt-0.5">{session.advisorRole || 'Consultation'}</p>
+                          <p className="font-black text-surface-900 uppercase tracking-widest text-lg">{session.advisorName}</p>
+                          <p className="text-[10px] text-surface-500 font-bold uppercase tracking-widest mt-0.5">{session.advisorRole || 'Consultation'}</p>
                         </div>
-                        <div className="flex items-center gap-1.5 text-xs text-zinc-500 bg-zinc-50 border border-zinc-200 px-2.5 py-1.5 rounded-lg shrink-0 w-fit">
-                          <Clock className="w-3.5 h-3.5 text-zinc-400" />
-                          <span className="font-medium">{formatDateString(session.date)}</span>
-                          <span className="text-zinc-300">·</span>
+                        <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-surface-600 bg-surface-50 border border-surface-200 px-2.5 py-1.5 rounded-none shrink-0 w-fit font-bold">
+                          <Clock className="w-3.5 h-3.5 text-surface-400" />
+                          <span className="font-black">{formatDateString(session.date)}</span>
+                          <span className="text-surface-300">·</span>
                           <span>{session.time}</span>
                         </div>
                       </div>
 
                       {session.feedback && (
-                        <div className="mt-3 p-3 bg-zinc-50 border border-zinc-200 rounded-lg">
-                          <p className="text-xs font-semibold text-zinc-500 capitalize  mb-1.5">Counsellor Feedback</p>
-                          <p className="text-xs text-zinc-600 italic leading-relaxed">"{session.feedback}"</p>
+                        <div className="mt-3 p-3 bg-surface-50 border border-surface-200 rounded-none">
+                          <p className="text-[10px] font-bold text-surface-500 uppercase tracking-widest mb-1.5">Counsellor Feedback</p>
+                          <p className="text-xs text-surface-900 font-medium leading-relaxed">"{session.feedback}"</p>
                         </div>
                       )}
 
                       <div className="mt-3 flex items-center justify-between">
-                        <span className="text-xs text-zinc-400">Session #{completedSessions.length - sIdx}</span>
+                        <span className="text-[10px] text-surface-400 font-bold uppercase tracking-widest">Session #{completedSessions.length - sIdx}</span>
                         <div className="flex items-center gap-3">
                           {(session.paymentStatus === 'PAID' || session.amountPaid > 0) && (
                             <button
                               type="button"
                               onClick={() => downloadPDFReceiptForSession(session)}
-                              className="inline-flex items-center gap-1 text-xs font-medium text-zinc-500 hover:text-zinc-900 transition-colors cursor-pointer"
+                              className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-surface-500 hover:text-surface-900 transition-colors cursor-pointer"
                               title="Download Receipt PDF"
                             >
                               <Download className="w-3.5 h-3.5" /> Receipt
@@ -387,7 +387,7 @@ const BookedSessionsTab = ({
                             <button
                               type="button"
                               onClick={() => downloadCertificatePDF(session)}
-                              className="inline-flex items-center gap-1 text-xs font-medium text-zinc-500 hover:text-zinc-900 transition-colors cursor-pointer"
+                              className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-surface-500 hover:text-surface-900 transition-colors cursor-pointer"
                               title="Download certificate"
                             >
                               <Download className="w-3.5 h-3.5" /> Certificate
@@ -401,17 +401,17 @@ const BookedSessionsTab = ({
               </div>
             </div>
           ) : (
-            <div className="bg-zinc-50 border border-dashed border-zinc-300 rounded-xl p-8 text-center">
-              <div className="w-12 h-12 mx-auto rounded-xl bg-zinc-200 flex items-center justify-center mb-3">
-                <Trophy className="w-6 h-6 text-zinc-500" />
+            <div className="bg-surface-50 border border-dashed border-surface-300 rounded-none p-8 text-center">
+              <div className="w-12 h-12 mx-auto rounded-none bg-surface-200 flex items-center justify-center mb-3">
+                <Trophy className="w-6 h-6 text-surface-500" />
               </div>
-              <p className="text-sm font-semibold text-zinc-700">No completed sessions yet</p>
-              <p className="text-xs text-zinc-500 mt-1">Finished sessions will appear here with counsellor feedback.</p>
+              <p className="text-sm font-black text-surface-900 uppercase tracking-widest">No completed sessions yet</p>
+              <p className="text-xs text-surface-500 mt-1">Finished sessions will appear here with counsellor feedback.</p>
               {enablePsychology && (
                 <button
                   type="button"
                   onClick={() => navigate('/booking')}
-                  className="mt-4 inline-flex items-center gap-1.5 min-h-[36px] px-5 py-2 bg-zinc-900 text-white text-xs font-semibold rounded-lg hover:bg-zinc-800 transition-colors border-none"
+                  className="mt-4 inline-flex items-center gap-1.5 min-h-[36px] px-5 py-2 bg-surface-900 text-white uppercase tracking-widest text-[10px] font-black rounded-none hover:bg-surface-800 transition-colors border-none"
                 >
                   <Plus className="w-3.5 h-3.5" /> Book First Session
                 </button>

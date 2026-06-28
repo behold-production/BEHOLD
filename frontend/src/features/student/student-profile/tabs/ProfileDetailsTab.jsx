@@ -153,27 +153,23 @@ const ProfileDetailsTab = ({
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <h2 className="text-xl font-bold text-zinc-900 tracking-tight">My Profile</h2>
-          <p className="text-sm text-zinc-500 mt-0.5">Keep your details up to date.</p>
+          <h2 className="text-xl font-bold text-surface-900 tracking-tight">My Profile</h2>
+          <p className="text-sm text-surface-500 mt-0.5">Keep your details up to date.</p>
         </div>
-        <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-none uppercase tracking-widest bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-black">
           <Shield className="w-3.5 h-3.5" /> Saved securely in Cloud
         </div>
       </div>
 
       {/* Progress — gradient bar */}
       <div
-        className="rounded-2xl p-5"
-        style={{
-          background: 'linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)',
-          boxShadow: 'inset 0 0 0 1px rgba(11,20,36,0.05), 0 1px 2px rgba(11,20,36,0.03), 0 4px 16px -4px rgba(11,20,36,0.07)'
-        }}
+        className="rounded-none p-5 bg-white border border-surface-200 shadow-none"
       >
         <div className="flex items-center justify-between mb-3">
 
           <div>
-            <p className="text-sm font-bold text-zinc-800">Profile Strength</p>
-            <p className="text-xs text-zinc-500 mt-0.5">
+            <p className="text-sm font-black text-surface-900">Profile Strength</p>
+            <p className="text-xs text-surface-500 mt-0.5">
               {completion < 50 ? 'Fill in more fields to strengthen your profile.' :
                 completion < 100 ? 'Almost complete — just a few more fields.' :
                   '🎉 Your profile is complete!'}
@@ -184,22 +180,22 @@ const ProfileDetailsTab = ({
             style={{ color: completion >= 80 ? '#10b981' : completion >= 50 ? '#f59e0b' : '#f43f5e' }}
           >{completion}%</span>
         </div>
-        <div className="h-2 w-full bg-zinc-100 rounded-full overflow-hidden">
+        <div className="h-2 w-full bg-surface-100 rounded-none overflow-hidden">
           <div
-            className="h-full rounded-full transition-all duration-700"
+            className="h-full rounded-none transition-all duration-700"
             style={{
               width: `${completion}%`,
               background: completion >= 80
-                ? 'linear-gradient(90deg, #10b981 0%, #059669 100%)'
+                ? '#10b981'
                 : completion >= 50
-                  ? 'linear-gradient(90deg, #f59e0b 0%, #d97706 100%)'
-                  : 'linear-gradient(90deg, #f43f5e 0%, #e11d48 100%)'
+                  ? '#f59e0b'
+                  : '#f43f5e'
             }}
           />
         </div>
         <div className="flex justify-between mt-2">
-          <span className="text-[10px] text-zinc-400 font-medium">0%</span>
-          <span className="text-[10px] text-zinc-400 font-medium">100% Complete</span>
+          <span className="text-[10px] text-surface-400 font-bold uppercase tracking-widest">0%</span>
+          <span className="text-[10px] text-surface-400 font-bold uppercase tracking-widest">100% Complete</span>
         </div>
       </div>
 
@@ -209,21 +205,17 @@ const ProfileDetailsTab = ({
           return (
             <div
               key={sIdx}
-              className="relative overflow-hidden rounded-2xl p-5"
-              style={{
-                background: '#ffffff',
-                boxShadow: `inset 0 0 0 1px rgba(11,20,36,0.05), 0 1px 2px rgba(11,20,36,0.03), 0 4px 16px -4px rgba(11,20,36,0.07)`
-              }}
+              className="relative overflow-hidden rounded-none p-5 border border-surface-200 bg-white shadow-none"
             >
               {/* Left accent border */}
-              <div className="absolute left-0 top-4 bottom-4 w-1 rounded-r-full" style={{ background: section.accentColor }} />
-              <div className="flex items-center gap-3 mb-5 pb-3 border-b border-zinc-100 pl-3">
-                <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: section.accentBg, border: `1px solid ${section.accentColor}25` }}>
+              <div className="absolute left-0 top-4 bottom-4 w-1 rounded-none" style={{ background: section.accentColor }} />
+              <div className="flex items-center gap-3 mb-5 pb-3 border-b border-surface-100 pl-3">
+                <div className="w-9 h-9 rounded-none flex items-center justify-center" style={{ background: section.accentBg, border: `1px solid ${section.accentColor}25` }}>
                   <SIcon className="w-[18px] h-[18px]" style={{ color: section.accentColor }} />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-zinc-900">{section.title}</h3>
-                  <p className="text-xs text-zinc-400 mt-0.5">{section.hint}</p>
+                  <h3 className="text-sm font-black text-surface-900">{section.title}</h3>
+                  <p className="text-xs text-surface-500 mt-0.5">{section.hint}</p>
                 </div>
               </div>
 
@@ -234,13 +226,13 @@ const ProfileDetailsTab = ({
                   const hasValue = !!formData[field.name];
                   return (
                     <div key={field.name} className="space-y-1.5">
-                      <label htmlFor={`sp-${field.name}`} className="text-xs text-zinc-600 font-medium flex items-center gap-1">
+                      <label htmlFor={`sp-${field.name}`} className="text-[10px] uppercase tracking-widest text-surface-600 font-bold flex items-center gap-1">
                         {field.label}
                         {field.required && <span className="text-rose-500">*</span>}
                       </label>
                       <div className="relative">
                         {FIcon && (
-                          <FIcon className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${hasError ? 'text-rose-400' : hasValue ? 'text-zinc-600' : 'text-zinc-300'
+                          <FIcon className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${hasError ? 'text-rose-400' : hasValue ? 'text-surface-600' : 'text-surface-300'
                             }`} />
                         )}
                         {field.type === 'select' ? (
@@ -249,9 +241,9 @@ const ProfileDetailsTab = ({
                             name={field.name}
                             value={formData[field.name]}
                             onChange={handleChange}
-                            className={`w-full min-h-[44px] pl-10 pr-9 py-2.5 border text-sm text-zinc-900 rounded-lg outline-none transition-all appearance-none cursor-pointer ${hasError
+                            className={`w-full min-h-[44px] pl-10 pr-9 py-2.5 border text-sm text-surface-900 font-medium rounded-none outline-none transition-all appearance-none cursor-pointer ${hasError
                               ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10'
-                              : 'bg-white border-zinc-200 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-100'
+                              : 'bg-surface-50 border-surface-200 focus:border-surface-900 focus:ring-0 focus:bg-white'
                               }`}
                           >
                             {field.options.map((o, i) => (
@@ -268,11 +260,11 @@ const ProfileDetailsTab = ({
                             placeholder={field.placeholder}
                             autoComplete={field.autoComplete}
                             disabled={field.disabled}
-                            className={`w-full min-h-[44px] pl-10 pr-9 py-2.5 text-sm rounded-lg outline-none transition-all ${field.disabled
-                                ? 'bg-zinc-50 border-zinc-200 text-zinc-400 cursor-not-allowed'
+                            className={`w-full min-h-[44px] pl-10 pr-9 py-2.5 text-sm font-medium rounded-none outline-none transition-all ${field.disabled
+                                ? 'bg-surface-100 border-surface-200 text-surface-500 cursor-not-allowed'
                                 : hasError
-                                  ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10 text-zinc-900'
-                                  : 'bg-white border-zinc-200 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-100 text-zinc-900'
+                                  ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10 text-surface-900'
+                                  : 'bg-surface-50 border-surface-200 focus:border-surface-900 focus:ring-0 focus:bg-white text-surface-900'
                               }`}
                           />
                         )}
@@ -292,7 +284,7 @@ const ProfileDetailsTab = ({
                           <AlertCircle className="w-3 h-3" /> {errors[field.name]}
                         </p>
                       ) : (
-                        <p className="text-xs text-zinc-400">{field.required ? 'Required' : 'Optional'}</p>
+                        <p className="text-[10px] uppercase tracking-widest font-bold text-surface-400">{field.required ? 'Required' : 'Optional'}</p>
                       )}
                     </div>
                   );
@@ -304,29 +296,25 @@ const ProfileDetailsTab = ({
 
         {/* Home Location & Address Card */}
         <div
-          className="relative overflow-hidden rounded-2xl p-5"
-          style={{
-            background: '#ffffff',
-            boxShadow: `inset 0 0 0 1px rgba(11,20,36,0.05), 0 1px 2px rgba(11,20,36,0.03), 0 4px 16px -4px rgba(11,20,36,0.07)`
-          }}
+          className="relative overflow-hidden rounded-none p-5 border border-surface-200 bg-white shadow-none"
         >
           {/* Left accent border */}
-          <div className="absolute left-0 top-4 bottom-4 w-1 rounded-r-full bg-amber-500" />
-          <div className="flex items-center justify-between mb-5 pb-3 border-b border-zinc-100 pl-3">
+          <div className="absolute left-0 top-4 bottom-4 w-1 rounded-none bg-amber-500" />
+          <div className="flex items-center justify-between mb-5 pb-3 border-b border-surface-100 pl-3">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center bg-amber-55/20 border border-amber-200/25">
+              <div className="w-9 h-9 rounded-none flex items-center justify-center bg-amber-55/20 border border-amber-200/25">
                 <MapPin className="w-[18px] h-[18px] text-amber-600" />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-zinc-900">Home Location & Address</h3>
-                <p className="text-xs text-zinc-400 mt-0.5">Used for calculating doorstep session booking feasibility (10 km limit)</p>
+                <h3 className="text-sm font-black text-surface-900">Home Location & Address</h3>
+                <p className="text-xs text-surface-500 mt-0.5">Used for calculating doorstep session booking feasibility (10 km limit)</p>
               </div>
             </div>
             <button
               type="button"
               onClick={handleDetectLocation}
               disabled={isLocating}
-              className="min-h-[32px] inline-flex items-center gap-1 px-3 py-1 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg text-xs font-semibold transition cursor-pointer border-none shadow-xs disabled:opacity-50"
+              className="min-h-[32px] inline-flex items-center gap-1 px-3 py-1 bg-surface-900 hover:bg-surface-800 text-white rounded-none uppercase tracking-widest text-[10px] font-black transition cursor-pointer border-none shadow-none disabled:opacity-50"
             >
               <Navigation className={`w-3.5 h-3.5 ${isLocating ? 'animate-spin' : ''}`} />
               {isLocating ? 'Locating...' : 'Detect Location'}
@@ -336,19 +324,19 @@ const ProfileDetailsTab = ({
           <div className="space-y-4 animate-in fade-in duration-200">
             {/* Address Search Autocomplete Input */}
             <div className="space-y-1.5 text-left relative">
-              <label htmlFor="student-location-search" className="text-xs text-zinc-650 font-medium flex items-center gap-1">
+              <label htmlFor="student-location-search" className="text-[10px] uppercase tracking-widest text-surface-600 font-bold flex items-center gap-1">
                 Search Home Address
               </label>
               <div className="relative flex gap-2">
                 <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-surface-400" />
                   <input
                     id="student-location-search"
                     type="text"
                     placeholder="Type to search and select your address... (e.g. Kozhikode, Kerala)"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full min-h-[44px] pl-10 pr-9 py-2.5 text-sm rounded-lg outline-none transition-all bg-white border border-zinc-200 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-100 text-zinc-900"
+                    className="w-full min-h-[44px] pl-10 pr-9 py-2.5 text-sm font-medium rounded-none outline-none transition-all bg-surface-50 border border-surface-200 focus:border-surface-900 focus:ring-0 focus:bg-white text-surface-900"
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
                         e.preventDefault();
@@ -361,7 +349,7 @@ const ProfileDetailsTab = ({
                   type="button"
                   onClick={handleAddressSearch}
                   disabled={isSearching}
-                  className="px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-semibold rounded-lg transition cursor-pointer border-none"
+                  className="px-4 py-2 bg-surface-900 hover:bg-surface-800 text-white text-[10px] uppercase tracking-widest font-black rounded-none transition cursor-pointer border-none shadow-none"
                 >
                   {isSearching ? 'Searching...' : 'Search'}
                 </button>
@@ -369,7 +357,7 @@ const ProfileDetailsTab = ({
 
               {/* Autocomplete Dropdown */}
               {searchResults.length > 0 && (
-                <div className="absolute left-0 right-0 mt-1 bg-white border border-zinc-200 rounded-lg max-h-48 overflow-y-auto z-50 shadow-xl divide-y divide-zinc-100">
+                <div className="absolute left-0 right-0 mt-1 bg-white border border-surface-200 rounded-none max-h-48 overflow-y-auto z-50 shadow-xl divide-y divide-surface-100">
                   {searchResults.map((res, index) => (
                     <button
                       key={index}
@@ -379,7 +367,7 @@ const ProfileDetailsTab = ({
                         setSearchQuery(res.display_name);
                         setSearchResults([]);
                       }}
-                      className="w-full text-left px-3.5 py-2.5 text-xs text-zinc-700 hover:text-zinc-900 hover:bg-zinc-50 transition-colors block truncate border-none cursor-pointer"
+                      className="w-full text-left px-3.5 py-2.5 text-xs text-surface-700 hover:text-surface-900 hover:bg-surface-50 transition-colors block truncate border-none cursor-pointer"
                     >
                       {res.display_name}
                     </button>
@@ -390,7 +378,7 @@ const ProfileDetailsTab = ({
 
             {/* Read/Write Coordinates Form Fields */}
             <div className="space-y-1.5">
-              <label htmlFor="sp-locationName" className="text-xs text-zinc-650 font-medium">Selected / Current Address</label>
+              <label htmlFor="sp-locationName" className="text-[10px] uppercase tracking-widest text-surface-600 font-bold">Selected / Current Address</label>
               <input
                 id="sp-locationName"
                 type="text"
@@ -401,13 +389,13 @@ const ProfileDetailsTab = ({
                   handleChange(e);
                   setSearchQuery(e.target.value);
                 }}
-                className="w-full min-h-[44px] px-3.5 py-2.5 text-sm rounded-lg outline-none transition-all bg-white border border-zinc-200 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-100 text-zinc-900"
+                className="w-full min-h-[44px] px-3.5 py-2.5 text-sm font-medium rounded-none outline-none transition-all bg-surface-50 border border-surface-200 focus:border-surface-900 focus:ring-0 focus:bg-white text-surface-900"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label htmlFor="sp-latitude" className="text-xs text-zinc-650 font-medium">Latitude</label>
+                <label htmlFor="sp-latitude" className="text-[10px] uppercase tracking-widest text-surface-600 font-bold">Latitude</label>
                 <input
                   id="sp-latitude"
                   type="number"
@@ -416,11 +404,11 @@ const ProfileDetailsTab = ({
                   placeholder="e.g., 11.2588"
                   value={formData.latitude || ''}
                   onChange={(e) => handleChange({ target: { name: 'latitude', value: parseFloat(e.target.value) || 0 } })}
-                  className="w-full min-h-[44px] px-3.5 py-2.5 text-sm rounded-lg outline-none transition-all bg-white border border-zinc-200 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-100 text-zinc-900"
+                  className="w-full min-h-[44px] px-3.5 py-2.5 text-sm font-medium rounded-none outline-none transition-all bg-surface-50 border border-surface-200 focus:border-surface-900 focus:ring-0 focus:bg-white text-surface-900"
                 />
               </div>
               <div className="space-y-1.5">
-                <label htmlFor="sp-longitude" className="text-xs text-zinc-650 font-medium">Longitude</label>
+                <label htmlFor="sp-longitude" className="text-[10px] uppercase tracking-widest text-surface-600 font-bold">Longitude</label>
                 <input
                   id="sp-longitude"
                   type="number"
@@ -429,7 +417,7 @@ const ProfileDetailsTab = ({
                   placeholder="e.g., 75.7804"
                   value={formData.longitude || ''}
                   onChange={(e) => handleChange({ target: { name: 'longitude', value: parseFloat(e.target.value) || 0 } })}
-                  className="w-full min-h-[44px] px-3.5 py-2.5 text-sm rounded-lg outline-none transition-all bg-white border border-zinc-200 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-100 text-zinc-900"
+                  className="w-full min-h-[44px] px-3.5 py-2.5 text-sm font-medium rounded-none outline-none transition-all bg-surface-50 border border-surface-200 focus:border-surface-900 focus:ring-0 focus:bg-white text-surface-900"
                 />
               </div>
             </div>
@@ -437,30 +425,30 @@ const ProfileDetailsTab = ({
         </div>
 
         {/* Browser Notification Settings Widget */}
-        <div className="bg-white/75 backdrop-blur-md border-[1.5px] border-[#0b1424] shadow-dark-blue rounded-lg sm:rounded-xl p-5 space-y-4">
-          <div className="flex items-center gap-2.5 pb-3 border-b border-zinc-100">
-            <div className="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center">
-              <Bell className="w-4 h-4 text-zinc-650" />
+        <div className="bg-white border border-surface-200 shadow-none rounded-none p-5 space-y-4">
+          <div className="flex items-center gap-2.5 pb-3 border-b border-surface-100">
+            <div className="w-8 h-8 rounded-none bg-surface-100 flex items-center justify-center">
+              <Bell className="w-4 h-4 text-surface-600" />
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-zinc-900">Desktop Alerts & Reminders</h3>
-              <p className="text-xs text-zinc-400">Receive real-time notifications for booking updates and messages</p>
+              <h3 className="text-sm font-black text-surface-900">Desktop Alerts & Reminders</h3>
+              <p className="text-xs text-surface-500">Receive real-time notifications for booking updates and messages</p>
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-zinc-50/50 p-4 rounded-xl border border-zinc-100 text-left">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-surface-50 p-4 rounded-none border border-surface-200 text-left">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <span className={`w-2.5 h-2.5 rounded-full ${
+                <span className={`w-2.5 h-2.5 rounded-none ${
                   !isNotificationSupported()
                     ? 'bg-rose-500'
                     : permissionState === 'granted'
                       ? 'bg-emerald-500 animate-pulse'
                       : permissionState === 'denied'
                         ? 'bg-rose-500'
-                        : 'bg-zinc-400'
+                        : 'bg-surface-400'
                 }`} />
-                <span className="text-xs font-bold uppercase tracking-wider text-zinc-700">
+                <span className="text-[10px] font-black uppercase tracking-widest text-surface-700">
                   {!isNotificationSupported()
                     ? 'Not Supported'
                     : permissionState === 'granted'
@@ -470,7 +458,7 @@ const ProfileDetailsTab = ({
                         : 'Disabled'}
                 </span>
               </div>
-              <p className="text-xs text-zinc-500 font-medium leading-relaxed">
+              <p className="text-xs text-surface-500 font-medium leading-relaxed">
                 {!isNotificationSupported()
                   ? 'Your browser does not support native desktop alerts.'
                   : permissionState === 'granted'
@@ -486,7 +474,7 @@ const ProfileDetailsTab = ({
                 <button
                   type="button"
                   onClick={handleEnableNotifications}
-                  className="min-h-[36px] px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg text-xs font-semibold transition cursor-pointer border-none shadow-xs"
+                  className="min-h-[36px] px-4 py-2 bg-surface-900 hover:bg-surface-800 text-white rounded-none text-[10px] uppercase tracking-widest font-black transition cursor-pointer border-none shadow-none"
                 >
                   Enable Notifications
                 </button>
@@ -495,13 +483,13 @@ const ProfileDetailsTab = ({
                 <button
                   type="button"
                   onClick={handleTestNotification}
-                  className="min-h-[36px] px-4 py-2 bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 rounded-lg text-xs font-semibold transition cursor-pointer"
+                  className="min-h-[36px] px-4 py-2 bg-surface-50 border border-surface-200 text-surface-900 hover:bg-surface-100 rounded-none text-[10px] uppercase tracking-widest font-black transition cursor-pointer shadow-none"
                 >
                   Test Alert Notification
                 </button>
               )}
               {isNotificationSupported() && permissionState === 'denied' && (
-                <span className="text-[10px] text-rose-500 font-bold bg-rose-50 border border-rose-100 p-2 rounded-lg block max-w-[200px]">
+                <span className="text-[10px] text-rose-500 font-bold uppercase tracking-widest bg-rose-50 border border-rose-100 p-2 rounded-none block max-w-[200px]">
                   🔒 Unblock in browser site settings
                 </span>
               )}
@@ -509,19 +497,19 @@ const ProfileDetailsTab = ({
           </div>
         </div>
 
-        <div className="sticky bottom-[72px] lg:bottom-0 z-30 flex items-center justify-end gap-2 p-3 card-luxury border-none rounded-xl shadow-sm">
+        <div className="sticky bottom-[72px] lg:bottom-0 z-30 flex items-center justify-end gap-2 p-3 bg-white border-t border-surface-200 rounded-none shadow-none">
           <button
             type="button"
             onClick={handleDiscard}
             disabled={isSaving}
-            className="min-h-[40px] px-4 py-2 border border-zinc-200 hover:border-zinc-300 rounded-lg text-xs font-medium text-zinc-600 hover:text-zinc-900 transition-colors bg-white disabled:opacity-50"
+            className="min-h-[40px] px-4 py-2 border border-surface-200 hover:border-surface-300 rounded-none text-[10px] uppercase tracking-widest font-black text-surface-900 hover:bg-surface-50 transition-colors bg-white shadow-none disabled:opacity-50"
           >
             Discard
           </button>
           <button
             type="submit"
             disabled={isSaving}
-            className="min-h-[40px] inline-flex items-center gap-1.5 px-5 py-2 bg-zinc-900 hover:bg-zinc-800 disabled:bg-zinc-500 text-white text-xs font-semibold rounded-lg transition-colors border-none"
+            className="min-h-[40px] inline-flex items-center gap-1.5 px-5 py-2 bg-surface-900 hover:bg-surface-800 disabled:bg-surface-500 text-white text-[10px] uppercase tracking-widest font-black rounded-none shadow-none transition-colors border-none"
           >
             {isSaving ? (
               <><span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />Saving...</>
@@ -533,9 +521,9 @@ const ProfileDetailsTab = ({
       </form>
 
       {isSaved && (
-        <div className="fixed bottom-[90px] lg:bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-4 py-2.5 bg-zinc-900 text-white rounded-xl shadow-xl" role="status">
+        <div className="fixed bottom-[90px] lg:bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-4 py-2.5 bg-surface-900 text-white rounded-none shadow-xl" role="status">
           <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-          <span className="text-sm font-medium">Profile saved successfully!</span>
+          <span className="text-[10px] uppercase tracking-widest font-black">Profile saved successfully!</span>
         </div>
       )}
     </div>
