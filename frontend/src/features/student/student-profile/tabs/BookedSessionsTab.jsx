@@ -110,7 +110,7 @@ const BookedSessionsTab = ({
                 return (
                   <div
                     key={session.id || idx}
-                    className="bg-white border border-surface-200 rounded-none shadow-none p-5 text-left"
+                    className="bg-white border border-surface-200 rounded-none shadow-square-light p-5 text-left"
                   >
                     {/* Status indicator */}
                     <div className="flex items-start justify-between gap-3 mb-4">
@@ -189,7 +189,7 @@ const BookedSessionsTab = ({
                               type="button"
                               disabled
                               title={meetStatus.status === 'LOCKED' ? 'Link activates 10 min before session' : 'Session has ended'}
-                              className="flex-1 min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-surface-100 text-surface-400 border border-surface-200 rounded-none text-[10px] uppercase tracking-widest font-black shadow-none cursor-not-allowed"
+                              className="flex-1 min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-surface-100 text-surface-400 border border-surface-200 rounded-none text-[10px] uppercase tracking-widest font-black shadow-square-light cursor-not-allowed"
                             >
                               <Lock className="w-3.5 h-3.5" /> {meetStatus.label}
                             </button>
@@ -263,7 +263,7 @@ const BookedSessionsTab = ({
                             <button
                               type="button"
                               onClick={() => handleCancelSession(session.id)}
-                              className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-white border border-surface-200 shadow-none hover:border-rose-200 hover:bg-rose-50 text-surface-500 hover:text-rose-600 rounded-none text-[10px] uppercase tracking-widest font-black transition-colors"
+                              className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-white border border-surface-200 shadow-square-light hover:border-rose-200 hover:bg-rose-50 text-surface-500 hover:text-rose-600 rounded-none text-[10px] uppercase tracking-widest font-black transition-colors"
                             >
                               <XIcon className="w-3.5 h-3.5" /> Cancel
                             </button>
@@ -308,7 +308,7 @@ const BookedSessionsTab = ({
             ].map((s, i) => {
               const Icon = s.icon;
               return (
-                <div key={i} className="bg-white border border-surface-200 rounded-none shadow-none p-4 text-left">
+                <div key={i} className="bg-white border border-surface-200 rounded-none shadow-square-light p-4 text-left">
                   <div className="w-8 h-8 rounded-none bg-surface-100 flex items-center justify-center mb-2">
                     <Icon className="w-4 h-4 text-surface-600" />
                   </div>
@@ -327,10 +327,10 @@ const BookedSessionsTab = ({
               <div className="space-y-4">
                 {completedSessions.map((session, sIdx) => (
                   <div key={session.id || sIdx} className="relative pl-12 text-left">
-                    <div className="absolute left-0 top-3 w-8 h-8 rounded-none border border-surface-200 bg-white flex items-center justify-center shadow-none">
+                    <div className="absolute left-0 top-3 w-8 h-8 rounded-none border border-surface-200 bg-white flex items-center justify-center shadow-square-light">
                       <Award className="w-4 h-4 text-surface-500" />
                     </div>
-                    <div className="bg-white border border-surface-200 rounded-none shadow-none p-4">
+                    <div className="bg-white border border-surface-200 rounded-none shadow-square-light p-4">
                       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-2">
                         <div>
                           <div className="flex flex-wrap items-center gap-2 mb-1.5">

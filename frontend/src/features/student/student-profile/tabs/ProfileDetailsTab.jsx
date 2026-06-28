@@ -163,7 +163,7 @@ const ProfileDetailsTab = ({
 
       {/* Progress — gradient bar */}
       <div
-        className="rounded-none p-5 bg-white border border-surface-200 shadow-none"
+        className="rounded-none p-5 bg-white border border-surface-200 shadow-square-light"
       >
         <div className="flex items-center justify-between mb-3">
 
@@ -205,7 +205,7 @@ const ProfileDetailsTab = ({
           return (
             <div
               key={sIdx}
-              className="relative overflow-hidden rounded-none p-5 border border-surface-200 bg-white shadow-none"
+              className="relative overflow-hidden rounded-none p-5 border border-surface-200 bg-white shadow-square-light"
             >
               {/* Left accent border */}
               <div className="absolute left-0 top-4 bottom-4 w-1 rounded-none" style={{ background: section.accentColor }} />
@@ -296,7 +296,7 @@ const ProfileDetailsTab = ({
 
         {/* Home Location & Address Card */}
         <div
-          className="relative overflow-hidden rounded-none p-5 border border-surface-200 bg-white shadow-none"
+          className="relative overflow-hidden rounded-none p-5 border border-surface-200 bg-white shadow-square-light"
         >
           {/* Left accent border */}
           <div className="absolute left-0 top-4 bottom-4 w-1 rounded-none bg-amber-500" />
@@ -425,7 +425,7 @@ const ProfileDetailsTab = ({
         </div>
 
         {/* Browser Notification Settings Widget */}
-        <div className="bg-white border border-surface-200 shadow-none rounded-none p-5 space-y-4">
+        <div className="bg-white border border-surface-200 shadow-square-light rounded-none p-5 space-y-4">
           <div className="flex items-center gap-2.5 pb-3 border-b border-surface-100">
             <div className="w-8 h-8 rounded-none bg-surface-100 flex items-center justify-center">
               <Bell className="w-4 h-4 text-surface-600" />
@@ -497,7 +497,7 @@ const ProfileDetailsTab = ({
           </div>
         </div>
 
-        <div className="sticky bottom-[72px] lg:bottom-0 z-30 flex items-center justify-end gap-2 p-3 bg-white border-t border-surface-200 rounded-none shadow-none">
+        <div className="sticky bottom-[72px] lg:bottom-0 z-30 flex items-center justify-end gap-2 p-3 bg-white border-t border-surface-200 rounded-none shadow-square-light">
           <button
             type="button"
             onClick={handleDiscard}

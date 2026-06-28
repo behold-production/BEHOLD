@@ -218,8 +218,8 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
   if (!enablePsychology && !isRescheduleParam) {
     return (
       <div className="min-h-[75vh] flex flex-col items-center justify-center text-center px-4 py-16 bg-surface-50 font-sans select-none">
-        <div className="max-w-md w-full bg-white border border-surface-200 p-8 rounded-none shadow-none space-y-6 animate-in fade-in zoom-in-95 duration-500">
-          <div className="w-16 h-16 bg-surface-100 border border-surface-200 rounded-none flex items-center justify-center mx-auto text-surface-900 shadow-none">
+        <div className="max-w-md w-full bg-white border border-surface-200 p-8 rounded-none shadow-square-light space-y-6 animate-in fade-in zoom-in-95 duration-500">
+          <div className="w-16 h-16 bg-surface-100 border border-surface-200 rounded-none flex items-center justify-center mx-auto text-surface-900 shadow-square-light">
             <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
@@ -366,7 +366,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
           {bookingStep === 'success' ? (
             /* STEP 5: Success & Confirmation View */
-            <div className="p-6 sm:p-10 bg-white border border-surface-200 rounded-none max-w-2xl mx-auto shadow-none space-y-6 text-center animate-in fade-in duration-300">
+            <div className="p-6 sm:p-10 bg-white border border-surface-200 rounded-none max-w-2xl mx-auto shadow-square-light space-y-6 text-center animate-in fade-in duration-300">
               <style>{`
                 @keyframes checkmark-circle {
                   0% { transform: scale(0); opacity: 0; }
@@ -397,7 +397,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                 }
               `}</style>
 
-              <div className="w-20 h-20 bg-surface-50 border border-surface-200 rounded-none flex items-center justify-center mx-auto text-surface-900 shadow-none animate-checkmark-circle">
+              <div className="w-20 h-20 bg-surface-50 border border-surface-200 rounded-none flex items-center justify-center mx-auto text-surface-900 shadow-square-light animate-checkmark-circle">
                 <svg className="w-10 h-10 text-surface-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                   <path className="animate-checkmark-path" strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
@@ -425,7 +425,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
               </div>
 
               {/* Invoice & Meeting Card */}
-              <div className="bg-surface-50 border border-surface-200 rounded-none p-5 text-left space-y-4 shadow-none animate-card-fade">
+              <div className="bg-surface-50 border border-surface-200 rounded-none p-5 text-left space-y-4 shadow-square-light animate-card-fade">
                 <h4 className="text-[10px] font-black uppercase tracking-widest text-surface-900 border-b border-surface-200 pb-2">
                   {rescheduleSession ? 'Reschedule Details' : 'Booking Confirmation'}
                 </h4>
@@ -683,7 +683,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
                             {/* Autocomplete Dropdown */}
                             {clientSearchResults.length > 0 && (
-                              <div className="absolute left-0 right-0 mt-1 bg-white border border-surface-200 rounded-none max-h-40 overflow-y-auto z-50 shadow-none divide-y divide-surface-100">
+                              <div className="absolute left-0 right-0 mt-1 bg-white border border-surface-200 rounded-none max-h-40 overflow-y-auto z-50 shadow-square-light divide-y divide-surface-100">
                                 {clientSearchResults.map((res, index) => (
                                   <button
                                     key={index}
@@ -823,7 +823,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                           2. {isAdvisorLocked ? 'Advisor Pre-Selected' : 'Choose Advisor'}
                         </label>
                         {isAdvisorLocked && selectedAdvisor ? (
-                          <div className="p-4 border border-surface-900 bg-surface-50 shadow-none rounded-none">
+                          <div className="p-4 border border-surface-900 bg-surface-50 shadow-square-light rounded-none">
                             <div className="flex items-start justify-between gap-3">
                               <div className="space-y-1.5 text-left min-w-0 flex-1">
                                 <h4 className="font-black text-surface-900 text-sm sm:text-base leading-tight uppercase tracking-widest">{selectedAdvisor.name}</h4>
@@ -1008,7 +1008,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                     </div>
 
                     {user && (
-                      <div className="bg-surface-50 border border-surface-200 rounded-none p-4 flex items-center justify-between gap-3 animate-in fade-in duration-300 shadow-none">
+                      <div className="bg-surface-50 border border-surface-200 rounded-none p-4 flex items-center justify-between gap-3 animate-in fade-in duration-300 shadow-square-light">
                         <div className="flex-1 min-w-0">
                           <span className="text-[10px] font-black uppercase tracking-widest text-surface-900 block truncate">{user.name}</span>
                           <span className="text-[10px] font-bold tracking-widest text-surface-600 truncate block">{user.email}</span>
@@ -1140,7 +1140,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
                         <div className="p-4 bg-surface-50 border border-surface-200 rounded-none space-y-4">
                           <div className="flex flex-col sm:flex-row items-center gap-4 text-left">
-                            <div className="w-12 h-12 bg-white border border-surface-200 rounded-none flex items-center justify-center shrink-0 shadow-none">
+                            <div className="w-12 h-12 bg-white border border-surface-200 rounded-none flex items-center justify-center shrink-0 shadow-square-light">
                               <svg className="w-6 h-6 text-surface-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                               </svg>
@@ -1365,7 +1365,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
               <button
                 type="button"
                 onClick={() => setShowNoCounsellorsModal(false)}
-                className="w-full py-2.5 bg-surface-900 hover:bg-black text-white font-bold text-xs uppercase tracking-widest rounded-none cursor-pointer transition border-none shadow-square-light"
+                className="w-full py-2.5 bg-surface-900 hover:bg-black text-white font-bold text-xs uppercase tracking-widest rounded-none cursor-pointer transition border-none shadow-none"
               >
                 OK
               </button>

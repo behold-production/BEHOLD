@@ -45,7 +45,7 @@ const OverviewTab = ({
 
       {/* ── Next Session Card ── */}
       {nextSession ? (
-        <div className="group relative overflow-hidden rounded-none border border-surface-200 bg-white p-5 shadow-none flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all duration-300">
+        <div className="group relative overflow-hidden rounded-none border border-surface-200 bg-white p-5 shadow-square-light flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all duration-300">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-none bg-surface-100 border border-surface-200 flex items-center justify-center shrink-0">
               {nextSession.mode === 'ONLINE'
@@ -96,7 +96,7 @@ const OverviewTab = ({
         <div
           className="rounded-none p-7 text-center border border-dashed border-surface-200 bg-white"
         >
-          <div className="w-14 h-14 mx-auto rounded-none bg-white border border-surface-200 shadow-none flex items-center justify-center mb-4">
+          <div className="w-14 h-14 mx-auto rounded-none bg-white border border-surface-200 shadow-square-light flex items-center justify-center mb-4">
             <CalendarDays className="w-6 h-6 text-surface-400" />
           </div>
           <p className="text-sm font-black text-surface-900">No upcoming sessions</p>
@@ -200,7 +200,7 @@ const OverviewTab = ({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Recent Activity — timeline style */}
         <div
-          className="lg:col-span-2 rounded-none p-5 bg-white border border-surface-200 shadow-none"
+          className="lg:col-span-2 rounded-none p-5 bg-white border border-surface-200 shadow-square-light"
         >
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-2.5">
@@ -250,7 +250,7 @@ const OverviewTab = ({
 
         {/* Achievements — milestone badge design */}
         <div
-          className="rounded-none p-5 bg-white border border-surface-200 shadow-none"
+          className="rounded-none p-5 bg-white border border-surface-200 shadow-square-light"
         >
           <div className="flex items-center gap-2.5 mb-5">
             <div className="w-8 h-8 rounded-none flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)', border: '1px solid rgba(217,119,6,0.2)' }}>
@@ -270,7 +270,7 @@ const OverviewTab = ({
               <div
                 key={i}
                 className={`flex items-center gap-2.5 text-[10px] uppercase tracking-widest px-3 py-2.5 rounded-none transition-all duration-200 border ${a.done
-                  ? 'bg-white border-surface-200 shadow-none'
+                  ? 'bg-white border-surface-200 shadow-square-light'
                   : 'bg-surface-50 border-surface-100'
                   }`}
               >

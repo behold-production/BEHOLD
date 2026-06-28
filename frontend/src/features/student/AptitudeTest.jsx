@@ -231,7 +231,7 @@ export default function AptitudeTest({ onFinishTest }) {
         {!testFinished ? (
           /* Quiz Interface Card */
           <div
-            className={`bg-white border border-surface-200 rounded-none shadow-none p-5 sm:p-8 md:p-14 select-none transition-all duration-300 ${
+            className={`bg-white border border-surface-200 rounded-none shadow-square-light p-5 sm:p-8 md:p-14 select-none transition-all duration-300 ${
               isAnimating ? 'opacity-0 scale-95 translate-y-2' : 'opacity-100 scale-100 translate-y-0'
             }`}
             id="quiz-card"
@@ -295,13 +295,13 @@ export default function AptitudeTest({ onFinishTest }) {
         ) : (
           /* Results Panel */
           <div
-            className="bg-white border border-surface-200 rounded-none shadow-none p-5 sm:p-8 md:p-14 relative overflow-hidden animate-in zoom-in-95 duration-500 text-left"
+            className="bg-white border border-surface-200 rounded-none shadow-square-light p-5 sm:p-8 md:p-14 relative overflow-hidden animate-in zoom-in-95 duration-500 text-left"
             id="results-panel"
           >
             {/* Header Shield */}
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-6 sm:pb-8 border-b border-surface-100 mb-6 sm:mb-10">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-surface-900 text-white rounded-none flex items-center justify-center shadow-none shrink-0">
+                <div className="w-12 h-12 bg-surface-900 text-white rounded-none flex items-center justify-center shadow-square-light shrink-0">
                   <Brain className="w-6 h-6" />
                 </div>
                 <div>
@@ -332,7 +332,7 @@ export default function AptitudeTest({ onFinishTest }) {
                   Your Dominant Affinity Profile
                 </h3>
 
-                <div className="p-5 sm:p-6 rounded-none border border-surface-200 bg-surface-50 flex gap-4 text-surface-900 shadow-none">
+                <div className="p-5 sm:p-6 rounded-none border border-surface-200 bg-surface-50 flex gap-4 text-surface-900 shadow-square-light">
                   <div className="shrink-0 mt-1">{dominantInfo.icon}</div>
                   <div>
                     <h4 className="text-base sm:text-lg font-black text-surface-900 uppercase tracking-widest leading-tight mb-2">
@@ -347,7 +347,7 @@ export default function AptitudeTest({ onFinishTest }) {
 
               {/* Recommendations and Call-to-Action */}
               <div className="lg:col-span-5 lg:row-span-2 space-y-6">
-                <div className="p-5 sm:p-6 bg-surface-50 border border-surface-200 rounded-none space-y-6 shadow-none">
+                <div className="p-5 sm:p-6 bg-surface-50 border border-surface-200 rounded-none space-y-6 shadow-square-light">
                   <h4 className="font-black text-surface-900 text-[10px] uppercase tracking-widest border-b border-surface-200 pb-3">
                     Recommended Pathways
                   </h4>

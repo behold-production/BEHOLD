@@ -145,7 +145,7 @@ export default function CdatSection({ setView }) {
   return (
     <section id="cdat" className="py-20 px-6 border-t border-surface-200 bg-surface-50">
       <div className="max-w-7xl mx-auto">
-        <div className="bg-white border border-surface-200 shadow-none overflow-hidden flex flex-col md:flex-row rounded-none">
+        <div className="bg-white border border-surface-200 shadow-square-light overflow-hidden flex flex-col md:flex-row rounded-none">
           
           {/* Text Side */}
           <div className="p-6 sm:p-8 md:p-12 flex-1 flex flex-col justify-center border-b md:border-b-0 md:border-r border-surface-200 bg-white">

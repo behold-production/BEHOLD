@@ -13,7 +13,7 @@ const SidebarNav = ({ currentSection, handleSectionChange, bookedSessions, testP
   return (
     <>
       {/* Desktop sidebar */}
-      <nav className="hidden lg:flex flex-col gap-0.5 p-1.5 bg-white border border-surface-200 rounded-none shadow-none sticky top-24">
+      <nav className="hidden lg:flex flex-col gap-0.5 p-1.5 bg-white border border-surface-200 rounded-none shadow-square-light sticky top-24">
         {TABS.map(tab => {
           const Icon = ICON_MAP[tab.iconName];
           const isActive = currentSection === tab.id;

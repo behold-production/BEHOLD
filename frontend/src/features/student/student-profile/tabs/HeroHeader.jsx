@@ -15,7 +15,7 @@ const HeroHeader = ({
   const totalProgress = Math.min(100, completion + (testProfile ? 15 : 0) + (stats.completed > 0 ? 10 : 0));
 
   return (
-    <div className="bg-white border border-surface-200 rounded-none shadow-none overflow-hidden">
+    <div className="bg-white border border-surface-200 rounded-none shadow-square-light overflow-hidden">
       {/* Top accent strip */}
       <div className="h-1 bg-brand w-full" />
 

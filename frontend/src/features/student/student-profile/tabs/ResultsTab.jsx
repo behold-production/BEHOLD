@@ -39,7 +39,7 @@ const ResultsTab = ({
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
         {/* Column 1: Sample Test Results */}
         <div className="xl:col-span-7 space-y-6">
-          <div className="bg-white border border-surface-200 rounded-none shadow-none p-5">
+          <div className="bg-white border border-surface-200 rounded-none shadow-square-light p-5">
             <h3 className="text-base font-black text-surface-900 mb-3 flex items-center gap-2">
               <BarChart3 className="w-4 h-4 text-surface-700 animate-pulse" /> Sample Aptitude Test (C-DAT)
             </h3>
@@ -106,7 +106,7 @@ const ResultsTab = ({
 
           {/* Career Suggestions */}
           {testProfile && topDomain && CAREER_SUGGESTIONS[topDomain] && (
-            <div className="bg-white border border-surface-200 rounded-none shadow-none p-5">
+            <div className="bg-white border border-surface-200 rounded-none shadow-square-light p-5">
               <h3 className="text-sm font-black text-surface-900 mb-1 flex items-center gap-2">
                 <Briefcase className="w-4 h-4 text-surface-400" /> Career Alignment
               </h3>
@@ -128,7 +128,7 @@ const ResultsTab = ({
         {/* Column 2: CIGI Aptitude Test Results & Uploads */}
         <div className="xl:col-span-5 space-y-6">
           {/* Upload form */}
-          <div className="bg-white border border-surface-200 rounded-none shadow-none p-5">
+          <div className="bg-white border border-surface-200 rounded-none shadow-square-light p-5">
             <h3 className="text-base font-black text-surface-900 mb-1.5 flex items-center gap-2">
               <Award className="w-4 h-4 text-surface-750" /> CIGI Aptitude Test (C-DAT)
             </h3>
@@ -199,7 +199,7 @@ const ResultsTab = ({
           </div>
 
           {/* Results list */}
-          <div className="bg-white border border-surface-200 rounded-none shadow-none p-5">
+          <div className="bg-white border border-surface-200 rounded-none shadow-square-light p-5">
             <h3 className="text-sm font-black text-surface-900 mb-3">Uploaded CIGI Results ({cigiResultsList.length})</h3>
 
             {cigiResultsList.length === 0 ? (
