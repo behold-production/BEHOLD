@@ -819,19 +819,10 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
  {/* Step 2: Advisor Selection */}
  {(selectedDate || isAdvisorLocked) && (
  <div className="space-y-3 pt-6 border-t border-surface-200 animate-in fade-in slide-in-from-top-2 duration-300">
- <div className="flex items-center justify-between">
+ <div className="flex items-center justify-between mb-4">
  <label className="text-[10px] font-black text-surface-900 block ">
  2. {isAdvisorLocked ? 'Advisor Pre-Selected' : (selectedAdvisor ? 'Selected Advisor' : 'Choose Advisor')}
  </label>
- {selectedAdvisor && !isAdvisorLocked && (
- <button
- type="button"
- onClick={() => { setSelectedAdvisor(null); setSelectedTime(''); }}
- className="text-[10px] text-surface-500 font-bold uppercase tracking-widest hover:text-surface-900 cursor-pointer"
- >
- Change
- </button>
- )}
  </div>
  {isAdvisorLocked && selectedAdvisor ? (
  <div className="p-4 border border-surface-900 bg-surface-50 shadow-square-light rounded-[10px]">
@@ -1046,6 +1037,19 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
       );
     });
   })()}
+  
+  {selectedAdvisor && !isAdvisorLocked && (
+    <div className="pt-3 pb-1 flex justify-center">
+      <button 
+        type="button" 
+        onClick={() => { setSelectedAdvisor(null); setSelectedTime(''); }} 
+        className="px-8 py-3 bg-white border-[2px] border-surface-200 text-brand font-black text-[11px] uppercase tracking-widest rounded-[10px] hover:border-brand transition-colors cursor-pointer active:scale-[0.98]"
+      >
+        Change Advisor
+      </button>
+    </div>
+  )}
+
  {errors.advisor && <p className="text-[10px] text-rose-500 font-bold mt-1 ">{errors.advisor}</p>}
  </div>
  )}
