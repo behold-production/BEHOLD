@@ -525,7 +525,7 @@ export default function DateTimePicker({
             <button
               type="button"
               onClick={() => onTimeChange('')}
-              className="min-h-[32px] px-3 inline-flex items-center text-[10px] font-black uppercase tracking-widest text-surface-500 hover:text-surface-900 transition cursor-pointer self-start sm:self-auto"
+              className="min-h-[32px] px-4 py-1.5 bg-white border-[2px] border-surface-200 inline-flex items-center text-[10px] font-black uppercase tracking-widest text-brand hover:border-brand transition-colors cursor-pointer self-start sm:self-auto rounded-[8px] active:scale-[0.98]"
             >
               Clear Time
             </button>

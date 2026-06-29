@@ -318,7 +318,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
               >
                 {/* Profile Card Header */}
                 <div className="p-6 flex items-start gap-4 border-b border-surface-200 bg-surface-50">
-                  <div className="w-16 h-16 bg-surface-200 text-surface-900 flex items-center justify-center font-black text-2xl shrink-0 overflow-hidden border border-surface-300 rounded-full">
+                  <div className="w-16 h-16 bg-white text-brand flex items-center justify-center font-black text-2xl shrink-0 overflow-hidden border-[2px] border-brand rounded-full shadow-square-light">
                     {advisor.profilePic ? (
                       <img src={advisor.profilePic} alt={advisor.name} className="w-full h-full object-cover" />
                     ) : (
@@ -441,7 +441,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
               >
                 {/* Left Column: Avatar & Name */}
                 <div className="p-6 flex lg:flex-col items-center lg:items-start gap-4 border-b lg:border-b-0 lg:border-r border-surface-200 bg-surface-50 lg:w-[250px] shrink-0">
-                  <div className="w-16 h-16 lg:w-20 lg:h-20 bg-surface-200 text-surface-900 flex items-center justify-center font-black text-2xl lg:text-3xl shrink-0 overflow-hidden border border-surface-300 rounded-full">
+                  <div className="w-16 h-16 lg:w-20 lg:h-20 bg-white text-brand flex items-center justify-center font-black text-2xl lg:text-3xl shrink-0 overflow-hidden border-[2px] border-brand rounded-full shadow-square-light">
                     {advisor.profilePic ? (
                       <img src={advisor.profilePic} alt={advisor.name} className="w-full h-full object-cover" />
                     ) : (

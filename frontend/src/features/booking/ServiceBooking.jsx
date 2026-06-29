@@ -7,6 +7,13 @@ import { FileDown } from 'lucide-react';
 import { formatDateString } from '../../shared/utils/dateFormatter';
 import toast from 'react-hot-toast';
 
+const getInitials = (name) => {
+  if (!name) return '';
+  const parts = name.split(' ').filter(Boolean);
+  if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+  return name.slice(0, 2).toUpperCase();
+};
+
 const COUNSELLING_FLOW = {
  online: [
  "Schedule Date, Time & choose consultant psychologist",
@@ -908,9 +915,18 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
           <div key={advisor.id} className="border-[2px] border-brand rounded-[10px] bg-white overflow-hidden animate-in fade-in slide-in-from-top-2 text-left shadow-square-light relative">
             {/* TOP SECTION: Avatar + Name/Title */}
             <div className="p-4 sm:p-5 flex items-center gap-4 bg-surface-50 border-b border-surface-200">
-              <div className="w-16 h-16 rounded-full overflow-hidden shrink-0 border border-surface-200 bg-white shadow-square-light">
-                <img src={advisor.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(advisor.name)}&background=0f172a&color=fff&size=128`} alt={advisor.name} className="w-full h-full object-cover" />
-              </div>
+              {(() => {
+                const avatarSrc = advisor.profilePic || advisor.image;
+                return (
+                  <div className="w-16 h-16 rounded-full shrink-0 flex items-center justify-center border-[2px] border-brand bg-white shadow-square-light overflow-hidden">
+                    {avatarSrc ? (
+                      <img src={avatarSrc} alt={advisor.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="font-heading font-black text-2xl uppercase tracking-widest text-brand">{getInitials(advisor.name)}</span>
+                    )}
+                  </div>
+                );
+              })()}
               <div>
                 <h4 className="font-heading font-black text-xl text-surface-900 uppercase leading-none mb-1">{advisor.name}</h4>
                 <p className="text-[10px] font-bold text-surface-900 uppercase tracking-widest">{advisor.role}</p>
@@ -1011,9 +1027,18 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
         >
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-3 min-w-0 flex-1">
-              <div className={`w-12 h-12 rounded-full overflow-hidden shrink-0 border-[2px] ${!isAvailable ? 'border-surface-200 opacity-50' : 'border-surface-200 bg-white'}`}>
-                <img src={advisor.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(advisor.name)}&background=0f172a&color=fff&size=128`} alt={advisor.name} className="w-full h-full object-cover" />
-              </div>
+              {(() => {
+                const avatarSrc = advisor.profilePic || advisor.image;
+                return (
+                  <div className={`w-12 h-12 rounded-full shrink-0 flex items-center justify-center border-[2px] overflow-hidden ${!isAvailable ? 'border-surface-200 opacity-50 bg-surface-50' : 'border-brand bg-white'}`}>
+                    {avatarSrc ? (
+                      <img src={avatarSrc} alt={advisor.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <span className={`font-heading font-black text-lg uppercase tracking-widest ${!isAvailable ? 'text-surface-400' : 'text-brand'}`}>{getInitials(advisor.name)}</span>
+                    )}
+                  </div>
+                );
+              })()}
               <div className="space-y-1 text-left min-w-0">
                 <h4 className={`font-heading font-black text-base sm:text-lg uppercase leading-none truncate ${!isAvailable ? 'text-surface-400' : 'text-surface-900'}`}>
                   {advisor.name}
