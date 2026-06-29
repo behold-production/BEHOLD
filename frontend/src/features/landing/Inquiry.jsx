@@ -119,7 +119,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
                     onChange={handleChange}
                     placeholder="Student Name"
                     autoComplete="name"
-                    className={`w-full px-4 py-3 bg-white border rounded-none text-sm outline-none transition-colors text-surface-900 ${
+                    className={`w-full px-4 py-3 bg-white border rounded-[10px] text-sm outline-none transition-colors text-surface-900 ${
                       formErrors.name ? 'border-red-500 focus:border-red-500' : 'border-surface-200 focus:border-brand'
                     }`}
                   />
@@ -135,7 +135,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
                     onChange={handleChange}
                     placeholder="name@email.com"
                     autoComplete="email"
-                    className={`w-full px-4 py-3 bg-white border rounded-none text-sm outline-none transition-colors text-surface-900 ${
+                    className={`w-full px-4 py-3 bg-white border rounded-[10px] text-sm outline-none transition-colors text-surface-900 ${
                       formErrors.email ? 'border-red-500 focus:border-red-500' : 'border-surface-200 focus:border-brand'
                     }`}
                   />
@@ -152,7 +152,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
                   value={formData.message}
                   onChange={handleChange}
                   placeholder="Details regarding stream, class or queries..."
-                  className="w-full px-4 py-3 bg-white border border-surface-200 rounded-none text-sm outline-none focus:border-brand transition-colors resize-none text-surface-900"
+                  className="w-full px-4 py-3 bg-white border border-surface-200 rounded-[10px] text-sm outline-none focus:border-brand transition-colors resize-none text-surface-900"
                 ></textarea>
               </div>
 

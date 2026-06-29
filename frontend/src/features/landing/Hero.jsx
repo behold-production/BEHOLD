@@ -83,7 +83,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleBookNowClick}
-              className="px-8 sm:px-10 py-3.5 sm:py-4 min-h-[50px] bg-brand text-zinc-950 hover:bg-brand-dark text-xs sm:text-sm font-black tracking-widest uppercase border-neon-glow border-neon-glow-hover w-full sm:w-auto transition-all cursor-pointer rounded-[15px]"
+              className="px-8 sm:px-10 py-3.5 sm:py-4 min-h-[50px] bg-brand text-zinc-950 hover:bg-brand-dark text-xs sm:text-sm font-black tracking-widest uppercase border-neon-glow border-neon-glow-hover w-full sm:w-auto transition-all cursor-pointer rounded-[10px]"
             >
               Book a Session
             </motion.button>
@@ -92,7 +92,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => navigateToSection('cdat')}
-            className="px-8 sm:px-10 py-3.5 sm:py-4 min-h-[50px] bg-white/10 hover:bg-white/20 text-white text-xs sm:text-sm font-black tracking-widest uppercase backdrop-blur-md border-neon-glow border-neon-glow-hover transition-all w-full sm:w-auto cursor-pointer rounded-[15px]"
+            className="px-8 sm:px-10 py-3.5 sm:py-4 min-h-[50px] bg-white/10 hover:bg-white/20 text-white text-xs sm:text-sm font-black tracking-widest uppercase backdrop-blur-md border-neon-glow border-neon-glow-hover transition-all w-full sm:w-auto cursor-pointer rounded-[10px]"
           >
             Explore Aptitude
           </motion.button>

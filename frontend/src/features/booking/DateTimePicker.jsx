@@ -177,7 +177,7 @@ export default function DateTimePicker({
 
   const getChipClass = (targetStr) => {
     const isSelected = selectedDate === targetStr;
-    const base = "shrink-0 px-3 min-h-[34px] rounded-none text-[11px] font-semibold capitalize transition-all duration-200 cursor-pointer flex items-center border";
+    const base = "shrink-0 px-3 min-h-[34px] rounded-[10px] text-[11px] font-semibold capitalize transition-all duration-200 cursor-pointer flex items-center border";
     if (isSelected) {
       return `${base} bg-surface-900 border-surface-900 text-white`;
     }
@@ -270,11 +270,11 @@ export default function DateTimePicker({
           <button type="button" onClick={() => handleQuickJump(nextWeekStr)} className={getChipClass(nextWeekStr)}>Next Week</button>
         </div>
 
-        <div className="flex items-center bg-surface-100 p-0.5 rounded-none border border-surface-200 shrink-0 self-start sm:self-auto">
+        <div className="flex items-center bg-surface-100 p-0.5 rounded-[10px] border border-surface-200 shrink-0 self-start sm:self-auto">
           <button
             type="button"
             onClick={() => setViewType('calendar')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-none transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-[10px] transition-all cursor-pointer ${
               viewType === 'calendar'
                 ? 'bg-white text-surface-950 shadow-sm border border-surface-200'
                 : 'text-surface-500 hover:text-surface-900 border border-transparent'
@@ -286,7 +286,7 @@ export default function DateTimePicker({
           <button
             type="button"
             onClick={() => setViewType('strip')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-none transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-[10px] transition-all cursor-pointer ${
               viewType === 'strip'
                 ? 'bg-white text-surface-950 shadow-sm border border-surface-200'
                 : 'text-surface-500 hover:text-surface-900 border border-transparent'
@@ -300,14 +300,14 @@ export default function DateTimePicker({
 
       {viewType === 'calendar' ? (
         /* Calendar Grid View */
-        <div className="bg-white border border-surface-200 rounded-none overflow-hidden shadow-xs animate-in fade-in duration-300 w-full max-w-full md:max-w-[450px] md:mx-auto">
+        <div className="bg-white border border-surface-200 rounded-[10px] overflow-hidden shadow-xs animate-in fade-in duration-300 w-full max-w-full md:max-w-[450px] md:mx-auto">
           {/* Calendar Header / Navigation */}
           <div className="flex items-center justify-between px-4 py-3 bg-surface-50 border-b border-surface-100">
             <button
               type="button"
               onClick={handlePrevMonth}
               disabled={isPrevMonthDisabled}
-              className="p-1.5 rounded-none hover:bg-surface-100 text-surface-600 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
+              className="p-1.5 rounded-[10px] hover:bg-surface-100 text-surface-600 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
@@ -318,7 +318,7 @@ export default function DateTimePicker({
               type="button"
               onClick={handleNextMonth}
               disabled={isNextMonthDisabled}
-              className="p-1.5 rounded-none hover:bg-surface-100 text-surface-600 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
+              className="p-1.5 rounded-[10px] hover:bg-surface-100 text-surface-600 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
@@ -352,7 +352,7 @@ export default function DateTimePicker({
                     }
                   }}
                   className={`
-                    relative flex flex-col items-center justify-center h-11 sm:h-12 w-full rounded-none transition-all duration-200 select-none border-2
+                    relative flex flex-col items-center justify-center h-11 sm:h-12 w-full rounded-[10px] transition-all duration-200 select-none border-2
                     ${meta.isPast
                       ? 'bg-surface-50 border-surface-50 text-surface-300 cursor-not-allowed opacity-40'
                       : isSelected
@@ -412,7 +412,7 @@ export default function DateTimePicker({
           <button
             type="button"
             onClick={() => scrollBy(-1)}
-            className="absolute -left-1 top-1/2 -translate-y-1/2 z-10 w-7 h-7 rounded-none bg-white border border-surface-200 shadow-md hover:bg-surface-50 items-center justify-center text-surface-500 hover:text-surface-900 transition cursor-pointer hidden sm:flex"
+            className="absolute -left-1 top-1/2 -translate-y-1/2 z-10 w-7 h-7 rounded-[10px] bg-white border border-surface-200 shadow-md hover:bg-surface-50 items-center justify-center text-surface-500 hover:text-surface-900 transition cursor-pointer hidden sm:flex"
             aria-label="Scroll left"
           >
             <ChevronLeft className="w-3.5 h-3.5" />
@@ -443,7 +443,7 @@ export default function DateTimePicker({
                   className={`
                     flex flex-col items-center justify-center snap-start
                     min-w-[60px] sm:min-w-[66px] h-[82px] sm:h-[88px]
-                    rounded-none border-2 transition-all duration-200 select-none
+                    rounded-[10px] border-2 transition-all duration-200 select-none
                     ${meta.isPast
                       ? 'bg-surface-50 border-surface-100 text-surface-300 cursor-not-allowed opacity-40'
                       : isSelected
@@ -497,7 +497,7 @@ export default function DateTimePicker({
           <button
             type="button"
             onClick={() => scrollBy(1)}
-            className="absolute -right-1 top-1/2 -translate-y-1/2 z-10 w-7 h-7 rounded-none bg-white border border-surface-200 shadow-md hover:bg-surface-50 items-center justify-center text-surface-500 hover:text-surface-900 transition cursor-pointer hidden sm:flex"
+            className="absolute -right-1 top-1/2 -translate-y-1/2 z-10 w-7 h-7 rounded-[10px] bg-white border border-surface-200 shadow-md hover:bg-surface-50 items-center justify-center text-surface-500 hover:text-surface-900 transition cursor-pointer hidden sm:flex"
             aria-label="Scroll right"
           >
             <ChevronRight className="w-3.5 h-3.5" />
@@ -507,7 +507,7 @@ export default function DateTimePicker({
 
       {/* Selected date summary */}
       {selectedDate && (
-        <div className="bg-surface-50 border border-surface-200 rounded-none p-3 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2 animate-in slide-in-from-top-2 duration-300">
+        <div className="bg-surface-50 border border-surface-200 rounded-[10px] p-3 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2 animate-in slide-in-from-top-2 duration-300">
           <div className="text-left">
             <div className="text-[10px] font-black uppercase text-surface-900 tracking-widest">
               Your Selection

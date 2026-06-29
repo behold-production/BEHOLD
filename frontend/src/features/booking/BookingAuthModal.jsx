@@ -149,7 +149,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
       >
         {/* Modal Card */}
         <div
-          className="relative w-full max-w-md my-auto bg-white border border-surface-200 rounded-none shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200"
+          className="relative w-full max-w-md my-auto bg-white border border-surface-200 rounded-[10px] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200"
           onClick={(e) => e.stopPropagation()}
         >
         <div className="h-1.5 w-full bg-surface-900" />
@@ -157,7 +157,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center rounded-none bg-surface-50 hover:bg-surface-100 border border-surface-200 text-surface-500 hover:text-surface-900 transition cursor-pointer font-bold text-base"
+          className="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center rounded-[10px] bg-surface-50 hover:bg-surface-100 border border-surface-200 text-surface-500 hover:text-surface-900 transition cursor-pointer font-bold text-base"
           aria-label="Close sign in dialog"
         >
           ✕
@@ -177,11 +177,11 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
             </div>
           </div>
 
-          <div className="flex rounded-none border border-surface-200 bg-surface-50 p-1 text-[10px] font-black uppercase tracking-widest">
+          <div className="flex rounded-[10px] border border-surface-200 bg-surface-50 p-1 text-[10px] font-black uppercase tracking-widest">
             <button
               type="button"
               onClick={() => switchMode('login')}
-              className={`flex-1 px-3 min-h-[40px] rounded-none cursor-pointer transition-all duration-200 flex items-center justify-center ${
+              className={`flex-1 px-3 min-h-[40px] rounded-[10px] cursor-pointer transition-all duration-200 flex items-center justify-center ${
                 mode === 'login'
                   ? 'bg-surface-900 text-white'
                   : 'text-surface-500 hover:text-surface-900'
@@ -192,7 +192,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
             <button
               type="button"
               onClick={() => switchMode('register')}
-              className={`flex-1 px-3 min-h-[40px] rounded-none cursor-pointer transition-all duration-200 flex items-center justify-center ${
+              className={`flex-1 px-3 min-h-[40px] rounded-[10px] cursor-pointer transition-all duration-200 flex items-center justify-center ${
                 mode === 'register'
                   ? 'bg-surface-900 text-white'
                   : 'text-surface-500 hover:text-surface-900'
@@ -214,7 +214,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                     onChange={handleChange}
                     placeholder="Your full legal name"
                     autoComplete="name"
-                    className={`w-full px-3.5 py-2.5 min-h-[44px] border rounded-none text-xs font-bold text-surface-900 outline-none transition ${
+                    className={`w-full px-3.5 py-2.5 min-h-[44px] border rounded-[10px] text-xs font-bold text-surface-900 outline-none transition ${
                       fieldErrors.name
                         ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:bg-rose-50/50'
                         : 'bg-surface-50 border-surface-200 focus:bg-white focus:border-surface-900'
@@ -232,7 +232,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                     onChange={handleChange}
                     placeholder="e.g. 9876543210"
                     autoComplete="tel"
-                    className={`w-full px-3.5 py-2.5 min-h-[44px] border rounded-none text-xs font-bold text-surface-900 outline-none transition ${
+                    className={`w-full px-3.5 py-2.5 min-h-[44px] border rounded-[10px] text-xs font-bold text-surface-900 outline-none transition ${
                       fieldErrors.phone
                         ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:bg-rose-50/50'
                         : 'bg-surface-50 border-surface-200 focus:bg-white focus:border-surface-900'
@@ -252,7 +252,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                 onChange={handleChange}
                 placeholder="you@example.com"
                 autoComplete="email"
-                className={`w-full px-3.5 py-2.5 min-h-[44px] border rounded-none text-xs font-bold text-surface-900 outline-none transition ${
+                className={`w-full px-3.5 py-2.5 min-h-[44px] border rounded-[10px] text-xs font-bold text-surface-900 outline-none transition ${
                   fieldErrors.email
                     ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:bg-rose-50/50'
                     : 'bg-surface-50 border-surface-200 focus:bg-white focus:border-surface-900'
@@ -270,7 +270,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                 onChange={handleChange}
                 placeholder="••••••••"
                 autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
-                className={`w-full px-3.5 py-2.5 min-h-[44px] border rounded-none text-xs font-bold text-surface-900 outline-none transition ${
+                className={`w-full px-3.5 py-2.5 min-h-[44px] border rounded-[10px] text-xs font-bold text-surface-900 outline-none transition ${
                   fieldErrors.password
                     ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:bg-rose-50/50'
                     : 'bg-surface-50 border-surface-200 focus:bg-white focus:border-surface-900'
@@ -289,7 +289,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                   onChange={handleChange}
                   placeholder="••••••••"
                   autoComplete="new-password"
-                  className={`w-full px-3.5 py-2.5 min-h-[44px] border rounded-none text-xs font-bold text-surface-900 outline-none transition ${
+                  className={`w-full px-3.5 py-2.5 min-h-[44px] border rounded-[10px] text-xs font-bold text-surface-900 outline-none transition ${
                     fieldErrors.confirmPassword
                       ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:bg-rose-50/50'
                       : 'bg-surface-50 border-surface-200 focus:bg-white focus:border-surface-900'
@@ -304,7 +304,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full px-6 py-3 min-h-[48px] bg-surface-900 hover:bg-black text-white font-black uppercase tracking-widest text-xs rounded-none transition flex items-center justify-center cursor-pointer border-none disabled:opacity-60"
+              className="w-full px-6 py-3 min-h-[48px] bg-surface-900 hover:bg-black text-white font-black uppercase tracking-widest text-xs rounded-[10px] transition flex items-center justify-center cursor-pointer border-none disabled:opacity-60"
             >
               {isLoading ? (
                 <div className="flex items-center gap-2 justify-center">

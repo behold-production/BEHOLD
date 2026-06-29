@@ -112,7 +112,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
         {/* SERVICE 2: CAREER MENTORING */}
         <div
           id="card-career"
-          className="bg-white border border-surface-200 rounded-none shadow-square-light p-6 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none group"
+          className="bg-white border border-surface-200 rounded-[10px] shadow-square-light p-6 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none group"
         >
           <div className="space-y-4">
             <div className="flex justify-between items-start">
@@ -147,7 +147,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                 }
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className="w-full sm:w-auto px-6 py-3 bg-brand text-surface-900 font-black uppercase tracking-widest text-[10px] rounded-none hover:bg-brand-dark transition-colors cursor-pointer text-center shadow-none border-none"
+              className="w-full sm:w-auto px-6 py-3 bg-brand text-surface-900 font-black uppercase tracking-widest text-[10px] rounded-[10px] hover:bg-brand-dark transition-colors cursor-pointer text-center shadow-none border-none"
             >
               {settings.careerBtnText || 'Book Your Mentor'}
             </button>
@@ -157,7 +157,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
         {/* SERVICE 3: PSYCHOLOGICAL COUNSELLING */}
         <div
           id="card-psychology"
-          className="bg-surface-50 border border-surface-200 rounded-none shadow-square-light p-6 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none group"
+          className="bg-surface-50 border border-surface-200 rounded-[10px] shadow-square-light p-6 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none group"
         >
           <div className="space-y-4">
             <div className="flex justify-between items-start">
@@ -192,7 +192,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                 }
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className="w-full sm:w-auto px-6 py-3 bg-brand text-surface-900 font-black uppercase tracking-widest text-[10px] rounded-none hover:bg-brand-dark transition-colors cursor-pointer text-center border-none shadow-none"
+              className="w-full sm:w-auto px-6 py-3 bg-brand text-surface-900 font-black uppercase tracking-widest text-[10px] rounded-[10px] hover:bg-brand-dark transition-colors cursor-pointer text-center border-none shadow-none"
             >
               {settings.counselBtnText || 'Book Your Therapist'}
             </button>
@@ -216,7 +216,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
         </div>
 
         {/* Dashboard-Style Toolbar */}
-        <div className="bg-white border border-surface-200 p-4 flex flex-col xl:flex-row xl:items-center gap-4 w-full rounded-none">
+        <div className="bg-white border border-surface-200 p-4 flex flex-col xl:flex-row xl:items-center gap-4 w-full rounded-[10px]">
           {/* Search Box */}
           <div className="relative w-full xl:w-[260px] shrink-0">
             <input
@@ -224,7 +224,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
               placeholder="Search experts or skills..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-surface-200 text-[10px] font-black uppercase tracking-widest focus:outline-none focus:border-surface-900 bg-white text-surface-900 transition-colors rounded-none placeholder:text-surface-400 placeholder:normal-case placeholder:tracking-normal placeholder:font-medium"
+              className="w-full pl-10 pr-4 py-3 border border-surface-200 text-[10px] font-black uppercase tracking-widest focus:outline-none focus:border-surface-900 bg-white text-surface-900 transition-colors rounded-[10px] placeholder:text-surface-400 placeholder:normal-case placeholder:tracking-normal placeholder:font-medium"
             />
             <Search className="w-4 h-4 text-surface-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
           </div>
@@ -236,7 +236,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                 key={filter}
                 type="button"
                 onClick={() => setActiveFilter(filter)}
-                className={`flex items-center justify-center px-4 py-3 text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-colors cursor-pointer shrink-0 snap-start border rounded-none shadow-none ${activeFilter === filter
+                className={`flex items-center justify-center px-4 py-3 text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-colors cursor-pointer shrink-0 snap-start border rounded-[10px] shadow-none ${activeFilter === filter
                     ? 'bg-surface-900 text-white border-surface-900'
                     : 'bg-surface-50 text-surface-500 border-surface-200 hover:border-surface-400'
                   }`}
@@ -252,7 +252,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="w-full px-4 pr-10 py-3 border border-surface-200 text-[10px] font-black uppercase tracking-widest bg-white text-surface-900 focus:outline-none focus:border-surface-900 cursor-pointer appearance-none transition-colors rounded-none"
+                className="w-full px-4 pr-10 py-3 border border-surface-200 text-[10px] font-black uppercase tracking-widest bg-white text-surface-900 focus:outline-none focus:border-surface-900 cursor-pointer appearance-none transition-colors rounded-[10px]"
               >
                 <option value="Recommended">Sort: Recommended</option>
                 <option value="Price: Low to High">Price: Low to High</option>
@@ -264,12 +264,12 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
               </div>
             </div>
 
-            <div className="flex border border-surface-200 bg-white shrink-0 rounded-none">
+            <div className="flex border border-surface-200 bg-white shrink-0 rounded-[10px]">
               <button
                 type="button"
                 onClick={() => setViewMode('grid')}
                 aria-label="Grid view"
-                className={`w-12 h-[38px] transition-colors cursor-pointer flex items-center justify-center border-r border-surface-200 rounded-none ${viewMode === 'grid' ? 'bg-surface-900 text-white' : 'text-surface-400 hover:text-surface-900 hover:bg-surface-50'}`}
+                className={`w-12 h-[38px] transition-colors cursor-pointer flex items-center justify-center border-r border-surface-200 rounded-[10px] ${viewMode === 'grid' ? 'bg-surface-900 text-white' : 'text-surface-400 hover:text-surface-900 hover:bg-surface-50'}`}
                 title="Grid View"
               >
                 <LayoutGrid className="w-4 h-4" />
@@ -278,7 +278,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                 type="button"
                 onClick={() => setViewMode('list')}
                 aria-label="List view"
-                className={`w-12 h-[38px] transition-colors cursor-pointer flex items-center justify-center rounded-none ${viewMode === 'list' ? 'bg-surface-900 text-white' : 'text-surface-400 hover:text-surface-900 hover:bg-surface-50'}`}
+                className={`w-12 h-[38px] transition-colors cursor-pointer flex items-center justify-center rounded-[10px] ${viewMode === 'list' ? 'bg-surface-900 text-white' : 'text-surface-400 hover:text-surface-900 hover:bg-surface-50'}`}
                 title="List View"
               >
                 <List className="w-4 h-4" />
@@ -296,7 +296,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                 className="square-card flex flex-col p-6 border-surface-200 bg-white min-h-[300px] animate-pulse"
               >
                 <div className="flex items-start gap-4 mb-4">
-                  <div className="w-16 h-16 bg-surface-200 rounded-none shrink-0" />
+                  <div className="w-16 h-16 bg-surface-200 rounded-[10px] shrink-0" />
                   <div className="flex-1 space-y-2">
                     <div className="h-6 bg-surface-200 w-3/4" />
                     <div className="h-4 bg-surface-200 w-1/2" />
@@ -314,7 +314,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
             {filteredAndSortedAdvisors.slice(0, visibleCount).map(advisor => (
               <div
                 key={advisor.id}
-                className="bg-white border border-surface-200 rounded-none p-0 flex flex-col group shadow-square-light hover:border-surface-300 transition-all duration-300"
+                className="bg-white border border-surface-200 rounded-[10px] p-0 flex flex-col group shadow-square-light hover:border-surface-300 transition-all duration-300"
               >
                 {/* Profile Card Header */}
                 <div className="p-6 flex items-start gap-4 border-b border-surface-200 bg-surface-50">
@@ -343,7 +343,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                       {(expandedSpecialties[advisor.id] ? advisor.specialties : advisor.specialties.slice(0, 2)).map((spec, i) => (
                         <span
                           key={i}
-                          className="px-2 py-1 bg-surface-50 border border-surface-200 text-[10px] font-bold text-surface-600 rounded-none uppercase tracking-widest"
+                          className="px-2 py-1 bg-surface-50 border border-surface-200 text-[10px] font-bold text-surface-600 rounded-[10px] uppercase tracking-widest"
                         >
                           {spec}
                         </span>
@@ -352,7 +352,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                         <button
                           type="button"
                           onClick={() => setExpandedSpecialties(prev => ({ ...prev, [advisor.id]: !prev[advisor.id] }))}
-                          className="px-2 py-1 bg-white border border-surface-200 text-[10px] font-black text-brand-dark rounded-none uppercase tracking-widest hover:bg-surface-50 transition-colors cursor-pointer"
+                          className="px-2 py-1 bg-white border border-surface-200 text-[10px] font-black text-brand-dark rounded-[10px] uppercase tracking-widest hover:bg-surface-50 transition-colors cursor-pointer"
                         >
                           {expandedSpecialties[advisor.id] ? '- Less' : `+ ${advisor.specialties.length - 2} More`}
                         </button>
@@ -396,8 +396,8 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                   {enablePsychology && (
                     <div className="flex items-center justify-between">
                       <span className="text-[10px] uppercase font-bold tracking-widest text-surface-500">Next available</span>
-                      <div className="flex items-center gap-2 bg-surface-50 px-3 py-1 border border-surface-200 rounded-none">
-                        <span className="w-2 h-2 bg-surface-900 rounded-none animate-pulse" />
+                      <div className="flex items-center gap-2 bg-surface-50 px-3 py-1 border border-surface-200 rounded-[10px]">
+                        <span className="w-2 h-2 bg-surface-900 rounded-[10px] animate-pulse" />
                         <span className="font-black text-surface-900 text-[10px] uppercase tracking-widest">{advisor.nextAvailable}</span>
                       </div>
                     </div>
@@ -407,7 +407,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                     <button
                       type="button"
                       onClick={() => window.spaNavigate(`/advisor/${advisor.id}`)}
-                      className={`px-4 py-3 bg-white border border-surface-200 text-surface-900 font-black uppercase tracking-widest text-[10px] rounded-none hover:bg-surface-50 hover:border-surface-300 transition-colors cursor-pointer flex items-center justify-center text-center shadow-none ${enablePsychology ? 'flex-1' : 'w-full'}`}
+                      className={`px-4 py-3 bg-white border border-surface-200 text-surface-900 font-black uppercase tracking-widest text-[10px] rounded-[10px] hover:bg-surface-50 hover:border-surface-300 transition-colors cursor-pointer flex items-center justify-center text-center shadow-none ${enablePsychology ? 'flex-1' : 'w-full'}`}
                     >
                       Profile
                     </button>
@@ -422,7 +422,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                           }
                           window.scrollTo({ top: 0, behavior: 'smooth' });
                         }}
-                        className="px-4 py-3 bg-surface-900 text-white font-black uppercase tracking-widest text-[10px] rounded-none hover:bg-surface-800 transition-colors cursor-pointer flex-1 flex items-center justify-center text-center border-none shadow-none"
+                        className="px-4 py-3 bg-surface-900 text-white font-black uppercase tracking-widest text-[10px] rounded-[10px] hover:bg-surface-800 transition-colors cursor-pointer flex-1 flex items-center justify-center text-center border-none shadow-none"
                       >
                         Book Now
                       </button>
@@ -437,7 +437,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
             {filteredAndSortedAdvisors.slice(0, visibleCount).map(advisor => (
               <div
                 key={advisor.id}
-                className="bg-white border border-surface-200 rounded-none p-0 flex flex-col lg:flex-row group shadow-square-light hover:border-surface-300 transition-all duration-300"
+                className="bg-white border border-surface-200 rounded-[10px] p-0 flex flex-col lg:flex-row group shadow-square-light hover:border-surface-300 transition-all duration-300"
               >
                 {/* Left Column: Avatar & Name */}
                 <div className="p-6 flex lg:flex-col items-center lg:items-start gap-4 border-b lg:border-b-0 lg:border-r border-surface-200 bg-surface-50 lg:w-[250px] shrink-0">
@@ -466,7 +466,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                       {(expandedSpecialties[advisor.id] ? advisor.specialties : advisor.specialties.slice(0, 2)).map((spec, i) => (
                         <span
                           key={i}
-                          className="px-2 py-1 bg-surface-50 border border-surface-200 text-[10px] font-bold text-surface-600 rounded-none uppercase tracking-widest"
+                          className="px-2 py-1 bg-surface-50 border border-surface-200 text-[10px] font-bold text-surface-600 rounded-[10px] uppercase tracking-widest"
                         >
                           {spec}
                         </span>
@@ -475,7 +475,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                         <button
                           type="button"
                           onClick={() => setExpandedSpecialties(prev => ({ ...prev, [advisor.id]: !prev[advisor.id] }))}
-                          className="px-2 py-1 bg-white border border-surface-200 text-[10px] font-black text-brand-dark rounded-none uppercase tracking-widest hover:bg-surface-50 transition-colors cursor-pointer"
+                          className="px-2 py-1 bg-white border border-surface-200 text-[10px] font-black text-brand-dark rounded-[10px] uppercase tracking-widest hover:bg-surface-50 transition-colors cursor-pointer"
                         >
                           {expandedSpecialties[advisor.id] ? '- Less' : `+ ${advisor.specialties.length - 2} More`}
                         </button>
@@ -518,8 +518,8 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                     {enablePsychology && (
                       <div className="flex items-center justify-between gap-2">
                         <span className="text-[10px] uppercase font-bold tracking-widest text-surface-500">Next open</span>
-                        <div className="flex items-center gap-2 bg-white px-2 py-1 border border-surface-200 rounded-none">
-                          <span className="w-2 h-2 bg-surface-900 rounded-none animate-pulse" />
+                        <div className="flex items-center gap-2 bg-white px-2 py-1 border border-surface-200 rounded-[10px]">
+                          <span className="w-2 h-2 bg-surface-900 rounded-[10px] animate-pulse" />
                           <span className="font-black text-surface-900 text-[10px] uppercase tracking-widest">{advisor.nextAvailable}</span>
                         </div>
                       </div>
@@ -528,7 +528,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                       <button
                         type="button"
                         onClick={() => window.spaNavigate(`/advisor/${advisor.id}`)}
-                        className={`px-4 py-3 bg-white border border-surface-200 text-surface-900 font-black uppercase tracking-widest text-[10px] rounded-none hover:bg-surface-50 hover:border-surface-300 transition-colors cursor-pointer text-center flex items-center justify-center shadow-none`}
+                        className={`px-4 py-3 bg-white border border-surface-200 text-surface-900 font-black uppercase tracking-widest text-[10px] rounded-[10px] hover:bg-surface-50 hover:border-surface-300 transition-colors cursor-pointer text-center flex items-center justify-center shadow-none`}
                       >
                         Profile
                       </button>
@@ -543,7 +543,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                             }
                             window.scrollTo({ top: 0, behavior: 'smooth' });
                           }}
-                          className="px-4 py-3 bg-surface-900 text-white font-black uppercase tracking-widest text-[10px] rounded-none hover:bg-surface-800 transition-colors cursor-pointer text-center flex items-center justify-center border-none shadow-none"
+                          className="px-4 py-3 bg-surface-900 text-white font-black uppercase tracking-widest text-[10px] rounded-[10px] hover:bg-surface-800 transition-colors cursor-pointer text-center flex items-center justify-center border-none shadow-none"
                         >
                           Book
                         </button>
@@ -570,7 +570,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
               onClick={() => {
                 setVisibleCount(prev => prev + 5);
               }}
-              className="px-6 py-3 bg-white border border-surface-200 text-surface-900 font-black uppercase tracking-widest text-[10px] rounded-none hover:bg-surface-50 hover:border-surface-300 transition-colors cursor-pointer text-center shadow-none"
+              className="px-6 py-3 bg-white border border-surface-200 text-surface-900 font-black uppercase tracking-widest text-[10px] rounded-[10px] hover:bg-surface-50 hover:border-surface-300 transition-colors cursor-pointer text-center shadow-none"
             >
               Load More Professionals
             </button>

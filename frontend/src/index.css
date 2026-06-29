@@ -368,7 +368,7 @@ textarea:focus {
 @utility square-card {
   background: #FFFFFF;
   border: 1px solid var(--color-surface-200);
-  border-radius: 0; /* Enforcing square corners */
+  border-radius: 10px; /* Enforcing square corners changed to 10px */
   transition: all 0.3s ease;
   
   &:hover {
@@ -386,7 +386,7 @@ textarea:focus {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   padding: 0.75rem 2rem;
-  border-radius: 0;
+  border-radius: 10px;
   transition: all 0.2s ease;
   display: inline-flex;
   align-items: center;
@@ -410,7 +410,7 @@ textarea:focus {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   padding: 0.75rem 2rem;
-  border-radius: 0;
+  border-radius: 10px;
   transition: all 0.2s ease;
   display: inline-flex;
   align-items: center;

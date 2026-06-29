@@ -145,7 +145,7 @@ export default function CdatSection({ setView }) {
   return (
     <section id="cdat" className="py-10 md:py-20 px-6 bg-surface-50">
       <div className="max-w-7xl mx-auto">
-        <div className="bg-white border border-surface-200 shadow-square-light overflow-hidden flex flex-col md:flex-row rounded-none mb-10">
+        <div className="bg-white border border-surface-200 shadow-square-light overflow-hidden flex flex-col md:flex-row rounded-[10px] mb-10">
           
           {/* Text Side */}
           <div className="p-6 sm:p-8 md:p-12 flex-1 flex flex-col justify-center border-b md:border-b-0 md:border-r border-surface-200 bg-white">
@@ -161,7 +161,7 @@ export default function CdatSection({ setView }) {
             <button
               type="button"
               onClick={() => document.getElementById('cdat-form')?.scrollIntoView({ behavior: 'smooth' })}
-              className="w-full sm:w-max px-6 py-3 bg-surface-900 text-white font-black uppercase tracking-widest text-[10px] rounded-none hover:bg-surface-800 transition-colors cursor-pointer border-none shadow-none"
+              className="w-full sm:w-max px-6 py-3 bg-surface-900 text-white font-black uppercase tracking-widest text-[10px] rounded-[10px] hover:bg-surface-800 transition-colors cursor-pointer border-none shadow-none"
             >
               CIGI Aptitude Test
             </button>
@@ -180,7 +180,7 @@ export default function CdatSection({ setView }) {
                   placeholder="Enter name"
                   value={groupRegName}
                   onChange={(e) => handleNameChange(e.target.value)}
-                  className={`w-full bg-white border rounded-none px-4 py-3 text-sm font-medium text-surface-900 focus:outline-none transition-colors ${errors.name ? 'border-red-500 focus:border-red-500' : 'border-surface-200 focus:border-surface-900'}`}
+                  className={`w-full bg-white border rounded-[10px] px-4 py-3 text-sm font-medium text-surface-900 focus:outline-none transition-colors ${errors.name ? 'border-red-500 focus:border-red-500' : 'border-surface-200 focus:border-surface-900'}`}
                 />
                 {errors.name && (
                   <p className="text-[10px] uppercase tracking-widest text-red-600 font-bold mt-1.5 flex items-center gap-1">
@@ -197,7 +197,7 @@ export default function CdatSection({ setView }) {
                   placeholder="Enter phone"
                   value={groupRegPhone}
                   onChange={(e) => handlePhoneChange(e.target.value)}
-                  className={`w-full bg-white border rounded-none px-4 py-3 text-sm font-medium text-surface-900 focus:outline-none transition-colors ${errors.phone ? 'border-red-500 focus:border-red-500' : 'border-surface-200 focus:border-surface-900'}`}
+                  className={`w-full bg-white border rounded-[10px] px-4 py-3 text-sm font-medium text-surface-900 focus:outline-none transition-colors ${errors.phone ? 'border-red-500 focus:border-red-500' : 'border-surface-200 focus:border-surface-900'}`}
                 />
                 {errors.phone && (
                   <p className="text-[10px] uppercase tracking-widest text-red-600 font-bold mt-1.5 flex items-center gap-1">
@@ -214,7 +214,7 @@ export default function CdatSection({ setView }) {
                   placeholder="Enter email"
                   value={groupRegEmail}
                   onChange={(e) => handleEmailChange(e.target.value)}
-                  className={`w-full bg-white border rounded-none px-4 py-3 text-sm font-medium text-surface-900 focus:outline-none transition-colors ${errors.email ? 'border-red-500 focus:border-red-500' : 'border-surface-200 focus:border-surface-900'}`}
+                  className={`w-full bg-white border rounded-[10px] px-4 py-3 text-sm font-medium text-surface-900 focus:outline-none transition-colors ${errors.email ? 'border-red-500 focus:border-red-500' : 'border-surface-200 focus:border-surface-900'}`}
                 />
                 {errors.email && (
                   <p className="text-[10px] uppercase tracking-widest text-red-600 font-bold mt-1.5 flex items-center gap-1">
@@ -224,12 +224,12 @@ export default function CdatSection({ setView }) {
               </div>
 
               {!generatedCode ? (
-                <button type="submit" className="w-full mt-4 px-6 py-3 bg-brand text-surface-900 font-black uppercase tracking-widest text-[10px] rounded-none hover:bg-brand-dark transition-all cursor-pointer border-none shadow-none">
+                <button type="submit" className="w-full mt-4 px-6 py-3 bg-brand text-surface-900 font-black uppercase tracking-widest text-[10px] rounded-[10px] hover:bg-brand-dark transition-all cursor-pointer border-none shadow-none">
                   Generate Code
                 </button>
               ) : (
                 <div className="pt-2 space-y-4 animate-in fade-in duration-300">
-                  <div className="p-4 bg-surface-100 border border-surface-200 flex items-center justify-between rounded-none">
+                  <div className="p-4 bg-surface-100 border border-surface-200 flex items-center justify-between rounded-[10px]">
                     <div>
                       <span className="text-[10px] uppercase tracking-widest text-surface-500 font-bold block mb-1">Your Code</span>
                       <span className="text-xl font-black tracking-widest text-surface-900">{generatedCode}</span>
@@ -237,7 +237,7 @@ export default function CdatSection({ setView }) {
                     <button
                       type="button"
                       onClick={copyManually}
-                      className="px-4 py-2 bg-white border border-surface-200 hover:border-surface-900 hover:bg-surface-50 text-surface-900 text-[10px] font-black uppercase tracking-widest cursor-pointer transition-colors flex items-center gap-2 rounded-none shadow-none"
+                      className="px-4 py-2 bg-white border border-surface-200 hover:border-surface-900 hover:bg-surface-50 text-surface-900 text-[10px] font-black uppercase tracking-widest cursor-pointer transition-colors flex items-center gap-2 rounded-[10px] shadow-none"
                     >
                       <Copy className="w-4 h-4" />
                       {copied ? 'Copied' : 'Copy'}
@@ -248,7 +248,7 @@ export default function CdatSection({ setView }) {
                     onClick={() => {
                       window.open("https://cigicareer.com/cdat-registration/", "_blank", "noopener,noreferrer");
                     }}
-                    className="w-full px-6 py-3 bg-surface-900 text-white font-black uppercase tracking-widest text-[10px] rounded-none hover:bg-surface-800 transition-colors cursor-pointer flex justify-center border-none shadow-none"
+                    className="w-full px-6 py-3 bg-surface-900 text-white font-black uppercase tracking-widest text-[10px] rounded-[10px] hover:bg-surface-800 transition-colors cursor-pointer flex justify-center border-none shadow-none"
                   >
                     Proceed to Portal
                   </button>
@@ -261,7 +261,7 @@ export default function CdatSection({ setView }) {
               <button 
                 type="button"
                 onClick={() => window.spaNavigate('/sample-test')}
-                className="w-full px-6 py-3 bg-white border border-surface-200 text-surface-900 font-black uppercase tracking-widest text-[10px] rounded-none hover:bg-surface-50 transition-all cursor-pointer flex justify-center text-center shadow-none"
+                className="w-full px-6 py-3 bg-white border border-surface-200 text-surface-900 font-black uppercase tracking-widest text-[10px] rounded-[10px] hover:bg-surface-50 transition-all cursor-pointer flex justify-center text-center shadow-none"
               >
                 Sample Test
               </button>
