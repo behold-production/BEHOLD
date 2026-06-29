@@ -76,21 +76,10 @@ class WhatsAppService {
    * Send an OTP code for verification
    */
   async sendOTP(phone, code) {
-    // We assume there is a template named "otp_verification" with 1 body parameter (the code).
+    // We assume there is a Utility template named "otp_verification" with 1 body parameter (the code).
     const components = [
       {
         type: "body",
-        parameters: [
-          {
-            type: "text",
-            text: code
-          }
-        ]
-      },
-      {
-        type: "button",
-        sub_type: "url",
-        index: "0",
         parameters: [
           {
             type: "text",
@@ -105,35 +94,38 @@ class WhatsAppService {
   }
 
   /**
-   * Send an appointment booking alert
-   * action can be: 'created', 'approved', 'rescheduled', 'cancelled'
+   * Send a general text notification using the universal 'behold_alert' template
    */
-  async sendBookingAlert(phone, action, details) {
-    const formattedTo = this._formatPhoneNumber(phone);
-    if (!formattedTo) return { success: false, error: 'Invalid phone number' };
-
-    // Format the details string for the template
-    // In Meta, templates usually have positional parameters {{1}}, {{2}} etc.
-    let summary = '';
-    switch(action) {
-      case 'created': summary = `Requested by ${details.studentName} for ${details.date} at ${details.time}`; break;
-      case 'approved': summary = `Confirmed with ${details.counsellorName} on ${details.date} at ${details.time}`; break;
-      case 'cancelled': summary = `Cancelled. Reason: ${details.reason || 'N/A'}`; break;
-      case 'rescheduled': summary = `Rescheduled to ${details.date} at ${details.time}`; break;
-      default: summary = 'Updated';
-    }
-
+  async sendNotification(phone, message) {
     const components = [
       {
         type: "body",
         parameters: [
-          { type: "text", text: action.toUpperCase() }, // {{1}}
-          { type: "text", text: summary }               // {{2}}
+          {
+            type: "text",
+            text: message
+          }
         ]
       }
     ];
+    return this.sendTemplate(phone, 'behold_alert', 'en', components);
+  }
 
-    return this.sendTemplate(phone, 'booking_alert', 'en', components);
+  /**
+   * Send an appointment booking alert
+   * action can be: 'created', 'approved', 'rescheduled', 'cancelled'
+   */
+  async sendBookingAlert(phone, action, details) {
+    let summary = '';
+    switch(action) {
+      case 'created': summary = `[Booking Requested] by ${details.studentName || 'Student'} for ${details.date} at ${details.time}`; break;
+      case 'approved': summary = `[Booking Confirmed] with ${details.counsellorName || 'Counsellor'} on ${details.date} at ${details.time}`; break;
+      case 'cancelled': summary = `[Booking Cancelled] Reason: ${details.reason || 'N/A'}`; break;
+      case 'rescheduled': summary = `[Booking Rescheduled] to ${details.date} at ${details.time}`; break;
+      default: summary = '[Booking Updated]';
+    }
+
+    return this.sendNotification(phone, summary);
   }
 }
 

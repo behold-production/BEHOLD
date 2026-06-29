@@ -557,6 +557,16 @@ const AdminController = {
       }
       const updated = await StorageService.update('counsellors', id, updates);
       if (!updated) return res.status(404).json({ success: false, message: 'Counsellor not found' });
+
+      // Send WhatsApp Notification if status changed
+      if (updates.isActive !== undefined && updated.phone) {
+        const WhatsAppService = require('../services/whatsappService');
+        const msg = updates.isActive 
+          ? `Congratulations ${updated.name}! Your counsellor profile has been Activated by the admin team.`
+          : `Notice: Your counsellor profile has been Deactivated. Please contact support.`;
+        WhatsAppService.sendNotification(updated.phone, msg).catch(err => console.error(err));
+      }
+
       const { password: _, ...counsellorData } = updated;
       res.status(200).json({ success: true, message: 'Counsellor updated successfully', data: counsellorData });
     } catch (error) {

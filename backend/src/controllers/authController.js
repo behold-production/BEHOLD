@@ -96,6 +96,10 @@ const AuthController = {
       const { password: _, ...userData } = newUser;
       const tokens = generateTokens(newUser);
 
+      if (newUser.phone) {
+        WhatsAppService.sendNotification(newUser.phone, `Welcome to Behold Aspire, ${newUser.name}! Your account has been created successfully.`).catch(err => console.error(err));
+      }
+
       res.status(201).json({
         success: true,
         message: 'User registered successfully',
@@ -186,6 +190,10 @@ const AuthController = {
 
       const { password: _, ...counsellorData } = newCounsellor;
       const tokens = generateTokens(newCounsellor);
+
+      if (newCounsellor.phone) {
+        WhatsAppService.sendNotification(newCounsellor.phone, `Welcome to Behold Aspire, ${newCounsellor.name}! Your application is under review by our admin team.`).catch(err => console.error(err));
+      }
 
       res.status(201).json({
         success: true,
@@ -392,12 +400,21 @@ const AuthController = {
         used: false
       });
 
+      // Securely log the OTP for development / testing
+      console.log(`\n======================================`);
+      console.log(`🔐 WHATSAPP OTP CODE GENERATED: ${otpCode}`);
+      console.log(`📱 TO: ${phone}`);
+      console.log(`======================================\n`);
+
       // Send via WhatsApp
       const waResponse = await WhatsAppService.sendOTP(phone, otpCode);
 
       if (!waResponse.success && !waResponse.mock) {
         console.error('WhatsApp sending failed:', waResponse.error);
-        // We still return success to frontend to allow testing/mocking if API fails or isn't fully set up
+        return res.status(500).json({ 
+          success: false, 
+          message: 'Failed to send OTP via WhatsApp. Ensure Meta Template is approved.' 
+        });
       }
 
       res.status(200).json({

@@ -12,6 +12,7 @@ const Setting = require('../models/Setting');
 const TestResult = require('../models/TestResult');
 const Role = require('../models/Role');
 const AptitudeQuestion = require('../models/AptitudeQuestion');
+const Otp = require('../models/Otp');
 
 const modelMap = {
   users: User,
@@ -26,7 +27,8 @@ const modelMap = {
   settings: Setting,
   testresults: TestResult,
   roles: Role,
-  aptitudequestions: AptitudeQuestion
+  aptitudequestions: AptitudeQuestion,
+  otps: Otp
 };
 
 function getModel(table) {
