@@ -99,7 +99,20 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
         </motion.div>
       </div>
 
-
+      {/* Decorative SVG Wave Divider */}
+      <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-[0] z-20 translate-y-[1px]">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 1440 320"
+          preserveAspectRatio="none"
+          className="w-full h-[40px] sm:h-[70px] md:h-[100px]"
+        >
+          <path
+            fill="var(--color-surface-50)"
+            d="M0,160L80,165.3C160,171,320,181,480,165.3C640,149,800,107,960,101.3C1120,96,1280,128,1360,144L1440,160L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"
+          ></path>
+        </svg>
+      </div>
 
     </section>
   );

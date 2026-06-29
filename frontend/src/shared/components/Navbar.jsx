@@ -206,17 +206,17 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                 <button
                   type="button"
                   onClick={onOpenAuth}
-                  className={`w-9 h-9 lg:w-10 lg:h-10 rounded-full overflow-hidden flex items-center justify-center border-2 transition-colors cursor-pointer ${isDarkTheme ? 'bg-white/10 text-white border-white/20 hover:border-brand' : 'bg-surface-50 text-surface-900 border-surface-200 hover:border-brand'}`}
+                  className={`w-10 h-10 lg:w-12 lg:h-12 rounded-full overflow-hidden flex items-center justify-center border-2 transition-colors cursor-pointer ${isDarkTheme ? 'bg-white/10 text-white border-white/20 hover:border-brand' : 'bg-surface-50 text-surface-900 border-surface-200 hover:border-brand'}`}
                   aria-label="Sign In"
                 >
-                  <User className="w-4 h-4 lg:w-5 lg:h-5" />
+                  <User className="w-5 h-5 lg:w-6 lg:h-6" />
                 </button>
               ) : (
                 <div className="relative" ref={desktopDropdownRef}>
                   <button
                     type="button"
                     onClick={() => setShowDropdown(!showDropdown)}
-                    className={`w-9 h-9 lg:w-10 lg:h-10 rounded-full overflow-hidden font-bold flex items-center justify-center text-sm border-2 transition-colors cursor-pointer ${isDarkTheme ? 'bg-white/10 text-white border-white/20 hover:border-brand' : 'bg-surface-50 text-surface-900 border-surface-200 hover:border-brand'}`}
+                    className={`w-10 h-10 lg:w-12 lg:h-12 rounded-full overflow-hidden font-bold flex items-center justify-center text-sm border-2 transition-colors cursor-pointer ${isDarkTheme ? 'bg-white/10 text-white border-white/20 hover:border-brand' : 'bg-surface-50 text-surface-900 border-surface-200 hover:border-brand'}`}
                   >
                     {user.profilePic || user.image ? (
                       <img src={user.profilePic || user.image} alt={user.name} className="w-full h-full object-cover" />
@@ -275,7 +275,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
       <aside
         id="mobile-drawer"
         aria-hidden={!isMenuOpen}
-        className={`fixed top-0 left-0 bottom-0 w-[300px] max-w-[85vw] bg-white z-50 lg:hidden shadow-square-dark transition-all duration-300 ease-in-out transform flex flex-col p-6 border-r border-surface-200 ${isMenuOpen ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0 pointer-events-none'
+        className={`fixed top-0 left-0 bottom-0 w-[300px] max-w-[85vw] bg-white z-50 lg:hidden shadow-2xl transition-all duration-300 ease-in-out transform flex flex-col p-6 ${isMenuOpen ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0 pointer-events-none'
           }`}
       >
         {/* Drawer Header */}
