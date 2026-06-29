@@ -13,6 +13,10 @@ router.post('/refresh-token', AuthController.refreshToken);
 router.post('/forgot-password', AuthController.forgotPassword);
 router.post('/reset-password', AuthController.resetPassword);
 
+// OTP routes
+router.post('/send-otp', AuthController.sendOtp);
+router.post('/verify-otp', AuthController.verifyOtp);
+
 // Protected routes
 router.post('/change-password', verifyJWT, AuthController.changePassword);
 router.post('/logout', verifyJWT, AuthController.logout);

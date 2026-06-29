@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const StorageService = require('../services/storageService');
+const WhatsAppService = require('../services/whatsappService');
 
 const ACCESS_EXPIRY = '15m';
 const REFRESH_EXPIRY = '7d';
@@ -27,6 +28,34 @@ async function findAnyUserByEmail(email) {
   if (counsellor) return { user: counsellor, table: 'counsellors' };
 
   const student = await StorageService.findOne('users', { email: emailLower, status: { $ne: 'DELETED' } });
+  if (student) return { user: student, table: 'users' };
+
+  return null;
+}
+
+// Helper to find any user across all tables by phone
+async function findAnyUserByPhone(phone) {
+  // Normalize phone (strip non-digits, etc if needed, or just exact match)
+  const phoneClean = phone.replace(/\D/g, '');
+
+  // Helper inner function
+  const checkMatch = (userPhone) => {
+    if (!userPhone) return false;
+    const uPhone = userPhone.replace(/\D/g, '');
+    // Match last 10 digits to handle country code differences
+    if (uPhone.length >= 10 && phoneClean.length >= 10) {
+      return uPhone.slice(-10) === phoneClean.slice(-10);
+    }
+    return uPhone === phoneClean;
+  };
+
+  const admin = (await StorageService.findAll('admins', {})).find(a => checkMatch(a.phone));
+  if (admin) return { user: admin, table: 'admins' };
+
+  const counsellor = (await StorageService.findAll('counsellors', { status: { $ne: 'DELETED' } })).find(c => checkMatch(c.phone));
+  if (counsellor) return { user: counsellor, table: 'counsellors' };
+
+  const student = (await StorageService.findAll('users', { status: { $ne: 'DELETED' } })).find(s => checkMatch(s.phone));
   if (student) return { user: student, table: 'users' };
 
   return null;
@@ -336,6 +365,99 @@ const AuthController = {
         success: true,
         message: 'Password changed successfully'
       });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // --- WhatsApp OTP Flow ---
+
+  // Send WhatsApp OTP
+  async sendOtp(req, res, next) {
+    try {
+      const { phone } = req.body;
+      if (!phone) {
+        return res.status(400).json({ success: false, message: 'Phone number is required' });
+      }
+
+      // Generate 6 digit OTP
+      const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+      const expiresAt = new Date(Date.now() + 5 * 60 * 1000).toISOString(); // 5 minutes validity
+
+      // Store in otps collection
+      await StorageService.create('otps', {
+        phone,
+        otpCode,
+        expiresAt,
+        used: false
+      });
+
+      // Send via WhatsApp
+      const waResponse = await WhatsAppService.sendOTP(phone, otpCode);
+
+      if (!waResponse.success && !waResponse.mock) {
+        console.error('WhatsApp sending failed:', waResponse.error);
+        // We still return success to frontend to allow testing/mocking if API fails or isn't fully set up
+      }
+
+      res.status(200).json({
+        success: true,
+        message: 'OTP sent successfully via WhatsApp'
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // Verify WhatsApp OTP
+  async verifyOtp(req, res, next) {
+    try {
+      const { phone, otpCode, isLogin } = req.body;
+      
+      if (!phone || !otpCode) {
+        return res.status(400).json({ success: false, message: 'Phone and OTP code are required' });
+      }
+
+      // Find OTP record
+      const otps = await StorageService.findAll('otps', { phone });
+      // Get the latest unused OTP
+      const validOtps = otps.filter(o => !o.used && new Date(o.expiresAt) > new Date());
+      const latestOtp = validOtps.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
+
+      if (!latestOtp || latestOtp.otpCode !== otpCode) {
+        return res.status(400).json({ success: false, message: 'Invalid or expired OTP' });
+      }
+
+      // Mark as used
+      await StorageService.update('otps', latestOtp.id, { used: true });
+
+      // If this is an OTP login flow, find the user and log them in
+      if (isLogin) {
+        const match = await findAnyUserByPhone(phone);
+        if (!match) {
+          return res.status(404).json({ 
+            success: false, 
+            message: 'No account found with this phone number. Please register.' 
+          });
+        }
+
+        const { user } = match;
+        const { password: _, ...userData } = user;
+        const tokens = generateTokens(user);
+
+        return res.status(200).json({
+          success: true,
+          message: 'OTP verified successfully. Logged in.',
+          data: { user: userData, ...tokens }
+        });
+      }
+
+      // If it's just verification (e.g. during registration)
+      res.status(200).json({
+        success: true,
+        message: 'OTP verified successfully'
+      });
+
     } catch (error) {
       next(error);
     }

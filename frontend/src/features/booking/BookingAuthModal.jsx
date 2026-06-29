@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../shared/context/AuthContext';
+import ApiService from '../../shared/services/api';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phoneRegex = /^(\+?\d{1,4}[- ]?)?[6-9]\d{9}$/;
@@ -16,6 +17,11 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
   });
   const [fieldErrors, setFieldErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+
+  // OTP State
+  const [otpPhone, setOtpPhone] = useState('');
+  const [otpCode, setOtpCode] = useState('');
+  const [isOtpSent, setIsOtpSent] = useState(false);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -58,6 +64,16 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
 
   const validate = () => {
     const err = {};
+    if (mode === 'otp') {
+      if (!isOtpSent) {
+        if (!otpPhone.trim()) err.otpPhone = 'Phone number is required';
+        else if (!phoneRegex.test(otpPhone.trim())) err.otpPhone = 'Please enter a valid phone number';
+      } else {
+        if (!otpCode.trim() || otpCode.length !== 6) err.otpCode = 'Please enter the 6-digit code';
+      }
+      return err;
+    }
+
     if (mode === 'register') {
       if (!form.name.trim()) err.name = 'Full name is required';
       else if (form.name.trim().length < 3) err.name = 'Name must be at least 3 characters';
@@ -90,6 +106,37 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
 
     setIsLoading(true);
     try {
+      if (mode === 'otp') {
+        if (!isOtpSent) {
+          // Send OTP
+          const res = await ApiService.sendOtp(otpPhone);
+          if (res.success) {
+            setIsOtpSent(true);
+            import('react-hot-toast').then(mod => mod.toast.success('WhatsApp OTP sent successfully!'));
+          } else {
+            throw new Error(res.message || 'Failed to send OTP');
+          }
+        } else {
+          // Verify OTP
+          const res = await ApiService.verifyOtp(otpPhone, otpCode, true);
+          if (res.success) {
+            if (setBookingForm) {
+              setBookingForm((prev) => ({
+                ...prev,
+                name: prev.name || res.data.user.name,
+                phone: otpPhone,
+                email: prev.email || res.data.user.email
+              }));
+            }
+            if (onSuccess) onSuccess(res.data);
+          } else {
+            throw new Error(res.message || 'Invalid OTP');
+          }
+        }
+        setIsLoading(false);
+        return;
+      }
+
       let authData;
       if (mode === 'login') {
         authData = await login(form.email.trim(), form.password);
@@ -128,6 +175,8 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
   const switchMode = (newMode) => {
     setMode(newMode);
     setFieldErrors({});
+    setIsOtpSent(false);
+    setOtpCode('');
   };
 
   return (
@@ -167,12 +216,12 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
           <div className="flex items-center gap-3 pr-10 text-left font-sans">
             <div className="min-w-0">
               <h3 id="booking-auth-modal-title" className="text-base sm:text-lg font-black uppercase tracking-widest text-surface-900 leading-tight">
-                {mode === 'login' ? 'Sign In to Continue' : 'Create Your Account'}
+                {mode === 'login' ? 'Sign In to Continue' : mode === 'otp' ? 'WhatsApp Fast Login' : 'Create Your Account'}
               </h3>
               <p className="text-[10px] font-bold uppercase tracking-widest text-surface-500 mt-1">
                 {mode === 'login'
                   ? 'Sign in to link this booking to your profile'
-                  : 'Quick free registration — under 30 seconds'}
+                  : mode === 'otp' ? 'Sign in securely using WhatsApp' : 'Quick free registration — under 30 seconds'}
               </p>
             </div>
           </div>
@@ -181,18 +230,29 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
             <button
               type="button"
               onClick={() => switchMode('login')}
-              className={`flex-1 px-3 min-h-[40px] rounded-[10px] cursor-pointer transition-all duration-200 flex items-center justify-center ${
+              className={`flex-1 px-1 min-h-[40px] rounded-[10px] cursor-pointer transition-all duration-200 flex items-center justify-center ${
                 mode === 'login'
                   ? 'bg-surface-900 text-white'
                   : 'text-surface-500 hover:text-surface-900'
               }`}
             >
-              Sign In
+              Email Login
+            </button>
+            <button
+              type="button"
+              onClick={() => switchMode('otp')}
+              className={`flex-1 px-1 min-h-[40px] rounded-[10px] cursor-pointer transition-all duration-200 flex items-center justify-center ${
+                mode === 'otp'
+                  ? 'bg-surface-900 text-white'
+                  : 'text-surface-500 hover:text-surface-900'
+              }`}
+            >
+              WhatsApp
             </button>
             <button
               type="button"
               onClick={() => switchMode('register')}
-              className={`flex-1 px-3 min-h-[40px] rounded-[10px] cursor-pointer transition-all duration-200 flex items-center justify-center ${
+              className={`flex-1 px-1 min-h-[40px] rounded-[10px] cursor-pointer transition-all duration-200 flex items-center justify-center ${
                 mode === 'register'
                   ? 'bg-surface-900 text-white'
                   : 'text-surface-500 hover:text-surface-900'
@@ -203,7 +263,47 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-3.5">
-            {mode === 'register' && (
+            {mode === 'otp' && (
+              <>
+                {!isOtpSent ? (
+                  <div className="space-y-1.5 text-left">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-surface-500 block">WhatsApp Number</label>
+                    <input
+                      type="tel"
+                      name="otpPhone"
+                      value={otpPhone}
+                      onChange={(e) => setOtpPhone(e.target.value)}
+                      placeholder="e.g. 9876543210"
+                      className={`w-full px-3.5 py-2.5 min-h-[44px] border rounded-[10px] text-xs font-bold text-surface-900 outline-none transition ${
+                        fieldErrors.otpPhone
+                          ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:bg-rose-50/50'
+                          : 'bg-surface-50 border-surface-200 focus:bg-white focus:border-surface-900'
+                      }`}
+                    />
+                    {fieldErrors.otpPhone && <p className="text-[9.5px] font-bold uppercase tracking-widest text-rose-500">{fieldErrors.otpPhone}</p>}
+                  </div>
+                ) : (
+                  <div className="space-y-1.5 text-left">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-surface-500 block">Enter 6-Digit Code</label>
+                    <input
+                      type="text"
+                      name="otpCode"
+                      value={otpCode}
+                      onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                      placeholder="••••••"
+                      className={`w-full px-3.5 py-2.5 min-h-[44px] border rounded-[10px] text-xs font-bold text-surface-900 outline-none transition tracking-[0.5em] text-center ${
+                        fieldErrors.otpCode
+                          ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:bg-rose-50/50'
+                          : 'bg-surface-50 border-surface-200 focus:bg-white focus:border-surface-900'
+                      }`}
+                    />
+                    {fieldErrors.otpCode && <p className="text-[9.5px] font-bold uppercase tracking-widest text-rose-500">{fieldErrors.otpCode}</p>}
+                  </div>
+                )}
+              </>
+            )}
+
+            {mode !== 'otp' && mode === 'register' && (
               <>
                 <div className="space-y-1.5 text-left">
                   <label className="text-[10px] font-black uppercase tracking-widest text-surface-500 block">Full Name</label>
@@ -243,26 +343,29 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
               </>
             )}
 
-            <div className="space-y-1.5 text-left">
-              <label className="text-[10px] font-black uppercase tracking-widest text-surface-500 block">Email Address</label>
-              <input
-                type="email"
-                name="email"
-                value={form.email}
-                onChange={handleChange}
-                placeholder="you@example.com"
-                autoComplete="email"
-                className={`w-full px-3.5 py-2.5 min-h-[44px] border rounded-[10px] text-xs font-bold text-surface-900 outline-none transition ${
-                  fieldErrors.email
-                    ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:bg-rose-50/50'
-                    : 'bg-surface-50 border-surface-200 focus:bg-white focus:border-surface-900'
-                }`}
-              />
-              {fieldErrors.email && <p className="text-[9.5px] font-bold uppercase tracking-widest text-rose-500">{fieldErrors.email}</p>}
-            </div>
+            {mode !== 'otp' && (
+              <div className="space-y-1.5 text-left">
+                <label className="text-[10px] font-black uppercase tracking-widest text-surface-500 block">Email Address</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={form.email}
+                  onChange={handleChange}
+                  placeholder="you@example.com"
+                  autoComplete="email"
+                  className={`w-full px-3.5 py-2.5 min-h-[44px] border rounded-[10px] text-xs font-bold text-surface-900 outline-none transition ${
+                    fieldErrors.email
+                      ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:bg-rose-50/50'
+                      : 'bg-surface-50 border-surface-200 focus:bg-white focus:border-surface-900'
+                  }`}
+                />
+                {fieldErrors.email && <p className="text-[9.5px] font-bold uppercase tracking-widest text-rose-500">{fieldErrors.email}</p>}
+              </div>
+            )}
 
-            <div className="space-y-1.5 text-left">
-              <label className="text-[10px] font-black uppercase tracking-widest text-surface-500 block">Password</label>
+            {mode !== 'otp' && (
+              <div className="space-y-1.5 text-left">
+                <label className="text-[10px] font-black uppercase tracking-widest text-surface-500 block">Password</label>
               <input
                 type="password"
                 name="password"
@@ -278,8 +381,9 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
               />
               {fieldErrors.password && <p className="text-[9.5px] font-bold uppercase tracking-widest text-rose-500">{fieldErrors.password}</p>}
             </div>
+            )}
 
-            {mode === 'register' && (
+            {mode !== 'otp' && mode === 'register' && (
               <div className="space-y-1.5 text-left">
                 <label className="text-[10px] font-black uppercase tracking-widest text-surface-500 block">Confirm Password</label>
                 <input
@@ -309,10 +413,10 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
               {isLoading ? (
                 <div className="flex items-center gap-2 justify-center">
                   <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  <span>{mode === 'login' ? 'Signing in...' : 'Creating account...'}</span>
+                  <span>{mode === 'login' ? 'Signing in...' : mode === 'otp' ? 'Processing...' : 'Creating account...'}</span>
                 </div>
               ) : (
-                <span>{mode === 'login' ? 'Login & Continue' : 'Register & Continue'}</span>
+                <span>{mode === 'login' ? 'Login & Continue' : mode === 'otp' ? (isOtpSent ? 'Verify & Login' : 'Send Code') : 'Register & Continue'}</span>
               )}
             </button>
           </form>
@@ -320,10 +424,10 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
           <div className="text-center">
             <button
               type="button"
-              onClick={() => switchMode(mode === 'login' ? 'register' : 'login')}
+              onClick={() => switchMode(mode === 'login' || mode === 'otp' ? 'register' : 'login')}
               className="text-[10px] font-black uppercase tracking-widest text-surface-600 hover:text-surface-900 hover:underline bg-transparent border-none cursor-pointer py-2 min-h-[36px] transition"
             >
-              {mode === 'login'
+              {mode === 'login' || mode === 'otp'
                 ? "Don't have an account? Register for free"
                 : 'Already have an account? Sign in'}
             </button>

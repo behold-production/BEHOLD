@@ -1,6 +1,7 @@
 const StorageService = require('../services/storageService');
 const { validateBookingDetails } = require('../utils/bookingValidator');
 const { autoExpireSessions } = require('../utils/sessionHelper');
+const WhatsAppService = require('../services/whatsappService');
 
 const AppointmentController = {
   // Create Appointment (User / Student)
@@ -67,6 +68,24 @@ const AppointmentController = {
         type: 'appointment_created',
         isRead: false
       });
+
+      // --- WhatsApp Alerts ---
+      if (counsellor && counsellor.phone) {
+        WhatsAppService.sendBookingAlert(counsellor.phone, 'created', {
+          studentName: user.name,
+          counsellorName: counsellor.name,
+          date,
+          time
+        }).catch(err => console.error(err));
+      }
+      if (user && user.phone) {
+        WhatsAppService.sendBookingAlert(user.phone, 'created', {
+          studentName: user.name,
+          counsellorName: counsellor.name,
+          date,
+          time
+        }).catch(err => console.error(err));
+      }
 
       res.status(201).json({
         success: true,
@@ -201,6 +220,16 @@ const AppointmentController = {
         isRead: false
       });
 
+      // --- WhatsApp Alerts ---
+      if (user && user.phone) {
+        WhatsAppService.sendBookingAlert(user.phone, 'approved', {
+          studentName: user.name,
+          counsellorName: counsellor ? counsellor.name : 'Your Counsellor',
+          date: appointment.date,
+          time: appointment.time
+        }).catch(err => console.error(err));
+      }
+
       res.status(200).json({
         success: true,
         message: 'Appointment approved successfully',
@@ -244,6 +273,18 @@ const AppointmentController = {
         type: 'appointment_rejected',
         isRead: false
       });
+
+      // --- WhatsApp Alerts ---
+      const user = await StorageService.findById('users', appointment.userId);
+      if (user && user.phone) {
+        WhatsAppService.sendBookingAlert(user.phone, 'cancelled', {
+          studentName: user.name,
+          counsellorName: counsellor ? counsellor.name : 'Counsellor',
+          date: appointment.date,
+          time: appointment.time,
+          reason: reason || 'Declined'
+        }).catch(err => console.error(err));
+      }
 
       res.status(200).json({
         success: true,
@@ -403,6 +444,20 @@ const AppointmentController = {
         isRead: false
       });
 
+      // --- WhatsApp Alerts ---
+      const user = await StorageService.findById('users', appointment.userId);
+      const counsellor = await StorageService.findById('counsellors', appointment.counsellorId);
+      
+      const details = {
+        studentName: user ? user.name : 'Student',
+        counsellorName: counsellor ? counsellor.name : 'Counsellor',
+        date,
+        time
+      };
+
+      if (user && user.phone) WhatsAppService.sendBookingAlert(user.phone, 'rescheduled', details).catch(err => console.error(err));
+      if (counsellor && counsellor.phone) WhatsAppService.sendBookingAlert(counsellor.phone, 'rescheduled', details).catch(err => console.error(err));
+
       res.status(200).json({
         success: true,
         message: 'Appointment rescheduled successfully. Pending approval.',
@@ -507,6 +562,21 @@ const AppointmentController = {
         type: 'appointment_cancelled',
         isRead: false
       });
+
+      // --- WhatsApp Alerts ---
+      const user = await StorageService.findById('users', appointment.userId);
+      const counsellor = await StorageService.findById('counsellors', appointment.counsellorId);
+      
+      const details = {
+        studentName: user ? user.name : 'Student',
+        counsellorName: counsellor ? counsellor.name : 'Counsellor',
+        date: appointment.date,
+        time: appointment.time,
+        reason: reason || 'Cancelled'
+      };
+
+      if (user && user.phone) WhatsAppService.sendBookingAlert(user.phone, 'cancelled', details).catch(err => console.error(err));
+      if (counsellor && counsellor.phone) WhatsAppService.sendBookingAlert(counsellor.phone, 'cancelled', details).catch(err => console.error(err));
 
       res.status(200).json({
         success: true,

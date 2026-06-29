@@ -327,6 +327,29 @@ const ApiService = {
     });
   },
 
+  // WhatsApp OTP Auth
+  async sendOtp(phone) {
+    return await request('/auth/send-otp', {
+      method: 'POST',
+      body: JSON.stringify({ phone })
+    });
+  },
+
+  async verifyOtp(phone, otpCode, isLogin = false) {
+    const res = await request('/auth/verify-otp', {
+      method: 'POST',
+      body: JSON.stringify({ phone, otpCode, isLogin })
+    });
+    // If it was a login flow, update session
+    if (isLogin && res.success && res.data && res.data.accessToken) {
+      localStorage.setItem('behold_token', res.data.accessToken);
+      localStorage.setItem('behold_refresh_token', res.data.refreshToken);
+      localStorage.setItem('behold_auth_user', JSON.stringify(res.data.user));
+      window.dispatchEvent(new Event('storage'));
+    }
+    return res;
+  },
+
   // User/Student Profile
   async getProfile() {
     return await request('/users/profile');
