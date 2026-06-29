@@ -17,11 +17,21 @@ export default function AuthModals({ isOpen, onClose }) {
   const [resetSuccess, setResetSuccess] = useState(false);
   const [rejectionReason, setRejectionReason] = useState(null);
 
+  // OTP State
+  const [loginMethod, setLoginMethod] = useState('email'); // 'email', 'phone'
+  const [otpPhone, setOtpPhone] = useState('');
+  const [otpCode, setOtpCode] = useState('');
+  const [isOtpSent, setIsOtpSent] = useState(false);
+
   // Reset state when opened/closed
   useEffect(() => {
     if (isOpen) {
       setFormData({ name: '', email: '', password: '', confirmPassword: '', resetToken: '', newPassword: '' });
       setMode('login');
+      setLoginMethod('email');
+      setOtpPhone('');
+      setOtpCode('');
+      setIsOtpSent(false);
       setShowPassword(false);
       setForgotSuccess(null);
       setResetSuccess(false);
@@ -84,9 +94,35 @@ export default function AuthModals({ isOpen, onClose }) {
       let loggedUser = null;
 
       if (mode === 'login') {
-        if (!formData.email.trim() || !formData.password) throw new Error('Please fill in all fields');
-        if (!emailRegex.test(formData.email)) throw new Error('Please enter a valid email address');
-        loggedUser = await login(formData.email, formData.password);
+        if (loginMethod === 'email') {
+          if (!formData.email.trim() || !formData.password) throw new Error('Please fill in all fields');
+          if (!emailRegex.test(formData.email)) throw new Error('Please enter a valid email address');
+          loggedUser = await login(formData.email, formData.password);
+        } else {
+          // WhatsApp OTP Login
+          const phoneRegex = /^(\+?\d{1,4}[- ]?)?[6-9]\d{9}$/;
+          if (!isOtpSent) {
+            if (!otpPhone.trim()) throw new Error('Phone number is required');
+            if (!phoneRegex.test(otpPhone.trim())) throw new Error('Please enter a valid phone number');
+            const res = await ApiService.sendOtp(otpPhone);
+            if (res.success) {
+              setIsOtpSent(true);
+              import('react-hot-toast').then(mod => mod.toast.success('WhatsApp OTP sent successfully!'));
+            } else {
+              throw new Error(res.message || 'Failed to send OTP');
+            }
+            setIsLoading(false);
+            return; // Don't close modal yet
+          } else {
+            if (!otpCode.trim() || otpCode.length !== 6) throw new Error('Please enter the 6-digit code');
+            const res = await ApiService.verifyOtp(otpPhone, otpCode, true);
+            if (res.success && res.data && res.data.user) {
+              loggedUser = res.data.user;
+            } else {
+              throw new Error(res.message || 'Invalid OTP');
+            }
+          }
+        }
       } else {
         if (!formData.name.trim() || !formData.email.trim() || !formData.password || !formData.confirmPassword) throw new Error('Please fill in all fields');
         if (!emailRegex.test(formData.email)) throw new Error('Please enter a valid email address');
@@ -200,6 +236,69 @@ export default function AuthModals({ isOpen, onClose }) {
         ) : (
           <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-4">
 
+          {/* Login Method Toggle */}
+          {mode === 'login' && (
+            <div className="flex rounded-lg border border-zinc-200 bg-zinc-50 p-1 text-sm font-semibold mb-2">
+              <button
+                type="button"
+                onClick={() => { setLoginMethod('email'); setForgotSuccess(null); }}
+                className={`flex-1 px-1 min-h-[36px] rounded-md cursor-pointer transition-all duration-200 flex items-center justify-center ${
+                  loginMethod === 'email'
+                    ? 'bg-zinc-900 text-white shadow-sm'
+                    : 'text-zinc-500 hover:text-zinc-900'
+                }`}
+              >
+                Email
+              </button>
+              <button
+                type="button"
+                onClick={() => { setLoginMethod('phone'); setForgotSuccess(null); }}
+                className={`flex-1 px-1 min-h-[36px] rounded-md cursor-pointer transition-all duration-200 flex items-center justify-center ${
+                  loginMethod === 'phone'
+                    ? 'bg-zinc-900 text-white shadow-sm'
+                    : 'text-zinc-500 hover:text-zinc-900'
+                }`}
+              >
+                WhatsApp OTP
+              </button>
+            </div>
+          )}
+
+          {/* WhatsApp OTP Phone Input */}
+          {mode === 'login' && loginMethod === 'phone' && !isOtpSent && (
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-zinc-500 block">WhatsApp Phone Number</label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+                <input
+                  type="tel"
+                  value={otpPhone}
+                  onChange={(e) => setOtpPhone(e.target.value)}
+                  placeholder="Enter your 10-digit number"
+                  className="w-full pl-10 pr-4 py-3 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 focus:bg-white focus:border-brand focus:ring-1 focus:ring-brand outline-none transition-all"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* WhatsApp OTP Code Input */}
+          {mode === 'login' && loginMethod === 'phone' && isOtpSent && (
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-zinc-500 block">Enter 6-Digit Code</label>
+              <div className="relative">
+                <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+                <input
+                  type="text"
+                  maxLength={6}
+                  value={otpCode}
+                  onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))}
+                  placeholder="123456"
+                  className="w-full pl-10 pr-4 py-3 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 focus:bg-white focus:border-brand focus:ring-1 focus:ring-brand outline-none transition-all font-mono tracking-widest text-center"
+                />
+              </div>
+            </div>
+          )}
+
           {/* Forgot → success: show token box */}
           {mode === 'forgot' && forgotSuccess && (
             <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 space-y-3">
@@ -263,7 +362,7 @@ export default function AuthModals({ isOpen, onClose }) {
           )}
 
           {/* Email — login, register, forgot (but not after success) */}
-          {(mode === 'login' || mode === 'register' || mode === 'forgot') && !forgotSuccess && (
+          {(mode === 'register' || mode === 'forgot' || (mode === 'login' && loginMethod === 'email')) && !forgotSuccess && (
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-zinc-500 block">Email Address</label>
               <div className="relative">
@@ -300,7 +399,7 @@ export default function AuthModals({ isOpen, onClose }) {
           )}
 
           {/* Password — login & register */}
-          {(mode === 'login' || mode === 'register') && (
+          {(mode === 'register' || (mode === 'login' && loginMethod === 'email')) && (
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
                 <label className="text-xs font-bold text-zinc-500 block">Password</label>
@@ -395,7 +494,7 @@ export default function AuthModals({ isOpen, onClose }) {
                 ) : (
                   <>
                     <span>
-                      {mode === 'login'    ? 'Sign In'         :
+                      {mode === 'login'    ? (loginMethod === 'phone' && !isOtpSent ? 'Send OTP' : 'Sign In')         :
                        mode === 'register' ? 'Sign Up'         :
                        mode === 'forgot'   ? 'Get Reset Token' :
                                             'Reset Password'}
