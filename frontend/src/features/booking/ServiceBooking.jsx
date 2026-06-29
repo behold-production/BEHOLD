@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useBookingViewModel } from './useBookingViewModel';
 import DateTimePicker from './DateTimePicker';
 import TimePicker from './TimePicker';
@@ -106,6 +106,25 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
  getCalculatedDistance,
  getHaversineDistance
  } = useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvisor });
+
+  const step2Ref = useRef(null);
+  const step3Ref = useRef(null);
+
+  useEffect(() => {
+    if (selectedDate && !selectedAdvisor && step2Ref.current) {
+      setTimeout(() => {
+        step2Ref.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 150);
+    }
+  }, [selectedDate]);
+
+  useEffect(() => {
+    if (selectedAdvisor && step3Ref.current) {
+      setTimeout(() => {
+        step3Ref.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 150);
+    }
+  }, [selectedAdvisor]);
 
  const isAdvisorLocked = !!preselectedAdvisorId;
  const flowKey = bookingMode === 'DOOR_STEP' ? 'doorstep' : bookingMode.toLowerCase();
@@ -818,7 +837,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
  {/* Step 2: Advisor Selection */}
  {(selectedDate || isAdvisorLocked) && (
- <div className="space-y-3 pt-6 border-t border-surface-200 animate-in fade-in slide-in-from-top-2 duration-300">
+ <div ref={step2Ref} className="space-y-3 pt-6 border-t border-surface-200 animate-in fade-in slide-in-from-top-2 duration-300">
  <div className="flex items-center justify-between mb-4">
  <label className="text-[10px] font-black text-surface-900 block ">
  2. {isAdvisorLocked ? 'Advisor Pre-Selected' : (selectedAdvisor ? 'Selected Advisor' : 'Choose Advisor')}
@@ -1042,7 +1061,13 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
     <div className="pt-3 pb-1 flex justify-center">
       <button 
         type="button" 
-        onClick={() => { setSelectedAdvisor(null); setSelectedTime(''); }} 
+        onClick={() => { 
+          setSelectedAdvisor(null); 
+          setSelectedTime(''); 
+          setTimeout(() => {
+            step2Ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 100);
+        }} 
         className="px-8 py-3 bg-white border-[2px] border-surface-200 text-brand font-black text-[11px] uppercase tracking-widest rounded-[10px] hover:border-brand transition-colors cursor-pointer active:scale-[0.98]"
       >
         Change Advisor
@@ -1058,7 +1083,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
   {/* Step 3: Time Selection */}
   {selectedDate && selectedAdvisor && (
- <div className="space-y-3 pt-6 border-t border-surface-200 animate-in fade-in slide-in-from-top-2 duration-300">
+ <div ref={step3Ref} className="space-y-3 pt-6 border-t border-surface-200 animate-in fade-in slide-in-from-top-2 duration-300">
  <label className="text-[10px] font-black text-surface-900 block ">3. Select Time</label>
  <TimePicker
  selectedDate={selectedDate}
