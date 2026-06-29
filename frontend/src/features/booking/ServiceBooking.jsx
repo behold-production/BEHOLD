@@ -819,9 +819,20 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
  {/* Step 2: Advisor Selection */}
  {(selectedDate || isAdvisorLocked) && (
  <div className="space-y-3 pt-6 border-t border-surface-200 animate-in fade-in slide-in-from-top-2 duration-300">
+ <div className="flex items-center justify-between">
  <label className="text-[10px] font-black text-surface-900 block ">
- 2. {isAdvisorLocked ? 'Advisor Pre-Selected' : 'Choose Advisor'}
+ 2. {isAdvisorLocked ? 'Advisor Pre-Selected' : (selectedAdvisor ? 'Selected Advisor' : 'Choose Advisor')}
  </label>
+ {selectedAdvisor && !isAdvisorLocked && (
+ <button
+ type="button"
+ onClick={() => { setSelectedAdvisor(null); setSelectedTime(''); }}
+ className="text-[10px] text-surface-500 font-bold uppercase tracking-widest hover:text-surface-900 cursor-pointer"
+ >
+ Change
+ </button>
+ )}
+ </div>
  {isAdvisorLocked && selectedAdvisor ? (
  <div className="p-4 border border-surface-900 bg-surface-50 shadow-square-light rounded-[10px]">
  <div className="flex items-start justify-between gap-3">
@@ -843,181 +854,198 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
  ) : (
  <div className="space-y-3">
  {(() => {
- const filteredAdvisors = advisors
- .filter(advisor => advisor.type === bookingService)
- .filter(advisor => !advisor.modes || advisor.modes.includes(bookingMode))
- .filter(advisor => {
- if (bookingMode !== 'DOOR_STEP') return true;
- const clientLat = parseFloat(bookingForm.clientLatitude);
- const clientLng = parseFloat(bookingForm.clientLongitude);
- const advLat = Number(advisor.latitude);
- const advLng = Number(advisor.longitude);
- if (isNaN(clientLat) || isNaN(clientLng) || !advLat || !advLng) return false;
- const distance = getHaversineDistance(clientLat, clientLng, advLat, advLng);
- return distance <= 10;
- });
+    const filteredAdvisors = advisors
+      .filter(advisor => advisor.type === bookingService)
+      .filter(advisor => !advisor.modes || advisor.modes.includes(bookingMode))
+      .filter(advisor => {
+        if (bookingMode !== 'DOOR_STEP') return true;
+        const clientLat = parseFloat(bookingForm.clientLatitude);
+        const clientLng = parseFloat(bookingForm.clientLongitude);
+        const advLat = Number(advisor.latitude);
+        const advLng = Number(advisor.longitude);
+        if (isNaN(clientLat) || isNaN(clientLng) || !advLat || !advLng) return false;
+        const distance = getHaversineDistance(clientLat, clientLng, advLat, advLng);
+        return distance <= 10;
+      });
 
- if (filteredAdvisors.length === 0) {
- return (
- <div className="p-6 border border-dashed border-rose-200 rounded-[10px] bg-rose-50 text-rose-800 text-center font-bold text-[10px] ">
- {bookingMode === 'DOOR_STEP'
- ? "No psychologists are available within a 10 km radius of your location. Try a different visit address or switch to Online mode."
- : "No psychologists are available matching the selected service type and mode."}
- </div>
- );
- }
-
-  return filteredAdvisors.map((advisor) => {
-    const slots = getAdvisorSlotsForDate(advisor, selectedDate);
-    const isAvailable = slots.length > 0;
-    const isSelected = selectedAdvisor?.id === advisor.id;
-
-    if (isSelected) {
+    if (filteredAdvisors.length === 0) {
       return (
-        <div key={advisor.id} className="border border-surface-200 rounded-[10px] bg-white overflow-hidden animate-in fade-in slide-in-from-top-2 text-left shadow-square-light">
-          {/* TOP SECTION: Avatar + Name/Title */}
-          <div className="p-4 sm:p-5 flex items-center gap-4 bg-surface-50 border-b border-surface-200">
-            <div className="w-16 h-16 rounded-full overflow-hidden shrink-0 border border-surface-200 bg-white shadow-square-light">
-              <img src={advisor.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(advisor.name)}&background=0f172a&color=fff&size=128`} alt={advisor.name} className="w-full h-full object-cover" />
-            </div>
-            <div>
-              <h4 className="font-heading font-black text-xl text-surface-900 uppercase leading-none mb-1">{advisor.name}</h4>
-              <p className="text-[10px] font-bold text-surface-900 uppercase tracking-widest">{advisor.role}</p>
-            </div>
-          </div>
-          
-          {/* MIDDLE SECTION 1: Specialties + Quote */}
-          <div className="p-4 sm:p-5 border-b border-surface-200 space-y-4">
-            <div>
-              <span className="text-[10px] font-black text-surface-900 block mb-2.5 uppercase tracking-widest">Specialties</span>
-              <div className="flex flex-wrap gap-2">
-                {advisor.specialties?.length > 0 ? advisor.specialties.map((spec, i) => (
-                  <span key={i} className="px-3 py-1.5 bg-white border border-surface-200 text-surface-900 text-[9px] sm:text-[10px] font-black rounded-[10px] uppercase tracking-wide">{spec}</span>
-                )) : (
-                  <span className="px-3 py-1.5 bg-white border border-surface-200 text-surface-500 text-[10px] font-bold rounded-[10px] uppercase">General</span>
-                )}
-              </div>
-            </div>
-            {advisor.bio && (
-              <p className="text-sm font-medium text-surface-600 italic leading-relaxed">"{advisor.bio}"</p>
-            )}
-          </div>
-
-          {/* MIDDLE SECTION 2: Grid Stats */}
-          <div className="grid grid-cols-3 divide-x divide-surface-200 border-b border-surface-200 bg-surface-50">
-            <div className="p-4 sm:p-5 flex flex-col items-center justify-center text-center">
-              <span className="font-heading font-black text-xl sm:text-2xl text-surface-900 leading-none">{advisor.hours || '0'}+</span>
-              <span className="text-[9px] sm:text-[10px] font-bold text-surface-900 uppercase mt-1 tracking-widest">HOURS</span>
-            </div>
-            <div className="p-4 sm:p-5 flex flex-col items-center justify-center text-center">
-              <span className="font-heading font-black text-sm sm:text-lg text-surface-900 leading-none truncate w-full px-1">{advisor.lang || 'English'}</span>
-              <span className="text-[9px] sm:text-[10px] font-bold text-surface-900 uppercase mt-1 tracking-widest">LANG</span>
-            </div>
-            <div className="p-4 sm:p-5 flex flex-col items-center justify-center text-center">
-              <span className="font-heading font-black text-xl sm:text-2xl text-surface-900 leading-none">₹{advisor.price}</span>
-              <span className="text-[9px] sm:text-[10px] font-bold text-surface-900 uppercase mt-1 tracking-widest">SESSION</span>
-            </div>
-          </div>
-
-          {/* BOTTOM SECTION: Availability + Buttons */}
-          <div className="p-4 sm:p-5 bg-white">
-            <div className="flex items-center justify-between mb-5">
-              <span className="text-[10px] font-black text-surface-900 uppercase tracking-widest">Next Available</span>
-              <div className="px-3 py-1.5 bg-white border border-surface-200 text-[9px] font-black text-surface-900 rounded-[10px] uppercase flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                AVAILABLE TODAY
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-3">
-              <button 
-                type="button" 
-                onClick={(e) => { 
-                  e.stopPropagation(); 
-                  window.open(`/advisors/${advisor.id}`, '_blank');
-                }} 
-                className="flex-1 py-3.5 bg-white border-[2px] border-surface-200 text-surface-900 font-black text-[11px] uppercase rounded-[10px] hover:border-surface-900 hover:bg-surface-50 transition-colors text-center cursor-pointer shadow-none"
-              >
-                PROFILE
-              </button>
-              <button 
-                type="button" 
-                onClick={(e) => { 
-                  e.stopPropagation(); 
-                  setAdvisorConfirmed(true); 
-                  if (errors.confirm) setErrors(prev => ({ ...prev, confirm: null })); 
-                  if (errors.advisor) setErrors(prev => ({ ...prev, advisor: null }));
-                }} 
-                className="flex-1 py-3.5 bg-surface-900 text-white font-black text-[11px] uppercase rounded-[10px] hover:bg-black transition-colors text-center border-[2px] border-surface-900 cursor-pointer shadow-square-light"
-              >
-                BOOK NOW
-              </button>
-            </div>
-          </div>
+        <div className="p-4 border border-dashed border-surface-200 rounded-[10px] bg-surface-50 text-surface-500 text-center font-bold text-[10px]">
+          No psychologists are available matching your criteria.
         </div>
       );
     }
 
-    return (
-      <div
-        key={advisor.id}
-        onClick={() => {
-          if (!isAvailable) return;
-          setSelectedAdvisor(advisor);
-          setAdvisorConfirmed(false); // Reset confirmation so Step 3 hides
-          if (errors.advisor) setErrors(prev => ({ ...prev, advisor: null }));
-          if (advisor.modes && advisor.modes.length > 0 && !advisor.modes.includes(bookingMode)) {
-            setBookingMode(advisor.modes[0]);
-          }
-          setSelectedTime('');
-        }}
-        className={`p-4 sm:p-5 border-[2px] rounded-[10px] transition ${!isAvailable
-          ? 'bg-surface-50 border-surface-200 opacity-50 cursor-not-allowed'
-          : 'bg-white border-surface-200 hover:border-surface-900 hover:shadow-square-light cursor-pointer active:scale-[0.99]'
-        }`}
-      >
-        <div className="flex items-center justify-between gap-3">
-          <div className="space-y-1 text-left min-w-0 flex-1">
-            <h4 className={`font-heading font-black text-base sm:text-lg uppercase leading-none ${!isAvailable ? 'text-surface-400' : 'text-surface-900'}`}>
-              {advisor.name}
-            </h4>
-            <p className="text-[10px] font-bold text-surface-900 uppercase tracking-widest">{advisor.role}</p>
-            {bookingMode === 'OFFLINE' && advisor.locationName && (
-              <span className="text-[10px] font-bold mt-1.5 block leading-tight text-surface-600">
-                📍 Center: {advisor.locationName}
-              </span>
-            )}
-            {bookingMode === 'DOOR_STEP' && (() => {
-              const clientLat = parseFloat(bookingForm.clientLatitude);
-              const clientLng = parseFloat(bookingForm.clientLongitude);
-              const advLat = Number(advisor.latitude);
-              const advLng = Number(advisor.longitude);
-              if (!isNaN(clientLat) && !isNaN(clientLng) && advLat && advLng) {
-                const distance = getHaversineDistance(clientLat, clientLng, advLat, advLng);
-                return (
-                  <span className="text-[10px] text-surface-900 font-black mt-1.5 block uppercase tracking-widest">
-                    📍 Distance: {distance.toFixed(2)} km
-                  </span>
-                );
-              }
-              return null;
-            })()}
-            {!isAvailable && (
-              <span className="text-[10px] text-rose-500 font-bold mt-1.5 inline-block uppercase tracking-widest">
-                Unavailable on this date
-              </span>
-            )}
+    const availableAdvisors = filteredAdvisors.filter(advisor => getAdvisorSlotsForDate(advisor, selectedDate).length > 0);
+
+    if (availableAdvisors.length === 0) {
+      return (
+        <div className="p-4 border border-dashed border-surface-200 rounded-[10px] bg-surface-50 text-surface-500 text-center font-bold text-[10px]">
+          No psychologists are available on this selected date. Please choose another date.
+        </div>
+      );
+    }
+
+    const advisorsToRender = selectedAdvisor ? [selectedAdvisor] : availableAdvisors;
+
+    return advisorsToRender.map((advisor) => {
+      const slots = getAdvisorSlotsForDate(advisor, selectedDate);
+      const isAvailable = slots.length > 0;
+      const isSelected = selectedAdvisor?.id === advisor.id;
+
+      if (isSelected) {
+        return (
+          <div key={advisor.id} className="border-[2px] border-brand rounded-[10px] bg-white overflow-hidden animate-in fade-in slide-in-from-top-2 text-left shadow-square-light relative">
+            {/* TOP SECTION: Avatar + Name/Title */}
+            <div className="p-4 sm:p-5 flex items-center gap-4 bg-surface-50 border-b border-surface-200">
+              <div className="w-16 h-16 rounded-full overflow-hidden shrink-0 border border-surface-200 bg-white shadow-square-light">
+                <img src={advisor.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(advisor.name)}&background=0f172a&color=fff&size=128`} alt={advisor.name} className="w-full h-full object-cover" />
+              </div>
+              <div>
+                <h4 className="font-heading font-black text-xl text-surface-900 uppercase leading-none mb-1">{advisor.name}</h4>
+                <p className="text-[10px] font-bold text-surface-900 uppercase tracking-widest">{advisor.role}</p>
+              </div>
+            </div>
+            
+            {/* MIDDLE SECTION 1: Specialties + Quote */}
+            <div className="p-4 sm:p-5 border-b border-surface-200 space-y-4">
+              <div>
+                <span className="text-[10px] font-black text-surface-900 block mb-2.5 uppercase tracking-widest">Specialties</span>
+                <div className="flex flex-wrap gap-2">
+                  {advisor.specialties?.length > 0 ? advisor.specialties.map((spec, i) => (
+                    <span key={i} className="px-3 py-1.5 bg-white border border-surface-200 text-surface-900 text-[9px] sm:text-[10px] font-black rounded-[10px] uppercase tracking-wide">{spec}</span>
+                  )) : (
+                    <span className="px-3 py-1.5 bg-white border border-surface-200 text-surface-500 text-[10px] font-bold rounded-[10px] uppercase">General</span>
+                  )}
+                </div>
+              </div>
+              {advisor.bio && (
+                <p className="text-sm font-medium text-surface-600 italic leading-relaxed">"{advisor.bio}"</p>
+              )}
+            </div>
+
+            {/* MIDDLE SECTION 2: Grid Stats */}
+            <div className="grid grid-cols-3 divide-x divide-surface-200 border-b border-surface-200 bg-surface-50">
+              <div className="p-4 sm:p-5 flex flex-col items-center justify-center text-center">
+                <span className="font-heading font-black text-xl sm:text-2xl text-surface-900 leading-none">{advisor.hours || '0'}+</span>
+                <span className="text-[9px] sm:text-[10px] font-bold text-surface-900 uppercase mt-1 tracking-widest">HOURS</span>
+              </div>
+              <div className="p-4 sm:p-5 flex flex-col items-center justify-center text-center">
+                <span className="font-heading font-black text-sm sm:text-lg text-surface-900 leading-none truncate w-full px-1">{advisor.lang || 'English'}</span>
+                <span className="text-[9px] sm:text-[10px] font-bold text-surface-900 uppercase mt-1 tracking-widest">LANG</span>
+              </div>
+              <div className="p-4 sm:p-5 flex flex-col items-center justify-center text-center">
+                <span className="font-heading font-black text-xl sm:text-2xl text-surface-900 leading-none">₹{advisor.price}</span>
+                <span className="text-[9px] sm:text-[10px] font-bold text-surface-900 uppercase mt-1 tracking-widest">SESSION</span>
+              </div>
+            </div>
+
+            {/* BOTTOM SECTION: Availability + Buttons */}
+            <div className="p-4 sm:p-5 bg-white">
+              <div className="flex items-center justify-between mb-5">
+                <span className="text-[10px] font-black text-surface-900 uppercase tracking-widest">Next Available</span>
+                <div className="px-3 py-1.5 bg-white border border-surface-200 text-[9px] font-black text-surface-900 rounded-[10px] uppercase flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                  AVAILABLE TODAY
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-3">
+                <button 
+                  type="button" 
+                  onClick={(e) => { 
+                    e.stopPropagation(); 
+                    window.open(`/advisors/${advisor.id}`, '_blank');
+                  }} 
+                  className="flex-1 py-3.5 bg-white border-[2px] border-surface-200 text-surface-900 font-black text-[11px] uppercase rounded-[10px] hover:border-surface-900 hover:bg-surface-50 transition-colors text-center cursor-pointer shadow-none"
+                >
+                  PROFILE
+                </button>
+                <button 
+                  type="button" 
+                  onClick={(e) => { 
+                    e.stopPropagation();
+                    if (!selectedTime) {
+                      toast.error('Please select a time slot below to proceed.');
+                    } else {
+                      handleStepChange('payment');
+                    }
+                  }} 
+                  className="flex-1 py-3.5 bg-surface-900 text-white font-black text-[11px] uppercase rounded-[10px] hover:bg-black transition-colors text-center border-[2px] border-surface-900 cursor-pointer shadow-square-light"
+                >
+                  BOOK NOW
+                </button>
+              </div>
+            </div>
           </div>
-          <div className="flex flex-col items-end gap-2 shrink-0">
-            <span className={`font-heading font-black text-xl sm:text-2xl ${!isAvailable ? 'text-surface-400' : 'text-surface-900'}`}>
-              ₹{advisor.price}
-            </span>
+        );
+      }
+
+      return (
+        <div
+          key={advisor.id}
+          onClick={() => {
+            if (!isAvailable) return;
+            setSelectedAdvisor(advisor);
+            setAdvisorConfirmed(false); // Reset confirmation so Step 3 hides
+            if (errors.advisor) setErrors(prev => ({ ...prev, advisor: null }));
+            if (advisor.modes && advisor.modes.length > 0 && !advisor.modes.includes(bookingMode)) {
+              setBookingMode(advisor.modes[0]);
+            }
+            setSelectedTime('');
+          }}
+          className={`p-4 sm:p-5 border-[2px] rounded-[10px] transition ${!isAvailable
+            ? 'bg-surface-50 border-surface-200 opacity-50 cursor-not-allowed'
+            : 'bg-white border-surface-200 hover:border-surface-900 hover:shadow-square-light cursor-pointer active:scale-[0.99]'
+          }`}
+        >
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3 min-w-0 flex-1">
+              <div className={`w-12 h-12 rounded-full overflow-hidden shrink-0 border-[2px] ${!isAvailable ? 'border-surface-200 opacity-50' : 'border-surface-200 bg-white'}`}>
+                <img src={advisor.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(advisor.name)}&background=0f172a&color=fff&size=128`} alt={advisor.name} className="w-full h-full object-cover" />
+              </div>
+              <div className="space-y-1 text-left min-w-0">
+                <h4 className={`font-heading font-black text-base sm:text-lg uppercase leading-none truncate ${!isAvailable ? 'text-surface-400' : 'text-surface-900'}`}>
+                  {advisor.name}
+                </h4>
+                <p className="text-[10px] font-bold text-surface-900 uppercase tracking-widest truncate">{advisor.role}</p>
+                {bookingMode === 'OFFLINE' && advisor.locationName && (
+                  <span className="text-[10px] font-bold mt-1.5 block leading-tight text-surface-600 truncate">
+                    📍 Center: {advisor.locationName}
+                  </span>
+                )}
+                {bookingMode === 'DOOR_STEP' && (() => {
+                  const clientLat = parseFloat(bookingForm.clientLatitude);
+                  const clientLng = parseFloat(bookingForm.clientLongitude);
+                  const advLat = Number(advisor.latitude);
+                  const advLng = Number(advisor.longitude);
+                  if (!isNaN(clientLat) && !isNaN(clientLng) && advLat && advLng) {
+                    const distance = getHaversineDistance(clientLat, clientLng, advLat, advLng);
+                    return (
+                      <span className="text-[10px] text-surface-900 font-black mt-1.5 block uppercase tracking-widest">
+                        📍 Distance: {distance.toFixed(2)} km
+                      </span>
+                    );
+                  }
+                  return null;
+                })()}
+                {!isAvailable && (
+                  <span className="text-[10px] text-rose-500 font-bold mt-1.5 inline-block uppercase tracking-widest">
+                    Unavailable on this date
+                  </span>
+                )}
+              </div>
+            </div>
+            <div className="flex flex-col items-end gap-2 shrink-0">
+              <span className={`font-heading font-black text-xl sm:text-2xl ${!isAvailable ? 'text-surface-400' : 'text-surface-900'}`}>
+                ₹{advisor.price}
+              </span>
+            </div>
           </div>
         </div>
-      </div>
-    );
-  });
-})()}
+      );
+    });
+  })()}
  {errors.advisor && <p className="text-[10px] text-rose-500 font-bold mt-1 ">{errors.advisor}</p>}
  </div>
  )}
@@ -1025,7 +1053,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
  )}
 
   {/* Step 3: Time Selection */}
-  {selectedDate && selectedAdvisor && advisorConfirmed && (
+  {selectedDate && selectedAdvisor && (
  <div className="space-y-3 pt-6 border-t border-surface-200 animate-in fade-in slide-in-from-top-2 duration-300">
  <label className="text-[10px] font-black text-surface-900 block ">3. Select Time</label>
  <TimePicker
