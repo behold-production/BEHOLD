@@ -918,11 +918,11 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
               {(() => {
                 const avatarSrc = advisor.profilePic || advisor.image;
                 return (
-                  <div className="w-16 h-16 rounded-full shrink-0 flex items-center justify-center border-2 border-brand bg-white shadow-sm overflow-hidden">
+                  <div className="w-16 h-16 rounded-full shrink-0 flex items-center justify-center border-2 border-cyan-500 bg-white shadow-sm overflow-hidden">
                     {avatarSrc ? (
                       <img src={avatarSrc} alt={advisor.name} className="w-full h-full object-cover" />
                     ) : (
-                      <span className="font-bold text-2xl text-brand">{getInitials(advisor.name)}</span>
+                      <span className="font-bold text-2xl text-cyan-600">{getInitials(advisor.name)}</span>
                     )}
                   </div>
                 );
@@ -970,7 +970,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
             <div className="p-4 sm:p-5 bg-white">
               <div className="flex items-center justify-between mb-5">
                 <span className="text-sm font-semibold text-surface-900">Next Available</span>
-                <div className="px-3 py-1 bg-white border border-surface-200 text-xs font-medium text-surface-900 rounded-full flex items-center gap-2">
+                <div className="px-3 py-1 bg-emerald-50 border border-emerald-200 text-xs font-medium text-emerald-700 rounded-full flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                   Available Today
                 </div>
@@ -1030,11 +1030,11 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
               {(() => {
                 const avatarSrc = advisor.profilePic || advisor.image;
                 return (
-                  <div className={`w-12 h-12 rounded-full shrink-0 flex items-center justify-center border-2 overflow-hidden ${!isAvailable ? 'border-surface-200 opacity-50 bg-surface-50' : 'border-brand bg-white'}`}>
+                  <div className={`w-12 h-12 rounded-full shrink-0 flex items-center justify-center border-2 overflow-hidden ${!isAvailable ? 'border-surface-200 opacity-50 bg-surface-50' : 'border-cyan-500 bg-white'}`}>
                     {avatarSrc ? (
                       <img src={avatarSrc} alt={advisor.name} className="w-full h-full object-cover" />
                     ) : (
-                      <span className={`font-bold text-lg ${!isAvailable ? 'text-surface-400' : 'text-brand'}`}>{getInitials(advisor.name)}</span>
+                      <span className={`font-bold text-lg ${!isAvailable ? 'text-surface-400' : 'text-cyan-600'}`}>{getInitials(advisor.name)}</span>
                     )}
                   </div>
                 );
@@ -1154,11 +1154,11 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
  <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
  <div className="border-b border-surface-200 pb-3 flex items-center justify-between">
  <div>
- <h3 className="text-sm font-semibold text-surface-900 flex items-center gap-2">
- <span className="w-6 h-6 rounded-xl bg-surface-900 text-white text-sm flex items-center justify-center shrink-0 font-semibold">2</span>
+ <h3 className="text-lg font-medium text-surface-900 flex items-center gap-2">
+ <span className="w-6 h-6 rounded-md bg-surface-900 text-white text-xs flex items-center justify-center shrink-0 font-medium">2</span>
  Account Details
  </h3>
- <p className="text-sm font-bold text-surface-500 mt-1">
+ <p className="text-sm font-normal text-surface-600 mt-1">
  {user
  ? 'Signed in. Confirm your details, then proceed to payment.'
  : 'Fill your details, then sign in or create a free account to continue.'}
@@ -1227,38 +1227,38 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
  <div className="space-y-1 text-left">
- <label className="text-sm font-semibold text-surface-500 block">Full Name</label>
+ <label className="text-sm font-medium text-surface-700 block">Full Name</label>
  <input
  type="text"
  name="name"
  value={bookingForm.name}
  onChange={handleInputChange}
  placeholder="Your full name"
- className={`w-full px-3.5 py-2.5 border rounded-xl text-xs font-bold text-surface-900 outline-none focus:border-surface-900 transition ${errors.name
+ className={`w-full px-3.5 py-2.5 border rounded-xl text-sm font-normal text-surface-900 outline-none focus:border-surface-900 transition ${errors.name
  ? 'border-rose-500 bg-rose-50/50'
- : 'border-surface-200 bg-white'
+ : 'border-surface-200 bg-surface-50'
  }`}
  />
- {errors.name && <p className="text-xs text-rose-500 font-bold mt-1">{errors.name}</p>}
+ {errors.name && <p className="text-xs text-rose-500 font-medium mt-1">{errors.name}</p>}
  </div>
  <div className="space-y-1 text-left">
- <label className="text-sm font-semibold text-surface-500 block">WhatsApp / Mobile</label>
+ <label className="text-sm font-medium text-surface-700 block">WhatsApp / Mobile</label>
  <input
  type="tel"
  name="phone"
  value={bookingForm.phone}
  onChange={handleInputChange}
  placeholder="e.g. 9876543210"
- className={`w-full px-3.5 py-2.5 border rounded-xl text-xs font-bold text-surface-900 outline-none focus:border-surface-900 transition ${errors.phone
+ className={`w-full px-3.5 py-2.5 border rounded-xl text-sm font-normal text-surface-900 outline-none focus:border-surface-900 transition ${errors.phone
  ? 'border-rose-500 bg-rose-50/50'
- : 'border-surface-200 bg-white'
+ : 'border-surface-200 bg-surface-50'
  }`}
  />
- {errors.phone && <p className="text-xs text-rose-500 font-bold mt-1">{errors.phone}</p>}
+ {errors.phone && <p className="text-xs text-rose-500 font-medium mt-1">{errors.phone}</p>}
  </div>
  <div className="space-y-1 sm:col-span-2 text-left">
- <label className="text-sm font-semibold text-surface-500 block">
- Email Address {user && <span className="text-surface-900 font-bold">(verified)</span>}
+ <label className="text-sm font-medium text-surface-700 block">
+ Email Address {user && <span className="text-surface-900 font-medium">(verified)</span>}
  </label>
  <input
  type="email"
@@ -1267,27 +1267,27 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
  onChange={handleInputChange}
  disabled={!!user}
  placeholder="you@example.com"
- className={`w-full px-3.5 py-2.5 border rounded-xl text-xs font-bold outline-none transition ${user
+ className={`w-full px-3.5 py-2.5 border rounded-xl text-sm font-normal outline-none transition ${user
  ? 'bg-surface-50 border-surface-200 text-surface-500 cursor-not-allowed'
  : errors.email
  ? 'border-rose-500 bg-rose-50/50 text-surface-900'
- : 'border-surface-200 bg-white text-surface-900 focus:border-surface-900'
+ : 'border-surface-200 bg-surface-50 text-surface-900 focus:border-surface-900'
  }`}
  />
- {errors.email && !user && <p className="text-xs text-rose-500 font-bold mt-1">{errors.email}</p>}
+ {errors.email && !user && <p className="text-xs text-rose-500 font-medium mt-1">{errors.email}</p>}
  </div>
  </div>
 
  {!user && (
- <div className="bg-surface-50 border border-surface-200 p-3 rounded-xl text-sm font-bold text-surface-500 text-left">
- <span className="text-surface-900 font-semibold block">Account Required to Continue</span>
+ <div className="bg-surface-50 border border-surface-200 p-4 rounded-xl text-sm font-normal text-surface-600 text-left">
+ <span className="text-surface-900 font-medium block mb-1">Account Required to Continue</span>
  You'll be asked to sign in or create a free account when you click "Proceed to Payment" — your booking details are saved automatically.
  </div>
  )}
 
  {user && (
- <div className="bg-surface-50 border border-surface-200 p-3 rounded-xl text-sm font-bold text-surface-500 text-left">
- <span className="text-surface-900 font-semibold block">Notification Reminders</span>
+ <div className="bg-surface-50 border border-surface-200 p-4 rounded-xl text-sm font-normal text-surface-600 text-left">
+ <span className="text-surface-900 font-medium block mb-1">Notification Reminders</span>
  Live session reminders will be sent to your verified email &amp; WhatsApp number.
  </div>
  )}
@@ -1295,11 +1295,11 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
  {/* --- PAYMENT SECTION --- */}
  <div className="pt-4 border-t border-surface-200 mt-6">
  <div className="border-b border-surface-200 pb-3 mb-6">
- <h3 className="text-sm font-semibold text-surface-900 flex items-center gap-2">
- <span className="w-6 h-6 rounded-xl bg-surface-900 text-white text-sm flex items-center justify-center shrink-0 font-semibold">3</span>
+ <h3 className="text-lg font-medium text-surface-900 flex items-center gap-2">
+ <span className="w-6 h-6 rounded-md bg-surface-900 text-white text-xs flex items-center justify-center shrink-0 font-medium">3</span>
  Payment & Confirm
  </h3>
- <p className="text-sm text-surface-500 font-bold mt-1">Choose payment method, apply any promo codes, and confirm your booking.</p>
+ <p className="text-sm text-surface-600 font-normal mt-1">Choose payment method, apply any promo codes, and confirm your booking.</p>
  </div>
 
  <form onSubmit={handlePaymentSubmit} className="space-y-6">
@@ -1517,7 +1517,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
  {showNoCounsellorsModal && (
  <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
  <div className="bg-white border border-surface-200 rounded-xl w-full max-w-sm p-6 shadow-sm space-y-4 text-center animate-in zoom-in-95 duration-200">
- <div className="w-12 h-12 bg-amber-50 border border-amber-255 rounded-full flex items-center justify-center mx-auto text-amber-600 shadow-sm text-xl font-bold ">
+ <div className="w-12 h-12 bg-amber-50 border border-amber-200 rounded-full flex items-center justify-center mx-auto text-amber-600 shadow-sm text-xl font-semibold ">
  !
  </div>
  <div className="space-y-1">

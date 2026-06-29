@@ -58,7 +58,7 @@ export default function TimePicker({
     <div className="bg-transparent sm:bg-white border-0 sm:border border-surface-200 rounded-[10px] p-0 sm:p-5 h-full">
       <div className="flex items-center justify-between mb-3 border-b border-surface-200 pb-2">
         <div className="flex items-center gap-1.5">
-          <span className="text-[10px] font-black uppercase tracking-widest text-surface-900">
+          <span className="text-sm font-semibold text-surface-900">
             Available Time Slots
           </span>
         </div>
@@ -104,7 +104,7 @@ export default function TimePicker({
                           }`}
                         >
                           {time}
-                          {isBooked && <span className="block text-[8px] text-rose-500 font-semibold mt-0.5">Booked</span>}
+                          {isBooked && <span className="block text-[10px] text-rose-500 font-semibold mt-0.5">Booked</span>}
                         </button>
                       );
                     })}
@@ -134,7 +134,7 @@ export default function TimePicker({
         </div>
       )}
       
-      {errors.time && <p className="text-[9.5px] uppercase tracking-widest text-rose-500 font-bold mt-2" role="alert">{errors.time}</p>}
+      {errors.time && <p className="text-sm font-medium text-rose-500 mt-2" role="alert">{errors.time}</p>}
     </div>
   );
 }

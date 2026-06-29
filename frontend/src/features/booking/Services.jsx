@@ -117,7 +117,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
           <div className="space-y-4">
             <div className="flex justify-between items-start">
               <div className="space-y-3">
-                <span className="inline-block bg-surface-900 text-white px-3 py-1 text-[10px] font-black uppercase tracking-widest">
+                <span className="inline-block bg-surface-900 text-white px-3 py-1 text-sm font-semibold">
                   {settings.careerBadge || 'Career Mentoring'}
                 </span>
                 <h3 className="text-2xl font-black uppercase tracking-widest text-surface-900 group-hover:text-surface-600 transition-colors duration-300">
@@ -162,7 +162,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
           <div className="space-y-4">
             <div className="flex justify-between items-start">
               <div className="space-y-3">
-                <span className="inline-block bg-surface-200 text-surface-900 px-3 py-1 text-[10px] font-black uppercase tracking-widest">
+                <span className="inline-block bg-surface-200 text-surface-900 px-3 py-1 text-sm font-semibold">
                   {settings.counselBadge || 'Psychological Counselling'}
                 </span>
                 <h3 className="text-2xl font-black uppercase tracking-widest text-surface-900 group-hover:text-surface-600 transition-colors duration-300">
@@ -204,7 +204,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
       {/* OUR EXPERTS SECTION */}
       <div id="our-experts" className="mt-20 md:mt-24 space-y-8">
         <div className="space-y-4 max-w-3xl border-l-4 border-surface-900 pl-4 sm:pl-6">
-          <span className="inline-block bg-surface-900 text-white px-3 py-1 text-[10px] font-black uppercase tracking-widest">
+          <span className="inline-block bg-surface-900 text-white px-3 py-1 text-sm font-semibold">
             Our Experts
           </span>
           <h2 className="text-2xl sm:text-3xl md:text-5xl font-black uppercase tracking-widest text-surface-900 leading-tight">
@@ -224,7 +224,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
               placeholder="Search experts or skills..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-surface-200 text-[10px] font-black uppercase tracking-widest focus:outline-none focus:border-surface-900 bg-white text-surface-900 transition-colors rounded-[10px] placeholder:text-surface-400 placeholder:normal-case placeholder:tracking-normal placeholder:font-medium"
+              className="w-full pl-10 pr-4 py-3 border border-surface-200 text-sm font-semibold focus:outline-none focus:border-surface-900 bg-white text-surface-900 transition-colors rounded-[10px] placeholder:text-surface-400 placeholder:normal-case placeholder:tracking-normal placeholder:font-medium"
             />
             <Search className="w-4 h-4 text-surface-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
           </div>
@@ -236,7 +236,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                 key={filter}
                 type="button"
                 onClick={() => setActiveFilter(filter)}
-                className={`flex items-center justify-center px-4 py-3 text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-colors cursor-pointer shrink-0 snap-start border rounded-[10px] shadow-none ${activeFilter === filter
+                className={`flex items-center justify-center px-4 py-3 text-sm font-semibold whitespace-nowrap transition-colors cursor-pointer shrink-0 snap-start border rounded-[10px] shadow-none ${activeFilter === filter
                     ? 'bg-surface-900 text-white border-surface-900'
                     : 'bg-surface-50 text-surface-500 border-surface-200 hover:border-surface-400'
                   }`}
@@ -252,7 +252,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="w-full px-4 pr-10 py-3 border border-surface-200 text-[10px] font-black uppercase tracking-widest bg-white text-surface-900 focus:outline-none focus:border-surface-900 cursor-pointer appearance-none transition-colors rounded-[10px]"
+                className="w-full px-4 pr-10 py-3 border border-surface-200 text-sm font-semibold bg-white text-surface-900 focus:outline-none focus:border-surface-900 cursor-pointer appearance-none transition-colors rounded-[10px]"
               >
                 <option value="Recommended">Sort: Recommended</option>
                 <option value="Price: Low to High">Price: Low to High</option>

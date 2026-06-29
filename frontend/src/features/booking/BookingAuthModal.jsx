@@ -226,7 +226,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
             </div>
           </div>
 
-          <div className="flex rounded-[10px] border border-surface-200 bg-surface-50 p-1 text-[10px] font-black uppercase tracking-widest">
+          <div className="flex rounded-[10px] border border-surface-200 bg-surface-50 p-1 text-sm font-semibold">
             <button
               type="button"
               onClick={() => switchMode('login')}
@@ -267,7 +267,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
               <>
                 {!isOtpSent ? (
                   <div className="space-y-1.5 text-left">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-surface-500 block">WhatsApp Number</label>
+                    <label className="text-sm font-semibold text-surface-500 block">WhatsApp Number</label>
                     <input
                       type="tel"
                       name="otpPhone"
@@ -280,11 +280,11 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                           : 'bg-surface-50 border-surface-200 focus:bg-white focus:border-surface-900'
                       }`}
                     />
-                    {fieldErrors.otpPhone && <p className="text-[9.5px] font-bold uppercase tracking-widest text-rose-500">{fieldErrors.otpPhone}</p>}
+                    {fieldErrors.otpPhone && <p className="text-sm font-medium text-rose-500">{fieldErrors.otpPhone}</p>}
                   </div>
                 ) : (
                   <div className="space-y-1.5 text-left">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-surface-500 block">Enter 6-Digit Code</label>
+                    <label className="text-sm font-semibold text-surface-500 block">Enter 6-Digit Code</label>
                     <input
                       type="text"
                       name="otpCode"
@@ -297,7 +297,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                           : 'bg-surface-50 border-surface-200 focus:bg-white focus:border-surface-900'
                       }`}
                     />
-                    {fieldErrors.otpCode && <p className="text-[9.5px] font-bold uppercase tracking-widest text-rose-500">{fieldErrors.otpCode}</p>}
+                    {fieldErrors.otpCode && <p className="text-sm font-medium text-rose-500">{fieldErrors.otpCode}</p>}
                   </div>
                 )}
               </>
@@ -306,7 +306,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
             {mode !== 'otp' && mode === 'register' && (
               <>
                 <div className="space-y-1.5 text-left">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-surface-500 block">Full Name</label>
+                  <label className="text-sm font-semibold text-surface-500 block">Full Name</label>
                   <input
                     type="text"
                     name="name"
@@ -320,11 +320,11 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                         : 'bg-surface-50 border-surface-200 focus:bg-white focus:border-surface-900'
                     }`}
                   />
-                  {fieldErrors.name && <p className="text-[9.5px] font-bold uppercase tracking-widest text-rose-500">{fieldErrors.name}</p>}
+                  {fieldErrors.name && <p className="text-sm font-medium text-rose-500">{fieldErrors.name}</p>}
                 </div>
 
                 <div className="space-y-1.5 text-left">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-surface-500 block">Mobile / WhatsApp</label>
+                  <label className="text-sm font-semibold text-surface-500 block">Mobile / WhatsApp</label>
                   <input
                     type="tel"
                     name="phone"
@@ -338,14 +338,14 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                         : 'bg-surface-50 border-surface-200 focus:bg-white focus:border-surface-900'
                     }`}
                   />
-                  {fieldErrors.phone && <p className="text-[9.5px] font-bold uppercase tracking-widest text-rose-500">{fieldErrors.phone}</p>}
+                  {fieldErrors.phone && <p className="text-sm font-medium text-rose-500">{fieldErrors.phone}</p>}
                 </div>
               </>
             )}
 
             {mode !== 'otp' && (
               <div className="space-y-1.5 text-left">
-                <label className="text-[10px] font-black uppercase tracking-widest text-surface-500 block">Email Address</label>
+                <label className="text-sm font-semibold text-surface-500 block">Email Address</label>
                 <input
                   type="email"
                   name="email"
@@ -359,13 +359,13 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                       : 'bg-surface-50 border-surface-200 focus:bg-white focus:border-surface-900'
                   }`}
                 />
-                {fieldErrors.email && <p className="text-[9.5px] font-bold uppercase tracking-widest text-rose-500">{fieldErrors.email}</p>}
+                {fieldErrors.email && <p className="text-sm font-medium text-rose-500">{fieldErrors.email}</p>}
               </div>
             )}
 
             {mode !== 'otp' && (
               <div className="space-y-1.5 text-left">
-                <label className="text-[10px] font-black uppercase tracking-widest text-surface-500 block">Password</label>
+                <label className="text-sm font-semibold text-surface-500 block">Password</label>
               <input
                 type="password"
                 name="password"
@@ -379,13 +379,13 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                     : 'bg-surface-50 border-surface-200 focus:bg-white focus:border-surface-900'
                 }`}
               />
-              {fieldErrors.password && <p className="text-[9.5px] font-bold uppercase tracking-widest text-rose-500">{fieldErrors.password}</p>}
+              {fieldErrors.password && <p className="text-sm font-medium text-rose-500">{fieldErrors.password}</p>}
             </div>
             )}
 
             {mode !== 'otp' && mode === 'register' && (
               <div className="space-y-1.5 text-left">
-                <label className="text-[10px] font-black uppercase tracking-widest text-surface-500 block">Confirm Password</label>
+                <label className="text-sm font-semibold text-surface-500 block">Confirm Password</label>
                 <input
                   type="password"
                   name="confirmPassword"
@@ -399,7 +399,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                       : 'bg-surface-50 border-surface-200 focus:bg-white focus:border-surface-900'
                   }`}
                 />
-                {fieldErrors.confirmPassword && <p className="text-[9.5px] font-bold uppercase tracking-widest text-rose-500">{fieldErrors.confirmPassword}</p>}
+                {fieldErrors.confirmPassword && <p className="text-sm font-medium text-rose-500">{fieldErrors.confirmPassword}</p>}
               </div>
             )}
 
@@ -425,7 +425,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
             <button
               type="button"
               onClick={() => switchMode(mode === 'login' || mode === 'otp' ? 'register' : 'login')}
-              className="text-[10px] font-black uppercase tracking-widest text-surface-600 hover:text-surface-900 hover:underline bg-transparent border-none cursor-pointer py-2 min-h-[36px] transition"
+              className="text-sm font-semibold text-surface-600 hover:text-surface-900 hover:underline bg-transparent border-none cursor-pointer py-2 min-h-[36px] transition"
             >
               {mode === 'login' || mode === 'otp'
                 ? "Don't have an account? Register for free"

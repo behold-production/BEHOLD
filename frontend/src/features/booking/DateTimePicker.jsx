@@ -525,7 +525,7 @@ export default function DateTimePicker({
             <button
               type="button"
               onClick={() => onTimeChange('')}
-              className="min-h-[32px] px-4 py-1.5 bg-white border-[2px] border-surface-200 inline-flex items-center text-[10px] font-black uppercase tracking-widest text-brand hover:border-brand transition-colors cursor-pointer self-start sm:self-auto rounded-[8px] active:scale-[0.98]"
+              className="min-h-[32px] px-4 py-1.5 bg-white border-[2px] border-surface-200 inline-flex items-center text-sm font-semibold text-brand hover:border-brand transition-colors cursor-pointer self-start sm:self-auto rounded-[8px] active:scale-[0.98]"
             >
               Clear Time
             </button>
@@ -535,9 +535,9 @@ export default function DateTimePicker({
 
       {/* Errors */}
       {(errors.date || errors.time) && (
-        <div className="space-y-1">
-          {errors.date && <p className="text-[9.5px] uppercase tracking-widest text-rose-500 font-bold" role="alert">{errors.date}</p>}
-          {errors.time && <p className="text-[9.5px] uppercase tracking-widest text-rose-500 font-bold" role="alert">{errors.time}</p>}
+        <div className="min-h-[20px] text-center pt-2">
+          {errors.date && <p className="text-sm font-medium text-rose-500" role="alert">{errors.date}</p>}
+          {errors.time && <p className="text-sm font-medium text-rose-500" role="alert">{errors.time}</p>}
         </div>
       )}
     </div>
