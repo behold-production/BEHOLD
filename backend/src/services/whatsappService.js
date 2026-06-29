@@ -5,7 +5,12 @@ class WhatsAppService {
     this.token = process.env.META_WA_ACCESS_TOKEN || '';
     this.phoneId = process.env.META_WA_PHONE_NUMBER_ID || '';
     this.baseUrl = `https://graph.facebook.com/v19.0/${this.phoneId}/messages`;
-    this.isConfigured = Boolean(this.token && this.phoneId && this.token !== 'your_meta_wa_access_token_here');
+    
+    // It's only configured if both token and phoneId are present and NOT placeholders
+    const hasRealToken = this.token && !this.token.includes('your_meta');
+    const hasRealPhoneId = this.phoneId && !this.phoneId.includes('your_meta');
+    
+    this.isConfigured = Boolean(hasRealToken && hasRealPhoneId);
   }
 
   /**
