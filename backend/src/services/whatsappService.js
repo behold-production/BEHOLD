@@ -95,7 +95,7 @@ class WhatsAppService {
     ];
 
     // For demonstration, if not configured, the logger will just output the payload
-    return this.sendTemplate(phone, 'otp_verification', 'en', components);
+    return this.sendTemplate(phone, 'otp_verification', 'en_US', components);
   }
 
   /**
@@ -113,7 +113,7 @@ class WhatsAppService {
         ]
       }
     ];
-    return this.sendTemplate(phone, 'behold_alert', 'en', components);
+    return this.sendTemplate(phone, 'behold_alert', 'en_US', components);
   }
 
   /**
@@ -122,14 +122,41 @@ class WhatsAppService {
    */
   async sendBookingAlert(phone, action, details) {
     let summary = '';
+    
+    const formattedDate = details.date || 'N/A';
+    const formattedTime = details.time || 'N/A';
+    const otherParty = details.counsellorName ? `Counsellor: ${details.counsellorName}` : `Student: ${details.studentName}`;
+    const mode = details.mode ? `\n📍 Mode: ${details.mode}` : '';
+
     switch(action) {
-      case 'created': summary = `[Booking Requested] by ${details.studentName || 'Student'} for ${details.date} at ${details.time}`; break;
-      case 'approved': summary = `[Booking Confirmed] with ${details.counsellorName || 'Counsellor'} on ${details.date} at ${details.time}`; break;
-      case 'cancelled': summary = `[Booking Cancelled] Reason: ${details.reason || 'N/A'}`; break;
-      case 'rescheduled': summary = `[Booking Rescheduled] to ${details.date} at ${details.time}`; break;
-      default: summary = '[Booking Updated]';
+      case 'created':
+        summary = `🗓️ *New Booking Request*\n\nWe have received a new appointment request.\n\n👤 ${otherParty}\n📅 Date: ${formattedDate}\n⏰ Time: ${formattedTime}${mode}\n\nPlease check your dashboard for more details.`;
+        break;
+      case 'approved':
+        summary = `✅ *Booking Confirmed*\n\nYour appointment has been successfully confirmed!\n\n👤 ${otherParty}\n📅 Date: ${formattedDate}\n⏰ Time: ${formattedTime}${mode}\n\nWe look forward to seeing you.`;
+        break;
+      case 'cancelled':
+        summary = `❌ *Booking Cancelled*\n\nYour appointment has been cancelled.\n\n📅 Date: ${formattedDate}\n⏰ Time: ${formattedTime}\n📝 Reason: ${details.reason || 'N/A'}\n\nIf you have any questions, please contact support.`;
+        break;
+      case 'rescheduled':
+        summary = `🔄 *Booking Rescheduled*\n\nYour appointment has been rescheduled to a new time.\n\n👤 ${otherParty}\n📅 New Date: ${formattedDate}\n⏰ New Time: ${formattedTime}${mode}\n\nPlease check your dashboard for updates.`;
+        break;
+      default:
+        summary = `🔔 *Booking Update*\n\nThere has been an update regarding your appointment.\n\n👤 ${otherParty}\n📅 Date: ${formattedDate}\n⏰ Time: ${formattedTime}\n\nPlease check your dashboard for details.`;
     }
 
+    return this.sendNotification(phone, summary);
+  }
+
+  /**
+   * Send a day-of-booking reminder
+   */
+  async sendDayOfReminder(phone, details) {
+    const otherParty = details.counsellorName ? `Counsellor: ${details.counsellorName}` : `Student: ${details.studentName}`;
+    const mode = details.mode ? `\n📍 Mode: ${details.mode}` : '';
+    
+    const summary = `⏰ *Appointment Reminder*\n\nHello! This is a friendly reminder that you have an appointment scheduled for today.\n\n👤 ${otherParty}\n⏰ Time: ${details.time || 'N/A'}${mode}\n\nPlease ensure you are ready at the scheduled time. See you soon!`;
+    
     return this.sendNotification(phone, summary);
   }
 }
