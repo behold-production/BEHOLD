@@ -118,6 +118,9 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
   const step2Ref = useRef(null);
   const step3Ref = useRef(null);
 
+  const [expandedBios, setExpandedBios] = useState({});
+  const [expandedSpecialties, setExpandedSpecialties] = useState({});
+
   useEffect(() => {
     if (selectedDate && !selectedAdvisor && step2Ref.current) {
       setTimeout(() => {
@@ -939,15 +942,46 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
               <div>
                 <span className="text-sm font-semibold text-surface-900 block mb-2">Specialties</span>
                 <div className="flex flex-wrap gap-2">
-                  {advisor.specialties?.length > 0 ? advisor.specialties.map((spec, i) => (
-                    <span key={i} className="px-3 py-1 bg-white border border-surface-200 text-surface-700 text-xs font-medium rounded-lg">{spec}</span>
-                  )) : (
+                  {advisor.specialties?.length > 0 ? (
+                    <>
+                      {(expandedSpecialties[advisor.id] ? advisor.specialties : advisor.specialties.slice(0, 5)).map((spec, i) => (
+                        <span key={i} className="px-3 py-1 bg-white border border-surface-200 text-surface-700 text-xs font-medium rounded-lg">{spec}</span>
+                      ))}
+                      {advisor.specialties.length > 5 && (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setExpandedSpecialties(prev => ({ ...prev, [advisor.id]: !prev[advisor.id] }));
+                          }}
+                          className="px-3 py-1 bg-surface-50 border border-surface-200 text-surface-700 text-xs font-bold rounded-lg hover:bg-surface-100 transition-colors cursor-pointer"
+                        >
+                          {expandedSpecialties[advisor.id] ? '- Less' : `+ ${advisor.specialties.length - 5} More`}
+                        </button>
+                      )}
+                    </>
+                  ) : (
                     <span className="px-3 py-1 bg-white border border-surface-200 text-surface-500 text-xs font-medium rounded-lg">General</span>
                   )}
                 </div>
               </div>
               {advisor.bio && (
-                <p className="text-sm font-medium text-surface-600 italic leading-relaxed">"{advisor.bio}"</p>
+                <div className="relative">
+                  <p className={`text-sm font-medium text-surface-600 italic leading-relaxed ${expandedBios[advisor.id] ? '' : 'line-clamp-2'}`}>
+                    "{advisor.bio}"
+                  </p>
+                  {advisor.bio.length > 100 && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setExpandedBios(prev => ({ ...prev, [advisor.id]: !prev[advisor.id] }));
+                      }}
+                      className="text-brand-dark font-black hover:underline cursor-pointer text-[11px] mt-1 uppercase tracking-wider"
+                    >
+                      {expandedBios[advisor.id] ? 'Read Less' : 'Read More'}
+                    </button>
+                  )}
+                </div>
               )}
             </div>
 
