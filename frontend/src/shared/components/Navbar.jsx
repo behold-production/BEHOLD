@@ -183,13 +183,15 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                 </button>
               )}
 
-              <button
-                onClick={() => navigate('/sample-test')}
-                className={`relative group transition-colors uppercase cursor-pointer ${isDarkTheme ? 'hover:text-white' : 'hover:text-surface-900'}`}
-              >
-                SAMPLE TEST
-                <span className={`absolute -bottom-2 left-0 w-full h-[2px] bg-brand transition-transform origin-left ${currentView === '/sample-test' ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`} />
-              </button>
+              {siteSettings.enableAptitude !== false && (
+                <button
+                  onClick={() => navigate('/sample-test')}
+                  className={`relative group transition-colors uppercase cursor-pointer ${isDarkTheme ? 'hover:text-white' : 'hover:text-surface-900'}`}
+                >
+                  SAMPLE TEST
+                  <span className={`absolute -bottom-2 left-0 w-full h-[2px] bg-brand transition-transform origin-left ${currentView === '/sample-test' ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`} />
+                </button>
+              )}
 
               <button
                 onClick={() => scrollToSection('inquiry')}
@@ -322,16 +324,19 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
             </button>
           )}
 
-          <button
-            type="button"
-            onClick={() => { navigate('/sample-test'); setIsMenuOpen(false); }}
-            className={`w-full text-left px-4 py-4 text-sm font-bold uppercase transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${currentView === '/sample-test'
-              ? 'bg-surface-50 text-brand border-brand'
-              : 'text-slate-600 hover:text-surface-900 hover:bg-surface-50 border-transparent'
-              }`}
-          >
-            <span>Sample Test</span>
-          </button>
+          {siteSettings.enableAptitude !== false && (
+            <button
+              type="button"
+              onClick={() => { navigate('/sample-test'); setIsMenuOpen(false); }}
+              className={`w-full text-left px-4 py-4 text-sm font-bold uppercase transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${currentView === '/sample-test'
+                  ? 'bg-brand/10 text-brand border-brand'
+                  : 'border-transparent text-surface-900 hover:bg-surface-50'
+                }`}
+            >
+              <span>Sample Test</span>
+              <ChevronRight className={`w-4 h-4 transition-transform ${currentView === '/sample-test' ? 'translate-x-1' : ''}`} />
+            </button>
+          )}
 
           <button
             type="button"

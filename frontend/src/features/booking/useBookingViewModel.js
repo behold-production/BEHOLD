@@ -180,7 +180,13 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
               bookedSlots: c.bookedSlots || [],
               locationName: c.locationName || '',
               latitude: Number(c.latitude) || 0,
-              longitude: Number(c.longitude) || 0
+              longitude: Number(c.longitude) || 0,
+              profilePic: c.profilePic || c.image || '',
+              image: c.image || c.profilePic || '',
+              specialties: c.specialties || [],
+              bio: c.bio || '',
+              hours: c.hours || 0,
+              lang: c.lang || ''
             };
           });
           setAdvisors(resolved);

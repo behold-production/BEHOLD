@@ -411,9 +411,17 @@ const AuthController = {
 
       if (!waResponse.success && !waResponse.mock) {
         console.error('WhatsApp sending failed:', waResponse.error);
+        
+        let metaErrorDetails = 'Unknown Meta API error';
+        if (waResponse.error && waResponse.error.error && waResponse.error.error.message) {
+          metaErrorDetails = waResponse.error.error.message;
+        } else if (typeof waResponse.error === 'string') {
+          metaErrorDetails = waResponse.error;
+        }
+
         return res.status(500).json({ 
           success: false, 
-          message: 'Failed to send OTP via WhatsApp. Ensure Meta Template is approved.' 
+          message: `WhatsApp API Error: ${metaErrorDetails}. Ensure your Meta Template 'otp_verification' exists and is approved, and your token is valid.` 
         });
       }
 

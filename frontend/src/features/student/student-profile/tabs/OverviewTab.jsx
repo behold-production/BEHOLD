@@ -120,9 +120,9 @@ const OverviewTab = ({
         {[
           { icon: Calendar, label: 'Upcoming', value: stats.upcoming, sub: 'sessions', accent: '#0ea5e9', bg: '#eff6ff', dot: '#3b82f6' },
           { icon: CheckCircle2, label: 'Completed', value: stats.completed, sub: 'lifetime', accent: '#10b981', bg: '#ecfdf5', dot: '#10b981' },
-          { icon: BarChart3, label: 'C-DAT', value: testProfile ? 'Done' : 'Pending', sub: testProfile ? 'profile ready' : 'not taken', accent: testProfile ? '#8b5cf6' : '#f59e0b', bg: testProfile ? '#f5f3ff' : '#fffbeb', dot: testProfile ? '#8b5cf6' : '#f59e0b' },
+          { icon: BarChart3, label: 'C-DAT', value: testProfile ? 'Done' : 'Pending', sub: testProfile ? 'profile ready' : 'not taken', accent: testProfile ? '#8b5cf6' : '#f59e0b', bg: testProfile ? '#f5f3ff' : '#fffbeb', dot: testProfile ? '#8b5cf6' : '#f59e0b', condition: enableAptitude },
           { icon: Clock, label: 'Hours', value: `${stats.hours}h`, sub: 'coached', accent: '#f43f5e', bg: '#fff1f2', dot: '#f43f5e' },
-        ].map((kpi, i) => {
+        ].filter(k => k.condition !== false).map((kpi, i) => {
           const Icon = kpi.icon;
           return (
             <div
@@ -264,9 +264,9 @@ const OverviewTab = ({
               { icon: Mail, label: 'Email Added', done: !!profile.email, emoji: '📧' },
               { icon: Phone, label: 'Phone Added', done: !!profile.phone, emoji: '📱' },
               { icon: Calendar, label: 'First Booking', done: stats.total > 0, emoji: '📅' },
-              { icon: BarChart3, label: 'C-DAT Completed', done: !!testProfile, emoji: '📊' },
+              { icon: BarChart3, label: 'C-DAT Completed', done: !!testProfile, emoji: '📊', condition: enableAptitude },
               { icon: Award, label: '5 Sessions Done', done: stats.completed >= 5, emoji: '🏆' },
-            ].map((a, i) => (
+            ].filter(a => a.condition !== false).map((a, i) => (
               <div
                 key={i}
                 className={`flex items-center gap-2.5 text-[10px] uppercase tracking-widest px-3 py-2.5 rounded-[10px] transition-all duration-200 border ${a.done

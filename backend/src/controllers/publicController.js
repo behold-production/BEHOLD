@@ -86,6 +86,7 @@ const PublicController = {
             'Your privacy is extremely important to us. This policy describes how we collect, protect, and use your personal information.',
           cdatGroupCode: 'cdat@behold',
           enablePsychology: true,
+          enableAptitude: true,
           enableOnline: true,
           enableOffline: true,
           enableDoorstep: true,
@@ -122,6 +123,7 @@ const PublicController = {
         data: {
           ...settings,
           enablePsychology: settings.enablePsychology !== false,
+          enableAptitude: settings.enableAptitude !== false,
           enableOnline: settings.enableOnline !== false,
           enableOffline: settings.enableOffline !== false,
           enableDoorstep: settings.enableDoorstep !== false

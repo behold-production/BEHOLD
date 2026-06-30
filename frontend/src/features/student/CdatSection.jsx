@@ -229,15 +229,15 @@ export default function CdatSection({ setView }) {
                 </button>
               ) : (
                 <div className="pt-2 space-y-4 animate-in fade-in duration-300">
-                  <div className="p-4 bg-surface-100 border border-surface-200 flex items-center justify-between rounded-[10px]">
-                    <div>
+                  <div className="p-4 bg-surface-100 border border-surface-200 flex items-center justify-between gap-4 rounded-[10px]">
+                    <div className="min-w-0 flex-1">
                       <span className="text-[10px] uppercase tracking-widest text-surface-500 font-bold block mb-1">Your Code</span>
-                      <span className="text-xl font-black tracking-widest text-surface-900">{generatedCode}</span>
+                      <span className="text-xl sm:text-2xl font-black tracking-widest text-surface-900 block truncate" title={generatedCode}>{generatedCode}</span>
                     </div>
                     <button
                       type="button"
                       onClick={copyManually}
-                      className="px-4 py-2 bg-white border border-surface-200 hover:border-surface-900 hover:bg-surface-50 text-surface-900 text-[10px] font-black uppercase tracking-widest cursor-pointer transition-colors flex items-center gap-2 rounded-[10px] shadow-none"
+                      className="shrink-0 px-4 py-2 bg-white border border-surface-200 hover:border-surface-900 hover:bg-surface-50 text-surface-900 text-[10px] font-black uppercase tracking-widest cursor-pointer transition-colors flex items-center gap-2 rounded-[10px] shadow-none"
                     >
                       <Copy className="w-4 h-4" />
                       {copied ? 'Copied' : 'Copy'}

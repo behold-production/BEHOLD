@@ -79,6 +79,19 @@ export function useStudentProfileViewModel() {
     return true;
   }, []);
 
+  const enableAptitude = useMemo(() => {
+    try {
+      const settings = localStorage.getItem('behold_site_settings');
+      if (settings) {
+        const parsed = JSON.parse(settings);
+        return parsed.enableAptitude !== false;
+      }
+    } catch (e) {
+      console.error("Error reading site settings", e);
+    }
+    return true;
+  }, []);
+
   const completion = useMemo(() => calculateCompletion(formData), [formData]);
   const greeting = useMemo(() => getGreeting(), []);
   const displayName = profile.name || user?.name || 'Student';
@@ -513,6 +526,7 @@ export function useStudentProfileViewModel() {
     navigate,
     currentSection,
     enablePsychology,
+    enableAptitude,
     completion,
     greeting,
     displayName,

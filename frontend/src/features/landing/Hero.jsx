@@ -9,8 +9,8 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
   };
 
   const settings = siteSettings || {};
-  // Removed hardcoded newline to allow natural text flow on large screens
-  const rawTitle = settings.heroTitle || "Bridging You To Your {True Growth.}";
+  // Updated to match the specific 3-line layout from the reference design
+  const rawTitle = settings.heroTitle || "Bridging You\nTo Your {True}\n{Growth.}";
   const heroSub = settings.heroSub || "Professional psychological counseling, aptitude assessment, and career mentorship designed to help individuals thrive with confidence and purpose.";
 
   const renderTitle = (text) => {
@@ -56,7 +56,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
           style={{ fontFamily: "'Poppins', 'Baloo Chettan 2', 'Manjari', 'Noto Sans Malayalam', sans-serif" }}
-          className="text-[clamp(1.75rem,8vw,3rem)] leading-[1.25] sm:text-5xl md:text-6xl lg:text-[5rem] lg:leading-[1.1] font-black text-white tracking-tight drop-shadow-lg px-6 sm:px-0 text-pretty"
+          className="text-[clamp(2.5rem,7vw,5.5rem)] leading-[1.1] sm:leading-[1.05] font-black text-white tracking-tight drop-shadow-lg px-4 sm:px-0 text-balance"
         >
           {renderTitle(rawTitle)}
         </motion.h1>
@@ -66,7 +66,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
-          className="text-[clamp(0.875rem,4vw,1rem)] sm:text-base md:text-xl text-zinc-300 max-w-2xl font-medium leading-relaxed mt-4 sm:mt-5 px-6 sm:px-0 text-pretty"
+          className="text-[clamp(1rem,2vw,1.25rem)] text-zinc-300 max-w-3xl font-medium leading-relaxed mt-4 sm:mt-6 px-4 sm:px-0 text-balance"
         >
           {heroSub}
         </motion.p>
@@ -88,28 +88,43 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
               Book a Session
             </motion.button>
           )}
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => navigateToSection('cdat')}
-            className="px-8 sm:px-10 py-3.5 sm:py-4 min-h-[50px] bg-white/10 hover:bg-white/20 text-white text-xs sm:text-sm font-black tracking-widest uppercase backdrop-blur-md border-neon-glow border-neon-glow-hover transition-all w-full sm:w-auto cursor-pointer rounded-[10px]"
-          >
-            Explore Aptitude
-          </motion.button>
+          {settings.enableAptitude !== false && (
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => navigateToSection('cdat')}
+              className="px-8 sm:px-10 py-3.5 sm:py-4 min-h-[50px] bg-white/10 hover:bg-white/20 text-white text-xs sm:text-sm font-black tracking-widest uppercase backdrop-blur-md border-neon-glow border-neon-glow-hover transition-all w-full sm:w-auto cursor-pointer rounded-[10px]"
+            >
+              Explore Aptitude
+            </motion.button>
+          )}
         </motion.div>
       </div>
 
-      {/* Decorative SVG Wave Divider */}
-      <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-[0] z-20 translate-y-[1px]">
+      {/* Decorative Layered Waves Divider */}
+      <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-[0] z-10 translate-y-[1px] pointer-events-none">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 1440 320"
           preserveAspectRatio="none"
-          className="w-full h-[40px] sm:h-[70px] md:h-[100px]"
+          className="w-full h-[80px] sm:h-[120px] md:h-[180px]"
         >
+          {/* Back translucent wave */}
           <path
-            fill="var(--color-surface-50)"
-            d="M0,160L80,165.3C160,171,320,181,480,165.3C640,149,800,107,960,101.3C1120,96,1280,128,1360,144L1440,160L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"
+            fill="var(--color-surface-50, #ffffff)"
+            fillOpacity="0.05"
+            d="M0,140 C320,140 420,240 720,240 C1020,240 1120,140 1440,140 L1440,320 L0,320 Z"
+          ></path>
+          {/* Middle translucent wave */}
+          <path
+            fill="var(--color-surface-50, #ffffff)"
+            fillOpacity="0.1"
+            d="M0,180 C320,180 420,280 720,280 C1020,280 1120,180 1440,180 L1440,320 L0,320 Z"
+          ></path>
+          {/* Front solid wave (with softer center bulge) */}
+          <path
+            fill="var(--color-surface-50, #ffffff)"
+            d="M0,260 C320,300 420,180 720,180 C1020,180 1120,300 1440,260 L1440,320 L0,320 Z"
           ></path>
         </svg>
       </div>

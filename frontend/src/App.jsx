@@ -67,6 +67,7 @@ export default function App() {
       whatsapp: 'https://wa.me/919497174011',
       contactEmail: 'support@behold.com',
       enablePsychology: true,
+      enableAptitude: true,
       gstEnabled: false,
       gstPercent: 0
     };
@@ -282,17 +283,17 @@ export default function App() {
     try {
       const { jsPDF } = await import('jspdf');
       const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-      
+
       const title = activeDocType === 'terms' ? 'Terms & Conditions' : 'Privacy Policy';
       const content = activeDocType === 'terms' ? siteSettings.termsOfUse : siteSettings.privacyPolicy;
-      
+
       doc.setFont('Helvetica', 'bold');
       doc.setFontSize(16);
       doc.text(`BEHOLD - ${title}`, 20, 20);
-      
+
       doc.setFont('Helvetica', 'normal');
       doc.setFontSize(10);
-      
+
       const splitText = doc.splitTextToSize(content || 'No content available.', 170);
       let y = 30;
       for (let i = 0; i < splitText.length; i++) {
@@ -303,7 +304,7 @@ export default function App() {
         doc.text(splitText[i], 20, y);
         y += 6;
       }
-      
+
       doc.save(`Behold_${activeDocType}.pdf`);
     } catch (err) {
       console.error('Failed to generate PDF', err);
@@ -319,7 +320,7 @@ export default function App() {
     <div className="font-sans antialiased selection:bg-brand/30 min-h-screen relative text-zinc-900 bg-zinc-50">
 
       {/* Global Toast Notifications */}
-      <Toaster 
+      <Toaster
         position="top-center"
         toastOptions={{
           duration: 4000,
@@ -362,69 +363,71 @@ export default function App() {
         </div>
       }>
         <Routes>
-        {/* Landing Page */}
-        <Route path="/" element={
-          <main className="fade-in-up">
-            <Hero setView={() => { }} navigateToSection={navigateToSection} siteSettings={siteSettings} />
-            <CdatSection setView={() => { }} />
-            {siteSettings.enablePsychology !== false && <Services setView={() => { }} onBookTherapist={handleBookTherapist} siteSettings={siteSettings} />}
-            <About setView={() => { }} enablePsychology={siteSettings.enablePsychology !== false} siteSettings={siteSettings} />
-            <Faq />
-            <Inquiry testProfile={testProfile} siteSettings={siteSettings} />
-          </main>
-        } />
+          {/* Landing Page */}
+          <Route path="/" element={
+            <main className="fade-in-up">
+              <Hero setView={() => { }} navigateToSection={navigateToSection} siteSettings={siteSettings} />
+              {siteSettings.enableAptitude !== false && <CdatSection setView={() => { }} />}
+              {siteSettings.enablePsychology !== false && <Services setView={() => { }} onBookTherapist={handleBookTherapist} siteSettings={siteSettings} />}
+              <About setView={() => { }} enablePsychology={siteSettings.enablePsychology !== false} siteSettings={siteSettings} />
+              <Faq />
+              <Inquiry testProfile={testProfile} siteSettings={siteSettings} />
+            </main>
+          } />
 
-        {/* Aptitude Test */}
-        <Route path="/sample-test" element={
-          <AptitudeTest onFinishTest={handleFinishTest} />
-        } />
+          {/* Aptitude Test */}
+          {siteSettings.enableAptitude !== false && (
+            <Route path="/sample-test" element={
+              <AptitudeTest onFinishTest={handleFinishTest} />
+            } />
+          )}
 
-        {/* Booking — open to guests; auth is enforced inside at "Proceed to Payment" */}
-        <Route path="/booking" element={
-          <ServiceBooking
-            preselectedAdvisorId={bookingAdvisor}
-            clearPreselectedAdvisor={() => setBookingAdvisor(null)}
-            onOpenAuth={() => setIsAuthModalOpen(true)}
-          />
-        } />
+          {/* Booking — open to guests; auth is enforced inside at "Proceed to Payment" */}
+          <Route path="/booking" element={
+            <ServiceBooking
+              preselectedAdvisorId={bookingAdvisor}
+              clearPreselectedAdvisor={() => setBookingAdvisor(null)}
+              onOpenAuth={() => setIsAuthModalOpen(true)}
+            />
+          } />
 
-        {/* Student Profile */}
-        <Route path="/profile" element={
-          user?.role?.toUpperCase() === 'USER' ? (
-            <StudentProfile />
-          ) : (
-            <Navigate to="/" replace />
-          )
-        } />
+          {/* Student Profile */}
+          <Route path="/profile" element={
+            user?.role?.toUpperCase() === 'USER' ? (
+              <StudentProfile />
+            ) : (
+              <Navigate to="/" replace />
+            )
+          } />
 
-        {/* Admin Dashboard */}
-        <Route path="/admin" element={
-          <div className="admin-console-theme">
-            <AdminDashboard setView={() => { }} />
-          </div>
-        } />
+          {/* Admin Dashboard */}
+          <Route path="/admin" element={
+            <div className="admin-console-theme">
+              <AdminDashboard setView={() => { }} />
+            </div>
+          } />
 
-        {/* Counsellor Dashboard */}
-        <Route path="/counsellor" element={
-          <div className="counsellor-console-theme">
-            <PsychologistDashboard setView={() => { }} />
-          </div>
-        } />
-        <Route path="/conceller" element={<Navigate to="/counsellor" replace />} />
+          {/* Counsellor Dashboard */}
+          <Route path="/counsellor" element={
+            <div className="counsellor-console-theme">
+              <PsychologistDashboard setView={() => { }} />
+            </div>
+          } />
+          <Route path="/conceller" element={<Navigate to="/counsellor" replace />} />
 
-        {/* Advisor Public Profile */}
-        <Route path="/advisor/:id" element={
-          <AdvisorProfileWrapper
-            handleBookTherapist={handleBookTherapist}
-            setPendingScrollSection={setPendingScrollSection}
-          />
-        } />
+          {/* Advisor Public Profile */}
+          <Route path="/advisor/:id" element={
+            <AdvisorProfileWrapper
+              handleBookTherapist={handleBookTherapist}
+              setPendingScrollSection={setPendingScrollSection}
+            />
+          } />
 
-        {/* Reset Password */}
-        <Route path="/reset-password" element={<ResetPassword />} />
+          {/* Reset Password */}
+          <Route path="/reset-password" element={<ResetPassword />} />
 
-        {/* Catch-all fallback */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+          {/* Catch-all fallback */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>
 

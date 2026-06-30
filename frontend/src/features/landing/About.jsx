@@ -85,22 +85,24 @@ export default function About({ enablePsychology = true, siteSettings }) {
         </div>
 
         {/* CTA Button */}
-        <div className="flex justify-center w-full pt-8">
-          <button
-            type="button"
-            onClick={() => {
-              if (enablePsychology) {
-                window.spaNavigate('/booking');
-              } else {
-                window.spaNavigate('/sample-test');
-              }
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            className="btn-primary w-full sm:w-auto px-12"
-          >
-            {enablePsychology ? 'Get Started with Behold' : 'Explore Aptitude Assessment'}
-          </button>
-        </div>
+        {(enablePsychology || settings.enableAptitude !== false) && (
+          <div className="flex justify-center w-full pt-8">
+            <button
+              type="button"
+              onClick={() => {
+                if (enablePsychology) {
+                  window.spaNavigate('/booking');
+                } else {
+                  window.spaNavigate('/sample-test');
+                }
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="btn-primary w-full sm:w-auto px-12"
+            >
+              {enablePsychology ? 'Get Started with Behold' : 'Explore Aptitude Assessment'}
+            </button>
+          </div>
+        )}
 
       </div>
 

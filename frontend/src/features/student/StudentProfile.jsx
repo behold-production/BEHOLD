@@ -35,6 +35,7 @@ export default function StudentProfile() {
     navigate,
     currentSection,
     enablePsychology,
+    enableAptitude,
     completion,
     greeting,
     displayName,
@@ -160,6 +161,7 @@ export default function StudentProfile() {
                   handleSectionChange={handleSectionChange}
                   bookedSessions={bookedSessions}
                   testProfile={testProfile}
+                  enableAptitude={enableAptitude}
                 />
               </aside>
 
@@ -176,6 +178,7 @@ export default function StudentProfile() {
                      bookedSessions={bookedSessions}
                      completedSessions={completedSessions}
                      profile={profile}
+                     enableAptitude={enableAptitude}
                   />
                 )}
                 {currentSection === 'details' && (
@@ -228,6 +231,7 @@ export default function StudentProfile() {
                     setCigiNote={setCigiNote}
                     isCigiUploading={isCigiUploading}
                     handleCigiDelete={handleCigiDelete}
+                    enableAptitude={enableAptitude}
                   />
                 )}
               </main>

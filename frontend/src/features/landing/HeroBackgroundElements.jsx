@@ -143,7 +143,7 @@ export default function HeroBackgroundElements() {
       <FloatingDiamond className="top-[20%] right-[5%] lg:right-[15%] opacity-60" size={100} delay={0.5} color1="#00D1D1" />
       <FloatingSphere className="top-[65%] right-[2%] lg:right-[12%] opacity-80" size={140} delay={2} color1="#0ea5e9" color2="#0369a1" />
 
-      <FloatingPill className="top-[75%] left-[30%] lg:left-[40%] opacity-40" size={160} delay={1} color1="#00D1D1" />
+      <FloatingPill className="top-[25%] left-[5%] lg:left-[15%] opacity-30" size={120} delay={1.5} color1="#00D1D1" />
     </div>
   );
 }

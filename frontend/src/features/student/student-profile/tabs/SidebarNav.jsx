@@ -9,12 +9,17 @@ const ICON_MAP = {
   BarChart3
 };
 
-const SidebarNav = ({ currentSection, handleSectionChange, bookedSessions, testProfile }) => {
+const SidebarNav = ({ currentSection, handleSectionChange, bookedSessions, testProfile, enableAptitude }) => {
+  const visibleTabs = TABS.filter(tab => {
+    if (tab.id === 'results' && enableAptitude === false) return false;
+    return true;
+  });
+
   return (
     <>
       {/* Desktop sidebar */}
       <nav className="hidden lg:flex flex-col gap-0.5 p-1.5 bg-white border border-surface-200 rounded-[10px] shadow-square-light sticky top-24">
-        {TABS.map(tab => {
+        {visibleTabs.map(tab => {
           const Icon = ICON_MAP[tab.iconName];
           const isActive = currentSection === tab.id;
           const badge =
@@ -59,18 +64,18 @@ const SidebarNav = ({ currentSection, handleSectionChange, bookedSessions, testP
 
       {/* Mobile bottom tab bar */}
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-surface-200">
-        <div className="grid grid-cols-4 gap-2 max-w-2xl mx-auto">
-          {TABS.map(tab => {
+        <div className="grid gap-2 max-w-2xl mx-auto" style={{ gridTemplateColumns: `repeat(${visibleTabs.length}, minmax(0, 1fr))` }}>
+          {visibleTabs.map(tab => {
             const Icon = ICON_MAP[tab.iconName];
             const isActive = currentSection === tab.id;
-            const badge =
-              tab.id === 'booked' ? bookedSessions.length : null;
+            const badge = tab.id === 'booked' ? bookedSessions.length : null;
             return (
               <button
                 key={tab.id}
                 type="button"
                 onClick={() => handleSectionChange(tab.id)}
                 className={`relative flex flex-col items-center justify-center gap-1 min-h-[60px] py-2 px-1 transition-colors ${isActive ? 'text-surface-900' : 'text-surface-400'
+
                   }`}
               >
                 <div className="relative">

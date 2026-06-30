@@ -1456,6 +1456,7 @@ export default function AdminDashboard({ setView }) {
           privacyPolicy: settings.privacyPolicy || '',
           cdatGroupCode: settings.cdatGroupCode || 'cdat@behold',
           enablePsychology: settings.enablePsychology !== undefined ? settings.enablePsychology : true,
+          enableAptitude: settings.enableAptitude !== undefined ? settings.enableAptitude : true,
           enableOnline: settings.enableOnline !== undefined ? settings.enableOnline : true,
           enableOffline: settings.enableOffline !== undefined ? settings.enableOffline : true,
           enableDoorstep: settings.enableDoorstep !== undefined ? settings.enableDoorstep : true,
