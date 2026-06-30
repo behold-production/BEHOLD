@@ -842,14 +842,30 @@ export default function SettingsTab(props) {
                 <div className="border border-zinc-800 p-5 rounded-xl space-y-4 bg-zinc-955/20">
                   <div className="flex items-center justify-between gap-4 py-2 border-b border-zinc-800/40">
                     <div>
-                      <span className="text-sm font-bold text-brand block">Enable Psychology & Booking Services</span>
-                      <span className="text-xs text-zinc-500 block font-medium mt-1 leading-relaxed">If disabled, the site will only display Aptitude Test features. Psychologists and booking sections will be hidden from the public website.</span>
+                      <span className="text-sm font-bold text-brand block">Enable Psychological Counselling</span>
+                      <span className="text-xs text-zinc-500 block font-medium mt-1 leading-relaxed">If disabled, psychological counselling services will be hidden from the public website.</span>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer shrink-0">
                       <input
                         type="checkbox"
                         checked={settingsForm.enablePsychology}
                         onChange={(e) => setSettingsForm({ ...settingsForm, enablePsychology: e.target.checked })}
+                        className="sr-only peer"
+                      />
+                      <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
+                    </label>
+                  </div>
+
+                  <div className="flex items-center justify-between gap-4 py-2 border-b border-zinc-800/40">
+                    <div>
+                      <span className="text-sm font-bold text-brand block">Enable Career Mentoring</span>
+                      <span className="text-xs text-zinc-500 block font-medium mt-1 leading-relaxed">If disabled, career mentoring services will be hidden from the public website.</span>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer shrink-0">
+                      <input
+                        type="checkbox"
+                        checked={settingsForm.enableCareerMentoring !== false}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, enableCareerMentoring: e.target.checked })}
                         className="sr-only peer"
                       />
                       <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />

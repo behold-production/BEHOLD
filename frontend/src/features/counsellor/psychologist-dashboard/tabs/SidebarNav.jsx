@@ -37,7 +37,7 @@ const SidebarNav = ({
             <button
               type="button"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="lg:hidden p-1.5 bg-zinc-950 border border-zinc-850 text-zinc-400 hover:text-white rounded-lg transition-colors cursor-pointer border-none"
+              className="lg:hidden p-1.5 bg-zinc-950 border border-zinc-850 text-zinc-400 hover:text-white rounded-[10px] transition-colors cursor-pointer border-none"
               title="Close Navigation Drawer"
             >
               <X className="w-4 h-4" />
@@ -48,9 +48,9 @@ const SidebarNav = ({
           <button
             type="button"
             onClick={() => setIsProfileDrawerOpen(true)}
-            className="w-full flex items-center gap-3 bg-zinc-955/60 hover:bg-zinc-950 p-3 rounded-xl border border-zinc-850 hover:border-brand/30 transition-all cursor-pointer text-left"
+            className="w-full flex items-center gap-3 bg-zinc-955/60 hover:bg-zinc-950 p-3 rounded-[10px] border border-zinc-850 hover:border-brand/30 transition-all cursor-pointer text-left"
           >
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-brand to-brand-accent text-zinc-955 flex items-center justify-center font-header font-bold text-sm shrink-0 overflow-hidden">
+            <div className="w-10 h-10 rounded-[10px] bg-gradient-to-br from-brand to-brand-accent text-zinc-955 flex items-center justify-center font-header font-bold text-sm shrink-0 overflow-hidden">
               {user?.profilePic ? (
                 <img src={user.profilePic} alt={profile.name} className="w-full h-full object-cover" />
               ) : (
@@ -101,7 +101,7 @@ const SidebarNav = ({
                       <button
                         key={item.id}
                         onClick={() => handleNavClick(item.id)}
-                        className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-lg text-[13px] capitalize transition-all text-left cursor-pointer border-none ${
+                        className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-[10px] text-[13px] capitalize transition-all text-left cursor-pointer border-none ${
                           isActive
                             ? 'bg-brand text-zinc-955 font-semibold shadow-sm'
                             : 'bg-transparent text-zinc-450 hover:text-white hover:bg-zinc-850/60 font-medium'
@@ -122,7 +122,7 @@ const SidebarNav = ({
         <div className="space-y-4 pt-4 border-t border-zinc-800 mt-6 lg:mt-0">
           <button
             onClick={() => setIsLogoutConfirmOpen(true)}
-            className="w-full py-2 border border-rose-900/50 hover:border-rose-650 text-rose-500 bg-rose-955/20 hover:bg-rose-900/40 hover:text-white font-semibold text-xs capitalize rounded-lg flex items-center justify-center gap-2 transition-colors cursor-pointer"
+            className="w-full py-2 border border-rose-900/50 hover:border-rose-650 text-rose-500 bg-rose-955/20 hover:bg-rose-900/40 hover:text-white font-semibold text-xs capitalize rounded-[10px] flex items-center justify-center gap-2 transition-colors cursor-pointer"
           >
             <LogOut className="w-3.5 h-3.5" /> Exit Console
           </button>

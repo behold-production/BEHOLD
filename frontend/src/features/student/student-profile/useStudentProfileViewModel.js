@@ -79,6 +79,17 @@ export function useStudentProfileViewModel() {
     return true;
   }, []);
 
+  const enableCareerMentoring = useMemo(() => {
+    try {
+      const stored = localStorage.getItem('behold_site_settings');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        return parsed.enableCareerMentoring !== false;
+      }
+    } catch (e) {}
+    return true;
+  }, []);
+
   const enableAptitude = useMemo(() => {
     try {
       const settings = localStorage.getItem('behold_site_settings');
@@ -526,6 +537,7 @@ export function useStudentProfileViewModel() {
     navigate,
     currentSection,
     enablePsychology,
+    enableCareerMentoring,
     enableAptitude,
     completion,
     greeting,

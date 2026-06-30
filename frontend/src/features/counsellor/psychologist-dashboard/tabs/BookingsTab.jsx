@@ -60,7 +60,7 @@ const BookingsTab = ({
       </div>
 
       {/* Tab switcher */}
-      <div className="flex flex-wrap sm:flex-nowrap gap-2 p-1.5 bg-zinc-950 border border-zinc-800 rounded-xl max-w-md w-full">
+      <div className="flex flex-wrap sm:flex-nowrap gap-2 p-1.5 bg-zinc-950 border border-zinc-800 rounded-[10px] max-w-md w-full">
         {[
           { id: 'CONFIRMED', label: 'Confirmed', count: confirmedCount },
           { id: 'COMPLETED', label: 'Completed', count: completedCount },
@@ -72,7 +72,7 @@ const BookingsTab = ({
               key={tab.id}
               type="button"
               onClick={() => setActiveBookingTab(tab.id)}
-              className={`flex-1 min-w-[85px] sm:min-w-0 py-2 px-2 sm:px-3 rounded-lg text-xs sm:text-sm font-bold capitalize transition-all duration-300 cursor-pointer flex items-center justify-center gap-1 sm:gap-1.5 border ${isActive
+              className={`flex-1 min-w-[85px] sm:min-w-0 py-2 px-2 sm:px-3 rounded-[10px] text-xs sm:text-sm font-bold capitalize transition-all duration-300 cursor-pointer flex items-center justify-center gap-1 sm:gap-1.5 border ${isActive
                 ? 'bg-brand text-zinc-955 border-brand shadow-sm'
                 : 'bg-transparent border-transparent text-zinc-400 hover:text-white hover:bg-zinc-850/60'
                 }`}
@@ -90,7 +90,7 @@ const BookingsTab = ({
         {filteredBookings.map((booking) => (
           <div
             key={booking.id}
-            className="rounded-xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-5 relative overflow-hidden transition-all hover:-translate-y-0.5"
+            className="rounded-[10px] p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-5 relative overflow-hidden transition-all hover:-translate-y-0.5"
             style={shadowStyle}
           >
             <div className="space-y-2">
@@ -171,7 +171,7 @@ const BookingsTab = ({
                   </span>
 
                   {editingFeedbackId === booking.id ? (
-                    <div className="space-y-3 font-sans bg-zinc-950 p-4 rounded-xl border border-zinc-800">
+                    <div className="space-y-3 font-sans bg-zinc-950 p-4 rounded-[10px] border border-zinc-800">
                       <div className="space-y-1">
                         <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider block">
                           Clinical Assessment & Observation Notes
@@ -181,7 +181,7 @@ const BookingsTab = ({
                           onChange={(e) => setNotesInput(e.target.value)}
                           placeholder="Enter clinical assessments, observations, and findings..."
                           rows={3}
-                          className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 text-white text-sm rounded-lg outline-none focus:border-brand resize-none font-medium"
+                          className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 text-white text-sm rounded-[10px] outline-none focus:border-brand resize-none font-medium"
                         />
                       </div>
 
@@ -194,7 +194,7 @@ const BookingsTab = ({
                           onChange={(e) => setFeedbackInput(e.target.value)}
                           placeholder="Enter key recommendations, student guidance, and feedback..."
                           rows={3}
-                          className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 text-white text-sm rounded-lg outline-none focus:border-brand resize-none font-medium"
+                          className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 text-white text-sm rounded-[10px] outline-none focus:border-brand resize-none font-medium"
                         />
                       </div>
 
@@ -207,7 +207,7 @@ const BookingsTab = ({
                           value={nextSessionInput}
                           onChange={(e) => setNextSessionInput(e.target.value)}
                           placeholder="e.g., In 2 weeks, Mid-July, or specific date"
-                          className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 text-white text-sm rounded-lg outline-none focus:border-brand font-semibold"
+                          className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 text-white text-sm rounded-[10px] outline-none focus:border-brand font-semibold"
                         />
                       </div>
 
@@ -215,14 +215,14 @@ const BookingsTab = ({
                         <button
                           type="button"
                           onClick={() => saveFeedback(booking.id)}
-                          className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-zinc-955 rounded-lg text-xs font-bold capitalize cursor-pointer shadow-sm border-none"
+                          className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-zinc-955 rounded-[10px] text-xs font-bold capitalize cursor-pointer shadow-sm border-none"
                         >
                           Save Records
                         </button>
                         <button
                           type="button"
                           onClick={() => setEditingFeedbackId(null)}
-                          className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg text-xs font-bold capitalize cursor-pointer border-none"
+                          className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-[10px] text-xs font-bold capitalize cursor-pointer border-none"
                         >
                           Cancel
                         </button>
@@ -234,7 +234,7 @@ const BookingsTab = ({
                         <span className="text-[10px] font-bold text-zinc-450 uppercase tracking-wider block">
                           Clinical Assessment & Observation Notes:
                         </span>
-                        <p className="text-sm text-zinc-300 bg-zinc-950 p-3 rounded-lg border border-zinc-800 italic leading-relaxed font-medium">
+                        <p className="text-sm text-zinc-300 bg-zinc-950 p-3 rounded-[10px] border border-zinc-800 italic leading-relaxed font-medium">
                           {booking.notes ? `"${booking.notes}"` : "No notes recorded yet."}
                         </p>
                       </div>
@@ -243,7 +243,7 @@ const BookingsTab = ({
                         <span className="text-[10px] font-bold text-zinc-450 uppercase tracking-wider block">
                           Recommendations & Feedback:
                         </span>
-                        <p className="text-sm text-zinc-300 bg-zinc-950 p-3 rounded-lg border border-zinc-800 italic leading-relaxed font-medium">
+                        <p className="text-sm text-zinc-300 bg-zinc-950 p-3 rounded-[10px] border border-zinc-800 italic leading-relaxed font-medium">
                           {booking.feedback ? `"${booking.feedback}"` : "No recommendations recorded yet."}
                         </p>
                       </div>
@@ -253,7 +253,7 @@ const BookingsTab = ({
                           <span className="text-[10px] font-bold text-zinc-450 uppercase tracking-wider block">
                             Next Session Approximate Time:
                           </span>
-                          <p className="text-sm text-zinc-300 bg-zinc-950 p-3 rounded-lg border border-zinc-800 leading-relaxed font-semibold">
+                          <p className="text-sm text-zinc-300 bg-zinc-950 p-3 rounded-[10px] border border-zinc-800 leading-relaxed font-semibold">
                             {booking.nextSession}
                           </p>
                         </div>
@@ -321,7 +321,7 @@ const BookingsTab = ({
             <div className="shrink-0 flex items-center gap-2">
               {editingBookingId === booking.id ? (
                 <div className="flex flex-col gap-1.5 w-full sm:w-auto">
-                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto bg-zinc-950 p-2 rounded-lg border border-zinc-800">
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto bg-zinc-950 p-2 rounded-[10px] border border-zinc-800">
                     <input
                       type="text"
                       placeholder="https://meet.google.com/..."
@@ -330,18 +330,18 @@ const BookingsTab = ({
                         setMeetLinkInput(e.target.value);
                         setMeetLinkError('');
                       }}
-                      className="px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 text-white text-sm rounded-md outline-none w-full sm:w-[240px] focus:border-brand shadow-sm"
+                      className="px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 text-white text-sm rounded-[10px] outline-none w-full sm:w-[240px] focus:border-brand shadow-sm"
                     />
                     <div className="flex gap-2">
                       <button
                         onClick={() => saveMeetLink(booking.id)}
-                        className="px-3 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-zinc-955 rounded-md text-sm font-bold capitalize cursor-pointer shadow-sm border-none"
+                        className="px-3 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-zinc-955 rounded-[10px] text-sm font-bold capitalize cursor-pointer shadow-sm border-none"
                       >
                         Save
                       </button>
                       <button
                         onClick={() => setEditingBookingId(null)}
-                        className="px-3 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-md text-sm font-bold capitalize cursor-pointer border-none"
+                        className="px-3 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-[10px] text-sm font-bold capitalize cursor-pointer border-none"
                       >
                         Cancel
                       </button>
@@ -355,7 +355,7 @@ const BookingsTab = ({
                       href={booking.meetLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-4 py-2.5 bg-brand text-zinc-955 hover:bg-brand-dark rounded-lg text-sm font-black tracking-widest uppercase transition-all duration-300 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98] cursor-pointer flex items-center gap-1.5 border-none animate-pulse"
+                      className="px-4 py-2.5 bg-brand text-zinc-955 hover:bg-brand-dark rounded-[10px] text-sm font-black tracking-widest uppercase transition-all duration-300 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98] cursor-pointer flex items-center gap-1.5 border-none animate-pulse"
                     >
                       <Video className="w-4 h-4 text-zinc-955" />
                       <span>Join Meet</span>
@@ -363,7 +363,7 @@ const BookingsTab = ({
                   )}
                   <button
                     onClick={() => startEditMeetLink(booking)}
-                    className="px-4.5 py-2.5 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-zinc-800 rounded-lg text-sm font-bold capitalize transition cursor-pointer flex items-center gap-1.5 shadow-sm"
+                    className="px-4.5 py-2.5 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-zinc-800 rounded-[10px] text-sm font-bold capitalize transition cursor-pointer flex items-center gap-1.5 shadow-sm"
                   >
                     <Edit className="w-3.5 h-3.5" />
                     <span>{booking.meetLink ? 'Edit Link' : 'Set Meet Link'}</span>
@@ -375,7 +375,7 @@ const BookingsTab = ({
         ))}
 
         {filteredBookings.length === 0 && (
-          <div className="text-center py-12 bg-zinc-955/40 border border-zinc-800 rounded-xl space-y-3">
+          <div className="text-center py-12 bg-zinc-955/40 border border-zinc-800 rounded-[10px] space-y-3">
             <Video className="w-8 h-8 text-zinc-600 mx-auto" />
             <p className="text-zinc-500 font-bold text-sm capitalize">
               No {activeBookingTab.toLowerCase()} sessions registered for your account yet.

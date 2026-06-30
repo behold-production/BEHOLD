@@ -118,9 +118,9 @@ const ProfileTab = ({
 
       <form onSubmit={handleProfileSave} className="space-y-6">
         {/* Profile Picture Upload */}
-        <div className="flex items-center gap-5 p-5 rounded-xl transition-all" style={shadowStyle}>
+        <div className="flex items-center gap-5 p-5 rounded-[10px] transition-all" style={shadowStyle}>
           <div className="relative group shrink-0">
-            <div className="w-20 h-20 rounded-xl overflow-hidden border border-zinc-800 group-hover:border-brand/50 transition-colors shadow-sm">
+            <div className="w-20 h-20 rounded-[10px] overflow-hidden border border-zinc-800 group-hover:border-brand/50 transition-colors shadow-sm">
               {user?.profilePic ? (
                 <img src={user.profilePic} alt={profile.name} className="w-full h-full object-cover" />
               ) : (
@@ -134,7 +134,7 @@ const ProfileTab = ({
             <button
               type="button"
               onClick={() => avatarFileRef.current?.click()}
-              className="absolute inset-0 flex items-center justify-center bg-zinc-900/60 opacity-0 group-hover:opacity-100 rounded-xl transition-opacity cursor-pointer text-white backdrop-blur-[1px]"
+              className="absolute inset-0 flex items-center justify-center bg-zinc-900/60 opacity-0 group-hover:opacity-100 rounded-[10px] transition-opacity cursor-pointer text-white backdrop-blur-[1px]"
             >
               <Edit className="w-5 h-5" />
             </button>
@@ -156,7 +156,7 @@ const ProfileTab = ({
               type="button"
               disabled={isAvatarUploading}
               onClick={() => avatarFileRef.current?.click()}
-              className="mt-2 px-3.5 py-1.5 text-xs font-bold bg-zinc-900 hover:bg-zinc-800 text-zinc-300 rounded-lg cursor-pointer transition disabled:opacity-50 border border-zinc-800"
+              className="mt-2 px-3.5 py-1.5 text-xs font-bold bg-zinc-900 hover:bg-zinc-800 text-zinc-300 rounded-[10px] cursor-pointer transition disabled:opacity-50 border border-zinc-800"
             >
               {isAvatarUploading ? 'Uploading...' : 'Change Photo'}
             </button>
@@ -164,7 +164,7 @@ const ProfileTab = ({
         </div>
 
         {/* Profile Info Form */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-left font-medium p-5 rounded-xl transition-all" style={shadowStyle}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-left font-medium p-5 rounded-[10px] transition-all" style={shadowStyle}>
           <div className="space-y-1.5">
             <label className="text-zinc-400 capitalize font-bold text-xs tracking-wide">Display Name</label>
             <input
@@ -172,7 +172,7 @@ const ProfileTab = ({
               placeholder="e.g. Dr. Sandra Tomy"
               value={ep.name || ''}
               onChange={(e) => setEp({ name: e.target.value })}
-              className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
+              className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-[10px] outline-none focus:border-brand transition-all"
             />
           </div>
 
@@ -183,7 +183,7 @@ const ProfileTab = ({
               placeholder="e.g. PhD Clinical Psychology"
               value={ep.education || ''}
               onChange={(e) => setEp({ education: e.target.value })}
-              className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
+              className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-[10px] outline-none focus:border-brand transition-all"
             />
           </div>
 
@@ -194,7 +194,7 @@ const ProfileTab = ({
               placeholder="1200"
               value={ep.price || ''}
               onChange={(e) => setEp({ price: Number(e.target.value) })}
-              className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
+              className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 text-sm text-white rounded-[10px] outline-none focus:border-brand transition-all"
             />
           </div>
 
@@ -205,7 +205,7 @@ const ProfileTab = ({
               placeholder="Malayalam, English, Tamil"
               value={ep.lang || ''}
               onChange={(e) => setEp({ lang: e.target.value })}
-              className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
+              className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-[10px] outline-none focus:border-brand transition-all"
             />
           </div>
 
@@ -216,7 +216,7 @@ const ProfileTab = ({
               placeholder="0"
               value={ep.hours || 0}
               onChange={(e) => setEp({ hours: Number(e.target.value) })}
-              className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
+              className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-[10px] outline-none focus:border-brand transition-all"
             />
           </div>
 
@@ -227,7 +227,7 @@ const ProfileTab = ({
               placeholder="Anxiety, Relationship Dynamics, Career Stress"
               value={ep.specialties || ''}
               onChange={(e) => setEp({ specialties: e.target.value })}
-              className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
+              className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 text-sm text-white rounded-[10px] outline-none focus:border-brand transition-all"
             />
           </div>
 
@@ -238,11 +238,11 @@ const ProfileTab = ({
               placeholder="https://meet.google.com/..."
               value={ep.defaultMeetLink || ''}
               onChange={(e) => setEp({ defaultMeetLink: e.target.value })}
-              className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
+              className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-[10px] outline-none focus:border-brand transition-all"
             />
           </div>
 
-          <div className="sm:col-span-2 space-y-4 p-5 bg-zinc-900 border border-zinc-800 rounded-xl">
+          <div className="sm:col-span-2 space-y-4 p-5 bg-zinc-900 border border-zinc-800 rounded-[10px]">
             <h4 className="text-xs font-bold text-brand uppercase tracking-wider">Practice / Geographic Location</h4>
             
             {/* Search address input */}
@@ -254,7 +254,7 @@ const ProfileTab = ({
                   placeholder="Type an address to search... (e.g. Kozhikode, Kerala)"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="flex-1 min-w-0 px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
+                  className="flex-1 min-w-0 px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 text-sm text-white rounded-[10px] outline-none focus:border-brand transition-all"
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') {
                       e.preventDefault();
@@ -266,7 +266,7 @@ const ProfileTab = ({
                   type="button"
                   onClick={handleAddressSearch}
                   disabled={isSearching}
-                  className="w-full sm:w-auto px-4 py-2.5 bg-brand text-zinc-955 text-xs font-extrabold rounded-lg hover:bg-brand-dark transition cursor-pointer shrink-0 flex items-center justify-center"
+                  className="w-full sm:w-auto px-4 py-2.5 bg-brand text-zinc-955 text-xs font-extrabold rounded-[10px] hover:bg-brand-dark transition cursor-pointer shrink-0 flex items-center justify-center"
                 >
                   {isSearching ? 'Searching...' : 'Search'}
                 </button>
@@ -274,7 +274,7 @@ const ProfileTab = ({
 
               {/* Search results dropdown */}
               {searchResults.length > 0 && (
-                <div className="absolute left-0 right-0 mt-1 bg-zinc-950 border border-zinc-800 rounded-lg max-h-48 overflow-y-auto z-50 shadow-xl divide-y divide-zinc-850">
+                <div className="absolute left-0 right-0 mt-1 bg-zinc-950 border border-zinc-800 rounded-[10px] max-h-48 overflow-y-auto z-50 shadow-xl divide-y divide-zinc-850">
                   {searchResults.map((res, index) => (
                     <button
                       key={index}
@@ -309,7 +309,7 @@ const ProfileTab = ({
                   setEp({ locationName: e.target.value });
                   setSearchQuery(e.target.value);
                 }}
-                className={`w-full px-3.5 py-2.5 bg-zinc-950 border text-sm text-white rounded-lg outline-none focus:border-brand transition-all ${
+                className={`w-full px-3.5 py-2.5 bg-zinc-950 border text-sm text-white rounded-[10px] outline-none focus:border-brand transition-all ${
                   (ep.modes?.includes('OFFLINE') || ep.modes?.includes('DOOR_STEP')) && !ep.locationName?.trim()
                     ? 'border-rose-800 focus:border-rose-600'
                     : 'border-zinc-800'
@@ -332,7 +332,7 @@ const ProfileTab = ({
                   placeholder="e.g. 11.2588"
                   value={ep.latitude || ''}
                   onChange={(e) => setEp({ latitude: parseFloat(e.target.value) || 0 })}
-                  className={`w-full px-3.5 py-2.5 bg-zinc-950 border text-sm text-white rounded-lg outline-none focus:border-brand transition-all ${
+                  className={`w-full px-3.5 py-2.5 bg-zinc-950 border text-sm text-white rounded-[10px] outline-none focus:border-brand transition-all ${
                     (ep.modes?.includes('OFFLINE') || ep.modes?.includes('DOOR_STEP')) && !ep.latitude
                       ? 'border-rose-800 focus:border-rose-600'
                       : 'border-zinc-800'
@@ -349,7 +349,7 @@ const ProfileTab = ({
                   placeholder="e.g. 75.7804"
                   value={ep.longitude || ''}
                   onChange={(e) => setEp({ longitude: parseFloat(e.target.value) || 0 })}
-                  className={`w-full px-3.5 py-2.5 bg-zinc-950 border text-sm text-white rounded-lg outline-none focus:border-brand transition-all ${
+                  className={`w-full px-3.5 py-2.5 bg-zinc-950 border text-sm text-white rounded-[10px] outline-none focus:border-brand transition-all ${
                     (ep.modes?.includes('OFFLINE') || ep.modes?.includes('DOOR_STEP')) && !ep.longitude
                       ? 'border-rose-800 focus:border-rose-600'
                       : 'border-zinc-800'
@@ -366,7 +366,7 @@ const ProfileTab = ({
               type="button"
               disabled={isLocating}
               onClick={handleDetectLocation}
-              className="px-3.5 py-2 bg-zinc-950 hover:bg-zinc-850 border border-zinc-800 text-zinc-305 text-xs font-bold capitalize rounded-lg transition cursor-pointer flex items-center justify-center gap-1.5 disabled:opacity-50"
+              className="px-3.5 py-2 bg-zinc-950 hover:bg-zinc-850 border border-zinc-800 text-zinc-305 text-xs font-bold capitalize rounded-[10px] transition cursor-pointer flex items-center justify-center gap-1.5 disabled:opacity-50"
             >
               {isLocating ? (
                 <>
@@ -435,7 +435,7 @@ const ProfileTab = ({
               placeholder="e.g. acc_N1z829Snd023"
               value={ep.razorpayAccountId || ''}
               onChange={(e) => setEp({ razorpayAccountId: e.target.value })}
-              className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all font-semibold"
+              className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-[10px] outline-none focus:border-brand transition-all font-semibold"
             />
             <p className="text-[11px] text-zinc-500 mt-1">
               Required to receive direct split payouts. Create a linked account in your Razorpay Dashboard.
@@ -452,7 +452,7 @@ const ProfileTab = ({
                   placeholder="e.g. Dr. Jane Doe"
                   value={ep.bankAccountName || ''}
                   onChange={(e) => setEp({ bankAccountName: e.target.value })}
-                  className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all font-semibold"
+                  className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-[10px] outline-none focus:border-brand transition-all font-semibold"
                 />
               </div>
               <div className="space-y-1.5">
@@ -462,7 +462,7 @@ const ProfileTab = ({
                   placeholder="e.g. 5010023485938"
                   value={ep.bankAccountNumber || ''}
                   onChange={(e) => setEp({ bankAccountNumber: e.target.value })}
-                  className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all font-semibold"
+                  className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-[10px] outline-none focus:border-brand transition-all font-semibold"
                 />
               </div>
               <div className="space-y-1.5">
@@ -472,7 +472,7 @@ const ProfileTab = ({
                   placeholder="e.g. HDFC0000123"
                   value={ep.bankIfscCode || ''}
                   onChange={(e) => setEp({ bankIfscCode: e.target.value })}
-                  className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all font-semibold"
+                  className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-[10px] outline-none focus:border-brand transition-all font-semibold"
                 />
               </div>
             </div>
@@ -485,14 +485,14 @@ const ProfileTab = ({
               placeholder="Describe your clinical expertise..."
               value={ep.bio || ''}
               onChange={(e) => setEp({ bio: e.target.value })}
-              className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all resize-none"
+              className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 text-sm text-white rounded-[10px] outline-none focus:border-brand transition-all resize-none"
             />
           </div>
           
           <div className="sm:col-span-2 pt-2">
             <button
               type="submit"
-              className="w-full sm:w-auto px-6 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize rounded-lg transition-colors cursor-pointer border-none shadow-md"
+              className="w-full sm:w-auto px-6 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize rounded-[10px] transition-colors cursor-pointer border-none shadow-md"
             >
               Save Profile Changes
             </button>
@@ -501,14 +501,14 @@ const ProfileTab = ({
       </form>
 
       {/* Google Calendar Connection */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-5 p-5 rounded-xl transition-all" style={shadowStyle}>
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-5 p-5 rounded-[10px] transition-all" style={shadowStyle}>
         <div className="space-y-1 text-left">
           <h4 className="text-sm font-bold text-white capitalize">Google Calendar Sync</h4>
           <p className="text-xs text-zinc-500 font-medium">Automatically create Google Meet links for online bookings.</p>
         </div>
         {profile?.googleRefreshToken ? (
           <div className="flex items-center gap-3">
-            <span className="text-sm text-emerald-450 font-bold capitalize flex items-center gap-1 bg-emerald-955/20 px-3 py-1.5 rounded-lg border border-emerald-900/30">Connected ✅</span>
+            <span className="text-sm text-emerald-450 font-bold capitalize flex items-center gap-1 bg-emerald-955/20 px-3 py-1.5 rounded-[10px] border border-emerald-900/30">Connected ✅</span>
             <button
               type="button"
               onClick={async () => {
@@ -522,7 +522,7 @@ const ProfileTab = ({
                   }
                 }
               }}
-              className="px-3.5 py-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 border border-rose-900/30 text-xs font-bold capitalize rounded-lg transition cursor-pointer"
+              className="px-3.5 py-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 border border-rose-900/30 text-xs font-bold capitalize rounded-[10px] transition cursor-pointer"
             >
               Disconnect
             </button>
@@ -540,7 +540,7 @@ const ProfileTab = ({
                 console.error(e);
               }
             }}
-            className="px-4 py-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 text-xs font-bold capitalize rounded-lg transition cursor-pointer shadow-sm flex items-center gap-2"
+            className="px-4 py-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 text-xs font-bold capitalize rounded-[10px] transition cursor-pointer shadow-sm flex items-center gap-2"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
             Connect Account
@@ -549,9 +549,9 @@ const ProfileTab = ({
       </div>
 
       {/* Browser Notification Settings Widget */}
-      <div className="p-5 rounded-xl transition-all space-y-4" style={shadowStyle}>
+      <div className="p-5 rounded-[10px] transition-all space-y-4" style={shadowStyle}>
         <div className="flex items-center gap-3 pb-4 border-b border-zinc-800 text-left">
-          <div className="w-10 h-10 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-[10px] bg-brand/10 border border-brand/20 flex items-center justify-center">
             <Bell className="w-5 h-5 text-brand" />
           </div>
           <div>
@@ -560,7 +560,7 @@ const ProfileTab = ({
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-zinc-950 p-4 rounded-xl border border-zinc-800/60 text-left">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-zinc-950 p-4 rounded-[10px] border border-zinc-800/60 text-left">
           <div className="space-y-1.5">
             <div className="flex items-center gap-2">
               <span className={`w-2.5 h-2.5 rounded-full ${
@@ -598,7 +598,7 @@ const ProfileTab = ({
               <button
                 type="button"
                 onClick={handleEnableNotifications}
-                className="min-h-[36px] px-4 py-2 bg-brand hover:bg-brand-dark text-zinc-955 rounded-lg text-xs font-bold transition cursor-pointer border-none shadow-md"
+                className="min-h-[36px] px-4 py-2 bg-brand hover:bg-brand-dark text-zinc-955 rounded-[10px] text-xs font-bold transition cursor-pointer border-none shadow-md"
               >
                 Enable Notifications
               </button>
@@ -607,7 +607,7 @@ const ProfileTab = ({
               <button
                 type="button"
                 onClick={handleTestNotification}
-                className="min-h-[36px] px-4 py-2 bg-zinc-900 border border-zinc-800 text-zinc-355 hover:text-white hover:bg-zinc-800 rounded-lg text-xs font-bold transition cursor-pointer shadow-sm"
+                className="min-h-[36px] px-4 py-2 bg-zinc-900 border border-zinc-800 text-zinc-355 hover:text-white hover:bg-zinc-800 rounded-[10px] text-xs font-bold transition cursor-pointer shadow-sm"
               >
                 Test Alert
               </button>

@@ -44,7 +44,7 @@ const OverviewTab = ({ profile, bookings, isSessionCompleted, setCurrentSection 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         {/* Next session card */}
         <div
-          className="rounded-2xl p-5 relative overflow-hidden flex flex-col justify-between group min-h-[160px] transition-all hover:-translate-y-1"
+          className="rounded-[10px] p-5 relative overflow-hidden flex flex-col justify-between group min-h-[160px] transition-all hover:-translate-y-1"
           style={shadowStyle}
         >
           <div className="space-y-3">
@@ -77,7 +77,7 @@ const OverviewTab = ({ profile, bookings, isSessionCompleted, setCurrentSection 
               <button
                 type="button"
                 onClick={() => window.open(pendingBookings[0].meetLink, '_blank')}
-                className="text-sm font-bold capitalize bg-brand text-zinc-955 hover:bg-brand-dark px-3.5 py-2 rounded-lg cursor-pointer flex items-center gap-1.5 transition-colors border-none"
+                className="text-sm font-bold capitalize bg-brand text-zinc-955 hover:bg-brand-dark px-3.5 py-2 rounded-[10px] cursor-pointer flex items-center gap-1.5 transition-colors border-none"
               >
                 <Video className="w-3.5 h-3.5" />
                 <span>Join Meet</span>
@@ -85,7 +85,7 @@ const OverviewTab = ({ profile, bookings, isSessionCompleted, setCurrentSection 
             )}
             <button
               onClick={() => setCurrentSection('bookings')}
-              className="text-sm font-bold capitalize bg-zinc-900 border border-zinc-800 text-white hover:bg-zinc-800 px-3.5 py-2 rounded-lg cursor-pointer transition-colors"
+              className="text-sm font-bold capitalize bg-zinc-900 border border-zinc-800 text-white hover:bg-zinc-800 px-3.5 py-2 rounded-[10px] cursor-pointer transition-colors"
             >
               {pendingBookings.length > 0 && !pendingBookings[0].meetLink ? 'Set Meet Link' : 'Manage Bookings'}
             </button>
@@ -94,7 +94,7 @@ const OverviewTab = ({ profile, bookings, isSessionCompleted, setCurrentSection 
 
         {/* Pricing stats card */}
         <div
-          className="rounded-2xl p-5 relative overflow-hidden flex flex-col justify-between min-h-[160px] transition-all hover:-translate-y-1"
+          className="rounded-[10px] p-5 relative overflow-hidden flex flex-col justify-between min-h-[160px] transition-all hover:-translate-y-1"
           style={shadowStyle}
         >
           <div className="space-y-2">
@@ -116,7 +116,7 @@ const OverviewTab = ({ profile, bookings, isSessionCompleted, setCurrentSection 
           </div>
           <button
             onClick={() => setCurrentSection('profile')}
-            className="w-fit text-sm font-bold capitalize bg-zinc-900 text-zinc-300 hover:text-white border border-zinc-800 px-4 py-2 rounded-lg mt-4 cursor-pointer transition-colors"
+            className="w-fit text-sm font-bold capitalize bg-zinc-900 text-zinc-300 hover:text-white border border-zinc-800 px-4 py-2 rounded-[10px] mt-4 cursor-pointer transition-colors"
           >
             Edit Profile Info
           </button>
@@ -124,7 +124,7 @@ const OverviewTab = ({ profile, bookings, isSessionCompleted, setCurrentSection 
 
         {/* Earnings & Revenue split card */}
         <div
-          className="rounded-2xl p-5 relative overflow-hidden flex flex-col justify-between min-h-[160px] transition-all hover:-translate-y-1"
+          className="rounded-[10px] p-5 relative overflow-hidden flex flex-col justify-between min-h-[160px] transition-all hover:-translate-y-1"
           style={shadowStyle}
         >
           <div className="space-y-2">
@@ -155,14 +155,14 @@ const OverviewTab = ({ profile, bookings, isSessionCompleted, setCurrentSection 
           {profile.razorpayAccountId ? (
             <button
               onClick={() => setCurrentSection('profile')}
-              className="w-fit text-sm font-bold capitalize bg-zinc-900 text-zinc-300 hover:text-white border border-zinc-800 px-4 py-2 rounded-lg mt-4 cursor-pointer transition-colors"
+              className="w-fit text-sm font-bold capitalize bg-zinc-900 text-zinc-300 hover:text-white border border-zinc-800 px-4 py-2 rounded-[10px] mt-4 cursor-pointer transition-colors"
             >
               Update Payout Account
             </button>
           ) : (
             <button
               onClick={() => setCurrentSection('profile')}
-              className="w-fit text-sm font-bold capitalize bg-rose-950/20 text-rose-400 hover:bg-rose-950/40 border border-rose-900/50 px-4 py-2 rounded-lg mt-4 cursor-pointer transition-colors flex items-center gap-1.5"
+              className="w-fit text-sm font-bold capitalize bg-rose-950/20 text-rose-400 hover:bg-rose-950/40 border border-rose-900/50 px-4 py-2 rounded-[10px] mt-4 cursor-pointer transition-colors flex items-center gap-1.5"
             >
               <AlertCircle className="w-3.5 h-3.5 animate-pulse" />
               <span>Configure Account</span>

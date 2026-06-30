@@ -16,6 +16,7 @@ const settingSchema = new mongoose.Schema(
     cdatGroupCode: { type: String, default: 'cdat@behold' },
     blockedIps: { type: [String], default: [] },
     enablePsychology: { type: Boolean, default: true },
+    enableCareerMentoring: { type: Boolean, default: true },
     enableAptitude: { type: Boolean, default: true },
     enableOnline: { type: Boolean, default: true },
     enableOffline: { type: Boolean, default: true },

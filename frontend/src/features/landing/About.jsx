@@ -1,7 +1,7 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 
-export default function About({ enablePsychology = true, siteSettings }) {
+export default function About({ enablePsychology = true, enableCareerMentoring = true, siteSettings }) {
   const settings = siteSettings || JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
 
   const pillars = [
@@ -85,12 +85,12 @@ export default function About({ enablePsychology = true, siteSettings }) {
         </div>
 
         {/* CTA Button */}
-        {(enablePsychology || settings.enableAptitude !== false) && (
+        {(enablePsychology || enableCareerMentoring || settings.enableAptitude !== false) && (
           <div className="flex justify-center w-full pt-8">
             <button
               type="button"
               onClick={() => {
-                if (enablePsychology) {
+                if (enablePsychology || enableCareerMentoring) {
                   window.spaNavigate('/booking');
                 } else {
                   window.spaNavigate('/sample-test');
@@ -99,7 +99,7 @@ export default function About({ enablePsychology = true, siteSettings }) {
               }}
               className="btn-primary w-full sm:w-auto px-12"
             >
-              {enablePsychology ? 'Get Started with Behold' : 'Explore Aptitude Assessment'}
+              {(enablePsychology || enableCareerMentoring) ? 'Get Started with Behold' : 'Explore Aptitude Assessment'}
             </button>
           </div>
         )}

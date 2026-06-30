@@ -233,7 +233,7 @@ export default function RevenueTab(props) {
           <p className="text-xs text-zinc-500 font-medium pt-1">Track your consultant earnings, service volume metrics, and check linked bank routing accounts</p>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-xs bg-zinc-800 border border-zinc-700 text-zinc-450 px-2.5 py-1.5 rounded-lg font-bold flex items-center gap-1.5">
+          <span className="text-xs bg-zinc-800 border border-zinc-700 text-zinc-450 px-2.5 py-1.5 rounded-[10px] font-bold flex items-center gap-1.5">
             <Wallet className="w-3.5 h-3.5 text-brand" />
             My Earnings Share: {splitPercent}% Payout
           </span>
@@ -243,7 +243,7 @@ export default function RevenueTab(props) {
       {/* Metrics Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Card 1 */}
-        <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-xl space-y-2 shadow-lg">
+        <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-[10px] space-y-2 shadow-lg">
           <div className="flex justify-between items-center text-zinc-500">
             <span className="text-xs font-bold uppercase tracking-wider">Net Payout Earned</span>
             <DollarSign className="w-4 h-4 text-brand" />
@@ -255,7 +255,7 @@ export default function RevenueTab(props) {
         </div>
 
         {/* Card 2 */}
-        <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-xl space-y-2 shadow-lg">
+        <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-[10px] space-y-2 shadow-lg">
           <div className="flex justify-between items-center text-zinc-500">
             <span className="text-xs font-bold uppercase tracking-wider">Gross Session Billings</span>
             <TrendingUp className="w-4 h-4 text-emerald-450" />
@@ -267,7 +267,7 @@ export default function RevenueTab(props) {
         </div>
 
         {/* Card 3 */}
-        <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-xl space-y-2 shadow-lg">
+        <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-[10px] space-y-2 shadow-lg">
           <div className="flex justify-between items-center text-zinc-500">
             <span className="text-xs font-bold uppercase tracking-wider">Sessions Conducted</span>
             <Users className="w-4 h-4 text-indigo-400" />
@@ -279,7 +279,7 @@ export default function RevenueTab(props) {
         </div>
 
         {/* Card 4 */}
-        <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-xl space-y-2 shadow-lg">
+        <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-[10px] space-y-2 shadow-lg">
           <div className="flex justify-between items-center text-zinc-500">
             <span className="text-xs font-bold uppercase tracking-wider">Pending Payouts</span>
             <AlertCircle className="w-4 h-4 text-amber-500" />
@@ -294,7 +294,7 @@ export default function RevenueTab(props) {
       {/* Monthly Chart and Bank Routing Info */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* SVG Chart */}
-        <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-xl shadow-lg lg:col-span-2 space-y-4">
+        <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-[10px] shadow-lg lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between pb-2 border-b border-zinc-800/60">
             <h4 className="text-xs font-bold text-white uppercase tracking-wider">Monthly Earnings Trend</h4>
             <span className="text-[11px] text-zinc-500">Net payout share (INR)</span>
@@ -339,7 +339,7 @@ export default function RevenueTab(props) {
         </div>
 
         {/* Bank Routing details */}
-        <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-xl shadow-lg flex flex-col justify-between space-y-4">
+        <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-[10px] shadow-lg flex flex-col justify-between space-y-4">
           <div>
             <div className="pb-2 border-b border-zinc-800/60 flex items-center justify-between mb-4">
               <h4 className="text-xs font-bold text-white uppercase tracking-wider font-header flex items-center gap-1.5">
@@ -406,7 +406,7 @@ export default function RevenueTab(props) {
           </div>
 
           {!profile.razorpayAccountId && (
-            <div className="p-3 bg-amber-955/20 border border-amber-900/30 rounded-lg text-[11px] text-amber-300 font-semibold leading-normal">
+            <div className="p-3 bg-amber-955/20 border border-amber-900/30 rounded-[10px] text-[11px] text-amber-300 font-semibold leading-normal">
               ⚠️ Payout Account Unlinked: Please complete your routing bank details in your Profile Tab to receive automated slot transfers.
             </div>
           )}
@@ -414,7 +414,7 @@ export default function RevenueTab(props) {
       </div>
 
       {/* Audit ledger filter bar */}
-      <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-xl space-y-4 shadow-lg">
+      <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-[10px] space-y-4 shadow-lg">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-zinc-800/60 pb-3">
           <h4 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5 font-header">
             <Filter className="w-4 h-4 text-zinc-500" /> Professional Earnings Ledger
@@ -428,7 +428,7 @@ export default function RevenueTab(props) {
                 placeholder="Search students..."
                 value={searchQuery}
                 onChange={(e) => { setSearchQuery(e.target.value); setPage(1); }}
-                className="w-full pl-8 pr-3 py-1.5 bg-zinc-950 border border-zinc-800 rounded-lg text-xs font-semibold focus:border-brand text-white outline-none"
+                className="w-full pl-8 pr-3 py-1.5 bg-zinc-950 border border-zinc-800 rounded-[10px] text-xs font-semibold focus:border-brand text-white outline-none"
               />
               <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-2.5 top-2" />
             </div>
@@ -437,7 +437,7 @@ export default function RevenueTab(props) {
             <select
               value={serviceFilter}
               onChange={(e) => { setServiceFilter(e.target.value); setPage(1); }}
-              className="bg-zinc-955 border border-zinc-800 rounded-lg text-xs font-semibold px-2.5 py-1.5 text-white outline-none cursor-pointer"
+              className="bg-zinc-955 border border-zinc-800 rounded-[10px] text-xs font-semibold px-2.5 py-1.5 text-white outline-none cursor-pointer"
             >
               <option value="ALL">All Services</option>
               <option value="counselling">Psychological Sessions</option>
@@ -448,7 +448,7 @@ export default function RevenueTab(props) {
             <select
               value={paymentStatusFilter}
               onChange={(e) => { setPaymentStatusFilter(e.target.value); setPage(1); }}
-              className="bg-zinc-955 border border-zinc-800 rounded-lg text-xs font-semibold px-2.5 py-1.5 text-white outline-none cursor-pointer"
+              className="bg-zinc-955 border border-zinc-800 rounded-[10px] text-xs font-semibold px-2.5 py-1.5 text-white outline-none cursor-pointer"
             >
               <option value="ALL">All Payment Statuses</option>
               <option value="PAID">PAID</option>
@@ -459,7 +459,7 @@ export default function RevenueTab(props) {
         </div>
 
         {/* Ledger Table */}
-        <div className="border border-zinc-800 rounded-lg overflow-hidden bg-zinc-950">
+        <div className="border border-zinc-800 rounded-[10px] overflow-hidden bg-zinc-950">
           <div className="overflow-x-auto w-full">
             <table className="w-full text-xs border-collapse min-w-[850px]">
               <thead>
@@ -573,7 +573,7 @@ export default function RevenueTab(props) {
             <select
               value={limit}
               onChange={(e) => { setLimit(Number(e.target.value)); setPage(1); }}
-              className="ml-2 bg-zinc-950 border border-zinc-800 text-zinc-300 text-xs font-bold rounded-lg px-2 py-1 cursor-pointer outline-none focus:border-brand"
+              className="ml-2 bg-zinc-950 border border-zinc-800 text-zinc-300 text-xs font-bold rounded-[10px] px-2 py-1 cursor-pointer outline-none focus:border-brand"
             >
               {[5, 10, 25, 50].map(n => (
                 <option key={n} value={n}>{n} / page</option>
@@ -585,7 +585,7 @@ export default function RevenueTab(props) {
             <button
               onClick={() => setPage(safeCurrentPage - 1)}
               disabled={safeCurrentPage === 1}
-              className="px-2.5 py-1.5 rounded-lg border border-zinc-800 bg-zinc-900 text-xs font-bold text-zinc-400 hover:text-white hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer"
+              className="px-2.5 py-1.5 rounded-[10px] border border-zinc-800 bg-zinc-900 text-xs font-bold text-zinc-400 hover:text-white hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer"
             >
               Prev
             </button>
@@ -593,7 +593,7 @@ export default function RevenueTab(props) {
               <button
                 key={n}
                 onClick={() => setPage(n)}
-                className={`w-7 h-7 rounded-lg border text-xs font-bold transition cursor-pointer ${
+                className={`w-7 h-7 rounded-[10px] border text-xs font-bold transition cursor-pointer ${
                   n === safeCurrentPage
                     ? 'bg-brand border-brand text-zinc-955'
                     : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-800'
@@ -605,7 +605,7 @@ export default function RevenueTab(props) {
             <button
               onClick={() => setPage(safeCurrentPage + 1)}
               disabled={safeCurrentPage === totalPages}
-              className="px-2.5 py-1.5 rounded-lg border border-zinc-800 bg-zinc-900 text-xs font-bold text-zinc-400 hover:text-white hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer"
+              className="px-2.5 py-1.5 rounded-[10px] border border-zinc-800 bg-zinc-900 text-xs font-bold text-zinc-400 hover:text-white hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer"
             >
               Next
             </button>

@@ -67,6 +67,7 @@ export default function App() {
       whatsapp: 'https://wa.me/919497174011',
       contactEmail: 'support@behold.com',
       enablePsychology: true,
+      enableCareerMentoring: true,
       enableAptitude: true,
       gstEnabled: false,
       gstPercent: 0
@@ -368,8 +369,8 @@ export default function App() {
             <main className="fade-in-up">
               <Hero setView={() => { }} navigateToSection={navigateToSection} siteSettings={siteSettings} />
               {siteSettings.enableAptitude !== false && <CdatSection setView={() => { }} />}
-              {siteSettings.enablePsychology !== false && <Services setView={() => { }} onBookTherapist={handleBookTherapist} siteSettings={siteSettings} />}
-              <About setView={() => { }} enablePsychology={siteSettings.enablePsychology !== false} siteSettings={siteSettings} />
+              {(siteSettings.enablePsychology !== false || siteSettings.enableCareerMentoring !== false) && <Services setView={() => { }} onBookTherapist={handleBookTherapist} siteSettings={siteSettings} />}
+              <About setView={() => { }} enablePsychology={siteSettings.enablePsychology !== false} enableCareerMentoring={siteSettings.enableCareerMentoring !== false} siteSettings={siteSettings} />
               <Faq />
               <Inquiry testProfile={testProfile} siteSettings={siteSettings} />
             </main>
@@ -458,6 +459,7 @@ export default function App() {
           siteCopyright={siteSettings.siteCopyright}
           onOpenDocs={(docType) => setActiveDocType(docType)}
           enablePsychology={siteSettings.enablePsychology !== false}
+          enableCareerMentoring={siteSettings.enableCareerMentoring !== false}
         />
       )}
 

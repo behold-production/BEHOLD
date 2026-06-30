@@ -11,6 +11,7 @@ import { formatCountdown } from '../utils';
 const OverviewTab = ({
   nextSession,
   enablePsychology,
+  enableCareerMentoring,
   navigate,
   handleSectionChange,
   setSessionSubTab,
@@ -31,7 +32,7 @@ const OverviewTab = ({
             {nextSession ? 'Your next session is coming up.' : 'Ready to start your journey?'}
           </p>
         </div>
-        {enablePsychology && (
+        {(enablePsychology || enableCareerMentoring) && (
           <button
             type="button"
             onClick={() => navigate('/booking')}
@@ -49,7 +50,9 @@ const OverviewTab = ({
         <div className="group relative overflow-hidden rounded-[10px] border border-surface-200 bg-white p-5 shadow-square-light flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all duration-300">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-[10px] bg-surface-100 border border-surface-200 flex items-center justify-center shrink-0">
-              {nextSession.mode === 'ONLINE'
+              {nextSession.advisorProfilePic ? (
+                <img src={nextSession.advisorProfilePic} alt={nextSession.advisorName} className="w-12 h-12 rounded-[10px] object-cover" />
+              ) : nextSession.mode === 'ONLINE'
                 ? <Video className="w-5 h-5 text-surface-600" />
                 : <MapPin className="w-5 h-5 text-surface-600" />}
             </div>
@@ -104,7 +107,7 @@ const OverviewTab = ({
           <p className="text-xs text-surface-500 mt-1.5 max-w-xs mx-auto leading-relaxed">
             Schedule a session with one of our certified professionals to get started.
           </p>
-          {enablePsychology && (
+          {(enablePsychology || enableCareerMentoring) && (
             <button
               type="button"
               onClick={() => navigate('/booking')}
@@ -170,7 +173,7 @@ const OverviewTab = ({
               ? `Next session with ${bookedSessions[0].advisorName} on ${formatDateString(bookedSessions[0].date)}.`
               : 'Connect 1-on-1 with certified psychologists and career mentors.'}
           </p>
-          {(bookedSessions.length > 0 || enablePsychology) && (
+          {(bookedSessions.length > 0 || enablePsychology || enableCareerMentoring) && (
             <button
               type="button"
               onClick={() => {

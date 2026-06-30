@@ -27,11 +27,13 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
   const { showAlert } = useCustomDialog();
 
   let enablePsychology = true;
+  let enableCareerMentoring = true;
   try {
     const stored = localStorage.getItem('behold_site_settings');
     if (stored) {
       const parsed = JSON.parse(stored);
       enablePsychology = parsed.enablePsychology !== false;
+      enableCareerMentoring = parsed.enableCareerMentoring !== false;
     }
   } catch (err) {}
 
@@ -1239,6 +1241,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     setShowSummary,
     downloadingPdf,
     enablePsychology,
+    enableCareerMentoring,
     isRescheduleParam,
     baseFee,
     gstEnabled,

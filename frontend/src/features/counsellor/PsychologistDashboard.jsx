@@ -1073,7 +1073,7 @@ export default function PsychologistDashboard({ setView }) {
             <p className="text-sm text-indigo-400 capitalize  font-bold">COUNSELLOR CENTRAL PORTAL</p>
           </div>
 
-          <div className="bg-zinc-900 border border-zinc-800 p-6 sm:p-8 rounded-2xl shadow-deep-blue space-y-6">
+          <div className="bg-zinc-900 border border-zinc-800 p-6 sm:p-8 rounded-[10px] shadow-deep-blue space-y-6">
             {/* Header Tabs */}
             <div className="flex border-b border-zinc-800 pb-1">
               <button
@@ -1108,7 +1108,7 @@ export default function PsychologistDashboard({ setView }) {
                       placeholder="enter your mail id"
                       value={loginEmail}
                       onChange={(e) => setLoginEmail(e.target.value)}
-                      className="w-full px-3.5 py-3 bg-zinc-950 border border-zinc-800 focus:border-indigo-500 rounded-lg text-sm text-white outline-none transition-colors"
+                      className="w-full px-3.5 py-3 bg-zinc-950 border border-zinc-800 focus:border-indigo-500 rounded-[10px] text-sm text-white outline-none transition-colors"
                     />
                   </div>
 
@@ -1121,13 +1121,13 @@ export default function PsychologistDashboard({ setView }) {
                         placeholder="••••••••"
                         value={loginPassword}
                         onChange={(e) => setLoginPassword(e.target.value)}
-                        className="w-full pl-3.5 pr-12 py-3 bg-zinc-955 border border-zinc-800 focus:border-indigo-500 rounded-lg text-sm text-white outline-none transition-colors"
+                        className="w-full pl-3.5 pr-12 py-3 bg-zinc-955 border border-zinc-800 focus:border-indigo-500 rounded-[10px] text-sm text-white outline-none transition-colors"
                       />
                       <button
                         type="button"
                         onClick={() => setShowPassword(v => !v)}
                         aria-label={showPassword ? 'Hide password' : 'Show password'}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-md text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800 focus:outline-none cursor-pointer transition-colors"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-[10px] text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800 focus:outline-none cursor-pointer transition-colors"
                       >
                         {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
@@ -1137,7 +1137,7 @@ export default function PsychologistDashboard({ setView }) {
                   <button
                     type="submit"
                     disabled={isLoggingIn}
-                    className="w-full py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize  rounded-lg cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1"
+                    className="w-full py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize  rounded-[10px] cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1"
                   >
                     {isLoggingIn ? 'Connecting...' : 'Enter Consultant Desk'}
                   </button>
@@ -1166,7 +1166,7 @@ export default function PsychologistDashboard({ setView }) {
                         placeholder="e.g. Dr. Sandra Tomy"
                         value={regForm.name}
                         onChange={(e) => setRegForm({ ...regForm, name: e.target.value })}
-                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-indigo-500 rounded-lg text-sm text-white outline-none transition-colors"
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-indigo-500 rounded-[10px] text-sm text-white outline-none transition-colors"
                       />
                     </div>
 
@@ -1178,7 +1178,7 @@ export default function PsychologistDashboard({ setView }) {
                         placeholder="counsellor@example.com"
                         value={regForm.email}
                         onChange={(e) => setRegForm({ ...regForm, email: e.target.value })}
-                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-indigo-500 rounded-lg text-sm text-white outline-none transition-colors"
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-indigo-500 rounded-[10px] text-sm text-white outline-none transition-colors"
                       />
                     </div>
 
@@ -1192,13 +1192,13 @@ export default function PsychologistDashboard({ setView }) {
                             placeholder="••••••••"
                             value={regForm.password}
                             onChange={(e) => setRegForm({ ...regForm, password: e.target.value })}
-                            className="w-full pl-3.5 pr-12 py-3 bg-zinc-955 border border-zinc-850 focus:border-indigo-500 rounded-lg text-sm text-white outline-none transition-colors"
+                            className="w-full pl-3.5 pr-12 py-3 bg-zinc-955 border border-zinc-850 focus:border-indigo-500 rounded-[10px] text-sm text-white outline-none transition-colors"
                           />
                           <button
                             type="button"
                             onClick={() => setShowRegPassword(v => !v)}
                             aria-label={showRegPassword ? 'Hide password' : 'Show password'}
-                            className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-md text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800 focus:outline-none cursor-pointer transition-colors"
+                            className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-[10px] text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800 focus:outline-none cursor-pointer transition-colors"
                           >
                             {showRegPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                           </button>
@@ -1213,13 +1213,13 @@ export default function PsychologistDashboard({ setView }) {
                             placeholder="••••••••"
                             value={regForm.confirmPassword}
                             onChange={(e) => setRegForm({ ...regForm, confirmPassword: e.target.value })}
-                            className="w-full pl-3.5 pr-12 py-3 bg-zinc-955 border border-zinc-855 focus:border-indigo-500 rounded-lg text-sm text-white outline-none transition-colors"
+                            className="w-full pl-3.5 pr-12 py-3 bg-zinc-955 border border-zinc-855 focus:border-indigo-500 rounded-[10px] text-sm text-white outline-none transition-colors"
                           />
                           <button
                             type="button"
                             onClick={() => setShowRegConfirmPassword(v => !v)}
                             aria-label={showRegConfirmPassword ? 'Hide password' : 'Show password'}
-                            className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-md text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800 focus:outline-none cursor-pointer transition-colors"
+                            className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-[10px] text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800 focus:outline-none cursor-pointer transition-colors"
                           >
                             {showRegConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                           </button>
@@ -1229,7 +1229,7 @@ export default function PsychologistDashboard({ setView }) {
 
                     <button
                       type="submit"
-                      className="w-full py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize  rounded-lg cursor-pointer transition border-none shadow-md"
+                      className="w-full py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize  rounded-[10px] cursor-pointer transition border-none shadow-md"
                     >
                       Next: Clinical Details
                     </button>
@@ -1247,7 +1247,7 @@ export default function PsychologistDashboard({ setView }) {
                           placeholder="e.g. PhD Clinical Psychology"
                           value={regForm.education}
                           onChange={(e) => setRegForm({ ...regForm, education: e.target.value })}
-                          className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-indigo-500 rounded-lg text-sm text-white outline-none transition-colors"
+                          className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-indigo-500 rounded-[10px] text-sm text-white outline-none transition-colors"
                         />
                       </div>
                       <div className="space-y-1">
@@ -1258,7 +1258,7 @@ export default function PsychologistDashboard({ setView }) {
                           placeholder="Malayalam, English, Tamil"
                           value={regForm.lang}
                           onChange={(e) => setRegForm({ ...regForm, lang: e.target.value })}
-                          className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-indigo-500 rounded-lg text-sm text-white outline-none transition-colors"
+                          className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-indigo-500 rounded-[10px] text-sm text-white outline-none transition-colors"
                         />
                       </div>
                     </div>
@@ -1271,7 +1271,7 @@ export default function PsychologistDashboard({ setView }) {
                         placeholder="1200"
                         value={regForm.price}
                         onChange={(e) => setRegForm({ ...regForm, price: e.target.value })}
-                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-indigo-500 rounded-lg text-sm text-white outline-none transition-colors"
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-indigo-500 rounded-[10px] text-sm text-white outline-none transition-colors"
                       />
                     </div>
 
@@ -1283,7 +1283,7 @@ export default function PsychologistDashboard({ setView }) {
                         placeholder="Anxiety, Relationship Dynamics, Career Stress"
                         value={regForm.specialties}
                         onChange={(e) => setRegForm({ ...regForm, specialties: e.target.value })}
-                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-indigo-500 rounded-lg text-sm text-white outline-none transition-colors"
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-indigo-500 rounded-[10px] text-sm text-white outline-none transition-colors"
                       />
                     </div>
 
@@ -1294,7 +1294,7 @@ export default function PsychologistDashboard({ setView }) {
                         placeholder="https://meet.google.com/abc-defg-hij"
                         value={regForm.defaultMeetLink}
                         onChange={(e) => setRegForm({ ...regForm, defaultMeetLink: e.target.value })}
-                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-indigo-500 rounded-lg text-sm text-white outline-none transition-colors"
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-indigo-500 rounded-[10px] text-sm text-white outline-none transition-colors"
                       />
                     </div>
 
@@ -1334,7 +1334,7 @@ export default function PsychologistDashboard({ setView }) {
                         placeholder="Describe your clinical expertise and background..."
                         value={regForm.bio}
                         onChange={(e) => setRegForm({ ...regForm, bio: e.target.value })}
-                        className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-indigo-500 rounded-lg text-sm text-white outline-none transition-colors resize-none"
+                        className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-indigo-500 rounded-[10px] text-sm text-white outline-none transition-colors resize-none"
                       />
                     </div>
 
@@ -1342,13 +1342,13 @@ export default function PsychologistDashboard({ setView }) {
                       <button
                         type="button"
                         onClick={() => setOnboardingStep(1)}
-                        className="flex-1 py-3 border border-zinc-800 hover:bg-zinc-850 text-white font-bold text-sm capitalize  rounded-lg cursor-pointer transition text-center"
+                        className="flex-1 py-3 border border-zinc-800 hover:bg-zinc-850 text-white font-bold text-sm capitalize  rounded-[10px] cursor-pointer transition text-center"
                       >
                         Back
                       </button>
                       <button
                         type="submit"
-                        className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize  rounded-lg cursor-pointer transition border-none shadow-md"
+                        className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize  rounded-[10px] cursor-pointer transition border-none shadow-md"
                       >
                         Next: Calendar
                       </button>
@@ -1368,7 +1368,7 @@ export default function PsychologistDashboard({ setView }) {
                               key={day.index}
                               type="button"
                               onClick={() => toggleRegDay(day.index)}
-                              className={`px-3 py-1.5 border rounded-lg text-sm font-bold capitalize  transition-all duration-200 cursor-pointer ${active
+                              className={`px-3 py-1.5 border rounded-[10px] text-sm font-bold capitalize  transition-all duration-200 cursor-pointer ${active
                                 ? 'bg-brand text-zinc-955 font-bold border-none'
                                 : 'bg-zinc-950 border-zinc-850 text-zinc-500 hover:border-zinc-750'
                                 }`}
@@ -1396,7 +1396,7 @@ export default function PsychologistDashboard({ setView }) {
                                     setRegAvailableSlots(prev => [...prev, slot]);
                                   }
                                 }}
-                                className={`flex-1 py-2.5 border rounded-lg font-bold transition cursor-pointer text-sm ${exists
+                                className={`flex-1 py-2.5 border rounded-[10px] font-bold transition cursor-pointer text-sm ${exists
                                   ? 'bg-brand/10 border-brand text-brand'
                                   : 'bg-zinc-955 border-zinc-850 text-zinc-500 hover:border-zinc-750'
                                   }`}
@@ -1406,7 +1406,7 @@ export default function PsychologistDashboard({ setView }) {
                               <button
                                 type="button"
                                 onClick={() => handleRemoveRegSlot(slot)}
-                                className="px-2.5 py-2.5 bg-zinc-950 border border-zinc-850 hover:bg-rose-950/40 hover:border-rose-900 text-zinc-500 hover:text-rose-400 rounded-lg text-sm font-bold capitalize transition cursor-pointer shrink-0 font-header"
+                                className="px-2.5 py-2.5 bg-zinc-950 border border-zinc-850 hover:bg-rose-950/40 hover:border-rose-900 text-zinc-500 hover:text-rose-400 rounded-[10px] text-sm font-bold capitalize transition cursor-pointer shrink-0 font-header"
                                 title="Remove Slot"
                               >
                                 Remove
@@ -1415,7 +1415,7 @@ export default function PsychologistDashboard({ setView }) {
                           );
                         })}
                         {regAllSlots.length === 0 && (
-                          <div className="col-span-2 py-4 bg-zinc-955/40 border border-dashed border-zinc-850 rounded-xl text-zinc-500 italic text-sm text-center w-full">
+                          <div className="col-span-2 py-4 bg-zinc-955/40 border border-dashed border-zinc-850 rounded-[10px] text-zinc-500 italic text-sm text-center w-full">
                             No timing slots configured. Use the controls below to add custom slots or generate from a time range.
                           </div>
                         )}
@@ -1430,7 +1430,7 @@ export default function PsychologistDashboard({ setView }) {
                           <select
                             value={regCustomHour}
                             onChange={(e) => setRegCustomHour(e.target.value)}
-                            className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-lg text-sm text-white outline-none focus:border-brand cursor-pointer"
+                            className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-[10px] text-sm text-white outline-none focus:border-brand cursor-pointer"
                           >
                             {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map(h => (
                               <option key={h} value={h}>{h}</option>
@@ -1442,7 +1442,7 @@ export default function PsychologistDashboard({ setView }) {
                           <select
                             value={regCustomMinute}
                             onChange={(e) => setRegCustomMinute(e.target.value)}
-                            className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-lg text-sm text-white outline-none focus:border-brand cursor-pointer"
+                            className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-[10px] text-sm text-white outline-none focus:border-brand cursor-pointer"
                           >
                             {['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55'].map(m => (
                               <option key={m} value={m}>{m}</option>
@@ -1454,7 +1454,7 @@ export default function PsychologistDashboard({ setView }) {
                           <select
                             value={regCustomPeriod}
                             onChange={(e) => setRegCustomPeriod(e.target.value)}
-                            className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-lg text-sm text-white outline-none focus:border-brand cursor-pointer"
+                            className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-[10px] text-sm text-white outline-none focus:border-brand cursor-pointer"
                           >
                             <option value="AM">AM</option>
                             <option value="PM">PM</option>
@@ -1463,7 +1463,7 @@ export default function PsychologistDashboard({ setView }) {
                         <button
                           type="button"
                           onClick={handleAddRegCustomSlot}
-                          className="bg-brand/10 hover:bg-brand text-brand hover:text-zinc-955 px-3 py-1.5 text-sm font-bold capitalize  rounded-lg transition-colors border border-brand/30 hover:border-brand cursor-pointer shrink-0 h-[28.5px] flex items-center justify-center font-header"
+                          className="bg-brand/10 hover:bg-brand text-brand hover:text-zinc-955 px-3 py-1.5 text-sm font-bold capitalize  rounded-[10px] transition-colors border border-brand/30 hover:border-brand cursor-pointer shrink-0 h-[28.5px] flex items-center justify-center font-header"
                         >
                           Add Slot
                         </button>
@@ -1479,7 +1479,7 @@ export default function PsychologistDashboard({ setView }) {
                             <select
                               value={regFromHour}
                               onChange={(e) => setRegFromHour(e.target.value)}
-                              className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-lg text-sm text-white outline-none focus:border-brand cursor-pointer"
+                              className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-[10px] text-sm text-white outline-none focus:border-brand cursor-pointer"
                             >
                               {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map(h => (
                                 <option key={h} value={h}>{h}</option>
@@ -1490,7 +1490,7 @@ export default function PsychologistDashboard({ setView }) {
                             <select
                               value={regFromMinute}
                               onChange={(e) => setRegFromMinute(e.target.value)}
-                              className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-lg text-sm text-white outline-none focus:border-brand cursor-pointer"
+                              className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-[10px] text-sm text-white outline-none focus:border-brand cursor-pointer"
                             >
                               {['00', '15', '30', '45'].map(m => (
                                 <option key={m} value={m}>{m}</option>
@@ -1501,7 +1501,7 @@ export default function PsychologistDashboard({ setView }) {
                             <select
                               value={regFromPeriod}
                               onChange={(e) => setRegFromPeriod(e.target.value)}
-                              className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-lg text-sm text-white outline-none focus:border-brand cursor-pointer"
+                              className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-[10px] text-sm text-white outline-none focus:border-brand cursor-pointer"
                             >
                               <option value="AM">AM</option>
                               <option value="PM">PM</option>
@@ -1515,7 +1515,7 @@ export default function PsychologistDashboard({ setView }) {
                             <select
                               value={regToHour}
                               onChange={(e) => setRegToHour(e.target.value)}
-                              className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-lg text-sm text-white outline-none focus:border-brand cursor-pointer"
+                              className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-[10px] text-sm text-white outline-none focus:border-brand cursor-pointer"
                             >
                               {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map(h => (
                                 <option key={h} value={h}>{h}</option>
@@ -1526,7 +1526,7 @@ export default function PsychologistDashboard({ setView }) {
                             <select
                               value={regToMinute}
                               onChange={(e) => setRegToMinute(e.target.value)}
-                              className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-lg text-sm text-white outline-none focus:border-brand cursor-pointer"
+                              className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-[10px] text-sm text-white outline-none focus:border-brand cursor-pointer"
                             >
                               {['00', '15', '30', '45'].map(m => (
                                 <option key={m} value={m}>{m}</option>
@@ -1537,7 +1537,7 @@ export default function PsychologistDashboard({ setView }) {
                             <select
                               value={regToPeriod}
                               onChange={(e) => setRegToPeriod(e.target.value)}
-                              className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-lg text-sm text-white outline-none focus:border-brand cursor-pointer"
+                              className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-[10px] text-sm text-white outline-none focus:border-brand cursor-pointer"
                             >
                               <option value="AM">AM</option>
                               <option value="PM">PM</option>
@@ -1553,7 +1553,7 @@ export default function PsychologistDashboard({ setView }) {
                             const toStr = `${regToHour}:${regToMinute} ${regToPeriod}`;
                             addTimeRangeSlots(fromStr, toStr, true);
                           }}
-                          className="w-full mt-1 bg-brand/10 hover:bg-brand text-brand hover:text-zinc-955 py-2 text-sm font-bold capitalize  rounded-lg transition-colors border border-brand/30 hover:border-brand cursor-pointer flex items-center justify-center font-header"
+                          className="w-full mt-1 bg-brand/10 hover:bg-brand text-brand hover:text-zinc-955 py-2 text-sm font-bold capitalize  rounded-[10px] transition-colors border border-brand/30 hover:border-brand cursor-pointer flex items-center justify-center font-header"
                         >
                           Generate Hourly Slots from Range
                         </button>
@@ -1564,14 +1564,14 @@ export default function PsychologistDashboard({ setView }) {
                       <button
                         type="button"
                         onClick={() => setOnboardingStep(2)}
-                        className="flex-1 py-3 border border-zinc-800 hover:bg-zinc-850 text-white font-bold text-sm capitalize  rounded-lg cursor-pointer transition text-center"
+                        className="flex-1 py-3 border border-zinc-800 hover:bg-zinc-850 text-white font-bold text-sm capitalize  rounded-[10px] cursor-pointer transition text-center"
                       >
                         Back
                       </button>
                       <button
                         type="submit"
                         disabled={isLoggingIn}
-                        className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize  rounded-lg cursor-pointer transition border-none shadow-md"
+                        className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize  rounded-[10px] cursor-pointer transition border-none shadow-md"
                       >
                         {isLoggingIn ? 'Creating Profile...' : 'Complete & Launch'}
                       </button>
@@ -1592,7 +1592,7 @@ export default function PsychologistDashboard({ setView }) {
         <div className="absolute top-1/4 left-1/3 w-[300px] h-[300px] bg-rose-500/5 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-1/3 right-1/4 w-[300px] h-[300px] bg-rose-900/5 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="w-full max-w-md bg-zinc-900/60 border border-rose-900/30 rounded-2xl p-6 sm:p-8 shadow-2xl relative z-10 backdrop-blur-xl space-y-6">
+        <div className="w-full max-w-md bg-zinc-900/60 border border-rose-900/30 rounded-[10px] p-6 sm:p-8 shadow-2xl relative z-10 backdrop-blur-xl space-y-6">
           <div className="text-center space-y-3">
             <div className="w-16 h-16 mx-auto rounded-full bg-rose-955/20 border border-rose-900/30 flex items-center justify-center text-rose-500">
               <ShieldAlert className="w-8 h-8 animate-pulse" />
@@ -1603,7 +1603,7 @@ export default function PsychologistDashboard({ setView }) {
             </p>
           </div>
 
-          <div className="bg-rose-955/15 border border-rose-900/20 p-4 rounded-xl space-y-1.5">
+          <div className="bg-rose-955/15 border border-rose-900/20 p-4 rounded-[10px] space-y-1.5">
             <span className="text-xs font-bold text-rose-400 uppercase tracking-wider block">Rejection Reason:</span>
             <p className="text-sm text-zinc-300 italic leading-relaxed">
               "{counsellorRejectionReason || user?.rejectionReason || 'Credentials did not meet verification standards.'}"
@@ -1617,7 +1617,7 @@ export default function PsychologistDashboard({ setView }) {
 
             <button
               onClick={() => logout()}
-              className="w-full py-3 bg-zinc-950 border border-zinc-800 hover:bg-zinc-850 hover:border-zinc-700 text-rose-450 hover:text-rose-400 font-bold text-sm capitalize rounded-lg transition cursor-pointer flex items-center justify-center gap-1.5"
+              className="w-full py-3 bg-zinc-950 border border-zinc-800 hover:bg-zinc-850 hover:border-zinc-700 text-rose-450 hover:text-rose-400 font-bold text-sm capitalize rounded-[10px] transition cursor-pointer flex items-center justify-center gap-1.5"
             >
               <LogOut className="w-4 h-4" /> Sign Out
             </button>
@@ -1642,7 +1642,7 @@ export default function PsychologistDashboard({ setView }) {
           <button
             type="button"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="p-1.5 bg-zinc-955 border border-zinc-850 text-zinc-400 hover:text-white rounded-lg transition-colors cursor-pointer border-none"
+            className="p-1.5 bg-zinc-955 border border-zinc-850 text-zinc-400 hover:text-white rounded-[10px] transition-colors cursor-pointer border-none"
             title={isMobileMenuOpen ? "Close Navigation Menu" : "Open Navigation Menu"}
           >
             {isMobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
@@ -1659,7 +1659,7 @@ export default function PsychologistDashboard({ setView }) {
         <button
           type="button"
           onClick={() => setIsProfileDrawerOpen(true)}
-          className="w-8 h-8 rounded-lg bg-zinc-950 border border-zinc-850 text-zinc-400 hover:text-white hover:border-brand/30 flex items-center justify-center shadow-sm cursor-pointer hover:opacity-90 active:scale-95 transition-all shrink-0"
+          className="w-8 h-8 rounded-[10px] bg-zinc-950 border border-zinc-850 text-zinc-400 hover:text-white hover:border-brand/30 flex items-center justify-center shadow-sm cursor-pointer hover:opacity-90 active:scale-95 transition-all shrink-0"
           title="Open Profile Menu"
         >
           <User className="w-4 h-4 text-brand" />
@@ -1681,7 +1681,7 @@ export default function PsychologistDashboard({ setView }) {
       <div className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-8 lg:p-10 space-y-6 relative z-10 text-left">
 
         {/* Workspace Banner */}
-        <div className="bg-zinc-900 border border-zinc-850 p-5 sm:p-8 rounded-2xl shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),_0_1px_3px_rgba(11,20,36,0.04),_0_6px_20px_-6px_rgba(11,20,36,0.08)] flex flex-col sm:flex-row justify-between items-center gap-4 relative overflow-hidden">
+        <div className="bg-zinc-900 border border-zinc-850 p-5 sm:p-8 rounded-[10px] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),_0_1px_3px_rgba(11,20,36,0.04),_0_6px_20px_-6px_rgba(11,20,36,0.08)] flex flex-col sm:flex-row justify-between items-center gap-4 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/5 rounded-full blur-2xl pointer-events-none" />
 
           <div className="space-y-1 relative z-10 w-full sm:w-auto text-left">
@@ -1712,11 +1712,11 @@ export default function PsychologistDashboard({ setView }) {
 
           {/* Quick Stats Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full sm:w-auto shrink-0 relative z-10 text-center">
-            <div className="bg-zinc-950 border border-zinc-850 px-5 py-2.5 rounded-xl">
+            <div className="bg-zinc-950 border border-zinc-850 px-5 py-2.5 rounded-[10px]">
               <span className="text-sm text-zinc-500 font-bold capitalize block">Upcoming Slots</span>
               <p className="text-sm font-bold text-brand mt-0.5">{bookings.filter(b => (b.status === 'CONFIRMED' || b.status === 'APPROVED' || b.status === 'PENDING') && !isSessionCompleted(b)).length} Bookings</p>
             </div>
-            <div className="bg-zinc-950 border border-zinc-850 px-5 py-2.5 rounded-xl">
+            <div className="bg-zinc-950 border border-zinc-850 px-5 py-2.5 rounded-[10px]">
               <span className="text-sm text-zinc-500 font-bold capitalize block">Hours Completed</span>
               <p className="text-sm font-bold text-brand mt-0.5">{bookings.filter(isSessionCompleted).length + Number(profile.hours || 0)}+ Hrs</p>
             </div>
@@ -1725,7 +1725,7 @@ export default function PsychologistDashboard({ setView }) {
 
         {/* Verification Status Alert Banner */}
         {counsellorStatus === 'REJECTED' || user?.status === 'REJECTED' ? (
-          <div className="bg-rose-955/20 border border-rose-900/60 p-4 rounded-xl flex items-center gap-3 text-rose-350 text-sm animate-in slide-in-from-top duration-300">
+          <div className="bg-rose-955/20 border border-rose-900/60 p-4 rounded-[10px] flex items-center gap-3 text-rose-350 text-sm animate-in slide-in-from-top duration-300">
             <ShieldAlert className="w-5 h-5 text-rose-455 shrink-0" />
             <div className="text-left">
               <span className="font-bold capitalize  block mb-0.5 text-rose-455">Application Rejected</span>
@@ -1738,7 +1738,7 @@ export default function PsychologistDashboard({ setView }) {
             </div>
           </div>
         ) : !isCounsellorVerified() ? (
-          <div className="bg-amber-955/20 border border-amber-900/60 p-4 rounded-xl flex items-center gap-3 text-amber-300 text-sm animate-in slide-in-from-top duration-300">
+          <div className="bg-amber-955/20 border border-amber-900/60 p-4 rounded-[10px] flex items-center gap-3 text-amber-300 text-sm animate-in slide-in-from-top duration-300">
             <ShieldAlert className="w-5 h-5 text-amber-450 shrink-0" />
             <div className="text-left">
               <span className="font-bold capitalize  block mb-0.5">Account Pending Verification</span>
@@ -1748,7 +1748,7 @@ export default function PsychologistDashboard({ setView }) {
         ) : null}
 
         {/* WORKSPACE CONTENT ROUTER */}
-        <div className="bg-zinc-900 border border-zinc-850 rounded-2xl p-5 sm:p-8 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),_0_1px_3px_rgba(11,20,36,0.04),_0_6px_20px_-6px_rgba(11,20,36,0.08)]">
+        <div className="bg-zinc-900 border border-zinc-850 rounded-[10px] p-5 sm:p-8 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),_0_1px_3px_rgba(11,20,36,0.04),_0_6px_20px_-6px_rgba(11,20,36,0.08)]">
           {isLoadingData ? (
             <div className="animate-pulse space-y-6">
               <div className="border-b border-zinc-800 pb-3 flex justify-between items-center">
@@ -1756,12 +1756,12 @@ export default function PsychologistDashboard({ setView }) {
                 <div className="h-6 bg-zinc-800 rounded w-24"></div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div className="bg-zinc-955 border border-zinc-850 rounded-xl p-5 min-h-[160px] space-y-4">
+                <div className="bg-zinc-955 border border-zinc-850 rounded-[10px] p-5 min-h-[160px] space-y-4">
                   <div className="h-6 bg-zinc-800 rounded w-1/3"></div>
                   <div className="h-5 bg-zinc-800 rounded w-2/3"></div>
                   <div className="h-4 bg-zinc-800 rounded w-1/2 mt-6"></div>
                 </div>
-                <div className="bg-zinc-955 border border-zinc-850 rounded-xl p-5 min-h-[160px] space-y-4">
+                <div className="bg-zinc-955 border border-zinc-850 rounded-[10px] p-5 min-h-[160px] space-y-4">
                   <div className="h-6 bg-zinc-800 rounded w-1/3"></div>
                   <div className="h-4 bg-zinc-800 rounded w-full mt-4"></div>
                   <div className="h-4 bg-zinc-800 rounded w-full"></div>
@@ -1885,7 +1885,7 @@ export default function PsychologistDashboard({ setView }) {
               </div>
               <button
                 onClick={() => setIsProfileDrawerOpen(false)}
-                className="p-2 rounded-lg text-zinc-500 hover:text-white hover:bg-zinc-800 transition cursor-pointer border-none bg-transparent"
+                className="p-2 rounded-[10px] text-zinc-500 hover:text-white hover:bg-zinc-800 transition cursor-pointer border-none bg-transparent"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -1893,7 +1893,7 @@ export default function PsychologistDashboard({ setView }) {
 
             {/* Avatar + Name */}
             <div className="px-6 py-6 flex flex-col items-center text-center space-y-3 border-b border-zinc-800">
-              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-600 to-indigo-400 text-white flex items-center justify-center font-header font-bold text-2xl shadow-xl">
+              <div className="w-20 h-20 rounded-[10px] bg-gradient-to-br from-indigo-600 to-indigo-400 text-white flex items-center justify-center font-header font-bold text-2xl shadow-xl">
                 {(profile?.name || '').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
               </div>
               <div>
@@ -1907,9 +1907,9 @@ export default function PsychologistDashboard({ setView }) {
             {/* Profile Details */}
             <div className="px-6 py-5 space-y-4 flex-1">
               <p className="text-sm font-bold capitalize  text-zinc-500 ">Professional Details</p>
-              <div className="bg-zinc-955/60 rounded-xl p-4 space-y-3 border border-zinc-800">
+              <div className="bg-zinc-955/60 rounded-[10px] p-4 space-y-3 border border-zinc-800">
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="w-8 h-8 rounded-[10px] bg-zinc-900 border border-zinc-800 flex items-center justify-center shrink-0 mt-0.5">
                     <Mail className="w-3.5 h-3.5 text-indigo-400" />
                   </div>
                   <div className="min-w-0 flex-1">
@@ -1918,7 +1918,7 @@ export default function PsychologistDashboard({ setView }) {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="w-8 h-8 rounded-[10px] bg-zinc-900 border border-zinc-800 flex items-center justify-center shrink-0 mt-0.5">
                     <Award className="w-3.5 h-3.5 text-indigo-400" />
                   </div>
                   <div>
@@ -1927,7 +1927,7 @@ export default function PsychologistDashboard({ setView }) {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="w-8 h-8 rounded-[10px] bg-zinc-900 border border-zinc-800 flex items-center justify-center shrink-0 mt-0.5">
                     <Shield className="w-3.5 h-3.5 text-indigo-400" />
                   </div>
                   <div>
@@ -1936,7 +1936,7 @@ export default function PsychologistDashboard({ setView }) {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="w-8 h-8 rounded-[10px] bg-zinc-900 border border-zinc-800 flex items-center justify-center shrink-0 mt-0.5">
                     <Globe className="w-3.5 h-3.5 text-indigo-400" />
                   </div>
                   <div>
@@ -1965,13 +1965,13 @@ export default function PsychologistDashboard({ setView }) {
             <div className="px-6 py-5 border-t border-zinc-800 space-y-2">
               <button
                 onClick={() => { handleNavClick('profile'); setIsProfileDrawerOpen(false); }}
-                className="w-full py-2.5 border border-zinc-700 hover:border-indigo-500 text-zinc-300 hover:text-white font-bold text-sm capitalize  rounded-lg flex items-center justify-center gap-1.5 transition-colors cursor-pointer bg-zinc-900"
+                className="w-full py-2.5 border border-zinc-700 hover:border-indigo-500 text-zinc-300 hover:text-white font-bold text-sm capitalize  rounded-[10px] flex items-center justify-center gap-1.5 transition-colors cursor-pointer bg-zinc-900"
               >
                 <Edit className="w-3.5 h-3.5 text-brand" /> Edit Profile
               </button>
               <button
                 onClick={() => { setIsProfileDrawerOpen(false); setIsLogoutConfirmOpen(true); }}
-                className="w-full py-2.5 border border-rose-900/50 hover:border-rose-600 text-rose-500 bg-rose-955/20 hover:bg-rose-900 hover:text-white font-bold text-sm capitalize  rounded-lg flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                className="w-full py-2.5 border border-rose-900/50 hover:border-rose-600 text-rose-500 bg-rose-955/20 hover:bg-rose-900 hover:text-white font-bold text-sm capitalize  rounded-[10px] flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
               >
                 <LogOut className="w-3.5 h-3.5" /> Sign Out
               </button>

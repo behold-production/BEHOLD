@@ -117,12 +117,12 @@ export const CustomDialogProvider = ({ children }) => {
       {children}
       {dialogState.isOpen && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-in fade-in duration-200">
-          <div className="bg-zinc-900 border border-zinc-800 rounded-3xl w-full max-w-md p-6 flex flex-col shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 text-white relative">
+          <div className="bg-zinc-900 border border-zinc-800 rounded-[10px] w-full max-w-md p-6 flex flex-col shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 text-white relative">
             
             {/* Close button */}
             <button
               onClick={handleCancel}
-              className="absolute top-4 right-4 p-1 hover:bg-zinc-800 rounded-lg text-zinc-400 hover:text-white transition duration-200 cursor-pointer border-none"
+              className="absolute top-4 right-4 p-1 hover:bg-zinc-800 rounded-[10px] text-zinc-400 hover:text-white transition duration-200 cursor-pointer border-none"
               title="Close"
             >
               <X className="w-5 h-5" />
@@ -130,7 +130,7 @@ export const CustomDialogProvider = ({ children }) => {
 
             {/* Icon & Title */}
             <div className="flex flex-col items-center text-center space-y-3 mt-2">
-              <div className="p-3 bg-zinc-950 rounded-2xl border border-zinc-850 shadow-inner">
+              <div className="p-3 bg-zinc-950 rounded-[10px] border border-zinc-850 shadow-inner">
                 {getIcon()}
               </div>
               <h3 className="text-lg font-bold tracking-tight text-white font-header">
@@ -151,7 +151,7 @@ export const CustomDialogProvider = ({ children }) => {
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     placeholder={dialogState.placeholder || "Enter value..."}
-                    className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 text-zinc-100 rounded-xl focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/10 transition duration-200 placeholder-zinc-500 text-sm font-semibold min-h-[100px] resize-none"
+                    className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 text-zinc-100 rounded-[10px] focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/10 transition duration-200 placeholder-zinc-500 text-sm font-semibold min-h-[100px] resize-none"
                     autoFocus
                     onKeyDown={(e) => {
                       if (e.key === 'Escape') handleCancel();
@@ -163,7 +163,7 @@ export const CustomDialogProvider = ({ children }) => {
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     placeholder={dialogState.placeholder || "Enter value..."}
-                    className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 text-zinc-100 rounded-xl focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/10 transition duration-200 placeholder-zinc-500 text-sm font-semibold"
+                    className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 text-zinc-100 rounded-[10px] focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/10 transition duration-200 placeholder-zinc-500 text-sm font-semibold"
                     autoFocus
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') handleConfirm();
@@ -179,14 +179,14 @@ export const CustomDialogProvider = ({ children }) => {
               {dialogState.type !== 'alert' && (
                 <button
                   onClick={handleCancel}
-                  className="flex-1 py-3 bg-zinc-800 hover:bg-zinc-750 border border-zinc-700 text-zinc-300 hover:text-white font-bold text-sm capitalize rounded-xl cursor-pointer transition"
+                  className="flex-1 py-3 bg-zinc-800 hover:bg-zinc-750 border border-zinc-700 text-zinc-300 hover:text-white font-bold text-sm capitalize rounded-[10px] cursor-pointer transition"
                 >
                   Cancel
                 </button>
               )}
               <button
                 onClick={handleConfirm}
-                className={`flex-1 py-3 font-bold text-sm capitalize rounded-xl cursor-pointer transition border-none shadow-md ${
+                className={`flex-1 py-3 font-bold text-sm capitalize rounded-[10px] cursor-pointer transition border-none shadow-md ${
                   dialogState.type === 'alert' && (dialogState.message.toLowerCase().includes('failed') || dialogState.message.toLowerCase().includes('error') || dialogState.message.toLowerCase().includes('denied'))
                     ? 'bg-rose-600 hover:bg-rose-700 text-white'
                     : dialogState.title.toLowerCase().includes('delete') || dialogState.title.toLowerCase().includes('remove') || dialogState.title.toLowerCase().includes('reject')

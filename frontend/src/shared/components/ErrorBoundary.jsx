@@ -35,7 +35,7 @@ export default class ErrorBoundary extends React.Component {
           <div className="max-w-xl w-full relative z-10 space-y-6">
             {/* Header info */}
             <div className="text-center space-y-2">
-              <div className="w-16 h-16 bg-rose-500/10 border border-rose-500/30 rounded-2xl flex items-center justify-center mx-auto text-rose-500 shadow-lg shadow-rose-955/20 float-slow mb-3">
+              <div className="w-16 h-16 bg-rose-500/10 border border-rose-500/30 rounded-[10px] flex items-center justify-center mx-auto text-rose-500 shadow-lg shadow-rose-955/20 float-slow mb-3">
                 <AlertTriangle className="w-8 h-8" />
               </div>
               <h1 className="text-3xl font-header font-black tracking-tight leading-none text-white capitalize">
@@ -47,7 +47,7 @@ export default class ErrorBoundary extends React.Component {
             </div>
 
             {/* Diagnostic Details card */}
-            <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl shadow-2xl space-y-4">
+            <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-[10px] shadow-2xl space-y-4">
               <div>
                 <span className="text-xs uppercase tracking-widest text-zinc-500 font-bold block mb-1">Error Diagnostics</span>
                 <p className="text-sm font-black text-rose-450 break-all leading-normal">
@@ -58,7 +58,7 @@ export default class ErrorBoundary extends React.Component {
               {this.state.errorInfo && (
                 <div className="space-y-1.5">
                   <span className="text-xs uppercase tracking-widest text-zinc-500 font-bold block">Component Callstack</span>
-                  <div className="max-h-[160px] overflow-y-auto pr-1 bg-zinc-950/60 border border-zinc-850 p-3 rounded-xl text-[10px] font-mono text-zinc-400 whitespace-pre-wrap leading-normal custom-scrollbar select-text">
+                  <div className="max-h-[160px] overflow-y-auto pr-1 bg-zinc-950/60 border border-zinc-850 p-3 rounded-[10px] text-[10px] font-mono text-zinc-400 whitespace-pre-wrap leading-normal custom-scrollbar select-text">
                     {this.state.errorInfo.componentStack}
                   </div>
                 </div>
@@ -70,7 +70,7 @@ export default class ErrorBoundary extends React.Component {
               <button
                 type="button"
                 onClick={this.handleReload}
-                className="px-6 py-3 bg-brand hover:bg-brand-dark text-zinc-950 font-bold text-xs capitalize rounded-xl transition cursor-pointer flex items-center justify-center gap-1.5 border-none shadow-lg shadow-brand/10 w-full sm:w-auto hover:scale-[1.02] active:scale-[0.98]"
+                className="px-6 py-3 bg-brand hover:bg-brand-dark text-zinc-950 font-bold text-xs capitalize rounded-[10px] transition cursor-pointer flex items-center justify-center gap-1.5 border-none shadow-lg shadow-brand/10 w-full sm:w-auto hover:scale-[1.02] active:scale-[0.98]"
               >
                 <RefreshCw className="w-4 h-4 animate-spin-reverse" />
                 Reload Application
@@ -78,7 +78,7 @@ export default class ErrorBoundary extends React.Component {
               <button
                 type="button"
                 onClick={this.handleGoHome}
-                className="px-6 py-3 bg-zinc-800 hover:bg-zinc-750 text-white font-bold text-xs capitalize rounded-xl transition cursor-pointer flex items-center justify-center gap-1.5 border border-zinc-700 w-full sm:w-auto hover:scale-[1.02] active:scale-[0.98]"
+                className="px-6 py-3 bg-zinc-800 hover:bg-zinc-750 text-white font-bold text-xs capitalize rounded-[10px] transition cursor-pointer flex items-center justify-center gap-1.5 border border-zinc-700 w-full sm:w-auto hover:scale-[1.02] active:scale-[0.98]"
               >
                 <Home className="w-4 h-4" />
                 Go Back Home

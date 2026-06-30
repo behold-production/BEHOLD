@@ -13,6 +13,7 @@ const BookedSessionsTab = ({
   bookedSessions,
   completedSessions,
   enablePsychology,
+  enableCareerMentoring,
   navigate,
   filterChips,
   setSessionFilter,
@@ -63,7 +64,7 @@ const BookedSessionsTab = ({
           </button>
         </div>
 
-        {sessionSubTab === 'upcoming' && enablePsychology && (
+        {sessionSubTab === 'upcoming' && (enablePsychology || enableCareerMentoring) && (
           <button
             type="button"
             onClick={() => navigate('/booking')}
@@ -146,8 +147,15 @@ const BookedSessionsTab = ({
                       </div>
                     </div>
 
-                    <p className="font-black uppercase tracking-widest text-surface-900 text-lg">{session.advisorName}</p>
-                    <p className="text-[10px] uppercase tracking-widest text-surface-500 font-bold mt-0.5">{session.advisorRole || 'Consultation'}</p>
+                    <div className="flex items-center gap-3">
+                      {session.advisorProfilePic && (
+                        <img src={session.advisorProfilePic} alt={session.advisorName} className="w-10 h-10 rounded-[10px] object-cover border border-surface-200 shrink-0" />
+                      )}
+                      <div>
+                        <p className="font-black uppercase tracking-widest text-surface-900 text-lg">{session.advisorName}</p>
+                        <p className="text-[10px] uppercase tracking-widest text-surface-500 font-bold mt-0.5">{session.advisorRole || 'Consultation'}</p>
+                      </div>
+                    </div>
 
                     <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
                       <div className="flex items-center gap-1.5 px-3 py-2 rounded-[10px] bg-surface-50 border border-surface-200 text-[10px] uppercase tracking-widest text-surface-600 font-bold">
@@ -285,7 +293,7 @@ const BookedSessionsTab = ({
                   ? 'Book a session with one of our experts.'
                   : `No ${sessionFilter} sessions scheduled.`}
               </p>
-              {enablePsychology && (
+              {(enablePsychology || enableCareerMentoring) && (
                 <button
                   type="button"
                   onClick={() => navigate('/booking')}
@@ -352,8 +360,15 @@ const BookedSessionsTab = ({
                               </div>
                             )}
                           </div>
-                          <p className="font-black text-surface-900 uppercase tracking-widest text-lg">{session.advisorName}</p>
-                          <p className="text-[10px] text-surface-500 font-bold uppercase tracking-widest mt-0.5">{session.advisorRole || 'Consultation'}</p>
+                          <div className="flex items-center gap-3 mt-1.5 mb-1.5">
+                            {session.advisorProfilePic && (
+                              <img src={session.advisorProfilePic} alt={session.advisorName} className="w-10 h-10 rounded-[10px] object-cover border border-surface-200 shrink-0" />
+                            )}
+                            <div>
+                              <p className="font-black text-surface-900 uppercase tracking-widest text-lg leading-tight">{session.advisorName}</p>
+                              <p className="text-[10px] text-surface-500 font-bold uppercase tracking-widest mt-0.5">{session.advisorRole || 'Consultation'}</p>
+                            </div>
+                          </div>
                         </div>
                         <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-surface-600 bg-surface-50 border border-surface-200 px-2.5 py-1.5 rounded-[10px] shrink-0 w-fit font-bold">
                           <Clock className="w-3.5 h-3.5 text-surface-400" />
@@ -407,7 +422,7 @@ const BookedSessionsTab = ({
               </div>
               <p className="text-sm font-black text-surface-900 uppercase tracking-widest">No completed sessions yet</p>
               <p className="text-xs text-surface-500 mt-1">Finished sessions will appear here with counsellor feedback.</p>
-              {enablePsychology && (
+              {(enablePsychology || enableCareerMentoring) && (
                 <button
                   type="button"
                   onClick={() => navigate('/booking')}

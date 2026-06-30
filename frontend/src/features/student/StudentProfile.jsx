@@ -35,6 +35,7 @@ export default function StudentProfile() {
     navigate,
     currentSection,
     enablePsychology,
+    enableCareerMentoring,
     enableAptitude,
     completion,
     greeting,
@@ -170,6 +171,7 @@ export default function StudentProfile() {
                   <OverviewTab
                      nextSession={nextSession}
                      enablePsychology={enablePsychology}
+                     enableCareerMentoring={enableCareerMentoring}
                      navigate={navigate}
                      handleSectionChange={handleSectionChange}
                      setSessionSubTab={setSessionSubTab}
@@ -203,6 +205,7 @@ export default function StudentProfile() {
                     bookedSessions={bookedSessions}
                     completedSessions={completedSessions}
                     enablePsychology={enablePsychology}
+                    enableCareerMentoring={enableCareerMentoring}
                     navigate={navigate}
                     filterChips={filterChips}
                     setSessionFilter={setSessionFilter}

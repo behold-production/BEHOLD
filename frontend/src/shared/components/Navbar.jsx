@@ -173,7 +173,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                 <span className={`absolute -bottom-2 left-0 w-full h-[2px] bg-brand transition-transform origin-left ${currentView === '/' && (activeSection === 'home' || activeSection === 'cdat' || activeSection === '') ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`} />
               </button>
 
-              {siteSettings.enablePsychology !== false && (
+              {(siteSettings.enablePsychology !== false || siteSettings.enableCareerMentoring !== false) && (
                 <button
                   onClick={() => scrollToSection('services')}
                   className={`relative group transition-colors uppercase cursor-pointer ${isDarkTheme ? 'hover:text-white' : 'hover:text-surface-900'}`}
@@ -252,7 +252,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                 </div>
               )}
 
-              {siteSettings.enablePsychology !== false && (
+              {(siteSettings.enablePsychology !== false || siteSettings.enableCareerMentoring !== false) && (
                 <button
                   type="button"
                   onClick={() => navigate('/booking')}
@@ -311,7 +311,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
             <span>Home</span>
           </button>
 
-          {siteSettings.enablePsychology !== false && (
+          {(siteSettings.enablePsychology !== false || siteSettings.enableCareerMentoring !== false) && (
             <button
               type="button"
               onClick={() => scrollToSection('services')}
@@ -349,7 +349,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
             <span>Contact</span>
           </button>
 
-          {siteSettings.enablePsychology !== false && (
+          {(siteSettings.enablePsychology !== false || siteSettings.enableCareerMentoring !== false) && (
             <button
               type="button"
               onClick={() => { navigate('/booking'); setIsMenuOpen(false); }}

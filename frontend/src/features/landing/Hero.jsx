@@ -78,7 +78,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
           transition={{ duration: 0.8, ease: "easeOut", delay: 0.5 }}
           className="flex flex-col sm:flex-row items-center gap-4 mt-8 w-full sm:w-auto px-4 sm:px-0"
         >
-          {settings.enablePsychology !== false && (
+          {(settings.enablePsychology !== false || settings.enableCareerMentoring !== false) && (
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}

@@ -90,6 +90,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
  setShowSummary,
  downloadingPdf,
  enablePsychology,
+ enableCareerMentoring,
  isRescheduleParam,
  baseFee,
  gstEnabled,
@@ -241,7 +242,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
  }
  }, [bookingMode]);
 
- if (!enablePsychology && !isRescheduleParam) {
+ if (!enablePsychology && !enableCareerMentoring && !isRescheduleParam) {
  return (
  <div className="min-h-[75vh] flex flex-col items-center justify-center text-center px-4 py-16 bg-surface-50 font-sans select-none">
  <div className="max-w-md w-full bg-white border border-surface-200 p-8 rounded-[10px] shadow-sm space-y-6 animate-in fade-in zoom-in-95 duration-500">
@@ -600,9 +601,9 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
  <label className="text-sm font-semibold text-surface-700 block">Select Service Type</label>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
  {[
- { id: 'counselling', label: 'Psychological Counselling' },
- { id: 'career', label: 'Career Mentoring' }
- ].map((s) => {
+ { id: 'counselling', label: 'Psychological Counselling', enabled: enablePsychology },
+ { id: 'career', label: 'Career Mentoring', enabled: enableCareerMentoring }
+ ].filter(s => s.enabled).map((s) => {
  const isSelected = bookingService === s.id;
  return (
  <button

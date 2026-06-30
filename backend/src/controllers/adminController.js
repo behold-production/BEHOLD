@@ -893,6 +893,7 @@ const AdminController = {
           privacyPolicy:
             'Your privacy is extremely important to us. This policy describes how we collect, protect, and use your personal information.',
           enablePsychology: true,
+          enableCareerMentoring: true,
           enableAptitude: true,
           enableOnline: true,
           enableOffline: true,
@@ -931,6 +932,7 @@ const AdminController = {
         data: {
           ...settings,
           enablePsychology: settings.enablePsychology !== false,
+          enableCareerMentoring: settings.enableCareerMentoring !== false,
           enableAptitude: settings.enableAptitude !== false,
           enableOnline: settings.enableOnline !== false,
           enableOffline: settings.enableOffline !== false,

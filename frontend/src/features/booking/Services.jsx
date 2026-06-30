@@ -28,6 +28,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
 
   const settings = siteSettings || JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
   const enablePsychology = settings.enablePsychology !== false;
+  const enableCareerMentoring = settings.enableCareerMentoring !== false;
 
   // Reset visibleCount when search or filter changes
   const [prevSearch, setPrevSearch] = useState(searchTerm);
@@ -110,6 +111,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch w-full">
 
         {/* SERVICE 2: CAREER MENTORING */}
+        {enableCareerMentoring && (
         <div
           id="card-career"
           className="bg-white border border-surface-200 rounded-[10px] shadow-square-light p-6 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none group"
@@ -136,7 +138,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
             </p>
           </div>
 
-          {enablePsychology && (
+          {enableCareerMentoring && (
             <button
               type="button"
               onClick={() => {
@@ -153,8 +155,10 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
             </button>
           )}
         </div>
+        )}
 
         {/* SERVICE 3: PSYCHOLOGICAL COUNSELLING */}
+        {enablePsychology && (
         <div
           id="card-psychology"
           className="bg-surface-50 border border-surface-200 rounded-[10px] shadow-square-light p-6 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none group"
@@ -186,7 +190,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
               type="button"
               onClick={() => {
                 if (onBookTherapist) {
-                  onBookTherapist('c3');
+                  onBookTherapist('counselling_1');
                 } else {
                   window.spaNavigate('/booking?service=counselling');
                 }
@@ -198,6 +202,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
             </button>
           )}
         </div>
+        )}
 
       </div>
 

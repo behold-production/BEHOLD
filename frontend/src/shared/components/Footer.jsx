@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Footer({ navigateToSection, siteName, siteCopyright, onOpenDocs, enablePsychology }) {
+export default function Footer({ navigateToSection, siteName, siteCopyright, onOpenDocs, enablePsychology, enableCareerMentoring }) {
   const handleLogoClick = () => {
     navigateToSection('top');
   };
@@ -20,7 +20,7 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
 
         {/* Navigation Links */}
         <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 mb-8">
-          {enablePsychology && (
+          {(enablePsychology || enableCareerMentoring) && (
             <>
               <button type="button" onClick={() => navigateToSection('services')} className="text-base sm:text-lg text-slate-300 hover:text-brand transition-colors cursor-pointer bg-transparent border-none font-medium">Services</button>
               <button type="button" onClick={() => window.spaNavigate('/booking')} className="text-base sm:text-lg text-slate-300 hover:text-brand transition-colors cursor-pointer bg-transparent border-none font-medium">Booking</button>
