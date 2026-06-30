@@ -18,7 +18,8 @@ const OverviewTab = ({
   testProfile,
   bookedSessions,
   completedSessions,
-  profile
+  profile,
+  enableAptitude
 }) => {
   return (
     <div className="space-y-5">
