@@ -228,7 +228,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                   </button>
 
                   {showDropdown && (
-                    <div className="absolute top-full right-0 mt-3 w-52 bg-white border-2 border-surface-200 shadow-square-light py-1 z-50">
+                    <div className="absolute top-full right-0 mt-3 w-52 bg-white border-2 border-surface-200 shadow-square-light py-1 z-50 rounded-[10px] overflow-hidden">
                       <div className="px-4 py-3 border-b border-surface-200">
                         <p className="text-sm font-heading font-bold text-surface-900 truncate">{user.name}</p>
                         <p className="text-xs text-slate-500 truncate mt-0.5">{user.email}</p>
