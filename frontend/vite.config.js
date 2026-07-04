@@ -8,42 +8,15 @@ export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
-    VitePWA({
-      registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'CIGI.png', 'children-learning.png'],
-      workbox: {
-        importScripts: ['sw-custom.js']
-      },
-      manifest: {
-        name: 'Behold Aspire',
-        short_name: 'Behold',
-        description: 'Expert Student Career Guidance & Aptitude Testing',
-        theme_color: '#0d9488', // teal-600
-        background_color: '#f8fafc', // slate-50
-        display: 'standalone',
-        orientation: 'portrait',
-        scope: '/',
-        start_url: '/',
-        icons: [
-          {
-            src: 'pwa-192.png',
-            sizes: '192x192',
-            type: 'image/png'
-          },
-          {
-            src: 'pwa-512.png',
-            sizes: '512x512',
-            type: 'image/png'
-          },
-          {
-            src: 'pwa-512.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'any maskable'
-          }
-        ]
-      }
-    })
+    // VitePWA plugin temporarily disabled to fix ESM/CJS build error
+    // VitePWA({
+    //   registerType: 'autoUpdate',
+    //   includeAssets: ['favicon.svg', 'CIGI.png', 'children-learning.png'],
+    //   workbox: {
+    //     importScripts: ['sw-custom.js']
+    //   },
+    //   manifest: { ... }
+    // })
   ],
   mode: 'development',
   server: {
