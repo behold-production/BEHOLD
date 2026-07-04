@@ -29,7 +29,8 @@ const BookingsTab = ({
   startEditMeetLink
 }) => {
   const confirmedCount = bookings.filter(b => !b.status || b.status === 'CONFIRMED' || b.status === 'PENDING' || b.status === 'APPROVED').length;
-  const completedCount = bookings.filter(b => b.status === 'COMPLETED' || b.status === 'EXPIRED').length;
+  const completedCount = bookings.filter(b => b.status === 'COMPLETED').length;
+  const expiredCount = bookings.filter(b => b.status === 'EXPIRED').length;
   const cancelledCount = bookings.filter(b => b.status === 'CANCELLED').length;
 
   const filteredBookings = bookings.filter(b => {
@@ -38,7 +39,10 @@ const BookingsTab = ({
       return status === 'CONFIRMED' || status === 'PENDING' || status === 'APPROVED';
     }
     if (activeBookingTab === 'COMPLETED') {
-      return status === 'COMPLETED' || status === 'EXPIRED';
+      return status === 'COMPLETED';
+    }
+    if (activeBookingTab === 'EXPIRED') {
+      return status === 'EXPIRED';
     }
     return status === activeBookingTab;
   });
@@ -64,6 +68,7 @@ const BookingsTab = ({
         {[
           { id: 'CONFIRMED', label: 'Confirmed', count: confirmedCount },
           { id: 'COMPLETED', label: 'Completed', count: completedCount },
+          { id: 'EXPIRED', label: 'Expired', count: expiredCount },
           { id: 'CANCELLED', label: 'Cancelled', count: cancelledCount }
         ].map(tab => {
           const isActive = activeBookingTab === tab.id;

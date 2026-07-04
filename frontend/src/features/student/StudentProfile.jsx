@@ -61,11 +61,12 @@ export default function StudentProfile() {
     setCigiNote
   } = useStudentProfileViewModel();
 
+  const actualCompletedCount = completedSessions.filter(s => !['EXPIRED', 'CANCELLED', 'REJECTED'].includes(s.status)).length;
   const stats = {
     total: bookedSessions.length + completedSessions.length,
-    completed: completedSessions.length,
+    completed: actualCompletedCount,
     upcoming: bookedSessions.length,
-    hours: completedSessions.length,
+    hours: actualCompletedCount,
   };
   const nextSession = bookedSessions[0];
 

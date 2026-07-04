@@ -129,9 +129,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                   {settings.careerSubtitle || 'Feeling Unsure About What’s Next?'}
                 </h4>
               </div>
-              <span className="font-black text-4xl text-surface-200 group-hover:text-surface-300 transition-colors">
-                01
-              </span>
+
             </div>
             <p className="text-surface-600 text-xs leading-relaxed">
               {settings.careerDesc || 'Whether you’re choosing a stream, exploring career options, or planning your future studies, we help you understand your strengths, interests, and opportunities so you can make confident decisions with clarity and direction.'}
@@ -176,9 +174,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                   {settings.counselSubtitle || 'You Don’t Have to Face It Alone.'}
                 </h4>
               </div>
-              <span className="font-black text-4xl text-surface-200 group-hover:text-surface-300 transition-colors">
-                02
-              </span>
+
             </div>
             <p className="text-surface-600 text-xs leading-relaxed">
               {settings.counselDesc || 'When stress, anxiety, self-doubt, or personal challenges begin to feel overwhelming, having the right support can make all the difference. Our counselling sessions provide a safe space to reflect, heal, grow, and move forward with confidence.'}

@@ -45,6 +45,7 @@ export default defineConfig({
       }
     })
   ],
+  mode: 'development',
   server: {
     host: true, // Expose to LAN so other devices can connect
     port: 5173,

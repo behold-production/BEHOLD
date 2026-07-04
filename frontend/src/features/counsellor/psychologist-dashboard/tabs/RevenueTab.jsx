@@ -87,7 +87,7 @@ export default function RevenueTab(props) {
       if (b.paymentStatus === 'PAID') {
         const payoutShare = amount * (splitPercent / 100);
 
-        if (b.status === 'COMPLETED' || b.status === 'EXPIRED') {
+        if (b.status === 'COMPLETED') {
           grossEarnings += amount;
           netPayoutEarned += payoutShare;
           completedPaidCount++;
@@ -493,7 +493,7 @@ export default function RevenueTab(props) {
                     const gross = Number(b.amountPaid) || 0;
                     const myPayout = gross * (splitPercent / 100);
                     const isRefunded = b.refundStatus === 'REFUNDED';
-                    const isCompleted = b.status === 'COMPLETED' || b.status === 'EXPIRED';
+                    const isCompleted = b.status === 'COMPLETED';
 
                     return (
                       <tr key={b.id} className="border-b border-zinc-900 hover:bg-zinc-900/30 transition-colors">

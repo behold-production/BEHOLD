@@ -311,7 +311,7 @@ const BookedSessionsTab = ({
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {[
               { label: 'Total Sessions', value: completedSessions.length + bookedSessions.length, icon: CalendarDays },
-              { label: 'Completed', value: completedSessions.length, icon: CheckCircle2 },
+              { label: 'Completed', value: completedSessions.filter(s => !['EXPIRED', 'CANCELLED', 'REJECTED'].includes(s.status)).length, icon: CheckCircle2 },
               { label: 'Upcoming', value: bookedSessions.length, icon: Clock },
             ].map((s, i) => {
               const Icon = s.icon;

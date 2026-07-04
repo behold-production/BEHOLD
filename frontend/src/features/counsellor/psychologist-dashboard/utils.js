@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 
 export const isSessionCompleted = (booking) => {
   if (booking.status === 'CANCELLED') return false;
-  if (booking.status === 'COMPLETED' || booking.status === 'EXPIRED') return true;
+  if (booking.status === 'COMPLETED') return true;
 
   if (booking.status === 'CONFIRMED' || booking.status === 'APPROVED' || booking.status === 'PENDING') {
     try {

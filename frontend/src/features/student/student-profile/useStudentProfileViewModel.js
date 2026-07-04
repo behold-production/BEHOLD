@@ -409,11 +409,12 @@ export function useStudentProfileViewModel() {
   }, []);
 
   const nextSession = bookedSessions[0];
+  const actualCompletedCount = completedSessions.filter(s => !['EXPIRED', 'CANCELLED', 'REJECTED'].includes(s.status)).length;
   const stats = {
     total: bookedSessions.length + completedSessions.length,
-    completed: completedSessions.length,
+    completed: actualCompletedCount,
     upcoming: bookedSessions.length,
-    hours: completedSessions.length,
+    hours: actualCompletedCount,
   };
 
   const handleCigiUpload = async (e) => {
