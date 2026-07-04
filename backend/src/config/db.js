@@ -34,10 +34,12 @@ async function connectDB() {
       return mongooseInstance.connection;
     })
     .catch((err) => {
-      dbPromise = null; // Reset promise so retry can be attempted on next request
-      isConnected = false;
-      console.error('[Database] Failed to connect to MongoDB:', err.message);
-      throw err;
+      console.error('[Database] MongoDB connection error:', err);
+      dbPromise = null;
+      if (!process.env.MONGODB_URI) {
+        throw new Error('Database connection error. VERCEL ENVIRONMENT VARIABLE MISSING: You must add MONGODB_URI in your Vercel Dashboard Settings -> Environment Variables.');
+      }
+      throw new Error('Database connection error. MONGODB ATLAS BLOCKED: You must go to MongoDB Atlas -> Network Access and add IP 0.0.0.0/0 to allow Vercel to connect.');
     });
 
   return dbPromise;

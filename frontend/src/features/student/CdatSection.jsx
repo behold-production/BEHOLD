@@ -148,7 +148,7 @@ export default function CdatSection({ setView }) {
         <div className="bg-white border border-surface-200 shadow-square-light overflow-hidden flex flex-col md:flex-row rounded-[10px] mb-10">
           
           {/* Text Side */}
-          <div className="p-6 sm:p-8 md:p-12 flex-1 flex flex-col justify-center border-b md:border-b-0 md:border-r border-surface-200 bg-white">
+          <div className="p-6 sm:p-8 md:p-12 flex-1 flex flex-col border-b md:border-b-0 md:border-r border-surface-200 bg-white">
             <div className="flex flex-row items-center justify-between gap-4 mb-4">
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-black uppercase tracking-widest text-surface-900 leading-tight">
                 CIGI Differential Aptitude Test (C-DAT)
