@@ -4,16 +4,11 @@ const { connectDB } = require('./src/config/db');
 
 const PORT = process.env.PORT || 5001;
 
-// On Vercel (serverless), module.exports = app is required.
-// For local dev with node/nodemon, we call app.listen().
-if (process.env.VERCEL) {
-  // Vercel serverless — connect on each cold start, export app
-  connectDB().catch((err) => {
-    console.error('[Database] Failed to connect to MongoDB:', err.message);
-  });
-  module.exports = app;
-} else {
-  // Local development — connect then start listening
+// Export the app for serverless environments (Vercel)
+module.exports = app;
+
+// Local development — connect then start listening only if executed directly
+if (require.main === module) {
   connectDB()
     .then(() => {
       app.listen(PORT, () => {
@@ -26,4 +21,9 @@ if (process.env.VERCEL) {
       console.error('[Database] Failed to connect to MongoDB:', err.message);
       process.exit(1);
     });
+} else {
+  // For Vercel cold starts, initialize DB connection
+  connectDB().catch((err) => {
+    console.error('[Database] Failed to connect to MongoDB on cold start:', err.message);
+  });
 }
