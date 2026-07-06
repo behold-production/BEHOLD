@@ -122,7 +122,7 @@ export const CustomDialogProvider = ({ children }) => {
             {/* Close button */}
             <button
               onClick={handleCancel}
-              className="absolute top-4 right-4 p-1 hover:bg-zinc-800 rounded-[10px] text-zinc-400 hover:text-white transition duration-200 cursor-pointer border-none"
+              className="absolute top-4 right-4 p-1 hover:bg-zinc-800 rounded-full text-zinc-400 hover:text-white transition duration-200 cursor-pointer border-none"
               title="Close"
             >
               <X className="w-5 h-5" />
@@ -179,14 +179,14 @@ export const CustomDialogProvider = ({ children }) => {
               {dialogState.type !== 'alert' && (
                 <button
                   onClick={handleCancel}
-                  className="flex-1 py-3 bg-zinc-800 hover:bg-zinc-750 border border-zinc-700 text-zinc-300 hover:text-white font-bold text-sm capitalize rounded-[10px] cursor-pointer transition"
+                  className="flex-1 py-3 bg-zinc-800 hover:bg-zinc-750 border border-zinc-700 text-zinc-300 hover:text-white font-bold text-sm capitalize rounded-full cursor-pointer transition"
                 >
                   Cancel
                 </button>
               )}
               <button
                 onClick={handleConfirm}
-                className={`flex-1 py-3 font-bold text-sm capitalize rounded-[10px] cursor-pointer transition border-none shadow-md ${
+                className={`flex-1 py-3 font-bold text-sm capitalize rounded-full cursor-pointer transition border-none shadow-md ${
                   dialogState.type === 'alert' && (dialogState.message.toLowerCase().includes('failed') || dialogState.message.toLowerCase().includes('error') || dialogState.message.toLowerCase().includes('denied'))
                     ? 'bg-rose-600 hover:bg-rose-700 text-white'
                     : dialogState.title.toLowerCase().includes('delete') || dialogState.title.toLowerCase().includes('remove') || dialogState.title.toLowerCase().includes('reject')

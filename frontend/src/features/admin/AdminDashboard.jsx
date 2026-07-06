@@ -3272,7 +3272,7 @@ export default function AdminDashboard({ setView }) {
               <button
                 type="submit"
                 disabled={isLoggingIn}
-                className="w-full py-3 bg-brand hover:bg-brand-dark text-zinc-950 font-bold text-sm capitalize  rounded-lg cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1"
+                className="w-full py-3 bg-brand hover:bg-brand-dark text-zinc-950 font-bold text-sm capitalize  rounded-full cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1"
               >
                 {isLoggingIn ? 'Verifying Credentials...' : 'Enter Admin Console'}
               </button>
@@ -3853,7 +3853,7 @@ export default function AdminDashboard({ setView }) {
                         type="button"
                         onClick={handleAdminUserDetectLocation}
                         disabled={isAdminUserLocating}
-                        className="px-2 py-1 bg-zinc-950 border border-zinc-850 hover:border-brand text-zinc-300 hover:text-white rounded-lg text-xs font-bold cursor-pointer transition flex items-center gap-1"
+                        className="px-2 py-1 bg-zinc-950 border border-zinc-850 hover:border-brand text-zinc-300 hover:text-white rounded-full text-xs font-bold cursor-pointer transition flex items-center gap-1"
                       >
                         {isAdminUserLocating ? 'Locating...' : 'Detect GPS'}
                       </button>
@@ -3881,7 +3881,7 @@ export default function AdminDashboard({ setView }) {
                             type="button"
                             onClick={handleAdminUserAddressSearch}
                             disabled={isAdminUserSearching}
-                            className="w-full sm:w-auto px-3 py-2 bg-brand text-zinc-950 text-xs font-bold rounded-lg hover:bg-brand-dark transition cursor-pointer border-none shrink-0 flex items-center justify-center"
+                            className="w-full sm:w-auto px-3 py-2 bg-brand text-zinc-950 text-xs font-bold rounded-full hover:bg-brand-dark transition cursor-pointer border-none shrink-0 flex items-center justify-center"
                           >
                             {isAdminUserSearching ? 'Searching...' : 'Search'}
                           </button>
@@ -3964,7 +3964,7 @@ export default function AdminDashboard({ setView }) {
                 <button
                   type="submit"
                   disabled={isSavingForm}
-                  className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize rounded-lg cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize rounded-full cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSavingForm && <Loader2 className="w-4 h-4 animate-spin" />}
                   {isAddUserOpen ? 'Create Account' : 'Save Changes'}
@@ -4159,7 +4159,7 @@ export default function AdminDashboard({ setView }) {
                         type="button"
                         onClick={handleAdminAddressSearch}
                         disabled={isAdminSearching}
-                        className="w-full sm:w-auto px-4 py-2 bg-brand text-zinc-955 text-xs font-bold rounded-lg hover:bg-brand-dark transition cursor-pointer shrink-0 flex items-center justify-center"
+                        className="w-full sm:w-auto px-4 py-2 bg-brand text-zinc-955 text-xs font-bold rounded-full hover:bg-brand-dark transition cursor-pointer shrink-0 flex items-center justify-center"
                       >
                         {isAdminSearching ? 'Searching...' : 'Search'}
                       </button>
@@ -4232,7 +4232,7 @@ export default function AdminDashboard({ setView }) {
                     type="button"
                     disabled={isAdminLocating}
                     onClick={handleAdminDetectLocation}
-                    className="px-3.5 py-2 bg-zinc-900 hover:bg-zinc-850 border border-zinc-800 text-zinc-300 text-xs font-bold capitalize rounded-lg transition cursor-pointer flex items-center justify-center gap-1.5 disabled:opacity-50"
+                    className="px-3.5 py-2 bg-zinc-900 hover:bg-zinc-850 border border-zinc-800 text-zinc-300 text-xs font-bold capitalize rounded-full transition cursor-pointer flex items-center justify-center gap-1.5 disabled:opacity-50"
                   >
                     {isAdminLocating ? (
                       <>
@@ -4441,7 +4441,7 @@ export default function AdminDashboard({ setView }) {
                       <button
                         type="button"
                         onClick={handleAddAdminCustomSlot}
-                        className="bg-brand/10 hover:bg-brand text-brand hover:text-zinc-955 px-3 py-1.5 text-xs font-bold capitalize rounded-lg transition-colors border border-brand/30 hover:border-brand cursor-pointer shrink-0 h-[30px] flex items-center justify-center font-header"
+                        className="bg-brand/10 hover:bg-brand text-brand hover:text-zinc-955 px-3 py-1.5 text-xs font-bold capitalize rounded-full transition-colors border border-brand/30 hover:border-brand cursor-pointer shrink-0 h-[30px] flex items-center justify-center font-header"
                       >
                         Add Slot
                       </button>
@@ -4559,7 +4559,7 @@ export default function AdminDashboard({ setView }) {
                 <button
                   type="submit"
                   disabled={isSavingForm}
-                  className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize rounded-lg cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize rounded-full cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSavingForm && <Loader2 className="w-4 h-4 animate-spin" />}
                   {isAddPsyOpen ? 'Save Psychologist' : 'Update Details'}
@@ -4726,7 +4726,7 @@ export default function AdminDashboard({ setView }) {
                 <button
                   type="submit"
                   disabled={isSavingForm}
-                  className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize rounded-lg cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize rounded-full cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSavingForm && <Loader2 className="w-4 h-4 animate-spin" />}
                   {isAddBookingOpen ? 'Confirm Slot' : 'Update Appointment'}
@@ -4798,7 +4798,7 @@ export default function AdminDashboard({ setView }) {
                 <button
                   type="submit"
                   disabled={isSavingForm}
-                  className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize rounded-lg cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize rounded-full cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSavingForm && <Loader2 className="w-4 h-4 animate-spin" />}
                   {isAddFaqOpen ? 'Create FAQ' : 'Save Changes'}
@@ -4929,7 +4929,7 @@ export default function AdminDashboard({ setView }) {
                 <button
                   type="submit"
                   disabled={isSavingForm}
-                  className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize rounded-lg cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize rounded-full cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSavingForm && <Loader2 className="w-4 h-4 animate-spin" />}
                   {isAddAptitudeOpen ? 'Create Question' : 'Save Changes'}
@@ -5658,7 +5658,7 @@ export default function AdminDashboard({ setView }) {
                   <button
                     type="submit"
                     disabled={isSavingForm}
-                    className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize rounded-lg cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize rounded-full cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isSavingForm && <Loader2 className="w-4 h-4 animate-spin" />}
                     Save Scopes

@@ -350,7 +350,7 @@ export default function InquiriesTab(props) {
                   {inquiriesDb.some(i => i.status === 'RESOLVED') && (
                     <button
                       onClick={handleBulkClearResolvedInquiries}
-                      className="px-3.5 py-2 bg-rose-955/20 hover:bg-rose-900 hover:text-white text-rose-500 rounded-lg border border-rose-900/30 transition cursor-pointer text-sm font-bold capitalize  shrink-0"
+                      className="px-3.5 py-2 bg-rose-955/20 hover:bg-rose-900 hover:text-white text-rose-500 rounded-full border border-rose-900/30 transition cursor-pointer text-sm font-bold capitalize  shrink-0"
                     >
                       Clear Resolved
                     </button>

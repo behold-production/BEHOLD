@@ -266,7 +266,7 @@ const ProfileTab = ({
                   type="button"
                   onClick={handleAddressSearch}
                   disabled={isSearching}
-                  className="w-full sm:w-auto px-4 py-2.5 bg-brand text-zinc-955 text-xs font-extrabold rounded-[10px] hover:bg-brand-dark transition cursor-pointer shrink-0 flex items-center justify-center"
+                  className="w-full sm:w-auto px-4 py-2.5 bg-brand text-zinc-955 text-xs font-extrabold rounded-full hover:bg-brand-dark transition cursor-pointer shrink-0 flex items-center justify-center"
                 >
                   {isSearching ? 'Searching...' : 'Search'}
                 </button>
@@ -366,7 +366,7 @@ const ProfileTab = ({
               type="button"
               disabled={isLocating}
               onClick={handleDetectLocation}
-              className="px-3.5 py-2 bg-zinc-950 hover:bg-zinc-850 border border-zinc-800 text-zinc-305 text-xs font-bold capitalize rounded-[10px] transition cursor-pointer flex items-center justify-center gap-1.5 disabled:opacity-50"
+              className="px-3.5 py-2 bg-zinc-950 hover:bg-zinc-850 border border-zinc-800 text-zinc-305 text-xs font-bold capitalize rounded-full transition cursor-pointer flex items-center justify-center gap-1.5 disabled:opacity-50"
             >
               {isLocating ? (
                 <>
@@ -492,7 +492,7 @@ const ProfileTab = ({
           <div className="sm:col-span-2 pt-2">
             <button
               type="submit"
-              className="w-full sm:w-auto px-6 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize rounded-[10px] transition-colors cursor-pointer border-none shadow-md"
+              className="w-full sm:w-auto px-6 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize rounded-full transition-colors cursor-pointer border-none shadow-md"
             >
               Save Profile Changes
             </button>
@@ -598,7 +598,7 @@ const ProfileTab = ({
               <button
                 type="button"
                 onClick={handleEnableNotifications}
-                className="min-h-[36px] px-4 py-2 bg-brand hover:bg-brand-dark text-zinc-955 rounded-[10px] text-xs font-bold transition cursor-pointer border-none shadow-md"
+                className="min-h-[36px] px-4 py-2 bg-brand hover:bg-brand-dark text-zinc-955 rounded-full text-xs font-bold transition cursor-pointer border-none shadow-md"
               >
                 Enable Notifications
               </button>
@@ -607,7 +607,7 @@ const ProfileTab = ({
               <button
                 type="button"
                 onClick={handleTestNotification}
-                className="min-h-[36px] px-4 py-2 bg-zinc-900 border border-zinc-800 text-zinc-355 hover:text-white hover:bg-zinc-800 rounded-[10px] text-xs font-bold transition cursor-pointer shadow-sm"
+                className="min-h-[36px] px-4 py-2 bg-zinc-900 border border-zinc-800 text-zinc-355 hover:text-white hover:bg-zinc-800 rounded-full text-xs font-bold transition cursor-pointer shadow-sm"
               >
                 Test Alert
               </button>

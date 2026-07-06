@@ -197,7 +197,7 @@ const BookedSessionsTab = ({
                               type="button"
                               disabled
                               title={meetStatus.status === 'LOCKED' ? 'Link activates 10 min before session' : 'Session has ended'}
-                              className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-surface-100 text-surface-400 border border-surface-200 rounded-[10px] text-[10px] uppercase tracking-widest font-black cursor-not-allowed"
+                              className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-surface-100 text-surface-400 border border-surface-200 rounded-full text-[10px] uppercase tracking-widest font-black cursor-not-allowed"
                             >
                               <Lock className="w-3.5 h-3.5" /> {meetStatus.label}
                             </button>

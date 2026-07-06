@@ -70,7 +70,7 @@ export default class ErrorBoundary extends React.Component {
               <button
                 type="button"
                 onClick={this.handleReload}
-                className="px-8 py-3.5 bg-brand hover:bg-[#00cce6] text-zinc-950 font-black text-xs uppercase tracking-widest rounded-2xl transition-all cursor-pointer flex items-center justify-center gap-2 border-none shadow-[0_0_15px_rgba(0,229,255,0.4)] w-full sm:w-auto hover:scale-[1.03] active:scale-[0.97]"
+                className="px-8 py-3.5 bg-brand hover:bg-[#00cce6] text-zinc-950 font-black text-xs uppercase tracking-widest rounded-full transition-all cursor-pointer flex items-center justify-center gap-2 border-none shadow-[0_0_15px_rgba(0,229,255,0.4)] w-full sm:w-auto hover:scale-[1.03] active:scale-[0.97]"
               >
                 <RefreshCw className="w-4 h-4 animate-spin-reverse" />
                 Reload Application
@@ -78,7 +78,7 @@ export default class ErrorBoundary extends React.Component {
               <button
                 type="button"
                 onClick={this.handleGoHome}
-                className="px-8 py-3.5 bg-zinc-800 hover:bg-zinc-700 text-white font-black text-xs uppercase tracking-widest rounded-2xl transition-all cursor-pointer flex items-center justify-center gap-2 border border-zinc-700 w-full sm:w-auto hover:scale-[1.03] active:scale-[0.97]"
+                className="px-8 py-3.5 bg-zinc-800 hover:bg-zinc-700 text-white font-black text-xs uppercase tracking-widest rounded-full transition-all cursor-pointer flex items-center justify-center gap-2 border border-zinc-700 w-full sm:w-auto hover:scale-[1.03] active:scale-[0.97]"
               >
                 <Home className="w-4 h-4" />
                 Go Back Home

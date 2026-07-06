@@ -572,7 +572,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
  <button
  type="button"
  onClick={resetBookingState}
- className="px-6 py-3 bg-surface-900 hover:bg-surface-800 text-white text-sm font-semibold rounded-[10px] transition cursor-pointer w-full sm:w-auto text-center border-none shadow-none"
+ className="px-6 py-3 bg-surface-900 hover:bg-surface-800 text-white text-sm font-semibold rounded-full transition cursor-pointer w-full sm:w-auto text-center border-none shadow-none"
  >
  Book Another Session
  </button>
@@ -705,7 +705,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
  type="button"
  onClick={handleClientAddressSearch}
  disabled={isClientSearching}
- className="w-full sm:w-auto px-4 py-2.5 bg-surface-900 text-white text-sm font-semibold rounded-[10px] hover:bg-black transition cursor-pointer shrink-0 text-center border-none"
+ className="w-full sm:w-auto px-4 py-2.5 bg-surface-900 text-white text-sm font-semibold rounded-full hover:bg-black transition cursor-pointer shrink-0 text-center border-none"
  >
  {isClientSearching ? 'Searching...' : 'Search'}
  </button>
@@ -799,7 +799,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
  type="button"
  disabled={isClientLocating}
  onClick={handleClientDetectLocation}
- className="px-4 py-2 border border-surface-200 hover:border-surface-300 text-surface-900 bg-white font-semibold text-sm rounded-[10px] transition cursor-pointer flex items-center justify-center gap-1.5 shadow-none disabled:opacity-50 "
+ className="px-4 py-2 border border-surface-200 hover:border-surface-300 text-surface-900 bg-white font-semibold text-sm rounded-full transition cursor-pointer flex items-center justify-center gap-1.5 shadow-none disabled:opacity-50 "
  >
  {isClientLocating ? (
  <>
@@ -1166,7 +1166,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
  type="button"
  disabled={!selectedDate || !selectedTime || isSubmitting}
  onClick={handleRescheduleConfirm}
- className="px-6 py-2.5 min-h-[48px] bg-surface-900 text-white font-semibold text-sm rounded-[10px] transition hover:bg-black disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center border-none shadow-none w-full sm:w-auto"
+ className="px-6 py-2.5 min-h-[48px] bg-surface-900 text-white font-semibold text-sm rounded-full transition hover:bg-black disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center border-none shadow-none w-full sm:w-auto"
  >
  {isSubmitting ? 'Rescheduling...' : 'Confirm Reschedule'}
  </button>
@@ -1367,7 +1367,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
  <button
  type="submit"
  disabled={isProcessingPayment}
- className="px-6 py-3 min-h-[48px] btn-primary text-xs rounded-[10px] transition flex items-center justify-center cursor-pointer disabled:opacity-50 w-full sm:w-auto "
+ className="px-6 py-3 min-h-[48px] btn-primary text-xs rounded-full transition flex items-center justify-center cursor-pointer disabled:opacity-50 w-full sm:w-auto "
  >
  {isProcessingPayment ? (
  <div className="w-4 h-4 border-2 border-surface-900/30 border-t-brand rounded-full animate-spin" />
@@ -1471,7 +1471,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
  <button
  type="button"
  onClick={handleRemoveCoupon}
- className="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 rounded-[10px] text-xs font-bold transition cursor-pointer"
+ className="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 rounded-full text-xs font-bold transition cursor-pointer"
  >
  Remove
  </button>
@@ -1479,7 +1479,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
  <button
  type="button"
  onClick={handleApplyCoupon}
- className="px-3.5 py-1.5 bg-surface-900 hover:bg-black text-white rounded-[10px] text-xs font-bold transition cursor-pointer border-none "
+ className="px-3.5 py-1.5 bg-surface-900 hover:bg-black text-white rounded-full text-xs font-bold transition cursor-pointer border-none "
  >
  Apply
  </button>

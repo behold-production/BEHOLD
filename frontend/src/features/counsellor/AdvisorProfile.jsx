@@ -92,7 +92,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
         <button
           type="button"
           onClick={onBack}
-          className="min-h-[44px] px-6 py-2.5 bg-zinc-900 text-white rounded-[10px] font-bold"
+          className="min-h-[44px] px-6 py-2.5 bg-zinc-900 text-white rounded-full font-bold"
         >
           Go Back
         </button>
@@ -107,7 +107,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
         <button
           type="button"
           onClick={onBack}
-          className="absolute top-20 md:top-32 left-4 md:left-10 z-10 min-h-[44px] flex items-center gap-2 px-4 py-2.5 bg-surface-900 hover:bg-surface-800 text-white rounded-[10px] text-[10px] font-black tracking-widest uppercase transition-all cursor-pointer shadow-none"
+          className="absolute top-20 md:top-32 left-4 md:left-10 z-10 min-h-[44px] flex items-center gap-2 px-4 py-2.5 bg-surface-900 hover:bg-surface-800 text-white rounded-full text-[10px] font-black tracking-widest uppercase transition-all cursor-pointer shadow-none"
         >
           <ChevronLeft className="w-4 h-4" /> Back to Experts
         </button>

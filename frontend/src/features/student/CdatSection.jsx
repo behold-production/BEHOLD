@@ -248,7 +248,7 @@ export default function CdatSection({ setView }) {
               </div>
 
               {!generatedCode ? (
-                <button type="submit" className="w-full mt-3 px-6 py-3 bg-brand text-surface-900 font-bold text-sm sm:text-base rounded-[10px] hover:bg-brand-dark transition-all cursor-pointer border-none shadow-none">
+                <button type="submit" className="w-full mt-3 px-6 py-3 bg-brand text-surface-900 font-bold text-sm sm:text-base rounded-full hover:bg-brand-dark transition-all cursor-pointer border-none shadow-none">
                   Generate Code
                 </button>
               ) : (
@@ -261,7 +261,7 @@ export default function CdatSection({ setView }) {
                     <button
                       type="button"
                       onClick={copyManually}
-                      className="shrink-0 px-4 py-2.5 bg-white border border-surface-200 hover:border-surface-900 hover:bg-surface-50 text-surface-900 text-sm font-bold cursor-pointer transition-colors flex items-center gap-2 rounded-[10px] shadow-none"
+                      className="shrink-0 px-4 py-2.5 bg-white border border-surface-200 hover:border-surface-900 hover:bg-surface-50 text-surface-900 text-sm font-bold cursor-pointer transition-colors flex items-center gap-2 rounded-full shadow-none"
                     >
                       <Copy className="w-4 h-4" />
                       {copied ? 'Copied' : 'Copy'}

@@ -155,7 +155,7 @@ const AvailabilityTab = ({
             <button
               type="button"
               onClick={handleAddCustomSlot}
-              className="bg-brand hover:bg-brand-dark text-zinc-955 px-4 py-2 text-sm font-bold capitalize rounded-[10px] transition-colors cursor-pointer shrink-0 h-[38px] flex items-center justify-center shadow-sm border-none"
+              className="bg-brand hover:bg-brand-dark text-zinc-955 px-4 py-2 text-sm font-bold capitalize rounded-full transition-colors cursor-pointer shrink-0 h-[38px] flex items-center justify-center shadow-sm border-none"
             >
               Add Slot
             </button>
@@ -261,7 +261,7 @@ const AvailabilityTab = ({
           ) : <span />}
           <button
             type="submit"
-            className="w-full sm:w-auto bg-brand hover:bg-brand-dark text-zinc-955 px-8 py-2.5 text-sm font-bold capitalize rounded-[10px] shadow-sm border-none cursor-pointer flex items-center justify-center gap-2 transition-colors"
+            className="w-full sm:w-auto bg-brand hover:bg-brand-dark text-zinc-955 px-8 py-2.5 text-sm font-bold capitalize rounded-full shadow-sm border-none cursor-pointer flex items-center justify-center gap-2 transition-colors"
           >
             <Save className="w-4 h-4" /> Save Slots Matrix
           </button>

@@ -221,7 +221,8 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                 <SectionHeader 
                     subtitle="OUR CLINICAL TEAM" 
                     title="Meet Our Professionals" 
-                    description="Professional, certified clinical professionals dedicated to supporting your recovery journey." 
+                    description="Professional, certified clinical professionals dedicated to supporting your recovery journey."
+                    align="responsive"
                 />
 
                 {/* Dashboard-Style Toolbar */}

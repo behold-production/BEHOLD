@@ -206,7 +206,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center rounded-[10px] bg-surface-50 hover:bg-surface-100 border border-surface-200 text-surface-500 hover:text-surface-900 transition cursor-pointer font-bold text-base"
+          className="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-surface-50 hover:bg-surface-100 border border-surface-200 text-surface-500 hover:text-surface-900 transition cursor-pointer font-bold text-base"
           aria-label="Close sign in dialog"
         >
           ✕
@@ -408,7 +408,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full px-6 py-3 min-h-[48px] bg-surface-900 hover:bg-black text-white font-black uppercase tracking-widest text-xs rounded-[10px] transition flex items-center justify-center cursor-pointer border-none disabled:opacity-60"
+              className="w-full px-6 py-3 min-h-[48px] bg-surface-900 hover:bg-black text-white font-black uppercase tracking-widest text-xs rounded-full transition flex items-center justify-center cursor-pointer border-none disabled:opacity-60"
             >
               {isLoading ? (
                 <div className="flex items-center gap-2 justify-center">

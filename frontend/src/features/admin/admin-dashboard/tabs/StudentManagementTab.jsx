@@ -370,7 +370,7 @@ export default function StudentManagementTab(props) {
                     </div>
                     <button
                       onClick={handleExportStudentsCSV}
-                      className="px-3 py-2 border border-zinc-800 hover:bg-zinc-850 hover:text-white text-zinc-400 text-sm font-bold rounded-lg transition-colors cursor-pointer capitalize shrink-0"
+                      className="px-3 py-2 border border-zinc-800 hover:bg-zinc-850 hover:text-white text-zinc-400 text-sm font-bold rounded-full transition-colors cursor-pointer capitalize shrink-0"
                     >
                       Export CSV
                     </button>
@@ -383,7 +383,7 @@ export default function StudentManagementTab(props) {
                     {canAddStudents && (
                       <button
                         onClick={handleOpenAddUser}
-                        className="px-4 py-2 bg-brand hover:bg-brand-dark text-zinc-950 text-sm font-bold rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 capitalize shrink-0"
+                        className="px-4 py-2 bg-brand hover:bg-brand-dark text-zinc-950 text-sm font-bold rounded-full transition-colors cursor-pointer flex items-center gap-1.5 capitalize shrink-0"
                       >
                         <Plus className="w-3.5 h-3.5 text-zinc-955" /> Add Student
                       </button>

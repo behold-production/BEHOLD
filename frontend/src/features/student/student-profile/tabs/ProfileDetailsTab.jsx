@@ -314,7 +314,7 @@ const ProfileDetailsTab = ({
               type="button"
               onClick={handleDetectLocation}
               disabled={isLocating}
-              className="min-h-[32px] inline-flex items-center gap-1 px-3 py-1 bg-surface-900 hover:bg-surface-800 text-white rounded-[10px] uppercase tracking-widest text-[10px] font-black transition cursor-pointer border-none shadow-none disabled:opacity-50"
+              className="min-h-[32px] inline-flex items-center gap-1 px-3 py-1 bg-surface-900 hover:bg-surface-800 text-white rounded-full uppercase tracking-widest text-[10px] font-black transition cursor-pointer border-none shadow-none disabled:opacity-50"
             >
               <Navigation className={`w-3.5 h-3.5 ${isLocating ? 'animate-spin' : ''}`} />
               {isLocating ? 'Locating...' : 'Detect Location'}
@@ -349,7 +349,7 @@ const ProfileDetailsTab = ({
                   type="button"
                   onClick={handleAddressSearch}
                   disabled={isSearching}
-                  className="px-4 py-2 bg-surface-900 hover:bg-surface-800 text-white text-[10px] uppercase tracking-widest font-black rounded-[10px] transition cursor-pointer border-none shadow-none"
+                  className="px-4 py-2 bg-surface-900 hover:bg-surface-800 text-white text-[10px] uppercase tracking-widest font-black rounded-full transition cursor-pointer border-none shadow-none"
                 >
                   {isSearching ? 'Searching...' : 'Search'}
                 </button>
@@ -474,7 +474,7 @@ const ProfileDetailsTab = ({
                 <button
                   type="button"
                   onClick={handleEnableNotifications}
-                  className="min-h-[36px] px-4 py-2 bg-surface-900 hover:bg-surface-800 text-white rounded-[10px] text-[10px] uppercase tracking-widest font-black transition cursor-pointer border-none shadow-none"
+                  className="min-h-[36px] px-4 py-2 bg-surface-900 hover:bg-surface-800 text-white rounded-full text-[10px] uppercase tracking-widest font-black transition cursor-pointer border-none shadow-none"
                 >
                   Enable Notifications
                 </button>
@@ -483,7 +483,7 @@ const ProfileDetailsTab = ({
                 <button
                   type="button"
                   onClick={handleTestNotification}
-                  className="min-h-[36px] px-4 py-2 bg-surface-50 border border-surface-200 text-surface-900 hover:bg-surface-100 rounded-[10px] text-[10px] uppercase tracking-widest font-black transition cursor-pointer shadow-none"
+                  className="min-h-[36px] px-4 py-2 bg-surface-50 border border-surface-200 text-surface-900 hover:bg-surface-100 rounded-full text-[10px] uppercase tracking-widest font-black transition cursor-pointer shadow-none"
                 >
                   Test Alert Notification
                 </button>
@@ -502,14 +502,14 @@ const ProfileDetailsTab = ({
             type="button"
             onClick={handleDiscard}
             disabled={isSaving}
-            className="min-h-[40px] px-4 py-2 border border-surface-200 hover:border-surface-300 rounded-[10px] text-[10px] uppercase tracking-widest font-black text-surface-900 hover:bg-surface-50 transition-colors bg-white shadow-none disabled:opacity-50"
+            className="min-h-[40px] px-4 py-2 border border-surface-200 hover:border-surface-300 rounded-full text-[10px] uppercase tracking-widest font-black text-surface-900 hover:bg-surface-50 transition-colors bg-white shadow-none disabled:opacity-50"
           >
             Discard
           </button>
           <button
             type="submit"
             disabled={isSaving}
-            className="min-h-[40px] inline-flex items-center gap-1.5 px-5 py-2 bg-surface-900 hover:bg-surface-800 disabled:bg-surface-500 text-white text-[10px] uppercase tracking-widest font-black rounded-[10px] shadow-none transition-colors border-none"
+            className="min-h-[40px] inline-flex items-center gap-1.5 px-5 py-2 bg-surface-900 hover:bg-surface-800 disabled:bg-surface-500 text-white text-[10px] uppercase tracking-widest font-black rounded-full shadow-none transition-colors border-none"
           >
             {isSaving ? (
               <><span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />Saving...</>

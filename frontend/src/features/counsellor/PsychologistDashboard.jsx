@@ -1137,7 +1137,7 @@ export default function PsychologistDashboard({ setView }) {
                   <button
                     type="submit"
                     disabled={isLoggingIn}
-                    className="w-full py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize  rounded-[10px] cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1"
+                    className="w-full py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize  rounded-full cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1"
                   >
                     {isLoggingIn ? 'Connecting...' : 'Enter Consultant Desk'}
                   </button>
@@ -1229,7 +1229,7 @@ export default function PsychologistDashboard({ setView }) {
 
                     <button
                       type="submit"
-                      className="w-full py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize  rounded-[10px] cursor-pointer transition border-none shadow-md"
+                      className="w-full py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize  rounded-full cursor-pointer transition border-none shadow-md"
                     >
                       Next: Clinical Details
                     </button>
@@ -1348,7 +1348,7 @@ export default function PsychologistDashboard({ setView }) {
                       </button>
                       <button
                         type="submit"
-                        className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize  rounded-[10px] cursor-pointer transition border-none shadow-md"
+                        className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize  rounded-full cursor-pointer transition border-none shadow-md"
                       >
                         Next: Calendar
                       </button>
@@ -1463,7 +1463,7 @@ export default function PsychologistDashboard({ setView }) {
                         <button
                           type="button"
                           onClick={handleAddRegCustomSlot}
-                          className="bg-brand/10 hover:bg-brand text-brand hover:text-zinc-955 px-3 py-1.5 text-sm font-bold capitalize  rounded-[10px] transition-colors border border-brand/30 hover:border-brand cursor-pointer shrink-0 h-[28.5px] flex items-center justify-center font-header"
+                          className="bg-brand/10 hover:bg-brand text-brand hover:text-zinc-955 px-3 py-1.5 text-sm font-bold capitalize  rounded-full transition-colors border border-brand/30 hover:border-brand cursor-pointer shrink-0 h-[28.5px] flex items-center justify-center font-header"
                         >
                           Add Slot
                         </button>
@@ -1571,7 +1571,7 @@ export default function PsychologistDashboard({ setView }) {
                       <button
                         type="submit"
                         disabled={isLoggingIn}
-                        className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize  rounded-[10px] cursor-pointer transition border-none shadow-md"
+                        className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm capitalize  rounded-full cursor-pointer transition border-none shadow-md"
                       >
                         {isLoggingIn ? 'Creating Profile...' : 'Complete & Launch'}
                       </button>

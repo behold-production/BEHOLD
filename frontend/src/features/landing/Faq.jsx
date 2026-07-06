@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronDown, HelpCircle, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
+import SectionHeader from '../../shared/components/SectionHeader';
 import ApiService from '../../shared/services/api';
 
 export default function Faq() {
@@ -45,16 +46,13 @@ export default function Faq() {
  className="py-10 md:py-20 px-6 bg-white"
  >
  <div className="max-w-4xl mx-auto">
- <div className="mb-12 space-y-4 text-center border-b border-surface-200 pb-8">
- <span className="inline-block bg-surface-900 text-white px-3 py-1 text-xs font-bold shadow-[2px_2px_0px_0px_rgba(0,229,255,1)]">
- Clarity Desk
- </span>
- <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-black text-surface-900 leading-tight">
- Frequently Asked
- </h2>
- <p className="text-slate-600 font-light text-lg">
- Explore key information about the BEHOLD mentorship model, deliverables, and student tracking scopes.
- </p>
+ <div className="mb-12 border-b border-surface-200 pb-8">
+    <SectionHeader
+        subtitle="Clarity Desk"
+        title="Frequently Asked"
+        description="Explore key information about the BEHOLD mentorship model, deliverables, and student tracking scopes."
+        align="responsive"
+    />
  </div>
 
  <div className="space-y-4">

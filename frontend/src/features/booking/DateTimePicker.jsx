@@ -307,7 +307,7 @@ export default function DateTimePicker({
               type="button"
               onClick={handlePrevMonth}
               disabled={isPrevMonthDisabled}
-              className="p-1.5 rounded-[10px] hover:bg-surface-100 text-surface-600 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
+              className="p-1.5 rounded-full hover:bg-surface-100 text-surface-600 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
@@ -318,7 +318,7 @@ export default function DateTimePicker({
               type="button"
               onClick={handleNextMonth}
               disabled={isNextMonthDisabled}
-              className="p-1.5 rounded-[10px] hover:bg-surface-100 text-surface-600 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
+              className="p-1.5 rounded-full hover:bg-surface-100 text-surface-600 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
             >
               <ChevronRight className="w-4 h-4" />
             </button>

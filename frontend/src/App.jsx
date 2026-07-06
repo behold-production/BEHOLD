@@ -487,7 +487,7 @@ export default function App() {
             <div className="px-6 py-4 border-t border-zinc-800 flex justify-end gap-3 bg-zinc-955">
               <button
                 onClick={handleDownloadPDF}
-                className="px-5 py-2.5 bg-zinc-800 hover:bg-zinc-750 text-zinc-300 hover:text-white font-bold text-xs capitalize rounded-lg cursor-pointer transition border border-zinc-700 shadow-md flex items-center gap-2"
+                className="px-5 py-2.5 bg-zinc-800 hover:bg-zinc-750 text-zinc-300 hover:text-white font-bold text-xs capitalize rounded-full cursor-pointer transition border border-zinc-700 shadow-md flex items-center gap-2"
               >
                 <Download className="w-3.5 h-3.5" />
                 Download PDF

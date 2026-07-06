@@ -513,7 +513,7 @@ export default function SettingsTab(props) {
                   <button
                     type="submit"
                     disabled={isSavingSettings}
-                    className={`px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-lg cursor-pointer transition shadow-md border-none flex items-center justify-center gap-1.5 ${isSavingSettings ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    className={`px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-full cursor-pointer transition shadow-md border-none flex items-center justify-center gap-1.5 ${isSavingSettings ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
                     {isSavingSettings && <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-955" />}
                     <span>Save General & Contact Settings</span>
@@ -923,7 +923,7 @@ export default function SettingsTab(props) {
                   <button
                     type="submit"
                     disabled={isSavingSettings}
-                    className={`px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-lg cursor-pointer transition shadow-md border-none flex items-center justify-center gap-1.5 ${isSavingSettings ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    className={`px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-full cursor-pointer transition shadow-md border-none flex items-center justify-center gap-1.5 ${isSavingSettings ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
                     {isSavingSettings && <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-955" />}
                     <span>Save Landing Page Content</span>
@@ -931,7 +931,8 @@ export default function SettingsTab(props) {
                 </div>
               </form>
             )}
-            {/* TAB 3: Services & Session Modes */}
+
+            {/* TAB 3: Services & Session Modes */}
             {activeSettingsTab === 'modes' && (
               <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-xl space-y-6 animate-in fade-in duration-200 shadow-lg">
                 <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
@@ -1045,7 +1046,7 @@ export default function SettingsTab(props) {
                   <button
                     type="submit"
                     disabled={isSavingSettings}
-                    className={`px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-lg cursor-pointer transition shadow-md border-none flex items-center justify-center gap-1.5 ${isSavingSettings ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    className={`px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-full cursor-pointer transition shadow-md border-none flex items-center justify-center gap-1.5 ${isSavingSettings ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
                     {isSavingSettings && <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-955" />}
                     <span>Save Services & Session Modes</span>
@@ -1186,7 +1187,7 @@ export default function SettingsTab(props) {
                   <button
                     type="submit"
                     disabled={isSavingSettings}
-                    className={`px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-lg cursor-pointer transition shadow-md border-none flex items-center justify-center gap-1.5 ${isSavingSettings ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    className={`px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-full cursor-pointer transition shadow-md border-none flex items-center justify-center gap-1.5 ${isSavingSettings ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
                     {isSavingSettings && <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-955" />}
                     <span>Save Payments & Taxation Settings</span>
@@ -1231,7 +1232,7 @@ export default function SettingsTab(props) {
                     <button
                       type="submit"
                       disabled={isSavingSettings}
-                      className={`px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-lg cursor-pointer transition shadow-md border-none flex items-center justify-center gap-1.5 ${isSavingSettings ? 'opacity-50 cursor-not-allowed' : ''}`}
+                      className={`px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-full cursor-pointer transition shadow-md border-none flex items-center justify-center gap-1.5 ${isSavingSettings ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >
                       {isSavingSettings && <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-955" />}
                       <span>Save Security Settings</span>
@@ -1288,7 +1289,7 @@ export default function SettingsTab(props) {
                         <button
                           type="button"
                           onClick={handleEnableNotifications}
-                          className="min-h-[36px] px-4 py-2 bg-brand hover:bg-brand-dark text-zinc-955 rounded-lg text-xs font-semibold transition cursor-pointer border-none shadow-md"
+                          className="min-h-[36px] px-4 py-2 bg-brand hover:bg-brand-dark text-zinc-955 rounded-full text-xs font-semibold transition cursor-pointer border-none shadow-md"
                         >
                           Enable Notifications
                         </button>
@@ -1297,7 +1298,7 @@ export default function SettingsTab(props) {
                         <button
                           type="button"
                           onClick={handleTestNotification}
-                          className="min-h-[36px] px-4 py-2 bg-zinc-955 border border-zinc-800 text-zinc-300 hover:text-white rounded-lg text-xs font-semibold transition cursor-pointer"
+                          className="min-h-[36px] px-4 py-2 bg-zinc-955 border border-zinc-800 text-zinc-300 hover:text-white rounded-full text-xs font-semibold transition cursor-pointer"
                         >
                           Test Alert Notification
                         </button>
@@ -1366,7 +1367,7 @@ export default function SettingsTab(props) {
                     <button
                       type="submit"
                       disabled={isSendingAnnouncement}
-                      className="px-6 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-lg cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1.5 disabled:opacity-50"
+                      className="px-6 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-full cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1.5 disabled:opacity-50"
                     >
                       {isSendingAnnouncement && <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-955" />}
                       <span>{isSendingAnnouncement ? 'Broadcasting...' : 'Broadcast Announcement'}</span>
@@ -1387,7 +1388,7 @@ export default function SettingsTab(props) {
                   <button
                     type="button"
                     onClick={handleAddPromoCode}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-zinc-955 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-white rounded-lg text-xs font-bold capitalize transition cursor-pointer"
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-zinc-955 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-white rounded-full text-xs font-bold capitalize transition cursor-pointer"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     Add Code
@@ -1473,7 +1474,7 @@ export default function SettingsTab(props) {
                   <button
                     type="submit"
                     disabled={isSavingSettings}
-                    className={`px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-lg cursor-pointer transition shadow-md border-none flex items-center justify-center gap-1.5 ${isSavingSettings ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    className={`px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-full cursor-pointer transition shadow-md border-none flex items-center justify-center gap-1.5 ${isSavingSettings ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
                     {isSavingSettings && <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-955" />}
                     <span>Save Promo Codes</span>
@@ -1524,7 +1525,7 @@ export default function SettingsTab(props) {
                   <button
                     type="submit"
                     disabled={isSavingSettings}
-                    className={`px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-lg cursor-pointer transition shadow-md border-none flex items-center justify-center gap-1.5 ${isSavingSettings ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    className={`px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs capitalize rounded-full cursor-pointer transition shadow-md border-none flex items-center justify-center gap-1.5 ${isSavingSettings ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
                     {isSavingSettings && <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-955" />}
                     <span>Save Policies & Legal</span>

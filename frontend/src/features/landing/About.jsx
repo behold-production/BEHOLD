@@ -53,6 +53,7 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
         subtitle="Why Choose Us"
         title={settings.aboutTitle || 'What We Offer'}
         description={settings.aboutSub || 'We go beyond traditional guidance by offering mentorship, doorstep counseling, and personalized support in schools.'}
+        align="responsive"
     />
  </motion.div>
 

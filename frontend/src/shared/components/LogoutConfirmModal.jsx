@@ -56,7 +56,7 @@ export default function LogoutConfirmModal({ isOpen, onConfirm, onCancel, theme 
           type="button"
           onClick={onCancel}
           aria-label="Close sign out confirmation"
-          className={`absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-[10px] transition cursor-pointer border-none ${
+          className={`absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-full transition cursor-pointer border-none ${
             isDark ? 'text-zinc-500 hover:text-white hover:bg-zinc-800' : 'text-zinc-400 hover:text-zinc-900 hover:bg-zinc-100'
           }`}
         >
@@ -90,7 +90,7 @@ export default function LogoutConfirmModal({ isOpen, onConfirm, onCancel, theme 
             <button
               type="button"
               onClick={onCancel}
-              className={`min-h-[44px] flex-1 py-2.5 rounded-[10px] text-xs font-bold capitalize  transition cursor-pointer border ${
+              className={`min-h-[44px] flex-1 py-2.5 rounded-full text-xs font-bold capitalize  transition cursor-pointer border ${
                 isDark
                   ? 'border-zinc-700 text-zinc-300 hover:bg-zinc-800'
                   : 'border-zinc-200 text-zinc-700 hover:bg-zinc-100'
@@ -101,7 +101,7 @@ export default function LogoutConfirmModal({ isOpen, onConfirm, onCancel, theme 
             <button
               type="button"
               onClick={onConfirm}
-              className="min-h-[44px] flex-1 py-2.5 rounded-[10px] text-xs font-bold capitalize  transition cursor-pointer border-none bg-rose-600 hover:bg-rose-700 text-white flex items-center justify-center gap-1.5 shadow-md"
+              className="min-h-[44px] flex-1 py-2.5 rounded-full text-xs font-bold capitalize  transition cursor-pointer border-none bg-rose-600 hover:bg-rose-700 text-white flex items-center justify-center gap-1.5 shadow-md"
             >
               <LogOut className="w-3.5 h-3.5" />
               Sign Out

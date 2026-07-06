@@ -88,7 +88,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
               {/* Mobile Hamburger Button */}
               <div className="flex lg:hidden items-center">
                 <button
-                  className={`p-1.5 -ml-2 rounded-xl transition-colors bg-transparent border-none cursor-pointer ${!isSolid ? 'text-white hover:bg-white/20' : 'text-zinc-950 hover:bg-gray-100/50'}`}
+                  className={`p-1.5 -ml-2 rounded-full transition-colors bg-transparent border-none cursor-pointer ${!isSolid ? 'text-white hover:bg-white/20' : 'text-zinc-950 hover:bg-gray-100/50'}`}
                   onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg>

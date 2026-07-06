@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import ApiService from '../../shared/services/api';
+import SectionHeader from '../../shared/components/SectionHeader';
 
 export default function Inquiry({ testProfile, siteSettings }) {
  const [formData, setFormData] = useState({
@@ -99,14 +100,13 @@ export default function Inquiry({ testProfile, siteSettings }) {
  >
  <div className="square-card p-0 flex flex-col md:flex-row overflow-hidden shadow-square-light bg-white border-surface-200">
  <div className="p-8 md:p-12 space-y-8 flex-1 border-b md:border-b-0 md:border-r border-surface-200">
- <div className="space-y-4 flex flex-col items-start text-left">
- <span className="inline-block bg-surface-900 text-white px-3 py-1 text-xs font-bold">
- Get in touch
- </span>
- <h2 className="text-2xl sm:text-3xl font-heading font-black tracking-tight text-surface-900 leading-tight">Want to Know More</h2>
- <p className="text-slate-600 font-light text-sm max-w-md">
- Submit your request to align parents, students, and coordinators for assessments and counselling sessions.
- </p>
+ <div className="space-y-4 mb-4 flex flex-col items-start text-left">
+    <SectionHeader
+        subtitle="Get in touch"
+        title="Want to Know More"
+        description="Submit your request to align parents, students, and coordinators for assessments and counselling sessions."
+        align="left"
+    />
  </div>
 
  {testProfile && (

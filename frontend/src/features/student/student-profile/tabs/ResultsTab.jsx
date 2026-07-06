@@ -187,7 +187,7 @@ const ResultsTab = ({
               <button
                 type="submit"
                 disabled={isCigiUploading}
-                className="w-full min-h-[38px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-surface-900 hover:bg-surface-800 disabled:bg-surface-500 text-white rounded-[10px] uppercase tracking-widest text-[10px] font-black transition-colors border-none shadow-none cursor-pointer"
+                className="w-full min-h-[38px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-surface-900 hover:bg-surface-800 disabled:bg-surface-500 text-white rounded-full uppercase tracking-widest text-[10px] font-black transition-colors border-none shadow-none cursor-pointer"
               >
                 {isCigiUploading ? (
                   <><span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Uploading...</>

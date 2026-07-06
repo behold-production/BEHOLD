@@ -316,7 +316,7 @@ export default function AptitudeTest({ onFinishTest }) {
               <button
                 id="btn-restart-test"
                 onClick={handleRestart}
-                className="px-5 py-2.5 bg-white border border-surface-200 hover:border-surface-900 hover:bg-surface-50 text-surface-900 rounded-[10px] font-black text-[10px] uppercase tracking-widest transition-colors flex items-center gap-2 cursor-pointer shadow-none w-full md:w-auto justify-center"
+                className="px-5 py-2.5 bg-white border border-surface-200 hover:border-surface-900 hover:bg-surface-50 text-surface-900 rounded-full font-black text-[10px] uppercase tracking-widest transition-colors flex items-center gap-2 cursor-pointer shadow-none w-full md:w-auto justify-center"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 <span>Retake Test</span>
@@ -375,7 +375,7 @@ export default function AptitudeTest({ onFinishTest }) {
                       id="btn-results-consult"
                       onClick={handleClaimMentoring}
                       disabled={isClaiming}
-                      className="w-full py-3.5 sm:py-4 bg-surface-900 hover:bg-surface-800 text-white font-black text-[10px] uppercase tracking-widest rounded-[10px] transition-all flex items-center justify-center gap-2 cursor-pointer shadow-none border-none disabled:opacity-70 disabled:cursor-not-allowed disabled:scale-100"
+                      className="w-full py-3.5 sm:py-4 bg-surface-900 hover:bg-surface-800 text-white font-black text-[10px] uppercase tracking-widest rounded-full transition-all flex items-center justify-center gap-2 cursor-pointer shadow-none border-none disabled:opacity-70 disabled:cursor-not-allowed disabled:scale-100"
                     >
                       {isClaiming ? (
                         <>
