@@ -118,8 +118,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
             initial={{ opacity: 0, y: 28 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: 'easeOut', delay: 0.05 }}
-            className="font-extrabold text-white leading-[1.1] tracking-tight drop-shadow-lg mb-5 w-full"
-            style={{ fontSize: 'clamp(2.4rem, 8vw, 4.5rem)' }}
+            className="font-extrabold text-white leading-[1.08] tracking-tight drop-shadow-lg mb-5 w-full text-[3.2rem] sm:text-6xl md:text-6xl lg:text-7xl"
           >
             {renderTitle(slide.title)}
           </motion.h1>
