@@ -92,8 +92,8 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
               key={idx}
               className="h-full p-6 bg-white border border-gray-100/70 shadow-sm hover:shadow-[0_20px_40px_rgba(32,97,115,0.08)] hover:-translate-y-1 flex flex-col group transition-all duration-300 relative overflow-hidden rounded-3xl select-none"
             >
-              {/* Top accent on hover */}
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#00cce6] to-[#00E5FF] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left rounded-t-3xl" />
+              {/* Left accent on hover */}
+              <div className="absolute left-0 top-0 bottom-0 w-[5px] bg-[#00E5FF] transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-top rounded-l-3xl" />
 
               {/* Icon */}
               <div className="mb-4 transition-transform group-hover:scale-110 duration-300">
