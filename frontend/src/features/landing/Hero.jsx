@@ -120,7 +120,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
-              className="text-[2.75rem] leading-[1.1] sm:text-5xl md:text-6xl lg:text-[5.5rem] lg:leading-[1.05] tracking-tight font-black text-white drop-shadow-lg mb-6 text-center md:text-left w-full mx-auto md:mx-0"
+              className="text-[2.75rem] leading-[1.1] sm:text-5xl md:text-6xl lg:text-[4.5rem] lg:leading-[1.05] tracking-tight font-black text-white drop-shadow-lg mb-6 text-center md:text-left w-full mx-auto md:mx-0"
             >
               {renderTitle(slide.title)}
             </motion.h1>
@@ -151,7 +151,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
               {slide.btn2Text && (
                 <button
                   onClick={() => handleButtonClick(slide.btn2Link)}
-                  className="px-6 py-4 sm:py-5 bg-white/10 backdrop-blur-md text-white font-black uppercase tracking-widest rounded-2xl transition-all flex items-center justify-center border border-white/20 w-full sm:w-auto hover:bg-white/20 hover:scale-105 active:scale-95 text-[15px] cursor-pointer shadow-[0_8px_32px_rgba(0,0,0,0.2)]"
+                  className="px-6 py-4 sm:py-5 bg-[#2C2E3E] text-white font-black uppercase tracking-widest rounded-2xl transition-all flex items-center justify-center border border-white/10 w-full sm:w-auto hover:bg-[#383a4c] hover:scale-105 active:scale-95 text-[15px] cursor-pointer shadow-lg"
                 >
                   {slide.btn2Text}
                 </button>
