@@ -53,7 +53,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
  return (
  <>
  {/* Top bar info */}
- <div className="bg-zinc-950 text-white/80 text-xs py-2 px-6 border-b border-white/5 relative z-50 hidden md:block">
+ <div className="bg-[#163a44] text-white/80 text-xs py-2 px-6 border-b border-white/5 relative z-50 hidden md:block">
  <div className="max-w-[1440px] mx-auto flex justify-between items-center px-4">
  <div className="flex items-center gap-6">
  <a href={siteSettings?.contactPhone ? `tel:${siteSettings.contactPhone.replace(/\s+/g, '')}` : '#'} className="flex items-center gap-1.5 hover:text-white transition-colors">
@@ -115,7 +115,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
  {/* Desktop CTA Button */}
  <button 
  onClick={() => navigate('/booking')}
- className={`hidden lg:flex items-center justify-center px-6 py-2.5 rounded-2xl text-xs sm:text-sm font-black tracking-widest transition-all cursor-pointer border-none hover:scale-105 active:scale-95 ${!isSolid ? 'bg-white text-zinc-950 hover:bg-gray-100 shadow-[0_0_15px_rgba(255,255,255,0.3)]' : 'bg-[#00E5FF] text-zinc-950 hover:bg-[#00cce6] shadow-[0_0_15px_rgba(0,229,255,0.4)]'}`}
+ className={`hidden lg:flex items-center justify-center px-6 py-2.5 rounded-full text-sm font-bold transition-all cursor-pointer border-none hover:scale-105 active:scale-95 shadow-lg ${!isSolid ? 'bg-white text-[#163a44] hover:bg-gray-100 shadow-white/20' : 'bg-[#163a44] text-white hover:bg-[#206173] shadow-[#163a44]/30'}`}
  >
  Book Appointment
  </button>
@@ -217,7 +217,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
  </a>
  <button
  onClick={() => { setMobileMenuOpen(false); navigate('/booking'); }}
- className="w-full bg-brand text-white py-3.5 rounded-xl font-medium shadow-sm active:scale-95 transition-transform border-none cursor-pointer text-base"
+ className="w-full bg-[#163a44] hover:bg-[#206173] text-white py-3.5 rounded-full font-medium shadow-sm active:scale-95 transition-all border-none cursor-pointer text-base"
  >
  Book Appointment
  </button>
