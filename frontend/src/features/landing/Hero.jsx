@@ -8,7 +8,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
     const handleScroll = () => {
       const scrollY = window.scrollY;
       const maxScroll = window.innerHeight * 0.75;
-      let opacity = Math.min(1, Math.max(0, scrollY / maxScroll));
+      const opacity = Math.min(1, Math.max(0, scrollY / maxScroll));
       setScrollOpacity(opacity);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -30,9 +30,9 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
   const settings = siteSettings || {};
 
   const defaultSlide = {
-    image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=2000&auto=format&fit=crop',
-    title: settings.heroTitle || "Find {Clarity}\nin Life's Chaos",
-    subtitle: settings.heroSub || "Professional psychological counseling, aptitude assessment, and career mentorship designed to help individuals thrive.",
+    image: 'https://images.unsplash.com/photo-1440688807730-73e4e2169fb8?q=80&w=2070&auto=format&fit=crop',
+    title: settings.heroTitle || "Bridging You\nTo Your {True}\n{Growth.}",
+    subtitle: settings.heroSub || "Professional psychological counseling, aptitude assessment, and career mentorship designed to help individuals thrive with confidence and purpose.",
     btn1Text: 'Book a Session',
     btn1Link: '/booking',
     btn2Text: 'Explore Aptitude',
@@ -52,7 +52,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
         content = (
           <React.Fragment key={`span-${index}`}>
             {parts[0]}
-            <span className="text-[#00E5FF] [text-shadow:0_0_30px_rgba(0,229,255,0.5)]">
+            <span className="text-[#00E5FF] [text-shadow:0_0_40px_rgba(0,229,255,0.4)]">
               {match[1]}
             </span>
             {parts[1]}
@@ -73,55 +73,53 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
   return (
     <section
       id="home"
-      className="relative w-full min-h-[100svh] flex flex-col overflow-hidden bg-[#0a1a24]"
+      className="relative w-full flex flex-col overflow-hidden bg-[#0d1d2e]"
+      style={{ minHeight: '100svh' }}
     >
       {/* Background Image */}
-      <div className="absolute inset-0 w-full h-full z-0">
+      <div className="absolute inset-0 z-0">
         <div
           className="w-full h-full bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: `url('${slide.image}')` }}
         />
       </div>
 
-      {/* Mobile: bottom-to-top dark gradient so top of image is visible */}
-      <div className="absolute inset-0 z-10 pointer-events-none md:hidden"
-        style={{ background: 'linear-gradient(to top, rgba(10,26,36,0.97) 45%, rgba(10,26,36,0.6) 70%, rgba(10,26,36,0.25) 100%)' }}
-      />
-
-      {/* Desktop: left-to-right gradient */}
-      <div className="absolute inset-0 z-10 pointer-events-none hidden md:block"
-        style={{ background: 'linear-gradient(to right, rgba(10,26,36,0.96) 0%, rgba(10,26,36,0.80) 50%, rgba(10,26,36,0.25) 100%)' }}
+      {/* Unified dark overlay — heavier in center for text legibility */}
+      <div className="absolute inset-0 z-10 pointer-events-none"
+        style={{
+          background: 'linear-gradient(to bottom, rgba(13,29,46,0.55) 0%, rgba(13,29,46,0.72) 40%, rgba(13,29,46,0.72) 60%, rgba(13,29,46,0.55) 100%)'
+        }}
       />
 
       {/* Scroll blur overlay */}
       <div
-        className="absolute inset-0 z-10 backdrop-blur-xl pointer-events-none transition-opacity duration-300"
-        style={{ opacity: scrollOpacity * 0.6, background: 'rgba(10,26,36,0.4)' }}
+        className="absolute inset-0 z-10 pointer-events-none transition-opacity duration-300"
+        style={{ opacity: scrollOpacity * 0.7, background: 'rgba(13,29,46,0.5)', backdropFilter: scrollOpacity > 0.1 ? `blur(${scrollOpacity * 12}px)` : 'none' }}
       />
 
-      {/* Content — mobile: bottom-aligned; desktop: vertically centered */}
-      <div className="relative z-20 flex-1 flex flex-col justify-end md:justify-center w-full max-w-[1440px] mx-auto px-6 sm:px-8 md:px-16 pb-16 pt-28 sm:pb-20 md:pb-0 md:pt-0">
-        <div className="max-w-2xl w-full">
+      {/* Content — vertically centered */}
+      <div className="relative z-20 flex-1 flex flex-col justify-center items-center w-full px-5 sm:px-8 md:px-16 pt-24 pb-10 md:pt-0 md:pb-0">
+        <div className="w-full max-w-2xl flex flex-col items-center md:items-start text-center md:text-left">
 
-          {/* Eyebrow badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: 'easeOut' }}
-            className="mb-4"
-          >
-            <span className="inline-flex items-center gap-2 text-[10px] sm:text-xs font-bold tracking-[0.2em] text-[#00E5FF] drop-shadow">
-              <span className="w-4 h-px bg-[#00E5FF] opacity-60" />
-              {settings.heroTopSub || "Psychological Counseling & Mentorship"}
-            </span>
-          </motion.div>
+          {/* Eyebrow label */}
+          {settings.heroTopSub && (
+            <motion.p
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="text-[11px] font-bold tracking-[0.22em] text-[#00E5FF] mb-5 drop-shadow"
+            >
+              {settings.heroTopSub}
+            </motion.p>
+          )}
 
           {/* Main Heading */}
           <motion.h1
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 28 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: 'easeOut', delay: 0.1 }}
-            className="text-[2.4rem] sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white mb-4 leading-[1.08] tracking-tight drop-shadow-lg"
+            transition={{ duration: 0.8, ease: 'easeOut', delay: 0.05 }}
+            className="font-extrabold text-white leading-[1.1] tracking-tight drop-shadow-lg mb-5 w-full"
+            style={{ fontSize: 'clamp(2.4rem, 8vw, 4.5rem)' }}
           >
             {renderTitle(slide.title)}
           </motion.h1>
@@ -130,8 +128,9 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: 'easeOut', delay: 0.2 }}
-            className="text-sm sm:text-base md:text-lg text-white/80 mb-8 max-w-md md:max-w-xl font-light leading-relaxed"
+            transition={{ duration: 0.8, ease: 'easeOut', delay: 0.15 }}
+            className="text-white/75 font-normal leading-relaxed mb-8 w-full max-w-md md:max-w-xl"
+            style={{ fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)' }}
           >
             {slide.subtitle}
           </motion.p>
@@ -140,13 +139,14 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: 'easeOut', delay: 0.3 }}
-            className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto"
+            transition={{ duration: 0.8, ease: 'easeOut', delay: 0.25 }}
+            className="flex flex-col gap-3 w-full md:flex-row md:w-auto"
           >
             {slide.btn1Text && (
               <button
                 onClick={() => handleButtonClick(slide.btn1Link)}
-                className="flex items-center justify-center bg-[#00E5FF] hover:bg-[#00cce6] active:scale-95 text-[#0a1a24] font-bold text-sm sm:text-base px-7 py-3.5 sm:py-3 rounded-full transition-all shadow-[0_4px_24px_rgba(0,229,255,0.35)] hover:shadow-[0_6px_30px_rgba(0,229,255,0.5)] hover:scale-[1.02] whitespace-nowrap border-none cursor-pointer min-h-[52px] sm:min-h-0"
+                className="w-full md:w-auto flex items-center justify-center bg-[#00E5FF] hover:bg-[#00d4eb] active:scale-[0.97] text-[#0d1d2e] font-bold rounded-full border-none cursor-pointer transition-all shadow-[0_4px_28px_rgba(0,229,255,0.4)] hover:shadow-[0_6px_36px_rgba(0,229,255,0.55)]"
+                style={{ fontSize: 'clamp(0.9rem, 2.2vw, 1rem)', padding: '1rem 2rem', minHeight: '56px' }}
               >
                 {slide.btn1Text}
               </button>
@@ -154,24 +154,12 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
             {slide.btn2Text && (
               <button
                 onClick={() => handleButtonClick(slide.btn2Link)}
-                className="flex items-center justify-center border border-white/40 bg-white/10 backdrop-blur-md active:scale-95 text-white hover:bg-white/20 hover:border-white/60 font-semibold text-sm sm:text-base px-7 py-3.5 sm:py-3 rounded-full transition-all whitespace-nowrap cursor-pointer min-h-[52px] sm:min-h-0"
+                className="w-full md:w-auto flex items-center justify-center bg-white/10 hover:bg-white/20 active:scale-[0.97] text-white font-semibold rounded-full border border-white/20 hover:border-white/40 cursor-pointer transition-all backdrop-blur-sm"
+                style={{ fontSize: 'clamp(0.9rem, 2.2vw, 1rem)', padding: '1rem 2rem', minHeight: '56px' }}
               >
                 {slide.btn2Text}
               </button>
             )}
-          </motion.div>
-
-          {/* Mobile scroll hint */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.2, duration: 0.6 }}
-            className="mt-10 flex md:hidden items-center gap-2 text-white/30 text-xs"
-          >
-            <svg className="w-3 h-3 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-            Scroll to explore
           </motion.div>
 
         </div>
