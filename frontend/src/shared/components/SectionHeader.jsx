@@ -1,10 +1,8 @@
 import React from 'react';
 
-export default function SectionHeader({ subtitle, title, description, align = 'center' }) {
-    const isCenter = align === 'center';
-
+export default function SectionHeader({ subtitle, title, description }) {
     return (
-        <div className={`flex flex-col space-y-3 mb-10 w-full max-w-3xl ${isCenter ? 'mx-auto items-center text-center' : 'items-start text-left'}`}>
+        <div className="flex flex-col space-y-3 mb-10 w-full max-w-3xl mx-auto items-center text-center">
             {subtitle && (
                 <span className="text-[#00E5FF] font-bold text-xs tracking-[0.2em] uppercase">
                     {subtitle}
@@ -14,7 +12,7 @@ export default function SectionHeader({ subtitle, title, description, align = 'c
                 {title}
             </h2>
             {description && (
-                <p className="text-gray-500 text-base leading-relaxed font-normal max-w-2xl">
+                <p className="text-gray-500 text-base leading-relaxed font-normal max-w-2xl mx-auto">
                     {description}
                 </p>
             )}
