@@ -129,8 +129,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: 'easeOut', delay: 0.15 }}
-            className="text-white/75 font-normal leading-relaxed mb-8 w-full max-w-md md:max-w-xl"
-            style={{ fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)' }}
+            className="text-white/80 font-normal leading-relaxed mb-8 w-full max-w-md md:max-w-xl text-base"
           >
             {slide.subtitle}
           </motion.p>

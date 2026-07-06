@@ -85,7 +85,7 @@ export default function Faq() {
  <div 
  className={`transition-all duration-300 overflow-hidden ${isOpen ? 'max-h-96 opacity-100 border-t border-brand/20' : 'max-h-0 opacity-0'}`}
  >
- <p className="text-slate-600 font-light leading-relaxed p-6 pt-4 ml-12">
+ <p className="text-slate-600 font-light leading-relaxed text-base p-6 pt-4 ml-12">
  {faq.answer}
  </p>
  </div>

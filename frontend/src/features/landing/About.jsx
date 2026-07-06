@@ -107,7 +107,7 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
               <h4 className="text-lg font-bold text-[#0F172A] mb-2 group-hover:text-[#00E5FF] transition-colors">
                 {pillar.title}
               </h4>
-              <p className="text-gray-500 text-sm leading-relaxed font-light flex-1">
+              <p className="text-base text-gray-500 leading-relaxed font-light flex-1">
                 {pillar.desc}
               </p>
             </div>
