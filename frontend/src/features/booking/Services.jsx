@@ -327,7 +327,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
  renderItem={(advisor) => (
  <div
  key={advisor.id}
- className="bg-white rounded-[20px] overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-300 w-full flex flex-col h-full"
+ className="bg-white/70 backdrop-blur-md border border-white/40 shadow-sm hover:shadow-[0_20px_40px_rgba(0,229,255,0.1)] transition-all duration-300 w-full flex flex-col h-full rounded-3xl overflow-hidden"
  >
  {/* Image Container */}
  <div className="relative w-full aspect-[4/3] bg-gray-100 shrink-0">

@@ -90,7 +90,7 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
           items={pillars.map((pillar, idx) => (
             <div
               key={idx}
-              className="h-full p-6 bg-white border border-gray-100/70 shadow-sm hover:shadow-[0_20px_40px_rgba(32,97,115,0.08)] hover:-translate-y-1 flex flex-col group transition-all duration-300 relative overflow-hidden rounded-3xl select-none"
+              className="h-full p-6 bg-white/75 backdrop-blur-md border border-white/40 shadow-sm hover:shadow-[0_20px_40px_rgba(0,229,255,0.1)] hover:-translate-y-1 flex flex-col group transition-all duration-300 relative overflow-hidden rounded-3xl select-none"
             >
               {/* Left accent on hover */}
               <div className="absolute left-0 top-6 bottom-6 w-[4px] bg-[#00E5FF] transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-center rounded-r-full" />
