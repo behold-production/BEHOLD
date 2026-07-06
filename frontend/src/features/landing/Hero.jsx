@@ -56,7 +56,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
         const parts = line.split(match[0]);
         content = (
           <React.Fragment key={`span-${index}`}>
-            {parts[0]}<span className="text-[#00E5FF] [text-shadow:0_0_20px_rgba(0,229,255,0.6)]">
+            {parts[0]}<span className="text-brand [text-shadow:0_0_20px_var(--color-brand)]">
               {match[1]}
             </span>{parts[1]}
           </React.Fragment>
@@ -97,20 +97,20 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
       ></div>
 
       {/* Content */}
-      <div className="relative z-20 w-full max-w-[1440px] mx-auto px-6 md:px-12 pt-32 pb-32 md:pb-24 flex justify-center md:justify-start text-center md:text-left">
-        <div className="max-w-3xl">
+      <div className="relative z-20 w-full max-w-[1440px] mx-auto px-6 md:px-12 pt-32 pb-32 md:pb-24 flex justify-center text-center">
+        <div className="max-w-3xl flex flex-col justify-center items-center">
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="w-full flex flex-col justify-center items-center md:items-start"
+            className="w-full flex flex-col justify-center items-center"
           >
             {settings.heroTopSub && (
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
-                className="text-brand-accent font-bold text-xs mb-4"
+                className="text-brand font-bold text-sm tracking-widest uppercase mb-4"
               >
                 {settings.heroTopSub}
               </motion.p>
@@ -120,7 +120,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
-              className="text-[2.75rem] leading-[1.1] sm:text-5xl md:text-6xl lg:text-[4.5rem] lg:leading-[1.05] tracking-tight font-black text-white drop-shadow-lg mb-6 text-center md:text-left w-full mx-auto md:mx-0"
+              className="text-[2.75rem] leading-[1.1] sm:text-5xl md:text-6xl lg:text-[4.5rem] lg:leading-[1.05] tracking-tight font-bold text-white drop-shadow-lg mb-6 text-center w-full mx-auto"
             >
               {renderTitle(slide.title)}
             </motion.h1>
@@ -129,7 +129,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-              className="text-base sm:text-lg md:text-xl text-gray-200 max-w-2xl font-medium leading-relaxed mb-10 text-center md:text-left"
+              className="text-base sm:text-lg md:text-xl text-gray-200 max-w-2xl font-medium leading-relaxed mb-10 text-center"
             >
               {slide.subtitle}
             </motion.p>
@@ -138,7 +138,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
-              className="flex flex-col sm:flex-row items-center sm:items-start gap-4 w-full justify-center md:justify-start max-w-sm sm:max-w-none mx-auto md:mx-0"
+              className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto"
             >
               {slide.btn1Text && (
                 <button
