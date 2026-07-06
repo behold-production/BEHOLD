@@ -45,7 +45,8 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
     setMobileMenuOpen(false);
   };
 
-  const navClass = isScrolled
+  const isSolid = isScrolled || currentView !== '/';
+  const navClass = isSolid
     ? "fixed w-full z-50 transition-all duration-300 lg:py-3 top-0"
     : "fixed w-full z-50 transition-all duration-300 lg:py-3 top-0 lg:top-8";
 
@@ -81,13 +82,13 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
       {/* Navigation Header */}
       <nav id="navbar" className={navClass}>
         <div className="max-w-[1440px] mx-auto px-0 lg:px-12">
-          <div className={`rounded-none lg:rounded-full px-5 sm:px-8 py-3 lg:py-2 flex items-center justify-between min-w-0 transition-all duration-500 ${!isScrolled ? 'bg-transparent border-transparent shadow-none' : 'glass shadow-sm border-b border-gray-100 lg:border lg:border-gray-100'}`}>
+          <div className={`rounded-none lg:rounded-full px-5 sm:px-8 py-3 lg:py-2 flex items-center justify-between min-w-0 transition-all duration-500 ${!isSolid ? 'bg-transparent border-transparent shadow-none' : 'glass shadow-sm border-b border-gray-100 lg:border lg:border-gray-100'}`}>
             {/* Left Section: Hamburger + Logo */}
             <div className="flex items-center gap-2 sm:gap-3">
               {/* Mobile Hamburger Button */}
               <div className="flex lg:hidden items-center">
                 <button
-                  className={`p-1.5 -ml-2 rounded-xl transition-colors bg-transparent border-none cursor-pointer ${!isScrolled ? 'text-white hover:bg-white/20' : 'text-[#163a44] hover:bg-gray-100/50'}`}
+                  className={`p-1.5 -ml-2 rounded-xl transition-colors bg-transparent border-none cursor-pointer ${!isSolid ? 'text-white hover:bg-white/20' : 'text-[#163a44] hover:bg-gray-100/50'}`}
                   onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg>
@@ -95,17 +96,17 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
               </div>
 
               {/* Logo */}
-              <button onClick={logoClick} className={`flex-shrink-0 flex items-center logo-text bg-transparent border-none p-0 cursor-pointer ${!isScrolled ? 'text-white' : 'text-[#1f2937]'}`} style={{ lineHeight: 1 }}>
-                {siteName || 'BEHOLD'}<span className="logo-dot" style={{ color: !isScrolled ? '#00E5FF' : '#0ea5e9' }}>.</span>
+              <button onClick={logoClick} className={`flex-shrink-0 flex items-center logo-text bg-transparent border-none p-0 cursor-pointer ${!isSolid ? 'text-white' : 'text-[#1f2937]'}`} style={{ lineHeight: 1 }}>
+                {siteName || 'BEHOLD'}<span className="logo-dot" style={{ color: !isSolid ? '#00E5FF' : '#0ea5e9' }}>.</span>
               </button>
             </div>
 
             {/* Desktop Menu */}
-            <div className={`hidden lg:flex items-center space-x-8 text-sm font-medium transition-colors duration-300 ${!isScrolled ? 'text-white/90' : 'text-[#163a44]'}`}>
-              <a href="#" onClick={(e) => { e.preventDefault(); navigateToSection?.('home') || navigate('/'); }} className={`transition-colors ${!isScrolled ? 'hover:text-[#00E5FF]' : 'hover:text-[#206173]'}`}>Home</a>
-              <a href="#" onClick={(e) => { e.preventDefault(); navigateToSection?.('services') || navigate('/'); }} className={`transition-colors flex items-center gap-1.5 ${!isScrolled ? 'hover:text-[#00E5FF]' : 'hover:text-[#206173]'}`}>Services <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M6 9l6 6 6-6" /></svg></a>
-              <a href="#" onClick={(e) => { e.preventDefault(); navigate('/sample-test'); }} className={`transition-colors ${!isScrolled ? 'hover:text-[#00E5FF]' : 'hover:text-[#206173]'}`}>Sample Test</a>
-              <a href="#" onClick={(e) => { e.preventDefault(); navigateToSection?.('contact') || navigate('/'); }} className={`transition-colors ${!isScrolled ? 'hover:text-[#00E5FF]' : 'hover:text-[#206173]'}`}>Contact</a>
+            <div className={`hidden lg:flex items-center space-x-8 text-sm font-medium transition-colors duration-300 ${!isSolid ? 'text-white/90' : 'text-[#163a44]'}`}>
+              <a href="#" onClick={(e) => { e.preventDefault(); navigateToSection?.('home') || navigate('/'); }} className={`transition-colors ${!isSolid ? 'hover:text-[#00E5FF]' : 'hover:text-[#206173]'}`}>Home</a>
+              <a href="#" onClick={(e) => { e.preventDefault(); navigateToSection?.('services') || navigate('/'); }} className={`transition-colors flex items-center gap-1.5 ${!isSolid ? 'hover:text-[#00E5FF]' : 'hover:text-[#206173]'}`}>Services <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M6 9l6 6 6-6" /></svg></a>
+              <a href="#" onClick={(e) => { e.preventDefault(); navigate('/sample-test'); }} className={`transition-colors ${!isSolid ? 'hover:text-[#00E5FF]' : 'hover:text-[#206173]'}`}>Sample Test</a>
+              <a href="#" onClick={(e) => { e.preventDefault(); navigateToSection?.('contact') || navigate('/'); }} className={`transition-colors ${!isSolid ? 'hover:text-[#00E5FF]' : 'hover:text-[#206173]'}`}>Contact</a>
             </div>
 
             {/* Right Actions */}
@@ -114,7 +115,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
               {/* Desktop CTA Button */}
               <button
                 onClick={() => navigate('/booking')}
-                className={`hidden lg:block px-6 py-2 rounded-full text-sm font-medium transition-all shadow-lg cursor-pointer border-none hover:scale-105 active:scale-95 ${!isScrolled ? 'bg-white text-[#163a44] hover:bg-gray-100 hover:shadow-white/20' : 'bg-[#163a44] text-white hover:bg-[#206173] hover:shadow-[#206173]/20'}`}
+                className={`hidden lg:block px-6 py-2 rounded-full text-sm font-medium transition-all shadow-lg cursor-pointer border-none hover:scale-105 active:scale-95 ${!isSolid ? 'bg-white text-[#163a44] hover:bg-gray-100 hover:shadow-white/20' : 'bg-[#163a44] text-white hover:bg-[#206173] hover:shadow-[#206173]/20'}`}
               >
                 Book Appointment
               </button>
@@ -123,7 +124,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
               <div className="relative group flex items-center justify-center">
                 <button
                   onClick={handleProfileClick}
-                  className={`w-9 h-9 lg:w-10 lg:h-10 rounded-full border-none flex items-center justify-center transition-all duration-300 cursor-pointer hover:scale-105 ${!isScrolled ? 'bg-white/20 text-white hover:bg-white/30' : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-900'}`}
+                  className={`w-9 h-9 lg:w-10 lg:h-10 rounded-full border-none flex items-center justify-center transition-all duration-300 cursor-pointer hover:scale-105 ${!isSolid ? 'bg-white/20 text-white hover:bg-white/30' : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-900'}`}
                 >
                   {user && user.photoURL ? (
                     <img src={user.photoURL} alt="Profile" className="w-full h-full rounded-full object-cover" />
