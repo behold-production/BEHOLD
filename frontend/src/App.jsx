@@ -417,6 +417,7 @@ export default function App() {
             </div>
           } />
           <Route path="/conceller" element={<Navigate to="/counsellor" replace />} />
+          <Route path="/cousellor" element={<Navigate to="/counsellor" replace />} />
 
           {/* Advisor Public Profile */}
           <Route path="/advisor/:id" element={
