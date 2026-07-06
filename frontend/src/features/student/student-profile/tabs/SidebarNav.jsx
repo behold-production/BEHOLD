@@ -1,6 +1,8 @@
-import React from 'react';
-import { Bell, LayoutDashboard, User, Calendar, BarChart3 } from 'lucide-react';
+import React, { useState } from 'react';
+import { Bell, LayoutDashboard, User, Calendar, BarChart3, LogOut } from 'lucide-react';
 import { TABS } from '../studentProfileConstants';
+import { useAuth } from '../../../shared/context/AuthContext';
+import LogoutConfirmModal from '../../../shared/components/LogoutConfirmModal';
 
 const ICON_MAP = {
   LayoutDashboard,
@@ -10,6 +12,9 @@ const ICON_MAP = {
 };
 
 const SidebarNav = ({ currentSection, handleSectionChange, bookedSessions, testProfile, enableAptitude }) => {
+  const { logout } = useAuth();
+  const [isLogoutOpen, setIsLogoutOpen] = useState(false);
+
   const visibleTabs = TABS.filter(tab => {
     if (tab.id === 'results' && enableAptitude === false) return false;
     return true;
@@ -60,6 +65,14 @@ const SidebarNav = ({ currentSection, handleSectionChange, bookedSessions, testP
             Data securely synced in Cloud. Contact your coordinator for support.
           </p>
         </div>
+
+        <button
+          onClick={() => setIsLogoutOpen(true)}
+          className="mt-2 mx-1 flex items-center gap-2.5 px-3 min-h-[44px] rounded-[10px] text-xs font-bold uppercase tracking-widest transition-all duration-150 cursor-pointer text-red-600 hover:bg-red-50 border-none bg-transparent group"
+        >
+          <LogOut className="w-4 h-4 shrink-0 text-red-400 group-hover:text-red-600" />
+          <span className="flex-1 text-left">Sign Out</span>
+        </button>
       </nav>
 
       {/* Mobile bottom tab bar */}
@@ -95,6 +108,15 @@ const SidebarNav = ({ currentSection, handleSectionChange, bookedSessions, testP
           })}
         </div>
       </nav>
+
+      <LogoutConfirmModal
+        isOpen={isLogoutOpen}
+        onClose={() => setIsLogoutOpen(false)}
+        onConfirm={() => {
+          logout();
+          setIsLogoutOpen(false);
+        }}
+      />
     </>
   );
 };

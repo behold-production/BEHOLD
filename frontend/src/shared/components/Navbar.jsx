@@ -29,6 +29,22 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
     }
   };
 
+  const handleProfileClick = () => {
+    if (!user) {
+      onOpenAuth?.();
+      return;
+    }
+    const role = user.role?.toUpperCase();
+    if (role === 'ADMIN' || role === 'SUPER_ADMIN' || role === 'SUB_ADMIN') {
+      navigate('/admin');
+    } else if (role === 'PSYCHOLOGIST' || role === 'COUNSELLOR') {
+      navigate('/counsellor');
+    } else {
+      navigate('/profile');
+    }
+    setMobileMenuOpen(false);
+  };
+
   const navClass = isScrolled
     ? "fixed w-full z-50 transition-all duration-300 lg:py-3 top-0"
     : "fixed w-full z-50 transition-all duration-300 lg:py-3 top-0 lg:top-8";
@@ -106,7 +122,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
               {/* Profile Avatar (Mobile + Desktop) */}
               <div className="relative group flex items-center justify-center">
                 <button
-                  onClick={() => user ? setIsLogoutOpen(true) : onOpenAuth?.()}
+                  onClick={handleProfileClick}
                   className={`w-9 h-9 lg:w-10 lg:h-10 rounded-full border-none flex items-center justify-center transition-all duration-300 cursor-pointer hover:scale-105 ${!isScrolled ? 'bg-white/20 text-white hover:bg-white/30' : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-900'}`}
                 >
                   {user && user.photoURL ? (
