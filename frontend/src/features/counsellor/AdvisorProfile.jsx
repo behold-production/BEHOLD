@@ -107,7 +107,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
         <button
           type="button"
           onClick={onBack}
-          className="absolute top-20 md:top-32 left-4 md:left-10 z-10 min-h-[44px] flex items-center gap-2 px-4 py-2.5 bg-surface-900 hover:bg-surface-800 text-white rounded-full text-[10px] font-black tracking-widest uppercase transition-all cursor-pointer shadow-none"
+          className="absolute top-20 md:top-32 left-4 md:left-10 z-10 min-h-[44px] flex items-center gap-2 px-4 py-2.5 bg-surface-900 hover:bg-surface-800 text-white rounded-full text-[10px] font-black tracking-widest capitalize transition-all cursor-pointer shadow-none"
         >
           <ChevronLeft className="w-4 h-4" /> Back to Experts
         </button>
@@ -131,7 +131,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             <div className="space-y-4 flex-1">
               <div>
                 <div className="flex flex-wrap items-center gap-2.5 mb-1.5">
-                  <span className="px-3 py-1 bg-surface-900 text-white text-[10px] font-black tracking-widest uppercase rounded-[10px]">
+                  <span className="px-3 py-1 bg-surface-900 text-white text-[10px] font-black tracking-widest capitalize rounded-[10px]">
                     Verified Expert
                   </span>
                   <span className="flex items-center gap-1 text-xs sm:text-xs font-bold text-zinc-500 capitalize">
@@ -195,7 +195,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
               <div className="flex flex-wrap gap-3">
                 {advisor.specialties.map((spec, i) => (
                   <div key={i} className="px-4 py-2 bg-surface-50 border border-surface-200 rounded-[10px]">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-surface-900">{spec}</span>
+                    <span className="text-[10px] font-black capitalize tracking-widest text-surface-900">{spec}</span>
                   </div>
                 ))}
               </div>
@@ -244,7 +244,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                 <button
                   type="button"
                   onClick={() => onBook(advisorId)}
-                  className="min-h-[48px] w-full py-3.5 bg-surface-900 hover:bg-surface-800 text-white rounded-[10px] text-[10px] font-black uppercase tracking-widest shadow-none transition-all flex items-center justify-center gap-2 cursor-pointer border-none"
+                  className="min-h-[48px] w-full py-3.5 bg-surface-900 hover:bg-surface-800 text-white rounded-[10px] text-[10px] font-black capitalize tracking-widest shadow-none transition-all flex items-center justify-center gap-2 cursor-pointer border-none"
                 >
                   <Calendar className="w-4 h-4" /> Book Now
                 </button>

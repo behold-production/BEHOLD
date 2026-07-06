@@ -90,7 +90,7 @@ const SidebarNav = ({
 
               return categories.map((cat, catIdx) => (
                 <div key={catIdx} className="space-y-1 mt-3 first:mt-0">
-                  <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest px-3.5 mb-1.5 mt-2">
+                  <div className="text-[10px] font-bold text-zinc-500 capitalize tracking-widest px-3.5 mb-1.5 mt-2">
                     {cat.title}
                   </div>
                   {cat.items.map(item => {

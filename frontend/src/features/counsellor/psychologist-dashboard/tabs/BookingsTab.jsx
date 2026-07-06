@@ -101,7 +101,7 @@ const BookingsTab = ({
             <div className="space-y-2">
               <div className="flex items-center gap-2 flex-wrap text-left">
                 {booking.status === 'EXPIRED' ? (
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-rose-955/20 border border-rose-900/30 text-rose-400 rounded text-xs font-bold uppercase tracking-wider">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-rose-955/20 border border-rose-900/30 text-rose-400 rounded text-xs font-bold capitalize tracking-wider">
                     EXPIRED
                   </span>
                 ) : (
@@ -178,7 +178,7 @@ const BookingsTab = ({
                   {editingFeedbackId === booking.id ? (
                     <div className="space-y-3 font-sans bg-zinc-950 p-4 rounded-[10px] border border-zinc-800">
                       <div className="space-y-1">
-                        <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider block">
+                        <label className="text-xs font-bold text-zinc-400 capitalize tracking-wider block">
                           Clinical Assessment & Observation Notes
                         </label>
                         <textarea
@@ -191,7 +191,7 @@ const BookingsTab = ({
                       </div>
 
                       <div className="space-y-1">
-                        <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider block">
+                        <label className="text-xs font-bold text-zinc-400 capitalize tracking-wider block">
                           Recommendations & Feedback
                         </label>
                         <textarea
@@ -204,7 +204,7 @@ const BookingsTab = ({
                       </div>
 
                       <div className="space-y-1">
-                        <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider block">
+                        <label className="text-xs font-bold text-zinc-400 capitalize tracking-wider block">
                           Next Session Approximate Time (Optional)
                         </label>
                         <input
@@ -236,7 +236,7 @@ const BookingsTab = ({
                   ) : (
                     <div className="space-y-3 font-sans">
                       <div className="space-y-1">
-                        <span className="text-[10px] font-bold text-zinc-450 uppercase tracking-wider block">
+                        <span className="text-[10px] font-bold text-zinc-450 capitalize tracking-wider block">
                           Clinical Assessment & Observation Notes:
                         </span>
                         <p className="text-sm text-zinc-300 bg-zinc-950 p-3 rounded-[10px] border border-zinc-800 italic leading-relaxed font-medium">
@@ -245,7 +245,7 @@ const BookingsTab = ({
                       </div>
 
                       <div className="space-y-1">
-                        <span className="text-[10px] font-bold text-zinc-450 uppercase tracking-wider block">
+                        <span className="text-[10px] font-bold text-zinc-450 capitalize tracking-wider block">
                           Recommendations & Feedback:
                         </span>
                         <p className="text-sm text-zinc-300 bg-zinc-950 p-3 rounded-[10px] border border-zinc-800 italic leading-relaxed font-medium">
@@ -255,7 +255,7 @@ const BookingsTab = ({
 
                       {booking.nextSession && booking.nextSession.trim() !== '' && booking.nextSession.trim().toLowerCase() !== 'n/a' && booking.nextSession.trim().toLowerCase() !== 'none' && booking.nextSession.trim().toLowerCase() !== 'no' && booking.nextSession.trim().toLowerCase() !== 'null' && (
                         <div className="space-y-1">
-                          <span className="text-[10px] font-bold text-zinc-450 uppercase tracking-wider block">
+                          <span className="text-[10px] font-bold text-zinc-450 capitalize tracking-wider block">
                             Next Session Approximate Time:
                           </span>
                           <p className="text-sm text-zinc-300 bg-zinc-950 p-3 rounded-[10px] border border-zinc-800 leading-relaxed font-semibold">
@@ -360,7 +360,7 @@ const BookingsTab = ({
                       href={booking.meetLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-4 py-2.5 bg-brand text-zinc-955 hover:bg-brand-dark rounded-[10px] text-sm font-black tracking-widest uppercase transition-all duration-300 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98] cursor-pointer flex items-center gap-1.5 border-none animate-pulse"
+                      className="px-4 py-2.5 bg-brand text-zinc-955 hover:bg-brand-dark rounded-[10px] text-sm font-black tracking-widest capitalize transition-all duration-300 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98] cursor-pointer flex items-center gap-1.5 border-none animate-pulse"
                     >
                       <Video className="w-4 h-4 text-zinc-955" />
                       <span>Join Meet</span>

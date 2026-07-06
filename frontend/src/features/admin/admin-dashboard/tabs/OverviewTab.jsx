@@ -947,14 +947,14 @@ export default function OverviewTab(props) {
                                         <span className="font-bold text-white capitalize shrink-0">{b.userName}</span>
                                         <span className="text-zinc-550 text-xs shrink-0">booked with</span>
                                         <span className="font-bold text-brand capitalize shrink-0">{b.advisorName}</span>
-                                        <span className="text-xs bg-zinc-950 text-zinc-400 border border-zinc-850 px-2 py-1 rounded font-bold uppercase tracking-wider shrink-0 whitespace-nowrap mt-1 sm:mt-0">
+                                        <span className="text-xs bg-zinc-950 text-zinc-400 border border-zinc-850 px-2 py-1 rounded font-bold capitalize tracking-wider shrink-0 whitespace-nowrap mt-1 sm:mt-0">
                                           {formatDateString(b.date)} • {b.time}
                                         </span>
                                       </div>
                                       <div className="flex flex-wrap items-center gap-2">
-                                        <span className="text-[11px] bg-zinc-950 text-zinc-400 border border-zinc-850 px-2 py-1 rounded font-bold uppercase tracking-wider shrink-0 whitespace-nowrap">{b.mode}</span>
-                                        <span className="text-[11px] bg-zinc-950 text-zinc-500 border border-zinc-850 px-2 py-1 rounded font-bold uppercase tracking-wider shrink-0 whitespace-nowrap">{b.service}</span>
-                                        <span className={`text-[11px] px-2 py-1 rounded uppercase tracking-wider font-bold border shrink-0 whitespace-nowrap ${b.status === 'CONFIRMED' ? 'bg-emerald-955/20 border-emerald-900/40 text-emerald-450' :
+                                        <span className="text-[11px] bg-zinc-950 text-zinc-400 border border-zinc-850 px-2 py-1 rounded font-bold capitalize tracking-wider shrink-0 whitespace-nowrap">{b.mode}</span>
+                                        <span className="text-[11px] bg-zinc-950 text-zinc-500 border border-zinc-850 px-2 py-1 rounded font-bold capitalize tracking-wider shrink-0 whitespace-nowrap">{b.service}</span>
+                                        <span className={`text-[11px] px-2 py-1 rounded capitalize tracking-wider font-bold border shrink-0 whitespace-nowrap ${b.status === 'CONFIRMED' ? 'bg-emerald-955/20 border-emerald-900/40 text-emerald-450' :
                                           b.status === 'PENDING' ? 'bg-amber-955/20 border-amber-900/40 text-amber-500' :
                                           b.status === 'COMPLETED' ? 'bg-brand/10 border-brand/20 text-brand' :
                                           b.status === 'CANCELLED' ? 'bg-rose-955/20 border-rose-900/30 text-rose-500' :
@@ -1104,7 +1104,7 @@ export default function OverviewTab(props) {
                                   </div>
 
                                   <div className="border-t border-zinc-900/60 pt-3 space-y-2.5">
-                                    <span className="text-[11px] font-bold text-zinc-550 uppercase tracking-wider block">Cognitive Domain Breakdown</span>
+                                    <span className="text-[11px] font-bold text-zinc-550 capitalize tracking-wider block">Cognitive Domain Breakdown</span>
                                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                                       {Object.entries(res.scores || {}).slice(0, 3).map(([key, val]) => (
                                         <div key={key} className="space-y-1 bg-zinc-950/40 p-2.5 rounded-lg border border-zinc-900">

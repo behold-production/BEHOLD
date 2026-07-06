@@ -49,7 +49,7 @@ export default class ErrorBoundary extends React.Component {
             {/* Diagnostic Details card */}
             <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-[10px] shadow-2xl space-y-4">
               <div>
-                <span className="text-xs uppercase tracking-widest text-zinc-500 font-bold block mb-1">Error Diagnostics</span>
+                <span className="text-xs capitalize tracking-widest text-zinc-500 font-bold block mb-1">Error Diagnostics</span>
                 <p className="text-sm font-black text-rose-450 break-all leading-normal">
                   {this.state.error ? this.state.error.toString() : 'Unknown App Runtime Error'}
                 </p>
@@ -57,7 +57,7 @@ export default class ErrorBoundary extends React.Component {
 
               {this.state.errorInfo && (
                 <div className="space-y-1.5">
-                  <span className="text-xs uppercase tracking-widest text-zinc-500 font-bold block">Component Callstack</span>
+                  <span className="text-xs capitalize tracking-widest text-zinc-500 font-bold block">Component Callstack</span>
                   <div className="max-h-[160px] overflow-y-auto pr-1 bg-zinc-950/60 border border-zinc-850 p-3 rounded-[10px] text-[10px] font-mono text-zinc-400 whitespace-pre-wrap leading-normal custom-scrollbar select-text">
                     {this.state.errorInfo.componentStack}
                   </div>
@@ -70,7 +70,7 @@ export default class ErrorBoundary extends React.Component {
               <button
                 type="button"
                 onClick={this.handleReload}
-                className="px-8 py-3.5 bg-brand hover:bg-[#00cce6] text-zinc-950 font-black text-xs uppercase tracking-widest rounded-full transition-all cursor-pointer flex items-center justify-center gap-2 border-none shadow-[0_0_15px_rgba(0,229,255,0.4)] w-full sm:w-auto hover:scale-[1.03] active:scale-[0.97]"
+                className="px-8 py-3.5 bg-brand hover:bg-[#00cce6] text-zinc-950 font-black text-xs capitalize tracking-widest rounded-full transition-all cursor-pointer flex items-center justify-center gap-2 border-none shadow-[0_0_15px_rgba(0,229,255,0.4)] w-full sm:w-auto hover:scale-[1.03] active:scale-[0.97]"
               >
                 <RefreshCw className="w-4 h-4 animate-spin-reverse" />
                 Reload Application
@@ -78,7 +78,7 @@ export default class ErrorBoundary extends React.Component {
               <button
                 type="button"
                 onClick={this.handleGoHome}
-                className="px-8 py-3.5 bg-zinc-800 hover:bg-zinc-700 text-white font-black text-xs uppercase tracking-widest rounded-full transition-all cursor-pointer flex items-center justify-center gap-2 border border-zinc-700 w-full sm:w-auto hover:scale-[1.03] active:scale-[0.97]"
+                className="px-8 py-3.5 bg-zinc-800 hover:bg-zinc-700 text-white font-black text-xs capitalize tracking-widest rounded-full transition-all cursor-pointer flex items-center justify-center gap-2 border border-zinc-700 w-full sm:w-auto hover:scale-[1.03] active:scale-[0.97]"
               >
                 <Home className="w-4 h-4" />
                 Go Back Home

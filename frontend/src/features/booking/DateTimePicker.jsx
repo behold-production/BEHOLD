@@ -327,7 +327,7 @@ export default function DateTimePicker({
           {/* Grid Weekdays Labels */}
           <div className="grid grid-cols-7 gap-1 px-3 py-2 text-center border-b border-surface-100 bg-surface-50/30">
             {['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map((wd, i) => (
-              <span key={i} className="text-[9px] sm:text-[10px] font-bold uppercase text-surface-400 tracking-wider">
+              <span key={i} className="text-[9px] sm:text-[10px] font-bold capitalize text-surface-400 tracking-wider">
                 {wd.substring(0, 3)}
               </span>
             ))}
@@ -459,7 +459,7 @@ export default function DateTimePicker({
                   `}
                 >
                   {/* Weekday */}
-                  <span className={`text-[9px] sm:text-[10px] font-bold tracking-widest uppercase leading-none ${
+                  <span className={`text-[9px] sm:text-[10px] font-bold tracking-widest capitalize leading-none ${
                     isSelected ? 'text-surface-400' : 'text-surface-400'
                   }`}>
                     {day.weekday}
@@ -509,13 +509,13 @@ export default function DateTimePicker({
       {selectedDate && (
         <div className="bg-surface-50 border border-surface-200 rounded-[10px] p-3 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2 animate-in slide-in-from-top-2 duration-300">
           <div className="text-left">
-            <div className="text-[10px] font-black uppercase text-surface-900 tracking-widest">
+            <div className="text-[10px] font-black capitalize text-surface-900 tracking-widest">
               Your Selection
             </div>
             <div className="text-xs sm:text-sm font-bold text-surface-900 mt-0.5">
               {formatHumanDate(selectedDate)}
             </div>
-            <div className="text-[10px] font-bold uppercase tracking-widest text-surface-500 mt-0.5">
+            <div className="text-[10px] font-bold capitalize tracking-widest text-surface-500 mt-0.5">
               {selectedTime
                 ? `${selectedTime} • ${bookingModeLabel(selectedMode)}`
                 : 'No time slot picked yet'}

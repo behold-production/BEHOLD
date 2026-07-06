@@ -245,7 +245,7 @@ export default function RevenueTab(props) {
         {/* Card 1 */}
         <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-[10px] space-y-2 shadow-lg">
           <div className="flex justify-between items-center text-zinc-500">
-            <span className="text-xs font-bold uppercase tracking-wider">Net Payout Earned</span>
+            <span className="text-xs font-bold capitalize tracking-wider">Net Payout Earned</span>
             <DollarSign className="w-4 h-4 text-brand" />
           </div>
           <div className="text-2xl font-bold text-brand font-header">
@@ -257,7 +257,7 @@ export default function RevenueTab(props) {
         {/* Card 2 */}
         <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-[10px] space-y-2 shadow-lg">
           <div className="flex justify-between items-center text-zinc-500">
-            <span className="text-xs font-bold uppercase tracking-wider">Gross Session Billings</span>
+            <span className="text-xs font-bold capitalize tracking-wider">Gross Session Billings</span>
             <TrendingUp className="w-4 h-4 text-emerald-450" />
           </div>
           <div className="text-2xl font-bold text-white font-header">
@@ -269,7 +269,7 @@ export default function RevenueTab(props) {
         {/* Card 3 */}
         <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-[10px] space-y-2 shadow-lg">
           <div className="flex justify-between items-center text-zinc-500">
-            <span className="text-xs font-bold uppercase tracking-wider">Sessions Conducted</span>
+            <span className="text-xs font-bold capitalize tracking-wider">Sessions Conducted</span>
             <Users className="w-4 h-4 text-indigo-400" />
           </div>
           <div className="text-2xl font-bold text-white font-header">
@@ -281,7 +281,7 @@ export default function RevenueTab(props) {
         {/* Card 4 */}
         <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-[10px] space-y-2 shadow-lg">
           <div className="flex justify-between items-center text-zinc-500">
-            <span className="text-xs font-bold uppercase tracking-wider">Pending Payouts</span>
+            <span className="text-xs font-bold capitalize tracking-wider">Pending Payouts</span>
             <AlertCircle className="w-4 h-4 text-amber-500" />
           </div>
           <div className="text-2xl font-bold text-amber-550 font-header">
@@ -296,7 +296,7 @@ export default function RevenueTab(props) {
         {/* SVG Chart */}
         <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-[10px] shadow-lg lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between pb-2 border-b border-zinc-800/60">
-            <h4 className="text-xs font-bold text-white uppercase tracking-wider">Monthly Earnings Trend</h4>
+            <h4 className="text-xs font-bold text-white capitalize tracking-wider">Monthly Earnings Trend</h4>
             <span className="text-[11px] text-zinc-500">Net payout share (INR)</span>
           </div>
 
@@ -342,7 +342,7 @@ export default function RevenueTab(props) {
         <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-[10px] shadow-lg flex flex-col justify-between space-y-4">
           <div>
             <div className="pb-2 border-b border-zinc-800/60 flex items-center justify-between mb-4">
-              <h4 className="text-xs font-bold text-white uppercase tracking-wider font-header flex items-center gap-1.5">
+              <h4 className="text-xs font-bold text-white capitalize tracking-wider font-header flex items-center gap-1.5">
                 <Building className="w-4 h-4 text-zinc-500" />
                 Payout Account
               </h4>
@@ -360,7 +360,7 @@ export default function RevenueTab(props) {
 
             <div className="space-y-3 pt-1">
               <div className="space-y-1">
-                <span className="text-[10px] font-bold uppercase text-zinc-500 block">Razorpay Merchant Account ID</span>
+                <span className="text-[10px] font-bold capitalize text-zinc-500 block">Razorpay Merchant Account ID</span>
                 <span className="text-xs font-mono font-semibold text-white">
                   {profile.razorpayAccountId && profile.razorpayAccountId.trim() 
                     ? profile.razorpayAccountId 
@@ -370,7 +370,7 @@ export default function RevenueTab(props) {
               </div>
 
               <div className="space-y-1">
-                <span className="text-[10px] font-bold uppercase text-zinc-500 block">Bank Account Holder</span>
+                <span className="text-[10px] font-bold capitalize text-zinc-500 block">Bank Account Holder</span>
                 <span className="text-xs font-semibold text-white capitalize">
                   {profile.bankAccountName && profile.bankAccountName.trim() 
                     ? profile.bankAccountName 
@@ -380,7 +380,7 @@ export default function RevenueTab(props) {
               </div>
 
               <div className="space-y-1">
-                <span className="text-[10px] font-bold uppercase text-zinc-500 block">Account Routing Number</span>
+                <span className="text-[10px] font-bold capitalize text-zinc-500 block">Account Routing Number</span>
                 <span className="text-xs font-mono font-semibold text-white">
                   {profile.bankAccountNumber && profile.bankAccountNumber.trim() 
                     ? (() => {
@@ -394,8 +394,8 @@ export default function RevenueTab(props) {
               </div>
 
               <div className="space-y-1">
-                <span className="text-[10px] font-bold uppercase text-zinc-500 block">IFSC Bank Code</span>
-                <span className="text-xs font-mono font-semibold text-white uppercase">
+                <span className="text-[10px] font-bold capitalize text-zinc-500 block">IFSC Bank Code</span>
+                <span className="text-xs font-mono font-semibold text-white capitalize">
                   {profile.bankIfscCode && profile.bankIfscCode.trim() 
                     ? profile.bankIfscCode 
                     : <span className="text-zinc-600 italic">Not set</span>
@@ -416,7 +416,7 @@ export default function RevenueTab(props) {
       {/* Audit ledger filter bar */}
       <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-[10px] space-y-4 shadow-lg">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-zinc-800/60 pb-3">
-          <h4 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5 font-header">
+          <h4 className="text-xs font-bold text-white capitalize tracking-wider flex items-center gap-1.5 font-header">
             <Filter className="w-4 h-4 text-zinc-500" /> Professional Earnings Ledger
           </h4>
 
@@ -463,7 +463,7 @@ export default function RevenueTab(props) {
           <div className="overflow-x-auto w-full">
             <table className="w-full text-xs border-collapse min-w-[850px]">
               <thead>
-                <tr className="bg-zinc-900/60 text-zinc-400 font-bold border-b border-zinc-800 text-left uppercase">
+                <tr className="bg-zinc-900/60 text-zinc-400 font-bold border-b border-zinc-800 text-left capitalize">
                   <th className="p-3">Ref ID</th>
                   <th className="p-3">Student Name</th>
                   <th className="p-3">Session Date</th>
@@ -501,7 +501,7 @@ export default function RevenueTab(props) {
                         <td className="p-3 font-bold text-white">{b.userName || b.studentName || 'Student'}</td>
                         <td className="p-3 text-zinc-350">{formatDateString(b.date)} at {b.time}</td>
                         <td className="p-3">
-                          <span className="text-xs bg-zinc-900 text-zinc-400 border border-zinc-800 px-2 py-0.5 rounded font-semibold uppercase">
+                          <span className="text-xs bg-zinc-900 text-zinc-400 border border-zinc-800 px-2 py-0.5 rounded font-semibold capitalize">
                             {b.mode}
                           </span>
                         </td>

@@ -115,7 +115,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
               {/* Desktop CTA Button */}
               <button 
                 onClick={() => navigate('/booking')}
-                className={`hidden lg:flex items-center justify-center px-6 py-2.5 rounded-2xl text-xs sm:text-sm font-black uppercase tracking-widest transition-all cursor-pointer border-none hover:scale-105 active:scale-95 ${!isSolid ? 'bg-white text-zinc-950 hover:bg-gray-100 shadow-[0_0_15px_rgba(255,255,255,0.3)]' : 'bg-[#00E5FF] text-zinc-950 hover:bg-[#00cce6] shadow-[0_0_15px_rgba(0,229,255,0.4)]'}`}
+                className={`hidden lg:flex items-center justify-center px-6 py-2.5 rounded-2xl text-xs sm:text-sm font-black capitalize tracking-widest transition-all cursor-pointer border-none hover:scale-105 active:scale-95 ${!isSolid ? 'bg-white text-zinc-950 hover:bg-gray-100 shadow-[0_0_15px_rgba(255,255,255,0.3)]' : 'bg-[#00E5FF] text-zinc-950 hover:bg-[#00cce6] shadow-[0_0_15px_rgba(0,229,255,0.4)]'}`}
               >
                 Book Appointment
               </button>
@@ -130,7 +130,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                     user.photoURL ? (
                       <img src={user.photoURL} alt="Profile" className="w-full h-full rounded-full object-cover" />
                     ) : (
-                      <span className="font-bold text-sm tracking-widest uppercase">
+                      <span className="font-bold text-sm tracking-widest capitalize">
                         {user.name ? user.name.trim().split(/\s+/).slice(0, 2).map(n => n[0]).join('') : 'U'}
                       </span>
                     )

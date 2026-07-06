@@ -348,7 +348,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                                 <div className="p-6 flex flex-col flex-1">
                                     {/* Role Pill */}
                                     <div className="mb-4">
-                                        <span className="inline-block bg-[#f4f8f9] text-[#163a44] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider w-fit">
+                                        <span className="inline-block bg-[#f4f8f9] text-[#163a44] px-3 py-1 rounded-full text-[10px] font-bold capitalize tracking-wider w-fit">
                                             {advisor.role || 'CONSULTANT PSYCHOLOGIST'}
                                         </span>
                                     </div>

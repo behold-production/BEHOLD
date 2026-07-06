@@ -1604,7 +1604,7 @@ export default function PsychologistDashboard({ setView }) {
           </div>
 
           <div className="bg-rose-955/15 border border-rose-900/20 p-4 rounded-[10px] space-y-1.5">
-            <span className="text-xs font-bold text-rose-400 uppercase tracking-wider block">Rejection Reason:</span>
+            <span className="text-xs font-bold text-rose-400 capitalize tracking-wider block">Rejection Reason:</span>
             <p className="text-sm text-zinc-300 italic leading-relaxed">
               "{counsellorRejectionReason || user?.rejectionReason || 'Credentials did not meet verification standards.'}"
             </p>
@@ -1689,17 +1689,17 @@ export default function PsychologistDashboard({ setView }) {
               <h1 className="text-xl sm:text-2xl font-header font-bold tracking-wide capitalize text-white flex items-center gap-2">
                 {profile.name}
                 {counsellorStatus === 'PENDING' && (
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-955/20 border border-amber-900/30 text-amber-500 uppercase tracking-wider">
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-955/20 border border-amber-900/30 text-amber-500 capitalize tracking-wider">
                     Pending
                   </span>
                 )}
                 {(counsellorStatus === 'APPROVED' || counsellorStatus === 'ACTIVE') && (
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-955/20 border border-emerald-900/30 text-emerald-450 uppercase tracking-wider">
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-955/20 border border-emerald-900/30 text-emerald-450 capitalize tracking-wider">
                     Verified
                   </span>
                 )}
                 {counsellorStatus === 'REJECTED' && (
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-955/20 border border-rose-900/30 text-rose-500 uppercase tracking-wider">
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-955/20 border border-rose-900/30 text-rose-500 capitalize tracking-wider">
                     Rejected
                   </span>
                 )}

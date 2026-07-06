@@ -7,7 +7,7 @@ export default function SectionHeader({ subtitle, title, description, align = 'c
     return (
         <div className={`flex flex-col space-y-3 mb-10 w-full max-w-3xl ${alignClass}`}>
             {subtitle && (
-                <span className="text-[#163a44] font-bold text-[12px] tracking-widest uppercase">
+                <span className="text-[#163a44] font-bold text-[12px] tracking-widest capitalize">
                     {subtitle}
                 </span>
             )}

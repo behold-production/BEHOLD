@@ -215,10 +215,10 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
         <div className="p-5 sm:p-8 space-y-4">
           <div className="flex items-center gap-3 pr-10 text-left font-sans">
             <div className="min-w-0">
-              <h3 id="booking-auth-modal-title" className="text-base sm:text-lg font-black uppercase tracking-widest text-surface-900 leading-tight">
+              <h3 id="booking-auth-modal-title" className="text-base sm:text-lg font-black capitalize tracking-widest text-surface-900 leading-tight">
                 {mode === 'login' ? 'Sign In to Continue' : mode === 'otp' ? 'WhatsApp Fast Login' : 'Create Your Account'}
               </h3>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-surface-500 mt-1">
+              <p className="text-[10px] font-bold capitalize tracking-widest text-surface-500 mt-1">
                 {mode === 'login'
                   ? 'Sign in to link this booking to your profile'
                   : mode === 'otp' ? 'Sign in securely using WhatsApp' : 'Quick free registration — under 30 seconds'}
@@ -408,7 +408,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full px-6 py-3 min-h-[48px] bg-surface-900 hover:bg-black text-white font-black uppercase tracking-widest text-xs rounded-full transition flex items-center justify-center cursor-pointer border-none disabled:opacity-60"
+              className="w-full px-6 py-3 min-h-[48px] bg-surface-900 hover:bg-black text-white font-black capitalize tracking-widest text-xs rounded-full transition flex items-center justify-center cursor-pointer border-none disabled:opacity-60"
             >
               {isLoading ? (
                 <div className="flex items-center gap-2 justify-center">
@@ -434,15 +434,15 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 pt-3 border-t border-surface-100">
-            <span className="text-[10px] text-surface-500 font-bold uppercase tracking-widest">
+            <span className="text-[10px] text-surface-500 font-bold capitalize tracking-widest">
               SSL Encrypted
             </span>
             <span className="text-surface-200 select-none" aria-hidden="true">|</span>
-            <span className="text-[10px] text-surface-500 font-bold uppercase tracking-widest">
+            <span className="text-[10px] text-surface-500 font-bold capitalize tracking-widest">
               No spam
             </span>
             <span className="text-surface-200 select-none" aria-hidden="true">|</span>
-            <span className="text-[10px] text-surface-500 font-bold uppercase tracking-widest">
+            <span className="text-[10px] text-surface-500 font-bold capitalize tracking-widest">
               Instant
             </span>
           </div>

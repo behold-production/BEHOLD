@@ -976,7 +976,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                         e.stopPropagation();
                         setExpandedBios(prev => ({ ...prev, [advisor.id]: !prev[advisor.id] }));
                       }}
-                      className="text-brand-dark font-black hover:underline cursor-pointer text-[11px] mt-1 uppercase tracking-wider"
+                      className="text-brand-dark font-black hover:underline cursor-pointer text-[11px] mt-1 capitalize tracking-wider"
                     >
                       {expandedBios[advisor.id] ? 'Read Less' : 'Read More'}
                     </button>

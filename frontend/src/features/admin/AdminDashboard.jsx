@@ -3710,7 +3710,7 @@ export default function AdminDashboard({ setView }) {
 
             {/* Details */}
             <div className="px-6 py-5 space-y-4 flex-1">
-              <p className="text-sm font-bold text-zinc-555 uppercase tracking-wider">Clearance & Details</p>
+              <p className="text-sm font-bold text-zinc-555 capitalize tracking-wider">Clearance & Details</p>
               <div className="bg-zinc-955/60 rounded-xl p-4 space-y-3 border border-zinc-850">
                 <div className="flex items-start gap-3">
                   <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center shrink-0 mt-0.5">
@@ -3734,7 +3734,7 @@ export default function AdminDashboard({ setView }) {
 
               {!isSuperAdmin && (
                 <div className="space-y-2">
-                  <p className="text-sm font-bold text-zinc-555 uppercase tracking-wider">Assigned Privilege Scopes</p>
+                  <p className="text-sm font-bold text-zinc-555 capitalize tracking-wider">Assigned Privilege Scopes</p>
                   <div className="bg-zinc-955/60 border border-zinc-850 rounded-xl p-4 space-y-2 max-h-48 overflow-y-auto scrollbar-thin">
                     {(user?.permissions || []).map((perm, idx) => (
                       <div key={idx} className="flex items-center gap-2 text-xs font-bold text-zinc-300 bg-zinc-900 px-2.5 py-1.5 rounded border border-zinc-850">
@@ -3772,7 +3772,7 @@ export default function AdminDashboard({ setView }) {
             <form onSubmit={isAddUserOpen ? handleCreateUser : handleUpdateUser} className="space-y-4 font-medium">
               {isEditUserOpen && (
                 <div className="space-y-2">
-                  <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Profile Picture</label>
+                  <label className="text-xs font-bold text-zinc-400 capitalize tracking-wide">Profile Picture</label>
                   <div className="flex items-center gap-3">
                     <div className="w-14 h-14 rounded-xl bg-zinc-950 border border-zinc-800 overflow-hidden shrink-0 flex items-center justify-center text-brand font-bold text-lg">
                       {userProfilePicFile ? (
@@ -3795,11 +3795,11 @@ export default function AdminDashboard({ setView }) {
               )}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Full Name</label>
+                  <label className="text-xs font-bold text-zinc-400 capitalize tracking-wide">Full Name</label>
                   <input type="text" required placeholder="e.g. John Doe" value={userForm.name} onChange={(e) => setUserForm({ ...userForm, name: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors" />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Email Address</label>
+                  <label className="text-xs font-bold text-zinc-400 capitalize tracking-wide">Email Address</label>
                   <input type="email" required placeholder="john@example.com" value={userForm.email} onChange={(e) => setUserForm({ ...userForm, email: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors" />
                 </div>
               </div>
@@ -3812,35 +3812,35 @@ export default function AdminDashboard({ setView }) {
               {isEditUserOpen && (
                 <>
                   <div className="border-t border-zinc-800 pt-3">
-                    <p className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-3">Student Information</p>
+                    <p className="text-xs font-bold text-zinc-500 capitalize tracking-widest mb-3">Student Information</p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div className="space-y-1">
-                        <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Phone Number</label>
+                        <label className="text-xs font-bold text-zinc-400 capitalize tracking-wide">Phone Number</label>
                         <input type="tel" placeholder="e.g. 9876543210" value={userForm.phone} onChange={(e) => setUserForm({ ...userForm, phone: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors" />
                       </div>
                       <div className="space-y-1">
-                        <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Grade / Class</label>
+                        <label className="text-xs font-bold text-zinc-400 capitalize tracking-wide">Grade / Class</label>
                         <input type="text" placeholder="e.g. Grade 10" value={userForm.grade} onChange={(e) => setUserForm({ ...userForm, grade: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors" />
                       </div>
                       <div className="sm:col-span-2 space-y-1">
-                        <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">School Name</label>
+                        <label className="text-xs font-bold text-zinc-400 capitalize tracking-wide">School Name</label>
                         <input type="text" placeholder="e.g. St. Mary's School" value={userForm.schoolName} onChange={(e) => setUserForm({ ...userForm, schoolName: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors" />
                       </div>
                     </div>
                   </div>
                   <div className="border-t border-zinc-800 pt-3">
-                    <p className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-3">Guardian Information</p>
+                    <p className="text-xs font-bold text-zinc-500 capitalize tracking-widest mb-3">Guardian Information</p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div className="space-y-1">
-                        <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Guardian Name</label>
+                        <label className="text-xs font-bold text-zinc-400 capitalize tracking-wide">Guardian Name</label>
                         <input type="text" placeholder="e.g. Mary Doe" value={userForm.guardianName} onChange={(e) => setUserForm({ ...userForm, guardianName: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors" />
                       </div>
                       <div className="space-y-1">
-                        <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Guardian Phone</label>
+                        <label className="text-xs font-bold text-zinc-400 capitalize tracking-wide">Guardian Phone</label>
                         <input type="tel" placeholder="e.g. 9876543211" value={userForm.guardianPhone} onChange={(e) => setUserForm({ ...userForm, guardianPhone: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors" />
                       </div>
                       <div className="space-y-1">
-                        <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Group / Batch Code</label>
+                        <label className="text-xs font-bold text-zinc-400 capitalize tracking-wide">Group / Batch Code</label>
                         <input type="text" placeholder="e.g. CIGI-2024-A" value={userForm.groupCode} onChange={(e) => setUserForm({ ...userForm, groupCode: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors" />
                       </div>
                     </div>
@@ -3848,7 +3848,7 @@ export default function AdminDashboard({ setView }) {
 
                   <div className="border-t border-zinc-800 pt-3 text-left">
                     <div className="flex items-center justify-between mb-3">
-                      <p className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Home Location & Address</p>
+                      <p className="text-xs font-bold text-zinc-500 capitalize tracking-widest">Home Location & Address</p>
                       <button
                         type="button"
                         onClick={handleAdminUserDetectLocation}
@@ -3995,7 +3995,7 @@ export default function AdminDashboard({ setView }) {
             <form onSubmit={isAddPsyOpen ? handleCreatePsy : handleUpdatePsy} className="space-y-4 font-medium">
               {isEditPsyOpen && (
                 <div className="space-y-2">
-                  <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Profile Picture</label>
+                  <label className="text-xs font-bold text-zinc-400 capitalize tracking-wide">Profile Picture</label>
                   <div className="flex items-center gap-3">
                     <div className="w-14 h-14 rounded-xl bg-zinc-950 border border-zinc-800 overflow-hidden shrink-0 flex items-center justify-center text-brand font-bold text-lg">
                       {psyProfilePicFile ? (
@@ -4136,7 +4136,7 @@ export default function AdminDashboard({ setView }) {
                 </div>
 
                 <div className="sm:col-span-2 space-y-3.5 p-4 bg-zinc-950 border border-zinc-800 rounded-lg mt-2 text-left">
-                  <h4 className="text-xs font-bold text-brand uppercase tracking-wider">Practice / Geographic Location</h4>
+                  <h4 className="text-xs font-bold text-brand capitalize tracking-wider">Practice / Geographic Location</h4>
                   
                   {/* Address search field */}
                   <div className="space-y-1.5 relative">
@@ -5156,7 +5156,7 @@ export default function AdminDashboard({ setView }) {
                       <div key={res.id} className="p-3 bg-zinc-955 border border-zinc-850 rounded-xl flex items-center justify-between gap-3 text-sm">
                         <div className="min-w-0 flex-1 space-y-1">
                           <div className="flex items-center gap-1.5 flex-wrap">
-                            <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold uppercase ${res.fileType === 'pdf' ? 'bg-rose-955/40 border border-rose-900/30 text-rose-450' : 'bg-blue-955/40 border border-blue-900/30 text-blue-400'}`}>
+                            <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold capitalize ${res.fileType === 'pdf' ? 'bg-rose-955/40 border border-rose-900/30 text-rose-450' : 'bg-blue-955/40 border border-blue-900/30 text-blue-400'}`}>
                               {res.fileType}
                             </span>
                             {(res.testDate || res.testTime) && (
@@ -5216,7 +5216,7 @@ export default function AdminDashboard({ setView }) {
                 <div className="space-y-3">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="text-[10px] uppercase font-bold text-zinc-500 block mb-1">
+                      <label className="text-[10px] capitalize font-bold text-zinc-500 block mb-1">
                         Result File {adminCigiEditingId ? '(Optional)' : '(Required)'}
                       </label>
                       <input
@@ -5230,7 +5230,7 @@ export default function AdminDashboard({ setView }) {
                       <p className="text-[9px] text-zinc-500 mt-0.5">Images and PDFs up to 5MB</p>
                     </div>
                     <div>
-                      <label className="text-[10px] uppercase font-bold text-zinc-500 block mb-1">Remarks / Notes</label>
+                      <label className="text-[10px] capitalize font-bold text-zinc-500 block mb-1">Remarks / Notes</label>
                       <input
                         type="text"
                         placeholder="e.g. Scored 85% logical"
@@ -5243,7 +5243,7 @@ export default function AdminDashboard({ setView }) {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="text-[10px] uppercase font-bold text-zinc-500 block mb-1">Date Taken</label>
+                      <label className="text-[10px] capitalize font-bold text-zinc-500 block mb-1">Date Taken</label>
                       <input
                         type="date"
                         value={adminCigiDate}
@@ -5252,7 +5252,7 @@ export default function AdminDashboard({ setView }) {
                       />
                     </div>
                     <div>
-                      <label className="text-[10px] uppercase font-bold text-zinc-500 block mb-1">Time Taken</label>
+                      <label className="text-[10px] capitalize font-bold text-zinc-500 block mb-1">Time Taken</label>
                       <input
                         type="time"
                         value={adminCigiTime}

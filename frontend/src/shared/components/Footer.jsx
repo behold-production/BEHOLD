@@ -13,7 +13,7 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
         <button
           type="button"
           onClick={handleLogoClick}
-          className="font-heading font-black text-3xl text-white hover:text-brand tracking-tighter cursor-pointer transition-colors inline-block bg-transparent border-none p-0 uppercase mb-8"
+          className="font-heading font-black text-3xl text-white hover:text-brand tracking-tighter cursor-pointer transition-colors inline-block bg-transparent border-none p-0 capitalize mb-8"
         >
           {siteName || 'BEHOLD'}<span className="text-brand font-black">.</span>
         </button>

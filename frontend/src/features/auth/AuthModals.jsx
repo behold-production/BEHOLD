@@ -222,7 +222,7 @@ export default function AuthModals({ isOpen, onClose }) {
                 We regret to inform you that your professional counsellor application has been rejected by the system administrator.
               </p>
               <div className="bg-white border border-rose-100 p-3 rounded-lg">
-                <span className="text-[10px] font-bold text-rose-500 uppercase tracking-wider block mb-1">Reason for Rejection:</span>
+                <span className="text-[10px] font-bold text-rose-500 capitalize tracking-wider block mb-1">Reason for Rejection:</span>
                 <p className="text-sm text-zinc-800 italic leading-relaxed">"{rejectionReason}"</p>
               </div>
             </div>

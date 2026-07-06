@@ -110,7 +110,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
-                className="text-brand font-bold text-sm tracking-widest uppercase mb-4"
+                className="text-brand font-bold text-sm tracking-widest capitalize mb-4"
               >
                 {settings.heroTopSub}
               </motion.p>
@@ -143,7 +143,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
               {slide.btn1Text && (
                 <button
                   onClick={() => handleButtonClick(slide.btn1Link)}
-                  className="px-6 py-4 sm:py-5 bg-[#00E5FF] text-black font-black uppercase tracking-widest rounded-2xl transition-all flex items-center justify-center w-full sm:w-auto hover:bg-[#00cce6] hover:scale-105 active:scale-95 text-[15px] cursor-pointer shadow-[0_0_25px_rgba(0,229,255,0.5)] border-none"
+                  className="px-6 py-4 sm:py-5 bg-[#00E5FF] text-black font-black capitalize tracking-widest rounded-2xl transition-all flex items-center justify-center w-full sm:w-auto hover:bg-[#00cce6] hover:scale-105 active:scale-95 text-[15px] cursor-pointer shadow-[0_0_25px_rgba(0,229,255,0.5)] border-none"
                 >
                   {slide.btn1Text}
                 </button>
@@ -151,7 +151,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
               {slide.btn2Text && (
                 <button
                   onClick={() => handleButtonClick(slide.btn2Link)}
-                  className="px-6 py-4 sm:py-5 bg-[#2C2E3E] text-white font-black uppercase tracking-widest rounded-2xl transition-all flex items-center justify-center border border-white/10 w-full sm:w-auto hover:bg-[#383a4c] hover:scale-105 active:scale-95 text-[15px] cursor-pointer shadow-lg"
+                  className="px-6 py-4 sm:py-5 bg-[#2C2E3E] text-white font-black capitalize tracking-widest rounded-2xl transition-all flex items-center justify-center border border-white/10 w-full sm:w-auto hover:bg-[#383a4c] hover:scale-105 active:scale-95 text-[15px] cursor-pointer shadow-lg"
                 >
                   {slide.btn2Text}
                 </button>

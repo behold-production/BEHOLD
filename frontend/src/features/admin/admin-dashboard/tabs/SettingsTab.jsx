@@ -386,17 +386,17 @@ export default function SettingsTab(props) {
               <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-xl space-y-6 animate-in fade-in duration-200 shadow-lg">
                 <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
                   <Settings className="w-4 h-4 text-brand" />
-                  <h4 className="text-sm font-bold text-white uppercase tracking-wider">General & Contact Settings</h4>
+                  <h4 className="text-sm font-bold text-white capitalize tracking-wider">General & Contact Settings</h4>
                 </div>
 
                 <div className="bg-zinc-950/20 border border-zinc-800 p-5 rounded-xl space-y-4">
-                  <h4 className="text-xs font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-2">
+                  <h4 className="text-xs font-bold text-zinc-300 capitalize tracking-wider flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-brand" />
                     Branding Details
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Custom Site Brand Name</label>
+                      <label className="text-xs font-bold text-zinc-400 capitalize tracking-wider">Custom Site Brand Name</label>
                       <input
                         type="text"
                         required
@@ -407,7 +407,7 @@ export default function SettingsTab(props) {
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Site Footer Copyright Notice</label>
+                      <label className="text-xs font-bold text-zinc-400 capitalize tracking-wider">Site Footer Copyright Notice</label>
                       <input
                         type="text"
                         required
@@ -421,13 +421,13 @@ export default function SettingsTab(props) {
                 </div>
 
                 <div className="bg-zinc-955/20 border border-zinc-800 p-5 rounded-xl space-y-4">
-                  <h4 className="text-xs font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-2">
+                  <h4 className="text-xs font-bold text-zinc-300 capitalize tracking-wider flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-brand" />
                     Contact & Support Endpoints
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-zinc-400 uppercase">WhatsApp Support Endpoint Link</label>
+                      <label className="text-xs font-bold text-zinc-400 capitalize">WhatsApp Support Endpoint Link</label>
                       <input
                         type="url"
                         required
@@ -438,7 +438,7 @@ export default function SettingsTab(props) {
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-zinc-400 uppercase">Contact Support Email Address</label>
+                      <label className="text-xs font-bold text-zinc-400 capitalize">Contact Support Email Address</label>
                       <input
                         type="email"
                         required
@@ -449,7 +449,7 @@ export default function SettingsTab(props) {
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-zinc-400 uppercase">Contact Phone Number</label>
+                      <label className="text-xs font-bold text-zinc-400 capitalize">Contact Phone Number</label>
                       <input
                         type="text"
                         required
@@ -460,7 +460,7 @@ export default function SettingsTab(props) {
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-zinc-400 uppercase">Open Hours</label>
+                      <label className="text-xs font-bold text-zinc-400 capitalize">Open Hours</label>
                       <input
                         type="text"
                         required
@@ -493,7 +493,7 @@ export default function SettingsTab(props) {
 
                   {settingsForm.showBanner && (
                     <div className="space-y-1 animate-in slide-in-from-top duration-200">
-                      <label className="text-xs font-bold text-zinc-400 uppercase">Alert Message Text</label>
+                      <label className="text-xs font-bold text-zinc-400 capitalize">Alert Message Text</label>
                       <input
                         type="text"
                         value={settingsForm.bannerNotice}
@@ -527,13 +527,13 @@ export default function SettingsTab(props) {
               <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-xl space-y-6 animate-in fade-in duration-200 shadow-lg">
                 <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
                   <Brain className="w-4 h-4 text-brand" />
-                  <h4 className="text-sm font-bold text-white uppercase tracking-wider">Landing Page Content</h4>
+                  <h4 className="text-sm font-bold text-white capitalize tracking-wider">Landing Page Content</h4>
                 </div>
 
                 {/* Hero Section */}
                 <div className="bg-zinc-950/40 border border-zinc-800 p-5 rounded-xl space-y-4">
                   <div className="flex justify-between items-center">
-                    <h4 className="text-xs font-bold text-brand uppercase tracking-wider flex items-center gap-2">
+                    <h4 className="text-xs font-bold text-brand capitalize tracking-wider flex items-center gap-2">
                       <span className="w-1.5 h-1.5 rounded-full bg-brand" />
                       Hero Carousel Slides
                     </h4>
@@ -580,7 +580,7 @@ export default function SettingsTab(props) {
                           
                           <div className="space-y-3">
                             <div>
-                              <label className="text-[10px] font-bold text-zinc-500 uppercase">Background Image URL</label>
+                              <label className="text-[10px] font-bold text-zinc-500 capitalize">Background Image URL</label>
                               <input type="url" value={slide.image || ''} onChange={(e) => {
                                 const newSlides = [...settingsForm.heroSlides];
                                 newSlides[index] = { ...newSlides[index], image: e.target.value };
@@ -589,7 +589,7 @@ export default function SettingsTab(props) {
                             </div>
                             
                             <div>
-                              <label className="text-[10px] font-bold text-zinc-500 uppercase">Heading (use {`{ }`} for highlight)</label>
+                              <label className="text-[10px] font-bold text-zinc-500 capitalize">Heading (use {`{ }`} for highlight)</label>
                               <input type="text" value={slide.title || ''} onChange={(e) => {
                                 const newSlides = [...settingsForm.heroSlides];
                                 newSlides[index] = { ...newSlides[index], title: e.target.value };
@@ -598,7 +598,7 @@ export default function SettingsTab(props) {
                             </div>
                             
                             <div>
-                              <label className="text-[10px] font-bold text-zinc-500 uppercase">Description / Subtitle</label>
+                              <label className="text-[10px] font-bold text-zinc-500 capitalize">Description / Subtitle</label>
                               <textarea rows={2} value={slide.subtitle || ''} onChange={(e) => {
                                 const newSlides = [...settingsForm.heroSlides];
                                 newSlides[index] = { ...newSlides[index], subtitle: e.target.value };
@@ -608,7 +608,7 @@ export default function SettingsTab(props) {
                             
                             <div className="grid grid-cols-2 gap-3">
                               <div className="space-y-2 p-2 border border-zinc-800/80 rounded bg-zinc-950/40">
-                                <span className="text-[10px] text-zinc-500 font-bold uppercase block">Primary Button (Left)</span>
+                                <span className="text-[10px] text-zinc-500 font-bold capitalize block">Primary Button (Left)</span>
                                 <input type="text" value={slide.btn1Text || ''} onChange={(e) => {
                                   const newSlides = [...settingsForm.heroSlides];
                                   newSlides[index] = { ...newSlides[index], btn1Text: e.target.value };
@@ -622,7 +622,7 @@ export default function SettingsTab(props) {
                               </div>
                               
                               <div className="space-y-2 p-2 border border-zinc-800/80 rounded bg-zinc-950/40">
-                                <span className="text-[10px] text-zinc-500 font-bold uppercase block">Secondary Button (Right)</span>
+                                <span className="text-[10px] text-zinc-500 font-bold capitalize block">Secondary Button (Right)</span>
                                 <input type="text" value={slide.btn2Text || ''} onChange={(e) => {
                                   const newSlides = [...settingsForm.heroSlides];
                                   newSlides[index] = { ...newSlides[index], btn2Text: e.target.value };
@@ -644,13 +644,13 @@ export default function SettingsTab(props) {
 
                 {/* Career Mentoring Section */}
                 <div className="bg-zinc-950/40 border border-zinc-800 p-5 rounded-xl space-y-4">
-                  <h4 className="text-xs font-bold text-brand uppercase tracking-wider flex items-center gap-2">
+                  <h4 className="text-xs font-bold text-brand capitalize tracking-wider flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-brand" />
                     Career Mentoring Card Customization
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-zinc-500 uppercase">Badge / Category</label>
+                      <label className="text-xs font-bold text-zinc-500 capitalize">Badge / Category</label>
                       <input
                         type="text"
                         required
@@ -660,7 +660,7 @@ export default function SettingsTab(props) {
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-zinc-500 uppercase">Title / Header</label>
+                      <label className="text-xs font-bold text-zinc-500 capitalize">Title / Header</label>
                       <input
                         type="text"
                         required
@@ -670,7 +670,7 @@ export default function SettingsTab(props) {
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-zinc-500 uppercase">Subtitle / Hook</label>
+                      <label className="text-xs font-bold text-zinc-500 capitalize">Subtitle / Hook</label>
                       <input
                         type="text"
                         required
@@ -680,7 +680,7 @@ export default function SettingsTab(props) {
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-zinc-500 uppercase">Button Text</label>
+                      <label className="text-xs font-bold text-zinc-500 capitalize">Button Text</label>
                       <input
                         type="text"
                         required
@@ -690,7 +690,7 @@ export default function SettingsTab(props) {
                       />
                     </div>
                     <div className="sm:col-span-2 space-y-1">
-                      <label className="text-xs font-bold text-zinc-500 uppercase">Description</label>
+                      <label className="text-xs font-bold text-zinc-500 capitalize">Description</label>
                       <textarea
                         rows={3}
                         required
@@ -704,13 +704,13 @@ export default function SettingsTab(props) {
 
                 {/* Psychological Counselling Section */}
                 <div className="bg-zinc-950/40 border border-zinc-800 p-5 rounded-xl space-y-4">
-                  <h4 className="text-xs font-bold text-brand uppercase tracking-wider flex items-center gap-2">
+                  <h4 className="text-xs font-bold text-brand capitalize tracking-wider flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-brand" />
                     Psychological Counselling Card Customization
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-zinc-500 uppercase">Badge / Category</label>
+                      <label className="text-xs font-bold text-zinc-500 capitalize">Badge / Category</label>
                       <input
                         type="text"
                         required
@@ -720,7 +720,7 @@ export default function SettingsTab(props) {
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-zinc-500 uppercase">Title / Header</label>
+                      <label className="text-xs font-bold text-zinc-500 capitalize">Title / Header</label>
                       <input
                         type="text"
                         required
@@ -730,7 +730,7 @@ export default function SettingsTab(props) {
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-zinc-500 uppercase">Subtitle / Hook</label>
+                      <label className="text-xs font-bold text-zinc-500 capitalize">Subtitle / Hook</label>
                       <input
                         type="text"
                         required
@@ -740,7 +740,7 @@ export default function SettingsTab(props) {
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-zinc-500 uppercase">Button Text</label>
+                      <label className="text-xs font-bold text-zinc-500 capitalize">Button Text</label>
                       <input
                         type="text"
                         required
@@ -750,7 +750,7 @@ export default function SettingsTab(props) {
                       />
                     </div>
                     <div className="sm:col-span-2 space-y-1">
-                      <label className="text-xs font-bold text-zinc-500 uppercase">Description</label>
+                      <label className="text-xs font-bold text-zinc-500 capitalize">Description</label>
                       <textarea
                         rows={3}
                         required
@@ -764,13 +764,13 @@ export default function SettingsTab(props) {
 
                 {/* What We Offer Section */}
                 <div className="bg-zinc-955/40 border border-zinc-800 p-5 rounded-xl space-y-4">
-                  <h4 className="text-xs font-bold text-brand uppercase tracking-wider flex items-center gap-2">
+                  <h4 className="text-xs font-bold text-brand capitalize tracking-wider flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-brand" />
                     "What We Offer" Section Customization
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-zinc-500 uppercase">Section Title</label>
+                      <label className="text-xs font-bold text-zinc-500 capitalize">Section Title</label>
                       <input
                         type="text"
                         required
@@ -780,7 +780,7 @@ export default function SettingsTab(props) {
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-zinc-500 uppercase">Section Subheading</label>
+                      <label className="text-xs font-bold text-zinc-500 capitalize">Section Subheading</label>
                       <input
                         type="text"
                         required
@@ -937,7 +937,7 @@ export default function SettingsTab(props) {
               <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-xl space-y-6 animate-in fade-in duration-200 shadow-lg">
                 <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
                   <Video className="w-4 h-4 text-brand" />
-                  <h4 className="text-sm font-bold text-white uppercase tracking-wider">Services & Session Modes</h4>
+                  <h4 className="text-sm font-bold text-white capitalize tracking-wider">Services & Session Modes</h4>
                 </div>
                 {/* Feature Toggles */}
                 <div className="border border-zinc-800 p-5 rounded-xl space-y-4 bg-zinc-955/20">
@@ -1060,12 +1060,12 @@ export default function SettingsTab(props) {
               <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-xl space-y-6 animate-in fade-in duration-200 shadow-lg">
                 <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
                   <KeyRound className="w-4 h-4 text-brand" />
-                  <h4 className="text-sm font-bold text-white uppercase tracking-wider">Payments & Taxation</h4>
+                  <h4 className="text-sm font-bold text-white capitalize tracking-wider">Payments & Taxation</h4>
                 </div>
 
                 {/* GST / Tax Configuration */}
                 <div className="bg-zinc-955/20 border border-zinc-800 rounded-xl p-5 space-y-4">
-                  <h4 className="text-xs font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-2">
+                  <h4 className="text-xs font-bold text-zinc-300 capitalize tracking-wider flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
                     Tax / GST Configuration
                   </h4>
@@ -1088,7 +1088,7 @@ export default function SettingsTab(props) {
 
                   {settingsForm.gstEnabled && (
                     <div className="space-y-1 max-w-xs animate-in slide-in-from-top-2 duration-200 pt-2">
-                      <label className="text-xs font-bold text-zinc-400 uppercase">GST Percentage (%)</label>
+                      <label className="text-xs font-bold text-zinc-400 capitalize">GST Percentage (%)</label>
                       <input
                         type="number"
                         min={0}
@@ -1112,13 +1112,13 @@ export default function SettingsTab(props) {
 
                 {/* Razorpay Route Commission Split Configuration */}
                 <div className="bg-zinc-955/20 border border-zinc-800 rounded-xl p-5 space-y-4">
-                  <h4 className="text-xs font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-2">
+                  <h4 className="text-xs font-bold text-zinc-300 capitalize tracking-wider flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                     Razorpay Route Split Configuration
                   </h4>
 
                   <div className="space-y-1 max-w-xs animate-in slide-in-from-top-2 duration-200">
-                    <label className="text-xs font-bold text-zinc-400 uppercase">Counsellor Payment Share (%)</label>
+                    <label className="text-xs font-bold text-zinc-400 capitalize">Counsellor Payment Share (%)</label>
                     <input
                       type="number"
                       min={0}
@@ -1140,13 +1140,13 @@ export default function SettingsTab(props) {
 
                 {/* Platform Payout Bank Details */}
                 <div className="bg-zinc-955/20 border border-zinc-800 rounded-xl p-5 space-y-4 animate-in slide-in-from-top-2 duration-200">
-                  <h4 className="text-xs font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-2">
+                  <h4 className="text-xs font-bold text-zinc-300 capitalize tracking-wider flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                     Platform Payout Bank Account Details
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-zinc-400 uppercase">Bank Account Name</label>
+                      <label className="text-xs font-bold text-zinc-400 capitalize">Bank Account Name</label>
                       <input
                         type="text"
                         value={settingsForm.adminBankAccountName || ''}
@@ -1156,7 +1156,7 @@ export default function SettingsTab(props) {
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-zinc-400 uppercase">Bank Account Number</label>
+                      <label className="text-xs font-bold text-zinc-400 capitalize">Bank Account Number</label>
                       <input
                         type="text"
                         value={settingsForm.adminBankAccountNumber || ''}
@@ -1166,7 +1166,7 @@ export default function SettingsTab(props) {
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-zinc-400 uppercase">IFSC Code</label>
+                      <label className="text-xs font-bold text-zinc-400 capitalize">IFSC Code</label>
                       <input
                         type="text"
                         value={settingsForm.adminBankIfscCode || ''}
@@ -1202,16 +1202,16 @@ export default function SettingsTab(props) {
                 <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-xl space-y-5 animate-in fade-in duration-200 shadow-lg">
                   <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
                     <ShieldCheck className="w-4 h-4 text-brand" />
-                    <h4 className="text-sm font-bold text-white uppercase tracking-wider">Security & System</h4>
+                    <h4 className="text-sm font-bold text-white capitalize tracking-wider">Security & System</h4>
                   </div>
 
                   <div className="bg-zinc-955/20 border border-zinc-800 p-5 rounded-xl space-y-4">
-                    <h4 className="text-xs font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-2">
+                    <h4 className="text-xs font-bold text-zinc-300 capitalize tracking-wider flex items-center gap-2">
                       <span className="w-1.5 h-1.5 rounded-full bg-brand" />
                       CDAT Group Integration Code
                     </h4>
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">CDAT Group / School Code</label>
+                      <label className="text-xs font-bold text-zinc-400 capitalize tracking-wider">CDAT Group / School Code</label>
                       <input
                         type="text"
                         required
@@ -1263,7 +1263,7 @@ export default function SettingsTab(props) {
                               ? 'bg-rose-500'
                               : 'bg-zinc-600'
                           }`} />
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">
+                        <span className="text-[10px] font-bold capitalize tracking-wider text-zinc-400">
                           {!isNotificationSupported()
                             ? 'Not Supported'
                             : permissionState === 'granted'
@@ -1327,7 +1327,7 @@ export default function SettingsTab(props) {
                   <div className="space-y-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-1">
-                        <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Target Audience</label>
+                        <label className="text-xs font-bold text-zinc-400 capitalize tracking-wide">Target Audience</label>
                         <select
                           value={announcementRole}
                           onChange={(e) => setAnnouncementRole(e.target.value)}
@@ -1340,7 +1340,7 @@ export default function SettingsTab(props) {
                       </div>
 
                       <div className="space-y-1">
-                        <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Announcement Title</label>
+                        <label className="text-xs font-bold text-zinc-400 capitalize tracking-wide">Announcement Title</label>
                         <input
                           type="text"
                           required
@@ -1353,7 +1353,7 @@ export default function SettingsTab(props) {
                     </div>
 
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Announcement Message</label>
+                      <label className="text-xs font-bold text-zinc-400 capitalize tracking-wide">Announcement Message</label>
                       <textarea
                         rows={3}
                         required
@@ -1383,7 +1383,7 @@ export default function SettingsTab(props) {
                 <div className="flex items-center justify-between pb-2 border-b border-zinc-800/60">
                   <div className="flex items-center gap-2">
                     <FileSpreadsheet className="w-4 h-4 text-brand" />
-                    <h4 className="text-sm font-bold text-white uppercase tracking-wider">Promotional Codes</h4>
+                    <h4 className="text-sm font-bold text-white capitalize tracking-wider">Promotional Codes</h4>
                   </div>
                   <button
                     type="button"
@@ -1410,19 +1410,19 @@ export default function SettingsTab(props) {
                           </button>
 
                           <div className="flex-1 w-full space-y-1">
-                            <label className="text-xs font-bold text-zinc-500 uppercase">Code (e.g. SAVE20)</label>
+                            <label className="text-xs font-bold text-zinc-500 capitalize">Code (e.g. SAVE20)</label>
                             <input
                               type="text"
                               required
                               value={promo.code}
                               onChange={(e) => handleUpdatePromoCode(idx, 'code', e.target.value.toUpperCase())}
-                              className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold uppercase transition-colors"
+                              className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold capitalize transition-colors"
                               placeholder="CODE"
                             />
                           </div>
 
                           <div className="w-full sm:w-32 space-y-1">
-                            <label className="text-xs font-bold text-zinc-500 uppercase">Type</label>
+                            <label className="text-xs font-bold text-zinc-500 capitalize">Type</label>
                             <select
                               value={promo.type}
                               onChange={(e) => handleUpdatePromoCode(idx, 'type', e.target.value)}
@@ -1434,7 +1434,7 @@ export default function SettingsTab(props) {
                           </div>
 
                           <div className="w-full sm:w-24 space-y-1">
-                            <label className="text-xs font-bold text-zinc-500 uppercase">Value</label>
+                            <label className="text-xs font-bold text-zinc-500 capitalize">Value</label>
                             <input
                               type="number"
                               required
@@ -1488,12 +1488,12 @@ export default function SettingsTab(props) {
               <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-xl space-y-5 animate-in fade-in duration-200 shadow-lg">
                 <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
                   <ShieldCheck className="w-4 h-4 text-brand" />
-                  <h4 className="text-sm font-bold text-white uppercase tracking-wider">Policies & Legal</h4>
+                  <h4 className="text-sm font-bold text-white capitalize tracking-wider">Policies & Legal</h4>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1">
-                    <label className="text-xs font-bold text-zinc-400 uppercase">Terms of Use Document</label>
+                    <label className="text-xs font-bold text-zinc-400 capitalize">Terms of Use Document</label>
                     <textarea
                       rows={12}
                       required
@@ -1505,7 +1505,7 @@ export default function SettingsTab(props) {
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-xs font-bold text-zinc-400 uppercase">Privacy Policy Document</label>
+                    <label className="text-xs font-bold text-zinc-400 capitalize">Privacy Policy Document</label>
                     <textarea
                       rows={12}
                       required

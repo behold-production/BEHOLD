@@ -167,7 +167,7 @@ const AvailabilityTab = ({
           <label className="text-zinc-400 capitalize font-bold block text-xs tracking-wide">Generate Slots from Time Range</label>
           <div className="flex flex-col gap-3 max-w-sm p-4 bg-zinc-950/40 border border-zinc-800 rounded-[10px]">
             <div className="flex gap-2 items-end">
-              <span className="text-xs text-zinc-500 font-bold pb-2 uppercase tracking-wider w-10 text-left">From:</span>
+              <span className="text-xs text-zinc-500 font-bold pb-2 capitalize tracking-wider w-10 text-left">From:</span>
               <div className="flex-1 space-y-1">
                 <select
                   value={fromHour}
@@ -203,7 +203,7 @@ const AvailabilityTab = ({
             </div>
 
             <div className="flex gap-2 items-end">
-              <span className="text-xs text-zinc-500 font-bold pb-2 uppercase tracking-wider w-10 text-left">To:</span>
+              <span className="text-xs text-zinc-500 font-bold pb-2 capitalize tracking-wider w-10 text-left">To:</span>
               <div className="flex-1 space-y-1">
                 <select
                   value={toHour}

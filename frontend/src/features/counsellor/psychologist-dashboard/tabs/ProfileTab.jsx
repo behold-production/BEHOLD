@@ -243,7 +243,7 @@ const ProfileTab = ({
           </div>
 
           <div className="sm:col-span-2 space-y-4 p-5 bg-zinc-900 border border-zinc-800 rounded-[10px]">
-            <h4 className="text-xs font-bold text-brand uppercase tracking-wider">Practice / Geographic Location</h4>
+            <h4 className="text-xs font-bold text-brand capitalize tracking-wider">Practice / Geographic Location</h4>
             
             {/* Search address input */}
             <div className="space-y-1.5 text-left relative">
@@ -443,7 +443,7 @@ const ProfileTab = ({
           </div>
 
           <div className="sm:col-span-2 border-t border-zinc-850 pt-4">
-            <h4 className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-3">Bank Account Details (Alternative / Payout Repay)</h4>
+            <h4 className="text-xs font-bold text-zinc-400 capitalize tracking-wider mb-3">Bank Account Details (Alternative / Payout Repay)</h4>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 animate-in fade-in duration-200">
               <div className="space-y-1.5">
                 <label className="text-zinc-400 capitalize font-bold text-xs tracking-wide">Account Holder Name</label>
@@ -572,7 +572,7 @@ const ProfileTab = ({
                       ? 'bg-rose-500'
                       : 'bg-zinc-600'
               }`} />
-              <span className="text-xs font-bold uppercase tracking-wider text-zinc-450">
+              <span className="text-xs font-bold capitalize tracking-wider text-zinc-450">
                 {!isNotificationSupported()
                   ? 'Not Supported'
                   : permissionState === 'granted'

@@ -205,7 +205,7 @@ export default function RefundRequestsTab(props) {
                           <div className="text-zinc-300 font-semibold text-xs">
                             {formatDateString(booking.date)} at {booking.time}
                           </div>
-                          <div className="text-xs text-zinc-555 font-bold uppercase pt-0.5">
+                          <div className="text-xs text-zinc-555 font-bold capitalize pt-0.5">
                             {booking.mode} ({booking.service === 'counselling' ? 'Wellbeing' : 'Career'})
                           </div>
                         </td>
@@ -258,7 +258,7 @@ export default function RefundRequestsTab(props) {
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-in slide-in-from-top duration-200">
                               {/* Cancellation Details */}
                               <div className="bg-zinc-900/30 border border-zinc-850 p-3 rounded-lg space-y-2">
-                                <h5 className="text-xs font-bold text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
+                                <h5 className="text-xs font-bold text-zinc-400 capitalize tracking-wider flex items-center gap-1.5">
                                   <Clock className="w-3.5 h-3.5 text-zinc-500" />
                                   Cancellation Details
                                 </h5>
@@ -296,7 +296,7 @@ export default function RefundRequestsTab(props) {
 
                               {/* Counsellor Bank Settings */}
                               <div className="bg-zinc-900/30 border border-zinc-850 p-3 rounded-lg space-y-2">
-                                <h5 className="text-xs font-bold text-brand uppercase tracking-wider flex items-center gap-1.5">
+                                <h5 className="text-xs font-bold text-brand capitalize tracking-wider flex items-center gap-1.5">
                                   <User className="w-3.5 h-3.5 text-brand" />
                                   Counsellor Bank Details
                                 </h5>
@@ -332,7 +332,7 @@ export default function RefundRequestsTab(props) {
 
                               {/* Platform Bank Settings */}
                               <div className="bg-zinc-900/30 border border-zinc-850 p-3 rounded-lg space-y-2">
-                                <h5 className="text-xs font-bold text-emerald-500 uppercase tracking-wider flex items-center gap-1.5">
+                                <h5 className="text-xs font-bold text-emerald-500 capitalize tracking-wider flex items-center gap-1.5">
                                   <Building2 className="w-3.5 h-3.5 text-emerald-500" />
                                   Platform Payout Bank Details
                                 </h5>

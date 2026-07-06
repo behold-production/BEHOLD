@@ -66,7 +66,7 @@ export default function ResetPassword() {
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-2">New Password</label>
+            <label className="block text-xs font-bold text-zinc-700 capitalize tracking-wider mb-2">New Password</label>
             <input
               type="password"
               value={password}
@@ -77,7 +77,7 @@ export default function ResetPassword() {
             />
           </div>
           <div>
-            <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-2">Confirm Password</label>
+            <label className="block text-xs font-bold text-zinc-700 capitalize tracking-wider mb-2">Confirm Password</label>
             <input
               type="password"
               value={confirmPassword}

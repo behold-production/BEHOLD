@@ -408,7 +408,7 @@ export default function App() {
               {user ? <AdminDashboard setView={() => { }} /> : <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center text-white">
                 <div className="animate-pulse flex flex-col items-center">
                   <ShieldAlert className="w-12 h-12 text-zinc-700 mb-4" />
-                  <p className="text-zinc-500 font-medium tracking-widest uppercase text-sm">Authentication Required</p>
+                  <p className="text-zinc-500 font-medium tracking-widest capitalize text-sm">Authentication Required</p>
                 </div>
               </div>}
             </div>
@@ -420,7 +420,7 @@ export default function App() {
               {user ? <PsychologistDashboard setView={() => { }} /> : <div className="min-h-screen bg-stone-900 flex flex-col items-center justify-center text-white">
                 <div className="animate-pulse flex flex-col items-center">
                   <ShieldAlert className="w-12 h-12 text-stone-700 mb-4" />
-                  <p className="text-stone-500 font-medium tracking-widest uppercase text-sm">Authentication Required</p>
+                  <p className="text-stone-500 font-medium tracking-widest capitalize text-sm">Authentication Required</p>
                 </div>
               </div>}
             </div>

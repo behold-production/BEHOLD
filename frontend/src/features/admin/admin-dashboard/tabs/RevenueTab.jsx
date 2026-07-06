@@ -157,7 +157,7 @@ export default function RevenueTab(props) {
         {/* Card 1 */}
         <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-xl space-y-2 shadow-lg">
           <div className="flex justify-between items-center text-zinc-500">
-            <span className="text-xs font-bold uppercase tracking-wider">Gross Platform Volume</span>
+            <span className="text-xs font-bold capitalize tracking-wider">Gross Platform Volume</span>
             <DollarSign className="w-4 h-4 text-emerald-450" />
           </div>
           <div className="text-2xl font-bold text-white font-header">
@@ -169,7 +169,7 @@ export default function RevenueTab(props) {
         {/* Card 2 */}
         <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-xl space-y-2 shadow-lg">
           <div className="flex justify-between items-center text-zinc-500">
-            <span className="text-xs font-bold uppercase tracking-wider">Platform Retention (Net Fee)</span>
+            <span className="text-xs font-bold capitalize tracking-wider">Platform Retention (Net Fee)</span>
             <TrendingUp className="w-4 h-4 text-brand" />
           </div>
           <div className="text-2xl font-bold text-brand font-header">
@@ -181,7 +181,7 @@ export default function RevenueTab(props) {
         {/* Card 3 */}
         <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-xl space-y-2 shadow-lg">
           <div className="flex justify-between items-center text-zinc-500">
-            <span className="text-xs font-bold uppercase tracking-wider">Counsellor Payouts Volume</span>
+            <span className="text-xs font-bold capitalize tracking-wider">Counsellor Payouts Volume</span>
             <Users className="w-4 h-4 text-indigo-400" />
           </div>
           <div className="text-2xl font-bold text-white font-header">
@@ -193,7 +193,7 @@ export default function RevenueTab(props) {
         {/* Card 4 */}
         <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-xl space-y-2 shadow-lg">
           <div className="flex justify-between items-center text-zinc-500">
-            <span className="text-xs font-bold uppercase tracking-wider">Total Refunds Paid</span>
+            <span className="text-xs font-bold capitalize tracking-wider">Total Refunds Paid</span>
             <AlertCircle className="w-4 h-4 text-rose-500" />
           </div>
           <div className="text-2xl font-bold text-rose-500 font-header">
@@ -208,7 +208,7 @@ export default function RevenueTab(props) {
         {/* SVG Chart */}
         <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-xl shadow-lg lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between pb-2 border-b border-zinc-800/60">
-            <h4 className="text-xs font-bold text-white uppercase tracking-wider">Monthly Revenue Trend</h4>
+            <h4 className="text-xs font-bold text-white capitalize tracking-wider">Monthly Revenue Trend</h4>
             <span className="text-[11px] text-zinc-500">Gross volume vs Platform Retention (Teal)</span>
           </div>
 
@@ -245,24 +245,24 @@ export default function RevenueTab(props) {
         {/* distribution summary */}
         <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-xl shadow-lg space-y-4">
           <div className="pb-2 border-b border-zinc-800/60">
-            <h4 className="text-xs font-bold text-white uppercase tracking-wider font-header">Platform Summary</h4>
+            <h4 className="text-xs font-bold text-white capitalize tracking-wider font-header">Platform Summary</h4>
           </div>
 
           <div className="space-y-4 pt-2">
             <div className="flex justify-between items-center text-xs pb-2 border-b border-zinc-800/40">
-              <span className="text-zinc-500 font-bold uppercase">Total Bookings Count</span>
+              <span className="text-zinc-500 font-bold capitalize">Total Bookings Count</span>
               <span className="text-white font-bold">{bookingsDb.length}</span>
             </div>
             <div className="flex justify-between items-center text-xs pb-2 border-b border-zinc-800/40">
-              <span className="text-zinc-500 font-bold uppercase">Completed & Paid</span>
+              <span className="text-zinc-500 font-bold capitalize">Completed & Paid</span>
               <span className="text-white font-bold">{metrics.totalPaidBookings}</span>
             </div>
             <div className="flex justify-between items-center text-xs pb-2 border-b border-zinc-800/40">
-              <span className="text-zinc-500 font-bold uppercase">Average Order Value</span>
+              <span className="text-zinc-500 font-bold capitalize">Average Order Value</span>
               <span className="text-white font-bold">₹{metrics.totalPaidBookings > 0 ? Math.round(metrics.grossVolume / metrics.totalPaidBookings) : 0}</span>
             </div>
             <div className="flex justify-between items-center text-xs">
-              <span className="text-zinc-500 font-bold uppercase">Active Pending Bookings</span>
+              <span className="text-zinc-500 font-bold capitalize">Active Pending Bookings</span>
               <span className="text-white font-bold">{bookingsDb.filter(b => b.status === 'PENDING').length}</span>
             </div>
           </div>
@@ -272,13 +272,13 @@ export default function RevenueTab(props) {
       {/* Counsellor breakdown matrix */}
       <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-xl shadow-lg space-y-4">
         <div className="pb-2 border-b border-zinc-800/60 flex items-center justify-between">
-          <h4 className="text-xs font-bold text-white uppercase tracking-wider">Counsellors Ledger & Account Routing</h4>
+          <h4 className="text-xs font-bold text-white capitalize tracking-wider">Counsellors Ledger & Account Routing</h4>
         </div>
 
         <div className="overflow-x-auto w-full">
           <table className="w-full text-xs text-left border-collapse">
             <thead>
-              <tr className="bg-zinc-950 text-zinc-500 border-b border-zinc-800 font-bold uppercase">
+              <tr className="bg-zinc-950 text-zinc-500 border-b border-zinc-800 font-bold capitalize">
                 <th className="p-3">Counsellor</th>
                 <th className="p-3 text-center">Sessions</th>
                 <th className="p-3 text-right">Gross Earned</th>
@@ -320,7 +320,7 @@ export default function RevenueTab(props) {
       {/* Audit ledger filter bar */}
       <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-xl space-y-4 shadow-lg">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-zinc-800/60 pb-3">
-          <h4 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5 font-header">
+          <h4 className="text-xs font-bold text-white capitalize tracking-wider flex items-center gap-1.5 font-header">
             <Filter className="w-4 h-4 text-zinc-500" /> Payment & Transaction Ledger
           </h4>
 
@@ -373,7 +373,7 @@ export default function RevenueTab(props) {
           <div className="overflow-x-auto w-full">
             <table className="w-full text-xs border-collapse min-w-[900px]">
               <thead>
-                <tr className="bg-zinc-900 text-zinc-400 font-bold border-b border-zinc-800 text-left uppercase">
+                <tr className="bg-zinc-900 text-zinc-400 font-bold border-b border-zinc-800 text-left capitalize">
                   <th className="p-3">Ref ID</th>
                   <th className="p-3">Student Name</th>
                   <th className="p-3">Counsellor</th>

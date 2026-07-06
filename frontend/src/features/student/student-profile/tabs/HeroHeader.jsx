@@ -53,22 +53,22 @@ const HeroHeader = ({
             <p className="text-xs text-surface-500 font-medium mb-0.5 flex items-center gap-1.5 justify-center sm:justify-start">
               <Sun className="w-3 h-3" /> {greeting}
             </p>
-            <h1 className="text-xl sm:text-2xl font-black text-surface-950 uppercase tracking-widest mt-1">
-              {displayName}
+            <h1 className="text-xl sm:text-2xl font-black text-surface-950 capitalize tracking-widest mt-1">
+              {(displayName || '').toLowerCase().replace(/\b\w/g, l => l.toUpperCase())}
             </h1>
             <div className="mt-2.5 flex flex-wrap items-center gap-2 justify-center sm:justify-start text-xs text-surface-500">
               {profile.grade && (
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[10px] bg-surface-100 text-surface-900 font-bold uppercase tracking-widest text-[10px]">
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[10px] bg-surface-100 text-surface-900 font-bold capitalize tracking-widest text-[10px]">
                   <GraduationCap className="w-3 h-3" /> {profile.grade}
                 </span>
               )}
               {profile.schoolName && (
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[10px] bg-surface-100 text-surface-900 font-bold uppercase tracking-widest text-[10px] max-w-[180px] truncate">
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[10px] bg-surface-100 text-surface-900 font-bold capitalize tracking-widest text-[10px] max-w-[180px] truncate">
                   <BookOpen className="w-3 h-3 shrink-0" />
                   <span className="truncate">{profile.schoolName}</span>
                 </span>
               )}
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[10px] bg-surface-100 text-surface-900 font-bold uppercase tracking-widest text-[10px]">
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[10px] bg-surface-100 text-surface-900 font-bold capitalize tracking-widest text-[10px]">
                 <Shield className="w-3 h-3" /> Verified
               </span>
             </div>
@@ -87,7 +87,7 @@ const HeroHeader = ({
             {/* Profile progress */}
             <div className="mt-4 max-w-xs">
               <div className="flex justify-between items-center mb-1">
-                <span className="text-[10px] text-surface-500 font-bold uppercase tracking-widest">Profile completion</span>
+                <span className="text-[10px] text-surface-500 font-bold capitalize tracking-widest">Profile completion</span>
                 <span className="text-[10px] font-bold text-surface-900">{totalProgress}%</span>
               </div>
               <div className="h-1.5 w-full bg-surface-100 rounded-[10px] overflow-hidden">
@@ -108,7 +108,7 @@ const HeroHeader = ({
             ].map((s, i) => (
               <div key={i} className="text-center px-4 py-2.5 bg-surface-50 border border-surface-200 rounded-[10px] min-w-[72px]">
                 <p className="text-base font-black text-surface-900">{s.value}</p>
-                <p className="text-[10px] text-surface-500 font-bold uppercase tracking-widest mt-0.5">{s.label}</p>
+                <p className="text-[10px] text-surface-500 font-bold capitalize tracking-widest mt-0.5">{s.label}</p>
               </div>
             ))}
           </div>

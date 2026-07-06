@@ -36,7 +36,7 @@ const OverviewTab = ({
           <button
             type="button"
             onClick={() => navigate('/booking')}
-            className="inline-flex items-center gap-1.5 min-h-[40px] px-5 py-2 bg-surface-900 text-white text-[10px] uppercase tracking-widest font-black rounded-[10px] hover:bg-surface-800 transition-all duration-200 border-none shadow-none"
+            className="inline-flex items-center gap-1.5 min-h-[40px] px-5 py-2 bg-surface-900 text-white text-[10px] capitalize tracking-widest font-black rounded-[10px] hover:bg-surface-800 transition-all duration-200 border-none shadow-none"
           >
             <Plus className="w-3.5 h-3.5" /> Book Session
           </button>
@@ -57,7 +57,7 @@ const OverviewTab = ({
                 : <MapPin className="w-5 h-5 text-surface-600" />}
             </div>
             <div>
-              <p className="text-[10px] font-black uppercase tracking-widest text-surface-400 mb-1 flex items-center gap-1.5">
+              <p className="text-[10px] font-black capitalize tracking-widest text-surface-400 mb-1 flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-[10px] bg-emerald-500 animate-pulse shadow-[0_0_4px_rgba(16,185,129,0.5)]" />
                 Next Scheduled Session
               </p>
@@ -67,7 +67,7 @@ const OverviewTab = ({
                 <span className="mx-1.5 text-surface-300">·</span>
                 <span className="text-surface-700 font-bold">{nextSession.mode === 'ONLINE' ? 'Online' : 'In-Person'}</span>
               </p>
-              <div className="flex flex-wrap items-center gap-2 mt-2.5 text-[10px] uppercase tracking-widest font-bold text-surface-600">
+              <div className="flex flex-wrap items-center gap-2 mt-2.5 text-[10px] capitalize tracking-widest font-bold text-surface-600">
                 <span className="flex items-center gap-1 bg-surface-50 px-2 py-1 rounded-[10px] border border-surface-200">
                   <Calendar className="w-3.5 h-3.5 text-surface-400" /> {formatDateString(nextSession.date)}
                 </span>
@@ -82,7 +82,7 @@ const OverviewTab = ({
               const cd = formatCountdown(nextSession.date, nextSession.time);
               return (
                 <div className="text-left sm:text-right">
-                  <p className="text-[10px] text-surface-400 font-black uppercase tracking-widest">Starts in</p>
+                  <p className="text-[10px] text-surface-400 font-black capitalize tracking-widest">Starts in</p>
                   <p className={`text-xl sm:text-2xl font-black tracking-tight ${cd.urgent ? 'text-amber-600' : 'text-surface-900'}`}>{cd.text}</p>
                 </div>
               );
@@ -90,7 +90,7 @@ const OverviewTab = ({
             <button
               type="button"
               onClick={() => { handleSectionChange('booked'); setSessionSubTab('upcoming'); }}
-              className="min-h-[38px] px-4 py-2 rounded-[10px] text-[10px] uppercase tracking-widest font-black transition-all cursor-pointer border border-surface-200 hover:border-surface-300 bg-white hover:bg-surface-50 text-surface-900 shadow-none"
+              className="min-h-[38px] px-4 py-2 rounded-[10px] text-[10px] capitalize tracking-widest font-black transition-all cursor-pointer border border-surface-200 hover:border-surface-300 bg-white hover:bg-surface-50 text-surface-900 shadow-none"
             >
               View Details
             </button>
@@ -111,7 +111,7 @@ const OverviewTab = ({
             <button
               type="button"
               onClick={() => navigate('/booking')}
-              className="mt-5 inline-flex items-center gap-1.5 min-h-[40px] px-6 py-2 bg-surface-900 text-white text-[10px] uppercase tracking-widest font-black rounded-[10px] hover:bg-surface-800 transition-all border-none shadow-none"
+              className="mt-5 inline-flex items-center gap-1.5 min-h-[40px] px-6 py-2 bg-surface-900 text-white text-[10px] capitalize tracking-widest font-black rounded-[10px] hover:bg-surface-800 transition-all border-none shadow-none"
             >
               <Plus className="w-3.5 h-3.5" /> Book a Session
             </button>
@@ -141,7 +141,7 @@ const OverviewTab = ({
               >
                 <Icon className="w-4 h-4" style={{ color: kpi.accent }} />
               </div>
-              <p className="text-[10px] text-surface-500 font-bold uppercase tracking-wider">{kpi.label}</p>
+              <p className="text-[10px] text-surface-500 font-bold capitalize tracking-wider">{kpi.label}</p>
               <p className="text-2xl font-black text-surface-900 mt-0.5 tracking-tight">{kpi.value}</p>
               <p className="text-[10px] text-surface-400 mt-0.5 font-medium">{kpi.sub}</p>
             </div>
@@ -160,7 +160,7 @@ const OverviewTab = ({
             <div className="w-11 h-11 rounded-[10px] flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)', border: '1px solid rgba(16,185,129,0.15)' }}>
               <Briefcase className="w-5 h-5" style={{ color: '#059669' }} />
             </div>
-            <span className={`text-[10px] uppercase tracking-widest px-2 py-1 rounded-[10px] font-bold ${bookedSessions.length > 0
+            <span className={`text-[10px] capitalize tracking-widest px-2 py-1 rounded-[10px] font-bold ${bookedSessions.length > 0
               ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
               : 'bg-surface-50 text-surface-500 border border-surface-200'
               }`}>
@@ -184,7 +184,7 @@ const OverviewTab = ({
                   navigate('/booking');
                 }
               }}
-              className="relative mt-5 w-full min-h-[40px] inline-flex items-center justify-center gap-2 px-4 py-2 rounded-[10px] text-[10px] uppercase tracking-widest font-black transition-all border-none cursor-pointer"
+              className="relative mt-5 w-full min-h-[40px] inline-flex items-center justify-center gap-2 px-4 py-2 rounded-[10px] text-[10px] capitalize tracking-widest font-black transition-all border-none cursor-pointer"
               style={{
                 background: bookedSessions.length > 0
                   ? 'linear-gradient(135deg, #059669 0%, #047857 100%)'
@@ -216,7 +216,7 @@ const OverviewTab = ({
             <button
               type="button"
               onClick={() => { handleSectionChange('booked'); setSessionSubTab('history'); }}
-              className="text-[10px] text-surface-400 hover:text-surface-900 transition-colors flex items-center gap-1 font-bold uppercase tracking-widest"
+              className="text-[10px] text-surface-400 hover:text-surface-900 transition-colors flex items-center gap-1 font-bold capitalize tracking-widest"
             >
               View all <ChevronRight className="w-3 h-3" />
             </button>
@@ -236,7 +236,7 @@ const OverviewTab = ({
                     <p className="text-xs text-surface-500 mt-0.5 font-medium">{s.advisorRole || 'Consultation'} · {formatDateString(s.date)}</p>
                   </div>
                   <div className="flex items-center gap-1.5 shrink-0">
-                    <span className="text-[10px] uppercase tracking-widest font-black text-emerald-600 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-[10px]">Completed</span>
+                    <span className="text-[10px] capitalize tracking-widest font-black text-emerald-600 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-[10px]">Completed</span>
                   </div>
                 </div>
               ))}
@@ -246,7 +246,7 @@ const OverviewTab = ({
               <div className="w-14 h-14 mx-auto rounded-[10px] bg-surface-50 border border-surface-200 flex items-center justify-center">
                 <History className="w-6 h-6 opacity-40" />
               </div>
-              <p className="text-[10px] uppercase tracking-widest font-bold text-surface-500">No sessions yet</p>
+              <p className="text-[10px] capitalize tracking-widest font-bold text-surface-500">No sessions yet</p>
               <p className="text-xs text-surface-400 font-medium">Completed sessions will appear here.</p>
             </div>
           )}
@@ -273,7 +273,7 @@ const OverviewTab = ({
             ].filter(a => a.condition !== false).map((a, i) => (
               <div
                 key={i}
-                className={`flex items-center gap-2.5 text-[10px] uppercase tracking-widest px-3 py-2.5 rounded-[10px] transition-all duration-200 border ${a.done
+                className={`flex items-center gap-2.5 text-[10px] capitalize tracking-widest px-3 py-2.5 rounded-[10px] transition-all duration-200 border ${a.done
                   ? 'bg-white border-surface-200 shadow-square-light'
                   : 'bg-surface-50 border-surface-100'
                   }`}
