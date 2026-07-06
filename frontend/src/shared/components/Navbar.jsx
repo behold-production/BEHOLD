@@ -53,7 +53,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
   return (
     <>
       {/* Top bar info */}
-      <div className="bg-brand-dark text-white/80 text-xs py-2 px-6 border-b border-white/5 relative z-50 hidden md:block">
+      <div className="bg-zinc-950 text-white/80 text-xs py-2 px-6 border-b border-white/5 relative z-50 hidden md:block">
         <div className="max-w-[1440px] mx-auto flex justify-between items-center px-4">
           <div className="flex items-center gap-6">
             <a href={siteSettings?.contactPhone ? `tel:${siteSettings.contactPhone.replace(/\s+/g, '')}` : '#'} className="flex items-center gap-1.5 hover:text-white transition-colors">
@@ -88,7 +88,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
               {/* Mobile Hamburger Button */}
               <div className="flex lg:hidden items-center">
                 <button
-                  className={`p-1.5 -ml-2 rounded-xl transition-colors bg-transparent border-none cursor-pointer ${!isSolid ? 'text-white hover:bg-white/20' : 'text-[#163a44] hover:bg-gray-100/50'}`}
+                  className={`p-1.5 -ml-2 rounded-xl transition-colors bg-transparent border-none cursor-pointer ${!isSolid ? 'text-white hover:bg-white/20' : 'text-zinc-950 hover:bg-gray-100/50'}`}
                   onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg>
@@ -102,7 +102,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
             </div>
 
             {/* Desktop Menu */}
-            <div className={`hidden lg:flex items-center space-x-8 text-sm font-medium transition-colors duration-300 ${!isSolid ? 'text-white/90' : 'text-[#163a44]'}`}>
+            <div className={`hidden lg:flex items-center space-x-8 text-sm font-medium transition-colors duration-300 ${!isSolid ? 'text-white/90' : 'text-zinc-950'}`}>
               <a href="#" onClick={(e) => { e.preventDefault(); navigateToSection?.('home') || navigate('/'); }} className={`transition-colors ${!isSolid ? 'hover:text-[#00E5FF]' : 'hover:text-[#206173]'}`}>Home</a>
               <a href="#" onClick={(e) => { e.preventDefault(); navigateToSection?.('services') || navigate('/'); }} className={`transition-colors flex items-center gap-1.5 ${!isSolid ? 'hover:text-[#00E5FF]' : 'hover:text-[#206173]'}`}>Services <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M6 9l6 6 6-6" /></svg></a>
               <a href="#" onClick={(e) => { e.preventDefault(); navigate('/sample-test'); }} className={`transition-colors ${!isSolid ? 'hover:text-[#00E5FF]' : 'hover:text-[#206173]'}`}>Sample Test</a>
@@ -115,7 +115,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
               {/* Desktop CTA Button */}
               <button
                 onClick={() => navigate('/booking')}
-                className={`hidden lg:block px-6 py-2 rounded-full text-sm font-medium transition-all shadow-lg cursor-pointer border-none hover:scale-105 active:scale-95 ${!isSolid ? 'bg-white text-[#163a44] hover:bg-gray-100 hover:shadow-white/20' : 'bg-[#163a44] text-white hover:bg-[#206173] hover:shadow-[#206173]/20'}`}
+                className={`hidden lg:block px-6 py-2 rounded-full text-sm font-medium transition-all shadow-lg cursor-pointer border-none hover:scale-105 active:scale-95 ${!isSolid ? 'bg-white text-zinc-950 hover:bg-gray-100 hover:shadow-white/20' : 'bg-brand text-zinc-950 hover:bg-brand-dark hover:shadow-brand/20'}`}
               >
                 Book Appointment
               </button>
@@ -217,7 +217,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
           </a>
           <button
             onClick={() => { setMobileMenuOpen(false); navigate('/booking'); }}
-            className="w-full bg-[#163a44] text-white py-3.5 rounded-xl font-medium shadow-sm active:scale-95 transition-transform border-none cursor-pointer text-base"
+            className="w-full bg-brand text-white py-3.5 rounded-xl font-medium shadow-sm active:scale-95 transition-transform border-none cursor-pointer text-base"
           >
             Book Appointment
           </button>
