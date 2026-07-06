@@ -165,7 +165,7 @@ export default function App() {
 
     if (user) {
       const userRole = user?.role?.toUpperCase();
-      if (userRole === 'ADMIN') {
+      if (userRole === 'ADMIN' || userRole === 'SUPER_ADMIN' || userRole === 'SUB_ADMIN') {
         if (!path.startsWith('/admin')) {
           navigate('/admin', { replace: true });
         }
@@ -179,8 +179,8 @@ export default function App() {
         }
       }
     } else {
-      if (path === '/profile') {
-        navigate('/', { replace: true, state: { from: '/profile' } });
+      if (path === '/profile' || path.startsWith('/admin') || path.startsWith('/counsellor') || path.startsWith('/conceller')) {
+        navigate('/', { replace: true, state: { from: path } });
         setTimeout(() => setIsAuthModalOpen(true), 0);
       }
     }

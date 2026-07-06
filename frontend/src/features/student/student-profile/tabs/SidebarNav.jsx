@@ -77,7 +77,7 @@ const SidebarNav = ({ currentSection, handleSectionChange, bookedSessions, testP
 
       {/* Mobile bottom tab bar */}
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-surface-200">
-        <div className="grid gap-2 max-w-2xl mx-auto" style={{ gridTemplateColumns: `repeat(${visibleTabs.length}, minmax(0, 1fr))` }}>
+        <div className="grid max-w-2xl mx-auto" style={{ gridTemplateColumns: `repeat(${visibleTabs.length + 1}, minmax(0, 1fr))` }}>
           {visibleTabs.map(tab => {
             const Icon = ICON_MAP[tab.iconName];
             const isActive = currentSection === tab.id;
@@ -106,6 +106,15 @@ const SidebarNav = ({ currentSection, handleSectionChange, bookedSessions, testP
               </button>
             );
           })}
+          
+          <button
+            type="button"
+            onClick={() => setIsLogoutOpen(true)}
+            className="relative flex flex-col items-center justify-center gap-1 min-h-[60px] py-2 px-1 transition-colors text-red-500 hover:text-red-600 cursor-pointer border-none bg-transparent"
+          >
+            <LogOut className="w-5 h-5" />
+            <span className="text-[10px] font-bold uppercase tracking-widest truncate max-w-full">Logout</span>
+          </button>
         </div>
       </nav>
 

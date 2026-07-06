@@ -135,7 +135,7 @@ export default function AuthModals({ isOpen, onClose }) {
 
       if (loggedUser) {
         const role = loggedUser.role?.toUpperCase();
-        if (role === 'ADMIN') {
+        if (role === 'ADMIN' || role === 'SUPER_ADMIN' || role === 'SUB_ADMIN') {
           navigate('/admin');
         } else if (role === 'PSYCHOLOGIST' || role === 'COUNSELLOR') {
           navigate('/counsellor');
