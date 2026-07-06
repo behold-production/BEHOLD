@@ -126,8 +126,14 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                   onClick={handleProfileClick}
                   className={`w-9 h-9 lg:w-10 lg:h-10 rounded-full border-none flex items-center justify-center transition-all duration-300 cursor-pointer hover:scale-105 ${!isSolid ? 'bg-white/20 text-white hover:bg-white/30' : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-900'}`}
                 >
-                  {user && user.photoURL ? (
-                    <img src={user.photoURL} alt="Profile" className="w-full h-full rounded-full object-cover" />
+                  {user ? (
+                    user.photoURL ? (
+                      <img src={user.photoURL} alt="Profile" className="w-full h-full rounded-full object-cover" />
+                    ) : (
+                      <span className="font-bold text-sm tracking-widest uppercase">
+                        {user.name ? user.name.trim().split(/\s+/).slice(0, 2).map(n => n[0]).join('') : 'U'}
+                      </span>
+                    )
                   ) : (
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
