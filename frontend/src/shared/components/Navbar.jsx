@@ -103,10 +103,10 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
 
             {/* Desktop Menu */}
             <div className={`hidden lg:flex items-center space-x-8 text-sm font-medium transition-colors duration-300 ${!isSolid ? 'text-white/90' : 'text-zinc-950'}`}>
-              <a href="#" onClick={(e) => { e.preventDefault(); navigateToSection?.('home') || navigate('/'); }} className={`transition-colors ${!isSolid ? 'hover:text-[#00E5FF]' : 'hover:text-[#206173]'}`}>Home</a>
-              <a href="#" onClick={(e) => { e.preventDefault(); navigateToSection?.('services') || navigate('/'); }} className={`transition-colors flex items-center gap-1.5 ${!isSolid ? 'hover:text-[#00E5FF]' : 'hover:text-[#206173]'}`}>Services <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M6 9l6 6 6-6" /></svg></a>
-              <a href="#" onClick={(e) => { e.preventDefault(); navigate('/sample-test'); }} className={`transition-colors ${!isSolid ? 'hover:text-[#00E5FF]' : 'hover:text-[#206173]'}`}>Sample Test</a>
-              <a href="#" onClick={(e) => { e.preventDefault(); navigateToSection?.('contact') || navigate('/'); }} className={`transition-colors ${!isSolid ? 'hover:text-[#00E5FF]' : 'hover:text-[#206173]'}`}>Contact</a>
+              <a href="#" onClick={(e) => { e.preventDefault(); navigateToSection?.('home') || navigate('/'); }} className={`transition-colors hover:text-brand`}>Home</a>
+              <a href="#" onClick={(e) => { e.preventDefault(); navigateToSection?.('services') || navigate('/'); }} className={`transition-colors flex items-center gap-1.5 hover:text-brand`}>Services <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M6 9l6 6 6-6" /></svg></a>
+              <a href="#" onClick={(e) => { e.preventDefault(); navigate('/sample-test'); }} className={`transition-colors hover:text-brand`}>Sample Test</a>
+              <a href="#" onClick={(e) => { e.preventDefault(); navigateToSection?.('contact') || navigate('/'); }} className={`transition-colors hover:text-brand`}>Contact</a>
             </div>
 
             {/* Right Actions */}
@@ -169,21 +169,21 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
         
         <div className="flex-1 overflow-y-auto px-5 sm:px-6">
           <div className="flex flex-col py-2">
-            <a href="#" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateToSection?.('home') || navigate('/'); }} className="group font-medium text-gray-800 hover:text-[#206173] py-4 border-b border-gray-100 flex items-center justify-between text-[17px]">
+            <a href="#" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateToSection?.('home') || navigate('/'); }} className="group font-medium text-gray-800 hover:text-brand py-4 border-b border-gray-100 flex items-center justify-between text-[17px]">
               Home
-              <svg className="w-5 h-5 text-gray-300 group-hover:text-[#206173] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+              <svg className="w-5 h-5 text-gray-300 group-hover:text-brand transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
             </a>
-            <a href="#" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateToSection?.('services') || navigate('/'); }} className="group font-medium text-gray-800 hover:text-[#206173] py-4 border-b border-gray-100 flex items-center justify-between text-[17px]">
+            <a href="#" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateToSection?.('services') || navigate('/'); }} className="group font-medium text-gray-800 hover:text-brand py-4 border-b border-gray-100 flex items-center justify-between text-[17px]">
               Services
-              <svg className="w-5 h-5 text-gray-300 group-hover:text-[#206173] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+              <svg className="w-5 h-5 text-gray-300 group-hover:text-brand transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
             </a>
-            <a href="#" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigate('/sample-test'); }} className="group font-medium text-gray-800 hover:text-[#206173] py-4 border-b border-gray-100 flex items-center justify-between text-[17px]">
+            <a href="#" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigate('/sample-test'); }} className="group font-medium text-gray-800 hover:text-brand py-4 border-b border-gray-100 flex items-center justify-between text-[17px]">
               Sample Test
-              <svg className="w-5 h-5 text-gray-300 group-hover:text-[#206173] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+              <svg className="w-5 h-5 text-gray-300 group-hover:text-brand transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
             </a>
-            <a href="#" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateToSection?.('contact') || navigate('/'); }} className="group font-medium text-gray-800 hover:text-[#206173] py-4 flex items-center justify-between text-[17px]">
+            <a href="#" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateToSection?.('contact') || navigate('/'); }} className="group font-medium text-gray-800 hover:text-brand py-4 flex items-center justify-between text-[17px]">
               Contact Us
-              <svg className="w-5 h-5 text-gray-300 group-hover:text-[#206173] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+              <svg className="w-5 h-5 text-gray-300 group-hover:text-brand transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
             </a>
           </div>
         </div>
