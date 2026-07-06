@@ -43,14 +43,14 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
               </svg>
-              {siteSettings?.contactPhone || '9207 07 51 51'}
+              {siteSettings?.contactPhone ? siteSettings.contactPhone : 'Not Available'}
             </a>
             <span className="text-white/20">|</span>
             <span className="flex items-center gap-1.5 text-gray-400">
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
-              Open Hours: Mon - Sat: 9:00 AM - 9:00 PM (Sun: 9:00 AM - 5:00 PM)
+              {siteSettings?.openHours ? siteSettings.openHours : 'Not Available'}
             </span>
           </div>
           <div className="flex items-center gap-4">

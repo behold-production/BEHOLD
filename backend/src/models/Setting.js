@@ -7,6 +7,8 @@ const settingSchema = new mongoose.Schema(
     heroSub: { type: String, default: '' },
     whatsapp: { type: String, default: '' },
     contactEmail: { type: String, default: '' },
+    contactPhone: { type: String, default: '9207 07 51 51' },
+    openHours: { type: String, default: 'Open Hours: Mon - Sat: 9:00 AM - 9:00 PM (Sun: 9:00 AM - 5:00 PM)' },
     siteName: { type: String, default: '' },
     siteCopyright: { type: String, default: '' },
     showBanner: { type: Boolean, default: false },

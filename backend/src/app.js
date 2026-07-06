@@ -55,7 +55,8 @@ app.use(ipBlockMiddleware);
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
-  'https://www.behold.co.in/',
+  'https://www.behold.co.in',
+  'https://behold.co.in',
   /^http:\/\/192\.168\.29\.45:\d+$/, // Allow specific LAN IP for development
   /^https:\/\/.*\.vercel\.app$/, // All Vercel preview deployments
   process.env.FRONTEND_URL // Set this in Vercel env vars to your production URL

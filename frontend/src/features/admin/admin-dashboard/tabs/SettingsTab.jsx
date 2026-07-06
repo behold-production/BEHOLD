@@ -448,6 +448,28 @@ export default function SettingsTab(props) {
                         placeholder="e.g. support@behold.com"
                       />
                     </div>
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-zinc-400 uppercase">Contact Phone Number</label>
+                      <input
+                        type="text"
+                        required
+                        value={settingsForm.contactPhone || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, contactPhone: e.target.value })}
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                        placeholder="e.g. 9207 07 51 51"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-zinc-400 uppercase">Open Hours</label>
+                      <input
+                        type="text"
+                        required
+                        value={settingsForm.openHours || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, openHours: e.target.value })}
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                        placeholder="e.g. Open Hours: Mon - Sat: 9:00 AM - 9:00 PM"
+                      />
+                    </div>
                   </div>
                 </div>
 
