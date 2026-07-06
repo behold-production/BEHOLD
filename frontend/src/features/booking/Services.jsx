@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import ApiService from '../../shared/services/api';
 import { calculateNextAvailable } from '../../shared/utils/dateFormatter';
 import StackSlider from '../../shared/components/StackSlider';
+import SectionHeader from '../../shared/components/SectionHeader';
 
 function getInitials(name) {
     if (!name) return 'EX';
@@ -217,17 +218,11 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
 
             {/* OUR EXPERTS SECTION */}
             <div id="our-experts" className="mt-20 md:mt-24 space-y-8">
-                <div className="flex flex-col items-center justify-center text-center space-y-3 mb-10 w-full max-w-2xl mx-auto">
-                    <span className="text-[#163a44] font-bold text-[11px] tracking-widest uppercase">
-                        OUR CLINICAL TEAM
-                    </span>
-                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#163a44] tracking-tight">
-                        Meet Our Professionals
-                    </h2>
-                    <p className="text-gray-500 font-medium text-sm sm:text-base px-4">
-                        Professional, certified clinical professionals dedicated to supporting your recovery journey.
-                    </p>
-                </div>
+                <SectionHeader 
+                    subtitle="OUR CLINICAL TEAM" 
+                    title="Meet Our Professionals" 
+                    description="Professional, certified clinical professionals dedicated to supporting your recovery journey." 
+                />
 
                 {/* Dashboard-Style Toolbar */}
                 <div className="bg-white border border-surface-200 p-4 flex flex-col xl:flex-row xl:items-center gap-4 w-full rounded-[10px]">

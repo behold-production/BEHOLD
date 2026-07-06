@@ -2,6 +2,7 @@ import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import StackSlider from '../../shared/components/StackSlider';
+import SectionHeader from '../../shared/components/SectionHeader';
 
 export default function About({ enablePsychology = true, enableCareerMentoring = true, siteSettings }) {
  const settings = siteSettings || JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
@@ -46,17 +47,13 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
  whileInView={{ opacity: 1, y: 0 }}
  viewport={{ once: true, margin:"-100px"}}
  transition={{ duration: 0.6 }}
- className="mb-4 md:mb-20 max-w-3xl mx-auto text-center space-y-4 md:space-y-6"
+ className="w-full"
  >
- <div className="inline-block bg-surface-900 text-white px-4 py-1.5 text-xs font-bold shadow-[4px_4px_0px_0px_rgba(0,229,255,1)] rounded-[10px]">
- Why Choose Us
- </div>
- <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-black text-surface-900 leading-tight">
- {settings.aboutTitle || 'What We Offer'}
- </h2>
- <p className="text-slate-600 text-lg font-light leading-relaxed max-w-2xl mx-auto">
- {settings.aboutSub || 'We go beyond traditional guidance by offering mentorship, doorstep counseling, and personalized support in schools.'}
- </p>
+    <SectionHeader 
+        subtitle="Why Choose Us"
+        title={settings.aboutTitle || 'What We Offer'}
+        description={settings.aboutSub || 'We go beyond traditional guidance by offering mentorship, doorstep counseling, and personalized support in schools.'}
+    />
  </motion.div>
 
  {/* 6-Card Grid / Stack Slider */}
