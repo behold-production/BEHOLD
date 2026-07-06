@@ -220,7 +220,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
             <div id="our-experts" className="mt-20 md:mt-24 space-y-8">
                 <SectionHeader 
                     subtitle="OUR CLINICAL TEAM" 
-                    title="Meet Our Professionals" 
+                    title="Meet Our Licensed Psychologists" 
                     description="Professional, certified clinical professionals dedicated to supporting your recovery journey."
                     align="responsive"
                 />
