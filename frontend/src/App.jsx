@@ -414,17 +414,12 @@ export default function App() {
  </div>
  } />
 
- {/* Counsellor Dashboard */}
- <Route path="/counsellor" element={
- <div className="counsellor-console-theme">
- {user ? <PsychologistDashboard setView={() => { }} /> : <div className="min-h-screen bg-stone-900 flex flex-col items-center justify-center text-white">
- <div className="animate-pulse flex flex-col items-center">
- <ShieldAlert className="w-12 h-12 text-stone-700 mb-4" />
- <p className="text-stone-500 font-medium tracking-widest text-sm">Authentication Required</p>
- </div>
- </div>}
- </div>
- } />
+  {/* Counsellor Dashboard */}
+  <Route path="/counsellor" element={
+    <div className="counsellor-console-theme">
+      <PsychologistDashboard setView={() => { }} />
+    </div>
+  } />
  <Route path="/conceller" element={<Navigate to="/counsellor" replace />} />
  <Route path="/cousellor" element={<Navigate to="/counsellor" replace />} />
 

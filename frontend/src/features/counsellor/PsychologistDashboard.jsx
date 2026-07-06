@@ -1056,536 +1056,640 @@ export default function PsychologistDashboard({ setView }) {
  </div>
  );
  }
+  // --- 1. COUNSELLOR PORTAL LOGIN GATE ---
+  if (!isCounsellor) {
+    return (
+      <div className='min-h-screen bg-[#030712] flex flex-col items-center justify-center text-white px-4 relative overflow-hidden text-left'>
+        {/* Ambient background glows */}
+        <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[140px] opacity-10 pointer-events-none'
+             style={{ background: 'radial-gradient(circle at 35% 45%, rgba(0, 229, 255, 0.08), transparent 50%), radial-gradient(circle at 65% 55%, rgba(99, 102, 241, 0.05), transparent 50%)' }} />
+        
+        {/* Logo Header outside the card */}
+        <div className='text-center mb-8 relative z-10'>
+          <h1 className='text-3xl font-extrabold tracking-wider text-white font-header'>
+            BEHOLD<span className='text-[#00E5FF]'>.</span>
+          </h1>
+          <p className='text-[10px] tracking-[0.25em] font-bold text-[#818CF8] mt-2 uppercase'>
+            Counsellor Central Portal
+          </p>
+        </div>
 
- // --- 1. COUNSELLOR PORTAL LOGIN GATE ---
- if (!isCounsellor) {
- return (
- <div className="min-h-screen bg-zinc-950 flex items-center justify-center p-4 relative overflow-hidden text-left">
- {/* Glowing background shapes */}
- <div className="absolute top-1/4 left-1/4 w-[300px] h-[300px] bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
- <div className="absolute bottom-1/4 right-1/4 w-[350px] h-[350px] bg-brand-accent/5 rounded-full blur-3xl pointer-events-none" />
+        <div className='relative z-10 w-full max-w-[460px] bg-[#0c1424]/95 backdrop-blur-xl border border-slate-800/80 rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-300'>
+          {/* Tabs */}
+          <div className='flex border-b border-slate-800/80'>
+            <button
+              type='button'
+              onClick={() => setGateMode('login')}
+              className={`w-1/2 py-4 text-center font-bold text-sm transition relative cursor-pointer ${
+                gateMode === 'login' ? 'text-white' : 'text-slate-500 hover:text-slate-350'
+              }`}
+            >
+              Sign In
+              {gateMode === 'login' && (
+                <div className='absolute bottom-0 left-0 right-0 h-[2px] bg-[#00E5FF] shadow-[0_2px_8px_rgba(0,229,255,0.4)]' />
+              )}
+            </button>
+            <button
+              type='button'
+              onClick={() => { setGateMode('register'); setOnboardingStep(1); setRegError(''); }}
+              className={`w-1/2 py-4 text-center font-bold text-sm transition relative cursor-pointer ${
+                gateMode === 'register' ? 'text-white' : 'text-slate-500 hover:text-slate-350'
+              }`}
+            >
+              Register Consultant
+              {gateMode === 'register' && (
+                <div className='absolute bottom-0 left-0 right-0 h-[2px] bg-[#00E5FF] shadow-[0_2px_8px_rgba(0,229,255,0.4)]' />
+              )}
+            </button>
+          </div>
 
- <div className="max-w-md w-full relative z-10 space-y-6">
- <div className="text-center space-y-2">
- <h1 className="text-3xl font-header font-bold tracking-tighter text-white">
- BEHOLD<span className="text-brand font-bold">.</span>
- </h1>
- <p className="text-sm text-indigo-400 font-bold">COUNSELLOR CENTRAL PORTAL</p>
- </div>
+          <div className='p-8'>
+            {gateMode === 'login' ? (
+              <div>
+                <h2 className='text-lg font-bold text-white text-left font-header'>Counsellor Sign In</h2>
+                <p className='text-xs text-slate-500 text-left mt-1.5 mb-6 leading-relaxed'>
+                  Access schedules, update clinic slots, and edit video rooms.
+                </p>
 
- <div className="bg-zinc-900 border border-zinc-800 p-6 sm:p-8 rounded-[10px] shadow-deep-blue space-y-6">
- {/* Header Tabs */}
- <div className="flex border-b border-zinc-800 pb-1">
- <button
- type="button"
- onClick={() => setGateMode('login')}
- className={`flex-1 pb-3 text-sm font-bold transition-colors ${gateMode === 'login' ? 'text-brand border-b-2 border-brand' : 'text-zinc-500 hover:text-zinc-500'}`}
- >
- Sign In
- </button>
- <button
- type="button"
- onClick={() => { setGateMode('register'); setOnboardingStep(1); setRegError(''); }}
- className={`flex-1 pb-3 text-sm font-bold transition-colors ${gateMode === 'register' ? 'text-brand border-b-2 border-brand' : 'text-zinc-500 hover:text-zinc-500'}`}
- >
- Register Consultant
- </button>
- </div>
+                {regError && (
+                  <div className='mb-5 p-3.5 bg-red-955/30 border border-red-900/50 rounded-lg text-red-200 text-xs font-medium text-left'>
+                    {regError}
+                  </div>
+                )}
 
- {gateMode === 'login' ? (
- <div className="space-y-6">
- <div className="space-y-1">
- <h2 className="text-sm font-bold text-white ">Counsellor Sign In</h2>
- <p className="text-sm text-zinc-500 leading-none">Access schedules, update clinic slots, and edit video rooms.</p>
- </div>
+                <form onSubmit={handleCounsellorLogin} className='space-y-5 text-left'>
+                  <div>
+                    <label className='block text-xs font-medium text-slate-400 mb-2'>
+                      Email Address
+                    </label>
+                    <input
+                      type='email'
+                      required
+                      placeholder='enter your mail id'
+                      value={loginEmail}
+                      onChange={(e) => setLoginEmail(e.target.value)}
+                      className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-650 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
+                      disabled={isLoggingIn}
+                    />
+                  </div>
 
- <form onSubmit={handleCounsellorLogin} className="space-y-4">
- <div className="space-y-1">
- <label className="text-sm font-bold text-zinc-500">Email Address</label>
- <input
- type="email"
- required
- placeholder="enter your mail id"
- value={loginEmail}
- onChange={(e) => setLoginEmail(e.target.value)}
- className="w-full px-3.5 py-3 bg-zinc-950 border border-zinc-800 focus:border-indigo-500 rounded-[10px] text-sm text-white outline-none transition-colors"
- />
- </div>
+                  <div>
+                    <label className='block text-xs font-medium text-slate-400 mb-2'>
+                      Password
+                    </label>
+                    <div className='relative'>
+                      <input
+                        type={showPassword ? 'text' : 'password'}
+                        required
+                        placeholder='••••••••'
+                        value={loginPassword}
+                        onChange={(e) => setLoginPassword(e.target.value)}
+                        className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-650 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] pr-10 transition duration-200'
+                        disabled={isLoggingIn}
+                      />
+                      <button
+                        type='button'
+                        onClick={() => setShowPassword(v => !v)}
+                        className='absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-350 transition cursor-pointer bg-transparent border-none outline-none'
+                      >
+                        {showPassword ? <EyeOff className='w-4.5 h-4.5' /> : <Eye className='w-4.5 h-4.5' />}
+                      </button>
+                    </div>
+                  </div>
 
- <div className="space-y-1">
- <label className="text-sm font-bold text-zinc-500">Password</label>
- <div className="relative">
- <input
- type={showPassword ? 'text' : 'password'}
- required
- placeholder="••••••••"
- value={loginPassword}
- onChange={(e) => setLoginPassword(e.target.value)}
- className="w-full pl-3.5 pr-12 py-3 bg-zinc-955 border border-zinc-800 focus:border-indigo-500 rounded-[10px] text-sm text-white outline-none transition-colors"
- />
- <button
- type="button"
- onClick={() => setShowPassword(v => !v)}
- aria-label={showPassword ? 'Hide password' : 'Show password'}
- className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-[10px] text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800 focus:outline-none cursor-pointer transition-colors"
- >
- {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
- </button>
- </div>
- </div>
+                  <div className='pt-2'>
+                    <button
+                      type='submit'
+                      disabled={isLoggingIn}
+                      className='w-full bg-[#00E5FF] hover:bg-[#00bccc] text-slate-950 font-bold py-3 rounded-lg text-sm transition duration-200 cursor-pointer shadow-lg shadow-[#00E5FF]/10 active:scale-[0.98] border-none flex items-center justify-center gap-1'
+                    >
+                      {isLoggingIn ? (
+                        <div className='w-5 h-5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin mx-auto' />
+                      ) : (
+                        'Enter Consultant Desk'
+                      )}
+                    </button>
+                    
+                    <a href='/' className='w-full text-center text-xs text-slate-500 hover:text-slate-350 transition pt-4 cursor-pointer block'>
+                      Back to Homepage
+                    </a>
+                  </div>
+                </form>
+              </div>
+            ) : (
+              <div>
+                {/* Steps tracker */}
+                <div className='flex items-center justify-start gap-2 mb-6 text-xs font-semibold'>
+                  <span className={onboardingStep === 1 ? 'text-[#818CF8]' : 'text-slate-500'}>
+                    1. Account Details
+                  </span>
+                  <span className='text-slate-600'>&gt;</span>
+                  <span className={onboardingStep === 2 ? 'text-[#818CF8]' : 'text-slate-500'}>
+                    2. Qualifications
+                  </span>
+                  <span className='text-slate-600'>&gt;</span>
+                  <span className={onboardingStep === 3 ? 'text-[#818CF8]' : 'text-slate-500'}>
+                    3. Schedule
+                  </span>
+                </div>
 
- <button
- type="submit"
- disabled={isLoggingIn}
- className="w-full py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm rounded-full cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1"
- >
- {isLoggingIn ? 'Connecting...' : 'Enter Consultant Desk'}
- </button>
- </form>
+                {regError && (
+                  <div className='mb-5 p-3.5 bg-red-955/30 border border-red-900/50 rounded-lg text-red-200 text-xs font-medium text-left'>
+                    {regError}
+                  </div>
+                )}
 
- </div>
- ) : (
- // REGISTRATION STEP-BY-STEP FLOW
- <div className="space-y-6">
- {/* Stepper Indicators */}
- <div className="flex flex-wrap items-center justify-center sm:justify-between gap-x-2 gap-y-2 text-sm md:text-base font-bold border-b border-zinc-850 pb-3 text-center">
- <span className={`whitespace-nowrap ${onboardingStep === 1 ? "text-indigo-400" : "text-zinc-550"}`}>1. Account Details</span>
- <ChevronRight className="w-4 h-4 text-zinc-700 hidden sm:inline" />
- <span className={`whitespace-nowrap ${onboardingStep === 2 ? "text-indigo-400" : "text-zinc-550"}`}>2. Qualifications</span>
- <ChevronRight className="w-4 h-4 text-zinc-700 hidden sm:inline" />
- <span className={`whitespace-nowrap ${onboardingStep === 3 ? "text-indigo-400" : "text-zinc-550"}`}>3. Schedule</span>
- </div>
+                {/* STEP 1: Account Details */}
+                {onboardingStep === 1 && (
+                  <form onSubmit={handleStepOneNext} className='space-y-4.5 text-left'>
+                    <div>
+                      <label className='block text-xs font-medium text-slate-400 mb-2'>
+                        Full Name
+                      </label>
+                      <input
+                        type='text'
+                        required
+                        placeholder='e.g. Dr. Sandra Tomy'
+                        value={regForm.name}
+                        onChange={(e) => setRegForm({ ...regForm, name: e.target.value })}
+                        className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
+                      />
+                    </div>
 
- {onboardingStep === 1 && (
- <form onSubmit={handleStepOneNext} className="space-y-4">
- <div className="space-y-1">
- <label className="text-sm font-bold text-zinc-500">Full Name</label>
- <input
- type="text"
- required
- placeholder="e.g. Dr. Sandra Tomy"
- value={regForm.name}
- onChange={(e) => setRegForm({ ...regForm, name: e.target.value })}
- className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-indigo-500 rounded-[10px] text-sm text-white outline-none transition-colors"
- />
- </div>
+                    <div>
+                      <label className='block text-xs font-medium text-slate-400 mb-2'>
+                        Email Address
+                      </label>
+                      <input
+                        type='email'
+                        required
+                        placeholder='counsellor@example.com'
+                        value={regForm.email}
+                        onChange={(e) => setRegForm({ ...regForm, email: e.target.value })}
+                        className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
+                      />
+                    </div>
 
- <div className="space-y-1">
- <label className="text-sm font-bold text-zinc-500">Email Address</label>
- <input
- type="email"
- required
- placeholder="counsellor@example.com"
- value={regForm.email}
- onChange={(e) => setRegForm({ ...regForm, email: e.target.value })}
- className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-indigo-500 rounded-[10px] text-sm text-white outline-none transition-colors"
- />
- </div>
+                    <div className='flex gap-4'>
+                      <div className='w-1/2'>
+                        <label className='block text-xs font-medium text-slate-400 mb-2'>
+                          Password
+                        </label>
+                        <div className='relative'>
+                          <input
+                            type={showRegPassword ? 'text' : 'password'}
+                            required
+                            placeholder='••••••••'
+                            value={regForm.password}
+                            onChange={(e) => setRegForm({ ...regForm, password: e.target.value })}
+                            className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] pr-9 transition duration-200'
+                          />
+                          <button
+                            type='button'
+                            onClick={() => setShowRegPassword(v => !v)}
+                            className='absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-350 transition cursor-pointer bg-transparent border-none outline-none'
+                          >
+                            {showRegPassword ? <EyeOff className='w-4 h-4' /> : <Eye className='w-4 h-4' />}
+                          </button>
+                        </div>
+                      </div>
 
- <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
- <div className="space-y-1">
- <label className="text-sm font-bold text-zinc-500">Password</label>
- <div className="relative">
- <input
- type={showRegPassword ? 'text' : 'password'}
- required
- placeholder="••••••••"
- value={regForm.password}
- onChange={(e) => setRegForm({ ...regForm, password: e.target.value })}
- className="w-full pl-3.5 pr-12 py-3 bg-zinc-955 border border-zinc-850 focus:border-indigo-500 rounded-[10px] text-sm text-white outline-none transition-colors"
- />
- <button
- type="button"
- onClick={() => setShowRegPassword(v => !v)}
- aria-label={showRegPassword ? 'Hide password' : 'Show password'}
- className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-[10px] text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800 focus:outline-none cursor-pointer transition-colors"
- >
- {showRegPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
- </button>
- </div>
- </div>
- <div className="space-y-1">
- <label className="text-sm font-bold text-zinc-500">Confirm</label>
- <div className="relative">
- <input
- type={showRegConfirmPassword ? 'text' : 'password'}
- required
- placeholder="••••••••"
- value={regForm.confirmPassword}
- onChange={(e) => setRegForm({ ...regForm, confirmPassword: e.target.value })}
- className="w-full pl-3.5 pr-12 py-3 bg-zinc-955 border border-zinc-855 focus:border-indigo-500 rounded-[10px] text-sm text-white outline-none transition-colors"
- />
- <button
- type="button"
- onClick={() => setShowRegConfirmPassword(v => !v)}
- aria-label={showRegConfirmPassword ? 'Hide password' : 'Show password'}
- className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-[10px] text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800 focus:outline-none cursor-pointer transition-colors"
- >
- {showRegConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
- </button>
- </div>
- </div>
- </div>
+                      <div className='w-1/2'>
+                        <label className='block text-xs font-medium text-slate-400 mb-2'>
+                          Confirm
+                        </label>
+                        <div className='relative'>
+                          <input
+                            type={showRegConfirmPassword ? 'text' : 'password'}
+                            required
+                            placeholder='••••••••'
+                            value={regForm.confirmPassword}
+                            onChange={(e) => setRegForm({ ...regForm, confirmPassword: e.target.value })}
+                            className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] pr-9 transition duration-200'
+                          />
+                          <button
+                            type='button'
+                            onClick={() => setShowRegConfirmPassword(v => !v)}
+                            className='absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-350 transition cursor-pointer bg-transparent border-none outline-none'
+                          >
+                            {showRegConfirmPassword ? <EyeOff className='w-4 h-4' /> : <Eye className='w-4 h-4' />}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
 
- <button
- type="submit"
- className="w-full py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm rounded-full cursor-pointer transition border-none shadow-md"
- >
- Next: Clinical Details
- </button>
- </form>
- )}
+                    <div className='pt-4'>
+                      <button
+                        type='submit'
+                        className='w-full bg-[#00E5FF] hover:bg-[#00bccc] text-slate-950 font-bold py-3 rounded-lg text-sm transition duration-200 cursor-pointer shadow-lg shadow-[#00E5FF]/10 active:scale-[0.98] border-none'
+                      >
+                        Next: Clinical Details
+                      </button>
+                      
+                      <a href='/' className='w-full text-center text-xs text-slate-500 hover:text-slate-350 transition pt-4 cursor-pointer block'>
+                        Back to Homepage
+                      </a>
+                    </div>
+                  </form>
+                )}
 
- {onboardingStep === 2 && (
- <form onSubmit={handleStepTwoNext} className="space-y-4 font-medium">
- <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
- <div className="space-y-1">
- <label className="text-sm font-bold text-zinc-500">Education Details</label>
- <input
- type="text"
- required
- placeholder="e.g. PhD Clinical Psychology"
- value={regForm.education}
- onChange={(e) => setRegForm({ ...regForm, education: e.target.value })}
- className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-indigo-500 rounded-[10px] text-sm text-white outline-none transition-colors"
- />
- </div>
- <div className="space-y-1">
- <label className="text-sm font-bold text-zinc-500">Languages Spoken</label>
- <input
- type="text"
- required
- placeholder="Malayalam, English, Tamil"
- value={regForm.lang}
- onChange={(e) => setRegForm({ ...regForm, lang: e.target.value })}
- className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-indigo-500 rounded-[10px] text-sm text-white outline-none transition-colors"
- />
- </div>
- </div>
+                {/* STEP 2: Qualifications & Clinical details */}
+                {onboardingStep === 2 && (
+                  <form onSubmit={handleStepTwoNext} className='space-y-4.5 text-left'>
+                    <div>
+                      <label className='block text-xs font-medium text-slate-400 mb-2'>
+                        Education / Degree
+                      </label>
+                      <input
+                        type='text'
+                        required
+                        placeholder='e.g. PhD Clinical Psychology'
+                        value={regForm.education}
+                        onChange={(e) => setRegForm({ ...regForm, education: e.target.value })}
+                        className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
+                      />
+                    </div>
 
- <div className="space-y-1">
- <label className="text-sm font-bold text-zinc-500">Hourly Session Fee (INR)</label>
- <input
- type="number"
- required
- placeholder="1200"
- value={regForm.price}
- onChange={(e) => setRegForm({ ...regForm, price: e.target.value })}
- className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-indigo-500 rounded-[10px] text-sm text-white outline-none transition-colors"
- />
- </div>
+                    <div className='flex gap-4'>
+                      <div className='w-1/2'>
+                        <label className='block text-xs font-medium text-slate-400 mb-2'>
+                          Hourly Session Fee (INR)
+                        </label>
+                        <input
+                          type='number'
+                          required
+                          placeholder='1200'
+                          value={regForm.price}
+                          onChange={(e) => setRegForm({ ...regForm, price: e.target.value })}
+                          className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
+                        />
+                      </div>
+                      <div className='w-1/2'>
+                        <label className='block text-xs font-medium text-slate-400 mb-2'>
+                          Experience (Years)
+                        </label>
+                        <input
+                          type='number'
+                          required
+                          placeholder='5'
+                          value={regForm.hours}
+                          onChange={(e) => setRegForm({ ...regForm, hours: e.target.value })}
+                          className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
+                        />
+                      </div>
+                    </div>
 
- <div className="space-y-1">
- <label className="text-sm font-bold text-zinc-500">Specialties (comma-separated)</label>
- <input
- type="text"
- required
- placeholder="Anxiety, Relationship Dynamics, Career Stress"
- value={regForm.specialties}
- onChange={(e) => setRegForm({ ...regForm, specialties: e.target.value })}
- className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-indigo-500 rounded-[10px] text-sm text-white outline-none transition-colors"
- />
- </div>
+                    <div>
+                      <label className='block text-xs font-medium text-slate-400 mb-2'>
+                        Languages Spoken
+                      </label>
+                      <input
+                        type='text'
+                        required
+                        placeholder='Malayalam, English, Tamil'
+                        value={regForm.lang}
+                        onChange={(e) => setRegForm({ ...regForm, lang: e.target.value })}
+                        className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
+                      />
+                    </div>
 
- <div className="space-y-1">
- <label className="text-sm font-bold text-zinc-500">Default Google Meet Link (optional)</label>
- <input
- type="url"
- placeholder="https://meet.google.com/abc-defg-hij"
- value={regForm.defaultMeetLink}
- onChange={(e) => setRegForm({ ...regForm, defaultMeetLink: e.target.value })}
- className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-indigo-500 rounded-[10px] text-sm text-white outline-none transition-colors"
- />
- </div>
+                    <div>
+                      <label className='block text-xs font-medium text-slate-400 mb-2'>
+                        Specialties (comma-separated)
+                      </label>
+                      <input
+                        type='text'
+                        required
+                        placeholder='Anxiety, Relationship Dynamics, Career Stress'
+                        value={regForm.specialties}
+                        onChange={(e) => setRegForm({ ...regForm, specialties: e.target.value })}
+                        className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
+                      />
+                    </div>
 
- <div className="space-y-2">
- <label className="text-sm font-bold text-zinc-500 block text-left">Supported Session Modes</label>
- <div className="flex gap-4 pt-0.5 justify-start text-left">
- {['ONLINE', 'OFFLINE', 'DOOR_STEP'].map(mode => {
- const isSelected = regForm.modes?.includes(mode);
- return (
- <label key={mode} className="flex items-center gap-1.5 cursor-pointer text-sm text-white select-none">
- <input
- type="checkbox"
- checked={isSelected}
- onChange={(e) => {
- let nextModes = [...(regForm.modes || [])];
- if (e.target.checked) {
- if (!nextModes.includes(mode)) nextModes.push(mode);
- } else {
- nextModes = nextModes.filter(m => m !== mode);
- }
- setRegForm({ ...regForm, modes: nextModes });
- }}
- className="w-3.5 h-3.5 rounded border-zinc-850 bg-zinc-950 text-brand focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
- />
- <span>{mode === 'DOOR_STEP' ? 'Doorstep' : mode.charAt(0) + mode.slice(1).toLowerCase()}</span>
- </label>
- );
- })}
- </div>
- </div>
+                    <div>
+                      <label className='block text-xs font-medium text-slate-400 mb-2'>
+                        Default Google Meet Link (optional)
+                      </label>
+                      <input
+                        type='url'
+                        placeholder='https://meet.google.com/abc-defg-hij'
+                        value={regForm.defaultMeetLink}
+                        onChange={(e) => setRegForm({ ...regForm, defaultMeetLink: e.target.value })}
+                        className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
+                      />
+                    </div>
 
- <div className="space-y-1">
- <label className="text-sm font-bold text-zinc-500">Professional Bio</label>
- <textarea
- rows={3}
- required
- placeholder="Describe your clinical expertise and background..."
- value={regForm.bio}
- onChange={(e) => setRegForm({ ...regForm, bio: e.target.value })}
- className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-indigo-500 rounded-[10px] text-sm text-white outline-none transition-colors resize-none"
- />
- </div>
+                    <div>
+                      <label className='block text-xs font-medium text-slate-400 mb-2'>
+                        Supported Session Modes
+                      </label>
+                      <div className='flex gap-4 pt-1 justify-start text-left'>
+                        {['ONLINE', 'OFFLINE', 'DOOR_STEP'].map(mode => {
+                          const isSelected = regForm.modes?.includes(mode);
+                          return (
+                            <label key={mode} className='flex items-center gap-1.5 cursor-pointer text-sm text-white select-none'>
+                              <input
+                                type='checkbox'
+                                checked={isSelected}
+                                onChange={(e) => {
+                                  let nextModes = [...(regForm.modes || [])];
+                                  if (e.target.checked) {
+                                    if (!nextModes.includes(mode)) nextModes.push(mode);
+                                  } else {
+                                    nextModes = nextModes.filter(m => m !== mode);
+                                  }
+                                  setRegForm({ ...regForm, modes: nextModes });
+                                }}
+                                className='w-3.5 h-3.5 rounded border-slate-800 bg-[#050811] text-[#00E5FF] focus:ring-0 focus:ring-offset-0 cursor-pointer accent-[#00E5FF]'
+                              />
+                              <span>{mode === 'DOOR_STEP' ? 'Doorstep' : mode.charAt(0) + mode.slice(1).toLowerCase()}</span>
+                            </label>
+                          );
+                        })}
+                      </div>
+                    </div>
 
- <div className="flex gap-3">
- <button
- type="button"
- onClick={() => setOnboardingStep(1)}
- className="flex-1 py-3 border border-zinc-800 hover:bg-zinc-850 text-white font-bold text-sm rounded-[10px] cursor-pointer transition text-center"
- >
- Back
- </button>
- <button
- type="submit"
- className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm rounded-full cursor-pointer transition border-none shadow-md"
- >
- Next: Calendar
- </button>
- </div>
- </form>
- )}
+                    <div>
+                      <label className='block text-xs font-medium text-slate-400 mb-2'>
+                        Professional Bio
+                      </label>
+                      <textarea
+                        rows='3'
+                        required
+                        placeholder='Describe your clinical expertise and background...'
+                        value={regForm.bio}
+                        onChange={(e) => setRegForm({ ...regForm, bio: e.target.value })}
+                        className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-2.5 text-sm text-white placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200 resize-none'
+                      />
+                    </div>
 
- {onboardingStep === 3 && (
- <form onSubmit={handleCompleteOnboarding} className="space-y-5">
- <div className="space-y-2">
- <label className="text-zinc-500 font-bold text-sm block">Operational Days</label>
- <div className="flex flex-wrap gap-1.5">
- {DAYS_OF_WEEK.map(day => {
- const active = regActiveDays[day.index];
- return (
- <button
- key={day.index}
- type="button"
- onClick={() => toggleRegDay(day.index)}
- className={`px-3 py-1.5 border rounded-[10px] text-sm font-bold transition-all duration-200 cursor-pointer ${active
- ? 'bg-brand text-zinc-955 font-bold border-none'
- : 'bg-zinc-950 border-zinc-850 text-zinc-500 hover:border-zinc-750'
- }`}
- >
- {day.label.substring(0, 3)}
- </button>
- );
- })}
- </div>
- </div>
+                    <div className='pt-4 flex gap-3'>
+                      <button
+                        type='button'
+                        onClick={() => setOnboardingStep(1)}
+                        className='w-1/3 border border-slate-800 text-slate-300 hover:text-white rounded-lg font-bold text-sm py-3 transition cursor-pointer active:scale-[0.98] bg-transparent'
+                      >
+                        Back
+                      </button>
+                      <button
+                        type='submit'
+                        className='w-2/3 bg-[#00E5FF] hover:bg-[#00bccc] text-slate-950 font-bold py-3 rounded-lg text-sm transition duration-200 cursor-pointer shadow-lg shadow-[#00E5FF]/10 active:scale-[0.98] border-none'
+                      >
+                        Next: Calendar
+                      </button>
+                    </div>
+                    
+                    <a href='/' className='w-full text-center text-xs text-slate-500 hover:text-slate-350 transition pt-2 cursor-pointer block'>
+                      Back to Homepage
+                    </a>
+                  </form>
+                )}
 
- <div className="space-y-2 border-t border-zinc-800 pt-3 text-left">
- <label className="text-zinc-500 font-bold text-sm block">Timing Slots (Active)</label>
- <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-center">
- {regAllSlots.map(slot => {
- const exists = regAvailableSlots.includes(slot);
- return (
- <div key={slot} className="flex items-center gap-1.5 w-full">
- <button
- type="button"
- onClick={() => {
- if (exists) {
- setRegAvailableSlots(prev => prev.filter(s => s !== slot));
- } else {
- setRegAvailableSlots(prev => [...prev, slot]);
- }
- }}
- className={`flex-1 py-2.5 border rounded-[10px] font-bold transition cursor-pointer text-sm ${exists
- ? 'bg-brand/10 border-brand text-brand'
- : 'bg-zinc-955 border-zinc-850 text-zinc-500 hover:border-zinc-750'
- }`}
- >
- {slot}
- </button>
- <button
- type="button"
- onClick={() => handleRemoveRegSlot(slot)}
- className="px-2.5 py-2.5 bg-zinc-950 border border-zinc-850 hover:bg-rose-950/40 hover:border-rose-900 text-zinc-500 hover:text-rose-400 rounded-[10px] text-sm font-bold transition cursor-pointer shrink-0 font-header"
- title="Remove Slot"
- >
- Remove
- </button>
- </div>
- );
- })}
- {regAllSlots.length === 0 && (
- <div className="col-span-2 py-4 bg-zinc-955/40 border border-dashed border-zinc-850 rounded-[10px] text-zinc-500 italic text-sm text-center w-full">
- No timing slots configured. Use the controls below to add custom slots or generate from a time range.
- </div>
- )}
- </div>
- </div>
+                {/* STEP 3: Timing Slots & Custom Scheduling */}
+                {onboardingStep === 3 && (
+                  <form onSubmit={handleCompleteOnboarding} className='space-y-5 text-left max-h-[50vh] overflow-y-auto pr-1 custom-scrollbar'>
+                    <div>
+                      <label className='block text-xs font-medium text-slate-400 mb-2'>
+                        Operational Days
+                      </label>
+                      <div className='flex flex-wrap gap-1.5'>
+                        {DAYS_OF_WEEK.map(day => {
+                          const active = regActiveDays[day.index];
+                          return (
+                            <button
+                              key={day.index}
+                              type='button'
+                              onClick={() => toggleRegDay(day.index)}
+                              className={`px-3 py-1.5 border rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer ${
+                                active
+                                  ? 'bg-[#00E5FF]/20 text-[#00E5FF] border-[#00E5FF]/40'
+                                  : 'bg-[#050811] border-slate-800 text-slate-400 hover:text-white'
+                              }`}
+                            >
+                              {day.label.substring(0, 3)}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
 
- <div className="space-y-2 border-t border-zinc-800 pt-3 text-left">
- <label className="text-zinc-500 font-bold text-sm block">Add Custom Timing Slot</label>
- <div className="flex gap-1.5 items-end">
- <div className="flex-1 space-y-0.5">
- <label className="text-xs text-zinc-500 font-bold block">Hour</label>
- <select
- value={regCustomHour}
- onChange={(e) => setRegCustomHour(e.target.value)}
- className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-[10px] text-sm text-white outline-none focus:border-brand cursor-pointer"
- >
- {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map(h => (
- <option key={h} value={h}>{h}</option>
- ))}
- </select>
- </div>
- <div className="flex-1 space-y-0.5">
- <label className="text-xs text-zinc-500 font-bold block">Minute</label>
- <select
- value={regCustomMinute}
- onChange={(e) => setRegCustomMinute(e.target.value)}
- className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-[10px] text-sm text-white outline-none focus:border-brand cursor-pointer"
- >
- {['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55'].map(m => (
- <option key={m} value={m}>{m}</option>
- ))}
- </select>
- </div>
- <div className="flex-1 space-y-0.5">
- <label className="text-xs text-zinc-500 font-bold block">AM/PM</label>
- <select
- value={regCustomPeriod}
- onChange={(e) => setRegCustomPeriod(e.target.value)}
- className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-[10px] text-sm text-white outline-none focus:border-brand cursor-pointer"
- >
- <option value="AM">AM</option>
- <option value="PM">PM</option>
- </select>
- </div>
- <button
- type="button"
- onClick={handleAddRegCustomSlot}
- className="bg-brand/10 hover:bg-brand text-brand hover:text-zinc-955 px-3 py-1.5 text-sm font-bold rounded-full transition-colors border border-brand/30 hover:border-brand cursor-pointer shrink-0 h-[28.5px] flex items-center justify-center font-header"
- >
- Add Slot
- </button>
- </div>
- </div>
+                    <div className='space-y-2 border-t border-slate-800/80 pt-4'>
+                      <label className='block text-xs font-medium text-slate-400 mb-2'>
+                        Timing Slots (Active)
+                      </label>
+                      <div className='grid grid-cols-2 gap-2'>
+                        {regAllSlots.map(slot => {
+                          const exists = regAvailableSlots.includes(slot);
+                          return (
+                            <div key={slot} className='flex items-center gap-1.5 w-full'>
+                              <button
+                                type='button'
+                                onClick={() => {
+                                  if (exists) {
+                                    setRegAvailableSlots(prev => prev.filter(s => s !== slot));
+                                  } else {
+                                    setRegAvailableSlots(prev => [...prev, slot]);
+                                  }
+                                }}
+                                className={`flex-1 py-2 border rounded-lg font-bold transition cursor-pointer text-xs ${
+                                  exists
+                                    ? 'bg-[#00E5FF]/20 text-[#00E5FF] border-[#00E5FF]/40'
+                                    : 'bg-[#050811] border-slate-800 text-slate-500 hover:text-slate-350'
+                                }`}
+                              >
+                                {slot}
+                              </button>
+                              <button
+                                type='button'
+                                onClick={() => handleRemoveRegSlot(slot)}
+                                className='px-2.5 py-2 bg-transparent border border-slate-800 hover:bg-rose-955/40 hover:border-rose-900 text-slate-500 hover:text-rose-450 rounded-lg text-xs font-bold transition cursor-pointer shrink-0'
+                                title='Remove Slot'
+                              >
+                                Remove
+                              </button>
+                            </div>
+                          );
+                        })}
+                        {regAllSlots.length === 0 && (
+                          <div className='col-span-2 py-4 bg-[#050811] border border-dashed border-slate-800 rounded-lg text-slate-500 italic text-xs text-center w-full'>
+                            No timing slots configured. Use the controls below to add custom slots or generate from a time range.
+                          </div>
+                        )}
+                      </div>
+                    </div>
 
- <div className="space-y-2 border-t border-zinc-800 pt-3 text-left">
- <label className="text-zinc-500 font-bold text-sm block">Add Custom Time Range (From / To)</label>
- <div className="flex flex-col gap-2">
- <div className="flex gap-1.5 items-end">
- <span className="text-sm text-zinc-550 font-bold pb-1.5 tracking-wide w-8 text-left">From:</span>
- <div className="flex-1 space-y-0.5">
- <select
- value={regFromHour}
- onChange={(e) => setRegFromHour(e.target.value)}
- className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-[10px] text-sm text-white outline-none focus:border-brand cursor-pointer"
- >
- {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map(h => (
- <option key={h} value={h}>{h}</option>
- ))}
- </select>
- </div>
- <div className="flex-1 space-y-0.5">
- <select
- value={regFromMinute}
- onChange={(e) => setRegFromMinute(e.target.value)}
- className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-[10px] text-sm text-white outline-none focus:border-brand cursor-pointer"
- >
- {['00', '15', '30', '45'].map(m => (
- <option key={m} value={m}>{m}</option>
- ))}
- </select>
- </div>
- <div className="flex-1 space-y-0.5">
- <select
- value={regFromPeriod}
- onChange={(e) => setRegFromPeriod(e.target.value)}
- className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-[10px] text-sm text-white outline-none focus:border-brand cursor-pointer"
- >
- <option value="AM">AM</option>
- <option value="PM">PM</option>
- </select>
- </div>
- </div>
+                    <div className='space-y-3 border-t border-slate-800/80 pt-4'>
+                      <label className='block text-xs font-medium text-slate-400'>Add Custom Timing Slot</label>
+                      <div className='flex gap-2 items-end'>
+                        <div className='flex-1 space-y-1.5'>
+                          <label className='text-[10px] text-slate-500 font-bold block'>Hour</label>
+                          <select
+                            value={regCustomHour}
+                            onChange={(e) => setRegCustomHour(e.target.value)}
+                            className='w-full bg-[#050811] border border-slate-805 focus:border-[#00E5FF] rounded-lg px-2.5 py-2 text-xs text-white outline-none cursor-pointer'
+                          >
+                            {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map(h => (
+                              <option key={h} value={h}>{h}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className='flex-1 space-y-1.5'>
+                          <label className='text-[10px] text-slate-500 font-bold block'>Minute</label>
+                          <select
+                            value={regCustomMinute}
+                            onChange={(e) => setRegCustomMinute(e.target.value)}
+                            className='w-full bg-[#050811] border border-slate-805 focus:border-[#00E5FF] rounded-lg px-2.5 py-2 text-xs text-white outline-none cursor-pointer'
+                          >
+                            {['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55'].map(m => (
+                              <option key={m} value={m}>{m}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className='flex-1 space-y-1.5'>
+                          <label className='text-[10px] text-slate-500 font-bold block'>AM/PM</label>
+                          <select
+                            value={regCustomPeriod}
+                            onChange={(e) => setRegCustomPeriod(e.target.value)}
+                            className='w-full bg-[#050811] border border-slate-805 focus:border-[#00E5FF] rounded-lg px-2.5 py-2 text-xs text-white outline-none cursor-pointer'
+                          >
+                            <option value='AM'>AM</option>
+                            <option value='PM'>PM</option>
+                          </select>
+                        </div>
+                        <button
+                          type='button'
+                          onClick={handleAddRegCustomSlot}
+                          className='bg-[#00E5FF]/20 hover:bg-[#00E5FF] text-[#00E5FF] hover:text-slate-950 px-3.5 py-2 text-xs font-bold rounded-lg transition border border-[#00E5FF]/30 hover:border-none cursor-pointer shrink-0 h-[34px] flex items-center justify-center font-header'
+                        >
+                          Add Slot
+                        </button>
+                      </div>
+                    </div>
 
- <div className="flex gap-1.5 items-end">
- <span className="text-sm text-zinc-555 font-bold pb-1.5 tracking-wide w-8 text-left">To:</span>
- <div className="flex-1 space-y-0.5">
- <select
- value={regToHour}
- onChange={(e) => setRegToHour(e.target.value)}
- className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-[10px] text-sm text-white outline-none focus:border-brand cursor-pointer"
- >
- {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map(h => (
- <option key={h} value={h}>{h}</option>
- ))}
- </select>
- </div>
- <div className="flex-1 space-y-0.5">
- <select
- value={regToMinute}
- onChange={(e) => setRegToMinute(e.target.value)}
- className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-[10px] text-sm text-white outline-none focus:border-brand cursor-pointer"
- >
- {['00', '15', '30', '45'].map(m => (
- <option key={m} value={m}>{m}</option>
- ))}
- </select>
- </div>
- <div className="flex-1 space-y-0.5">
- <select
- value={regToPeriod}
- onChange={(e) => setRegToPeriod(e.target.value)}
- className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-850 rounded-[10px] text-sm text-white outline-none focus:border-brand cursor-pointer"
- >
- <option value="AM">AM</option>
- <option value="PM">PM</option>
- </select>
- </div>
- </div>
+                    <div className='space-y-3 border-t border-slate-800/80 pt-4'>
+                      <label className='block text-xs font-medium text-slate-400'>Add Custom Time Range (From / To)</label>
+                      <div className='flex flex-col gap-3'>
+                        <div className='flex gap-2 items-center'>
+                          <span className='text-xs text-slate-500 font-bold tracking-wide w-10 text-left'>From:</span>
+                          <div className='flex-1'>
+                            <select
+                              value={regFromHour}
+                              onChange={(e) => setRegFromHour(e.target.value)}
+                              className='w-full bg-[#050811] border border-slate-800 focus:border-[#00E5FF] rounded-lg px-2.5 py-2 text-xs text-white outline-none cursor-pointer'
+                            >
+                              {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map(h => (
+                                <option key={h} value={h}>{h}</option>
+                              ))}
+                            </select>
+                          </div>
+                          <div className='flex-1'>
+                            <select
+                              value={regFromMinute}
+                              onChange={(e) => setRegFromMinute(e.target.value)}
+                              className='w-full bg-[#050811] border border-slate-800 focus:border-[#00E5FF] rounded-lg px-2.5 py-2 text-xs text-white outline-none cursor-pointer'
+                            >
+                              {['00', '15', '30', '45'].map(m => (
+                                <option key={m} value={m}>{m}</option>
+                              ))}
+                            </select>
+                          </div>
+                          <div className='flex-1'>
+                            <select
+                              value={regFromPeriod}
+                              onChange={(e) => setRegFromPeriod(e.target.value)}
+                              className='w-full bg-[#050811] border border-slate-800 focus:border-[#00E5FF] rounded-lg px-2.5 py-2 text-xs text-white outline-none cursor-pointer'
+                            >
+                              <option value='AM'>AM</option>
+                              <option value='PM'>PM</option>
+                            </select>
+                          </div>
+                        </div>
 
- <button
- type="button"
- onClick={() => {
- setRegSlotError('');
- const fromStr = `${regFromHour}:${regFromMinute} ${regFromPeriod}`;
- const toStr = `${regToHour}:${regToMinute} ${regToPeriod}`;
- addTimeRangeSlots(fromStr, toStr, true);
- }}
- className="w-full mt-1 bg-brand/10 hover:bg-brand text-brand hover:text-zinc-955 py-2 text-sm font-bold rounded-[10px] transition-colors border border-brand/30 hover:border-brand cursor-pointer flex items-center justify-center font-header"
- >
- Generate Hourly Slots from Range
- </button>
- </div>
- </div>
+                        <div className='flex gap-2 items-center'>
+                          <span className='text-xs text-slate-500 font-bold tracking-wide w-10 text-left'>To:</span>
+                          <div className='flex-1'>
+                            <select
+                              value={regToHour}
+                              onChange={(e) => setRegToHour(e.target.value)}
+                              className='w-full bg-[#050811] border border-slate-800 focus:border-[#00E5FF] rounded-lg px-2.5 py-2 text-xs text-white outline-none cursor-pointer'
+                            >
+                              {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map(h => (
+                                <option key={h} value={h}>{h}</option>
+                              ))}
+                            </select>
+                          </div>
+                          <div className='flex-1'>
+                            <select
+                              value={regToMinute}
+                              onChange={(e) => setRegToMinute(e.target.value)}
+                              className='w-full bg-[#050811] border border-slate-800 focus:border-[#00E5FF] rounded-lg px-2.5 py-2 text-xs text-white outline-none cursor-pointer'
+                            >
+                              {['00', '15', '30', '45'].map(m => (
+                                <option key={m} value={m}>{m}</option>
+                              ))}
+                            </select>
+                          </div>
+                          <div className='flex-1'>
+                            <select
+                              value={regToPeriod}
+                              onChange={(e) => setRegToPeriod(e.target.value)}
+                              className='w-full bg-[#050811] border border-slate-800 focus:border-[#00E5FF] rounded-lg px-2.5 py-2 text-xs text-white outline-none cursor-pointer'
+                            >
+                              <option value='AM'>AM</option>
+                              <option value='PM'>PM</option>
+                            </select>
+                          </div>
+                        </div>
 
- <div className="flex gap-3 pt-1">
- <button
- type="button"
- onClick={() => setOnboardingStep(2)}
- className="flex-1 py-3 border border-zinc-800 hover:bg-zinc-850 text-white font-bold text-sm rounded-[10px] cursor-pointer transition text-center"
- >
- Back
- </button>
- <button
- type="submit"
- disabled={isLoggingIn}
- className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm rounded-full cursor-pointer transition border-none shadow-md"
- >
- {isLoggingIn ? 'Creating Profile...' : 'Complete & Launch'}
- </button>
- </div>
- </form>
- )}
- </div>
- )}
- </div>
- </div>
- </div>
- );
- }
+                        <button
+                          type='button'
+                          onClick={() => {
+                            setRegSlotError('');
+                            const fromStr = `${regFromHour}:${regFromMinute} ${regFromPeriod}`;
+                            const toStr = `${regToHour}:${regToMinute} ${regToPeriod}`;
+                            addTimeRangeSlots(fromStr, toStr, true);
+                          }}
+                          className='w-full bg-[#00E5FF]/20 hover:bg-[#00E5FF] text-[#00E5FF] hover:text-slate-950 py-2.5 text-xs font-bold rounded-lg transition border border-[#00E5FF]/30 hover:border-none cursor-pointer flex items-center justify-center font-header'
+                        >
+                          Generate Hourly Slots from Range
+                        </button>
+                      </div>
+                    </div>
 
+                    <div className='pt-6 flex gap-3'>
+                      <button
+                        type='button'
+                        onClick={() => setOnboardingStep(2)}
+                        className='w-1/3 border border-slate-800 text-slate-300 hover:text-white rounded-lg font-bold text-sm py-3 transition cursor-pointer active:scale-[0.98] bg-transparent'
+                      >
+                        Back
+                      </button>
+                      <button
+                        type='submit'
+                        disabled={isLoggingIn}
+                        className='w-2/3 bg-[#00E5FF] hover:bg-[#00bccc] text-slate-950 font-bold py-3 rounded-lg text-sm transition duration-200 cursor-pointer shadow-lg shadow-[#00E5FF]/10 active:scale-[0.98] border-none'
+                      >
+                        {isLoggingIn ? (
+                          <div className='w-5 h-5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin mx-auto' />
+                        ) : (
+                          'Complete & Launch'
+                        )}
+                      </button>
+                    </div>
+                    
+                    <a href='/' className='w-full text-center text-xs text-slate-500 hover:text-slate-350 transition pt-2 cursor-pointer block'>
+                      Back to Homepage
+                    </a>
+                  </form>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
  if (counsellorStatus === 'REJECTED' || user?.status === 'REJECTED') {
  return (
  <div className="min-h-screen bg-zinc-955 flex items-center justify-center p-4 relative overflow-hidden text-left">
