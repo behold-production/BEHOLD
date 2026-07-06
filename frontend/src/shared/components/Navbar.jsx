@@ -48,7 +48,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
   const isSolid = isScrolled || currentView !== '/';
   const navClass = isScrolled
     ? "fixed w-full z-50 transition-all duration-300 lg:py-3 top-0"
-    : "fixed w-full z-50 transition-all duration-300 lg:py-3 top-0 lg:top-8";
+    : "fixed w-full z-50 transition-all duration-300 lg:py-3 top-0 md:top-[33px]";
 
   return (
     <>
