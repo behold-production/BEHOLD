@@ -97,9 +97,9 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
         style={{ opacity: scrollOpacity * 0.7, background: 'rgba(13,29,46,0.5)', backdropFilter: scrollOpacity > 0.1 ? `blur(${scrollOpacity * 12}px)` : 'none' }}
       />
 
-      {/* Content — vertically centered */}
-      <div className="relative z-20 flex-1 flex flex-col justify-center items-center w-full px-5 sm:px-8 md:px-16 pt-24 pb-10 md:pt-0 md:pb-0">
-        <div className="w-full max-w-2xl flex flex-col items-center md:items-start text-center md:text-left">
+      {/* Content — mobile: centered, desktop: bottom-left */}
+      <div className="relative z-20 flex-1 flex flex-col justify-center items-center md:justify-end md:items-start w-full px-5 sm:px-8 md:px-16 pt-24 pb-10 md:pt-0 md:pb-16 lg:pb-20">
+        <div className="w-full max-w-2xl flex flex-col items-center text-center md:items-start md:text-left">
 
           {/* Eyebrow label */}
           {settings.heroTopSub && (
