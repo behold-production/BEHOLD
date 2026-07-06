@@ -58,7 +58,21 @@ const settingSchema = new mongoose.Schema(
         value: { type: Number, required: true },
         isActive: { type: Boolean, default: true }
       }
-    ]
+    ],
+    heroSlides: {
+      type: [
+        {
+          image: { type: String, default: '' },
+          title: { type: String, default: '' },
+          subtitle: { type: String, default: '' },
+          btn1Text: { type: String, default: '' },
+          btn1Link: { type: String, default: '' },
+          btn2Text: { type: String, default: '' },
+          btn2Link: { type: String, default: '' }
+        }
+      ],
+      default: []
+    }
   },
   { timestamps: true }
 );

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { SkeletonTableRows, PaginationBar } from '../components/SharedAdminUI';
-import { User, ShieldAlert, Award, Trash, Check, Plus, Lock, Settings, KeyRound, BarChart3, LogOut, Search, ShieldCheck, Calendar, Clock, Link, AlertCircle, Edit, Video, UserPlus, MessageSquare, FileSpreadsheet, HelpCircle, X, ChevronRight, ChevronLeft, Mail, Shield, Menu, Brain, Download, FileText, Eye, EyeOff, Bell, Send, Loader2 } from 'lucide-react';
+import { User, ShieldAlert, Award, Trash, Check, Plus, Lock, Settings, KeyRound, BarChart3, LogOut, Search, ShieldCheck, Calendar, Clock, Link, AlertCircle, Edit, Video, UserPlus, MessageSquare, FileSpreadsheet, HelpCircle, X, ChevronRight, ChevronLeft, ChevronUp, ChevronDown, Mail, Shield, Menu, Brain, Download, FileText, Eye, EyeOff, Bell, Send, Loader2 } from 'lucide-react';
 
 const isNotificationSupported = () => 'Notification' in window;
 
@@ -510,35 +510,113 @@ export default function SettingsTab(props) {
 
                 {/* Hero Section */}
                 <div className="bg-zinc-950/40 border border-zinc-800 p-5 rounded-xl space-y-4">
-                  <h4 className="text-xs font-bold text-brand uppercase tracking-wider flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-brand" />
-                    Hero Banner Text Configuration
-                  </h4>
+                  <div className="flex justify-between items-center">
+                    <h4 className="text-xs font-bold text-brand uppercase tracking-wider flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+                      Hero Carousel Slides
+                    </h4>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const newSlide = { image: '', title: '', subtitle: '', btn1Text: '', btn1Link: '', btn2Text: '', btn2Link: '' };
+                        setSettingsForm(prev => ({ ...prev, heroSlides: [...(prev.heroSlides || []), newSlide] }));
+                      }}
+                      className="px-3 py-1.5 bg-brand/10 hover:bg-brand/20 text-brand rounded flex items-center gap-1 text-xs font-bold transition-colors cursor-pointer"
+                    >
+                      <Plus className="w-3 h-3" />
+                      Add Slide
+                    </button>
+                  </div>
+                  
                   <div className="space-y-4">
-                    <div className="space-y-1">
-                      <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Hero Section Heading</label>
-                      <input
-                        type="text"
-                        required
-                        value={settingsForm.heroTitle}
-                        onChange={(e) => setSettingsForm({ ...settingsForm, heroTitle: e.target.value })}
-                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
-                        placeholder="e.g. Bridging You To Your {True Growth.}"
-                      />
-                      <span className="text-[11px] text-zinc-500 block font-medium">Use curly braces `{ }` around words you want highlighted with the neon gradient.</span>
-                    </div>
-
-                    <div className="space-y-1">
-                      <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Hero Section Subtitle</label>
-                      <textarea
-                        rows={3}
-                        required
-                        value={settingsForm.heroSub}
-                        onChange={(e) => setSettingsForm({ ...settingsForm, heroSub: e.target.value })}
-                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none resize-none font-semibold transition-colors"
-                        placeholder="Write a compelling landing subheading..."
-                      />
-                    </div>
+                    {!(settingsForm.heroSlides?.length > 0) ? (
+                      <div className="p-4 border border-dashed border-zinc-700 rounded-lg text-center text-zinc-500 text-xs">
+                        No custom slides configured. Default fallback slides will be used on the landing page.
+                      </div>
+                    ) : (
+                      settingsForm.heroSlides.map((slide, index) => (
+                        <div key={index} className="p-4 border border-zinc-800 bg-zinc-900/60 rounded-lg space-y-4 shadow-sm">
+                          <div className="flex justify-between items-center pb-2 border-b border-zinc-800/80">
+                            <span className="text-xs font-bold text-zinc-300">Slide {index + 1}</span>
+                            <div className="flex items-center gap-2">
+                              <button type="button" disabled={index === 0} onClick={() => {
+                                const newSlides = [...settingsForm.heroSlides];
+                                [newSlides[index - 1], newSlides[index]] = [newSlides[index], newSlides[index - 1]];
+                                setSettingsForm(prev => ({ ...prev, heroSlides: newSlides }));
+                              }} className="p-1 hover:bg-zinc-800 rounded disabled:opacity-30 cursor-pointer"><ChevronUp className="w-4 h-4 text-zinc-400" /></button>
+                              <button type="button" disabled={index === settingsForm.heroSlides.length - 1} onClick={() => {
+                                const newSlides = [...settingsForm.heroSlides];
+                                [newSlides[index + 1], newSlides[index]] = [newSlides[index], newSlides[index + 1]];
+                                setSettingsForm(prev => ({ ...prev, heroSlides: newSlides }));
+                              }} className="p-1 hover:bg-zinc-800 rounded disabled:opacity-30 cursor-pointer"><ChevronDown className="w-4 h-4 text-zinc-400" /></button>
+                              <button type="button" onClick={() => {
+                                const newSlides = settingsForm.heroSlides.filter((_, i) => i !== index);
+                                setSettingsForm(prev => ({ ...prev, heroSlides: newSlides }));
+                              }} className="p-1 hover:bg-red-500/20 rounded cursor-pointer"><Trash className="w-4 h-4 text-red-400" /></button>
+                            </div>
+                          </div>
+                          
+                          <div className="space-y-3">
+                            <div>
+                              <label className="text-[10px] font-bold text-zinc-500 uppercase">Background Image URL</label>
+                              <input type="url" value={slide.image || ''} onChange={(e) => {
+                                const newSlides = [...settingsForm.heroSlides];
+                                newSlides[index] = { ...newSlides[index], image: e.target.value };
+                                setSettingsForm(prev => ({ ...prev, heroSlides: newSlides }));
+                              }} className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none" placeholder="https://images.unsplash.com/photo-..." />
+                            </div>
+                            
+                            <div>
+                              <label className="text-[10px] font-bold text-zinc-500 uppercase">Heading (use {`{ }`} for highlight)</label>
+                              <input type="text" value={slide.title || ''} onChange={(e) => {
+                                const newSlides = [...settingsForm.heroSlides];
+                                newSlides[index] = { ...newSlides[index], title: e.target.value };
+                                setSettingsForm(prev => ({ ...prev, heroSlides: newSlides }));
+                              }} className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none" placeholder="Bridging You To Your {True Growth.}" />
+                            </div>
+                            
+                            <div>
+                              <label className="text-[10px] font-bold text-zinc-500 uppercase">Description / Subtitle</label>
+                              <textarea rows={2} value={slide.subtitle || ''} onChange={(e) => {
+                                const newSlides = [...settingsForm.heroSlides];
+                                newSlides[index] = { ...newSlides[index], subtitle: e.target.value };
+                                setSettingsForm(prev => ({ ...prev, heroSlides: newSlides }));
+                              }} className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white resize-none outline-none" placeholder="Description text..." />
+                            </div>
+                            
+                            <div className="grid grid-cols-2 gap-3">
+                              <div className="space-y-2 p-2 border border-zinc-800/80 rounded bg-zinc-950/40">
+                                <span className="text-[10px] text-zinc-500 font-bold uppercase block">Primary Button (Left)</span>
+                                <input type="text" value={slide.btn1Text || ''} onChange={(e) => {
+                                  const newSlides = [...settingsForm.heroSlides];
+                                  newSlides[index] = { ...newSlides[index], btn1Text: e.target.value };
+                                  setSettingsForm(prev => ({ ...prev, heroSlides: newSlides }));
+                                }} className="w-full px-2 py-1.5 bg-zinc-900 border border-zinc-800 focus:border-brand rounded text-xs text-white outline-none" placeholder="Button Text (e.g. Book A Session)" />
+                                <input type="text" value={slide.btn1Link || ''} onChange={(e) => {
+                                  const newSlides = [...settingsForm.heroSlides];
+                                  newSlides[index] = { ...newSlides[index], btn1Link: e.target.value };
+                                  setSettingsForm(prev => ({ ...prev, heroSlides: newSlides }));
+                                }} className="w-full px-2 py-1.5 bg-zinc-900 border border-zinc-800 focus:border-brand rounded text-xs text-white outline-none" placeholder="Link Route (e.g. /booking)" />
+                              </div>
+                              
+                              <div className="space-y-2 p-2 border border-zinc-800/80 rounded bg-zinc-950/40">
+                                <span className="text-[10px] text-zinc-500 font-bold uppercase block">Secondary Button (Right)</span>
+                                <input type="text" value={slide.btn2Text || ''} onChange={(e) => {
+                                  const newSlides = [...settingsForm.heroSlides];
+                                  newSlides[index] = { ...newSlides[index], btn2Text: e.target.value };
+                                  setSettingsForm(prev => ({ ...prev, heroSlides: newSlides }));
+                                }} className="w-full px-2 py-1.5 bg-zinc-900 border border-zinc-800 focus:border-brand rounded text-xs text-white outline-none" placeholder="Button Text (e.g. Explore Aptitude)" />
+                                <input type="text" value={slide.btn2Link || ''} onChange={(e) => {
+                                  const newSlides = [...settingsForm.heroSlides];
+                                  newSlides[index] = { ...newSlides[index], btn2Link: e.target.value };
+                                  setSettingsForm(prev => ({ ...prev, heroSlides: newSlides }));
+                                }} className="w-full px-2 py-1.5 bg-zinc-900 border border-zinc-800 focus:border-brand rounded text-xs text-white outline-none" placeholder="Link Route (e.g. /aptitude-test)" />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    )}
                   </div>
                 </div>
 

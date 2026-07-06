@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Baloo+Chettan+2:wght@400;500;600;700;800&family=Manjari:wght@400;700&family=Noto+Sans+Malayalam:wght@400;500;700&family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600&family=Baloo+Chettan+2:wght@400;500;600;700;800&family=Manjari:wght@400;700&family=Noto+Sans+Malayalam:wght@400;500;700&family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -13,8 +13,8 @@
   --color-zinc-900: var(--color-slate-900);
   --color-zinc-800: var(--color-slate-800);
   --color-zinc-700: var(--color-slate-700);
-  --font-sans: 'Poppins', 'Baloo Chettan 2', 'Manjari', 'Noto Sans Malayalam', system-ui, sans-serif;
-  --font-heading: 'Poppins', 'Baloo Chettan 2', 'Manjari', 'Noto Sans Malayalam', sans-serif;
+  --font-sans: 'Outfit', 'Poppins', 'Baloo Chettan 2', 'Manjari', 'Noto Sans Malayalam', system-ui, sans-serif;
+  --font-heading: 'Outfit', 'Poppins', 'Baloo Chettan 2', 'Manjari', 'Noto Sans Malayalam', sans-serif;
   --color-brand: #00E5FF;
   --color-brand-dark: #00B3CC;
   --color-brand-light: #e6fbfb;
@@ -107,6 +107,25 @@ html {
   scroll-padding-top: 80px;
   /* keep sections clear of the sticky navbar */
   -webkit-text-size-adjust: 100%;
+}
+
+.bg-brand-dark {
+  background-color: #163a44;
+}
+
+/* Glassmorphism utilities */
+.glass {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.glass-dark {
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 body {
@@ -289,6 +308,19 @@ body.no-scroll {
   }
 }
 
+@keyframes flyOutLeft {
+  0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  100% { transform: translate(-150%, -50%) scale(0.8) rotate(-10deg); opacity: 0; }
+}
+
+@keyframes flyOutRight {
+  0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  100% { transform: translate(50%, -50%) scale(0.8) rotate(10deg); opacity: 0; }
+}
+
+.fly-left { animation: flyOutLeft 0.5s forwards ease-in-out; }
+.fly-right { animation: flyOutRight 0.5s forwards ease-in-out; }
+
 /* Testimonial scrolling animation */
 @keyframes marquee {
   0% {
@@ -380,25 +412,23 @@ textarea:focus {
 
 /* Sharp, blocky buttons */
 @utility btn-primary {
-  background-color: var(--color-brand);
-  color: var(--color-surface-900);
+  background-color: var(--color-surface-900);
+  color: #ffffff;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
   padding: 0.75rem 2rem;
   border-radius: 10px !important;
   transition: all 0.2s ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid var(--color-brand);
-  box-shadow: 0 0 12px rgba(0, 229, 255, 0.35), inset 0 0 4px rgba(0, 229, 255, 0.1);
+  border: 2px solid var(--color-surface-900);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
   
   &:hover {
-    background-color: transparent;
-    color: var(--color-brand-dark);
-    border-color: var(--color-brand-dark);
-    box-shadow: 0 0 20px rgba(0, 229, 255, 0.65), inset 0 0 8px rgba(0, 229, 255, 0.25);
+    background-color: #000000;
+    color: #ffffff;
+    border-color: #000000;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
   }
 }
 
@@ -407,8 +437,6 @@ textarea:focus {
   background-color: transparent;
   color: var(--color-surface-900);
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
   padding: 0.75rem 2rem;
   border-radius: 10px !important;
   transition: all 0.2s ease;
@@ -418,9 +446,8 @@ textarea:focus {
   border: 2px solid var(--color-surface-900);
   
   &:hover {
-    border-color: var(--color-brand);
-    background-color: var(--color-brand);
-    color: var(--color-surface-900);
+    background-color: var(--color-surface-900);
+    color: #ffffff;
   }
 }
 
@@ -442,4 +469,32 @@ textarea:focus {
   font-size: 32px;
   line-height: 0;
   margin-left: 2px;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+/* ── NAVBAR GLASS & DROPDOWN ────────────────────────────── */
+.glass {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.dropdown-menu {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.group:hover .dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
 }

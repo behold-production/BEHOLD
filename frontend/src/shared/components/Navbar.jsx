@@ -1,426 +1,231 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Menu, X, ArrowUpRight, User, LogOut, ChevronRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import LogoutConfirmModal from './LogoutConfirmModal';
 
-function getInitials(name) {
-  if (!name) return 'ST';
-  const clean = name.trim();
-  if (clean.length === 0) return 'ST';
-  const words = clean.split(/\s+/).filter(Boolean);
-  if (words.length >= 2) {
-    return (words[0][0] + words[1][0]).toUpperCase();
-  }
-  if (words[0].length >= 2) {
-    return words[0].slice(0, 2).toUpperCase();
-  }
-  return words[0].toUpperCase();
-}
-
-export default function Navbar({ navigateToSection, currentView, onOpenAuth, siteName, siteSettings = {} }) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('');
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
+export default function Navbar({ navigateToSection, currentView, onOpenAuth, siteName, siteSettings }) {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isLogoutOpen, setIsLogoutOpen] = useState(false);
+
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const desktopDropdownRef = useRef(null);
-  const mobileDropdownRef = useRef(null);
 
-  useEffect(() => {
-    if (currentView !== '/') {
-      setTimeout(() => setActiveSection(''), 0);
-      return;
-    }
-
-    const sections = ['home', 'services', 'about', 'faqs', 'inquiry', 'cdat'];
-
-    const handleIntersect = (entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          setActiveSection(entry.target.id);
-        }
-      });
-    };
-
-    const observer = new IntersectionObserver(handleIntersect, {
-      rootMargin: '-40% 0px -40% 0px',
-      threshold: 0
-    });
-
-    sections.forEach(id => {
-      const el = document.getElementById(id);
-      if (el) {
-        observer.observe(el);
-      }
-    });
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [currentView]);
-
-  // Body scroll lock while the mobile drawer is open
-  useEffect(() => {
-    if (isMenuOpen) {
-      document.body.classList.add('no-scroll');
-    } else {
-      document.body.classList.remove('no-scroll');
-    }
-    return () => document.body.classList.remove('no-scroll');
-  }, [isMenuOpen]);
-
-  // Track scroll position for dynamic styling
+  // Handle Scroll
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      setIsScrolled(window.scrollY > 20);
     };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // Check initial state
+    window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close mobile drawer & dropdown automatically when route changes
-  useEffect(() => {
-    setTimeout(() => {
-      setIsMenuOpen(false);
-      setShowDropdown(false);
-    }, 0);
-  }, [currentView]);
-
-  // Close dropdown when clicking outside of it
-  useEffect(() => {
-    if (!showDropdown) return;
-    const handleClickOutside = (e) => {
-      if (
-        desktopDropdownRef.current && !desktopDropdownRef.current.contains(e.target) &&
-        mobileDropdownRef.current && !mobileDropdownRef.current.contains(e.target)
-      ) {
-        setShowDropdown(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [showDropdown]);
-
-  const scrollToSection = (id) => {
-    setIsMenuOpen(false);
-    // Delay scrolling slightly to allow the no-scroll lock to be removed from the body first
-    setTimeout(() => {
-      navigateToSection(id);
-    }, 50);
-  };
-
-  const handleLogoClick = () => {
-    setIsMenuOpen(false);
-    setTimeout(() => {
-      navigateToSection('top');
-    }, 50);
-  };
-
-  const handleProfileClick = () => {
-    setShowDropdown(false);
-    setIsMenuOpen(false);
-    if (user) {
-      const role = user.role?.toUpperCase();
-      if (role === 'ADMIN') {
-        navigate('/admin');
-      } else if (role === 'PSYCHOLOGIST' || role === 'COUNSELLOR') {
-        navigate('/counsellor');
-      } else {
-        navigate('/profile');
-      }
+  const logoClick = () => {
+    if (currentView === '/') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      navigate('/');
+      setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
     }
   };
 
-  const isDarkTheme = currentView === '/' && !isScrolled;
+  const navClass = isScrolled
+    ? "fixed w-full z-50 transition-all duration-300 lg:py-3 top-0"
+    : "fixed w-full z-50 transition-all duration-300 lg:py-3 top-0 lg:top-8";
 
   return (
     <>
-      <header className={`fixed top-0 w-full z-50 transition-all duration-300 ${isDarkTheme ? 'bg-transparent border-transparent' : 'bg-white/90 backdrop-blur-md border-b border-surface-200 shadow-sm'}`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-            {/* Mobile Left Side: Hamburger + Logo */}
-            <div className="flex items-center gap-3 lg:gap-0">
-              {/* Mobile Menu Toggle (Moved to left) */}
-              <button
-                id="mobile-menu-toggle"
-                type="button"
-                className={`lg:hidden p-2 -ml-2 cursor-pointer transition-colors ${isDarkTheme ? 'text-white' : 'text-surface-900'}`}
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-              >
-                {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-              </button>
+      {/* Top bar info */}
+      <div className="bg-brand-dark text-white/80 text-xs py-2 px-6 border-b border-white/5 relative z-50 hidden md:block">
+        <div className="max-w-[1440px] mx-auto flex justify-between items-center px-4">
+          <div className="flex items-center gap-6">
+            <a href={siteSettings?.contactPhone ? `tel:${siteSettings.contactPhone.replace(/\s+/g, '')}` : '#'} className="flex items-center gap-1.5 hover:text-white transition-colors">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+              </svg>
+              {siteSettings?.contactPhone || '9207 07 51 51'}
+            </a>
+            <span className="text-white/20">|</span>
+            <span className="flex items-center gap-1.5 text-gray-400">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              Open Hours: Mon - Sat: 9:00 AM - 9:00 PM (Sun: 9:00 AM - 5:00 PM)
+            </span>
+          </div>
+          <div className="flex items-center gap-4">
+            <a href="#" className="hover:text-white transition-colors">Facebook</a>
+            <a href="#" className="hover:text-white transition-colors">Instagram</a>
+            <a href="#" className="hover:text-white transition-colors">LinkedIn</a>
+            <a href="#" className="hover:text-white transition-colors">YouTube</a>
+          </div>
+        </div>
+      </div>
+
+      {/* Navigation Header */}
+      <nav id="navbar" className={navClass}>
+        <div className="max-w-[1440px] mx-auto px-0 lg:px-12">
+          <div className={`rounded-none lg:rounded-full px-5 sm:px-8 py-3 lg:py-2 flex items-center justify-between min-w-0 transition-all duration-500 ${!isScrolled ? 'bg-transparent border-transparent shadow-none' : 'glass shadow-sm border-b border-gray-100 lg:border lg:border-gray-100'}`}>
+            {/* Left Section: Hamburger + Logo */}
+            <div className="flex items-center gap-2 sm:gap-3">
+              {/* Mobile Hamburger Button */}
+              <div className="flex lg:hidden items-center">
+                <button
+                  className={`p-1.5 -ml-2 rounded-xl transition-colors bg-transparent border-none cursor-pointer ${!isScrolled ? 'text-white hover:bg-white/20' : 'text-[#163a44] hover:bg-gray-100/50'}`}
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg>
+                </button>
+              </div>
 
               {/* Logo */}
-              <span
-                onClick={handleLogoClick}
-                className={`logo-text cursor-pointer select-none ${isDarkTheme ? 'text-white' : ''}`}
-                id="nav-logo"
-              >
-                {siteName || 'BEHOLD'}<span className="logo-dot">.</span>
-              </span>
+              <button onClick={logoClick} className={`flex-shrink-0 flex items-center logo-text bg-transparent border-none p-0 cursor-pointer ${!isScrolled ? 'text-white' : 'text-[#1f2937]'}`} style={{ lineHeight: 1 }}>
+                {siteName || 'BEHOLD'}<span className="logo-dot" style={{ color: !isScrolled ? '#00E5FF' : '#0ea5e9' }}>.</span>
+              </button>
             </div>
 
-            {/* Desktop Navigation */}
-            <nav className={`hidden lg:flex items-center gap-8 font-heading font-semibold text-sm tracking-wide ${isDarkTheme ? 'text-zinc-300' : 'text-slate-600'}`}>
+            {/* Desktop Menu */}
+            <div className={`hidden lg:flex items-center space-x-8 text-sm font-medium transition-colors duration-300 ${!isScrolled ? 'text-white/90' : 'text-[#163a44]'}`}>
+              <a href="#" onClick={(e) => { e.preventDefault(); navigateToSection?.('home') || navigate('/'); }} className={`transition-colors ${!isScrolled ? 'hover:text-[#00E5FF]' : 'hover:text-[#206173]'}`}>Home</a>
+              <a href="#" onClick={(e) => { e.preventDefault(); navigateToSection?.('services') || navigate('/'); }} className={`transition-colors flex items-center gap-1.5 ${!isScrolled ? 'hover:text-[#00E5FF]' : 'hover:text-[#206173]'}`}>Services <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M6 9l6 6 6-6" /></svg></a>
+              <a href="#" onClick={(e) => { e.preventDefault(); navigate('/sample-test'); }} className={`transition-colors ${!isScrolled ? 'hover:text-[#00E5FF]' : 'hover:text-[#206173]'}`}>Sample Test</a>
+              <a href="#" onClick={(e) => { e.preventDefault(); navigateToSection?.('contact') || navigate('/'); }} className={`transition-colors ${!isScrolled ? 'hover:text-[#00E5FF]' : 'hover:text-[#206173]'}`}>Contact</a>
+            </div>
+
+            {/* Right Actions */}
+            <div className="flex items-center gap-3 sm:gap-5 shrink-0">
+
+              {/* Desktop CTA Button */}
               <button
-                onClick={handleLogoClick}
-                className={`relative group transition-colors uppercase cursor-pointer ${isDarkTheme ? 'hover:text-white' : 'hover:text-surface-900'}`}
+                onClick={() => navigate('/booking')}
+                className={`hidden lg:block px-6 py-2 rounded-full text-sm font-medium transition-all shadow-lg cursor-pointer border-none hover:scale-105 active:scale-95 ${!isScrolled ? 'bg-white text-[#163a44] hover:bg-gray-100 hover:shadow-white/20' : 'bg-[#163a44] text-white hover:bg-[#206173] hover:shadow-[#206173]/20'}`}
               >
-                HOME
-                <span className={`absolute -bottom-2 left-0 w-full h-[2px] bg-brand transition-transform origin-left ${currentView === '/' && (activeSection === 'home' || activeSection === 'cdat' || activeSection === '') ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`} />
+                Book Appointment
               </button>
 
-              {(siteSettings.enablePsychology !== false || siteSettings.enableCareerMentoring !== false) && (
+              {/* Profile Avatar (Mobile + Desktop) */}
+              <div className="relative group flex items-center justify-center">
                 <button
-                  onClick={() => scrollToSection('services')}
-                  className={`relative group transition-colors uppercase cursor-pointer ${isDarkTheme ? 'hover:text-white' : 'hover:text-surface-900'}`}
+                  onClick={() => user ? setIsLogoutOpen(true) : onOpenAuth?.()}
+                  className={`w-9 h-9 lg:w-10 lg:h-10 rounded-full border-none flex items-center justify-center transition-all duration-300 cursor-pointer hover:scale-105 ${!isScrolled ? 'bg-white/20 text-white hover:bg-white/30' : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-900'}`}
                 >
-                  SERVICES
-                  <span className={`absolute -bottom-2 left-0 w-full h-[2px] bg-brand transition-transform origin-left ${activeSection === 'services' && currentView === '/' ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`} />
-                </button>
-              )}
-
-              {siteSettings.enableAptitude !== false && (
-                <button
-                  onClick={() => navigate('/sample-test')}
-                  className={`relative group transition-colors uppercase cursor-pointer ${isDarkTheme ? 'hover:text-white' : 'hover:text-surface-900'}`}
-                >
-                  SAMPLE TEST
-                  <span className={`absolute -bottom-2 left-0 w-full h-[2px] bg-brand transition-transform origin-left ${currentView === '/sample-test' ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`} />
-                </button>
-              )}
-
-              <button
-                onClick={() => scrollToSection('inquiry')}
-                className={`relative group transition-colors uppercase cursor-pointer ${isDarkTheme ? 'hover:text-white' : 'hover:text-surface-900'}`}
-              >
-                CONTACT
-                <span className={`absolute -bottom-2 left-0 w-full h-[2px] bg-brand transition-transform origin-left ${activeSection === 'inquiry' && currentView === '/' ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`} />
-              </button>
-            </nav>
-
-            {/* Right Column: Actions */}
-            <div className="flex items-center gap-3 lg:gap-4 relative">
-              {!user ? (
-                <button
-                  type="button"
-                  onClick={onOpenAuth}
-                  className={`w-10 h-10 lg:w-12 lg:h-12 rounded-full overflow-hidden flex items-center justify-center border-2 transition-colors cursor-pointer ${isDarkTheme ? 'bg-white/10 text-white border-white/20 hover:border-brand' : 'bg-surface-50 text-surface-900 border-surface-200 hover:border-brand'}`}
-                  aria-label="Sign In"
-                >
-                  <User className="w-5 h-5 lg:w-6 lg:h-6" />
-                </button>
-              ) : (
-                <div className="relative" ref={desktopDropdownRef}>
-                  <button
-                    type="button"
-                    onClick={() => setShowDropdown(!showDropdown)}
-                    className={`w-10 h-10 lg:w-12 lg:h-12 rounded-full overflow-hidden font-bold flex items-center justify-center text-sm border-2 transition-colors cursor-pointer ${isDarkTheme ? 'bg-white/10 text-white border-white/20 hover:border-brand' : 'bg-surface-50 text-surface-900 border-surface-200 hover:border-brand'}`}
-                  >
-                    {user.profilePic || user.image ? (
-                      <img src={user.profilePic || user.image} alt={user.name} className="w-full h-full object-cover" />
-                    ) : (
-                      getInitials(user.name)
-                    )}
-                  </button>
-
-                  {showDropdown && (
-                    <div className="absolute top-full right-0 mt-3 w-52 bg-white border-2 border-surface-200 shadow-square-light py-1 z-50 rounded-[10px] overflow-hidden">
-                      <div className="px-4 py-3 border-b border-surface-200">
-                        <p className="text-sm font-heading font-bold text-surface-900 truncate">{user.name}</p>
-                        <p className="text-xs text-slate-500 truncate mt-0.5">{user.email}</p>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={handleProfileClick}
-                        className="w-full text-left px-4 py-3 text-xs font-bold text-slate-600 uppercase hover:bg-surface-50 hover:text-brand transition-colors flex items-center gap-2 cursor-pointer"
-                      >
-                        <User className="w-3.5 h-3.5" /> Your Profile
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => { setShowDropdown(false); setIsLogoutConfirmOpen(true); }}
-                        className="w-full text-left px-4 py-3 text-xs font-bold text-red-500 uppercase hover:bg-red-50 transition-colors flex items-center gap-2 cursor-pointer"
-                      >
-                        <LogOut className="w-3.5 h-3.5" /> Sign Out
-                      </button>
-                    </div>
+                  {user && user.photoURL ? (
+                    <img src={user.photoURL} alt="Profile" className="w-full h-full rounded-full object-cover" />
+                  ) : (
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
                   )}
-                </div>
-              )}
-
-              {(siteSettings.enablePsychology !== false || siteSettings.enableCareerMentoring !== false) && (
-                <button
-                  type="button"
-                  onClick={() => navigate('/booking')}
-                  className="hidden lg:block btn-primary text-xs py-2.5 px-6"
-                >
-                  Book Session
                 </button>
-              )}
-            </div>
-        </div>
-      </header>
+                <div className="absolute top-[110%] right-0 lg:left-1/2 lg:-translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap bg-gray-800 text-white text-xs px-3 py-1.5 rounded-lg shadow-lg translate-y-2 group-hover:translate-y-0 before:content-[''] before:absolute before:-top-1 before:right-3 lg:before:left-1/2 lg:before:-translate-x-1/2 before:border-4 before:border-transparent before:border-b-gray-800">
+                  {user ? 'My Profile' : 'Sign In'}
+                </div>
+              </div>
 
-      {/* Backdrop overlay */}
-      {isMenuOpen && (
-        <div
-          className="fixed inset-0 bg-zinc-950/50 backdrop-blur-xs z-40 lg:hidden animate-in fade-in duration-300"
-          onClick={() => setIsMenuOpen(false)}
-        />
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden" onClick={() => setMobileMenuOpen(false)}></div>
       )}
 
-      {/* Mobile Side Drawer */}
-      <aside
-        id="mobile-drawer"
-        aria-hidden={!isMenuOpen}
-        className={`fixed top-0 left-0 bottom-0 w-[300px] max-w-[85vw] bg-white z-50 lg:hidden shadow-2xl transition-all duration-300 ease-in-out transform flex flex-col p-6 ${isMenuOpen ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0 pointer-events-none'
-          }`}
-      >
-        {/* Drawer Header */}
-        <div className="flex items-center justify-between pb-6 border-b border-surface-200 mb-6">
-          <span
-            onClick={() => { setIsMenuOpen(false); handleLogoClick(); }}
-            className="logo-text cursor-pointer"
-          >
-            {siteName || 'BEHOLD'}<span className="logo-dot">.</span>
-          </span>
-          <button
-            type="button"
-            onClick={() => setIsMenuOpen(false)}
-            aria-label="Close navigation menu"
-            className="w-10 h-10 flex items-center justify-center border border-surface-200 hover:border-surface-900 transition-colors cursor-pointer"
-          >
-            <X className="w-5 h-5 text-surface-900" />
+      {/* Mobile Menu Slide-out */}
+      <div id="mobile-menu" className={`fixed top-0 left-0 h-full w-[85vw] max-w-sm bg-white z-50 shadow-2xl lg:hidden flex flex-col transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <div className="p-5 sm:p-6 border-b border-gray-100 flex justify-between items-center bg-white">
+          <button onClick={logoClick} className="flex-shrink-0 flex items-center logo-text bg-transparent border-none p-0 cursor-pointer text-black" style={{ lineHeight: 1 }}>
+            {siteName || 'BEHOLD'}<span className="logo-dot" style={{ color: '#0ea5e9' }}>.</span>
+          </button>
+          <button onClick={() => setMobileMenuOpen(false)} className="text-gray-400 hover:text-gray-800 transition-colors bg-gray-50 hover:bg-gray-100 rounded-full p-2 border-none cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
           </button>
         </div>
-
-        {/* Drawer Navigation Links */}
-        <div className="flex flex-col gap-1 overflow-y-auto flex-1 font-heading">
-          <button
-            type="button"
-            onClick={handleLogoClick}
-            className={`w-full text-left px-4 py-4 text-sm font-bold uppercase transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${currentView === '/' && (activeSection === 'home' || activeSection === 'cdat' || activeSection === '')
-              ? 'bg-surface-50 text-brand border-brand'
-              : 'text-slate-600 hover:text-surface-900 hover:bg-surface-50 border-transparent'
-              }`}
-          >
-            <span>Home</span>
-          </button>
-
-          {(siteSettings.enablePsychology !== false || siteSettings.enableCareerMentoring !== false) && (
-            <button
-              type="button"
-              onClick={() => scrollToSection('services')}
-              className={`w-full text-left px-4 py-4 text-sm font-bold uppercase transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${activeSection === 'services' && currentView === '/'
-                ? 'bg-surface-50 text-brand border-brand'
-                : 'text-slate-600 hover:text-surface-900 hover:bg-surface-50 border-transparent'
-                }`}
-            >
-              <span>Services</span>
-            </button>
-          )}
-
-          {siteSettings.enableAptitude !== false && (
-            <button
-              type="button"
-              onClick={() => { navigate('/sample-test'); setIsMenuOpen(false); }}
-              className={`w-full text-left px-4 py-4 text-sm font-bold uppercase transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${currentView === '/sample-test'
-                  ? 'bg-brand/10 text-brand border-brand'
-                  : 'border-transparent text-surface-900 hover:bg-surface-50'
-                }`}
-            >
-              <span>Sample Test</span>
-              <ChevronRight className={`w-4 h-4 transition-transform ${currentView === '/sample-test' ? 'translate-x-1' : ''}`} />
-            </button>
-          )}
-
-          <button
-            type="button"
-            onClick={() => scrollToSection('inquiry')}
-            className={`w-full text-left px-4 py-4 text-sm font-bold uppercase transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${activeSection === 'inquiry' && currentView === '/'
-              ? 'bg-surface-50 text-brand border-brand'
-              : 'text-slate-600 hover:text-surface-900 hover:bg-surface-50 border-transparent'
-              }`}
-          >
-            <span>Contact</span>
-          </button>
-
-          {(siteSettings.enablePsychology !== false || siteSettings.enableCareerMentoring !== false) && (
-            <button
-              type="button"
-              onClick={() => { navigate('/booking'); setIsMenuOpen(false); }}
-              className={`w-full text-left px-4 py-4 text-sm font-bold uppercase transition-all duration-200 flex items-center justify-between cursor-pointer border-l-4 ${currentView === '/booking'
-                ? 'bg-surface-50 text-brand border-brand'
-                : 'text-slate-600 hover:text-surface-900 hover:bg-surface-50 border-transparent'
-                }`}
-            >
-              <span>Book Session</span>
-            </button>
-          )}
+        
+        <div className="flex-1 overflow-y-auto px-5 sm:px-6">
+          <div className="flex flex-col py-2">
+            <a href="#" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateToSection?.('home') || navigate('/'); }} className="group font-medium text-gray-800 hover:text-[#206173] py-4 border-b border-gray-100 flex items-center justify-between text-[17px]">
+              Home
+              <svg className="w-5 h-5 text-gray-300 group-hover:text-[#206173] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+            </a>
+            <a href="#" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateToSection?.('services') || navigate('/'); }} className="group font-medium text-gray-800 hover:text-[#206173] py-4 border-b border-gray-100 flex items-center justify-between text-[17px]">
+              Services
+              <svg className="w-5 h-5 text-gray-300 group-hover:text-[#206173] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+            </a>
+            <a href="#" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigate('/sample-test'); }} className="group font-medium text-gray-800 hover:text-[#206173] py-4 border-b border-gray-100 flex items-center justify-between text-[17px]">
+              Sample Test
+              <svg className="w-5 h-5 text-gray-300 group-hover:text-[#206173] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+            </a>
+            <a href="#" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateToSection?.('contact') || navigate('/'); }} className="group font-medium text-gray-800 hover:text-[#206173] py-4 flex items-center justify-between text-[17px]">
+              Contact Us
+              <svg className="w-5 h-5 text-gray-300 group-hover:text-[#206173] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+            </a>
+          </div>
         </div>
 
-        {/* Drawer Footer: User Profile Widget */}
-        <div className="pt-6 border-t border-surface-200 mt-auto">
-          {user ? (
-            <div className="bg-surface-50 p-4 border border-surface-200 flex flex-col gap-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 border border-surface-200 text-surface-900 font-bold flex items-center justify-center text-sm shrink-0 overflow-hidden bg-white">
-                  {user.profilePic || user.image ? (
-                    <img src={user.profilePic || user.image} alt={user.name} className="w-full h-full object-cover" />
-                  ) : (
-                    getInitials(user.name)
-                  )}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm font-heading font-bold text-surface-900 truncate">{user.name}</p>
-                  <p className="text-xs text-slate-500 truncate mt-0.5">{user.email}</p>
-                </div>
-              </div>
+        {/* Footer */}
+        <div className="p-5 sm:p-6 border-t border-gray-100 bg-gray-50 flex flex-col gap-3 mt-auto">
+          <button
+            onClick={() => {
+              setMobileMenuOpen(false);
+              if (user) setIsLogoutOpen(true);
+              else onOpenAuth?.();
+            }}
+            className="w-full bg-white text-gray-700 hover:bg-gray-100 py-3.5 rounded-xl font-medium shadow-sm active:scale-95 transition-all duration-300 border border-gray-200 flex justify-center items-center gap-2 cursor-pointer text-base"
+          >
+            <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+            </svg>
+            {user ? 'Sign Out' : 'Sign In'}
+          </button>
 
-              <div className="grid grid-cols-2 gap-3">
-                <button
-                  type="button"
-                  onClick={handleProfileClick}
-                  className="py-2.5 text-xs font-bold text-surface-900 bg-white border-2 border-surface-200 hover:border-brand transition-colors text-center cursor-pointer uppercase min-h-[40px]"
-                >
-                  Profile
-                </button>
-                <button
-                  type="button"
-                  onClick={() => { setIsLogoutConfirmOpen(true); setIsMenuOpen(false); }}
-                  className="py-2.5 text-xs font-bold text-surface-900 bg-white border-2 border-surface-200 hover:bg-red-50 hover:border-red-500 hover:text-red-500 transition-colors text-center cursor-pointer uppercase flex items-center justify-center gap-1 min-h-[40px]"
-                >
-                  <LogOut className="w-3 h-3" /> Sign Out
-                </button>
-              </div>
-            </div>
-          ) : (
-            <button
-              type="button"
-              onClick={() => { onOpenAuth(); setIsMenuOpen(false); }}
-              className="btn-primary w-full"
-            >
-              Sign In
-            </button>
-          )}
+          <a
+            href="https://wa.link/4jpzfq"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full bg-[#25D366]/10 hover:bg-[#25D366] text-[#25D366] hover:text-white py-3.5 rounded-xl font-medium shadow-sm active:scale-95 transition-all duration-300 border-none flex justify-center items-center gap-2 text-base"
+          >
+            <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+              <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.717-1.46L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.42 9.864-9.864.002-2.637-1.03-5.118-2.91-6.997-1.881-1.879-4.36-2.912-6.998-2.913-5.443 0-9.868 4.425-9.873 9.873-.001 1.77.465 3.49 1.348 5.022L1.876 22.1l4.771-1.253zM17.43 14.93c-.313-.156-1.854-.915-2.141-1.018-.287-.104-.497-.156-.707.156-.21.312-.814 1.018-1 1.225-.186.208-.371.233-.684.078-1.597-.798-2.63-1.385-3.66-3.153-.271-.463-.271-.237.104-.613.337-.337.497-.52.684-.712.186-.193.186-.313.093-.52-.093-.208-.707-1.702-.97-2.327-.255-.612-.516-.529-.707-.539-.181-.01-.389-.01-.597-.01-.208 0-.547.078-.834.39-.287.312-1.097 1.07-1.097 2.611 0 1.54 1.12 3.031 1.277 3.239.156.208 2.203 3.364 5.337 4.717.745.322 1.328.513 1.78.657.749.238 1.431.205 1.97.124.6-.09 1.854-.758 2.114-1.492.26-.735.26-1.363.181-1.492-.078-.13-.287-.208-.6-.364z" />
+            </svg>
+            WhatsApp Us
+          </a>
+          <button
+            onClick={() => { setMobileMenuOpen(false); navigate('/booking'); }}
+            className="w-full bg-[#163a44] text-white py-3.5 rounded-xl font-medium shadow-sm active:scale-95 transition-transform border-none cursor-pointer text-base"
+          >
+            Book Appointment
+          </button>
         </div>
-      </aside>
+      </div>
 
-      {/* Logout Confirmation Modal */}
+      {/* Floating WhatsApp Button */}
+      <div className="fixed bottom-6 right-6 z-50 group">
+        <a
+          href={siteSettings?.whatsapp || '#'}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-14 h-14 rounded-full bg-[#25D366] text-white hover:bg-[#1DA851] flex items-center justify-center transition-all duration-300 hover:scale-105 shadow-[0_8px_32px_rgba(37,211,102,0.3)] border border-white/20 cursor-pointer"
+        >
+          <svg className="w-8 h-8 fill-current" viewBox="0 0 24 24">
+            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.717-1.46L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.42 9.864-9.864.002-2.637-1.03-5.118-2.91-6.997-1.881-1.879-4.36-2.912-6.998-2.913-5.443 0-9.868 4.425-9.873 9.873-.001 1.77.465 3.49 1.348 5.022L1.876 22.1l4.771-1.253zM17.43 14.93c-.313-.156-1.854-.915-2.141-1.018-.287-.104-.497-.156-.707.156-.21.312-.814 1.018-1 1.225-.186.208-.371.233-.684.078-1.597-.798-2.63-1.385-3.66-3.153-.271-.463-.271-.237.104-.613.337-.337.497-.52.684-.712.186-.193.186-.313.093-.52-.093-.208-.707-1.702-.97-2.327-.255-.612-.516-.529-.707-.539-.181-.01-.389-.01-.597-.01-.208 0-.547.078-.834.39-.287.312-1.097 1.07-1.097 2.611 0 1.54 1.12 3.031 1.277 3.239.156.208 2.203 3.364 5.337 4.717.745.322 1.328.513 1.78.657.749.238 1.431.205 1.97.124.6-.09 1.854-.758 2.114-1.492.26-.735.26-1.363.181-1.492-.078-.13-.287-.208-.6-.364z" />
+          </svg>
+        </a>
+        <div className="absolute right-[110%] top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap bg-gray-800 text-white text-sm font-medium px-4 py-2 rounded-lg shadow-xl translate-x-2 group-hover:translate-x-0 mr-2 before:content-[''] before:absolute before:top-1/2 before:-translate-y-1/2 before:-right-2 before:border-4 before:border-transparent before:border-l-gray-800">
+          Chat on WhatsApp
+        </div>
+      </div>
+
       <LogoutConfirmModal
-        isOpen={isLogoutConfirmOpen}
+        isOpen={isLogoutOpen}
+        onClose={() => setIsLogoutOpen(false)}
         onConfirm={() => {
-          setIsLogoutConfirmOpen(false);
-          setShowDropdown(false);
-          setIsMenuOpen(false);
           logout();
+          setIsLogoutOpen(false);
+          setMobileMenuOpen(false);
         }}
-        onCancel={() => setIsLogoutConfirmOpen(false)}
-        theme="light"
       />
     </>
   );

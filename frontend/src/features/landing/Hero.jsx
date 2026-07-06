@@ -1,17 +1,50 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import HeroBackgroundElements from './HeroBackgroundElements';
 
 export default function Hero({ setView, navigateToSection, siteSettings }) {
-  const handleBookNowClick = () => {
-    window.spaNavigate('/booking');
+  const [scrollOpacity, setScrollOpacity] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      const maxScroll = window.innerHeight * 0.75; 
+      let opacity = scrollY / maxScroll;
+      if (opacity > 1) opacity = 1;
+      if (opacity < 0) opacity = 0;
+      setScrollOpacity(opacity);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const handleButtonClick = (link) => {
+    if (!link) return;
+    if (link === '/booking') {
+      window.spaNavigate?.('/booking');
+    } else if (link === '/aptitude-test' || link === '/aptitude' || link === 'cdat') {
+      navigateToSection('cdat');
+    } else {
+      window.spaNavigate?.(link);
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const settings = siteSettings || {};
-  // Updated to match the specific 3-line layout from the reference design
-  const rawTitle = settings.heroTitle || "Bridging You\nTo Your {True}\n{Growth.}";
-  const heroSub = settings.heroSub || "Professional psychological counseling, aptitude assessment, and career mentorship designed to help individuals thrive with confidence and purpose.";
+
+  // Default fallback if no slides are configured in admin
+  const defaultSlide = {
+    image: 'https://images.unsplash.com/photo-1440688807730-73e4e2169fb8?q=80&w=2070&auto=format&fit=crop',
+    title: settings.heroTitle || "Bridging You\nTo Your {True}\n{Growth.}",
+    subtitle: settings.heroSub || "Professional psychological counseling, aptitude assessment, and career mentorship designed to help individuals thrive with confidence and purpose.",
+    btn1Text: 'Book a Session',
+    btn1Link: '/booking',
+    btn2Text: 'Explore Aptitude',
+    btn2Link: '/aptitude-test'
+  };
+
+  // Use the first configured slide (admin can change this) or default
+  const slide = (settings.heroSlides && settings.heroSlides.length > 0) ? settings.heroSlides[0] : defaultSlide;
 
   const renderTitle = (text) => {
     if (!text) return null;
@@ -23,7 +56,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
         const parts = line.split(match[0]);
         content = (
           <React.Fragment key={`span-${index}`}>
-            {parts[0]}<span className="relative text-brand font-black drop-shadow-[0_0_15px_rgba(6,182,212,0.5)]">
+            {parts[0]}<span className="text-[#00E5FF] [text-shadow:0_0_20px_rgba(0,229,255,0.6)]">
               {match[1]}
             </span>{parts[1]}
           </React.Fragment>
@@ -43,92 +76,90 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
   return (
     <section
       id="home"
-      className="relative w-full pt-32 pb-32 sm:pb-36 md:pb-40 lg:pt-36 lg:pb-48 px-4 sm:px-6 flex flex-col items-center justify-center min-h-[100svh] select-none bg-gradient-to-b from-slate-900 to-slate-800 overflow-hidden"
+      className="relative w-full min-h-[100svh] flex flex-col justify-center items-start overflow-hidden bg-slate-900"
     >
-      {/* Heavy 3D Background Elements & Particles */}
-      <HeroBackgroundElements />
-
-      <div className="max-w-4xl mx-auto w-full flex flex-col items-center justify-center text-center relative z-20 space-y-5 mt-0 lg:mt-0">
-
-        {/* Main Headline */}
-        <motion.h1
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
-          style={{ fontFamily: "'Poppins', 'Baloo Chettan 2', 'Manjari', 'Noto Sans Malayalam', sans-serif" }}
-          className="text-[clamp(2.5rem,7vw,5.5rem)] leading-[1.1] sm:leading-[1.05] font-black text-white tracking-tight drop-shadow-lg px-4 sm:px-0 text-balance"
-        >
-          {renderTitle(rawTitle)}
-        </motion.h1>
-
-        {/* Subtitle */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
-          className="text-[clamp(1rem,2vw,1.25rem)] text-zinc-300 max-w-3xl font-medium leading-relaxed mt-4 sm:mt-6 px-4 sm:px-0 text-balance"
-        >
-          {heroSub}
-        </motion.p>
-
-        {/* CTA Buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut", delay: 0.5 }}
-          className="flex flex-col sm:flex-row items-center gap-4 mt-8 w-full sm:w-auto px-4 sm:px-0"
-        >
-          {(settings.enablePsychology !== false || settings.enableCareerMentoring !== false) && (
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handleBookNowClick}
-              className="px-8 sm:px-10 py-3.5 sm:py-4 min-h-[50px] bg-brand text-zinc-950 hover:bg-brand-dark text-xs sm:text-sm font-black tracking-widest uppercase border-neon-glow border-neon-glow-hover w-full sm:w-auto transition-all cursor-pointer rounded-[10px]"
-            >
-              Book a Session
-            </motion.button>
-          )}
-          {settings.enableAptitude !== false && (
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => navigateToSection('cdat')}
-              className="px-8 sm:px-10 py-3.5 sm:py-4 min-h-[50px] bg-white/10 hover:bg-white/20 text-white text-xs sm:text-sm font-black tracking-widest uppercase backdrop-blur-md border-neon-glow border-neon-glow-hover transition-all w-full sm:w-auto cursor-pointer rounded-[10px]"
-            >
-              Explore Aptitude
-            </motion.button>
-          )}
-        </motion.div>
+      {/* Static Background Image */}
+      <div className="absolute inset-0 w-full h-full z-0">
+        <div
+          className="w-full h-full bg-cover bg-center bg-fixed"
+          style={{ backgroundImage: `url('${slide.image}')` }}
+        />
       </div>
 
-      {/* Decorative Layered Waves Divider */}
-      <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-[0] z-10 translate-y-[1px] pointer-events-none">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 1440 320"
-          preserveAspectRatio="none"
-          className="w-full h-[80px] sm:h-[120px] md:h-[180px]"
-        >
-          {/* Back translucent wave */}
-          <path
-            fill="var(--color-surface-50, #ffffff)"
-            fillOpacity="0.05"
-            d="M0,140 C320,140 420,240 720,240 C1020,240 1120,140 1440,140 L1440,320 L0,320 Z"
-          ></path>
-          {/* Middle translucent wave */}
-          <path
-            fill="var(--color-surface-50, #ffffff)"
-            fillOpacity="0.1"
-            d="M0,180 C320,180 420,280 720,280 C1020,280 1120,180 1440,180 L1440,320 L0,320 Z"
-          ></path>
-          {/* Front solid wave (with softer center bulge) */}
-          <path
-            fill="var(--color-surface-50, #ffffff)"
-            d="M0,260 C320,300 420,180 720,180 C1020,180 1120,300 1440,260 L1440,320 L0,320 Z"
-          ></path>
-        </svg>
-      </div>
+      {/* Dark Overlay Gradient */}
+      <div className="absolute inset-0 z-10 bg-gradient-to-r from-slate-900/90 via-slate-900/60 to-transparent pointer-events-none"></div>
+      <div className="absolute inset-0 z-10 bg-black/30 pointer-events-none"></div>
 
+      {/* Frosted Glass Scroll Effect Overlay */}
+      <div 
+        className="absolute inset-0 z-10 bg-slate-900/20 backdrop-blur-xl pointer-events-none" 
+        style={{ opacity: scrollOpacity }}
+      ></div>
+
+      {/* Content */}
+      <div className="relative z-20 w-full max-w-[1440px] mx-auto px-6 md:px-12 pt-32 pb-32 md:pb-24 flex justify-center md:justify-start text-center md:text-left">
+        <div className="max-w-3xl">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            className="w-full flex flex-col justify-center items-center md:items-start"
+          >
+            {settings.heroTopSub && (
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="text-brand-accent font-bold text-xs mb-4"
+              >
+                {settings.heroTopSub}
+              </motion.p>
+            )}
+
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
+              className="text-[2.75rem] leading-[1.1] sm:text-5xl md:text-6xl lg:text-[5.5rem] lg:leading-[1.05] tracking-tight font-black text-white drop-shadow-lg mb-6 text-center md:text-left w-full mx-auto md:mx-0"
+            >
+              {renderTitle(slide.title)}
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+              className="text-base sm:text-lg md:text-xl text-gray-200 max-w-2xl font-medium leading-relaxed mb-10 text-center md:text-left"
+            >
+              {slide.subtitle}
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
+              className="flex flex-col sm:flex-row items-center sm:items-start gap-4 w-full justify-center md:justify-start max-w-sm sm:max-w-none mx-auto md:mx-0"
+            >
+              {slide.btn1Text && (
+                <button
+                  onClick={() => handleButtonClick(slide.btn1Link)}
+                  className="px-6 py-4 sm:py-5 bg-[#00E5FF] text-black font-black uppercase tracking-widest rounded-2xl transition-all flex items-center justify-center w-full sm:w-auto hover:bg-[#00cce6] hover:scale-105 active:scale-95 text-[15px] cursor-pointer shadow-[0_0_25px_rgba(0,229,255,0.5)] border-none"
+                >
+                  {slide.btn1Text}
+                </button>
+              )}
+              {slide.btn2Text && (
+                <button
+                  onClick={() => handleButtonClick(slide.btn2Link)}
+                  className="px-6 py-4 sm:py-5 bg-white/10 backdrop-blur-md text-white font-black uppercase tracking-widest rounded-2xl transition-all flex items-center justify-center border border-white/20 w-full sm:w-auto hover:bg-white/20 hover:scale-105 active:scale-95 text-[15px] cursor-pointer shadow-[0_8px_32px_rgba(0,0,0,0.2)]"
+                >
+                  {slide.btn2Text}
+                </button>
+              )}
+            </motion.div>
+          </motion.div>
+        </div>
+      </div>
     </section>
   );
 }

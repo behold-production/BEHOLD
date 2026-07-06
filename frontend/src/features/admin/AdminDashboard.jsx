@@ -1313,6 +1313,7 @@ export default function AdminDashboard({ setView }) {
     adminBankAccountNumber: '',
     adminBankIfscCode: '',
     promoCodes: [],
+    heroSlides: [],
     careerBadge: '',
     careerTitle: '',
     careerSubtitle: '',

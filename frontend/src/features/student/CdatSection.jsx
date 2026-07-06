@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import React, { useState, useEffect } from 'react';
 import { Copy, AlertCircle } from 'lucide-react';
 import ApiService from '../../shared/services/api';
@@ -143,101 +144,124 @@ export default function CdatSection({ setView }) {
   };
 
   return (
-    <section id="cdat" className="py-10 md:py-20 px-6 bg-surface-50">
-      <div className="max-w-7xl mx-auto">
-        <div className="bg-white border border-surface-200 shadow-square-light overflow-hidden flex flex-col md:flex-row rounded-[10px] mb-10">
+    <motion.section  initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.7 }} id="cdat" className="relative pt-16 md:pt-24 pb-16 md:pb-24 px-6 overflow-hidden">
+      {/* Background Image & Glassmorphic Overlay */}
+      <div className="absolute inset-0 z-0">
+        <div 
+          className="w-full h-full bg-cover bg-center bg-fixed scale-105"
+          style={{ backgroundImage: "url('/students_kerala.png')" }}
+        />
+      </div>
+      <div className="absolute inset-0 z-10 bg-white/60 backdrop-blur-lg pointer-events-none"></div>
+      
+      <div className="relative z-20 max-w-7xl mx-auto flex flex-col md:flex-row gap-6 lg:gap-12 items-stretch">
           
-          {/* Text Side */}
-          <div className="p-6 sm:p-8 md:p-12 flex-1 flex flex-col border-b md:border-b-0 md:border-r border-surface-200 bg-white">
+          {/* Text Side Card */}
+          <motion.div 
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="bg-white border border-surface-200 shadow-square-light hover:shadow-square-hover transition-all duration-300 rounded-[10px] p-6 sm:p-8 flex-1 flex flex-col group"
+          >
             <div className="flex flex-row items-center justify-between gap-4 mb-4">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-black uppercase tracking-widest text-surface-900 leading-tight">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-surface-900 leading-tight">
                 CIGI Differential Aptitude Test (C-DAT)
               </h2>
-              <img src="/CIGI.png" alt="CIGI Logo" className="h-16 sm:h-20 object-contain shrink-0" />
+              <img src="/CIGI.png" alt="CIGI Logo" className="h-16 sm:h-20 object-contain shrink-0 mix-blend-multiply" />
             </div>
-            <p className="text-surface-600 text-sm md:text-base leading-relaxed mb-8 max-w-lg">
+            <p className="text-surface-700 text-base md:text-lg leading-relaxed mb-8 max-w-lg font-medium">
               C-DAT effectively identifies the inherent capacities of students, guiding them towards suitable academic and career paths with scientific precision.
             </p>
-            <button
-              type="button"
-              onClick={() => document.getElementById('cdat-form')?.scrollIntoView({ behavior: 'smooth' })}
-              className="w-full sm:w-max px-6 py-3 bg-surface-900 text-white font-black uppercase tracking-widest text-[10px] rounded-[10px] hover:bg-surface-800 transition-colors cursor-pointer border-none shadow-none"
-            >
-              CIGI Aptitude Test
-            </button>
-          </div>
+            <div className="mt-auto">
+              <button
+                type="button"
+                onClick={() => document.getElementById('cdat-form')?.scrollIntoView({ behavior: 'smooth' })}
+                className="w-full sm:w-max px-8 py-3.5 bg-surface-900 text-white font-bold text-sm sm:text-base rounded-[10px] hover:bg-surface-800 transition-colors cursor-pointer border-none shadow-none"
+              >
+                CIGI Aptitude Test
+              </button>
+            </div>
+          </motion.div>
           
-          {/* Form Side */}
-          <div id="cdat-form" className="p-8 md:p-12 bg-surface-50 w-full md:w-[450px] lg:w-[500px] shrink-0">
-            <h3 className="font-black text-xl mb-6 text-surface-900 uppercase tracking-widest">Generate Group Code</h3>
-            <form onSubmit={handleGenerateCode} className="space-y-5">
+          {/* Form Side Card */}
+          <motion.div 
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+            id="cdat-form" 
+            className="bg-white border border-surface-200 shadow-square-light hover:shadow-square-hover transition-all duration-300 rounded-[10px] p-6 sm:p-8 w-full md:w-[450px] lg:w-[480px] shrink-0 group"
+          >
+            <h3 className="font-black text-2xl mb-4 text-surface-900">Generate Group Code</h3>
+            <form onSubmit={handleGenerateCode} className="space-y-3">
               
               <div>
-                <label className="block text-[10px] font-bold text-surface-500 uppercase tracking-widest mb-2" htmlFor="cdat-name">Full Name</label>
+                <label className="block text-sm font-bold text-surface-700 mb-1.5" htmlFor="cdat-name">Full Name</label>
                 <input
                   id="cdat-name"
                   type="text"
                   placeholder="Enter name"
                   value={groupRegName}
                   onChange={(e) => handleNameChange(e.target.value)}
-                  className={`w-full bg-white border rounded-[10px] px-4 py-3 text-sm font-medium text-surface-900 focus:outline-none transition-colors ${errors.name ? 'border-red-500 focus:border-red-500' : 'border-surface-200 focus:border-surface-900'}`}
+                  className={`w-full bg-surface-50 border rounded-[10px] px-4 py-2.5 text-base font-medium text-surface-900 focus:outline-none transition-colors ${errors.name ? 'border-red-500 focus:border-red-500' : 'border-surface-200 focus:border-surface-900 focus:bg-white'}`}
                 />
                 {errors.name && (
-                  <p className="text-[10px] uppercase tracking-widest text-red-600 font-bold mt-1.5 flex items-center gap-1">
-                    <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {errors.name}
+                  <p className="text-sm text-red-600 font-bold mt-1.5 flex items-center gap-1">
+                    <AlertCircle className="w-4 h-4 shrink-0" /> {errors.name}
                   </p>
                 )}
               </div>
               
               <div>
-                <label className="block text-[10px] font-bold text-surface-500 uppercase tracking-widest mb-2" htmlFor="cdat-phone">Phone Number</label>
+                <label className="block text-sm font-bold text-surface-700 mb-1.5" htmlFor="cdat-phone">Phone Number</label>
                 <input
                   id="cdat-phone"
                   type="tel"
                   placeholder="Enter phone"
                   value={groupRegPhone}
                   onChange={(e) => handlePhoneChange(e.target.value)}
-                  className={`w-full bg-white border rounded-[10px] px-4 py-3 text-sm font-medium text-surface-900 focus:outline-none transition-colors ${errors.phone ? 'border-red-500 focus:border-red-500' : 'border-surface-200 focus:border-surface-900'}`}
+                  className={`w-full bg-surface-50 border rounded-[10px] px-4 py-2.5 text-base font-medium text-surface-900 focus:outline-none transition-colors ${errors.phone ? 'border-red-500 focus:border-red-500' : 'border-surface-200 focus:border-surface-900 focus:bg-white'}`}
                 />
                 {errors.phone && (
-                  <p className="text-[10px] uppercase tracking-widest text-red-600 font-bold mt-1.5 flex items-center gap-1">
-                    <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {errors.phone}
+                  <p className="text-sm text-red-600 font-bold mt-1.5 flex items-center gap-1">
+                    <AlertCircle className="w-4 h-4 shrink-0" /> {errors.phone}
                   </p>
                 )}
               </div>
               
               <div>
-                <label className="block text-[10px] font-bold text-surface-500 uppercase tracking-widest mb-2" htmlFor="cdat-email">Email Address</label>
+                <label className="block text-sm font-bold text-surface-700 mb-1.5" htmlFor="cdat-email">Email Address</label>
                 <input
                   id="cdat-email"
                   type="email"
                   placeholder="Enter email"
                   value={groupRegEmail}
                   onChange={(e) => handleEmailChange(e.target.value)}
-                  className={`w-full bg-white border rounded-[10px] px-4 py-3 text-sm font-medium text-surface-900 focus:outline-none transition-colors ${errors.email ? 'border-red-500 focus:border-red-500' : 'border-surface-200 focus:border-surface-900'}`}
+                  className={`w-full bg-surface-50 border rounded-[10px] px-4 py-2.5 text-base font-medium text-surface-900 focus:outline-none transition-colors ${errors.email ? 'border-red-500 focus:border-red-500' : 'border-surface-200 focus:border-surface-900 focus:bg-white'}`}
                 />
                 {errors.email && (
-                  <p className="text-[10px] uppercase tracking-widest text-red-600 font-bold mt-1.5 flex items-center gap-1">
-                    <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {errors.email}
+                  <p className="text-sm text-red-600 font-bold mt-1.5 flex items-center gap-1">
+                    <AlertCircle className="w-4 h-4 shrink-0" /> {errors.email}
                   </p>
                 )}
               </div>
 
               {!generatedCode ? (
-                <button type="submit" className="w-full mt-4 px-6 py-3 bg-brand text-surface-900 font-black uppercase tracking-widest text-[10px] rounded-[10px] hover:bg-brand-dark transition-all cursor-pointer border-none shadow-none">
+                <button type="submit" className="w-full mt-3 px-6 py-3 bg-brand text-surface-900 font-bold text-sm sm:text-base rounded-[10px] hover:bg-brand-dark transition-all cursor-pointer border-none shadow-none">
                   Generate Code
                 </button>
               ) : (
                 <div className="pt-2 space-y-4 animate-in fade-in duration-300">
-                  <div className="p-4 bg-surface-100 border border-surface-200 flex items-center justify-between gap-4 rounded-[10px]">
+                  <div className="p-4 bg-white/80 backdrop-blur-sm border border-white/60 flex items-center justify-between gap-4 rounded-[10px]">
                     <div className="min-w-0 flex-1">
-                      <span className="text-[10px] uppercase tracking-widest text-surface-500 font-bold block mb-1">Your Code</span>
-                      <span className="text-xl sm:text-2xl font-black tracking-widest text-surface-900 block truncate" title={generatedCode}>{generatedCode}</span>
+                      <span className="text-sm text-surface-700 font-bold block mb-1">Your Code</span>
+                      <span className="text-2xl sm:text-3xl font-black text-surface-900 block truncate" title={generatedCode}>{generatedCode}</span>
                     </div>
                     <button
                       type="button"
                       onClick={copyManually}
-                      className="shrink-0 px-4 py-2 bg-white border border-surface-200 hover:border-surface-900 hover:bg-surface-50 text-surface-900 text-[10px] font-black uppercase tracking-widest cursor-pointer transition-colors flex items-center gap-2 rounded-[10px] shadow-none"
+                      className="shrink-0 px-4 py-2.5 bg-white border border-surface-200 hover:border-surface-900 hover:bg-surface-50 text-surface-900 text-sm font-bold cursor-pointer transition-colors flex items-center gap-2 rounded-[10px] shadow-none"
                     >
                       <Copy className="w-4 h-4" />
                       {copied ? 'Copied' : 'Copy'}
@@ -248,7 +272,7 @@ export default function CdatSection({ setView }) {
                     onClick={() => {
                       window.open("https://cigicareer.com/cdat-registration/", "_blank", "noopener,noreferrer");
                     }}
-                    className="w-full px-6 py-3 bg-surface-900 text-white font-black uppercase tracking-widest text-[10px] rounded-[10px] hover:bg-surface-800 transition-colors cursor-pointer flex justify-center border-none shadow-none"
+                    className="w-full px-6 py-3.5 bg-surface-900 text-white font-bold text-sm sm:text-base rounded-[10px] hover:bg-surface-800 transition-colors cursor-pointer flex justify-center border-none shadow-none"
                   >
                     Proceed to Portal
                   </button>
@@ -256,20 +280,19 @@ export default function CdatSection({ setView }) {
               )}
             </form>
             
-            <div className="mt-8 pt-6 border-t border-surface-200">
-              <p className="text-[10px] text-surface-500 font-bold uppercase tracking-widest mb-3 text-center">Want to try a practice test?</p>
+            <div className="mt-6 pt-5 border-t border-surface-200">
+              <p className="text-sm text-surface-700 font-bold mb-2.5 text-center">Want to try a practice test?</p>
               <button 
                 type="button"
                 onClick={() => window.spaNavigate('/sample-test')}
-                className="w-full px-6 py-3 bg-white border border-surface-200 text-surface-900 font-black uppercase tracking-widest text-[10px] rounded-[10px] hover:bg-surface-50 transition-all cursor-pointer flex justify-center text-center shadow-none"
+                className="w-full px-6 py-3.5 bg-white/80 backdrop-blur-sm border border-white/60 text-surface-900 font-bold text-sm sm:text-base rounded-[10px] hover:bg-white transition-all cursor-pointer flex justify-center text-center shadow-none"
               >
                 Sample Test
               </button>
             </div>
-          </div>
+          </motion.div>
 
-        </div>
       </div>
-    </section>
+    </motion.section>
   );
 }
