@@ -15,7 +15,7 @@ export default function SectionHeader({ subtitle, title, description, align = 'c
  {title}
  </h2>
  {description && (
- <p className="text-gray-500 font-medium text-sm sm:text-base px-4 max-w-2xl">
+ <p className="text-gray-500 text-sm sm:text-base px-4 max-w-2xl">
  {description}
  </p>
  )}
