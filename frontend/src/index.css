@@ -15,10 +15,10 @@
   --color-zinc-700: var(--color-slate-700);
   --font-sans: 'Outfit', 'Poppins', 'Baloo Chettan 2', 'Manjari', 'Noto Sans Malayalam', system-ui, sans-serif;
   --font-heading: 'Outfit', 'Poppins', 'Baloo Chettan 2', 'Manjari', 'Noto Sans Malayalam', sans-serif;
-  --color-brand: #206173;
-  --color-brand-dark: #163a44;
-  --color-brand-light: #eaf3f5;
-  --color-brand-accent: #23949c;
+  --color-brand: #00E5FF;
+  --color-brand-dark: #00B3CC;
+  --color-brand-light: #e6fbfb;
+  --color-brand-accent: #0ea5e9;
 
   --color-surface-50: #F8FAFC;
   --color-surface-100: #F1F5F9;
@@ -26,8 +26,8 @@
   --color-surface-800: #1E293B;
   --color-surface-900: #0F172A;
 
-  --shadow-square: 0 20px 40px rgba(32, 97, 115, 0.08);
-  --shadow-square-hover: 0 24px 50px rgba(32, 97, 115, 0.14);
+  --shadow-square: 0 4px 20px rgba(0, 229, 255, 0.08);
+  --shadow-square-hover: 0 12px 40px rgba(0, 229, 255, 0.15);
   --shadow-square-dark: 0 8px 24px rgba(15, 23, 42, 0.18);
   --shadow-square-light: 0 4px 12px rgba(226, 232, 240, 0.8);
 
@@ -127,7 +127,7 @@ html {
 
 body {
   background-color: #f4f8f9;
-  color: #163a44;
+  color: #0F172A;
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -454,15 +454,14 @@ textarea:focus {
   }
 }
 
-/* Specific logo styling - dark text, cyan dot for light mode */
+/* Specific logo styling */
 @utility logo-text {
   font-family: var(--font-heading);
   font-weight: 900;
   font-size: 28px;
   line-height: 1;
   letter-spacing: -0.02em;
-  color: var(--color-surface-900); /* Changed to dark for light bg */
-  text-transform: uppercase;
+  color: var(--color-surface-900);
   display: flex;
   align-items: baseline;
 }

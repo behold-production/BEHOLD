@@ -340,7 +340,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
  )}
  {/* Floating pill for experience */}
  <div className="absolute bottom-3 right-3 bg-white/95 backdrop-blur-sm rounded-full px-3 py-1.5 shadow-sm border border-white/20">
- <span className="text-[10px] font-bold text-[#163a44]">{advisor.hours >= 1000 ? '8+' : '5+'} Yrs Exp</span>
+ <span className="text-[10px] font-bold text-[#0F172A]">{advisor.hours >= 1000 ? '8+' : '5+'} Yrs Exp</span>
  </div>
  </div>
 
@@ -348,13 +348,13 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
  <div className="p-6 flex flex-col flex-1">
  {/* Role Pill */}
  <div className="mb-4">
- <span className="inline-block bg-[#f4f8f9] text-[#163a44] px-3 py-1 rounded-full text-[10px] font-bold tracking-wider w-fit">
+ <span className="inline-block bg-[#f4f8f9] text-[#0F172A] px-3 py-1 rounded-full text-[10px] font-bold tracking-wider w-fit">
  {advisor.role || 'CONSULTANT PSYCHOLOGIST'}
  </span>
  </div>
 
  {/* Name */}
- <h3 className="text-xl font-bold text-[#163a44] mb-1.5">{advisor.name}</h3>
+ <h3 className="text-xl font-bold text-[#0F172A] mb-1.5">{advisor.name}</h3>
 
  {/* Languages */}
  <div className="flex items-center gap-1.5 text-[11px] text-gray-500 mb-4">
@@ -378,7 +378,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
  }
  window.scrollTo({ top: 0, behavior: 'smooth' });
  }}
- className="w-full py-3 rounded-[20px] border border-gray-200 bg-white text-[#163a44] font-bold text-xs flex justify-center items-center hover:bg-gray-50 hover:border-gray-300 transition-colors cursor-pointer mt-auto shadow-sm"
+ className="w-full py-3 rounded-[20px] border border-gray-200 bg-white text-[#0F172A] font-bold text-xs flex justify-center items-center hover:bg-gray-50 hover:border-gray-300 transition-colors cursor-pointer mt-auto shadow-sm"
  >
  Book Consultation
  </button>
