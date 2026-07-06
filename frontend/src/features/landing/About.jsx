@@ -36,8 +36,8 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
 
  return (
  <section id="about"className="py-12 md:py-24 px-6 bg-surface-50 relative">
-      {/* Mobile Beautiful Background */}
-      <div className="absolute inset-0 z-0 bg-[url('/hero_clay.png')] bg-cover bg-center opacity-30 md:hidden pointer-events-none"></div>
+ {/* Mobile Beautiful Background */}
+ <div className="absolute inset-0 z-0 bg-[url('/hero_clay.png')] bg-cover bg-center opacity-30 md:hidden pointer-events-none"></div>
 
  <div className="max-w-7xl mx-auto space-y-8 md:space-y-16">
 
@@ -49,12 +49,12 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
  transition={{ duration: 0.6 }}
  className="w-full"
  >
-    <SectionHeader 
-        subtitle="Why Choose Us"
-        title={settings.aboutTitle || 'What We Offer'}
-        description={settings.aboutSub || 'We go beyond traditional guidance by offering mentorship, doorstep counseling, and personalized support in schools.'}
-        align="responsive"
-    />
+ <SectionHeader 
+ subtitle="Why Choose Us"
+ title={settings.aboutTitle || 'What We Offer'}
+ description={settings.aboutSub || 'We go beyond traditional guidance by offering mentorship, doorstep counseling, and personalized support in schools.'}
+ align="responsive"
+ />
  </motion.div>
 
  {/* 6-Card Grid / Stack Slider */}

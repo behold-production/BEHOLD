@@ -101,12 +101,12 @@ export default function Inquiry({ testProfile, siteSettings }) {
  <div className="square-card p-0 flex flex-col md:flex-row overflow-hidden shadow-square-light bg-white border-surface-200">
  <div className="p-8 md:p-12 space-y-8 flex-1 border-b md:border-b-0 md:border-r border-surface-200">
  <div className="space-y-4 mb-4 flex flex-col items-start text-left">
-    <SectionHeader
-        subtitle="Get in touch"
-        title="Want to Know More"
-        description="Submit your request to align parents, students, and coordinators for assessments and counselling sessions."
-        align="left"
-    />
+ <SectionHeader
+ subtitle="Get in touch"
+ title="Want to Know More"
+ description="Submit your request to align parents, students, and coordinators for assessments and counselling sessions."
+ align="left"
+ />
  </div>
 
  {testProfile && (

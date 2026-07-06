@@ -10,40 +10,40 @@ import ErrorBoundary from './shared/components/ErrorBoundary'
 
 // Register PWA service worker
 // if ('serviceWorker' in navigator) {
-//   if (import.meta.env.DEV) {
-//     navigator.serviceWorker.getRegistrations().then((registrations) => {
-//       for (const registration of registrations) {
-//         registration.unregister();
-//       }
-//     });
-//   } else {
-//     // registerSW({ immediate: true });
-//   }
+// if (import.meta.env.DEV) {
+// navigator.serviceWorker.getRegistrations().then((registrations) => {
+// for (const registration of registrations) {
+// registration.unregister();
+// }
+// });
+// } else {
+// // registerSW({ immediate: true });
+// }
 // }
 
 // Intercept localStorage.setItem to trigger custom event for same-tab updates
 const originalSetItem = localStorage.setItem;
 localStorage.setItem = function (key, value) {
-  originalSetItem.apply(this, arguments);
-  const event = new CustomEvent('storage_update', { detail: { key, value } });
-  window.dispatchEvent(event);
+ originalSetItem.apply(this, arguments);
+ const event = new CustomEvent('storage_update', { detail: { key, value } });
+ window.dispatchEvent(event);
 };
 
 // Fallback spaNavigate stub before React is fully mounted
 window.spaNavigate = function (path) {
-  window.location.pathname = path;
+ window.location.pathname = path;
 };
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <AuthProvider>
-      <BrowserRouter>
-        <ErrorBoundary>
-          <CustomDialogProvider>
-            <App />
-          </CustomDialogProvider>
-        </ErrorBoundary>
-      </BrowserRouter>
-    </AuthProvider>
-  </StrictMode>,
+ <StrictMode>
+ <AuthProvider>
+ <BrowserRouter>
+ <ErrorBoundary>
+ <CustomDialogProvider>
+ <App />
+ </CustomDialogProvider>
+ </ErrorBoundary>
+ </BrowserRouter>
+ </AuthProvider>
+ </StrictMode>,
 )

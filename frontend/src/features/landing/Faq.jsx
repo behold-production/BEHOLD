@@ -47,12 +47,12 @@ export default function Faq() {
  >
  <div className="max-w-4xl mx-auto">
  <div className="mb-12 border-b border-surface-200 pb-8">
-    <SectionHeader
-        subtitle="Clarity Desk"
-        title="Frequently Asked"
-        description="Explore key information about the BEHOLD mentorship model, deliverables, and student tracking scopes."
-        align="responsive"
-    />
+ <SectionHeader
+ subtitle="Clarity Desk"
+ title="Frequently Asked"
+ description="Explore key information about the BEHOLD mentorship model, deliverables, and student tracking scopes."
+ align="responsive"
+ />
  </div>
 
  <div className="space-y-4">
