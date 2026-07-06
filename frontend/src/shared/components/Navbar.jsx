@@ -113,9 +113,9 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
             <div className="flex items-center gap-3 sm:gap-5 shrink-0">
 
               {/* Desktop CTA Button */}
-              <button
-                onClick={() => navigate('/booking')}
-                className={`hidden lg:block px-6 py-2 rounded-full text-sm font-medium transition-all shadow-lg cursor-pointer border-none hover:scale-105 active:scale-95 ${!isSolid ? 'bg-white text-zinc-950 hover:bg-gray-100 hover:shadow-white/20' : 'bg-brand text-zinc-950 hover:bg-brand-dark hover:shadow-brand/20'}`}
+              <button 
+                onClick={handleBookingClick}
+                className={`hidden lg:flex items-center justify-center px-6 py-2.5 rounded-2xl text-xs sm:text-sm font-black uppercase tracking-widest transition-all cursor-pointer border-none hover:scale-105 active:scale-95 ${!isSolid ? 'bg-white text-zinc-950 hover:bg-gray-100 shadow-[0_0_15px_rgba(255,255,255,0.3)]' : 'bg-[#00E5FF] text-zinc-950 hover:bg-[#00cce6] shadow-[0_0_15px_rgba(0,229,255,0.4)]'}`}
               >
                 Book Appointment
               </button>
@@ -141,7 +141,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                     </svg>
                   )}
                 </button>
-                <div className="absolute top-[110%] right-0 lg:left-1/2 lg:-translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap bg-gray-800 text-white text-xs px-3 py-1.5 rounded-lg shadow-lg translate-y-2 group-hover:translate-y-0 before:content-[''] before:absolute before:-top-1 before:right-3 lg:before:left-1/2 lg:before:-translate-x-1/2 before:border-4 before:border-transparent before:border-b-gray-800">
+                <div className="absolute top-[110%] right-0 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap bg-gray-800 text-white text-xs px-3 py-1.5 rounded-lg shadow-lg translate-y-2 group-hover:translate-y-0 before:content-[''] before:absolute before:-top-1 before:right-4 before:border-4 before:border-transparent before:border-b-gray-800">
                   {user ? 'My Profile' : 'Sign In'}
                 </div>
               </div>
