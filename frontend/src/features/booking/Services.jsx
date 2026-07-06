@@ -132,20 +132,20 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
  <div className="space-y-4">
  <div className="flex justify-between items-start">
  <div className="space-y-3">
- <span className="inline-block bg-surface-900 text-white px-3 py-1 text-sm font-semibold">
- {settings.careerBadge || 'Career Mentoring'}
- </span>
- <h3 className="text-2xl font-black text-surface-900 group-hover:text-surface-600 transition-colors duration-300">
- {settings.careerTitle || 'Career Clarity & Direction'}
- </h3>
- <h4 className="text-[10px] font-bold text-surface-500">
- {settings.careerSubtitle || 'Feeling Unsure About What’s Next?'}
- </h4>
+  <span className="inline-block bg-surface-900 text-white px-3 py-1 text-sm font-semibold rounded-full">
+  {settings.careerBadge || 'Career Mentoring'}
+  </span>
+  <h3 className="text-3xl sm:text-4xl font-black text-surface-900 group-hover:text-surface-600 transition-colors duration-300 leading-tight">
+  {settings.careerTitle || 'Career Clarity & Direction'}
+  </h3>
+  <h4 className="text-sm font-bold text-surface-500">
+  {settings.careerSubtitle || 'Feeling Unsure About What’s Next?'}
+  </h4>
  </div>
  </div>
- <p className="text-surface-600 text-xs leading-relaxed">
- {settings.careerDesc || 'Whether you’re choosing a stream, exploring career options, or planning your future studies, we help you understand your strengths, interests, and opportunities so you can make confident decisions with clarity and direction.'}
- </p>
+  <p className="text-surface-600 text-base leading-relaxed font-normal">
+  {settings.careerDesc || 'Whether you’re choosing a stream, exploring career options, or planning your future studies, we help you understand your strengths, interests, and opportunities so you can make confident decisions with clarity and direction.'}
+  </p>
  </div>
 
  {enableCareerMentoring && (
@@ -159,7 +159,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
  }
  window.scrollTo({ top: 0, behavior: 'smooth' });
  }}
- className="w-full sm:w-auto px-6 py-3 bg-brand text-surface-900 font-black text-[10px] rounded-[10px] hover:bg-brand-dark transition-colors cursor-pointer text-center shadow-none border-none"
+  className="w-full px-6 py-4 bg-brand text-surface-900 font-bold text-sm rounded-full hover:bg-brand-dark transition-all cursor-pointer text-center shadow-[0_4px_20px_rgba(0,229,255,0.3)] border-none"
  >
  {settings.careerBtnText || 'Book Your Mentor'}
  </button>
@@ -180,20 +180,20 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
  <div className="space-y-4">
  <div className="flex justify-between items-start">
  <div className="space-y-3">
- <span className="inline-block bg-surface-200 text-surface-900 px-3 py-1 text-sm font-semibold">
- {settings.counselBadge || 'Psychological Counselling'}
- </span>
- <h3 className="text-2xl font-black text-surface-900 group-hover:text-surface-600 transition-colors duration-300">
- {settings.counselTitle || 'Emotional Wellbeing & Support'}
- </h3>
- <h4 className="text-[10px] font-bold text-surface-500">
- {settings.counselSubtitle || 'You Don’t Have to Face It Alone.'}
- </h4>
+  <span className="inline-block bg-surface-200 text-surface-900 px-3 py-1 text-sm font-semibold rounded-full">
+  {settings.counselBadge || 'Psychological Counselling'}
+  </span>
+  <h3 className="text-3xl sm:text-4xl font-black text-surface-900 group-hover:text-surface-600 transition-colors duration-300 leading-tight">
+  {settings.counselTitle || 'Emotional Wellbeing & Support'}
+  </h3>
+  <h4 className="text-sm font-bold text-surface-500">
+  {settings.counselSubtitle || 'You Don’t Have to Face It Alone.'}
+  </h4>
  </div>
  </div>
- <p className="text-surface-600 text-xs leading-relaxed">
- {settings.counselDesc || 'When stress, anxiety, self-doubt, or personal challenges begin to feel overwhelming, having the right support can make all the difference. Our counselling sessions provide a safe space to reflect, heal, grow, and move forward with confidence.'}
- </p>
+  <p className="text-surface-600 text-base leading-relaxed font-normal">
+  {settings.counselDesc || 'When stress, anxiety, self-doubt, or personal challenges begin to feel overwhelming, having the right support can make all the difference. Our counselling sessions provide a safe space to reflect, heal, grow, and move forward with confidence.'}
+  </p>
  </div>
 
  {enablePsychology && (
@@ -207,7 +207,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
  }
  window.scrollTo({ top: 0, behavior: 'smooth' });
  }}
- className="w-full sm:w-auto px-6 py-3 bg-brand text-surface-900 font-black text-[10px] rounded-[10px] hover:bg-brand-dark transition-colors cursor-pointer text-center border-none shadow-none"
+  className="w-full px-6 py-4 bg-brand text-surface-900 font-bold text-sm rounded-full hover:bg-brand-dark transition-all cursor-pointer text-center border-none shadow-[0_4px_20px_rgba(0,229,255,0.3)]"
  >
  {settings.counselBtnText || 'Book Your Therapist'}
  </button>

@@ -1001,7 +1001,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
           contact: bookingForm.phone
         },
         theme: {
-          color: "#06b6d4"
+          color: "#00E5FF"
         },
         modal: {
           ondismiss: function () {
