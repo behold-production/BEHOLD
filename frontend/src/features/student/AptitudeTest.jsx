@@ -240,10 +240,10 @@ export default function AptitudeTest({ onFinishTest }) {
  <div className="mb-8 sm:mb-12">
  <div className="flex flex-col sm:flex-row justify-between sm:items-end gap-4 mb-4">
  <div>
- <h2 className="text-2xl sm:text-3xl font-black text-surface-900 tracking-widest leading-none">
+ <h2 className="text-3xl sm:text-4xl font-extrabold text-surface-900 leading-none">
  Aptitude Profiling
  </h2>
- <p className="text-[10px] font-bold tracking-widest text-surface-500 mt-2">
+ <p className="text-sm font-medium text-surface-500 mt-2">
  Discover your core cognitive affinities across 8 dimensions.
  </p>
  </div>
@@ -264,10 +264,10 @@ export default function AptitudeTest({ onFinishTest }) {
  {/* Question Text */}
  <div className="mb-6 sm:mb-10">
  <div className="flex gap-4 items-start mb-6">
- <span className="flex items-center justify-center w-7 h-7 rounded-[10px] bg-surface-100 text-surface-900 font-black text-[10px] tracking-widest shrink-0 mt-0.5 ">
+ <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-surface-100 text-surface-900 font-bold text-sm shrink-0 mt-0.5 ">
  Q
  </span>
- <h3 className="text-base sm:text-lg md:text-xl font-black text-surface-900 tracking-widest leading-snug">
+ <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-surface-900 leading-snug">
  {currentQObj.question}
  </h3>
  </div>
@@ -281,7 +281,7 @@ export default function AptitudeTest({ onFinishTest }) {
  onClick={() => handleAnswer(currentQObj.category, opt.weight)}
  className="w-full text-left p-4 sm:p-5 rounded-[10px] border border-surface-200 bg-surface-50 hover:bg-surface-100 hover:border-surface-300 transition-all duration-200 flex items-center justify-between group cursor-pointer text-surface-900 shadow-none"
  >
- <span className="text-[10px] sm:text-xs font-black tracking-widest text-surface-600 group-hover:text-surface-900 transition-colors pr-4">
+ <span className="text-sm sm:text-base font-medium text-surface-700 group-hover:text-surface-900 transition-colors pr-4">
  {opt.text}
  </span>
  <div className="w-4 h-4 rounded-[10px] border border-surface-300 group-hover:border-surface-900 group-hover:bg-surface-900 transition-all duration-200 flex items-center justify-center shrink-0 ml-4">
@@ -308,7 +308,7 @@ export default function AptitudeTest({ onFinishTest }) {
  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[10px] bg-surface-50 border border-surface-200 text-surface-900 text-[10px] tracking-widest font-black mb-1">
  <Award className="w-3.5 h-3.5 text-surface-900" /> CIGI Framework Certified
  </div>
- <h2 className="text-2xl sm:text-3xl font-black text-surface-900 tracking-widest leading-none">
+ <h2 className="text-3xl sm:text-4xl font-extrabold text-surface-900 leading-none">
  Assessment Completed
  </h2>
  </div>
