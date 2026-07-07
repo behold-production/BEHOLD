@@ -578,71 +578,88 @@ export default function SettingsTab(props) {
  </div>
  </div>
  
- <div className="space-y-3">
- <div>
- <label className="text-[10px] font-bold text-zinc-500 ">Background Image URL</label>
- <input type="url" value={slide.image || ''} onChange={(e) => {
- const newSlides = [...settingsForm.heroSlides];
- newSlides[index] = { ...newSlides[index], image: e.target.value };
- setSettingsForm(prev => ({ ...prev, heroSlides: newSlides }));
- }} className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none" placeholder="https://images.unsplash.com/photo-..." />
- </div>
- 
- <div>
- <label className="text-[10px] font-bold text-zinc-500 ">Heading (use {`{ }`} for highlight)</label>
- <input type="text" value={slide.title || ''} onChange={(e) => {
- const newSlides = [...settingsForm.heroSlides];
- newSlides[index] = { ...newSlides[index], title: e.target.value };
- setSettingsForm(prev => ({ ...prev, heroSlides: newSlides }));
- }} className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none" placeholder="Bridging You To Your {True Growth.}" />
- </div>
- 
- <div>
- <label className="text-[10px] font-bold text-zinc-500 ">Description / Subtitle</label>
- <textarea rows={2} value={slide.subtitle || ''} onChange={(e) => {
- const newSlides = [...settingsForm.heroSlides];
- newSlides[index] = { ...newSlides[index], subtitle: e.target.value };
- setSettingsForm(prev => ({ ...prev, heroSlides: newSlides }));
- }} className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white resize-none outline-none" placeholder="Description text..." />
- </div>
- 
- <div className="grid grid-cols-2 gap-3">
- <div className="space-y-2 p-2 border border-zinc-800/80 rounded bg-zinc-950/40">
- <span className="text-[10px] text-zinc-500 font-bold block">Primary Button (Left)</span>
- <input type="text" value={slide.btn1Text || ''} onChange={(e) => {
- const newSlides = [...settingsForm.heroSlides];
- newSlides[index] = { ...newSlides[index], btn1Text: e.target.value };
- setSettingsForm(prev => ({ ...prev, heroSlides: newSlides }));
- }} className="w-full px-2 py-1.5 bg-zinc-900 border border-zinc-800 focus:border-brand rounded text-xs text-white outline-none" placeholder="Button Text (e.g. Book A Session)" />
- <input type="text" value={slide.btn1Link || ''} onChange={(e) => {
- const newSlides = [...settingsForm.heroSlides];
- newSlides[index] = { ...newSlides[index], btn1Link: e.target.value };
- setSettingsForm(prev => ({ ...prev, heroSlides: newSlides }));
- }} className="w-full px-2 py-1.5 bg-zinc-900 border border-zinc-800 focus:border-brand rounded text-xs text-white outline-none" placeholder="Link Route (e.g. /booking)" />
- </div>
- 
- <div className="space-y-2 p-2 border border-zinc-800/80 rounded bg-zinc-950/40">
- <span className="text-[10px] text-zinc-500 font-bold block">Secondary Button (Right)</span>
- <input type="text" value={slide.btn2Text || ''} onChange={(e) => {
- const newSlides = [...settingsForm.heroSlides];
- newSlides[index] = { ...newSlides[index], btn2Text: e.target.value };
- setSettingsForm(prev => ({ ...prev, heroSlides: newSlides }));
- }} className="w-full px-2 py-1.5 bg-zinc-900 border border-zinc-800 focus:border-brand rounded text-xs text-white outline-none" placeholder="Button Text (e.g. Explore Aptitude)" />
- <input type="text" value={slide.btn2Link || ''} onChange={(e) => {
- const newSlides = [...settingsForm.heroSlides];
- newSlides[index] = { ...newSlides[index], btn2Link: e.target.value };
- setSettingsForm(prev => ({ ...prev, heroSlides: newSlides }));
- }} className="w-full px-2 py-1.5 bg-zinc-900 border border-zinc-800 focus:border-brand rounded text-xs text-white outline-none" placeholder="Link Route (e.g. /aptitude-test)" />
- </div>
- </div>
- </div>
+      <div className="space-y-3">
+        <div>
+          <label className="text-[10px] font-bold text-zinc-500 ">Background Image / Video URL</label>
+          <input type="url" value={slide.image || ''} onChange={(e) => {
+            const newSlides = [...settingsForm.heroSlides];
+            newSlides[index] = { ...newSlides[index], image: e.target.value };
+            setSettingsForm(prev => ({ ...prev, heroSlides: newSlides }));
+          }} className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none" placeholder="https://images.unsplash.com/photo-... or video.mp4" />
+        </div>
+        
+        <div>
+          <div className="flex justify-between items-center mb-1">
+            <label className="text-[10px] font-bold text-zinc-500">Heading (use {`{ }`} for highlight)</label>
+            <span className="text-[9px] text-zinc-500">({120 - (slide.title || '').length} remaining)</span>
+          </div>
+          <input type="text" maxLength={120} value={slide.title || ''} onChange={(e) => {
+            const newSlides = [...settingsForm.heroSlides];
+            newSlides[index] = { ...newSlides[index], title: e.target.value };
+            setSettingsForm(prev => ({ ...prev, heroSlides: newSlides }));
+          }} className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none" placeholder="Bridging You To Your {True Growth.}" />
+        </div>
+        
+        <div>
+          <div className="flex justify-between items-center mb-1">
+            <label className="text-[10px] font-bold text-zinc-500">Description / Subtitle</label>
+            <span className="text-[9px] text-zinc-500">({300 - (slide.subtitle || '').length} remaining)</span>
+          </div>
+          <textarea rows={2} maxLength={300} value={slide.subtitle || ''} onChange={(e) => {
+            const newSlides = [...settingsForm.heroSlides];
+            newSlides[index] = { ...newSlides[index], subtitle: e.target.value };
+            setSettingsForm(prev => ({ ...prev, heroSlides: newSlides }));
+          }} className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white resize-none outline-none" placeholder="Description text..." />
+        </div>
+      </div>
  </div>
  ))
  )}
  </div>
  </div>
 
- {/* Career Mentoring Section */}
+    {/* Hero Section Global Buttons Customization */}
+    <div className="bg-zinc-955/40 border border-zinc-800 p-5 rounded-xl space-y-4 mb-4">
+      <h4 className="text-xs font-bold text-brand tracking-wider flex items-center gap-2">
+        <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+        Hero Section Global Buttons Settings
+      </h4>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="space-y-2 p-3 border border-zinc-800/80 rounded bg-zinc-955/40">
+          <span className="text-[10px] text-zinc-400 font-bold block mb-1">Primary Button (Left)</span>
+          <input type="text" value={settingsForm.heroSlides?.[0]?.btn1Text || ''} onChange={(e) => {
+            const newSlides = [...(settingsForm.heroSlides || [])];
+            if (newSlides.length === 0) newSlides.push({ image: '', title: '', subtitle: '', btn1Text: '', btn1Link: '', btn2Text: '', btn2Link: '' });
+            newSlides[0] = { ...newSlides[0], btn1Text: e.target.value };
+            setSettingsForm(prev => ({ ...prev, heroSlides: newSlides }));
+          }} className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none mb-2" placeholder="Button Text (e.g. Book A Session)" />
+          <input type="text" value={settingsForm.heroSlides?.[0]?.btn1Link || ''} onChange={(e) => {
+            const newSlides = [...(settingsForm.heroSlides || [])];
+            if (newSlides.length === 0) newSlides.push({ image: '', title: '', subtitle: '', btn1Text: '', btn1Link: '', btn2Text: '', btn2Link: '' });
+            newSlides[0] = { ...newSlides[0], btn1Link: e.target.value };
+            setSettingsForm(prev => ({ ...prev, heroSlides: newSlides }));
+          }} className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none" placeholder="Link Route (e.g. /booking)" />
+        </div>
+        
+        <div className="space-y-2 p-3 border border-zinc-800/80 rounded bg-zinc-955/40">
+          <span className="text-[10px] text-zinc-400 font-bold block mb-1">Secondary Button (Right)</span>
+          <input type="text" value={settingsForm.heroSlides?.[0]?.btn2Text || ''} onChange={(e) => {
+            const newSlides = [...(settingsForm.heroSlides || [])];
+            if (newSlides.length === 0) newSlides.push({ image: '', title: '', subtitle: '', btn1Text: '', btn1Link: '', btn2Text: '', btn2Link: '' });
+            newSlides[0] = { ...newSlides[0], btn2Text: e.target.value };
+            setSettingsForm(prev => ({ ...prev, heroSlides: newSlides }));
+          }} className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none mb-2" placeholder="Button Text (e.g. Explore Aptitude)" />
+          <input type="text" value={settingsForm.heroSlides?.[0]?.btn2Link || ''} onChange={(e) => {
+            const newSlides = [...(settingsForm.heroSlides || [])];
+            if (newSlides.length === 0) newSlides.push({ image: '', title: '', subtitle: '', btn1Text: '', btn1Link: '', btn2Text: '', btn2Link: '' });
+            newSlides[0] = { ...newSlides[0], btn2Link: e.target.value };
+            setSettingsForm(prev => ({ ...prev, heroSlides: newSlides }));
+          }} className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none" placeholder="Link Route (e.g. /aptitude-test)" />
+        </div>
+      </div>
+    </div>
+
+    {/* Career Mentoring Section */}
  <div className="bg-zinc-950/40 border border-zinc-800 p-5 rounded-xl space-y-4">
  <h4 className="text-xs font-bold text-brand tracking-wider flex items-center gap-2">
  <span className="w-1.5 h-1.5 rounded-full bg-brand" />

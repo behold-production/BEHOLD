@@ -76,12 +76,24 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
       className="relative w-full flex flex-col overflow-hidden bg-[#0d1d2e]"
       style={{ minHeight: '100svh' }}
     >
-      {/* Background Image */}
+      {/* Background Image or Video */}
       <div className="absolute inset-0 z-0">
-        <div
-          className="w-full h-full bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url('${slide.image}')` }}
-        />
+        {slide.image && (slide.image.endsWith('.mp4') || slide.image.endsWith('.webm') || slide.image.endsWith('.ogg') || slide.image.includes('video') || slide.image.includes('mp4')) ? (
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover"
+          >
+            <source src={slide.image} />
+          </video>
+        ) : (
+          <div
+            className="w-full h-full bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: `url('${slide.image}')` }}
+          />
+        )}
       </div>
 
       {/* Unified dark overlay — heavier in center for text legibility */}
