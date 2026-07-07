@@ -1297,7 +1297,9 @@ export default function AdminDashboard({ setView }) {
  whatsapp: '',
  contactEmail: '',
  siteName: '',
- siteCopyright: '',
+    siteCopyright: '',
+    contactPhone: '',
+    openHours: '',
  showBanner: false,
  bannerNotice: '',
  termsOfUse: '',
@@ -1450,7 +1452,9 @@ export default function AdminDashboard({ setView }) {
  whatsapp: settings.whatsapp || 'https://wa.me/919497174011',
  contactEmail: settings.contactEmail || 'support@behold.com',
  siteName: settings.siteName || 'BEHOLD',
- siteCopyright: settings.siteCopyright || '© BEHOLD Ltd., 2026. All rights reserved.',
+    siteCopyright: settings.siteCopyright || '© BEHOLD Ltd., 2026. All rights reserved.',
+    contactPhone: settings.contactPhone || '9207 07 51 51',
+    openHours: settings.openHours || 'Open Hours: Mon - Sat: 9:00 AM - 9:00 PM (Sun: 9:00 AM - 5:00 PM)',
  showBanner: settings.showBanner !== undefined ? settings.showBanner : false,
  bannerNotice: settings.bannerNotice || '🚨 Maintenance Notice: Schedulers undergoing maintenance tonight between 12:00 AM - 02:00 AM IST.',
  termsOfUse: settings.termsOfUse || '',
@@ -1544,7 +1548,7 @@ export default function AdminDashboard({ setView }) {
  }, [user]);
 
  // Determine sub-admin permissions
- const isSuperAdmin = user?.role?.toUpperCase() === 'ADMIN' && !user?.permissions;
+ const isSuperAdmin = user?.role?.toUpperCase() === 'ADMIN';
  const _p = user?.permissions || [];
 
  // Module-level access (broad) — legacy keys OR any action key in that module
@@ -2837,6 +2841,8 @@ export default function AdminDashboard({ setView }) {
         contactEmail: 'support@behold.com',
         siteName: 'BEHOLD',
         siteCopyright: '© BEHOLD Ltd., 2026. All rights reserved.',
+        contactPhone: '9207 07 51 51',
+        openHours: 'Open Hours: Mon - Sat: 9:00 AM - 9:00 PM (Sun: 9:00 AM - 5:00 PM)',
         bannerNotice: '🚨 Maintenance Notice: Schedulers undergoing maintenance tonight between 12:00 AM - 02:00 AM IST.',
         cdatGroupCode: 'cdat@behold',
         careerBadge: 'Career Mentoring',

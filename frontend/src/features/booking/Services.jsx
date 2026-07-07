@@ -126,10 +126,10 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
             <div className={`grid grid-cols-1 ${enableCareerMentoring && enablePsychology ? 'md:grid-cols-2' : ''} gap-8 items-stretch w-full mb-10`}>
                 {enableCareerMentoring && (
                     <motion.div
-                        initial={{ opacity: 0, x: -40 }}
-                        whileInView={{ opacity: 1, x: 0 }}
+                        initial={{ opacity: 0, x: -80, scale: 0.96 }}
+                        whileInView={{ opacity: 1, x: 0, scale: 1 }}
                         viewport={{ once: true, margin: "-50px" }}
-                        transition={{ duration: 0.6, ease: "easeOut" }}
+                        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
                         key="career"
                         id="card-career"
                         className="square-card p-6 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none group h-full"
@@ -174,10 +174,10 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
 
                 {enablePsychology && (
                     <motion.div
-                        initial={{ opacity: 0, x: 40 }}
-                        whileInView={{ opacity: 1, x: 0 }}
+                        initial={{ opacity: 0, x: 80, scale: 0.96 }}
+                        whileInView={{ opacity: 1, x: 0, scale: 1 }}
                         viewport={{ once: true, margin: "-50px" }}
-                        transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
+                        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
                         key="psychology"
                         id="card-psychology"
                         className="square-card p-6 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none group h-full bg-[#f8fafc]"

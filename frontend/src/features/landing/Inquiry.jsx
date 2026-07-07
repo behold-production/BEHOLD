@@ -92,10 +92,10 @@ export default function Inquiry({ testProfile, siteSettings }) {
  {/* 3. CALL TO ACTION BLOCK WITH INQUIRY FORM */}
  <motion.section
  id="inquiry"
- initial={{ opacity: 0, y: 30 }}
- whileInView={{ opacity: 1, y: 0 }}
+ initial={{ opacity: 0, y: 60, scale: 0.98 }}
+ whileInView={{ opacity: 1, y: 0, scale: 1 }}
  viewport={{ once: true, margin:"-100px"}}
- transition={{ duration: 0.6 }}
+ transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
  className="py-10 md:py-20 px-6 max-w-7xl mx-auto"
  >
  <div className="square-card p-0 flex flex-col md:flex-row overflow-hidden bg-white">

@@ -143,56 +143,56 @@ export default function CdatSection({ setView }) {
  }
  };
 
- return (
- <motion.section initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.7 }} id="cdat" className="relative pt-16 md:pt-24 pb-16 md:pb-24 px-6 overflow-hidden">
- {/* Background Image & Glassmorphic Overlay */}
- <div className="absolute inset-0 z-0">
- <div 
- className="w-full h-full bg-cover bg-center bg-fixed scale-105"
- style={{ backgroundImage: "url('/students_kerala.png')" }}
- />
- </div>
- <div className="absolute inset-0 z-10 bg-white/60 backdrop-blur-lg pointer-events-none"></div>
+  return (
+    <motion.section initial={{ opacity: 0, y: 60 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }} id="cdat" className="relative pt-16 md:pt-24 pb-16 md:pb-24 px-6 overflow-hidden">
+      {/* Background Image & Glassmorphic Overlay */}
+      <div className="absolute inset-0 z-0">
+        <div 
+          className="w-full h-full bg-cover bg-center bg-fixed scale-105"
+          style={{ backgroundImage: "url('/students_kerala.png')" }}
+        />
+      </div>
+      <div className="absolute inset-0 z-10 bg-white/60 backdrop-blur-lg pointer-events-none"></div>
+      
+      <div className="relative z-20 max-w-7xl mx-auto flex flex-col md:flex-row gap-6 lg:gap-12 items-stretch">
+        
+        {/* Text Side Card */}
+        <motion.div 
+          initial={{ opacity: 0, x: -80, scale: 0.96 }}
+          whileInView={{ opacity: 1, x: 0, scale: 1 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          className="square-card p-6 sm:p-8 flex-1 flex flex-col group"
+        >
+          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-6 mb-6">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-surface-900 leading-tight">
+              CIGI Differential Aptitude Test (C-DAT)
+            </h2>
+            <img src="/CIGI.png" alt="CIGI Logo" className="h-16 sm:h-20 object-contain shrink-0 mix-blend-multiply sm:self-start mt-1" />
+          </div>
+          <p className="text-surface-700 text-base md:text-lg leading-relaxed mb-8 max-w-lg font-medium">
+            C-DAT effectively identifies the inherent capacities of students, guiding them towards suitable academic and career paths with scientific precision.
+          </p>
+          <div className="mt-auto">
+            <button
+              type="button"
+              onClick={() => document.getElementById('cdat-form')?.scrollIntoView({ behavior: 'smooth' })}
+              className="w-full sm:w-max px-8 py-3.5 bg-brand text-surface-900 font-bold text-sm sm:text-base rounded-full hover:bg-brand-dark transition-colors cursor-pointer border-none shadow-[0_4px_20px_rgba(0,229,255,0.3)]"
+            >
+              CIGI Aptitude Test
+            </button>
+          </div>
+        </motion.div>
  
- <div className="relative z-20 max-w-7xl mx-auto flex flex-col md:flex-row gap-6 lg:gap-12 items-stretch">
- 
- {/* Text Side Card */}
- <motion.div 
- initial={{ opacity: 0, x: -40 }}
- whileInView={{ opacity: 1, x: 0 }}
- viewport={{ once: true, margin: "-50px" }}
- transition={{ duration: 0.6, ease: "easeOut" }}
- className="bg-white border border-surface-200 shadow-square-light hover:shadow-square-hover transition-all duration-300 rounded-[10px] p-6 sm:p-8 flex-1 flex flex-col group"
- >
- <div className="flex flex-row items-center justify-between gap-4 mb-4">
- <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-surface-900 leading-tight">
- CIGI Differential Aptitude Test (C-DAT)
- </h2>
- <img src="/CIGI.png" alt="CIGI Logo" className="h-16 sm:h-20 object-contain shrink-0 mix-blend-multiply" />
- </div>
- <p className="text-surface-700 text-base md:text-lg leading-relaxed mb-8 max-w-lg font-medium">
- C-DAT effectively identifies the inherent capacities of students, guiding them towards suitable academic and career paths with scientific precision.
- </p>
- <div className="mt-auto">
- <button
- type="button"
- onClick={() => document.getElementById('cdat-form')?.scrollIntoView({ behavior: 'smooth' })}
- className="w-full sm:w-max px-8 py-3.5 bg-surface-900 text-white font-bold text-sm sm:text-base rounded-[10px] hover:bg-surface-800 transition-colors cursor-pointer border-none shadow-none"
- >
- CIGI Aptitude Test
- </button>
- </div>
- </motion.div>
- 
- {/* Form Side Card */}
- <motion.div 
- initial={{ opacity: 0, x: 40 }}
- whileInView={{ opacity: 1, x: 0 }}
- viewport={{ once: true, margin: "-50px" }}
- transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
- id="cdat-form" 
- className="bg-white border border-surface-200 shadow-square-light hover:shadow-square-hover transition-all duration-300 rounded-[10px] p-6 sm:p-8 w-full md:w-[450px] lg:w-[480px] shrink-0 group"
- >
+  {/* Form Side Card */}
+  <motion.div 
+    initial={{ opacity: 0, x: 80, scale: 0.96 }}
+    whileInView={{ opacity: 1, x: 0, scale: 1 }}
+    viewport={{ once: true, margin: "-50px" }}
+    transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
+    id="cdat-form" 
+    className="square-card p-6 sm:p-8 w-full md:w-[450px] lg:w-[480px] shrink-0 group"
+  >
  <h3 className="font-black text-2xl mb-4 text-surface-900">Generate Group Code</h3>
  <form onSubmit={handleGenerateCode} className="space-y-3">
  

@@ -127,9 +127,9 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
 
           {/* Main Heading */}
           <motion.h1
-            initial={{ opacity: 0, y: 28 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: 'easeOut', delay: 0.05 }}
+            initial={{ opacity: 0, y: 50, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
             className="font-extrabold text-white leading-[1.08] tracking-tight drop-shadow-lg mb-5 w-full text-[3.2rem] sm:text-6xl md:text-6xl lg:text-7xl"
           >
             {renderTitle(slide.title)}
@@ -137,9 +137,9 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
 
           {/* Subtitle */}
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: 'easeOut', delay: 0.15 }}
+            transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
             className="text-white/80 font-normal leading-relaxed mb-8 w-full max-w-md md:max-w-xl text-base"
           >
             {slide.subtitle}
@@ -147,9 +147,9 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
 
           {/* Buttons */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: 'easeOut', delay: 0.25 }}
+            transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
             className="flex flex-col gap-3 w-full md:flex-row md:w-auto"
           >
             {slide.btn1Text && (
