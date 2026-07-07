@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
  User, Calendar, Clock, BookOpen, Link, ShieldAlert, Award, Globe,
  Edit, Video, BarChart3, AlertCircle, Save, LogOut,
- X, ChevronRight, Mail, Shield, Menu, FileText, Send, Eye, EyeOff, Bell, Check
+ X, ChevronRight, Mail, Shield, Menu, FileText, Send, Eye, EyeOff, Bell, Check, MapPin, Navigation
 } from 'lucide-react';
 import {
  isNotificationSupported,
@@ -147,20 +147,23 @@ export default function PsychologistDashboard({ setView }) {
  const [onboardingStep, setOnboardingStep] = useState(1); // 1, 2, or 3
 
  // Registration Form States
- const [regForm, setRegForm] = useState({
- name: '',
- email: '',
- password: '',
- confirmPassword: '',
- education: '',
- specialties: '',
- price: '',
- lang: '',
- bio: '',
- defaultMeetLink: '',
- hours: 0,
- modes: ['ONLINE', 'OFFLINE', 'DOOR_STEP']
- });
+  const [regForm, setRegForm] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    education: '',
+    specialties: '',
+    price: '',
+    lang: '',
+    bio: '',
+    defaultMeetLink: '',
+    hours: 0,
+    modes: ['ONLINE', 'OFFLINE', 'DOOR_STEP'],
+    locationName: '',
+    latitude: 0,
+    longitude: 0
+  });
  const setRegError = (msg) => { if (msg && !msg.includes('Status:')) import('react-hot-toast').then(mod => mod.toast.error(msg)) };
  const regError = '';
  const [regActiveDays, setRegActiveDays] = useState({
@@ -688,21 +691,24 @@ export default function PsychologistDashboard({ setView }) {
  ? regForm.specialties.split(',').map(s => s.trim()).filter(Boolean)
  : [];
 
- const extraPayload = {
- education: regForm.education.trim(),
- specialties: specialtiesArr,
- price: Number(regForm.price) || 1200,
- lang: regForm.lang.trim(),
- bio: regForm.bio.trim(),
- defaultMeetLink: regForm.defaultMeetLink.trim(),
- hours: Number(regForm.hours) || 0,
- modes: regForm.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP'],
- title: 'Consultant Psychologist',
- availability: {
- activeDays: regActiveDays,
- availableSlots: regAvailableSlots
- }
- };
+    const extraPayload = {
+      education: regForm.education.trim(),
+      specialties: specialtiesArr,
+      price: Number(regForm.price) || 1200,
+      lang: regForm.lang.trim(),
+      bio: regForm.bio.trim(),
+      defaultMeetLink: regForm.defaultMeetLink.trim(),
+      hours: Number(regForm.hours) || 0,
+      modes: regForm.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP'],
+      title: 'Consultant Psychologist',
+      locationName: regForm.locationName.trim(),
+      latitude: Number(regForm.latitude) || 0,
+      longitude: Number(regForm.longitude) || 0,
+      availability: {
+        activeDays: regActiveDays,
+        availableSlots: regAvailableSlots
+      }
+    };
 
  await register(
  regForm.name.trim(),
@@ -712,20 +718,23 @@ export default function PsychologistDashboard({ setView }) {
  extraPayload
  );
 
- setRegForm({
- name: '',
- email: '',
- password: '',
- confirmPassword: '',
- education: '',
- specialties: '',
- price: '',
- lang: '',
- bio: '',
- defaultMeetLink: '',
- hours: 0,
- modes: ['ONLINE', 'OFFLINE', 'DOOR_STEP']
- });
+  setRegForm({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    education: '',
+    specialties: '',
+    price: '',
+    lang: '',
+    bio: '',
+    defaultMeetLink: '',
+    hours: 0,
+    modes: ['ONLINE', 'OFFLINE', 'DOOR_STEP'],
+    locationName: '',
+    latitude: 0,
+    longitude: 0
+  });
  setOnboardingStep(1);
  setGateMode('login');
  } catch (err) {
@@ -1408,6 +1417,81 @@ export default function PsychologistDashboard({ setView }) {
                           );
                         })}
                       </div>
+                    </div>
+
+                    <div className='border-t border-slate-800/80 pt-4 space-y-4'>
+                      <h5 className='text-xs font-bold text-[#00E5FF] tracking-wider flex items-center gap-1.5'>
+                        <MapPin className='w-3.5 h-3.5' /> Location & Practice Center
+                      </h5>
+                      <div>
+                        <label className='block text-xs font-medium text-slate-400 mb-2'>
+                          Clinic / Practice Center Address
+                        </label>
+                        <input
+                          type='text'
+                          required
+                          placeholder='e.g. BEHOLD Mental Health Space, Cochin, Kerala'
+                          value={regForm.locationName}
+                          onChange={(e) => setRegForm({ ...regForm, locationName: e.target.value })}
+                          className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
+                        />
+                      </div>
+                      <div className='flex gap-4 items-end'>
+                        <div className='w-1/2'>
+                          <label className='block text-xs font-medium text-slate-400 mb-2'>
+                            Latitude
+                          </label>
+                          <input
+                            type='number'
+                            step='any'
+                            required
+                            placeholder='e.g. 9.9816'
+                            value={regForm.latitude}
+                            onChange={(e) => setRegForm({ ...regForm, latitude: e.target.value })}
+                            className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
+                          />
+                        </div>
+                        <div className='w-1/2'>
+                          <label className='block text-xs font-medium text-slate-400 mb-2'>
+                            Longitude
+                          </label>
+                          <input
+                            type='number'
+                            step='any'
+                            required
+                            placeholder='e.g. 76.2999'
+                            value={regForm.longitude}
+                            onChange={(e) => setRegForm({ ...regForm, longitude: e.target.value })}
+                            className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
+                          />
+                        </div>
+                      </div>
+                      <button
+                        type='button'
+                        onClick={() => {
+                          if (navigator.geolocation) {
+                            navigator.geolocation.getCurrentPosition(
+                              (position) => {
+                                setRegForm(prev => ({
+                                  ...prev,
+                                  latitude: parseFloat(position.coords.latitude.toFixed(6)),
+                                  longitude: parseFloat(position.coords.longitude.toFixed(6))
+                                }));
+                                toast.success("Location coordinates fetched successfully!");
+                              },
+                              (error) => {
+                                console.error(error);
+                                toast.error("Failed to auto-fetch location. Please enter manually.");
+                              }
+                            );
+                          } else {
+                            toast.error("Geolocation is not supported by this browser.");
+                          }
+                        }}
+                        className='w-full py-2 bg-slate-900 hover:bg-slate-850 text-slate-300 hover:text-white rounded-lg text-xs font-bold transition-all border border-slate-800 cursor-pointer flex items-center justify-center gap-1.5'
+                      >
+                        <Navigation className='w-3.5 h-3.5 text-[#00E5FF]' /> Auto-Detect Coordinates
+                      </button>
                     </div>
 
                     <div>
