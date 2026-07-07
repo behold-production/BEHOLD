@@ -1,6 +1,6 @@
 import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { Routes, Route, Navigate, useNavigate, useLocation, useParams } from 'react-router-dom';
-import { MessageCircle, X, Download, ShieldAlert } from 'lucide-react';
+import { MessageCircle, X, Download, ShieldAlert, Eye, EyeOff } from 'lucide-react';
 import { Toaster, useToasterStore, toast } from 'react-hot-toast';
 import Navbar from './shared/components/Navbar';
 import Hero from './features/landing/Hero';
