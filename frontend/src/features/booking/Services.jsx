@@ -140,7 +140,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                                     <span className="inline-block bg-surface-900 text-white px-3 py-1 text-sm font-semibold rounded-full">
                                         {settings.careerBadge || 'Career Mentoring'}
                                     </span>
-                                    <h3 className="text-3xl sm:text-4xl font-black text-surface-900 group-hover:text-surface-600 transition-colors duration-300 leading-tight">
+                                    <h3 className="text-3xl sm:text-4xl font-black text-surface-900 group-hover:text-surface-600 transition-colors duration-300 leading-tight font-header">
                                         {settings.careerTitle || 'Career Clarity & Direction'}
                                     </h3>
                                     <h4 className="text-sm font-bold text-surface-500">
@@ -188,7 +188,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                                     <span className="inline-block bg-surface-200 text-surface-900 px-3 py-1 text-sm font-semibold rounded-full">
                                         {settings.counselBadge || 'Psychological Counselling'}
                                     </span>
-                                    <h3 className="text-3xl sm:text-4xl font-black text-surface-900 group-hover:text-surface-600 transition-colors duration-300 leading-tight">
+                                    <h3 className="text-3xl sm:text-4xl font-black text-surface-900 group-hover:text-surface-600 transition-colors duration-300 leading-tight font-header">
                                         {settings.counselTitle || 'Emotional Wellbeing & Support'}
                                     </h3>
                                     <h4 className="text-sm font-bold text-surface-500">

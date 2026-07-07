@@ -171,7 +171,7 @@ export default function CdatSection({ setView }) {
               </span>
               <img src="/CIGI.png" alt="CIGI Logo" className="h-12 sm:h-14 object-contain mix-blend-multiply" />
             </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-surface-900 leading-tight">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-surface-900 leading-tight font-header">
               CIGI Differential Aptitude Test (C-DAT)
             </h2>
           </div>
@@ -198,7 +198,7 @@ export default function CdatSection({ setView }) {
     id="cdat-form" 
     className="square-card p-6 sm:p-8 w-full md:w-[450px] lg:w-[480px] shrink-0 group"
   >
- <h3 className="font-black text-2xl mb-4 text-surface-900">Generate Group Code</h3>
+ <h3 className="font-black text-2xl mb-4 text-surface-900 font-header">Generate Group Code</h3>
  <form onSubmit={handleGenerateCode} className="space-y-3">
  
  <div>

@@ -15,6 +15,7 @@
   --color-zinc-700: var(--color-slate-700);
   --font-sans: 'Montserrat', 'Poppins', 'Inter', system-ui, -apple-system, sans-serif;
   --font-heading: 'Montserrat', 'Poppins', 'Outfit', system-ui, -apple-system, sans-serif;
+  --font-header: 'Montserrat', 'Poppins', 'Outfit', system-ui, -apple-system, sans-serif;
   --color-brand: #00E5FF;
   --color-brand-dark: #00B3CC;
   --color-brand-light: #e6fbfb;
