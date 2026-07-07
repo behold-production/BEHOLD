@@ -98,7 +98,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
  transition={{ duration: 0.6 }}
  className="py-10 md:py-20 px-6 max-w-7xl mx-auto"
  >
- <div className="square-card p-0 flex flex-col md:flex-row overflow-hidden shadow-square-light bg-white border-surface-200">
+ <div className="square-card p-0 flex flex-col md:flex-row overflow-hidden bg-white">
  <div className="p-8 md:p-12 space-y-8 flex-1 border-b md:border-b-0 md:border-r border-surface-200">
  <div className="space-y-4 mb-4 flex flex-col items-start text-left">
  <SectionHeader

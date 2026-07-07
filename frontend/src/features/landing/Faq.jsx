@@ -61,7 +61,7 @@ export default function Faq() {
  return (
  <div 
  key={idx} 
- className={`square-card p-0 transition-all duration-300 ${isOpen ? 'shadow-square-hover border-brand bg-brand/5' : 'shadow-square-light bg-white border-surface-200'}`}
+ className={`square-card p-0 transition-all duration-300 ${isOpen ? 'bg-brand/5' : 'bg-white'}`}
  >
  <button
  type="button"

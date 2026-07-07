@@ -132,7 +132,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                         transition={{ duration: 0.6, ease: "easeOut" }}
                         key="career"
                         id="card-career"
-                        className="bg-white border border-surface-200 rounded-[10px] shadow-square-light p-6 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none group h-full transition-shadow duration-300 hover:shadow-square-hover"
+                        className="square-card p-6 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none group h-full"
                     >
                         <div className="space-y-4">
                             <div className="flex justify-between items-start">
@@ -180,7 +180,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                         transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
                         key="psychology"
                         id="card-psychology"
-                        className="bg-surface-50 border border-surface-200 rounded-[10px] shadow-square-light p-6 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none group h-full transition-shadow duration-300 hover:shadow-square-hover"
+                        className="square-card p-6 sm:p-8 md:p-12 flex flex-col justify-between space-y-8 select-none group h-full bg-[#f8fafc]"
                     >
                         <div className="space-y-4">
                             <div className="flex justify-between items-start">
@@ -231,7 +231,7 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
                 />
 
                 {/* Dashboard-Style Toolbar */}
-                <div className="bg-white border border-surface-200 p-4 flex flex-col xl:flex-row xl:items-center gap-4 w-full rounded-[10px]">
+                <div className="square-card p-4 flex flex-col xl:flex-row xl:items-center gap-4 w-full">
                     {/* Search Box */}
                     <div className="relative w-full xl:w-[260px] shrink-0">
                         <input

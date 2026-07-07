@@ -11,13 +11,29 @@ import Faq from './features/landing/Faq';
 import Inquiry from './features/landing/Inquiry';
 import Footer from './shared/components/Footer';
 import AuthModals from './features/auth/AuthModals';
-const ServiceBooking = lazy(() => import('./features/booking/ServiceBooking'));
-const AdvisorProfile = lazy(() => import('./features/counsellor/AdvisorProfile'));
-const StudentProfile = lazy(() => import('./features/student/StudentProfile'));
-const PsychologistDashboard = lazy(() => import('./features/counsellor/PsychologistDashboard'));
-const AdminDashboard = lazy(() => import('./features/admin/AdminDashboard'));
-const AptitudeTest = lazy(() => import('./features/student/AptitudeTest'));
-const ResetPassword = lazy(() => import('./features/auth/ResetPassword'));
+function lazyWithRetry(importFn) {
+  return lazy(() =>
+    importFn().catch((error) => {
+      const isChunkLoadFailed = error.message && (
+        error.message.includes('Failed to fetch dynamically imported module') ||
+        error.message.includes('Importing a module script failed')
+      );
+      if (isChunkLoadFailed) {
+        window.location.reload();
+        return new Promise(() => {});
+      }
+      throw error;
+    })
+  );
+}
+
+const ServiceBooking = lazyWithRetry(() => import('./features/booking/ServiceBooking'));
+const AdvisorProfile = lazyWithRetry(() => import('./features/counsellor/AdvisorProfile'));
+const StudentProfile = lazyWithRetry(() => import('./features/student/StudentProfile'));
+const PsychologistDashboard = lazyWithRetry(() => import('./features/counsellor/PsychologistDashboard'));
+const AdminDashboard = lazyWithRetry(() => import('./features/admin/AdminDashboard'));
+const AptitudeTest = lazyWithRetry(() => import('./features/student/AptitudeTest'));
+const ResetPassword = lazyWithRetry(() => import('./features/auth/ResetPassword'));
 
 import { useAuth } from './shared/context/AuthContext';
 import ApiService from './shared/services/api';
