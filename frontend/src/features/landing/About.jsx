@@ -123,9 +123,9 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
                 <div className="mb-4 transition-transform group-hover:scale-110 duration-300">
                   {pillar.icon}
                 </div>
-                <span className="text-[10px] font-bold text-[#00E5FF] bg-[#00E5FF]/10 px-2.5 py-1 rounded-full w-max mb-3">
+                <div className="absolute top-5 right-6 text-5xl sm:text-6xl font-black text-slate-100 group-hover:text-[#00E5FF]/15 transition-colors select-none font-header leading-none tracking-tighter">
                   0{idx + 1}
-                </span>
+                </div>
                 <h4 className="text-lg font-bold text-[#0F172A] mb-2 group-hover:text-[#00E5FF] transition-colors">
                   {pillar.title}
                 </h4>
@@ -154,9 +154,9 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
                   {pillar.icon}
                 </div>
 
-                <span className="text-[10px] font-bold text-[#00E5FF] bg-[#00E5FF]/10 px-2.5 py-1 rounded-full w-max mb-3">
+                <div className="absolute top-5 right-6 text-5xl sm:text-6xl font-black text-slate-100 group-hover:text-[#00E5FF]/15 transition-colors select-none font-header leading-none tracking-tighter">
                   0{idx + 1}
-                </span>
+                </div>
 
                 <h4 className="text-lg font-bold text-[#0F172A] mb-2 group-hover:text-[#00E5FF] transition-colors">
                   {pillar.title}
