@@ -164,11 +164,16 @@ export default function CdatSection({ setView }) {
           transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
           className="square-card p-6 sm:p-8 flex-1 flex flex-col group"
         >
-          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-6 mb-6">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-surface-900 leading-tight">
+          <div className="space-y-4 mb-6">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-bold text-[#00E5FF] bg-[#00E5FF]/10 px-2.5 py-1 rounded-full uppercase tracking-wider">
+                Aptitude Assessment
+              </span>
+              <img src="/CIGI.png" alt="CIGI Logo" className="h-12 sm:h-14 object-contain mix-blend-multiply" />
+            </div>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-surface-900 leading-tight">
               CIGI Differential Aptitude Test (C-DAT)
             </h2>
-            <img src="/CIGI.png" alt="CIGI Logo" className="h-16 sm:h-20 object-contain shrink-0 mix-blend-multiply sm:self-start mt-1" />
           </div>
           <p className="text-surface-700 text-base md:text-lg leading-relaxed mb-8 max-w-lg font-medium">
             C-DAT effectively identifies the inherent capacities of students, guiding them towards suitable academic and career paths with scientific precision.

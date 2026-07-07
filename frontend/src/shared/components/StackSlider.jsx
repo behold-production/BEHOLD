@@ -99,7 +99,7 @@ export default function StackSlider({
       </div>
 
       {/* Controls & Pagination */}
-      <div className="flex items-center justify-between w-full max-w-[300px] mt-4 mb-4 gap-4 relative z-20">
+      <div className="flex items-center justify-between w-full max-w-[300px] mt-14 mb-4 gap-4 relative z-20">
         <button
           onClick={handlePrev}
           disabled={currentIndex === 0 || isAnimating.current}
