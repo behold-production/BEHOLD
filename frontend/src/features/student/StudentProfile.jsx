@@ -157,7 +157,7 @@ export default function StudentProfile() {
  />
  </div>
  <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
- <aside className="lg:col-span-3">
+ <aside className="lg:col-span-3 lg:sticky lg:top-24 lg:self-start">
  <SidebarNav
  currentSection={currentSection}
  handleSectionChange={handleSectionChange}

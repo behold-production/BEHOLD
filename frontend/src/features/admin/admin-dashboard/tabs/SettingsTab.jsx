@@ -358,7 +358,7 @@ export default function SettingsTab(props) {
 
  <div className="flex flex-col md:flex-row gap-6 items-start">
  {/* Tabs Sidebar Nav */}
- <div className="w-full md:w-64 shrink-0 flex md:flex-col gap-1.5 overflow-x-auto md:overflow-x-visible pb-3 md:pb-0 border-b md:border-b-0 border-zinc-800/60 md:border-r md:border-zinc-800/60 md:pr-4 scrollbar-none flex-nowrap">
+ <div className="w-full md:w-64 shrink-0 flex md:flex-col gap-1.5 overflow-x-auto md:overflow-x-visible pb-3 md:pb-0 border-b md:border-b-0 border-zinc-800/60 md:border-r md:border-zinc-800/60 md:pr-4 scrollbar-none flex-nowrap md:sticky md:top-24 md:self-start">
  {settingsTabs.map((tab) => {
  const Icon = tab.icon;
  const isActive = activeSettingsTab === tab.id;
