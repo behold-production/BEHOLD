@@ -248,36 +248,50 @@ export default function App() {
  };
 
  useEffect(() => {
+    const fetchGlobalSettings = async () => {
+      try {
+        const res = await ApiService.getSettings();
+        if (res.success && res.data) {
+          const parsed = res.data;
+          setSiteSettings(prev => ({
+            ...prev,
+            ...parsed
+          }));
+          localStorage.setItem('behold_site_settings', JSON.stringify(parsed));
+        }
+      } catch (err) {
+        console.error('Failed to fetch global settings', err);
+      }
+    };
+    fetchGlobalSettings();
 
- const fetchGlobalSettings = async () => {
- try {
- const res = await ApiService.getSettings();
- if (res.success && res.data) {
- const parsed = res.data;
- setSiteSettings(prev => ({
- ...prev,
- ...parsed
- }));
- localStorage.setItem('behold_site_settings', JSON.stringify(parsed));
- }
- } catch (err) {
- console.error('Failed to fetch global settings', err);
- }
- };
- fetchGlobalSettings();
+    const handleSettingsUpdate = (e) => {
+      if (e.detail) {
+        setSiteSettings(prev => ({
+          ...prev,
+          ...e.detail
+        }));
+        localStorage.setItem('behold_site_settings', JSON.stringify(e.detail));
+      } else {
+        fetchGlobalSettings();
+      }
+    };
 
- const handleStorageChange = (e) => {
- const key = e.key || (e.detail && e.detail.key);
- if (key === 'behold_site_settings' || !key) {
- loadSettings();
- }
- };
- window.addEventListener('storage', handleStorageChange);
- window.addEventListener('storage_update', handleStorageChange);
- return () => {
- window.removeEventListener('storage', handleStorageChange);
- window.removeEventListener('storage_update', handleStorageChange);
- };
+    const handleStorageChange = (e) => {
+      const key = e.key || (e.detail && e.detail.key);
+      if (key === 'behold_site_settings' || !key) {
+        loadSettings();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('storage_update', handleStorageChange);
+    window.addEventListener('behold_settings_updated', handleSettingsUpdate);
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('storage_update', handleStorageChange);
+      window.removeEventListener('behold_settings_updated', handleSettingsUpdate);
+    };
  }, []);
 
  const { user, isLoading } = useAuth();

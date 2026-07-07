@@ -2912,6 +2912,7 @@ export default function AdminDashboard({ setView }) {
       setSettingsForm(cleaned);
       setSettingsSuccess("Site Settings updated successfully!");
       window.dispatchEvent(new Event('behold_faqs_updated'));
+      window.dispatchEvent(new CustomEvent('behold_settings_updated', { detail: cleaned }));
       setTimeout(() => setSettingsSuccess(''), 3000);
       reloadData();
     } catch (err) {
