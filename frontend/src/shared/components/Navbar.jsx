@@ -124,7 +124,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
  <div className="relative group flex items-center justify-center">
  <button
  onClick={handleProfileClick}
- className={`w-9 h-9 lg:w-10 lg:h-10 rounded-full border-none flex items-center justify-center transition-all duration-300 cursor-pointer hover:scale-105 ${!isSolid ? 'bg-white/20 text-white hover:bg-white/30' : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-900'}`}
+ className={`w-11 h-11 lg:w-12 lg:h-12 rounded-full border-none flex items-center justify-center transition-all duration-300 cursor-pointer hover:scale-105 ${!isSolid ? 'bg-white/20 text-white hover:bg-white/30' : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-900'}`}
  >
  {user ? (
  user.photoURL ? (

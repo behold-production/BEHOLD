@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { LayoutGrid, List } from 'lucide-react';
 import StackSlider from '../../shared/components/StackSlider';
 import SectionHeader from '../../shared/components/SectionHeader';
 
 export default function About({ enablePsychology = true, enableCareerMentoring = true, siteSettings }) {
+  const [viewMode, setViewMode] = useState('stack'); // 'stack' or 'list'
   const settings = siteSettings || JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
 
   const pillars = [
@@ -83,37 +85,90 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
           />
         </motion.div>
 
+        {/* Toggle View Mode Control on Mobile */}
+        <div className="lg:hidden flex items-center bg-[#F1F5F9] border border-slate-200/50 rounded-full p-1 w-max mx-auto mb-8 relative z-20 shadow-xs">
+          <button
+            type="button"
+            onClick={() => setViewMode('stack')}
+            className={`p-2.5 rounded-full transition-all duration-300 cursor-pointer flex items-center justify-center ${viewMode === 'stack' ? 'bg-[#0F172A] text-white shadow-xs' : 'text-slate-400 hover:text-slate-600 bg-transparent'}`}
+            title="Stack View"
+          >
+            <LayoutGrid className="w-4 h-4" />
+          </button>
+          <button
+            type="button"
+            onClick={() => setViewMode('list')}
+            className={`p-2.5 rounded-full transition-all duration-300 cursor-pointer flex items-center justify-center ${viewMode === 'list' ? 'bg-[#0F172A] text-white shadow-xs' : 'text-slate-400 hover:text-slate-600 bg-transparent'}`}
+            title="List View"
+          >
+            <List className="w-4 h-4" />
+          </button>
+        </div>
+
         {/* 6-Card Grid */}
-        <StackSlider
-          desktopClassName="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch"
-          mobileContainerClassName="relative w-full mx-auto h-[220px] sm:h-[240px]"
-          items={pillars.map((pillar, idx) => (
-            <div
-              key={idx}
-              className="square-card h-full p-6 flex flex-col group transition-all duration-300 relative overflow-hidden rounded-3xl select-none"
-            >
-              {/* Left accent on hover */}
-              <div className="absolute left-0 top-0 bottom-0 w-[5px] bg-[#00E5FF] transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-top rounded-l-3xl" />
+        {viewMode === 'list' ? (
+          <div className="lg:hidden flex flex-col gap-5">
+            {pillars.map((pillar, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.6, delay: idx * 0.05 }}
+                className="square-card p-6 flex flex-col group transition-all duration-300 relative overflow-hidden rounded-3xl"
+              >
+                {/* Left accent on hover */}
+                <div className="absolute left-0 top-0 bottom-0 w-[5px] bg-[#00E5FF] transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-top rounded-l-3xl" />
+                {/* Icon */}
+                <div className="mb-4 transition-transform group-hover:scale-110 duration-300">
+                  {pillar.icon}
+                </div>
+                <span className="text-[10px] font-bold text-[#00E5FF] bg-[#00E5FF]/10 px-2.5 py-1 rounded-full w-max mb-3">
+                  0{idx + 1}
+                </span>
+                <h4 className="text-lg font-bold text-[#0F172A] mb-2 group-hover:text-[#00E5FF] transition-colors">
+                  {pillar.title}
+                </h4>
+                <p className="text-base text-gray-500 leading-relaxed font-light">
+                  {pillar.desc}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        ) : null}
 
-              {/* Icon */}
-              <div className="mb-4 transition-transform group-hover:scale-110 duration-300">
-                {pillar.icon}
+        <div className={viewMode === 'list' ? 'hidden lg:block' : 'block'}>
+          <StackSlider
+            desktopClassName="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch"
+            mobileContainerClassName="relative w-full mx-auto h-[220px] sm:h-[240px]"
+            items={pillars.map((pillar, idx) => (
+              <div
+                key={idx}
+                className="square-card h-full p-6 flex flex-col group transition-all duration-300 relative overflow-hidden rounded-3xl select-none"
+              >
+                {/* Left accent on hover */}
+                <div className="absolute left-0 top-0 bottom-0 w-[5px] bg-[#00E5FF] transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-top rounded-l-3xl" />
+
+                {/* Icon */}
+                <div className="mb-4 transition-transform group-hover:scale-110 duration-300">
+                  {pillar.icon}
+                </div>
+
+                <span className="text-[10px] font-bold text-[#00E5FF] bg-[#00E5FF]/10 px-2.5 py-1 rounded-full w-max mb-3">
+                  0{idx + 1}
+                </span>
+
+                <h4 className="text-lg font-bold text-[#0F172A] mb-2 group-hover:text-[#00E5FF] transition-colors">
+                  {pillar.title}
+                </h4>
+                <p className="text-base text-gray-500 leading-relaxed font-light flex-1">
+                  {pillar.desc}
+                </p>
               </div>
-
-              <span className="text-[10px] font-bold text-[#00E5FF] bg-[#00E5FF]/10 px-2.5 py-1 rounded-full w-max mb-3">
-                0{idx + 1}
-              </span>
-
-              <h4 className="text-lg font-bold text-[#0F172A] mb-2 group-hover:text-[#00E5FF] transition-colors">
-                {pillar.title}
-              </h4>
-              <p className="text-base text-gray-500 leading-relaxed font-light flex-1">
-                {pillar.desc}
-              </p>
-            </div>
-          ))}
-          renderItem={(item) => item}
-        />
+            ))}
+            renderItem={(item) => item}
+          />
+        </div>
 
         {/* CTA Button */}
         {(enablePsychology || enableCareerMentoring || settings.enableAptitude !== false) && (

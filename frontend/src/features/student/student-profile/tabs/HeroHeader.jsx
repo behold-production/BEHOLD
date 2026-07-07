@@ -27,14 +27,14 @@ const HeroHeader = ({
  <img
  src={profile.profilePic || user?.profilePic || user?.image}
  alt={displayName}
- className="w-16 h-16 sm:w-20 sm:h-20 rounded-[10px] object-cover border border-surface-200"
+ className="w-20 h-20 sm:w-24 sm:h-24 rounded-[12px] object-cover border border-surface-200"
  />
  ) : (
- <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-[10px] bg-surface-100 border border-surface-200 flex items-center justify-center text-surface-900 font-bold text-xl sm:text-2xl">
+ <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-[12px] bg-surface-100 border border-surface-200 flex items-center justify-center text-surface-900 font-bold text-2xl sm:text-3xl">
  {getInitials(profile.name, user?.name)}
  </div>
  )}
- <label className="absolute inset-0 rounded-[10px] bg-black/45 flex items-center justify-center opacity-0 group-hover:opacity-100 cursor-pointer transition-opacity duration-200">
+ <label className="absolute inset-0 rounded-[12px] bg-black/45 flex items-center justify-center opacity-0 group-hover:opacity-100 cursor-pointer transition-opacity duration-200">
  <Plus className="w-5 h-5 text-white" />
  <input
  type="file"

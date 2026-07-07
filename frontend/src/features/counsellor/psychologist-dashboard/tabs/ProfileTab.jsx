@@ -120,12 +120,12 @@ const ProfileTab = ({
  {/* Profile Picture Upload */}
  <div className="flex items-center gap-5 p-5 rounded-[10px] transition-all" style={shadowStyle}>
  <div className="relative group shrink-0">
- <div className="w-20 h-20 rounded-[10px] overflow-hidden border border-zinc-800 group-hover:border-brand/50 transition-colors shadow-sm">
- {user?.profilePic ? (
- <img src={user.profilePic} alt={profile.name} className="w-full h-full object-cover" />
+          <div className="w-24 h-24 rounded-[12px] overflow-hidden border border-zinc-800 group-hover:border-brand/50 transition-colors shadow-sm">
+            {(profile.profilePic || user?.profilePic || profile.image || user?.image) ? (
+              <img src={profile.profilePic || user?.profilePic || profile.image || user?.image} alt={profile.name} className="w-full h-full object-cover" />
  ) : (
  <div className="w-full h-full bg-zinc-950 flex items-center justify-center">
- <span className="text-zinc-500 font-bold text-2xl font-header">
+                <span className="text-zinc-500 font-bold text-3xl font-header">
  {(() => { const c = (profile?.name || '').trim(); return c.length > 1 ? (c[0] + c[c.length - 1]).toUpperCase() : c.toUpperCase() || 'ST'; })()}
  </span>
  </div>
@@ -134,7 +134,7 @@ const ProfileTab = ({
  <button
  type="button"
  onClick={() => avatarFileRef.current?.click()}
- className="absolute inset-0 flex items-center justify-center bg-zinc-900/60 opacity-0 group-hover:opacity-100 rounded-[10px] transition-opacity cursor-pointer text-white backdrop-blur-[1px]"
+ className="absolute inset-0 flex items-center justify-center bg-zinc-900/60 opacity-0 group-hover:opacity-100 rounded-[12px] transition-opacity cursor-pointer text-white backdrop-blur-[1px]"
  >
  <Edit className="w-5 h-5" />
  </button>
