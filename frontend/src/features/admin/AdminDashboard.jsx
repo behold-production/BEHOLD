@@ -1987,7 +1987,7 @@ export default function AdminDashboard({ setView }) {
 
  setIsSavingForm(true);
  try {
- await ApiService.createAdminCounsellor({
+ const res = await ApiService.createAdminCounsellor({
  name: psyForm.name.trim(),
  email: psyForm.email.trim(),
  password: psyForm.password,
@@ -2010,6 +2010,13 @@ export default function AdminDashboard({ setView }) {
  availableSlots: adminAvailableSlots
  }
  });
+ if (res.success && res.data && psyProfilePicFile) {
+ setIsPsyPicUploading(true);
+ const fd = new FormData();
+ fd.append('profilePic', psyProfilePicFile);
+ await ApiService.adminUpdateCounsellorProfilePic(res.data.id, fd);
+ setIsPsyPicUploading(false);
+ }
  setPsyFormSuccess("Psychologist added successfully!");
  setPsyForm({
  id: '',
@@ -4082,7 +4089,7 @@ export default function AdminDashboard({ setView }) {
  </div>
 
  <form onSubmit={isAddPsyOpen ? handleCreatePsy : handleUpdatePsy} className="space-y-4 font-medium">
- {isEditPsyOpen && (
+ {(isEditPsyOpen || isAddPsyOpen) && (
  <div className="space-y-2">
  <label className="text-xs font-bold text-zinc-400 tracking-wide">Profile Picture</label>
  <div className="flex items-center gap-3">
