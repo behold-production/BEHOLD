@@ -300,7 +300,23 @@ const AdminController = {
   // Create User
   async createUser(req, res, next) {
     try {
-      const { name, email, password, role, permissions, customRoleTitle, locationName, latitude, longitude } = req.body;
+      const {
+        name,
+        email,
+        password,
+        role,
+        permissions,
+        customRoleTitle,
+        locationName,
+        latitude,
+        longitude,
+        phone,
+        schoolName,
+        grade,
+        guardianName,
+        guardianPhone,
+        groupCode
+      } = req.body;
       const bcrypt = require('bcryptjs');
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
@@ -308,12 +324,12 @@ const AdminController = {
         name,
         email: email.toLowerCase(),
         password: hashedPassword,
-        phone: '',
-        schoolName: '',
-        grade: '',
-        guardianName: '',
-        guardianPhone: '',
-        groupCode: '',
+        phone: phone || '',
+        schoolName: schoolName || '',
+        grade: grade || '',
+        guardianName: guardianName || '',
+        guardianPhone: guardianPhone || '',
+        groupCode: groupCode || '',
         role: role || 'user',
         permissions: permissions || [],
         customRoleTitle: customRoleTitle || '',

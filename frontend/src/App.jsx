@@ -178,11 +178,11 @@ export default function App() {
  navigate('/profile', { replace: true });
  }
  }
- } else {
- if (path === '/profile' || path.startsWith('/admin') || path.startsWith('/counsellor') || path.startsWith('/conceller')) {
- setTimeout(() => setIsAuthModalOpen(true), 0);
- }
- }
+  } else {
+    if (path === '/profile') {
+      setTimeout(() => setIsAuthModalOpen(true), 0);
+    }
+  }
  }, [user, isLoading, location.pathname, navigate]);
 
  // Handle pending scrolls once landing view is active
