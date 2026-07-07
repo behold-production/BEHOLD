@@ -2818,26 +2818,108 @@ export default function AdminDashboard({ setView }) {
  };
 
  // Site Settings save handler
- const handleSaveSettings = async (e) => {
- e.preventDefault();
- if (!isSuperAdmin) {
- await showAlert("Access Denied: You do not have permission to save settings.");
- return;
- }
- setIsSavingSettings(true);
- setSettingsSuccess('');
- try {
- await ApiService.updateAdminSettings(settingsForm);
- setSettingsSuccess("Site Settings updated successfully!");
- window.dispatchEvent(new Event('behold_faqs_updated'));
- setTimeout(() => setSettingsSuccess(''), 3000);
- reloadData();
- } catch (err) {
- await showAlert(err.message || "Failed to save settings.");
- } finally {
- setIsSavingSettings(false);
- }
- };
+  const handleSaveSettings = async (e) => {
+    e.preventDefault();
+    if (!isSuperAdmin) {
+      await showAlert("Access Denied: You do not have permission to save settings.");
+      return;
+    }
+    setIsSavingSettings(true);
+    setSettingsSuccess('');
+    try {
+      // Trim and fill defaults
+      const cleaned = { ...settingsForm };
+      
+      const defaults = {
+        heroTitle: 'Bridging You \\nTo Your {True Growth.}',
+        heroSub: 'Professional psychological counseling, aptitude assessment, and career mentorship designed to help individuals thrive with confidence and purpose.',
+        whatsapp: 'https://wa.me/919497174011',
+        contactEmail: 'support@behold.com',
+        siteName: 'BEHOLD',
+        siteCopyright: '© BEHOLD Ltd., 2026. All rights reserved.',
+        bannerNotice: '🚨 Maintenance Notice: Schedulers undergoing maintenance tonight between 12:00 AM - 02:00 AM IST.',
+        cdatGroupCode: 'cdat@behold',
+        careerBadge: 'Career Mentoring',
+        careerTitle: 'Career Clarity & Direction',
+        careerSubtitle: 'Feeling Unsure About What’s Next?',
+        careerDesc: 'Whether you’re choosing a stream, exploring career options, or planning your future studies, we help you understand your strengths, interests, and opportunities so you can make confident decisions with clarity and direction.',
+        careerBtnText: 'Book Your Mentor',
+        counselBadge: 'Psychological Counselling',
+        counselTitle: 'Emotional Wellbeing & Support',
+        counselSubtitle: 'You Don’t Have to Face It Alone.',
+        counselDesc: 'When stress, anxiety, self-doubt, or personal challenges begin to feel overwhelming, having the right support can make all the difference. Our counselling sessions provide a safe space to reflect, heal, grow, and move forward with confidence.',
+        counselBtnText: 'Book Your Therapist',
+        aboutTitle: 'What We Offer',
+        aboutSub: 'We go beyond traditional guidance by offering mentorship, doorstep counseling, and personalized support in schools.',
+        offer1Title: 'Extended Mentorship',
+        offer1Desc: 'We guide students through milestones to turn assessment reports into real achievements.',
+        offer2Title: 'Doorstep & Online Counseling',
+        offer2Desc: 'We provide at-home and virtual counseling to ensure emotional privacy and comfort.',
+        offer3Title: 'Personalized School Programs',
+        offer3Desc: 'We conduct orientations and workshops to build healthy learning environments in schools.',
+        offer4Title: 'C-DAT & Career Roadmaps',
+        offer4Desc: 'We use aptitude evaluations to match university pathways with individual natural talents.',
+        offer5Title: 'Goal Tracking',
+        offer5Desc: 'We provide continuous reviews to keep students on track with their long-term goals.',
+        offer6Title: 'Parent Guidance',
+        offer6Desc: 'We guide parents to reduce academic friction and relieve student stress.'
+      };
+
+      // Fill root defaults
+      Object.keys(defaults).forEach(key => {
+        if (cleaned[key] === undefined || cleaned[key] === null || (typeof cleaned[key] === 'string' && cleaned[key].trim() === '')) {
+          cleaned[key] = defaults[key];
+        } else if (typeof cleaned[key] === 'string') {
+          cleaned[key] = cleaned[key].trim();
+        }
+      });
+
+      // Fill slides defaults
+      const defaultSlide = {
+        image: 'https://images.unsplash.com/photo-1440688807730-73e4e2169fb8?q=80&w=2070&auto=format&fit=crop',
+        title: 'Bridging You \\nTo Your {True Growth.}',
+        subtitle: 'Professional psychological counseling, aptitude assessment, and career mentorship designed to help individuals thrive with confidence and purpose.',
+        btn1Text: 'Book a Session',
+        btn1Link: '/booking',
+        btn2Text: 'Explore Aptitude',
+        btn2Link: '/aptitude-test'
+      };
+
+      if (!cleaned.heroSlides || !Array.isArray(cleaned.heroSlides) || cleaned.heroSlides.length === 0) {
+        cleaned.heroSlides = [defaultSlide];
+      } else {
+        cleaned.heroSlides = cleaned.heroSlides.map(slide => {
+          const cleanedSlide = { ...slide };
+          if (!cleanedSlide.image || cleanedSlide.image.trim() === '') cleanedSlide.image = defaultSlide.image;
+          if (!cleanedSlide.title || cleanedSlide.title.trim() === '') cleanedSlide.title = defaultSlide.title;
+          if (!cleanedSlide.subtitle || cleanedSlide.subtitle.trim() === '') cleanedSlide.subtitle = defaultSlide.subtitle;
+          if (!cleanedSlide.btn1Text || cleanedSlide.btn1Text.trim() === '') cleanedSlide.btn1Text = defaultSlide.btn1Text;
+          if (!cleanedSlide.btn1Link || cleanedSlide.btn1Link.trim() === '') cleanedSlide.btn1Link = defaultSlide.btn1Link;
+          if (!cleanedSlide.btn2Text || cleanedSlide.btn2Text.trim() === '') cleanedSlide.btn2Text = defaultSlide.btn2Text;
+          if (!cleanedSlide.btn2Link || cleanedSlide.btn2Link.trim() === '') cleanedSlide.btn2Link = defaultSlide.btn2Link;
+          
+          // trim strings
+          Object.keys(cleanedSlide).forEach(k => {
+            if (typeof cleanedSlide[k] === 'string') {
+              cleanedSlide[k] = cleanedSlide[k].trim();
+            }
+          });
+          return cleanedSlide;
+        });
+      }
+
+      await ApiService.updateAdminSettings(cleaned);
+      setSettingsForm(cleaned);
+      setSettingsSuccess("Site Settings updated successfully!");
+      window.dispatchEvent(new Event('behold_faqs_updated'));
+      setTimeout(() => setSettingsSuccess(''), 3000);
+      reloadData();
+    } catch (err) {
+      await showAlert(err.message || "Failed to save settings.");
+    } finally {
+      setIsSavingSettings(false);
+    }
+  };
 
  const handleAddPromoCode = () => {
  setSettingsForm(prev => ({
