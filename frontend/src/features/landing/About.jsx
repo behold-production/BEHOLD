@@ -115,23 +115,44 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.6, delay: idx * 0.05 }}
-                className="square-card p-6 flex flex-col group transition-all duration-300 relative overflow-hidden rounded-3xl"
+                className="square-card p-6 flex flex-col group transition-all duration-300 relative overflow-hidden rounded-[12px] text-left"
               >
-                {/* Left accent on hover */}
-                <div className="absolute left-0 top-0 bottom-0 w-[5px] bg-[#00E5FF] transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-top rounded-l-3xl" />
-                {/* Icon */}
-                <div className="mb-4 transition-transform group-hover:scale-110 duration-300">
-                  {pillar.icon}
+                {/* Top Accent corner overlay shape */}
+                <div className="absolute top-0 right-0 w-8 h-8 bg-slate-50 border-b border-l border-slate-100 rounded-bl-[12px] group-hover:bg-[#00E5FF]/10 transition-colors pointer-events-none" />
+
+                {/* Header: Number and Title inline */}
+                <div className="flex items-center gap-3.5 mb-3.5 mt-2">
+                  <span className="text-3xl font-black text-slate-200 group-hover:text-[#00E5FF]/35 transition-colors select-none tracking-tighter font-header leading-none">
+                    0{idx + 1}
+                  </span>
+                  <h4 className="text-xs font-black text-[#0F172A] tracking-wider uppercase group-hover:text-[#00E5FF] transition-colors font-header leading-tight">
+                    {pillar.title}
+                  </h4>
                 </div>
-                <div className="absolute top-5 right-6 text-5xl sm:text-6xl font-black text-slate-100 group-hover:text-[#00E5FF]/15 transition-colors select-none font-header leading-none tracking-tighter">
-                  0{idx + 1}
-                </div>
-                <h4 className="text-lg font-bold text-[#0F172A] mb-2 group-hover:text-[#00E5FF] transition-colors">
-                  {pillar.title}
-                </h4>
-                <p className="text-base text-gray-500 leading-relaxed font-light">
+
+                {/* Body: Description */}
+                <p className="text-sm text-gray-500 leading-relaxed font-light mb-6 flex-1 text-left">
                   {pillar.desc}
                 </p>
+
+                {/* Footer: Bottom Right Arrow Button */}
+                <div className="flex justify-end mt-auto">
+                  <div 
+                    onClick={() => {
+                      if (enablePsychology || enableCareerMentoring) {
+                        window.spaNavigate('/booking');
+                      } else {
+                        window.spaNavigate('/sample-test');
+                      }
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="w-8 h-8 rounded-full bg-slate-50 border border-slate-200/50 flex items-center justify-center text-slate-600 hover:bg-[#00E5FF] hover:border-transparent hover:text-slate-950 transition-all shadow-xs cursor-pointer"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                    </svg>
+                  </div>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -144,26 +165,44 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
             items={pillars.map((pillar, idx) => (
               <div
                 key={idx}
-                className="square-card h-full p-6 flex flex-col group transition-all duration-300 relative overflow-hidden rounded-3xl select-none"
+                className="square-card h-full p-6 flex flex-col group transition-all duration-300 relative overflow-hidden rounded-[12px] select-none text-left"
               >
-                {/* Left accent on hover */}
-                <div className="absolute left-0 top-0 bottom-0 w-[5px] bg-[#00E5FF] transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-top rounded-l-3xl" />
+                {/* Top Accent corner overlay shape */}
+                <div className="absolute top-0 right-0 w-8 h-8 bg-slate-50 border-b border-l border-slate-100 rounded-bl-[12px] group-hover:bg-[#00E5FF]/10 transition-colors pointer-events-none" />
 
-                {/* Icon */}
-                <div className="mb-4 transition-transform group-hover:scale-110 duration-300">
-                  {pillar.icon}
+                {/* Header: Number and Title inline */}
+                <div className="flex items-center gap-3.5 mb-3.5 mt-2">
+                  <span className="text-3xl font-black text-slate-200 group-hover:text-[#00E5FF]/35 transition-colors select-none tracking-tighter font-header leading-none">
+                    0{idx + 1}
+                  </span>
+                  <h4 className="text-xs font-black text-[#0F172A] tracking-wider uppercase group-hover:text-[#00E5FF] transition-colors font-header leading-tight">
+                    {pillar.title}
+                  </h4>
                 </div>
 
-                <div className="absolute top-5 right-6 text-5xl sm:text-6xl font-black text-slate-100 group-hover:text-[#00E5FF]/15 transition-colors select-none font-header leading-none tracking-tighter">
-                  0{idx + 1}
-                </div>
-
-                <h4 className="text-lg font-bold text-[#0F172A] mb-2 group-hover:text-[#00E5FF] transition-colors">
-                  {pillar.title}
-                </h4>
-                <p className="text-base text-gray-500 leading-relaxed font-light flex-1">
+                {/* Body: Description */}
+                <p className="text-sm text-gray-500 leading-relaxed font-light mb-6 flex-1 text-left">
                   {pillar.desc}
                 </p>
+
+                {/* Footer: Bottom Right Arrow Button */}
+                <div className="flex justify-end mt-auto">
+                  <div 
+                    onClick={() => {
+                      if (enablePsychology || enableCareerMentoring) {
+                        window.spaNavigate('/booking');
+                      } else {
+                        window.spaNavigate('/sample-test');
+                      }
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="w-8 h-8 rounded-full bg-slate-50 border border-slate-200/50 flex items-center justify-center text-slate-600 hover:bg-[#00E5FF] hover:border-transparent hover:text-slate-950 transition-all shadow-xs cursor-pointer"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                    </svg>
+                  </div>
+                </div>
               </div>
             ))}
             renderItem={(item) => item}
