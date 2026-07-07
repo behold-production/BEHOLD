@@ -32,7 +32,13 @@ export default function StackSlider({
 
   const handlePrev = () => {
     if (isAnimating.current || currentIndex <= 0) return;
+    isAnimating.current = true;
+    setAnimatingDir('right');
     setCurrentIndex(prev => prev - 1);
+    setTimeout(() => {
+      setAnimatingDir(null);
+      isAnimating.current = false;
+    }, 450);
   };
 
   const handleTouchStart = (e) => {
@@ -77,8 +83,12 @@ export default function StackSlider({
 
           let className = "absolute top-1/2 left-1/2 w-full transition-all duration-500 ease-out bg-transparent overflow-visible";
 
-          if (isCurrent && animatingDir === 'left') {
-            className += " fly-left";
+          if (isCurrent) {
+            if (animatingDir === 'left') {
+              className += " fly-left";
+            } else if (animatingDir === 'right') {
+              className += " fly-in-left";
+            }
           }
 
           return (

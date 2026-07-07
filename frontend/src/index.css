@@ -317,8 +317,14 @@ body.no-scroll {
   100% { transform: translate(50%, -50%) scale(0.8) rotate(10deg); opacity: 0; }
 }
 
+@keyframes flyInFromLeft {
+  0% { transform: translate(-150%, -50%) scale(0.8) rotate(-10deg); opacity: 0; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
 .fly-left { animation: flyOutLeft 0.5s forwards ease-in-out; }
 .fly-right { animation: flyOutRight 0.5s forwards ease-in-out; }
+.fly-in-left { animation: flyInFromLeft 0.5s forwards ease-in-out; }
 
 /* Testimonial scrolling animation */
 @keyframes marquee {
