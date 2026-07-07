@@ -53,7 +53,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
  id: psy._id || psy.id,
  name: psy.name,
  profilePic: psy.profilePic || '',
- role: 'Consultant Psychologist',
+ role: psy.role || 'Consultant Psychologist',
  specialties: Array.isArray(psy.specialties) ? psy.specialties : ['Anxiety Stress & Panic', 'Depression & Mood Concerns', 'Relationship'],
  hours: psy.completedHours || 0, // Mock hours
  lang: psy.lang || 'English',

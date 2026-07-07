@@ -89,13 +89,18 @@ export default function Services({ setView, onBookTherapist, siteSettings }) {
     const filteredAndSortedAdvisors = advisors.filter(adv => {
         // Search by name or specialty
         const searchLower = searchTerm.toLowerCase();
+        const specialtiesArr = Array.isArray(adv.specialties)
+            ? adv.specialties
+            : typeof adv.specialties === 'string'
+                ? adv.specialties.split(',').map(s => s.trim()).filter(Boolean)
+                : [];
         const matchesSearch =
-            adv.name.toLowerCase().includes(searchLower) ||
-            adv.specialties.some(s => s.toLowerCase().includes(searchLower)) ||
-            adv.role.toLowerCase().includes(searchLower);
+            (adv.name && adv.name.toLowerCase().includes(searchLower)) ||
+            specialtiesArr.some(s => s.toLowerCase().includes(searchLower)) ||
+            (adv.role && adv.role.toLowerCase().includes(searchLower));
 
         // Filter by role category
-        const matchesFilter = activeFilter === 'All' || adv.role.includes(activeFilter);
+        const matchesFilter = activeFilter === 'All' || (adv.role && adv.role.includes(activeFilter));
         return matchesSearch && matchesFilter;
     }).sort((a, b) => {
         // Featured Top 5 psychologists always sorted first

@@ -23,6 +23,42 @@
       "dest": "/backend/server.js"
     },
     {
+      "src": "/admin(.*)",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/counsellor(.*)",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/conceller(.*)",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/cousellor(.*)",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/profile(.*)",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/booking(.*)",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/sample-test(.*)",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/reset-password(.*)",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/advisor/(.*)",
+      "dest": "/index.html"
+    },
+    {
       "handle": "filesystem"
     },
     {
