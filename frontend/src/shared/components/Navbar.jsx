@@ -196,7 +196,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
  if (user) setIsLogoutOpen(true);
  else onOpenAuth?.();
  }}
- className="w-full bg-white text-gray-700 hover:bg-gray-100 py-3.5 rounded-xl font-medium shadow-sm active:scale-95 transition-all duration-300 border border-gray-200 flex justify-center items-center gap-2 cursor-pointer text-base"
+ className="w-full bg-white text-gray-700 hover:bg-gray-100 py-3.5 rounded-xl font-bold shadow-sm active:scale-95 transition-all duration-300 border border-gray-200 flex justify-center items-center gap-2 cursor-pointer text-base font-header"
  >
  <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
@@ -208,16 +208,17 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
  href="https://wa.link/4jpzfq"
  target="_blank"
  rel="noopener noreferrer"
- className="w-full bg-[#25D366]/10 hover:bg-[#25D366] text-[#25D366] hover:text-white py-3.5 rounded-xl font-medium shadow-sm active:scale-95 transition-all duration-300 border-none flex justify-center items-center gap-2 text-base"
+ className="w-full bg-[#25D366]/10 hover:bg-[#25D366] text-[#25D366] hover:text-white py-3.5 rounded-xl font-bold active:scale-95 transition-all duration-300 border border-[#25D366]/20 flex justify-center items-center gap-2 text-base font-header cursor-pointer"
  >
  <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
  <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.717-1.46L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.42 9.864-9.864.002-2.637-1.03-5.118-2.91-6.997-1.881-1.879-4.36-2.912-6.998-2.913-5.443 0-9.868 4.425-9.873 9.873-.001 1.77.465 3.49 1.348 5.022L1.876 22.1l4.771-1.253zM17.43 14.93c-.313-.156-1.854-.915-2.141-1.018-.287-.104-.497-.156-.707.156-.21.312-.814 1.018-1 1.225-.186.208-.371.233-.684.078-1.597-.798-2.63-1.385-3.66-3.153-.271-.463-.271-.237.104-.613.337-.337.497-.52.684-.712.186-.193.186-.313.093-.52-.093-.208-.707-1.702-.97-2.327-.255-.612-.516-.529-.707-.539-.181-.01-.389-.01-.597-.01-.208 0-.547.078-.834.39-.287.312-1.097 1.07-1.097 2.611 0 1.54 1.12 3.031 1.277 3.239.156.208 2.203 3.364 5.337 4.717.745.322 1.328.513 1.78.657.749.238 1.431.205 1.97.124.6-.09 1.854-.758 2.114-1.492.26-.735.26-1.363.181-1.492-.078-.13-.287-.208-.6-.364z" />
  </svg>
  WhatsApp Us
  </a>
+
  <button
  onClick={() => { setMobileMenuOpen(false); navigate('/booking'); }}
- className="w-full bg-[#0F172A] hover:bg-[#00E5FF] text-white py-3.5 rounded-full font-medium shadow-sm active:scale-95 transition-all border-none cursor-pointer text-base"
+ className="w-full bg-[#0F172A] hover:bg-slate-800 text-white py-3.5 rounded-xl font-bold active:scale-95 transition-all border-none cursor-pointer text-base font-header shadow-[0_4px_12px_rgba(15,23,42,0.15)]"
  >
  Book Appointment
  </button>
