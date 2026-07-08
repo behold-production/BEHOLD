@@ -222,7 +222,8 @@ export default function App() {
  enableCareerMentoring: true,
  enableAptitude: true,
  gstEnabled: false,
- gstPercent: 0
+ gstPercent: 0,
+ sectionOrder: ['counselling-intro', 'aptitude', 'counsellors', 'about', 'faq']
  };
  try {
  const stored = localStorage.getItem('behold_site_settings');
@@ -353,32 +354,34 @@ export default function App() {
 
  // Handle pending scrolls once landing view is active
  useEffect(() => {
- if (location.pathname === '/' && pendingScrollSection) {
- if (pendingScrollSection === 'top') {
- window.scrollTo({ top: 0, behavior: 'smooth' });
- setTimeout(() => setPendingScrollSection(null), 0);
- return;
- }
+  if (location.pathname === '/' && pendingScrollSection) {
+  if (pendingScrollSection === 'top') {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  setTimeout(() => setPendingScrollSection(null), 0);
+  return;
+  }
 
- let attempts = 0;
- const tryScroll = () => {
- const element = document.getElementById(pendingScrollSection);
- if (element) {
- const offset = 80;
- const bodyRect = document.body.getBoundingClientRect().top;
- const elementRect = element.getBoundingClientRect().top;
- window.scrollTo({ top: elementRect - bodyRect - offset, behavior: 'smooth' });
- setPendingScrollSection(null);
- } else if (attempts < 15) {
- attempts++;
- setTimeout(tryScroll, 50);
- } else {
- setPendingScrollSection(null);
- }
- };
- tryScroll();
- }
- }, [location.pathname, pendingScrollSection]);
+  let attempts = 0;
+  const tryScroll = () => {
+  let targetId = pendingScrollSection;
+  if (targetId === 'contact') targetId = 'inquiry';
+  const element = document.getElementById(targetId);
+  if (element) {
+  const offset = 80;
+  const bodyRect = document.body.getBoundingClientRect().top;
+  const elementRect = element.getBoundingClientRect().top;
+  window.scrollTo({ top: elementRect - bodyRect - offset, behavior: 'smooth' });
+  setPendingScrollSection(null);
+  } else if (attempts < 15) {
+  attempts++;
+  setTimeout(tryScroll, 50);
+  } else {
+  setPendingScrollSection(null);
+  }
+  };
+  tryScroll();
+  }
+  }, [location.pathname, pendingScrollSection]);
 
  const handleBookTherapist = (advisorId) => {
  setBookingAdvisor(advisorId);
@@ -407,34 +410,37 @@ export default function App() {
  navigateToSection('inquiry');
  };
 
- const navigateToSection = (sectionId) => {
- // Handle navigation to the booking page if requested as a section
- if (sectionId === 'booking' || sectionId === '/booking') {
- navigate('/booking');
- return;
- }
+  const navigateToSection = (sectionId) => {
+  // Handle navigation to the booking page if requested as a section
+  if (sectionId === 'booking' || sectionId === '/booking') {
+  navigate('/booking');
+  return;
+  }
 
- if (sectionId === 'top') {
- if (location.pathname === '/') {
- window.scrollTo({ top: 0, behavior: 'smooth' });
- } else {
- navigate('/');
- window.scrollTo({ top: 0, behavior: 'smooth' });
- }
- return;
- }
+  if (sectionId === 'top') {
+  if (location.pathname === '/') {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  } else {
+  navigate('/');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  return;
+  }
 
- const element = document.getElementById(sectionId);
- if (location.pathname === '/' && element) {
- const offset = 80;
- const bodyRect = document.body.getBoundingClientRect().top;
- const elementRect = element.getBoundingClientRect().top;
- window.scrollTo({ top: elementRect - bodyRect - offset, behavior: 'smooth' });
- } else {
- setPendingScrollSection(sectionId);
- navigate('/');
- }
- };
+  let targetId = sectionId;
+  if (targetId === 'contact') targetId = 'inquiry';
+  if (targetId === 'counselling-intro') targetId = 'services';
+  const element = document.getElementById(targetId);
+  if (location.pathname === '/' && element) {
+  const offset = 80;
+  const bodyRect = document.body.getBoundingClientRect().top;
+  const elementRect = element.getBoundingClientRect().top;
+  window.scrollTo({ top: elementRect - bodyRect - offset, behavior: 'smooth' });
+  } else {
+  setPendingScrollSection(sectionId);
+  navigate('/');
+  }
+  };
 
  // Show blank screen while auth is resolving to avoid flash
  if (isLoading) {
@@ -531,17 +537,52 @@ export default function App() {
  <Routes>
  {/* Landing Page */}
  <Route path="/" element={
- <main className="fade-in-up">
- <Hero setView={() => { }} navigateToSection={navigateToSection} siteSettings={siteSettings} />
- <div className="relative z-10 bg-surface-50 w-full">
- {siteSettings.enableAptitude !== false && <CdatSection setView={() => { }} />}
- {(siteSettings.enablePsychology !== false || siteSettings.enableCareerMentoring !== false) && <Services setView={() => { }} onBookTherapist={handleBookTherapist} siteSettings={siteSettings} />}
- <About setView={() => { }} enablePsychology={siteSettings.enablePsychology !== false} enableCareerMentoring={siteSettings.enableCareerMentoring !== false} siteSettings={siteSettings} />
- <Faq />
- <Inquiry testProfile={testProfile} siteSettings={siteSettings} />
- </div>
- </main>
- } />
+    <main className="fade-in-up">
+      <Hero setView={() => { }} navigateToSection={navigateToSection} siteSettings={siteSettings} />
+      <div className="relative z-10 bg-gradient-to-b from-[#f0f4fa] via-[#e2e8f0] to-[#f0f4fa] w-full min-h-screen">
+        {(() => {
+          const order = Array.isArray(siteSettings.sectionOrder) && siteSettings.sectionOrder.length > 0
+            ? siteSettings.sectionOrder
+            : ['counselling-intro', 'aptitude', 'counsellors', 'about', 'faq'];
+          return order.map((sectionKey) => {
+            switch (sectionKey) {
+              case 'counselling-intro':
+                return (siteSettings.enablePsychology !== false || siteSettings.enableCareerMentoring !== false) ? (
+                  <Services key="counselling_intro" mode="intro" setView={() => { }} onBookTherapist={handleBookTherapist} siteSettings={siteSettings} />
+                ) : null;
+              case 'counsellors':
+                return (siteSettings.enablePsychology !== false) ? (
+                  <Services key="counsellors_list" mode="experts" setView={() => { }} onBookTherapist={handleBookTherapist} siteSettings={siteSettings} />
+                ) : null;
+              case 'counselling':
+                return (siteSettings.enablePsychology !== false || siteSettings.enableCareerMentoring !== false) ? (
+                  <Services key="services_sec" setView={() => { }} onBookTherapist={handleBookTherapist} siteSettings={siteSettings} />
+                ) : null;
+              case 'aptitude':
+                return siteSettings.enableAptitude !== false ? (
+                  <CdatSection key="aptitude_sec" setView={() => { }} />
+                ) : null;
+              case 'about':
+                return (
+                  <About
+                    key="about_sec"
+                    setView={() => { }}
+                    enablePsychology={siteSettings.enablePsychology !== false}
+                    enableCareerMentoring={siteSettings.enableCareerMentoring !== false}
+                    siteSettings={siteSettings}
+                  />
+                );
+              case 'faq':
+                return <Faq key="faq_sec" />;
+              default:
+                return null;
+            }
+          });
+        })()}
+        <Inquiry testProfile={testProfile} siteSettings={siteSettings} />
+      </div>
+    </main>
+  } />
 
  {/* Aptitude Test */}
  {siteSettings.enableAptitude !== false && (
@@ -617,6 +658,7 @@ export default function App() {
  onOpenDocs={(docType) => setActiveDocType(docType)}
  enablePsychology={siteSettings.enablePsychology !== false}
  enableCareerMentoring={siteSettings.enableCareerMentoring !== false}
+ siteSettings={siteSettings}
  />
  )}
 

@@ -2,8 +2,8 @@
 @import "tailwindcss";
 
 @theme {
-  --shadow-sm: 0 1px 2px 0 rgba(9, 14, 26, 0.08);
-  --shadow: 0 1px 3px 0 rgba(9, 14, 26, 0.12), 0 1px 2px -1px rgba(9, 14, 26, 0.12);
+  --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.02);
+  --shadow: 0 4px 16px rgba(15, 23, 42, 0.06), 0 1px 4px rgba(15, 23, 42, 0.03);
   --shadow-md: 0 4px 6px -1px rgba(9, 14, 26, 0.15), 0 2px 4px -2px rgba(9, 14, 26, 0.15);
   --shadow-lg: 0 10px 15px -3px rgba(9, 14, 26, 0.18), 0 4px 6px -4px rgba(9, 14, 26, 0.15);
   --shadow-xl: 0 20px 25px -5px rgba(9, 14, 26, 0.22), 0 8px 10px -6px rgba(9, 14, 26, 0.2);
@@ -13,9 +13,9 @@
   --color-zinc-900: var(--color-slate-900);
   --color-zinc-800: var(--color-slate-800);
   --color-zinc-700: var(--color-slate-700);
-  --font-sans: 'Montserrat', 'Poppins', 'Inter', system-ui, -apple-system, sans-serif;
-  --font-heading: 'Montserrat', 'Poppins', 'Outfit', system-ui, -apple-system, sans-serif;
-  --font-header: 'Montserrat', 'Poppins', 'Outfit', system-ui, -apple-system, sans-serif;
+  --font-sans: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-heading: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-header: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
   --color-brand: #00E5FF;
   --color-brand-dark: #00B3CC;
   --color-brand-light: #e6fbfb;
@@ -59,16 +59,16 @@
   --color-emerald-955: #021a11;
   --color-amber-450: #facc40;
 
-  /* Fluid responsive base font sizes using clamp (Bigger on mobile, tighter on desktop) */
-  --text-xs: 0.75rem;
-  --text-sm: 0.875rem;
-  --text-base: clamp(1.0625rem, 0.95rem + 0.2vw, 1.125rem);
-  --text-lg: clamp(1.1875rem, 1.05rem + 0.25vw, 1.25rem);
-  --text-xl: clamp(1.3125rem, 1.15rem + 0.3vw, 1.35rem);
-  --text-2xl: clamp(1.5rem, 1.25rem + 0.5vw, 1.6rem);
-  --text-3xl: clamp(1.75rem, 1.4rem + 0.75vw, 2.0rem);
-  --text-4xl: clamp(1.875rem, 1.25rem + 2.5vw, 2.5rem);
-  --text-5xl: clamp(2.5rem, 2.0rem + 1.5vw, 3.25rem);
+  /* Fluid responsive base font sizes using clamp (Adjusted to look compact on mobile and readable on desktop) */
+  --text-xs: clamp(0.7rem, 0.65rem + 0.15vw, 0.75rem);
+  --text-sm: clamp(0.8rem, 0.75rem + 0.2vw, 0.875rem);
+  --text-base: clamp(0.925rem, 0.85rem + 0.3vw, 1.025rem);
+  --text-lg: clamp(1.1rem, 1.0rem + 0.25vw, 1.1875rem);
+  --text-xl: clamp(1.25rem, 1.1rem + 0.3vw, 1.35rem);
+  --text-2xl: clamp(1.4rem, 1.2rem + 0.5vw, 1.55rem);
+  --text-3xl: clamp(1.65rem, 1.35rem + 0.75vw, 1.875rem);
+  --text-4xl: clamp(1.8rem, 1.25rem + 2.5vw, 2.25rem);
+  --text-5xl: clamp(2.25rem, 1.85rem + 1.5vw, 2.85rem);
 
   /* Custom premium dark blue shadows */
   --shadow-dark-blue-sm: 0 1px 3px 0 rgba(11, 20, 36, 0.1), 0 1px 2px -1px rgba(11, 20, 36, 0.1);
@@ -97,6 +97,23 @@
 }
 
 /* Base Body Styles */
+html,
+body,
+button,
+input,
+select,
+textarea,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.font-header,
+.font-heading {
+  font-family: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif !important;
+}
+
 html,
 body {
   max-width: 100%;
@@ -323,9 +340,9 @@ body.no-scroll {
   100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
 }
 
-.fly-left { animation: flyOutLeft 0.5s forwards ease-in-out; }
-.fly-right { animation: flyOutRight 0.5s forwards ease-in-out; }
-.fly-in-left { animation: flyInFromLeft 0.5s forwards ease-in-out; }
+.fly-left { animation: flyOutLeft 0.4s forwards cubic-bezier(0.16, 1, 0.3, 1); }
+.fly-right { animation: flyOutRight 0.4s forwards cubic-bezier(0.16, 1, 0.3, 1); }
+.fly-in-left { animation: flyInFromLeft 0.4s forwards cubic-bezier(0.16, 1, 0.3, 1); }
 
 /* Testimonial scrolling animation */
 @keyframes marquee {

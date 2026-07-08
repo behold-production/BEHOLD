@@ -1315,6 +1315,7 @@ export default function AdminDashboard({ setView }) {
  adminBankAccountNumber: '',
  adminBankIfscCode: '',
  promoCodes: [],
+ socialLinks: [],
  heroSlides: [],
  careerBadge: '',
  careerTitle: '',
@@ -1326,6 +1327,12 @@ export default function AdminDashboard({ setView }) {
  counselSubtitle: '',
  counselDesc: '',
  counselBtnText: '',
+ servicesSectionTitle: '',
+ servicesSectionSub: '',
+ servicesSectionDesc: '',
+ aptitudeSectionTitle: '',
+ aptitudeSectionSub: '',
+ aptitudeSectionDesc: '',
  aboutTitle: '',
  aboutSub: '',
  offer1Title: '',
@@ -1339,7 +1346,8 @@ export default function AdminDashboard({ setView }) {
  offer5Title: '',
  offer5Desc: '',
  offer6Title: '',
- offer6Desc: ''
+ offer6Desc: '',
+ sectionOrder: ['counselling-intro', 'aptitude', 'counsellors', 'about', 'faq']
  });
  const [settingsSuccess, setSettingsSuccess] = useState('');
 
@@ -1472,6 +1480,7 @@ export default function AdminDashboard({ setView }) {
  adminBankAccountNumber: settings.adminBankAccountNumber || '',
  adminBankIfscCode: settings.adminBankIfscCode || '',
  promoCodes: settings.promoCodes || [],
+ socialLinks: settings.socialLinks || [],
  careerBadge: settings.careerBadge || 'Career Mentoring',
  careerTitle: settings.careerTitle || 'Career Clarity & Direction',
  careerSubtitle: settings.careerSubtitle || 'Feeling Unsure About What’s Next?',
@@ -1482,6 +1491,12 @@ export default function AdminDashboard({ setView }) {
  counselSubtitle: settings.counselSubtitle || 'You Don’t Have to Face It Alone.',
  counselDesc: settings.counselDesc || 'When stress, anxiety, self-doubt, or personal challenges begin to feel overwhelming, having the right support can make all the difference. Our counselling sessions provide a safe space to reflect, heal, grow, and move forward with confidence.',
  counselBtnText: settings.counselBtnText || 'Book Your Therapist',
+ servicesSectionTitle: settings.servicesSectionTitle || 'Book Your Session',
+ servicesSectionSub: settings.servicesSectionSub || 'OUR MENTORSHIP SERVICES',
+ servicesSectionDesc: settings.servicesSectionDesc || 'Access standard, expert counselling sessions and lifetime career mentoring.',
+ aptitudeSectionTitle: settings.aptitudeSectionTitle || 'Register your Aptitude Test',
+ aptitudeSectionSub: settings.aptitudeSectionSub || 'CDAT APTITUDE ASSESSMENT',
+ aptitudeSectionDesc: settings.aptitudeSectionDesc || 'Identify your potential with scientific, standardized career assessments.',
  aboutTitle: settings.aboutTitle || 'What We Offer',
  aboutSub: settings.aboutSub || 'We go beyond traditional guidance by offering mentorship, doorstep counseling, and personalized support in schools.',
  offer1Title: settings.offer1Title || 'Extended Mentorship',
@@ -1495,7 +1510,8 @@ export default function AdminDashboard({ setView }) {
  offer5Title: settings.offer5Title || 'Goal Tracking',
  offer5Desc: settings.offer5Desc || 'We provide continuous reviews to keep students on track with their long-term goals.',
  offer6Title: settings.offer6Title || 'Parent Guidance',
- offer6Desc: settings.offer6Desc || 'We guide parents to reduce academic friction and relieve student stress.'
+ offer6Desc: settings.offer6Desc || 'We guide parents to reduce academic friction and relieve student stress.',
+ sectionOrder: settings.sectionOrder || ['counselling-intro', 'aptitude', 'counsellors', 'about', 'faq']
  });
  }
  } catch (error) {
@@ -2852,6 +2868,12 @@ export default function AdminDashboard({ setView }) {
         openHours: 'Open Hours: Mon - Sat: 9:00 AM - 9:00 PM (Sun: 9:00 AM - 5:00 PM)',
         bannerNotice: '🚨 Maintenance Notice: Schedulers undergoing maintenance tonight between 12:00 AM - 02:00 AM IST.',
         cdatGroupCode: 'cdat@behold',
+        socialLinks: [
+          { name: 'Facebook', url: 'https://facebook.com', logo: '' },
+          { name: 'Instagram', url: 'https://instagram.com', logo: '' },
+          { name: 'LinkedIn', url: 'https://linkedin.com', logo: '' },
+          { name: 'YouTube', url: 'https://youtube.com', logo: '' }
+        ],
         careerBadge: 'Career Mentoring',
         careerTitle: 'Career Clarity & Direction',
         careerSubtitle: 'Feeling Unsure About What’s Next?',
@@ -2862,6 +2884,12 @@ export default function AdminDashboard({ setView }) {
         counselSubtitle: 'You Don’t Have to Face It Alone.',
         counselDesc: 'When stress, anxiety, self-doubt, or personal challenges begin to feel overwhelming, having the right support can make all the difference. Our counselling sessions provide a safe space to reflect, heal, grow, and move forward with confidence.',
         counselBtnText: 'Book Your Therapist',
+        servicesSectionTitle: 'Book Your Session',
+        servicesSectionSub: 'OUR MENTORSHIP SERVICES',
+        servicesSectionDesc: 'Access standard, expert counselling sessions and lifetime career mentoring.',
+        aptitudeSectionTitle: 'Register your Aptitude Test',
+        aptitudeSectionSub: 'CDAT APTITUDE ASSESSMENT',
+        aptitudeSectionDesc: 'Identify your potential with scientific, standardized career assessments.',
         aboutTitle: 'What We Offer',
         aboutSub: 'We go beyond traditional guidance by offering mentorship, doorstep counseling, and personalized support in schools.',
         offer1Title: 'Extended Mentorship',
@@ -2875,7 +2903,8 @@ export default function AdminDashboard({ setView }) {
         offer5Title: 'Goal Tracking',
         offer5Desc: 'We provide continuous reviews to keep students on track with their long-term goals.',
         offer6Title: 'Parent Guidance',
-        offer6Desc: 'We guide parents to reduce academic friction and relieve student stress.'
+        offer6Desc: 'We guide parents to reduce academic friction and relieve student stress.',
+        sectionOrder: ['counselling-intro', 'aptitude', 'counsellors', 'about', 'faq']
       };
 
       // Fill root defaults
@@ -2894,7 +2923,7 @@ export default function AdminDashboard({ setView }) {
         subtitle: 'Professional psychological counseling, aptitude assessment, and career mentorship designed to help individuals thrive with confidence and purpose.',
         btn1Text: 'Book a Session',
         btn1Link: '/booking',
-        btn2Text: 'Explore Aptitude',
+        btn2Text: 'Book Aptitude Test',
         btn2Link: '/aptitude-test'
       };
 

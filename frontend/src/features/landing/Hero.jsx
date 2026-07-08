@@ -19,12 +19,13 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
     if (!link) return;
     if (link === '/booking') {
       window.spaNavigate?.('/booking');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } else if (link === '/aptitude-test' || link === '/aptitude' || link === 'cdat') {
       navigateToSection('cdat');
     } else {
       window.spaNavigate?.(link);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const settings = siteSettings || {};
@@ -35,7 +36,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
     subtitle: settings.heroSub || "Professional psychological counseling, aptitude assessment, and career mentorship designed to help individuals thrive with confidence and purpose.",
     btn1Text: 'Book a Session',
     btn1Link: '/booking',
-    btn2Text: 'Explore Aptitude',
+    btn2Text: 'Book Aptitude Test',
     btn2Link: '/aptitude-test'
   };
 

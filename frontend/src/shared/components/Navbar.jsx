@@ -1,12 +1,89 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import LogoutConfirmModal from './LogoutConfirmModal';
 
 export default function Navbar({ navigateToSection, currentView, onOpenAuth, siteName, siteSettings }) {
- const [isScrolled, setIsScrolled] = useState(false);
- const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
- const [isLogoutOpen, setIsLogoutOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isLogoutOpen, setIsLogoutOpen] = useState(false);
+  const location = useLocation();
+
+  const renderSocialIcon = (name, logo) => {
+    const logoVal = (logo || '').trim();
+    if (logoVal) {
+      if (logoVal.startsWith('/') || logoVal.startsWith('http://') || logoVal.startsWith('https://')) {
+        return <img src={logoVal} alt={name} className="w-3.5 h-3.5 object-contain" />;
+      }
+    }
+
+    const norm = (logoVal || name || '').toLowerCase().trim();
+    if (norm.includes('facebook')) {
+      return (
+        <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+          <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1V12h3v3h-3v6.8c4.56-.93 8-4.96 8-9.8z"/>
+        </svg>
+      );
+    }
+    if (norm.includes('instagram')) {
+      return (
+        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+        </svg>
+      );
+    }
+    if (norm.includes('linkedin')) {
+      return (
+        <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+          <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+        </svg>
+      );
+    }
+    if (norm.includes('youtube')) {
+      return (
+        <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+          <path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.108C19.52 3.5 12 3.5 12 3.5s-7.52 0-9.388.555A3.002 3.002 0 0 0 .502 6.163C0 8.07 0 12 0 12s0 3.93.502 5.837a3.003 3.003 0 0 0 2.11 2.108C4.48 20.5 12 20.5 12 20.5s7.52 0 9.388-.555a3.002 3.002 0 0 0 2.11-2.108C24 15.93 24 12 24 12s0-3.93-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+        </svg>
+      );
+    }
+    if (norm.includes('twitter') || norm.includes('x.com')) {
+      return (
+        <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+        </svg>
+      );
+    }
+    if (norm.includes('whatsapp') || norm.includes('phone') || norm.includes('call')) {
+      return (
+        <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+          <path d="M12.031 2C6.446 2 1.922 6.524 1.922 12.11c0 1.912.528 3.76 1.531 5.387L2 22l4.67-1.229a10.03 10.03 0 0 0 5.361 1.54h.005c5.581 0 10.105-4.524 10.105-10.11C22.141 6.524 17.618 2 12.03 2zm0 18.52c-1.705 0-3.378-.458-4.85-1.326l-.348-.207-3.6 1.05 1.05-3.51-.227-.36a8.21 8.21 0 0 1-1.26-4.382c0-4.547 3.7-8.245 8.245-8.245 2.202 0 4.272.86 5.829 2.418a8.17 8.17 0 0 1 2.418 5.835c-.006 4.55-3.702 8.248-8.257 8.248zm4.526-6.183c-.248-.124-1.467-.724-1.694-.807-.227-.083-.393-.124-.558.124-.166.248-.641.807-.786.973-.145.166-.29.186-.538.062a7.07 7.07 0 0 1-1.996-1.23 7.8 7.8 0 0 1-1.382-1.722c-.145-.248-.015-.382.11-.506.11-.11.248-.29.372-.435.124-.145.166-.248.248-.414.083-.166.04-.31-.02-.435-.062-.124-.558-1.345-.765-1.841-.2-.483-.403-.414-.558-.422-.145-.008-.31-.008-.476-.008a.92.92 0 0 0-.662.31c-.227.248-.869.849-.869 2.07 0 1.221.89 2.401.993 2.546.103.145 1.751 2.673 4.243 3.748.593.256 1.056.409 1.417.524.597.19 1.14.163 1.569.099.479-.072 1.467-.6 1.674-1.18.207-.58.207-1.077.145-1.18-.062-.104-.227-.166-.476-.29z"/>
+        </svg>
+      );
+    }
+    return (
+      <svg className="w-3.5 h-3.5 fill-none stroke-currentColor strokeWidth-2" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+        <path d="M2 12h20"/>
+      </svg>
+    );
+  };
+
+  const defaultSocials = [
+    { name: 'Facebook', url: '#' },
+    { name: 'Instagram', url: '#' },
+    { name: 'LinkedIn', url: '#' },
+    { name: 'YouTube', url: '#' }
+  ];
+
+  const socials = (Array.isArray(siteSettings?.socialLinks) && siteSettings.socialLinks.length > 0
+    ? siteSettings.socialLinks
+    : defaultSocials).filter(link => {
+      const url = (link.url || '').trim();
+      return url !== '' && url !== '#' && url !== 'https://' && url !== 'http://';
+    });
 
  const { user, logout } = useAuth();
  const navigate = useNavigate();
@@ -45,10 +122,10 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
  setMobileMenuOpen(false);
  };
 
- const isSolid = isScrolled || currentView !== '/';
- const navClass = isScrolled
- ? "fixed w-full z-50 transition-all duration-300 lg:py-3 top-0"
- : "fixed w-full z-50 transition-all duration-300 lg:py-3 top-0 md:top-[33px]";
+  const useTransparentHeader = (currentView === '/' || location.pathname === '/') && !isScrolled;
+  const navClass = isScrolled
+    ? "fixed w-full z-40 transition-all duration-300 lg:py-3 top-0"
+    : "fixed w-full z-40 transition-all duration-300 lg:py-3 top-0 md:top-[33px]";
 
  return (
  <>
@@ -70,84 +147,94 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
  {siteSettings?.openHours ? siteSettings.openHours : 'Not Available'}
  </span>
  </div>
- <div className="flex items-center gap-4">
- <a href="#" className="hover:text-white transition-colors">Facebook</a>
- <a href="#" className="hover:text-white transition-colors">Instagram</a>
- <a href="#" className="hover:text-white transition-colors">LinkedIn</a>
- <a href="#" className="hover:text-white transition-colors">YouTube</a>
- </div>
+  <div className="flex items-center gap-4">
+    {socials.map((link, idx) => (
+      <a
+        key={idx}
+        href={link.url || '#'}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="hover:text-brand transition-colors flex items-center gap-1.5 text-[11px] text-gray-400 font-bold"
+      >
+        {renderSocialIcon(link.name, link.logo)}
+        <span className="hidden sm:inline">{link.name}</span>
+      </a>
+    ))}
+  </div>
  </div>
  </div>
 
  {/* Navigation Header */}
  <nav id="navbar" className={navClass}>
- <div className="max-w-[1440px] mx-auto px-0 lg:px-12">
- <div className={`rounded-none lg:rounded-full px-5 sm:px-8 py-3 lg:py-2 flex items-center justify-between min-w-0 transition-all duration-500 ${!isSolid ? 'bg-transparent border-transparent shadow-none' : 'glass shadow-sm border-b border-gray-100 lg:border lg:border-gray-100'}`}>
- {/* Left Section: Hamburger + Logo */}
- <div className="flex items-center gap-2 sm:gap-3">
- {/* Mobile Hamburger Button */}
- <div className="flex lg:hidden items-center">
- <button
- className={`p-1.5 -ml-2 rounded-full transition-colors bg-transparent border-none cursor-pointer ${!isSolid ? 'text-white hover:bg-white/20' : 'text-zinc-950 hover:bg-gray-100/50'}`}
- onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
- >
- <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg>
- </button>
- </div>
+   <div className="max-w-[1440px] mx-auto px-0 lg:px-12">
+     <div className={useTransparentHeader 
+       ? "w-full lg:mx-0 lg:my-0 px-5 sm:px-8 py-3 lg:py-2 flex items-center justify-between min-w-0 transition-all duration-300 bg-transparent border-none shadow-none" 
+       : "w-full lg:rounded-full lg:mx-0 lg:my-0 px-5 sm:px-8 py-3 lg:py-2 flex items-center justify-between min-w-0 transition-all duration-300 glass border-b border-gray-100/60 lg:border lg:shadow-sm"
+     }>
+      {/* Left Section: Hamburger + Logo */}
+      <div className="flex items-center gap-2 sm:gap-3">
+        {/* Mobile Hamburger Button */}
+        <div className="flex lg:hidden items-center">
+          <button
+            className={useTransparentHeader ? "p-1.5 -ml-2 rounded-full transition-colors bg-transparent border-none cursor-pointer text-white hover:bg-white/10" : "p-1.5 -ml-2 rounded-full transition-colors bg-transparent border-none cursor-pointer text-zinc-950 hover:bg-gray-100/50"}
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg>
+          </button>
+        </div>
 
- {/* Logo */}
- <button onClick={logoClick} className={`flex-shrink-0 flex items-center logo-text bg-transparent border-none p-0 cursor-pointer ${!isSolid ? 'text-white' : 'text-[#1f2937]'}`} style={{ lineHeight: 1 }}>
- {siteName || 'BEHOLD'}<span className="logo-dot" style={{ color: !isSolid ? '#00E5FF' : '#0ea5e9' }}>.</span>
- </button>
- </div>
+        {/* Logo */}
+        <button onClick={logoClick} className={useTransparentHeader ? "flex-shrink-0 flex items-center logo-text bg-transparent border-none p-0 cursor-pointer text-white" : "flex-shrink-0 flex items-center logo-text bg-transparent border-none p-0 cursor-pointer text-[#1f2937]"} style={{ lineHeight: 1 }}>
+          {siteName || 'BEHOLD'}<span className="logo-dot" style={{ color: '#00E5FF' }}>.</span>
+        </button>
+      </div>
 
- {/* Desktop Menu */}
- <div className={`hidden lg:flex items-center space-x-8 text-sm font-medium transition-colors duration-300 ${!isSolid ? 'text-white/90' : 'text-zinc-950'}`}>
- <a href="#" onClick={(e) => { e.preventDefault(); navigateToSection?.('home') || navigate('/'); }} className={`transition-colors hover:text-brand`}>Home</a>
- <a href="#" onClick={(e) => { e.preventDefault(); navigateToSection?.('services') || navigate('/'); }} className={`transition-colors flex items-center gap-1.5 hover:text-brand`}>Services <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M6 9l6 6 6-6" /></svg></a>
- <a href="#" onClick={(e) => { e.preventDefault(); navigate('/sample-test'); }} className={`transition-colors hover:text-brand`}>Sample Test</a>
- <a href="#" onClick={(e) => { e.preventDefault(); navigateToSection?.('contact') || navigate('/'); }} className={`transition-colors hover:text-brand`}>Contact</a>
- </div>
+      {/* Desktop Menu */}
+      <div className={useTransparentHeader ? "hidden lg:flex items-center space-x-8 text-sm font-semibold text-white/90 transition-colors duration-300" : "hidden lg:flex items-center space-x-8 text-sm font-semibold text-zinc-800 transition-colors duration-300"}>
+        <a href="#" onClick={(e) => { e.preventDefault(); navigateToSection?.('home') || navigate('/'); }} className="transition-colors hover:text-[#00E5FF]">Home</a>
+        <a href="#" onClick={(e) => { e.preventDefault(); navigateToSection?.('services') || navigate('/'); }} className="transition-colors flex items-center gap-1.5 hover:text-[#00E5FF]">Services <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M6 9l6 6 6-6" /></svg></a>
+        <a href="#" onClick={(e) => { e.preventDefault(); navigate('/sample-test'); }} className="transition-colors hover:text-[#00E5FF]">Sample Test</a>
+        <a href="#" onClick={(e) => { e.preventDefault(); navigateToSection?.('contact') || navigate('/'); }} className="transition-colors hover:text-[#00E5FF]">Contact</a>
+      </div>
 
- {/* Right Actions */}
- <div className="flex items-center gap-3 sm:gap-5 shrink-0">
+      {/* Right Actions */}
+      <div className="flex items-center gap-3 sm:gap-5 shrink-0">
 
- {/* Desktop CTA Button */}
- <button 
- onClick={() => navigate('/booking')}
- className={`hidden lg:flex items-center justify-center px-6 py-2.5 rounded-full text-sm font-bold transition-all cursor-pointer border-none hover:scale-105 active:scale-95 shadow-lg ${!isSolid ? 'bg-white text-[#0F172A] hover:bg-gray-100 shadow-white/20' : 'bg-[#0F172A] text-white hover:bg-[#00E5FF] shadow-[#0F172A]/30'}`}
- >
- Book Appointment
- </button>
+        {/* Desktop CTA Button */}
+        <button 
+          onClick={() => navigate('/booking')}
+          className={useTransparentHeader ? "hidden lg:flex items-center justify-center px-6 py-2.5 rounded-full text-sm font-bold transition-all cursor-pointer border-none hover:scale-105 active:scale-95 shadow-md bg-[#00E5FF] text-[#0f172a] hover:bg-white hover:text-[#0f172a]" : "hidden lg:flex items-center justify-center px-6 py-2.5 rounded-full text-sm font-bold transition-all cursor-pointer border-none hover:scale-105 active:scale-95 shadow-md bg-[#0F172A] text-white hover:bg-[#00E5FF] hover:text-[#0f172a] shadow-[#0F172A]/10"}
+        >
+          Book Appointment
+        </button>
 
- {/* Profile Avatar (Mobile + Desktop) */}
- <div className="relative group flex items-center justify-center">
- <button
- onClick={handleProfileClick}
- className={`w-11 h-11 lg:w-12 lg:h-12 rounded-full border-none flex items-center justify-center transition-all duration-300 cursor-pointer hover:scale-105 ${!isSolid ? 'bg-white/20 text-white hover:bg-white/30' : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-900'}`}
- >
- {user ? (
- user.photoURL ? (
- <img src={user.photoURL} alt="Profile" className="w-full h-full rounded-full object-cover" />
- ) : (
- <span className="font-bold text-sm tracking-widest ">
- {user.name ? user.name.trim().split(/\s+/).slice(0, 2).map(n => n[0]).join('') : 'U'}
- </span>
- )
- ) : (
- <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
- <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
- <circle cx="12" cy="7" r="4"></circle>
- </svg>
- )}
- </button>
- <div className="absolute top-[110%] right-0 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap bg-gray-800 text-white text-xs px-3 py-1.5 rounded-lg shadow-lg translate-y-2 group-hover:translate-y-0 before:content-[''] before:absolute before:-top-1 before:right-4 before:border-4 before:border-transparent before:border-b-gray-800">
- {user ? 'My Profile' : 'Sign In'}
- </div>
- </div>
+        {/* Profile Avatar (Mobile + Desktop) */}
+        <div className="relative group flex items-center justify-center">
+          <button
+            onClick={handleProfileClick}
+            className={useTransparentHeader ? "w-11 h-11 lg:w-12 lg:h-12 rounded-full border border-white/20 flex items-center justify-center transition-all duration-300 cursor-pointer hover:scale-105 bg-white/10 text-white hover:bg-white/20" : "w-11 h-11 lg:w-12 lg:h-12 rounded-full border-none flex items-center justify-center transition-all duration-300 cursor-pointer hover:scale-105 bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-900"}
+          >
+            {user ? (
+              user.photoURL ? (
+                <img src={user.photoURL} alt="Profile" className="w-full h-full rounded-full object-cover" />
+              ) : (
+                <span className="font-bold text-sm tracking-widest ">
+                  {user.name ? user.name.trim().split(/\s+/).slice(0, 2).map(n => n[0]).join('') : 'U'}
+                </span>
+              )
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            )}
+          </button>
+          <div className="absolute top-[110%] right-0 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap bg-gray-800 text-white text-xs px-3 py-1.5 rounded-lg shadow-lg translate-y-2 group-hover:translate-y-0 before:content-[''] before:absolute before:-top-1 before:right-4 before:border-4 before:border-transparent before:border-b-gray-800">
+            {user ? 'My Profile' : 'Sign In'}
+          </div>
+        </div>
 
- </div>
- </div>
+      </div></div>
  </div>
  </nav>
 

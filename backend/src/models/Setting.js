@@ -61,6 +61,27 @@ const settingSchema = new mongoose.Schema(
         isActive: { type: Boolean, default: true }
       }
     ],
+    servicesSectionTitle: { type: String, default: 'Book Your Session' },
+    servicesSectionSub: { type: String, default: 'OUR MENTORSHIP SERVICES' },
+    servicesSectionDesc: { type: String, default: 'Access standard, expert counselling sessions and lifetime career mentoring.' },
+    aptitudeSectionTitle: { type: String, default: 'Register your Aptitude Test' },
+    aptitudeSectionSub: { type: String, default: 'CDAT APTITUDE ASSESSMENT' },
+    aptitudeSectionDesc: { type: String, default: 'Identify your potential with scientific, standardized career assessments.' },
+    socialLinks: {
+      type: [
+        {
+          name: { type: String, default: '' },
+          url: { type: String, default: '' },
+          logo: { type: String, default: '' }
+        }
+      ],
+      default: [
+        { name: 'Facebook', url: 'https://facebook.com', logo: '' },
+        { name: 'Instagram', url: 'https://instagram.com', logo: '' },
+        { name: 'LinkedIn', url: 'https://linkedin.com', logo: '' },
+        { name: 'YouTube', url: 'https://youtube.com', logo: '' }
+      ]
+    },
     heroSlides: {
       type: [
         {

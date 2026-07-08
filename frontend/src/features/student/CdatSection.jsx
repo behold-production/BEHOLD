@@ -2,8 +2,10 @@ import { motion } from 'framer-motion';
 import React, { useState, useEffect } from 'react';
 import { Copy, AlertCircle, ArrowRight, FlaskConical } from 'lucide-react';
 import ApiService from '../../shared/services/api';
+import SectionHeader from '../../shared/components/SectionHeader';
 
 export default function CdatSection({ setView }) {
+  const [settings, setSettings] = useState(null);
   const [groupRegName, setGroupRegName] = useState(() => {
     try {
       const saved = localStorage.getItem('behold_student_profile');
@@ -44,8 +46,11 @@ export default function CdatSection({ setView }) {
   useEffect(() => {
     ApiService.getSettings()
       .then(data => {
-        if (data.success && data.data && data.data.cdatGroupCode) {
-          setFetchedGroupCode(data.data.cdatGroupCode);
+        if (data.success && data.data) {
+          setSettings(data.data);
+          if (data.data.cdatGroupCode) {
+            setFetchedGroupCode(data.data.cdatGroupCode);
+          }
         }
       })
       .catch(err => console.error("Error fetching settings:", err));
@@ -114,31 +119,30 @@ export default function CdatSection({ setView }) {
 
   return (
     <motion.section
-      initial={{ opacity: 0, y: 60 }}
+      initial={{ opacity: 0, y: 35 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+      viewport={{ once: true, margin: "-20px" }}
+      transition={{ duration: 0.85, ease: "easeOut" }}
       id="cdat"
-      className="relative pt-14 md:pt-24 pb-14 md:pb-24 px-4 sm:px-6 overflow-hidden"
+      className="relative py-8 md:py-16 px-4 sm:px-6 overflow-hidden"
     >
-      {/* Background */}
-      <div className="absolute inset-0 z-0">
-        <div
-          className="w-full h-full bg-cover bg-center bg-fixed scale-105"
-          style={{ backgroundImage: "url('/students_kerala.png')" }}
+      <div className="max-w-6xl mx-auto mb-10 text-center relative z-20">
+        <SectionHeader
+          subtitle={settings?.aptitudeSectionSub || "CDAT APTITUDE ASSESSMENT"}
+          title={settings?.aptitudeSectionTitle || "Register your Aptitude Test"}
+          description={settings?.aptitudeSectionDesc || "Identify your potential with scientific, standardized career assessments."}
+          align="center"
         />
       </div>
-      <div className="absolute inset-0 z-10 bg-white/60 backdrop-blur-lg pointer-events-none" />
-
       <div className="relative z-20 max-w-6xl mx-auto flex flex-col md:flex-row gap-5 md:gap-10 items-stretch">
 
         {/* ── LEFT: Info Card ─────────────────────────── */}
         <motion.div
-          initial={{ opacity: 0, x: -60, scale: 0.97 }}
-          whileInView={{ opacity: 1, x: 0, scale: 1 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-          className="square-card p-5 sm:p-7 flex-1 flex flex-col"
+          initial={{ opacity: 0, y: 35, scale: 0.97 }}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          viewport={{ once: true, margin: "-20px" }}
+          transition={{ duration: 0.85, ease: "easeOut" }}
+          className="bg-white rounded-3xl border border-slate-200/60 shadow-sm p-5 sm:p-7 flex-1 flex flex-col"
         >
           {/* Badge + Logo Row */}
           <div className="flex items-start justify-between gap-3 mb-4">
@@ -175,12 +179,12 @@ export default function CdatSection({ setView }) {
 
         {/* ── RIGHT: Form Card ────────────────────────── */}
         <motion.div
-          initial={{ opacity: 0, x: 60, scale: 0.97 }}
-          whileInView={{ opacity: 1, x: 0, scale: 1 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+          initial={{ opacity: 0, y: 35, scale: 0.97 }}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          viewport={{ once: true, margin: "-20px" }}
+          transition={{ duration: 0.85, ease: "easeOut", delay: 0.1 }}
           id="cdat-form"
-          className="square-card p-5 sm:p-7 w-full md:w-[420px] lg:w-[460px] shrink-0 flex flex-col"
+          className="bg-white rounded-3xl border border-slate-200/60 shadow-sm p-5 sm:p-7 w-full md:w-[420px] lg:w-[460px] shrink-0 flex flex-col"
         >
           {/* Form Header */}
           <div className="mb-5">

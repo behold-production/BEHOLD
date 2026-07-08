@@ -66,7 +66,7 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
   ];
 
   return (
-    <section id="about" className="py-12 md:py-20 bg-gradient-to-b from-white to-slate-50 relative">
+    <section id="about" className="py-8 md:py-14 bg-transparent relative">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-12">
 
         {/* Section Header */}
@@ -111,14 +111,14 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
             {pillars.map((pillar, idx) => (
               <motion.div
                 key={idx}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.6, delay: idx * 0.05 }}
-                className="square-card p-6 flex flex-col group transition-all duration-300 relative overflow-hidden rounded-[12px] text-left"
+                viewport={{ once: true, margin: "-30px" }}
+                transition={{ duration: 0.85, ease: "easeOut", delay: idx * 0.05 }}
+                className="bg-white rounded-3xl p-6 shadow-sm hover:shadow-[0_20px_40px_rgba(0,229,255,0.08)] hover:-translate-y-1 transition-all duration-300 group border border-slate-200/60 hover:border-[#00E5FF]/20 relative overflow-hidden flex flex-col text-left"
               >
-                {/* Top Accent corner overlay shape */}
-                <div className="absolute top-0 right-0 w-8 h-8 bg-slate-50 border-b border-l border-slate-100 rounded-bl-[12px] group-hover:bg-[#00E5FF]/10 transition-colors pointer-events-none" />
+                {/* Top Accent border line hover gradient effect */}
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-400 to-[#00E5FF] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
 
                 {/* Header: Number and Title inline */}
                 <div className="flex items-center gap-3.5 mb-3.5 mt-2">
@@ -137,7 +137,7 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
 
                 {/* Footer: Bottom Right Arrow Button */}
                 <div className="flex justify-end mt-auto">
-                  <div 
+                  <div
                     onClick={() => {
                       if (enablePsychology || enableCareerMentoring) {
                         window.spaNavigate('/booking');
@@ -163,12 +163,16 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
             desktopClassName="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch"
             mobileContainerClassName="relative w-full mx-auto h-[220px] sm:h-[240px]"
             items={pillars.map((pillar, idx) => (
-              <div
+              <motion.div
                 key={idx}
-                className="square-card h-full p-6 flex flex-col group transition-all duration-300 relative overflow-hidden rounded-[12px] select-none text-left"
+                initial={{ opacity: 0, y: 25, scale: 0.98 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true, margin: "-30px" }}
+                transition={{ duration: 0.85, ease: "easeOut", delay: (idx % 3) * 0.08 }}
+                className="bg-white rounded-3xl h-full p-6 flex flex-col group transition-all duration-300 relative overflow-hidden shadow-sm hover:shadow-[0_20px_40px_rgba(0,229,255,0.08)] hover:-translate-y-1 border border-slate-200/60 hover:border-[#00E5FF]/20 select-none text-left"
               >
-                {/* Top Accent corner overlay shape */}
-                <div className="absolute top-0 right-0 w-8 h-8 bg-slate-50 border-b border-l border-slate-100 rounded-bl-[12px] group-hover:bg-[#00E5FF]/10 transition-colors pointer-events-none" />
+                {/* Top Accent border line hover gradient effect */}
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-400 to-[#00E5FF] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
 
                 {/* Header: Number and Title inline */}
                 <div className="flex items-center gap-3.5 mb-3.5 mt-2">
@@ -187,7 +191,7 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
 
                 {/* Footer: Bottom Right Arrow Button */}
                 <div className="flex justify-end mt-auto">
-                  <div 
+                  <div
                     onClick={() => {
                       if (enablePsychology || enableCareerMentoring) {
                         window.spaNavigate('/booking');
@@ -203,7 +207,7 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
                     </svg>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
             renderItem={(item) => item}
           />

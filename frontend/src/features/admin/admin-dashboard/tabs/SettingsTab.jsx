@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { SkeletonTableRows, PaginationBar } from '../components/SharedAdminUI';
-import { User, ShieldAlert, Award, Trash, Check, Plus, Lock, Settings, KeyRound, BarChart3, LogOut, Search, ShieldCheck, Calendar, Clock, Link, AlertCircle, Edit, Video, UserPlus, MessageSquare, FileSpreadsheet, HelpCircle, X, ChevronRight, ChevronLeft, ChevronUp, ChevronDown, Mail, Shield, Menu, Brain, Download, FileText, Eye, EyeOff, Bell, Send, Loader2 } from 'lucide-react';
+import { User, ShieldAlert, Award, Trash, Check, Plus, Lock, Settings, KeyRound, BarChart3, LogOut, Search, ShieldCheck, Calendar, Clock, Link, AlertCircle, Edit, Video, UserPlus, MessageSquare, FileSpreadsheet, HelpCircle, X, ChevronRight, ChevronLeft, ChevronUp, ChevronDown, Mail, Shield, Menu, Brain, Download, FileText, Eye, EyeOff, Bell, Send, Loader2, GripVertical } from 'lucide-react';
 
 const isNotificationSupported = () => 'Notification' in window;
 
@@ -337,6 +337,7 @@ export default function SettingsTab(props) {
  } = props;
 
  const [activeSettingsTab, setActiveSettingsTab] = useState('general');
+ const [draggedIndex, setDraggedIndex] = useState(null);
 
  const settingsTabs = [
  { id: 'general', label: 'General & Contact', icon: Settings },
@@ -473,8 +474,91 @@ export default function SettingsTab(props) {
  </div>
  </div>
 
- {/* Top Alert Banner Notice */}
- <div className="border border-zinc-800 p-5 rounded-xl space-y-4 bg-zinc-955/20">
+  {/* Social Media Channels Section */}
+  <div className="bg-zinc-955/20 border border-zinc-800 p-5 rounded-xl space-y-4">
+    <h4 className="text-xs font-bold text-zinc-300 tracking-wider flex items-center gap-2">
+      <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+      Social Media Channels (Navbar & Footer)
+    </h4>
+    <div className="space-y-3">
+      {Array.isArray(settingsForm.socialLinks) && settingsForm.socialLinks.map((link, idx) => (
+        <div key={idx} className="flex items-center gap-3 bg-zinc-950/40 p-3 rounded-lg border border-zinc-800/40">
+          <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold text-zinc-500 uppercase">Channel Name (e.g. Facebook)</label>
+              <input
+                type="text"
+                required
+                value={link.name || ''}
+                onChange={(e) => {
+                  const updated = [...settingsForm.socialLinks];
+                  updated[idx] = { ...updated[idx], name: e.target.value };
+                  setSettingsForm({ ...settingsForm, socialLinks: updated });
+                }}
+                className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
+                placeholder="Name"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold text-zinc-500 uppercase">Channel Link / URL</label>
+              <input
+                type="text"
+                required
+                value={link.url || ''}
+                onChange={(e) => {
+                  const updated = [...settingsForm.socialLinks];
+                  updated[idx] = { ...updated[idx], url: e.target.value };
+                  setSettingsForm({ ...settingsForm, socialLinks: updated });
+                }}
+                className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
+                placeholder="https://"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold text-zinc-500 uppercase">Logo / Icon (e.g. Facebook, or URL)</label>
+              <input
+                type="text"
+                value={link.logo || ''}
+                onChange={(e) => {
+                  const updated = [...settingsForm.socialLinks];
+                  updated[idx] = { ...updated[idx], logo: e.target.value };
+                  setSettingsForm({ ...settingsForm, socialLinks: updated });
+                }}
+                className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
+                placeholder="e.g. Brain, Facebook, or image path"
+              />
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              const updated = settingsForm.socialLinks.filter((_, i) => i !== idx);
+              setSettingsForm({ ...settingsForm, socialLinks: updated });
+            }}
+            className="p-2 bg-red-955/10 hover:bg-red-955/35 text-red-400 hover:text-red-300 rounded-lg transition-colors cursor-pointer self-end"
+            title="Remove Channel"
+          >
+            <Trash className="w-4 h-4" />
+          </button>
+        </div>
+      ))}
+
+      <button
+        type="button"
+        onClick={() => {
+          const updated = [...(settingsForm.socialLinks || [])];
+          updated.push({ name: 'New Social', url: 'https://', logo: '' });
+          setSettingsForm({ ...settingsForm, socialLinks: updated });
+        }}
+        className="w-full py-2 bg-zinc-800/40 hover:bg-zinc-800/80 border border-zinc-700/50 hover:border-brand text-zinc-300 hover:text-white rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5"
+      >
+        <span>+ Add Social Channel</span>
+      </button>
+    </div>
+  </div>
+
+  {/* Top Alert Banner Notice */}
+  <div className="border border-zinc-800 p-5 rounded-xl space-y-4 bg-zinc-955/20">
  <div className="flex items-center justify-between gap-4">
  <div>
  <span className="text-sm font-bold text-zinc-300 block">System Banner Notification Bar</span>
@@ -656,6 +740,172 @@ export default function SettingsTab(props) {
             setSettingsForm(prev => ({ ...prev, heroSlides: newSlides }));
           }} className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none" placeholder="Link Route (e.g. /aptitude-test)" />
         </div>
+      </div>
+    </div>
+
+    {/* Section Ordering Configuration */}
+    <div className="bg-zinc-955/40 border border-zinc-800 p-5 rounded-xl space-y-4 mb-4">
+      <h4 className="text-xs font-bold text-brand tracking-wider flex items-center gap-2">
+        <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+        Landing Page Sections Ordering (Drag & Save)
+      </h4>
+      <p className="text-xs text-zinc-400 leading-relaxed font-semibold">
+        Drag and drop sections to rearrange their order on the landing page. Note that the <strong>Hero</strong>, <strong>Contact</strong> (Inquiry), and <strong>Footer</strong> sections are fixed and cannot be reordered.
+      </p>
+      
+      <div className="space-y-3">
+        {(settingsForm.sectionOrder || ['counselling-intro', 'aptitude', 'counsellors', 'about', 'faq']).map((sectionKey, idx) => {
+          const sectionMetadata = {
+            'counselling-intro': {
+              title: "Counselling & Mentorship Cards",
+              desc: "Displays the dual blocks for Career Mentoring & Psychological Counselling."
+            },
+            counsellors: {
+              title: "Meet Our Professionals",
+              desc: "Displays the grid, search filter, and list of consultant psychologists."
+            },
+            counselling: {
+              title: "Counselling & Mentorship (Combined legacy)",
+              desc: "Displays emotional wellbeing services and professional advisors list."
+            },
+            aptitude: {
+              title: "CIGI Aptitude Test",
+              desc: "Provides the C-DAT assessment registration form."
+            },
+            about: {
+              title: "About Us (What We Offer)",
+              desc: "Displays school programs, goals tracking, and guidance details."
+            },
+            faq: {
+              title: "Frequently Asked Questions",
+              desc: "Accordion with common queries and answers."
+            }
+          };
+          
+          const meta = sectionMetadata[sectionKey] || { title: sectionKey, desc: '' };
+          const isDragging = draggedIndex === idx;
+          const currentOrder = settingsForm.sectionOrder || ['counselling-intro', 'aptitude', 'counsellors', 'about', 'faq'];
+          
+          return (
+            <div
+              key={sectionKey}
+              draggable
+              onDragStart={(e) => {
+                setDraggedIndex(idx);
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', idx);
+              }}
+              onDragOver={(e) => {
+                e.preventDefault();
+              }}
+              onDragEnter={(e) => {
+                e.preventDefault();
+                if (draggedIndex !== null && draggedIndex !== idx) {
+                  const reordered = [...currentOrder];
+                  const [removed] = reordered.splice(draggedIndex, 1);
+                  reordered.splice(idx, 0, removed);
+                  setDraggedIndex(idx);
+                  setSettingsForm(prev => ({ ...prev, sectionOrder: reordered }));
+                }
+              }}
+              onDragEnd={() => {
+                setDraggedIndex(null);
+              }}
+              className={`flex items-center justify-between p-4 rounded-xl border transition-all duration-200 select-none ${
+                isDragging
+                  ? 'bg-brand/10 border-brand/50 opacity-50 scale-[0.98]'
+                  : 'bg-zinc-900/60 hover:bg-zinc-900/90 border-zinc-800 hover:border-zinc-700'
+              }`}
+            >
+              <div className="flex items-center gap-3.5 min-w-0">
+                <div className="cursor-grab active:cursor-grabbing text-zinc-500 hover:text-zinc-300 p-1">
+                  <GripVertical className="w-5 h-5 shrink-0" />
+                </div>
+                <div className="min-w-0">
+                  <h5 className="text-xs font-bold text-white flex items-center gap-2">
+                    <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-zinc-800 text-[10px] text-zinc-400 font-bold border border-zinc-700">
+                      {idx + 1}
+                    </span>
+                    {meta.title}
+                  </h5>
+                  <p className="text-[10px] text-zinc-400 font-medium truncate mt-0.5">{meta.desc}</p>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-1 shrink-0">
+                <button
+                  type="button"
+                  disabled={idx === 0}
+                  onClick={() => {
+                    const newOrder = [...currentOrder];
+                    [newOrder[idx - 1], newOrder[idx]] = [newOrder[idx], newOrder[idx - 1]];
+                    setSettingsForm(prev => ({ ...prev, sectionOrder: newOrder }));
+                  }}
+                  className="p-1.5 hover:bg-zinc-800 rounded disabled:opacity-30 disabled:pointer-events-none cursor-pointer text-zinc-400 hover:text-white transition-all"
+                  title="Move Section Up"
+                >
+                  <ChevronUp className="w-4 h-4" />
+                </button>
+                <button
+                  type="button"
+                  disabled={idx === currentOrder.length - 1}
+                  onClick={() => {
+                    const newOrder = [...currentOrder];
+                    [newOrder[idx + 1], newOrder[idx]] = [newOrder[idx], newOrder[idx + 1]];
+                    setSettingsForm(prev => ({ ...prev, sectionOrder: newOrder }));
+                  }}
+                  className="p-1.5 hover:bg-zinc-800 rounded disabled:opacity-30 disabled:pointer-events-none cursor-pointer text-zinc-400 hover:text-white transition-all"
+                  title="Move Section Down"
+                >
+                  <ChevronDown className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+
+    {/* Mentorship Services Section Header Customization */}
+    <div className="bg-zinc-950/40 border border-zinc-800 p-5 rounded-xl space-y-4">
+      <h4 className="text-xs font-bold text-brand tracking-wider flex items-center gap-2">
+        <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+        Mentorship Services Section Header Customization
+      </h4>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="space-y-1">
+          <label className="text-xs font-bold text-zinc-500 ">Section Title</label>
+          <input
+            type="text"
+            required
+            value={settingsForm.servicesSectionTitle || ''}
+            onChange={(e) => setSettingsForm({ ...settingsForm, servicesSectionTitle: e.target.value })}
+            className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800/80 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
+            placeholder="e.g. We Design Your Path to Success"
+          />
+        </div>
+        <div className="space-y-1">
+          <label className="text-xs font-bold text-zinc-500 ">Section Subtitle</label>
+          <input
+            type="text"
+            required
+            value={settingsForm.servicesSectionSub || ''}
+            onChange={(e) => setSettingsForm({ ...settingsForm, servicesSectionSub: e.target.value })}
+            className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800/80 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
+            placeholder="e.g. OUR MENTORSHIP SERVICES"
+          />
+        </div>
+      </div>
+      <div className="space-y-1">
+        <label className="text-xs font-bold text-zinc-500 ">Section Description / Helper Text</label>
+        <textarea
+          required
+          rows={2}
+          value={settingsForm.servicesSectionDesc || ''}
+          onChange={(e) => setSettingsForm({ ...settingsForm, servicesSectionDesc: e.target.value })}
+          className="w-full px-3.5 py-2 bg-zinc-955 border border-zinc-800/80 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors resize-none"
+          placeholder="e.g. Access standard, expert counselling sessions and lifetime career mentoring."
+        />
       </div>
     </div>
 
@@ -1220,6 +1470,49 @@ export default function SettingsTab(props) {
  <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
  <ShieldCheck className="w-4 h-4 text-brand" />
  <h4 className="text-sm font-bold text-white tracking-wider">Security & System</h4>
+ </div>
+
+ {/* Aptitude Section Header Customization */}
+ <div className="bg-zinc-955/20 border border-zinc-800 p-5 rounded-xl space-y-4">
+ <h4 className="text-xs font-bold text-zinc-300 tracking-wider flex items-center gap-2">
+ <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+ Aptitude Section Header Customization
+ </h4>
+ <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+ <div className="space-y-1">
+ <label className="text-xs font-bold text-zinc-400 tracking-wider">Section Title</label>
+ <input
+ type="text"
+ required
+ value={settingsForm.aptitudeSectionTitle || ''}
+ onChange={(e) => setSettingsForm({ ...settingsForm, aptitudeSectionTitle: e.target.value })}
+ className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+ placeholder="e.g. Discover Your Inherent Strengths"
+ />
+ </div>
+ <div className="space-y-1">
+ <label className="text-xs font-bold text-zinc-400 tracking-wider">Section Subtitle</label>
+ <input
+ type="text"
+ required
+ value={settingsForm.aptitudeSectionSub || ''}
+ onChange={(e) => setSettingsForm({ ...settingsForm, aptitudeSectionSub: e.target.value })}
+ className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+ placeholder="e.g. CDAT APTITUDE ASSESSMENT"
+ />
+ </div>
+ </div>
+ <div className="space-y-1">
+ <label className="text-xs font-bold text-zinc-400 tracking-wider">Section Description / Helper Text</label>
+ <textarea
+ required
+ rows={2}
+ value={settingsForm.aptitudeSectionDesc || ''}
+ onChange={(e) => setSettingsForm({ ...settingsForm, aptitudeSectionDesc: e.target.value })}
+ className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors resize-none"
+ placeholder="e.g. Identify your potential with scientific assessments..."
+ />
+ </div>
  </div>
 
  <div className="bg-zinc-955/20 border border-zinc-800 p-5 rounded-xl space-y-4">
