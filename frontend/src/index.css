@@ -485,19 +485,19 @@ textarea:focus {
 @utility logo-text {
   font-family: var(--font-heading);
   font-weight: 900;
-  font-size: 28px;
+  font-size: 22px;
   line-height: 1;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.05em;
   color: var(--color-surface-900);
-  display: flex;
+  display: inline-flex;
   align-items: baseline;
 }
 
 @utility logo-dot {
-  color: var(--color-brand);
-  font-size: 32px;
-  line-height: 0;
-  margin-left: 2px;
+  color: #00E5FF;
+  font-size: inherit;
+  line-height: inherit;
+  margin-left: 1px;
 }
 
 .glass {

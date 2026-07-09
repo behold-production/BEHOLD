@@ -133,19 +133,25 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
  <div className="bg-[#0F172A] text-white/80 text-xs py-2 px-6 border-b border-white/5 relative z-50 hidden md:block">
  <div className="max-w-[1440px] mx-auto flex justify-between items-center px-4">
  <div className="flex items-center gap-6">
- <a href={siteSettings?.contactPhone ? `tel:${siteSettings.contactPhone.replace(/\s+/g, '')}` : '#'} className="flex items-center gap-1.5 hover:text-white transition-colors">
- <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
- <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
- </svg>
- {siteSettings?.contactPhone ? siteSettings.contactPhone : 'Not Available'}
- </a>
- <span className="text-white/20">|</span>
- <span className="flex items-center gap-1.5 text-gray-400">
- <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
- <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
- </svg>
- {siteSettings?.openHours ? siteSettings.openHours : 'Not Available'}
- </span>
+    {siteSettings?.contactPhone && siteSettings.contactPhone.trim() !== '' && (
+      <a href={`tel:${siteSettings.contactPhone.replace(/\s+/g, '')}`} className="flex items-center gap-1.5 hover:text-white transition-colors">
+        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+        </svg>
+        {siteSettings.contactPhone}
+      </a>
+    )}
+    {siteSettings?.contactPhone && siteSettings?.openHours && (
+      <span className="text-white/20">|</span>
+    )}
+    {siteSettings?.openHours && siteSettings.openHours.trim() !== '' && (
+      <span className="flex items-center gap-1.5 text-gray-400">
+        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        {siteSettings.openHours}
+      </span>
+    )}
  </div>
   <div className="flex items-center gap-4">
     {socials.map((link, idx) => (
@@ -184,8 +190,8 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
         </div>
 
         {/* Logo */}
-        <button onClick={logoClick} className={useTransparentHeader ? "flex-shrink-0 flex items-center logo-text bg-transparent border-none p-0 cursor-pointer text-white" : "flex-shrink-0 flex items-center logo-text bg-transparent border-none p-0 cursor-pointer text-[#1f2937]"} style={{ lineHeight: 1 }}>
-          {siteName || 'BEHOLD'}<span className="logo-dot" style={{ color: '#00E5FF' }}>.</span>
+        <button onClick={logoClick} className={useTransparentHeader ? "flex-shrink-0 inline-flex items-baseline font-black text-xl sm:text-2xl tracking-wider uppercase bg-transparent border-none p-0 cursor-pointer text-white font-header" : "flex-shrink-0 inline-flex items-baseline font-black text-xl sm:text-2xl tracking-wider uppercase bg-transparent border-none p-0 cursor-pointer text-[#1f2937] font-header"} style={{ lineHeight: 1 }}>
+          {siteName || 'BEHOLD'}<span className="text-[#00E5FF] font-black">.</span>
         </button>
       </div>
 
@@ -312,22 +318,28 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
  </div>
  </div>
 
- {/* Floating WhatsApp Button */}
- <div className="fixed bottom-6 right-6 z-50 group">
- <a
- href={siteSettings?.whatsapp || '#'}
- target="_blank"
- rel="noopener noreferrer"
- className="w-14 h-14 rounded-full bg-[#25D366] text-white hover:bg-[#1DA851] flex items-center justify-center transition-all duration-300 hover:scale-105 shadow-[0_8px_32px_rgba(37,211,102,0.3)] border border-white/20 cursor-pointer"
- >
- <svg className="w-8 h-8 fill-current" viewBox="0 0 24 24">
- <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.717-1.46L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.42 9.864-9.864.002-2.637-1.03-5.118-2.91-6.997-1.881-1.879-4.36-2.912-6.998-2.913-5.443 0-9.868 4.425-9.873 9.873-.001 1.77.465 3.49 1.348 5.022L1.876 22.1l4.771-1.253zM17.43 14.93c-.313-.156-1.854-.915-2.141-1.018-.287-.104-.497-.156-.707.156-.21.312-.814 1.018-1 1.225-.186.208-.371.233-.684.078-1.597-.798-2.63-1.385-3.66-3.153-.271-.463-.271-.237.104-.613.337-.337.497-.52.684-.712.186-.193.186-.313.093-.52-.093-.208-.707-1.702-.97-2.327-.255-.612-.516-.529-.707-.539-.181-.01-.389-.01-.597-.01-.208 0-.547.078-.834.39-.287.312-1.097 1.07-1.097 2.611 0 1.54 1.12 3.031 1.277 3.239.156.208 2.203 3.364 5.337 4.717.745.322 1.328.513 1.78.657.749.238 1.431.205 1.97.124.6-.09 1.854-.758 2.114-1.492.26-.735.26-1.363.181-1.492-.078-.13-.287-.208-.6-.364z" />
- </svg>
- </a>
- <div className="absolute right-[110%] top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap bg-gray-800 text-white text-sm font-medium px-4 py-2 rounded-lg shadow-xl translate-x-2 group-hover:translate-x-0 mr-2 before:content-[''] before:absolute before:top-1/2 before:-translate-y-1/2 before:-right-2 before:border-4 before:border-transparent before:border-l-gray-800">
- Chat on WhatsApp
- </div>
- </div>
+  {/* Floating WhatsApp Button Matching Reference Exactly */}
+  <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 group">
+    <a
+      href={siteSettings?.whatsapp || '#'}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="relative flex items-center justify-center p-1.5 sm:p-2 rounded-full bg-[#0d361e]/95 border-2 border-[#1d8045]/70 shadow-[0_6px_25px_rgba(37,211,102,0.45)] transition-all duration-300 hover:scale-105 cursor-pointer"
+      aria-label="Chat on WhatsApp"
+    >
+      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#25D366] flex items-center justify-center shadow-inner">
+        <svg
+          className="w-6 h-6 sm:w-7 sm:h-7 text-white fill-current shrink-0"
+          viewBox="0 0 24 24"
+        >
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+        </svg>
+      </div>
+    </a>
+    <div className="absolute right-[110%] top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap bg-gray-800 text-white text-sm font-medium px-4 py-2 rounded-lg shadow-xl translate-x-2 group-hover:translate-x-0 mr-2 before:content-[''] before:absolute before:top-1/2 before:-translate-y-1/2 before:-right-2 before:border-4 before:border-transparent before:border-l-gray-800">
+      Chat on WhatsApp
+    </div>
+  </div>
 
  <LogoutConfirmModal
  isOpen={isLogoutOpen}

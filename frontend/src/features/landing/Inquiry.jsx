@@ -98,7 +98,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
         transition={{ duration: 0.85, ease: "easeOut" }}
         className="py-8 md:py-14 px-6 max-w-7xl mx-auto"
       >
-        <div className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-[0_20px_50px_rgba(0,229,255,0.04)] border border-slate-200/60 flex flex-col md:flex-row transition-all duration-300">
+        <div className="bg-white rounded-[8px] overflow-hidden shadow-sm hover:shadow-md border border-slate-200 flex flex-col md:flex-row transition-all duration-300">
           <div className="p-8 md:p-12 space-y-8 flex-1 border-b md:border-b-0 md:border-r border-gray-100">
             <div className="space-y-4 mb-4 flex flex-col items-start text-left">
               <SectionHeader
@@ -127,7 +127,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
                     onChange={handleChange}
                     placeholder="Student Name"
                     autoComplete="name"
-                    className={`w-full px-5 py-4 bg-white border rounded-2xl text-sm outline-none transition-all text-surface-900 ${formErrors.name ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200' : 'border-gray-200 focus:border-[#00E5FF] focus:ring-2 focus:ring-[#00E5FF]/20'}`}
+                    className={`w-full px-5 py-4 bg-white border rounded-[8px] text-sm outline-none transition-all text-surface-900 ${formErrors.name ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200' : 'border-gray-200 focus:border-slate-400 focus:ring-2 focus:ring-slate-200'}`}
                   />
                   {formErrors.name && <p className="text-red-500 font-bold text-xs mt-1" role="alert">{formErrors.name}</p>}
                 </div>
@@ -141,7 +141,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
                     onChange={handleChange}
                     placeholder="name@email.com"
                     autoComplete="email"
-                    className={`w-full px-5 py-4 bg-white border rounded-2xl text-sm outline-none transition-all text-surface-900 ${formErrors.email ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200' : 'border-gray-200 focus:border-[#00E5FF] focus:ring-2 focus:ring-[#00E5FF]/20'}`}
+                    className={`w-full px-5 py-4 bg-white border rounded-[8px] text-sm outline-none transition-all text-surface-900 ${formErrors.email ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200' : 'border-gray-200 focus:border-slate-400 focus:ring-2 focus:ring-slate-200'}`}
                   />
                   {formErrors.email && <p className="text-red-500 font-bold text-xs mt-1" role="alert">{formErrors.email}</p>}
                 </div>
@@ -156,14 +156,14 @@ export default function Inquiry({ testProfile, siteSettings }) {
                   value={formData.message}
                   onChange={handleChange}
                   placeholder="Details regarding stream, class or queries..."
-                  className="w-full px-5 py-4 bg-white border border-gray-200 rounded-2xl text-sm outline-none focus:border-[#00E5FF] focus:ring-2 focus:ring-[#00E5FF]/20 transition-all resize-none text-surface-900"
+                  className="w-full px-5 py-4 bg-white border border-gray-200 rounded-[8px] text-sm outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-200 transition-all resize-none text-surface-900"
                 ></textarea>
               </div>
 
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-[#0F172A] text-white py-4 rounded-full font-bold hover:bg-[#00E5FF] hover:text-[#0F172A] transition-all duration-300 shadow-md hover:shadow-[#00E5FF]/10 active:scale-[0.98] border-none cursor-pointer flex justify-center items-center gap-2 text-sm"
+                className="w-full bg-[#0F172A] text-white py-4 rounded-[8px] font-bold hover:bg-slate-800 transition-all duration-300 shadow-sm active:scale-[0.98] border-none cursor-pointer flex justify-center items-center gap-2 text-sm"
               >
                 {isSubmitting ? (
                   <>
@@ -176,7 +176,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
               </button>
 
               {submitStatus === 'success' && (
-                <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 text-center font-bold text-xs rounded-xl" role="status">
+                <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 text-center font-bold text-xs rounded-[8px]" role="status">
                   Request sent successfully! Our coordinator will contact you shortly.
                 </div>
               )}

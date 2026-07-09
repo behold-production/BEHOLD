@@ -115,7 +115,7 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-30px" }}
                 transition={{ duration: 0.85, ease: "easeOut", delay: idx * 0.05 }}
-                className="bg-white rounded-3xl p-6 shadow-sm hover:shadow-[0_20px_40px_rgba(0,229,255,0.08)] hover:-translate-y-1 transition-all duration-300 group border border-slate-200/60 hover:border-[#00E5FF]/20 relative overflow-hidden flex flex-col text-left"
+                className="bg-white rounded-[8px] p-4 sm:p-6 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 group border border-slate-200 relative overflow-hidden flex flex-col text-left"
               >
                 {/* Top Accent border line hover gradient effect */}
                 <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-400 to-[#00E5FF] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
@@ -169,7 +169,7 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
                 viewport={{ once: true, margin: "-30px" }}
                 transition={{ duration: 0.85, ease: "easeOut", delay: (idx % 3) * 0.08 }}
-                className="bg-white rounded-3xl h-full p-6 flex flex-col group transition-all duration-300 relative overflow-hidden shadow-sm hover:shadow-[0_20px_40px_rgba(0,229,255,0.08)] hover:-translate-y-1 border border-slate-200/60 hover:border-[#00E5FF]/20 select-none text-left"
+                className="bg-white rounded-[8px] h-full p-4 sm:p-6 flex flex-col group transition-all duration-300 relative overflow-hidden shadow-sm hover:shadow-md hover:-translate-y-1 border border-slate-200 select-none text-left"
               >
                 {/* Top Accent border line hover gradient effect */}
                 <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-400 to-[#00E5FF] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />

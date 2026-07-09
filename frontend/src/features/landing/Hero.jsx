@@ -1,20 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
+import { ArrowRight, Sparkles } from 'lucide-react';
 
 export default function Hero({ setView, navigateToSection, siteSettings }) {
-  const [scrollOpacity, setScrollOpacity] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      const maxScroll = window.innerHeight * 0.75;
-      const opacity = Math.min(1, Math.max(0, scrollY / maxScroll));
-      setScrollOpacity(opacity);
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   const handleButtonClick = (link) => {
     if (!link) return;
     if (link === '/booking') {
@@ -32,7 +20,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
 
   const defaultSlide = {
     image: 'https://images.unsplash.com/photo-1440688807730-73e4e2169fb8?q=80&w=2070&auto=format&fit=crop',
-    title: settings.heroTitle || "Bridging You\nTo Your {True}\n{Growth.}",
+    title: settings.heroTitle || "Bridging You To Your {True Growth.}",
     subtitle: settings.heroSub || "Professional psychological counseling, aptitude assessment, and career mentorship designed to help individuals thrive with confidence and purpose.",
     btn1Text: 'Book a Session',
     btn1Link: '/booking',
@@ -50,11 +38,43 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
       let content;
       if (match) {
         const parts = line.split(match[0]);
+        const innerText = match[1];
+        const endsWithDot = innerText.endsWith('.');
+        const mainText = endsWithDot ? innerText.slice(0, -1) : innerText;
+
         content = (
           <React.Fragment key={`span-${index}`}>
             {parts[0]}
-            <span className="text-[#00E5FF] [text-shadow:0_0_40px_rgba(0,229,255,0.4)]">
-              {match[1]}
+            <span className="relative inline-block text-[#00E5FF] font-black [text-shadow:0_0_35px_rgba(0,229,255,0.55)] pb-1 sm:pb-2">
+              {mainText}
+              {endsWithDot && (
+                <span className="text-[#00E5FF] [text-shadow:0_0_20px_#00E5FF,0_0_40px_#00E5FF] inline-block font-black">
+                  .
+                </span>
+              )}
+
+              {/* Insanely Stylish Glowing Neon Blue Curved Underline */}
+              <svg
+                className="absolute left-0 -bottom-1 sm:-bottom-2 w-full h-3 sm:h-4 pointer-events-none overflow-visible"
+                viewBox="0 0 320 18"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M4 13C65 3 150 2 315 13"
+                  stroke="#00E5FF"
+                  strokeWidth="4.5"
+                  strokeLinecap="round"
+                  className="drop-shadow-[0_0_12px_#00E5FF]"
+                />
+                <path
+                  d="M20 16C90 9 185 10 300 15"
+                  stroke="#79f2ff"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeOpacity="0.8"
+                />
+              </svg>
             </span>
             {parts[1]}
           </React.Fragment>
@@ -64,7 +84,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
       }
       return (
         <React.Fragment key={index}>
-          {index > 0 && <br />}
+          {index > 0 && <br className="hidden sm:block" />}
           {content}
         </React.Fragment>
       );
@@ -74,107 +94,91 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
   return (
     <section
       id="home"
-      className="relative w-full flex flex-col overflow-hidden bg-[#0d1d2e]"
+      className="relative w-full flex flex-col justify-center overflow-hidden bg-[#0a121e]"
       style={{ minHeight: '100svh' }}
     >
-      {/* Background Image or Video */}
-      <div className="absolute inset-0 z-0">
+      {/* Hardware-Accelerated Background Image or Video */}
+      <div className="absolute inset-0 z-0 select-none pointer-events-none">
         {slide.image && (slide.image.endsWith('.mp4') || slide.image.endsWith('.webm') || slide.image.endsWith('.ogg') || slide.image.includes('video') || slide.image.includes('mp4')) ? (
           <video
             autoPlay
             loop
             muted
             playsInline
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover scale-105"
           >
             <source src={slide.image} />
           </video>
         ) : (
           <div
-            className="w-full h-full bg-cover bg-center bg-no-repeat"
+            className="w-full h-full bg-cover bg-center bg-no-repeat transform-gpu"
             style={{ backgroundImage: `url('${slide.image}')` }}
           />
         )}
       </div>
 
-      {/* Unified dark overlay — heavier in center for text legibility */}
-      <div className="absolute inset-0 z-10 pointer-events-none"
+      {/* Atmospheric High-Performance Dark Vignette Overlay (Zero Scroll Re-blur Cost) */}
+      <div
+        className="absolute inset-0 z-10 pointer-events-none transform-gpu"
         style={{
-          background: 'linear-gradient(to bottom, rgba(13,29,46,0.55) 0%, rgba(13,29,46,0.72) 40%, rgba(13,29,46,0.72) 60%, rgba(13,29,46,0.55) 100%)'
+          background: 'radial-gradient(circle at 50% 40%, rgba(10,18,30,0.55) 0%, rgba(10,18,30,0.88) 65%, rgba(6,11,19,0.96) 100%)'
         }}
       />
 
-      {/* Scroll blur overlay */}
-      <div
-        className="absolute inset-0 z-10 pointer-events-none transition-opacity duration-300"
-        style={{ opacity: scrollOpacity * 0.7, background: 'rgba(13,29,46,0.5)', backdropFilter: scrollOpacity > 0.1 ? `blur(${scrollOpacity * 12}px)` : 'none' }}
-      />
-
-      {/* Content — mobile: centered, desktop: bottom-left */}
-      <div className="relative z-20 flex-1 flex flex-col justify-center items-center md:justify-end md:items-start w-full px-5 sm:px-8 md:px-16 pt-24 pb-10 md:pt-0 md:pb-16 lg:pb-20">
-        <div className="w-full max-w-2xl flex flex-col items-center text-center md:items-start md:text-left">
-
-          {/* Eyebrow label */}
-          {settings.heroTopSub && (
-            <motion.p
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="text-[11px] font-bold tracking-[0.22em] text-[#00E5FF] mb-5 drop-shadow"
-            >
-              {settings.heroTopSub}
-            </motion.p>
-          )}
-
-          {/* Main Heading */}
-          <motion.h1
-            initial={{ opacity: 0, y: 50, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-            className="font-black text-white leading-[1.08] tracking-tight drop-shadow-lg mb-5 w-full text-[3.2rem] sm:text-6xl md:text-6xl lg:text-7xl font-header"
-          >
-            {renderTitle(slide.title)}
-          </motion.h1>
-
-          {/* Subtitle */}
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
-            className="text-white/80 font-normal leading-relaxed mb-8 w-full max-w-md md:max-w-xl text-base"
-          >
-            {slide.subtitle}
-          </motion.p>
-
-          {/* Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
-            className="flex flex-col gap-3 w-full md:flex-row md:w-auto"
-          >
-            {slide.btn1Text && (
-              <button
-                onClick={() => handleButtonClick(slide.btn1Link)}
-                className="w-full md:w-auto flex items-center justify-center bg-[#00E5FF] hover:bg-[#00d4eb] active:scale-[0.97] text-[#0d1d2e] font-bold rounded-full border-none cursor-pointer transition-all shadow-[0_4px_28px_rgba(0,229,255,0.4)] hover:shadow-[0_6px_36px_rgba(0,229,255,0.55)]"
-                style={{ fontSize: 'clamp(0.9rem, 2.2vw, 1rem)', padding: '1rem 2rem', minHeight: '56px' }}
-              >
-                {slide.btn1Text}
-              </button>
-            )}
-            {slide.btn2Text && (
-              <button
-                onClick={() => handleButtonClick(slide.btn2Link)}
-                className="w-full md:w-auto flex items-center justify-center bg-white/10 hover:bg-white/20 active:scale-[0.97] text-white font-semibold rounded-full border border-white/20 hover:border-white/40 cursor-pointer transition-all backdrop-blur-sm"
-                style={{ fontSize: 'clamp(0.9rem, 2.2vw, 1rem)', padding: '1rem 2rem', minHeight: '56px' }}
-              >
-                {slide.btn2Text}
-              </button>
-            )}
-          </motion.div>
-
-        </div>
+      {/* Hardware-Accelerated Subtle CSS Ambient Particles (Compositor thread, 0 JS load) */}
+      <div className="absolute inset-0 z-10 pointer-events-none overflow-hidden select-none">
+        <div className="absolute top-1/4 left-1/5 w-2 h-2 rounded-full bg-[#00E5FF]/35 blur-[1px] animate-[pulse_6s_ease-in-out_infinite]" />
+        <div className="absolute top-2/3 right-1/4 w-2.5 h-2.5 rounded-full bg-teal-400/30 blur-[1px] animate-[pulse_8s_ease-in-out_infinite]" />
       </div>
+
+      {/* Hero Content Container - Zero JS scroll loops, pure crisp 60fps layout */}
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="relative z-20 w-full max-w-5xl mx-auto px-5 sm:px-10 pt-28 pb-16 md:py-36 flex flex-col items-center text-center transform-gpu"
+      >
+        {/* Subtle Eyebrow Badge */}
+        {settings.heroTopSub && (
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm mb-5">
+            <Sparkles className="w-3.5 h-3.5 text-[#00E5FF]" />
+            <span className="text-[11px] font-bold tracking-[0.2em] text-white/90 uppercase">
+              {settings.heroTopSub}
+            </span>
+          </div>
+        )}
+
+        {/* Main Heading */}
+        <h1 className="font-black text-white leading-[1.12] sm:leading-[1.06] tracking-tight drop-shadow-xl mb-5 sm:mb-6 max-w-4xl text-[2.5rem] sm:text-6xl md:text-7xl font-header">
+          {renderTitle(slide.title)}
+        </h1>
+
+        {/* Subtitle */}
+        <p className="text-white/80 font-normal leading-relaxed mb-8 sm:mb-10 max-w-2xl text-sm sm:text-lg md:text-xl drop-shadow-sm px-2">
+          {slide.subtitle}
+        </p>
+
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-4 w-full max-w-xs sm:max-w-none">
+          {slide.btn1Text && (
+            <button
+              onClick={() => handleButtonClick(slide.btn1Link)}
+              className="w-full sm:w-auto flex items-center justify-center gap-2.5 bg-[#00E5FF] hover:bg-[#26ebff] active:scale-[0.98] text-[#0a121e] font-black rounded-full border-none cursor-pointer transition-all shadow-[0_4px_25px_rgba(0,229,255,0.35)] px-6 py-3.5 sm:px-8 sm:py-4 text-sm sm:text-base"
+            >
+              <span>{slide.btn1Text}</span>
+              <ArrowRight className="w-4 h-4 shrink-0" />
+            </button>
+          )}
+          {slide.btn2Text && (
+            <button
+              onClick={() => handleButtonClick(slide.btn2Link)}
+              className="w-full sm:w-auto flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 active:scale-[0.98] text-white font-semibold rounded-full border border-white/25 hover:border-white/50 cursor-pointer transition-all px-6 py-3.5 sm:px-8 sm:py-4 text-sm sm:text-base"
+            >
+              <span>{slide.btn2Text}</span>
+            </button>
+          )}
+        </div>
+      </motion.div>
     </section>
   );
 }
