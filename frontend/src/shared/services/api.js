@@ -1042,6 +1042,48 @@ const ApiService = {
 
   async purgeExpiredTrash() {
     return await request('/admin/trash/purge', { method: 'POST' });
+  },
+
+  // ─── Blog Endpoints ────────────────────────────────────────────────────────
+  async getBlogs(params = {}) {
+    const query = new URLSearchParams(params).toString();
+    return await request(`/blogs?${query}`);
+  },
+
+  async getBlogBySlug(slug) {
+    return await request(`/blogs/${slug}`);
+  },
+
+  async getAllBlogsAdmin() {
+    return await request('/blogs/admin/all');
+  },
+
+  async createBlog(formData) {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_BASE_URL}/blogs`, {
+      method: 'POST',
+      headers: {
+        ...(token ? { Authorization: `Bearer ${token}` } : {})
+      },
+      body: formData
+    });
+    return await response.json();
+  },
+
+  async updateBlog(id, formData) {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_BASE_URL}/blogs/${id}`, {
+      method: 'PUT',
+      headers: {
+        ...(token ? { Authorization: `Bearer ${token}` } : {})
+      },
+      body: formData
+    });
+    return await response.json();
+  },
+
+  async deleteBlog(id) {
+    return await request(`/blogs/${id}`, { method: 'DELETE' });
   }
 };
 

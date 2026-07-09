@@ -56,7 +56,7 @@ export default function Faq() {
                 </div>
 
                 <div className="space-y-4">
-                    {faqs.map((faq, idx) => {
+                    {faqs.slice(0, 6).map((faq, idx) => {
                         const isOpen = openIndex === idx;
                         return (
                             <div
@@ -93,6 +93,22 @@ export default function Faq() {
                         );
                     })}
                 </div>
+
+                {faqs.length > 6 && (
+                    <div className="flex justify-center mt-10">
+                        <button
+                            type="button"
+                            onClick={() => {
+                                window.spaNavigate?.('/faqs');
+                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                            }}
+                            className="inline-flex items-center gap-2 px-8 py-4 bg-slate-900 hover:bg-[#008899] text-white font-black text-xs uppercase tracking-wider rounded-xl transition-all cursor-pointer shadow-md hover:scale-105 active:scale-95 border-none"
+                        >
+                            <span>View All FAQs</span>
+                            <ArrowRight className="w-4 h-4" />
+                        </button>
+                    </div>
+                )}
             </div>
         </motion.section>
     );

@@ -34,6 +34,10 @@ const PsychologistDashboard = lazyWithRetry(() => import('./features/counsellor/
 const AdminDashboard = lazyWithRetry(() => import('./features/admin/AdminDashboard'));
 const AptitudeTest = lazyWithRetry(() => import('./features/student/AptitudeTest'));
 const ResetPassword = lazyWithRetry(() => import('./features/auth/ResetPassword'));
+const BlogList = lazyWithRetry(() => import('./features/blog/BlogList'));
+const BlogPostDetail = lazyWithRetry(() => import('./features/blog/BlogPostDetail'));
+const FaqsPage = lazyWithRetry(() => import('./features/faqs/FaqsPage'));
+import BlogSection from './features/landing/BlogSection';
 
 import { useAuth } from './shared/context/AuthContext';
 import ApiService from './shared/services/api';
@@ -579,13 +583,19 @@ export default function App() {
             }
           });
         })()}
+        <BlogSection />
         <Inquiry testProfile={testProfile} siteSettings={siteSettings} />
       </div>
     </main>
   } />
 
- {/* Aptitude Test */}
- {siteSettings.enableAptitude !== false && (
+  {/* Blog & FAQ Routes */}
+  <Route path="/blog" element={<BlogList />} />
+  <Route path="/blog/:slug" element={<BlogPostDetail />} />
+  <Route path="/faqs" element={<FaqsPage />} />
+
+  {/* Aptitude Test */}
+  {siteSettings.enableAptitude !== false && (
  <Route path="/sample-test" element={
  <AptitudeTest onFinishTest={handleFinishTest} />
  } />

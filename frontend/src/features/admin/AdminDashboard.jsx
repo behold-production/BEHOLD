@@ -11,6 +11,7 @@ import InquiriesTab from './admin-dashboard/tabs/InquiriesTab';
 import TestResultsTab from './admin-dashboard/tabs/TestResultsTab';
 import AptitudeQuestionsTab from './admin-dashboard/tabs/AptitudeQuestionsTab';
 import FaqsTab from './admin-dashboard/tabs/FaqsTab';
+import BlogManagementTab from './admin-dashboard/tabs/BlogManagementTab';
 import SettingsTab from './admin-dashboard/tabs/SettingsTab';
 import AnalyticsTab from './admin-dashboard/tabs/AnalyticsTab';
 import RefundRequestsTab from './admin-dashboard/tabs/RefundRequestsTab';
@@ -3782,6 +3783,7 @@ export default function AdminDashboard({ setView }) {
  {currentSection === 'testresults' && isSuperAdmin && <TestResultsTab {...tabProps} />}
  {currentSection === 'aptitude' && isSuperAdmin && <AptitudeQuestionsTab {...tabProps} />}
  {currentSection === 'faqs' && isSuperAdmin && <FaqsTab {...tabProps} />}
+ {currentSection === 'blogs' && <BlogManagementTab />}
  {currentSection === 'refunds' && isSuperAdmin && <RefundRequestsTab {...tabProps} />}
  {currentSection === 'trash' && isSuperAdmin && <TrashTab showAlert={showAlert} showConfirm={showConfirm} reloadData={reloadData} />}
  {currentSection === 'settings' && isSuperAdmin && <SettingsTab {...tabProps} />}

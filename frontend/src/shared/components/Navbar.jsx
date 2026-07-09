@@ -211,6 +211,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
         <a href="#" onClick={(e) => { e.preventDefault(); navigateToSection?.('home') || navigate('/'); }} className="transition-colors hover:text-[#00E5FF]">Home</a>
         <a href="#" onClick={(e) => { e.preventDefault(); navigateToSection?.('services') || navigate('/'); }} className="transition-colors flex items-center gap-1.5 hover:text-[#00E5FF]">Services <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M6 9l6 6 6-6" /></svg></a>
         <a href="#" onClick={(e) => { e.preventDefault(); navigate('/sample-test'); }} className="transition-colors hover:text-[#00E5FF]">Sample Test</a>
+        <a href="#" onClick={(e) => { e.preventDefault(); navigate('/blog'); }} className="transition-colors hover:text-[#00E5FF]">Blog</a>
         <a href="#" onClick={(e) => { e.preventDefault(); navigateToSection?.('contact') || navigate('/'); }} className="transition-colors hover:text-[#00E5FF]">Contact</a>
       </div>
 

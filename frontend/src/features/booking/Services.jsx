@@ -43,7 +43,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
     const [searchTerm, setSearchTerm] = useState('');
     const [activeFilter, setActiveFilter] = useState('All');
     const [sortBy, setSortBy] = useState('Recommended');
-    const [visibleCount, setVisibleCount] = useState(5);
+    const [visibleCount, setVisibleCount] = useState(6);
     const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
     const [expandedBios, setExpandedBios] = useState({});
     const [expandedSpecialties, setExpandedSpecialties] = useState({});
@@ -683,11 +683,17 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                             <button
                                 type="button"
                                 onClick={() => {
-                                    setVisibleCount(prev => prev + 5);
+                                    if (mode === 'experts') {
+                                        window.spaNavigate?.('/booking');
+                                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                                    } else {
+                                        setVisibleCount(prev => prev + 6);
+                                    }
                                 }}
-                                className="px-6 py-3 bg-white border border-surface-200 text-surface-900 font-black text-[10px] rounded-[10px] hover:bg-surface-50 hover:border-surface-300 transition-colors cursor-pointer text-center shadow-none"
+                                className="inline-flex items-center gap-2 px-8 py-4 bg-slate-900 hover:bg-[#008899] text-white font-black text-xs uppercase tracking-wider rounded-xl transition-all cursor-pointer shadow-md hover:scale-105 active:scale-95 border-none"
                             >
-                                Load More Professionals
+                                <span>{mode === 'experts' ? 'View All Psychologists & Mentors' : 'Load More Professionals'}</span>
+                                <ArrowRight className="w-4 h-4" />
                             </button>
                         </div>
                     )}

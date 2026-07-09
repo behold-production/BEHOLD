@@ -136,6 +136,7 @@ export default function SidebarNav(props) {
  { id: 'testresults', label: 'Aptitude Results', icon: FileSpreadsheet, visible: isSuperAdmin },
  { id: 'inquiries', label: 'Student Inquiries', icon: MessageSquare, visible: isSuperAdmin },
  { id: 'faqs', label: 'FAQ Manager', icon: HelpCircle, visible: isSuperAdmin },
+ { id: 'blogs', label: 'Blog Manager', icon: FileText, visible: true },
  ]
  },
  {
