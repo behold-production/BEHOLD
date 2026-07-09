@@ -525,7 +525,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                                                     }
                                                     window.scrollTo({ top: 0, behavior: 'smooth' });
                                                 }}
-                                                className="w-full py-2.5 bg-slate-900 text-white font-bold text-xs sm:text-sm rounded-[8px] hover:bg-slate-800 transition-colors cursor-pointer text-center flex items-center justify-center border-none shadow-sm"
+                                                className="w-full py-2.5 bg-[#00E5FF] hover:bg-[#26ebff] text-[#0a121e] font-black text-xs sm:text-sm rounded-[8px] transition-all cursor-pointer text-center flex items-center justify-center border-none shadow-[0_4px_15px_rgba(0,229,255,0.3)] active:scale-95"
                                             >
                                                 Book
                                             </button>
@@ -643,7 +643,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                                                     }
                                                     window.scrollTo({ top: 0, behavior: 'smooth' });
                                                 }}
-                                                className="w-full py-2.5 bg-slate-900 text-white font-bold text-xs sm:text-sm rounded-[8px] hover:bg-slate-800 transition-colors cursor-pointer text-center flex items-center justify-center border-none shadow-sm"
+                                                className="w-full py-2.5 bg-[#00E5FF] hover:bg-[#26ebff] text-[#0a121e] font-black text-xs sm:text-sm rounded-[8px] transition-all cursor-pointer text-center flex items-center justify-center border-none shadow-[0_4px_15px_rgba(0,229,255,0.3)] active:scale-95"
                                             >
                                                 Book
                                             </button>

@@ -12,10 +12,16 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
 
   const renderSocialIcon = (name, logo) => {
     const logoVal = (logo || '').trim();
-    if (logoVal) {
-      if (logoVal.startsWith('/') || logoVal.startsWith('http://') || logoVal.startsWith('https://')) {
-        return <img src={logoVal} alt={name} className="w-4 h-4 object-contain" />;
-      }
+    const isImageUrl = logoVal && /\.(png|jpe?g|svg|webp|gif|ico)(\?.*)?$/i.test(logoVal);
+    if (isImageUrl) {
+      return (
+        <img
+          src={logoVal}
+          alt={name}
+          className="w-4 h-4 object-contain"
+          onError={(e) => { e.currentTarget.style.display = 'none'; }}
+        />
+      );
     }
 
     const norm = (logoVal || name || '').toLowerCase().trim();
@@ -86,8 +92,12 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
           {/* Column 1: BEHOLD Logo, Contact Info & Social Icons */}
           <div className="col-span-12 md:col-span-5 lg:col-span-4 space-y-5">
             <div className="inline-block cursor-pointer" onClick={handleLogoClick}>
-              <h3 className="text-white font-black text-xl sm:text-2xl tracking-wider leading-none uppercase font-header">
-                BEHOLD<span className="text-[#00E5FF]">.</span>
+              <h3
+                className="text-white font-black text-2xl sm:text-3xl tracking-wider leading-none uppercase font-header"
+                style={{ fontWeight: 900, fontFamily: 'Outfit, sans-serif' }}
+              >
+                <span style={{ fontWeight: 900 }}>BEHOLD</span>
+                <span className="text-[#00E5FF] font-black ml-0.5" style={{ fontWeight: 900, color: '#00E5FF' }}>.</span>
               </h3>
             </div>
 

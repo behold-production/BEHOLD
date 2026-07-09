@@ -23,7 +23,7 @@ const SidebarNav = ({ currentSection, handleSectionChange, bookedSessions, testP
  return (
  <>
  {/* Desktop sidebar */}
- <nav className="hidden lg:flex flex-col gap-0.5 p-1.5 bg-white border border-surface-200 rounded-[10px] shadow-square-light sticky top-24">
+ <nav className="hidden lg:flex flex-col gap-0.5 p-1.5 bg-white border border-surface-200 rounded-[10px] shadow-square-light sticky top-24 max-h-[calc(100vh-110px)] overflow-y-auto overscroll-contain [&::-webkit-scrollbar]:hidden">
  {visibleTabs.map(tab => {
  const Icon = ICON_MAP[tab.iconName];
  const isActive = currentSection === tab.id;
@@ -36,15 +36,15 @@ const SidebarNav = ({ currentSection, handleSectionChange, bookedSessions, testP
  type="button"
  onClick={() => handleSectionChange(tab.id)}
  className={`relative flex items-center gap-2.5 px-3 min-h-[44px] rounded-[10px] text-xs font-bold tracking-widest transition-all duration-150 group cursor-pointer ${isActive
- ? 'bg-surface-900 text-white'
- : 'text-surface-600 hover:bg-surface-50 hover:text-surface-900'
+ ? 'bg-[#00E5FF] text-[#0a121e] font-black shadow-[0_4px_15px_rgba(0,229,255,0.28)]'
+ : 'text-surface-600 hover:bg-[#00E5FF]/15 hover:text-[#0a121e]'
  }`}
  >
- {Icon && <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-surface-400 group-hover:text-surface-600'}`} />}
+ {Icon && <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-[#0a121e]' : 'text-surface-400 group-hover:text-[#0a121e]'}`} />}
  <span className="flex-1 text-left">{tab.label}</span>
  {badge !== null && badge !== 0 && (
  <span className={`text-[10px] font-black px-1.5 min-w-[20px] h-5 rounded-[10px] flex items-center justify-center ${isActive
- ? 'bg-white/20 text-white'
+ ? 'bg-[#0a121e] text-[#00E5FF]'
  : tab.id === 'results' && !testProfile
  ? 'bg-amber-100 text-amber-700'
  : 'bg-surface-100 text-surface-600'

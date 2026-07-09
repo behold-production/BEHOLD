@@ -11,10 +11,16 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
 
   const renderSocialIcon = (name, logo) => {
     const logoVal = (logo || '').trim();
-    if (logoVal) {
-      if (logoVal.startsWith('/') || logoVal.startsWith('http://') || logoVal.startsWith('https://')) {
-        return <img src={logoVal} alt={name} className="w-3.5 h-3.5 object-contain" />;
-      }
+    const isImageUrl = logoVal && /\.(png|jpe?g|svg|webp|gif|ico)(\?.*)?$/i.test(logoVal);
+    if (isImageUrl) {
+      return (
+        <img
+          src={logoVal}
+          alt={name}
+          className="w-3.5 h-3.5 object-contain"
+          onError={(e) => { e.currentTarget.style.display = 'none'; }}
+        />
+      );
     }
 
     const norm = (logoVal || name || '').toLowerCase().trim();
@@ -190,8 +196,13 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
         </div>
 
         {/* Logo */}
-        <button onClick={logoClick} className={useTransparentHeader ? "flex-shrink-0 inline-flex items-baseline font-black text-xl sm:text-2xl tracking-wider uppercase bg-transparent border-none p-0 cursor-pointer text-white font-header" : "flex-shrink-0 inline-flex items-baseline font-black text-xl sm:text-2xl tracking-wider uppercase bg-transparent border-none p-0 cursor-pointer text-[#1f2937] font-header"} style={{ lineHeight: 1 }}>
-          {siteName || 'BEHOLD'}<span className="text-[#00E5FF] font-black">.</span>
+        <button
+          onClick={logoClick}
+          className={useTransparentHeader ? "flex-shrink-0 inline-flex items-baseline font-black text-2xl sm:text-3xl tracking-wider uppercase bg-transparent border-none p-0 cursor-pointer text-white font-header drop-shadow-sm" : "flex-shrink-0 inline-flex items-baseline font-black text-2xl sm:text-3xl tracking-wider uppercase bg-transparent border-none p-0 cursor-pointer text-[#0f172a] font-header"}
+          style={{ fontWeight: 900, fontFamily: 'Outfit, sans-serif', lineHeight: 1 }}
+        >
+          <span style={{ fontWeight: 900 }}>{siteName || 'BEHOLD'}</span>
+          <span className="text-[#00E5FF] font-black ml-0.5" style={{ fontWeight: 900, color: '#00E5FF' }}>.</span>
         </button>
       </div>
 
@@ -218,18 +229,23 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
         <div className="relative group flex items-center justify-center">
           <button
             onClick={handleProfileClick}
-            className={useTransparentHeader ? "w-11 h-11 lg:w-12 lg:h-12 rounded-full border border-white/20 flex items-center justify-center transition-all duration-300 cursor-pointer hover:scale-105 bg-white/10 text-white hover:bg-white/20" : "w-11 h-11 lg:w-12 lg:h-12 rounded-full border-none flex items-center justify-center transition-all duration-300 cursor-pointer hover:scale-105 bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-900"}
+            className={useTransparentHeader ? "w-11 h-11 lg:w-12 lg:h-12 rounded-full border-2 border-[#00E5FF]/60 hover:border-[#00E5FF] flex items-center justify-center transition-all duration-300 cursor-pointer hover:scale-105 bg-[#0a121e]/80 text-[#00E5FF] shadow-[0_0_15px_rgba(0,229,255,0.25)] overflow-hidden" : "w-11 h-11 lg:w-12 lg:h-12 rounded-full border-2 border-[#00E5FF] flex items-center justify-center transition-all duration-300 cursor-pointer hover:scale-105 bg-[#0a121e] text-[#00E5FF] shadow-[0_0_15px_rgba(0,229,255,0.25)] overflow-hidden"}
           >
             {user ? (
-              user.photoURL ? (
-                <img src={user.photoURL} alt="Profile" className="w-full h-full rounded-full object-cover" />
+              (user.profilePic || user.image || user.photoURL || user.avatar) ? (
+                <img
+                  src={user.profilePic || user.image || user.photoURL || user.avatar}
+                  alt="Profile"
+                  className="w-full h-full rounded-full object-cover"
+                  onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                />
               ) : (
-                <span className="font-bold text-sm tracking-widest ">
+                <span className="font-black text-sm tracking-widest text-[#00E5FF]">
                   {user.name ? user.name.trim().split(/\s+/).slice(0, 2).map(n => n[0]).join('') : 'U'}
                 </span>
               )
             ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="text-[#00E5FF]">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                 <circle cx="12" cy="7" r="4"></circle>
               </svg>
@@ -321,7 +337,15 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
   {/* Floating WhatsApp Button Matching Reference Exactly */}
   <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 group">
     <a
-      href={siteSettings?.whatsapp || '#'}
+      href={(() => {
+        const input = siteSettings?.whatsapp;
+        if (!input || input === '#') return 'https://wa.link/4jpzfq';
+        const str = String(input).trim();
+        if (str.startsWith('http://') || str.startsWith('https://')) return str;
+        const digits = str.replace(/\D/g, '');
+        if (digits.length >= 10) return `https://wa.me/${digits}`;
+        return 'https://wa.link/4jpzfq';
+      })()}
       target="_blank"
       rel="noopener noreferrer"
       className="relative flex items-center justify-center p-1.5 sm:p-2 rounded-full bg-[#0d361e]/95 border-2 border-[#1d8045]/70 shadow-[0_6px_25px_rgba(37,211,102,0.45)] transition-all duration-300 hover:scale-105 cursor-pointer"
