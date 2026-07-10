@@ -221,7 +221,6 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                                         className="w-full py-3.5 px-6 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm rounded-[8px] transition-all duration-200 cursor-pointer text-center shadow-xs flex items-center justify-center gap-2"
                                     >
                                         <span>{settings.careerBtnText || 'Book Your Mentor'}</span>
-                                        <ArrowRight className="w-4 h-4" />
                                     </button>
                                 )}
                             </motion.div>
@@ -293,7 +292,6 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                                         className="w-full py-3.5 px-6 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm rounded-[8px] transition-all duration-200 cursor-pointer text-center shadow-xs flex items-center justify-center gap-2"
                                     >
                                         <span>{settings.counselBtnText || 'Book Your Therapist'}</span>
-                                        <ArrowRight className="w-4 h-4" />
                                     </button>
                                 )}
                             </motion.div>
@@ -693,7 +691,6 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                                 className="inline-flex items-center gap-2 px-8 py-4 bg-slate-900 hover:bg-[#008899] text-white font-black text-xs uppercase tracking-wider rounded-xl transition-all cursor-pointer shadow-md hover:scale-105 active:scale-95 border-none"
                             >
                                 <span>{mode === 'experts' ? 'View All Psychologists & Mentors' : 'Load More Professionals'}</span>
-                                <ArrowRight className="w-4 h-4" />
                             </button>
                         </div>
                     )}

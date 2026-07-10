@@ -221,7 +221,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
         {/* Desktop CTA Button */}
         <button 
           onClick={() => navigate('/booking')}
-          className={useTransparentHeader ? "hidden lg:flex items-center justify-center px-6 py-2.5 rounded-full text-sm font-bold transition-all cursor-pointer border-none hover:scale-105 active:scale-95 shadow-md bg-[#00E5FF] text-[#0f172a] hover:bg-white hover:text-[#0f172a]" : "hidden lg:flex items-center justify-center px-6 py-2.5 rounded-full text-sm font-bold transition-all cursor-pointer border-none hover:scale-105 active:scale-95 shadow-md bg-[#0F172A] text-white hover:bg-[#00E5FF] hover:text-[#0f172a] shadow-[#0F172A]/10"}
+          className={useTransparentHeader ? "hidden" : "hidden lg:flex items-center justify-center px-6 py-2.5 rounded-full text-sm font-bold transition-all cursor-pointer border-none hover:scale-105 active:scale-95 shadow-md bg-[#0F172A] text-white hover:bg-[#00E5FF] hover:text-[#0f172a] shadow-[#0F172A]/10"}
         >
           Book Appointment
         </button>
@@ -263,75 +263,141 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
 
  {/* Mobile Menu Overlay */}
  {mobileMenuOpen && (
- <div className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden" onClick={() => setMobileMenuOpen(false)}></div>
+ <div className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden" onClick={() => setMobileMenuOpen(false)} />
  )}
 
- {/* Mobile Menu Slide-out */}
- <div id="mobile-menu" className={`fixed top-0 left-0 h-full w-[85vw] max-w-sm bg-white z-50 shadow-2xl lg:hidden flex flex-col transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
- <div className="p-5 sm:p-6 border-b border-gray-100 flex justify-between items-center bg-white">
- <button onClick={logoClick} className="flex-shrink-0 flex items-center logo-text bg-transparent border-none p-0 cursor-pointer text-black" style={{ lineHeight: 1 }}>
- {siteName || 'BEHOLD'}<span className="logo-dot" style={{ color: '#0ea5e9' }}>.</span>
+ {/* Mobile Drawer — Dark Navy Premium */}
+ <div
+ id="mobile-menu"
+ className={`fixed top-0 left-0 h-full w-[85vw] max-w-[340px] z-50 shadow-2xl lg:hidden flex flex-col transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+ mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+ }`}
+ style={{ background: 'linear-gradient(160deg, #0f172a 0%, #111827 60%, #0c1a2e 100%)' }}
+ >
+ {/* ── Header ── */}
+ <div className="px-6 pt-6 pb-5 flex items-center justify-between border-b border-white/8">
+ <button
+ onClick={logoClick}
+ className="flex items-baseline gap-0.5 bg-transparent border-none p-0 cursor-pointer"
+ style={{ fontFamily: 'Outfit, sans-serif', fontWeight: 900, fontSize: '1.6rem', lineHeight: 1, color: '#fff', letterSpacing: '0.04em' }}
+ >
+ {siteName || 'BEHOLD'}
+ <span style={{ color: '#00E5FF', fontWeight: 900 }}>.</span>
  </button>
- <button onClick={() => setMobileMenuOpen(false)} className="text-gray-400 hover:text-gray-800 transition-colors bg-gray-50 hover:bg-gray-100 rounded-full p-2 border-none cursor-pointer">
- <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+ <button
+ onClick={() => setMobileMenuOpen(false)}
+ className="w-9 h-9 rounded-full flex items-center justify-center bg-white/8 hover:bg-white/15 text-white/70 hover:text-white transition-all border-none cursor-pointer"
+ >
+ <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+ <line x1="18" y1="6" x2="6" y2="18" />
+ <line x1="6" y1="6" x2="18" y2="18" />
+ </svg>
  </button>
- </div>
- 
- <div className="flex-1 overflow-y-auto px-5 sm:px-6">
- <div className="flex flex-col py-2">
- <a href="#" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateToSection?.('home') || navigate('/'); }} className="group font-medium text-gray-800 hover:text-brand py-4 border-b border-gray-100 flex items-center justify-between text-[17px]">
- Home
- <svg className="w-5 h-5 text-gray-300 group-hover:text-brand transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
- </a>
- <a href="#" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateToSection?.('services') || navigate('/'); }} className="group font-medium text-gray-800 hover:text-brand py-4 border-b border-gray-100 flex items-center justify-between text-[17px]">
- Services
- <svg className="w-5 h-5 text-gray-300 group-hover:text-brand transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
- </a>
- <a href="#" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigate('/sample-test'); }} className="group font-medium text-gray-800 hover:text-brand py-4 border-b border-gray-100 flex items-center justify-between text-[17px]">
- Sample Test
- <svg className="w-5 h-5 text-gray-300 group-hover:text-brand transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
- </a>
- <a href="#" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigateToSection?.('contact') || navigate('/'); }} className="group font-medium text-gray-800 hover:text-brand py-4 flex items-center justify-between text-[17px]">
- Contact Us
- <svg className="w-5 h-5 text-gray-300 group-hover:text-brand transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
- </a>
- </div>
  </div>
 
- {/* Footer */}
- <div className="p-5 sm:p-6 border-t border-gray-100 bg-gray-50 flex flex-col gap-3 mt-auto">
+ {/* ── Nav Links ── */}
+ <div className="flex-1 overflow-y-auto px-3 pt-4 pb-2">
+ {[
+ { label: 'Home', action: () => { setMobileMenuOpen(false); navigateToSection?.('home') || navigate('/'); } },
+ { label: 'Services', action: () => { setMobileMenuOpen(false); navigateToSection?.('services') || navigate('/'); } },
+ { label: 'About Us', action: () => { setMobileMenuOpen(false); navigateToSection?.('about') || navigate('/'); } },
+ { label: 'Aptitude Test', action: () => { setMobileMenuOpen(false); navigate('/sample-test'); } },
+ { label: 'Blog', action: () => { setMobileMenuOpen(false); navigate('/blog'); } },
+ { label: 'Contact Us', action: () => { setMobileMenuOpen(false); navigateToSection?.('contact') || navigate('/'); } },
+ ].map(({ label, action }) => (
  <button
- onClick={() => {
- setMobileMenuOpen(false);
- if (user) setIsLogoutOpen(true);
- else onOpenAuth?.();
- }}
- className="w-full bg-white text-gray-700 hover:bg-gray-100 py-3.5 rounded-xl font-bold shadow-sm active:scale-95 transition-all duration-300 border border-gray-200 flex justify-center items-center gap-2 cursor-pointer text-base font-header"
+ key={label}
+ onClick={action}
+ className="w-full text-left flex items-center justify-between px-4 py-4 rounded-xl text-white/80 hover:text-white hover:bg-white/7 transition-all duration-200 group text-[15px] font-medium cursor-pointer border-none bg-transparent"
  >
- <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
- <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+ <span>{label}</span>
+ <svg className="w-4 h-4 text-white/25 group-hover:text-[#00E5FF] group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+ <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+ </svg>
+ </button>
+ ))}
+
+ {/* Divider */}
+ <div className="mx-4 my-4 border-t border-white/8" />
+
+ {/* Social Links */}
+ {socials.length > 0 && (
+ <div className="px-4 pb-2">
+ <p className="text-[10px] font-bold tracking-[0.18em] uppercase text-white/30 mb-3">Follow Us</p>
+ <div className="flex items-center gap-2 flex-wrap">
+ {socials.map((link, idx) => (
+ <a
+ key={idx}
+ href={link.url || '#'}
+ target="_blank"
+ rel="noopener noreferrer"
+ className="w-9 h-9 rounded-full border border-white/12 flex items-center justify-center text-white/50 hover:text-[#00E5FF] hover:border-[#00E5FF]/40 transition-all duration-200"
+ >
+ {renderSocialIcon(link.name, link.logo)}
+ </a>
+ ))}
+ </div>
+ </div>
+ )}
+ </div>
+
+ {/* ── Footer Actions ── */}
+ <div className="px-5 pb-6 pt-4 border-t border-white/8 flex flex-col gap-3">
+ {/* Contact Info */}
+ {siteSettings?.contactPhone && (
+ <a
+ href={`tel:${siteSettings.contactPhone.replace(/\s+/g, '')}`}
+ className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 text-white/60 hover:text-white hover:bg-white/10 transition-all text-sm cursor-pointer"
+ >
+ <svg className="w-4 h-4 text-[#00E5FF] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+ <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548A1 1 0 0119 9.28V12a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+ </svg>
+ <span className="font-medium">{siteSettings.contactPhone}</span>
+ </a>
+ )}
+
+ {/* Sign In / Sign Out */}
+ <button
+ onClick={() => { setMobileMenuOpen(false); if (user) setIsLogoutOpen(true); else onOpenAuth?.(); }}
+ className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold text-sm text-white/80 hover:text-white bg-white/8 hover:bg-white/14 border border-white/10 hover:border-white/20 transition-all cursor-pointer"
+ >
+ <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+ <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
  </svg>
  {user ? 'Sign Out' : 'Sign In'}
  </button>
 
- <a
- href="https://wa.link/4jpzfq"
- target="_blank"
- rel="noopener noreferrer"
- className="w-full bg-[#25D366]/10 hover:bg-[#25D366] text-[#25D366] hover:text-white py-3.5 rounded-xl font-bold active:scale-95 transition-all duration-300 border border-[#25D366]/20 flex justify-center items-center gap-2 text-base font-header cursor-pointer"
- >
- <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
- <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.717-1.46L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.42 9.864-9.864.002-2.637-1.03-5.118-2.91-6.997-1.881-1.879-4.36-2.912-6.998-2.913-5.443 0-9.868 4.425-9.873 9.873-.001 1.77.465 3.49 1.348 5.022L1.876 22.1l4.771-1.253zM17.43 14.93c-.313-.156-1.854-.915-2.141-1.018-.287-.104-.497-.156-.707.156-.21.312-.814 1.018-1 1.225-.186.208-.371.233-.684.078-1.597-.798-2.63-1.385-3.66-3.153-.271-.463-.271-.237.104-.613.337-.337.497-.52.684-.712.186-.193.186-.313.093-.52-.093-.208-.707-1.702-.97-2.327-.255-.612-.516-.529-.707-.539-.181-.01-.389-.01-.597-.01-.208 0-.547.078-.834.39-.287.312-1.097 1.07-1.097 2.611 0 1.54 1.12 3.031 1.277 3.239.156.208 2.203 3.364 5.337 4.717.745.322 1.328.513 1.78.657.749.238 1.431.205 1.97.124.6-.09 1.854-.758 2.114-1.492.26-.735.26-1.363.181-1.492-.078-.13-.287-.208-.6-.364z" />
- </svg>
- WhatsApp Us
- </a>
+ {/* WhatsApp Icon + Book Appointment — Single Row */}
+ <div className="flex items-center gap-3">
+   {/* WhatsApp icon-only square button */}
+   <a
+     href={(() => {
+       const input = siteSettings?.whatsapp;
+       if (!input || input === '#') return 'https://wa.link/4jpzfq';
+       const str = String(input).trim();
+       if (str.startsWith('http')) return str;
+       const digits = str.replace(/\D/g, '');
+       return digits.length >= 10 ? `https://wa.me/${digits}` : 'https://wa.link/4jpzfq';
+     })()}
+     target="_blank"
+     rel="noopener noreferrer"
+     className="shrink-0 w-14 h-14 flex items-center justify-center rounded-xl bg-[#25D366]/10 hover:bg-[#25D366]/25 border border-[#25D366]/25 hover:border-[#25D366]/50 text-[#25D366] transition-all cursor-pointer"
+     aria-label="WhatsApp Us"
+   >
+     <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24">
+       <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+     </svg>
+   </a>
 
- <button
- onClick={() => { setMobileMenuOpen(false); navigate('/booking'); }}
- className="w-full bg-[#0F172A] hover:bg-slate-800 text-white py-3.5 rounded-xl font-bold active:scale-95 transition-all border-none cursor-pointer text-base font-header shadow-[0_4px_12px_rgba(15,23,42,0.15)]"
- >
- Book Appointment
- </button>
+   {/* Book Appointment — fills remaining space */}
+   <button
+     onClick={() => { setMobileMenuOpen(false); navigate('/booking'); }}
+     className="flex-1 h-14 flex items-center justify-center rounded-xl font-black text-sm text-slate-900 border-none cursor-pointer transition-all active:scale-95 shadow-[0_4px_20px_rgba(0,229,255,0.35)] hover:shadow-[0_6px_28px_rgba(0,229,255,0.55)]"
+     style={{ background: '#00E5FF' }}
+   >
+     Book Appointment
+   </button>
+ </div>
  </div>
  </div>
 

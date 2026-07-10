@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Sparkles } from 'lucide-react';
+
 
 export default function Hero({ setView, navigateToSection, siteSettings }) {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const intervalRef = useRef(null);
+
   const handleButtonClick = (link) => {
     if (!link) return;
     if (link === '/booking') {
@@ -28,8 +31,24 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
     btn2Link: '/aptitude-test'
   };
 
-  const slide = (settings.heroSlides && settings.heroSlides.length > 0) ? settings.heroSlides[0] : defaultSlide;
+  // Support multiple slides if configured via admin
+  const slides =
+    settings.heroSlides && settings.heroSlides.length > 0
+      ? settings.heroSlides
+      : [defaultSlide];
 
+  const slide = slides[currentSlide] || defaultSlide;
+
+  // Auto-advance carousel (only if multiple slides)
+  useEffect(() => {
+    if (slides.length <= 1) return;
+    intervalRef.current = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 5500);
+    return () => clearInterval(intervalRef.current);
+  }, [slides.length]);
+
+  // Render title with {highlighted text} syntax -> neon blue glow + underline
   const renderTitle = (text) => {
     if (!text) return null;
     const lines = text.split(/\r?\n|\\n/g);
@@ -45,15 +64,12 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
         content = (
           <React.Fragment key={`span-${index}`}>
             {parts[0]}
-            <span className="relative inline-block text-[#00E5FF] font-black [text-shadow:0_0_35px_rgba(0,229,255,0.55)] pb-1 sm:pb-2">
+            <span className="relative inline-block text-[#00E5FF] font-black [text-shadow:0_0_40px_rgba(0,229,255,0.6),0_0_80px_rgba(0,229,255,0.25)] pb-1 sm:pb-2">
               {mainText}
               {endsWithDot && (
-                <span className="text-[#00E5FF] [text-shadow:0_0_20px_#00E5FF,0_0_40px_#00E5FF] inline-block font-black">
-                  .
-                </span>
+                <span className="text-[#00E5FF] [text-shadow:0_0_20px_#00E5FF,0_0_50px_#00E5FF] inline-block font-black">.</span>
               )}
-
-              {/* Insanely Stylish Glowing Neon Blue Curved Underline */}
+              {/* Glowing neon curved SVG underline */}
               <svg
                 className="absolute left-0 -bottom-1 sm:-bottom-2 w-full h-3 sm:h-4 pointer-events-none overflow-visible"
                 viewBox="0 0 320 18"
@@ -65,14 +81,14 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
                   stroke="#00E5FF"
                   strokeWidth="4.5"
                   strokeLinecap="round"
-                  className="drop-shadow-[0_0_12px_#00E5FF]"
+                  className="drop-shadow-[0_0_14px_#00E5FF]"
                 />
                 <path
                   d="M20 16C90 9 185 10 300 15"
                   stroke="#79f2ff"
                   strokeWidth="2"
                   strokeLinecap="round"
-                  strokeOpacity="0.8"
+                  strokeOpacity="0.75"
                 />
               </svg>
             </span>
@@ -94,91 +110,122 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
   return (
     <section
       id="home"
-      className="relative w-full flex flex-col justify-center overflow-hidden bg-[#0a121e]"
+      className="relative w-full flex flex-col justify-between overflow-hidden bg-[#060b13]"
       style={{ minHeight: '100svh' }}
     >
-      {/* Hardware-Accelerated Background Image or Video */}
-      <div className="absolute inset-0 z-0 select-none pointer-events-none">
-        {slide.image && (slide.image.endsWith('.mp4') || slide.image.endsWith('.webm') || slide.image.endsWith('.ogg') || slide.image.includes('video') || slide.image.includes('mp4')) ? (
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="w-full h-full object-cover scale-105"
-          >
-            <source src={slide.image} />
-          </video>
-        ) : (
+      {/* ── BACKGROUND IMAGE CAROUSEL (smooth crossfade) ── */}
+      <div className="absolute inset-0 z-0 select-none pointer-events-none overflow-hidden">
+        {slides.map((s, i) => (
           <div
-            className="w-full h-full bg-cover bg-center bg-no-repeat transform-gpu"
-            style={{ backgroundImage: `url('${slide.image}')` }}
-          />
-        )}
-      </div>
-
-      {/* Atmospheric High-Performance Dark Vignette Overlay (Zero Scroll Re-blur Cost) */}
-      <div
-        className="absolute inset-0 z-10 pointer-events-none transform-gpu"
-        style={{
-          background: 'radial-gradient(circle at 50% 40%, rgba(10,18,30,0.55) 0%, rgba(10,18,30,0.88) 65%, rgba(6,11,19,0.96) 100%)'
-        }}
-      />
-
-      {/* Hardware-Accelerated Subtle CSS Ambient Particles (Compositor thread, 0 JS load) */}
-      <div className="absolute inset-0 z-10 pointer-events-none overflow-hidden select-none">
-        <div className="absolute top-1/4 left-1/5 w-2 h-2 rounded-full bg-[#00E5FF]/35 blur-[1px] animate-[pulse_6s_ease-in-out_infinite]" />
-        <div className="absolute top-2/3 right-1/4 w-2.5 h-2.5 rounded-full bg-teal-400/30 blur-[1px] animate-[pulse_8s_ease-in-out_infinite]" />
-      </div>
-
-      {/* Hero Content Container - Zero JS scroll loops, pure crisp 60fps layout */}
-      <motion.div
-        initial={{ opacity: 0, y: 15 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="relative z-20 w-full max-w-5xl mx-auto px-5 sm:px-10 pt-28 pb-16 md:py-36 flex flex-col items-center text-center transform-gpu"
-      >
-        {/* Subtle Eyebrow Badge */}
-        {settings.heroTopSub && (
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm mb-5">
-            <Sparkles className="w-3.5 h-3.5 text-[#00E5FF]" />
-            <span className="text-[11px] font-bold tracking-[0.2em] text-white/90 uppercase">
-              {settings.heroTopSub}
-            </span>
+            key={i}
+            className="absolute inset-0 transition-opacity duration-[1400ms] ease-in-out"
+            style={{ opacity: i === currentSlide ? 1 : 0 }}
+          >
+            {s.image && (s.image.endsWith('.mp4') || s.image.endsWith('.webm') || s.image.endsWith('.ogg') || s.image.includes('video')) ? (
+              <video autoPlay loop muted playsInline className="w-full h-full object-cover scale-105">
+                <source src={s.image} />
+              </video>
+            ) : (
+              <div
+                className="w-full h-full bg-cover bg-center bg-no-repeat transform-gpu scale-[1.04]"
+                style={{ backgroundImage: `url('${s.image}')` }}
+              />
+            )}
           </div>
-        )}
+        ))}
 
-        {/* Main Heading */}
-        <h1 className="font-black text-white leading-[1.12] sm:leading-[1.06] tracking-tight drop-shadow-xl mb-5 sm:mb-6 max-w-4xl text-[2.5rem] sm:text-6xl md:text-7xl font-header">
+        {/* Rich layered dark gradient overlay — keeps text perfectly legible */}
+        <div
+          className="absolute inset-0 z-10 pointer-events-none"
+          style={{
+            background:
+              'linear-gradient(180deg, rgba(6,11,19,0.52) 0%, rgba(6,11,19,0.70) 50%, rgba(6,11,19,0.93) 100%)',
+          }}
+        />
+
+        {/* Subtle neon ambient glow at center-bottom */}
+        <div
+          className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[280px] rounded-full opacity-18 blur-[90px] pointer-events-none z-10"
+          style={{ background: 'radial-gradient(ellipse, #00E5FF 0%, transparent 70%)' }}
+        />
+      </div>
+
+      {/* ── CSS AMBIENT PARTICLES (compositor thread, zero JS) ── */}
+      <div className="absolute inset-0 z-10 pointer-events-none overflow-hidden select-none">
+        <div className="absolute top-[18%] left-[10%] w-1.5 h-1.5 rounded-full bg-[#00E5FF]/45 blur-[0.5px] animate-[pulse_5s_ease-in-out_infinite]" />
+        <div className="absolute top-[64%] right-[16%] w-2 h-2 rounded-full bg-[#00E5FF]/28 blur-[1px] animate-[pulse_8s_ease-in-out_infinite_1.5s]" />
+        <div className="absolute top-[38%] right-[7%] w-1 h-1 rounded-full bg-white/55 animate-[pulse_7s_ease-in-out_infinite_0.8s]" />
+        <div className="absolute bottom-[30%] left-[5%] w-1.5 h-1.5 rounded-full bg-[#00E5FF]/35 animate-[pulse_6s_ease-in-out_infinite_2s]" />
+      </div>
+
+      {/* ── MAIN HERO CONTENT (vertically centered, auto grows) ── */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+        className="relative z-20 w-full max-w-5xl mx-auto px-5 sm:px-10 text-center flex flex-col items-center my-auto pt-28 pb-16 md:pt-36 md:pb-20 transform-gpu"
+      >
+        {/* Main H1 Heading */}
+        <h1 className="font-black text-white leading-[1.1] sm:leading-[1.06] tracking-tight drop-shadow-2xl mb-5 sm:mb-6 max-w-4xl text-[2.55rem] sm:text-[3.6rem] md:text-[4.5rem] lg:text-[5rem] font-header">
           {renderTitle(slide.title)}
         </h1>
 
-        {/* Subtitle */}
-        <p className="text-white/80 font-normal leading-relaxed mb-8 sm:mb-10 max-w-2xl text-sm sm:text-lg md:text-xl drop-shadow-sm px-2">
+        {/* Subtitle paragraph */}
+        <p className="text-white/72 font-normal leading-relaxed mb-9 sm:mb-11 max-w-2xl text-sm sm:text-lg md:text-xl drop-shadow-sm px-2">
           {slide.subtitle}
         </p>
 
-        {/* Action Buttons */}
+        {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-4 w-full max-w-xs sm:max-w-none">
           {slide.btn1Text && (
             <button
               onClick={() => handleButtonClick(slide.btn1Link)}
-              className="w-full sm:w-auto flex items-center justify-center gap-2.5 bg-[#00E5FF] hover:bg-[#26ebff] active:scale-[0.98] text-[#0a121e] font-black rounded-full border-none cursor-pointer transition-all shadow-[0_4px_25px_rgba(0,229,255,0.35)] px-6 py-3.5 sm:px-8 sm:py-4 text-sm sm:text-base"
+              className="w-full sm:w-auto flex items-center justify-center gap-2.5 bg-[#00E5FF] hover:bg-[#1aebff] active:scale-[0.97] text-[#060b13] font-black rounded-full border-none cursor-pointer transition-all duration-300 shadow-[0_4px_28px_rgba(0,229,255,0.42)] hover:shadow-[0_6px_38px_rgba(0,229,255,0.62)] px-7 py-3.5 sm:px-9 sm:py-4 text-sm sm:text-base"
             >
               <span>{slide.btn1Text}</span>
-              <ArrowRight className="w-4 h-4 shrink-0" />
             </button>
           )}
           {slide.btn2Text && (
             <button
               onClick={() => handleButtonClick(slide.btn2Link)}
-              className="w-full sm:w-auto flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 active:scale-[0.98] text-white font-semibold rounded-full border border-white/25 hover:border-white/50 cursor-pointer transition-all px-6 py-3.5 sm:px-8 sm:py-4 text-sm sm:text-base"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 bg-white/8 hover:bg-white/15 active:scale-[0.97] text-white font-semibold rounded-full border border-white/22 hover:border-[#00E5FF]/55 cursor-pointer transition-all duration-300 hover:shadow-[0_0_22px_rgba(0,229,255,0.18)] px-7 py-3.5 sm:px-9 sm:py-4 text-sm sm:text-base"
             >
               <span>{slide.btn2Text}</span>
             </button>
           )}
         </div>
+
+        {/* Slide dots — only when multiple slides are configured */}
+        {slides.length > 1 && (
+          <div className="flex items-center gap-2 mt-9">
+            {slides.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrentSlide(i)}
+                className={`rounded-full transition-all duration-500 cursor-pointer border-none outline-none ${
+                  i === currentSlide
+                    ? 'w-6 h-2 bg-[#00E5FF] shadow-[0_0_8px_rgba(0,229,255,0.7)]'
+                    : 'w-2 h-2 bg-white/28 hover:bg-white/55'
+                }`}
+                aria-label={`Go to slide ${i + 1}`}
+              />
+            ))}
+          </div>
+        )}
       </motion.div>
+
+      {/* ── SCROLL DOWN INDICATOR (pinned to bottom of full-screen) ── */}
+      <div className="relative z-20 text-center pb-8 sm:pb-10">
+        <button
+          onClick={() => navigateToSection('services')}
+          className="inline-flex flex-col items-center gap-2.5 text-xs sm:text-sm text-white/45 hover:text-[#00E5FF] transition-colors duration-300 tracking-[0.18em] font-normal cursor-pointer border-none bg-transparent outline-none group"
+        >
+          <span className="w-7 h-10 rounded-full border-2 border-white/28 group-hover:border-[#00E5FF]/65 flex justify-center pt-1.5 transition-colors duration-300">
+            <span className="w-1.5 h-2.5 bg-white/55 group-hover:bg-[#00E5FF] rounded-full animate-bounce transition-colors duration-300" />
+          </span>
+          <span className="uppercase">Scroll Down</span>
+        </button>
+      </div>
     </section>
   );
 }

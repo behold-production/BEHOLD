@@ -543,7 +543,7 @@ export default function App() {
  <Route path="/" element={
     <main className="fade-in-up">
       <Hero setView={() => { }} navigateToSection={navigateToSection} siteSettings={siteSettings} />
-      <div className="relative z-10 bg-gradient-to-b from-[#f0f4fa] via-[#e2e8f0] to-[#f0f4fa] w-full min-h-screen">
+      <div className="relative z-10 bg-white w-full">
         {(() => {
           const order = Array.isArray(siteSettings.sectionOrder) && siteSettings.sectionOrder.length > 0
             ? siteSettings.sectionOrder
