@@ -482,10 +482,10 @@ export default function SettingsTab(props) {
     </h4>
     <div className="space-y-3">
       {Array.isArray(settingsForm.socialLinks) && settingsForm.socialLinks.map((link, idx) => (
-        <div key={idx} className="flex items-center gap-3 bg-zinc-950/40 p-3 rounded-lg border border-zinc-800/40">
-          <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div key={idx} className="flex items-start sm:items-end gap-3 bg-zinc-950/40 p-3 rounded-lg border border-zinc-800/40">
+          <div className="flex-1 grid grid-cols-1 sm:grid-cols-[1.2fr_2fr_1.2fr] gap-4 items-end">
             <div className="space-y-1">
-              <label className="text-[10px] font-bold text-zinc-500 uppercase">Channel Name (e.g. Facebook)</label>
+              <label className="block text-[10px] font-bold text-zinc-500 uppercase truncate">Channel Name</label>
               <input
                 type="text"
                 required
@@ -496,11 +496,11 @@ export default function SettingsTab(props) {
                   setSettingsForm({ ...settingsForm, socialLinks: updated });
                 }}
                 className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
-                placeholder="Name"
+                placeholder="e.g. Facebook"
               />
             </div>
             <div className="space-y-1">
-              <label className="text-[10px] font-bold text-zinc-500 uppercase">Channel Link / URL</label>
+              <label className="block text-[10px] font-bold text-zinc-500 uppercase truncate">Channel Link / URL</label>
               <input
                 type="text"
                 required
@@ -515,7 +515,7 @@ export default function SettingsTab(props) {
               />
             </div>
             <div className="space-y-1">
-              <label className="text-[10px] font-bold text-zinc-500 uppercase">Logo / Icon (e.g. Facebook, or URL)</label>
+              <label className="block text-[10px] font-bold text-zinc-500 uppercase truncate">Logo / Icon</label>
               <input
                 type="text"
                 value={link.logo || ''}
@@ -525,7 +525,7 @@ export default function SettingsTab(props) {
                   setSettingsForm({ ...settingsForm, socialLinks: updated });
                 }}
                 className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
-                placeholder="e.g. Brain, Facebook, or image path"
+                placeholder="e.g. Facebook"
               />
             </div>
           </div>
