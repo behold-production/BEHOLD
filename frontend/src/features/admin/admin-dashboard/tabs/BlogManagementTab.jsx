@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Plus, Search, Edit, Trash2, ExternalLink, Eye, EyeOff, BookOpen, Clock, Tag, User, Sparkles, Check, X, AlertCircle } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Plus, Search, Edit, Trash2, ExternalLink, Eye, EyeOff, BookOpen, Clock, Tag, User, Sparkles, Check, X, AlertCircle, UploadCloud, Image as ImageIcon } from 'lucide-react';
 import ApiService from '../../../../shared/services/api';
 import { toast } from 'react-hot-toast';
 
@@ -23,6 +23,7 @@ export default function BlogManagementTab() {
     excerpt: '',
     readTime: '5 min read',
     coverImage: '',
+    coverImageFile: null,
     authorName: 'Behold Aspire Editorial Team',
     authorRole: 'Senior Career Counsellor & Mentor',
     authorAvatar: '',
@@ -30,6 +31,44 @@ export default function BlogManagementTab() {
     content: '',
     isPublished: true
   });
+
+  const [dragActive, setDragActive] = useState(false);
+  const fileInputRef = useRef(null);
+
+  const handleDrag = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setDragActive(true);
+    } else if (e.type === "dragleave") {
+      setDragActive(false);
+    }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      const file = e.dataTransfer.files[0];
+      if (file.type.startsWith('image/')) {
+        setFormData({ ...formData, coverImageFile: file, coverImage: URL.createObjectURL(file) });
+      } else {
+        toast.error('Please upload a valid image file');
+      }
+    }
+  };
+
+  const handleFileChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      if (file.type.startsWith('image/')) {
+        setFormData({ ...formData, coverImageFile: file, coverImage: URL.createObjectURL(file) });
+      } else {
+        toast.error('Please upload a valid image file');
+      }
+    }
+  };
 
   const fetchBlogs = async () => {
     setLoading(true);
@@ -60,6 +99,7 @@ export default function BlogManagementTab() {
         excerpt: blog.excerpt || '',
         readTime: blog.readTime || '5 min read',
         coverImage: blog.coverImage || '',
+        coverImageFile: null,
         authorName: blog.author?.name || 'Behold Aspire Editorial Team',
         authorRole: blog.author?.role || 'Senior Career Counsellor & Mentor',
         authorAvatar: blog.author?.avatar || '',
@@ -76,6 +116,7 @@ export default function BlogManagementTab() {
         excerpt: '',
         readTime: '5 min read',
         coverImage: '',
+        coverImageFile: null,
         authorName: 'Behold Aspire Editorial Team',
         authorRole: 'Senior Career Counsellor & Mentor',
         authorAvatar: '',
@@ -122,7 +163,11 @@ export default function BlogManagementTab() {
       payload.append('category', formData.category);
       payload.append('excerpt', formData.excerpt);
       payload.append('readTime', formData.readTime);
-      payload.append('coverImage', formData.coverImage);
+      if (formData.coverImageFile) {
+        payload.append('coverImage', formData.coverImageFile);
+      } else {
+        payload.append('coverImage', formData.coverImage);
+      }
       payload.append('authorName', formData.authorName);
       payload.append('authorRole', formData.authorRole);
       payload.append('authorAvatar', formData.authorAvatar);
@@ -473,17 +518,50 @@ export default function BlogManagementTab() {
                 </div>
               </div>
 
-              {/* Cover Image URL */}
+              {/* Cover Image Upload (Drag & Drop) */}
               <div>
                 <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
-                  Cover Image URL
+                  Cover Image (Drag & Drop or Click)
                 </label>
+                <div
+                  className={`relative flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-xl transition-colors ${
+                    dragActive ? 'border-[#00E5FF] bg-[#00E5FF]/5' : 'border-slate-700 bg-slate-950 hover:border-slate-500 hover:bg-slate-900/50'
+                  } cursor-pointer overflow-hidden group`}
+                  onDragEnter={handleDrag}
+                  onDragLeave={handleDrag}
+                  onDragOver={handleDrag}
+                  onDrop={handleDrop}
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="hidden"
+                  />
+                  {formData.coverImage ? (
+                    <>
+                      <img src={formData.coverImage} alt="Cover Preview" className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity" />
+                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40">
+                        <span className="text-white text-xs font-bold flex items-center gap-2"><ImageIcon className="w-4 h-4" /> Change Image</span>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center text-slate-400">
+                      <UploadCloud className={`w-8 h-8 mb-2 ${dragActive ? 'text-[#00E5FF]' : 'text-slate-500'}`} />
+                      <p className="text-xs font-medium">Drag & drop an image here</p>
+                      <p className="text-[10px] text-slate-500 mt-1">or click to browse files</p>
+                    </div>
+                  )}
+                </div>
+                <div className="mt-2 text-[10px] text-slate-500">Alternatively, you can provide an external image URL below:</div>
                 <input
                   type="text"
                   placeholder="https://images.unsplash.com/..."
                   value={formData.coverImage}
-                  onChange={(e) => setFormData({ ...formData, coverImage: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-[#00E5FF] text-white text-xs font-mono outline-none"
+                  onChange={(e) => setFormData({ ...formData, coverImage: e.target.value, coverImageFile: null })}
+                  className="w-full mt-1 px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-[#00E5FF] text-white text-xs font-mono outline-none"
                 />
               </div>
 

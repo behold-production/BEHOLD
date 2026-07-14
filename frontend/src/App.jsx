@@ -230,7 +230,7 @@ export default function App() {
       enableAptitude: true,
       gstEnabled: false,
       gstPercent: 0,
-      sectionOrder: ['counselling-intro', 'whyChooseUs', 'counsellors', 'about', 'reviews', 'faq', 'blog', 'inquiry']
+      sectionOrder: ['counselling-intro', 'whyChooseUs', 'aptitude', 'counsellors', 'about', 'reviews', 'faq', 'blog']
     };
     try {
       const stored = localStorage.getItem('behold_site_settings');
@@ -548,9 +548,9 @@ export default function App() {
               <Hero setView={() => { }} navigateToSection={navigateToSection} siteSettings={siteSettings} />
               <div className="relative z-10 bg-white w-full">
                 {(() => {
-                  const defaultOrder = ['counselling-intro', 'whyChooseUs', 'counsellors', 'about', 'reviews', 'faq', 'blog', 'inquiry'];
+                  const defaultOrder = ['counselling-intro', 'whyChooseUs', 'aptitude', 'counsellors', 'about', 'reviews', 'faq', 'blog'];
                   let order = Array.isArray(siteSettings.sectionOrder) && siteSettings.sectionOrder.length > 0
-                    ? siteSettings.sectionOrder
+                    ? siteSettings.sectionOrder.filter(sec => sec !== 'inquiry' && sec !== 'process') // Sanitize
                     : defaultOrder;
                   
                   // Ensure any new sections not present in the saved database order are still rendered at the bottom
@@ -595,13 +595,14 @@ export default function App() {
                         return <Faq key="faq_sec" />;
                       case 'blog':
                         return <BlogSection key="blog_sec" />;
-                      case 'inquiry':
-                        return <Inquiry key="inquiry_sec" testProfile={testProfile} siteSettings={siteSettings} />;
                       default:
                         return null;
                     }
                   });
                 })()}
+                
+                {/* Fixed Inquiry Section */}
+                <Inquiry key="inquiry_fixed" testProfile={testProfile} siteSettings={siteSettings} />
               </div>
             </main>
           } />

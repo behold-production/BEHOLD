@@ -716,8 +716,8 @@ export default function SettingsTab(props) {
       
       <div className="space-y-3">
         {(() => {
-          const VALID_SECTIONS = ['counselling-intro', 'whyChooseUs', 'counsellors', 'aptitude', 'about', 'reviews', 'faq', 'blog', 'inquiry'];
-          const defaultOrder = ['counselling-intro', 'whyChooseUs', 'counsellors', 'aptitude', 'about', 'reviews', 'faq', 'blog', 'inquiry'];
+          const VALID_SECTIONS = ['counselling-intro', 'whyChooseUs', 'aptitude', 'counsellors', 'about', 'reviews', 'faq', 'blog'];
+          const defaultOrder = ['counselling-intro', 'whyChooseUs', 'aptitude', 'counsellors', 'about', 'reviews', 'faq', 'blog'];
           
           let currentOrder = Array.isArray(settingsForm.sectionOrder) && settingsForm.sectionOrder.length > 0
             ? settingsForm.sectionOrder.filter(sec => VALID_SECTIONS.includes(sec))

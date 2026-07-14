@@ -2905,7 +2905,7 @@ export default function AdminDashboard({ setView }) {
         offer5Desc: 'We provide continuous reviews to keep students on track with their long-term goals.',
         offer6Title: 'Parent Guidance',
         offer6Desc: 'We guide parents to reduce academic friction and relieve student stress.',
-        sectionOrder: ['counselling-intro', 'process', 'whyChooseUs', 'aptitude', 'counsellors', 'about', 'faq', 'blog', 'inquiry']
+        sectionOrder: ['counselling-intro', 'whyChooseUs', 'aptitude', 'counsellors', 'about', 'reviews', 'faq', 'blog']
       };
 
       // Fill root defaults
