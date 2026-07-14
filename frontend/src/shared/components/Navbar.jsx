@@ -374,9 +374,11 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                 const input = siteSettings?.whatsapp;
                 if (!input || input === '#') return 'https://wa.link/4jpzfq';
                 const str = String(input).trim();
-                if (str.startsWith('http')) return str;
+                if (str.startsWith('http://') || str.startsWith('https://')) return str;
                 const digits = str.replace(/\D/g, '');
-                return digits.length >= 10 ? `https://wa.me/${digits}` : 'https://wa.link/4jpzfq';
+                if (digits.length === 10) return `https://wa.me/91${digits}`;
+                if (digits.length > 10) return `https://wa.me/${digits}`;
+                return 'https://wa.link/4jpzfq';
               })()}
               target="_blank"
               rel="noopener noreferrer"
@@ -408,7 +410,8 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
             const str = String(input).trim();
             if (str.startsWith('http://') || str.startsWith('https://')) return str;
             const digits = str.replace(/\D/g, '');
-            if (digits.length >= 10) return `https://wa.me/${digits}`;
+            if (digits.length === 10) return `https://wa.me/91${digits}`;
+            if (digits.length > 10) return `https://wa.me/${digits}`;
             return 'https://wa.link/4jpzfq';
           })()}
           target="_blank"

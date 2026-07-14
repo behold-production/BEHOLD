@@ -428,14 +428,14 @@ export default function SettingsTab(props) {
  </h4>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
  <div className="space-y-1">
- <label className="text-xs font-bold text-zinc-400 ">WhatsApp Support Endpoint Link</label>
+ <label className="text-xs font-bold text-zinc-400 ">WhatsApp Support Link / Number</label>
  <input
- type="url"
+ type="text"
  required
  value={settingsForm.whatsapp}
  onChange={(e) => setSettingsForm({ ...settingsForm, whatsapp: e.target.value })}
  className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
- placeholder="e.g. https://wa.me/919497174011"
+ placeholder="e.g. 9497174011 or https://wa.me/..."
  />
  </div>
  <div className="space-y-1">
