@@ -61,6 +61,10 @@ const settingSchema = new mongoose.Schema(
         isActive: { type: Boolean, default: true }
       }
     ],
+    sectionOrder: { 
+      type: [String], 
+      default: ['counselling-intro', 'whyChooseUs', 'aptitude', 'counsellors', 'about', 'reviews', 'faq', 'blog'] 
+    },
     servicesSectionTitle: { type: String, default: 'Book Your Session' },
     servicesSectionSub: { type: String, default: 'OUR MENTORSHIP SERVICES' },
     servicesSectionDesc: { type: String, default: 'Access standard, expert counselling sessions and lifetime career mentoring.' },
