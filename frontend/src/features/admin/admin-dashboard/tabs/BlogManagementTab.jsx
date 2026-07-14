@@ -223,10 +223,10 @@ export default function BlogManagementTab() {
 
         <button
           onClick={() => handleOpenModal()}
-          className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-[#00E5FF] hover:bg-[#2ef1ff] text-[#0a121e] font-black text-xs uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(0,229,255,0.3)] hover:scale-105 active:scale-95 cursor-pointer border-none shrink-0"
+          className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-[#00E5FF] hover:bg-[#2ef1ff] text-[#0a121e] font-black text-xs uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(0,229,255,0.2)] hover:scale-105 active:scale-95 cursor-pointer border-none shrink-0"
         >
           <Plus className="w-4 h-4" />
-          <span>+ Write New Article</span>
+          <span>Write New Article</span>
         </button>
       </div>
 
@@ -315,7 +315,7 @@ export default function BlogManagementTab() {
                     </td>
 
                     <td className="py-4 px-4">
-                      <span className="px-2.5 py-1 rounded-md bg-[#00E5FF]/10 border border-[#00E5FF]/30 text-[#00E5FF] text-[11px] font-bold">
+                      <span className="inline-block px-2.5 py-1.5 rounded-md bg-[#00E5FF]/10 border border-[#00E5FF]/30 text-[#00E5FF] text-[11px] font-bold leading-tight whitespace-nowrap">
                         {post.category || 'Career Guidance'}
                       </span>
                     </td>

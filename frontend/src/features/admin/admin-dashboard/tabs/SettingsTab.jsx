@@ -702,46 +702,7 @@ export default function SettingsTab(props) {
  </div>
  </div>
 
-    {/* Hero Section Global Buttons Customization */}
-    <div className="bg-zinc-955/40 border border-zinc-800 p-5 rounded-xl space-y-4 mb-4">
-      <h4 className="text-xs font-bold text-brand tracking-wider flex items-center gap-2">
-        <span className="w-1.5 h-1.5 rounded-full bg-brand" />
-        Hero Section Global Buttons Settings
-      </h4>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="space-y-2 p-3 border border-zinc-800/80 rounded bg-zinc-955/40">
-          <span className="text-[10px] text-zinc-400 font-bold block mb-1">Primary Button (Left)</span>
-          <input type="text" value={settingsForm.heroSlides?.[0]?.btn1Text || ''} onChange={(e) => {
-            const newSlides = [...(settingsForm.heroSlides || [])];
-            if (newSlides.length === 0) newSlides.push({ image: '', title: '', subtitle: '', btn1Text: '', btn1Link: '', btn2Text: '', btn2Link: '' });
-            newSlides[0] = { ...newSlides[0], btn1Text: e.target.value };
-            setSettingsForm(prev => ({ ...prev, heroSlides: newSlides }));
-          }} className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none mb-2" placeholder="Button Text (e.g. Book A Session)" />
-          <input type="text" value={settingsForm.heroSlides?.[0]?.btn1Link || ''} onChange={(e) => {
-            const newSlides = [...(settingsForm.heroSlides || [])];
-            if (newSlides.length === 0) newSlides.push({ image: '', title: '', subtitle: '', btn1Text: '', btn1Link: '', btn2Text: '', btn2Link: '' });
-            newSlides[0] = { ...newSlides[0], btn1Link: e.target.value };
-            setSettingsForm(prev => ({ ...prev, heroSlides: newSlides }));
-          }} className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none" placeholder="Link Route (e.g. /booking)" />
-        </div>
-        
-        <div className="space-y-2 p-3 border border-zinc-800/80 rounded bg-zinc-955/40">
-          <span className="text-[10px] text-zinc-400 font-bold block mb-1">Secondary Button (Right)</span>
-          <input type="text" value={settingsForm.heroSlides?.[0]?.btn2Text || ''} onChange={(e) => {
-            const newSlides = [...(settingsForm.heroSlides || [])];
-            if (newSlides.length === 0) newSlides.push({ image: '', title: '', subtitle: '', btn1Text: '', btn1Link: '', btn2Text: '', btn2Link: '' });
-            newSlides[0] = { ...newSlides[0], btn2Text: e.target.value };
-            setSettingsForm(prev => ({ ...prev, heroSlides: newSlides }));
-          }} className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none mb-2" placeholder="Button Text (e.g. Explore Aptitude)" />
-          <input type="text" value={settingsForm.heroSlides?.[0]?.btn2Link || ''} onChange={(e) => {
-            const newSlides = [...(settingsForm.heroSlides || [])];
-            if (newSlides.length === 0) newSlides.push({ image: '', title: '', subtitle: '', btn1Text: '', btn1Link: '', btn2Text: '', btn2Link: '' });
-            newSlides[0] = { ...newSlides[0], btn2Link: e.target.value };
-            setSettingsForm(prev => ({ ...prev, heroSlides: newSlides }));
-          }} className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none" placeholder="Link Route (e.g. /aptitude-test)" />
-        </div>
-      </div>
-    </div>
+
 
     {/* Section Ordering Configuration */}
     <div className="bg-zinc-955/40 border border-zinc-800 p-5 rounded-xl space-y-4 mb-4">
@@ -755,9 +716,11 @@ export default function SettingsTab(props) {
       
       <div className="space-y-3">
         {(() => {
-          const defaultOrder = ['counselling-intro', 'whyChooseUs', 'counsellors', 'about', 'reviews', 'faq', 'blog', 'inquiry'];
+          const VALID_SECTIONS = ['counselling-intro', 'whyChooseUs', 'counsellors', 'aptitude', 'about', 'reviews', 'faq', 'blog', 'inquiry'];
+          const defaultOrder = ['counselling-intro', 'whyChooseUs', 'counsellors', 'aptitude', 'about', 'reviews', 'faq', 'blog', 'inquiry'];
+          
           let currentOrder = Array.isArray(settingsForm.sectionOrder) && settingsForm.sectionOrder.length > 0
-            ? settingsForm.sectionOrder
+            ? settingsForm.sectionOrder.filter(sec => VALID_SECTIONS.includes(sec))
             : defaultOrder;
             
           const missingSections = defaultOrder.filter(sec => !currentOrder.includes(sec));
@@ -1259,7 +1222,7 @@ export default function SettingsTab(props) {
  <label className="relative inline-flex items-center cursor-pointer shrink-0">
  <input
  type="checkbox"
- checked={settingsForm.enableCareerMentoring !== false}
+ checked={settingsForm.enableCareerMentoring}
  onChange={(e) => setSettingsForm({ ...settingsForm, enableCareerMentoring: e.target.checked })}
  className="sr-only peer"
  />
