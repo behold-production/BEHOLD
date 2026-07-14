@@ -208,7 +208,7 @@ export const generateReceiptPDFDoc = async (bookingDetails, showAlert) => {
 
     // 3. Discount (if applied)
     if (detailsDiscount > 0) {
-      doc.setTextColor(22, 163, 74); // green
+      doc.setTextColor(0, 229, 255); // neon blue
       doc.text(`Promo Discount Code`, 24, tableY);
       doc.text(`-Rs. ${detailsDiscount.toFixed(2)}`, 160, tableY);
       tableY += 8;

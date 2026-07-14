@@ -22,7 +22,7 @@ const capsules = [
 
 export default function WhyChooseUs({ siteSettings }) {
   return (
-    <section id="why-choose-us" className="py-16 md:py-28 bg-[#f9fafb] overflow-hidden scroll-mt-20">
+    <section id="why-choose-us" className="py-16 md:py-28 bg-white overflow-hidden scroll-mt-20">
       <div className="flex flex-col lg:flex-row items-stretch max-w-[1600px] mx-auto">
 
         {/* Left: Image */}
@@ -52,13 +52,13 @@ export default function WhyChooseUs({ siteSettings }) {
             lg:pr-[max(3rem,calc((100vw-80rem)/2+2rem))]
             lg:pl-16 order-1 lg:order-2 flex flex-col justify-center"
         >
-          <span className="text-xs sm:text-sm font-bold tracking-[0.2em] uppercase text-[#00E5FF] block mb-4">
+          <span className="text-xs sm:text-sm font-bold tracking-[0.2em] uppercase text-neon-blue-mid block mb-4">
             WHY CHOOSE US
           </span>
-          <h2 className="text-4xl sm:text-5xl lg:text-[48px] font-normal text-slate-900 mb-4 leading-[1.14] tracking-tight">
+          <h2 className="text-4xl sm:text-5xl lg:text-[48px] font-normal text-neon-blue-deep mb-4 leading-[1.14] tracking-tight font-serif">
             Built on Trust.<br />Driven by Excellence.
           </h2>
-          <p className="text-gray-600 text-sm sm:text-base leading-relaxed font-normal mb-8 max-w-lg">
+          <p className="text-ink-soft text-sm sm:text-base leading-relaxed font-normal mb-8 max-w-lg font-sans">
             We combine psychological expertise, personalized mentorship, and efficient processes to deliver
             guidance that helps every student achieve their goals with confidence and clarity.
           </p>
@@ -72,16 +72,16 @@ export default function WhyChooseUs({ siteSettings }) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.05 * idx }}
-                className="bg-white py-1 pl-1 pr-5 sm:pr-7 rounded-full border border-gray-200 flex items-center gap-4 shadow-sm hover:shadow-md hover:border-[#00E5FF]/40 transition-all duration-300"
+                className="bg-paper py-1.5 pl-1.5 pr-5 sm:pr-7 rounded-full border border-line flex items-center gap-4 shadow-[0_2px_10px_rgba(0,0,0,0.02)] hover:shadow-[0_4px_20px_rgba(6,14,32,0.08)] hover:border-gold hover:-translate-y-0.5 transition-all duration-300 group cursor-default"
               >
-                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#00E5FF] flex items-center justify-center shrink-0">
-                  <svg className="w-5 h-5 text-slate-900" viewBox="0 0 24 24" fill="currentColor">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-neon-blue-deep group-hover:bg-gold flex items-center justify-center shrink-0 transition-colors">
+                  <svg className="w-5 h-5 text-white group-hover:text-neon-blue-deep transition-colors" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
                   </svg>
                 </div>
                 <div>
-                  <h4 className="text-[13px] sm:text-[14px] font-bold text-slate-900 mb-0.5 leading-snug">{cap.title}</h4>
-                  <p className="text-[#666] text-[11px] sm:text-[12px] leading-snug font-normal">{cap.desc}</p>
+                  <h4 className="text-[13px] sm:text-[14px] font-bold text-neon-blue-deep mb-0.5 leading-snug font-sans group-hover:text-gold transition-colors">{cap.title}</h4>
+                  <p className="text-ink-soft text-[11px] sm:text-[12px] leading-snug font-normal font-sans">{cap.desc}</p>
                 </div>
               </motion.div>
             ))}

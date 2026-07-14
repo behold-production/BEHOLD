@@ -413,7 +413,7 @@ export default function AdminDashboard({ setView }) {
 
  // 3. Discount (if applied)
  if (appliedDiscount > 0) {
- doc.setTextColor(22, 163, 74); // green
+ doc.setTextColor(0, 229, 255); // neon blue
  doc.text(`Promo Discount Code`, 24, tableY);
  doc.text(`-Rs. ${appliedDiscount.toFixed(2)}`, 160, tableY);
  tableY += 8;
@@ -1348,7 +1348,7 @@ export default function AdminDashboard({ setView }) {
  offer5Desc: '',
  offer6Title: '',
  offer6Desc: '',
- sectionOrder: ['counselling-intro', 'aptitude', 'counsellors', 'about', 'faq']
+ sectionOrder: ['counselling-intro', 'process', 'whyChooseUs', 'aptitude', 'counsellors', 'about', 'faq', 'blog', 'inquiry']
  });
  const [settingsSuccess, setSettingsSuccess] = useState('');
 
@@ -1512,7 +1512,7 @@ export default function AdminDashboard({ setView }) {
  offer5Desc: settings.offer5Desc || 'We provide continuous reviews to keep students on track with their long-term goals.',
  offer6Title: settings.offer6Title || 'Parent Guidance',
  offer6Desc: settings.offer6Desc || 'We guide parents to reduce academic friction and relieve student stress.',
- sectionOrder: settings.sectionOrder || ['counselling-intro', 'aptitude', 'counsellors', 'about', 'faq']
+ sectionOrder: settings.sectionOrder || ['counselling-intro', 'process', 'whyChooseUs', 'aptitude', 'counsellors', 'about', 'faq', 'blog', 'inquiry']
  });
  }
  } catch (error) {
@@ -2905,7 +2905,7 @@ export default function AdminDashboard({ setView }) {
         offer5Desc: 'We provide continuous reviews to keep students on track with their long-term goals.',
         offer6Title: 'Parent Guidance',
         offer6Desc: 'We guide parents to reduce academic friction and relieve student stress.',
-        sectionOrder: ['counselling-intro', 'aptitude', 'counsellors', 'about', 'faq']
+        sectionOrder: ['counselling-intro', 'process', 'whyChooseUs', 'aptitude', 'counsellors', 'about', 'faq', 'blog', 'inquiry']
       };
 
       // Fill root defaults

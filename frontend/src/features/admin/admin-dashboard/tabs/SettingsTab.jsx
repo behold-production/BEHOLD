@@ -754,115 +754,138 @@ export default function SettingsTab(props) {
       </p>
       
       <div className="space-y-3">
-        {(settingsForm.sectionOrder || ['counselling-intro', 'aptitude', 'counsellors', 'about', 'faq']).map((sectionKey, idx) => {
-          const sectionMetadata = {
-            'counselling-intro': {
-              title: "Counselling & Mentorship Cards",
-              desc: "Displays the dual blocks for Career Mentoring & Psychological Counselling."
-            },
-            counsellors: {
-              title: "Meet Our Professionals",
-              desc: "Displays the grid, search filter, and list of consultant psychologists."
-            },
-            counselling: {
-              title: "Counselling & Mentorship (Combined legacy)",
-              desc: "Displays emotional wellbeing services and professional advisors list."
-            },
-            aptitude: {
-              title: "CIGI Aptitude Test",
-              desc: "Provides the C-DAT assessment registration form."
-            },
-            about: {
-              title: "About Us (What We Offer)",
-              desc: "Displays school programs, goals tracking, and guidance details."
-            },
-            faq: {
-              title: "Frequently Asked Questions",
-              desc: "Accordion with common queries and answers."
-            }
-          };
-          
-          const meta = sectionMetadata[sectionKey] || { title: sectionKey, desc: '' };
-          const isDragging = draggedIndex === idx;
-          const currentOrder = settingsForm.sectionOrder || ['counselling-intro', 'aptitude', 'counsellors', 'about', 'faq'];
-          
-          return (
-            <div
-              key={sectionKey}
-              draggable
-              onDragStart={(e) => {
-                setDraggedIndex(idx);
-                e.dataTransfer.effectAllowed = 'move';
-                e.dataTransfer.setData('text/plain', idx);
-              }}
-              onDragOver={(e) => {
-                e.preventDefault();
-              }}
-              onDragEnter={(e) => {
-                e.preventDefault();
-                if (draggedIndex !== null && draggedIndex !== idx) {
-                  const reordered = [...currentOrder];
-                  const [removed] = reordered.splice(draggedIndex, 1);
-                  reordered.splice(idx, 0, removed);
+        {(() => {
+          const defaultOrder = ['counselling-intro', 'whyChooseUs', 'aptitude', 'counsellors', 'about', 'faq', 'blog', 'inquiry'];
+          let currentOrder = Array.isArray(settingsForm.sectionOrder) && settingsForm.sectionOrder.length > 0
+            ? settingsForm.sectionOrder
+            : defaultOrder;
+            
+          const missingSections = defaultOrder.filter(sec => !currentOrder.includes(sec));
+          if (missingSections.length > 0) {
+            currentOrder = [...currentOrder, ...missingSections];
+          }
+
+          return currentOrder.map((sectionKey, idx) => {
+            const sectionMetadata = {
+              'counselling-intro': {
+                title: "Counselling & Mentorship Cards",
+                desc: "Displays the dual blocks for Career Mentoring & Psychological Counselling."
+              },
+              'whyChooseUs': {
+                title: "Why Choose Us",
+                desc: "Displays the features and benefits of choosing Behold."
+              },
+              counsellors: {
+                title: "Meet Our Professionals",
+                desc: "Displays the grid, search filter, and list of consultant psychologists."
+              },
+              counselling: {
+                title: "Counselling & Mentorship (Combined legacy)",
+                desc: "Displays emotional wellbeing services and professional advisors list."
+              },
+              aptitude: {
+                title: "CIGI Aptitude Test",
+                desc: "Provides the C-DAT assessment registration form."
+              },
+              about: {
+                title: "About Us (What We Offer)",
+                desc: "Displays school programs, goals tracking, and guidance details."
+              },
+              faq: {
+                title: "Frequently Asked Questions",
+                desc: "Accordion with common queries and answers."
+              },
+              blog: {
+                title: "Blog / Articles Section",
+                desc: "Displays the latest articles and career guidance posts."
+              },
+              inquiry: {
+                title: "Inquiry Form",
+                desc: "Displays the contact and inquiry submission form."
+              }
+            };
+            
+            const meta = sectionMetadata[sectionKey] || { title: sectionKey, desc: '' };
+            const isDragging = draggedIndex === idx;
+            
+            return (
+              <div
+                key={sectionKey}
+                draggable
+                onDragStart={(e) => {
                   setDraggedIndex(idx);
-                  setSettingsForm(prev => ({ ...prev, sectionOrder: reordered }));
-                }
-              }}
-              onDragEnd={() => {
-                setDraggedIndex(null);
-              }}
-              className={`flex items-center justify-between p-4 rounded-xl border transition-all duration-200 select-none ${
-                isDragging
-                  ? 'bg-brand/10 border-brand/50 opacity-50 scale-[0.98]'
-                  : 'bg-zinc-900/60 hover:bg-zinc-900/90 border-zinc-800 hover:border-zinc-700'
-              }`}
-            >
-              <div className="flex items-center gap-3.5 min-w-0">
-                <div className="cursor-grab active:cursor-grabbing text-zinc-500 hover:text-zinc-300 p-1">
-                  <GripVertical className="w-5 h-5 shrink-0" />
+                  e.dataTransfer.effectAllowed = 'move';
+                  e.dataTransfer.setData('text/plain', idx);
+                }}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                }}
+                onDragEnter={(e) => {
+                  e.preventDefault();
+                  if (draggedIndex !== null && draggedIndex !== idx) {
+                    const reordered = [...currentOrder];
+                    const [removed] = reordered.splice(draggedIndex, 1);
+                    reordered.splice(idx, 0, removed);
+                    setDraggedIndex(idx);
+                    setSettingsForm(prev => ({ ...prev, sectionOrder: reordered }));
+                  }
+                }}
+                onDragEnd={() => {
+                  setDraggedIndex(null);
+                }}
+                className={`flex items-center justify-between p-4 rounded-xl border transition-all duration-200 select-none ${
+                  isDragging
+                    ? 'bg-brand/10 border-brand/50 opacity-50 scale-[0.98]'
+                    : 'bg-zinc-900/60 hover:bg-zinc-900/90 border-zinc-800 hover:border-zinc-700'
+                }`}
+              >
+                <div className="flex items-center gap-3.5 min-w-0">
+                  <div className="cursor-grab active:cursor-grabbing text-zinc-500 hover:text-zinc-300 p-1">
+                    <GripVertical className="w-5 h-5 shrink-0" />
+                  </div>
+                  <div className="min-w-0">
+                    <h5 className="text-xs font-bold text-white flex items-center gap-2">
+                      <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-zinc-800 text-[10px] text-zinc-400 font-bold border border-zinc-700">
+                        {idx + 1}
+                      </span>
+                      {meta.title}
+                    </h5>
+                    <p className="text-[10px] text-zinc-400 font-medium truncate mt-0.5">{meta.desc}</p>
+                  </div>
                 </div>
-                <div className="min-w-0">
-                  <h5 className="text-xs font-bold text-white flex items-center gap-2">
-                    <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-zinc-800 text-[10px] text-zinc-400 font-bold border border-zinc-700">
-                      {idx + 1}
-                    </span>
-                    {meta.title}
-                  </h5>
-                  <p className="text-[10px] text-zinc-400 font-medium truncate mt-0.5">{meta.desc}</p>
+                
+                <div className="flex items-center gap-1 shrink-0">
+                  <button
+                    type="button"
+                    disabled={idx === 0}
+                    onClick={() => {
+                      const newOrder = [...currentOrder];
+                      [newOrder[idx - 1], newOrder[idx]] = [newOrder[idx], newOrder[idx - 1]];
+                      setSettingsForm(prev => ({ ...prev, sectionOrder: newOrder }));
+                    }}
+                    className="p-1.5 hover:bg-zinc-800 rounded disabled:opacity-30 disabled:pointer-events-none cursor-pointer text-zinc-400 hover:text-white transition-all"
+                    title="Move Section Up"
+                  >
+                    <ChevronUp className="w-4 h-4" />
+                  </button>
+                  <button
+                    type="button"
+                    disabled={idx === currentOrder.length - 1}
+                    onClick={() => {
+                      const newOrder = [...currentOrder];
+                      [newOrder[idx + 1], newOrder[idx]] = [newOrder[idx], newOrder[idx + 1]];
+                      setSettingsForm(prev => ({ ...prev, sectionOrder: newOrder }));
+                    }}
+                    className="p-1.5 hover:bg-zinc-800 rounded disabled:opacity-30 disabled:pointer-events-none cursor-pointer text-zinc-400 hover:text-white transition-all"
+                    title="Move Section Down"
+                  >
+                    <ChevronDown className="w-4 h-4" />
+                  </button>
                 </div>
               </div>
-              
-              <div className="flex items-center gap-1 shrink-0">
-                <button
-                  type="button"
-                  disabled={idx === 0}
-                  onClick={() => {
-                    const newOrder = [...currentOrder];
-                    [newOrder[idx - 1], newOrder[idx]] = [newOrder[idx], newOrder[idx - 1]];
-                    setSettingsForm(prev => ({ ...prev, sectionOrder: newOrder }));
-                  }}
-                  className="p-1.5 hover:bg-zinc-800 rounded disabled:opacity-30 disabled:pointer-events-none cursor-pointer text-zinc-400 hover:text-white transition-all"
-                  title="Move Section Up"
-                >
-                  <ChevronUp className="w-4 h-4" />
-                </button>
-                <button
-                  type="button"
-                  disabled={idx === currentOrder.length - 1}
-                  onClick={() => {
-                    const newOrder = [...currentOrder];
-                    [newOrder[idx + 1], newOrder[idx]] = [newOrder[idx], newOrder[idx + 1]];
-                    setSettingsForm(prev => ({ ...prev, sectionOrder: newOrder }));
-                  }}
-                  className="p-1.5 hover:bg-zinc-800 rounded disabled:opacity-30 disabled:pointer-events-none cursor-pointer text-zinc-400 hover:text-white transition-all"
-                  title="Move Section Down"
-                >
-                  <ChevronDown className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          );
-        })}
+            );
+          });
+        })()}
       </div>
     </div>
 

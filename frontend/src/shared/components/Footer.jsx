@@ -84,7 +84,7 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
   const addressVal = settings.contactAddress && settings.contactAddress.trim() !== '' ? settings.contactAddress : null;
 
   return (
-    <footer className="bg-[#060913] text-slate-400 pt-12 sm:pt-16 pb-24 sm:pb-12 px-5 sm:px-10 border-t border-slate-900/80 relative z-10 font-sans">
+    <footer className="bg-neon-blue-deep text-white/60 pt-12 sm:pt-16 pb-24 sm:pb-12 px-5 sm:px-10 border-t border-white/5 relative z-10 font-sans">
       <div className="max-w-7xl mx-auto">
         {/* Main Executive Responsive Layout */}
         <div className="grid grid-cols-12 gap-y-10 gap-x-8 lg:gap-12 mb-12 sm:mb-14 text-left">
@@ -92,21 +92,18 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
           {/* Column 1: BEHOLD Logo, Contact Info & Social Icons */}
           <div className="col-span-12 md:col-span-5 lg:col-span-4 space-y-5">
             <div className="inline-block cursor-pointer" onClick={handleLogoClick}>
-              <h3
-                className="text-white font-black text-2xl sm:text-3xl tracking-wider leading-none uppercase font-header"
-                style={{ fontWeight: 900, fontFamily: 'Outfit, sans-serif' }}
-              >
-                <span style={{ fontWeight: 900 }}>BEHOLD</span>
+              <div className="inline-flex items-baseline text-white font-header font-black text-2xl sm:text-3xl tracking-wider uppercase drop-shadow-sm" style={{ fontWeight: 900, fontFamily: 'Outfit, sans-serif', lineHeight: 1 }}>
+                <span style={{ fontWeight: 900 }}>{siteName || 'BEHOLD'}</span>
                 <span className="text-[#00E5FF] font-black ml-0.5" style={{ fontWeight: 900, color: '#00E5FF' }}>.</span>
-              </h3>
+              </div>
             </div>
 
             {/* Contact details directly below BEHOLD */}
-            <div className="space-y-3 text-xs sm:text-sm font-normal pt-1">
+            <div className="space-y-3 text-xs sm:text-sm font-normal pt-1 font-sans">
               {addressVal && (
                 <div className="flex items-start gap-3">
-                  <MapPin className="w-4 h-4 text-[#eab308] shrink-0 mt-0.5" />
-                  <span className="text-slate-400 leading-relaxed">
+                  <MapPin className="w-4 h-4 text-gold-soft shrink-0 mt-0.5" />
+                  <span className="text-white/60 leading-relaxed">
                     {addressVal}
                   </span>
                 </div>
@@ -114,10 +111,10 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
 
               {emailAddr && (
                 <div className="flex items-center gap-3">
-                  <Mail className="w-4 h-4 text-[#eab308] shrink-0" />
+                  <Mail className="w-4 h-4 text-gold-soft shrink-0" />
                   <a
                     href={`mailto:${emailAddr}`}
-                    className="text-slate-400 hover:text-white transition-colors truncate"
+                    className="text-white/60 hover:text-white transition-colors truncate"
                   >
                     {emailAddr}
                   </a>
@@ -126,10 +123,10 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
 
               {phoneVal && (
                 <div className="flex items-center gap-3">
-                  <Phone className="w-4 h-4 text-[#eab308] shrink-0" />
+                  <Phone className="w-4 h-4 text-gold-soft shrink-0" />
                   <a
                     href={`tel:${phoneVal}`}
-                    className="text-slate-400 hover:text-white transition-colors"
+                    className="text-white/60 hover:text-white transition-colors"
                   >
                     {phoneVal}
                   </a>
@@ -146,7 +143,7 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
                     href={link.url || '#'}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border border-slate-800 bg-[#0b0f1e] text-slate-400 hover:text-white hover:border-slate-600 transition-all flex items-center justify-center"
+                    className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border border-white/10 bg-neon-blue-soft/20 text-white/70 hover:text-gold-soft hover:border-gold-soft/30 transition-all flex items-center justify-center"
                     title={link.name}
                   >
                     {renderSocialIcon(link.name, link.logo)}
@@ -160,15 +157,15 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
           <div className="col-span-12 md:col-span-7 lg:col-span-8 grid grid-cols-2 gap-6 sm:gap-12">
             {/* Services */}
             <div className="space-y-3.5">
-              <h4 className="text-sm sm:text-base font-bold text-white tracking-wide uppercase">
+              <h4 className="text-xs font-semibold text-gold-soft tracking-wider uppercase font-mono">
                 Services
               </h4>
-              <ul className="space-y-2.5 text-xs sm:text-sm font-normal">
+              <ul className="space-y-2.5 text-xs sm:text-sm font-normal font-sans">
                 <li>
                   <button
                     type="button"
                     onClick={() => navigateToSection ? navigateToSection('services') : window.spaNavigate('/booking')}
-                    className="text-slate-400 hover:text-white transition-colors cursor-pointer bg-transparent border-none p-0 text-left"
+                    className="text-white/60 hover:text-white transition-colors cursor-pointer bg-transparent border-none p-0 text-left"
                   >
                     Career Mentoring
                   </button>
@@ -177,7 +174,7 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
                   <button
                     type="button"
                     onClick={() => navigateToSection ? navigateToSection('services') : window.spaNavigate('/booking?service=counseling')}
-                    className="text-slate-400 hover:text-white transition-colors cursor-pointer bg-transparent border-none p-0 text-left"
+                    className="text-white/60 hover:text-white transition-colors cursor-pointer bg-transparent border-none p-0 text-left"
                   >
                     Psychological Counselling
                   </button>
@@ -186,7 +183,7 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
                   <button
                     type="button"
                     onClick={() => window.spaNavigate('/booking')}
-                    className="text-slate-400 hover:text-white transition-colors cursor-pointer bg-transparent border-none p-0 text-left"
+                    className="text-white/60 hover:text-white transition-colors cursor-pointer bg-transparent border-none p-0 text-left"
                   >
                     Stream & Degree Selection
                   </button>
@@ -195,7 +192,7 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
                   <button
                     type="button"
                     onClick={() => window.spaNavigate('/booking')}
-                    className="text-slate-400 hover:text-white transition-colors cursor-pointer bg-transparent border-none p-0 text-left"
+                    className="text-white/60 hover:text-white transition-colors cursor-pointer bg-transparent border-none p-0 text-left"
                   >
                     Aptitude Mapping
                   </button>
@@ -204,7 +201,7 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
                   <button
                     type="button"
                     onClick={() => window.spaNavigate('/sample-test')}
-                    className="text-slate-400 hover:text-white transition-colors cursor-pointer bg-transparent border-none p-0 text-left"
+                    className="text-white/60 hover:text-white transition-colors cursor-pointer bg-transparent border-none p-0 text-left"
                   >
                     Sample Aptitude Assessment
                   </button>
@@ -214,15 +211,15 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
 
             {/* Company */}
             <div className="space-y-3.5">
-              <h4 className="text-sm sm:text-base font-bold text-white tracking-wide uppercase">
+              <h4 className="text-xs font-semibold text-gold-soft tracking-wider uppercase font-mono">
                 Company
               </h4>
-              <ul className="space-y-2.5 text-xs sm:text-sm font-normal">
+              <ul className="space-y-2.5 text-xs sm:text-sm font-normal font-sans">
                 <li>
                   <button
                     type="button"
                     onClick={() => navigateToSection && navigateToSection('top')}
-                    className="text-slate-400 hover:text-white transition-colors cursor-pointer bg-transparent border-none p-0 text-left"
+                    className="text-white/60 hover:text-white transition-colors cursor-pointer bg-transparent border-none p-0 text-left"
                   >
                     About
                   </button>
@@ -231,7 +228,7 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
                   <button
                     type="button"
                     onClick={() => onOpenDocs && onOpenDocs('privacy')}
-                    className="text-slate-400 hover:text-white transition-colors cursor-pointer bg-transparent border-none p-0 text-left"
+                    className="text-white/60 hover:text-white transition-colors cursor-pointer bg-transparent border-none p-0 text-left"
                   >
                     Privacy Policy
                   </button>
@@ -240,7 +237,7 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
                   <button
                     type="button"
                     onClick={() => onOpenDocs && onOpenDocs('terms')}
-                    className="text-slate-400 hover:text-white transition-colors cursor-pointer bg-transparent border-none p-0 text-left"
+                    className="text-white/60 hover:text-white transition-colors cursor-pointer bg-transparent border-none p-0 text-left"
                   >
                     Terms of Service
                   </button>
@@ -249,7 +246,7 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
                   <button
                     type="button"
                     onClick={() => navigateToSection && navigateToSection('inquiry')}
-                    className="text-slate-400 hover:text-white transition-colors cursor-pointer bg-transparent border-none p-0 text-left"
+                    className="text-white/60 hover:text-white transition-colors cursor-pointer bg-transparent border-none p-0 text-left"
                   >
                     Support & Contact
                   </button>
@@ -260,19 +257,19 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
         </div>
 
         {/* Bottom Bar: Copyright & Bottom Links with Clearance for Floating Button */}
-        <div className="pt-6 sm:pt-8 border-t border-slate-800/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-slate-400 pr-16 sm:pr-24">
+        <div className="pt-6 sm:pt-8 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-white/50 pr-16 sm:pr-24 font-sans">
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
             <button
               type="button"
               onClick={() => onOpenDocs && onOpenDocs('privacy')}
-              className="text-slate-400 hover:text-white transition-colors cursor-pointer bg-transparent border-none p-0 font-medium"
+              className="text-white/50 hover:text-white transition-colors cursor-pointer bg-transparent border-none p-0 font-medium"
             >
               Privacy Policy
             </button>
             <button
               type="button"
               onClick={() => onOpenDocs && onOpenDocs('terms')}
-              className="text-slate-400 hover:text-white transition-colors cursor-pointer bg-transparent border-none p-0 font-medium"
+              className="text-white/50 hover:text-white transition-colors cursor-pointer bg-transparent border-none p-0 font-medium"
             >
               Terms of Service
             </button>

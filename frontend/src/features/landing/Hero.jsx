@@ -64,12 +64,12 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
         content = (
           <React.Fragment key={`span-${index}`}>
             {parts[0]}
-            <span className="relative inline-block text-[#00E5FF] font-black [text-shadow:0_0_40px_rgba(0,229,255,0.6),0_0_80px_rgba(0,229,255,0.25)] pb-1 sm:pb-2">
+            <span className="relative inline-block text-gold-soft font-bold pb-1 sm:pb-2">
               {mainText}
               {endsWithDot && (
-                <span className="text-[#00E5FF] [text-shadow:0_0_20px_#00E5FF,0_0_50px_#00E5FF] inline-block font-black">.</span>
+                <span className="text-gold-soft inline-block font-bold">.</span>
               )}
-              {/* Glowing neon curved SVG underline */}
+              {/* Glowing curved SVG underline */}
               <svg
                 className="absolute left-0 -bottom-1 sm:-bottom-2 w-full h-3 sm:h-4 pointer-events-none overflow-visible"
                 viewBox="0 0 320 18"
@@ -78,14 +78,14 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
               >
                 <path
                   d="M4 13C65 3 150 2 315 13"
-                  stroke="#00E5FF"
+                  stroke="#C89B3C"
                   strokeWidth="4.5"
                   strokeLinecap="round"
-                  className="drop-shadow-[0_0_14px_#00E5FF]"
+                  className="drop-shadow-[0_0_10px_rgba(200,155,60,0.3)]"
                 />
                 <path
                   d="M20 16C90 9 185 10 300 15"
-                  stroke="#79f2ff"
+                  stroke="#E4C87A"
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeOpacity="0.75"
@@ -110,7 +110,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
   return (
     <section
       id="home"
-      className="relative w-full flex flex-col justify-between overflow-hidden bg-[#060b13]"
+      className="relative w-full flex flex-col justify-between overflow-hidden bg-neon-blue-deep"
       style={{ minHeight: '100svh' }}
     >
       {/* ── BACKGROUND IMAGE CAROUSEL (smooth crossfade) ── */}
@@ -134,28 +134,28 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
           </div>
         ))}
 
-        {/* Rich layered dark gradient overlay — keeps text perfectly legible */}
+        {/* Layered neon blue radial gradient overlay */}
         <div
           className="absolute inset-0 z-10 pointer-events-none"
           style={{
             background:
-              'linear-gradient(180deg, rgba(6,11,19,0.52) 0%, rgba(6,11,19,0.70) 50%, rgba(6,11,19,0.93) 100%)',
+              'radial-gradient(120% 100% at 15% 0%, rgba(21, 43, 82, 0.6) 0%, rgba(12, 26, 54, 0.8) 55%, rgba(6, 14, 32, 0.95) 100%)',
           }}
         />
 
-        {/* Subtle neon ambient glow at center-bottom */}
+        {/* Warm gold ambient glow at center-bottom */}
         <div
-          className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[280px] rounded-full opacity-18 blur-[90px] pointer-events-none z-10"
-          style={{ background: 'radial-gradient(ellipse, #00E5FF 0%, transparent 70%)' }}
+          className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[280px] rounded-full opacity-20 blur-[90px] pointer-events-none z-10"
+          style={{ background: 'radial-gradient(ellipse, #C89B3C 0%, transparent 70%)' }}
         />
       </div>
 
       {/* ── CSS AMBIENT PARTICLES (compositor thread, zero JS) ── */}
       <div className="absolute inset-0 z-10 pointer-events-none overflow-hidden select-none">
-        <div className="absolute top-[18%] left-[10%] w-1.5 h-1.5 rounded-full bg-[#00E5FF]/45 blur-[0.5px] animate-[pulse_5s_ease-in-out_infinite]" />
-        <div className="absolute top-[64%] right-[16%] w-2 h-2 rounded-full bg-[#00E5FF]/28 blur-[1px] animate-[pulse_8s_ease-in-out_infinite_1.5s]" />
-        <div className="absolute top-[38%] right-[7%] w-1 h-1 rounded-full bg-white/55 animate-[pulse_7s_ease-in-out_infinite_0.8s]" />
-        <div className="absolute bottom-[30%] left-[5%] w-1.5 h-1.5 rounded-full bg-[#00E5FF]/35 animate-[pulse_6s_ease-in-out_infinite_2s]" />
+        <div className="absolute top-[18%] left-[10%] w-1.5 h-1.5 rounded-full bg-gold-soft/30 blur-[0.5px] animate-[pulse_5s_ease-in-out_infinite]" />
+        <div className="absolute top-[64%] right-[16%] w-2 h-2 rounded-full bg-gold-soft/20 blur-[1px] animate-[pulse_8s_ease-in-out_infinite_1.5s]" />
+        <div className="absolute top-[38%] right-[7%] w-1 h-1 rounded-full bg-white/40 animate-[pulse_7s_ease-in-out_infinite_0.8s]" />
+        <div className="absolute bottom-[30%] left-[5%] w-1.5 h-1.5 rounded-full bg-gold-soft/25 animate-[pulse_6s_ease-in-out_infinite_2s]" />
       </div>
 
       {/* ── MAIN HERO CONTENT (vertically centered, auto grows) ── */}
@@ -163,15 +163,19 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-        className="relative z-20 w-full max-w-5xl mx-auto px-5 sm:px-10 text-center flex flex-col items-center my-auto pt-28 pb-16 md:pt-36 md:pb-20 transform-gpu"
+        className="relative z-20 w-full max-w-5xl mx-auto px-5 sm:px-10 text-center flex flex-col items-center my-auto pt-28 pb-10 md:pt-36 md:pb-12 transform-gpu"
       >
+        <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-gold-soft font-semibold mb-4 sm:mb-5">
+          Career Guidance · Psychological Counselling
+        </span>
+
         {/* Main H1 Heading */}
-        <h1 className="font-black text-white leading-[1.1] sm:leading-[1.06] tracking-tight drop-shadow-2xl mb-5 sm:mb-6 max-w-4xl text-[2.55rem] sm:text-[3.6rem] md:text-[4.5rem] lg:text-[5rem] font-header">
+        <h1 className="font-serif font-semibold text-white leading-[1.1] sm:leading-[1.06] tracking-tight drop-shadow-2xl mb-5 sm:mb-6 max-w-4xl text-[2.55rem] sm:text-[3.6rem] md:text-[4.5rem] lg:text-[5rem]">
           {renderTitle(slide.title)}
         </h1>
 
         {/* Subtitle paragraph */}
-        <p className="text-white/72 font-normal leading-relaxed mb-9 sm:mb-11 max-w-2xl text-sm sm:text-lg md:text-xl drop-shadow-sm px-2">
+        <p className="text-white/75 font-normal leading-relaxed mb-9 sm:mb-11 max-w-2xl text-sm sm:text-lg md:text-xl drop-shadow-sm px-2">
           {slide.subtitle}
         </p>
 
@@ -180,7 +184,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
           {slide.btn1Text && (
             <button
               onClick={() => handleButtonClick(slide.btn1Link)}
-              className="w-full sm:w-auto flex items-center justify-center gap-2.5 bg-[#00E5FF] hover:bg-[#1aebff] active:scale-[0.97] text-[#060b13] font-black rounded-full border-none cursor-pointer transition-all duration-300 shadow-[0_4px_28px_rgba(0,229,255,0.42)] hover:shadow-[0_6px_38px_rgba(0,229,255,0.62)] px-7 py-3.5 sm:px-9 sm:py-4 text-sm sm:text-base"
+              className="w-full sm:w-auto flex items-center justify-center gap-2.5 bg-gold hover:bg-gold-soft text-neon-blue-deep font-semibold rounded-[2px] border-none cursor-pointer transition-all duration-300 shadow-md shadow-gold/20 hover:shadow-gold/45 px-7 py-3.5 sm:px-9 sm:py-4 text-sm sm:text-base active:translate-y-[1px]"
             >
               <span>{slide.btn1Text}</span>
             </button>
@@ -188,7 +192,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
           {slide.btn2Text && (
             <button
               onClick={() => handleButtonClick(slide.btn2Link)}
-              className="w-full sm:w-auto flex items-center justify-center gap-2 bg-white/8 hover:bg-white/15 active:scale-[0.97] text-white font-semibold rounded-full border border-white/22 hover:border-[#00E5FF]/55 cursor-pointer transition-all duration-300 hover:shadow-[0_0_22px_rgba(0,229,255,0.18)] px-7 py-3.5 sm:px-9 sm:py-4 text-sm sm:text-base"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 bg-white/8 hover:bg-white/15 text-white font-semibold rounded-[2px] border border-white/20 hover:border-gold-soft cursor-pointer transition-all duration-300 px-7 py-3.5 sm:px-9 sm:py-4 text-sm sm:text-base active:translate-y-[1px]"
             >
               <span>{slide.btn2Text}</span>
             </button>
@@ -202,11 +206,10 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
               <button
                 key={i}
                 onClick={() => setCurrentSlide(i)}
-                className={`rounded-full transition-all duration-500 cursor-pointer border-none outline-none ${
-                  i === currentSlide
-                    ? 'w-6 h-2 bg-[#00E5FF] shadow-[0_0_8px_rgba(0,229,255,0.7)]'
-                    : 'w-2 h-2 bg-white/28 hover:bg-white/55'
-                }`}
+                className={`rounded-full transition-all duration-500 cursor-pointer border-none outline-none ${i === currentSlide
+                  ? 'w-6 h-2 bg-gold shadow-[0_0_8px_rgba(200,155,60,0.7)]'
+                  : 'w-2 h-2 bg-white/28 hover:bg-white/55'
+                  }`}
                 aria-label={`Go to slide ${i + 1}`}
               />
             ))}
@@ -214,16 +217,28 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
         )}
       </motion.div>
 
-      {/* ── SCROLL DOWN INDICATOR (pinned to bottom of full-screen) ── */}
+      {/* ── Stats Section ── */}
+      {settings.stats && settings.stats.length > 0 && (
+        <div className="relative z-20 max-w-5xl mx-auto w-full px-5 sm:px-10 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-0 border-t border-white/10 pt-10 pb-8 mt-12">
+          {settings.stats.map((stat, idx) => (
+            <div key={idx} className="md:px-6 md:border-l border-white/10 md:first:border-l-0 md:first:pl-0 text-left">
+              <div className="font-serif text-3xl font-bold text-gold-soft">{stat.value}</div>
+              <div className="text-xs text-white/60 mt-1 font-sans">{stat.label}</div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* ── SCROLL DOWN INDICATOR ── */}
       <div className="relative z-20 text-center pb-8 sm:pb-10">
         <button
           onClick={() => navigateToSection('services')}
-          className="inline-flex flex-col items-center gap-2.5 text-xs sm:text-sm text-white/45 hover:text-[#00E5FF] transition-colors duration-300 tracking-[0.18em] font-normal cursor-pointer border-none bg-transparent outline-none group"
+          className="inline-flex flex-col items-center gap-2.5 text-xs sm:text-sm text-white/45 hover:text-gold-soft transition-colors duration-300 tracking-[0.18em] font-normal cursor-pointer border-none bg-transparent outline-none group"
         >
-          <span className="w-7 h-10 rounded-full border-2 border-white/28 group-hover:border-[#00E5FF]/65 flex justify-center pt-1.5 transition-colors duration-300">
-            <span className="w-1.5 h-2.5 bg-white/55 group-hover:bg-[#00E5FF] rounded-full animate-bounce transition-colors duration-300" />
+          <span className="w-7 h-10 rounded-full border-2 border-white/28 group-hover:border-gold-soft/65 flex justify-center pt-1.5 transition-colors duration-300">
+            <span className="w-1.5 h-2.5 bg-white/55 group-hover:bg-gold-soft rounded-full animate-bounce transition-colors duration-300" />
           </span>
-          <span className="uppercase">Scroll Down</span>
+          <span className="uppercase font-mono text-[10px]">Scroll Down</span>
         </button>
       </div>
     </section>

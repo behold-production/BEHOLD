@@ -50,7 +50,7 @@ export default function Faq() {
 
         {/* Header */}
         <div className="text-center mb-16">
-          <span className="text-xs sm:text-sm font-semibold tracking-widest uppercase text-[#00E5FF] block mb-3">
+          <span className="text-xs sm:text-sm font-semibold tracking-widest uppercase text-neon-blue-soft block mb-3">
             FREQUENTLY ASKED QUESTIONS
           </span>
           <h2 className="text-4xl sm:text-5xl lg:text-[46px] font-normal text-slate-900 mb-4 leading-[1.18] tracking-tight">
@@ -74,12 +74,12 @@ export default function Faq() {
                 <button
                   type="button"
                   onClick={() => toggleFaq(idx)}
-                  className={`w-full text-left px-6 sm:px-8 py-5 sm:py-6 font-bold text-base sm:text-lg text-slate-900 flex justify-between items-center focus:outline-none transition-colors duration-200 cursor-pointer ${isOpen ? 'bg-[#00E5FF]/5' : 'bg-white hover:bg-gray-50/60'}`}
+                  className={`w-full text-left px-6 sm:px-8 py-5 sm:py-6 font-bold text-base sm:text-lg text-slate-900 flex justify-between items-center focus:outline-none transition-colors duration-200 cursor-pointer ${isOpen ? 'bg-neon-blue-soft/10' : 'bg-white hover:bg-gray-50/60'}`}
                   aria-expanded={isOpen}
                 >
                   <span className="pr-4">{faq.question}</span>
                   <ChevronDown
-                    className={`w-4 h-4 text-slate-700 shrink-0 transition-transform duration-300 ${isOpen ? 'rotate-180 text-[#00E5FF]' : ''}`}
+                    className={`w-4 h-4 text-slate-700 shrink-0 transition-transform duration-300 ${isOpen ? 'rotate-180 text-neon-blue-mid' : ''}`}
                   />
                 </button>
                 <div
@@ -104,7 +104,7 @@ export default function Faq() {
                 window.spaNavigate?.('/faqs');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className="inline-flex items-center gap-2 px-8 py-4 bg-slate-900 hover:bg-[#00E5FF] hover:text-slate-900 text-white font-bold text-sm rounded-xl transition-all duration-300 cursor-pointer shadow-md hover:shadow-lg border-none"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-neon-blue-deep hover:bg-neon-blue-mid text-white font-bold text-sm rounded-xl transition-all duration-300 cursor-pointer shadow-md hover:shadow-lg border-none"
             >
               <span>View All FAQs</span>
               <ArrowRight className="w-4 h-4" />

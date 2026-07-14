@@ -37,13 +37,13 @@ export default function Process() {
           transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
           className="text-center max-w-3xl mx-auto mb-20"
         >
-          <span className="text-xs sm:text-sm font-semibold tracking-widest uppercase text-[#00E5FF] block mb-3">
+          <span className="text-xs sm:text-sm font-bold tracking-[0.2em] uppercase text-neon-blue-mid block mb-4">
             OUR PROCESS
           </span>
-          <h2 className="text-4xl sm:text-5xl lg:text-[46px] font-normal text-slate-900 mb-4 leading-[1.18] tracking-tight">
+          <h2 className="text-4xl sm:text-5xl lg:text-[46px] font-normal text-neon-blue-deep mb-4 leading-[1.18] tracking-tight font-serif">
             A Simple Path To<br className="hidden sm:inline" /> Student Success
           </h2>
-          <p className="text-gray-600 text-sm sm:text-base leading-relaxed font-normal max-w-2xl mx-auto">
+          <p className="text-ink-soft text-sm sm:text-base leading-relaxed font-normal max-w-2xl mx-auto font-sans">
             We make mentorship and career guidance straightforward with a clear, structured process —
             guiding every student from initial consultation to confident career clarity.
           </p>
@@ -58,29 +58,29 @@ export default function Process() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-40px' }}
               transition={{ duration: 0.6, delay: idx * 0.1 }}
-              className="text-center relative"
+              className="text-center relative group"
             >
               {/* Horizontal dotted connector (desktop only, not last item) */}
               {idx < steps.length - 1 && (
-                <div className="hidden lg:block absolute top-[46px] left-[calc(50%+56px)] w-[calc(100%-112px)] border-t-2 border-dotted border-[#00E5FF]/50" />
+                <div className="hidden lg:block absolute top-[46px] left-[calc(50%+56px)] w-[calc(100%-112px)] border-t-[3px] border-dotted border-line" />
               )}
 
               {/* Circle Number */}
-              <div className="w-[92px] h-[92px] rounded-full bg-[#00E5FF]/15 flex items-center justify-center mx-auto mb-4 shadow-sm border border-[#00E5FF]/20">
-                <span className="text-4xl sm:text-5xl font-extrabold text-slate-900 leading-none font-header">
+              <div className="w-[92px] h-[92px] rounded-full bg-paper flex items-center justify-center mx-auto mb-6 shadow-[0_4px_20px_rgba(0,0,0,0.04)] border border-line group-hover:border-gold group-hover:shadow-[0_8px_30px_rgba(6,14,32,0.12)] transition-all duration-300">
+                <span className="text-4xl sm:text-5xl font-black text-neon-blue-deep group-hover:text-gold-soft leading-none font-serif transition-colors">
                   {step.num}
                 </span>
               </div>
 
-              <h3 className="text-lg sm:text-xl font-extrabold text-slate-900 mb-2 tracking-tight">{step.title}</h3>
-              <p className="text-gray-500 text-xs sm:text-sm leading-relaxed max-w-[250px] mx-auto font-normal">
+              <h3 className="text-lg sm:text-xl font-bold text-neon-blue-deep mb-3 tracking-tight font-sans">{step.title}</h3>
+              <p className="text-ink-soft text-xs sm:text-sm leading-relaxed max-w-[250px] mx-auto font-normal font-sans">
                 {step.desc}
               </p>
 
               {/* Vertical dotted connector (mobile/tablet only, not last item) */}
               {idx < steps.length - 1 && (
-                <div className="lg:hidden flex justify-center my-5">
-                  <div className="h-10 border-l-[3px] border-dotted border-[#00E5FF]/50" />
+                <div className="lg:hidden flex justify-center my-6">
+                  <div className="h-10 border-l-[3px] border-dotted border-line" />
                 </div>
               )}
             </motion.div>

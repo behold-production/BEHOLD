@@ -24,7 +24,7 @@ function AdvisorAvatar({ advisor, sizeClass = "w-16 h-16" }) {
     const [imgError, setImgError] = React.useState(false);
 
     return (
-        <div className={`${sizeClass} rounded-full border-2 border-[#00E5FF] bg-white text-[#00E5FF] flex items-center justify-center font-black text-xl shrink-0 overflow-hidden shadow-sm`}>
+        <div className={`${sizeClass} rounded-full border-2 border-gold bg-white text-gold flex items-center justify-center font-black text-xl shrink-0 overflow-hidden shadow-sm`}>
             {advisor.profilePic && !imgError ? (
                 <img
                     src={advisor.profilePic}
@@ -163,45 +163,45 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                                 transition={{ duration: 0.5 }}
                                 key="career"
                                 id="card-career"
-                                className="bg-white rounded-[8px] border border-slate-200 shadow-sm hover:shadow-md hover:border-slate-300 transition-all duration-300 p-5 sm:p-8 flex flex-col justify-between"
+                                className="bg-white rounded-[2px] border border-line shadow-sm hover:shadow-md hover:border-gold transition-all duration-300 p-5 sm:p-8 flex flex-col justify-between"
                             >
                                 <div>
                                     {/* Category Header */}
-                                    <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-6">
-                                        <div className="flex items-center gap-2 text-slate-700 font-semibold text-xs tracking-wider uppercase">
-                                            <Compass className="w-4 h-4 text-slate-900" />
+                                    <div className="flex items-center justify-between pb-4 border-b border-line mb-6">
+                                        <div className="flex items-center gap-2 text-ink-soft font-semibold text-xs tracking-wider uppercase font-mono">
+                                            <Compass className="w-4 h-4 text-gold" />
                                             <span>{settings.careerBadge || 'Career Mentoring'}</span>
                                         </div>
-                                        <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-[8px]">
+                                        <span className="text-xs font-semibold text-gold bg-gold/5 border border-gold/15 px-2.5 py-1 rounded-sm">
                                             Lifetime Access
                                         </span>
                                     </div>
 
                                     {/* Main Title & Subtitle */}
-                                    <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight leading-snug mb-2">
+                                    <h3 className="text-2xl sm:text-3xl font-semibold text-neon-blue-deep tracking-tight leading-snug mb-2 font-serif">
                                         {settings.careerTitle || 'Career Clarity & Direction'}
                                     </h3>
-                                    <h4 className="text-sm font-semibold text-slate-500 mb-4">
+                                    <h4 className="text-sm font-medium text-ink-soft mb-4 font-sans">
                                         {settings.careerSubtitle || "Feeling Unsure About What's Next?"}
                                     </h4>
 
                                     {/* Description Paragraph */}
-                                    <p className="text-slate-600 text-sm leading-relaxed mb-6">
+                                    <p className="text-ink-soft text-sm leading-relaxed mb-6 font-sans">
                                         {settings.careerDesc || "Whether you're choosing a stream, exploring career options, or planning your future studies, we help you understand your strengths, interests, and opportunities so you can make confident decisions with clarity and direction."}
                                     </p>
 
                                     {/* Key Offerings List */}
-                                    <div className="space-y-3 pt-4 border-t border-slate-100 mb-8">
-                                        <div className="flex items-center gap-3 text-xs sm:text-sm text-slate-700 font-medium">
-                                            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                                    <div className="space-y-3 pt-4 border-t border-line mb-8">
+                                        <div className="flex items-center gap-3 text-xs sm:text-sm text-ink font-medium">
+                                            <CheckCircle2 className="w-4 h-4 text-neon-blue-mid shrink-0" />
                                             <span>Stream & Degree Selection Guidance</span>
                                         </div>
-                                        <div className="flex items-center gap-3 text-xs sm:text-sm text-slate-700 font-medium">
-                                            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                                        <div className="flex items-center gap-3 text-xs sm:text-sm text-ink font-medium">
+                                            <CheckCircle2 className="w-4 h-4 text-neon-blue-mid shrink-0" />
                                             <span>Strengths & Aptitude Mapping</span>
                                         </div>
-                                        <div className="flex items-center gap-3 text-xs sm:text-sm text-slate-700 font-medium">
-                                            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                                        <div className="flex items-center gap-3 text-xs sm:text-sm text-ink font-medium">
+                                            <CheckCircle2 className="w-4 h-4 text-neon-blue-mid shrink-0" />
                                             <span>Personalized Career Roadmap</span>
                                         </div>
                                     </div>
@@ -218,7 +218,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                                             }
                                             window.scrollTo({ top: 0, behavior: 'smooth' });
                                         }}
-                                        className="w-full py-3.5 px-6 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm rounded-[8px] transition-all duration-200 cursor-pointer text-center shadow-xs flex items-center justify-center gap-2"
+                                        className="w-full py-3.5 px-6 bg-neon-blue-deep hover:bg-neon-blue-mid text-white font-semibold text-sm rounded-sm transition-all duration-200 cursor-pointer text-center shadow-sm flex items-center justify-center gap-2 border-none active:translate-y-[1px]"
                                     >
                                         <span>{settings.careerBtnText || 'Book Your Mentor'}</span>
                                     </button>
@@ -234,45 +234,45 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                                 transition={{ duration: 0.5, delay: 0.1 }}
                                 key="psychology"
                                 id="card-psychology"
-                                className="bg-white rounded-[8px] border border-slate-200 shadow-sm hover:shadow-md hover:border-slate-300 transition-all duration-300 p-5 sm:p-8 flex flex-col justify-between"
+                                className="bg-white rounded-[2px] border border-line shadow-sm hover:shadow-md hover:border-gold transition-all duration-300 p-5 sm:p-8 flex flex-col justify-between"
                             >
                                 <div>
                                     {/* Category Header */}
-                                    <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-6">
-                                        <div className="flex items-center gap-2 text-slate-700 font-semibold text-xs tracking-wider uppercase">
-                                            <Heart className="w-4 h-4 text-rose-600" />
+                                    <div className="flex items-center justify-between pb-4 border-b border-line mb-6">
+                                        <div className="flex items-center gap-2 text-ink-soft font-semibold text-xs tracking-wider uppercase font-mono">
+                                            <Heart className="w-4 h-4 text-gold" />
                                             <span>{settings.counselBadge || 'Psychological Counselling'}</span>
                                         </div>
-                                        <span className="text-xs font-semibold text-rose-700 bg-rose-50 border border-rose-200 px-2.5 py-1 rounded-[8px]">
+                                        <span className="text-xs font-semibold text-gold bg-gold/5 border border-gold/15 px-2.5 py-1 rounded-sm">
                                             Confidential & Safe
                                         </span>
                                     </div>
 
                                     {/* Main Title & Subtitle */}
-                                    <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight leading-snug mb-2">
+                                    <h3 className="text-2xl sm:text-3xl font-semibold text-neon-blue-deep tracking-tight leading-snug mb-2 font-serif">
                                         {settings.counselTitle || 'Emotional Wellbeing & Support'}
                                     </h3>
-                                    <h4 className="text-sm font-semibold text-slate-500 mb-4">
+                                    <h4 className="text-sm font-medium text-ink-soft mb-4 font-sans">
                                         {settings.counselSubtitle || "You Don't Have to Face It Alone."}
                                     </h4>
 
                                     {/* Description Paragraph */}
-                                    <p className="text-slate-600 text-sm leading-relaxed mb-6">
+                                    <p className="text-ink-soft text-sm leading-relaxed mb-6 font-sans">
                                         {settings.counselDesc || "When stress, anxiety, self-doubt, or personal challenges begin to feel overwhelming, having the right support can make all the difference. Our counselling sessions provide a safe space to reflect, heal, grow, and move forward with confidence."}
                                     </p>
 
                                     {/* Key Offerings List */}
-                                    <div className="space-y-3 pt-4 border-t border-slate-100 mb-8">
-                                        <div className="flex items-center gap-3 text-xs sm:text-sm text-slate-700 font-medium">
-                                            <CheckCircle2 className="w-4 h-4 text-rose-600 shrink-0" />
+                                    <div className="space-y-3 pt-4 border-t border-line mb-8">
+                                        <div className="flex items-center gap-3 text-xs sm:text-sm text-ink font-medium">
+                                            <CheckCircle2 className="w-4 h-4 text-neon-blue-mid shrink-0" />
                                             <span>Stress, Anxiety & Emotional Support</span>
                                         </div>
-                                        <div className="flex items-center gap-3 text-xs sm:text-sm text-slate-700 font-medium">
-                                            <CheckCircle2 className="w-4 h-4 text-rose-600 shrink-0" />
+                                        <div className="flex items-center gap-3 text-xs sm:text-sm text-ink font-medium">
+                                            <CheckCircle2 className="w-4 h-4 text-neon-blue-mid shrink-0" />
                                             <span>Licensed & Experienced Therapists</span>
                                         </div>
-                                        <div className="flex items-center gap-3 text-xs sm:text-sm text-slate-700 font-medium">
-                                            <CheckCircle2 className="w-4 h-4 text-rose-600 shrink-0" />
+                                        <div className="flex items-center gap-3 text-xs sm:text-sm text-ink font-medium">
+                                            <CheckCircle2 className="w-4 h-4 text-neon-blue-mid shrink-0" />
                                             <span>100% Private & Non-Judgmental Space</span>
                                         </div>
                                     </div>
@@ -285,11 +285,11 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                                             if (onBookTherapist) {
                                                 onBookTherapist('psychology_1');
                                             } else {
-                                                window.spaNavigate('/booking?service=counseling');
+                                                window.spaNavigate('/booking?service=counselling');
                                             }
                                             window.scrollTo({ top: 0, behavior: 'smooth' });
                                         }}
-                                        className="w-full py-3.5 px-6 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm rounded-[8px] transition-all duration-200 cursor-pointer text-center shadow-xs flex items-center justify-center gap-2"
+                                        className="w-full py-3.5 px-6 bg-neon-blue-deep hover:bg-neon-blue-mid text-white font-semibold text-sm rounded-sm transition-all duration-200 cursor-pointer text-center shadow-sm flex items-center justify-center gap-2 border-none active:translate-y-[1px]"
                                     >
                                         <span>{settings.counselBtnText || 'Book Your Therapist'}</span>
                                     </button>
@@ -313,16 +313,16 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                     {/* Dashboard-Style Toolbar */}
                     <div className="space-y-4 w-full">
                         {/* Tier 1: Category Filter Tabs */}
-                        <div className="w-full bg-white border border-slate-200 shadow-xs p-3 px-4 rounded-[8px] overflow-hidden">
+                        <div className="w-full bg-[#E9EDE4]/40 border border-line p-3 px-4 rounded-[2px] overflow-hidden">
                             <div className="flex flex-row overflow-x-auto scrollbar-none snap-x gap-2 w-full min-w-0">
                                 {['All', 'Consultant Psychologist', 'Clinical Psychologist', 'Psychiatrist', 'Career Mentor'].map(filter => (
                                     <button
                                         key={filter}
                                         type="button"
                                         onClick={() => setActiveFilter(filter)}
-                                        className={`flex items-center justify-center px-4 py-2.5 text-xs sm:text-sm font-bold whitespace-nowrap transition-colors cursor-pointer shrink-0 snap-start border rounded-[8px] shadow-none ${activeFilter === filter
-                                            ? 'bg-surface-900 text-white border-surface-900'
-                                            : 'bg-white text-surface-500 border-surface-200 hover:border-surface-400'
+                                        className={`flex items-center justify-center px-4 py-2.5 text-xs sm:text-sm font-bold whitespace-nowrap transition-colors cursor-pointer shrink-0 snap-start border rounded-sm shadow-none ${activeFilter === filter
+                                            ? 'bg-neon-blue-deep text-gold-soft border-neon-blue-deep'
+                                            : 'bg-white text-ink-soft border-line hover:border-line-strong hover:text-ink'
                                             }`}
                                     >
                                         {filter === 'All' ? 'All Roles' : filter}
@@ -340,9 +340,9 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                                     placeholder="Search experts or skills..."
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
-                                    className="w-full pl-10 pr-4 py-2.5 border border-slate-200 text-sm font-semibold focus:outline-none focus:border-surface-900 bg-white text-surface-900 transition-colors rounded-[8px] placeholder:text-surface-400 placeholder:normal-case placeholder:tracking-normal placeholder:font-medium"
+                                    className="w-full pl-10 pr-4 py-2.5 border border-line text-sm font-semibold focus:outline-none focus:border-gold bg-white text-ink transition-colors rounded-sm placeholder:text-ink-soft placeholder:normal-case placeholder:tracking-normal placeholder:font-medium"
                                 />
-                                <Search className="w-4 h-4 text-surface-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                                <Search className="w-4 h-4 text-ink-soft absolute left-3.5 top-1/2 -translate-y-1/2" />
                             </div>
 
                             {/* Sort Selector & View Toggles */}
@@ -351,23 +351,23 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                                     <select
                                         value={sortBy}
                                         onChange={(e) => setSortBy(e.target.value)}
-                                        className="w-full px-4 pr-10 py-2.5 border border-slate-200 text-sm font-semibold bg-white text-surface-900 focus:outline-none focus:border-surface-900 cursor-pointer appearance-none transition-colors rounded-[8px]"
+                                        className="w-full px-4 pr-10 py-2.5 border border-line text-sm font-semibold bg-white text-ink focus:outline-none focus:border-gold cursor-pointer appearance-none transition-colors rounded-sm"
                                     >
                                         <option value="Recommended">Sort: Recommended</option>
                                         <option value="Price: Low to High">Price: Low to High</option>
                                         <option value="Price: High to Low">Price: High to Low</option>
                                         <option value="Experience">Experience (Most Hours)</option>
                                     </select>
-                                    <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-surface-400">
+                                    <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-ink-soft">
                                         <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" /></svg>
                                     </div>
                                 </div>
 
-                                <div className="flex border border-surface-200 bg-white shrink-0 rounded-[8px] p-0.5">
+                                <div className="flex border border-line bg-white shrink-0 rounded-sm p-0.5">
                                     <button
                                         type="button"
                                         onClick={() => setViewMode('grid')}
-                                        className={`w-10 h-[32px] transition-colors cursor-pointer flex items-center justify-center rounded-[6px] ${viewMode === 'grid' ? 'bg-surface-900 text-white' : 'text-surface-400 hover:text-surface-900 hover:bg-surface-50'}`}
+                                        className={`w-10 h-[32px] transition-colors cursor-pointer flex items-center justify-center rounded-sm ${viewMode === 'grid' ? 'bg-neon-blue-deep text-white' : 'text-ink-soft hover:text-neon-blue-deep hover:bg-paper'}`}
                                         title="Grid View"
                                     >
                                         <LayoutGrid className="w-3.5 h-3.5" />
@@ -375,7 +375,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                                     <button
                                         type="button"
                                         onClick={() => setViewMode('list')}
-                                        className={`w-10 h-[32px] transition-colors cursor-pointer flex items-center justify-center rounded-[6px] ${viewMode === 'list' ? 'bg-surface-900 text-white' : 'text-surface-400 hover:text-surface-900 hover:bg-surface-50'}`}
+                                        className={`w-10 h-[32px] transition-colors cursor-pointer flex items-center justify-center rounded-sm ${viewMode === 'list' ? 'bg-neon-blue-deep text-white' : 'text-ink-soft hover:text-neon-blue-deep hover:bg-paper'}`}
                                         title="List View"
                                     >
                                         <List className="w-3.5 h-3.5" />
@@ -408,10 +408,13 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                             ))}
                         </div>
                     ) : viewMode === 'grid' ? (
-                        <StackSlider
-                            desktopClassName="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-                            mobileContainerClassName="relative w-full max-w-[420px] mx-auto min-h-[540px]"
-                            items={filteredAndSortedAdvisors.slice(0, visibleCount)}
+                        <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16 my-8">
+                            <div className="w-full lg:w-1/2 relative">
+                                <StackSlider
+                                    forceCarousel={true}
+                                    desktopClassName="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                                    mobileContainerClassName="relative w-full max-w-[420px] mx-auto h-[540px]"
+                                    items={filteredAndSortedAdvisors.slice(0, visibleCount)}
                             renderItem={(advisor, idx) => (
                                 <motion.div
                                     key={advisor.id}
@@ -419,27 +422,27 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                                     whileInView={{ opacity: 1, y: 0 }}
                                     viewport={{ once: true, margin: "-50px" }}
                                     transition={{ duration: 0.5, delay: (idx % 3) * 0.1 }}
-                                    className="bg-white rounded-[8px] border border-slate-200 shadow-sm hover:shadow-md hover:border-slate-300 transition-all duration-300 flex flex-col justify-between h-full overflow-hidden group"
+                                    className="bg-white rounded-[2px] border border-line shadow-sm hover:shadow hover:border-gold transition-all duration-300 flex flex-col justify-between h-full overflow-hidden group"
                                 >
                                     <div>
                                         {/* Top Header: Avatar + Name & Role */}
                                         <div className="p-4 sm:p-6 pb-4 sm:pb-5 flex items-center gap-4 bg-white">
                                             <AdvisorAvatar advisor={advisor} sizeClass="w-16 h-16" />
                                             <div className="min-w-0 flex-1">
-                                                <h4 className="text-xl font-bold text-slate-900 group-hover:text-slate-700 transition-colors truncate">
+                                                <h4 className="text-lg sm:text-xl font-serif font-semibold text-neon-blue-deep group-hover:text-gold transition-colors truncate">
                                                     {advisor.name}
                                                 </h4>
-                                                <p className="text-xs sm:text-sm font-semibold text-slate-700 mt-0.5 truncate">
+                                                <p className="text-xs sm:text-sm font-semibold text-ink-soft mt-0.5 truncate">
                                                     {advisor.role || 'Consultant Psychologist'}
                                                 </p>
                                             </div>
                                         </div>
 
-                                        <div className="border-t border-slate-100" />
+                                        <div className="border-t border-line" />
 
                                         {/* Middle Section 1: Specialties & Bio Quote */}
                                         <div className="p-4 sm:p-6 py-3.5 sm:py-4 bg-white">
-                                            <span className="text-xs font-bold text-slate-900 block mb-2.5">
+                                            <span className="text-xs font-bold text-neon-blue-deep block mb-2.5 font-mono uppercase tracking-wider">
                                                 Specialties
                                             </span>
                                             <div className="flex flex-wrap gap-2 mb-3">
@@ -449,43 +452,43 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                                                 ).slice(0, 3).map((spec, i) => (
                                                     <span
                                                         key={i}
-                                                        className="px-2.5 py-1 bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700 rounded-[8px]"
+                                                        className="px-2.5 py-1 bg-paper border border-line text-xs font-semibold text-ink-soft rounded-sm"
                                                     >
                                                         {spec}
                                                     </span>
                                                 ))}
                                                 {Array.isArray(advisor.specialties) && advisor.specialties.length > 3 && (
-                                                    <span className="px-2.5 py-1 bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-600 rounded-[8px]">
+                                                    <span className="px-2.5 py-1 bg-paper border border-line text-xs font-semibold text-ink-soft rounded-sm">
                                                         +{advisor.specialties.length - 3}
                                                     </span>
                                                 )}
                                             </div>
-                                            <p className="text-xs sm:text-sm italic text-slate-600 leading-relaxed line-clamp-2">
+                                            <p className="text-xs sm:text-sm italic text-ink-soft leading-relaxed line-clamp-2">
                                                 "{advisor.bio || 'Consultant psychologist specializing in mental health and well-being.'}"
                                             </p>
                                         </div>
 
-                                        <div className="border-t border-slate-100" />
+                                        <div className="border-t border-line" />
 
                                         {/* Middle Section 2: 3-Column Stats Grid */}
-                                        <div className="grid grid-cols-3 divide-x divide-slate-100 bg-slate-50/70 border-b border-slate-100">
+                                        <div className="grid grid-cols-3 divide-x divide-line bg-[#E9EDE4]/30 border-b border-line">
                                             <div className="p-3.5 sm:p-4 flex flex-col items-center justify-center text-center">
-                                                <span className="font-bold text-lg sm:text-xl text-slate-900 leading-none">
+                                                <span className="font-bold text-lg sm:text-xl text-neon-blue-deep leading-none font-serif">
                                                     {advisor.hours ? `${advisor.hours}+` : '2+'}
                                                 </span>
-                                                <span className="text-[11px] font-semibold text-slate-500 mt-1">Hours</span>
+                                                <span className="text-[11px] font-semibold text-ink-soft mt-1 font-mono uppercase">Hours</span>
                                             </div>
                                             <div className="p-3.5 sm:p-4 flex flex-col items-center justify-center text-center min-w-0">
-                                                <span className="font-bold text-sm sm:text-base text-slate-900 leading-none truncate max-w-full px-1">
+                                                <span className="font-bold text-sm sm:text-base text-neon-blue-deep leading-none truncate max-w-full px-1">
                                                     {advisor.lang ? advisor.lang.split(',')[0].trim() : 'Malayalam'}
                                                 </span>
-                                                <span className="text-[11px] font-semibold text-slate-500 mt-1">Lang</span>
+                                                <span className="text-[11px] font-semibold text-ink-soft mt-1 font-mono uppercase">Lang</span>
                                             </div>
                                             <div className="p-3.5 sm:p-4 flex flex-col items-center justify-center text-center">
-                                                <span className="font-bold text-lg sm:text-xl text-slate-900 leading-none">
+                                                <span className="font-bold text-lg sm:text-xl text-neon-blue-deep leading-none font-serif">
                                                     ₹{(advisor.price || 899).toLocaleString('en-IN')}
                                                 </span>
-                                                <span className="text-[11px] font-semibold text-slate-500 mt-1">Cost</span>
+                                                <span className="text-[11px] font-semibold text-ink-soft mt-1 font-mono uppercase">Cost</span>
                                             </div>
                                         </div>
                                     </div>
@@ -493,23 +496,23 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                                     {/* Bottom Section: Availability Badge + Profile & Book Buttons */}
                                     <div className="p-4 sm:p-6 pt-3.5 sm:pt-4 bg-white space-y-4">
                                         <div className="flex items-center justify-between">
-                                            <span className="text-xs font-semibold text-slate-700">Next open</span>
-                                            <div className="flex items-center gap-2 bg-white px-3 py-1 border border-slate-200 rounded-full shadow-2xs">
+                                            <span className="text-xs font-semibold text-ink-soft">Next open</span>
+                                            <div className="flex items-center gap-2 bg-white px-3 py-1 border border-line rounded-sm shadow-2xs">
                                                 <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-                                                <span className="font-bold text-slate-800 text-xs">
+                                                <span className="font-bold text-ink text-xs">
                                                     {advisor.nextAvailable || 'Available Tomorrow'}
                                                 </span>
                                             </div>
                                         </div>
 
-                                        <div className="space-y-2">
+                                        <div className="grid grid-cols-2 gap-2">
                                             <button
                                                 type="button"
                                                 onClick={() => {
                                                     window.spaNavigate(`/advisor/${advisor.id}`);
                                                     window.scrollTo({ top: 0, behavior: 'smooth' });
                                                 }}
-                                                className="w-full py-2.5 bg-white border border-slate-200 text-slate-900 font-bold text-xs sm:text-sm rounded-[8px] hover:bg-slate-50 hover:border-slate-300 transition-colors cursor-pointer text-center flex items-center justify-center"
+                                                className="w-full py-2.5 bg-white border border-line text-neon-blue-deep font-semibold text-xs sm:text-sm rounded-sm hover:bg-paper hover:border-line-strong transition-colors cursor-pointer text-center flex items-center justify-center active:translate-y-[1px]"
                                             >
                                                 Profile
                                             </button>
@@ -523,7 +526,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                                                     }
                                                     window.scrollTo({ top: 0, behavior: 'smooth' });
                                                 }}
-                                                className="w-full py-2.5 bg-[#00E5FF] hover:bg-[#26ebff] text-[#0a121e] font-black text-xs sm:text-sm rounded-[8px] transition-all cursor-pointer text-center flex items-center justify-center border-none shadow-[0_4px_15px_rgba(0,229,255,0.3)] active:scale-95"
+                                                className="w-full py-2.5 bg-gold hover:bg-gold-soft text-neon-blue-deep font-semibold text-xs sm:text-sm rounded-sm transition-all cursor-pointer text-center flex items-center justify-center border-none shadow-sm shadow-gold/10 active:translate-y-[1px]"
                                             >
                                                 Book
                                             </button>
@@ -532,32 +535,55 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                                 </motion.div>
                             )}
                         />
+                            </div>
+                            <div className="w-full lg:w-1/2 flex flex-col justify-center text-center lg:text-left px-4 lg:pr-10">
+                                <span className="font-mono text-[11px] tracking-[0.2em] uppercase text-gold mb-5 font-bold">Unfold with Behold</span>
+                                <h3 className="text-3xl sm:text-4xl lg:text-[42px] font-serif font-semibold text-neon-blue-deep leading-[1.1] mb-6">
+                                    Guiding You Towards a Brighter Future
+                                </h3>
+                                <p className="text-ink-soft text-sm sm:text-base leading-relaxed mb-8 max-w-lg mx-auto lg:mx-0">
+                                    Our expert team of clinical psychologists, psychiatrists, and career mentors is dedicated to helping you overcome challenges. Browse our experts to find the right fit for your mental wellbeing or career guidance needs.
+                                </p>
+                                <div>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            window.spaNavigate('/booking');
+                                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                                        }}
+                                        className="inline-flex items-center justify-center px-8 py-3.5 bg-neon-blue-deep hover:bg-neon-blue-mid text-white font-semibold rounded-sm transition-all shadow-md shadow-neon-blue-deep/20 border-none cursor-pointer"
+                                    >
+                                        View Full Directory
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     ) : (
                         <div className="flex flex-col gap-6">
                             {filteredAndSortedAdvisors.slice(0, visibleCount).map(advisor => (
                                 <div
                                     key={advisor.id}
-                                    className="bg-white rounded-[8px] border border-slate-200 shadow-sm hover:shadow-md hover:border-slate-300 transition-all duration-300 flex flex-col justify-between overflow-hidden group"
+                                    className="bg-white rounded-[2px] border border-line shadow-sm hover:shadow hover:border-gold transition-all duration-300 flex flex-col justify-between overflow-hidden group"
                                 >
                                     <div>
                                         {/* Top Header: Avatar + Name & Role */}
                                         <div className="p-4 sm:p-6 pb-4 sm:pb-5 flex items-center gap-4 bg-white">
                                             <AdvisorAvatar advisor={advisor} sizeClass="w-16 h-16" />
                                             <div className="min-w-0 flex-1">
-                                                <h4 className="text-xl font-bold text-slate-900 group-hover:text-slate-700 transition-colors truncate">
+                                                <h4 className="text-lg sm:text-xl font-serif font-semibold text-neon-blue-deep group-hover:text-gold transition-colors truncate">
                                                     {advisor.name}
                                                 </h4>
-                                                <p className="text-xs sm:text-sm font-semibold text-slate-700 mt-0.5 truncate">
+                                                <p className="text-xs sm:text-sm font-semibold text-ink-soft mt-0.5 truncate">
                                                     {advisor.role || 'Consultant Psychologist'}
                                                 </p>
                                             </div>
                                         </div>
 
-                                        <div className="border-t border-slate-100" />
+                                        <div className="border-t border-line" />
 
                                         {/* Middle Section 1: Specialties & Bio Quote */}
                                         <div className="p-4 sm:p-6 py-3.5 sm:py-4 bg-white">
-                                            <span className="text-xs font-bold text-slate-900 block mb-2.5">
+                                            <span className="text-xs font-bold text-neon-blue-deep block mb-2.5 font-mono uppercase tracking-wider">
                                                 Specialties
                                             </span>
                                             <div className="flex flex-wrap gap-2 mb-3">
@@ -567,43 +593,43 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                                                 ).slice(0, 3).map((spec, i) => (
                                                     <span
                                                         key={i}
-                                                        className="px-2.5 py-1 bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700 rounded-[8px]"
+                                                        className="px-2.5 py-1 bg-paper border border-line text-xs font-semibold text-ink-soft rounded-sm"
                                                     >
                                                         {spec}
                                                     </span>
                                                 ))}
                                                 {Array.isArray(advisor.specialties) && advisor.specialties.length > 3 && (
-                                                    <span className="px-2.5 py-1 bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-600 rounded-[8px]">
+                                                    <span className="px-2.5 py-1 bg-paper border border-line text-xs font-semibold text-ink-soft rounded-sm">
                                                         +{advisor.specialties.length - 3}
                                                     </span>
                                                 )}
                                             </div>
-                                            <p className="text-xs sm:text-sm italic text-slate-600 leading-relaxed line-clamp-2">
+                                            <p className="text-xs sm:text-sm italic text-ink-soft leading-relaxed line-clamp-2">
                                                 "{advisor.bio || 'Consultant psychologist specializing in mental health and well-being.'}"
                                             </p>
                                         </div>
 
-                                        <div className="border-t border-slate-100" />
+                                        <div className="border-t border-line" />
 
                                         {/* Middle Section 2: 3-Column Stats Grid */}
-                                        <div className="grid grid-cols-3 divide-x divide-slate-100 bg-slate-50/70 border-b border-slate-100">
+                                        <div className="grid grid-cols-3 divide-x divide-line bg-[#E9EDE4]/30 border-b border-line">
                                             <div className="p-3.5 sm:p-4 flex flex-col items-center justify-center text-center">
-                                                <span className="font-bold text-lg sm:text-xl text-slate-900 leading-none">
+                                                <span className="font-bold text-lg sm:text-xl text-neon-blue-deep leading-none font-serif">
                                                     {advisor.hours ? `${advisor.hours}+` : '2+'}
                                                 </span>
-                                                <span className="text-[11px] font-semibold text-slate-500 mt-1">Hours</span>
+                                                <span className="text-[11px] font-semibold text-ink-soft mt-1 font-mono uppercase">Hours</span>
                                             </div>
                                             <div className="p-3.5 sm:p-4 flex flex-col items-center justify-center text-center min-w-0">
-                                                <span className="font-bold text-sm sm:text-base text-slate-900 leading-none truncate max-w-full px-1">
+                                                <span className="font-bold text-sm sm:text-base text-neon-blue-deep leading-none truncate max-w-full px-1">
                                                     {advisor.lang ? advisor.lang.split(',')[0].trim() : 'Malayalam'}
                                                 </span>
-                                                <span className="text-[11px] font-semibold text-slate-500 mt-1">Lang</span>
+                                                <span className="text-[11px] font-semibold text-ink-soft mt-1 font-mono uppercase">Lang</span>
                                             </div>
                                             <div className="p-3.5 sm:p-4 flex flex-col items-center justify-center text-center">
-                                                <span className="font-bold text-lg sm:text-xl text-slate-900 leading-none">
+                                                <span className="font-bold text-lg sm:text-xl text-neon-blue-deep leading-none font-serif">
                                                     ₹{(advisor.price || 899).toLocaleString('en-IN')}
                                                 </span>
-                                                <span className="text-[11px] font-semibold text-slate-500 mt-1">Cost</span>
+                                                <span className="text-[11px] font-semibold text-ink-soft mt-1 font-mono uppercase">Cost</span>
                                             </div>
                                         </div>
                                     </div>
@@ -611,23 +637,23 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                                     {/* Bottom Section: Availability Badge + Profile & Book Buttons */}
                                     <div className="p-4 sm:p-6 pt-3.5 sm:pt-4 bg-white space-y-4">
                                         <div className="flex items-center justify-between">
-                                            <span className="text-xs font-semibold text-slate-700">Next open</span>
-                                            <div className="flex items-center gap-2 bg-white px-3 py-1 border border-slate-200 rounded-full shadow-2xs">
+                                            <span className="text-xs font-semibold text-ink-soft">Next open</span>
+                                            <div className="flex items-center gap-2 bg-white px-3 py-1 border border-line rounded-sm shadow-2xs">
                                                 <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-                                                <span className="font-bold text-slate-800 text-xs">
+                                                <span className="font-bold text-ink text-xs">
                                                     {advisor.nextAvailable || 'Available Tomorrow'}
                                                 </span>
                                             </div>
                                         </div>
 
-                                        <div className="space-y-2">
+                                        <div className="grid grid-cols-2 gap-2">
                                             <button
                                                 type="button"
                                                 onClick={() => {
                                                     window.spaNavigate(`/advisor/${advisor.id}`);
                                                     window.scrollTo({ top: 0, behavior: 'smooth' });
                                                 }}
-                                                className="w-full py-2.5 bg-white border border-slate-200 text-slate-900 font-bold text-xs sm:text-sm rounded-[8px] hover:bg-slate-50 hover:border-slate-300 transition-colors cursor-pointer text-center flex items-center justify-center"
+                                                className="w-full py-2.5 bg-white border border-line text-neon-blue-deep font-semibold text-xs sm:text-sm rounded-sm hover:bg-paper hover:border-line-strong transition-colors cursor-pointer text-center flex items-center justify-center active:translate-y-[1px]"
                                             >
                                                 Profile
                                             </button>
@@ -641,7 +667,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                                                     }
                                                     window.scrollTo({ top: 0, behavior: 'smooth' });
                                                 }}
-                                                className="w-full py-2.5 bg-[#00E5FF] hover:bg-[#26ebff] text-[#0a121e] font-black text-xs sm:text-sm rounded-[8px] transition-all cursor-pointer text-center flex items-center justify-center border-none shadow-[0_4px_15px_rgba(0,229,255,0.3)] active:scale-95"
+                                                className="w-full py-2.5 bg-gold hover:bg-gold-soft text-neon-blue-deep font-semibold text-xs sm:text-sm rounded-sm transition-all cursor-pointer text-center flex items-center justify-center border-none shadow-sm shadow-gold/10 active:translate-y-[1px]"
                                             >
                                                 Book
                                             </button>
@@ -688,7 +714,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                                         setVisibleCount(prev => prev + 6);
                                     }
                                 }}
-                                className="inline-flex items-center gap-2 px-8 py-4 bg-slate-900 hover:bg-[#008899] text-white font-black text-xs uppercase tracking-wider rounded-xl transition-all cursor-pointer shadow-md hover:scale-105 active:scale-95 border-none"
+                                className="inline-flex items-center gap-2 px-8 py-3.5 bg-neon-blue-deep hover:bg-neon-blue-mid text-white font-semibold text-xs uppercase tracking-wider rounded-sm transition-all cursor-pointer shadow-sm hover:scale-105 active:scale-95 border-none active:translate-y-[1px]"
                             >
                                 <span>{mode === 'experts' ? 'View All Psychologists & Mentors' : 'Load More Professionals'}</span>
                             </button>

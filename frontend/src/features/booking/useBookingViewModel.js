@@ -56,8 +56,8 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       }
       const queryParams = new URLSearchParams(window.location.search);
       const urlService = queryParams.get('service') || queryParams.get('type');
-      if (urlService === 'career' || urlService === 'counselling') {
-        return urlService;
+      if (urlService === 'career' || urlService === 'counselling' || urlService === 'counseling') {
+        return urlService === 'counseling' ? 'counselling' : urlService;
       }
     } catch (e) {}
     return 'counselling';
@@ -399,7 +399,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
 
       // 3. Discount (if applied)
       if (detailsDiscount > 0) {
-        doc.setTextColor(22, 163, 74); // green
+        doc.setTextColor(0, 229, 255); // neon blue
         doc.text(`Promo Discount Code`, 24, tableY);
         doc.text(`-Rs. ${detailsDiscount.toFixed(2)}`, 160, tableY);
         tableY += 8;
@@ -798,7 +798,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         }, 150);
         return;
       }
-      if (preselectedAdvisorId === 'c3' || preselectedAdvisorId === 'counselling') {
+      if (preselectedAdvisorId === 'c3' || preselectedAdvisorId === 'counselling' || preselectedAdvisorId === 'counseling' || preselectedAdvisorId === 'psychology_1') {
         setTimeout(() => {
           setBookingService('counselling');
           setSelectedAdvisor(null);

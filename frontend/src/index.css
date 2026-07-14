@@ -1,7 +1,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600&family=Baloo+Chettan+2:wght@400;500;600;700;800&family=Manjari:wght@400;700&family=Noto+Sans+Malayalam:wght@400;500;700&family=Poppins:wght@300;400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
 
 @theme {
+  --color-neon-blue-deep: #060e20;
+  --color-neon-blue-mid: #0c1a36;
+  --color-neon-blue-soft: #152b52;
+  --color-paper: #F2F4EF;
+  --color-paper-alt: #E9EDE4;
+  --color-teal: #4A7C74;
+  --color-gold: #C89B3C;
+  --color-gold-soft: #E4C87A;
+  --color-ink: #202823;
+  --color-ink-soft: #5B6A61;
+  --color-line: #D6DBCF;
+  --color-line-strong: #C3CBB9;
+
+  --font-serif: 'Fraunces', serif;
+  --font-sans: 'Work Sans', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+
   --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.02);
   --shadow: 0 4px 16px rgba(15, 23, 42, 0.06), 0 1px 4px rgba(15, 23, 42, 0.03);
   --shadow-md: 0 4px 6px -1px rgba(9, 14, 26, 0.15), 0 2px 4px -2px rgba(9, 14, 26, 0.15);
@@ -13,9 +31,6 @@
   --color-zinc-900: var(--color-slate-900);
   --color-zinc-800: var(--color-slate-800);
   --color-zinc-700: var(--color-slate-700);
-  --font-sans: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
-  --font-heading: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
-  --font-header: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
   --color-brand: #00E5FF;
   --color-brand-dark: #00B3CC;
   --color-brand-light: #e6fbfb;
@@ -102,7 +117,10 @@ body,
 button,
 input,
 select,
-textarea,
+textarea {
+  font-family: 'Work Sans', 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
+}
+
 h1,
 h2,
 h3,
@@ -111,13 +129,15 @@ h5,
 h6,
 .font-header,
 .font-heading {
-  font-family: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif !important;
+  font-family: 'Fraunces', serif;
 }
 
 html,
 body {
   max-width: 100%;
   overflow-x: clip;
+  background-color: var(--color-paper) !important;
+  color: var(--color-ink) !important;
 }
 
 html {
@@ -130,17 +150,17 @@ html {
 
 /* Glassmorphism utilities */
 .glass {
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
 }
 
 .glass-dark {
-    background: rgba(15, 23, 42, 0.75);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 body {
@@ -161,25 +181,15 @@ body.no-scroll {
   touch-action: none;
 }
 
-/* Custom Scrollbar */
+/* Hide Scrollbars Globally */
 ::-webkit-scrollbar {
-  width: 8px;
+  display: none !important;
 }
 
-::-webkit-scrollbar-track {
-  background: #fafafa;
+* {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
 }
-
-::-webkit-scrollbar-thumb {
-  background: #cffafe;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #a5f3fc;
-}
-
-/* Smooth Scrolling handled in base block above */
 
 /* Luxury Card Base Utility */
 @utility card-luxury {
@@ -326,23 +336,52 @@ body.no-scroll {
 }
 
 @keyframes flyOutLeft {
-  0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-  100% { transform: translate(-150%, -50%) scale(0.8) rotate(-10deg); opacity: 0; }
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(-150%, -50%) scale(0.8) rotate(-10deg);
+    opacity: 0;
+  }
 }
 
 @keyframes flyOutRight {
-  0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-  100% { transform: translate(50%, -50%) scale(0.8) rotate(10deg); opacity: 0; }
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(50%, -50%) scale(0.8) rotate(10deg);
+    opacity: 0;
+  }
 }
 
 @keyframes flyInFromLeft {
-  0% { transform: translate(-150%, -50%) scale(0.8) rotate(-10deg); opacity: 0; }
-  100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  0% {
+    transform: translate(-150%, -50%) scale(0.8) rotate(-10deg);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
 }
 
-.fly-left { animation: flyOutLeft 0.4s forwards cubic-bezier(0.16, 1, 0.3, 1); }
-.fly-right { animation: flyOutRight 0.4s forwards cubic-bezier(0.16, 1, 0.3, 1); }
-.fly-in-left { animation: flyInFromLeft 0.4s forwards cubic-bezier(0.16, 1, 0.3, 1); }
+.fly-left {
+  animation: flyOutLeft 0.4s forwards cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fly-right {
+  animation: flyOutRight 0.4s forwards cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fly-in-left {
+  animation: flyInFromLeft 0.4s forwards cubic-bezier(0.16, 1, 0.3, 1);
+}
 
 /* Testimonial scrolling animation */
 @keyframes marquee {
@@ -426,7 +465,7 @@ textarea:focus {
   border-radius: 10px;
   box-shadow: 0 4px 15px rgba(0, 229, 255, 0.15) !important;
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  
+
   &:hover {
     border-color: rgba(0, 229, 255, 0.85) !important;
     transform: translateY(-8px) scale(1.015) !important;
@@ -448,13 +487,13 @@ textarea:focus {
   border: none;
   box-shadow: 0 4px 20px rgba(32, 97, 115, 0.25);
   cursor: pointer;
-  
+
   &:hover {
     background-color: var(--color-brand);
     box-shadow: 0 6px 24px rgba(32, 97, 115, 0.35);
     transform: translateY(-1px);
   }
-  
+
   &:active {
     transform: scale(0.97);
   }
@@ -473,7 +512,7 @@ textarea:focus {
   justify-content: center;
   border: 1.5px solid var(--color-brand-dark);
   cursor: pointer;
-  
+
   &:hover {
     background-color: var(--color-brand-dark);
     color: #ffffff;
@@ -527,19 +566,24 @@ textarea:focus {
   visibility: visible;
   transform: translateY(0);
 }
+
 /* Clean Typography Dampening Helpers */
 .tracking-widest {
   letter-spacing: 0.025em !important;
 }
+
 .font-black {
   font-weight: 700 !important;
 }
+
 .font-bold {
   font-weight: 600 !important;
 }
+
 .font-extrabold {
   font-weight: 700 !important;
 }
+
 .font-medium {
   font-weight: 500 !important;
 }

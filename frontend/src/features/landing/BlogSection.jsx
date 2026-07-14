@@ -35,10 +35,10 @@ const BlogSection = () => {
       {/* Section Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
         <div className="space-y-3">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black font-header tracking-tight text-slate-900">
-            Latest From <span className="text-[#00A3B8]">Behold Aspire</span>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-semibold font-serif tracking-tight text-neon-blue-deep">
+            Latest From <span className="text-gold">Behold Aspire</span>
           </h2>
-          <p className="text-sm sm:text-base text-slate-600 max-w-xl leading-relaxed">
+          <p className="text-sm sm:text-base text-ink-soft max-w-xl leading-relaxed font-sans">
             Research-backed career roadmaps, stream selection strategies, and psychological guidance authored by CIGI mentors.
           </p>
         </div>
@@ -46,7 +46,7 @@ const BlogSection = () => {
         <button
           type="button"
           onClick={handleOpenAllBlogs}
-          className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-slate-900 hover:bg-[#00E5FF] text-white hover:text-slate-900 font-black text-xs sm:text-sm uppercase tracking-wider transition-all duration-300 shadow-md hover:scale-105 active:scale-95 border-none cursor-pointer shrink-0"
+          className="inline-flex items-center gap-2 px-6 py-3.5 rounded-sm bg-neon-blue-deep hover:bg-neon-blue-mid text-white font-semibold text-xs sm:text-sm uppercase tracking-wider transition-all duration-300 shadow-sm hover:scale-105 active:scale-95 border-none cursor-pointer shrink-0 active:translate-y-[1px]"
         >
           <span>Explore All Articles</span>
           <ArrowRight className="w-4 h-4" />
@@ -59,43 +59,44 @@ const BlogSection = () => {
           <article
             key={post._id || post.slug}
             onClick={() => handleOpenBlog(post.slug)}
-            className="group bg-white hover:bg-slate-50 border border-slate-200 hover:border-[#00E5FF] rounded-2xl overflow-hidden transition-all duration-300 flex flex-col cursor-pointer shadow-sm hover:shadow-xl hover:-translate-y-1.5 h-full"
+            className="group bg-white rounded-md overflow-hidden transition-all duration-500 flex flex-col cursor-pointer shadow-[0_4px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgba(6,14,32,0.12)] hover:-translate-y-1.5 h-full border border-line/40"
           >
             {/* Cover Image Container */}
-            <div className="relative h-52 w-full overflow-hidden bg-slate-100 shrink-0">
+            <div className="relative h-56 w-full overflow-hidden bg-paper shrink-0">
               <img
                 src={post.coverImage || 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&auto=format&fit=crop&q=80'}
                 alt={post.title}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-neon-blue-deep/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
               {/* Category Badge */}
-              <span className="absolute top-4 left-4 px-3 py-1 rounded-lg bg-white/95 backdrop-blur-md border border-slate-200 text-[#008899] text-[11px] font-black tracking-wider uppercase shadow-sm">
+              <span className="absolute top-4 left-4 px-3 py-1.5 rounded-sm bg-white/95 backdrop-blur-md text-neon-blue-deep text-[10px] font-bold font-mono tracking-wider uppercase shadow-sm">
                 {post.category || 'Career Guidance'}
               </span>
 
               {/* Read Time */}
-              <div className="absolute bottom-3 right-4 flex items-center gap-1.5 text-xs font-semibold text-slate-800 bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-md border border-slate-200 shadow-xs">
-                <Clock className="w-3.5 h-3.5 text-[#00A3B8]" />
+              <div className="absolute bottom-4 right-4 flex items-center gap-1.5 text-[10px] font-bold text-white bg-neon-blue-deep/90 backdrop-blur-md px-3 py-1.5 rounded-sm shadow-sm uppercase tracking-wider font-mono">
+                <Clock className="w-3.5 h-3.5 text-gold-soft" />
                 <span>{post.readTime || '5 min read'}</span>
               </div>
             </div>
 
             {/* Content Body */}
-            <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
-              <div className="space-y-2.5">
-                <h3 className="text-lg sm:text-xl font-bold font-header text-slate-900 group-hover:text-[#008899] transition-colors line-clamp-2 leading-snug">
+            <div className="p-7 flex-1 flex flex-col justify-between space-y-5">
+              <div className="space-y-3">
+                <h3 className="text-xl sm:text-2xl font-semibold font-serif text-neon-blue-deep group-hover:text-neon-blue-mid transition-colors line-clamp-2 leading-snug">
                   {post.title}
                 </h3>
-                <p className="text-xs sm:text-sm text-slate-600 line-clamp-3 leading-relaxed">
+                <p className="text-sm text-ink-soft line-clamp-3 leading-relaxed font-sans">
                   {post.excerpt}
                 </p>
               </div>
 
               {/* Author & Read Action */}
-              <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-full bg-[#00E5FF]/20 border border-[#00A3B8] flex items-center justify-center text-[#008899] font-bold text-xs overflow-hidden shrink-0">
+              <div className="pt-5 border-t border-line/40 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-neon-blue-deep/5 border border-neon-blue-deep/10 flex items-center justify-center text-neon-blue-deep font-bold text-sm overflow-hidden shrink-0 shadow-inner">
                     {post.author?.avatar ? (
                       <img src={post.author.avatar} alt={post.author.name} className="w-full h-full object-cover" />
                     ) : (
@@ -103,17 +104,17 @@ const BlogSection = () => {
                     )}
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-slate-900 line-clamp-1">
+                    <h4 className="text-xs font-bold text-neon-blue-deep line-clamp-1 font-sans">
                       {post.author?.name || 'Editorial Team'}
                     </h4>
-                    <p className="text-[10px] text-slate-500 line-clamp-1">
+                    <p className="text-[10px] text-ink-soft line-clamp-1 font-sans uppercase tracking-widest mt-0.5 font-semibold">
                       {post.author?.role || 'Senior Mentor'}
                     </p>
                   </div>
                 </div>
 
-                <div className="text-xs font-black text-[#008899] flex items-center gap-1 group-hover:translate-x-1.5 transition-transform">
-                  <span>Read Article</span>
+                <div className="text-[11px] font-bold text-neon-blue-deep flex items-center gap-1.5 group-hover:translate-x-2 transition-transform duration-300 font-mono uppercase bg-neon-blue-deep/5 px-3 py-1.5 rounded-sm group-hover:bg-gold/20 group-hover:text-gold-soft">
+                  <span>Read</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </div>
               </div>

@@ -196,7 +196,7 @@ export function getInitials(name) {
 
       // 3. Discount (if applied)
       if (appliedDiscount > 0) {
-        doc.setTextColor(22, 163, 74); // green
+        doc.setTextColor(0, 229, 255); // neon blue
         doc.text(`Promo Discount Code`, 24, tableY);
         doc.text(`-Rs. ${appliedDiscount.toFixed(2)}`, 160, tableY);
         tableY += 8;

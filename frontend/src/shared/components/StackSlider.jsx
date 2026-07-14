@@ -4,7 +4,8 @@ export default function StackSlider({
   items,
   renderItem,
   desktopClassName = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6",
-  mobileContainerClassName = "relative w-full max-w-[400px] mx-auto h-[450px]"
+  mobileContainerClassName = "relative w-full max-w-[400px] mx-auto h-[450px]",
+  forceCarousel = false
 }) {
   const [isMobile, setIsMobile] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -54,7 +55,7 @@ export default function StackSlider({
 
   if (!items || items.length === 0) return null;
 
-  if (!isMobile) {
+  if (!isMobile && !forceCarousel) {
     return (
       <div className={desktopClassName}>
         {items.map((item, index) => renderItem ? renderItem(item, index) : item)}
