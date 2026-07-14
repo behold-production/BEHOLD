@@ -17,7 +17,7 @@ export default function AptitudeLanding({ setView }) {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="w-full"
         >
-          <span className="font-mono text-[12px] tracking-[0.2em] uppercase text-[#C89B3C] font-bold block mb-4">
+          <span className="font-mono text-[12px] tracking-[0.2em] uppercase text-[#00E5FF] font-bold block mb-4">
             CIGI Differential Aptitude Test
           </span>
           <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-semibold text-neon-blue-deep mb-8 leading-[1.1] tracking-tight">
@@ -38,7 +38,7 @@ export default function AptitudeLanding({ setView }) {
 
             <button
               onClick={handleProceed}
-              className="w-full sm:w-auto inline-flex items-center justify-center px-10 py-4 bg-[#C89B3C] hover:bg-[#D4A373] text-white font-semibold rounded-full transition-all shadow-md hover:shadow-lg border-none cursor-pointer"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-10 py-4 bg-[#00E5FF] hover:bg-[#00B3CC] text-white font-semibold rounded-full transition-all shadow-md hover:shadow-lg border-none cursor-pointer"
             >
               Try a Sample Test
             </button>

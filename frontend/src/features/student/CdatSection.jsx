@@ -136,7 +136,7 @@ export default function CdatSection({ setView }) {
         <div className="lg:col-span-7 flex flex-col justify-between h-full">
           <div>
             {/* Eyebrow */}
-            <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-[#E4C87A] font-semibold flex items-center gap-2 before:content-[''] before:w-4 before:h-[1px] before:bg-current mb-4">
+            <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-[#00B3CC] font-semibold flex items-center gap-2 before:content-[''] before:w-4 before:h-[1px] before:bg-current mb-4">
               Scientific Assessment
             </span>
 
@@ -151,9 +151,9 @@ export default function CdatSection({ setView }) {
             </p>
 
             {/* Partner Badge */}
-            <div className="inline-flex items-center gap-2.5 border border-white/20 px-4 py-2.5 text-xs text-white/80 mb-8 hover:border-[#E4C87A] transition-colors rounded-[2px]">
+            <div className="inline-flex items-center gap-2.5 border border-white/20 px-4 py-2.5 text-xs text-white/80 mb-8 hover:border-[#00B3CC] transition-colors rounded-[2px]">
               <span>Assessment partner —</span>
-              <span className="font-serif text-[#E4C87A] font-bold">CIGI</span>
+              <span className="font-serif text-[#00B3CC] font-bold">CIGI</span>
               <img
                 src="/CIGI.png"
                 alt="CIGI Logo"
@@ -180,7 +180,7 @@ export default function CdatSection({ setView }) {
         {/* ── RIGHT COLUMN: Registration Card ────────────────────────── */}
         <div
           id="cdat-form"
-          className="lg:col-span-5 bg-white text-slate-900 p-8 sm:p-10 border-t-4 border-[#C89B3C] shadow-2xl rounded-[2px] flex flex-col justify-between"
+          className="lg:col-span-5 bg-white text-slate-900 p-8 sm:p-10 border-t-4 border-[#00E5FF] shadow-2xl rounded-[2px] flex flex-col justify-between"
         >
           <div>
             <h4 className="font-serif text-xl sm:text-2xl font-semibold text-neon-blue-deep mb-1.5">
@@ -256,7 +256,7 @@ export default function CdatSection({ setView }) {
                 {!generatedCode ? (
                   <button
                     type="submit"
-                    className="w-full py-3.5 bg-[#C89B3C] hover:bg-[#E4C87A] text-neon-blue-deep font-semibold text-sm rounded-[2px] transition-all duration-300 cursor-pointer text-center shadow-md active:translate-y-[1px]"
+                    className="w-full py-3.5 bg-[#00E5FF] hover:bg-[#00B3CC] text-neon-blue-deep font-semibold text-sm rounded-[2px] transition-all duration-300 cursor-pointer text-center shadow-md active:translate-y-[1px]"
                   >
                     Generate Group Code
                   </button>

@@ -79,7 +79,7 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
               alt="Behold Aspire mentorship session"
             />
             {/* Soft decorative blob */}
-            <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-[#C89B3C]/20 rounded-full blur-3xl -z-10 pointer-events-none" />
+            <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-[#00E5FF]/20 rounded-full blur-3xl -z-10 pointer-events-none" />
             <div className="absolute -top-10 -left-10 w-40 h-40 bg-[#152B52]/10 rounded-full blur-3xl -z-10 pointer-events-none" />
           </div>
         </motion.div>

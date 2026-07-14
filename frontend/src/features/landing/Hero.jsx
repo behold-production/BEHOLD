@@ -78,14 +78,14 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
               >
                 <path
                   d="M4 13C65 3 150 2 315 13"
-                  stroke="#C89B3C"
+                  stroke="#00E5FF"
                   strokeWidth="4.5"
                   strokeLinecap="round"
                   className="drop-shadow-[0_0_10px_rgba(200,155,60,0.3)]"
                 />
                 <path
                   d="M20 16C90 9 185 10 300 15"
-                  stroke="#E4C87A"
+                  stroke="#00B3CC"
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeOpacity="0.75"
@@ -146,7 +146,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
         {/* Warm gold ambient glow at center-bottom */}
         <div
           className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[280px] rounded-full opacity-20 blur-[90px] pointer-events-none z-10"
-          style={{ background: 'radial-gradient(ellipse, #C89B3C 0%, transparent 70%)' }}
+          style={{ background: 'radial-gradient(ellipse, #00E5FF 0%, transparent 70%)' }}
         />
       </div>
 
@@ -165,10 +165,6 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
         transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
         className="relative z-20 w-full max-w-5xl mx-auto px-5 sm:px-10 text-center flex flex-col items-center my-auto pt-28 pb-10 md:pt-36 md:pb-12 transform-gpu"
       >
-        <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-gold-soft font-semibold mb-4 sm:mb-5">
-          Career Guidance · Psychological Counselling
-        </span>
-
         {/* Main H1 Heading */}
         <h1 className="font-serif font-semibold text-white leading-[1.1] sm:leading-[1.06] tracking-tight drop-shadow-2xl mb-5 sm:mb-6 max-w-4xl text-[2.55rem] sm:text-[3.6rem] md:text-[4.5rem] lg:text-[5rem]">
           {renderTitle(slide.title)}

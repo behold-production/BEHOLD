@@ -755,7 +755,7 @@ export default function SettingsTab(props) {
       
       <div className="space-y-3">
         {(() => {
-          const defaultOrder = ['counselling-intro', 'whyChooseUs', 'aptitude', 'counsellors', 'about', 'faq', 'blog', 'inquiry'];
+          const defaultOrder = ['counselling-intro', 'whyChooseUs', 'counsellors', 'about', 'reviews', 'faq', 'blog', 'inquiry'];
           let currentOrder = Array.isArray(settingsForm.sectionOrder) && settingsForm.sectionOrder.length > 0
             ? settingsForm.sectionOrder
             : defaultOrder;
@@ -790,6 +790,10 @@ export default function SettingsTab(props) {
               about: {
                 title: "About Us (What We Offer)",
                 desc: "Displays school programs, goals tracking, and guidance details."
+              },
+              reviews: {
+                title: "Reviews & Testimonials",
+                desc: "Displays community feedback and user success stories."
               },
               faq: {
                 title: "Frequently Asked Questions",

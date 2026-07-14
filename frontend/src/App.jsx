@@ -10,6 +10,7 @@ import About from './features/landing/About';
 import Faq from './features/landing/Faq';
 import WhyChooseUs from './features/landing/WhyChooseUs';
 import Inquiry from './features/landing/Inquiry';
+import Reviews from './features/landing/Reviews';
 import Footer from './shared/components/Footer';
 import AuthModals from './features/auth/AuthModals';
 function lazyWithRetry(importFn) {
@@ -34,6 +35,7 @@ const StudentProfile = lazyWithRetry(() => import('./features/student/StudentPro
 const PsychologistDashboard = lazyWithRetry(() => import('./features/counsellor/PsychologistDashboard'));
 const AdminDashboard = lazyWithRetry(() => import('./features/admin/AdminDashboard'));
 const AptitudeTest = lazyWithRetry(() => import('./features/student/AptitudeTest'));
+const AptitudeLanding = lazyWithRetry(() => import('./features/student/AptitudeLanding'));
 const ResetPassword = lazyWithRetry(() => import('./features/auth/ResetPassword'));
 const BlogList = lazyWithRetry(() => import('./features/blog/BlogList'));
 const BlogPostDetail = lazyWithRetry(() => import('./features/blog/BlogPostDetail'));
@@ -228,7 +230,7 @@ export default function App() {
       enableAptitude: true,
       gstEnabled: false,
       gstPercent: 0,
-      sectionOrder: ['counselling-intro', 'aptitude', 'counsellors', 'about', 'faq']
+      sectionOrder: ['counselling-intro', 'whyChooseUs', 'counsellors', 'about', 'reviews', 'faq', 'blog', 'inquiry']
     };
     try {
       const stored = localStorage.getItem('behold_site_settings');
@@ -546,7 +548,7 @@ export default function App() {
               <Hero setView={() => { }} navigateToSection={navigateToSection} siteSettings={siteSettings} />
               <div className="relative z-10 bg-white w-full">
                 {(() => {
-                  const defaultOrder = ['counselling-intro', 'whyChooseUs', 'aptitude', 'counsellors', 'about', 'faq', 'blog', 'inquiry'];
+                  const defaultOrder = ['counselling-intro', 'whyChooseUs', 'counsellors', 'about', 'reviews', 'faq', 'blog', 'inquiry'];
                   let order = Array.isArray(siteSettings.sectionOrder) && siteSettings.sectionOrder.length > 0
                     ? siteSettings.sectionOrder
                     : defaultOrder;
@@ -587,6 +589,8 @@ export default function App() {
                             siteSettings={siteSettings}
                           />
                         );
+                      case 'reviews':
+                        return <Reviews key="reviews_sec" />;
                       case 'faq':
                         return <Faq key="faq_sec" />;
                       case 'blog':
@@ -608,6 +612,7 @@ export default function App() {
           <Route path="/faqs" element={<FaqsPage />} />
 
           {/* Aptitude Test */}
+          <Route path="/aptitude" element={<AptitudeLanding />} />
           {siteSettings.enableAptitude !== false && (
             <Route path="/sample-test" element={
               <AptitudeTest onFinishTest={handleFinishTest} />

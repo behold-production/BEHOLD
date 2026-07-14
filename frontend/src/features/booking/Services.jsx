@@ -408,13 +408,10 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                             ))}
                         </div>
                     ) : viewMode === 'grid' ? (
-                        <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16 my-8">
-                            <div className="w-full lg:w-1/2 relative">
-                                <StackSlider
-                                    forceCarousel={true}
-                                    desktopClassName="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-                                    mobileContainerClassName="relative w-full max-w-[420px] mx-auto h-[540px]"
-                                    items={filteredAndSortedAdvisors.slice(0, visibleCount)}
+                        <StackSlider
+                            desktopClassName="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                            mobileContainerClassName="relative w-full max-w-[420px] mx-auto min-h-[540px]"
+                            items={filteredAndSortedAdvisors.slice(0, visibleCount)}
                             renderItem={(advisor, idx) => (
                                 <motion.div
                                     key={advisor.id}
@@ -422,14 +419,14 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                                     whileInView={{ opacity: 1, y: 0 }}
                                     viewport={{ once: true, margin: "-50px" }}
                                     transition={{ duration: 0.5, delay: (idx % 3) * 0.1 }}
-                                    className="bg-white rounded-[2px] border border-line shadow-sm hover:shadow hover:border-gold transition-all duration-300 flex flex-col justify-between h-full overflow-hidden group"
+                                    className="bg-white rounded-[2px] border border-line shadow-sm hover:shadow hover:border-[#00E5FF] transition-all duration-300 flex flex-col justify-between h-full overflow-hidden group"
                                 >
                                     <div>
                                         {/* Top Header: Avatar + Name & Role */}
                                         <div className="p-4 sm:p-6 pb-4 sm:pb-5 flex items-center gap-4 bg-white">
                                             <AdvisorAvatar advisor={advisor} sizeClass="w-16 h-16" />
                                             <div className="min-w-0 flex-1">
-                                                <h4 className="text-lg sm:text-xl font-serif font-semibold text-neon-blue-deep group-hover:text-gold transition-colors truncate">
+                                                <h4 className="text-lg sm:text-xl font-serif font-semibold text-neon-blue-deep group-hover:text-[#00E5FF] transition-colors truncate">
                                                     {advisor.name}
                                                 </h4>
                                                 <p className="text-xs sm:text-sm font-semibold text-ink-soft mt-0.5 truncate">
@@ -526,7 +523,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                                                     }
                                                     window.scrollTo({ top: 0, behavior: 'smooth' });
                                                 }}
-                                                className="w-full py-2.5 bg-gold hover:bg-gold-soft text-neon-blue-deep font-semibold text-xs sm:text-sm rounded-sm transition-all cursor-pointer text-center flex items-center justify-center border-none shadow-sm shadow-gold/10 active:translate-y-[1px]"
+                                                className="w-full py-2.5 bg-[#00E5FF] hover:bg-[#00B3CC] text-neon-blue-deep font-semibold text-xs sm:text-sm rounded-sm transition-all cursor-pointer text-center flex items-center justify-center border-none shadow-sm shadow-[#00E5FF]/10 active:translate-y-[1px]"
                                             >
                                                 Book
                                             </button>
@@ -535,29 +532,6 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                                 </motion.div>
                             )}
                         />
-                            </div>
-                            <div className="w-full lg:w-1/2 flex flex-col justify-center text-center lg:text-left px-4 lg:pr-10">
-                                <span className="font-mono text-[11px] tracking-[0.2em] uppercase text-gold mb-5 font-bold">Unfold with Behold</span>
-                                <h3 className="text-3xl sm:text-4xl lg:text-[42px] font-serif font-semibold text-neon-blue-deep leading-[1.1] mb-6">
-                                    Guiding You Towards a Brighter Future
-                                </h3>
-                                <p className="text-ink-soft text-sm sm:text-base leading-relaxed mb-8 max-w-lg mx-auto lg:mx-0">
-                                    Our expert team of clinical psychologists, psychiatrists, and career mentors is dedicated to helping you overcome challenges. Browse our experts to find the right fit for your mental wellbeing or career guidance needs.
-                                </p>
-                                <div>
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            window.spaNavigate('/booking');
-                                            window.scrollTo({ top: 0, behavior: 'smooth' });
-                                        }}
-                                        className="inline-flex items-center justify-center px-8 py-3.5 bg-neon-blue-deep hover:bg-neon-blue-mid text-white font-semibold rounded-sm transition-all shadow-md shadow-neon-blue-deep/20 border-none cursor-pointer"
-                                    >
-                                        View Full Directory
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
                     ) : (
                         <div className="flex flex-col gap-6">
                             {filteredAndSortedAdvisors.slice(0, visibleCount).map(advisor => (
