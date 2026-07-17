@@ -59,11 +59,11 @@ export default function CdatSection({ setView, siteSettings }) {
             <span className="text-xs font-bold tracking-widest uppercase text-blue-200 block mb-3">
               {sectionSub}
             </span>
-            <h2 className="text-3xl md:text-4xl font-black mb-3 leading-tight flex items-center flex-wrap gap-x-2">
+            <h2 id="aptitude-title" className="text-3xl md:text-4xl font-black mb-3 leading-tight flex items-center flex-wrap gap-x-2">
               <span>{settings.aptitudeSectionTitle ? settings.aptitudeSectionTitle.replace(/\s*\(C-DAT\)$/i, '') : 'CIGI Differential Aptitude Test'}</span>
               <span className="whitespace-nowrap inline-flex items-center">
                 <span>(C-DAT)</span>
-                <ScrollDot nextId="services-title" label="Scroll to Book Your Session ↓" size="md" inlineText={true} />
+                <ScrollDot nextId="experts-title" label="Scroll to Meet Our Experts ↓" size="md" inlineText={true} />
               </span>
             </h2>
             <p className="text-blue-100 text-sm md:text-base leading-relaxed mb-5 max-w-xl">

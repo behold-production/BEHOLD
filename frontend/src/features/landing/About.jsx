@@ -105,7 +105,7 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
               About Behold
             </span>
             <h2 id="about-title" className="text-3xl sm:text-4xl md:text-5xl font-black text-gray-900 mb-4 leading-tight">
-              {renderTitleWithFullstopDot(aboutTitle)}
+              {renderTitleWithFullstopDot(aboutTitle, 'reviews-title', 'Scroll to Student Reviews ↓', 'md')}
             </h2>
             <p className="text-gray-600 text-base leading-relaxed mb-4 max-w-prose font-normal">{aboutSub}</p>
 

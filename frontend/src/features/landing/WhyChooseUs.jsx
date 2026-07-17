@@ -92,7 +92,7 @@ export default function WhyChooseUs({ siteSettings }) {
             Why Choose Us
           </span>
           <h2 id="why-choose-us-title" className="text-3xl md:text-4xl font-black text-gray-900 mb-3 leading-tight flex items-center justify-center flex-wrap">
-            {renderTitleWithFullstopDot('Built on Trust. Driven by Excellence', 'about-title', 'Scroll to What We Offer ↓', 'md')}
+            {renderTitleWithFullstopDot('Built on Trust. Driven by Excellence', 'aptitude-title', 'Scroll to C-DAT Assessment ↓', 'md')}
           </h2>
           <p className="text-sm text-gray-500 max-w-xl mx-auto leading-relaxed">
             We combine psychological expertise, personalized mentorship, and efficient processes to deliver guidance that helps every student achieve their goals.

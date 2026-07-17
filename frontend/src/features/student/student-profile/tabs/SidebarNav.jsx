@@ -23,7 +23,7 @@ const SidebarNav = ({ currentSection, handleSectionChange, bookedSessions, testP
  return (
  <>
  {/* Desktop sidebar */}
- <nav className="hidden lg:flex flex-col gap-1 p-2 bg-white border border-slate-200/80 rounded-2xl shadow-md sticky top-24 max-h-[calc(100vh-110px)] overflow-y-auto overscroll-contain [&::-webkit-scrollbar]:hidden">
+ <nav className="hidden lg:flex flex-col gap-1.5 p-3 bg-white border border-slate-200/80 rounded-2xl shadow-md sticky top-24 max-h-[calc(100vh-110px)] overflow-y-auto overscroll-contain [&::-webkit-scrollbar]:hidden">
  {visibleTabs.map(tab => {
  const Icon = ICON_MAP[tab.iconName];
  const isActive = currentSection === tab.id;
@@ -35,18 +35,20 @@ const SidebarNav = ({ currentSection, handleSectionChange, bookedSessions, testP
  key={tab.id}
  type="button"
  onClick={() => handleSectionChange(tab.id)}
- className={`relative flex items-center gap-3 px-4 min-h-[46px] rounded-xl text-xs font-bold tracking-wider transition-all duration-200 group cursor-pointer ${isActive
- ? 'bg-blue-600 text-white font-black shadow-md shadow-blue-500/20'
- : 'text-slate-600 hover:bg-blue-50 hover:text-blue-600'
+ className={`relative flex items-center gap-3 px-4 min-h-[46px] rounded-xl text-xs font-bold tracking-wider transition-all duration-200 group cursor-pointer border-0 ${
+ isActive
+ ? 'bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 text-white font-black shadow-lg shadow-blue-500/25 scale-[1.02]'
+ : 'text-slate-600 hover:bg-slate-100/80 hover:text-blue-600'
  }`}
  >
  {Icon && <Icon className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 ${isActive ? 'text-white' : 'text-slate-400 group-hover:text-blue-600'}`} />}
  <span className="flex-1 text-left">{tab.label}</span>
  {badge !== null && badge !== 0 && (
- <span className={`text-[10px] font-black px-2 min-w-[20px] h-5 rounded-full flex items-center justify-center ${isActive
- ? 'bg-white text-blue-600'
+ <span className={`text-[10px] font-black px-2 min-w-[20px] h-5 rounded-full flex items-center justify-center ${
+ isActive
+ ? 'bg-white text-blue-600 shadow-xs'
  : tab.id === 'results' && !testProfile
- ? 'bg-amber-100 text-amber-700'
+ ? 'bg-amber-100 text-amber-700 font-black animate-pulse'
  : 'bg-slate-100 text-slate-600'
  }`}>
  {badge}
@@ -56,19 +58,21 @@ const SidebarNav = ({ currentSection, handleSectionChange, bookedSessions, testP
  );
  })}
 
- <div className="mt-3 mx-1 p-3.5 bg-gradient-to-br from-blue-50/50 to-indigo-50/30 border border-blue-100/80 rounded-xl">
- <div className="flex items-center gap-2 mb-1">
+ <div className="mt-3 mx-1 p-4 bg-gradient-to-br from-blue-50/80 via-white to-indigo-50/50 border border-blue-200/80 rounded-2xl shadow-xs">
+ <div className="flex items-center gap-2 mb-1.5">
+ <div className="w-6 h-6 rounded-lg bg-blue-600/10 flex items-center justify-center shrink-0">
  <Bell className="w-3.5 h-3.5 text-blue-600" />
- <span className="text-[10px] tracking-wider font-bold text-slate-800 uppercase">Need help?</span>
+ </div>
+ <span className="text-[10px] tracking-wider font-extrabold text-slate-900 uppercase">Need help?</span>
  </div>
  <p className="text-xs text-slate-600 leading-relaxed font-medium">
- Data securely synced in Cloud. Contact your coordinator for support.
+ Data securely synced in Cloud. Contact your coordinator for guidance & support.
  </p>
  </div>
 
  <button
  onClick={() => setIsLogoutOpen(true)}
- className="mt-2 mx-1 flex items-center gap-3 px-4 min-h-[44px] rounded-xl text-xs font-bold tracking-wider transition-all duration-150 cursor-pointer text-rose-600 hover:bg-rose-50 border-none bg-transparent group"
+ className="mt-1 mx-1 flex items-center gap-3 px-4 min-h-[44px] rounded-xl text-xs font-bold tracking-wider transition-all duration-150 cursor-pointer text-rose-600 hover:bg-rose-50 border border-transparent hover:border-rose-100 group"
  >
  <LogOut className="w-4 h-4 shrink-0 text-rose-500 group-hover:scale-110 transition-transform" />
  <span className="flex-1 text-left">Sign Out</span>

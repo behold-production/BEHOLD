@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Star, ShieldCheck, Clock, Video, MapPin, CheckCircle2, ArrowRight } from 'lucide-react';
 import ApiService from '../../shared/services/api';
 import { ScrollDot, renderTitleWithFullstopDot } from '../../shared/components/BrandDot';
 
@@ -93,7 +94,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                 {settings.servicesSectionSub || 'Our Mentorship Ecosystem'}
               </span>
               <h2 id="services-title" className="text-3xl md:text-4xl font-black text-gray-900 mb-3 flex items-center justify-center flex-wrap">
-                {renderTitleWithFullstopDot(settings.servicesSectionTitle || 'Book Your Session', 'why-choose-us', 'Scroll to Why Choose Us ↓', 'md')}
+                {renderTitleWithFullstopDot(settings.servicesSectionTitle || 'Book Your Session', 'unfold-behold', 'Scroll to Unfold with Behold ↓', 'md')}
               </h2>
               <p className="text-sm md:text-base text-gray-600 max-w-xl mx-auto">
                 {settings.servicesSectionDesc || 'Access expert counselling sessions and lifetime career mentoring tailored to your aspirations.'}
@@ -222,7 +223,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
 
               {/* RIGHT COLUMN: Accompanying "Unfold with Behold" Text Content (5 cols) */}
               <div className="lg:col-span-5 flex flex-col justify-center py-4">
-                <div className="inline-flex items-center gap-2 mb-3">
+                <div id="unfold-behold" className="inline-flex items-center gap-2 mb-3">
                   <span className="text-xs font-bold tracking-widest uppercase text-blue-600">Unfold with Behold</span>
                   <ScrollDot nextId="why-choose-us" label="Scroll to Why Choose Us ↓" size="xs" inlineText={true} />
                 </div>
@@ -269,8 +270,8 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
           <div className={mode === 'experts' ? '' : 'mt-20'}>
             <div className="text-center mb-10">
               <span className="text-sm font-bold tracking-widest uppercase text-blue-600 block mb-4">Our Clinical Team</span>
-              <h2 className="text-4xl font-black text-gray-900 mb-4 flex items-center justify-center flex-wrap">
-                {renderTitleWithFullstopDot('Meet Our Experts', 'why-choose-us', 'Scroll down ↓', 'md')}
+              <h2 id="experts-title" className="text-4xl font-black text-gray-900 mb-4 flex items-center justify-center flex-wrap">
+                {renderTitleWithFullstopDot('Meet Our Experts', 'about-title', 'Scroll to What We Offer ↓', 'md')}
               </h2>
               <p className="text-xl text-gray-600 max-w-xl mx-auto">Certified professionals dedicated to your wellbeing and career success.</p>
             </div>

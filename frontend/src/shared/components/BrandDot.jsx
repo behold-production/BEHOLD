@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 /**
  * ScrollDot (Interactive Navy Neon Blue Little Dot)
  * Renders the signature BEHOLD little dot (`.`) in navy neon blue.
- * When clicked, smoothly scrolls down to `nextId`.
+ * When scrolled into view, it dynamically activates with a glowing neon ripple ring.
+ * When clicked, triggers a ripple burst and smoothly scrolls down to `nextId`.
  * Fits cleanly at baseline right after headings or text like a real period.
  */
 export function ScrollDot({
@@ -15,6 +16,30 @@ export function ScrollDot({
   onClick = null
 }) {
   const [hovered, setHovered] = useState(false);
+  const [isActive, setIsActive] = useState(false);
+  const [isClicking, setIsClicking] = useState(false);
+  const dotRef = useRef(null);
+
+  useEffect(() => {
+    if (!dotRef.current) return;
+    const targetEl = dotRef.current.closest('section') || dotRef.current.closest('div[id]') || dotRef.current.parentElement;
+    if (!targetEl) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          setIsActive(entry.isIntersecting);
+        });
+      },
+      {
+        rootMargin: '-25% 0px -35% 0px',
+        threshold: 0.15
+      }
+    );
+
+    observer.observe(targetEl);
+    return () => observer.disconnect();
+  }, []);
 
   // Refined little dot sizes suitable for periods and small accents
   const sizes = {
@@ -27,6 +52,9 @@ export function ScrollDot({
 
   const handleClick = (e) => {
     e.stopPropagation();
+    setIsClicking(true);
+    setTimeout(() => setIsClicking(false), 450);
+
     if (onClick) {
       onClick();
       return;
@@ -45,6 +73,7 @@ export function ScrollDot({
 
   return (
     <span
+      ref={dotRef}
       onClick={handleClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -59,20 +88,48 @@ export function ScrollDot({
         marginLeft: inlineText ? '2px' : '0px',
         marginRight: inlineText ? '1px' : '0px',
         cursor: 'pointer',
-        transform: hovered ? 'scale(1.3)' : 'scale(1)',
-        transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+        transform: isClicking ? 'scale(1.7)' : hovered ? 'scale(1.35)' : isActive ? 'scale(1.15)' : 'scale(1)',
+        transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
       }}
       className={`relative inline-block rounded-full shrink-0 ${sizes[size] || sizes.md} ${className}`}
     >
+      {/* Dynamic Expanding Ripple Ring when section is active in viewport or hovered */}
+      {(isActive || hovered || isClicking) && (
+        <span
+          className="absolute -inset-1 rounded-full pointer-events-none animate-ping"
+          style={{
+            background: 'radial-gradient(circle, #00F0FF 0%, rgba(0, 240, 255, 0) 70%)',
+            opacity: isClicking ? 0.9 : hovered ? 0.75 : 0.55,
+            animationDuration: isClicking ? '0.45s' : '1.6s',
+          }}
+        />
+      )}
+
+      {/* Outer Breathing Glowing Aura when active */}
+      {(isActive || hovered) && (
+        <span
+          className="absolute -inset-0.5 rounded-full pointer-events-none animate-pulse"
+          style={{
+            background: '#00E5FF',
+            filter: 'blur(3px)',
+            opacity: hovered ? 0.85 : 0.65,
+          }}
+        />
+      )}
+
       {/* Navy Neon Blue Little Dot */}
       <span
         className="absolute inset-0 rounded-full"
         style={{
           background: 'radial-gradient(circle at 35% 35%, #00F0FF 0%, #00A8FF 55%, #0c1a36 100%)',
-          boxShadow: hovered
-            ? '0 0 12px rgba(0, 240, 255, 0.95), 0 0 3px #00F0FF, inset 1px 1px 1.5px rgba(255, 255, 255, 0.8)'
+          boxShadow: isClicking
+            ? '0 0 18px rgba(0, 240, 255, 1), 0 0 6px #00F0FF, inset 1px 1px 2px rgba(255, 255, 255, 0.95)'
+            : hovered
+            ? '0 0 14px rgba(0, 240, 255, 0.95), 0 0 4px #00F0FF, inset 1px 1px 1.5px rgba(255, 255, 255, 0.85)'
+            : isActive
+            ? '0 0 10px rgba(0, 229, 255, 0.9), 0 0 2.5px #00F0FF, inset 1px 1px 1.5px rgba(255, 255, 255, 0.75)'
             : '0 0 6px rgba(0, 229, 255, 0.75), 0 0 1.5px #00F0FF, inset 1px 1px 1.5px rgba(255, 255, 255, 0.65)',
-          transition: 'all 0.2s ease',
+          transition: 'all 0.3s ease',
         }}
       />
       {/* Specular Highlight for crisp jewel finish */}

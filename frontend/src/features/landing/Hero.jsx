@@ -102,8 +102,8 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
               <ScrollDot nextId="services-title" label="Scroll to Book Your Session ↓" size="xs" inlineText={true} />
             </div>
 
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 leading-[1.12] mb-4 tracking-tight">
-              {renderTitleWithFullstopDot(title)}
+            <h1 id="hero-title" className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 leading-[1.12] mb-4 tracking-tight">
+              {renderTitleWithFullstopDot(title, 'services-title', 'Scroll to Book Your Session ↓', 'md')}
             </h1>
 
             <p className="text-sm sm:text-base lg:text-lg text-gray-600 leading-relaxed mb-6 max-w-xl font-normal">
