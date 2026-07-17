@@ -536,6 +536,7 @@ export default function App() {
         />
       )}
 
+
       <Suspense fallback={
         <div className="min-h-screen bg-zinc-955 flex items-center justify-center">
           <div className="w-8 h-8 border-2 border-brand border-t-transparent rounded-full animate-spin" />
@@ -552,7 +553,7 @@ export default function App() {
                   let order = Array.isArray(siteSettings.sectionOrder) && siteSettings.sectionOrder.length > 0
                     ? siteSettings.sectionOrder.filter(sec => sec !== 'inquiry' && sec !== 'process') // Sanitize
                     : defaultOrder;
-                  
+
                   // Ensure any new sections not present in the saved database order are still rendered at the bottom
                   const missingSections = defaultOrder.filter(sec => !order.includes(sec));
                   if (missingSections.length > 0) {
@@ -577,7 +578,7 @@ export default function App() {
                         ) : null;
                       case 'aptitude':
                         return siteSettings.enableAptitude !== false ? (
-                          <CdatSection key="aptitude_sec" setView={() => { }} />
+                      <CdatSection key="aptitude_sec" setView={() => { }} siteSettings={siteSettings} />
                         ) : null;
                       case 'about':
                         return (
@@ -600,7 +601,7 @@ export default function App() {
                     }
                   });
                 })()}
-                
+
                 {/* Fixed Inquiry Section */}
                 <Inquiry key="inquiry_fixed" testProfile={testProfile} siteSettings={siteSettings} />
               </div>

@@ -1,92 +1,95 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 
-const capsules = [
+const features = [
   {
+    icon: (
+      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      </svg>
+    ),
     title: 'Expertise You Can Trust',
     desc: 'Our certified counselors and mentors provide research-backed guidance grounded in psychological science and career development.',
+    color: 'bg-blue-50 text-blue-600',
   },
   {
+    icon: (
+      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+      </svg>
+    ),
     title: 'End-To-End Support',
     desc: 'From aptitude assessment and stream selection to university guidance, we manage every milestone of the student journey.',
+    color: 'bg-indigo-50 text-indigo-600',
   },
   {
+    icon: (
+      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" />
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+      </svg>
+    ),
     title: 'Doorstep & Online Sessions',
     desc: 'Available at home, in school, or online — expert counseling designed around your schedule and comfort.',
+    color: 'bg-teal-50 text-teal-600',
   },
   {
+    icon: (
+      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+      </svg>
+    ),
     title: 'Student-Centric Approach',
-    desc: 'Every plan is tailored to the individual student\'s strengths, interests, and aspirations for a deeply personal experience.',
+    desc: "Every plan is tailored to the individual student's strengths, interests, and aspirations for a deeply personal experience.",
+    color: 'bg-pink-50 text-pink-600',
   },
 ];
 
 export default function WhyChooseUs({ siteSettings }) {
   return (
-    <section id="why-choose-us" className="py-16 md:py-28 bg-white overflow-hidden scroll-mt-20">
-      <div className="flex flex-col lg:flex-row items-stretch max-w-[1600px] mx-auto">
+    <section id="why-choose-us" className="py-14 bg-gray-50">
+      <div className="max-w-6xl mx-auto px-6 lg:px-8">
 
-        {/* Left: Image */}
-        <motion.div
-          initial={{ opacity: 0, x: -40 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full lg:w-[45%] px-6 sm:px-10 lg:pl-[max(2rem,calc((100vw-80rem)/2+2rem))] lg:pr-0 py-4 lg:py-0 flex items-center order-2 lg:order-1"
-        >
-          <div className="w-full overflow-hidden shadow-2xl rounded-[16px] lg:rounded-r-none lg:rounded-l-[16px]">
-            <img
-              src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2071&auto=format&fit=crop"
-              className="w-full h-[320px] sm:h-[420px] lg:h-[520px] object-cover object-center"
-              alt="Behold mentorship workshop session"
-            />
-          </div>
-        </motion.div>
-
-        {/* Right: Content */}
-        <motion.div
-          initial={{ opacity: 0, x: 40 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-          className="w-full lg:w-[55%] py-10 lg:py-16 px-6 sm:px-10
-            lg:pr-[max(3rem,calc((100vw-80rem)/2+2rem))]
-            lg:pl-16 order-1 lg:order-2 flex flex-col justify-center"
-        >
-          <span className="text-xs sm:text-sm font-bold tracking-[0.2em] uppercase text-neon-blue-mid block mb-4">
-            WHY CHOOSE US
+        {/* Header */}
+        <div className="text-center mb-10">
+          <span className="text-sm font-bold tracking-widest uppercase text-blue-600 block mb-4">
+            Why Choose Us
           </span>
-          <h2 className="text-4xl sm:text-5xl lg:text-[48px] font-normal text-neon-blue-deep mb-4 leading-[1.14] tracking-tight font-serif">
-            Built on Trust.<br />Driven by Excellence.
+          <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-4 leading-tight">
+            Built on Trust.<br className="hidden sm:inline" /> Driven by Excellence.
           </h2>
-          <p className="text-ink-soft text-sm sm:text-base leading-relaxed font-normal mb-8 max-w-lg font-sans">
-            We combine psychological expertise, personalized mentorship, and efficient processes to deliver
-            guidance that helps every student achieve their goals with confidence and clarity.
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+            We combine psychological expertise, personalized mentorship, and efficient processes to deliver guidance that helps every student achieve their goals.
           </p>
+        </div>
 
-          {/* Capsule Pills */}
-          <div className="space-y-3 sm:space-y-4">
-            {capsules.map((cap, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.05 * idx }}
-                className="bg-paper py-1.5 pl-1.5 pr-5 sm:pr-7 rounded-full border border-line flex items-center gap-4 shadow-[0_2px_10px_rgba(0,0,0,0.02)] hover:shadow-[0_4px_20px_rgba(6,14,32,0.08)] hover:border-gold hover:-translate-y-0.5 transition-all duration-300 group cursor-default"
-              >
-                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-neon-blue-deep group-hover:bg-gold flex items-center justify-center shrink-0 transition-colors">
-                  <svg className="w-5 h-5 text-white group-hover:text-neon-blue-deep transition-colors" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
-                  </svg>
-                </div>
-                <div>
-                  <h4 className="text-[13px] sm:text-[14px] font-bold text-neon-blue-deep mb-0.5 leading-snug font-sans group-hover:text-gold transition-colors">{cap.title}</h4>
-                  <p className="text-ink-soft text-[11px] sm:text-[12px] leading-snug font-normal font-sans">{cap.desc}</p>
-                </div>
-              </motion.div>
-            ))}
+        {/* Features Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {features.map((feat, i) => (
+            <div key={i} className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 hover:shadow-md transition-shadow flex gap-5">
+              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${feat.color}`}>
+                {feat.icon}
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">{feat.title}</h3>
+                <p className="text-gray-600 leading-relaxed">{feat.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Bottom CTA strip */}
+        <div className="mt-12 bg-blue-600 rounded-2xl p-8 flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
+          <div>
+            <h3 className="text-2xl font-black text-white mb-1">Ready to get started?</h3>
+            <p className="text-blue-200">Book your first session today — no commitment required.</p>
           </div>
-        </motion.div>
+          <button
+            onClick={() => { window.spaNavigate?.('/booking'); window.scrollTo({ top: 0 }); }}
+            className="px-8 py-4 bg-white text-blue-600 font-bold rounded-xl hover:bg-blue-50 transition shrink-0 border-none cursor-pointer shadow-lg"
+          >
+            Book Appointment
+          </button>
+        </div>
       </div>
     </section>
   );
