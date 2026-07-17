@@ -591,7 +591,7 @@ export default function App() {
                           />
                         );
                       case 'reviews':
-                        return <Reviews key="reviews_sec" />;
+                        return <Reviews key="reviews_sec" siteSettings={siteSettings} />;
                       case 'faq':
                         return <Faq key="faq_sec" />;
                       case 'blog':

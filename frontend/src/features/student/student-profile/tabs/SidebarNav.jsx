@@ -23,7 +23,7 @@ const SidebarNav = ({ currentSection, handleSectionChange, bookedSessions, testP
  return (
  <>
  {/* Desktop sidebar */}
- <nav className="hidden lg:flex flex-col gap-0.5 p-1.5 bg-white border border-surface-200 rounded-[10px] shadow-square-light sticky top-24 max-h-[calc(100vh-110px)] overflow-y-auto overscroll-contain [&::-webkit-scrollbar]:hidden">
+ <nav className="hidden lg:flex flex-col gap-1 p-2 bg-white border border-slate-200/80 rounded-2xl shadow-md sticky top-24 max-h-[calc(100vh-110px)] overflow-y-auto overscroll-contain [&::-webkit-scrollbar]:hidden">
  {visibleTabs.map(tab => {
  const Icon = ICON_MAP[tab.iconName];
  const isActive = currentSection === tab.id;
@@ -35,19 +35,19 @@ const SidebarNav = ({ currentSection, handleSectionChange, bookedSessions, testP
  key={tab.id}
  type="button"
  onClick={() => handleSectionChange(tab.id)}
- className={`relative flex items-center gap-2.5 px-3 min-h-[44px] rounded-[10px] text-xs font-bold tracking-widest transition-all duration-150 group cursor-pointer ${isActive
- ? 'bg-[#00E5FF] text-[#0a121e] font-black shadow-[0_4px_15px_rgba(0,229,255,0.28)]'
- : 'text-surface-600 hover:bg-[#00E5FF]/15 hover:text-[#0a121e]'
+ className={`relative flex items-center gap-3 px-4 min-h-[46px] rounded-xl text-xs font-bold tracking-wider transition-all duration-200 group cursor-pointer ${isActive
+ ? 'bg-blue-600 text-white font-black shadow-md shadow-blue-500/20'
+ : 'text-slate-600 hover:bg-blue-50 hover:text-blue-600'
  }`}
  >
- {Icon && <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-[#0a121e]' : 'text-surface-400 group-hover:text-[#0a121e]'}`} />}
+ {Icon && <Icon className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 ${isActive ? 'text-white' : 'text-slate-400 group-hover:text-blue-600'}`} />}
  <span className="flex-1 text-left">{tab.label}</span>
  {badge !== null && badge !== 0 && (
- <span className={`text-[10px] font-black px-1.5 min-w-[20px] h-5 rounded-[10px] flex items-center justify-center ${isActive
- ? 'bg-[#0a121e] text-[#00E5FF]'
+ <span className={`text-[10px] font-black px-2 min-w-[20px] h-5 rounded-full flex items-center justify-center ${isActive
+ ? 'bg-white text-blue-600'
  : tab.id === 'results' && !testProfile
  ? 'bg-amber-100 text-amber-700'
- : 'bg-surface-100 text-surface-600'
+ : 'bg-slate-100 text-slate-600'
  }`}>
  {badge}
  </span>
@@ -56,21 +56,21 @@ const SidebarNav = ({ currentSection, handleSectionChange, bookedSessions, testP
  );
  })}
 
- <div className="mt-2 mx-1 p-3 bg-surface-50 border border-surface-200 rounded-[10px]">
+ <div className="mt-3 mx-1 p-3.5 bg-gradient-to-br from-blue-50/50 to-indigo-50/30 border border-blue-100/80 rounded-xl">
  <div className="flex items-center gap-2 mb-1">
- <Bell className="w-3.5 h-3.5 text-surface-400" />
- <span className="text-[10px] tracking-widest font-bold text-surface-700">Need help?</span>
+ <Bell className="w-3.5 h-3.5 text-blue-600" />
+ <span className="text-[10px] tracking-wider font-bold text-slate-800 uppercase">Need help?</span>
  </div>
- <p className="text-xs text-surface-500 leading-relaxed">
+ <p className="text-xs text-slate-600 leading-relaxed font-medium">
  Data securely synced in Cloud. Contact your coordinator for support.
  </p>
  </div>
 
  <button
  onClick={() => setIsLogoutOpen(true)}
- className="mt-2 mx-1 flex items-center gap-2.5 px-3 min-h-[44px] rounded-[10px] text-xs font-bold tracking-widest transition-all duration-150 cursor-pointer text-red-600 hover:bg-red-50 border-none bg-transparent group"
+ className="mt-2 mx-1 flex items-center gap-3 px-4 min-h-[44px] rounded-xl text-xs font-bold tracking-wider transition-all duration-150 cursor-pointer text-rose-600 hover:bg-rose-50 border-none bg-transparent group"
  >
- <LogOut className="w-4 h-4 shrink-0 text-red-400 group-hover:text-red-600" />
+ <LogOut className="w-4 h-4 shrink-0 text-rose-500 group-hover:scale-110 transition-transform" />
  <span className="flex-1 text-left">Sign Out</span>
  </button>
  </nav>

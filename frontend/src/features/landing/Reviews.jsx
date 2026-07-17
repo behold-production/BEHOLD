@@ -1,4 +1,5 @@
 import React from 'react';
+import { ScrollDot, renderTitleWithFullstopDot } from '../../shared/components/BrandDot';
 
 const reviews = [
   {
@@ -10,7 +11,7 @@ const reviews = [
     color: "bg-blue-600",
   },
   {
-    text: "As a parent, seeing my son struggle with exam anxiety was heartbreaking. The psychological counseling at Behold Aspire was a turning point. He's now confident, focused, and much happier.",
+    text: "As a parent, seeing my son struggle with exam anxiety was heartbreaking. The psychological counseling at BEHOLD was a turning point. He's now confident, focused, and much happier.",
     author: "Rajesh K.",
     role: "Parent",
     initial: "R",
@@ -39,22 +40,27 @@ function Stars({ count = 5 }) {
   );
 }
 
-export default function Reviews() {
+export default function Reviews({ siteSettings }) {
+  const settings = siteSettings || {};
+  const firstHeroStat = Array.isArray(settings.heroStats) && settings.heroStats.length > 0
+    ? `${settings.heroStats[0].num} ${settings.heroStats[0].label}`
+    : '500+ Students Guided';
+
   return (
-    <section className="py-24 bg-gray-50">
+    <section className="py-14 bg-gray-50">
       <div className="max-w-6xl mx-auto px-6 lg:px-8">
 
         {/* Header */}
         <div className="text-center mb-14">
-          <div className="inline-flex items-center gap-2 mb-4">
-            <span className="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>
+          <div className="inline-flex items-baseline gap-1 mb-4">
             <span className="text-sm font-bold tracking-widest uppercase text-blue-600">Testimonials</span>
+            <ScrollDot nextId="faq-title" label="Scroll to FAQ ↓" size="xs" inlineText={true} />
           </div>
-          <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-4 leading-tight">
-            What Our Community Says
+          <h2 id="reviews-title" className="text-4xl md:text-5xl font-black text-gray-900 mb-4 leading-tight flex items-center justify-center flex-wrap">
+            {renderTitleWithFullstopDot('What Our Community Says', 'faq-title', 'Scroll to FAQ ↓', 'md')}
           </h2>
-          <p className="text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed">
-            Real stories from students, parents, and professionals who found clarity and support through Behold Aspire.
+          <p className="text-sm md:text-base text-gray-500 max-w-2xl mx-auto leading-relaxed">
+            Real stories from students, parents, and professionals who found clarity and support through BEHOLD.
           </p>
         </div>
 
@@ -89,7 +95,7 @@ export default function Reviews() {
             <span>4.9 / 5 Average Rating</span>
           </div>
           <span className="hidden sm:block w-1 h-1 rounded-full bg-gray-300"></span>
-          <span>500+ Students Guided</span>
+          <span>{firstHeroStat}</span>
           <span className="hidden sm:block w-1 h-1 rounded-full bg-gray-300"></span>
           <span>100% Confidential Sessions</span>
         </div>

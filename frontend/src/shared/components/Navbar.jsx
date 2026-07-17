@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import LogoutConfirmModal from './LogoutConfirmModal';
+import { ScrollDot } from './BrandDot';
 
 export default function Navbar({ navigateToSection, currentView, onOpenAuth, siteName, siteSettings }) {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -71,7 +72,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
               className="text-2xl font-black tracking-wide text-gray-900 bg-transparent border-none cursor-pointer p-0 flex items-baseline gap-0.5"
             >
               <span>{siteName || 'BEHOLD'}</span>
-              <span className="text-blue-500 font-black">.</span>
+              <ScrollDot nextId="cdat-badge" label="Scroll to CIGI Certificate ↓" size="md" inlineText={true} />
             </button>
 
             {/* Desktop Nav Links */}
@@ -112,30 +113,67 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
               </button>
 
               {/* Sign In / Profile */}
-              <button
-                onClick={handleProfileClick}
-                className="px-4 py-2 border border-gray-300 hover:border-gray-400 text-gray-700 font-semibold text-sm rounded transition-colors bg-transparent cursor-pointer"
-              >
-                {user ? (user.name?.split(' ')[0] || 'Profile') : 'Sign In'}
-              </button>
+              {user ? (
+                <button
+                  onClick={handleProfileClick}
+                  className="w-10 h-10 rounded-full border-2 border-blue-600 hover:border-blue-700 bg-blue-50 text-blue-600 font-black text-base flex items-center justify-center transition-all hover:scale-105 shadow-xs p-0 overflow-hidden cursor-pointer shrink-0"
+                  title={`${user.name || 'User'} Profile`}
+                >
+                  {(user.profilePic || user.avatar || user.profileImage || user.photoURL || user.image) ? (
+                    <img
+                      src={user.profilePic || user.avatar || user.profileImage || user.photoURL || user.image}
+                      alt={user.name || 'Profile'}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <span>{(user.name || user.email || 'U').charAt(0).toUpperCase()}</span>
+                  )}
+                </button>
+              ) : (
+                <button
+                  onClick={handleProfileClick}
+                  className="px-4 py-2 border border-gray-300 hover:border-gray-400 text-gray-700 font-semibold text-sm rounded transition-colors bg-transparent cursor-pointer"
+                >
+                  Sign In
+                </button>
+              )}
             </div>
 
-            {/* Mobile Hamburger */}
-            <button
-              className="md:hidden p-2 rounded text-gray-700 hover:bg-gray-100 transition border-none cursor-pointer bg-transparent"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-label="Menu"
-            >
-              {mobileMenuOpen ? (
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              ) : (
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
+            {/* Mobile Hamburger & Profile */}
+            <div className="md:hidden flex items-center gap-2.5">
+              {user && (
+                <button
+                  onClick={handleProfileClick}
+                  className="w-9 h-9 rounded-full border-2 border-blue-600 bg-blue-50 text-blue-600 font-black text-sm flex items-center justify-center transition-all shadow-2xs p-0 overflow-hidden cursor-pointer shrink-0"
+                  title={`${user.name || 'User'} Profile`}
+                >
+                  {(user.profilePic || user.avatar || user.profileImage || user.photoURL || user.image) ? (
+                    <img
+                      src={user.profilePic || user.avatar || user.profileImage || user.photoURL || user.image}
+                      alt={user.name || 'Profile'}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <span>{(user.name || user.email || 'U').charAt(0).toUpperCase()}</span>
+                  )}
+                </button>
               )}
-            </button>
+              <button
+                className="p-2 rounded text-gray-700 hover:bg-gray-100 transition border-none cursor-pointer bg-transparent"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                aria-label="Menu"
+              >
+                {mobileMenuOpen ? (
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                ) : (
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                )}
+              </button>
+            </div>
           </div>
         </div>
 
@@ -170,12 +208,40 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                 >
                   Book Appointment
                 </button>
-                <button
-                  onClick={() => { setMobileMenuOpen(false); if (user) setIsLogoutOpen(true); else onOpenAuth?.(); }}
-                  className="w-full py-3 border border-gray-300 text-gray-700 font-semibold rounded transition hover:bg-gray-50 bg-transparent cursor-pointer"
-                >
-                  {user ? 'Sign Out' : 'Sign In'}
-                </button>
+                {user ? (
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => { setMobileMenuOpen(false); handleProfileClick(); }}
+                      className="flex-1 py-3 bg-blue-50 text-blue-700 font-bold rounded transition hover:bg-blue-100 border border-blue-200/60 cursor-pointer flex items-center justify-center gap-2"
+                    >
+                      <div className="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-black overflow-hidden">
+                        {(user.profilePic || user.avatar || user.profileImage || user.photoURL || user.image) ? (
+                          <img
+                            src={user.profilePic || user.avatar || user.profileImage || user.photoURL || user.image}
+                            alt={user.name || 'Profile'}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <span>{(user.name || user.email || 'U').charAt(0).toUpperCase()}</span>
+                        )}
+                      </div>
+                      <span>Dashboard</span>
+                    </button>
+                    <button
+                      onClick={() => { setMobileMenuOpen(false); setIsLogoutOpen(true); }}
+                      className="py-3 px-4 border border-rose-300 text-rose-600 font-semibold rounded transition hover:bg-rose-50 bg-transparent cursor-pointer"
+                    >
+                      Sign Out
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => { setMobileMenuOpen(false); onOpenAuth?.(); }}
+                    className="w-full py-3 border border-gray-300 text-gray-700 font-semibold rounded transition hover:bg-gray-50 bg-transparent cursor-pointer"
+                  >
+                    Sign In
+                  </button>
+                )}
               </div>
             </div>
           </div>

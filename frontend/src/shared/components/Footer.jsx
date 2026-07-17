@@ -1,5 +1,6 @@
 import React from 'react';
 import { Mail, Phone, MapPin } from 'lucide-react';
+import { ScrollDot } from './BrandDot';
 
 export default function Footer({ navigateToSection, siteName, siteCopyright, onOpenDocs, enablePsychology, enableCareerMentoring, siteSettings }) {
   const settings = siteSettings || {};
@@ -21,11 +22,12 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
           {/* Brand Column */}
           <div className="md:col-span-1">
             <button
+              id="footer-brand"
               onClick={() => navigateToSection?.('top')}
               className="text-2xl font-black text-white bg-transparent border-none cursor-pointer p-0 flex items-baseline gap-0.5 mb-4"
             >
               <span>{siteName || 'BEHOLD'}</span>
-              <span className="text-blue-400 font-black">.</span>
+              <ScrollDot nextId="top" label="Scroll back to Top ↑" size="md" inlineText={true} />
             </button>
             <p className="text-gray-400 text-sm leading-relaxed mb-4">
               Expert career guidance, psychological counselling, and aptitude assessments for students across Kerala.

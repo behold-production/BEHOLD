@@ -2905,53 +2905,82 @@ export default function AdminDashboard({ setView }) {
         offer5Desc: 'We provide continuous reviews to keep students on track with their long-term goals.',
         offer6Title: 'Parent Guidance',
         offer6Desc: 'We guide parents to reduce academic friction and relieve student stress.',
-        sectionOrder: ['counselling-intro', 'whyChooseUs', 'aptitude', 'counsellors', 'about', 'reviews', 'faq', 'blog']
-      };
+          sectionOrder: ['counselling-intro', 'whyChooseUs', 'aptitude', 'counsellors', 'about', 'reviews', 'faq', 'blog'],
+          heroStats: [
+            { num: '500+', label: 'Students Guided' },
+            { num: '98%', label: 'Clarity & Peace' },
+            { num: '50+', label: 'Certified Mentors' }
+          ],
+          aboutStats: [
+            { value: '10+', label: 'Years Experience' },
+            { value: '500+', label: 'Students Guided' },
+            { value: '50+', label: 'Expert Mentors' },
+            { value: '98%', label: 'Success Rate' }
+          ]
+        };
 
-      // Fill root defaults
-      Object.keys(defaults).forEach(key => {
-        if (cleaned[key] === undefined || cleaned[key] === null || (typeof cleaned[key] === 'string' && cleaned[key].trim() === '')) {
-          cleaned[key] = defaults[key];
-        } else if (typeof cleaned[key] === 'string') {
-          cleaned[key] = cleaned[key].trim();
-        }
-      });
-
-      // Fill slides defaults
-      const defaultSlide = {
-        image: 'https://images.unsplash.com/photo-1440688807730-73e4e2169fb8?q=80&w=2070&auto=format&fit=crop',
-        title: 'Bridging You \\nTo Your {True Growth.}',
-        subtitle: 'Professional psychological counseling, aptitude assessment, and career mentorship designed to help individuals thrive with confidence and purpose.',
-        btn1Text: 'Book a Session',
-        btn1Link: '/booking',
-        btn2Text: 'Book Aptitude Test',
-        btn2Link: '/aptitude-test'
-      };
-
-      if (!cleaned.heroSlides || !Array.isArray(cleaned.heroSlides) || cleaned.heroSlides.length === 0) {
-        cleaned.heroSlides = [defaultSlide];
-      } else {
-        cleaned.heroSlides = cleaned.heroSlides.map(slide => {
-          const cleanedSlide = { ...slide };
-          if (!cleanedSlide.image || cleanedSlide.image.trim() === '') cleanedSlide.image = defaultSlide.image;
-          if (!cleanedSlide.title || cleanedSlide.title.trim() === '') cleanedSlide.title = defaultSlide.title;
-          if (!cleanedSlide.subtitle || cleanedSlide.subtitle.trim() === '') cleanedSlide.subtitle = defaultSlide.subtitle;
-          if (!cleanedSlide.btn1Text || cleanedSlide.btn1Text.trim() === '') cleanedSlide.btn1Text = defaultSlide.btn1Text;
-          if (!cleanedSlide.btn1Link || cleanedSlide.btn1Link.trim() === '') cleanedSlide.btn1Link = defaultSlide.btn1Link;
-          if (!cleanedSlide.btn2Text || cleanedSlide.btn2Text.trim() === '') cleanedSlide.btn2Text = defaultSlide.btn2Text;
-          if (!cleanedSlide.btn2Link || cleanedSlide.btn2Link.trim() === '') cleanedSlide.btn2Link = defaultSlide.btn2Link;
-          
-          // trim strings
-          Object.keys(cleanedSlide).forEach(k => {
-            if (typeof cleanedSlide[k] === 'string') {
-              cleanedSlide[k] = cleanedSlide[k].trim();
-            }
-          });
-          return cleanedSlide;
+        // Fill root defaults
+        Object.keys(defaults).forEach(key => {
+          if (cleaned[key] === undefined || cleaned[key] === null || (typeof cleaned[key] === 'string' && cleaned[key].trim() === '')) {
+            cleaned[key] = defaults[key];
+          } else if (typeof cleaned[key] === 'string') {
+            cleaned[key] = cleaned[key].trim();
+          }
         });
-      }
 
-      await ApiService.updateAdminSettings(cleaned);
+        // Fill slides defaults
+        const defaultSlide = {
+          image: 'https://images.unsplash.com/photo-1440688807730-73e4e2169fb8?q=80&w=2070&auto=format&fit=crop',
+          title: 'Bridging You \\nTo Your {True Growth.}',
+          subtitle: 'Professional psychological counseling, aptitude assessment, and career mentorship designed to help individuals thrive with confidence and purpose.',
+          btn1Text: 'Book a Session',
+          btn1Link: '/booking',
+          btn2Text: 'Book Aptitude Test',
+          btn2Link: '/aptitude-test'
+        };
+
+        if (!cleaned.heroSlides || !Array.isArray(cleaned.heroSlides) || cleaned.heroSlides.length === 0) {
+          cleaned.heroSlides = [defaultSlide];
+        } else {
+          cleaned.heroSlides = cleaned.heroSlides.map(slide => {
+            const cleanedSlide = { ...slide };
+            if (!cleanedSlide.image || cleanedSlide.image.trim() === '') cleanedSlide.image = defaultSlide.image;
+            if (!cleanedSlide.title || cleanedSlide.title.trim() === '') cleanedSlide.title = defaultSlide.title;
+            if (!cleanedSlide.subtitle || cleanedSlide.subtitle.trim() === '') cleanedSlide.subtitle = defaultSlide.subtitle;
+            if (!cleanedSlide.btn1Text || cleanedSlide.btn1Text.trim() === '') cleanedSlide.btn1Text = defaultSlide.btn1Text;
+            if (!cleanedSlide.btn1Link || cleanedSlide.btn1Link.trim() === '') cleanedSlide.btn1Link = defaultSlide.btn1Link;
+            if (!cleanedSlide.btn2Text || cleanedSlide.btn2Text.trim() === '') cleanedSlide.btn2Text = defaultSlide.btn2Text;
+            if (!cleanedSlide.btn2Link || cleanedSlide.btn2Link.trim() === '') cleanedSlide.btn2Link = defaultSlide.btn2Link;
+            
+            // trim strings
+            Object.keys(cleanedSlide).forEach(k => {
+              if (typeof cleanedSlide[k] === 'string') {
+                cleanedSlide[k] = cleanedSlide[k].trim();
+              }
+            });
+            return cleanedSlide;
+          });
+        }
+
+        if (!cleaned.heroStats || !Array.isArray(cleaned.heroStats) || cleaned.heroStats.length === 0) {
+          cleaned.heroStats = defaults.heroStats;
+        } else {
+          cleaned.heroStats = cleaned.heroStats.map(stat => ({
+            num: (stat.num || '').trim(),
+            label: (stat.label || '').trim()
+          })).filter(stat => stat.num || stat.label);
+        }
+
+        if (!cleaned.aboutStats || !Array.isArray(cleaned.aboutStats) || cleaned.aboutStats.length === 0) {
+          cleaned.aboutStats = defaults.aboutStats;
+        } else {
+          cleaned.aboutStats = cleaned.aboutStats.map(stat => ({
+            value: (stat.value || stat.num || '').trim(),
+            label: (stat.label || '').trim()
+          })).filter(stat => stat.value || stat.label);
+        }
+
+        await ApiService.updateAdminSettings(cleaned);
       setSettingsForm(cleaned);
       setSettingsSuccess("Site Settings updated successfully!");
       window.dispatchEvent(new Event('behold_faqs_updated'));

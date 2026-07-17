@@ -702,7 +702,118 @@ export default function SettingsTab(props) {
  </div>
  </div>
 
+  {/* Hero Trust Stats Bar (Below Hero Buttons) */}
+  <div className="bg-zinc-950/40 border border-zinc-800 p-5 rounded-xl space-y-4">
+    <div className="flex justify-between items-center">
+      <div>
+        <h4 className="text-xs font-bold text-brand tracking-wider flex items-center gap-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+          Hero Trust Stats Bar (Below Hero Buttons)
+        </h4>
+        <p className="text-[11px] text-zinc-400 mt-0.5">These numbers display directly beneath the action buttons on the main screen (e.g. 500+ Students Guided).</p>
+      </div>
+      <button
+        type="button"
+        onClick={() => {
+          const newStat = { num: '', label: '' };
+          setSettingsForm(prev => ({ ...prev, heroStats: [...(prev.heroStats || []), newStat] }));
+        }}
+        className="px-3 py-1.5 bg-brand/10 hover:bg-brand/20 text-brand rounded flex items-center gap-1 text-xs font-bold transition-colors cursor-pointer shrink-0"
+      >
+        <Plus className="w-3 h-3" />
+        Add Stat Card
+      </button>
+    </div>
 
+    <div className="space-y-3">
+      {!(settingsForm.heroStats?.length > 0) ? (
+        <div className="p-4 border border-dashed border-zinc-700 rounded-lg text-center text-zinc-500 text-xs">
+          No stats configured. Default fallback stats will be used on the landing page.
+        </div>
+      ) : (
+        settingsForm.heroStats.map((stat, idx) => (
+          <div key={idx} className="flex flex-col sm:flex-row sm:items-center gap-3 p-3.5 border border-zinc-800/80 rounded-xl bg-zinc-955/60 transition-colors">
+            <div className="flex items-center gap-2 sm:w-1/3">
+              <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-zinc-800 text-[10px] text-zinc-400 font-bold border border-zinc-700 shrink-0">
+                {idx + 1}
+              </span>
+              <div className="w-full">
+                <label className="text-[10px] font-bold text-zinc-500 block mb-0.5">Highlight / Number</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. 500+"
+                  value={stat.num || ''}
+                  onChange={(e) => {
+                    const newStats = [...settingsForm.heroStats];
+                    newStats[idx] = { ...newStats[idx], num: e.target.value };
+                    setSettingsForm(prev => ({ ...prev, heroStats: newStats }));
+                  }}
+                  className="w-full px-2.5 py-1.5 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white font-bold outline-none"
+                />
+              </div>
+            </div>
+            <div className="flex items-center gap-3 sm:w-2/3">
+              <div className="w-full">
+                <label className="text-[10px] font-bold text-zinc-500 block mb-0.5">Label / Description</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Students Guided"
+                  value={stat.label || ''}
+                  onChange={(e) => {
+                    const newStats = [...settingsForm.heroStats];
+                    newStats[idx] = { ...newStats[idx], label: e.target.value };
+                    setSettingsForm(prev => ({ ...prev, heroStats: newStats }));
+                  }}
+                  className="w-full px-2.5 py-1.5 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none"
+                />
+              </div>
+              <div className="flex items-center gap-1 shrink-0 self-end mb-0.5">
+                <button
+                  type="button"
+                  disabled={idx === 0}
+                  onClick={() => {
+                    const newStats = [...settingsForm.heroStats];
+                    [newStats[idx - 1], newStats[idx]] = [newStats[idx], newStats[idx - 1]];
+                    setSettingsForm(prev => ({ ...prev, heroStats: newStats }));
+                  }}
+                  className="p-1.5 hover:bg-zinc-800 rounded disabled:opacity-30 disabled:pointer-events-none cursor-pointer text-zinc-400 hover:text-white transition-all"
+                  title="Move Up"
+                >
+                  <ChevronUp className="w-4 h-4" />
+                </button>
+                <button
+                  type="button"
+                  disabled={idx === settingsForm.heroStats.length - 1}
+                  onClick={() => {
+                    const newStats = [...settingsForm.heroStats];
+                    [newStats[idx + 1], newStats[idx]] = [newStats[idx], newStats[idx + 1]];
+                    setSettingsForm(prev => ({ ...prev, heroStats: newStats }));
+                  }}
+                  className="p-1.5 hover:bg-zinc-800 rounded disabled:opacity-30 disabled:pointer-events-none cursor-pointer text-zinc-400 hover:text-white transition-all"
+                  title="Move Down"
+                >
+                  <ChevronDown className="w-4 h-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const newStats = settingsForm.heroStats.filter((_, i) => i !== idx);
+                    setSettingsForm(prev => ({ ...prev, heroStats: newStats }));
+                  }}
+                  className="p-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded cursor-pointer transition ml-1"
+                  title="Remove Stat"
+                >
+                  <Trash className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+        ))
+      )}
+    </div>
+  </div>
 
     {/* Section Ordering Configuration */}
     <div className="bg-zinc-955/40 border border-zinc-800 p-5 rounded-xl space-y-4 mb-4">
@@ -1171,6 +1282,119 @@ export default function SettingsTab(props) {
  </div>
  </div>
  </div>
+
+ {/* About Us Statistics Grid Customization */}
+  <div className="bg-zinc-950/40 border border-zinc-800 p-5 rounded-xl space-y-4">
+    <div className="flex justify-between items-center">
+      <div>
+        <h4 className="text-xs font-bold text-brand tracking-wider flex items-center gap-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+          About Us Section Statistics Grid
+        </h4>
+        <p className="text-[11px] text-zinc-400 mt-0.5">These numbers display in the 4-card grid on the "What We Offer / About Us" section.</p>
+      </div>
+      <button
+        type="button"
+        onClick={() => {
+          const newStat = { value: '', label: '' };
+          setSettingsForm(prev => ({ ...prev, aboutStats: [...(prev.aboutStats || []), newStat] }));
+        }}
+        className="px-3 py-1.5 bg-brand/10 hover:bg-brand/20 text-brand rounded flex items-center gap-1 text-xs font-bold transition-colors cursor-pointer shrink-0"
+      >
+        <Plus className="w-3 h-3" />
+        Add Stat Card
+      </button>
+    </div>
+
+    <div className="space-y-3">
+      {!(settingsForm.aboutStats?.length > 0) ? (
+        <div className="p-4 border border-dashed border-zinc-700 rounded-lg text-center text-zinc-500 text-xs">
+          No stats configured. Default fallback stats will be used in About section.
+        </div>
+      ) : (
+        settingsForm.aboutStats.map((stat, idx) => (
+          <div key={idx} className="flex flex-col sm:flex-row sm:items-center gap-3 p-3.5 border border-zinc-800/80 rounded-xl bg-zinc-955/60 transition-colors">
+            <div className="flex items-center gap-2 sm:w-1/3">
+              <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-zinc-800 text-[10px] text-zinc-400 font-bold border border-zinc-700 shrink-0">
+                {idx + 1}
+              </span>
+              <div className="w-full">
+                <label className="text-[10px] font-bold text-zinc-500 block mb-0.5">Highlight / Number</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. 10+"
+                  value={stat.value || stat.num || ''}
+                  onChange={(e) => {
+                    const newStats = [...settingsForm.aboutStats];
+                    newStats[idx] = { ...newStats[idx], value: e.target.value };
+                    setSettingsForm(prev => ({ ...prev, aboutStats: newStats }));
+                  }}
+                  className="w-full px-2.5 py-1.5 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white font-bold outline-none"
+                />
+              </div>
+            </div>
+            <div className="flex items-center gap-3 sm:w-2/3">
+              <div className="w-full">
+                <label className="text-[10px] font-bold text-zinc-500 block mb-0.5">Label / Description</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Years Experience"
+                  value={stat.label || ''}
+                  onChange={(e) => {
+                    const newStats = [...settingsForm.aboutStats];
+                    newStats[idx] = { ...newStats[idx], label: e.target.value };
+                    setSettingsForm(prev => ({ ...prev, aboutStats: newStats }));
+                  }}
+                  className="w-full px-2.5 py-1.5 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none"
+                />
+              </div>
+              <div className="flex items-center gap-1 shrink-0 self-end mb-0.5">
+                <button
+                  type="button"
+                  disabled={idx === 0}
+                  onClick={() => {
+                    const newStats = [...settingsForm.aboutStats];
+                    [newStats[idx - 1], newStats[idx]] = [newStats[idx], newStats[idx - 1]];
+                    setSettingsForm(prev => ({ ...prev, aboutStats: newStats }));
+                  }}
+                  className="p-1.5 hover:bg-zinc-800 rounded disabled:opacity-30 disabled:pointer-events-none cursor-pointer text-zinc-400 hover:text-white transition-all"
+                  title="Move Up"
+                >
+                  <ChevronUp className="w-4 h-4" />
+                </button>
+                <button
+                  type="button"
+                  disabled={idx === settingsForm.aboutStats.length - 1}
+                  onClick={() => {
+                    const newStats = [...settingsForm.aboutStats];
+                    [newStats[idx + 1], newStats[idx]] = [newStats[idx], newStats[idx + 1]];
+                    setSettingsForm(prev => ({ ...prev, aboutStats: newStats }));
+                  }}
+                  className="p-1.5 hover:bg-zinc-800 rounded disabled:opacity-30 disabled:pointer-events-none cursor-pointer text-zinc-400 hover:text-white transition-all"
+                  title="Move Down"
+                >
+                  <ChevronDown className="w-4 h-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const newStats = settingsForm.aboutStats.filter((_, i) => i !== idx);
+                    setSettingsForm(prev => ({ ...prev, aboutStats: newStats }));
+                  }}
+                  className="p-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded cursor-pointer transition ml-1"
+                  title="Remove Stat"
+                >
+                  <Trash className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+        ))
+      )}
+    </div>
+  </div>
 
  {settingsSuccess && (
  <p className="text-xs text-emerald-500 font-bold tracking-wide">{settingsSuccess}</p>

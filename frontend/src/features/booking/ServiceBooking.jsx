@@ -6,6 +6,7 @@ import BookingAuthModal from './BookingAuthModal';
 import { FileDown } from 'lucide-react';
 import { formatDateString } from '../../shared/utils/dateFormatter';
 import toast from 'react-hot-toast';
+import { ScrollDot } from '../../shared/components/BrandDot';
 
 const getInitials = (name) => {
     if (!name) return '';
@@ -299,14 +300,17 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
             <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-8 sm:space-y-10">
 
                 {/* Header */}
-                <div className="text-center flex flex-col items-center space-y-4">
-                    <span className="inline-block bg-surface-900 text-white px-3.5 py-1.5 text-[11px] font-black uppercase tracking-widest rounded-[8px]">
-                        {rescheduleSession ? 'Reschedule Session' : 'Book A Session'}
-                    </span>
-                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight leading-tight text-surface-900 font-header">
-                        {rescheduleSession ? 'Reschedule Your Session' : 'Book Your Session'}
+                <div className="text-center flex flex-col items-center space-y-3">
+                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-600 text-xs font-bold shadow-sm">
+                        <ScrollDot nextId="booking-console" label="Scroll to booking form ↓" size="xs" />
+                        <span>{rescheduleSession ? 'RESCHEDULE SESSION' : 'BOOK A SESSION'}</span>
+                        <ScrollDot nextId="booking-console" label="Scroll to booking form ↓" size="xs" inlineText={true} />
+                    </div>
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight leading-tight text-gray-900 font-header flex items-center justify-center flex-wrap gap-0.5">
+                        <span>{rescheduleSession ? 'Reschedule Your Session' : 'Book Your Session'}</span>
+                        <ScrollDot nextId="booking-console" label="Scroll to booking form ↓" size="md" inlineText={true} />
                     </h1>
-                    <p className="text-surface-600 max-w-xl mx-auto text-sm sm:text-base leading-relaxed">
+                    <p className="text-gray-500 max-w-xl mx-auto text-sm sm:text-base leading-relaxed font-normal">
                         {rescheduleSession
                             ? `Reschedule your appointment with ${rescheduleSession.advisorName || rescheduleSession.counsellorName}. Pick a new date and time.`
                             : 'Choose your service, pick a date and time, and confirm with a real advisor — it only takes a few minutes.'}
@@ -316,72 +320,74 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                 {/* BOOKING FORM */}
                 <div id="booking-console" className="space-y-6 sm:space-y-8 w-full mt-6">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-surface-200 pb-4">
-                        <h2 className="text-xl sm:text-2xl font-black text-surface-900 font-header">
-                            Your Booking
+                        <h2 className="text-xl sm:text-2xl font-black text-gray-900 font-header flex items-center gap-0.5">
+                            <span>Your Booking</span>
+                            <ScrollDot nextId="booking-console" label="Scroll down ↓" size="md" inlineText={true} />
                         </h2>
                     </div>
 
-                    {/* Step Progress */}
+                    {/* Step Progress Banner */}
                     {bookingStep !== 'success' && (() => {
                         const stepMapping = { config: 0, payment: 1, success: 2 };
                         const currentStepIdx = stepMapping[bookingStep] || 0;
                         const stepLabels = ['Schedule & Advisor', 'Account & Payment', 'Session Confirmed'];
                         return (
-                            <div className="bg-surface-50 border border-surface-200 p-4 sm:p-5 space-y-3 rounded-[8px] animate-in fade-in duration-300">
+                            <div className="bg-white border border-slate-200/80 p-5 sm:p-6 space-y-5 rounded-2xl shadow-sm animate-in fade-in duration-300">
                                 {/* Mobile: compact progress bar */}
                                 <div className="flex sm:hidden items-center gap-2">
                                     <div className="flex items-center gap-1.5 flex-1 min-w-0">
-                                        <span className="text-sm font-semibold text-surface-900 shrink-0">
+                                        <span className="text-sm font-bold text-gray-900 shrink-0">
                                             Step {currentStepIdx + 1} of 3
                                         </span>
-                                        <div className="h-1 flex-1 bg-surface-200 rounded-[8px] overflow-hidden">
+                                        <div className="h-1.5 flex-1 bg-slate-100 rounded-full overflow-hidden">
                                             <div
-                                                className="h-full bg-surface-900 rounded-[8px] transition-all duration-500"
+                                                className="h-full bg-blue-600 rounded-full transition-all duration-500"
                                                 style={{ width: `${(currentStepIdx / 3) * 100}%` }}
                                             />
                                         </div>
                                     </div>
-                                    <span className="text-sm font-semibold text-surface-900 truncate">
+                                    <span className="text-sm font-bold text-blue-600 truncate">
                                         {stepLabels[currentStepIdx]}
                                     </span>
                                 </div>
 
                                 {/* Desktop/tablet: full stepper */}
                                 <div className="hidden sm:block">
-                                    <div className="flex items-center justify-between gap-2 border-b border-surface-200 pb-3">
+                                    <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-3.5">
                                         <div className="flex items-center gap-2">
-                                            <h3 className="font-semibold text-sm text-surface-900">
-                                                {bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring'} &middot; {bookingMode === 'ONLINE' ? 'Video Call' : bookingMode === 'DOOR_STEP' ? 'Home Visit' : 'At Center'}
-                                            </h3>
+                                            <span className="px-3.5 py-1 rounded-full bg-blue-50 border border-blue-100 text-blue-700 font-bold text-xs inline-flex items-center gap-2 shadow-2xs">
+                                                <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
+                                                <span>{bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring'} &middot; {bookingMode === 'ONLINE' ? 'Video Call' : bookingMode === 'DOOR_STEP' ? 'Home Visit' : 'At Center'}</span>
+                                            </span>
                                         </div>
                                     </div>
 
-                                    <div className="flex overflow-x-auto snap-x scrollbar-none gap-3 lg:gap-4 pb-2 mt-3 lg:grid lg:grid-cols-3 lg:gap-6 w-full">
+                                    <div className="flex overflow-x-auto snap-x scrollbar-none gap-4 pb-2 mt-4 lg:grid lg:grid-cols-3 lg:gap-6 w-full">
                                         {activeSteps.map((step, idx) => {
                                             const isCompleted = idx < currentStepIdx;
                                             const isActive = idx === currentStepIdx;
 
                                             return (
-                                                <div key={idx} className="flex lg:flex-col items-start gap-3 lg:gap-2 relative shrink-0 snap-start w-[200px] sm:w-[220px] lg:w-auto">
+                                                <div key={idx} className="flex lg:flex-col items-start gap-3.5 lg:gap-2.5 relative shrink-0 snap-start w-[200px] sm:w-[220px] lg:w-auto">
                                                     <div className="flex items-center lg:w-full">
-                                                        <div className={`flex items-center justify-center w-8 h-8 rounded-[8px] font-semibold text-xs border transition-all duration-300 shrink-0 ${isCompleted
-                                                            ? 'bg-surface-900 border-surface-900 text-white'
+                                                        <div className={`flex items-center justify-center w-8 h-8 rounded-xl font-bold text-xs border transition-all duration-300 shrink-0 ${isCompleted
+                                                            ? 'bg-slate-900 border-slate-900 text-white shadow-sm'
                                                             : isActive
-                                                                ? 'bg-surface-100 border-surface-900 text-surface-900'
-                                                                : 'bg-white border-surface-200 text-surface-400'
+                                                                ? 'bg-blue-600 border-blue-600 text-white shadow-md shadow-blue-500/25 ring-4 ring-blue-50'
+                                                                : 'bg-slate-100 border-slate-200 text-slate-400'
                                                             }`}>
                                                             {isCompleted ? '✓' : idx + 1}
                                                         </div>
                                                         {idx < activeSteps.length - 1 && (
-                                                            <div className={`hidden lg:block h-[1px] w-full ml-2 transition-all duration-300 ${isCompleted ? 'bg-surface-900' : 'bg-surface-200'
+                                                            <div className={`hidden lg:block h-[2px] w-full ml-3 transition-all duration-300 rounded-full ${isCompleted ? 'bg-blue-600' : 'bg-slate-200'
                                                                 }`} />
                                                         )}
                                                     </div>
                                                     <div className="flex flex-col text-left min-w-0">
-                                                        <span className={`text-sm font-semibold ${isActive ? 'text-surface-900' : isCompleted ? 'text-surface-600' : 'text-surface-400'}`}>
+                                                        <span className={`text-sm font-bold ${isActive ? 'text-gray-900' : isCompleted ? 'text-gray-700' : 'text-gray-400'}`}>
                                                             {stepLabels[idx]}
                                                         </span>
-                                                        <span className={`text-xs transition-colors duration-300 mt-0.5 ${isActive ? 'text-surface-700 font-medium' : 'text-surface-500'}`}>
+                                                        <span className={`text-xs transition-colors duration-300 mt-0.5 leading-relaxed ${isActive ? 'text-gray-600 font-medium' : 'text-gray-400'}`}>
                                                             {step}
                                                         </span>
                                                     </div>

@@ -47,71 +47,69 @@ const OverviewTab = ({
 
  {/* ── Next Session Card ── */}
  {nextSession ? (
- <div className="group relative overflow-hidden rounded-[10px] border border-surface-200 bg-white p-5 shadow-square-light flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all duration-300">
+ <div className="group relative overflow-hidden rounded-2xl border border-blue-200/60 bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/30 p-6 shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-5 transition-all duration-300 hover:shadow-lg">
  <div className="flex items-center gap-4">
- <div className="w-12 h-12 rounded-[10px] bg-surface-100 border border-surface-200 flex items-center justify-center shrink-0">
+ <div className="w-14 h-14 rounded-full bg-blue-100/80 border-2 border-blue-300/50 flex items-center justify-center shrink-0 shadow-xs overflow-hidden">
  {nextSession.advisorProfilePic ? (
- <img src={nextSession.advisorProfilePic} alt={nextSession.advisorName} className="w-12 h-12 rounded-[10px] object-cover" />
+ <img src={nextSession.advisorProfilePic} alt={nextSession.advisorName} className="w-full h-full rounded-full object-cover" />
  ) : nextSession.mode === 'ONLINE'
- ? <Video className="w-5 h-5 text-surface-600" />
- : <MapPin className="w-5 h-5 text-surface-600" />}
+ ? <Video className="w-6 h-6 text-blue-600" />
+ : <MapPin className="w-6 h-6 text-blue-600" />}
  </div>
  <div>
- <p className="text-[10px] font-black tracking-widest text-surface-400 mb-1 flex items-center gap-1.5">
- <span className="w-1.5 h-1.5 rounded-[10px] bg-emerald-500 animate-pulse shadow-[0_0_4px_rgba(16,185,129,0.5)]" />
+ <p className="text-[10px] font-black tracking-widest text-emerald-600 uppercase mb-1 flex items-center gap-1.5">
+ <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_6px_rgba(16,185,129,0.8)]" />
  Next Scheduled Session
  </p>
- <p className="font-black text-surface-900 text-base tracking-tight">{nextSession.advisorName}</p>
- <p className="text-xs text-surface-500 mt-0.5 font-medium">
+ <h3 className="font-black text-slate-900 text-lg tracking-tight">{nextSession.advisorName}</h3>
+ <p className="text-xs text-slate-600 mt-0.5 font-medium">
  {nextSession.advisorRole || 'Consultation'}
- <span className="mx-1.5 text-surface-300">·</span>
- <span className="text-surface-700 font-bold">{nextSession.mode === 'ONLINE' ? 'Online' : 'In-Person'}</span>
+ <span className="mx-2 text-slate-300">·</span>
+ <span className="text-blue-600 font-bold">{nextSession.mode === 'ONLINE' ? 'Online Video Call' : 'In-Person Visit'}</span>
  </p>
- <div className="flex flex-wrap items-center gap-2 mt-2.5 text-[10px] tracking-widest font-bold text-surface-600">
- <span className="flex items-center gap-1 bg-surface-50 px-2 py-1 rounded-[10px] border border-surface-200">
- <Calendar className="w-3.5 h-3.5 text-surface-400" /> {formatDateString(nextSession.date)}
+ <div className="flex flex-wrap items-center gap-2.5 mt-3 text-xs font-bold text-slate-700">
+ <span className="flex items-center gap-1.5 bg-white px-3 py-1 rounded-full border border-slate-200/80 shadow-2xs">
+ <Calendar className="w-3.5 h-3.5 text-blue-600" /> {formatDateString(nextSession.date)}
  </span>
- <span className="flex items-center gap-1 bg-surface-50 px-2 py-1 rounded-[10px] border border-surface-200">
- <Clock className="w-3.5 h-3.5 text-surface-400" /> {nextSession.time}
+ <span className="flex items-center gap-1.5 bg-white px-3 py-1 rounded-full border border-slate-200/80 shadow-2xs">
+ <Clock className="w-3.5 h-3.5 text-blue-600" /> {nextSession.time}
  </span>
  </div>
  </div>
  </div>
- <div className="flex items-center justify-between sm:justify-end gap-5 shrink-0 pt-3 sm:pt-0 border-t sm:border-t-0 border-surface-100">
+ <div className="flex items-center justify-between sm:justify-end gap-6 shrink-0 pt-4 sm:pt-0 border-t sm:border-t-0 border-slate-200/60">
  {(() => {
  const cd = formatCountdown(nextSession.date, nextSession.time);
  return (
  <div className="text-left sm:text-right">
- <p className="text-[10px] text-surface-400 font-black tracking-widest">Starts in</p>
- <p className={`text-xl sm:text-2xl font-black tracking-tight ${cd.urgent ? 'text-amber-600' : 'text-surface-900'}`}>{cd.text}</p>
+ <p className="text-[10px] text-slate-400 font-black tracking-widest uppercase">Starts in</p>
+ <p className={`text-xl sm:text-2xl font-black tracking-tight ${cd.urgent ? 'text-rose-600 animate-pulse' : 'text-slate-900'}`}>{cd.text}</p>
  </div>
  );
  })()}
  <button
  type="button"
  onClick={() => { handleSectionChange('booked'); setSessionSubTab('upcoming'); }}
- className="min-h-[38px] px-4 py-2 rounded-[10px] text-[10px] tracking-widest font-black transition-all cursor-pointer border border-surface-200 hover:border-surface-300 bg-white hover:bg-surface-50 text-surface-900 shadow-none"
+ className="min-h-[40px] px-5 py-2 rounded-xl text-xs font-black transition-all cursor-pointer border border-blue-600 bg-blue-600 hover:bg-blue-700 text-white shadow-sm hover:shadow"
  >
  View Details
  </button>
  </div>
  </div>
  ) : (
- <div
- className="rounded-[10px] p-7 text-center border border-dashed border-surface-200 bg-white"
- >
- <div className="w-14 h-14 mx-auto rounded-[10px] bg-white border border-surface-200 shadow-square-light flex items-center justify-center mb-4">
- <CalendarDays className="w-6 h-6 text-surface-400" />
+ <div className="rounded-2xl p-8 text-center border border-dashed border-slate-300 bg-gradient-to-b from-slate-50/50 to-white">
+ <div className="w-16 h-16 mx-auto rounded-full bg-blue-50 border border-blue-100 shadow-xs flex items-center justify-center mb-4">
+ <CalendarDays className="w-7 h-7 text-blue-600" />
  </div>
- <p className="text-sm font-black text-surface-900">No upcoming sessions</p>
- <p className="text-xs text-surface-500 mt-1.5 max-w-xs mx-auto leading-relaxed">
+ <p className="text-base font-black text-slate-900">No upcoming sessions</p>
+ <p className="text-xs text-slate-500 mt-1.5 max-w-sm mx-auto leading-relaxed">
  Schedule a session with one of our certified professionals to get started.
  </p>
  {(enablePsychology || enableCareerMentoring) && (
  <button
  type="button"
  onClick={() => navigate('/booking')}
- className="mt-5 inline-flex items-center gap-1.5 min-h-[40px] px-6 py-2 bg-surface-900 text-white text-[10px] tracking-widest font-black rounded-[10px] hover:bg-surface-800 transition-all border-none shadow-none"
+ className="mt-5 inline-flex items-center gap-1.5 min-h-[40px] px-6 py-2 bg-slate-900 text-white text-[10px] tracking-widest font-black rounded-xl hover:bg-slate-800 transition-all border-none shadow-none"
  >
  <Plus className="w-3.5 h-3.5" /> Book a Session
  </button>

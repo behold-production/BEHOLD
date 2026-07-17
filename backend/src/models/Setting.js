@@ -99,6 +99,33 @@ const settingSchema = new mongoose.Schema(
         }
       ],
       default: []
+    },
+    heroStats: {
+      type: [
+        {
+          num: { type: String, default: '' },
+          label: { type: String, default: '' }
+        }
+      ],
+      default: [
+        { num: '500+', label: 'Students Guided' },
+        { num: '98%', label: 'Clarity & Peace' },
+        { num: '50+', label: 'Certified Mentors' }
+      ]
+    },
+    aboutStats: {
+      type: [
+        {
+          value: { type: String, default: '' },
+          label: { type: String, default: '' }
+        }
+      ],
+      default: [
+        { value: '10+', label: 'Years Experience' },
+        { value: '500+', label: 'Students Guided' },
+        { value: '50+', label: 'Expert Mentors' },
+        { value: '98%', label: 'Success Rate' }
+      ]
     }
   },
   { timestamps: true }

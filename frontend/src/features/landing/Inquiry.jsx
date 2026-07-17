@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import ApiService from '../../shared/services/api';
+import { ScrollDot, renderTitleWithFullstopDot } from '../../shared/components/BrandDot';
 
 const steps = [
   {
@@ -82,12 +83,12 @@ export default function Inquiry({ testProfile, siteSettings }) {
           }}
         />
         <div className="relative max-w-4xl mx-auto px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center gap-2 mb-6">
-            <span className="w-2 h-2 rounded-full bg-blue-500 inline-block animate-pulse"></span>
+          <div className="inline-flex items-baseline gap-1 mb-6">
             <span className="text-sm font-bold tracking-widest uppercase text-blue-400">Start Your Journey</span>
+            <ScrollDot nextId="inquiry-title" label="Scroll to Form ↓" size="xs" inlineText={true} />
           </div>
-          <h2 className="text-4xl md:text-5xl font-black text-white mb-6 leading-tight">
-            Ready To Build<br />Your Future?
+          <h2 className="text-4xl md:text-5xl font-black text-white mb-6 leading-tight flex items-center justify-center flex-wrap">
+            {renderTitleWithFullstopDot('Ready To Build Your Future?', 'inquiry-title', 'Scroll to Form ↓', 'md')}
           </h2>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
             Take the first step toward discovering your true potential. Our mentors are here to guide you through every stage of your academic and career journey.
@@ -110,18 +111,20 @@ export default function Inquiry({ testProfile, siteSettings }) {
       </section>
 
       {/* Contact Form */}
-      <section id="inquiry" className="py-24 bg-gray-50">
+      <section id="inquiry" className="py-14 bg-gray-50">
         <div className="max-w-6xl mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
 
             {/* Form — 3 cols */}
             <div className="lg:col-span-3 bg-white rounded-3xl p-8 md:p-10 shadow-sm border border-gray-100">
               <div className="mb-8">
-                <div className="inline-flex items-center gap-2 mb-3">
-                  <span className="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>
+                <div className="inline-flex items-baseline gap-1 mb-3">
                   <span className="text-sm font-bold tracking-widest uppercase text-blue-600">Get In Touch</span>
+                  <ScrollDot nextId="footer-brand" label="Scroll to Footer ↓" size="xs" inlineText={true} />
                 </div>
-                <h2 className="text-3xl font-black text-gray-900 mb-2">Want to Know More?</h2>
+                <h2 id="inquiry-title" className="text-3xl font-black text-gray-900 mb-2 flex items-center flex-wrap">
+                  {renderTitleWithFullstopDot('Want to Know More?', 'footer-brand', 'Scroll to Footer ↓', 'md')}
+                </h2>
                 <p className="text-gray-500 leading-relaxed">
                   Submit your request and we'll match you with the right expert within 24 hours.
                 </p>

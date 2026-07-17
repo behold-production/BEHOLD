@@ -499,7 +499,6 @@ export default function AuthModals({ isOpen, onClose }) {
  mode === 'forgot' ? 'Get Reset Token' :
  'Reset Password'}
  </span>
- <ArrowRight className="w-3.5 h-3.5" />
  </>
  )}
  </button>

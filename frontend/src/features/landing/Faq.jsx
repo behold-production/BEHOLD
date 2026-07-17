@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
 import ApiService from '../../shared/services/api';
+import { ScrollDot, renderTitleWithFullstopDot } from '../../shared/components/BrandDot';
 
 const defaultFaqs = [
   {
@@ -44,19 +45,19 @@ export default function Faq() {
   const displayFaqs = faqs.length > 0 ? faqs.slice(0, 6) : defaultFaqs;
 
   return (
-    <section id="faqs" className="py-24 bg-white">
+    <section id="faqs" className="py-14 bg-white">
       <div className="max-w-3xl mx-auto px-6 lg:px-8">
 
         {/* Header */}
         <div className="text-center mb-14">
-          <div className="inline-flex items-center gap-2 mb-4">
-            <span className="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>
+          <div className="inline-flex items-baseline gap-1 mb-4">
             <span className="text-sm font-bold tracking-widest uppercase text-blue-600">
               Frequently Asked Questions
             </span>
+            <ScrollDot nextId="inquiry-title" label="Scroll to Inquiry ↓" size="xs" inlineText={true} />
           </div>
-          <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-4 leading-tight">
-            Everything You Need To Know
+          <h2 id="faq-title" className="text-4xl md:text-5xl font-black text-gray-900 mb-4 leading-tight flex items-center justify-center flex-wrap">
+            {renderTitleWithFullstopDot('Everything You Need To Know', 'inquiry-title', 'Scroll to Inquiry ↓', 'md')}
           </h2>
           <p className="text-xl text-gray-500 leading-relaxed">
             We've answered the most common questions about our counseling model, C-DAT assessments, and mentorship programs.

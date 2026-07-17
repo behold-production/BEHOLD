@@ -115,13 +115,35 @@ const PublicController = {
           offer5Title: 'Goal Tracking',
           offer5Desc: 'We provide continuous reviews to keep students on track with their long-term goals.',
           offer6Title: 'Parent Guidance',
-          offer6Desc: 'We guide parents to reduce academic friction and relieve student stress.'
+          offer6Desc: 'We guide parents to reduce academic friction and relieve student stress.',
+          heroStats: [
+            { num: '500+', label: 'Students Guided' },
+            { num: '98%', label: 'Clarity & Peace' },
+            { num: '50+', label: 'Certified Mentors' }
+          ],
+          aboutStats: [
+            { value: '10+', label: 'Years Experience' },
+            { value: '500+', label: 'Students Guided' },
+            { value: '50+', label: 'Expert Mentors' },
+            { value: '98%', label: 'Success Rate' }
+          ]
         });
       }
       res.status(200).json({
         success: true,
         data: {
           ...settings,
+          heroStats: Array.isArray(settings.heroStats) && settings.heroStats.length > 0 ? settings.heroStats : [
+            { num: '500+', label: 'Students Guided' },
+            { num: '98%', label: 'Clarity & Peace' },
+            { num: '50+', label: 'Certified Mentors' }
+          ],
+          aboutStats: Array.isArray(settings.aboutStats) && settings.aboutStats.length > 0 ? settings.aboutStats : [
+            { value: '10+', label: 'Years Experience' },
+            { value: '500+', label: 'Students Guided' },
+            { value: '50+', label: 'Expert Mentors' },
+            { value: '98%', label: 'Success Rate' }
+          ],
           enablePsychology: settings.enablePsychology !== false,
           enableAptitude: settings.enableAptitude !== false,
           enableOnline: settings.enableOnline !== false,
