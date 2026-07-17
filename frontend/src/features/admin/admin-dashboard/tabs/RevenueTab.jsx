@@ -155,7 +155,7 @@ export default function RevenueTab(props) {
  {/* Metrics Cards */}
  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
  {/* Card 1 */}
- <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-xl space-y-2 shadow-lg">
+ <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-lg space-y-2 shadow-lg">
  <div className="flex justify-between items-center text-zinc-500">
  <span className="text-xs font-bold tracking-wider">Gross Platform Volume</span>
  <DollarSign className="w-4 h-4 text-emerald-450" />
@@ -167,7 +167,7 @@ export default function RevenueTab(props) {
  </div>
 
  {/* Card 2 */}
- <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-xl space-y-2 shadow-lg">
+ <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-lg space-y-2 shadow-lg">
  <div className="flex justify-between items-center text-zinc-500">
  <span className="text-xs font-bold tracking-wider">Platform Retention (Net Fee)</span>
  <TrendingUp className="w-4 h-4 text-brand" />
@@ -179,7 +179,7 @@ export default function RevenueTab(props) {
  </div>
 
  {/* Card 3 */}
- <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-xl space-y-2 shadow-lg">
+ <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-lg space-y-2 shadow-lg">
  <div className="flex justify-between items-center text-zinc-500">
  <span className="text-xs font-bold tracking-wider">Counsellor Payouts Volume</span>
  <Users className="w-4 h-4 text-indigo-400" />
@@ -191,7 +191,7 @@ export default function RevenueTab(props) {
  </div>
 
  {/* Card 4 */}
- <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-xl space-y-2 shadow-lg">
+ <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-lg space-y-2 shadow-lg">
  <div className="flex justify-between items-center text-zinc-500">
  <span className="text-xs font-bold tracking-wider">Total Refunds Paid</span>
  <AlertCircle className="w-4 h-4 text-rose-500" />
@@ -206,7 +206,7 @@ export default function RevenueTab(props) {
  {/* Monthly Chart and Analytics Grid */}
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
  {/* SVG Chart */}
- <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-xl shadow-lg lg:col-span-2 space-y-4">
+ <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-lg shadow-lg lg:col-span-2 space-y-4">
  <div className="flex items-center justify-between pb-2 border-b border-zinc-800/60">
  <h4 className="text-xs font-bold text-white tracking-wider">Monthly Revenue Trend</h4>
  <span className="text-[11px] text-zinc-500">Gross volume vs Platform Retention (Teal)</span>
@@ -243,7 +243,7 @@ export default function RevenueTab(props) {
  </div>
 
  {/* distribution summary */}
- <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-xl shadow-lg space-y-4">
+ <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-lg shadow-lg space-y-4">
  <div className="pb-2 border-b border-zinc-800/60">
  <h4 className="text-xs font-bold text-white tracking-wider font-header">Platform Summary</h4>
  </div>
@@ -270,7 +270,7 @@ export default function RevenueTab(props) {
  </div>
 
  {/* Counsellor breakdown matrix */}
- <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-xl shadow-lg space-y-4">
+ <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-lg shadow-lg space-y-4">
  <div className="pb-2 border-b border-zinc-800/60 flex items-center justify-between">
  <h4 className="text-xs font-bold text-white tracking-wider">Counsellors Ledger & Account Routing</h4>
  </div>
@@ -318,7 +318,7 @@ export default function RevenueTab(props) {
  </div>
 
  {/* Audit ledger filter bar */}
- <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-xl space-y-4 shadow-lg">
+ <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-lg space-y-4 shadow-lg">
  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-zinc-800/60 pb-3">
  <h4 className="text-xs font-bold text-white tracking-wider flex items-center gap-1.5 font-header">
  <Filter className="w-4 h-4 text-zinc-500" /> Payment & Transaction Ledger

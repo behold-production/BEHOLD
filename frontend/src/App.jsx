@@ -125,7 +125,7 @@ function UnauthorizedFallback({ roleRequired }) {
         </p>
       </div>
 
-      <div className='relative z-10 w-full max-w-[420px] bg-[#0c1424]/95 backdrop-blur-xl border border-slate-800/80 rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-300'>
+      <div className='relative z-10 w-full max-w-[420px] bg-[#0c1424]/95 backdrop-blur-xl border border-slate-800/80 rounded-lg shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-300'>
         <div className='p-8'>
           <div>
             <h2 className='text-lg font-bold text-white text-left font-header'>
@@ -695,7 +695,7 @@ export default function App() {
       {/* Terms & Privacy Documents Modal */}
       {activeDocType && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
-          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-2xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
+          <div className="bg-zinc-900 border border-zinc-800 rounded-lg w-full max-w-2xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
 
             {/* Modal Header */}
             <div className="px-6 py-4 border-b border-zinc-800 flex justify-between items-center bg-zinc-950/40">

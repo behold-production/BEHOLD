@@ -98,8 +98,8 @@ const BlogList = () => {
 
           {/* Search Bar */}
           <form onSubmit={handleSearchSubmit} className="mt-10 max-w-2xl mx-auto relative group">
-            <div className="absolute -inset-1 bg-gradient-to-r from-brand/10 to-brand/0 rounded-2xl blur-lg opacity-0 group-hover:opacity-100 transition duration-500"></div>
-            <div className="relative flex items-center bg-white/90 backdrop-blur-xl border border-slate-200 rounded-2xl shadow-xl focus-within:border-brand/40 transition-all p-1.5">
+            <div className="absolute -inset-1 bg-gradient-to-r from-brand/10 to-brand/0 rounded-lg blur-lg opacity-0 group-hover:opacity-100 transition duration-500"></div>
+            <div className="relative flex items-center bg-white/90 backdrop-blur-xl border border-slate-200 rounded-lg shadow-xl focus-within:border-brand/40 transition-all p-1.5">
               <Search className="w-5 h-5 text-slate-400 absolute left-5" />
               <input
                 type="text"
@@ -110,7 +110,7 @@ const BlogList = () => {
               />
               <button
                 type="submit"
-                className="absolute right-2 top-2 bottom-2 px-6 rounded-xl bg-brand hover:bg-[#00d0e6] text-white font-black text-xs uppercase tracking-widest transition-all shadow-md shadow-brand/20 cursor-pointer border-none flex items-center gap-2"
+                className="absolute right-2 top-2 bottom-2 px-6 rounded-lg bg-brand hover:bg-[#00d0e6] text-white font-black text-xs uppercase tracking-widest transition-all shadow-md shadow-brand/20 cursor-pointer border-none flex items-center gap-2"
               >
                 Search
               </button>
@@ -147,7 +147,7 @@ const BlogList = () => {
             <div className="w-12 h-12 border-4 border-zinc-800 border-t-brand rounded-full animate-spin"></div>
           </div>
         ) : blogs.length === 0 ? (
-          <div className="text-center py-24 bg-white/60 backdrop-blur-sm rounded-3xl border border-slate-200/60 shadow-xl max-w-2xl mx-auto">
+          <div className="text-center py-24 bg-white/60 backdrop-blur-sm rounded-lg border border-slate-200/60 shadow-xl max-w-2xl mx-auto">
             <div className="w-20 h-20 bg-brand/5 rounded-full flex items-center justify-center mx-auto mb-6">
               <BookOpen className="w-10 h-10 text-brand opacity-90" />
             </div>
@@ -160,7 +160,7 @@ const BlogList = () => {
               <article
                 key={post._id || post.slug}
                 onClick={() => handleOpenBlog(post.slug)}
-                className="group relative bg-white border border-slate-200/60 hover:border-brand/30 rounded-[24px] overflow-hidden transition-all duration-500 flex flex-col cursor-pointer shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-slate-300/60 hover:-translate-y-2 h-full"
+                className="group relative bg-white border border-slate-200/60 hover:border-brand/30 rounded-lg overflow-hidden transition-all duration-500 flex flex-col cursor-pointer shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-slate-300/60 hover:-translate-y-2 h-full"
               >
                 {/* Glow Effect */}
                 <div className="absolute inset-0 bg-gradient-to-br from-brand/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />

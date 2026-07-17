@@ -384,13 +384,13 @@ export default function SettingsTab(props) {
  <div className="flex-1 w-full min-w-0">
  {/* TAB 1: General & Contact */}
  {activeSettingsTab === 'general' && (
- <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-xl space-y-6 animate-in fade-in duration-200 shadow-lg">
+ <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-lg space-y-6 animate-in fade-in duration-200 shadow-lg">
  <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
  <Settings className="w-4 h-4 text-brand" />
  <h4 className="text-sm font-bold text-white tracking-wider">General & Contact Settings</h4>
  </div>
 
- <div className="bg-zinc-950/20 border border-zinc-800 p-5 rounded-xl space-y-4">
+ <div className="bg-zinc-950/20 border border-zinc-800 p-5 rounded-lg space-y-4">
  <h4 className="text-xs font-bold text-zinc-300 tracking-wider flex items-center gap-2">
  <span className="w-1.5 h-1.5 rounded-full bg-brand" />
  Branding Details
@@ -421,7 +421,7 @@ export default function SettingsTab(props) {
  </div>
  </div>
 
- <div className="bg-zinc-955/20 border border-zinc-800 p-5 rounded-xl space-y-4">
+ <div className="bg-zinc-955/20 border border-zinc-800 p-5 rounded-lg space-y-4">
  <h4 className="text-xs font-bold text-zinc-300 tracking-wider flex items-center gap-2">
  <span className="w-1.5 h-1.5 rounded-full bg-brand" />
  Contact & Support Endpoints
@@ -475,7 +475,7 @@ export default function SettingsTab(props) {
  </div>
 
   {/* Social Media Channels Section */}
-  <div className="bg-zinc-955/20 border border-zinc-800 p-5 rounded-xl space-y-4">
+  <div className="bg-zinc-955/20 border border-zinc-800 p-5 rounded-lg space-y-4">
     <h4 className="text-xs font-bold text-zinc-300 tracking-wider flex items-center gap-2">
       <span className="w-1.5 h-1.5 rounded-full bg-brand" />
       Social Media Channels (Navbar & Footer)
@@ -558,7 +558,7 @@ export default function SettingsTab(props) {
   </div>
 
   {/* Top Alert Banner Notice */}
-  <div className="border border-zinc-800 p-5 rounded-xl space-y-4 bg-zinc-955/20">
+  <div className="border border-zinc-800 p-5 rounded-lg space-y-4 bg-zinc-955/20">
  <div className="flex items-center justify-between gap-4">
  <div>
  <span className="text-sm font-bold text-zinc-300 block">System Banner Notification Bar</span>
@@ -608,14 +608,14 @@ export default function SettingsTab(props) {
 
  {/* TAB 2: Landing Page Content */}
  {activeSettingsTab === 'landing' && (
- <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-xl space-y-6 animate-in fade-in duration-200 shadow-lg">
+ <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-lg space-y-6 animate-in fade-in duration-200 shadow-lg">
  <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
  <Brain className="w-4 h-4 text-brand" />
  <h4 className="text-sm font-bold text-white tracking-wider">Landing Page Content</h4>
  </div>
 
  {/* Hero Section */}
- <div className="bg-zinc-950/40 border border-zinc-800 p-5 rounded-xl space-y-4">
+ <div className="bg-zinc-950/40 border border-zinc-800 p-5 rounded-lg space-y-4">
  <div className="flex justify-between items-center">
  <h4 className="text-xs font-bold text-brand tracking-wider flex items-center gap-2">
  <span className="w-1.5 h-1.5 rounded-full bg-brand" />
@@ -703,7 +703,7 @@ export default function SettingsTab(props) {
  </div>
 
   {/* Hero Trust Stats Bar (Below Hero Buttons) */}
-  <div className="bg-zinc-950/40 border border-zinc-800 p-5 rounded-xl space-y-4">
+  <div className="bg-zinc-950/40 border border-zinc-800 p-5 rounded-lg space-y-4">
     <div className="flex justify-between items-center">
       <div>
         <h4 className="text-xs font-bold text-brand tracking-wider flex items-center gap-2">
@@ -732,7 +732,7 @@ export default function SettingsTab(props) {
         </div>
       ) : (
         settingsForm.heroStats.map((stat, idx) => (
-          <div key={idx} className="flex flex-col sm:flex-row sm:items-center gap-3 p-3.5 border border-zinc-800/80 rounded-xl bg-zinc-955/60 transition-colors">
+          <div key={idx} className="flex flex-col sm:flex-row sm:items-center gap-3 p-3.5 border border-zinc-800/80 rounded-lg bg-zinc-955/60 transition-colors">
             <div className="flex items-center gap-2 sm:w-1/3">
               <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-zinc-800 text-[10px] text-zinc-400 font-bold border border-zinc-700 shrink-0">
                 {idx + 1}
@@ -816,7 +816,7 @@ export default function SettingsTab(props) {
   </div>
 
     {/* Section Ordering Configuration */}
-    <div className="bg-zinc-955/40 border border-zinc-800 p-5 rounded-xl space-y-4 mb-4">
+    <div className="bg-zinc-955/40 border border-zinc-800 p-5 rounded-lg space-y-4 mb-4">
       <h4 className="text-xs font-bold text-brand tracking-wider flex items-center gap-2">
         <span className="w-1.5 h-1.5 rounded-full bg-brand" />
         Landing Page Sections Ordering (Drag & Save)
@@ -911,7 +911,7 @@ export default function SettingsTab(props) {
                 onDragEnd={() => {
                   setDraggedIndex(null);
                 }}
-                className={`flex items-center justify-between p-4 rounded-xl border transition-all duration-200 select-none ${
+                className={`flex items-center justify-between p-4 rounded-lg border transition-all duration-200 select-none ${
                   isDragging
                     ? 'bg-brand/10 border-brand/50 opacity-50 scale-[0.98]'
                     : 'bg-zinc-900/60 hover:bg-zinc-900/90 border-zinc-800 hover:border-zinc-700'
@@ -968,7 +968,7 @@ export default function SettingsTab(props) {
     </div>
 
     {/* Mentorship Services Section Header Customization */}
-    <div className="bg-zinc-950/40 border border-zinc-800 p-5 rounded-xl space-y-4">
+    <div className="bg-zinc-950/40 border border-zinc-800 p-5 rounded-lg space-y-4">
       <h4 className="text-xs font-bold text-brand tracking-wider flex items-center gap-2">
         <span className="w-1.5 h-1.5 rounded-full bg-brand" />
         Mentorship Services Section Header Customization
@@ -1011,7 +1011,7 @@ export default function SettingsTab(props) {
     </div>
 
     {/* Career Mentoring Section */}
- <div className="bg-zinc-950/40 border border-zinc-800 p-5 rounded-xl space-y-4">
+ <div className="bg-zinc-950/40 border border-zinc-800 p-5 rounded-lg space-y-4">
  <h4 className="text-xs font-bold text-brand tracking-wider flex items-center gap-2">
  <span className="w-1.5 h-1.5 rounded-full bg-brand" />
  Career Mentoring Card Customization
@@ -1071,7 +1071,7 @@ export default function SettingsTab(props) {
  </div>
 
  {/* Psychological Counselling Section */}
- <div className="bg-zinc-950/40 border border-zinc-800 p-5 rounded-xl space-y-4">
+ <div className="bg-zinc-950/40 border border-zinc-800 p-5 rounded-lg space-y-4">
  <h4 className="text-xs font-bold text-brand tracking-wider flex items-center gap-2">
  <span className="w-1.5 h-1.5 rounded-full bg-brand" />
  Psychological Counselling Card Customization
@@ -1131,7 +1131,7 @@ export default function SettingsTab(props) {
  </div>
 
  {/* What We Offer Section */}
- <div className="bg-zinc-955/40 border border-zinc-800 p-5 rounded-xl space-y-4">
+ <div className="bg-zinc-955/40 border border-zinc-800 p-5 rounded-lg space-y-4">
  <h4 className="text-xs font-bold text-brand tracking-wider flex items-center gap-2">
  <span className="w-1.5 h-1.5 rounded-full bg-brand" />
  "What We Offer" Section Customization
@@ -1284,7 +1284,7 @@ export default function SettingsTab(props) {
  </div>
 
  {/* About Us Statistics Grid Customization */}
-  <div className="bg-zinc-950/40 border border-zinc-800 p-5 rounded-xl space-y-4">
+  <div className="bg-zinc-950/40 border border-zinc-800 p-5 rounded-lg space-y-4">
     <div className="flex justify-between items-center">
       <div>
         <h4 className="text-xs font-bold text-brand tracking-wider flex items-center gap-2">
@@ -1313,7 +1313,7 @@ export default function SettingsTab(props) {
         </div>
       ) : (
         settingsForm.aboutStats.map((stat, idx) => (
-          <div key={idx} className="flex flex-col sm:flex-row sm:items-center gap-3 p-3.5 border border-zinc-800/80 rounded-xl bg-zinc-955/60 transition-colors">
+          <div key={idx} className="flex flex-col sm:flex-row sm:items-center gap-3 p-3.5 border border-zinc-800/80 rounded-lg bg-zinc-955/60 transition-colors">
             <div className="flex items-center gap-2 sm:w-1/3">
               <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-zinc-800 text-[10px] text-zinc-400 font-bold border border-zinc-700 shrink-0">
                 {idx + 1}
@@ -1415,13 +1415,13 @@ export default function SettingsTab(props) {
 
  {/* TAB 3: Services & Session Modes */}
  {activeSettingsTab === 'modes' && (
- <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-xl space-y-6 animate-in fade-in duration-200 shadow-lg">
+ <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-lg space-y-6 animate-in fade-in duration-200 shadow-lg">
  <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
  <Video className="w-4 h-4 text-brand" />
  <h4 className="text-sm font-bold text-white tracking-wider">Services & Session Modes</h4>
  </div>
  {/* Feature Toggles */}
- <div className="border border-zinc-800 p-5 rounded-xl space-y-4 bg-zinc-955/20">
+ <div className="border border-zinc-800 p-5 rounded-lg space-y-4 bg-zinc-955/20">
  <div className="flex items-center justify-between gap-4 py-2 border-b border-zinc-800/40">
  <div>
  <span className="text-sm font-bold text-brand block">Enable Psychological Counselling</span>
@@ -1538,14 +1538,14 @@ export default function SettingsTab(props) {
 
  {/* TAB 4: Payments & Taxation */}
  {activeSettingsTab === 'payments' && (
- <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-xl space-y-6 animate-in fade-in duration-200 shadow-lg">
+ <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-lg space-y-6 animate-in fade-in duration-200 shadow-lg">
  <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
  <KeyRound className="w-4 h-4 text-brand" />
  <h4 className="text-sm font-bold text-white tracking-wider">Payments & Taxation</h4>
  </div>
 
  {/* GST / Tax Configuration */}
- <div className="bg-zinc-955/20 border border-zinc-800 rounded-xl p-5 space-y-4">
+ <div className="bg-zinc-955/20 border border-zinc-800 rounded-lg p-5 space-y-4">
  <h4 className="text-xs font-bold text-zinc-300 tracking-wider flex items-center gap-2">
  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
  Tax / GST Configuration
@@ -1592,7 +1592,7 @@ export default function SettingsTab(props) {
  </div>
 
  {/* Razorpay Route Commission Split Configuration */}
- <div className="bg-zinc-955/20 border border-zinc-800 rounded-xl p-5 space-y-4">
+ <div className="bg-zinc-955/20 border border-zinc-800 rounded-lg p-5 space-y-4">
  <h4 className="text-xs font-bold text-zinc-300 tracking-wider flex items-center gap-2">
  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
  Razorpay Route Split Configuration
@@ -1620,7 +1620,7 @@ export default function SettingsTab(props) {
  </div>
 
  {/* Platform Payout Bank Details */}
- <div className="bg-zinc-955/20 border border-zinc-800 rounded-xl p-5 space-y-4 animate-in slide-in-from-top-2 duration-200">
+ <div className="bg-zinc-955/20 border border-zinc-800 rounded-lg p-5 space-y-4 animate-in slide-in-from-top-2 duration-200">
  <h4 className="text-xs font-bold text-zinc-300 tracking-wider flex items-center gap-2">
  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
  Platform Payout Bank Account Details
@@ -1680,14 +1680,14 @@ export default function SettingsTab(props) {
  {/* TAB 5: Security & System */}
  {activeSettingsTab === 'security' && (
  <div className="space-y-6">
- <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-xl space-y-5 animate-in fade-in duration-200 shadow-lg">
+ <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-lg space-y-5 animate-in fade-in duration-200 shadow-lg">
  <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
  <ShieldCheck className="w-4 h-4 text-brand" />
  <h4 className="text-sm font-bold text-white tracking-wider">Security & System</h4>
  </div>
 
  {/* Aptitude Section Header Customization */}
- <div className="bg-zinc-955/20 border border-zinc-800 p-5 rounded-xl space-y-4">
+ <div className="bg-zinc-955/20 border border-zinc-800 p-5 rounded-lg space-y-4">
  <h4 className="text-xs font-bold text-zinc-300 tracking-wider flex items-center gap-2">
  <span className="w-1.5 h-1.5 rounded-full bg-brand" />
  Aptitude Section Header Customization
@@ -1729,7 +1729,7 @@ export default function SettingsTab(props) {
  </div>
  </div>
 
- <div className="bg-zinc-955/20 border border-zinc-800 p-5 rounded-xl space-y-4">
+ <div className="bg-zinc-955/20 border border-zinc-800 p-5 rounded-lg space-y-4">
  <h4 className="text-xs font-bold text-zinc-300 tracking-wider flex items-center gap-2">
  <span className="w-1.5 h-1.5 rounded-full bg-brand" />
  CDAT Group Integration Code
@@ -1765,7 +1765,7 @@ export default function SettingsTab(props) {
  </form>
 
  {/* Browser Notification Settings Widget */}
- <div className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-xl space-y-4 shadow-lg">
+ <div className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-lg space-y-4 shadow-lg">
  <div className="flex items-center gap-2.5 pb-3 border-b border-zinc-800/60">
  <div className="w-8 h-8 rounded-lg bg-zinc-955 border border-zinc-800/60 flex items-center justify-center">
  <Bell className="w-4 h-4 text-indigo-400" />
@@ -1776,7 +1776,7 @@ export default function SettingsTab(props) {
  </div>
  </div>
 
- <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-zinc-955/20 p-4 rounded-xl border border-zinc-800 text-left">
+ <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-zinc-955/20 p-4 rounded-lg border border-zinc-800 text-left">
  <div className="space-y-1">
  <div className="flex items-center gap-2">
  <span className={`w-2.5 h-2.5 rounded-full ${!isNotificationSupported()
@@ -1837,7 +1837,7 @@ export default function SettingsTab(props) {
  </div>
 
  {/* Broadcast Announcement Dispatcher */}
- <form onSubmit={handleSendAnnouncement} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-xl space-y-4 shadow-lg">
+ <form onSubmit={handleSendAnnouncement} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-lg space-y-4 shadow-lg">
  <div className="flex items-center gap-2.5 pb-3 border-b border-zinc-800/60">
  <div className="w-8 h-8 rounded-lg bg-zinc-955 border border-zinc-800/60 flex items-center justify-center">
  <Send className="w-4 h-4 text-indigo-400" />
@@ -1903,7 +1903,7 @@ export default function SettingsTab(props) {
 
  {/* TAB 6: Promo Codes */}
  {activeSettingsTab === 'promo' && (
- <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-xl space-y-5 animate-in fade-in duration-200 shadow-lg">
+ <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-lg space-y-5 animate-in fade-in duration-200 shadow-lg">
  <div className="flex items-center justify-between pb-2 border-b border-zinc-800/60">
  <div className="flex items-center gap-2">
  <FileSpreadsheet className="w-4 h-4 text-brand" />
@@ -1923,7 +1923,7 @@ export default function SettingsTab(props) {
  {settingsForm.promoCodes && settingsForm.promoCodes.length > 0 ? (
  <div className="space-y-3">
  {settingsForm.promoCodes.map((promo, idx) => (
- <div key={idx} className="flex flex-col sm:flex-row items-center gap-3 p-3 bg-zinc-955/40 border border-zinc-800 rounded-xl relative group">
+ <div key={idx} className="flex flex-col sm:flex-row items-center gap-3 p-3 bg-zinc-955/40 border border-zinc-800 rounded-lg relative group">
  <button
  type="button"
  onClick={() => handleRemovePromoCode(idx)}
@@ -1984,7 +1984,7 @@ export default function SettingsTab(props) {
  ))}
  </div>
  ) : (
- <div className="py-8 border border-dashed border-zinc-800 rounded-xl bg-zinc-955/20 text-center">
+ <div className="py-8 border border-dashed border-zinc-800 rounded-lg bg-zinc-955/20 text-center">
  <p className="text-xs text-zinc-500 font-medium">No promotional codes configured.</p>
  </div>
  )}
@@ -2009,7 +2009,7 @@ export default function SettingsTab(props) {
 
  {/* TAB 7: Policies & Legal */}
  {activeSettingsTab === 'legal' && (
- <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-xl space-y-5 animate-in fade-in duration-200 shadow-lg">
+ <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-lg space-y-5 animate-in fade-in duration-200 shadow-lg">
  <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
  <ShieldCheck className="w-4 h-4 text-brand" />
  <h4 className="text-sm font-bold text-white tracking-wider">Policies & Legal</h4>

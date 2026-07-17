@@ -98,7 +98,7 @@ const HeroHeader = ({
               </div>
 
               {/* Profile completion progress bar */}
-              <div className="mt-5 max-w-sm mx-auto sm:mx-0 bg-slate-50/80 border border-slate-200/80 rounded-2xl p-3.5 shadow-2xs">
+              <div className="mt-5 max-w-sm mx-auto sm:mx-0 bg-slate-50/80 border border-slate-200/80 rounded-lg p-3.5 shadow-2xs">
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-[11px] text-slate-600 font-extrabold tracking-wider uppercase flex items-center gap-1.5">
                     Profile Completion
@@ -120,8 +120,8 @@ const HeroHeader = ({
             {statItems.map((s, i) => {
               const Icon = s.icon;
               return (
-                <div key={i} className={`flex flex-col sm:flex-row items-center gap-3.5 px-5 py-4 bg-white hover:bg-slate-50 border border-slate-200/80 rounded-2xl transition-all duration-200 min-w-[145px] shadow-xs hover:shadow-md group`}>
-                  <div className={`w-11 h-11 rounded-xl ${s.bg} border ${s.border} flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform`}>
+                <div key={i} className={`flex flex-col sm:flex-row items-center gap-3.5 px-5 py-4 bg-white hover:bg-slate-50 border border-slate-200/80 rounded-lg transition-all duration-200 min-w-[145px] shadow-xs hover:shadow-md group`}>
+                  <div className={`w-11 h-11 rounded-lg ${s.bg} border ${s.border} flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform`}>
                     <Icon className={`w-5 h-5 ${s.color}`} />
                   </div>
                   <div className="text-center sm:text-left">

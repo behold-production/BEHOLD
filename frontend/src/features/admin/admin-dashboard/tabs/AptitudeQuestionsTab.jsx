@@ -368,7 +368,7 @@ export default function AptitudeQuestionsTab(props) {
  </button>
  </div>
 
- <div className="bg-zinc-955 border border-zinc-850 p-4 rounded-xl flex items-center gap-3">
+ <div className="bg-zinc-955 border border-zinc-850 p-4 rounded-lg flex items-center gap-3">
  <Search className="w-4 h-4 text-zinc-500 shrink-0" />
  <input
  type="text"
@@ -382,7 +382,7 @@ export default function AptitudeQuestionsTab(props) {
  <div className="space-y-4">
  {isDbLoading ? (
  [...Array(3)].map((_, idx) => (
- <div key={idx} className="animate-pulse bg-zinc-950 border border-zinc-850 rounded-xl p-5 flex flex-col gap-4">
+ <div key={idx} className="animate-pulse bg-zinc-950 border border-zinc-850 rounded-lg p-5 flex flex-col gap-4">
  <div className="flex gap-2">
  <div className="h-5 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] rounded w-8" />
  <div className="h-5 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] rounded w-16" />
@@ -402,7 +402,7 @@ export default function AptitudeQuestionsTab(props) {
  .map((q, index) => (
  <div
  key={q.id || index}
- className="bg-zinc-950 border border-zinc-850 rounded-xl p-5 flex flex-col sm:flex-row sm:items-start justify-between gap-5"
+ className="bg-zinc-950 border border-zinc-850 rounded-lg p-5 flex flex-col sm:flex-row sm:items-start justify-between gap-5"
  >
  <div className="space-y-2 flex-1 min-w-0">
  <div className="flex items-center gap-3 mb-2">
@@ -443,7 +443,7 @@ export default function AptitudeQuestionsTab(props) {
  ))}
 
  {aptitudeQuestionsDb.filter(q => (q.question + q.category).toLowerCase().includes(searchAptitude.toLowerCase())).length === 0 && (
- <div className="text-center py-10 bg-zinc-955 border border-zinc-850 rounded-xl space-y-3">
+ <div className="text-center py-10 bg-zinc-955 border border-zinc-850 rounded-lg space-y-3">
  <Brain className="w-8 h-8 text-zinc-650 mx-auto" />
  <p className="text-zinc-500 font-bold text-sm ">No Questions Found.</p>
  </div>

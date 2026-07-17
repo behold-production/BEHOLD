@@ -190,7 +190,7 @@ export default function AuthModals({ isOpen, onClose }) {
  >
  {/* Modal Card */}
  <div 
- className="relative w-full max-w-md my-auto bg-white rounded-xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 border border-zinc-200"
+ className="relative w-full max-w-md my-auto bg-white rounded-lg shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 border border-zinc-200"
  onClick={(e) => e.stopPropagation()}
  >
 
@@ -217,7 +217,7 @@ export default function AuthModals({ isOpen, onClose }) {
  {/* Form body */}
  {rejectionReason ? (
  <div className="p-5 sm:p-6 space-y-4">
- <div className="bg-rose-50 border border-rose-200 p-4 rounded-xl space-y-3">
+ <div className="bg-rose-50 border border-rose-200 p-4 rounded-lg space-y-3">
  <p className="text-sm text-zinc-700 leading-relaxed font-medium">
  We regret to inform you that your professional counsellor application has been rejected by the system administrator.
  </p>
@@ -301,7 +301,7 @@ export default function AuthModals({ isOpen, onClose }) {
 
  {/* Forgot → success: show token box */}
  {mode === 'forgot' && forgotSuccess && (
- <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 space-y-3">
+ <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 space-y-3">
  <div className="flex items-center gap-2">
  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
  <p className="text-sm font-semibold text-emerald-900">Reset token generated!</p>
@@ -333,7 +333,7 @@ export default function AuthModals({ isOpen, onClose }) {
 
  {/* Reset success state */}
  {mode === 'reset' && resetSuccess && (
- <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center gap-3">
+ <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 flex items-center gap-3">
  <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
  <div>
  <p className="text-sm font-semibold text-emerald-900">Password reset successfully!</p>

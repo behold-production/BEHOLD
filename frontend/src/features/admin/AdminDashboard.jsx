@@ -3379,7 +3379,7 @@ export default function AdminDashboard({ setView }) {
  <p className="text-sm text-zinc-500 font-bold">ADMINISTRATOR CONTROL GATE</p>
  </div>
 
- <div className="bg-zinc-900 border border-zinc-800 p-6 sm:p-8 rounded-2xl shadow-2xl space-y-6 text-left">
+ <div className="bg-zinc-900 border border-zinc-800 p-6 sm:p-8 rounded-lg shadow-2xl space-y-6 text-left">
  <div className="space-y-1">
  <h2 className="text-base font-bold text-white ">Sign In to Dashboard</h2>
  <p className="text-sm text-zinc-500 leading-none">Security clearance required for system administration.</p>
@@ -3851,7 +3851,7 @@ export default function AdminDashboard({ setView }) {
  const { cleanName, roleTitle } = parseStaffDetails(user);
  return (
  <div className="px-6 py-6 flex flex-col items-center text-center space-y-3 border-b border-zinc-800">
- <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-brand to-brand-accent text-zinc-955 flex items-center justify-center font-header font-bold text-2xl shadow-xl">
+ <div className="w-20 h-20 rounded-lg bg-gradient-to-br from-brand to-brand-accent text-zinc-955 flex items-center justify-center font-header font-bold text-2xl shadow-xl">
  {(cleanName || '').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
  </div>
  <div>
@@ -3867,7 +3867,7 @@ export default function AdminDashboard({ setView }) {
  {/* Details */}
  <div className="px-6 py-5 space-y-4 flex-1">
  <p className="text-sm font-bold text-zinc-555 tracking-wider">Clearance & Details</p>
- <div className="bg-zinc-955/60 rounded-xl p-4 space-y-3 border border-zinc-850">
+ <div className="bg-zinc-955/60 rounded-lg p-4 space-y-3 border border-zinc-850">
  <div className="flex items-start gap-3">
  <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center shrink-0 mt-0.5">
  <Mail className="w-3.5 h-3.5 text-brand" />
@@ -3891,7 +3891,7 @@ export default function AdminDashboard({ setView }) {
  {!isSuperAdmin && (
  <div className="space-y-2">
  <p className="text-sm font-bold text-zinc-555 tracking-wider">Assigned Privilege Scopes</p>
- <div className="bg-zinc-955/60 border border-zinc-850 rounded-xl p-4 space-y-2 max-h-48 overflow-y-auto scrollbar-thin">
+ <div className="bg-zinc-955/60 border border-zinc-850 rounded-lg p-4 space-y-2 max-h-48 overflow-y-auto scrollbar-thin">
  {(user?.permissions || []).map((perm, idx) => (
  <div key={idx} className="flex items-center gap-2 text-xs font-bold text-zinc-300 bg-zinc-900 px-2.5 py-1.5 rounded border border-zinc-850">
  <span className="w-1.5 h-1.5 rounded-full bg-brand" />
@@ -3916,7 +3916,7 @@ export default function AdminDashboard({ setView }) {
  className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
  onClick={() => { setIsAddUserOpen(false); setIsEditUserOpen(false); }}
  />
- <div className="relative w-full max-w-lg bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
+ <div className="relative w-full max-w-lg bg-zinc-900 border border-zinc-800 rounded-lg p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
  <div>
  <h3 className="text-base font-bold text-white font-header">
  {isAddUserOpen ? 'Register Student' : 'Edit Student Details'}
@@ -3930,7 +3930,7 @@ export default function AdminDashboard({ setView }) {
  <div className="space-y-2">
  <label className="text-xs font-bold text-zinc-400 tracking-wide">Profile Picture</label>
  <div className="flex items-center gap-3">
- <div className="w-14 h-14 rounded-xl bg-zinc-950 border border-zinc-800 overflow-hidden shrink-0 flex items-center justify-center text-brand font-bold text-lg">
+ <div className="w-14 h-14 rounded-lg bg-zinc-950 border border-zinc-800 overflow-hidden shrink-0 flex items-center justify-center text-brand font-bold text-lg">
  {userProfilePicFile ? (
  <img src={URL.createObjectURL(userProfilePicFile)} alt="Preview" className="w-full h-full object-cover" />
  ) : userForm.profilePic ? (
@@ -4138,7 +4138,7 @@ export default function AdminDashboard({ setView }) {
  className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
  onClick={() => { setIsAddPsyOpen(false); setIsEditPsyOpen(false); }}
  />
- <div className="relative w-full max-w-lg bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200 overflow-y-auto max-h-[90vh]">
+ <div className="relative w-full max-w-lg bg-zinc-900 border border-zinc-800 rounded-lg p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200 overflow-y-auto max-h-[90vh]">
  <div>
  <h3 className="text-base font-bold text-white font-header">
  {isAddPsyOpen ? 'Register Psychologist' : 'Edit Psychologist details'}
@@ -4153,7 +4153,7 @@ export default function AdminDashboard({ setView }) {
  <div className="space-y-2">
  <label className="text-xs font-bold text-zinc-400 tracking-wide">Profile Picture</label>
  <div className="flex items-center gap-3">
- <div className="w-14 h-14 rounded-xl bg-zinc-950 border border-zinc-800 overflow-hidden shrink-0 flex items-center justify-center text-brand font-bold text-lg">
+ <div className="w-14 h-14 rounded-lg bg-zinc-950 border border-zinc-800 overflow-hidden shrink-0 flex items-center justify-center text-brand font-bold text-lg">
  {psyProfilePicFile ? (
  <img src={URL.createObjectURL(psyProfilePicFile)} alt="Preview" className="w-full h-full object-cover" />
  ) : psyForm.profilePic ? (
@@ -4548,7 +4548,7 @@ export default function AdminDashboard({ setView }) {
  );
  })}
  {adminAllSlots.length === 0 && (
- <div className="col-span-2 py-4 bg-zinc-955/40 border border-dashed border-zinc-850 rounded-xl text-zinc-550 italic text-xs text-center w-full">
+ <div className="col-span-2 py-4 bg-zinc-955/40 border border-dashed border-zinc-850 rounded-lg text-zinc-550 italic text-xs text-center w-full">
  No timing slots configured. Use the controls below to add custom slots or generate from a time range.
  </div>
  )}
@@ -4556,7 +4556,7 @@ export default function AdminDashboard({ setView }) {
  </div>
 
  {/* Add Custom Timing Slot */}
- <div className="space-y-1.5 bg-zinc-955/50 border border-zinc-850/60 p-3.5 rounded-xl">
+ <div className="space-y-1.5 bg-zinc-955/50 border border-zinc-850/60 p-3.5 rounded-lg">
  <label className="text-xs font-bold text-zinc-350 block">Add Custom Timing Slot</label>
  <div className="flex gap-2 items-end">
  <div className="flex-1 space-y-0.5">
@@ -4605,7 +4605,7 @@ export default function AdminDashboard({ setView }) {
  </div>
 
  {/* Add Custom Time Range */}
- <div className="space-y-1.5 bg-zinc-955/50 border border-zinc-850/60 p-3.5 rounded-xl">
+ <div className="space-y-1.5 bg-zinc-955/50 border border-zinc-850/60 p-3.5 rounded-lg">
  <label className="text-xs font-bold text-zinc-350 block">Generate Timing Slots from Range</label>
  <div className="flex flex-col gap-2">
  <div className="flex gap-1.5 items-end">
@@ -4733,7 +4733,7 @@ export default function AdminDashboard({ setView }) {
  className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
  onClick={() => { setIsAddBookingOpen(false); setIsEditBookingOpen(false); }}
  />
- <div className="relative w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200">
+ <div className="relative w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-lg p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200">
  <div>
  <h3 className="text-base font-bold text-white font-header">
  {isAddBookingOpen ? 'Schedule Consultation' : 'Update Appointment'}
@@ -4900,7 +4900,7 @@ export default function AdminDashboard({ setView }) {
  className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
  onClick={() => { setIsAddFaqOpen(false); setIsEditFaqOpen(false); }}
  />
- <div className="relative w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200">
+ <div className="relative w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-lg p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200">
  <div>
  <h3 className="text-base font-bold text-white font-header">
  {isAddFaqOpen ? 'Create FAQ Record' : 'Update FAQ Record'}
@@ -4972,7 +4972,7 @@ export default function AdminDashboard({ setView }) {
  className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
  onClick={() => { setIsAddAptitudeOpen(false); setIsEditAptitudeOpen(false); }}
  />
- <div className="relative w-full max-w-xl bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
+ <div className="relative w-full max-w-xl bg-zinc-900 border border-zinc-800 rounded-lg p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
  <div>
  <h3 className="text-base font-bold text-white font-header flex items-center gap-2">
  <Brain className="w-5 h-5 text-brand" />
@@ -5103,10 +5103,10 @@ export default function AdminDashboard({ setView }) {
  className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
  onClick={() => setViewingStudent(null)}
  />
- <div className="relative w-full max-w-2xl bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6 text-left text-white z-10 animate-in zoom-in-95 duration-200 overflow-y-auto max-h-[85vh]">
+ <div className="relative w-full max-w-2xl bg-zinc-900 border border-zinc-800 rounded-lg p-6 sm:p-8 shadow-2xl space-y-6 text-left text-white z-10 animate-in zoom-in-95 duration-200 overflow-y-auto max-h-[85vh]">
  <div className="flex justify-between items-start">
  <div className="flex items-center gap-3">
- <div className="w-12 h-12 rounded-xl bg-brand/10 border border-brand/20 text-brand flex items-center justify-center font-bold text-lg shrink-0 overflow-hidden">
+ <div className="w-12 h-12 rounded-lg bg-brand/10 border border-brand/20 text-brand flex items-center justify-center font-bold text-lg shrink-0 overflow-hidden">
  {viewingStudent.profilePic || viewingStudent.image ? (
  <img src={viewingStudent.profilePic || viewingStudent.image} alt={viewingStudent.name} className="w-full h-full object-cover" />
  ) : (
@@ -5130,7 +5130,7 @@ export default function AdminDashboard({ setView }) {
 
  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
  {/* Account details */}
- <div className="bg-zinc-955 border border-zinc-850 rounded-xl p-4 space-y-3">
+ <div className="bg-zinc-955 border border-zinc-850 rounded-lg p-4 space-y-3">
  <span className="text-sm font-bold text-zinc-500 block">Registry Metadata</span>
  <div className="space-y-2.5 text-sm">
  <div>
@@ -5158,7 +5158,7 @@ export default function AdminDashboard({ setView }) {
  </div>
 
  {/* Consultation Stats */}
- <div className="bg-zinc-955 border border-zinc-850 rounded-xl p-4 flex flex-col justify-between">
+ <div className="bg-zinc-955 border border-zinc-850 rounded-lg p-4 flex flex-col justify-between">
  <div>
  <span className="text-sm font-bold text-zinc-500 block mb-3">Consultation Summary</span>
  <div className="grid grid-cols-2 gap-2 text-center">
@@ -5189,7 +5189,7 @@ export default function AdminDashboard({ setView }) {
  {/* Booking History List */}
  <div className="space-y-2">
  <span className="text-sm font-bold text-zinc-500 block">Consultation History Log</span>
- <div className="border border-zinc-850 rounded-xl overflow-hidden bg-zinc-955 max-h-[160px] overflow-y-auto">
+ <div className="border border-zinc-850 rounded-lg overflow-hidden bg-zinc-955 max-h-[160px] overflow-y-auto">
  <div className="overflow-x-auto w-full">
  <table className="w-full text-sm border-collapse text-left min-w-[420px]">
  <thead>
@@ -5250,7 +5250,7 @@ export default function AdminDashboard({ setView }) {
  const studentTests = testResultsDb.filter(res => res.studentEmail?.toLowerCase() === viewingStudent.email?.toLowerCase());
  if (studentTests.length === 0) {
  return (
- <div className="p-5 bg-zinc-950/30 border border-zinc-850/60 rounded-xl text-center text-zinc-650 italic text-sm">
+ <div className="p-5 bg-zinc-950/30 border border-zinc-850/60 rounded-lg text-center text-zinc-650 italic text-sm">
  No aptitude assessment reports logged.
  </div>
  );
@@ -5258,7 +5258,7 @@ export default function AdminDashboard({ setView }) {
  return (
  <div className="space-y-4">
  {studentTests.map(res => (
- <div key={res.id} className="bg-zinc-955 border border-zinc-850 rounded-xl p-4 space-y-3">
+ <div key={res.id} className="bg-zinc-955 border border-zinc-850 rounded-lg p-4 space-y-3">
  <div className="flex justify-between items-center pb-2 border-b border-zinc-900">
  <div>
  <span className="text-sm bg-brand text-zinc-955 px-2 py-0.5 rounded font-bold ">
@@ -5303,13 +5303,13 @@ export default function AdminDashboard({ setView }) {
  {/* Existing uploads */}
  <div className="space-y-2">
  {(!viewingStudent.cigiResults || viewingStudent.cigiResults.length === 0) ? (
- <div className="p-4 bg-zinc-950/30 border border-zinc-850/60 rounded-xl text-center text-zinc-650 italic text-xs">
+ <div className="p-4 bg-zinc-950/30 border border-zinc-850/60 rounded-lg text-center text-zinc-650 italic text-xs">
  No CIGI results uploaded for this student yet.
  </div>
  ) : (
  <div className="grid grid-cols-1 gap-2.5 max-h-[200px] overflow-y-auto pr-1">
  {viewingStudent.cigiResults.map(res => (
- <div key={res.id} className="p-3 bg-zinc-955 border border-zinc-850 rounded-xl flex items-center justify-between gap-3 text-sm">
+ <div key={res.id} className="p-3 bg-zinc-955 border border-zinc-850 rounded-lg flex items-center justify-between gap-3 text-sm">
  <div className="min-w-0 flex-1 space-y-1">
  <div className="flex items-center gap-1.5 flex-wrap">
  <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold ${res.fileType === 'pdf' ? 'bg-rose-955/40 border border-rose-900/30 text-rose-450' : 'bg-blue-955/40 border border-blue-900/30 text-blue-400'}`}>
@@ -5364,7 +5364,7 @@ export default function AdminDashboard({ setView }) {
  </div>
 
  {/* Form to Add/Edit Result */}
- <form onSubmit={handleAdminCigiUpload} className="bg-zinc-955 border border-zinc-850 rounded-xl p-4 space-y-3">
+ <form onSubmit={handleAdminCigiUpload} className="bg-zinc-955 border border-zinc-850 rounded-lg p-4 space-y-3">
  <span className="text-xs font-bold text-zinc-400 block">
  {adminCigiEditingId ? 'Edit CIGI Result Metadata / Replace File' : 'Add CIGI Result Record'}
  </span>
@@ -5463,10 +5463,10 @@ export default function AdminDashboard({ setView }) {
  className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
  onClick={() => setViewingPsychologist(null)}
  />
- <div className="relative w-full max-w-2xl bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6 text-left text-white z-10 animate-in zoom-in-95 duration-200 overflow-y-auto max-h-[85vh]">
+ <div className="relative w-full max-w-2xl bg-zinc-900 border border-zinc-800 rounded-lg p-6 sm:p-8 shadow-2xl space-y-6 text-left text-white z-10 animate-in zoom-in-95 duration-200 overflow-y-auto max-h-[85vh]">
  <div className="flex justify-between items-start">
  <div className="flex items-center gap-3">
- <div className="w-12 h-12 rounded-xl bg-brand/10 border border-brand/20 text-brand flex items-center justify-center font-bold text-lg shrink-0 overflow-hidden">
+ <div className="w-12 h-12 rounded-lg bg-brand/10 border border-brand/20 text-brand flex items-center justify-center font-bold text-lg shrink-0 overflow-hidden">
  {viewingPsychologist.profilePic || viewingPsychologist.image ? (
  <img src={viewingPsychologist.profilePic || viewingPsychologist.image} alt={viewingPsychologist.name} className="w-full h-full object-cover" />
  ) : (
@@ -5506,7 +5506,7 @@ export default function AdminDashboard({ setView }) {
  {/* Grid details */}
  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
  {/* Professional Info */}
- <div className="bg-zinc-955 border border-zinc-850 rounded-xl p-4 space-y-3.5 text-sm">
+ <div className="bg-zinc-955 border border-zinc-850 rounded-lg p-4 space-y-3.5 text-sm">
  <span className="text-sm font-bold text-zinc-500 block">Advisor Credentials</span>
  <div className="space-y-2.5">
  <div>
@@ -5565,7 +5565,7 @@ export default function AdminDashboard({ setView }) {
  {/* Bio & Availability */}
  <div className="space-y-4">
  {/* Bio */}
- <div className="bg-zinc-955 border border-zinc-850 rounded-xl p-4 space-y-2 text-sm">
+ <div className="bg-zinc-955 border border-zinc-850 rounded-lg p-4 space-y-2 text-sm">
  <span className="text-sm font-bold text-zinc-500 block">Therapist Bio</span>
  <p className="text-zinc-300 leading-relaxed italic text-[12.5px]">
  "{bio}"
@@ -5573,7 +5573,7 @@ export default function AdminDashboard({ setView }) {
  </div>
 
  {/* Specialties List */}
- <div className="bg-zinc-955 border border-zinc-850 rounded-xl p-4 space-y-2">
+ <div className="bg-zinc-955 border border-zinc-850 rounded-lg p-4 space-y-2">
  <span className="text-sm font-bold text-zinc-500 block">Areas of Expertise</span>
  <div className="flex flex-wrap gap-1.5 pt-1">
  {specialtiesList.map(spec => (
@@ -5588,7 +5588,7 @@ export default function AdminDashboard({ setView }) {
  </div>
 
  {/* Supported Session Modes */}
- <div className="bg-zinc-955 border border-zinc-850 rounded-xl p-4 space-y-2">
+ <div className="bg-zinc-955 border border-zinc-850 rounded-lg p-4 space-y-2">
  <span className="text-sm font-bold text-zinc-500 block">Supported Session Modes</span>
  <div className="flex flex-wrap gap-1.5 pt-1">
  {modes.map(mode => (
@@ -5603,7 +5603,7 @@ export default function AdminDashboard({ setView }) {
  </div>
 
  {/* Active Availability Timings */}
- <div className="bg-zinc-955 border border-zinc-850 rounded-xl p-4 space-y-2.5 text-sm">
+ <div className="bg-zinc-955 border border-zinc-850 rounded-lg p-4 space-y-2.5 text-sm">
  <span className="text-sm font-bold text-zinc-500 block">Active Availability Timings</span>
  <div>
  <span className="text-zinc-500 block text-xs ">Operational Days</span>
@@ -5646,7 +5646,7 @@ export default function AdminDashboard({ setView }) {
  </span>
  </div>
 
- <div className="border border-zinc-850 rounded-xl overflow-hidden bg-zinc-955 max-h-[160px] overflow-y-auto">
+ <div className="border border-zinc-850 rounded-lg overflow-hidden bg-zinc-955 max-h-[160px] overflow-y-auto">
  <div className="overflow-x-auto w-full">
  <table className="w-full text-sm border-collapse text-left min-w-[420px]">
  <thead>
@@ -5725,7 +5725,7 @@ export default function AdminDashboard({ setView }) {
  className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
  onClick={() => setEditingSubAdmin(null)}
  />
- <div className="relative w-full max-w-xl bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
+ <div className="relative w-full max-w-xl bg-zinc-900 border border-zinc-800 rounded-lg p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
  <div>
  <h3 className="text-base font-bold text-white font-header flex items-center gap-2">
  <Lock className="w-4 h-4 text-brand" /> Edit Access Scopes
@@ -5760,7 +5760,7 @@ export default function AdminDashboard({ setView }) {
  (module.id === 'manage_psychologists' && !!editSubAdminPermissionsObj['MANAGE_PSYCHOLOGISTS']) ||
  (module.id === 'manage_bookings' && !!editSubAdminPermissionsObj['MANAGE_BOOKINGS']);
  return (
- <div key={module.id} className={`bg-zinc-950 border rounded-xl overflow-hidden shadow-md text-left transition-colors duration-200 ${isParentChecked ? 'border-brand/40 bg-brand/5' : 'border-zinc-850 bg-zinc-950'}`}>
+ <div key={module.id} className={`bg-zinc-950 border rounded-lg overflow-hidden shadow-md text-left transition-colors duration-200 ${isParentChecked ? 'border-brand/40 bg-brand/5' : 'border-zinc-850 bg-zinc-950'}`}>
  <div className="flex items-center justify-between p-3 border-b border-zinc-900/60 bg-zinc-900/40">
  <span className="font-header font-bold text-xs text-white ">{module.name}</span>
  <label className="relative inline-flex items-center cursor-pointer select-none">

@@ -55,19 +55,19 @@ export default function FaqsPage() {
           <button
             type="button"
             onClick={() => navigate('/')}
-            className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-wider text-[#008899] hover:text-slate-900 mb-6 transition-colors cursor-pointer bg-transparent border-none p-0"
+            className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-wider text-[#00A8FF] hover:text-slate-900 mb-6 transition-colors cursor-pointer bg-transparent border-none p-0"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Back to Home</span>
           </button>
 
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00E5FF]/15 border border-[#00E5FF]/40 text-[#008899] text-xs font-black tracking-widest uppercase mb-4 shadow-xs">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00E5FF]/15 border border-[#00E5FF]/40 text-[#00A8FF] text-xs font-black tracking-widest uppercase mb-4 shadow-xs">
             <Sparkles className="w-3.5 h-3.5" />
             <span>CLARITY DESK & KNOWLEDGE BASE</span>
           </div>
 
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black font-header tracking-tight text-slate-900 leading-tight">
-            Frequently Asked <span className="text-[#008899]">Questions</span>
+            Frequently Asked <span className="text-[#00A8FF]">Questions</span>
           </h1>
           <p className="mt-3 text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
             Complete answers regarding Behold Aspire assessment models, stream selections, counselling procedures, and lifetime support.
@@ -80,7 +80,7 @@ export default function FaqsPage() {
               placeholder="Search questions or keywords..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-white border border-slate-200 focus:border-[#008899] text-slate-900 placeholder-slate-400 text-sm font-medium outline-none shadow-md transition-all"
+              className="w-full pl-11 pr-4 py-3.5 rounded-lg bg-white border border-slate-200 focus:border-[#00A8FF] text-slate-900 placeholder-slate-400 text-sm font-medium outline-none shadow-md transition-all"
             />
             <Search className="w-5 h-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
           </div>
@@ -91,11 +91,11 @@ export default function FaqsPage() {
       <main className="flex-1 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
         {loading ? (
           <div className="flex justify-center items-center py-20">
-            <div className="w-10 h-10 border-4 border-[#008899] border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-10 h-10 border-4 border-[#00A8FF] border-t-transparent rounded-full animate-spin"></div>
           </div>
         ) : filteredFaqs.length === 0 ? (
-          <div className="text-center py-16 bg-white rounded-2xl border border-slate-200 shadow-sm">
-            <HelpCircle className="w-12 h-12 text-[#008899] mx-auto mb-3 opacity-70" />
+          <div className="text-center py-16 bg-white rounded-lg border border-slate-200 shadow-sm">
+            <HelpCircle className="w-12 h-12 text-[#00A8FF] mx-auto mb-3 opacity-70" />
             <h3 className="text-lg font-bold text-slate-900 mb-1">No questions found</h3>
             <p className="text-sm text-slate-500">Try searching for a different keyword.</p>
           </div>
@@ -106,8 +106,8 @@ export default function FaqsPage() {
               return (
                 <div
                   key={idx}
-                  className={`bg-white rounded-2xl border border-slate-200 shadow-sm transition-all duration-300 ${
-                    isOpen ? 'ring-1 ring-[#008899]/30 border-[#008899]' : ''
+                  className={`bg-white rounded-lg border border-slate-200 shadow-sm transition-all duration-300 ${
+                    isOpen ? 'ring-1 ring-[#00A8FF]/30 border-[#00A8FF]' : ''
                   }`}
                 >
                   <button
@@ -118,9 +118,9 @@ export default function FaqsPage() {
                   >
                     <div className="flex items-center gap-4">
                       <div
-                        className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 border ${
+                        className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 border ${
                           isOpen
-                            ? 'bg-[#008899] text-white border-[#008899]'
+                            ? 'bg-[#00A8FF] text-white border-[#00A8FF]'
                             : 'bg-slate-50 text-slate-500 border-slate-200'
                         }`}
                       >

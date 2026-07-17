@@ -422,7 +422,7 @@ export default function OverviewTab(props) {
  {/* Students Card */}
  <div
  onClick={() => setActiveStatHighlight(activeStatHighlight === 'students' ? null : 'students')}
- className={`bg-zinc-950 border p-4 rounded-xl text-center space-y-1.5 cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-brand/5 select-none ${activeStatHighlight === 'students'
+ className={`bg-zinc-950 border p-4 rounded-lg text-center space-y-1.5 cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-brand/5 select-none ${activeStatHighlight === 'students'
  ? 'border-brand bg-brand/5 ring-1 ring-brand/30'
  : 'border-zinc-850 hover:border-zinc-700'
  }`}
@@ -441,7 +441,7 @@ export default function OverviewTab(props) {
  {/* Psychologists Card */}
  <div
  onClick={() => setActiveStatHighlight(activeStatHighlight === 'psychologists' ? null : 'psychologists')}
- className={`bg-zinc-955 border p-4 rounded-xl text-center space-y-1.5 cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-brand/5 select-none ${activeStatHighlight === 'psychologists'
+ className={`bg-zinc-955 border p-4 rounded-lg text-center space-y-1.5 cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-brand/5 select-none ${activeStatHighlight === 'psychologists'
  ? 'border-brand bg-brand/5 ring-1 ring-brand/30'
  : 'border-zinc-850 hover:border-zinc-700'
  }`}
@@ -460,7 +460,7 @@ export default function OverviewTab(props) {
  {/* Total Bookings Card */}
  <div
  onClick={() => setActiveStatHighlight(activeStatHighlight === 'bookings' ? null : 'bookings')}
- className={`bg-zinc-955 border p-4 rounded-xl text-center space-y-1.5 cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-brand/5 select-none ${activeStatHighlight === 'bookings'
+ className={`bg-zinc-955 border p-4 rounded-lg text-center space-y-1.5 cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-brand/5 select-none ${activeStatHighlight === 'bookings'
  ? 'border-brand bg-brand/5 ring-1 ring-brand/30'
  : 'border-zinc-850 hover:border-zinc-700'
  }`}
@@ -479,7 +479,7 @@ export default function OverviewTab(props) {
  {/* Inquiries Card */}
  <div
  onClick={() => setActiveStatHighlight(activeStatHighlight === 'inquiries' ? null : 'inquiries')}
- className={`bg-zinc-955 border p-4 rounded-xl text-center space-y-1.5 cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-brand/5 select-none ${activeStatHighlight === 'inquiries'
+ className={`bg-zinc-955 border p-4 rounded-lg text-center space-y-1.5 cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-brand/5 select-none ${activeStatHighlight === 'inquiries'
  ? 'border-brand bg-brand/5 ring-1 ring-brand/30'
  : 'border-zinc-850 hover:border-zinc-700'
  }`}
@@ -498,7 +498,7 @@ export default function OverviewTab(props) {
  {/* Completed Card */}
  <div
  onClick={() => setActiveStatHighlight(activeStatHighlight === 'completed' ? null : 'completed')}
- className={`bg-zinc-955 border p-4 rounded-xl text-center space-y-1.5 cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-brand/5 select-none ${activeStatHighlight === 'completed'
+ className={`bg-zinc-955 border p-4 rounded-lg text-center space-y-1.5 cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-brand/5 select-none ${activeStatHighlight === 'completed'
  ? 'border-brand bg-brand/5 ring-1 ring-brand/30'
  : 'border-zinc-850 hover:border-zinc-700'
  }`}
@@ -517,7 +517,7 @@ export default function OverviewTab(props) {
  {/* Revenue Card */}
  <div
  onClick={() => setActiveStatHighlight(activeStatHighlight === 'revenue' ? null : 'revenue')}
- className={`bg-zinc-955 border p-4 rounded-xl text-center space-y-1.5 cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-brand/5 select-none ${activeStatHighlight === 'revenue'
+ className={`bg-zinc-955 border p-4 rounded-lg text-center space-y-1.5 cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-brand/5 select-none ${activeStatHighlight === 'revenue'
  ? 'border-brand bg-brand/5 ring-1 ring-brand/30'
  : 'border-zinc-850 hover:border-zinc-700'
  }`}
@@ -536,7 +536,7 @@ export default function OverviewTab(props) {
 
  {/* Interactive KPI Detail Drawer/Panel */}
  {activeStatHighlight && (
- <div className="bg-zinc-950 border border-zinc-850 p-5 rounded-xl space-y-4 animate-in slide-in-from-top-4 duration-300 relative">
+ <div className="bg-zinc-950 border border-zinc-850 p-5 rounded-lg space-y-4 animate-in slide-in-from-top-4 duration-300 relative">
  <button
  onClick={() => setActiveStatHighlight(null)}
  className="absolute top-4 right-4 p-1.5 bg-zinc-900 hover:bg-zinc-805 text-zinc-450 hover:text-white rounded border border-zinc-800 cursor-pointer transition border-none"
@@ -822,7 +822,7 @@ export default function OverviewTab(props) {
  )}
 
  {/* Quick actions panel */}
- <div className="bg-zinc-955 border border-zinc-855 p-4.5 rounded-xl space-y-3">
+ <div className="bg-zinc-955 border border-zinc-855 p-4.5 rounded-lg space-y-3">
  <span className="text-sm font-bold text-zinc-500 block">Quick Action Gateways</span>
  <div className="flex flex-wrap gap-3">
  <button
@@ -886,7 +886,7 @@ export default function OverviewTab(props) {
  {/* Main overview columns */}
  <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
  {/* Live Activity Feed Segmented Panel (Col Span 8) */}
- <div className="lg:col-span-8 bg-zinc-955 border border-zinc-850 rounded-xl p-5 space-y-4">
+ <div className="lg:col-span-8 bg-zinc-955 border border-zinc-850 rounded-lg p-5 space-y-4">
  <div className="flex justify-between items-center border-b border-zinc-900 pb-2">
  <span className="text-sm font-bold text-zinc-400">Live Activity Feed</span>
  <span className="text-sm text-zinc-500 ">Sync OK • {formatDateString(new Date())}</span>
@@ -940,7 +940,7 @@ export default function OverviewTab(props) {
  ) : (
  <>
  {[...bookingsDb].reverse().slice(0, 3).map(b => (
- <div key={b.id} className="bg-zinc-900/40 p-4 rounded-xl border border-zinc-855 text-sm hover:border-zinc-800 transition-colors">
+ <div key={b.id} className="bg-zinc-900/40 p-4 rounded-lg border border-zinc-855 text-sm hover:border-zinc-800 transition-colors">
  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
  <div className="space-y-3 flex-1 min-w-0">
  <div className="flex flex-wrap items-center gap-2">
@@ -1026,7 +1026,7 @@ export default function OverviewTab(props) {
  {[...inquiriesDb].reverse().slice(0, 3).map(i => {
  const isResolved = i.status === 'RESOLVED';
  return (
- <div key={i.id} className="bg-zinc-900/40 p-4 rounded-xl border border-zinc-855 text-sm space-y-3.5 hover:border-zinc-800 transition-colors">
+ <div key={i.id} className="bg-zinc-900/40 p-4 rounded-lg border border-zinc-855 text-sm space-y-3.5 hover:border-zinc-800 transition-colors">
  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3.5">
  <div>
  <span className="text-white font-bold block leading-tight">{i.name}</span>
@@ -1089,7 +1089,7 @@ export default function OverviewTab(props) {
  ) : (
  <>
  {[...testResultsDb].reverse().slice(0, 3).map(res => (
- <div key={res.id} className="bg-zinc-900/40 p-4 rounded-xl border border-zinc-855 text-sm space-y-3.5 hover:border-zinc-800 transition-colors">
+ <div key={res.id} className="bg-zinc-900/40 p-4 rounded-lg border border-zinc-855 text-sm space-y-3.5 hover:border-zinc-800 transition-colors">
  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3.5">
  <div>
  <span className="text-white font-bold block leading-tight">{res.studentName}</span>
@@ -1130,7 +1130,7 @@ export default function OverviewTab(props) {
  </div>
 
  {/* System health & visual meters (Col Span 4) */}
- <div className="lg:col-span-4 bg-zinc-955 border border-zinc-850 rounded-xl p-5 space-y-5 text-sm">
+ <div className="lg:col-span-4 bg-zinc-955 border border-zinc-850 rounded-lg p-5 space-y-5 text-sm">
  <div className="border-b border-zinc-900 pb-2 flex items-center justify-between">
  <span className="text-sm font-bold text-zinc-400">Database & System Health</span>
  <div className="flex items-center gap-1.5">

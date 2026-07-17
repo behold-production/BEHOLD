@@ -81,7 +81,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                 <button
                   key={label}
                   onClick={action}
-                  className="text-gray-700 hover:text-blue-600 font-medium text-sm transition-colors bg-transparent border-none cursor-pointer p-0"
+                  className="text-gray-700 hover:text-[#00A8FF] font-medium text-sm transition-colors bg-transparent border-none cursor-pointer p-0"
                 >
                   {label}
                 </button>
@@ -107,7 +107,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
               {/* Book Appointment */}
               <button
                 onClick={() => navigate('/booking')}
-                className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded transition-colors border-none cursor-pointer"
+                className="px-5 py-2.5 bg-[#00F0FF] hover:bg-[#00d8e6] text-white font-black text-sm rounded-lg transition-all shadow-[0_0_12px_rgba(0,240,255,0.4)] border-none cursor-pointer"
               >
                 Book Appointment
               </button>
@@ -116,7 +116,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
               {user ? (
                 <button
                   onClick={handleProfileClick}
-                  className="w-10 h-10 rounded-full border-2 border-blue-600 hover:border-blue-700 bg-blue-50 text-blue-600 font-black text-base flex items-center justify-center transition-all hover:scale-105 shadow-xs p-0 overflow-hidden cursor-pointer shrink-0"
+                  className="w-10 h-10 rounded-full border-2 border-[#00F0FF] hover:border-[#00d8e6] bg-[#00F0FF]/10 text-[#00A8FF] font-black text-base flex items-center justify-center transition-all hover:scale-105 shadow-[0_0_8px_rgba(0,240,255,0.3)] p-0 overflow-hidden cursor-pointer shrink-0"
                   title={`${user.name || 'User'} Profile`}
                 >
                   {(user.profilePic || user.avatar || user.profileImage || user.photoURL || user.image) ? (
@@ -144,7 +144,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
               {user && (
                 <button
                   onClick={handleProfileClick}
-                  className="w-9 h-9 rounded-full border-2 border-blue-600 bg-blue-50 text-blue-600 font-black text-sm flex items-center justify-center transition-all shadow-2xs p-0 overflow-hidden cursor-pointer shrink-0"
+                  className="w-9 h-9 rounded-full border-2 border-[#00F0FF] bg-[#00F0FF]/10 text-[#00A8FF] font-black text-sm flex items-center justify-center transition-all shadow-[0_0_6px_rgba(0,240,255,0.3)] p-0 overflow-hidden cursor-pointer shrink-0"
                   title={`${user.name || 'User'} Profile`}
                 >
                   {(user.profilePic || user.avatar || user.profileImage || user.photoURL || user.image) ? (
@@ -185,7 +185,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                 <button
                   key={label}
                   onClick={action}
-                  className="text-left px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-blue-600 font-medium rounded transition bg-transparent border-none cursor-pointer w-full"
+                  className="text-left px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-[#00A8FF] font-medium rounded transition bg-transparent border-none cursor-pointer w-full"
                 >
                   {label}
                 </button>
@@ -204,7 +204,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                 </a>
                 <button
                   onClick={() => { setMobileMenuOpen(false); navigate('/booking'); }}
-                  className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded transition border-none cursor-pointer"
+                  className="w-full py-3 bg-[#00F0FF] hover:bg-[#00d8e6] text-white font-black rounded-lg transition shadow-[0_0_12px_rgba(0,240,255,0.4)] border-none cursor-pointer"
                 >
                   Book Appointment
                 </button>
@@ -212,9 +212,9 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                   <div className="flex gap-2">
                     <button
                       onClick={() => { setMobileMenuOpen(false); handleProfileClick(); }}
-                      className="flex-1 py-3 bg-blue-50 text-blue-700 font-bold rounded transition hover:bg-blue-100 border border-blue-200/60 cursor-pointer flex items-center justify-center gap-2"
+                      className="flex-1 py-3 bg-[#00F0FF]/10 text-[#00A8FF] font-bold rounded-lg transition hover:bg-[#00F0FF]/20 border border-[#00F0FF]/30 cursor-pointer flex items-center justify-center gap-2 shadow-[0_0_8px_rgba(0,240,255,0.2)]"
                     >
-                      <div className="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-black overflow-hidden">
+                      <div className="w-5 h-5 rounded-full bg-[#00F0FF] text-gray-950 flex items-center justify-center text-xs font-black overflow-hidden">
                         {(user.profilePic || user.avatar || user.profileImage || user.photoURL || user.image) ? (
                           <img
                             src={user.profilePic || user.avatar || user.profileImage || user.photoURL || user.image}

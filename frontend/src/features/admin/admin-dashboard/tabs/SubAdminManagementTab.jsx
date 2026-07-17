@@ -380,7 +380,7 @@ export default function SubAdminManagementTab(props) {
  {activeRoleTab === 'roles' ? (
  <div className="space-y-6">
  {/* Roles Registry List (Grid of roles) */}
- <div className="border border-zinc-850 p-5 rounded-xl bg-zinc-955/40 space-y-4 text-left">
+ <div className="border border-zinc-850 p-5 rounded-lg bg-zinc-955/40 space-y-4 text-left">
  <div className="text-sm font-bold text-zinc-400 pb-1.5 border-b border-zinc-855 flex items-center justify-between">
  <div className="flex items-center gap-1.5">
  <Settings className="w-4 h-4 text-brand" /> Active Custom Roles Registry
@@ -426,7 +426,7 @@ export default function SubAdminManagementTab(props) {
  );
  const memberCount = subAdminsList.filter(a => a.customRoleTitle === role.name).length;
  return (
- <div key={role.id} className="bg-zinc-900 border border-zinc-850 p-4 rounded-xl flex flex-col justify-between space-y-4 hover:border-zinc-700 transition-colors">
+ <div key={role.id} className="bg-zinc-900 border border-zinc-850 p-4 rounded-lg flex flex-col justify-between space-y-4 hover:border-zinc-700 transition-colors">
  <div className="space-y-2">
  <div className="flex justify-between items-start gap-1">
  <div className="min-w-0">
@@ -500,7 +500,7 @@ export default function SubAdminManagementTab(props) {
  {/* Staff Provisioning Section */}
  <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
  {/* Registration form */}
- <form onSubmit={handleCreateSubAdmin} className="lg:col-span-7 bg-zinc-950 border border-zinc-850 p-5 rounded-xl space-y-4 text-left">
+ <form onSubmit={handleCreateSubAdmin} className="lg:col-span-7 bg-zinc-950 border border-zinc-850 p-5 rounded-lg space-y-4 text-left">
  <div className="text-sm font-bold text-zinc-400 pb-1.5 border-b border-zinc-850 flex items-center gap-1.5">
  <Settings className="w-4 h-4 text-brand" /> Register Staff Profile
  </div>
@@ -584,13 +584,13 @@ export default function SubAdminManagementTab(props) {
  </form>
 
  {/* Role Scopes Viewer */}
- <div className="lg:col-span-5 border border-zinc-850 p-5 rounded-xl bg-zinc-955/40 space-y-4 text-left">
+ <div className="lg:col-span-5 border border-zinc-850 p-5 rounded-lg bg-zinc-955/40 space-y-4 text-left">
  <div className="text-sm font-bold text-zinc-400 pb-1.5 border-b border-zinc-850 flex items-center gap-1.5">
  <Lock className="w-4 h-4 text-brand" /> Role Scope Permissions
  </div>
 
  {rolesDb.length === 0 ? (
- <div className="p-4 bg-amber-500/10 border border-amber-500/20 text-amber-500 text-sm rounded-xl space-y-2">
+ <div className="p-4 bg-amber-500/10 border border-amber-500/20 text-amber-500 text-sm rounded-lg space-y-2">
  <p className="font-bold">No Custom Roles Defined</p>
  <p className="text-sm text-zinc-400 leading-normal">
  To register sub-admin staff, you must first define a role title and assign its permission scopes using the "Create Custom Role Title" form above.
@@ -611,7 +611,7 @@ export default function SubAdminManagementTab(props) {
  const activeActions = module.actions.filter(act => selectedPermissions.includes(act.id));
 
  return (
- <div key={module.id} className={`p-3 border rounded-xl flex items-center justify-between transition-colors duration-200 ${isModuleEnabled ? 'border-brand/30 bg-brand/5 text-white' : 'border-zinc-800 bg-zinc-950/20 text-zinc-500'}`}>
+ <div key={module.id} className={`p-3 border rounded-lg flex items-center justify-between transition-colors duration-200 ${isModuleEnabled ? 'border-brand/30 bg-brand/5 text-white' : 'border-zinc-800 bg-zinc-950/20 text-zinc-500'}`}>
  <div className="text-sm min-w-0">
  <span className={`font-bold block ${isModuleEnabled ? 'text-white' : 'text-zinc-500'}`}>{module.name}</span>
  {isModuleEnabled && activeActions.length > 0 ? (
@@ -736,7 +736,7 @@ export default function SubAdminManagementTab(props) {
  </div>
  ) : (
  /* NEW ROLE / EDIT ROLE FORM */
- <form onSubmit={handleCreateRole} className="bg-zinc-950 border border-zinc-850 p-6 rounded-xl space-y-6 text-left">
+ <form onSubmit={handleCreateRole} className="bg-zinc-950 border border-zinc-850 p-6 rounded-lg space-y-6 text-left">
  <div className="text-sm font-bold text-zinc-400 pb-1.5 border-b border-zinc-850 flex items-center justify-between">
  <div className="flex items-center gap-1.5">
  <Plus className="w-4 h-4 text-brand" /> {editingRoleId ? 'Modify Custom Role details' : 'Define New Custom Role'}
@@ -777,7 +777,7 @@ export default function SubAdminManagementTab(props) {
  (module.id === 'manage_psychologists' && !!newRolePermissions['MANAGE_PSYCHOLOGISTS']) ||
  (module.id === 'manage_bookings' && !!newRolePermissions['MANAGE_BOOKINGS']);
  return (
- <div key={module.id} className={`bg-zinc-950 border rounded-xl overflow-hidden shadow-md text-left transition-colors duration-200 ${isParentChecked ? 'border-brand/40 bg-brand/5' : 'border-zinc-850 bg-zinc-950'}`}>
+ <div key={module.id} className={`bg-zinc-950 border rounded-lg overflow-hidden shadow-md text-left transition-colors duration-200 ${isParentChecked ? 'border-brand/40 bg-brand/5' : 'border-zinc-850 bg-zinc-950'}`}>
  {/* Header */}
  <div className="flex items-center justify-between p-4 border-b border-zinc-900/60 bg-zinc-900/40">
  <span className="font-header font-bold text-sm text-white ">{module.name}</span>

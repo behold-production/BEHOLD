@@ -368,7 +368,7 @@ export default function AnalyticsTab(props) {
 
  <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
  {/* Monthly bookings vertical chart */}
- <div className="lg:col-span-8 bg-zinc-955 border border-zinc-850 rounded-xl p-5 space-y-4">
+ <div className="lg:col-span-8 bg-zinc-955 border border-zinc-850 rounded-lg p-5 space-y-4">
  <span className="text-sm font-bold text-zinc-400 block border-b border-zinc-900 pb-2">Monthly Booking Volumes</span>
  <div className="h-48 flex items-end justify-between gap-4 pt-6 px-4">
  {sortedMonths.map(([month, count]) => {
@@ -395,7 +395,7 @@ export default function AnalyticsTab(props) {
  {/* Right: Service and psychologist breakdown */}
  <div className="lg:col-span-4 space-y-4">
  {/* Service Type Breakdown */}
- <div className="bg-zinc-955 border border-zinc-850 rounded-xl p-5 space-y-3">
+ <div className="bg-zinc-955 border border-zinc-850 rounded-lg p-5 space-y-3">
  <span className="text-sm font-bold text-zinc-400 block border-b border-zinc-900 pb-2">Service Breakdown</span>
  <div className="space-y-3 text-sm">
  <div className="space-y-1">
@@ -421,7 +421,7 @@ export default function AnalyticsTab(props) {
  </div>
 
  {/* Top psychologist list */}
- <div className="bg-zinc-955 border border-zinc-850 rounded-xl p-5 space-y-3">
+ <div className="bg-zinc-955 border border-zinc-850 rounded-lg p-5 space-y-3">
  <span className="text-sm font-bold text-zinc-400 block border-b border-zinc-900 pb-2">Top Performers (Completed)</span>
  <div className="space-y-2 text-sm">
  {sortedAdvisors.map(([name, count], idx) => (

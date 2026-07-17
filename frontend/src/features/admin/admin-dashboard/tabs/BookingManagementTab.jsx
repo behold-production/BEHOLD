@@ -405,7 +405,7 @@ export default function BookingManagementTab(props) {
  </div>
 
  {/* Status Filter Tabs & Revenue Estimate */}
- <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-zinc-950 p-4 rounded-xl border border-zinc-850">
+ <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-zinc-950 p-4 rounded-lg border border-zinc-850">
  <div className="flex flex-wrap gap-1.5">
  {['ALL', 'PENDING', 'CONFIRMED', 'COMPLETED', 'EXPIRED', 'CANCELLED'].map(status => (
  <button

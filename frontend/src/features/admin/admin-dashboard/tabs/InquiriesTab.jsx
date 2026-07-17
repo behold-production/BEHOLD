@@ -371,7 +371,7 @@ export default function InquiriesTab(props) {
  <div className="space-y-4">
  {isDbLoading ? (
  [...Array(3)].map((_, idx) => (
- <div key={idx} className="animate-pulse bg-zinc-955 border border-zinc-850 rounded-xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-5">
+ <div key={idx} className="animate-pulse bg-zinc-955 border border-zinc-850 rounded-lg p-5 flex flex-col md:flex-row md:items-center justify-between gap-5">
  <div className="space-y-2 flex-1">
  <div className="flex gap-2">
  <div className="h-4 bg-zinc-900 rounded w-16" />
@@ -388,7 +388,7 @@ export default function InquiriesTab(props) {
  {filteredInquiries.slice((inquiryPage - 1) * inquiryLimit, inquiryPage * inquiryLimit).map((inq) => (
  <div
  key={inq.id}
- className="bg-zinc-955 border border-zinc-850 rounded-xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-5 relative overflow-hidden"
+ className="bg-zinc-955 border border-zinc-850 rounded-lg p-5 flex flex-col md:flex-row md:items-center justify-between gap-5 relative overflow-hidden"
  >
  <div className="space-y-2 flex-1 min-w-0">
  <div className="flex items-center gap-2 flex-wrap">
@@ -456,7 +456,7 @@ export default function InquiriesTab(props) {
  ))}
 
  {filteredInquiries.length === 0 && (
- <div className="text-center py-10 bg-zinc-955 border border-zinc-850 rounded-xl space-y-3">
+ <div className="text-center py-10 bg-zinc-955 border border-zinc-850 rounded-lg space-y-3">
  <MessageSquare className="w-8 h-8 text-zinc-650 mx-auto" />
  <p className="text-zinc-500 font-bold text-sm ">No student inquiries submitted yet.</p>
  </div>

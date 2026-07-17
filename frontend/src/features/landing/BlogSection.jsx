@@ -44,21 +44,18 @@ const BlogSection = () => {
         
         {/* Section Header */}
         <div className="text-center mb-14">
-          <div className="inline-flex items-baseline gap-1 mb-4">
-            <span className="text-sm font-bold tracking-widest uppercase text-blue-600">Our Knowledge Base</span>
-            <ScrollDot nextId="blog-grid" label="Scroll to Articles ↓" size="xs" inlineText={true} />
-          </div>
-          <h2 id="blog-title" className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tighter text-slate-900 leading-tight mb-4 flex items-center justify-center flex-wrap">
+          <span className="text-xs sm:text-sm font-bold tracking-widest uppercase text-blue-600 block mb-3">Our Knowledge Base</span>
+          <h2 id="blog-title" className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 mb-4 tracking-tight leading-tight flex items-center justify-center flex-wrap">
             {renderTitleWithFullstopDot('Latest From Behold Aspire', 'blog-grid', 'Scroll to Articles ↓', 'md')}
           </h2>
-          <p className="text-sm md:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed font-medium mb-8">
+          <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed font-normal mb-8">
             Research-backed career roadmaps, stream selection strategies, and psychological guidance authored by CIGI mentors.
           </p>
           <div className="flex justify-center">
             <button
               type="button"
               onClick={handleOpenAllBlogs}
-              className="px-8 py-3.5 rounded-xl bg-gray-900 hover:bg-blue-600 text-white font-bold text-sm transition-all shadow-md hover:shadow-lg border-none cursor-pointer flex items-center justify-center"
+              className="px-8 py-3.5 rounded-lg bg-gray-900 hover:bg-[#00F0FF] text-white hover:text-white font-black text-sm transition-all shadow-md hover:shadow-[0_0_15px_rgba(0,240,255,0.4)] border-none cursor-pointer flex items-center justify-center"
             >
               Explore All Articles
             </button>
@@ -71,7 +68,7 @@ const BlogSection = () => {
             <article
               key={post._id || post.slug}
               onClick={() => handleOpenBlog(post.slug)}
-              className="group relative bg-white border border-slate-200/60 hover:border-blue-300/80 rounded-[24px] overflow-hidden transition-all duration-500 flex flex-col cursor-pointer shadow-lg shadow-slate-200/50 hover:shadow-2xl hover:shadow-slate-300/60 hover:-translate-y-2 h-full"
+              className="group relative bg-white border border-slate-200/60 hover:border-blue-300/80 rounded-lg overflow-hidden transition-all duration-500 flex flex-col cursor-pointer shadow-lg shadow-slate-200/50 hover:shadow-2xl hover:shadow-slate-300/60 hover:-translate-y-2 h-full"
             >
               {/* Cover Image Container */}
               <div className="relative h-60 w-full overflow-hidden bg-slate-100 shrink-0">
@@ -83,13 +80,13 @@ const BlogSection = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-500" />
 
                 {/* Category Badge */}
-                <span className="absolute top-4 left-4 px-3 py-1.5 rounded-lg bg-white/90 backdrop-blur-md border border-white/50 text-blue-600 text-[10px] font-black tracking-widest uppercase shadow-sm">
+                <span className="absolute top-4 left-4 px-3 py-1.5 rounded-lg bg-white/90 backdrop-blur-md border border-white/50 text-[#00A8FF] text-[10px] font-black tracking-widest uppercase shadow-sm">
                   {post.category || 'Career Guidance'}
                 </span>
 
                 {/* Read Time */}
                 <div className="absolute bottom-4 right-4 flex items-center gap-1.5 text-[10px] font-bold text-slate-800 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/50 shadow-sm uppercase tracking-wider">
-                  <Clock className="w-3.5 h-3.5 text-blue-600" />
+                  <Clock className="w-3.5 h-3.5 text-[#00A8FF]" />
                   <span>{post.readTime || '5 min read'}</span>
                 </div>
               </div>
@@ -97,7 +94,7 @@ const BlogSection = () => {
               {/* Content Body */}
               <div className="p-6 sm:p-8 flex-1 flex flex-col justify-between space-y-6 relative z-10">
                 <div className="space-y-4">
-                  <h3 className="text-xl sm:text-2xl font-black text-slate-900 group-hover:text-blue-600 transition-colors line-clamp-2 leading-tight tracking-tight">
+                  <h3 className="text-xl sm:text-2xl font-black text-slate-900 group-hover:text-[#00A8FF] transition-colors line-clamp-2 leading-tight tracking-tight">
                     {post.title}
                   </h3>
                   <p className="text-sm text-slate-600 line-clamp-3 leading-relaxed font-medium">
@@ -108,7 +105,7 @@ const BlogSection = () => {
                 {/* Author Info & Read Action */}
                 <div className="pt-5 border-t border-slate-100 flex items-center justify-between gap-3">
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-10 h-10 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 font-black text-sm overflow-hidden shrink-0 shadow-sm">
+                    <div className="w-10 h-10 rounded-full bg-[#00F0FF]/10 border border-[#00F0FF]/30 flex items-center justify-center text-[#00A8FF] font-black text-sm overflow-hidden shrink-0 shadow-sm">
                       {post.author?.avatar ? (
                         <img src={post.author.avatar} alt={post.author.name} className="w-full h-full object-cover" />
                       ) : (
@@ -125,7 +122,7 @@ const BlogSection = () => {
                     </div>
                   </div>
 
-                  <div className="shrink-0 text-xs font-bold text-blue-600 bg-blue-50 group-hover:bg-blue-600 group-hover:text-white transition-all px-3.5 py-1.5 rounded-lg">
+                  <div className="shrink-0 text-xs font-bold text-[#00A8FF] bg-[#00F0FF]/10 group-hover:bg-[#00F0FF] group-hover:text-gray-950 transition-all px-3.5 py-1.5 rounded-lg">
                     Read
                   </div>
                 </div>

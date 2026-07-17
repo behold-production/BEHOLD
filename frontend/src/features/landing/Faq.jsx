@@ -50,16 +50,13 @@ export default function Faq() {
 
         {/* Header */}
         <div className="text-center mb-14">
-          <div className="inline-flex items-baseline gap-1 mb-4">
-            <span className="text-sm font-bold tracking-widest uppercase text-blue-600">
-              Frequently Asked Questions
-            </span>
-            <ScrollDot nextId="inquiry-title" label="Scroll to Inquiry ↓" size="xs" inlineText={true} />
-          </div>
-          <h2 id="faq-title" className="text-4xl md:text-5xl font-black text-gray-900 mb-4 leading-tight flex items-center justify-center flex-wrap">
+          <span className="text-xs sm:text-sm font-bold tracking-widest uppercase text-[#00A8FF] block mb-3">
+            Frequently Asked Questions
+          </span>
+          <h2 id="faq-title" className="text-3xl sm:text-4xl md:text-5xl font-black text-gray-900 mb-4 tracking-tight leading-tight flex items-center justify-center flex-wrap">
             {renderTitleWithFullstopDot('Everything You Need To Know', 'inquiry-title', 'Scroll to Inquiry ↓', 'md')}
           </h2>
-          <p className="text-xl text-gray-500 leading-relaxed">
+          <p className="text-base sm:text-lg text-gray-600 font-normal max-w-2xl mx-auto leading-relaxed">
             We've answered the most common questions about our counseling model, C-DAT assessments, and mentorship programs.
           </p>
         </div>
@@ -71,17 +68,17 @@ export default function Faq() {
             return (
               <div
                 key={idx}
-                className={`rounded-2xl border transition-all duration-200 overflow-hidden ${isOpen ? 'border-blue-200 bg-blue-50' : 'border-gray-100 bg-white hover:border-gray-200'}`}
+                className={`rounded-lg border transition-all duration-200 overflow-hidden ${isOpen ? 'border-[#00F0FF]/40 bg-[#00F0FF]/5' : 'border-gray-100 bg-white hover:border-gray-200'}`}
               >
                 <button
                   type="button"
                   onClick={() => setOpenIndex(isOpen ? null : idx)}
                   className="w-full text-left px-6 py-5 flex items-center justify-between gap-4 cursor-pointer bg-transparent border-none"
                 >
-                  <span className={`font-bold text-base leading-snug ${isOpen ? 'text-blue-700' : 'text-gray-900'}`}>
+                  <span className={`font-bold text-base leading-snug ${isOpen ? 'text-[#00A8FF]' : 'text-gray-900'}`}>
                     {faq.question}
                   </span>
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-all ${isOpen ? 'bg-blue-600 text-white rotate-180' : 'bg-gray-100 text-gray-500'}`}>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-all ${isOpen ? 'bg-[#00A8FF] text-white rotate-180' : 'bg-gray-100 text-gray-500'}`}>
                     <ChevronDown className="w-4 h-4" />
                   </div>
                 </button>
@@ -89,7 +86,7 @@ export default function Faq() {
                   className="overflow-hidden transition-all duration-300 ease-in-out"
                   style={{ maxHeight: isOpen ? '400px' : '0px' }}
                 >
-                  <div className="px-6 pb-6 text-gray-600 leading-relaxed text-base border-t border-blue-100 pt-4">
+                  <div className="px-6 pb-6 text-gray-600 leading-relaxed text-base border-t border-[#00F0FF]/20 pt-4">
                     {faq.answer}
                   </div>
                 </div>
@@ -106,7 +103,7 @@ export default function Faq() {
               const el = document.getElementById('inquiry');
               if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }}
-            className="px-8 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition border-none cursor-pointer shadow-lg shadow-blue-100"
+            className="px-8 py-3.5 bg-[#00A8FF] hover:bg-[#00F0FF] text-white font-bold rounded-lg transition border-none cursor-pointer shadow-lg shadow-[#00A8FF]/20"
           >
             Contact Our Team
           </button>

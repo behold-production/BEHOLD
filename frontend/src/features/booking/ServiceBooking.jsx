@@ -302,9 +302,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                 {/* Header */}
                 <div className="text-center flex flex-col items-center space-y-3">
                     <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-600 text-xs font-bold shadow-sm">
-                        <ScrollDot nextId="booking-console" label="Scroll to booking form ↓" size="xs" />
                         <span>{rescheduleSession ? 'RESCHEDULE SESSION' : 'BOOK A SESSION'}</span>
-                        <ScrollDot nextId="booking-console" label="Scroll to booking form ↓" size="xs" inlineText={true} />
                     </div>
                     <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight leading-tight text-gray-900 font-header flex items-center justify-center flex-wrap gap-0.5">
                         <span>{rescheduleSession ? 'Reschedule Your Session' : 'Book Your Session'}</span>
@@ -332,7 +330,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                         const currentStepIdx = stepMapping[bookingStep] || 0;
                         const stepLabels = ['Schedule & Advisor', 'Account & Payment', 'Session Confirmed'];
                         return (
-                            <div className="bg-white border border-slate-200/80 p-5 sm:p-6 space-y-5 rounded-2xl shadow-sm animate-in fade-in duration-300">
+                            <div className="bg-white border border-slate-200/80 p-5 sm:p-6 space-y-5 rounded-lg shadow-sm animate-in fade-in duration-300">
                                 {/* Mobile: compact progress bar */}
                                 <div className="flex sm:hidden items-center gap-2">
                                     <div className="flex items-center gap-1.5 flex-1 min-w-0">
@@ -370,7 +368,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                             return (
                                                 <div key={idx} className="flex lg:flex-col items-start gap-3.5 lg:gap-2.5 relative shrink-0 snap-start w-[200px] sm:w-[220px] lg:w-auto">
                                                     <div className="flex items-center lg:w-full">
-                                                        <div className={`flex items-center justify-center w-8 h-8 rounded-xl font-bold text-xs border transition-all duration-300 shrink-0 ${isCompleted
+                                                        <div className={`flex items-center justify-center w-8 h-8 rounded-lg font-bold text-xs border transition-all duration-300 shrink-0 ${isCompleted
                                                             ? 'bg-slate-900 border-slate-900 text-white shadow-sm'
                                                             : isActive
                                                                 ? 'bg-blue-600 border-blue-600 text-white shadow-md shadow-blue-500/25 ring-4 ring-blue-50'
@@ -757,7 +755,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                                                 setClientSearchQuery(e.target.value);
                                                             }}
                                                             placeholder="e.g. Apartment/House No, Street Name, City, Pincode"
-                                                            className={`w-full px-3.5 py-2.5 border rounded-xl text-sm font-medium text-surface-900 outline-none focus:border-surface-900 transition ${errors.clientLocationName
+                                                            className={`w-full px-3.5 py-2.5 border rounded-lg text-sm font-medium text-surface-900 outline-none focus:border-surface-900 transition ${errors.clientLocationName
                                                                 ? 'border-rose-500 bg-rose-50/50'
                                                                 : 'border-surface-200 bg-white'
                                                                 }`}
@@ -775,7 +773,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                                                 value={bookingForm.clientLatitude || ''}
                                                                 onChange={handleInputChange}
                                                                 placeholder="e.g. 11.2588"
-                                                                className={`w-full px-3.5 py-2.5 border rounded-xl text-sm font-medium text-surface-900 outline-none focus:border-surface-900 transition ${errors.clientLatitude
+                                                                className={`w-full px-3.5 py-2.5 border rounded-lg text-sm font-medium text-surface-900 outline-none focus:border-surface-900 transition ${errors.clientLatitude
                                                                     ? 'border-rose-500 bg-rose-50/50'
                                                                     : 'border-surface-200 bg-white'
                                                                     }`}
@@ -791,7 +789,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                                                 value={bookingForm.clientLongitude || ''}
                                                                 onChange={handleInputChange}
                                                                 placeholder="e.g. 75.7804"
-                                                                className={`w-full px-3.5 py-2.5 border rounded-xl text-sm font-medium text-surface-900 outline-none focus:border-surface-900 transition ${errors.clientLongitude
+                                                                className={`w-full px-3.5 py-2.5 border rounded-lg text-sm font-medium text-surface-900 outline-none focus:border-surface-900 transition ${errors.clientLongitude
                                                                     ? 'border-rose-500 bg-rose-50/50'
                                                                     : 'border-surface-200 bg-white'
                                                                     }`}
@@ -1307,7 +1305,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                                     value={bookingForm.name}
                                                     onChange={handleInputChange}
                                                     placeholder="Your full name"
-                                                    className={`w-full px-3.5 py-2.5 border rounded-xl text-sm font-normal text-surface-900 outline-none focus:border-surface-900 transition ${errors.name
+                                                    className={`w-full px-3.5 py-2.5 border rounded-lg text-sm font-normal text-surface-900 outline-none focus:border-surface-900 transition ${errors.name
                                                         ? 'border-rose-500 bg-rose-50/50'
                                                         : 'border-surface-200 bg-surface-50'
                                                         }`}
@@ -1322,7 +1320,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                                     value={bookingForm.phone}
                                                     onChange={handleInputChange}
                                                     placeholder="e.g. 9876543210"
-                                                    className={`w-full px-3.5 py-2.5 border rounded-xl text-sm font-normal text-surface-900 outline-none focus:border-surface-900 transition ${errors.phone
+                                                    className={`w-full px-3.5 py-2.5 border rounded-lg text-sm font-normal text-surface-900 outline-none focus:border-surface-900 transition ${errors.phone
                                                         ? 'border-rose-500 bg-rose-50/50'
                                                         : 'border-surface-200 bg-surface-50'
                                                         }`}
@@ -1340,7 +1338,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                                     onChange={handleInputChange}
                                                     disabled={!!user}
                                                     placeholder="you@example.com"
-                                                    className={`w-full px-3.5 py-2.5 border rounded-xl text-sm font-normal outline-none transition ${user
+                                                    className={`w-full px-3.5 py-2.5 border rounded-lg text-sm font-normal outline-none transition ${user
                                                         ? 'bg-surface-50 border-surface-200 text-surface-500 cursor-not-allowed'
                                                         : errors.email
                                                             ? 'border-rose-500 bg-rose-50/50 text-surface-900'
@@ -1352,14 +1350,14 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                         </div>
 
                                         {!user && (
-                                            <div className="bg-surface-50 border border-surface-200 p-4 rounded-xl text-sm font-normal text-surface-600 text-left">
+                                            <div className="bg-surface-50 border border-surface-200 p-4 rounded-lg text-sm font-normal text-surface-600 text-left">
                                                 <span className="text-surface-900 font-medium block mb-1">Account Required to Continue</span>
                                                 You'll be asked to sign in or create a free account when you click "Proceed to Payment" — your booking details are saved automatically.
                                             </div>
                                         )}
 
                                         {user && (
-                                            <div className="bg-surface-50 border border-surface-200 p-4 rounded-xl text-sm font-normal text-surface-600 text-left">
+                                            <div className="bg-surface-50 border border-surface-200 p-4 rounded-lg text-sm font-normal text-surface-600 text-left">
                                                 <span className="text-surface-900 font-medium block mb-1">Notification Reminders</span>
                                                 Live session reminders will be sent to your verified email &amp; WhatsApp number.
                                             </div>

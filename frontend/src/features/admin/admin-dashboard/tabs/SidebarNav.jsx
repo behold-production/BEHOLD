@@ -81,7 +81,7 @@ export default function SidebarNav(props) {
  <button
  type="button"
  onClick={() => setIsProfileDrawerOpen(true)}
- className="w-full flex items-center gap-3 bg-zinc-955/60 hover:bg-zinc-950 p-3 rounded-xl border border-zinc-850 hover:border-brand/30 transition-all cursor-pointer text-left"
+ className="w-full flex items-center gap-3 bg-zinc-955/60 hover:bg-zinc-950 p-3 rounded-lg border border-zinc-850 hover:border-brand/30 transition-all cursor-pointer text-left"
  >
  <div className="w-12 h-12 rounded-[10px] bg-gradient-to-br from-brand to-brand-accent text-zinc-955 flex items-center justify-center font-header font-bold text-sm shrink-0 overflow-hidden">
  {(user?.profilePic || user?.image) ? (

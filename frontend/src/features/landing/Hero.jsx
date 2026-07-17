@@ -62,9 +62,9 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
                 const firstWords = words.join(' ');
 
                 return (
-                  <span key={partIdx} className={isAccent ? 'text-blue-600' : ''}>
+                  <span key={partIdx} className={isAccent ? 'text-transparent bg-clip-text bg-gradient-to-r from-[#00A8FF] to-[#00F0FF]' : ''}>
                     {firstWords ? `${firstWords} ` : ''}
-                    <span className="whitespace-nowrap inline-flex items-baseline">
+                    <span className="inline">
                       <span>{lastWord}</span>
                       <ScrollDot nextId="services-title" label="Scroll to Book Your Session ↓" size="md" inlineText={true} />
                     </span>
@@ -97,9 +97,8 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
           {/* LEFT: Copy (7 cols) */}
           <div className="lg:col-span-7 flex flex-col justify-center order-2 lg:order-1 py-2">
             {/* Badge */}
-            <div id="cdat-badge" className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-600 text-xs font-bold mb-5 w-fit shadow-2xl shadow-blue-500/5">
+            <div id="cdat-badge" className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#00F0FF]/10 border border-[#00F0FF]/30 text-[#00A8FF] text-xs font-bold mb-5 w-fit shadow-2xl shadow-[#00F0FF]/10">
               <span>{badge}</span>
-              <ScrollDot nextId="services-title" label="Scroll to Book Your Session ↓" size="xs" inlineText={true} />
             </div>
 
             <h1 id="hero-title" className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 leading-[1.12] mb-4 tracking-tight">
@@ -114,13 +113,13 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
             <div className="flex flex-col sm:flex-row gap-3 mb-8">
               <button
                 onClick={handleBook}
-                className="px-6 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl transition shadow-lg shadow-blue-500/20 border-none cursor-pointer flex items-center justify-center"
+                className="px-6 py-3.5 bg-[#00F0FF] hover:bg-[#00d8e6] text-white font-black text-sm rounded-lg transition shadow-[0_0_15px_rgba(0,240,255,0.4)] border-none cursor-pointer flex items-center justify-center"
               >
                 {btn1Text}
               </button>
               <button
                 onClick={handleExplore}
-                className="px-6 py-3.5 bg-white hover:bg-gray-50 text-gray-800 font-bold text-sm rounded-xl transition border border-gray-200 hover:border-blue-300 cursor-pointer shadow-sm flex items-center justify-center"
+                className="px-6 py-3.5 bg-white hover:bg-gray-50 text-gray-800 font-bold text-sm rounded-lg transition border border-gray-200 hover:border-[#00F0FF] cursor-pointer shadow-sm flex items-center justify-center"
               >
                 {btn2Text}
               </button>
@@ -130,7 +129,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
             <div className="flex items-center gap-6 sm:gap-8 pt-5 border-t border-gray-200/60">
               {stats.map(({ num, label }, idx) => (
                 <div key={idx} className="flex flex-col">
-                  <div className="text-lg sm:text-xl font-black text-blue-600">{num}</div>
+                  <div className="text-lg sm:text-xl font-black text-[#00A8FF]">{num}</div>
                   <div className="text-xs text-gray-500 font-medium mt-0.5">{label}</div>
                 </div>
               ))}
@@ -183,9 +182,9 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
                     </div>
 
                     {/* Verified Badge */}
-                    <div className="flex items-center gap-1 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">
-                      <span className="w-3 h-3 rounded-full bg-blue-600 text-white flex items-center justify-center text-[7px] font-black shrink-0">✓</span>
-                      <span className="text-[9px] font-bold text-blue-700 whitespace-nowrap">CIGI Partner</span>
+                    <div className="flex items-center gap-1 bg-[#00F0FF]/10 px-2 py-0.5 rounded-full border border-[#00F0FF]/30">
+                      <span className="w-3 h-3 rounded-full bg-[#00F0FF] text-gray-950 flex items-center justify-center text-[7px] font-black shrink-0">✓</span>
+                      <span className="text-[9px] font-bold text-[#00A8FF] whitespace-nowrap">CIGI Partner</span>
                     </div>
                   </div>
 
@@ -200,28 +199,28 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
                     {/* Subtle dark overlay gradient at bottom */}
                     <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-gray-900/60 via-gray-900/20 to-transparent pointer-events-none" />
 
-                    {/* Floating Audio Mentorship Card (Top-Right inside screen - made smaller and neater) */}
+                    {/* Floating Audio Mentorship Card (Top-Right inside screen) */}
                     <div className="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 bg-white/95 backdrop-blur-md rounded-lg p-1.5 sm:p-2 shadow-md border border-gray-100/90 flex items-center gap-1.5 sm:gap-2 max-w-[140px] sm:max-w-[155px] z-20 transition-all hover:scale-105">
-                      <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-[8px] sm:text-[9px] shrink-0 shadow-xs">▶</div>
+                      <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-[#00F0FF] text-gray-950 flex items-center justify-center text-[8px] sm:text-[9px] shrink-0 font-black shadow-xs">▶</div>
                       <div className="overflow-hidden">
                         <div className="text-[8.5px] sm:text-[9.5px] font-bold text-gray-800 truncate">1-on-1 Mentorship</div>
-                        <div className="flex items-center gap-0.5 pt-0.5">
-                          {[8, 12, 9, 14, 10, 6, 12, 9, 7, 11].map((h, idx) => (
-                            <span key={idx} className="w-0.5 bg-blue-600 rounded-full shrink-0" style={{ height: `${h}px` }} />
+                        <div className="flex items-center gap-0.5 h-3">
+                          {[6, 12, 8, 14, 10, 16, 7, 13, 9, 15, 11, 8].map((h, idx) => (
+                            <span key={idx} className="w-0.5 bg-[#00F0FF] rounded-full shrink-0" style={{ height: `${h}px` }} />
                           ))}
                         </div>
                       </div>
                     </div>
 
-                    {/* Floating Question Prompt Card (Bottom-Left overlay - made smaller so illustration is visible) */}
+                    {/* Floating Question Prompt Card (Bottom-Left overlay) */}
                     <div className="absolute bottom-2.5 left-2.5 sm:bottom-3 sm:left-3 bg-white/95 backdrop-blur-md rounded-lg p-2 sm:p-2.5 shadow-lg border border-gray-100/90 max-w-[170px] sm:max-w-[200px] z-20 text-left transition-all hover:scale-105">
-                      <div className="text-[7.5px] sm:text-[8px] font-bold text-blue-600 uppercase tracking-wider mb-0.5">Career vs Passion</div>
+                      <div className="text-[7.5px] sm:text-[8px] font-bold text-[#00A8FF] uppercase tracking-wider mb-0.5">Career vs Passion</div>
                       <div className="text-[9.5px] sm:text-[10.5px] font-black text-gray-900 leading-tight">
                         that’s a trick question — with C-DAT you master both!
                       </div>
                     </div>
 
-                    {/* Location Badge (Bottom-Right overlay - compact) */}
+                    {/* Location Badge (Bottom-Right overlay) */}
                     <div className="absolute bottom-2.5 right-2.5 sm:bottom-3 sm:right-3 bg-gray-900/80 backdrop-blur-md text-white text-[9px] sm:text-[10px] font-bold px-2 sm:px-2.5 py-1 rounded-full flex items-center gap-1 shadow z-20">
                       <span className="text-xs">📍</span>
                       <span>Kerala, India</span>
@@ -237,7 +236,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
                           <button
                             key={i}
                             onClick={() => setCurrentImgIdx(i)}
-                            className={`h-1 rounded-full transition-all border-none cursor-pointer ${currentImgIdx === i ? 'w-4.5 bg-blue-600' : 'w-1 bg-gray-300 hover:bg-gray-400'}`}
+                            className={`h-1 rounded-full transition-all border-none cursor-pointer ${currentImgIdx === i ? 'w-4.5 bg-[#00F0FF]' : 'w-1 bg-gray-300 hover:bg-gray-400'}`}
                           />
                         ))}
                       </div>
@@ -246,7 +245,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
                       <span className="hidden sm:inline text-gray-500 font-semibold text-[10px]">CIGI Certified Guidance</span>
                       <button
                         onClick={handleBook}
-                        className="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white font-bold text-[10px] sm:text-[11px] rounded-md transition border-none cursor-pointer shadow-2xs"
+                        className="px-2.5 py-1 bg-[#00F0FF] hover:bg-[#00d8e6] text-white font-black text-[10px] sm:text-[11px] rounded-md transition border-none cursor-pointer shadow-2xs"
                       >
                         Book Now
                       </button>

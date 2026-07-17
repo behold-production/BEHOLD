@@ -360,7 +360,7 @@ export default function FaqsTab(props) {
  <div className="space-y-4">
  {isDbLoading ? (
  [...Array(3)].map((_, idx) => (
- <div key={idx} className="animate-pulse bg-zinc-955 border border-zinc-850 rounded-xl p-5 flex flex-col gap-3">
+ <div key={idx} className="animate-pulse bg-zinc-955 border border-zinc-850 rounded-lg p-5 flex flex-col gap-3">
  <div className="flex gap-2 items-center">
  <div className="h-5 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] rounded w-5" />
  <div className="h-5 bg-zinc-900 rounded w-1/2" />
@@ -373,7 +373,7 @@ export default function FaqsTab(props) {
  {faqsDb.map((faq, index) => (
  <div
  key={index}
- className="bg-zinc-950 border border-zinc-850 rounded-xl p-5 flex flex-col sm:flex-row sm:items-start justify-between gap-5"
+ className="bg-zinc-950 border border-zinc-850 rounded-lg p-5 flex flex-col sm:flex-row sm:items-start justify-between gap-5"
  >
  <div className="space-y-2 flex-1 min-w-0">
  <h4 className="font-header font-bold text-sm text-white flex items-center gap-2">
@@ -405,7 +405,7 @@ export default function FaqsTab(props) {
  ))}
 
  {faqsDb.length === 0 && (
- <div className="text-center py-10 bg-zinc-955 border border-zinc-850 rounded-xl space-y-3">
+ <div className="text-center py-10 bg-zinc-955 border border-zinc-850 rounded-lg space-y-3">
  <HelpCircle className="w-8 h-8 text-zinc-650 mx-auto" />
  <p className="text-zinc-500 font-bold text-sm ">No FAQs defined.</p>
  </div>

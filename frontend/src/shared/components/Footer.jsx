@@ -108,7 +108,7 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
             </p>
             <button
               onClick={() => goTo('/booking')}
-              className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded transition mb-3 border-none cursor-pointer"
+              className="w-full py-3 bg-[#00F0FF] hover:bg-[#00d8e6] text-white font-black text-sm rounded-lg transition mb-3 border-none cursor-pointer shadow-[0_0_12px_rgba(0,240,255,0.4)]"
             >
               Book Appointment
             </button>

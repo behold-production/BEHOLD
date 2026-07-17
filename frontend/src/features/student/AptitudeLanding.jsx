@@ -28,11 +28,10 @@ export default function AptitudeLanding({ setView }) {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="w-full"
         >
-          <div className="inline-flex items-baseline gap-1 mb-3">
+          <div className="mb-3">
             <span className="font-mono text-[12px] tracking-[0.2em] uppercase text-[#00E5FF] font-bold">
               CIGI Differential Aptitude Test
             </span>
-            <ScrollDot nextId="journey-card" label="Scroll to Begin ↓" size="xs" inlineText={true} />
           </div>
 
           <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-semibold text-neon-blue-deep mb-6 leading-[1.1] tracking-tight flex items-center justify-center flex-wrap">
@@ -44,7 +43,7 @@ export default function AptitudeLanding({ setView }) {
           </p>
 
           {/* Main Teaser Hook Card */}
-          <div id="journey-card" className="bg-white rounded-2xl shadow-xl p-8 sm:p-10 max-w-3xl mx-auto border border-[#E9EDE4] text-left mb-12 relative overflow-hidden">
+          <div id="journey-card" className="bg-white rounded-lg shadow-xl p-8 sm:p-10 max-w-3xl mx-auto border border-[#E9EDE4] text-left mb-12 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-cyan-50 to-blue-50 rounded-full blur-2xl -translate-y-12 translate-x-12 pointer-events-none" />
             <h3 className="text-2xl font-serif font-semibold text-neon-blue-deep mb-3">
               Begin Your Journey
@@ -55,7 +54,7 @@ export default function AptitudeLanding({ setView }) {
 
             <button
               onClick={handleProceed}
-              className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 bg-[#00E5FF] hover:bg-[#00B3CC] text-white font-semibold rounded-xl transition-all shadow-md hover:shadow-lg border-none cursor-pointer text-sm"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 bg-[#00E5FF] hover:bg-[#00B3CC] text-white font-semibold rounded-lg transition-all shadow-md hover:shadow-lg border-none cursor-pointer text-sm"
             >
               Try a Sample Test
             </button>
@@ -69,7 +68,7 @@ export default function AptitudeLanding({ setView }) {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div
                 onClick={handleDetailedCdat}
-                className="bg-white p-5 rounded-2xl border border-gray-200/80 hover:border-[#00E5FF] transition-all shadow-sm hover:shadow-md cursor-pointer flex flex-col justify-between"
+                className="bg-white p-5 rounded-lg border border-gray-200/80 hover:border-[#00E5FF] transition-all shadow-sm hover:shadow-md cursor-pointer flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between mb-2">
@@ -82,7 +81,7 @@ export default function AptitudeLanding({ setView }) {
 
               <div
                 onClick={handleCounsellorAssign}
-                className="bg-white p-5 rounded-2xl border border-gray-200/80 hover:border-[#00E5FF] transition-all shadow-sm hover:shadow-md cursor-pointer flex flex-col justify-between"
+                className="bg-white p-5 rounded-lg border border-gray-200/80 hover:border-[#00E5FF] transition-all shadow-sm hover:shadow-md cursor-pointer flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between mb-2">

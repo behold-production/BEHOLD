@@ -10,7 +10,7 @@ const features = [
     ),
     title: 'Expertise You Can Trust',
     desc: 'Our certified counselors and mentors provide research-backed guidance grounded in psychological science and career development.',
-    color: 'bg-blue-50 text-blue-600',
+    color: 'bg-[#00F0FF]/10 text-[#00A8FF]',
   },
   {
     icon: (
@@ -63,7 +63,7 @@ function ReadMore({ text }) {
       </p>
       <button
         onClick={() => setOpen(o => !o)}
-        className="mt-0.5 text-[10px] font-semibold text-blue-500 bg-transparent border-none cursor-pointer p-0 inline-flex items-center gap-0.5 hover:opacity-70 transition-opacity"
+        className="mt-0.5 text-[10px] font-semibold text-[#00A8FF] bg-transparent border-none cursor-pointer p-0 inline-flex items-center gap-0.5 hover:opacity-80 transition-opacity"
       >
         {open ? 'Less' : 'More'}
         <svg
@@ -87,14 +87,14 @@ export default function WhyChooseUs({ siteSettings }) {
       <div className="max-w-5xl mx-auto px-6 lg:px-8">
 
         {/* Header */}
-        <div className="text-center mb-8">
-          <span className="text-xs font-bold tracking-widest uppercase text-blue-600 block mb-3">
+        <div className="text-center mb-14">
+          <span className="text-xs sm:text-sm font-bold tracking-widest uppercase text-[#00A8FF] block mb-3">
             Why Choose Us
           </span>
-          <h2 id="why-choose-us-title" className="text-3xl md:text-4xl font-black text-gray-900 mb-3 leading-tight flex items-center justify-center flex-wrap">
+          <h2 id="why-choose-us-title" className="text-3xl sm:text-4xl md:text-5xl font-black text-gray-900 mb-4 tracking-tight leading-tight flex items-center justify-center flex-wrap">
             {renderTitleWithFullstopDot('Built on Trust. Driven by Excellence', 'aptitude-title', 'Scroll to C-DAT Assessment ↓', 'md')}
           </h2>
-          <p className="text-sm text-gray-500 max-w-xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg text-gray-600 font-normal max-w-2xl mx-auto leading-relaxed">
             We combine psychological expertise, personalized mentorship, and efficient processes to deliver guidance that helps every student achieve their goals.
           </p>
         </div>
@@ -106,9 +106,9 @@ export default function WhyChooseUs({ siteSettings }) {
             {features.map((feat, i) => (
               <div
                 key={i}
-                className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow flex gap-3 w-full sm:w-[calc(50%-8px)] lg:w-[calc(33.33%-11px)]"
+                className="bg-white rounded-lg p-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow flex gap-3 w-full sm:w-[calc(50%-8px)] lg:w-[calc(33.33%-11px)]"
               >
-                <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${feat.color}`}>
+                <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${feat.color}`}>
                   {feat.icon}
                 </div>
                 <div className="min-w-0">
@@ -124,9 +124,9 @@ export default function WhyChooseUs({ siteSettings }) {
             {features.map((feat, i) => (
               <div
                 key={i}
-                className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow flex gap-3"
+                className="bg-white rounded-lg p-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow flex gap-3"
               >
-                <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${feat.color}`}>
+                <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${feat.color}`}>
                   {feat.icon}
                 </div>
                 <div className="min-w-0">
@@ -139,14 +139,14 @@ export default function WhyChooseUs({ siteSettings }) {
         )}
 
         {/* Bottom CTA strip */}
-        <div className="mt-8 bg-blue-600 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+        <div className="mt-8 bg-[#00A8FF]/10 border border-[#00A8FF]/20 rounded-lg p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
           <div>
-            <h3 className="text-lg font-black text-white mb-0.5">Ready to get started?</h3>
-            <p className="text-blue-200 text-sm">Book your first session today — no commitment required.</p>
+            <h3 className="text-lg font-black text-gray-900 mb-0.5">Ready to get started?</h3>
+            <p className="text-gray-500 text-sm">Book your first session today — no commitment required.</p>
           </div>
           <button
             onClick={() => { window.spaNavigate?.('/booking'); window.scrollTo({ top: 0 }); }}
-            className="px-6 py-3 bg-white text-blue-600 font-bold text-sm rounded-xl hover:bg-blue-50 transition shrink-0 border-none cursor-pointer shadow-lg"
+            className="px-6 py-3.5 bg-[#00A8FF] hover:bg-[#0090e0] text-white font-black text-sm rounded-lg transition-all shrink-0 border-none cursor-pointer shadow-md"
           >
             Book Appointment
           </button>

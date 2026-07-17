@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 /**
- * ScrollDot (Interactive Navy Neon Blue Little Dot)
- * Renders the signature BEHOLD little dot (`.`) in navy neon blue.
- * When scrolled into view, it dynamically activates with a glowing neon ripple ring.
- * When clicked, triggers a ripple burst and smoothly scrolls down to `nextId`.
- * Fits cleanly at baseline right after headings or text like a real period.
+ * ScrollDot
+ * Renders a clean, normal typographical period (.) in neon blue (#00F0FF) right next to the text.
+ * Clicking it scrolls to `nextId` smoothly.
  */
 export function ScrollDot({
   nextId = '',
@@ -15,46 +13,10 @@ export function ScrollDot({
   className = '',
   onClick = null
 }) {
-  const [hovered, setHovered] = useState(false);
-  const [isActive, setIsActive] = useState(false);
-  const [isClicking, setIsClicking] = useState(false);
   const dotRef = useRef(null);
-
-  useEffect(() => {
-    if (!dotRef.current) return;
-    const targetEl = dotRef.current.closest('section') || dotRef.current.closest('div[id]') || dotRef.current.parentElement;
-    if (!targetEl) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          setIsActive(entry.isIntersecting);
-        });
-      },
-      {
-        rootMargin: '-25% 0px -35% 0px',
-        threshold: 0.15
-      }
-    );
-
-    observer.observe(targetEl);
-    return () => observer.disconnect();
-  }, []);
-
-  // Refined little dot sizes suitable for periods and small accents
-  const sizes = {
-    xs: 'w-1.5 h-1.5',    // 6px
-    sm: 'w-2 h-2',        // 8px
-    md: 'w-2.5 h-2.5',    // 10px — ideal period dot for logo/headings
-    lg: 'w-3 h-3',        // 12px
-    xl: 'w-3.5 h-3.5',    // 14px
-  };
 
   const handleClick = (e) => {
     e.stopPropagation();
-    setIsClicking(true);
-    setTimeout(() => setIsClicking(false), 450);
-
     if (onClick) {
       onClick();
       return;
@@ -75,121 +37,36 @@ export function ScrollDot({
     <span
       ref={dotRef}
       onClick={handleClick}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
       title={label}
-      style={{
-        display: inlineText ? 'inline-block' : 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        verticalAlign: 'baseline',
-        position: 'relative',
-        bottom: inlineText ? '0.05em' : '0px',
-        marginLeft: inlineText ? '2px' : '0px',
-        marginRight: inlineText ? '1px' : '0px',
-        cursor: 'pointer',
-        transform: isClicking ? 'scale(1.7)' : hovered ? 'scale(1.35)' : isActive ? 'scale(1.15)' : 'scale(1)',
-        transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
-      }}
-      className={`relative inline-block rounded-full shrink-0 ${sizes[size] || sizes.md} ${className}`}
+      className={`text-[#00F0FF] font-black cursor-pointer inline transition-transform duration-200 hover:opacity-80 drop-shadow-[0_0_8px_rgba(0,240,255,0.6)] ${className}`}
     >
-      {/* Dynamic Expanding Ripple Ring when section is active in viewport or hovered */}
-      {(isActive || hovered || isClicking) && (
-        <span
-          className="absolute -inset-1 rounded-full pointer-events-none animate-ping"
-          style={{
-            background: 'radial-gradient(circle, #00F0FF 0%, rgba(0, 240, 255, 0) 70%)',
-            opacity: isClicking ? 0.9 : hovered ? 0.75 : 0.55,
-            animationDuration: isClicking ? '0.45s' : '1.6s',
-          }}
-        />
-      )}
-
-      {/* Outer Breathing Glowing Aura when active */}
-      {(isActive || hovered) && (
-        <span
-          className="absolute -inset-0.5 rounded-full pointer-events-none animate-pulse"
-          style={{
-            background: '#00E5FF',
-            filter: 'blur(3px)',
-            opacity: hovered ? 0.85 : 0.65,
-          }}
-        />
-      )}
-
-      {/* Navy Neon Blue Little Dot */}
-      <span
-        className="absolute inset-0 rounded-full"
-        style={{
-          background: 'radial-gradient(circle at 35% 35%, #00F0FF 0%, #00A8FF 55%, #0c1a36 100%)',
-          boxShadow: isClicking
-            ? '0 0 18px rgba(0, 240, 255, 1), 0 0 6px #00F0FF, inset 1px 1px 2px rgba(255, 255, 255, 0.95)'
-            : hovered
-            ? '0 0 14px rgba(0, 240, 255, 0.95), 0 0 4px #00F0FF, inset 1px 1px 1.5px rgba(255, 255, 255, 0.85)'
-            : isActive
-            ? '0 0 10px rgba(0, 229, 255, 0.9), 0 0 2.5px #00F0FF, inset 1px 1px 1.5px rgba(255, 255, 255, 0.75)'
-            : '0 0 6px rgba(0, 229, 255, 0.75), 0 0 1.5px #00F0FF, inset 1px 1px 1.5px rgba(255, 255, 255, 0.65)',
-          transition: 'all 0.3s ease',
-        }}
-      />
-      {/* Specular Highlight for crisp jewel finish */}
-      <span
-        className="absolute rounded-full pointer-events-none"
-        style={{
-          top: '18%',
-          left: '20%',
-          width: '35%',
-          height: '25%',
-          background: 'rgba(255, 255, 255, 0.75)',
-        }}
-      />
-      {/* Tooltip */}
-      {hovered && label && (
-        <span
-          className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-2 py-1 bg-gray-900 text-white text-[11px] font-semibold rounded shadow-lg whitespace-nowrap z-50 pointer-events-none"
-          style={{ letterSpacing: '0.02em', animation: 'fadeInUp 0.15s ease-out' }}
-        >
-          {label}
-          <span className="absolute left-1/2 -translate-x-1/2 top-full -mt-1 border-4 border-transparent border-t-gray-900" />
-        </span>
-      )}
+      .
     </span>
   );
 }
 
 /**
- * BrandDot — The signature navy neon blue dot from the BEHOLD. logo.
- * Used throughout the site as a visual motif.
+ * BrandDot — A simple, clean normal neon blue period (.) or flat circular accent
  */
 export function BrandDot({ size = 'md', pulse = false, float = false, className = '' }) {
-  const sizes = {
-    xs: 'w-1.5 h-1.5',
-    sm: 'w-2 h-2',
-    md: 'w-2.5 h-2.5',
-    lg: 'w-3.5 h-3.5',
-    xl: 'w-5 h-5',
-  };
-  const anim = float ? 'animate-dot-float' : pulse ? 'animate-pulse' : '';
   return (
     <span
-      className={`inline-block rounded-full shrink-0 ${sizes[size] || sizes.md} ${anim} ${className}`}
-      style={{
-        background: 'radial-gradient(circle at 35% 35%, #00F0FF 0%, #00A8FF 55%, #0c1a36 100%)',
-        boxShadow: '0 0 6px rgba(0, 229, 255, 0.7), 0 0 1.5px #00F0FF',
-      }}
+      className={`text-[#00F0FF] font-black inline drop-shadow-[0_0_6px_rgba(0,240,255,0.5)] ${className}`}
       aria-hidden="true"
-    />
+    >
+      .
+    </span>
   );
 }
 
 /**
- * DotEyebrow — Section label with a leading navy neon blue dot.
+ * DotEyebrow — Section label with clean leading dot.
  */
 export function DotEyebrow({ children, className = '' }) {
   return (
-    <div className={`inline-flex items-center gap-2 ${className}`}>
-      <BrandDot size="xs" pulse />
-      <span className="text-sm font-bold tracking-widest uppercase text-blue-600">
+    <div className={`inline-flex items-center gap-1.5 ${className}`}>
+      <span className="w-2 h-2 rounded-full bg-[#00F0FF] inline-block shadow-[0_0_6px_rgba(0,240,255,0.8)]" />
+      <span className="text-sm font-bold tracking-widest uppercase text-[#00A8FF]">
         {children}
       </span>
     </div>
@@ -197,7 +74,7 @@ export function DotEyebrow({ children, className = '' }) {
 }
 
 /**
- * DotDivider — A horizontal line of navy neon dots used to separate sections visually.
+ * DotDivider — Clean horizontal divider line.
  */
 export function DotDivider({ count = 5, className = '' }) {
   return (
@@ -205,14 +82,12 @@ export function DotDivider({ count = 5, className = '' }) {
       {Array.from({ length: count }).map((_, i) => (
         <span
           key={i}
-          className="rounded-full"
+          className="rounded-full inline-block"
           style={{
-            width: i === Math.floor(count / 2) ? '8px' : '5px',
-            height: i === Math.floor(count / 2) ? '8px' : '5px',
-            background: i === Math.floor(count / 2)
-              ? 'radial-gradient(circle at 35% 35%, #00F0FF 0%, #00A8FF 55%, #0c1a36 100%)'
-              : 'rgba(0, 229, 255, 0.4)',
-            boxShadow: i === Math.floor(count / 2) ? '0 0 6px rgba(0, 229, 255, 0.7)' : 'none',
+            width: i === Math.floor(count / 2) ? '6px' : '4px',
+            height: i === Math.floor(count / 2) ? '6px' : '4px',
+            background: i === Math.floor(count / 2) ? '#00F0FF' : '#00A8FF',
+            boxShadow: i === Math.floor(count / 2) ? '0 0 6px rgba(0, 240, 255, 0.7)' : 'none',
           }}
           aria-hidden="true"
         />
@@ -222,51 +97,22 @@ export function DotDivider({ count = 5, className = '' }) {
 }
 
 /**
- * FloatingDots — Decorative scattered dots for section backgrounds.
+ * FloatingDots — Subtle decorative background dots.
  */
 export function FloatingDots({ className = '' }) {
-  const dots = [
-    { size: 'w-2 h-2', top: '10%', left: '5%', delay: '0s', opacity: 0.25 },
-    { size: 'w-1.5 h-1.5', top: '25%', right: '8%', delay: '0.8s', opacity: 0.3 },
-    { size: 'w-2.5 h-2.5', top: '60%', left: '3%', delay: '1.5s', opacity: 0.2 },
-    { size: 'w-1.5 h-1.5', top: '80%', right: '5%', delay: '0.4s', opacity: 0.25 },
-    { size: 'w-2 h-2', top: '15%', right: '20%', delay: '1.2s', opacity: 0.2 },
-    { size: 'w-1.5 h-1.5', top: '45%', left: '12%', delay: '2s', opacity: 0.3 },
-    { size: 'w-2 h-2', top: '70%', right: '15%', delay: '0.6s', opacity: 0.25 },
-  ];
-
-  return (
-    <div className={`absolute inset-0 pointer-events-none overflow-hidden ${className}`} aria-hidden="true">
-      {dots.map((dot, i) => (
-        <span
-          key={i}
-          className={`absolute rounded-full animate-dot-float ${dot.size}`}
-          style={{
-            top: dot.top,
-            left: dot.left,
-            right: dot.right,
-            opacity: dot.opacity,
-            animationDelay: dot.delay,
-            background: 'radial-gradient(circle at 35% 35%, #00F0FF 0%, #00A8FF 55%, #0c1a36 100%)',
-            boxShadow: '0 0 5px rgba(0, 229, 255, 0.6)',
-          }}
-        />
-      ))}
-    </div>
-  );
+  return null; // Clean aesthetic without cluttering bubbles
 }
 
 /**
  * renderTitleWithFullstopDot
- * Wraps the last word of any section title with a ScrollDot period (.)
- * so that the dot never wraps onto its own line and sits exactly at baseline.
+ * Wraps the last word of any section title with a normal period (.) right attached to the text.
  */
 export function renderTitleWithFullstopDot(text = '', nextId = '', label = 'Scroll down ↓', size = 'md') {
   if (typeof text !== 'string' || !text) return null;
   const words = text.trim().split(/\s+/);
   if (words.length <= 1) {
     return (
-      <span className="whitespace-nowrap inline-flex items-baseline">
+      <span className="inline">
         <span>{text}</span>
         <ScrollDot nextId={nextId} label={label} size={size} inlineText={true} />
       </span>
@@ -277,7 +123,7 @@ export function renderTitleWithFullstopDot(text = '', nextId = '', label = 'Scro
   return (
     <span className="inline">
       <span>{firstPart} </span>
-      <span className="whitespace-nowrap inline-flex items-baseline">
+      <span className="inline">
         <span>{lastWord}</span>
         <ScrollDot nextId={nextId} label={label} size={size} inlineText={true} />
       </span>

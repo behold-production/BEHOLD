@@ -101,7 +101,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
   if (!advisor) {
     return (
       <div className="min-h-screen pt-28 pb-16 bg-slate-50 text-center px-4 flex flex-col items-center justify-center">
-        <div className="w-16 h-16 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center mb-4">
+        <div className="w-16 h-16 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center mb-4">
           <UserCheck className="w-8 h-8 text-slate-400" />
         </div>
         <h2 className="text-2xl font-black mb-2 text-slate-900 tracking-tight">Specialist Profile Not Found</h2>
@@ -109,7 +109,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
         <button
           type="button"
           onClick={onBack}
-          className="min-h-[44px] px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl font-bold shadow-md shadow-blue-500/20 transition-all border-0 cursor-pointer"
+          className="min-h-[44px] px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-lg font-bold shadow-md shadow-blue-500/20 transition-all border-0 cursor-pointer"
         >
           Go Back to Directory
         </button>
@@ -125,7 +125,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
           <button
             type="button"
             onClick={onBack}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-white hover:bg-slate-100 border border-slate-200/80 rounded-xl text-slate-700 font-bold text-xs shadow-2xs transition-all cursor-pointer group"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-white hover:bg-slate-100 border border-slate-200/80 rounded-lg text-slate-700 font-bold text-xs shadow-2xs transition-all cursor-pointer group"
           >
             <ChevronLeft className="w-4 h-4 text-slate-500 group-hover:-translate-x-0.5 transition-transform" /> Back to Specialists
           </button>
@@ -144,7 +144,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
 
           <div className="flex flex-col md:flex-row gap-6 sm:gap-8 items-start md:items-center relative z-10">
             {/* Avatar Circle/Square */}
-            <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-3xl bg-gradient-to-br from-blue-600 via-indigo-600 to-blue-800 text-white shadow-xl ring-2 ring-blue-500/20 flex items-center justify-center font-black text-4xl sm:text-5xl shrink-0 overflow-hidden relative group">
+            <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-lg bg-gradient-to-br from-blue-600 via-indigo-600 to-blue-800 text-white shadow-xl ring-2 ring-blue-500/20 flex items-center justify-center font-black text-4xl sm:text-5xl shrink-0 overflow-hidden relative group">
               {advisor.profilePic ? (
                 <img src={advisor.profilePic} alt={advisor.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
               ) : (
@@ -177,8 +177,8 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
 
               {/* 3 Frosted Stat Tiles */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-4 border-t border-slate-100">
-                <div className="flex items-center gap-3.5 p-3.5 bg-slate-50/80 border border-slate-200/80 rounded-2xl">
-                  <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 font-bold shadow-xs">
+                <div className="flex items-center gap-3.5 p-3.5 bg-slate-50/80 border border-slate-200/80 rounded-lg">
+                  <div className="w-10 h-10 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 font-bold shadow-xs">
                     <Clock className="w-5 h-5" />
                   </div>
                   <div>
@@ -187,8 +187,8 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3.5 p-3.5 bg-slate-50/80 border border-slate-200/80 rounded-2xl">
-                  <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 font-bold shadow-xs">
+                <div className="flex items-center gap-3.5 p-3.5 bg-slate-50/80 border border-slate-200/80 rounded-lg">
+                  <div className="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 font-bold shadow-xs">
                     <Globe className="w-5 h-5" />
                   </div>
                   <div className="min-w-0">
@@ -197,8 +197,8 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3.5 p-3.5 bg-slate-50/80 border border-slate-200/80 rounded-2xl">
-                  <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0 font-bold shadow-xs">
+                <div className="flex items-center gap-3.5 p-3.5 bg-slate-50/80 border border-slate-200/80 rounded-lg">
+                  <div className="w-10 h-10 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center shrink-0 font-bold shadow-xs">
                     <span className="text-base font-black">₹</span>
                   </div>
                   <div>
@@ -219,7 +219,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             {/* About Section */}
             <div className="bg-white p-6 sm:p-8 rounded-[28px] border border-slate-200/80 shadow-sm space-y-5">
               <div className="flex items-center gap-3 text-slate-900 border-b border-slate-100 pb-4">
-                <div className="p-2.5 bg-blue-50 rounded-xl border border-blue-200/60">
+                <div className="p-2.5 bg-blue-50 rounded-lg border border-blue-200/60">
                   <BookOpen className="w-5 h-5 text-blue-600" />
                 </div>
                 <div>
@@ -240,7 +240,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             {/* Specialties & Focus Areas */}
             <div className="bg-white p-6 sm:p-8 rounded-[28px] border border-slate-200/80 shadow-sm space-y-5">
               <div className="flex items-center gap-3 text-slate-900 border-b border-slate-100 pb-4">
-                <div className="p-2.5 bg-rose-50 rounded-xl border border-rose-200/60">
+                <div className="p-2.5 bg-rose-50 rounded-lg border border-rose-200/60">
                   <Heart className="w-5 h-5 text-rose-500" />
                 </div>
                 <div>
@@ -250,7 +250,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
               </div>
               <div className="flex flex-wrap gap-2.5">
                 {advisor.specialties.map((spec, i) => (
-                  <span key={i} className="px-4 py-2.5 bg-slate-50 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-200/80 border border-slate-200/80 transition-all rounded-xl text-xs font-bold text-slate-700 shadow-2xs">
+                  <span key={i} className="px-4 py-2.5 bg-slate-50 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-200/80 border border-slate-200/80 transition-all rounded-lg text-xs font-bold text-slate-700 shadow-2xs">
                     {spec}
                   </span>
                 ))}
@@ -260,7 +260,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             {/* Qualifications & Degrees */}
             <div className="bg-white p-6 sm:p-8 rounded-[28px] border border-slate-200/80 shadow-sm space-y-5">
               <div className="flex items-center gap-3 text-slate-900 border-b border-slate-100 pb-4">
-                <div className="p-2.5 bg-amber-50 rounded-xl border border-amber-200/60">
+                <div className="p-2.5 bg-amber-50 rounded-lg border border-amber-200/60">
                   <Award className="w-5 h-5 text-amber-600" />
                 </div>
                 <div>
@@ -268,8 +268,8 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                   <p className="text-xs text-slate-500 font-medium">Academic background & verification</p>
                 </div>
               </div>
-              <div className="flex items-center gap-4 p-5 border border-slate-200/80 rounded-2xl bg-slate-50/80 shadow-2xs">
-                <div className="w-12 h-12 rounded-xl bg-white border border-slate-200 flex items-center justify-center shrink-0 text-blue-600 shadow-xs">
+              <div className="flex items-center gap-4 p-5 border border-slate-200/80 rounded-lg bg-slate-50/80 shadow-2xs">
+                <div className="w-12 h-12 rounded-lg bg-white border border-slate-200 flex items-center justify-center shrink-0 text-blue-600 shadow-xs">
                   <GraduationCap className="w-6 h-6" />
                 </div>
                 <div className="flex flex-col">
@@ -283,7 +283,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             {/* Consultation Methodology & Ethics */}
             <div className="bg-white p-6 sm:p-8 rounded-[28px] border border-slate-200/80 shadow-sm space-y-5">
               <div className="flex items-center gap-3 text-slate-900 border-b border-slate-100 pb-4">
-                <div className="p-2.5 bg-emerald-50 rounded-xl border border-emerald-200/60">
+                <div className="p-2.5 bg-emerald-50 rounded-lg border border-emerald-200/60">
                   <Sparkles className="w-5 h-5 text-emerald-600" />
                 </div>
                 <div>
@@ -292,13 +292,13 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                 </div>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="p-4 bg-slate-50/80 rounded-2xl border border-slate-200/80">
+                <div className="p-4 bg-slate-50/80 rounded-lg border border-slate-200/80">
                   <div className="flex items-center gap-2 font-black text-sm text-slate-900 mb-1">
                     <Lock className="w-4 h-4 text-blue-600" /> 100% Confidential
                   </div>
                   <p className="text-xs text-slate-600 leading-relaxed font-medium">All discussions and personal assessments remain strictly confidential between you and the counselor.</p>
                 </div>
-                <div className="p-4 bg-slate-50/80 rounded-2xl border border-slate-200/80">
+                <div className="p-4 bg-slate-50/80 rounded-lg border border-slate-200/80">
                   <div className="flex items-center gap-2 font-black text-sm text-slate-900 mb-1">
                     <Calendar className="w-4 h-4 text-emerald-600" /> Structured 60-Min Sessions
                   </div>
@@ -323,7 +323,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                 </div>
 
                 {/* Pricing & Slot Preview Card */}
-                <div className="p-5 bg-gradient-to-br from-blue-50/50 via-white to-indigo-50/40 border border-blue-200/80 rounded-2xl space-y-4 shadow-2xs">
+                <div className="p-5 bg-gradient-to-br from-blue-50/50 via-white to-indigo-50/40 border border-blue-200/80 rounded-lg space-y-4 shadow-2xs">
                   <div className="flex justify-between items-center">
                     <span className="text-slate-600 text-xs font-bold uppercase tracking-wider">Next Available</span>
                     <span className="font-extrabold text-emerald-700 bg-emerald-100/80 border border-emerald-300/60 px-3 py-1 rounded-full text-xs shadow-2xs">{advisor.nextAvailable}</span>
@@ -354,7 +354,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                 <button
                   type="button"
                   onClick={() => onBook(advisorId)}
-                  className="w-full py-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-700 hover:to-indigo-700 text-white rounded-2xl text-xs font-black tracking-widest uppercase transition-all flex items-center justify-center gap-2.5 cursor-pointer shadow-lg shadow-blue-500/25 hover:shadow-xl hover:scale-[1.01] border-0"
+                  className="w-full py-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-700 hover:to-indigo-700 text-white rounded-lg text-xs font-black tracking-widest uppercase transition-all flex items-center justify-center gap-2.5 cursor-pointer shadow-lg shadow-blue-500/25 hover:shadow-xl hover:scale-[1.01] border-0"
                 >
                   <Calendar className="w-4 h-4" /> Book Consultation Now
                 </button>

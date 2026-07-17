@@ -361,7 +361,7 @@ export default function TestResultsTab(props) {
  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
  {isDbLoading ? (
  [...Array(4)].map((_, idx) => (
- <div key={idx} className="animate-pulse bg-zinc-950 border border-zinc-850 rounded-xl p-5 space-y-4 flex flex-col justify-between h-[300px]">
+ <div key={idx} className="animate-pulse bg-zinc-950 border border-zinc-850 rounded-lg p-5 space-y-4 flex flex-col justify-between h-[300px]">
  <div className="space-y-3">
  <div className="flex justify-between items-start">
  <div className="space-y-2 flex-1">
@@ -385,7 +385,7 @@ export default function TestResultsTab(props) {
  {filteredTestResults.map((res) => (
  <div
  key={res.id}
- className="bg-zinc-950 border border-zinc-850 rounded-xl p-5 space-y-4 relative overflow-hidden flex flex-col justify-between"
+ className="bg-zinc-950 border border-zinc-850 rounded-lg p-5 space-y-4 relative overflow-hidden flex flex-col justify-between"
  >
  <div className="space-y-3">
  <div className="flex justify-between items-start">
@@ -439,7 +439,7 @@ export default function TestResultsTab(props) {
  ))}
 
  {filteredTestResults.length === 0 && (
- <div className="col-span-2 text-center py-10 bg-zinc-955 border border-zinc-850 rounded-xl space-y-3">
+ <div className="col-span-2 text-center py-10 bg-zinc-955 border border-zinc-850 rounded-lg space-y-3">
  <FileSpreadsheet className="w-8 h-8 text-zinc-655 mx-auto" />
  <p className="text-zinc-500 font-bold text-sm ">No aptitude tests completed yet.</p>
  </div>

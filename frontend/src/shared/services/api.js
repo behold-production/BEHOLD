@@ -1084,6 +1084,30 @@ const ApiService = {
 
   async deleteBlog(id) {
     return await request(`/blogs/${id}`, { method: 'DELETE' });
+  },
+
+  // ─── Public Reviews / Testimonials ────────────────────────────────────────
+  async submitReview(name, role, rating, comment) {
+    return await request('/reviews', {
+      method: 'POST',
+      body: JSON.stringify({ name, role, rating, comment })
+    });
+  },
+
+  async getPublicReviews() {
+    return await request('/reviews');
+  },
+
+  async getAdminReviews() {
+    return await request('/admin/reviews');
+  },
+
+  async approveReview(id) {
+    return await request(`/admin/reviews/${id}/approve`, { method: 'PUT' });
+  },
+
+  async deleteReview(id) {
+    return await request(`/admin/reviews/${id}`, { method: 'DELETE' });
   }
 };
 

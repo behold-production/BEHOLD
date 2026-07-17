@@ -43,7 +43,7 @@ export default function ResetPassword() {
  if (!token) {
  return (
  <div className="min-h-screen flex items-center justify-center bg-zinc-50">
- <div className="p-8 max-w-md bg-white rounded-2xl shadow-xl text-center border border-zinc-200">
+ <div className="p-8 max-w-md bg-white rounded-lg shadow-xl text-center border border-zinc-200">
  <h2 className="text-xl font-bold text-rose-500 mb-2">Invalid Link</h2>
  <p className="text-zinc-600 mb-6">No reset token found in the URL. Please use a valid reset link.</p>
  <button onClick={() => navigate('/')} className="px-6 py-2 bg-brand text-white rounded-lg font-semibold hover:bg-brand-dark transition-colors">
@@ -58,7 +58,7 @@ export default function ResetPassword() {
  <div className="min-h-screen flex items-center justify-center bg-zinc-50 relative overflow-hidden">
  <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
  
- <div className="w-full max-w-md p-8 bg-white/80 backdrop-blur-xl border border-white rounded-2xl sm:rounded-[2rem] shadow-2xl relative z-10">
+ <div className="w-full max-w-md p-8 bg-white/80 backdrop-blur-xl border border-white rounded-lg sm:rounded-[2rem] shadow-2xl relative z-10">
  <div className="text-center mb-8">
  <h2 className="text-2xl font-bold text-brand font-header">Reset Password</h2>
  <p className="text-sm text-zinc-500 mt-2 font-medium">Create a new password for your account</p>
@@ -72,7 +72,7 @@ export default function ResetPassword() {
  value={password}
  onChange={(e) => setPassword(e.target.value)}
  required
- className="w-full px-4 py-3 bg-zinc-50/50 border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand transition-all text-sm font-medium"
+ className="w-full px-4 py-3 bg-zinc-50/50 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand transition-all text-sm font-medium"
  placeholder="Enter new password"
  />
  </div>
@@ -83,7 +83,7 @@ export default function ResetPassword() {
  value={confirmPassword}
  onChange={(e) => setConfirmPassword(e.target.value)}
  required
- className="w-full px-4 py-3 bg-zinc-50/50 border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand transition-all text-sm font-medium"
+ className="w-full px-4 py-3 bg-zinc-50/50 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand transition-all text-sm font-medium"
  placeholder="Confirm new password"
  />
  </div>

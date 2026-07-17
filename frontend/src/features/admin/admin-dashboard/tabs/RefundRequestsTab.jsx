@@ -124,7 +124,7 @@ export default function RefundRequestsTab(props) {
  </div>
 
  {/* Info notice about refund flow */}
- <div className="bg-zinc-955/60 p-4 rounded-xl border border-zinc-850 text-xs text-zinc-400 space-y-1">
+ <div className="bg-zinc-955/60 p-4 rounded-lg border border-zinc-850 text-xs text-zinc-400 space-y-1">
  <div className="flex items-center gap-2 font-bold text-white mb-1">
  <ShieldAlert className="w-4 h-4 text-brand" />
  <span>About Cancellation Payouts & Refund Operations</span>
@@ -134,7 +134,7 @@ export default function RefundRequestsTab(props) {
  </div>
 
  {/* Filters and Counters */}
- <div className="flex flex-wrap gap-1.5 bg-zinc-950 p-3 rounded-xl border border-zinc-850">
+ <div className="flex flex-wrap gap-1.5 bg-zinc-950 p-3 rounded-lg border border-zinc-850">
  {['ALL', 'PENDING', 'REFUNDED', 'REJECTED'].map((status) => (
  <button
  key={status}

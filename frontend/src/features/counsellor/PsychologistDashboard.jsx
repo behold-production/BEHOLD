@@ -1083,7 +1083,7 @@ export default function PsychologistDashboard({ setView }) {
           </p>
         </div>
 
-        <div className='relative z-10 w-full max-w-[460px] bg-[#0c1424]/95 backdrop-blur-xl border border-slate-800/80 rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-300'>
+        <div className='relative z-10 w-full max-w-[460px] bg-[#0c1424]/95 backdrop-blur-xl border border-slate-800/80 rounded-lg shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-300'>
           {/* Tabs */}
           <div className='flex border-b border-slate-800/80'>
             <button

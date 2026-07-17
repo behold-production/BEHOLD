@@ -78,31 +78,28 @@ export default function Inquiry({ testProfile, siteSettings }) {
         <div
           className="absolute inset-0 opacity-5"
           style={{
-            backgroundImage: 'radial-gradient(circle, #3b82f6 1px, transparent 1px)',
+            backgroundImage: 'radial-gradient(circle, #00F0FF 1px, transparent 1px)',
             backgroundSize: '28px 28px',
           }}
         />
         <div className="relative max-w-4xl mx-auto px-6 lg:px-8 text-center">
-          <div className="inline-flex items-baseline gap-1 mb-6">
-            <span className="text-sm font-bold tracking-widest uppercase text-blue-400">Start Your Journey</span>
-            <ScrollDot nextId="inquiry-title" label="Scroll to Form ↓" size="xs" inlineText={true} />
-          </div>
-          <h2 className="text-4xl md:text-5xl font-black text-white mb-6 leading-tight flex items-center justify-center flex-wrap">
+          <span className="text-xs sm:text-sm font-bold tracking-widest uppercase text-[#00A8FF] block mb-3">Start Your Journey</span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4 tracking-tight leading-tight flex items-center justify-center flex-wrap">
             {renderTitleWithFullstopDot('Ready To Build Your Future?', 'inquiry-title', 'Scroll to Form ↓', 'md')}
           </h2>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+          <p className="text-base sm:text-lg text-gray-300 font-normal max-w-2xl mx-auto mb-10 leading-relaxed">
             Take the first step toward discovering your true potential. Our mentors are here to guide you through every stage of your academic and career journey.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
               onClick={() => { const el = document.getElementById('inquiry'); if (el) el.scrollIntoView({ behavior: 'smooth' }); }}
-              className="px-10 py-4 bg-blue-600 hover:bg-blue-500 text-white font-black text-lg rounded-xl transition border-none cursor-pointer shadow-xl shadow-blue-900/40"
+              className="px-10 py-4 bg-[#00A8FF] hover:bg-[#00F0FF] text-white font-black text-lg rounded-lg transition border-none cursor-pointer shadow-xl shadow-[#00A8FF]/30"
             >
               Book Your Consultation
             </button>
             <button
               onClick={() => { window.spaNavigate?.('/sample-test'); window.scrollTo({ top: 0 }); }}
-              className="px-10 py-4 bg-white/10 hover:bg-white/20 text-white font-bold text-lg rounded-xl transition border border-white/20 cursor-pointer"
+              className="px-10 py-4 bg-white/10 hover:bg-white/20 text-white font-bold text-lg rounded-lg transition border border-white/20 cursor-pointer"
             >
               Take Aptitude Test
             </button>
@@ -116,22 +113,19 @@ export default function Inquiry({ testProfile, siteSettings }) {
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
 
             {/* Form — 3 cols */}
-            <div className="lg:col-span-3 bg-white rounded-3xl p-8 md:p-10 shadow-sm border border-gray-100">
+            <div className="lg:col-span-3 bg-white rounded-lg p-8 md:p-10 shadow-sm border border-gray-100">
               <div className="mb-8">
-                <div className="inline-flex items-baseline gap-1 mb-3">
-                  <span className="text-sm font-bold tracking-widest uppercase text-blue-600">Get In Touch</span>
-                  <ScrollDot nextId="footer-brand" label="Scroll to Footer ↓" size="xs" inlineText={true} />
-                </div>
-                <h2 id="inquiry-title" className="text-3xl font-black text-gray-900 mb-2 flex items-center flex-wrap">
+                <span className="text-xs sm:text-sm font-bold tracking-widest uppercase text-[#00A8FF] block mb-2">Get In Touch</span>
+                <h2 id="inquiry-title" className="text-3xl sm:text-4xl font-black text-gray-900 mb-2 flex items-center flex-wrap">
                   {renderTitleWithFullstopDot('Want to Know More?', 'footer-brand', 'Scroll to Footer ↓', 'md')}
                 </h2>
-                <p className="text-gray-500 leading-relaxed">
+                <p className="text-base text-gray-600 font-normal leading-relaxed">
                   Submit your request and we'll match you with the right expert within 24 hours.
                 </p>
               </div>
 
               {testProfile && (
-                <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-xl text-blue-700 text-sm font-semibold">
+                <div className="mb-6 p-4 bg-[#00F0FF]/10 border border-[#00F0FF]/30 rounded-lg text-[#00A8FF] text-sm font-semibold">
                   ✓ Pre-filled with your aptitude test results ({testProfile.dominantDomain} profile).
                 </div>
               )}
@@ -143,7 +137,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
                   </div>
                   <h3 className="text-xl font-black text-gray-900 mb-2">Request Sent!</h3>
                   <p className="text-gray-500">Our coordinator will contact you shortly.</p>
-                  <button onClick={() => setSubmitStatus(null)} className="mt-6 px-6 py-2.5 bg-blue-600 text-white rounded-xl font-bold border-none cursor-pointer">Send Another</button>
+                  <button onClick={() => setSubmitStatus(null)} className="mt-6 px-6 py-2.5 bg-[#00A8FF] text-white rounded-lg font-bold border-none cursor-pointer">Send Another</button>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-5">
@@ -154,7 +148,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
                         type="text" name="name" id="name-input"
                         value={formData.name} onChange={handleChange}
                         placeholder="Student Name"
-                        className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 transition ${formErrors.name ? 'border-red-400 focus:ring-red-100' : 'border-gray-200 focus:border-blue-500 focus:ring-blue-100'}`}
+                        className={`w-full border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 transition ${formErrors.name ? 'border-red-400 focus:ring-red-100' : 'border-gray-200 focus:border-[#00A8FF] focus:ring-[#00F0FF]/20'}`}
                       />
                       {formErrors.name && <p className="text-red-500 text-xs mt-1 font-semibold">{formErrors.name}</p>}
                     </div>
@@ -164,7 +158,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
                         type="email" name="email" id="email-input"
                         value={formData.email} onChange={handleChange}
                         placeholder="name@email.com"
-                        className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 transition ${formErrors.email ? 'border-red-400 focus:ring-red-100' : 'border-gray-200 focus:border-blue-500 focus:ring-blue-100'}`}
+                        className={`w-full border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 transition ${formErrors.email ? 'border-red-400 focus:ring-red-100' : 'border-gray-200 focus:border-[#00A8FF] focus:ring-[#00F0FF]/20'}`}
                       />
                       {formErrors.email && <p className="text-red-500 text-xs mt-1 font-semibold">{formErrors.email}</p>}
                     </div>
@@ -176,7 +170,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
                       rows={5} name="message" id="message-textarea"
                       value={formData.message} onChange={handleChange}
                       placeholder="Details regarding stream, class or queries..."
-                      className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition resize-none"
+                      className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#00A8FF] focus:ring-2 focus:ring-[#00F0FF]/20 transition resize-none"
                     />
                   </div>
 
@@ -184,7 +178,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
 
                   <button
                     type="submit" disabled={isSubmitting}
-                    className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-black text-lg rounded-xl transition border-none cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2 shadow-lg shadow-blue-100"
+                    className="w-full py-4 bg-[#00A8FF] hover:bg-[#00F0FF] text-white font-black text-lg rounded-lg transition border-none cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2 shadow-lg shadow-[#00A8FF]/20"
                   >
                     {isSubmitting ? <><Loader2 className="w-5 h-5 animate-spin" /> Sending...</> : 'Send Request'}
                   </button>
@@ -198,7 +192,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
               <div className="space-y-6">
                 {steps.map((step, i) => (
                   <div key={i} className="flex gap-4">
-                    <div className="w-12 h-12 bg-blue-600 text-white rounded-2xl flex items-center justify-center shrink-0 shadow-lg shadow-blue-200">
+                    <div className="w-12 h-12 bg-[#00A8FF] text-white rounded-lg flex items-center justify-center shrink-0 shadow-lg shadow-[#00A8FF]/30">
                       {step.icon}
                     </div>
                     <div>
@@ -211,16 +205,16 @@ export default function Inquiry({ testProfile, siteSettings }) {
 
               {/* Contact info */}
               {(settings.contactPhone || settings.contactEmail) && (
-                <div className="mt-8 p-6 bg-blue-50 rounded-2xl border border-blue-100">
+                <div className="mt-8 p-6 bg-[#00F0FF]/10 rounded-lg border border-[#00F0FF]/30">
                   <h4 className="font-bold text-gray-900 mb-3 text-sm uppercase tracking-wider">Or reach us directly</h4>
                   {settings.contactPhone && (
-                    <a href={`tel:${settings.contactPhone}`} className="flex items-center gap-2 text-blue-600 font-bold mb-2 hover:text-blue-700">
+                    <a href={`tel:${settings.contactPhone}`} className="flex items-center gap-2 text-[#00A8FF] font-bold mb-2 hover:text-[#00F0FF]">
                       <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.5a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.83h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l.76-.76a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.72 17z" /></svg>
                       {settings.contactPhone}
                     </a>
                   )}
                   {settings.contactEmail && (
-                    <a href={`mailto:${settings.contactEmail}`} className="flex items-center gap-2 text-blue-600 font-bold hover:text-blue-700">
+                    <a href={`mailto:${settings.contactEmail}`} className="flex items-center gap-2 text-[#00A8FF] font-bold hover:text-[#00F0FF]">
                       <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
                       {settings.contactEmail}
                     </a>
