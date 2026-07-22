@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Clock } from 'lucide-react';
 import ApiService from '../../shared/services/api';
 import { DEFAULT_BLOGS_DATA } from '../blog/defaultBlogsData';
-import { ScrollDot, renderTitleWithFullstopDot } from '../../shared/components/BrandDot';
+import { ScrollDot } from '../../shared/components/BrandDot';
 
 const BlogSection = () => {
   const navigate = useNavigate();
@@ -33,33 +33,26 @@ const BlogSection = () => {
   };
 
   return (
-    <section className="py-16 md:py-24 bg-slate-50 relative overflow-hidden">
-      
-      {/* Background Decor */}
-      <div className="absolute top-0 left-0 right-0 h-[500px] pointer-events-none z-0">
-        <div className="absolute -top-40 right-0 w-[600px] h-[600px] bg-brand/5 blur-[100px] rounded-full" />
-      </div>
+    <section id="blog" className="py-16 sm:py-24 bg-white border-b border-gray-100">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
-        {/* Section Header */}
-        <div className="text-center mb-14">
-          <span className="text-xs sm:text-sm font-bold tracking-widest uppercase text-blue-600 block mb-3">Our Knowledge Base</span>
-          <h2 id="blog-title" className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 mb-4 tracking-tight leading-tight flex items-center justify-center flex-wrap">
-            {renderTitleWithFullstopDot('Latest From Behold Aspire', 'blog-grid', 'Scroll to Articles ↓', 'md')}
+        {/* Header */}
+        <div className="text-center mb-16">
+          <span className="text-xs font-bold tracking-widest uppercase text-gray-400 block mb-3">
+            Latest Insights
+          </span>
+          <h2 id="blog-title" className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-4 tracking-tight leading-tight">
+            Guidance for Your Journey.
           </h2>
-          <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed font-normal mb-8">
-            Research-backed career roadmaps, stream selection strategies, and psychological guidance authored by CIGI mentors.
+          <p className="text-sm sm:text-base text-gray-600 max-w-xl mx-auto leading-relaxed font-normal mb-8">
+            Research-backed articles, student guides, and mental health resources from our clinical team.
           </p>
-          <div className="flex justify-center">
-            <button
-              type="button"
-              onClick={handleOpenAllBlogs}
-              className="px-8 py-3.5 rounded-lg bg-gray-900 hover:bg-[#00F0FF] text-white hover:text-white font-black text-sm transition-all shadow-md hover:shadow-[0_0_15px_rgba(0,240,255,0.4)] border-none cursor-pointer flex items-center justify-center"
-            >
-              Explore All Articles
-            </button>
-          </div>
+          <button
+            onClick={handleOpenAllBlogs}
+            className="px-6 py-2.5 bg-gray-900 hover:bg-black text-white font-semibold text-xs rounded-md transition border-none cursor-pointer shadow-sm"
+          >
+            Explore All Articles
+          </button>
         </div>
 
         {/* Blog Cards Grid */}
@@ -68,44 +61,44 @@ const BlogSection = () => {
             <article
               key={post._id || post.slug}
               onClick={() => handleOpenBlog(post.slug)}
-              className="group relative bg-white border border-slate-200/60 hover:border-blue-300/80 rounded-lg overflow-hidden transition-all duration-500 flex flex-col cursor-pointer shadow-lg shadow-slate-200/50 hover:shadow-2xl hover:shadow-slate-300/60 hover:-translate-y-2 h-full"
+              className="group relative bg-white border border-gray-200 hover:border-gray-300 rounded-lg overflow-hidden transition-all duration-300 flex flex-col cursor-pointer shadow-sm hover:shadow-md h-full"
             >
               {/* Cover Image Container */}
-              <div className="relative h-60 w-full overflow-hidden bg-slate-100 shrink-0">
+              <div className="relative h-56 w-full overflow-hidden bg-gray-100 shrink-0">
                 <img
                   src={post.coverImage || 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&auto=format&fit=crop&q=80'}
                   alt={post.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-t from-gray-900/40 to-transparent opacity-40 group-hover:opacity-20 transition-opacity duration-300" />
 
                 {/* Category Badge */}
-                <span className="absolute top-4 left-4 px-3 py-1.5 rounded-lg bg-white/90 backdrop-blur-md border border-white/50 text-[#00A8FF] text-[10px] font-black tracking-widest uppercase shadow-sm">
+                <span className="absolute top-4 left-4 px-2.5 py-1 rounded bg-white/95 backdrop-blur-sm text-gray-900 text-[10px] font-bold tracking-wider uppercase shadow-sm">
                   {post.category || 'Career Guidance'}
                 </span>
 
                 {/* Read Time */}
-                <div className="absolute bottom-4 right-4 flex items-center gap-1.5 text-[10px] font-bold text-slate-800 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/50 shadow-sm uppercase tracking-wider">
-                  <Clock className="w-3.5 h-3.5 text-[#00A8FF]" />
+                <div className="absolute bottom-4 right-4 flex items-center gap-1 text-[10px] font-semibold text-gray-700 bg-white/95 backdrop-blur-sm px-2.5 py-1 rounded border border-gray-200/50 shadow-sm uppercase">
+                  <Clock className="w-3 h-3 text-gray-500" />
                   <span>{post.readTime || '5 min read'}</span>
                 </div>
               </div>
 
               {/* Content Body */}
-              <div className="p-6 sm:p-8 flex-1 flex flex-col justify-between space-y-6 relative z-10">
-                <div className="space-y-4">
-                  <h3 className="text-xl sm:text-2xl font-black text-slate-900 group-hover:text-[#00A8FF] transition-colors line-clamp-2 leading-tight tracking-tight">
+              <div className="p-6 sm:p-7 flex-1 flex flex-col justify-between space-y-6">
+                <div className="space-y-3">
+                  <h3 className="text-xl font-serif font-bold text-gray-900 group-hover:text-black transition-colors line-clamp-2 leading-snug">
                     {post.title}
                   </h3>
-                  <p className="text-sm text-slate-600 line-clamp-3 leading-relaxed font-medium">
+                  <p className="text-sm text-gray-600 line-clamp-3 leading-relaxed font-normal">
                     {post.excerpt}
                   </p>
                 </div>
 
                 {/* Author Info & Read Action */}
-                <div className="pt-5 border-t border-slate-100 flex items-center justify-between gap-3">
+                <div className="pt-4 border-t border-gray-100 flex items-center justify-between gap-3">
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-10 h-10 rounded-full bg-[#00F0FF]/10 border border-[#00F0FF]/30 flex items-center justify-center text-[#00A8FF] font-black text-sm overflow-hidden shrink-0 shadow-sm">
+                    <div className="w-8 h-8 rounded-full bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-900 font-bold text-xs overflow-hidden shrink-0">
                       {post.author?.avatar ? (
                         <img src={post.author.avatar} alt={post.author.name} className="w-full h-full object-cover" />
                       ) : (
@@ -113,17 +106,17 @@ const BlogSection = () => {
                       )}
                     </div>
                     <div className="min-w-0">
-                      <h4 className="text-xs font-bold text-slate-900 truncate">
+                      <h4 className="text-xs font-bold text-gray-900 truncate">
                         {post.author?.name || 'Editorial Team'}
                       </h4>
-                      <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider truncate mt-0.5">
+                      <p className="text-[10px] text-gray-500 font-normal truncate">
                         {post.author?.role || 'Senior Mentor'}
                       </p>
                     </div>
                   </div>
 
-                  <div className="shrink-0 text-xs font-bold text-[#00A8FF] bg-[#00F0FF]/10 group-hover:bg-[#00F0FF] group-hover:text-gray-950 transition-all px-3.5 py-1.5 rounded-lg">
-                    Read
+                  <div className="shrink-0 text-xs font-semibold text-gray-900 group-hover:underline">
+                    Read →
                   </div>
                 </div>
               </div>

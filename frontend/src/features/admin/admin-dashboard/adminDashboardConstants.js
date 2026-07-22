@@ -97,5 +97,15 @@ export const PRIVILEGE_MODULES = [
       { id: 'delete_staff', name: 'Delete Staff' },
       { id: 'verify_staff', name: 'Verify Staff' }
     ]
+  },
+  {
+    id: 'manage_blogs',
+    name: 'Blog Management',
+    actions: [
+      { id: 'view_blogs', name: 'View Blogs' },
+      { id: 'add_blogs', name: 'Add Blog' },
+      { id: 'edit_blogs', name: 'Edit Blog' },
+      { id: 'delete_blogs', name: 'Delete Blog' }
+    ]
   }
 ];

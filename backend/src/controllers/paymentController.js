@@ -79,33 +79,11 @@ const PaymentController = {
         }
       };
 
-      if (counsellor.razorpayAccountId && counsellor.razorpayAccountId.trim()) {
-        const splitPercent = settings.counsellorSplitPercent !== undefined ? Number(settings.counsellorSplitPercent) : 50;
-        const counsellorAmount = Math.round(netTotal * (splitPercent / 100) * 100); // split in paise
-        options.transfers = [
-          {
-            account: counsellor.razorpayAccountId.trim(),
-            amount: counsellorAmount,
-            currency: 'INR',
-            on_hold: false
-          }
-        ];
-      }
-
       let order;
       try {
         order = await razorpay.orders.create(options);
       } catch (err) {
-        // If it failed and we had split transfers, try creating it WITHOUT transfers as a fallback
-        if (options.transfers) {
-          console.warn('[Razorpay Route Fallback]: Split transfer failed to initialize. Creating standard order without transfer split. Error:', err.message);
-          delete options.transfers;
-          options.notes.splitError = 'true';
-          options.notes.splitErrorMessage = err.message || 'Razorpay account linking issue';
-          order = await razorpay.orders.create(options);
-        } else {
-          throw err;
-        }
+        throw err;
       }
 
       res.status(200).json({
@@ -272,7 +250,11 @@ const PaymentController = {
         }
       }
 
-      // 4. Create appointment
+      // 4. Calculate commission
+      const commissionPercent = counsellor.commissionPercent !== undefined ? Number(counsellor.commissionPercent) : (settings.counsellorSplitPercent !== undefined ? Number(settings.counsellorSplitPercent) : 50);
+      const counsellorShareAmount = Number((netTotal * (commissionPercent / 100)).toFixed(2));
+
+      // 5. Create appointment
       const newAppointment = await StorageService.create('appointments', {
         userId,
         counsellorId,
@@ -291,10 +273,11 @@ const PaymentController = {
         clientLocationName: clientLocationName || '',
         clientLatitude: Number(clientLatitude) || 0,
         clientLongitude: Number(clientLongitude) || 0,
-        razorpaySplitError: notes.splitError === 'true' ? (notes.splitErrorMessage || 'Split routing failed') : ''
+        commissionPercent,
+        counsellorShareAmount
       });
 
-      // 5. Send notifications to counsellor
+      // 6. Send notifications to counsellor
       await StorageService.create('notifications', {
         recipientId: counsellorId,
         recipientRole: 'counsellor',
@@ -304,7 +287,7 @@ const PaymentController = {
         isRead: false
       });
 
-      // 6. Send notifications to student
+      // 7. Send notifications to student
       await StorageService.create('notifications', {
         recipientId: userId,
         recipientRole: 'user',

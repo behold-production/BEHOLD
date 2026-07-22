@@ -21,18 +21,23 @@ const OverviewTab = ({ profile, bookings, isSessionCompleted, setCurrentSection 
  const completedHours = bookings.filter(isSessionCompleted).length + Number(profile.hours || 0);
 
  const siteSettings = JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
- const splitPercent = siteSettings.counsellorSplitPercent !== undefined ? Number(siteSettings.counsellorSplitPercent) : 50;
- const splitRatio = splitPercent / 100;
+ const defaultSplit = siteSettings.counsellorSplitPercent !== undefined ? Number(siteSettings.counsellorSplitPercent) : 50;
 
  const completedPaidBookings = bookings.filter(b => isSessionCompleted(b) && b.paymentStatus === 'PAID');
- const completedEarnings = completedPaidBookings.reduce((acc, b) => acc + (Number(b.amountPaid || 0) * splitRatio), 0);
+ const completedEarnings = completedPaidBookings.reduce((acc, b) => {
+ const commPercent = b.commissionPercent !== undefined ? Number(b.commissionPercent) : defaultSplit;
+ return acc + (Number(b.amountPaid || 0) * (commPercent / 100));
+ }, 0);
 
  const pendingPaidBookings = bookings.filter(b =>
  (b.status === 'CONFIRMED' || b.status === 'APPROVED' || b.status === 'PENDING') &&
  !isSessionCompleted(b) &&
  b.paymentStatus === 'PAID'
  );
- const pendingPayouts = pendingPaidBookings.reduce((acc, b) => acc + (Number(b.amountPaid || 0) * splitRatio), 0);
+ const pendingPayouts = pendingPaidBookings.reduce((acc, b) => {
+ const commPercent = b.commissionPercent !== undefined ? Number(b.commissionPercent) : defaultSplit;
+ return acc + (Number(b.amountPaid || 0) * (commPercent / 100));
+ }, 0);
 
  return (
  <div className="space-y-6 animate-in fade-in duration-200 text-sm">
@@ -128,7 +133,7 @@ const OverviewTab = ({ profile, bookings, isSessionCompleted, setCurrentSection 
  style={shadowStyle}
  >
  <div className="space-y-2">
- <span className="text-xs bg-emerald-950/50 border border-emerald-900/50 text-emerald-400 px-2 py-0.5 rounded font-bold ">Earnings & Payouts ({splitPercent}% Split)</span>
+ <span className="text-xs bg-emerald-950/50 border border-emerald-900/50 text-emerald-400 px-2 py-0.5 rounded font-bold ">Earnings & Payouts (({profile.commissionPercent !== undefined ? profile.commissionPercent : defaultSplit}% Split))</span>
  <div className="space-y-1.5 pt-2">
  <div className="flex justify-between font-bold text-zinc-400">
  <span>Completed Earnings</span>
@@ -139,20 +144,12 @@ const OverviewTab = ({ profile, bookings, isSessionCompleted, setCurrentSection 
  <span className="text-amber-500">₹{formatAmount(pendingPayouts)}</span>
  </div>
  <div className="flex justify-between font-bold text-zinc-400 items-center">
- <span>Payout Account</span>
- {profile.razorpayAccountId ? (
- <span className="text-emerald-400 font-mono text-xs truncate max-w-[120px]" title={profile.razorpayAccountId}>
- {profile.razorpayAccountId}
- </span>
- ) : (
- <span className="text-rose-500 text-xs flex items-center gap-1 font-bold">
- <AlertCircle className="w-3.5 h-3.5" /> Not Set
- </span>
- )}
+                  <span>Payout Mode</span>
+                  <span className="text-zinc-500 font-medium text-xs">Internal (Manual)</span>
+                </div>
+              </div>
  </div>
- </div>
- </div>
- {profile.razorpayAccountId ? (
+ {false ? (
  <button
  onClick={() => setCurrentSection('profile')}
  className="w-fit text-sm font-bold bg-zinc-900 text-zinc-300 hover:text-white border border-zinc-800 px-4 py-2 rounded-[10px] mt-4 cursor-pointer transition-colors"

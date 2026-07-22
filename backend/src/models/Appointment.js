@@ -30,6 +30,8 @@ const appointmentSchema = new mongoose.Schema(
     refundId: { type: String, default: '' },
     refundedAt: { type: Date, default: null },
     razorpaySplitError: { type: String, default: '' },
+    commissionPercent: { type: Number, default: 50 },
+    counsellorShareAmount: { type: Number, default: 0 },
     isDeleted: { type: Boolean, default: false },
     deletedAt: { type: Date, default: null }
   },

@@ -85,7 +85,8 @@ export default function RevenueTab(props) {
  }
 
  if (b.paymentStatus === 'PAID') {
- const payoutShare = amount * (splitPercent / 100);
+ const commPercent = b.commissionPercent !== undefined ? Number(b.commissionPercent) : splitPercent;
+ const payoutShare = amount * (commPercent / 100);
 
  if (b.status === 'COMPLETED') {
  grossEarnings += amount;
@@ -120,7 +121,8 @@ export default function RevenueTab(props) {
  const monthIndex = parseInt(parts[1]) - 1;
  if (monthIndex >= 0 && monthIndex < 12) {
  const val = Number(b.amountPaid) || 0;
- const payoutShare = val * (splitPercent / 100);
+ const commPercent = b.commissionPercent !== undefined ? Number(b.commissionPercent) : splitPercent;
+ const payoutShare = val * (commPercent / 100);
  data[monthIndex].payout += payoutShare;
  data[monthIndex].gross += val;
  }
@@ -235,7 +237,7 @@ export default function RevenueTab(props) {
  <div className="flex items-center gap-2">
  <span className="text-xs bg-zinc-800 border border-zinc-700 text-zinc-450 px-2.5 py-1.5 rounded-[10px] font-bold flex items-center gap-1.5">
  <Wallet className="w-3.5 h-3.5 text-brand" />
- My Earnings Share: {splitPercent}% Payout
+ Individual Split Active
  </span>
  </div>
  </div>
@@ -251,7 +253,7 @@ export default function RevenueTab(props) {
  <div className="text-2xl font-bold text-brand font-header">
  ₹{formatAmount(metrics.netPayoutEarned)}
  </div>
- <p className="text-[11px] text-zinc-500 font-medium">Your absolute net share ({splitPercent}%) from completed bookings</p>
+ <p className="text-[11px] text-zinc-500 font-medium">Your absolute net share from completed bookings</p>
  </div>
 
  {/* Card 2 */}
@@ -304,10 +306,10 @@ export default function RevenueTab(props) {
  {/* Gridlines */}
  <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
  <div className="w-full border-t border-dashed border-zinc-800/60 text-[10px] text-zinc-600 pt-0.5 font-bold">
- ₹{formatAmount(monthlyChartData.maxVal * (splitPercent / 100))}
+ ₹{formatAmount(monthlyChartData.maxVal)}
  </div>
  <div className="w-full border-t border-dashed border-zinc-800/60 text-[10px] text-zinc-600 pt-0.5 font-bold">
- ₹{formatAmount(monthlyChartData.maxVal * (splitPercent / 100) / 2)}
+ ₹{formatAmount(monthlyChartData.maxVal / 2)}
  </div>
  <div className="w-full border-t border-dashed border-zinc-800/60 text-[10px] text-zinc-600 pt-0.5 font-bold">₹0</div>
  </div>
@@ -315,8 +317,7 @@ export default function RevenueTab(props) {
  {/* SVG Columns */}
  <div className="absolute inset-0 flex items-end justify-between px-2 pt-4">
  {monthlyChartData.data.map((d, i) => {
- const maxPayout = monthlyChartData.maxVal * (splitPercent / 100);
- const payoutHeight = d.payout > 0 ? (d.payout / maxPayout) * 100 : 0;
+ const payoutHeight = d.payout > 0 ? (d.payout / monthlyChartData.maxVal) * 100 : 0;
  const grossHeight = d.gross > 0 ? (d.gross / monthlyChartData.maxVal) * 100 : 0;
  
  return (
@@ -469,7 +470,7 @@ export default function RevenueTab(props) {
  <th className="p-3">Session Date</th>
  <th className="p-3">Session Mode</th>
  <th className="p-3 text-right">Gross Paid</th>
- <th className="p-3 text-right font-bold text-brand">My Share ({splitPercent}%)</th>
+ <th className="p-3 text-right font-bold text-brand">My Share (Payout)</th>
  <th className="p-3 text-center">Payment Status</th>
  <th className="p-3 text-center">Clinical Record</th>
  <th className="p-3 text-center">Receipt</th>
@@ -491,7 +492,8 @@ export default function RevenueTab(props) {
  ) : (
  pagedBookings.map((b) => {
  const gross = Number(b.amountPaid) || 0;
- const myPayout = gross * (splitPercent / 100);
+ const commPercent = b.commissionPercent !== undefined ? Number(b.commissionPercent) : splitPercent;
+ const myPayout = gross * (commPercent / 100);
  const isRefunded = b.refundStatus === 'REFUNDED';
  const isCompleted = b.status === 'COMPLETED';
 

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
 import ApiService from '../../shared/services/api';
-import { ScrollDot, renderTitleWithFullstopDot } from '../../shared/components/BrandDot';
 
 const defaultFaqs = [
   {
@@ -45,40 +44,40 @@ export default function Faq() {
   const displayFaqs = faqs.length > 0 ? faqs.slice(0, 6) : defaultFaqs;
 
   return (
-    <section id="faqs" className="py-14 bg-white">
-      <div className="max-w-3xl mx-auto px-6 lg:px-8">
+    <section id="faqs" className="py-16 sm:py-24 bg-white border-b border-gray-100">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Header */}
-        <div className="text-center mb-14">
-          <span className="text-xs sm:text-sm font-bold tracking-widest uppercase text-[#00A8FF] block mb-3">
+        <div className="text-center mb-16">
+          <span className="text-xs font-bold tracking-widest uppercase text-gray-400 block mb-3">
             Frequently Asked Questions
           </span>
-          <h2 id="faq-title" className="text-3xl sm:text-4xl md:text-5xl font-black text-gray-900 mb-4 tracking-tight leading-tight flex items-center justify-center flex-wrap">
-            {renderTitleWithFullstopDot('Everything You Need To Know', 'inquiry-title', 'Scroll to Inquiry ↓', 'md')}
+          <h2 id="faq-title" className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-4 tracking-tight leading-tight">
+            Everything You Need to Know.
           </h2>
-          <p className="text-base sm:text-lg text-gray-600 font-normal max-w-2xl mx-auto leading-relaxed">
+          <p className="text-sm sm:text-base text-gray-600 font-normal max-w-xl mx-auto leading-relaxed">
             We've answered the most common questions about our counseling model, C-DAT assessments, and mentorship programs.
           </p>
         </div>
 
         {/* Accordion */}
-        <div className="space-y-3">
+        <div className="space-y-4">
           {displayFaqs.map((faq, idx) => {
             const isOpen = openIndex === idx;
             return (
               <div
                 key={idx}
-                className={`rounded-lg border transition-all duration-200 overflow-hidden ${isOpen ? 'border-[#00F0FF]/40 bg-[#00F0FF]/5' : 'border-gray-100 bg-white hover:border-gray-200'}`}
+                className={`rounded-lg border transition-all duration-200 overflow-hidden ${isOpen ? 'border-gray-900 bg-gray-50/50 shadow-sm' : 'border-gray-200 bg-white hover:border-gray-300'}`}
               >
                 <button
                   type="button"
                   onClick={() => setOpenIndex(isOpen ? null : idx)}
                   className="w-full text-left px-6 py-5 flex items-center justify-between gap-4 cursor-pointer bg-transparent border-none"
                 >
-                  <span className={`font-bold text-base leading-snug ${isOpen ? 'text-[#00A8FF]' : 'text-gray-900'}`}>
+                  <span className={`font-bold text-base leading-snug ${isOpen ? 'text-gray-900' : 'text-gray-800'}`}>
                     {faq.question}
                   </span>
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-all ${isOpen ? 'bg-[#00A8FF] text-white rotate-180' : 'bg-gray-100 text-gray-500'}`}>
+                  <div className={`w-8 h-8 rounded-md flex items-center justify-center shrink-0 transition-all ${isOpen ? 'bg-gray-900 text-white rotate-180' : 'bg-gray-100 text-gray-500'}`}>
                     <ChevronDown className="w-4 h-4" />
                   </div>
                 </button>
@@ -86,7 +85,7 @@ export default function Faq() {
                   className="overflow-hidden transition-all duration-300 ease-in-out"
                   style={{ maxHeight: isOpen ? '400px' : '0px' }}
                 >
-                  <div className="px-6 pb-6 text-gray-600 leading-relaxed text-base border-t border-[#00F0FF]/20 pt-4">
+                  <div className="px-6 pb-6 text-gray-600 leading-relaxed text-sm sm:text-base border-t border-gray-200 pt-4 font-normal">
                     {faq.answer}
                   </div>
                 </div>
@@ -96,14 +95,14 @@ export default function Faq() {
         </div>
 
         {/* Bottom CTA */}
-        <div className="mt-12 text-center">
-          <p className="text-gray-500 mb-4 font-medium">Still have questions?</p>
+        <div className="mt-14 text-center">
+          <p className="text-gray-600 mb-4 text-sm font-normal">Still have questions?</p>
           <button
             onClick={() => {
               const el = document.getElementById('inquiry');
               if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }}
-            className="px-8 py-3.5 bg-[#00A8FF] hover:bg-[#00F0FF] text-white font-bold rounded-lg transition border-none cursor-pointer shadow-lg shadow-[#00A8FF]/20"
+            className="px-8 py-3 bg-gray-900 hover:bg-black text-white font-semibold text-sm rounded-md transition border-none cursor-pointer shadow-sm"
           >
             Contact Our Team
           </button>

@@ -426,21 +426,7 @@ const ProfileTab = ({
  </div>
  </div>
 
- <div className="sm:col-span-2 space-y-1.5">
- <label className="text-zinc-400 font-bold text-xs tracking-wide">
- Razorpay Linked Account ID (for split payouts)
- </label>
- <input
- type="text"
- placeholder="e.g. acc_N1z829Snd023"
- value={ep.razorpayAccountId || ''}
- onChange={(e) => setEp({ razorpayAccountId: e.target.value })}
- className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-[10px] outline-none focus:border-brand transition-all font-semibold"
- />
- <p className="text-[11px] text-zinc-500 mt-1">
- Required to receive direct split payouts. Create a linked account in your Razorpay Dashboard.
- </p>
- </div>
+ 
 
  <div className="sm:col-span-2 border-t border-zinc-850 pt-4">
  <h4 className="text-xs font-bold text-zinc-400 tracking-wider mb-3">Bank Account Details (Alternative / Payout Repay)</h4>

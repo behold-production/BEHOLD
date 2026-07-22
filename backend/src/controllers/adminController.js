@@ -440,7 +440,8 @@ const AdminController = {
         modes,
         title,
         availability,
-        isTopFive
+        isTopFive,
+        commissionPercent
       } = req.body;
       const bcrypt = require('bcryptjs');
       const salt = await bcrypt.genSalt(10);
@@ -482,7 +483,8 @@ const AdminController = {
                 .filter(Boolean)
             : ['ONLINE', 'OFFLINE', 'DOOR_STEP'],
         title: title || 'Consultant Psychologist',
-        isTopFive: isTopFive === true || isTopFive === 'true'
+        isTopFive: isTopFive === true || isTopFive === 'true',
+        commissionPercent: commissionPercent !== undefined ? Number(commissionPercent) : 50
       });
       const { password: _, ...counsellorData } = newCounsellor;
       res.status(201).json({ success: true, message: 'Counsellor created successfully', data: counsellorData });
@@ -514,10 +516,10 @@ const AdminController = {
         profilePicPublicId,
         isTopFive,
         isActive,
-        razorpayAccountId,
         bankAccountNumber,
         bankIfscCode,
-        bankAccountName
+        bankAccountName,
+        commissionPercent
       } = req.body;
       const updates = {};
       if (name !== undefined) updates.name = name;
@@ -561,10 +563,10 @@ const AdminController = {
       if (profilePicPublicId !== undefined) updates.profilePicPublicId = profilePicPublicId;
       if (isTopFive !== undefined) updates.isTopFive = isTopFive === true || isTopFive === 'true';
       if (isActive !== undefined) updates.isActive = isActive === true || isActive === 'true';
-      if (razorpayAccountId !== undefined) updates.razorpayAccountId = razorpayAccountId;
       if (bankAccountNumber !== undefined) updates.bankAccountNumber = bankAccountNumber;
       if (bankIfscCode !== undefined) updates.bankIfscCode = bankIfscCode;
       if (bankAccountName !== undefined) updates.bankAccountName = bankAccountName;
+      if (commissionPercent !== undefined) updates.commissionPercent = Number(commissionPercent);
 
       if (password) {
         const bcrypt = require('bcryptjs');

@@ -44,7 +44,6 @@ const CounsellorController = {
         locationName,
         latitude,
         longitude,
-        razorpayAccountId,
         bankAccountNumber,
         bankIfscCode,
         bankAccountName
@@ -67,7 +66,6 @@ const CounsellorController = {
       if (locationName !== undefined) updates.locationName = locationName;
       if (latitude !== undefined) updates.latitude = Number(latitude);
       if (longitude !== undefined) updates.longitude = Number(longitude);
-      if (razorpayAccountId !== undefined) updates.razorpayAccountId = razorpayAccountId;
       if (bankAccountNumber !== undefined) updates.bankAccountNumber = bankAccountNumber;
       if (bankIfscCode !== undefined) updates.bankIfscCode = bankIfscCode;
       if (bankAccountName !== undefined) updates.bankAccountName = bankAccountName;

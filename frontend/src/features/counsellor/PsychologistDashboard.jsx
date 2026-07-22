@@ -85,7 +85,7 @@ export default function PsychologistDashboard({ setView }) {
  locationName: '',
  latitude: 0,
  longitude: 0,
- razorpayAccountId: '',
+ 
  bankAccountNumber: '',
  bankIfscCode: '',
  bankAccountName: ''
@@ -259,7 +259,7 @@ export default function PsychologistDashboard({ setView }) {
  locationName: c.locationName || '',
  latitude: c.latitude || 0,
  longitude: c.longitude || 0,
- razorpayAccountId: c.razorpayAccountId || '',
+ 
  bankAccountNumber: c.bankAccountNumber || '',
  bankIfscCode: c.bankIfscCode || '',
  bankAccountName: c.bankAccountName || ''
@@ -788,7 +788,7 @@ export default function PsychologistDashboard({ setView }) {
  locationName: formData.locationName || '',
  latitude: Number(formData.latitude) || 0,
  longitude: Number(formData.longitude) || 0,
- razorpayAccountId: formData.razorpayAccountId || '',
+ 
  bankAccountNumber: formData.bankAccountNumber || '',
  bankIfscCode: formData.bankIfscCode || '',
  bankAccountName: formData.bankAccountName || ''

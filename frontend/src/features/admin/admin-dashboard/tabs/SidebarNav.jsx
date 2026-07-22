@@ -135,8 +135,9 @@ export default function SidebarNav(props) {
  { id: 'aptitude', label: 'Aptitude Questions', icon: Brain, visible: isSuperAdmin },
  { id: 'testresults', label: 'Aptitude Results', icon: FileSpreadsheet, visible: isSuperAdmin },
  { id: 'inquiries', label: 'Student Inquiries', icon: MessageSquare, visible: isSuperAdmin },
+ { id: 'reviews', label: 'Reviews', icon: MessageSquare, visible: isSuperAdmin },
  { id: 'faqs', label: 'FAQ Manager', icon: HelpCircle, visible: isSuperAdmin },
- { id: 'blogs', label: 'Blog Manager', icon: FileText, visible: true },
+ { id: 'blogs', label: 'Blog Manager', icon: FileText, visible: isSuperAdmin || props.hasBlogPermission },
  ]
  },
  {

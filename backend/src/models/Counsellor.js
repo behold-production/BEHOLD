@@ -35,10 +35,10 @@ const counsellorSchema = new mongoose.Schema(
     locationName: { type: String, default: '' },
     latitude: { type: Number, default: 0 },
     longitude: { type: Number, default: 0 },
-    razorpayAccountId: { type: String, default: '' },
     bankAccountNumber: { type: String, default: '' },
     bankIfscCode: { type: String, default: '' },
     bankAccountName: { type: String, default: '' },
+    commissionPercent: { type: Number, default: 50 },
     isDeleted: { type: Boolean, default: false },
     deletedAt: { type: Date, default: null }
   },

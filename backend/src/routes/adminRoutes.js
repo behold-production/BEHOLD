@@ -1,5 +1,6 @@
 const express = require('express');
 const AdminController = require('../controllers/adminController');
+const reviewController = require('../controllers/reviewController');
 const { verifyJWT, requireRole } = require('../middleware/authMiddleware');
 const upload = require('../middleware/uploadMiddleware');
 
@@ -9,6 +10,11 @@ const router = express.Router();
 router.use(verifyJWT, requireRole('admin'));
 
 router.get('/dashboard', AdminController.getDashboard);
+
+// Reviews
+router.get('/reviews', reviewController.getAdminReviews);
+router.put('/reviews/:id/approve', reviewController.approveReview);
+router.delete('/reviews/:id', reviewController.deleteReview);
 router.get('/users', AdminController.getUsers);
 router.post('/users', AdminController.createUser);
 router.put('/users/:id', AdminController.updateUser);

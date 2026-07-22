@@ -34,7 +34,7 @@ export default function RevenueTab(props) {
  }, [usersDb]);
 
  // Settings commission split percentage
- const splitPercent = useMemo(() => {
+ const defaultSplit = useMemo(() => {
  return settingsForm.counsellorSplitPercent !== undefined ? Number(settingsForm.counsellorSplitPercent) : 50;
  }, [settingsForm]);
 
@@ -55,8 +55,9 @@ export default function RevenueTab(props) {
  grossVolume += amount;
  
  // Calculate shares
- const pShare = amount * ((100 - splitPercent) / 100);
- const cShare = amount * (splitPercent / 100);
+ const commPercent = b.commissionPercent !== undefined ? Number(b.commissionPercent) : defaultSplit;
+ const pShare = amount * ((100 - commPercent) / 100);
+ const cShare = amount * (commPercent / 100);
  retentionVolume += pShare;
  payoutVolume += cShare;
 
@@ -77,7 +78,7 @@ export default function RevenueTab(props) {
  activePaidCount,
  totalPaidBookings: completedCount + activePaidCount
  };
- }, [bookingsDb, splitPercent]);
+ }, [bookingsDb, defaultSplit]);
 
  // Chart data calculations (Monthly SVG-based charts)
  const monthlyChartData = useMemo(() => {
@@ -92,8 +93,9 @@ export default function RevenueTab(props) {
  const monthIndex = parseInt(parts[1]) - 1;
  if (monthIndex >= 0 && monthIndex < 12) {
  const val = Number(b.amountPaid) || 0;
+ const commPercent = b.commissionPercent !== undefined ? Number(b.commissionPercent) : defaultSplit;
  data[monthIndex].amount += val;
- data[monthIndex].platform += val * ((100 - splitPercent) / 100);
+ data[monthIndex].platform += val * ((100 - commPercent) / 100);
  }
  }
  }
@@ -102,7 +104,7 @@ export default function RevenueTab(props) {
  // Find max value to scale the SVG chart
  const maxVal = Math.max(...data.map(d => d.amount), 1000);
  return { data, maxVal };
- }, [bookingsDb, splitPercent]);
+ }, [bookingsDb, defaultSplit]);
 
  // Filtering
  const filteredBookings = useMemo(() => {
@@ -147,7 +149,7 @@ export default function RevenueTab(props) {
  </div>
  <div className="flex items-center gap-2">
  <span className="text-xs bg-zinc-800 border border-zinc-700 text-zinc-400 px-2 py-1 rounded font-bold">
- Platform Split: {100 - splitPercent}% Retention / {splitPercent}% Payout
+ Individual Commission Split Active
  </span>
  </div>
  </div>
@@ -175,7 +177,7 @@ export default function RevenueTab(props) {
  <div className="text-2xl font-bold text-brand font-header">
  ₹{formatAmount(metrics.retentionVolume)}
  </div>
- <p className="text-[11px] text-zinc-500 font-medium">Platform commission earnings ({100 - splitPercent}%)</p>
+ <p className="text-[11px] text-zinc-500 font-medium">Platform commission earnings (Variable %)</p>
  </div>
 
  {/* Card 3 */}
@@ -187,7 +189,7 @@ export default function RevenueTab(props) {
  <div className="text-2xl font-bold text-white font-header">
  ₹{formatAmount(metrics.payoutVolume)}
  </div>
- <p className="text-[11px] text-zinc-500 font-medium">Routed directly to consultant accounts ({splitPercent}%)</p>
+ <p className="text-[11px] text-zinc-500 font-medium">Routed directly to consultant accounts (Variable %)</p>
  </div>
 
  {/* Card 4 */}
@@ -292,8 +294,11 @@ export default function RevenueTab(props) {
  const cBookings = bookingsDb.filter(b => b.counsellorId === c.id || b.advisorId === c.id);
  const paidBookings = cBookings.filter(b => b.paymentStatus === 'PAID' && b.refundStatus !== 'REFUNDED');
  const gross = paidBookings.reduce((sum, b) => sum + (Number(b.amountPaid) || 0), 0);
- const payout = gross * (splitPercent / 100);
- const ret = gross * ((100 - splitPercent) / 100);
+ const payout = paidBookings.reduce((sum, b) => {
+ const commPercent = b.commissionPercent !== undefined ? Number(b.commissionPercent) : defaultSplit;
+ return sum + (Number(b.amountPaid) || 0) * (commPercent / 100);
+ }, 0);
+ const ret = gross - payout;
 
  return (
  <tr key={c.id} className="border-b border-zinc-850 hover:bg-zinc-950/40 transition-colors">
@@ -379,8 +384,8 @@ export default function RevenueTab(props) {
  <th className="p-3">Counsellor</th>
  <th className="p-3">Session Date</th>
  <th className="p-3 text-right">Gross Paid</th>
- <th className="p-3 text-right">Commission ({100 - splitPercent}%)</th>
- <th className="p-3 text-right font-bold text-brand">Payout ({splitPercent}%)</th>
+ <th className="p-3 text-right">Commission (Platform)</th>
+ <th className="p-3 text-right font-bold text-brand">Payout (Counsellor)</th>
  <th className="p-3 text-center">Payment Status</th>
  <th className="p-3 text-center">Receipt</th>
  </tr>
@@ -397,8 +402,9 @@ export default function RevenueTab(props) {
  ) : (
  pagedBookings.map((b) => {
  const gross = Number(b.amountPaid) || 0;
- const commission = gross * ((100 - splitPercent) / 100);
- const payout = gross * (splitPercent / 100);
+ const commPercent = b.commissionPercent !== undefined ? Number(b.commissionPercent) : defaultSplit;
+ const commission = gross * ((100 - commPercent) / 100);
+ const payout = gross * (commPercent / 100);
  const isRefunded = b.refundStatus === 'REFUNDED';
 
  return (

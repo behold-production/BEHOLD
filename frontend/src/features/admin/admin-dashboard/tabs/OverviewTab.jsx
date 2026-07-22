@@ -784,40 +784,50 @@ export default function OverviewTab(props) {
  )}
 
  {activeStatHighlight === 'revenue' && (() => {
- const splitPercent = settingsForm && settingsForm.counsellorSplitPercent !== undefined ? Number(settingsForm.counsellorSplitPercent) : 50;
- const splitRatio = splitPercent / 100;
- const platformRatio = (100 - splitPercent) / 100;
- return (
- <div className="space-y-4">
- <div className="flex items-center gap-2 border-b border-zinc-900 pb-2">
- <span className="text-brand font-bold text-sm">₹</span>
- <h4 className="font-header font-bold text-sm text-white">Revenue Audits</h4>
- </div>
- <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
- <div className="bg-zinc-900/60 p-4.5 rounded-lg border border-zinc-850 space-y-1">
- <span className="text-sm text-zinc-500 font-bold block">Completed Gross Revenue</span>
- <p className="text-xl font-bold text-emerald-450 ">₹{totalRevenue}</p>
- <span className="text-xs text-zinc-650 font-bold block mt-1">INR Fulfilled</span>
- </div>
- <div className="bg-zinc-900/60 p-4.5 rounded-lg border border-zinc-850 space-y-1">
- <span className="text-sm text-zinc-500 font-bold block">Projected Booked Revenue</span>
- <p className="text-xl font-bold text-white ">₹{projectedRevenue}</p>
- <span className="text-xs text-zinc-650 font-bold block mt-1">Scheduled (CONFIRMED/PENDING)</span>
- </div>
- <div className="bg-zinc-900/60 p-4.5 rounded-lg border border-zinc-850 space-y-1">
- <span className="text-sm text-zinc-500 font-bold block">Platform Share ({100 - splitPercent}% Split)</span>
- <p className="text-xl font-bold text-brand ">₹{formatAmount(totalRevenue * platformRatio)}</p>
- <span className="text-xs text-zinc-650 font-bold block mt-1">{100 - splitPercent}% Platform service share</span>
- </div>
- <div className="bg-zinc-900/60 p-4.5 rounded-lg border border-zinc-850 space-y-1">
- <span className="text-sm text-zinc-500 font-bold block">Counsellor Payouts ({splitPercent}% Split)</span>
- <p className="text-xl font-bold text-emerald-400 ">₹{formatAmount(totalRevenue * splitRatio)}</p>
- <span className="text-xs text-zinc-650 font-bold block mt-1">{splitPercent}% routed to Linked Accounts</span>
- </div>
- </div>
- </div>
- );
- })()}
+  const defaultSplit = settingsForm && settingsForm.counsellorSplitPercent !== undefined ? Number(settingsForm.counsellorSplitPercent) : 50;
+  let platformShareTotal = 0;
+  let payoutTotal = 0;
+  
+  bookingsDb.forEach(b => {
+    if (b.status === 'COMPLETED' || b.status === 'EXPIRED') {
+      let amt = b.amountPaid !== undefined && b.amountPaid !== null ? Number(b.amountPaid) : 1250;
+      const commPercent = b.commissionPercent !== undefined ? Number(b.commissionPercent) : defaultSplit;
+      platformShareTotal += amt * ((100 - commPercent) / 100);
+      payoutTotal += amt * (commPercent / 100);
+    }
+  });
+
+  return (
+  <div className="space-y-4">
+  <div className="flex items-center gap-2 border-b border-zinc-900 pb-2">
+  <span className="text-brand font-bold text-sm">₹</span>
+  <h4 className="font-header font-bold text-sm text-white">Revenue Audits</h4>
+  </div>
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+  <div className="bg-zinc-900/60 p-4.5 rounded-lg border border-zinc-850 space-y-1">
+  <span className="text-sm text-zinc-500 font-bold block">Completed Gross Revenue</span>
+  <p className="text-xl font-bold text-emerald-450 ">₹{totalRevenue}</p>
+  <span className="text-xs text-zinc-650 font-bold block mt-1">INR Fulfilled</span>
+  </div>
+  <div className="bg-zinc-900/60 p-4.5 rounded-lg border border-zinc-850 space-y-1">
+  <span className="text-sm text-zinc-500 font-bold block">Projected Booked Revenue</span>
+  <p className="text-xl font-bold text-white ">₹{projectedRevenue}</p>
+  <span className="text-xs text-zinc-650 font-bold block mt-1">Scheduled (CONFIRMED/PENDING)</span>
+  </div>
+  <div className="bg-zinc-900/60 p-4.5 rounded-lg border border-zinc-850 space-y-1">
+  <span className="text-sm text-zinc-500 font-bold block">Platform Share</span>
+  <p className="text-xl font-bold text-brand ">₹{formatAmount(platformShareTotal)}</p>
+  <span className="text-xs text-zinc-650 font-bold block mt-1">Variable Platform service share</span>
+  </div>
+  <div className="bg-zinc-900/60 p-4.5 rounded-lg border border-zinc-850 space-y-1">
+  <span className="text-sm text-zinc-500 font-bold block">Counsellor Payouts</span>
+  <p className="text-xl font-bold text-emerald-400 ">₹{formatAmount(payoutTotal)}</p>
+  <span className="text-xs text-zinc-650 font-bold block mt-1">Variable routing to Accounts</span>
+  </div>
+  </div>
+  </div>
+  );
+  })()}
  </div>
  )}
 

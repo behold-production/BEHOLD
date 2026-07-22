@@ -1,342 +1,399 @@
-import React from 'react';
+import React, { useState } from 'react';
+import ApiService from '../../../../shared/services/api';
 import { SkeletonTableRows, PaginationBar } from '../components/SharedAdminUI';
 import { User, ShieldAlert, Award, Trash, Check, Plus, Lock, Settings, KeyRound, BarChart3, LogOut, Search, ShieldCheck, Calendar, Clock, Link, AlertCircle, Edit, Video, UserPlus, MessageSquare, FileSpreadsheet, HelpCircle, X, ChevronRight, ChevronLeft, Mail, Shield, Menu, Brain, Download, FileText, Eye, EyeOff, Bell, Send, Loader2 } from 'lucide-react';
 import { formatDateString } from '../utils';
 
 export default function SubAdminManagementTab(props) {
- const {
- currentSection,
- setCurrentSection,
- permissionState,
- setPermissionState,
- announcementTitle,
- setAnnouncementTitle,
- announcementMessage,
- setAnnouncementMessage,
- announcementRole,
- setAnnouncementRole,
- isSendingAnnouncement,
- setIsSendingAnnouncement,
- activeStatHighlight,
- setActiveStatHighlight,
- overviewActivityTab,
- setOverviewActivityTab,
- selectedOverviewBooking,
- setSelectedOverviewBooking,
- isScanning,
- setIsScanning,
- scanProgress,
- setScanProgress,
- scanResults,
- setScanResults,
- usersDb,
- setUsersDb,
- bookingsDb,
- setBookingsDb,
- inquiriesDb,
- setInquiriesDb,
- testResultsDb,
- setTestResultsDb,
- faqsDb,
- setFaqsDb,
- aptitudeQuestionsDb,
- setAptitudeQuestionsDb,
- rolesDb,
- setRolesDb,
- isDbLoading,
- setIsDbLoading,
- newRoleName,
- setNewRoleName,
- newRoleDescription,
- setNewRoleDescription,
- editingRoleId,
- setEditingRoleId,
- activeRoleTab,
- setActiveRoleTab,
- newRolePermissions,
- setNewRolePermissions,
- roleError,
- setRoleError,
- roleSuccess,
- setRoleSuccess,
- roleToDelete,
- setRoleToDelete,
- searchUser,
- setSearchUser,
- searchPsy,
- setSearchPsy,
- psyFilter,
- setPsyFilter,
- searchInquiry,
- setSearchInquiry,
- searchTestResult,
- setSearchTestResult,
- searchBooking,
- setSearchBooking,
- searchAptitude,
- setSearchAptitude,
- bookingStatusFilter,
- setBookingStatusFilter,
- studentPage,
- setStudentPage,
- studentLimit,
- setStudentLimit,
- psyPage,
- setPsyPage,
- psyLimit,
- setPsyLimit,
- bookingPage,
- setBookingPage,
- bookingLimit,
- setBookingLimit,
- inquiryPage,
- setInquiryPage,
- inquiryLimit,
- setInquiryLimit,
- aptitudePage,
- setAptitudePage,
- aptitudeLimit,
- setAptitudeLimit,
- isAddFaqOpen,
- setIsAddFaqOpen,
- isEditFaqOpen,
- setIsEditFaqOpen,
- faqForm,
- setFaqForm,
- faqFormError,
- setFaqFormError,
- faqFormSuccess,
- setFaqFormSuccess,
- isAddAptitudeOpen,
- setIsAddAptitudeOpen,
- isEditAptitudeOpen,
- setIsEditAptitudeOpen,
- aptitudeForm,
- setAptitudeForm,
- aptitudeFormError,
- setAptitudeFormError,
- aptitudeFormSuccess,
- setAptitudeFormSuccess,
- loginEmail,
- setLoginEmail,
- loginPassword,
- setLoginPassword,
- showPassword,
- setShowPassword,
- loginError,
- setLoginError,
- isLoggingIn,
- setIsLoggingIn,
- subAdminForm,
- setSubAdminForm,
- selectedPermissions,
- setSelectedPermissions,
- subAdminError,
- setSubAdminError,
- subAdminSuccess,
- setSubAdminSuccess,
- isRegistering,
- setIsRegistering,
- isSavingForm,
- isAddUserOpen,
- setIsAddUserOpen,
- isEditUserOpen,
- setIsEditUserOpen,
- userForm,
- setUserForm,
- userFormError,
- setUserFormError,
- userFormSuccess,
- setUserFormSuccess,
- userProfilePicFile,
- setUserProfilePicFile,
- isUserPicUploading,
- setIsUserPicUploading,
- isAddPsyOpen,
- setIsAddPsyOpen,
- isEditPsyOpen,
- setIsEditPsyOpen,
- psyForm,
- setPsyForm,
- psyFormError,
- setPsyFormError,
- psyFormSuccess,
- setPsyFormSuccess,
- psyProfilePicFile,
- setPsyProfilePicFile,
- isPsyPicUploading,
- setIsPsyPicUploading,
- adminActiveDays,
- setAdminActiveDays,
- adminAvailableSlots,
- setAdminAvailableSlots,
- adminAllSlots,
- setAdminAllSlots,
- adminCustomHour,
- setAdminCustomHour,
- adminCustomMinute,
- setAdminCustomMinute,
- adminCustomPeriod,
- setAdminCustomPeriod,
- adminFromHour,
- setAdminFromHour,
- adminFromMinute,
- setAdminFromMinute,
- adminFromPeriod,
- setAdminFromPeriod,
- adminToHour,
- setAdminToHour,
- adminToMinute,
- setAdminToMinute,
- adminToPeriod,
- setAdminToPeriod,
- isAddBookingOpen,
- setIsAddBookingOpen,
- isEditBookingOpen,
- setIsEditBookingOpen,
- bookingForm,
- setBookingForm,
- bookingFormError,
- setBookingFormError,
- bookingFormSuccess,
- setBookingFormSuccess,
- viewingStudent,
- setViewingStudent,
- viewingPsychologist,
- setViewingPsychologist,
- editingSubAdmin,
- setEditingSubAdmin,
- adminCigiFile,
- setAdminCigiFile,
- adminCigiDate,
- setAdminCigiDate,
- adminCigiTime,
- setAdminCigiTime,
- adminCigiNote,
- setAdminCigiNote,
- adminCigiEditingId,
- setAdminCigiEditingId,
- isAdminCigiUploading,
- setIsAdminCigiUploading,
- isMobileMenuOpen,
- setIsMobileMenuOpen,
- editSubAdminRoleName,
- setEditSubAdminRoleName,
- editSubAdminPermissionsObj,
- setEditSubAdminPermissionsObj,
- editSubAdminError,
- setEditSubAdminError,
- editSubAdminSuccess,
- setEditSubAdminSuccess,
- selectedBookingIds,
- setSelectedBookingIds,
- settingsForm,
- setSettingsForm,
- settingsSuccess,
- setSettingsSuccess,
- inquiryNotesText,
- setInquiryNotesText,
- isProfileDrawerOpen,
- setIsProfileDrawerOpen,
- isLogoutConfirmOpen,
- setIsLogoutConfirmOpen,
- getPageNumbers,
- getLocalTodayString,
- handleExportPDF,
- handleExportImage,
- downloadPDFReceipt,
- downloadDiagnosticPDF,
- printTextSection,
- handleEnableNotifications,
- handleTestNotification,
- handleSendAnnouncement,
- handleAdminCigiUpload,
- handleAdminCigiDelete,
- handleAdminStartEditCigi,
- handleAdminCancelEditCigi,
- reloadData,
- getAdvisorSlotsForBookingForm,
- handleNavClick,
- handleAdminLogin,
- handleCreateUser,
- handleOpenEditUser,
- handleUpdateUser,
- handleDeleteUser,
- handleGenerateResetToken,
- handleCreateAptitudeQuestion,
- handleOpenEditAptitudeQuestion,
- handleUpdateAptitudeQuestion,
- handleDeleteAptitudeQuestion,
- parseAdminTimeToMinutes,
- formatAdminMinutesToTime,
- addAdminTimeRangeSlots,
- handleAddAdminCustomSlot,
- handleRemoveAdminSlot,
- toggleAdminDay,
- handleCreatePsy,
- handleOpenEditPsy,
- handleUpdatePsy,
- handleDeletePsy,
- handleRejectPsy,
- handleCreateBooking,
- handleOpenEditBooking,
- handleUpdateBooking,
- handleDeleteBooking,
- handleRoleChangeInForm,
- handleCreateRole,
- handleDeleteRole,
- handleDuplicateRole,
- executeDeleteRole,
- handleCreateSubAdmin,
- togglePermission,
- toggleNewRolePermission,
- toggleModuleAllPermissions,
- toggleChildAction,
- handleEditRoleClick,
- parseStaffDetails,
- handleResolveInquiry,
- handleDeleteInquiry,
- handleToggleStudentStatus,
- handleTogglePsyVerification,
- handleTogglePsyTopFive,
- handleSaveSettings,
- handleAddPromoCode,
- handleUpdatePromoCode,
- handleRemovePromoCode,
- handleRunSecurityCheck,
- handleOpenEditSubAdmin,
- handleEditSubAdminRoleChange,
- toggleEditSubAdminModuleAll,
- toggleEditSubAdminChildAction,
- handleSaveSubAdminPermissions,
- handleSaveInquiryNote,
- handleBulkClearResolvedInquiries,
- handleExportAptitudeResults,
- handleToggleSelectBooking,
- handleBulkBookingStatus,
- handleBulkDeleteBookings,
- handleDeleteTestResult,
- handleCreateFaq,
- handleOpenEditFaq,
- handleUpdateFaq,
- handleDeleteFaq,
- handleExportStudentsCSV,
- showAlert,
- showConfirm,
- showPrompt,
- user,
- login,
- register,
- logout,
- isLoading,
- getInitials,
- PRIVILEGE_MODULES,
- isSuperAdmin,
- hasUserPermission,
- hasPsyPermission,
- hasBookingPermission,
- subAdminsList
- } = props;
+ 
+  const { rolesDb, usersDb, reloadData, isSuperAdmin, PRIVILEGE_MODULES, showAlert, showConfirm } = props;
+
+  const [activeRoleTab, setActiveRoleTab] = useState('roles');
+  
+  const [newRoleName, setNewRoleName] = useState('');
+  const [newRoleDescription, setNewRoleDescription] = useState('');
+  const [newRolePermissions, setNewRolePermissions] = useState({});
+  const [roleError, setRoleError] = useState('');
+  const [roleSuccess, setRoleSuccess] = useState('');
+  const [editingRoleId, setEditingRoleId] = useState(null);
+  const [roleToDelete, setRoleToDelete] = useState(null);
+
+  const [subAdminForm, setSubAdminForm] = useState({ name: '', email: '', password: '', roleId: '' });
+  const [selectedPermissions, setSelectedPermissions] = useState([]);
+  const [subAdminError, setSubAdminError] = useState('');
+  const [subAdminSuccess, setSubAdminSuccess] = useState('');
+
+  const [editingSubAdmin, setEditingSubAdmin] = useState(null);
+  const [editSubAdminRoleName, setEditSubAdminRoleName] = useState('');
+  const [editSubAdminPermissionsObj, setEditSubAdminPermissionsObj] = useState({});
+  const [editSubAdminError, setEditSubAdminError] = useState('');
+  const [editSubAdminSuccess, setEditSubAdminSuccess] = useState('');
+  const [isSavingForm, setIsSavingForm] = useState(false);
+
+  const subAdmins = usersDb.filter(u => u.role === 'SUB_ADMIN');
+
+
+
+const handleRoleChangeInForm = (roleName) => {
+ setSubAdminForm(prev => ({ ...prev, roleName }));
+ const foundRole = rolesDb.find(r => r.name === roleName);
+ if (foundRole) {
+ setSelectedPermissions(foundRole.permissions || []);
+ }
+ };
+
+ const handleCreateRole = async (e) => {
+ e.preventDefault();
+ if (!isSuperAdmin) {
+ setRoleError("Access Denied: You do not have permission to manage roles.");
+ return;
+ }
+ setRoleError('');
+ setRoleSuccess('');
+
+ const trimmed = newRoleName.trim();
+ if (!trimmed) {
+ setRoleError("Role Title name is required.");
+ return;
+ }
+
+ setIsSavingForm(true);
+ try {
+ const permissions = Object.keys(newRolePermissions).filter(p => newRolePermissions[p]);
+ let res;
+ if (editingRoleId) {
+ res = await ApiService.updateRole(editingRoleId, trimmed, permissions, newRoleDescription);
+ } else {
+ res = await ApiService.createRole(trimmed, permissions, newRoleDescription);
+ }
+
+ if (res.success && res.data) {
+ if (editingRoleId) {
+ setRolesDb(prev => prev.map(r => (r._id === editingRoleId || r.id === editingRoleId) ? res.data : r));
+ setRoleSuccess(`Role "${trimmed}" updated successfully!`);
+ } else {
+ setRolesDb(prev => [...prev, res.data]);
+ setRoleSuccess(`Role "${trimmed}" created successfully!`);
+ }
+
+ // Auto-select if no role is currently selected
+ if (!subAdminForm.roleName) {
+ setSubAdminForm(prev => ({ ...prev, roleName: trimmed }));
+ setSelectedPermissions(permissions);
+ }
+
+ setNewRoleName('');
+ setNewRoleDescription('');
+ setNewRolePermissions({});
+ setEditingRoleId(null);
+ setActiveRoleTab('roles');
+ setTimeout(() => setRoleSuccess(''), 3000);
+ } else {
+ setRoleError(res.message || "Failed to save role.");
+ }
+ } catch (err) {
+ setRoleError(err.message || "An error occurred saving the role.");
+ } finally {
+ setIsSavingForm(false);
+ }
+ };
+
+ const handleDeleteRole = async (role) => {
+ if (!isSuperAdmin) {
+ await showAlert("Access Denied: You do not have permission to manage roles.");
+ return;
+ }
+ // Safety check: warn if staff members are currently using this role
+ const staffUsingRole = subAdminsList.filter(a => a.customRoleTitle === role.name);
+ if (staffUsingRole.length > 0) {
+ const confirmed = await showConfirm(
+ `${staffUsingRole.length} staff member${staffUsingRole.length > 1 ? 's are' : ' is'} currently assigned to "${role.name}". Deleting this role will not revoke their current permissions, but they will lose role association. Continue?`
+ );
+ if (!confirmed) return;
+ }
+ setRoleToDelete(role);
+ };
+
+ const handleDuplicateRole = (role) => {
+ setEditingRoleId(null);
+ setNewRoleName(`Copy of ${role.name}`);
+ setNewRoleDescription(role.description || '');
+ const permsObj = {};
+ (role.permissions || []).forEach(p => { permsObj[p] = true; });
+ setNewRolePermissions(permsObj);
+ setActiveRoleTab('new_role');
+ };
+
+ const executeDeleteRole = async (roleId) => {
+ if (!isSuperAdmin) {
+ await showAlert("Access Denied: You do not have permission to manage roles.");
+ return;
+ }
+ try {
+ const res = await ApiService.deleteRole(roleId);
+ if (res.success) {
+ const deletedRole = rolesDb.find(r => r._id === roleId || r.id === roleId);
+ setRolesDb(prev => prev.filter(r => r._id !== roleId && r.id !== roleId));
+
+ if (deletedRole) {
+ setRoleSuccess(`Role "${deletedRole.name}" deleted successfully!`);
+ setTimeout(() => setRoleSuccess(''), 3000);
+
+ // Reset selection if the deleted role was currently selected
+ if (subAdminForm.roleName === deletedRole.name) {
+ setSubAdminForm(prev => ({ ...prev, roleName: '' }));
+ setSelectedPermissions([]);
+ }
+ }
+ } else {
+ await showAlert(res.message || "Failed to delete role.");
+ }
+ } catch (err) {
+ await showAlert(res.message || "An error occurred deleting the role.");
+ } finally {
+ setRoleToDelete(null);
+ }
+ };
+
+ // Sub-admin creation handler
+ const handleCreateSubAdmin = async (e) => {
+ e.preventDefault();
+ if (!isSuperAdmin) {
+ setSubAdminError("Access Denied: You do not have permission to manage sub-admins.");
+ return;
+ }
+ setSubAdminError('');
+ setSubAdminSuccess('');
+ setIsRegistering(true);
+
+ if (!subAdminForm.name.trim() || !subAdminForm.email.trim() || !subAdminForm.password) {
+ setSubAdminError("Please fill in all fields.");
+ setIsRegistering(false);
+ return;
+ }
+
+ if (!subAdminForm.roleName) {
+ setSubAdminError("Please select a Role Title. If none exist, please create one above.");
+ setIsRegistering(false);
+ return;
+ }
+
+ const permissionsArray = selectedPermissions;
+ if (permissionsArray.length === 0) {
+ setSubAdminError("Please select a role title that has at least one permission scope, or configure permissions for this role.");
+ setIsRegistering(false);
+ return;
+ }
+
+ try {
+ await ApiService.createAdminUser(
+ subAdminForm.name.trim(),
+ subAdminForm.email.trim(),
+ subAdminForm.password,
+ 'ADMIN',
+ permissionsArray,
+ subAdminForm.roleName
+ );
+
+ setSubAdminSuccess(`Sub-admin account for ${subAdminForm.name} created successfully!`);
+
+ const defaultRole = rolesDb.length > 0 ? rolesDb[0] : null;
+ setSubAdminForm({
+ name: '',
+ email: '',
+ password: '',
+ roleName: defaultRole ? defaultRole.name : ''
+ });
+ if (defaultRole) {
+ handleRoleChangeInForm(defaultRole.name);
+ } else {
+ setSelectedPermissions([]);
+ }
+ reloadData();
+ } catch (err) {
+ setSubAdminError(err.message || "Failed to create account.");
+ } finally {
+ setIsRegistering(false);
+ }
+ };
+
+ const togglePermission = (perm) => {
+ setSelectedPermissions(prev => {
+ if (prev.includes(perm)) {
+ return prev.filter(p => p !== perm);
+ } else {
+ return [...prev, perm];
+ }
+ });
+ };
+
+ const toggleNewRolePermission = (perm) => {
+ setNewRolePermissions(prev => {
+ const next = { ...prev };
+ next[perm] = !next[perm];
+ 
+ // If legacy keys are toggled, sync them
+ if (perm === 'MANAGE_USERS') next['manage_users'] = next[perm];
+ if (perm === 'MANAGE_PSYCHOLOGISTS') next['manage_psychologists'] = next[perm];
+ if (perm === 'MANAGE_BOOKINGS') next['manage_bookings'] = next[perm];
+ 
+ if (perm === 'manage_users') next['MANAGE_USERS'] = next[perm];
+ if (perm === 'manage_psychologists') next['MANAGE_PSYCHOLOGISTS'] = next[perm];
+ if (perm === 'manage_bookings') next['MANAGE_BOOKINGS'] = next[perm];
+ 
+ return next;
+ });
+ };
+
+ const toggleModuleAllPermissions = (moduleId, actionsList, turnOn) => {
+ setNewRolePermissions(prev => {
+ const next = { ...prev };
+ next[moduleId] = turnOn;
+ actionsList.forEach(act => {
+ next[act.id] = turnOn;
+ });
+ // Legacy compatibility keys
+ if (moduleId === 'manage_users') next['MANAGE_USERS'] = turnOn;
+ if (moduleId === 'manage_psychologists') next['MANAGE_PSYCHOLOGISTS'] = turnOn;
+ if (moduleId === 'manage_bookings') next['MANAGE_BOOKINGS'] = turnOn;
+ return next;
+ });
+ };
+
+ const toggleChildAction = (moduleId, actionId, actionsList) => {
+ setNewRolePermissions(prev => {
+ const next = { ...prev };
+ next[actionId] = !next[actionId];
+ 
+ // If the child is checked, the parent should also be checked
+ if (next[actionId]) {
+ next[moduleId] = true;
+ } else {
+ // If all children of this module are unchecked, uncheck the parent
+ const anyChecked = actionsList.some(act => next[act.id]);
+ if (!anyChecked) {
+ next[moduleId] = false;
+ }
+ }
+ 
+ // Legacy compatibility keys
+ if (moduleId === 'manage_users') next['MANAGE_USERS'] = next[moduleId];
+ if (moduleId === 'manage_psychologists') next['MANAGE_PSYCHOLOGISTS'] = next[moduleId];
+ if (moduleId === 'manage_bookings') next['MANAGE_BOOKINGS'] = next[moduleId];
+ 
+ return next;
+ });
+ };
+
+ const handleEditRoleClick = (role) => {
+ setEditingRoleId(role._id || role.id);
+ setNewRoleName(role.name);
+ setNewRoleDescription(role.description || '');
+ const permsObj = {};
+ (role.permissions || []).forEach(p => {
+ permsObj[p] = true;
+ });
+ setNewRolePermissions(permsObj);
+ setActiveRoleTab('new_role');
+ };
+
+const handleOpenEditSubAdmin = (admin) => {
+ setEditingSubAdmin(admin);
+ setEditSubAdminError('');
+ setEditSubAdminSuccess('');
+ // Set role name from the admin's assigned role
+ const roleName = admin.customRoleTitle || '';
+ setEditSubAdminRoleName(roleName);
+ // Build permissions object from the admin's current permissions array
+ const permsObj = {};
+ (admin.permissions || []).forEach(p => { permsObj[p] = true; });
+ setEditSubAdminPermissionsObj(permsObj);
+ };
+
+ const handleEditSubAdminRoleChange = (roleName) => {
+ setEditSubAdminRoleName(roleName);
+ const foundRole = rolesDb.find(r => r.name === roleName);
+ if (foundRole) {
+ const permsObj = {};
+ (foundRole.permissions || []).forEach(p => { permsObj[p] = true; });
+ setEditSubAdminPermissionsObj(permsObj);
+ } else {
+ setEditSubAdminPermissionsObj({});
+ }
+ };
+
+ const toggleEditSubAdminModuleAll = (moduleId, actionsList, turnOn) => {
+ setEditSubAdminPermissionsObj(prev => {
+ const next = { ...prev };
+ next[moduleId] = turnOn;
+ actionsList.forEach(act => { next[act.id] = turnOn; });
+ if (moduleId === 'manage_users') next['MANAGE_USERS'] = turnOn;
+ if (moduleId === 'manage_psychologists') next['MANAGE_PSYCHOLOGISTS'] = turnOn;
+ if (moduleId === 'manage_bookings') next['MANAGE_BOOKINGS'] = turnOn;
+ return next;
+ });
+ };
+
+ const toggleEditSubAdminChildAction = (moduleId, actionId, actionsList) => {
+ setEditSubAdminPermissionsObj(prev => {
+ const next = { ...prev };
+ next[actionId] = !next[actionId];
+ if (next[actionId]) {
+ next[moduleId] = true;
+ } else {
+ const anyChecked = actionsList.some(act => next[act.id]);
+ if (!anyChecked) next[moduleId] = false;
+ }
+ if (moduleId === 'manage_users') next['MANAGE_USERS'] = next[moduleId];
+ if (moduleId === 'manage_psychologists') next['MANAGE_PSYCHOLOGISTS'] = next[moduleId];
+ if (moduleId === 'manage_bookings') next['MANAGE_BOOKINGS'] = next[moduleId];
+ return next;
+ });
+ };
+
+ const handleSaveSubAdminPermissions = async (e) => {
+ e.preventDefault();
+ if (!isSuperAdmin) {
+ setEditSubAdminError("Access Denied: You do not have permission to manage sub-admins.");
+ return;
+ }
+ setEditSubAdminError('');
+ setEditSubAdminSuccess('');
+
+ const permsArray = Object.keys(editSubAdminPermissionsObj).filter(k => editSubAdminPermissionsObj[k]);
+
+ if (permsArray.length === 0) {
+ setEditSubAdminError("Please enable at least one permission for this staff member.");
+ return;
+ }
+
+ setIsSavingForm(true);
+ try {
+ await ApiService.updateAdminUser(
+ editingSubAdmin.id,
+ editingSubAdmin.name,
+ editingSubAdmin.email,
+ undefined,
+ 'ADMIN',
+ permsArray,
+ editSubAdminRoleName || editingSubAdmin.customRoleTitle
+ );
+ setEditSubAdminSuccess('Permissions updated successfully!');
+ reloadData();
+ setTimeout(() => {
+ setEditingSubAdmin(null);
+ setEditSubAdminSuccess('');
+ }, 1500);
+ } catch (err) {
+ setEditSubAdminError(err.message || 'Failed to save permissions.');
+ } finally {
+ setIsSavingForm(false);
+ }
+ };
+
+ // Inquiry Reply/Notes
+
+
 
  return (
  <div className="space-y-6 animate-in fade-in duration-200 text-sm">

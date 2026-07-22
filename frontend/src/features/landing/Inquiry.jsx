@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import ApiService from '../../shared/services/api';
-import { ScrollDot, renderTitleWithFullstopDot } from '../../shared/components/BrandDot';
+import { renderTitleWithFullstopDot } from '../../shared/components/BrandDot';
 
 const steps = [
   {
@@ -73,33 +73,27 @@ export default function Inquiry({ testProfile, siteSettings }) {
   return (
     <>
       {/* Ready CTA Banner */}
-      <section className="py-20 bg-gray-900 relative overflow-hidden">
-        {/* Subtle dot grid */}
-        <div
-          className="absolute inset-0 opacity-5"
-          style={{
-            backgroundImage: 'radial-gradient(circle, #00F0FF 1px, transparent 1px)',
-            backgroundSize: '28px 28px',
-          }}
-        />
-        <div className="relative max-w-4xl mx-auto px-6 lg:px-8 text-center">
-          <span className="text-xs sm:text-sm font-bold tracking-widest uppercase text-[#00A8FF] block mb-3">Start Your Journey</span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4 tracking-tight leading-tight flex items-center justify-center flex-wrap">
-            {renderTitleWithFullstopDot('Ready To Build Your Future?', 'inquiry-title', 'Scroll to Form ↓', 'md')}
+      <section className="py-20 sm:py-24 bg-gray-900 text-white relative">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <span className="text-xs font-bold tracking-widest uppercase text-gray-400 block mb-3">
+            Start Your Journey
+          </span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white mb-4 tracking-tight leading-tight">
+            Ready to Build Your Future.
           </h2>
-          <p className="text-base sm:text-lg text-gray-300 font-normal max-w-2xl mx-auto mb-10 leading-relaxed">
+          <p className="text-sm sm:text-base text-gray-300 font-normal max-w-xl mx-auto mb-10 leading-relaxed">
             Take the first step toward discovering your true potential. Our mentors are here to guide you through every stage of your academic and career journey.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-wrap gap-4 justify-center">
             <button
               onClick={() => { const el = document.getElementById('inquiry'); if (el) el.scrollIntoView({ behavior: 'smooth' }); }}
-              className="px-10 py-4 bg-[#00A8FF] hover:bg-[#00F0FF] text-white font-black text-lg rounded-lg transition border-none cursor-pointer shadow-xl shadow-[#00A8FF]/30"
+              className="px-8 py-3.5 bg-white hover:bg-gray-100 text-gray-900 font-semibold text-sm rounded-md transition border-none cursor-pointer shadow-sm"
             >
               Book Your Consultation
             </button>
             <button
               onClick={() => { window.spaNavigate?.('/sample-test'); window.scrollTo({ top: 0 }); }}
-              className="px-10 py-4 bg-white/10 hover:bg-white/20 text-white font-bold text-lg rounded-lg transition border border-white/20 cursor-pointer"
+              className="px-8 py-3.5 bg-transparent hover:bg-white/10 text-white font-semibold text-sm rounded-md transition border border-gray-600 cursor-pointer"
             >
               Take Aptitude Test
             </button>
@@ -107,97 +101,104 @@ export default function Inquiry({ testProfile, siteSettings }) {
         </div>
       </section>
 
-      {/* Contact Form */}
-      <section id="inquiry" className="py-14 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
+      {/* Contact Form Section */}
+      <section id="inquiry" className="py-16 sm:py-24 bg-white border-b border-gray-100">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
 
-            {/* Form — 3 cols */}
-            <div className="lg:col-span-3 bg-white rounded-lg p-8 md:p-10 shadow-sm border border-gray-100">
+            {/* Form — 7 cols */}
+            <div className="lg:col-span-7 bg-white rounded-lg p-6 sm:p-10 border border-gray-200 shadow-sm">
               <div className="mb-8">
-                <span className="text-xs sm:text-sm font-bold tracking-widest uppercase text-[#00A8FF] block mb-2">Get In Touch</span>
-                <h2 id="inquiry-title" className="text-3xl sm:text-4xl font-black text-gray-900 mb-2 flex items-center flex-wrap">
-                  {renderTitleWithFullstopDot('Want to Know More?', 'footer-brand', 'Scroll to Footer ↓', 'md')}
+                <span className="text-xs font-bold tracking-widest uppercase text-gray-400 block mb-2">
+                  Get in Touch
+                </span>
+                <h2 id="inquiry-title" className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 mb-3 leading-tight">
+                  Want to Know More.
                 </h2>
-                <p className="text-base text-gray-600 font-normal leading-relaxed">
+                <p className="text-sm sm:text-base text-gray-600 font-normal leading-relaxed">
                   Submit your request and we'll match you with the right expert within 24 hours.
                 </p>
               </div>
 
               {testProfile && (
-                <div className="mb-6 p-4 bg-[#00F0FF]/10 border border-[#00F0FF]/30 rounded-lg text-[#00A8FF] text-sm font-semibold">
+                <div className="mb-6 p-4 bg-gray-50 border border-gray-200 rounded-md text-gray-900 text-xs sm:text-sm font-semibold">
                   ✓ Pre-filled with your aptitude test results ({testProfile.dominantDomain} profile).
                 </div>
               )}
 
               {submitStatus === 'success' ? (
                 <div className="text-center py-12">
-                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <svg className="w-8 h-8 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12" /></svg>
+                  <div className="w-12 h-12 bg-gray-900 text-white rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-lg">
+                    ✓
                   </div>
-                  <h3 className="text-xl font-black text-gray-900 mb-2">Request Sent!</h3>
-                  <p className="text-gray-500">Our coordinator will contact you shortly.</p>
-                  <button onClick={() => setSubmitStatus(null)} className="mt-6 px-6 py-2.5 bg-[#00A8FF] text-white rounded-lg font-bold border-none cursor-pointer">Send Another</button>
+                  <h3 className="text-xl font-serif font-bold text-gray-900 mb-2">Request Sent.</h3>
+                  <p className="text-gray-600 text-sm">Our coordinator will contact you shortly.</p>
+                  <button
+                    onClick={() => setSubmitStatus(null)}
+                    className="mt-6 px-6 py-2.5 bg-gray-900 hover:bg-black text-white font-semibold text-sm rounded-md border-none cursor-pointer"
+                  >
+                    Send Another
+                  </button>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} className="space-y-5">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label htmlFor="name-input" className="block text-sm font-bold text-gray-700 mb-2">Full Name</label>
+                      <label htmlFor="name-input" className="block text-xs font-bold text-gray-700 mb-1.5">Full Name *</label>
                       <input
                         type="text" name="name" id="name-input"
                         value={formData.name} onChange={handleChange}
-                        placeholder="Student Name"
-                        className={`w-full border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 transition ${formErrors.name ? 'border-red-400 focus:ring-red-100' : 'border-gray-200 focus:border-[#00A8FF] focus:ring-[#00F0FF]/20'}`}
+                        placeholder="e.g. Priya Nair"
+                        className={`w-full border rounded-md px-3.5 py-2.5 text-sm focus:outline-none focus:border-gray-900 transition ${formErrors.name ? 'border-red-400' : 'border-gray-200'}`}
                       />
-                      {formErrors.name && <p className="text-red-500 text-xs mt-1 font-semibold">{formErrors.name}</p>}
+                      {formErrors.name && <p className="text-red-600 text-xs mt-1 font-semibold">{formErrors.name}</p>}
                     </div>
                     <div>
-                      <label htmlFor="email-input" className="block text-sm font-bold text-gray-700 mb-2">Email Address</label>
+                      <label htmlFor="email-input" className="block text-xs font-bold text-gray-700 mb-1.5">Email Address *</label>
                       <input
                         type="email" name="email" id="email-input"
                         value={formData.email} onChange={handleChange}
                         placeholder="name@email.com"
-                        className={`w-full border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 transition ${formErrors.email ? 'border-red-400 focus:ring-red-100' : 'border-gray-200 focus:border-[#00A8FF] focus:ring-[#00F0FF]/20'}`}
+                        className={`w-full border rounded-md px-3.5 py-2.5 text-sm focus:outline-none focus:border-gray-900 transition ${formErrors.email ? 'border-red-400' : 'border-gray-200'}`}
                       />
-                      {formErrors.email && <p className="text-red-500 text-xs mt-1 font-semibold">{formErrors.email}</p>}
+                      {formErrors.email && <p className="text-red-600 text-xs mt-1 font-semibold">{formErrors.email}</p>}
                     </div>
                   </div>
 
                   <div>
-                    <label htmlFor="message-textarea" className="block text-sm font-bold text-gray-700 mb-2">Your Message</label>
+                    <label htmlFor="message-textarea" className="block text-xs font-bold text-gray-700 mb-1.5">Your Message</label>
                     <textarea
-                      rows={5} name="message" id="message-textarea"
+                      rows={4} name="message" id="message-textarea"
                       value={formData.message} onChange={handleChange}
                       placeholder="Details regarding stream, class or queries..."
-                      className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#00A8FF] focus:ring-2 focus:ring-[#00F0FF]/20 transition resize-none"
+                      className="w-full border border-gray-200 rounded-md px-3.5 py-2.5 text-sm focus:outline-none focus:border-gray-900 transition resize-none"
                     />
                   </div>
 
-                  {formErrors.submit && <p className="text-red-500 text-sm font-bold">{formErrors.submit}</p>}
+                  {formErrors.submit && <p className="text-red-600 text-xs font-semibold">{formErrors.submit}</p>}
 
                   <button
                     type="submit" disabled={isSubmitting}
-                    className="w-full py-4 bg-[#00A8FF] hover:bg-[#00F0FF] text-white font-black text-lg rounded-lg transition border-none cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2 shadow-lg shadow-[#00A8FF]/20"
+                    className="w-full py-3 bg-gray-900 hover:bg-black text-white font-semibold text-sm rounded-md transition border-none cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2"
                   >
-                    {isSubmitting ? <><Loader2 className="w-5 h-5 animate-spin" /> Sending...</> : 'Send Request'}
+                    {isSubmitting ? <><Loader2 className="w-4 h-4 animate-spin" /> Sending...</> : 'Send Request'}
                   </button>
                 </form>
               )}
             </div>
 
-            {/* Info — 2 cols */}
-            <div className="lg:col-span-2 flex flex-col justify-center">
-              <h3 className="text-2xl font-black text-gray-900 mb-8">What Happens Next?</h3>
+            {/* Info — 5 cols */}
+            <div className="lg:col-span-5 flex flex-col justify-center">
+              <h3 className="text-2xl font-serif font-bold text-gray-900 mb-8">What Happens Next.</h3>
               <div className="space-y-6">
                 {steps.map((step, i) => (
-                  <div key={i} className="flex gap-4">
-                    <div className="w-12 h-12 bg-[#00A8FF] text-white rounded-lg flex items-center justify-center shrink-0 shadow-lg shadow-[#00A8FF]/30">
+                  <div key={i} className="flex gap-4 items-start">
+                    <div className="w-10 h-10 bg-gray-900 text-white rounded-md flex items-center justify-center shrink-0 mt-0.5">
                       {step.icon}
                     </div>
                     <div>
-                      <h4 className="font-bold text-gray-900 mb-1">{step.title}</h4>
-                      <p className="text-gray-500 text-sm leading-relaxed">{step.desc}</p>
+                      <h4 className="font-bold text-gray-900 text-base mb-1">{step.title}</h4>
+                      <p className="text-gray-600 text-xs sm:text-sm leading-relaxed font-normal">{step.desc}</p>
                     </div>
                   </div>
                 ))}
@@ -205,17 +206,17 @@ export default function Inquiry({ testProfile, siteSettings }) {
 
               {/* Contact info */}
               {(settings.contactPhone || settings.contactEmail) && (
-                <div className="mt-8 p-6 bg-[#00F0FF]/10 rounded-lg border border-[#00F0FF]/30">
-                  <h4 className="font-bold text-gray-900 mb-3 text-sm uppercase tracking-wider">Or reach us directly</h4>
+                <div className="mt-10 p-6 bg-gray-50 rounded-lg border border-gray-200">
+                  <h4 className="font-bold text-gray-900 mb-3 text-xs uppercase tracking-widest">Reach Us Directly</h4>
                   {settings.contactPhone && (
-                    <a href={`tel:${settings.contactPhone}`} className="flex items-center gap-2 text-[#00A8FF] font-bold mb-2 hover:text-[#00F0FF]">
-                      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.5a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.83h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l.76-.76a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.72 17z" /></svg>
+                    <a href={`tel:${settings.contactPhone}`} className="flex items-center gap-2 text-gray-900 font-semibold text-sm mb-2 hover:underline">
+                      <svg className="w-4 h-4 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.5a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.83h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l.76-.76a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.72 17z" /></svg>
                       {settings.contactPhone}
                     </a>
                   )}
                   {settings.contactEmail && (
-                    <a href={`mailto:${settings.contactEmail}`} className="flex items-center gap-2 text-[#00A8FF] font-bold hover:text-[#00F0FF]">
-                      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
+                    <a href={`mailto:${settings.contactEmail}`} className="flex items-center gap-2 text-gray-900 font-semibold text-sm hover:underline">
+                      <svg className="w-4 h-4 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
                       {settings.contactEmail}
                     </a>
                   )}

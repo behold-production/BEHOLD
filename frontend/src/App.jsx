@@ -578,7 +578,7 @@ export default function App() {
                         ) : null;
                       case 'aptitude':
                         return siteSettings.enableAptitude !== false ? (
-                      <CdatSection key="aptitude_sec" setView={() => { }} siteSettings={siteSettings} />
+                          <CdatSection key="aptitude_sec" setView={() => { }} siteSettings={siteSettings} />
                         ) : null;
                       case 'about':
                         return (
