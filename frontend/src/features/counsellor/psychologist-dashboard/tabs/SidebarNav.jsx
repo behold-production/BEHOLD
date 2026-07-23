@@ -50,7 +50,7 @@ const SidebarNav = ({
  onClick={() => setIsProfileDrawerOpen(true)}
  className="w-full flex items-center gap-3 bg-zinc-955/60 hover:bg-zinc-950 p-3 rounded-[10px] border border-zinc-850 hover:border-brand/30 transition-all cursor-pointer text-left"
  >
- <div className="w-12 h-12 rounded-[10px] bg-gradient-to-br from-brand to-brand-accent text-zinc-955 flex items-center justify-center font-header font-bold text-sm shrink-0 overflow-hidden">
+ <div className="w-12 h-12 rounded-[10px] bg-brand text-zinc-955 flex items-center justify-center font-header font-bold text-sm shrink-0 overflow-hidden">
  {(profile.profilePic || user?.profilePic || profile.image || user?.image) ? (
  <img src={profile.profilePic || user?.profilePic || profile.image || user?.image} alt={profile.name} className="w-full h-full object-cover" />
  ) : (

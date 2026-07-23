@@ -37,19 +37,19 @@ const SidebarNav = ({ currentSection, handleSectionChange, bookedSessions, testP
  onClick={() => handleSectionChange(tab.id)}
  className={`relative flex items-center gap-3 px-4 min-h-[46px] rounded-lg text-xs font-bold tracking-wider transition-all duration-200 group cursor-pointer border-0 ${
  isActive
- ? 'bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 text-white font-black shadow-lg shadow-blue-500/25 scale-[1.02]'
- : 'text-slate-600 hover:bg-slate-100/80 hover:text-blue-600'
+ ? 'bg-brand text-zinc-955 font-bold shadow-sm scale-[1.02]'
+ : 'text-surface-600 hover:bg-surface-100 hover:text-brand'
  }`}
  >
- {Icon && <Icon className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 ${isActive ? 'text-white' : 'text-slate-400 group-hover:text-blue-600'}`} />}
+ {Icon && <Icon className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 ${isActive ? 'text-zinc-955' : 'text-surface-400 group-hover:text-brand'}`} />}
  <span className="flex-1 text-left">{tab.label}</span>
  {badge !== null && badge !== 0 && (
- <span className={`text-[10px] font-black px-2 min-w-[20px] h-5 rounded-full flex items-center justify-center ${
+ <span className={`text-[10px] font-bold px-2 min-w-[20px] h-5 rounded-full flex items-center justify-center ${
  isActive
- ? 'bg-white text-blue-600 shadow-xs'
+ ? 'bg-white text-brand shadow-sm'
  : tab.id === 'results' && !testProfile
- ? 'bg-amber-100 text-amber-700 font-black animate-pulse'
- : 'bg-slate-100 text-slate-600'
+ ? 'bg-amber-100 text-amber-700 animate-pulse'
+ : 'bg-surface-100 text-surface-600'
  }`}>
  {badge}
  </span>
@@ -58,14 +58,14 @@ const SidebarNav = ({ currentSection, handleSectionChange, bookedSessions, testP
  );
  })}
 
- <div className="mt-3 mx-1 p-4 bg-gradient-to-br from-blue-50/80 via-white to-indigo-50/50 border border-blue-200/80 rounded-lg shadow-xs">
+ <div className="mt-3 mx-1 p-4 bg-surface-50 border border-surface-200 rounded-lg shadow-sm">
  <div className="flex items-center gap-2 mb-1.5">
- <div className="w-6 h-6 rounded-lg bg-blue-600/10 flex items-center justify-center shrink-0">
- <Bell className="w-3.5 h-3.5 text-blue-600" />
+ <div className="w-6 h-6 rounded-lg bg-brand/10 flex items-center justify-center shrink-0">
+ <Bell className="w-3.5 h-3.5 text-brand" />
  </div>
- <span className="text-[10px] tracking-wider font-extrabold text-slate-900 uppercase">Need help?</span>
+ <span className="text-[10px] tracking-wider font-bold text-surface-900 uppercase">Need help?</span>
  </div>
- <p className="text-xs text-slate-600 leading-relaxed font-medium">
+ <p className="text-xs text-surface-600 leading-relaxed font-medium">
  Data securely synced in Cloud. Contact your coordinator for guidance & support.
  </p>
  </div>

@@ -2081,12 +2081,12 @@ export default function PsychologistDashboard({ setView }) {
 
  {/* Avatar + Name */}
  <div className="px-6 py-6 flex flex-col items-center text-center space-y-3 border-b border-zinc-800">
- <div className="w-20 h-20 rounded-[10px] bg-gradient-to-br from-indigo-600 to-indigo-400 text-white flex items-center justify-center font-header font-bold text-2xl shadow-xl">
+ <div className="w-20 h-20 rounded-[10px] bg-brand text-zinc-955 flex items-center justify-center font-header font-bold text-2xl shadow-xl">
  {(profile?.name || '').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
  </div>
  <div>
  <h2 className="text-base font-bold text-white tracking-wide font-header font-bold">{profile.name}</h2>
- <span className="inline-block mt-1 text-sm px-2.5 py-1 rounded-full font-bold bg-indigo-950 border border-indigo-900 text-indigo-400 ">
+ <span className="inline-block mt-1 text-sm px-2.5 py-1 rounded-full font-bold bg-brand/10 border border-brand/20 text-brand">
  Consultant Psychologist
  </span>
  </div>

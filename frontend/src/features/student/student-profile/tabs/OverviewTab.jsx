@@ -36,7 +36,7 @@ const OverviewTab = ({
           <button
             type="button"
             onClick={() => navigate('/booking')}
-            className="inline-flex items-center gap-2 min-h-[44px] px-6 py-2.5 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-700 hover:to-indigo-700 text-white text-xs tracking-wider font-black uppercase rounded-lg transition-all duration-200 shadow-md shadow-blue-500/20 cursor-pointer border-0"
+            className="inline-flex items-center gap-2 min-h-[44px] px-6 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 text-xs tracking-wider font-bold uppercase rounded-md transition-colors shadow-sm cursor-pointer border-0"
           >
             <Plus className="w-4 h-4" /> Book Consultation
           </button>
@@ -45,15 +45,15 @@ const OverviewTab = ({
 
       {/* ── Next Session Card ── */}
       {nextSession ? (
-        <div className="group relative overflow-hidden rounded-lg border border-blue-200/80 bg-gradient-to-br from-white via-blue-50/40 to-indigo-50/30 p-6 sm:p-7 shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-6 transition-all duration-300 hover:shadow-lg">
+        <div className="group relative overflow-hidden rounded-md border border-surface-200 bg-white p-6 sm:p-7 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-6 transition-shadow hover:shadow-md">
           <div className="flex items-center gap-5 min-w-0">
-            <div className="w-16 h-16 rounded-lg bg-blue-100/80 border-2 border-blue-300/60 flex items-center justify-center shrink-0 shadow-sm overflow-hidden">
+            <div className="w-16 h-16 rounded-md bg-brand/10 border border-brand/20 flex items-center justify-center shrink-0">
               {nextSession.advisorProfilePic ? (
-                <img src={nextSession.advisorProfilePic} alt={nextSession.advisorName} className="w-full h-full rounded-lg object-cover" />
+                <img src={nextSession.advisorProfilePic} alt={nextSession.advisorName} className="w-full h-full rounded-md object-cover" />
               ) : nextSession.mode === 'ONLINE' ? (
-                <Video className="w-7 h-7 text-blue-600" />
+                <Video className="w-7 h-7 text-brand" />
               ) : (
-                <MapPin className="w-7 h-7 text-blue-600" />
+                <MapPin className="w-7 h-7 text-brand" />
               )}
             </div>
             <div className="min-w-0">
@@ -62,17 +62,17 @@ const OverviewTab = ({
                 Next Scheduled Session
               </p>
               <h3 className="font-black text-slate-900 text-xl tracking-tight truncate">{nextSession.advisorName}</h3>
-              <p className="text-xs text-slate-600 mt-0.5 font-medium truncate">
+              <p className="text-xs text-surface-600 mt-0.5 font-medium truncate">
                 {nextSession.advisorRole || 'Consultant Psychologist'}
-                <span className="mx-2 text-slate-300">·</span>
-                <span className="text-blue-600 font-bold">{nextSession.mode === 'ONLINE' ? 'Online Video Call' : 'In-Person Clinic Visit'}</span>
+                <span className="mx-2 text-surface-300">·</span>
+                <span className="text-brand font-bold">{nextSession.mode === 'ONLINE' ? 'Online Video Call' : 'In-Person Clinic Visit'}</span>
               </p>
-              <div className="flex flex-wrap items-center gap-2.5 mt-3 text-xs font-bold text-slate-700">
-                <span className="flex items-center gap-1.5 bg-white px-3.5 py-1.5 rounded-lg border border-slate-200/80 shadow-2xs">
-                  <Calendar className="w-3.5 h-3.5 text-blue-600" /> {formatDateString(nextSession.date)}
+              <div className="flex flex-wrap items-center gap-2.5 mt-3 text-xs font-bold text-surface-700">
+                <span className="flex items-center gap-1.5 bg-surface-50 px-3.5 py-1.5 rounded-md border border-surface-200">
+                  <Calendar className="w-3.5 h-3.5 text-brand" /> {formatDateString(nextSession.date)}
                 </span>
-                <span className="flex items-center gap-1.5 bg-white px-3.5 py-1.5 rounded-lg border border-slate-200/80 shadow-2xs">
-                  <Clock className="w-3.5 h-3.5 text-blue-600" /> {nextSession.time}
+                <span className="flex items-center gap-1.5 bg-surface-50 px-3.5 py-1.5 rounded-md border border-surface-200">
+                  <Clock className="w-3.5 h-3.5 text-brand" /> {nextSession.time}
                 </span>
               </div>
             </div>
@@ -90,26 +90,26 @@ const OverviewTab = ({
             <button
               type="button"
               onClick={() => { handleSectionChange('booked'); setSessionSubTab('upcoming'); }}
-              className="min-h-[42px] px-5 py-2.5 rounded-lg text-xs font-black uppercase tracking-wider transition-all cursor-pointer border border-blue-600 bg-blue-600 hover:bg-blue-700 text-white shadow-sm hover:shadow"
+              className="min-h-[42px] px-5 py-2.5 rounded-md text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer border border-brand bg-brand hover:bg-brand-dark text-zinc-955 shadow-sm"
             >
               View Details
             </button>
           </div>
         </div>
       ) : (
-        <div className="rounded-lg p-10 text-center border border-dashed border-blue-200/80 bg-gradient-to-br from-blue-50/40 via-white to-indigo-50/30 shadow-xs">
-          <div className="w-16 h-16 mx-auto rounded-lg bg-gradient-to-br from-blue-100 to-indigo-100 border border-blue-200/60 shadow-sm flex items-center justify-center mb-4">
-            <CalendarDays className="w-7 h-7 text-blue-600" />
+        <div className="rounded-md p-10 text-center border border-dashed border-surface-200 bg-surface-50">
+          <div className="w-16 h-16 mx-auto rounded-md bg-surface-100 border border-surface-200 flex items-center justify-center mb-4">
+            <CalendarDays className="w-7 h-7 text-surface-500" />
           </div>
-          <p className="text-xl font-black text-slate-900 tracking-tight">No upcoming sessions booked</p>
-          <p className="text-xs text-slate-500 mt-1.5 max-w-md mx-auto leading-relaxed font-medium">
+          <p className="text-xl font-bold text-surface-900 tracking-tight">No upcoming sessions booked</p>
+          <p className="text-xs text-surface-500 mt-1.5 max-w-md mx-auto leading-relaxed font-medium">
             Schedule a 1-on-1 session with one of our certified clinical psychologists or career mentors to start your progress.
           </p>
           {(enablePsychology || enableCareerMentoring) && (
             <button
               type="button"
               onClick={() => navigate('/booking')}
-              className="mt-6 inline-flex items-center gap-2 min-h-[44px] px-6 py-2.5 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 text-white text-xs tracking-widest uppercase font-black rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md shadow-blue-500/20 cursor-pointer border-0"
+              className="mt-6 inline-flex items-center gap-2 min-h-[44px] px-6 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 text-xs tracking-widest uppercase font-bold rounded-md transition-colors shadow-sm cursor-pointer border-0"
             >
               <Plus className="w-4 h-4" /> Schedule Consultation Now
             </button>
@@ -120,27 +120,27 @@ const OverviewTab = ({
       {/* ── KPI Stats Row — executive frosted white cards ── */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {[
-          { icon: Calendar, label: 'Upcoming', value: stats.upcoming, sub: 'booked sessions', accent: '#2563eb', bg: '#eff6ff', dot: '#3b82f6' },
-          { icon: CheckCircle2, label: 'Completed', value: stats.completed, sub: 'finished sessions', accent: '#059669', bg: '#ecfdf5', dot: '#10b981' },
-          { icon: BarChart3, label: 'C-DAT Assessment', value: testProfile ? 'Ready' : 'Pending', sub: testProfile ? 'report generated' : 'take assessment', accent: testProfile ? '#7c3aed' : '#d97706', bg: testProfile ? '#f5f3ff' : '#fffbeb', dot: testProfile ? '#8b5cf6' : '#f59e0b', condition: enableAptitude },
-          { icon: Clock, label: 'Total Hours', value: `${stats.hours}h`, sub: '1-on-1 coaching', accent: '#e11d48', bg: '#fff1f2', dot: '#f43f5e' },
+          { icon: Calendar, label: 'Upcoming', value: stats.upcoming, sub: 'booked sessions', accent: '#00E5FF', bg: 'var(--color-surface-100)', dot: '#00E5FF' },
+          { icon: CheckCircle2, label: 'Completed', value: stats.completed, sub: 'finished sessions', accent: '#10b981', bg: 'var(--color-surface-100)', dot: '#10b981' },
+          { icon: BarChart3, label: 'C-DAT Assessment', value: testProfile ? 'Ready' : 'Pending', sub: testProfile ? 'report generated' : 'take assessment', accent: testProfile ? '#8b5cf6' : '#f59e0b', bg: 'var(--color-surface-100)', dot: testProfile ? '#8b5cf6' : '#f59e0b', condition: enableAptitude },
+          { icon: Clock, label: 'Total Hours', value: `${stats.hours}h`, sub: '1-on-1 coaching', accent: '#f43f5e', bg: 'var(--color-surface-100)', dot: '#f43f5e' },
         ].filter(k => k.condition !== false).map((kpi, i) => {
           const Icon = kpi.icon;
           return (
             <div
               key={i}
-              className="relative overflow-hidden rounded-lg p-5 transition-all duration-300 hover:-translate-y-1 cursor-default group border border-slate-200/80 bg-white shadow-sm hover:shadow-md"
+              className="relative overflow-hidden rounded-md p-5 transition-shadow hover:shadow-md cursor-default group border border-surface-200 bg-white shadow-sm"
             >
-              <div className="absolute top-0 left-0 right-0 h-1.5 transition-all duration-300" style={{ background: kpi.dot }} />
+              <div className="absolute top-0 left-0 right-0 h-1 transition-colors" style={{ background: kpi.dot }} />
               <div
-                className="w-11 h-11 rounded-lg flex items-center justify-center mb-3.5 transition-transform duration-300 group-hover:scale-110 shadow-2xs"
+                className="w-10 h-10 rounded-md flex items-center justify-center mb-3.5"
                 style={{ background: kpi.bg }}
               >
                 <Icon className="w-5 h-5" style={{ color: kpi.accent }} />
               </div>
-              <p className="text-[10px] text-slate-500 font-extrabold tracking-widest uppercase">{kpi.label}</p>
-              <p className="text-2xl sm:text-3xl font-black text-slate-900 mt-1 tracking-tight">{kpi.value}</p>
-              <p className="text-xs text-slate-400 mt-1 font-medium">{kpi.sub}</p>
+              <p className="text-[10px] text-surface-500 font-bold tracking-widest uppercase">{kpi.label}</p>
+              <p className="text-2xl sm:text-3xl font-bold text-surface-900 mt-1 tracking-tight">{kpi.value}</p>
+              <p className="text-xs text-surface-400 mt-1 font-medium">{kpi.sub}</p>
             </div>
           );
         })}
@@ -149,13 +149,12 @@ const OverviewTab = ({
       {/* ── Action Cards Row ── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {/* Expert Consultation Action Card */}
-        <div className="group bg-white rounded-lg p-6 border border-slate-200/80 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50/50 rounded-full blur-2xl pointer-events-none" />
+        <div className="bg-white rounded-md p-6 border border-surface-200 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
           <div>
-            <div className="w-12 h-12 rounded-lg bg-blue-50 border border-blue-200/80 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
-              <Briefcase className="w-6 h-6 text-blue-600" />
+            <div className="w-12 h-12 rounded-md bg-brand/10 border border-brand/20 flex items-center justify-center mb-4">
+              <Briefcase className="w-6 h-6 text-brand" />
             </div>
-            <span className="px-2.5 py-1 bg-blue-50 text-blue-700 font-bold text-[10px] rounded-full uppercase tracking-wider">
+            <span className="px-2.5 py-1 bg-surface-100 text-surface-700 font-bold text-[10px] rounded-full uppercase tracking-wider">
               ★ 4.9 Rated Specialists
             </span>
             <h3 className="text-lg font-black text-slate-900 mt-3 tracking-tight">1-on-1 Expert Consultation</h3>
@@ -163,12 +162,12 @@ const OverviewTab = ({
               Connect with verified clinical psychologists and career counselors for tailored academic, career, and emotional guidance.
             </p>
           </div>
-          <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-600">60-min personalized session</span>
+          <div className="mt-6 pt-4 border-t border-surface-200 flex items-center justify-between">
+            <span className="text-xs font-bold text-surface-600">60-min personalized session</span>
             <button
               type="button"
               onClick={() => navigate('/booking')}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold text-xs flex items-center gap-1.5 transition-all shadow-sm cursor-pointer border-0"
+              className="px-4 py-2 bg-brand hover:bg-brand-dark text-zinc-955 rounded-md font-bold text-xs flex items-center gap-1.5 transition-colors shadow-sm cursor-pointer border-0"
             >
               Book Now <ArrowRight className="w-3.5 h-3.5" />
             </button>
@@ -177,13 +176,12 @@ const OverviewTab = ({
 
         {/* C-DAT Aptitude Card */}
         {enableAptitude && (
-          <div className="group bg-white rounded-lg p-6 border border-slate-200/80 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-50/50 rounded-full blur-2xl pointer-events-none" />
+          <div className="bg-white rounded-md p-6 border border-surface-200 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
             <div>
-              <div className="w-12 h-12 rounded-lg bg-indigo-50 border border-indigo-200/80 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
-                <Sparkles className="w-6 h-6 text-indigo-600" />
+              <div className="w-12 h-12 rounded-md bg-surface-900 border border-surface-800 flex items-center justify-center mb-4">
+                <Sparkles className="w-6 h-6 text-white" />
               </div>
-              <span className="px-2.5 py-1 bg-indigo-50 text-indigo-700 font-bold text-[10px] rounded-full uppercase tracking-wider">
+              <span className="px-2.5 py-1 bg-surface-100 text-surface-700 font-bold text-[10px] rounded-full uppercase tracking-wider">
                 {testProfile ? 'Report Ready' : 'AI Assessment'}
               </span>
               <h3 className="text-lg font-black text-slate-900 mt-3 tracking-tight">C-DAT Aptitude Assessment</h3>
@@ -191,12 +189,12 @@ const OverviewTab = ({
                 Comprehensive psycho-diagnostic & career aptitude assessment to uncover your top strengths, skills, and ideal career tracks.
               </p>
             </div>
-            <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-600">{testProfile ? 'Verified Results' : '45-min scientific evaluation'}</span>
+            <div className="mt-6 pt-4 border-t border-surface-200 flex items-center justify-between">
+              <span className="text-xs font-bold text-surface-600">{testProfile ? 'Verified Results' : '45-min scientific evaluation'}</span>
               <button
                 type="button"
                 onClick={() => handleSectionChange('cdat')}
-                className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-bold text-xs flex items-center gap-1.5 transition-all shadow-sm cursor-pointer border-0"
+                className="px-4 py-2 bg-surface-900 hover:bg-surface-800 text-white rounded-md font-bold text-xs flex items-center gap-1.5 transition-colors shadow-sm cursor-pointer border-0"
               >
                 {testProfile ? 'View Report' : 'Take Assessment'} <ArrowRight className="w-3.5 h-3.5" />
               </button>
@@ -208,18 +206,18 @@ const OverviewTab = ({
       {/* ── Recent Activity + Achievements ── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Recent Activity */}
-        <div className="lg:col-span-2 rounded-lg p-6 bg-white border border-slate-200/80 shadow-sm">
-          <div className="flex items-center justify-between mb-5 border-b border-slate-100 pb-4">
+        <div className="lg:col-span-2 rounded-md p-6 bg-white border border-surface-200 shadow-sm">
+          <div className="flex items-center justify-between mb-5 border-b border-surface-200 pb-4">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-lg bg-blue-50 border border-blue-200/60 flex items-center justify-center">
-                <Activity className="w-4 h-4 text-blue-600" />
+              <div className="w-9 h-9 rounded-md bg-brand/10 border border-brand/20 flex items-center justify-center">
+                <Activity className="w-4 h-4 text-brand" />
               </div>
-              <h4 className="text-base font-black text-slate-900 tracking-tight">Recent Session History</h4>
+              <h4 className="text-base font-bold text-surface-900 tracking-tight">Recent Session History</h4>
             </div>
             <button
               type="button"
               onClick={() => { handleSectionChange('booked'); setSessionSubTab('history'); }}
-              className="text-xs text-blue-600 hover:text-blue-700 transition-colors flex items-center gap-1 font-bold tracking-wider uppercase cursor-pointer border-0 bg-transparent"
+              className="text-xs text-brand hover:text-brand-dark transition-colors flex items-center gap-1 font-bold tracking-wider uppercase cursor-pointer border-0 bg-transparent"
             >
               View all <ChevronRight className="w-3.5 h-3.5" />
             </button>
@@ -227,38 +225,38 @@ const OverviewTab = ({
           {completedSessions.length > 0 ? (
             <div className="space-y-3">
               {completedSessions.slice(0, 3).map((s, i) => (
-                <div key={i} className="flex items-center gap-4 p-4 rounded-lg transition-all duration-200 hover:bg-slate-50 border border-slate-100 group">
-                  <div className="w-10 h-10 rounded-lg bg-emerald-50 border border-emerald-200/80 flex items-center justify-center shrink-0">
-                    <Award className="w-5 h-5 text-emerald-600" />
+                <div key={i} className="flex items-center gap-4 p-4 rounded-md transition-colors hover:bg-surface-50 border border-surface-100">
+                  <div className="w-10 h-10 rounded-md bg-surface-100 flex items-center justify-center shrink-0">
+                    <Award className="w-5 h-5 text-surface-600" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-black text-slate-900 truncate">{s.advisorName}</p>
-                    <p className="text-xs text-slate-500 mt-0.5 font-medium">{s.advisorRole || 'Consultation'} · {formatDateString(s.date)}</p>
+                    <p className="text-sm font-bold text-surface-900 truncate">{s.advisorName}</p>
+                    <p className="text-xs text-surface-500 mt-0.5 font-medium">{s.advisorRole || 'Consultation'} · {formatDateString(s.date)}</p>
                   </div>
                   <div className="flex items-center gap-1.5 shrink-0">
-                    <span className="text-[10px] tracking-widest font-black uppercase text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full">Completed</span>
+                    <span className="text-[10px] tracking-widest font-bold uppercase text-surface-700 bg-surface-100 border border-surface-200 px-2.5 py-1 rounded-full">Completed</span>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="text-center py-12 text-slate-400 space-y-3 border border-dashed border-slate-200 rounded-lg bg-slate-50/50">
-              <div className="w-14 h-14 mx-auto rounded-lg bg-white border border-slate-200/80 flex items-center justify-center shadow-2xs">
-                <History className="w-6 h-6 text-slate-400" />
+            <div className="text-center py-12 text-surface-400 space-y-3 border border-dashed border-surface-200 rounded-md bg-surface-50/50">
+              <div className="w-14 h-14 mx-auto rounded-md bg-white border border-surface-200 flex items-center justify-center shadow-sm">
+                <History className="w-6 h-6 text-surface-400" />
               </div>
-              <p className="text-xs tracking-widest uppercase font-black text-slate-500">No completed sessions yet</p>
-              <p className="text-xs text-slate-400 font-medium">Your finished consultation records and notes will appear here.</p>
+              <p className="text-xs tracking-widest uppercase font-bold text-surface-500">No completed sessions yet</p>
+              <p className="text-xs text-surface-400 font-medium">Your finished consultation records and notes will appear here.</p>
             </div>
           )}
         </div>
 
         {/* Achievements */}
-        <div className="rounded-lg p-6 bg-white border border-slate-200/80 shadow-sm">
-          <div className="flex items-center gap-3 mb-5 border-b border-slate-100 pb-4">
-            <div className="w-9 h-9 rounded-lg bg-amber-50 border border-amber-200/60 flex items-center justify-center">
+        <div className="rounded-md p-6 bg-white border border-surface-200 shadow-sm">
+          <div className="flex items-center gap-3 mb-5 border-b border-surface-100 pb-4">
+            <div className="w-9 h-9 rounded-md bg-amber-50 border border-amber-200 flex items-center justify-center">
               <Trophy className="w-4 h-4 text-amber-600" />
             </div>
-            <h4 className="text-base font-black text-slate-900 tracking-tight">Milestones</h4>
+            <h4 className="text-base font-bold text-surface-900 tracking-tight">Milestones</h4>
           </div>
           <div className="space-y-2.5">
             {[
@@ -271,23 +269,23 @@ const OverviewTab = ({
             ].filter(a => a.condition !== false).map((a, i) => (
               <div
                 key={i}
-                className={`flex items-center gap-3 text-xs font-bold px-3.5 py-3 rounded-lg transition-all duration-200 border ${
+                className={`flex items-center gap-3 text-xs font-bold px-3.5 py-3 rounded-md transition-colors border ${
                   a.done
-                    ? 'bg-slate-50/80 border-slate-200/80 text-slate-900 shadow-2xs'
-                    : 'bg-slate-50/40 border-slate-100 text-slate-400'
+                    ? 'bg-surface-50 border-surface-200 text-surface-900'
+                    : 'bg-surface-50 border-surface-100 text-surface-400'
                 }`}
               >
                 <div
-                  className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 text-xs ${
-                    a.done ? 'bg-blue-600 text-white shadow-2xs' : 'bg-slate-200 text-slate-400'
+                  className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 text-xs ${
+                    a.done ? 'bg-brand text-zinc-955' : 'bg-surface-200 text-surface-400'
                   }`}
                 >
                   {a.done ? <Check className="w-3.5 h-3.5" strokeWidth={3} /> : <span>{a.emoji}</span>}
                 </div>
-                <span className={`flex-1 truncate ${a.done ? 'font-bold text-slate-800' : 'line-through text-slate-400'}`}>
+                <span className={`flex-1 truncate ${a.done ? 'font-bold text-surface-800' : 'line-through text-surface-400'}`}>
                   {a.label}
                 </span>
-                {a.done && <span className="text-xs font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200/60">Done</span>}
+                {a.done && <span className="text-xs font-bold text-surface-700 bg-surface-100 px-2 py-0.5 rounded-md border border-surface-200">Done</span>}
               </div>
             ))}
           </div>
