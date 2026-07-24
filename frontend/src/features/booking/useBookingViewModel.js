@@ -953,9 +953,9 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       setPaymentStepText("Awaiting payment...");
 
       const options = {
-        key: keyId,
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID || keyId || 'rzp_test_THJcTWUaeHzOnn',
         amount: amount,
-        currency: currency,
+        currency: currency || 'INR',
         name: "BEHOLD.",
         description: `${bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring'} Session`,
         image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=120&q=80",
@@ -1012,6 +1012,11 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       };
 
       const razorpayInstance = new window.Razorpay(options);
+      razorpayInstance.on('payment.failed', function (response) {
+        console.error("Razorpay Payment Failed:", response.error);
+        toast.error(response.error?.description || "Payment failed. Please try again.");
+        setIsProcessingPayment(false);
+      });
       razorpayInstance.open();
     } catch (err) {
       console.error("Payment initialization error:", err);

@@ -151,6 +151,7 @@ app.use('/api/sessions', sessionRoutes);
 app.use('/api/feedbacks', feedbackRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/api', paymentRoutes);
 app.use('/api/google', googleAuthRoutes);
 app.use('/api/cron', cronRoutes);
 app.use('/api/blogs', blogRoutes);

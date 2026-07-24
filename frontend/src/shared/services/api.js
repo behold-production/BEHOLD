@@ -428,15 +428,29 @@ const ApiService = {
     });
   },
 
+  async createOrder(payload) {
+    return await request('/create-order', {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+  },
+
   async verifyPaymentAndBook(paymentDetails, bookingDetails) {
     return await request('/payments/verify', {
       method: 'POST',
       body: JSON.stringify({
-        razorpay_payment_id: paymentDetails.razorpay_payment_id,
-        razorpay_order_id: paymentDetails.razorpay_order_id,
-        razorpay_signature: paymentDetails.razorpay_signature,
+        razorpay_payment_id: paymentDetails.razorpay_payment_id || paymentDetails.payment_id,
+        razorpay_order_id: paymentDetails.razorpay_order_id || paymentDetails.order_id,
+        razorpay_signature: paymentDetails.razorpay_signature || paymentDetails.signature,
         bookingDetails
       })
+    });
+  },
+
+  async verifyPayment(paymentData) {
+    return await request('/verify-payment', {
+      method: 'POST',
+      body: JSON.stringify(paymentData)
     });
   },
 

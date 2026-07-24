@@ -7,48 +7,6 @@ const PaymentController = {
   // Create Razorpay Order
   async createOrder(req, res, next) {
     try {
-      const { counsellorId, date, time, mode, service, clientLatitude, clientLongitude } = req.body;
-      if (!counsellorId || !date || !time || !mode) {
-        return res.status(400).json({ success: false, message: 'Counsellor ID, date, time, and mode are required' });
-      }
-
-      // 1. Validate booking details (availability, double booking, past date)
-      const validation = await validateBookingDetails(counsellorId, date, time, mode, service || 'counselling', null, clientLatitude, clientLongitude);
-      if (!validation.valid) {
-        return res.status(400).json({ success: false, message: validation.message });
-      }
-
-      const counsellor = validation.counsellor;
-
-      // 2. Fetch site settings to see if GST is enabled
-      const settings = (await StorageService.findOne('settings')) || {};
-
-      const baseFee = Number(counsellor.price) || 1200;
-      const gstEnabled = settings.gstEnabled === true;
-      const gstPercent = gstEnabled ? Number(settings.gstPercent) || 0 : 0;
-      const gstAmount = gstPercent > 0 ? Math.round(baseFee * (gstPercent / 100)) : 0;
-
-      // Calculate net total in INR before discount
-      const totalBeforeDiscount = baseFee + gstAmount;
-
-      // Apply coupon code if provided
-      const { couponCode } = req.body;
-      let appliedDiscount = 0;
-      if (couponCode && settings.promoCodes && Array.isArray(settings.promoCodes)) {
-        const cleanCoupon = couponCode.toUpperCase().trim();
-        const foundPromo = settings.promoCodes.find(
-          (p) => p.code.toUpperCase() === cleanCoupon && p.isActive !== false
-        );
-        if (foundPromo) {
-          if (foundPromo.type === 'PERCENTAGE') {
-            appliedDiscount = Math.round(totalBeforeDiscount * (foundPromo.value / 100));
-          } else {
-            appliedDiscount = foundPromo.value;
-          }
-        }
-      }
-      const netTotal = Math.max(1, totalBeforeDiscount - appliedDiscount);
-
       if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
         return res.status(500).json({
           success: false,
@@ -56,38 +14,137 @@ const PaymentController = {
         });
       }
 
-      // 3. Initialize Razorpay
-      const razorpay = new Razorpay({
-        key_id: process.env.RAZORPAY_KEY_ID,
-        key_secret: process.env.RAZORPAY_KEY_SECRET
-      });
+      const {
+        amount,
+        currency = 'INR',
+        receipt,
+        counsellorId,
+        date,
+        time,
+        mode,
+        service,
+        couponCode,
+        clientLatitude,
+        clientLongitude,
+        notes: customNotes
+      } = req.body;
 
-      // 4. Create Order options
-      const options = {
-        amount: netTotal * 100, // Razorpay amount is in paise (INR * 100)
-        currency: 'INR',
-        receipt: `rcpt_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
-        notes: {
+      let amountInPaise = 0;
+      let orderNotes = { ...(customNotes || {}) };
+      let netTotal = 0;
+
+      // Scenario 1: Direct amount provided (e.g. standard checkout payload)
+      if (amount !== undefined && amount !== null && amount !== '') {
+        amountInPaise = Number(amount);
+        if (isNaN(amountInPaise) || amountInPaise < 100) {
+          return res.status(400).json({
+            success: false,
+            message: 'Invalid amount. Minimum amount is 100 paise'
+          });
+        }
+        netTotal = amountInPaise / 100;
+        if (req.user && req.user.id) {
+          orderNotes.userId = req.user.id;
+        }
+      }
+      // Scenario 2: Booking details provided
+      else if (counsellorId && date && time && mode) {
+        // Validate booking details (availability, double booking, past date)
+        const validation = await validateBookingDetails(
           counsellorId,
-          userId: req.user.id,
+          date,
+          time,
+          mode,
+          service || 'counselling',
+          null,
+          clientLatitude,
+          clientLongitude
+        );
+        if (!validation.valid) {
+          return res.status(400).json({ success: false, message: validation.message });
+        }
+
+        const counsellor = validation.counsellor;
+        const settings = (await StorageService.findOne('settings')) || {};
+
+        const baseFee = Number(counsellor.price) || 1200;
+        const gstEnabled = settings.gstEnabled === true;
+        const gstPercent = gstEnabled ? Number(settings.gstPercent) || 0 : 0;
+        const gstAmount = gstPercent > 0 ? Math.round(baseFee * (gstPercent / 100)) : 0;
+        const totalBeforeDiscount = baseFee + gstAmount;
+
+        let appliedDiscount = 0;
+        if (couponCode && settings.promoCodes && Array.isArray(settings.promoCodes)) {
+          const cleanCoupon = couponCode.toUpperCase().trim();
+          const foundPromo = settings.promoCodes.find(
+            (p) => p.code.toUpperCase() === cleanCoupon && p.isActive !== false
+          );
+          if (foundPromo) {
+            if (foundPromo.type === 'PERCENTAGE') {
+              appliedDiscount = Math.round(totalBeforeDiscount * (foundPromo.value / 100));
+            } else {
+              appliedDiscount = foundPromo.value;
+            }
+          }
+        }
+        netTotal = Math.max(1, totalBeforeDiscount - appliedDiscount);
+        amountInPaise = netTotal * 100;
+
+        if (amountInPaise < 100) {
+          return res.status(400).json({
+            success: false,
+            message: 'Calculated amount is below minimum limit of 100 paise'
+          });
+        }
+
+        orderNotes = {
+          ...orderNotes,
+          counsellorId,
+          userId: req.user ? req.user.id : '',
           date,
           time,
           mode,
           service: service || 'counselling',
           couponCode: couponCode || '',
           appliedDiscount: String(appliedDiscount)
-        }
+        };
+      } else {
+        return res.status(400).json({
+          success: false,
+          message: 'Either amount (in paise, >= 100) or complete booking details (counsellorId, date, time, mode) are required'
+        });
+      }
+
+      // Initialize Razorpay SDK
+      const razorpay = new Razorpay({
+        key_id: process.env.RAZORPAY_KEY_ID,
+        key_secret: process.env.RAZORPAY_KEY_SECRET
+      });
+
+      // Create Order options
+      const options = {
+        amount: amountInPaise,
+        currency: (currency || 'INR').toUpperCase(),
+        receipt: receipt || `rcpt_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+        notes: orderNotes
       };
 
       let order;
       try {
         order = await razorpay.orders.create(options);
       } catch (err) {
-        throw err;
+        console.error('[Razorpay API Error]:', err);
+        return res.status(500).json({
+          success: false,
+          message: err.message || 'Error communicating with Razorpay API'
+        });
       }
 
       res.status(200).json({
         success: true,
+        order_id: order.id,
+        amount: order.amount,
+        currency: order.currency,
         data: {
           keyId: process.env.RAZORPAY_KEY_ID,
           orderId: order.id,
@@ -98,33 +155,36 @@ const PaymentController = {
       });
     } catch (error) {
       console.error('[Razorpay Order Creation Error]:', error);
-      next(error);
+      res.status(500).json({
+        success: false,
+        message: error.message || 'Server error creating Razorpay order'
+      });
     }
   },
 
-  // Verify signature and book appointment
+  // Verify signature and book appointment / finalize payment
   async verifyPaymentAndBook(req, res, next) {
     try {
-      const { razorpay_payment_id, razorpay_order_id, razorpay_signature, bookingDetails } = req.body;
+      const razorpay_payment_id = req.body.razorpay_payment_id || req.body.payment_id;
+      const razorpay_order_id = req.body.razorpay_order_id || req.body.order_id;
+      const razorpay_signature = req.body.razorpay_signature || req.body.signature;
+      const bookingDetails = req.body.bookingDetails;
 
-      if (!razorpay_payment_id || !razorpay_order_id || !razorpay_signature || !bookingDetails) {
+      if (!razorpay_payment_id || !razorpay_order_id || !razorpay_signature) {
         return res.status(400).json({
           success: false,
-          message: 'Missing required signature verification fields or booking details'
+          message: 'Missing required verification fields: razorpay_payment_id, razorpay_order_id, and razorpay_signature are required'
         });
       }
 
-      const { counsellorId, date, time, mode, service, clientLocationName, clientLatitude, clientLongitude } = bookingDetails;
-      const userId = req.user.id;
-
-      if (!counsellorId || !date || !time || !mode) {
-        return res.status(400).json({
+      if (!process.env.RAZORPAY_KEY_SECRET) {
+        return res.status(500).json({
           success: false,
-          message: 'Counsellor ID, date, time, and mode are required in booking details'
+          message: 'Razorpay secret key is not configured in backend environment'
         });
       }
 
-      // 1. Verify Razorpay cryptographic signature
+      // 1. Verify Razorpay cryptographic signature: HMAC-SHA256(order_id + "|" + payment_id, KEY_SECRET)
       const body = razorpay_order_id + '|' + razorpay_payment_id;
       const expectedSignature = crypto
         .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
@@ -137,6 +197,28 @@ const PaymentController = {
         return res.status(400).json({
           success: false,
           message: 'Payment verification failed: Signature mismatch'
+        });
+      }
+
+      // If no booking details provided, return standalone payment verification success
+      if (!bookingDetails) {
+        return res.status(200).json({
+          success: true,
+          message: 'Payment signature verified successfully',
+          order_id: razorpay_order_id,
+          payment_id: razorpay_payment_id,
+          razorpay_order_id,
+          razorpay_payment_id
+        });
+      }
+
+      const { counsellorId, date, time, mode, service, clientLocationName, clientLatitude, clientLongitude } = bookingDetails;
+      const userId = req.user ? req.user.id : '';
+
+      if (!counsellorId || !date || !time || !mode) {
+        return res.status(400).json({
+          success: false,
+          message: 'Counsellor ID, date, time, and mode are required in booking details'
         });
       }
 

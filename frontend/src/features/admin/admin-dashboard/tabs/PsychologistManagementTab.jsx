@@ -119,7 +119,7 @@ export default function PsychologistManagementTab(props) {
   const psyProfilePicRef = useRef(null);
   const [isAdminUserLocating, setIsAdminUserLocating] = useState(false);
 
-  
+
   const { bookingsDb, handleTogglePsyActiveStatus, updatingPsyIds, handleGenerateResetToken } = props;
 
   const [adminSearchQuery, setAdminSearchQuery] = useState('');
@@ -157,7 +157,7 @@ export default function PsychologistManagementTab(props) {
         const lat = pos.coords.latitude;
         const lon = pos.coords.longitude;
         setPsyForm(prev => ({ ...prev, latitude: lat, longitude: lon }));
-        
+
         try {
           const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
           if (res.ok) {
@@ -711,19 +711,17 @@ export default function PsychologistManagementTab(props) {
                 setPsyFilter(tab.id);
                 setPsyPage(1);
               }}
-              className={`px-4 py-2 text-xs font-bold rounded-lg transition duration-200 cursor-pointer flex items-center gap-1.5 ${
-                psyFilter === tab.id
+              className={`px-4 py-2 text-xs font-bold rounded-lg transition duration-200 cursor-pointer flex items-center gap-1.5 ${psyFilter === tab.id
                   ? "bg-brand text-zinc-955"
                   : "bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] text-zinc-400 hover:text-zinc-200 hover:bg-zinc-850"
-              }`}
+                }`}
             >
               <span>{tab.label}</span>
               <span
-                className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${
-                  psyFilter === tab.id
+                className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${psyFilter === tab.id
                     ? "bg-zinc-955/20 text-zinc-955"
                     : "bg-zinc-800 text-zinc-500"
-                }`}
+                  }`}
               >
                 {tab.count}
               </span>
@@ -810,11 +808,10 @@ export default function PsychologistManagementTab(props) {
                         <td className="p-3 text-center whitespace-nowrap">
                           <button
                             onClick={() => handleTogglePsyTopFive(psy)}
-                            className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer border ${
-                              psy.isTopFive
+                            className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer border ${psy.isTopFive
                                 ? "bg-amber-500/20 border-amber-500/40 text-amber-400 hover:bg-amber-500/30"
                                 : "bg-zinc-900 border-zinc-800 text-zinc-500 hover:text-zinc-300 hover:bg-zinc-850"
-                            }`}
+                              }`}
                             title="Toggle Top 5 featured status"
                           >
                             {psy.isTopFive ? "★ Featured" : "☆ Feature"}
@@ -822,7 +819,7 @@ export default function PsychologistManagementTab(props) {
                         </td>
                         <td className="p-3 text-center whitespace-nowrap">
                           {psy.status === "APPROVED" ||
-                          psy.status === "ACTIVE" ? (
+                            psy.status === "ACTIVE" ? (
                             <div className="flex items-center justify-center gap-2">
                               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-955/20 border border-emerald-900/40 text-emerald-450 text-sm font-bold ">
                                 <Check className="w-3.5 h-3.5 text-emerald-450" />{" "}
@@ -899,11 +896,10 @@ export default function PsychologistManagementTab(props) {
                                   updatingPsyIds && updatingPsyIds[psy.id]
                                 }
                                 onClick={() => handleTogglePsyActiveStatus(psy)}
-                                className={`px-2.5 py-1 rounded border text-xs font-bold transition cursor-pointer select-none flex items-center gap-1.5 justify-center min-w-[70px] ${
-                                  psy.isActive !== false
+                                className={`px-2.5 py-1 rounded border text-xs font-bold transition cursor-pointer select-none flex items-center gap-1.5 justify-center min-w-[70px] ${psy.isActive !== false
                                     ? "bg-zinc-900 border-emerald-900/60 text-emerald-450 hover:bg-emerald-950/20"
                                     : "bg-zinc-900 border-rose-900/60 text-rose-450 hover:bg-rose-955/20"
-                                } ${updatingPsyIds && updatingPsyIds[psy.id] ? "opacity-40 cursor-not-allowed" : ""}`}
+                                  } ${updatingPsyIds && updatingPsyIds[psy.id] ? "opacity-40 cursor-not-allowed" : ""}`}
                                 title={
                                   psy.isActive !== false
                                     ? "Pause Profile"
@@ -1504,11 +1500,10 @@ export default function PsychologistManagementTab(props) {
                             key={day.index}
                             type="button"
                             onClick={() => toggleAdminDay(day.index)}
-                            className={`px-3 py-1.5 border rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer ${
-                              active
+                            className={`px-3 py-1.5 border rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer ${active
                                 ? "bg-brand text-zinc-955 font-bold border-none"
                                 : "bg-zinc-955 border-zinc-850 text-zinc-500 hover:border-zinc-750"
-                            }`}
+                              }`}
                           >
                             {day.label}
                           </button>
@@ -1544,11 +1539,10 @@ export default function PsychologistManagementTab(props) {
                                   ]);
                                 }
                               }}
-                              className={`flex-1 py-2 border rounded-lg font-bold transition cursor-pointer text-xs ${
-                                exists
+                              className={`flex-1 py-2 border rounded-lg font-bold transition cursor-pointer text-xs ${exists
                                   ? "bg-brand/10 border-brand text-brand"
                                   : "bg-zinc-955 border-zinc-850 text-zinc-400 hover:border-zinc-750"
-                              }`}
+                                }`}
                             >
                               {slot}
                             </button>
@@ -1839,7 +1833,7 @@ export default function PsychologistManagementTab(props) {
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-lg bg-brand/10 border border-brand/20 text-brand flex items-center justify-center font-bold text-lg shrink-0 overflow-hidden">
                   {viewingPsychologist.profilePic ||
-                  viewingPsychologist.image ? (
+                    viewingPsychologist.image ? (
                     <img
                       src={
                         viewingPsychologist.profilePic ||
@@ -1979,13 +1973,12 @@ export default function PsychologistManagementTab(props) {
                         </div>
                         <div className="flex gap-2 items-center pt-1">
                           <span
-                            className={`px-2.5 py-0.5 rounded text-sm font-bold ${
-                              viewingPsychologist.status === "ACTIVE"
+                            className={`px-2.5 py-0.5 rounded text-sm font-bold ${viewingPsychologist.status === "ACTIVE"
                                 ? "bg-emerald-955/20 border border-emerald-900/30 text-emerald-450"
                                 : viewingPsychologist.status === "REJECTED"
                                   ? "bg-rose-955/20 border border-rose-900/30 text-rose-455"
                                   : "bg-amber-955/20 border border-amber-900/30 text-amber-500"
-                            }`}
+                              }`}
                           >
                             {viewingPsychologist.status === "ACTIVE"
                               ? "Verified"
@@ -2065,22 +2058,22 @@ export default function PsychologistManagementTab(props) {
                           <span className="font-semibold text-zinc-300">
                             {viewingPsychologist.availability?.activeDays
                               ? Object.entries(
-                                  viewingPsychologist.availability.activeDays,
-                                )
-                                  .filter(([_, active]) => active)
-                                  .map(([dayIndex]) => {
-                                    const days = [
-                                      "Sunday",
-                                      "Monday",
-                                      "Tuesday",
-                                      "Wednesday",
-                                      "Thursday",
-                                      "Friday",
-                                      "Saturday",
-                                    ];
-                                    return days[Number(dayIndex)];
-                                  })
-                                  .join(", ") || "None"
+                                viewingPsychologist.availability.activeDays,
+                              )
+                                .filter(([_, active]) => active)
+                                .map(([dayIndex]) => {
+                                  const days = [
+                                    "Sunday",
+                                    "Monday",
+                                    "Tuesday",
+                                    "Wednesday",
+                                    "Thursday",
+                                    "Friday",
+                                    "Saturday",
+                                  ];
+                                  return days[Number(dayIndex)];
+                                })
+                                .join(", ") || "None"
                               : "Monday, Tuesday, Wednesday, Thursday, Friday"}
                           </span>
                         </div>
@@ -2125,7 +2118,7 @@ export default function PsychologistManagementTab(props) {
                               b.advisorId === viewingPsychologist.id ||
                               (b.advisorName &&
                                 b.advisorName.toLowerCase() ===
-                                  viewingPsychologist.name.toLowerCase()),
+                                viewingPsychologist.name.toLowerCase()),
                           ).length
                         }{" "}
                         consultations booked
@@ -2150,7 +2143,7 @@ export default function PsychologistManagementTab(props) {
                                   b.advisorId === viewingPsychologist.id ||
                                   (b.advisorName &&
                                     b.advisorName.toLowerCase() ===
-                                      viewingPsychologist.name.toLowerCase()),
+                                    viewingPsychologist.name.toLowerCase()),
                               );
                               if (psyBookings.length === 0) {
                                 return (
@@ -2199,15 +2192,14 @@ export default function PsychologistManagementTab(props) {
                                     </td>
                                     <td className="p-2.5 text-center">
                                       <span
-                                        className={`px-2 py-0.5 rounded text-sm font-bold ${
-                                          b.status === "CONFIRMED"
+                                        className={`px-2 py-0.5 rounded text-sm font-bold ${b.status === "CONFIRMED"
                                             ? "bg-indigo-950/20 border border-indigo-900/30 text-indigo-400"
                                             : b.status === "COMPLETED"
                                               ? "bg-emerald-955/20 border border-emerald-900/30 text-emerald-450"
                                               : b.status === "CANCELLED"
                                                 ? "bg-rose-955/20 border border-rose-900/30 text-rose-500"
                                                 : "bg-zinc-800 border border-zinc-700 text-zinc-400"
-                                        }`}
+                                          }`}
                                       >
                                         {b.status}
                                       </span>
@@ -2237,859 +2229,859 @@ export default function PsychologistManagementTab(props) {
         </div>
       )}
 
-{(isAddPsyOpen || isEditPsyOpen) && (
- <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
- <div
- className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
- onClick={() => { setIsAddPsyOpen(false); setIsEditPsyOpen(false); }}
- />
- <div className="relative w-full max-w-lg bg-zinc-900 border border-zinc-800 rounded-lg p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200 overflow-y-auto max-h-[90vh]">
- <div>
- <h3 className="text-base font-bold text-white font-header">
- {isAddPsyOpen ? 'Register Psychologist' : 'Edit Psychologist details'}
- </h3>
- <p className="text-sm text-zinc-500 leading-none mt-1">
- {isAddPsyOpen ? 'Register a clinical professional profile.' : 'Modify credentials, rates, and bios.'}
- </p>
- </div>
+      {(isAddPsyOpen || isEditPsyOpen) && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
+            onClick={() => { setIsAddPsyOpen(false); setIsEditPsyOpen(false); }}
+          />
+          <div className="relative w-full max-w-lg bg-zinc-900 border border-zinc-800 rounded-lg p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200 overflow-y-auto max-h-[90vh]">
+            <div>
+              <h3 className="text-base font-bold text-white font-header">
+                {isAddPsyOpen ? 'Register Psychologist' : 'Edit Psychologist details'}
+              </h3>
+              <p className="text-sm text-zinc-500 leading-none mt-1">
+                {isAddPsyOpen ? 'Register a clinical professional profile.' : 'Modify credentials, rates, and bios.'}
+              </p>
+            </div>
 
- <form onSubmit={isAddPsyOpen ? handleCreatePsy : handleUpdatePsy} className="space-y-4 font-medium">
- {(isEditPsyOpen || isAddPsyOpen) && (
- <div className="space-y-2">
- <label className="text-xs font-bold text-zinc-400 tracking-wide">Profile Picture</label>
- <div className="flex items-center gap-3">
- <div className="w-14 h-14 rounded-lg bg-zinc-950 border border-zinc-800 overflow-hidden shrink-0 flex items-center justify-center text-brand font-bold text-lg">
- {psyProfilePicFile ? (
- <img src={URL.createObjectURL(psyProfilePicFile)} alt="Preview" className="w-full h-full object-cover" />
- ) : psyForm.profilePic ? (
- <img src={psyForm.profilePic} alt="Profile" className="w-full h-full object-cover" />
- ) : (
- getInitials(psyForm.name)
- )}
- </div>
- <div className="flex-1 space-y-1">
- <input ref={psyProfilePicRef} type="file" accept="image/jpeg,image/png,image/jpg" className="hidden" onChange={(e) => { const file = e.target.files?.[0]; if (file) setPsyProfilePicFile(file); }} />
- <button type="button" onClick={() => psyProfilePicRef.current?.click()} className="px-3 py-2 text-xs font-bold bg-zinc-955 border border-zinc-800 hover:border-brand text-zinc-300 hover:text-white rounded-lg cursor-pointer transition bg-transparent">
- {psyProfilePicFile ? 'Change Image' : 'Upload Photo'}
- </button>
- {psyProfilePicFile && (<p className="text-xs text-zinc-500 truncate max-w-[180px]">{psyProfilePicFile.name}</p>)}
- </div>
- </div>
- </div>
- )}
- <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
- <div className="space-y-1">
- <label className="text-sm font-bold text-zinc-400">Full Name</label>
- <input
- type="text"
- required
- placeholder="e.g. Dr. Sandra Tomy"
- value={psyForm.name}
- onChange={(e) => setPsyForm({ ...psyForm, name: e.target.value })}
- className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
- />
- </div>
+            <form onSubmit={isAddPsyOpen ? handleCreatePsy : handleUpdatePsy} className="space-y-4 font-medium">
+              {(isEditPsyOpen || isAddPsyOpen) && (
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-zinc-400 tracking-wide">Profile Picture</label>
+                  <div className="flex items-center gap-3">
+                    <div className="w-14 h-14 rounded-lg bg-zinc-950 border border-zinc-800 overflow-hidden shrink-0 flex items-center justify-center text-brand font-bold text-lg">
+                      {psyProfilePicFile ? (
+                        <img src={URL.createObjectURL(psyProfilePicFile)} alt="Preview" className="w-full h-full object-cover" />
+                      ) : psyForm.profilePic ? (
+                        <img src={psyForm.profilePic} alt="Profile" className="w-full h-full object-cover" />
+                      ) : (
+                        getInitials(psyForm.name)
+                      )}
+                    </div>
+                    <div className="flex-1 space-y-1">
+                      <input ref={psyProfilePicRef} type="file" accept="image/jpeg,image/png,image/jpg" className="hidden" onChange={(e) => { const file = e.target.files?.[0]; if (file) setPsyProfilePicFile(file); }} />
+                      <button type="button" onClick={() => psyProfilePicRef.current?.click()} className="px-3 py-2 text-xs font-bold bg-zinc-955 border border-zinc-800 hover:border-brand text-zinc-300 hover:text-white rounded-lg cursor-pointer transition bg-transparent">
+                        {psyProfilePicFile ? 'Change Image' : 'Upload Photo'}
+                      </button>
+                      {psyProfilePicFile && (<p className="text-xs text-zinc-500 truncate max-w-[180px]">{psyProfilePicFile.name}</p>)}
+                    </div>
+                  </div>
+                </div>
+              )}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div className="space-y-1">
+                  <label className="text-sm font-bold text-zinc-400">Full Name</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Dr. Sandra Tomy"
+                    value={psyForm.name}
+                    onChange={(e) => setPsyForm({ ...psyForm, name: e.target.value })}
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                  />
+                </div>
 
- <div className="space-y-1">
- <label className="text-sm font-bold text-zinc-400">Email Address</label>
- <input
- type="email"
- required
- placeholder="counsellor@example.com"
- value={psyForm.email}
- onChange={(e) => setPsyForm({ ...psyForm, email: e.target.value })}
- className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
- />
- </div>
+                <div className="space-y-1">
+                  <label className="text-sm font-bold text-zinc-400">Email Address</label>
+                  <input
+                    type="email"
+                    required
+                    placeholder="counsellor@example.com"
+                    value={psyForm.email}
+                    onChange={(e) => setPsyForm({ ...psyForm, email: e.target.value })}
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                  />
+                </div>
 
- <div className="space-y-1">
- <label className="text-sm font-bold text-zinc-400">
- Password {isEditPsyOpen && <span className="text-zinc-500 lowercase font-normal">(blank keeps same)</span>}
- </label>
- <input
- type="password"
- required={isAddPsyOpen}
- placeholder={isEditPsyOpen ? "••••••••" : "Enter password"}
- value={psyForm.password}
- onChange={(e) => setPsyForm({ ...psyForm, password: e.target.value })}
- className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
- />
- </div>
+                <div className="space-y-1">
+                  <label className="text-sm font-bold text-zinc-400">
+                    Password {isEditPsyOpen && <span className="text-zinc-500 lowercase font-normal">(blank keeps same)</span>}
+                  </label>
+                  <input
+                    type="password"
+                    required={isAddPsyOpen}
+                    placeholder={isEditPsyOpen ? "••••••••" : "Enter password"}
+                    value={psyForm.password}
+                    onChange={(e) => setPsyForm({ ...psyForm, password: e.target.value })}
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                  />
+                </div>
 
- <div className="space-y-1">
- <label className="text-sm font-bold text-zinc-400">Education qualifications</label>
- <input
- type="text"
- placeholder="e.g. MPhil Clinical Psychology"
- value={psyForm.education}
- onChange={(e) => setPsyForm({ ...psyForm, education: e.target.value })}
- className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
- />
- </div>
+                <div className="space-y-1">
+                  <label className="text-sm font-bold text-zinc-400">Education qualifications</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. MPhil Clinical Psychology"
+                    value={psyForm.education}
+                    onChange={(e) => setPsyForm({ ...psyForm, education: e.target.value })}
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                  />
+                </div>
 
- <div className="space-y-1">
- <label className="text-sm font-bold text-zinc-400">Professional Title</label>
- <select
- value={psyForm.title}
- onChange={(e) => setPsyForm({ ...psyForm, title: e.target.value })}
- className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none cursor-pointer"
- >
- <option value="Consultant Psychologist">Consultant Psychologist</option>
- <option value="Clinical Psychologist">Clinical Psychologist</option>
- <option value="Psychiatrist">Psychiatrist</option>
- <option value="Career Mentor">Career Mentor</option>
- </select>
- </div>
+                <div className="space-y-1">
+                  <label className="text-sm font-bold text-zinc-400">Professional Title</label>
+                  <select
+                    value={psyForm.title}
+                    onChange={(e) => setPsyForm({ ...psyForm, title: e.target.value })}
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none cursor-pointer"
+                  >
+                    <option value="Consultant Psychologist">Consultant Psychologist</option>
+                    <option value="Clinical Psychologist">Clinical Psychologist</option>
+                    <option value="Psychiatrist">Psychiatrist</option>
+                    <option value="Career Mentor">Career Mentor</option>
+                  </select>
+                </div>
 
- <div className="space-y-1">
- <label className="text-sm font-bold text-zinc-400">Phone Number</label>
- <input
- type="text"
- placeholder="e.g. +91 94971 74011"
- value={psyForm.phone}
- onChange={(e) => setPsyForm({ ...psyForm, phone: e.target.value })}
- className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
- />
- </div>
+                <div className="space-y-1">
+                  <label className="text-sm font-bold text-zinc-400">Phone Number</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. +91 94971 74011"
+                    value={psyForm.phone}
+                    onChange={(e) => setPsyForm({ ...psyForm, phone: e.target.value })}
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                  />
+                </div>
 
- <div className="space-y-1">
- <label className="text-sm font-bold text-zinc-400">Hourly price (INR)</label>
- <input
- type="number"
- placeholder="e.g. 1250"
- value={psyForm.price}
- onChange={(e) => setPsyForm({ ...psyForm, price: e.target.value })}
- className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
- />
- </div>
+                <div className="space-y-1">
+                  <label className="text-sm font-bold text-zinc-400">Hourly price (INR)</label>
+                  <input
+                    type="number"
+                    placeholder="e.g. 1250"
+                    value={psyForm.price}
+                    onChange={(e) => setPsyForm({ ...psyForm, price: e.target.value })}
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                  />
+                </div>
 
- <div className="space-y-1">
- <label className="text-sm font-bold text-zinc-400">Languages Spoken</label>
- <input
- type="text"
- placeholder="e.g. Malayalam, English"
- value={psyForm.lang}
- onChange={(e) => setPsyForm({ ...psyForm, lang: e.target.value })}
- className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
- />
- </div>
+                <div className="space-y-1">
+                  <label className="text-sm font-bold text-zinc-400">Languages Spoken</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Malayalam, English"
+                    value={psyForm.lang}
+                    onChange={(e) => setPsyForm({ ...psyForm, lang: e.target.value })}
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                  />
+                </div>
 
- <div className="space-y-1">
- <label className="text-sm font-bold text-zinc-400">Experience Hours</label>
- <input
- type="number"
- placeholder="e.g. 150"
- value={psyForm.hours}
- onChange={(e) => setPsyForm({ ...psyForm, hours: Number(e.target.value) || 0 })}
- className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
- />
- </div>
+                <div className="space-y-1">
+                  <label className="text-sm font-bold text-zinc-400">Experience Hours</label>
+                  <input
+                    type="number"
+                    placeholder="e.g. 150"
+                    value={psyForm.hours}
+                    onChange={(e) => setPsyForm({ ...psyForm, hours: Number(e.target.value) || 0 })}
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                  />
+                </div>
 
- <div className="sm:col-span-2 space-y-1">
- <label className="text-sm font-bold text-zinc-400">Default Google Meet Link (optional)</label>
- <input
- type="text"
- placeholder="https://meet.google.com/abc-defg-hij"
- value={psyForm.defaultMeetLink}
- onChange={(e) => setPsyForm({ ...psyForm, defaultMeetLink: e.target.value })}
- className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
- />
- </div>
+                <div className="sm:col-span-2 space-y-1">
+                  <label className="text-sm font-bold text-zinc-400">Default Google Meet Link (optional)</label>
+                  <input
+                    type="text"
+                    placeholder="https://meet.google.com/abc-defg-hij"
+                    value={psyForm.defaultMeetLink}
+                    onChange={(e) => setPsyForm({ ...psyForm, defaultMeetLink: e.target.value })}
+                    className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                  />
+                </div>
 
- <div className="sm:col-span-2 space-y-3.5 p-4 bg-zinc-950 border border-zinc-800 rounded-lg mt-2 text-left">
- <h4 className="text-xs font-bold text-brand tracking-wider">Practice / Geographic Location</h4>
- 
- {/* Address search field */}
- <div className="space-y-1.5 relative">
- <label className="text-zinc-400 font-bold text-xs tracking-wide block">Search Location Address</label>
- <div className="flex flex-col sm:flex-row gap-2">
- <input
- type="text"
- placeholder="Type an address to search..."
- value={adminSearchQuery}
- onChange={(e) => setAdminSearchQuery(e.target.value)}
- className="flex-1 min-w-0 px-3 py-2 bg-zinc-900 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
- onKeyDown={(e) => {
- if (e.key === 'Enter') {
- e.preventDefault();
- handleAdminAddressSearch();
- }
- }}
- />
- <button
- type="button"
- onClick={handleAdminAddressSearch}
- disabled={isAdminSearching}
- className="w-full sm:w-auto px-4 py-2 bg-brand text-zinc-955 text-xs font-bold rounded-full hover:bg-brand-dark transition cursor-pointer shrink-0 flex items-center justify-center"
- >
- {isAdminSearching ? 'Searching...' : 'Search'}
- </button>
- </div>
+                <div className="sm:col-span-2 space-y-3.5 p-4 bg-zinc-950 border border-zinc-800 rounded-lg mt-2 text-left">
+                  <h4 className="text-xs font-bold text-brand tracking-wider">Practice / Geographic Location</h4>
 
- {/* Autocomplete Dropdown */}
- {adminSearchResults.length > 0 && (
- <div className="absolute left-0 right-0 mt-1 bg-zinc-900 border border-zinc-800 rounded-lg max-h-40 overflow-y-auto z-50 shadow-xl divide-y divide-zinc-800">
- {adminSearchResults.map((res, index) => (
- <button
- key={index}
- type="button"
- onClick={() => {
- setPsyForm({
- ...psyForm,
- locationName: res.display_name,
- latitude: parseFloat(res.lat) || 0,
- longitude: parseFloat(res.lon) || 0
- });
- setAdminSearchQuery(res.display_name);
- setAdminSearchResults([]);
- }}
- className="w-full text-left px-3.5 py-2.5 text-xs text-zinc-300 hover:text-white hover:bg-zinc-800 transition-colors block truncate"
- >
- {res.display_name}
- </button>
- ))}
- </div>
- )}
- </div>
+                  {/* Address search field */}
+                  <div className="space-y-1.5 relative">
+                    <label className="text-zinc-400 font-bold text-xs tracking-wide block">Search Location Address</label>
+                    <div className="flex flex-col sm:flex-row gap-2">
+                      <input
+                        type="text"
+                        placeholder="Type an address to search..."
+                        value={adminSearchQuery}
+                        onChange={(e) => setAdminSearchQuery(e.target.value)}
+                        className="flex-1 min-w-0 px-3 py-2 bg-zinc-900 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            handleAdminAddressSearch();
+                          }
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={handleAdminAddressSearch}
+                        disabled={isAdminSearching}
+                        className="w-full sm:w-auto px-4 py-2 bg-brand text-zinc-955 text-xs font-bold rounded-full hover:bg-brand-dark transition cursor-pointer shrink-0 flex items-center justify-center"
+                      >
+                        {isAdminSearching ? 'Searching...' : 'Search'}
+                      </button>
+                    </div>
 
- <div className="space-y-1.5">
- <label className="text-zinc-400 font-bold text-xs tracking-wide">Clinic / Center Address</label>
- <input
- type="text"
- placeholder="e.g. 123 Main St, Calicut, Kerala"
- value={psyForm.locationName || ''}
- onChange={(e) => {
- setPsyForm({ ...psyForm, locationName: e.target.value });
- setAdminSearchQuery(e.target.value);
- }}
- className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
- />
- </div>
- <div className="grid grid-cols-2 gap-4">
- <div className="space-y-1.5">
- <label className="text-zinc-400 font-bold text-xs tracking-wide">Latitude</label>
- <input
- type="number"
- step="any"
- placeholder="e.g. 11.2588"
- value={psyForm.latitude || ''}
- onChange={(e) => setPsyForm({ ...psyForm, latitude: parseFloat(e.target.value) || 0 })}
- className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
- />
- </div>
- <div className="space-y-1.5">
- <label className="text-zinc-400 font-bold text-xs tracking-wide">Longitude</label>
- <input
- type="number"
- step="any"
- placeholder="e.g. 75.7804"
- value={psyForm.longitude || ''}
- onChange={(e) => setPsyForm({ ...psyForm, longitude: parseFloat(e.target.value) || 0 })}
- className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
- />
- </div>
- </div>
- <button
- type="button"
- disabled={isAdminLocating}
- onClick={handleAdminDetectLocation}
- className="px-3.5 py-2 bg-zinc-900 hover:bg-zinc-850 border border-zinc-800 text-zinc-300 text-xs font-bold rounded-full transition cursor-pointer flex items-center justify-center gap-1.5 disabled:opacity-50"
- >
- {isAdminLocating ? (
- <>
- <div className="w-3 h-3 border border-zinc-400 border-t-brand rounded-full animate-spin" />
- Locating...
- </>
- ) : (
- <>
- <svg className="w-3.5 h-3.5 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor">
- <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
- <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
- </svg>
- Detect Location & Address
- </>
- )}
- </button>
- </div>
+                    {/* Autocomplete Dropdown */}
+                    {adminSearchResults.length > 0 && (
+                      <div className="absolute left-0 right-0 mt-1 bg-zinc-900 border border-zinc-800 rounded-lg max-h-40 overflow-y-auto z-50 shadow-xl divide-y divide-zinc-800">
+                        {adminSearchResults.map((res, index) => (
+                          <button
+                            key={index}
+                            type="button"
+                            onClick={() => {
+                              setPsyForm({
+                                ...psyForm,
+                                locationName: res.display_name,
+                                latitude: parseFloat(res.lat) || 0,
+                                longitude: parseFloat(res.lon) || 0
+                              });
+                              setAdminSearchQuery(res.display_name);
+                              setAdminSearchResults([]);
+                            }}
+                            className="w-full text-left px-3.5 py-2.5 text-xs text-zinc-300 hover:text-white hover:bg-zinc-800 transition-colors block truncate"
+                          >
+                            {res.display_name}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
 
- <div className="sm:col-span-2 space-y-1.5 pt-1">
- <label className="text-sm font-bold text-zinc-400 block mb-1">Supported Session Modes</label>
- <div className="flex flex-wrap gap-4">
- {['ONLINE', 'OFFLINE', 'DOOR_STEP'].map(mode => (
- <label key={mode} className="flex items-center gap-2 cursor-pointer text-sm text-zinc-300 select-none font-semibold">
- <input
- type="checkbox"
- checked={psyForm.modes ? psyForm.modes.includes(mode) : false}
- onChange={() => {
- const currentModes = psyForm.modes || [];
- const nextModes = currentModes.includes(mode)
- ? currentModes.filter(m => m !== mode)
- : [...currentModes, mode];
- setPsyForm({ ...psyForm, modes: nextModes });
- }}
- className="w-4 h-4 rounded border-zinc-805 bg-zinc-955 text-brand focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
- />
- <span>{mode === 'DOOR_STEP' ? 'Doorstep' : mode.charAt(0) + mode.slice(1).toLowerCase()}</span>
- </label>
- ))}
- </div>
- </div>
+                  <div className="space-y-1.5">
+                    <label className="text-zinc-400 font-bold text-xs tracking-wide">Clinic / Center Address</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. 123 Main St, Calicut, Kerala"
+                      value={psyForm.locationName || ''}
+                      onChange={(e) => {
+                        setPsyForm({ ...psyForm, locationName: e.target.value });
+                        setAdminSearchQuery(e.target.value);
+                      }}
+                      className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1.5">
+                      <label className="text-zinc-400 font-bold text-xs tracking-wide">Latitude</label>
+                      <input
+                        type="number"
+                        step="any"
+                        placeholder="e.g. 11.2588"
+                        value={psyForm.latitude || ''}
+                        onChange={(e) => setPsyForm({ ...psyForm, latitude: parseFloat(e.target.value) || 0 })}
+                        className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-zinc-400 font-bold text-xs tracking-wide">Longitude</label>
+                      <input
+                        type="number"
+                        step="any"
+                        placeholder="e.g. 75.7804"
+                        value={psyForm.longitude || ''}
+                        onChange={(e) => setPsyForm({ ...psyForm, longitude: parseFloat(e.target.value) || 0 })}
+                        className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
+                      />
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    disabled={isAdminLocating}
+                    onClick={handleAdminDetectLocation}
+                    className="px-3.5 py-2 bg-zinc-900 hover:bg-zinc-850 border border-zinc-800 text-zinc-300 text-xs font-bold rounded-full transition cursor-pointer flex items-center justify-center gap-1.5 disabled:opacity-50"
+                  >
+                    {isAdminLocating ? (
+                      <>
+                        <div className="w-3 h-3 border border-zinc-400 border-t-brand rounded-full animate-spin" />
+                        Locating...
+                      </>
+                    ) : (
+                      <>
+                        <svg className="w-3.5 h-3.5 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        Detect Location & Address
+                      </>
+                    )}
+                  </button>
+                </div>
 
- <div className="sm:col-span-2 space-y-1.5 pt-2">
- <label className="text-sm font-bold text-zinc-400 block mb-1">Account & Feature Status</label>
- <div className="flex flex-wrap gap-5">
- <label className="flex items-center gap-2 cursor-pointer text-sm text-zinc-300 select-none font-semibold">
- <input
- type="checkbox"
- checked={psyForm.isActive !== false}
- onChange={(e) => setPsyForm({ ...psyForm, isActive: e.target.checked })}
- className="w-4 h-4 rounded border-zinc-805 bg-zinc-955 text-brand focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
- />
- <span>Active Profile (Accept Bookings)</span>
- </label>
+                <div className="sm:col-span-2 space-y-1.5 pt-1">
+                  <label className="text-sm font-bold text-zinc-400 block mb-1">Supported Session Modes</label>
+                  <div className="flex flex-wrap gap-4">
+                    {['ONLINE', 'OFFLINE', 'DOOR_STEP'].map(mode => (
+                      <label key={mode} className="flex items-center gap-2 cursor-pointer text-sm text-zinc-300 select-none font-semibold">
+                        <input
+                          type="checkbox"
+                          checked={psyForm.modes ? psyForm.modes.includes(mode) : false}
+                          onChange={() => {
+                            const currentModes = psyForm.modes || [];
+                            const nextModes = currentModes.includes(mode)
+                              ? currentModes.filter(m => m !== mode)
+                              : [...currentModes, mode];
+                            setPsyForm({ ...psyForm, modes: nextModes });
+                          }}
+                          className="w-4 h-4 rounded border-zinc-805 bg-zinc-955 text-brand focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
+                        />
+                        <span>{mode === 'DOOR_STEP' ? 'Doorstep' : mode.charAt(0) + mode.slice(1).toLowerCase()}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
 
- <label className="flex items-center gap-2 cursor-pointer text-sm text-zinc-300 select-none font-semibold">
- <input
- type="checkbox"
- checked={psyForm.isTopFive || false}
- onChange={(e) => setPsyForm({ ...psyForm, isTopFive: e.target.checked })}
- className="w-4 h-4 rounded border-zinc-805 bg-zinc-955 text-brand focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
- />
- <span>Featured Psychologist (Top 5)</span>
- </label>
- </div>
- </div>
+                <div className="sm:col-span-2 space-y-1.5 pt-2">
+                  <label className="text-sm font-bold text-zinc-400 block mb-1">Account & Feature Status</label>
+                  <div className="flex flex-wrap gap-5">
+                    <label className="flex items-center gap-2 cursor-pointer text-sm text-zinc-300 select-none font-semibold">
+                      <input
+                        type="checkbox"
+                        checked={psyForm.isActive !== false}
+                        onChange={(e) => setPsyForm({ ...psyForm, isActive: e.target.checked })}
+                        className="w-4 h-4 rounded border-zinc-805 bg-zinc-955 text-brand focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
+                      />
+                      <span>Active Profile (Accept Bookings)</span>
+                    </label>
 
- <div className="sm:col-span-2 space-y-1">
- <label className="text-sm font-bold text-zinc-400">Specialties (comma-separated)</label>
- <input
- type="text"
- placeholder="Anxiety, Stress Management, Mood Disorders"
- value={psyForm.specialties}
- onChange={(e) => setPsyForm({ ...psyForm, specialties: e.target.value })}
- className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
- />
- </div>
+                    <label className="flex items-center gap-2 cursor-pointer text-sm text-zinc-300 select-none font-semibold">
+                      <input
+                        type="checkbox"
+                        checked={psyForm.isTopFive || false}
+                        onChange={(e) => setPsyForm({ ...psyForm, isTopFive: e.target.checked })}
+                        className="w-4 h-4 rounded border-zinc-805 bg-zinc-955 text-brand focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
+                      />
+                      <span>Featured Psychologist (Top 5)</span>
+                    </label>
+                  </div>
+                </div>
 
- <div className="sm:col-span-2 space-y-1">
- <label className="text-sm font-bold text-zinc-400">Professional Bio</label>
- <textarea
- rows={4}
- placeholder="Write clinical experience details..."
- value={psyForm.bio}
- onChange={(e) => setPsyForm({ ...psyForm, bio: e.target.value })}
- className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors resize-none"
- />
- </div>
+                <div className="sm:col-span-2 space-y-1">
+                  <label className="text-sm font-bold text-zinc-400">Specialties (comma-separated)</label>
+                  <input
+                    type="text"
+                    placeholder="Anxiety, Stress Management, Mood Disorders"
+                    value={psyForm.specialties}
+                    onChange={(e) => setPsyForm({ ...psyForm, specialties: e.target.value })}
+                    className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                  />
+                </div>
 
- {/* Availability Timings */}
- <div className="sm:col-span-2 border-t border-zinc-800 pt-4 space-y-4">
- <h4 className="text-sm font-bold text-zinc-300 font-header">Availability Timings</h4>
+                <div className="sm:col-span-2 space-y-1">
+                  <label className="text-sm font-bold text-zinc-400">Professional Bio</label>
+                  <textarea
+                    rows={4}
+                    placeholder="Write clinical experience details..."
+                    value={psyForm.bio}
+                    onChange={(e) => setPsyForm({ ...psyForm, bio: e.target.value })}
+                    className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors resize-none"
+                  />
+                </div>
 
- {/* Operational Days */}
- <div className="space-y-1.5">
- <label className="text-xs font-bold text-zinc-400 block">Operational Days</label>
- <div className="flex flex-wrap gap-1.5">
- {[
- { label: 'Mon', index: 1 },
- { label: 'Tue', index: 2 },
- { label: 'Wed', index: 3 },
- { label: 'Thu', index: 4 },
- { label: 'Fri', index: 5 },
- { label: 'Sat', index: 6 },
- { label: 'Sun', index: 0 }
- ].map(day => {
- const active = adminActiveDays[day.index];
- return (
- <button
- key={day.index}
- type="button"
- onClick={() => toggleAdminDay(day.index)}
- className={`px-3 py-1.5 border rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer ${active
- ? 'bg-brand text-zinc-955 font-bold border-none'
- : 'bg-zinc-955 border-zinc-850 text-zinc-500 hover:border-zinc-750'
- }`}
- >
- {day.label}
- </button>
- );
- })}
- </div>
- </div>
+                {/* Availability Timings */}
+                <div className="sm:col-span-2 border-t border-zinc-800 pt-4 space-y-4">
+                  <h4 className="text-sm font-bold text-zinc-300 font-header">Availability Timings</h4>
 
- {/* Active Timing Slots */}
- <div className="space-y-1.5">
- <label className="text-xs font-bold text-zinc-400 block">Timing Slots (Active)</label>
- <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[200px] overflow-y-auto pr-1">
- {adminAllSlots.map(slot => {
- const exists = adminAvailableSlots.includes(slot);
- return (
- <div key={slot} className="flex items-center gap-1.5 w-full">
- <button
- type="button"
- onClick={() => {
- if (exists) {
- setAdminAvailableSlots(prev => prev.filter(s => s !== slot));
- } else {
- setAdminAvailableSlots(prev => [...prev, slot]);
- }
- }}
- className={`flex-1 py-2 border rounded-lg font-bold transition cursor-pointer text-xs ${exists
- ? 'bg-brand/10 border-brand text-brand'
- : 'bg-zinc-955 border-zinc-850 text-zinc-400 hover:border-zinc-750'
- }`}
- >
- {slot}
- </button>
- <button
- type="button"
- onClick={() => handleRemoveAdminSlot(slot)}
- className="px-2 py-2 bg-zinc-950 border border-zinc-850 hover:bg-rose-955/40 hover:border-rose-900 text-zinc-500 hover:text-rose-400 rounded-lg text-xs font-bold transition cursor-pointer shrink-0 font-header"
- title="Remove Slot"
- >
- Remove
- </button>
- </div>
- );
- })}
- {adminAllSlots.length === 0 && (
- <div className="col-span-2 py-4 bg-zinc-955/40 border border-dashed border-zinc-850 rounded-lg text-zinc-550 italic text-xs text-center w-full">
- No timing slots configured. Use the controls below to add custom slots or generate from a time range.
- </div>
- )}
- </div>
- </div>
+                  {/* Operational Days */}
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-zinc-400 block">Operational Days</label>
+                    <div className="flex flex-wrap gap-1.5">
+                      {[
+                        { label: 'Mon', index: 1 },
+                        { label: 'Tue', index: 2 },
+                        { label: 'Wed', index: 3 },
+                        { label: 'Thu', index: 4 },
+                        { label: 'Fri', index: 5 },
+                        { label: 'Sat', index: 6 },
+                        { label: 'Sun', index: 0 }
+                      ].map(day => {
+                        const active = adminActiveDays[day.index];
+                        return (
+                          <button
+                            key={day.index}
+                            type="button"
+                            onClick={() => toggleAdminDay(day.index)}
+                            className={`px-3 py-1.5 border rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer ${active
+                              ? 'bg-brand text-zinc-955 font-bold border-none'
+                              : 'bg-zinc-955 border-zinc-850 text-zinc-500 hover:border-zinc-750'
+                              }`}
+                          >
+                            {day.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
 
- {/* Add Custom Timing Slot */}
- <div className="space-y-1.5 bg-zinc-955/50 border border-zinc-850/60 p-3.5 rounded-lg">
- <label className="text-xs font-bold text-zinc-350 block">Add Custom Timing Slot</label>
- <div className="flex gap-2 items-end">
- <div className="flex-1 space-y-0.5">
- <label className="text-[10px] text-zinc-500 font-bold block">Hour</label>
- <select
- value={adminCustomHour}
- onChange={(e) => setAdminCustomHour(e.target.value)}
- className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
- >
- {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map(h => (
- <option key={h} value={h}>{h}</option>
- ))}
- </select>
- </div>
- <div className="flex-1 space-y-0.5">
- <label className="text-[10px] text-zinc-500 font-bold block">Minute</label>
- <select
- value={adminCustomMinute}
- onChange={(e) => setAdminCustomMinute(e.target.value)}
- className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-855 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
- >
- {['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55'].map(m => (
- <option key={m} value={m}>{m}</option>
- ))}
- </select>
- </div>
- <div className="flex-1 space-y-0.5">
- <label className="text-[10px] text-zinc-500 font-bold block">AM/PM</label>
- <select
- value={adminCustomPeriod}
- onChange={(e) => setAdminCustomPeriod(e.target.value)}
- className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-855 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
- >
- <option value="AM">AM</option>
- <option value="PM">PM</option>
- </select>
- </div>
- <button
- type="button"
- onClick={handleAddAdminCustomSlot}
- className="bg-brand/10 hover:bg-brand text-brand hover:text-zinc-955 px-3 py-1.5 text-xs font-bold rounded-full transition-colors border border-brand/30 hover:border-brand cursor-pointer shrink-0 h-[30px] flex items-center justify-center font-header"
- >
- Add Slot
- </button>
- </div>
- </div>
+                  {/* Active Timing Slots */}
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-zinc-400 block">Timing Slots (Active)</label>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[200px] overflow-y-auto pr-1">
+                      {adminAllSlots.map(slot => {
+                        const exists = adminAvailableSlots.includes(slot);
+                        return (
+                          <div key={slot} className="flex items-center gap-1.5 w-full">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (exists) {
+                                  setAdminAvailableSlots(prev => prev.filter(s => s !== slot));
+                                } else {
+                                  setAdminAvailableSlots(prev => [...prev, slot]);
+                                }
+                              }}
+                              className={`flex-1 py-2 border rounded-lg font-bold transition cursor-pointer text-xs ${exists
+                                ? 'bg-brand/10 border-brand text-brand'
+                                : 'bg-zinc-955 border-zinc-850 text-zinc-400 hover:border-zinc-750'
+                                }`}
+                            >
+                              {slot}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveAdminSlot(slot)}
+                              className="px-2 py-2 bg-zinc-950 border border-zinc-850 hover:bg-rose-955/40 hover:border-rose-900 text-zinc-500 hover:text-rose-400 rounded-lg text-xs font-bold transition cursor-pointer shrink-0 font-header"
+                              title="Remove Slot"
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        );
+                      })}
+                      {adminAllSlots.length === 0 && (
+                        <div className="col-span-2 py-4 bg-zinc-955/40 border border-dashed border-zinc-850 rounded-lg text-zinc-550 italic text-xs text-center w-full">
+                          No timing slots configured. Use the controls below to add custom slots or generate from a time range.
+                        </div>
+                      )}
+                    </div>
+                  </div>
 
- {/* Add Custom Time Range */}
- <div className="space-y-1.5 bg-zinc-955/50 border border-zinc-850/60 p-3.5 rounded-lg">
- <label className="text-xs font-bold text-zinc-350 block">Generate Timing Slots from Range</label>
- <div className="flex flex-col gap-2">
- <div className="flex gap-1.5 items-end">
- <span className="text-xs text-zinc-500 font-bold pb-1.5 tracking-wide w-10 text-left">From:</span>
- <div className="flex-1 space-y-0.5">
- <select
- value={adminFromHour}
- onChange={(e) => setAdminFromHour(e.target.value)}
- className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
- >
- {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map(h => (
- <option key={h} value={h}>{h}</option>
- ))}
- </select>
- </div>
- <div className="flex-1 space-y-0.5">
- <select
- value={adminFromMinute}
- onChange={(e) => setAdminFromMinute(e.target.value)}
- className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
- >
- {['00', '15', '30', '45'].map(m => (
- <option key={m} value={m}>{m}</option>
- ))}
- </select>
- </div>
- <div className="flex-1 space-y-0.5">
- <select
- value={adminFromPeriod}
- onChange={(e) => setAdminFromPeriod(e.target.value)}
- className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-855 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
- >
- <option value="AM">AM</option>
- <option value="PM">PM</option>
- </select>
- </div>
- </div>
+                  {/* Add Custom Timing Slot */}
+                  <div className="space-y-1.5 bg-zinc-955/50 border border-zinc-850/60 p-3.5 rounded-lg">
+                    <label className="text-xs font-bold text-zinc-350 block">Add Custom Timing Slot</label>
+                    <div className="flex gap-2 items-end">
+                      <div className="flex-1 space-y-0.5">
+                        <label className="text-[10px] text-zinc-500 font-bold block">Hour</label>
+                        <select
+                          value={adminCustomHour}
+                          onChange={(e) => setAdminCustomHour(e.target.value)}
+                          className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+                        >
+                          {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map(h => (
+                            <option key={h} value={h}>{h}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="flex-1 space-y-0.5">
+                        <label className="text-[10px] text-zinc-500 font-bold block">Minute</label>
+                        <select
+                          value={adminCustomMinute}
+                          onChange={(e) => setAdminCustomMinute(e.target.value)}
+                          className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-855 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+                        >
+                          {['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55'].map(m => (
+                            <option key={m} value={m}>{m}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="flex-1 space-y-0.5">
+                        <label className="text-[10px] text-zinc-500 font-bold block">AM/PM</label>
+                        <select
+                          value={adminCustomPeriod}
+                          onChange={(e) => setAdminCustomPeriod(e.target.value)}
+                          className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-855 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+                        >
+                          <option value="AM">AM</option>
+                          <option value="PM">PM</option>
+                        </select>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={handleAddAdminCustomSlot}
+                        className="bg-brand/10 hover:bg-brand text-brand hover:text-zinc-955 px-3 py-1.5 text-xs font-bold rounded-full transition-colors border border-brand/30 hover:border-brand cursor-pointer shrink-0 h-[30px] flex items-center justify-center font-header"
+                      >
+                        Add Slot
+                      </button>
+                    </div>
+                  </div>
 
- <div className="flex gap-1.5 items-end">
- <span className="text-xs text-zinc-500 font-bold pb-1.5 tracking-wide w-10 text-left">To:</span>
- <div className="flex-1 space-y-0.5">
- <select
- value={adminToHour}
- onChange={(e) => setAdminToHour(e.target.value)}
- className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
- >
- {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map(h => (
- <option key={h} value={h}>{h}</option>
- ))}
- </select>
- </div>
- <div className="flex-1 space-y-0.5">
- <select
- value={adminToMinute}
- onChange={(e) => setAdminToMinute(e.target.value)}
- className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
- >
- {['00', '15', '30', '45'].map(m => (
- <option key={m} value={m}>{m}</option>
- ))}
- </select>
- </div>
- <div className="flex-1 space-y-0.5">
- <select
- value={adminToPeriod}
- onChange={(e) => setAdminToPeriod(e.target.value)}
- className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-855 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
- >
- <option value="AM">AM</option>
- <option value="PM">PM</option>
- </select>
- </div>
- </div>
+                  {/* Add Custom Time Range */}
+                  <div className="space-y-1.5 bg-zinc-955/50 border border-zinc-850/60 p-3.5 rounded-lg">
+                    <label className="text-xs font-bold text-zinc-350 block">Generate Timing Slots from Range</label>
+                    <div className="flex flex-col gap-2">
+                      <div className="flex gap-1.5 items-end">
+                        <span className="text-xs text-zinc-500 font-bold pb-1.5 tracking-wide w-10 text-left">From:</span>
+                        <div className="flex-1 space-y-0.5">
+                          <select
+                            value={adminFromHour}
+                            onChange={(e) => setAdminFromHour(e.target.value)}
+                            className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+                          >
+                            {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map(h => (
+                              <option key={h} value={h}>{h}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="flex-1 space-y-0.5">
+                          <select
+                            value={adminFromMinute}
+                            onChange={(e) => setAdminFromMinute(e.target.value)}
+                            className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+                          >
+                            {['00', '15', '30', '45'].map(m => (
+                              <option key={m} value={m}>{m}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="flex-1 space-y-0.5">
+                          <select
+                            value={adminFromPeriod}
+                            onChange={(e) => setAdminFromPeriod(e.target.value)}
+                            className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-855 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+                          >
+                            <option value="AM">AM</option>
+                            <option value="PM">PM</option>
+                          </select>
+                        </div>
+                      </div>
 
- <button
- type="button"
- onClick={() => {
- const fromStr = `${adminFromHour}:${adminFromMinute} ${adminFromPeriod}`;
- const toStr = `${adminToHour}:${adminToMinute} ${adminToPeriod}`;
- addAdminTimeRangeSlots(fromStr, toStr);
- }}
- className="w-full mt-1 bg-brand/10 hover:bg-brand text-brand hover:text-zinc-955 py-2 text-xs font-bold rounded-lg transition-colors border border-brand/30 hover:border-brand cursor-pointer flex items-center justify-center font-header"
- >
- Generate Hourly Slots from Range
- </button>
- </div>
- </div>
- </div>
- </div>
+                      <div className="flex gap-1.5 items-end">
+                        <span className="text-xs text-zinc-500 font-bold pb-1.5 tracking-wide w-10 text-left">To:</span>
+                        <div className="flex-1 space-y-0.5">
+                          <select
+                            value={adminToHour}
+                            onChange={(e) => setAdminToHour(e.target.value)}
+                            className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+                          >
+                            {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map(h => (
+                              <option key={h} value={h}>{h}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="flex-1 space-y-0.5">
+                          <select
+                            value={adminToMinute}
+                            onChange={(e) => setAdminToMinute(e.target.value)}
+                            className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+                          >
+                            {['00', '15', '30', '45'].map(m => (
+                              <option key={m} value={m}>{m}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="flex-1 space-y-0.5">
+                          <select
+                            value={adminToPeriod}
+                            onChange={(e) => setAdminToPeriod(e.target.value)}
+                            className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-855 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+                          >
+                            <option value="AM">AM</option>
+                            <option value="PM">PM</option>
+                          </select>
+                        </div>
+                      </div>
 
- {psyFormError && (
- <p className="text-sm text-rose-500 font-bold tracking-wide">{psyFormError}</p>
- )}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const fromStr = `${adminFromHour}:${adminFromMinute} ${adminFromPeriod}`;
+                          const toStr = `${adminToHour}:${adminToMinute} ${adminToPeriod}`;
+                          addAdminTimeRangeSlots(fromStr, toStr);
+                        }}
+                        className="w-full mt-1 bg-brand/10 hover:bg-brand text-brand hover:text-zinc-955 py-2 text-xs font-bold rounded-lg transition-colors border border-brand/30 hover:border-brand cursor-pointer flex items-center justify-center font-header"
+                      >
+                        Generate Hourly Slots from Range
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
- {psyFormSuccess && (
- <p className="text-sm text-emerald-500 font-bold tracking-wide">{psyFormSuccess}</p>
- )}
+              {psyFormError && (
+                <p className="text-sm text-rose-500 font-bold tracking-wide">{psyFormError}</p>
+              )}
 
- <div className="flex gap-3 pt-2">
- <button
- type="button"
- onClick={() => { setIsAddPsyOpen(false); setIsEditPsyOpen(false); }}
- className="flex-1 py-3 border border-zinc-800 hover:bg-zinc-850 text-white font-bold text-sm rounded-lg cursor-pointer transition text-center bg-transparent"
- >
- Cancel
- </button>
- <button
- type="submit"
- disabled={isSavingForm}
- className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm rounded-full cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
- >
- {isSavingForm && <Loader2 className="w-4 h-4 animate-spin" />}
- {isAddPsyOpen ? 'Save Psychologist' : 'Update Details'}
- </button>
- </div>
- </form>
- </div>
- </div>
- )}
+              {psyFormSuccess && (
+                <p className="text-sm text-emerald-500 font-bold tracking-wide">{psyFormSuccess}</p>
+              )}
 
-{viewingPsychologist && (
- <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
- <div
- className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
- onClick={() => setViewingPsychologist(null)}
- />
- <div className="relative w-full max-w-2xl bg-zinc-900 border border-zinc-800 rounded-lg p-6 sm:p-8 shadow-2xl space-y-6 text-left text-white z-10 animate-in zoom-in-95 duration-200 overflow-y-auto max-h-[85vh]">
- <div className="flex justify-between items-start">
- <div className="flex items-center gap-3">
- <div className="w-12 h-12 rounded-lg bg-brand/10 border border-brand/20 text-brand flex items-center justify-center font-bold text-lg shrink-0 overflow-hidden">
- {viewingPsychologist.profilePic || viewingPsychologist.image ? (
- <img src={viewingPsychologist.profilePic || viewingPsychologist.image} alt={viewingPsychologist.name} className="w-full h-full object-cover" />
- ) : (
- getInitials(viewingPsychologist.name)
- )}
- </div>
- <div>
- <h3 className="text-base font-bold text-white font-header flex items-center gap-2">
- <Award className="w-5 h-5 text-brand" /> Psychologist Profile Details
- </h3>
- <p className="text-sm text-zinc-500 mt-1">Credentials, availability, rates, and booking history logs.</p>
- </div>
- </div>
- <button
- onClick={() => setViewingPsychologist(null)}
- className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition cursor-pointer border-none bg-transparent"
- >
- <X className="w-4 h-4" />
- </button>
- </div>
+              <div className="flex gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => { setIsAddPsyOpen(false); setIsEditPsyOpen(false); }}
+                  className="flex-1 py-3 border border-zinc-800 hover:bg-zinc-850 text-white font-bold text-sm rounded-lg cursor-pointer transition text-center bg-transparent"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSavingForm}
+                  className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm rounded-full cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isSavingForm && <Loader2 className="w-4 h-4 animate-spin" />}
+                  {isAddPsyOpen ? 'Save Psychologist' : 'Update Details'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
- {(() => {
- const title = viewingPsychologist.title || 'Consultant Psychologist';
- const phone = viewingPsychologist.phone || 'N/A';
- const hours = viewingPsychologist.hours !== undefined ? viewingPsychologist.hours : 0;
- const rawModes = viewingPsychologist.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP'];
- const modes = Array.isArray(rawModes) ? rawModes : (typeof rawModes === 'string' ? rawModes.split(',').map(m => m.trim()) : []);
- const education = viewingPsychologist.education || 'MPhil Clinical Psychology';
- const rawSpecialties = viewingPsychologist.specialties || 'Anxiety, Stress Management, Mood Disorders';
- const specialtiesList = Array.isArray(rawSpecialties) ? rawSpecialties : (typeof rawSpecialties === 'string' ? rawSpecialties.split(',').map(s => s.trim()) : []);
- const price = viewingPsychologist.price || 1200;
- const lang = viewingPsychologist.lang || 'English, Malayalam';
- const bio = viewingPsychologist.bio || viewingPsychologist.experience || 'Professional clinical therapist committed to student wellbeing.';
+      {viewingPsychologist && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
+            onClick={() => setViewingPsychologist(null)}
+          />
+          <div className="relative w-full max-w-2xl bg-zinc-900 border border-zinc-800 rounded-lg p-6 sm:p-8 shadow-2xl space-y-6 text-left text-white z-10 animate-in zoom-in-95 duration-200 overflow-y-auto max-h-[85vh]">
+            <div className="flex justify-between items-start">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-lg bg-brand/10 border border-brand/20 text-brand flex items-center justify-center font-bold text-lg shrink-0 overflow-hidden">
+                  {viewingPsychologist.profilePic || viewingPsychologist.image ? (
+                    <img src={viewingPsychologist.profilePic || viewingPsychologist.image} alt={viewingPsychologist.name} className="w-full h-full object-cover" />
+                  ) : (
+                    getInitials(viewingPsychologist.name)
+                  )}
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-white font-header flex items-center gap-2">
+                    <Award className="w-5 h-5 text-brand" /> Psychologist Profile Details
+                  </h3>
+                  <p className="text-sm text-zinc-500 mt-1">Credentials, availability, rates, and booking history logs.</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setViewingPsychologist(null)}
+                className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition cursor-pointer border-none bg-transparent"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
 
- return (
- <div className="space-y-6">
- {/* Grid details */}
- <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
- {/* Professional Info */}
- <div className="bg-zinc-955 border border-zinc-850 rounded-lg p-4 space-y-3.5 text-sm">
- <span className="text-sm font-bold text-zinc-500 block">Advisor Credentials</span>
- <div className="space-y-2.5">
- <div>
- <span className="text-zinc-500 block text-xs ">Professional Title</span>
- <span className="font-bold text-white">{title}</span>
- </div>
- <div>
- <span className="text-zinc-500 block text-sm ">Full Name</span>
- <span className="font-bold text-white">{viewingPsychologist.name}</span>
- </div>
- <div>
- <span className="text-zinc-500 block text-sm ">Email Address</span>
- <span className="font-semibold text-zinc-300">{viewingPsychologist.email}</span>
- </div>
- <div>
- <span className="text-zinc-500 block text-xs ">Phone Number</span>
- <span className="font-semibold text-zinc-300">{phone}</span>
- </div>
- <div>
- <span className="text-zinc-550 block text-sm ">Education Qualification</span>
- <span className="font-bold text-zinc-350">{education}</span>
- </div>
- <div>
- <span className="text-zinc-500 block text-xs ">Experience Hours</span>
- <span className="font-bold text-zinc-300">{hours} hours</span>
- </div>
- <div>
- <span className="text-zinc-500 block text-sm ">Consultation Fee</span>
- <span className="font-bold text-brand">₹{price} / hour</span>
- </div>
- <div>
- <span className="text-zinc-500 block text-sm ">Languages Spoken</span>
- <span className="font-medium text-zinc-300">{lang}</span>
- </div>
- <div className="flex gap-2 items-center pt-1">
- <span className={`px-2.5 py-0.5 rounded text-sm font-bold ${viewingPsychologist.status === 'ACTIVE'
- ? 'bg-emerald-955/20 border border-emerald-900/30 text-emerald-450'
- : viewingPsychologist.status === 'REJECTED'
- ? 'bg-rose-955/20 border border-rose-900/30 text-rose-455'
- : 'bg-amber-955/20 border border-amber-900/30 text-amber-500'
- }`}>
- {viewingPsychologist.status === 'ACTIVE' ? 'Verified' : viewingPsychologist.status === 'REJECTED' ? 'Rejected' : 'Pending Verification'}
- </span>
- <a
- href={`#/advisor/${viewingPsychologist.id}`}
- target="_blank"
- rel="noopener noreferrer"
- className="px-2.5 py-0.5 bg-zinc-900 border border-zinc-800 hover:text-brand rounded text-sm font-bold transition"
- >
- Preview Profile
- </a>
- </div>
- </div>
- </div>
+            {(() => {
+              const title = viewingPsychologist.title || 'Consultant Psychologist';
+              const phone = viewingPsychologist.phone || 'N/A';
+              const hours = viewingPsychologist.hours !== undefined ? viewingPsychologist.hours : 0;
+              const rawModes = viewingPsychologist.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP'];
+              const modes = Array.isArray(rawModes) ? rawModes : (typeof rawModes === 'string' ? rawModes.split(',').map(m => m.trim()) : []);
+              const education = viewingPsychologist.education || 'MPhil Clinical Psychology';
+              const rawSpecialties = viewingPsychologist.specialties || 'Anxiety, Stress Management, Mood Disorders';
+              const specialtiesList = Array.isArray(rawSpecialties) ? rawSpecialties : (typeof rawSpecialties === 'string' ? rawSpecialties.split(',').map(s => s.trim()) : []);
+              const price = viewingPsychologist.price || 1200;
+              const lang = viewingPsychologist.lang || 'English, Malayalam';
+              const bio = viewingPsychologist.bio || viewingPsychologist.experience || 'Professional clinical therapist committed to student wellbeing.';
 
- {/* Bio & Availability */}
- <div className="space-y-4">
- {/* Bio */}
- <div className="bg-zinc-955 border border-zinc-850 rounded-lg p-4 space-y-2 text-sm">
- <span className="text-sm font-bold text-zinc-500 block">Therapist Bio</span>
- <p className="text-zinc-300 leading-relaxed italic text-[12.5px]">
- "{bio}"
- </p>
- </div>
+              return (
+                <div className="space-y-6">
+                  {/* Grid details */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Professional Info */}
+                    <div className="bg-zinc-955 border border-zinc-850 rounded-lg p-4 space-y-3.5 text-sm">
+                      <span className="text-sm font-bold text-zinc-500 block">Advisor Credentials</span>
+                      <div className="space-y-2.5">
+                        <div>
+                          <span className="text-zinc-500 block text-xs ">Professional Title</span>
+                          <span className="font-bold text-white">{title}</span>
+                        </div>
+                        <div>
+                          <span className="text-zinc-500 block text-sm ">Full Name</span>
+                          <span className="font-bold text-white">{viewingPsychologist.name}</span>
+                        </div>
+                        <div>
+                          <span className="text-zinc-500 block text-sm ">Email Address</span>
+                          <span className="font-semibold text-zinc-300">{viewingPsychologist.email}</span>
+                        </div>
+                        <div>
+                          <span className="text-zinc-500 block text-xs ">Phone Number</span>
+                          <span className="font-semibold text-zinc-300">{phone}</span>
+                        </div>
+                        <div>
+                          <span className="text-zinc-550 block text-sm ">Education Qualification</span>
+                          <span className="font-bold text-zinc-350">{education}</span>
+                        </div>
+                        <div>
+                          <span className="text-zinc-500 block text-xs ">Experience Hours</span>
+                          <span className="font-bold text-zinc-300">{hours} hours</span>
+                        </div>
+                        <div>
+                          <span className="text-zinc-500 block text-sm ">Consultation Fee</span>
+                          <span className="font-bold text-brand">₹{price} / hour</span>
+                        </div>
+                        <div>
+                          <span className="text-zinc-500 block text-sm ">Languages Spoken</span>
+                          <span className="font-medium text-zinc-300">{lang}</span>
+                        </div>
+                        <div className="flex gap-2 items-center pt-1">
+                          <span className={`px-2.5 py-0.5 rounded text-sm font-bold ${viewingPsychologist.status === 'ACTIVE'
+                            ? 'bg-emerald-955/20 border border-emerald-900/30 text-emerald-450'
+                            : viewingPsychologist.status === 'REJECTED'
+                              ? 'bg-rose-955/20 border border-rose-900/30 text-rose-455'
+                              : 'bg-amber-955/20 border border-amber-900/30 text-amber-500'
+                            }`}>
+                            {viewingPsychologist.status === 'ACTIVE' ? 'Verified' : viewingPsychologist.status === 'REJECTED' ? 'Rejected' : 'Pending Verification'}
+                          </span>
+                          <a
+                            href={`#/advisor/${viewingPsychologist.id}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-2.5 py-0.5 bg-zinc-900 border border-zinc-800 hover:text-brand rounded text-sm font-bold transition"
+                          >
+                            Preview Profile
+                          </a>
+                        </div>
+                      </div>
+                    </div>
 
- {/* Specialties List */}
- <div className="bg-zinc-955 border border-zinc-850 rounded-lg p-4 space-y-2">
- <span className="text-sm font-bold text-zinc-500 block">Areas of Expertise</span>
- <div className="flex flex-wrap gap-1.5 pt-1">
- {specialtiesList.map(spec => (
- <span
- key={spec}
- className="px-2.5 py-0.5 rounded-full bg-zinc-900 border border-zinc-800 text-sm font-bold text-zinc-400 tracking-wide"
- >
- {spec}
- </span>
- ))}
- </div>
- </div>
+                    {/* Bio & Availability */}
+                    <div className="space-y-4">
+                      {/* Bio */}
+                      <div className="bg-zinc-955 border border-zinc-850 rounded-lg p-4 space-y-2 text-sm">
+                        <span className="text-sm font-bold text-zinc-500 block">Therapist Bio</span>
+                        <p className="text-zinc-300 leading-relaxed italic text-[12.5px]">
+                          "{bio}"
+                        </p>
+                      </div>
 
- {/* Supported Session Modes */}
- <div className="bg-zinc-955 border border-zinc-850 rounded-lg p-4 space-y-2">
- <span className="text-sm font-bold text-zinc-500 block">Supported Session Modes</span>
- <div className="flex flex-wrap gap-1.5 pt-1">
- {modes.map(mode => (
- <span
- key={mode}
- className="px-2.5 py-0.5 rounded-full bg-zinc-900 border border-zinc-800 text-xs font-bold text-zinc-400 tracking-wide"
- >
- {mode === 'DOOR_STEP' ? 'Doorstep' : mode.charAt(0) + mode.slice(1).toLowerCase()}
- </span>
- ))}
- </div>
- </div>
+                      {/* Specialties List */}
+                      <div className="bg-zinc-955 border border-zinc-850 rounded-lg p-4 space-y-2">
+                        <span className="text-sm font-bold text-zinc-500 block">Areas of Expertise</span>
+                        <div className="flex flex-wrap gap-1.5 pt-1">
+                          {specialtiesList.map(spec => (
+                            <span
+                              key={spec}
+                              className="px-2.5 py-0.5 rounded-full bg-zinc-900 border border-zinc-800 text-sm font-bold text-zinc-400 tracking-wide"
+                            >
+                              {spec}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
 
- {/* Active Availability Timings */}
- <div className="bg-zinc-955 border border-zinc-850 rounded-lg p-4 space-y-2.5 text-sm">
- <span className="text-sm font-bold text-zinc-500 block">Active Availability Timings</span>
- <div>
- <span className="text-zinc-500 block text-xs ">Operational Days</span>
- <span className="font-semibold text-zinc-300">
- {viewingPsychologist.availability?.activeDays
- ? Object.entries(viewingPsychologist.availability.activeDays)
- .filter(([_, active]) => active)
- .map(([dayIndex]) => {
- const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
- return days[Number(dayIndex)];
- })
- .join(', ') || 'None'
- : 'Monday, Tuesday, Wednesday, Thursday, Friday'}
- </span>
- </div>
- <div className="pt-1.5">
- <span className="text-zinc-500 block text-xs ">Available Time Slots</span>
- <div className="flex flex-wrap gap-1 mt-1.5 max-h-[100px] overflow-y-auto pr-1">
- {viewingPsychologist.availability?.availableSlots?.length > 0 ? (
- viewingPsychologist.availability.availableSlots.map(slot => (
- <span key={slot} className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-xs font-bold text-zinc-400">
- {slot}
- </span>
- ))
- ) : (
- <span className="text-zinc-550 italic text-xs">No timing slots configured.</span>
- )}
- </div>
- </div>
- </div>
- </div>
- </div>
+                      {/* Supported Session Modes */}
+                      <div className="bg-zinc-955 border border-zinc-850 rounded-lg p-4 space-y-2">
+                        <span className="text-sm font-bold text-zinc-500 block">Supported Session Modes</span>
+                        <div className="flex flex-wrap gap-1.5 pt-1">
+                          {modes.map(mode => (
+                            <span
+                              key={mode}
+                              className="px-2.5 py-0.5 rounded-full bg-zinc-900 border border-zinc-800 text-xs font-bold text-zinc-400 tracking-wide"
+                            >
+                              {mode === 'DOOR_STEP' ? 'Doorstep' : mode.charAt(0) + mode.slice(1).toLowerCase()}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
 
- {/* Consult bookings count */}
- <div className="space-y-2">
- <div className="flex justify-between items-center">
- <span className="text-sm font-bold text-zinc-500 block">Consultation Schedule History</span>
- <span className="text-sm text-brand font-bold ">
- {bookingsDb.filter(b => b.advisorId === viewingPsychologist.id || (b.advisorName && b.advisorName.toLowerCase() === viewingPsychologist.name.toLowerCase())).length} consultations booked
- </span>
- </div>
+                      {/* Active Availability Timings */}
+                      <div className="bg-zinc-955 border border-zinc-850 rounded-lg p-4 space-y-2.5 text-sm">
+                        <span className="text-sm font-bold text-zinc-500 block">Active Availability Timings</span>
+                        <div>
+                          <span className="text-zinc-500 block text-xs ">Operational Days</span>
+                          <span className="font-semibold text-zinc-300">
+                            {viewingPsychologist.availability?.activeDays
+                              ? Object.entries(viewingPsychologist.availability.activeDays)
+                                .filter(([_, active]) => active)
+                                .map(([dayIndex]) => {
+                                  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                                  return days[Number(dayIndex)];
+                                })
+                                .join(', ') || 'None'
+                              : 'Monday, Tuesday, Wednesday, Thursday, Friday'}
+                          </span>
+                        </div>
+                        <div className="pt-1.5">
+                          <span className="text-zinc-500 block text-xs ">Available Time Slots</span>
+                          <div className="flex flex-wrap gap-1 mt-1.5 max-h-[100px] overflow-y-auto pr-1">
+                            {viewingPsychologist.availability?.availableSlots?.length > 0 ? (
+                              viewingPsychologist.availability.availableSlots.map(slot => (
+                                <span key={slot} className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-xs font-bold text-zinc-400">
+                                  {slot}
+                                </span>
+                              ))
+                            ) : (
+                              <span className="text-zinc-550 italic text-xs">No timing slots configured.</span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
 
- <div className="border border-zinc-850 rounded-lg overflow-hidden bg-zinc-955 max-h-[160px] overflow-y-auto">
- <div className="overflow-x-auto w-full">
- <table className="w-full text-sm border-collapse text-left min-w-[420px]">
- <thead>
- <tr className="bg-zinc-900/50 text-zinc-500 font-bold border-b border-zinc-855">
- <th className="p-2.5">Client Student</th>
- <th className="p-2.5">Date & Time</th>
- <th className="p-2.5">Type & Mode</th>
- <th className="p-2.5 text-center">Status</th>
- </tr>
- </thead>
- <tbody>
- {(() => {
- const psyBookings = bookingsDb.filter(b => b.advisorId === viewingPsychologist.id || (b.advisorName && b.advisorName.toLowerCase() === viewingPsychologist.name.toLowerCase()));
- if (psyBookings.length === 0) {
- return (
- <tr>
- <td colSpan={4} className="p-4 text-center text-zinc-650 italic">No scheduled slot logs.</td>
- </tr>
- );
- }
- return psyBookings.map(b => {
- const student = usersDb.find(u => u.id === b.userId);
- return (
- <tr key={b.id} className="border-b border-zinc-900/60 hover:bg-zinc-900/30">
- <td className="p-2.5">
- <span className="text-white block font-semibold">{student ? student.name : 'Unknown Student'}</span>
- <span className="text-zinc-500 text-sm truncate block max-w-[150px]">{student ? student.email : ''}</span>
- </td>
- <td className="p-2.5">
- <span className="text-zinc-300 block font-semibold">{b.date}</span>
- <span className="text-zinc-500 text-sm">{b.time}</span>
- </td>
- <td className="p-2.5 text-zinc-400 font-medium">
- {b.service === 'counselling' ? 'Wellbeing' : 'Career'} ({b.mode})
- </td>
- <td className="p-2.5 text-center">
- <span className={`px-2 py-0.5 rounded text-sm font-bold ${b.status === 'CONFIRMED' ? 'bg-indigo-950/20 border border-indigo-900/30 text-indigo-400' :
- b.status === 'COMPLETED' ? 'bg-emerald-955/20 border border-emerald-900/30 text-emerald-450' :
- b.status === 'CANCELLED' ? 'bg-rose-955/20 border border-rose-900/30 text-rose-500' :
- 'bg-zinc-800 border border-zinc-700 text-zinc-400'
- }`}>
- {b.status}
- </span>
- </td>
- </tr>
- );
- });
- })()}
- </tbody>
- </table>
- </div>
- </div>
- </div>
- </div>
- );
- })()}
+                  {/* Consult bookings count */}
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm font-bold text-zinc-500 block">Consultation Schedule History</span>
+                      <span className="text-sm text-brand font-bold ">
+                        {bookingsDb.filter(b => b.advisorId === viewingPsychologist.id || (b.advisorName && b.advisorName.toLowerCase() === viewingPsychologist.name.toLowerCase())).length} consultations booked
+                      </span>
+                    </div>
 
- <div className="pt-2 flex justify-end">
- <button
- onClick={() => setViewingPsychologist(null)}
- className="px-6 py-2.5 border border-zinc-800 hover:bg-zinc-855 text-white font-bold text-sm rounded-lg cursor-pointer transition text-center border-none bg-transparent"
- >
- Close Profile
- </button>
- </div>
- </div>
- </div>
- )}
+                    <div className="border border-zinc-850 rounded-lg overflow-hidden bg-zinc-955 max-h-[160px] overflow-y-auto">
+                      <div className="overflow-x-auto w-full">
+                        <table className="w-full text-sm border-collapse text-left min-w-[420px]">
+                          <thead>
+                            <tr className="bg-zinc-900/50 text-zinc-500 font-bold border-b border-zinc-855">
+                              <th className="p-2.5">Client Student</th>
+                              <th className="p-2.5">Date & Time</th>
+                              <th className="p-2.5">Type & Mode</th>
+                              <th className="p-2.5 text-center">Status</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {(() => {
+                              const psyBookings = bookingsDb.filter(b => b.advisorId === viewingPsychologist.id || (b.advisorName && b.advisorName.toLowerCase() === viewingPsychologist.name.toLowerCase()));
+                              if (psyBookings.length === 0) {
+                                return (
+                                  <tr>
+                                    <td colSpan={4} className="p-4 text-center text-zinc-650 italic">No scheduled slot logs.</td>
+                                  </tr>
+                                );
+                              }
+                              return psyBookings.map(b => {
+                                const student = usersDb.find(u => u.id === b.userId);
+                                return (
+                                  <tr key={b.id} className="border-b border-zinc-900/60 hover:bg-zinc-900/30">
+                                    <td className="p-2.5">
+                                      <span className="text-white block font-semibold">{student ? student.name : 'Unknown Student'}</span>
+                                      <span className="text-zinc-500 text-sm truncate block max-w-[150px]">{student ? student.email : ''}</span>
+                                    </td>
+                                    <td className="p-2.5">
+                                      <span className="text-zinc-300 block font-semibold">{b.date}</span>
+                                      <span className="text-zinc-500 text-sm">{b.time}</span>
+                                    </td>
+                                    <td className="p-2.5 text-zinc-400 font-medium">
+                                      {b.service === 'counselling' ? 'Wellbeing' : 'Career'} ({b.mode})
+                                    </td>
+                                    <td className="p-2.5 text-center">
+                                      <span className={`px-2 py-0.5 rounded text-sm font-bold ${b.status === 'CONFIRMED' ? 'bg-indigo-950/20 border border-indigo-900/30 text-indigo-400' :
+                                        b.status === 'COMPLETED' ? 'bg-emerald-955/20 border border-emerald-900/30 text-emerald-450' :
+                                          b.status === 'CANCELLED' ? 'bg-rose-955/20 border border-rose-900/30 text-rose-500' :
+                                            'bg-zinc-800 border border-zinc-700 text-zinc-400'
+                                        }`}>
+                                        {b.status}
+                                      </span>
+                                    </td>
+                                  </tr>
+                                );
+                              });
+                            })()}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
 
-</>
+            <div className="pt-2 flex justify-end">
+              <button
+                onClick={() => setViewingPsychologist(null)}
+                className="px-6 py-2.5 border border-zinc-800 hover:bg-zinc-855 text-white font-bold text-sm rounded-lg cursor-pointer transition text-center border-none bg-transparent"
+              >
+                Close Profile
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+    </>
   );
 }
