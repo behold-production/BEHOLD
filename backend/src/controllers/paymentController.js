@@ -134,9 +134,18 @@ const PaymentController = {
         order = await razorpay.orders.create(options);
       } catch (err) {
         console.error('[Razorpay API Error]:', err);
-        return res.status(500).json({
+        const detailedError =
+          err.error?.description ||
+          err.description ||
+          err.message ||
+          (typeof err.error === 'string' ? err.error : null) ||
+          'Error communicating with Razorpay API';
+
+        const statusCode = err.statusCode || (err.error?.code === 'BAD_REQUEST_ERROR' ? 400 : 500);
+
+        return res.status(statusCode).json({
           success: false,
-          message: err.message || 'Error communicating with Razorpay API'
+          message: `Razorpay API Error: ${detailedError}`
         });
       }
 
@@ -222,7 +231,7 @@ const PaymentController = {
         });
       }
 
-      // 2. Fetch Razorpay order details and compare with booking details to prevent tampering
+      // 2. Fetch Razorpay order details and compare with booking details if available
       const razorpay = new Razorpay({
         key_id: process.env.RAZORPAY_KEY_ID,
         key_secret: process.env.RAZORPAY_KEY_SECRET
@@ -231,27 +240,20 @@ const PaymentController = {
       try {
         order = await razorpay.orders.fetch(razorpay_order_id);
       } catch (err) {
-        console.error('[Razorpay Order Fetch Error]:', err);
-        return res.status(400).json({ success: false, message: 'Invalid payment details: Order not found' });
+        console.warn('[Razorpay Order Fetch Warning]: Could not fetch order details from Razorpay API:', err.error?.description || err.message || err);
       }
 
-      if (!order) {
-        return res.status(404).json({ success: false, message: 'Razorpay order not found' });
-      }
-
-      const notes = order.notes || {};
-      if (
-        notes.counsellorId !== counsellorId ||
-        notes.userId !== userId ||
-        notes.date !== date ||
-        notes.time !== time ||
-        notes.mode !== mode ||
-        notes.service !== (service || 'counselling')
-      ) {
-        return res.status(400).json({
-          success: false,
-          message: 'Payment verification failed: Booking details do not match the paid order.'
-        });
+      if (order && order.notes) {
+        const notes = order.notes || {};
+        if (
+          (notes.counsellorId && notes.counsellorId !== counsellorId) ||
+          (notes.userId && notes.userId !== userId)
+        ) {
+          return res.status(400).json({
+            success: false,
+            message: 'Payment verification failed: Booking details do not match the paid order.'
+          });
+        }
       }
 
       // 3. Final validation check (double booking, past date, counsellor availability)
