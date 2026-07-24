@@ -1,89 +1,86 @@
 import React from 'react';
 
-const features = [
-  {
-    title: 'Expertise You Can Trust',
-    desc: 'Our certified counselors and mentors provide research-backed guidance grounded in psychological science and career development.',
-  },
-  {
-    title: 'End-To-End Support',
-    desc: 'From aptitude assessment and stream selection to university guidance, we manage every milestone of the student journey.',
-  },
-  {
-    title: 'Doorstep & Online Sessions',
-    desc: 'Available at home, in school, or online — expert counseling designed around your schedule and comfort.',
-  },
-  {
-    title: 'Student-Centric Approach',
-    desc: "Every plan is tailored to the individual student's strengths, interests, and aspirations for a deeply personal experience.",
-  },
-];
-
 export default function WhyChooseUs({ siteSettings }) {
-  const stats = [
-    { num: '10,000+', label: 'Sessions Completed' },
-    { num: '500+',    label: 'Students Guided'    },
-    { num: '98%',     label: 'Satisfaction Rate'  },
+  const pillars = [
+    {
+      badge: 'Certified Care',
+      title: 'Expertise Grounded in Psychological Science',
+      desc: 'Our CIGI-certified psychologists and mentors bring structured guidance to relieve stress and establish personal clarity.'
+    },
+    {
+      badge: '100% Confidential',
+      title: 'Private & Secure Online Sessions',
+      desc: 'Every session takes place in a confidential environment with instant Google Meet delivery and strict data protection.'
+    },
+    {
+      badge: 'Scientific Assessment',
+      title: 'Proven C-DAT Aptitude Mapping',
+      desc: 'Discover strengths in verbal, numerical, spatial, and mechanical reasoning through empirical psychometric evaluation.'
+    },
+    {
+      badge: 'Lifelong Growth',
+      title: 'Personalized Career & Academic Mentoring',
+      desc: 'Tailored stream selection for Class 8–12 and college planning with lifetime progress tracking in your personal portal.'
+    }
   ];
 
   return (
-    <section id="why-choose-us" className="pt-16 sm:pt-24 bg-white border-b border-gray-100">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
+    <section id="why-choose-us" className="py-16 sm:py-20 bg-white text-slate-900 border-b border-slate-100">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        {/* Header */}
-        <div className="max-w-3xl mb-16">
-          <span className="text-xs sm:text-sm font-bold tracking-widest uppercase text-gray-400 block mb-3">
-            Why Choose Us
+        {/* Section Header */}
+        <div className="text-center max-w-2xl mx-auto mb-14">
+          <span className="inline-block px-3 py-1 rounded-md bg-slate-100 text-slate-800 text-xs font-semibold mb-3">
+            Why Choose BEHOLD
           </span>
-          <h2
-            id="why-choose-us-title"
-            className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-4 tracking-tight leading-tight"
-          >
-            Built on Trust. Driven by Excellence.
+          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight leading-tight mb-3">
+            Built on Trust. Grounded in Psychological Science.
           </h2>
-          <p className="text-sm sm:text-base text-gray-600 font-normal leading-relaxed">
-            We combine psychological expertise, personalized mentorship, and efficient processes to deliver guidance that helps every student achieve their goals.
+          <p className="text-slate-600 text-sm leading-relaxed font-normal">
+            We provide a calm, reassuring, and scientifically backed environment to help students and parents make confident choices without stress.
           </p>
         </div>
 
-        {/* 2x2 Feature Grid with clean borders */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 border-t border-l border-gray-200">
-          {features.map((feat, i) => (
+        {/* Feature Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {pillars.map((item, idx) => (
             <div
-              key={i}
-              className="p-8 sm:p-10 border-b border-r border-gray-200 flex flex-col justify-between"
+              key={idx}
+              className="bg-white rounded-xl p-6 sm:p-7 border border-slate-200 hover:border-slate-300 shadow-xs transition-all duration-200 flex flex-col justify-between"
             >
-              <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-3">{feat.title}</h3>
-              <p className="text-gray-600 text-xs sm:text-sm leading-relaxed font-normal">{feat.desc}</p>
+              <div>
+                <div className="mb-4">
+                  <span className="text-xs font-semibold px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 border border-slate-200 inline-block">
+                    {item.badge}
+                  </span>
+                </div>
+                <h3 className="text-base sm:text-lg font-bold text-slate-900 mb-2">{item.title}</h3>
+                <p className="text-slate-600 text-xs sm:text-sm leading-relaxed font-normal mb-5">{item.desc}</p>
+              </div>
+
+              <div className="pt-3 border-t border-slate-100 flex items-center text-slate-900 text-xs font-semibold">
+                <span>Learn how we support you</span>
+              </div>
             </div>
           ))}
         </div>
 
-        {/* Ready to get started CTA */}
-        <div className="mt-16 flex flex-col items-start">
-          <p className="text-sm sm:text-base text-gray-600 font-medium mb-4">Ready to get started?</p>
+        {/* Banner */}
+        <div className="mt-10 bg-slate-900 text-white rounded-xl p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-sm">
+          <div>
+            <h3 className="text-lg sm:text-xl font-bold mb-1 text-white">Ready to take the first step towards peace & clarity?</h3>
+            <p className="text-slate-300 text-xs max-w-xl font-normal">
+              Book a confidential 1-on-1 session with a certified psychologist or career advisor today.
+            </p>
+          </div>
           <button
             onClick={() => { window.spaNavigate?.('/booking'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-            className="px-6 py-3 bg-gray-900 hover:bg-black text-white font-semibold text-sm rounded-lg transition shadow-sm border-none cursor-pointer"
+            className="px-5 py-3 bg-white hover:bg-slate-100 text-slate-900 font-bold text-xs rounded-lg transition-colors shrink-0 border-none cursor-pointer"
           >
             Book Appointment
           </button>
         </div>
 
-      </div>
-
-      {/* Full-width Black Stats Bar */}
-      <div className="bg-gray-950 text-white py-12 sm:py-16">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 divide-y sm:divide-y-0 sm:divide-x divide-gray-800">
-            {stats.map(({ num, label }, idx) => (
-              <div key={idx} className={`flex flex-col items-start ${idx > 0 ? 'pt-6 sm:pt-0 sm:pl-8' : ''}`}>
-                <div className="text-4xl sm:text-5xl font-serif font-bold text-white mb-1 leading-none">{num}</div>
-                <div className="text-xs sm:text-sm text-gray-400 font-medium">{label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
     </section>
   );

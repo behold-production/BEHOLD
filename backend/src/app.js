@@ -22,6 +22,7 @@ const paymentRoutes = require('./routes/paymentRoutes');
 const googleAuthRoutes = require('./routes/googleAuthRoutes');
 const cronRoutes = require('./routes/cronRoutes');
 const blogRoutes = require('./routes/blogRoutes');
+const whatsappRoutes = require('./routes/whatsappRoutes');
 const errorHandler = require('./middleware/errorMiddleware');
 
 const app = express();
@@ -30,12 +31,12 @@ const app = express();
 app.use(compression());
 
 // ─── Trust Proxy for Rate Limiting ──────────────────────────────────────────
-app.set('trust proxy', 1); // Essential for rate limiters behind a reverse proxy/load balancer (e.g., Vercel, AWS, Render)
+app.set('trust proxy', 1);
 
 // ─── Security Headers ────────────────────────────────────────────────────────
 app.use(
   helmet({
-    crossOriginResourcePolicy: { policy: 'cross-origin' } // allow images/uploads from other origins
+    crossOriginResourcePolicy: { policy: 'cross-origin' }
   })
 );
 
@@ -58,15 +59,14 @@ const allowedOrigins = [
   'http://localhost:3000',
   'https://www.behold.co.in',
   'https://behold.co.in',
-  /^http:\/\/192\.168\.29\.45:\d+$/, // Allow specific LAN IP for development
-  /^https:\/\/.*\.vercel\.app$/, // All Vercel preview deployments
-  process.env.FRONTEND_URL // Set this in Vercel env vars to your production URL
+  /^http:\/\/192\.168\.29\.45:\d+$/,
+  /^https:\/\/.*\.vercel\.app$/,
+  process.env.FRONTEND_URL
 ].filter(Boolean);
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (mobile apps, curl, server-to-server)
       if (!origin) return callback(null, true);
       const isAllowed = allowedOrigins.some((allowed) =>
         typeof allowed === 'string' ? allowed === origin : allowed.test(origin)
@@ -81,7 +81,6 @@ app.use(
 );
 
 // ─── Rate Limiters ────────────────────────────────────────────────────────
-// General API limiter: 200 requests per 15 minutes per IP
 const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 200,
@@ -93,7 +92,6 @@ const generalLimiter = rateLimit({
   }
 });
 
-// Strict auth limiter: 20 requests per 15 minutes per IP (brute-force protection)
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 20,
@@ -106,14 +104,13 @@ const authLimiter = rateLimit({
 });
 
 app.use('/api/', generalLimiter);
-app.use('/api/auth', authLimiter); // Applied in addition to general; auth gets stricter limit
+app.use('/api/auth', authLimiter);
 
 // ─── Body Parsers ─────────────────────────────────────────────────────────
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // ─── MongoDB Injection Sanitization ──────────────────────────────────────
-// Strips keys starting with '$' or containing '.' from request body/query/params
 app.use(
   mongoSanitize({
     onSanitize: ({ req, key }) => {
@@ -133,7 +130,7 @@ app.use('/uploads', express.static(uploadsDir));
 app.get('/api/health', (req, res) => {
   res.status(200).json({
     success: true,
-    message: 'Behold Aspire Backend API is running and healthy',
+    message: 'Behold Backend API is running and healthy',
     data: {
       uptime: process.uptime(),
       timestamp: new Date().toISOString()
@@ -155,6 +152,7 @@ app.use('/api', paymentRoutes);
 app.use('/api/google', googleAuthRoutes);
 app.use('/api/cron', cronRoutes);
 app.use('/api/blogs', blogRoutes);
+app.use('/api/whatsapp', whatsappRoutes);
 app.use('/api', publicRoutes);
 
 // ─── 404 Catch ────────────────────────────────────────────────────────────

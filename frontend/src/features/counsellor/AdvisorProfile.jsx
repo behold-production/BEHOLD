@@ -130,7 +130,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             <ChevronLeft className="w-4 h-4 text-slate-500 group-hover:-translate-x-0.5 transition-transform" /> Back to Specialists
           </button>
           <div className="flex items-center gap-2 text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-3 py-1.5 rounded-full shadow-2xs">
-            <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" /> Verified BEHOLD ASPIRE Counselor
+            <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" /> Verified BEHOLD Counselor
           </div>
         </div>
 
@@ -272,7 +272,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                 <div className="flex flex-col">
                   <span className="text-[10px] uppercase font-bold text-surface-400 tracking-widest mb-0.5">Verified Academic Degree</span>
                   <h4 className="font-bold text-base text-surface-900">{advisor.education}</h4>
-                  <p className="text-xs text-surface-500 mt-0.5 font-medium">Licensed and verified practitioner under BEHOLD ASPIRE Clinical Guidelines</p>
+                  <p className="text-xs text-surface-500 mt-0.5 font-medium">Licensed and verified practitioner under BEHOLD Clinical Guidelines</p>
                 </div>
               </div>
             </div>
@@ -357,7 +357,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                 </button>
 
                 <p className="text-[11px] text-center text-surface-400 font-medium">
-                  Secured by BEHOLD ASPIRE Clinical Gateway · No hidden charges
+                  Secured by BEHOLD Clinical Gateway · No hidden charges
                 </p>
               </div>
             </div>

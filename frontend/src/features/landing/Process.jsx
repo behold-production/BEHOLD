@@ -1,68 +1,75 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 
 const steps = [
   {
     num: '01',
-    title: 'Free Consultation',
-    desc: 'We understand your goals, academic background, and aspirations, then recommend the best counseling or assessment solution.',
+    title: 'Choose Service & Expert',
+    desc: 'Select Psychological Counselling, Career Mentoring, or Aptitude Testing, and pick your preferred certified advisor.',
   },
   {
     num: '02',
-    title: 'C-DAT Assessment',
-    desc: 'Students complete the C-DAT aptitude test or psychological screening, designed to reveal natural strengths and career domains.',
+    title: 'Pick Slot & Secure Checkout',
+    desc: 'Choose a date and time slot that suits your schedule. Pay seamlessly and safely via Razorpay.',
   },
   {
     num: '03',
-    title: 'Personalized Roadmap',
-    desc: 'Our mentors interpret results and build a tailored career roadmap — stream selection, university pathways, and goal milestones.',
+    title: '1-on-1 Confidential Session',
+    desc: 'Join your private video session via instant Google Meet delivery from your email or personal student portal.',
   },
   {
     num: '04',
-    title: 'Ongoing Mentorship',
-    desc: 'Regular follow-up sessions, parent guidance, and goal tracking ensure the student stays on course and achieves their milestones.',
+    title: 'Action Plan & Ongoing Growth',
+    desc: 'Receive personalized recommendations, assessment reports, and follow-up guidance for lasting peace of mind.',
   },
 ];
 
 export default function Process() {
   return (
-    <section id="process" className="py-16 sm:py-24 bg-white border-b border-gray-100">
+    <section id="process" className="py-16 sm:py-20 bg-white text-slate-900 border-b border-slate-100">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="text-xs font-bold tracking-widest uppercase text-gray-400 block mb-3">
-            Our Process
+        <div className="text-center max-w-2xl mx-auto mb-14">
+          <span className="inline-block px-3 py-1 rounded-md bg-slate-100 text-slate-800 text-xs font-semibold mb-3">
+            Simple 4-Step Process
           </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-4 tracking-tight leading-tight">
-            A Simple Path to Student Success.
+          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight leading-tight mb-3">
+            How Your Journey to Peace & Growth Works
           </h2>
-          <p className="text-sm sm:text-base text-gray-600 leading-relaxed font-normal max-w-xl mx-auto">
-            We make mentorship and career guidance straightforward with a clear, structured process from initial consultation to confident career clarity.
+          <p className="text-slate-600 text-sm leading-relaxed font-normal">
+            Zero cognitive friction. A clear, stress-free pathway from initial selection to ongoing mentorship.
           </p>
         </div>
 
         {/* Steps Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 relative">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {steps.map((step, idx) => (
-            <motion.div
+            <div
               key={idx}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.5, delay: idx * 0.1 }}
-              className="flex flex-col items-start relative group p-6 rounded-lg bg-gray-50 border border-gray-100 hover:bg-white hover:shadow-md hover:border-gray-200 transition-all"
+              className="flex flex-col items-start p-6 rounded-xl bg-white border border-slate-200 hover:border-slate-300 shadow-xs transition-all"
             >
-              <div className="w-12 h-12 rounded-lg bg-gray-900 text-white flex items-center justify-center font-serif font-bold text-lg mb-6 shadow-sm">
-                {step.num}
+              <div className="flex items-center justify-between w-full mb-4">
+                <span className="text-xs font-extrabold px-2.5 py-1 rounded-md bg-slate-900 text-white">
+                  Step {step.num}
+                </span>
               </div>
 
-              <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2 leading-snug">{step.title}</h3>
-              <p className="text-gray-600 text-xs sm:text-sm leading-relaxed font-normal">
+              <h3 className="text-sm font-bold text-slate-900 mb-2">{step.title}</h3>
+              <p className="text-slate-600 text-xs leading-relaxed font-normal">
                 {step.desc}
               </p>
-            </motion.div>
+            </div>
           ))}
+        </div>
+
+        {/* CTA */}
+        <div className="mt-10 text-center">
+          <button
+            onClick={() => { window.spaNavigate?.('/booking'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+            className="inline-block px-6 py-3 bg-slate-900 hover:bg-black text-white font-bold text-xs rounded-lg transition-colors cursor-pointer border-none shadow-xs"
+          >
+            Start Your Session Today
+          </button>
         </div>
 
       </div>

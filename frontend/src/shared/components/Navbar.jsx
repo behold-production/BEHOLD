@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import LogoutConfirmModal from './LogoutConfirmModal';
-import { ScrollDot } from './BrandDot';
+import { Menu, X } from 'lucide-react';
 
 export default function Navbar({ navigateToSection, currentView, onOpenAuth, siteName, siteSettings }) {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -10,9 +10,10 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    const handleScroll = () => setIsScrolled(window.scrollY > 15);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -22,7 +23,12 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
     if (section.startsWith('/')) {
       navigate(section);
     } else {
-      navigateToSection?.(section);
+      if (location.pathname !== '/') {
+        navigate('/');
+        setTimeout(() => navigateToSection?.(section), 100);
+      } else {
+        navigateToSection?.(section);
+      }
     }
   };
 
@@ -33,7 +39,10 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
 
   const handleProfileClick = () => {
     setMobileMenuOpen(false);
-    if (!user) { onOpenAuth?.(); return; }
+    if (!user) {
+      onOpenAuth?.();
+      return;
+    }
     const role = user.role?.toUpperCase();
     if (role === 'ADMIN' || role === 'SUPER_ADMIN' || role === 'SUB_ADMIN') navigate('/admin');
     else if (role === 'PSYCHOLOGIST' || role === 'COUNSELLOR') navigate('/counsellor');
@@ -52,199 +61,168 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
   })();
 
   const navLinks = [
-    { label: 'Home', action: () => goTo('home') },
-    { label: 'Services', action: () => goTo('services') },
-    { label: 'Sample Test', action: () => goTo('/sample-test') },
-    { label: 'Blog', action: () => goTo('/blog') },
-    { label: 'Contact', action: () => goTo('contact') },
+    { label: 'Home', action: () => goTo('home'), path: '/' },
+    { label: 'Services', action: () => goTo('services'), path: '/booking' },
+    { label: 'Sample Test', action: () => goTo('/sample-test'), path: '/sample-test' },
+    { label: 'Blog', action: () => goTo('/blog'), path: '/blog' },
+    { label: 'Contact', action: () => goTo('contact'), path: '#contact' },
   ];
 
   return (
     <>
-      {/* Main Navbar */}
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-sm border-b border-gray-200' : 'bg-white/95 border-b border-gray-100'}`}>
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 sm:h-20">
+      {/* Top Text-Only Announcement Bar */}
+      <div className="bg-slate-900 text-slate-200 text-xs py-2 px-4 border-b border-slate-800 font-medium flex items-center justify-center gap-3 relative z-50">
+        <span className="inline-block text-cyan-400 bg-slate-800 px-2.5 py-0.5 rounded-md text-[11px] font-bold border border-slate-700">
+          100% Confidential & Certified Psychological Care
+        </span>
+        <span className="hidden sm:inline text-slate-300">&middot;</span>
+        <a
+          href={whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-white hover:underline font-bold transition-colors"
+        >
+          Helpline Support
+        </a>
+      </div>
 
-            {/* Logo */}
-            <button
-              onClick={handleLogoClick}
-              className="text-2xl sm:text-3xl font-serif font-bold tracking-tight text-gray-900 bg-transparent border-none cursor-pointer p-0 flex items-baseline gap-0.5"
-            >
-              <span>{siteName || 'BEHOLD'}</span>
-              <span className="text-gray-900 font-sans font-black text-xl">.</span>
-            </button>
+      {/* Classic Clean Fixed Header */}
+      <header className={`sticky top-0 z-40 bg-white transition-shadow duration-200 ${isScrolled ? 'shadow-sm border-b border-slate-200' : 'border-b border-slate-100'
+        }`}>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between">
 
-            {/* Desktop Nav Links */}
-            <div className="hidden md:flex items-center gap-8">
-              {navLinks.map(({ label, action }) => (
+          {/* Logo */}
+          <button
+            onClick={handleLogoClick}
+            className="flex items-center gap-2 text-left bg-transparent border-none cursor-pointer p-0"
+          >
+            <span className="text-2xl font-black tracking-tight text-slate-900 font-sans">
+              {siteName || 'BEHOLD'}
+            </span>
+          </button>
+
+          {/* Desktop Nav Links */}
+          <nav className="hidden md:flex items-center gap-6">
+            {navLinks.map(({ label, action, path }) => {
+              const isActive = location.pathname === path;
+              return (
                 <button
                   key={label}
                   onClick={action}
-                  className="text-gray-600 hover:text-gray-950 font-medium text-sm transition-colors bg-transparent border-none cursor-pointer p-0"
+                  className={`text-sm font-semibold transition-colors bg-transparent border-none cursor-pointer p-0 ${isActive ? 'text-slate-900 font-bold border-b-2 border-slate-900 pb-0.5' : 'text-slate-600 hover:text-slate-900'
+                    }`}
                 >
                   {label}
                 </button>
-              ))}
-            </div>
+              );
+            })}
+          </nav>
 
-            {/* Desktop Right Actions */}
-            <div className="hidden md:flex items-center gap-4">
-              {/* WhatsApp */}
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-gray-950 transition-colors"
-                title="Chat on WhatsApp"
-              >
-                <span className="hidden lg:inline">WhatsApp</span>
-              </a>
+          {/* Right Action Buttons */}
+          <div className="hidden md:flex items-center gap-3">
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition-colors border border-slate-200"
+            >
+              Helpline
+            </a>
 
-              {/* Book Appointment */}
+            <button
+              onClick={() => navigate('/booking')}
+              className="px-4 py-2 bg-slate-900 hover:bg-black text-white font-bold text-xs rounded-lg transition-colors shadow-xs border-none cursor-pointer"
+            >
+              Book Appointment
+            </button>
+
+            {user ? (
               <button
-                onClick={() => navigate('/booking')}
-                className="px-5 py-2.5 bg-gray-900 hover:bg-black text-white font-semibold text-xs sm:text-sm rounded-md transition shadow-sm border-none cursor-pointer"
+                onClick={handleProfileClick}
+                className="w-9 h-9 rounded-lg border border-slate-200 bg-slate-100 text-slate-900 font-bold text-sm flex items-center justify-center transition-all p-0 overflow-hidden cursor-pointer shrink-0"
+                title={`${user.name || 'User'} Profile`}
+              >
+                {(user.profilePic || user.avatar || user.profileImage || user.photoURL || user.image) ? (
+                  <img
+                    src={user.profilePic || user.avatar || user.profileImage || user.photoURL || user.image}
+                    alt={user.name || 'Profile'}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span className="text-slate-900 font-bold">{(user.name || user.email || 'U').charAt(0).toUpperCase()}</span>
+                )}
+              </button>
+            ) : (
+              <button
+                onClick={handleProfileClick}
+                className="px-3.5 py-2 border border-slate-200 hover:border-slate-400 text-slate-800 font-semibold text-xs rounded-lg transition-all bg-white cursor-pointer"
+              >
+                Sign In
+              </button>
+            )}
+          </div>
+
+          {/* Mobile Hamburger */}
+          <div className="md:hidden flex items-center gap-2">
+            {user && (
+              <button
+                onClick={handleProfileClick}
+                className="w-8 h-8 rounded-lg border border-slate-200 bg-slate-100 text-slate-900 font-bold text-xs flex items-center justify-center transition-all p-0 overflow-hidden cursor-pointer"
+              >
+                <span className="text-slate-900 font-bold">{(user.name || user.email || 'U').charAt(0).toUpperCase()}</span>
+              </button>
+            )}
+            <button
+              className="p-2 rounded-lg text-slate-700 hover:bg-slate-100 transition border-none cursor-pointer bg-transparent"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle Menu"
+            >
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
+
+        </div>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden bg-white border-b border-slate-200 px-4 py-4 flex flex-col gap-3">
+            {navLinks.map(({ label, action }) => (
+              <button
+                key={label}
+                onClick={action}
+                className="text-left py-2 text-slate-700 hover:text-slate-900 font-semibold transition bg-transparent border-none cursor-pointer text-sm"
+              >
+                {label}
+              </button>
+            ))}
+            <div className="pt-2 border-t border-slate-100 flex flex-col gap-2">
+              <button
+                onClick={() => { setMobileMenuOpen(false); navigate('/booking'); }}
+                className="w-full py-2.5 bg-slate-900 text-white font-bold rounded-lg transition border-none cursor-pointer text-sm"
               >
                 Book Appointment
               </button>
-
-              {/* Sign In / Profile */}
               {user ? (
                 <button
-                  onClick={handleProfileClick}
-                  className="w-9 h-9 rounded-full border border-gray-300 hover:border-gray-900 bg-gray-100 text-gray-900 font-bold text-sm flex items-center justify-center transition-all p-0 overflow-hidden cursor-pointer shrink-0"
-                  title={`${user.name || 'User'} Profile`}
+                  onClick={() => { setMobileMenuOpen(false); setIsLogoutOpen(true); }}
+                  className="w-full py-2 border border-rose-200 text-rose-600 font-semibold rounded-lg transition bg-white text-xs"
                 >
-                  {(user.profilePic || user.avatar || user.profileImage || user.photoURL || user.image) ? (
-                    <img
-                      src={user.profilePic || user.avatar || user.profileImage || user.photoURL || user.image}
-                      alt={user.name || 'Profile'}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <span>{(user.name || user.email || 'U').charAt(0).toUpperCase()}</span>
-                  )}
+                  Sign Out
                 </button>
               ) : (
                 <button
-                  onClick={handleProfileClick}
-                  className="px-4 py-2 border border-gray-300 hover:border-gray-900 text-gray-800 font-semibold text-xs sm:text-sm rounded transition-colors bg-transparent cursor-pointer"
+                  onClick={() => { setMobileMenuOpen(false); onOpenAuth?.(); }}
+                  className="w-full py-2 border border-slate-200 text-slate-800 font-semibold rounded-lg transition bg-white text-xs"
                 >
                   Sign In
                 </button>
               )}
             </div>
-
-            {/* Mobile Hamburger & Profile */}
-            <div className="md:hidden flex items-center gap-2.5">
-              {user && (
-                <button
-                  onClick={handleProfileClick}
-                  className="w-8 h-8 rounded-full border border-gray-300 bg-gray-100 text-gray-900 font-bold text-sm flex items-center justify-center transition-all p-0 overflow-hidden cursor-pointer shrink-0"
-                  title={`${user.name || 'User'} Profile`}
-                >
-                  {(user.profilePic || user.avatar || user.profileImage || user.photoURL || user.image) ? (
-                    <img
-                      src={user.profilePic || user.avatar || user.profileImage || user.photoURL || user.image}
-                      alt={user.name || 'Profile'}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <span>{(user.name || user.email || 'U').charAt(0).toUpperCase()}</span>
-                  )}
-                </button>
-              )}
-              <button
-                className="p-2 rounded text-gray-700 hover:bg-gray-100 transition border-none cursor-pointer bg-transparent"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                aria-label="Menu"
-              >
-                {mobileMenuOpen ? (
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                ) : (
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                  </svg>
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden bg-white border-t border-gray-200 shadow-lg">
-            <div className="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-1">
-              {navLinks.map(({ label, action }) => (
-                <button
-                  key={label}
-                  onClick={action}
-                  className="text-left px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-gray-950 font-medium rounded transition bg-transparent border-none cursor-pointer w-full"
-                >
-                  {label}
-                </button>
-              ))}
-              <div className="border-t border-gray-100 mt-2 pt-4 flex flex-col gap-3">
-                <a
-                  href={whatsappUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-4 py-3 text-gray-700 hover:bg-gray-50 rounded font-medium"
-                >
-                  <span>Chat on WhatsApp</span>
-                </a>
-                <button
-                  onClick={() => { setMobileMenuOpen(false); navigate('/booking'); }}
-                  className="w-full py-3 bg-gray-900 hover:bg-black text-white font-semibold rounded-lg transition shadow-sm border-none cursor-pointer text-sm"
-                >
-                  Book Appointment
-                </button>
-                {user ? (
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => { setMobileMenuOpen(false); handleProfileClick(); }}
-                      className="flex-1 py-3 bg-gray-100 text-gray-900 font-semibold rounded-lg transition hover:bg-gray-200 border border-gray-300 cursor-pointer flex items-center justify-center gap-2 text-sm"
-                    >
-                      <span>Dashboard</span>
-                    </button>
-                    <button
-                      onClick={() => { setMobileMenuOpen(false); setIsLogoutOpen(true); }}
-                      className="py-3 px-4 border border-rose-300 text-rose-600 font-semibold rounded transition hover:bg-rose-50 bg-transparent cursor-pointer text-sm"
-                    >
-                      Sign Out
-                    </button>
-                  </div>
-                ) : (
-                  <button
-                    onClick={() => { setMobileMenuOpen(false); onOpenAuth?.(); }}
-                    className="w-full py-3 border border-gray-300 text-gray-800 font-semibold rounded transition hover:bg-gray-50 bg-transparent cursor-pointer text-sm"
-                  >
-                    Sign In
-                  </button>
-                )}
-              </div>
-            </div>
           </div>
         )}
-      </nav>
+      </header>
 
-      {/* Floating WhatsApp Button */}
-      <a
-        href={whatsappUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 z-50 w-12 h-12 bg-gray-900 hover:bg-black text-white rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-105 border border-gray-700"
-        aria-label="Chat on WhatsApp"
-        title="Chat on WhatsApp"
-      >
-        <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
-          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-        </svg>
-      </a>
-
+      {/* Logout Confirm Modal */}
       <LogoutConfirmModal
         isOpen={isLogoutOpen}
         onClose={() => setIsLogoutOpen(false)}

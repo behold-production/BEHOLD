@@ -115,10 +115,20 @@ const PaymentController = {
         });
       }
 
+      const keyId = (process.env.RAZORPAY_KEY_ID || '').trim().replace(/^["']|["']$/g, '');
+      const keySecret = (process.env.RAZORPAY_KEY_SECRET || '').trim().replace(/^["']|["']$/g, '');
+
+      if (!keyId || !keySecret) {
+        return res.status(500).json({
+          success: false,
+          message: 'Razorpay API keys (RAZORPAY_KEY_ID / RAZORPAY_KEY_SECRET) are missing in environment variables'
+        });
+      }
+
       // Initialize Razorpay SDK
       const razorpay = new Razorpay({
-        key_id: process.env.RAZORPAY_KEY_ID,
-        key_secret: process.env.RAZORPAY_KEY_SECRET
+        key_id: keyId,
+        key_secret: keySecret
       });
 
       // Create Order options
@@ -186,7 +196,10 @@ const PaymentController = {
         });
       }
 
-      if (!process.env.RAZORPAY_KEY_SECRET) {
+      const keyId = (process.env.RAZORPAY_KEY_ID || '').trim().replace(/^["']|["']$/g, '');
+      const keySecret = (process.env.RAZORPAY_KEY_SECRET || '').trim().replace(/^["']|["']$/g, '');
+
+      if (!keySecret) {
         return res.status(500).json({
           success: false,
           message: 'Razorpay secret key is not configured in backend environment'
@@ -196,7 +209,7 @@ const PaymentController = {
       // 1. Verify Razorpay cryptographic signature: HMAC-SHA256(order_id + "|" + payment_id, KEY_SECRET)
       const body = razorpay_order_id + '|' + razorpay_payment_id;
       const expectedSignature = crypto
-        .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
+        .createHmac('sha256', keySecret)
         .update(body.toString())
         .digest('hex');
 
@@ -233,8 +246,8 @@ const PaymentController = {
 
       // 2. Fetch Razorpay order details and compare with booking details if available
       const razorpay = new Razorpay({
-        key_id: process.env.RAZORPAY_KEY_ID,
-        key_secret: process.env.RAZORPAY_KEY_SECRET
+        key_id: keyId,
+        key_secret: keySecret
       });
       let order;
       try {

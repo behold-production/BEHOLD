@@ -1,131 +1,144 @@
 import React from 'react';
-import { ScrollDot } from '../../shared/components/BrandDot';
 import jpg1 from '../../assets/jpg1.jpg';
 import jpg2 from '../../assets/jpg2.jpg';
 import jpg3 from '../../assets/jpg3.jpg';
 
 export default function Hero({ setView, navigateToSection, siteSettings }) {
   const settings = siteSettings || {};
-  const title    = settings.heroTitle || 'Bridging You \nTo Your True Growth';
-  const subtitle = settings.heroSub   || 'Professional psychological counseling, aptitude assessment, and career mentorship designed to help individuals thrive with confidence and purpose.';
-  const btn1Text = settings.heroBtn1  || 'Book Your Session';
-  const btn2Text = settings.heroBtn2  || 'Take Aptitude Test';
-  const badge    = settings.heroBadge || 'CIGI CERTIFIED CAREER GUIDANCE';
+  const title = settings.heroTitle || 'Every Mind Matters';
+  const subtitle = settings.heroSub || 'A personal development and mentoring ecosystem — combining psychological care, self-discovery, and career guidance to help you grow with confidence and peace of mind.';
 
-  const handleBook    = () => { window.spaNavigate?.('/booking');     window.scrollTo({ top: 0, behavior: 'smooth' }); };
-  const handleExplore = () => { window.spaNavigate?.('/sample-test'); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+  const handleBook = () => {
+    window.spaNavigate?.('/booking');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleExplore = () => {
+    window.spaNavigate?.('/sample-test');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const stats = (Array.isArray(settings.heroStats) && settings.heroStats.length > 0)
     ? settings.heroStats
     : [
-        { num: '500+', label: 'Students Guided' },
-        { num: '98%',  label: 'Clarity & Peace'  },
-        { num: '50+',  label: 'Certified Mentors' },
+        { num: '5,000+', label: 'Students & Parents Guided' },
+        { num: '99.4%', label: 'Confidentiality Rate' },
+        { num: '50+', label: 'Certified Psychologists' }
       ];
 
-  /* Parses title with clean editorial serif formatting */
-  const renderHeroTitle = (rawText) => {
-    if (!rawText) return null;
-    const lines = rawText.replace(/\\n/g, '\n').split('\n');
-    return lines.map((line, lineIdx) => {
-      const isLastLine = lineIdx === lines.length - 1;
-      const parts = line.split(/(\{.*?\})/g);
-      return (
-        <span key={lineIdx} className={`block ${lineIdx === 1 ? 'italic font-serif text-gray-800 font-normal' : ''}`}>
-          {parts.map((part, partIdx) => {
-            const isAccent = part.startsWith('{') && part.endsWith('}');
-            let clean = isAccent ? part.slice(1, -1) : part;
-            if (isLastLine && partIdx === parts.length - 1) clean = clean.replace(/\.+$/, '');
-            if (isLastLine && partIdx === parts.length - 1) {
-              const words = clean.trim().split(' ');
-              const last  = words.pop() || '';
-              const rest  = words.join(' ');
-              return (
-                <span key={partIdx} className={isAccent ? 'italic font-serif font-normal text-gray-800' : ''}>
-                  {rest ? `${rest} ` : ''}
-                  <span className="inline">
-                    <span>{last}</span>
-                    <ScrollDot nextId="why-choose-us" label="Scroll down ↓" size="md" inlineText={true} />
-                  </span>
-                </span>
-              );
-            }
-            return (
-              <span key={partIdx} className={isAccent ? 'italic font-serif font-normal text-gray-800' : ''}>
-                {clean}
-              </span>
-            );
-          })}
-        </span>
-      );
-    });
-  };
-
   return (
-    <section
-      id="home"
-      className="relative bg-white w-full pt-28 sm:pt-36 pb-16 border-b border-gray-100"
-    >
+    <section id="home" className="bg-white text-slate-900 w-full py-16 sm:py-20 border-b border-slate-100">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Top Eyebrow / Badge */}
-        <div className="flex items-center gap-2 mb-6">
-          <span className="text-gray-400 font-bold text-xs uppercase tracking-widest">—</span>
-          <span className="text-xs sm:text-sm font-bold tracking-widest uppercase text-gray-500">{badge}</span>
+        {/* Text-Only Confidential Badge */}
+        <div className="inline-block px-3.5 py-1 rounded-md bg-black text-white text-xs font-semibold mb-6">
+          100% Confidential & Certified Psychological Care
         </div>
 
-        {/* Headline */}
-        <h1
-          id="hero-title"
-          className="text-4xl sm:text-6xl md:text-7xl font-serif font-bold text-gray-900 tracking-tight leading-[1.1] mb-6 max-w-4xl"
-        >
-          {renderHeroTitle(title)}
-        </h1>
+        {/* 2-Column Balanced Hero Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center mb-16">
+          
+          {/* Left Column: Headlines & CTAs */}
+          <div className="lg:col-span-6">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-sans font-black text-slate-900 tracking-tight leading-[1.15] mb-6">
+              {title}
+            </h1>
+            <p className="text-base sm:text-lg text-slate-600 leading-relaxed font-normal mb-8 max-w-xl">
+              {subtitle}
+            </p>
 
-        {/* Subtitle */}
-        <p className="text-base sm:text-lg text-gray-600 leading-relaxed mb-10 max-w-2xl font-sans font-normal">
-          {subtitle}
-        </p>
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+              <button
+                onClick={handleBook}
+                className="px-6 py-3.5 bg-black hover:bg-slate-900 text-white font-bold text-sm rounded-lg transition-colors shadow-xs cursor-pointer border-none text-center"
+              >
+                Book Consultation
+              </button>
+              <button
+                onClick={handleExplore}
+                className="px-6 py-3.5 bg-white hover:bg-slate-50 text-slate-800 font-semibold text-sm rounded-lg transition-colors border border-slate-200 cursor-pointer shadow-xs text-center"
+              >
+                Know Yourself (Aptitude Test)
+              </button>
+            </div>
 
-        {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mb-16">
-          <button
-            onClick={handleBook}
-            className="px-8 py-4 bg-gray-900 hover:bg-black text-white font-semibold text-sm rounded-lg transition shadow-sm border-none cursor-pointer flex items-center justify-center"
-          >
-            {btn1Text}
-          </button>
-          <button
-            onClick={handleExplore}
-            className="px-8 py-4 bg-white hover:bg-gray-50 text-gray-900 font-semibold text-sm rounded-lg transition border border-gray-300 cursor-pointer flex items-center justify-center"
-          >
-            {btn2Text}
-          </button>
+            {/* Quick Checks */}
+            <div className="mt-8 flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-500">
+              <span>Certified Psychologists</span>
+              <span>&middot;</span>
+              <span>Direct Google Meet Link</span>
+              <span>&middot;</span>
+              <span>Instant Reports</span>
+            </div>
+          </div>
+
+          {/* Right Column: Healing / Growth Emotional Visual Card */}
+          <div className="lg:col-span-6 flex justify-center">
+            <div className="w-full max-w-md bg-slate-50 border border-slate-200 rounded-2xl p-6 shadow-xs">
+              <div className="relative h-64 sm:h-72 w-full rounded-xl overflow-hidden mb-5 bg-slate-200">
+                <img
+                  src={jpg1}
+                  alt="Personal Growth and Mental Wellness Care"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                <div className="absolute bottom-4 left-4 right-4 text-white">
+                  <span className="inline-block px-2.5 py-0.5 rounded-md bg-black text-[#00E5FF] text-[10px] font-bold uppercase tracking-wider mb-1">
+                    Healing & Growth Space
+                  </span>
+                  <h3 className="text-base font-bold text-white leading-tight">Guided 1-on-1 Psychological Support</h3>
+                </div>
+              </div>
+
+              <div className="space-y-2.5 text-xs text-slate-600 font-medium">
+                <div className="flex items-center justify-between p-2.5 bg-white rounded-lg border border-slate-200">
+                  <span className="font-bold text-slate-900">Psychological Counselling</span>
+                  <span className="text-slate-500">60 mins &middot; Confidential</span>
+                </div>
+                <div className="flex items-center justify-between p-2.5 bg-white rounded-lg border border-slate-200">
+                  <span className="font-bold text-slate-900">C-DAT Aptitude Assessment</span>
+                  <span className="text-slate-500">45 mins &middot; Scientific</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
 
-        {/* 3-Photo Grid Row */}
+        {/* 3-Photo Showcase */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-4">
-          {[jpg1, jpg2, jpg3].map((img, idx) => (
+          {[
+            { img: jpg1, title: 'Confidential 1-on-1 Sessions', badge: 'Empathy & Support' },
+            { img: jpg2, title: 'Scientific Aptitude Mapping', badge: 'Psychometric Testing' },
+            { img: jpg3, title: 'Lifetime Personal Mentoring', badge: 'Career Clarity' }
+          ].map((item, idx) => (
             <div
               key={idx}
-              className="relative h-64 sm:h-72 md:h-80 w-full rounded-xl overflow-hidden bg-gray-100 border border-gray-200/60 shadow-sm group"
+              className="relative h-56 sm:h-64 w-full rounded-xl overflow-hidden bg-slate-100 border border-slate-200 shadow-xs group"
             >
               <img
-                src={img}
-                alt={`Behold session ${idx + 1}`}
-                className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                src={item.img}
+                alt={item.title}
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-60 group-hover:opacity-30 transition-opacity" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+              <div className="absolute bottom-4 left-4 right-4 text-white">
+                <span className="inline-block px-2.5 py-0.5 rounded-md bg-black text-white text-[10px] font-bold uppercase tracking-wider mb-1">
+                  {item.badge}
+                </span>
+                <h4 className="text-sm font-bold text-white leading-tight">{item.title}</h4>
+              </div>
             </div>
           ))}
         </div>
 
-        {/* Stats Row */}
-        <div className="grid grid-cols-3 gap-6 pt-16 mt-12 border-t border-gray-200">
+        {/* Stats */}
+        <div className="grid grid-cols-3 gap-6 pt-10 mt-10 border-t border-slate-100">
           {stats.map(({ num, label }, idx) => (
-            <div key={idx} className="flex flex-col items-start">
-              <div className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-gray-900 leading-none mb-2">{num}</div>
-              <div className="text-xs sm:text-sm text-gray-500 font-medium leading-tight">{label}</div>
+            <div key={idx} className="flex flex-col items-center text-center">
+              <div className="text-2xl sm:text-3xl font-bold text-slate-900 mb-0.5">{num}</div>
+              <div className="text-xs text-slate-500 font-medium">{label}</div>
             </div>
           ))}
         </div>
