@@ -296,29 +296,29 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
     }
 
     return (
-        <div className="min-h-screen pt-20 sm:pt-24 pb-12 sm:pb-20 bg-white text-surface-900 text-left border-b border-surface-200">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-8 sm:space-y-10">
+        <div className="min-h-screen pt-24 sm:pt-28 pb-16 sm:pb-24 bg-[#f7f4ef] text-[#1c1514] text-left border-b border-[#e2dad2]">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-10">
 
                 {/* Header */}
                 <div className="text-center flex flex-col items-center space-y-3">
-                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-600 text-xs font-bold shadow-sm">
-                        <span>{rescheduleSession ? 'RESCHEDULE SESSION' : 'BOOK A SESSION'}</span>
-                    </div>
-                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight leading-tight text-gray-900 font-header flex items-center justify-center flex-wrap gap-0.5">
+                    <span className="text-xs font-bold uppercase tracking-widest text-[#7c7069] block mb-1">
+                        {rescheduleSession ? 'RESCHEDULE SESSION' : 'BOOK A CONFIDENTIAL SESSION'}
+                    </span>
+                    <h1 className="text-3xl sm:text-5xl md:text-6xl font-sans font-black uppercase tracking-tight leading-none text-[#1c1514] flex items-center justify-center flex-wrap gap-1">
                         <span>{rescheduleSession ? 'Reschedule Your Session' : 'Book Your Session'}</span>
                         <ScrollDot nextId="booking-console" label="Scroll to booking form ↓" size="md" inlineText={true} />
                     </h1>
-                    <p className="text-gray-500 max-w-xl mx-auto text-sm sm:text-base leading-relaxed font-normal">
+                    <p className="text-[#6e635e] max-w-xl mx-auto text-sm sm:text-base leading-relaxed font-normal">
                         {rescheduleSession
                             ? `Reschedule your appointment with ${rescheduleSession.advisorName || rescheduleSession.counsellorName}. Pick a new date and time.`
-                            : 'Choose your service, pick a date and time, and confirm with a real advisor — it only takes a few minutes.'}
+                            : 'Choose your service, pick a date and time, and confirm with a certified specialist.'}
                     </p>
                 </div>
 
                 {/* BOOKING FORM */}
                 <div id="booking-console" className="space-y-6 sm:space-y-8 w-full mt-6">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-surface-200 pb-4">
-                        <h2 className="text-xl sm:text-2xl font-black text-gray-900 font-header flex items-center gap-0.5">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#d6cecb] pb-4">
+                        <h2 className="text-xl sm:text-2xl font-sans font-black uppercase text-[#1c1514] flex items-center gap-1">
                             <span>Your Booking</span>
                             <ScrollDot nextId="booking-console" label="Scroll down ↓" size="md" inlineText={true} />
                         </h2>
@@ -1386,6 +1386,9 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                                             <h5 className="text-sm font-semibold text-surface-900 ">Secure Payment Gateway</h5>
                                                             <p className="text-sm text-surface-500 font-bold mt-1">
                                                                 A secure Razorpay checkout overlay will open to complete your payment using UPI, Cards, Netbanking, or Wallet.
+                                                            </p>
+                                                            <p className="text-[11px] text-surface-500 font-normal mt-2">
+                                                                By proceeding, you agree to our platform <button type="button" onClick={() => props.onOpenDocs?.('terms')} className="underline hover:text-surface-900 bg-transparent border-none p-0 cursor-pointer text-[11px]">Terms</button> and <button type="button" onClick={() => props.onOpenDocs?.('refund')} className="underline hover:text-surface-900 bg-transparent border-none p-0 cursor-pointer text-[11px]">Return & Refund Policy</button>.
                                                             </p>
                                                         </div>
                                                     </div>

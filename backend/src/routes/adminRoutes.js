@@ -42,6 +42,7 @@ router.get('/appointments', AdminController.getAppointments);
 router.post('/appointments', AdminController.createAppointment);
 router.put('/appointments/:id', AdminController.updateAppointment);
 router.delete('/appointments/:id', AdminController.deleteAppointment);
+router.post('/appointments/:id/send-reminder', AdminController.sendAppointmentReminder);
 router.get('/feedbacks', AdminController.getFeedbacks);
 router.put('/feedbacks/:id/moderate', AdminController.moderateFeedback);
 router.post('/notifications', AdminController.sendSystemNotification);

@@ -275,6 +275,14 @@ export default function RevenueTab(props) {
  <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-lg shadow-lg space-y-4">
  <div className="pb-2 border-b border-zinc-800/60 flex items-center justify-between">
  <h4 className="text-xs font-bold text-white tracking-wider">Counsellors Ledger & Account Routing</h4>
+ <button
+    type="button"
+    onClick={handleExportPayoutCSV}
+    className="px-3 py-1.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs rounded-lg cursor-pointer transition flex items-center gap-1.5 border-none shadow-sm"
+  >
+    <Download className="w-3.5 h-3.5" />
+    <span>Export Payout CSV</span>
+  </button>
  </div>
 
  <div className="overflow-x-auto w-full">

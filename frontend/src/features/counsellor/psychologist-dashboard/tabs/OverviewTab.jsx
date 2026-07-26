@@ -139,32 +139,27 @@ const OverviewTab = ({ profile, bookings, isSessionCompleted, setCurrentSection 
  <span>Completed Earnings</span>
  <span className="text-emerald-400">₹{formatAmount(completedEarnings)}</span>
  </div>
- <div className="flex justify-between font-bold text-zinc-400">
- <span>Pending Payouts</span>
- <span className="text-amber-500">₹{formatAmount(pendingPayouts)}</span>
- </div>
  <div className="flex justify-between font-bold text-zinc-400 items-center">
-                  <span>Payout Mode</span>
-                  <span className="text-zinc-500 font-medium text-xs">Internal (Manual)</span>
-                </div>
-              </div>
+ <span>Payout Mode</span>
+ <span className="text-brand font-bold text-xs">Direct Platform Settlement</span>
  </div>
- {false ? (
+ </div>
+ </div>
+
+ <div className="flex items-center gap-2 mt-4">
+ <button
+ onClick={() => setCurrentSection('revenue')}
+ className="text-xs font-bold bg-brand/10 hover:bg-brand/20 text-brand border border-brand/20 px-3.5 py-2 rounded-[10px] cursor-pointer transition-colors"
+ >
+ View Revenue Ledger
+ </button>
  <button
  onClick={() => setCurrentSection('profile')}
- className="w-fit text-sm font-bold bg-zinc-900 text-zinc-300 hover:text-white border border-zinc-800 px-4 py-2 rounded-[10px] mt-4 cursor-pointer transition-colors"
+ className="text-xs font-bold bg-zinc-900 text-zinc-300 hover:text-white border border-zinc-800 px-3.5 py-2 rounded-[10px] cursor-pointer transition-colors"
  >
- Update Payout Account
+ Bank Details
  </button>
- ) : (
- <button
- onClick={() => setCurrentSection('profile')}
- className="w-fit text-sm font-bold bg-rose-950/20 text-rose-400 hover:bg-rose-950/40 border border-rose-900/50 px-4 py-2 rounded-[10px] mt-4 cursor-pointer transition-colors flex items-center gap-1.5"
- >
- <AlertCircle className="w-3.5 h-3.5 animate-pulse" />
- <span>Configure Account</span>
- </button>
- )}
+ </div>
  </div>
  </div>
  </div>

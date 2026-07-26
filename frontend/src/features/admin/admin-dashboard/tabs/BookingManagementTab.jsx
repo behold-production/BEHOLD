@@ -2,6 +2,8 @@ import React from 'react';
 import { User, ShieldAlert, Award, Trash, Check, Plus, Lock, Settings, KeyRound, BarChart3, LogOut, Search, ShieldCheck, Calendar, Clock, Link, AlertCircle, Edit, Video, UserPlus, MessageSquare, FileSpreadsheet, HelpCircle, X, ChevronRight, ChevronLeft, Mail, Shield, Menu, Brain, Download, FileText, Eye, EyeOff, Bell, Send } from 'lucide-react';
 import { SkeletonTableRows, PaginationBar } from '../components/SharedAdminUI';
 import { formatDateString } from '../utils';
+import ApiService from '../../../../shared/services/api';
+import toast from 'react-hot-toast';
 
 export default function BookingManagementTab(props) {
  const {
@@ -575,16 +577,38 @@ export default function BookingManagementTab(props) {
  </span>
  </td>
  <td className="p-3 whitespace-nowrap">
- <div className="flex items-center justify-center gap-2">
- {booking.status !== 'CANCELLED' && (
- <button
- onClick={() => downloadPDFReceipt(booking)}
- className="p-1.5 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"
- title="Download Receipt PDF"
- >
- <Download className="w-3.5 h-3.5" />
- </button>
- )}
+  <div className="flex items-center justify-center gap-2">
+  {booking.status !== 'CANCELLED' && (
+    <>
+      <button
+        onClick={() => downloadPDFReceipt(booking)}
+        className="p-1.5 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"
+        title="Download Receipt PDF"
+      >
+        <Download className="w-3.5 h-3.5" />
+      </button>
+
+      <button
+        type="button"
+        onClick={async () => {
+          try {
+            const res = await ApiService.sendAppointmentReminder(booking.id);
+            if (res.success) {
+              toast.success('WhatsApp session reminder sent successfully!');
+            } else {
+              toast.error(res.message || 'Failed to send WhatsApp reminder.');
+            }
+          } catch (err) {
+            toast.error('Error sending WhatsApp reminder.');
+          }
+        }}
+        className="p-1.5 bg-emerald-955/30 text-emerald-450 hover:text-white hover:bg-emerald-900/60 rounded border border-emerald-900/40 transition cursor-pointer"
+        title="Send Instant WhatsApp Session Reminder"
+      >
+        <Send className="w-3.5 h-3.5" />
+      </button>
+    </>
+  )}
  {booking.status === 'COMPLETED' && (
  <button
  onClick={() => downloadDiagnosticPDF(booking)}

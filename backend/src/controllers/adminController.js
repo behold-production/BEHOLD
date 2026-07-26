@@ -269,28 +269,160 @@ const AdminController = {
     }
   },
 
-  // System Settings - Send Global Notification
+  // System Settings - Send Global / Targeted Broadcast Notification
   async sendSystemNotification(req, res, next) {
     try {
-      const { recipientId, recipientRole, title, message } = req.body;
+      const { recipientId, recipientRole, title, message, sendWhatsApp } = req.body;
+      const WhatsAppService = require('../services/whatsappService');
 
       if (!title || !message) {
         return res.status(400).json({ success: false, message: 'Title and message are required' });
       }
 
-      const newNotification = await StorageService.create('notifications', {
-        recipientId: recipientId || 'ALL',
-        recipientRole: recipientRole || 'user',
-        title,
-        message,
-        type: 'system_alert',
-        isRead: false
-      });
+      const roleTarget = (recipientRole || 'user').toLowerCase();
+      let recipientsToNotify = [];
+
+      if (roleTarget === 'all' || roleTarget === 'user') {
+        const users = await StorageService.findAll('users', { isDeleted: { $ne: true } });
+        recipientsToNotify.push(...users.map((u) => ({ ...u, role: 'user' })));
+      }
+      if (roleTarget === 'all' || roleTarget === 'counsellor' || roleTarget === 'psychologist') {
+        const counsellors = await StorageService.findAll('counsellors', { isDeleted: { $ne: true } });
+        recipientsToNotify.push(...counsellors.map((c) => ({ ...c, role: 'counsellor' })));
+      }
+
+      if (recipientId && recipientId !== 'ALL') {
+        recipientsToNotify = recipientsToNotify.filter((r) => r.id === recipientId);
+      }
+
+      // Create in-app notification records
+      let createdNotifications = [];
+      if (recipientId && recipientId !== 'ALL') {
+        const notif = await StorageService.create('notifications', {
+          recipientId,
+          recipientRole: recipientRole || 'user',
+          title,
+          message,
+          type: 'system_alert',
+          isRead: false
+        });
+        createdNotifications.push(notif);
+      } else {
+        const batchNotifs = await Promise.all(
+          recipientsToNotify.map((r) =>
+            StorageService.create('notifications', {
+              recipientId: r.id,
+              recipientRole: r.role,
+              title,
+              message,
+              type: 'system_alert',
+              isRead: false
+            })
+          )
+        );
+        createdNotifications = batchNotifs;
+      }
+
+      // Optional WhatsApp Broadcast Dispatch
+      let waStatus = { sentCount: 0, attempted: false };
+      if (sendWhatsApp) {
+        waStatus.attempted = true;
+        for (const recipient of recipientsToNotify) {
+          if (recipient.phone) {
+            try {
+              await WhatsAppService.sendNotification(
+                recipient.phone,
+                `📢 ${title.toUpperCase()}\n\n${message}\n\n- Behold Aspire Team`
+              );
+              waStatus.sentCount++;
+            } catch (waErr) {
+              console.warn(`[WhatsApp Broadcast Fail] To ${recipient.phone}:`, waErr.message);
+            }
+          }
+        }
+      }
 
       res.status(201).json({
         success: true,
-        message: 'System notification sent successfully',
-        data: newNotification
+        message: `System notification broadcasted to ${recipientsToNotify.length} recipient(s)${waStatus.attempted ? ` (${waStatus.sentCount} sent via WhatsApp)` : ''}`,
+        data: createdNotifications,
+        waStatus
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // Manual Trigger: Send WhatsApp Session Reminder for Appointment
+  async sendAppointmentReminder(req, res, next) {
+    try {
+      const { id } = req.params;
+      const appointment = await StorageService.findById('appointments', id);
+      if (!appointment) {
+        return res.status(404).json({ success: false, message: 'Appointment not found' });
+      }
+
+      const [student, counsellor] = await Promise.all([
+        StorageService.findById('users', appointment.userId),
+        StorageService.findById('counsellors', appointment.counsellorId)
+      ]);
+
+      const WhatsAppService = require('../services/whatsappService');
+      let waResults = { student: false, counsellor: false };
+
+      const reminderDetails = {
+        date: appointment.date,
+        time: appointment.time,
+        mode: appointment.mode,
+        studentName: student?.name || 'Student',
+        counsellorName: counsellor?.name || 'Counsellor'
+      };
+
+      if (student && student.phone) {
+        try {
+          await WhatsAppService.sendBookingAlert(student.phone, 'approved', reminderDetails);
+          waResults.student = true;
+        } catch (err) {
+          console.warn('[WhatsApp Reminder Error - Student]:', err.message);
+        }
+      }
+
+      if (counsellor && counsellor.phone) {
+        try {
+          await WhatsAppService.sendBookingAlert(counsellor.phone, 'approved', reminderDetails);
+          waResults.counsellor = true;
+        } catch (err) {
+          console.warn('[WhatsApp Reminder Error - Counsellor]:', err.message);
+        }
+      }
+
+      // Create in-app notifications
+      if (student) {
+        await StorageService.create('notifications', {
+          recipientId: student.id,
+          recipientRole: 'user',
+          title: 'Appointment Session Reminder',
+          message: `Reminder for your upcoming session on ${appointment.date} at ${appointment.time} with ${counsellor?.name || 'Counsellor'}.`,
+          type: 'appointment_reminder',
+          isRead: false
+        });
+      }
+
+      if (counsellor) {
+        await StorageService.create('notifications', {
+          recipientId: counsellor.id,
+          recipientRole: 'counsellor',
+          title: 'Appointment Session Reminder',
+          message: `Reminder for your upcoming session on ${appointment.date} at ${appointment.time} with ${student?.name || 'Student'}.`,
+          type: 'appointment_reminder',
+          isRead: false
+        });
+      }
+
+      res.status(200).json({
+        success: true,
+        message: 'Session reminders dispatched successfully',
+        data: { waResults, appointmentId: id }
       });
     } catch (error) {
       next(error);

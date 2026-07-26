@@ -12,4 +12,8 @@ router.post('/order', verifyJWT, PaymentController.createOrder);
 router.post('/verify-payment', verifyJWT, PaymentController.verifyPaymentAndBook);
 router.post('/verify', verifyJWT, PaymentController.verifyPaymentAndBook);
 
+// Public Razorpay Webhook Routes (No JWT verification since requests originate from Razorpay servers)
+router.post('/webhook', PaymentController.handleWebhook);
+router.post('/razorpay-webhook', PaymentController.handleWebhook);
+
 module.exports = router;

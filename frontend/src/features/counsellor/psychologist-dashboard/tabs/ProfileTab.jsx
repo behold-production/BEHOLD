@@ -429,7 +429,8 @@ const ProfileTab = ({
  
 
  <div className="sm:col-span-2 border-t border-zinc-850 pt-4">
- <h4 className="text-xs font-bold text-zinc-400 tracking-wider mb-3">Bank Account Details (Alternative / Payout Repay)</h4>
+ <h4 className="text-xs font-bold text-white tracking-wider mb-1">Bank Account Details (For Payout Transfers)</h4>
+ <p className="text-[11px] text-zinc-500 font-medium mb-3">Provide your bank details below. Admin settles your console earnings directly to this account.</p>
  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 animate-in fade-in duration-200">
  <div className="space-y-1.5">
  <label className="text-zinc-400 font-bold text-xs tracking-wide">Account Holder Name</label>

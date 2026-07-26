@@ -70,46 +70,50 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
 
   return (
     <>
-      {/* Top Text-Only Announcement Bar */}
-      <div className="bg-slate-900 text-slate-200 text-xs py-2 px-4 border-b border-slate-800 font-medium flex items-center justify-center gap-3 relative z-50">
-        <span className="inline-block text-cyan-400 bg-slate-800 px-2.5 py-0.5 rounded-md text-[11px] font-bold border border-slate-700">
-          100% Confidential & Certified Psychological Care
-        </span>
-        <span className="hidden sm:inline text-slate-300">&middot;</span>
-        <a
-          href={whatsappUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-white hover:underline font-bold transition-colors"
-        >
-          Helpline Support
-        </a>
-      </div>
+      {/* Top Text-Only Announcement Bar - Only shows when Admin enables & assigns details */}
+      {siteSettings?.showBanner && siteSettings?.bannerNotice && (
+        <div className="bg-slate-900 text-slate-200 text-xs py-2 px-4 border-b border-slate-800 font-medium flex items-center justify-center gap-3 relative z-50">
+          <span className="inline-block text-cyan-400 bg-slate-800 px-2.5 py-0.5 rounded-md text-[11px] font-bold border border-slate-700">
+            {siteSettings.bannerNotice}
+          </span>
+          {siteSettings?.phone && (
+            <>
+              <span className="hidden sm:inline text-slate-300">&middot;</span>
+              <a
+                href={`tel:${siteSettings.phone}`}
+                className="text-white hover:underline font-bold transition-colors"
+              >
+                Helpline: {siteSettings.phone}
+              </a>
+            </>
+          )}
+        </div>
+      )}
 
-      {/* Classic Clean Fixed Header */}
-      <header className={`sticky top-0 z-40 bg-white transition-shadow duration-200 ${isScrolled ? 'shadow-sm border-b border-slate-200' : 'border-b border-slate-100'
+      {/* Classic Clean Fixed Header - Luxury Editorial Aesthetic */}
+      <header className={`sticky top-0 z-40 bg-[#f7f4ef]/95 backdrop-blur-md transition-shadow duration-200 ${isScrolled ? 'shadow-xs border-b border-[#e2dad2]' : 'border-b border-[#ebdcd3]'
         }`}>
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
 
-          {/* Logo */}
+          {/* Logo - OURA & CO style */}
           <button
             onClick={handleLogoClick}
             className="flex items-center gap-2 text-left bg-transparent border-none cursor-pointer p-0"
           >
-            <span className="text-2xl font-black tracking-tight text-slate-900 font-sans">
+            <span className="text-xl sm:text-2xl font-black tracking-tight text-[#1c1514] font-sans uppercase">
               {siteName || 'BEHOLD'}
             </span>
           </button>
 
-          {/* Desktop Nav Links */}
-          <nav className="hidden md:flex items-center gap-6">
+          {/* Desktop Nav Links - Uppercase Editorial */}
+          <nav className="hidden md:flex items-center gap-8">
             {navLinks.map(({ label, action, path }) => {
               const isActive = location.pathname === path;
               return (
                 <button
                   key={label}
                   onClick={action}
-                  className={`text-sm font-semibold transition-colors bg-transparent border-none cursor-pointer p-0 ${isActive ? 'text-slate-900 font-bold border-b-2 border-slate-900 pb-0.5' : 'text-slate-600 hover:text-slate-900'
+                  className={`text-xs font-bold uppercase tracking-widest transition-colors bg-transparent border-none cursor-pointer p-0 ${isActive ? 'text-[#1c1514] font-extrabold border-b border-[#1c1514] pb-1' : 'text-[#6e635e] hover:text-[#1c1514]'
                     }`}
                 >
                   {label}
@@ -120,26 +124,18 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
 
           {/* Right Action Buttons */}
           <div className="hidden md:flex items-center gap-3">
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition-colors border border-slate-200"
-            >
-              Helpline
-            </a>
-
             <button
               onClick={() => navigate('/booking')}
-              className="px-4 py-2 bg-slate-900 hover:bg-black text-white font-bold text-xs rounded-lg transition-colors shadow-xs border-none cursor-pointer"
+              className="px-6 py-2.5 bg-[#2b211e] hover:bg-[#1c1514] text-[#f7f4ef] font-bold text-[11px] uppercase tracking-widest rounded-full transition-all shadow-xs border-none cursor-pointer flex items-center gap-1.5"
             >
-              Book Appointment
+              <span>Book Appointment</span>
+              <span className="text-[10px]">›</span>
             </button>
 
             {user ? (
               <button
                 onClick={handleProfileClick}
-                className="w-9 h-9 rounded-lg border border-slate-200 bg-slate-100 text-slate-900 font-bold text-sm flex items-center justify-center transition-all p-0 overflow-hidden cursor-pointer shrink-0"
+                className="w-9 h-9 rounded-full border border-[#d8d0c7] bg-[#ebe5df] text-[#1c1514] font-bold text-xs flex items-center justify-center transition-all p-0 overflow-hidden cursor-pointer shrink-0 shadow-xs"
                 title={`${user.name || 'User'} Profile`}
               >
                 {(user.profilePic || user.avatar || user.profileImage || user.photoURL || user.image) ? (
@@ -149,13 +145,13 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <span className="text-slate-900 font-bold">{(user.name || user.email || 'U').charAt(0).toUpperCase()}</span>
+                  <span className="text-[#1c1514] font-bold">{(user.name || user.email || 'U').charAt(0).toUpperCase()}</span>
                 )}
               </button>
             ) : (
               <button
                 onClick={handleProfileClick}
-                className="px-3.5 py-2 border border-slate-200 hover:border-slate-400 text-slate-800 font-semibold text-xs rounded-lg transition-all bg-white cursor-pointer"
+                className="px-4 py-2 border border-[#d8d0c7] hover:border-[#1c1514] text-[#2b211e] font-bold text-[11px] uppercase tracking-widest rounded-full transition-all bg-[#f7f4ef] cursor-pointer"
               >
                 Sign In
               </button>

@@ -1019,6 +1019,12 @@ const ApiService = {
     });
   },
 
+  async sendAppointmentReminder(id) {
+    return await request(`/admin/appointments/${id}/send-reminder`, {
+      method: 'POST'
+    });
+  },
+
   async rejectRefund(id) {
     return await request(`/admin/appointments/${id}/reject-refund`, {
       method: 'POST'

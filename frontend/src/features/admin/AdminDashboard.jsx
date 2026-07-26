@@ -748,6 +748,7 @@ export default function AdminDashboard({ setView }) {
  const [announcementTitle, setAnnouncementTitle] = useState('');
  const [announcementMessage, setAnnouncementMessage] = useState('');
  const [announcementRole, setAnnouncementRole] = useState('user'); // 'user', 'counsellor', 'everyone'
+ const [sendWhatsAppAnnouncement, setSendWhatsAppAnnouncement] = useState(false);
  const [isSendingAnnouncement, setIsSendingAnnouncement] = useState(false);
 
  const handleEnableNotifications = async () => {
@@ -763,10 +764,8 @@ export default function AdminDashboard({ setView }) {
 
  const handleTestNotification = () => {
  const sent = sendLocalNotification('Test Notification', 'Hello! This is a test notification from BEHOLD.');
- if (sent) {
- import('react-hot-toast').then(mod => mod.toast.success('Test notification sent!'));
- } else {
- import('react-hot-toast').then(mod => mod.toast.error('Failed to send. Check browser permissions.'));
+ if (!sent) {
+ import('react-hot-toast').then(mod => mod.toast.error('Please enable notifications first.'));
  }
  };
 
@@ -780,31 +779,26 @@ export default function AdminDashboard({ setView }) {
  setIsSendingAnnouncement(true);
  try {
  if (announcementRole === 'everyone') {
- // Send to users
  await ApiService.sendSystemNotification({
  recipientId: 'ALL',
- recipientRole: 'user',
+ recipientRole: 'all',
  title: announcementTitle.trim(),
- message: announcementMessage.trim()
- });
- // Send to counsellors
- await ApiService.sendSystemNotification({
- recipientId: 'ALL',
- recipientRole: 'counsellor',
- title: announcementTitle.trim(),
- message: announcementMessage.trim()
+ message: announcementMessage.trim(),
+ sendWhatsApp: sendWhatsAppAnnouncement
  });
  } else {
  await ApiService.sendSystemNotification({
  recipientId: 'ALL',
  recipientRole: announcementRole,
  title: announcementTitle.trim(),
- message: announcementMessage.trim()
+ message: announcementMessage.trim(),
+ sendWhatsApp: sendWhatsAppAnnouncement
  });
  }
- import('react-hot-toast').then(mod => mod.toast.success('System announcement sent successfully!'));
+ import('react-hot-toast').then(mod => mod.toast.success(`System announcement broadcasted successfully!${sendWhatsAppAnnouncement ? ' (Dispatched via WhatsApp)' : ''}`));
  setAnnouncementTitle('');
  setAnnouncementMessage('');
+ setSendWhatsAppAnnouncement(false);
  } catch (err) {
  console.error(err);
  import('react-hot-toast').then(mod => mod.toast.error('Failed to send announcement.'));
@@ -1306,6 +1300,7 @@ export default function AdminDashboard({ setView }) {
  bannerNotice: '',
  termsOfUse: '',
  privacyPolicy: '',
+ refundPolicy: '',
  cdatGroupCode: '',
  enableOnline: true,
  enableOffline: true,
@@ -1469,6 +1464,7 @@ export default function AdminDashboard({ setView }) {
  bannerNotice: settings.bannerNotice || '🚨 Maintenance Notice: Schedulers undergoing maintenance tonight between 12:00 AM - 02:00 AM IST.',
  termsOfUse: settings.termsOfUse || '',
  privacyPolicy: settings.privacyPolicy || '',
+ refundPolicy: settings.refundPolicy || '',
  cdatGroupCode: settings.cdatGroupCode || 'cdat@behold',
  enablePsychology: settings.enablePsychology !== undefined ? settings.enablePsychology : true,
  enableAptitude: settings.enableAptitude !== undefined ? settings.enableAptitude : true,
@@ -3457,6 +3453,8 @@ export default function AdminDashboard({ setView }) {
  setAnnouncementMessage,
  announcementRole,
  setAnnouncementRole,
+ sendWhatsAppAnnouncement,
+ setSendWhatsAppAnnouncement,
  isSendingAnnouncement,
  setIsSendingAnnouncement,
  activeStatHighlight,

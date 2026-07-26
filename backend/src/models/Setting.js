@@ -15,6 +15,10 @@ const settingSchema = new mongoose.Schema(
     bannerNotice: { type: String, default: '' },
     termsOfUse: { type: String, default: '' },
     privacyPolicy: { type: String, default: '' },
+    refundPolicy: { 
+      type: String, 
+      default: 'BEHOLD Return, Cancellation & Refund Policy:\n\n1. Appointment Cancellations:\n- Clients can request session cancellation up to 24 hours prior to the scheduled session start time for a full 100% refund.\n- Cancellations made less than 24 hours before the scheduled session start time or no-shows are non-refundable.\n\n2. Refund Processing:\n- Approved refunds will be processed back to the original Razorpay payment source within 5-7 business days.\n- In case of technical issues or platform cancellations, full automatic refund will be issued.\n\n3. Rescheduling:\n- Sessions can be rescheduled up to 12 hours before start time free of charge.' 
+    },
     cdatGroupCode: { type: String, default: 'cdat@behold' },
     blockedIps: { type: [String], default: [] },
     enablePsychology: { type: Boolean, default: true },

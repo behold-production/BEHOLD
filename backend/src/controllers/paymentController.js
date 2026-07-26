@@ -290,61 +290,17 @@ const PaymentController = {
       const gstAmount = gstPercent > 0 ? Math.round(baseFee * (gstPercent / 100)) : 0;
       const netTotal = Math.max(1, baseFee + gstAmount - appliedDiscount);
 
-      let finalMeetLink = mode === 'ONLINE' ? counsellor.defaultMeetLink || '' : '';
-
-      if (mode === 'ONLINE' && counsellor.googleRefreshToken) {
-        try {
-          const { google } = require('googleapis');
-          const oauth2Client = new google.auth.OAuth2(
-            process.env.GOOGLE_CLIENT_ID,
-            process.env.GOOGLE_CLIENT_SECRET,
-            process.env.GOOGLE_REDIRECT_URI || 'http://localhost:5000/api/google/callback'
-          );
-          oauth2Client.setCredentials({ refresh_token: counsellor.googleRefreshToken });
-
-          const calendar = google.calendar({ version: 'v3', auth: oauth2Client });
-
-          // Construct Start and End Date
-          const [year, month, day] = date.split('-');
-          let [timePart, period] = time.split(' ');
-          let [hours, minutes] = timePart.split(':');
-          hours = parseInt(hours, 10);
-          if (period === 'PM' && hours !== 12) hours += 12;
-          if (period === 'AM' && hours === 12) hours = 0;
-
-          const startTimeStr = `${year}-${month}-${day}T${hours.toString().padStart(2, '0')}:${minutes}:00+05:30`;
-          const startTime = new Date(startTimeStr);
-          const endTime = new Date(startTime.getTime() + 60 * 60 * 1000); // 1 hour duration
-
-          const frontendUrl = process.env.FRONTEND_URL || 'https://behold-aspire.vercel.app';
-          const event = {
-            summary: `Counselling Session: ${user.name} & ${counsellor.name}`,
-            description: `Service: ${service || 'Counselling'}\nMode: ONLINE\n\nAccess your session details, reports, and portal on BEHOLD:\n- Student Portal: ${frontendUrl}/profile\n- Advisor Portal: ${frontendUrl}/counsellor`,
-            start: { dateTime: startTime.toISOString() },
-            end: { dateTime: endTime.toISOString() },
-            attendees: [{ email: user.email }, { email: counsellor.email }],
-            conferenceData: {
-              createRequest: {
-                requestId: `meet-${Date.now()}-${Math.random().toString(36).substring(7)}`,
-                conferenceSolutionKey: { type: 'hangoutsMeet' }
-              }
-            }
-          };
-
-          const response = await calendar.events.insert({
-            calendarId: 'primary',
-            resource: event,
-            conferenceDataVersion: 1,
-            sendUpdates: 'all'
-          });
-
-          if (response.data && response.data.hangoutLink) {
-            finalMeetLink = response.data.hangoutLink;
-          }
-        } catch (calError) {
-          console.error('[Google Calendar Error]:', calError);
-          // Fallback to defaultMeetLink if API fails
-        }
+      let finalMeetLink = '';
+      if (mode === 'ONLINE') {
+        const { generateSessionMeetingLink } = require('../utils/calendarHelper');
+        finalMeetLink = await generateSessionMeetingLink({
+          counsellor,
+          user,
+          date,
+          time,
+          service,
+          appointmentId: `app_${Date.now()}`
+        });
       }
 
       // 4. Calculate commission
@@ -402,6 +358,169 @@ const PaymentController = {
     } catch (error) {
       console.error('[Razorpay Signature Verification Error]:', error);
       next(error);
+    }
+  },
+
+  // Handle Razorpay Webhooks (payment.captured, order.paid, payment.failed, refund.processed, refund.created)
+  async handleWebhook(req, res, next) {
+    try {
+      const signature = req.headers['x-razorpay-signature'];
+      const webhookSecret = (process.env.RAZORPAY_WEBHOOK_SECRET || process.env.RAZORPAY_KEY_SECRET || '').trim();
+
+      if (!signature) {
+        return res.status(400).json({ success: false, message: 'Missing x-razorpay-signature header' });
+      }
+
+      if (!webhookSecret) {
+        console.warn('[Razorpay Webhook Warning]: RAZORPAY_WEBHOOK_SECRET or RAZORPAY_KEY_SECRET is missing in environment.');
+      } else {
+        const payloadString = req.rawBody || JSON.stringify(req.body);
+        const expectedSignature = crypto
+          .createHmac('sha256', webhookSecret)
+          .update(payloadString)
+          .digest('hex');
+
+        if (expectedSignature !== signature) {
+          console.error('[Razorpay Webhook Error]: Webhook signature mismatch');
+          return res.status(400).json({ success: false, message: 'Invalid webhook signature' });
+        }
+      }
+
+      const eventPayload = req.body || {};
+      const event = eventPayload.event;
+      console.log(`[Razorpay Webhook Received]: Event "${event}"`);
+
+      const payloadEntity = eventPayload.payload?.payment?.entity || eventPayload.payload?.order?.entity || {};
+      const orderId = payloadEntity.order_id || payloadEntity.id;
+      const paymentId = payloadEntity.id;
+
+      if (event === 'payment.captured' || event === 'order.paid') {
+        const existingAppointment = await StorageService.findOne('appointments', {
+          $or: [
+            { razorpayOrderId: orderId },
+            { razorpayPaymentId: paymentId }
+          ]
+        });
+
+        if (existingAppointment) {
+          if (existingAppointment.paymentStatus !== 'PAID') {
+            await StorageService.update('appointments', existingAppointment.id, {
+              paymentStatus: 'PAID',
+              razorpayPaymentId: paymentId || existingAppointment.razorpayPaymentId
+            });
+            console.log(`[Razorpay Webhook]: Updated appointment ${existingAppointment.id} paymentStatus to PAID`);
+          }
+        } else if (orderId) {
+          // Fetch order details from Razorpay to create appointment if client browser disconnected after payment
+          try {
+            const keyId = (process.env.RAZORPAY_KEY_ID || '').trim().replace(/^["']|["']$/g, '');
+            const keySecret = (process.env.RAZORPAY_KEY_SECRET || '').trim().replace(/^["']|["']$/g, '');
+            if (keyId && keySecret) {
+              const razorpay = new Razorpay({ key_id: keyId, key_secret: keySecret });
+              const orderObj = await razorpay.orders.fetch(orderId);
+              const notes = orderObj.notes || {};
+
+              if (notes.counsellorId && notes.date && notes.time && notes.mode) {
+                const validation = await validateBookingDetails(
+                  notes.counsellorId,
+                  notes.date,
+                  notes.time,
+                  notes.mode,
+                  notes.service || 'counselling'
+                );
+
+                if (validation.valid) {
+                  const counsellor = validation.counsellor;
+                  const settings = (await StorageService.findOne('settings')) || {};
+                  const netTotal = (orderObj.amount || 0) / 100;
+                  const commissionPercent = counsellor.commissionPercent !== undefined 
+                    ? Number(counsellor.commissionPercent) 
+                    : (settings.counsellorSplitPercent !== undefined ? Number(settings.counsellorSplitPercent) : 50);
+                  const counsellorShareAmount = Number((netTotal * (commissionPercent / 100)).toFixed(2));
+
+                  const { generateSessionMeetingLink } = require('../utils/calendarHelper');
+                  const autoMeetLink = notes.mode === 'ONLINE' ? await generateSessionMeetingLink({
+                    counsellor,
+                    user: notes.userId ? await StorageService.findById('users', notes.userId) : null,
+                    date: notes.date,
+                    time: notes.time,
+                    service: notes.service || 'counselling',
+                    appointmentId: `app_wh_${Date.now()}`
+                  }) : '';
+
+                  const newBooking = await StorageService.create('appointments', {
+                    userId: notes.userId || '',
+                    counsellorId: notes.counsellorId,
+                    date: notes.date,
+                    time: notes.time,
+                    mode: notes.mode,
+                    meetLink: autoMeetLink,
+                    status: 'PENDING',
+                    service: notes.service || 'counselling',
+                    paymentStatus: 'PAID',
+                    razorpayOrderId: orderId,
+                    razorpayPaymentId: paymentId || '',
+                    amountPaid: netTotal,
+                    appliedDiscount: Number(notes.appliedDiscount) || 0,
+                    couponCode: notes.couponCode || '',
+                    commissionPercent,
+                    counsellorShareAmount
+                  });
+
+                  console.log(`[Razorpay Webhook]: Auto-created booking ${newBooking.id} via captured payment event.`);
+
+                  if (notes.counsellorId) {
+                    await StorageService.create('notifications', {
+                      recipientId: notes.counsellorId,
+                      recipientRole: 'counsellor',
+                      title: 'New Paid Appointment Request',
+                      message: `Appointment booked on ${notes.date} at ${notes.time}. Payment ₹${netTotal} confirmed via Webhook.`,
+                      type: 'appointment_created',
+                      isRead: false
+                    });
+                  }
+                }
+              }
+            }
+          } catch (fetchErr) {
+            console.error('[Razorpay Webhook Order Processing Error]:', fetchErr.message);
+          }
+        }
+      } else if (event === 'refund.processed' || event === 'refund.created') {
+        const refundEntity = eventPayload.payload?.refund?.entity || {};
+        const refundPaymentId = refundEntity.payment_id || paymentId;
+
+        if (refundPaymentId) {
+          const appointment = await StorageService.findOne('appointments', { razorpayPaymentId: refundPaymentId });
+          if (appointment) {
+            await StorageService.update('appointments', appointment.id, {
+              refundStatus: 'REFUNDED',
+              paymentStatus: 'REFUNDED',
+              refundId: refundEntity.id || appointment.refundId,
+              refundedAt: new Date()
+            });
+            console.log(`[Razorpay Webhook]: Marked appointment ${appointment.id} as REFUNDED.`);
+          }
+        }
+      } else if (event === 'payment.failed') {
+        if (paymentId || orderId) {
+          const appointment = await StorageService.findOne('appointments', {
+            $or: [
+              { razorpayPaymentId: paymentId },
+              { razorpayOrderId: orderId }
+            ]
+          });
+          if (appointment && appointment.paymentStatus !== 'PAID') {
+            await StorageService.update('appointments', appointment.id, { paymentStatus: 'FAILED' });
+            console.log(`[Razorpay Webhook]: Marked appointment ${appointment.id} paymentStatus as FAILED.`);
+          }
+        }
+      }
+
+      return res.status(200).json({ success: true, message: 'Webhook event processed successfully', event });
+    } catch (error) {
+      console.error('[Razorpay Webhook Error]:', error);
+      res.status(500).json({ success: false, message: 'Webhook processing error', error: error.message });
     }
   }
 };

@@ -251,6 +251,8 @@ export default function SettingsTab(props) {
  handleEnableNotifications,
  handleTestNotification,
  handleSendAnnouncement,
+ sendWhatsAppAnnouncement,
+ setSendWhatsAppAnnouncement,
  handleAdminCigiUpload,
  handleAdminCigiDelete,
  handleAdminStartEditCigi,
@@ -1888,6 +1890,19 @@ export default function SettingsTab(props) {
  />
  </div>
 
+ <div className="flex items-center gap-2 pt-1 pb-1">
+ <input
+ type="checkbox"
+ id="sendWhatsAppCheck"
+ checked={sendWhatsAppAnnouncement || false}
+ onChange={(e) => setSendWhatsAppAnnouncement?.(e.target.checked)}
+ className="w-4 h-4 cursor-pointer accent-emerald-500 rounded"
+ />
+ <label htmlFor="sendWhatsAppCheck" className="text-xs font-bold text-emerald-400 cursor-pointer select-none">
+ Also Dispatch Announcement via WhatsApp API to target recipients
+ </label>
+ </div>
+
  <button
  type="submit"
  disabled={isSendingAnnouncement}
@@ -2037,6 +2052,18 @@ export default function SettingsTab(props) {
  onChange={(e) => setSettingsForm({ ...settingsForm, privacyPolicy: e.target.value })}
  className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold resize-y transition-colors font-mono text-xs leading-relaxed"
  placeholder="Write Platform Privacy Policy..."
+ />
+ </div>
+
+ <div className="space-y-1">
+ <label className="text-xs font-bold text-zinc-400 ">Return & Refund Policy Document</label>
+ <textarea
+ rows={12}
+ required
+ value={settingsForm.refundPolicy}
+ onChange={(e) => setSettingsForm({ ...settingsForm, refundPolicy: e.target.value })}
+ className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold resize-y transition-colors font-mono text-xs leading-relaxed"
+ placeholder="Write Platform Return & Refund Policy..."
  />
  </div>
  </div>
