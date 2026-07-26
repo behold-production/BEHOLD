@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { renderTitleWithFullstopDot } from '../../shared/components/BrandDot';
 import ApiService from '../../shared/services/api';
 import { useAuth } from '../../shared/context/AuthContext';
@@ -69,34 +70,31 @@ function Stars({ count = 5, total = 5, interactive = false, onSelect }) {
 function ReviewCard({ review }) {
   const initial = (review.name || '?')[0].toUpperCase();
   return (
-    <div
-      className="bg-white rounded-lg border border-gray-200 shadow-sm flex flex-col justify-between shrink-0 p-6"
-      style={{ width: '320px', minHeight: '220px' }}
-    >
-      <div>
+    <div className="bg-white rounded-2xl border border-[#d6cecb] shadow-xs hover:shadow-md transition-shadow flex flex-col justify-between h-full p-6 sm:p-7 w-full">
+      <div className="flex-1 flex flex-col justify-between">
         {/* Stars */}
         <div className="flex gap-1 mb-4">
           {Array.from({ length: 5 }).map((_, i) => (
-            <svg key={i} className={`w-4 h-4 fill-current ${i < (review.rating || 5) ? 'text-yellow-400' : 'text-gray-200'}`} viewBox="0 0 24 24">
+            <svg key={i} className={`w-4 h-4 fill-current ${i < (review.rating || 5) ? 'text-amber-400' : 'text-gray-200'}`} viewBox="0 0 24 24">
               <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
             </svg>
           ))}
         </div>
 
         {/* Quote */}
-        <p className="text-gray-700 text-sm leading-relaxed mb-6 font-normal">
+        <p className="text-[#3a312d] text-sm leading-relaxed mb-6 font-normal">
           &ldquo;{review.comment || review.text}&rdquo;
         </p>
       </div>
 
       {/* Author */}
-      <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
-        <div className="w-9 h-9 bg-gray-900 text-white font-serif font-bold rounded-full flex items-center justify-center text-sm shrink-0">
+      <div className="flex items-center gap-3 pt-4 border-t border-[#eae4dc]">
+        <div className="w-9 h-9 bg-[#1c1514] text-[#f7f4ef] font-sans font-bold rounded-full flex items-center justify-center text-sm shrink-0">
           {initial}
         </div>
         <div>
-          <div className="font-bold text-gray-900 text-sm leading-tight">{review.name}</div>
-          <div className="text-gray-500 text-xs font-normal mt-0.5">{review.role || 'Student'}</div>
+          <div className="font-bold text-[#1c1514] text-sm leading-tight">{review.name}</div>
+          <div className="text-[#7c7069] text-xs font-normal mt-0.5">{review.role || 'Student'}</div>
         </div>
       </div>
     </div>
@@ -233,9 +231,8 @@ export default function Reviews({ siteSettings }) {
   const [apiReviews, setApiReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const scrollRef = useRef(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 3;
 
   const fetchReviews = async () => {
     try {
@@ -252,103 +249,92 @@ export default function Reviews({ siteSettings }) {
 
   useEffect(() => { fetchReviews(); }, []);
 
-  const updateScrollState = () => {
-    const el = scrollRef.current;
-    if (!el) return;
-    setCanScrollLeft(el.scrollLeft > 4);
-    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 4);
-  };
-
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    el.addEventListener('scroll', updateScrollState, { passive: true });
-    updateScrollState();
-    return () => el.removeEventListener('scroll', updateScrollState);
-  }, [apiReviews]);
-
-  const scroll = (dir) => {
-    const el = scrollRef.current;
-    if (el) el.scrollBy({ left: dir * 340, behavior: 'smooth' });
-  };
-
   const displayReviews = apiReviews.length > 0 ? apiReviews : fallbackReviews;
+  const totalPages = Math.ceil(displayReviews.length / itemsPerPage);
+  const paginatedReviews = displayReviews.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   return (
-    <section className="py-16 sm:py-24 bg-gray-50 border-b border-gray-200">
+    <section className="py-16 sm:py-24 bg-[#f7f4ef] border-b border-[#e2dad2]">
       <div className="max-w-6xl mx-auto">
 
         {/* Header */}
         <div className="text-center mb-14 px-4 sm:px-6 lg:px-8">
-          <span className="text-xs font-bold tracking-widest uppercase text-gray-400 block mb-3">
+          <span className="text-xs font-bold tracking-widest uppercase text-[#7c7069] block mb-3">
             Testimonials
           </span>
           <h2
             id="reviews-title"
-            className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-4 tracking-tight leading-tight"
+            className="text-3xl sm:text-4xl md:text-5xl font-sans font-bold text-[#1c1514] mb-4 tracking-tight leading-tight uppercase"
           >
             What Our Community Says.
           </h2>
-          <p className="text-sm sm:text-base text-gray-600 max-w-xl mx-auto leading-relaxed font-normal">
+          <p className="text-sm sm:text-base text-[#6e635e] max-w-xl mx-auto leading-relaxed font-normal">
             Real stories from students, parents, and professionals who found clarity through BEHOLD.
           </p>
         </div>
 
-        {/* Scroll Controls Header */}
-        <div className="flex items-center justify-between px-4 sm:px-6 lg:px-8 mb-6">
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-gray-400 font-medium hidden sm:block">Swipe horizontally or use arrows</span>
-          </div>
-          <div className="flex gap-2">
-            <button
-              onClick={() => scroll(-1)}
-              disabled={!canScrollLeft}
-              className={`w-9 h-9 rounded-md border flex items-center justify-center transition cursor-pointer ${canScrollLeft ? 'border-gray-900 text-gray-900 hover:bg-gray-100' : 'border-gray-200 text-gray-300 cursor-not-allowed'}`}
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-            <button
-              onClick={() => scroll(1)}
-              disabled={!canScrollRight}
-              className={`w-9 h-9 rounded-md border flex items-center justify-center transition cursor-pointer ${canScrollRight ? 'border-gray-900 text-gray-900 hover:bg-gray-100' : 'border-gray-200 text-gray-300 cursor-not-allowed'}`}
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        {/* Horizontal Scroll Carousel */}
+        {/* Paginated Review Cards Grid */}
         {loading ? (
           <div className="flex justify-center py-12">
-            <div className="w-6 h-6 border-2 border-gray-900 border-t-transparent rounded-full animate-spin" />
+            <div className="w-6 h-6 border-2 border-[#2b211e] border-t-transparent rounded-full animate-spin" />
           </div>
         ) : (
-          <div
-            ref={scrollRef}
-            className="flex gap-6 overflow-x-auto px-4 sm:px-6 lg:px-8 pb-4"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
-          >
-            {displayReviews.map((rev, i) => (
-              <ReviewCard key={rev._id || i} review={rev} />
-            ))}
-            {/* Write Review CTA Card */}
-            <div
-              className="bg-white border border-gray-300 border-dashed rounded-lg flex flex-col items-center justify-center shrink-0 cursor-pointer hover:border-gray-900 transition p-6"
-              style={{ width: '260px', minHeight: '220px' }}
-              onClick={() => setShowForm(true)}
-            >
-              <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center mb-3 text-gray-900">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-                </svg>
-              </div>
-              <p className="text-gray-900 font-bold text-sm text-center">Share Your Experience</p>
-              <p className="text-gray-500 text-xs text-center mt-1">Write a testimonial</p>
+          <div className="px-4 sm:px-6 lg:px-8 space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+              {paginatedReviews.map((rev, i) => (
+                <div key={rev._id || i} className="w-full h-full flex flex-col">
+                  <ReviewCard review={rev} />
+                </div>
+              ))}
             </div>
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-center gap-2 pt-6">
+                <button
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  aria-label="Previous Page"
+                  className={`w-9 h-9 rounded-full text-sm font-bold transition-all cursor-pointer border flex items-center justify-center ${
+                    currentPage === 1
+                      ? 'border-[#d8d0c7] text-[#a39891] bg-[#ebe5df] cursor-not-allowed'
+                      : 'border-[#2b211e] bg-[#2b211e] text-[#f7f4ef] hover:bg-[#1c1514]'
+                  }`}
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
+                  <button
+                    key={num}
+                    onClick={() => setCurrentPage(num)}
+                    className={`w-9 h-9 rounded-full text-xs font-bold transition-all cursor-pointer border flex items-center justify-center ${
+                      currentPage === num
+                        ? 'bg-[#2b211e] text-[#f7f4ef] border-[#2b211e] shadow-xs'
+                        : 'bg-white text-[#2b211e] border-[#d8d0c7] hover:border-[#1c1514]'
+                    }`}
+                  >
+                    {num}
+                  </button>
+                ))}
+
+                <button
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  aria-label="Next Page"
+                  className={`w-9 h-9 rounded-full text-sm font-bold transition-all cursor-pointer border flex items-center justify-center ${
+                    currentPage === totalPages
+                      ? 'border-[#d8d0c7] text-[#a39891] bg-[#ebe5df] cursor-not-allowed'
+                      : 'border-[#2b211e] bg-[#2b211e] text-[#f7f4ef] hover:bg-[#1c1514]'
+                  }`}
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+            )}
           </div>
         )}
 

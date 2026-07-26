@@ -190,17 +190,17 @@ export default function AuthModals({ isOpen, onClose }) {
  >
  {/* Modal Card */}
  <div 
- className="relative w-full max-w-md my-auto bg-white rounded-lg shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 border border-zinc-200"
+ className="relative w-full max-w-md my-auto bg-white rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 border border-[#d6cecb]"
  onClick={(e) => e.stopPropagation()}
  >
 
  {/* Header */}
- <div className="flex justify-between items-start gap-4 p-5 sm:p-6 border-b border-zinc-100">
+ <div className="flex justify-between items-start gap-4 p-6 sm:p-7 border-b border-[#eae4dc]">
  <div className="min-w-0">
- <h2 id="auth-modal-title" className="text-xl sm:text-2xl font-header font-bold tracking-tight text-zinc-900">
+ <h2 id="auth-modal-title" className="text-xl sm:text-2xl font-sans font-bold tracking-tight text-[#1c1514] uppercase">
  {rejectionReason ? 'Application Rejected' : titles[mode].title}
  </h2>
- <p className="text-xs text-zinc-500 font-medium mt-1">
+ <p className="text-xs text-[#6e635e] font-normal mt-1">
  {rejectionReason ? 'Your counselor application has been declined.' : titles[mode].subtitle}
  </p>
  </div>
@@ -208,44 +208,44 @@ export default function AuthModals({ isOpen, onClose }) {
  type="button"
  onClick={onClose}
  aria-label="Close dialog"
- className="w-10 h-10 shrink-0 bg-zinc-50 hover:bg-zinc-100 rounded-full transition-colors cursor-pointer flex items-center justify-center"
+ className="w-9 h-9 shrink-0 bg-[#eae4dc] hover:bg-[#d8d0c7] rounded-full transition-colors cursor-pointer flex items-center justify-center border-none"
  >
- <X className="w-4 h-4 text-zinc-600" />
+ <X className="w-4 h-4 text-[#1c1514]" />
  </button>
  </div>
 
  {/* Form body */}
  {rejectionReason ? (
- <div className="p-5 sm:p-6 space-y-4">
- <div className="bg-rose-50 border border-rose-200 p-4 rounded-lg space-y-3">
- <p className="text-sm text-zinc-700 leading-relaxed font-medium">
+ <div className="p-6 space-y-4">
+ <div className="bg-rose-50 border border-rose-200 p-4 rounded-2xl space-y-3">
+ <p className="text-sm text-[#1c1514] leading-relaxed font-medium">
  We regret to inform you that your professional counsellor application has been rejected by the system administrator.
  </p>
- <div className="bg-white border border-rose-100 p-3 rounded-lg">
- <span className="text-[10px] font-bold text-rose-500 tracking-wider block mb-1">Reason for Rejection:</span>
+ <div className="bg-white border border-rose-100 p-3 rounded-xl">
+ <span className="text-[10px] font-bold text-rose-600 tracking-wider block mb-1 uppercase">Reason for Rejection:</span>
  <p className="text-sm text-zinc-800 italic leading-relaxed">"{rejectionReason}"</p>
  </div>
  </div>
  <button
  onClick={() => { setRejectionReason(null); setMode('login'); }}
- className="w-full py-3 bg-zinc-900 hover:bg-zinc-800 text-white font-semibold text-sm rounded-lg transition-all cursor-pointer border-none"
+ className="w-full py-3.5 bg-[#2b211e] hover:bg-[#1c1514] text-[#f7f4ef] font-bold text-xs uppercase tracking-widest rounded-full transition-all cursor-pointer border-none"
  >
  Return to Login
  </button>
  </div>
  ) : (
- <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-4">
+ <form onSubmit={handleSubmit} className="p-6 space-y-4">
 
  {/* Login Method Toggle */}
  {mode === 'login' && (
- <div className="flex rounded-lg border border-zinc-200 bg-zinc-50 p-1 text-sm font-semibold mb-2">
+ <div className="flex rounded-full border border-[#d8d0c7] bg-[#eae4dc]/60 p-1 text-xs font-bold mb-3">
  <button
  type="button"
  onClick={() => { setLoginMethod('email'); setForgotSuccess(null); }}
- className={`flex-1 px-1 min-h-[36px] rounded-md cursor-pointer transition-all duration-200 flex items-center justify-center ${
+ className={`flex-1 px-3 min-h-[36px] rounded-full cursor-pointer transition-all duration-200 flex items-center justify-center border-none ${
  loginMethod === 'email'
- ? 'bg-zinc-900 text-white shadow-sm'
- : 'text-zinc-500 hover:text-zinc-900'
+ ? 'bg-[#2b211e] text-[#f7f4ef] shadow-xs'
+ : 'text-[#6e635e] hover:text-[#1c1514]'
  }`}
  >
  Email
@@ -253,10 +253,10 @@ export default function AuthModals({ isOpen, onClose }) {
  <button
  type="button"
  onClick={() => { setLoginMethod('phone'); setForgotSuccess(null); }}
- className={`flex-1 px-1 min-h-[36px] rounded-md cursor-pointer transition-all duration-200 flex items-center justify-center ${
+ className={`flex-1 px-3 min-h-[36px] rounded-full cursor-pointer transition-all duration-200 flex items-center justify-center border-none ${
  loginMethod === 'phone'
- ? 'bg-zinc-900 text-white shadow-sm'
- : 'text-zinc-500 hover:text-zinc-900'
+ ? 'bg-[#2b211e] text-[#f7f4ef] shadow-xs'
+ : 'text-[#6e635e] hover:text-[#1c1514]'
  }`}
  >
  WhatsApp OTP

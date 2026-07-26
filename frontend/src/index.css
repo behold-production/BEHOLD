@@ -1,6 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap');
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'ClimateCrisisLocal';
+  src: url('./assets/Climate-Crisis.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+.font-climate {
+  font-family: 'ClimateCrisisLocal', 'Bodoni Moda', 'Playfair Display', sans-serif !important;
+  letter-spacing: 0.015em;
+}
+
 @theme {
   --color-neon-blue-deep: #060e20;
   --color-neon-blue-mid: #0c1a36;

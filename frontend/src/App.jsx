@@ -331,9 +331,9 @@ export default function App() {
     return () => clearInterval(interval);
   }, [user]);
 
-  // Role-based routing and redirection flow
+  // Role-based routing and strict portal isolation flow
   useEffect(() => {
-    if (isLoading) return; // Wait for auth to resolve
+    if (isLoading) return; // Wait for auth resolution
 
     const path = location.pathname;
 
@@ -341,14 +341,17 @@ export default function App() {
       const userRole = user?.role?.toUpperCase();
       if (userRole === 'ADMIN' || userRole === 'SUPER_ADMIN' || userRole === 'SUB_ADMIN') {
         if (!path.startsWith('/admin')) {
+          toast.error('Admin Console Active: Navigating outside Admin Control Room is restricted.', { id: 'admin-route-guard' });
           navigate('/admin', { replace: true });
         }
       } else if (userRole === 'PSYCHOLOGIST' || userRole === 'COUNSELLOR') {
-        if (path !== '/counsellor' && path !== '/conceller') {
+        if (path !== '/counsellor' && path !== '/conceller' && path !== '/cousellor') {
+          toast.error('Specialist Console Active: Navigating outside Counsellor Console is restricted.', { id: 'counsellor-route-guard' });
           navigate('/counsellor', { replace: true });
         }
       } else if (userRole === 'USER') {
-        if (path === '/counsellor' || path === '/conceller' || path.startsWith('/admin')) {
+        if (path === '/counsellor' || path === '/conceller' || path === '/cousellor' || path.startsWith('/admin')) {
+          toast.error('Access Denied: You do not have permission to access this portal.', { id: 'user-access-denied' });
           navigate('/profile', { replace: true });
         }
       }
@@ -581,15 +584,7 @@ export default function App() {
                           <CdatSection key="aptitude_sec" setView={() => { }} siteSettings={siteSettings} />
                         ) : null;
                       case 'about':
-                        return (
-                          <About
-                            key="about_sec"
-                            setView={() => { }}
-                            enablePsychology={siteSettings.enablePsychology !== false}
-                            enableCareerMentoring={siteSettings.enableCareerMentoring !== false}
-                            siteSettings={siteSettings}
-                          />
-                        );
+                        return null;
                       case 'reviews':
                         return <Reviews key="reviews_sec" siteSettings={siteSettings} />;
                       case 'faq':

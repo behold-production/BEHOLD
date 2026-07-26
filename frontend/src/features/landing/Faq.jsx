@@ -26,7 +26,7 @@ const defaultFaqs = [
 ];
 
 export default function Faq() {
-  const [openIndex, setOpenIndex] = useState(0);
+  const [openIndex, setOpenIndex] = useState(null);
   const [faqs, setFaqs] = useState([]);
 
   useEffect(() => {
@@ -44,18 +44,18 @@ export default function Faq() {
   const displayFaqs = faqs.length > 0 ? faqs.slice(0, 6) : defaultFaqs;
 
   return (
-    <section id="faqs" className="py-16 sm:py-24 bg-white border-b border-gray-100">
+    <section id="faqs" className="py-20 sm:py-28 bg-[#f7f4ef] text-[#1c1514] border-b border-[#e2dad2]">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Header */}
-        <div className="text-center mb-16">
-          <span className="text-xs font-bold tracking-widest uppercase text-gray-400 block mb-3">
-            Frequently Asked Questions
+        <div className="text-center mb-14">
+          <span className="text-xs font-bold tracking-widest uppercase text-[#7c7069] block mb-2">
+            FREQUENTLY ASKED QUESTIONS
           </span>
-          <h2 id="faq-title" className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-4 tracking-tight leading-tight">
+          <h2 id="faq-title" className="text-3xl sm:text-5xl font-sans font-bold uppercase text-[#1c1514] mb-3 tracking-tight leading-none">
             Everything You Need to Know.
           </h2>
-          <p className="text-sm sm:text-base text-gray-600 font-normal max-w-xl mx-auto leading-relaxed">
+          <p className="text-sm sm:text-base text-[#6e635e] font-normal max-w-xl mx-auto leading-relaxed">
             We've answered the most common questions about our counseling model, C-DAT assessments, and mentorship programs.
           </p>
         </div>
@@ -67,17 +67,17 @@ export default function Faq() {
             return (
               <div
                 key={idx}
-                className={`rounded-lg border transition-all duration-200 overflow-hidden ${isOpen ? 'border-gray-900 bg-gray-50/50 shadow-sm' : 'border-gray-200 bg-white hover:border-gray-300'}`}
+                className={`rounded-2xl border transition-all duration-300 overflow-hidden ${isOpen ? 'border-[#1c1514] bg-white shadow-sm' : 'border-[#d6cecb] bg-white hover:border-[#1c1514]'}`}
               >
                 <button
                   type="button"
                   onClick={() => setOpenIndex(isOpen ? null : idx)}
                   className="w-full text-left px-6 py-5 flex items-center justify-between gap-4 cursor-pointer bg-transparent border-none"
                 >
-                  <span className={`font-bold text-base leading-snug ${isOpen ? 'text-gray-900' : 'text-gray-800'}`}>
+                  <span className={`font-bold text-sm sm:text-base leading-snug ${isOpen ? 'text-[#1c1514]' : 'text-[#1c1514]'}`}>
                     {faq.question}
                   </span>
-                  <div className={`w-8 h-8 rounded-md flex items-center justify-center shrink-0 transition-all ${isOpen ? 'bg-gray-900 text-white rotate-180' : 'bg-gray-100 text-gray-500'}`}>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ${isOpen ? 'bg-[#2b211e] text-[#f7f4ef] rotate-180' : 'bg-[#eae4dc] text-[#1c1514]'}`}>
                     <ChevronDown className="w-4 h-4" />
                   </div>
                 </button>
@@ -85,7 +85,7 @@ export default function Faq() {
                   className="overflow-hidden transition-all duration-300 ease-in-out"
                   style={{ maxHeight: isOpen ? '400px' : '0px' }}
                 >
-                  <div className="px-6 pb-6 text-gray-600 leading-relaxed text-sm sm:text-base border-t border-gray-200 pt-4 font-normal">
+                  <div className="px-6 pb-6 text-[#6e635e] leading-relaxed text-xs sm:text-sm border-t border-[#eae4dc] pt-4 font-normal">
                     {faq.answer}
                   </div>
                 </div>
@@ -95,14 +95,14 @@ export default function Faq() {
         </div>
 
         {/* Bottom CTA */}
-        <div className="mt-14 text-center">
-          <p className="text-gray-600 mb-4 text-sm font-normal">Still have questions?</p>
+        <div className="mt-12 text-center">
+          <p className="text-[#6e635e] mb-4 text-xs sm:text-sm font-normal">Still have questions?</p>
           <button
             onClick={() => {
               const el = document.getElementById('inquiry');
               if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }}
-            className="px-8 py-3 bg-gray-900 hover:bg-black text-white font-semibold text-sm rounded-md transition border-none cursor-pointer shadow-sm"
+            className="px-7 py-3 bg-[#2b211e] hover:bg-[#1c1514] text-[#f7f4ef] font-bold text-xs uppercase tracking-widest rounded-full transition-all border-none cursor-pointer shadow-xs"
           >
             Contact Our Team
           </button>

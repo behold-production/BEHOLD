@@ -122,27 +122,16 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
     const [expandedBios, setExpandedBios] = useState({});
     const [expandedSpecialties, setExpandedSpecialties] = useState({});
 
-    useEffect(() => {
-        if (selectedDate && !selectedAdvisor && step2Ref.current) {
-            setTimeout(() => {
-                step2Ref.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 150);
-        }
-    }, [selectedDate]);
-
-    useEffect(() => {
-        if (selectedAdvisor && step3Ref.current) {
-            setTimeout(() => {
-                step3Ref.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 150);
-        }
-    }, [selectedAdvisor]);
-
     const isAdvisorLocked = !!preselectedAdvisorId;
     const flowKey = bookingMode === 'DOOR_STEP' ? 'doorstep' : bookingMode.toLowerCase();
     const activeSteps = bookingService === 'counselling' ? COUNSELLING_FLOW[flowKey] : CAREER_FLOW[flowKey];
 
     const [clientSearchQuery, setClientSearchQuery] = useState(bookingForm.clientLocationName || '');
+    const [advisorPage, setAdvisorPage] = useState(1);
+
+    useEffect(() => {
+        setAdvisorPage(1);
+    }, [selectedDate, bookingMode, bookingService]);
     const [clientSearchResults, setClientSearchResults] = useState([]);
     const [isClientSearching, setIsClientSearching] = useState(false);
     const [isClientLocating, setIsClientLocating] = useState(false);
@@ -330,31 +319,31 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                         const currentStepIdx = stepMapping[bookingStep] || 0;
                         const stepLabels = ['Schedule & Advisor', 'Account & Payment', 'Session Confirmed'];
                         return (
-                            <div className="bg-white/90 backdrop-blur-md border border-emerald-100 p-5 sm:p-6 space-y-5 rounded-2xl shadow-sm animate-in fade-in duration-300">
+                            <div className="bg-white border border-[#d6cecb] p-5 sm:p-6 space-y-5 rounded-2xl shadow-xs animate-in fade-in duration-300">
                                 {/* Mobile: compact progress bar */}
                                 <div className="flex sm:hidden items-center gap-2">
                                     <div className="flex items-center gap-1.5 flex-1 min-w-0">
-                                        <span className="text-xs font-bold text-slate-900 shrink-0">
+                                        <span className="text-xs font-bold text-[#1c1514] shrink-0">
                                             Step {currentStepIdx + 1} of 3
                                         </span>
-                                        <div className="h-2 flex-1 bg-slate-100 rounded-full overflow-hidden">
+                                        <div className="h-2 flex-1 bg-[#eae4dc] rounded-full overflow-hidden">
                                             <div
-                                                className="h-full bg-emerald-600 rounded-full transition-all duration-500"
+                                                className="h-full bg-[#2b211e] rounded-full transition-all duration-500"
                                                 style={{ width: `${((currentStepIdx + 1) / 3) * 100}%` }}
                                             />
                                         </div>
                                     </div>
-                                    <span className="text-xs font-bold text-emerald-600 truncate">
+                                    <span className="text-xs font-bold text-[#2b211e] truncate">
                                         {stepLabels[currentStepIdx]}
                                     </span>
                                 </div>
 
                                 {/* Desktop/tablet: full stepper */}
                                 <div className="hidden sm:block">
-                                    <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-3.5">
+                                    <div className="flex items-center justify-between gap-2 border-b border-[#eae4dc] pb-3.5">
                                         <div className="flex items-center gap-2">
-                                            <span className="px-3.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 font-bold text-xs inline-flex items-center gap-2 shadow-2xs">
-                                                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                                            <span className="px-3.5 py-1 rounded-full bg-[#eae4dc] border border-[#d8d0c7] text-[#1c1514] font-bold text-xs inline-flex items-center gap-2">
+                                                <span className="w-2 h-2 rounded-full bg-[#2b211e]" />
                                                 <span>{bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring'} &middot; {bookingMode === 'ONLINE' ? 'Video Call' : bookingMode === 'DOOR_STEP' ? 'Home Visit' : 'At Center'}</span>
                                             </span>
                                         </div>
@@ -369,20 +358,20 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                                 <div key={idx} className="flex flex-col items-start gap-2 relative">
                                                     <div className="flex items-center w-full">
                                                         <div className={`flex items-center justify-center w-8 h-8 rounded-xl font-bold text-xs border transition-all duration-300 shrink-0 ${isCompleted
-                                                            ? 'bg-emerald-600 border-emerald-600 text-white shadow-sm'
+                                                            ? 'bg-[#2b211e] border-[#2b211e] text-[#f7f4ef] shadow-xs'
                                                             : isActive
-                                                                ? 'bg-emerald-600 border-emerald-600 text-white shadow-md shadow-emerald-500/25 ring-4 ring-emerald-50'
-                                                                : 'bg-slate-100 border-slate-200 text-slate-400'
+                                                                ? 'bg-[#2b211e] border-[#2b211e] text-[#f7f4ef] shadow-sm ring-4 ring-[#eae4dc]'
+                                                                : 'bg-[#eae4dc] border-[#d8d0c7] text-[#7c7069]'
                                                             }`}>
                                                             {isCompleted ? '✓' : idx + 1}
                                                         </div>
                                                         {idx < activeSteps.length - 1 && (
-                                                            <div className={`h-[2px] w-full ml-3 transition-all duration-300 rounded-full ${isCompleted ? 'bg-emerald-600' : 'bg-slate-200'
+                                                            <div className={`h-[2px] w-full ml-3 transition-all duration-300 rounded-full ${isCompleted || isActive ? 'bg-[#2b211e]' : 'bg-[#eae4dc]'
                                                                 }`} />
                                                         )}
                                                     </div>
                                                     <div className="flex flex-col text-left min-w-0 mt-1">
-                                                        <span className={`text-xs sm:text-sm font-bold ${isActive ? 'text-slate-900' : isCompleted ? 'text-slate-700' : 'text-slate-400'}`}>
+                                                        <span className={`text-xs sm:text-sm font-bold ${isActive ? 'text-[#1c1514]' : isCompleted ? 'text-[#2b211e]' : 'text-[#a39891]'}`}>
                                                             {stepLabels[idx]}
                                                         </span>
                                                         <span className={`text-[11px] transition-colors duration-300 mt-0.5 leading-relaxed ${isActive ? 'text-slate-600 font-medium' : 'text-slate-400'}`}>
@@ -621,9 +610,9 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                                                     if (rescheduleSession) return;
                                                                     setBookingService(s.id);
                                                                 }}
-                                                                className={`min-h-[48px] px-4 py-3 rounded-[8px] transition-all duration-300 cursor-pointer flex items-center justify-center text-center border-2 text-sm font-semibold ${isSelected
-                                                                    ? 'bg-surface-900 border-surface-900 text-white'
-                                                                    : 'bg-white border-surface-200 text-surface-700 hover:border-surface-300 hover:bg-surface-50'
+                                                                className={`min-h-[48px] px-4 py-3 rounded-xl transition-all duration-300 cursor-pointer flex items-center justify-center text-center border text-sm font-bold ${isSelected
+                                                                    ? 'bg-[#2b211e] border-[#2b211e] text-[#f7f4ef] shadow-xs'
+                                                                    : 'bg-white border-[#d8d0c7] text-[#1c1514] hover:border-[#1c1514] hover:bg-[#f7f4ef]'
                                                                     } ${rescheduleSession ? 'opacity-65 cursor-not-allowed' : ''}`}
                                                             >
                                                                 {s.label}
@@ -658,14 +647,14 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                                                         if (rescheduleSession) return;
                                                                         setBookingMode(m.id);
                                                                     }}
-                                                                    className={`flex flex-col items-center justify-center gap-1 px-3 py-2 border-2 rounded-[8px] transition cursor-pointer text-center min-h-[48px] leading-tight ${bookingMode === m.id
-                                                                        ? 'bg-surface-100 text-surface-900 border-surface-900'
-                                                                        : 'bg-white text-surface-700 border-surface-200 hover:border-surface-300 hover:bg-surface-50'
+                                                                    className={`flex flex-col items-center justify-center gap-1 px-3 py-2 border rounded-xl transition cursor-pointer text-center min-h-[48px] leading-tight ${bookingMode === m.id
+                                                                        ? 'bg-[#2b211e] text-[#f7f4ef] border-[#2b211e] shadow-xs'
+                                                                        : 'bg-white text-[#1c1514] border-[#d8d0c7] hover:border-[#1c1514] hover:bg-[#f7f4ef]'
                                                                         } ${(!isAvailable || rescheduleSession) ? 'opacity-40 cursor-not-allowed' : ''}`}
                                                                 >
                                                                     <span className="flex flex-col items-center">
-                                                                        <span className="font-semibold text-sm text-surface-900">{m.label}</span>
-                                                                        <span className="text-xs text-surface-500 mt-0.5">{m.desc}</span>
+                                                                        <span className={`font-bold text-sm ${bookingMode === m.id ? 'text-[#f7f4ef]' : 'text-[#1c1514]'}`}>{m.label}</span>
+                                                                        <span className={`text-xs mt-0.5 ${bookingMode === m.id ? 'text-[#e2dad2]' : 'text-[#6e635e]'}`}>{m.desc}</span>
                                                                         {!isAvailable && <span className="text-sm text-rose-500 font-medium mt-1">Disabled</span>}
                                                                     </span>
                                                                 </button>
@@ -906,12 +895,12 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                                             if (availableAdvisors.length === 0) {
                                                                 return (
                                                                     <div className="p-4 border border-dashed border-surface-200 rounded-[8px] bg-surface-50 text-surface-600 text-center font-medium text-sm">
-                                                                        No psychologists are available on this selected date. Please choose another date.
+                                                                No psychologists are available on this selected date. Please choose another date.
                                                                     </div>
                                                                 );
                                                             }
 
-                                                            const advisorsToRender = selectedAdvisor ? [selectedAdvisor] : availableAdvisors;
+                                                            const advisorsToRender = selectedAdvisor ? [selectedAdvisor] : availableAdvisors.slice((advisorPage - 1) * 4, advisorPage * 4);
 
                                                             return advisorsToRender.map((advisor) => {
                                                                 const slots = getAdvisorSlotsForDate(advisor, selectedDate);
@@ -1152,6 +1141,51 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                                                 );
                                                             });
                                                         })()}
+
+                                                        {!selectedAdvisor && Math.ceil(availableAdvisors.length / 4) > 1 && (
+                                                            <div className="flex items-center justify-center gap-2 pt-4">
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => setAdvisorPage(p => Math.max(1, p - 1))}
+                                                                    disabled={advisorPage === 1}
+                                                                    aria-label="Previous Page"
+                                                                    className={`w-8 h-8 rounded-full text-sm font-bold transition-all cursor-pointer border flex items-center justify-center ${
+                                                                        advisorPage === 1
+                                                                            ? 'border-[#d8d0c7] text-[#a39891] bg-[#ebe5df] cursor-not-allowed'
+                                                                            : 'border-[#2b211e] bg-[#2b211e] text-[#f7f4ef] hover:bg-[#1c1514]'
+                                                                    }`}
+                                                                >
+                                                                    ‹
+                                                                </button>
+                                                                {Array.from({ length: Math.ceil(availableAdvisors.length / 4) }, (_, i) => i + 1).map((num) => (
+                                                                    <button
+                                                                        key={num}
+                                                                        type="button"
+                                                                        onClick={() => setAdvisorPage(num)}
+                                                                        className={`w-8 h-8 rounded-full text-xs font-bold transition-all cursor-pointer border flex items-center justify-center ${
+                                                                            advisorPage === num
+                                                                                ? 'bg-[#2b211e] text-[#f7f4ef] border-[#2b211e] shadow-xs'
+                                                                                : 'bg-white text-[#2b211e] border-[#d8d0c7] hover:border-[#1c1514]'
+                                                                        }`}
+                                                                    >
+                                                                        {num}
+                                                                    </button>
+                                                                ))}
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => setAdvisorPage(p => Math.min(Math.ceil(availableAdvisors.length / 4), p + 1))}
+                                                                    disabled={advisorPage === Math.ceil(availableAdvisors.length / 4)}
+                                                                    aria-label="Next Page"
+                                                                    className={`w-8 h-8 rounded-full text-sm font-bold transition-all cursor-pointer border flex items-center justify-center ${
+                                                                        advisorPage === Math.ceil(availableAdvisors.length / 4)
+                                                                            ? 'border-[#d8d0c7] text-[#a39891] bg-[#ebe5df] cursor-not-allowed'
+                                                                            : 'border-[#2b211e] bg-[#2b211e] text-[#f7f4ef] hover:bg-[#1c1514]'
+                                                                    }`}
+                                                                >
+                                                                    ›
+                                                                </button>
+                                                            </div>
+                                                        )}
 
                                                         {selectedAdvisor && !isAdvisorLocked && (
                                                             <div className="pt-3 pb-1 flex justify-center">

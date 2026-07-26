@@ -17,18 +17,18 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
   return (
     <footer className="bg-[#1c1514] text-[#e2dad2] border-t border-[#2b211e]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12">
 
           {/* Brand Column */}
-          <div className="md:col-span-1">
+          <div className="col-span-1 md:col-span-6 lg:col-span-5 w-full">
             <button
               id="footer-brand"
               onClick={() => navigateToSection?.('top')}
-              className="text-2xl font-sans font-black text-[#f7f4ef] uppercase tracking-tight bg-transparent border-none cursor-pointer p-0 flex items-baseline gap-1 mb-4"
+              className="text-2xl sm:text-3xl font-sans font-black text-[#f7f4ef] uppercase tracking-tight bg-transparent border-none cursor-pointer p-0 flex items-baseline gap-1 mb-4"
             >
-              <span>{siteName || 'BEHOLD'}</span>
+              <span>{(siteName || 'BEHOLD').replace(/\.$/, '')}.</span>
             </button>
-            <p className="text-[#a39891] text-xs leading-relaxed mb-6 font-normal">
+            <p className="text-[#a39891] text-xs sm:text-sm leading-relaxed mb-6 font-normal max-w-sm">
               Expert career guidance, psychological care, and aptitude assessments for students and individuals.
             </p>
             <div className="space-y-3 text-xs font-normal">
@@ -54,9 +54,9 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
           </div>
 
           {/* Services */}
-          <div>
-            <h4 className="text-[#f7f4ef] font-sans font-bold uppercase text-xs tracking-widest mb-5">Services</h4>
-            <ul className="space-y-2.5 text-xs font-normal">
+          <div className="col-span-1 md:col-span-3 lg:col-span-3 pt-6 md:pt-0 border-t border-[#2b211e] md:border-t-0 md:pl-4 lg:pl-8">
+            <h4 className="text-[#f7f4ef] font-sans font-bold uppercase text-xs tracking-widest mb-4 md:mb-5">Services</h4>
+            <ul className="space-y-3 text-xs sm:text-sm font-normal">
               {[
                 { label: 'Career Mentoring', action: () => goTo('services') },
                 { label: 'Psychological Counselling', action: () => goTo('services') },
@@ -67,7 +67,7 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
                 <li key={label}>
                   <button
                     onClick={action}
-                    className="text-[#a39891] hover:text-[#f7f4ef] transition-colors bg-transparent border-none cursor-pointer p-0 text-left text-xs font-normal"
+                    className="text-[#a39891] hover:text-[#f7f4ef] transition-colors bg-transparent border-none cursor-pointer p-0 text-left text-xs sm:text-sm font-normal"
                   >
                     {label}
                   </button>
@@ -77,11 +77,10 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
           </div>
 
           {/* Company */}
-          <div>
-            <h4 className="text-[#f7f4ef] font-sans font-bold uppercase text-xs tracking-widest mb-5">Company</h4>
-            <ul className="space-y-2.5 text-xs font-normal">
+          <div className="col-span-1 md:col-span-3 lg:col-span-4 pt-6 md:pt-0 border-t border-[#2b211e] md:border-t-0 md:pl-4 lg:pl-8">
+            <h4 className="text-[#f7f4ef] font-sans font-bold uppercase text-xs tracking-widest mb-4 md:mb-5">Company</h4>
+            <ul className="space-y-3 text-xs sm:text-sm font-normal">
               {[
-                { label: 'About Us', action: () => goTo('about') },
                 { label: 'Articles & Insights', action: () => goTo('/blog') },
                 { label: 'Privacy Policy', action: () => onOpenDocs?.('privacy') },
                 { label: 'Terms of Service', action: () => onOpenDocs?.('terms') },
@@ -91,38 +90,13 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
                 <li key={label}>
                   <button
                     onClick={action}
-                    className="text-[#a39891] hover:text-[#f7f4ef] transition-colors bg-transparent border-none cursor-pointer p-0 text-left text-xs font-normal"
+                    className="text-[#a39891] hover:text-[#f7f4ef] transition-colors bg-transparent border-none cursor-pointer p-0 text-left text-xs sm:text-sm font-normal"
                   >
                     {label}
                   </button>
                 </li>
               ))}
             </ul>
-          </div>
-
-          {/* Portals */}
-          <div>
-            <h4 className="text-[#f7f4ef] font-sans font-bold uppercase text-xs tracking-widest mb-5">Ecosystem Portals</h4>
-            <div className="space-y-3">
-              <button
-                onClick={() => goTo('/profile')}
-                className="w-full py-2.5 px-4 bg-[#2b211e] hover:bg-[#382b27] text-[#f7f4ef] text-xs font-bold uppercase tracking-wider rounded-lg transition text-left border border-[#423430] cursor-pointer"
-              >
-                Student & Client Portal ›
-              </button>
-              <button
-                onClick={() => goTo('/counsellor')}
-                className="w-full py-2.5 px-4 bg-[#2b211e] hover:bg-[#382b27] text-[#f7f4ef] text-xs font-bold uppercase tracking-wider rounded-lg transition text-left border border-[#423430] cursor-pointer"
-              >
-                Advisor & Specialist Console ›
-              </button>
-              <button
-                onClick={() => goTo('/admin')}
-                className="w-full py-2.5 px-4 bg-[#2b211e] hover:bg-[#382b27] text-[#f7f4ef] text-xs font-bold uppercase tracking-wider rounded-lg transition text-left border border-[#423430] cursor-pointer"
-              >
-                Admin Control Room ›
-              </button>
-            </div>
           </div>
 
         </div>

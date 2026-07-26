@@ -29,16 +29,16 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
       </div>
 
       {/* Hero Content Overlay */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 flex flex-col justify-between min-h-[80vh]">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20 sm:pt-40 sm:pb-28 flex flex-col justify-between min-h-[85vh]">
         
         {/* Top & Statement Headline Box */}
         <div className="max-w-5xl space-y-4">
-          <span className="text-base sm:text-xl font-serif italic text-white/95 tracking-wide block">
-            Whatever you feel
+          <span className="text-[#e2dad2] font-['Cormorant_Garamond',serif] italic text-2xl sm:text-3xl font-medium tracking-wide block mb-1">
+            Whatever you feel,
           </span>
           
           {/* Multi-Line Uppercase Typography */}
-          <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-['Outfit','Plus_Jakarta_Sans',sans-serif] font-semibold uppercase text-white tracking-tight leading-[0.92] drop-shadow-md">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-7xl font-climate uppercase text-white tracking-wide leading-[1.08] drop-shadow-md">
             {titleLines.map((line, idx) => (
               <React.Fragment key={idx}>
                 {line}
@@ -60,7 +60,6 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
               className="px-8 py-3.5 bg-white hover:bg-[#f7f4ef] text-[#1c1514] font-bold text-xs uppercase tracking-widest rounded-full transition-all shadow-lg border-none cursor-pointer flex items-center gap-2"
             >
               <span>BOOK CONSULTATION</span>
-              <span>›</span>
             </button>
           </div>
         </div>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { renderTitleWithFullstopDot } from '../../shared/components/BrandDot';
-import jpg3 from '../../assets/jpg3.jpg';
+import luxuryClinicRoom from '../../assets/luxury_clinic_room.png';
 
 export default function About({ enablePsychology = true, enableCareerMentoring = true, siteSettings }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -28,10 +28,10 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
 
             {/* Featured Architectural / Wellness Image Asset */}
             <div className="pt-4">
-              <div className="w-full h-64 sm:h-80 rounded-xl overflow-hidden bg-[#2b211e] border border-[#d8d0c7] shadow-sm">
+              <div className="w-full h-64 sm:h-80 rounded-2xl overflow-hidden bg-[#2b211e] border border-[#d8d0c7] shadow-sm">
                 <img
-                  src={jpg3}
-                  alt="BEHOLD Mentorship & Care"
+                  src={luxuryClinicRoom}
+                  alt="BEHOLD Mentorship & Psychological Care"
                   className="w-full h-full object-cover"
                 />
               </div>

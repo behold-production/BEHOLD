@@ -313,7 +313,6 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                   className="w-full py-4 bg-[#f7f4ef] hover:bg-white text-[#1c1514] font-bold text-xs uppercase tracking-widest rounded-full transition-all shadow-md cursor-pointer border-none flex items-center justify-center gap-2"
                 >
                   <span>Select Date & Time Slot</span>
-                  <span>›</span>
                 </button>
               </div>
             </div>
