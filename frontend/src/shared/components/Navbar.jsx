@@ -193,7 +193,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                 )}
               </div>
 
-              {/* Mobile/Tablet Hamburger Trigger (<1024px) */}
+              {/* Mobile/Tablet Hamburger Trigger */}
               <div className="flex items-center gap-2 lg:hidden">
                 <button
                   onClick={() => setMobileMenuOpen(true)}
