@@ -19,6 +19,17 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileMenuOpen]);
+
   const goTo = (section) => {
     setMobileMenuOpen(false);
     if (section.startsWith('/')) {
@@ -220,6 +231,27 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                       </button>
                     </div>
 
+                    {user && (
+                      <div
+                        onClick={handleProfileClick}
+                        className="mb-6 p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between cursor-pointer hover:border-[#00e5ff] transition-all group shadow-2xs"
+                      >
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className="w-10 h-10 rounded-full bg-[#0f172a] text-[#00e5ff] flex items-center justify-center font-bold overflow-hidden shrink-0 border border-[#00e5ff]/40">
+                            {user.profilePic ? (
+                              <img src={user.profilePic} alt={user.name} className="w-full h-full object-cover" />
+                            ) : (
+                              <User className="w-5 h-5 text-[#00e5ff]" />
+                            )}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-xs font-bold text-[#0f172a] truncate group-hover:text-[#00e5ff] transition-colors">{user.name}</p>
+                            <p className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">My Profile / Dashboard &rarr;</p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
                     <div className="flex flex-col gap-4">
                       {navLinks.map(({ label, action }) => (
                         <button
@@ -234,23 +266,35 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                   </div>
 
                   <div className="pt-6 border-t border-slate-200 flex flex-col gap-3">
+                    {user && (
+                      <button
+                        onClick={handleProfileClick}
+                        className="w-full py-3 bg-[#0f172a] hover:bg-[#1e293b] text-white font-bold text-xs uppercase tracking-widest rounded-full transition-all border border-[#00e5ff]/40 cursor-pointer shadow-xs text-center flex items-center justify-center gap-2"
+                      >
+                        <User className="w-4 h-4 text-[#00e5ff]" />
+                        <span>My Profile / Dashboard</span>
+                      </button>
+                    )}
                     <button
                       onClick={() => { setMobileMenuOpen(false); navigate('/booking'); }}
-                      className="w-full py-3 bg-[#0f172a] hover:bg-[#1e293b] text-white font-bold text-xs uppercase tracking-widest rounded-full transition-all border border-[#00e5ff]/30 cursor-pointer shadow-xs text-center"
+                      className={`w-full py-3 font-bold text-xs uppercase tracking-widest rounded-full transition-all cursor-pointer text-center ${user
+                        ? 'bg-slate-100 hover:bg-slate-200 text-[#0f172a] border border-slate-200'
+                        : 'bg-[#0f172a] hover:bg-[#1e293b] text-white border border-[#00e5ff]/30 shadow-xs'
+                        }`}
                     >
                       Book Session
                     </button>
                     {user ? (
                       <button
                         onClick={() => { setMobileMenuOpen(false); setIsLogoutOpen(true); }}
-                        className="w-full py-2.5 border border-rose-200 text-rose-600 font-bold text-xs uppercase tracking-wider rounded-full transition bg-white text-center cursor-pointer"
+                        className="w-full py-2.5 border border-rose-200 text-rose-600 font-bold text-xs uppercase tracking-wider rounded-full transition bg-white hover:bg-rose-50 text-center cursor-pointer"
                       >
                         Sign Out
                       </button>
                     ) : (
                       <button
                         onClick={() => { setMobileMenuOpen(false); onOpenAuth?.(); }}
-                        className="w-full py-2.5 border border-[#d8d0c7] text-[#1c1514] font-bold text-xs uppercase tracking-wider rounded-full transition bg-[#eae4dc] hover:bg-[#e2dad2] text-center cursor-pointer"
+                        className="w-full py-2.5 border border-slate-200 text-[#0f172a] font-bold text-xs uppercase tracking-wider rounded-full transition bg-slate-100 hover:bg-slate-200 text-center cursor-pointer"
                       >
                         Sign In
                       </button>
