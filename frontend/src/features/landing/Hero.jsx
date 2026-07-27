@@ -5,7 +5,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
   const settings = siteSettings || {};
 
   const heroBg = settings.heroBgImage || settings.heroSlides?.[0]?.image || luxuryHeroBg;
-  const rawTitle = settings.heroTitle || 'WE DESIGN\nTHE CLARITY\nOF YOU';
+  const rawTitle = settings.heroTitle || 'EVERY MIND\nMATTERS';
   const displayEyebrow = settings.heroEyebrow || 'Whatever you feel,';
   const displayBtnText = settings.heroBtnText || 'BOOK CONSULTATION';
 
@@ -34,7 +34,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
     });
   };
 
-  const displaySubtitle = settings.heroSub || 'Should guide your new experience, one step at a time, toward your full clarity and peace of mind.';
+  const displaySubtitle = settings.heroSub || 'A personal development and mentoring ecosystem — combining psychological care, self-discovery, and career guidance to help you grow with confidence and peace of mind.';
 
   const handleBook = () => {
     window.spaNavigate?.('/booking');
