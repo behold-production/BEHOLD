@@ -60,7 +60,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             name: psy.name || 'Expert Counselor',
             profilePic: psy.profilePic || '',
             role: formattedRole,
-            specialties: Array.isArray(psy.specialties) && psy.specialties.length > 0
+            specs: Array.isArray(psy.specialties) && psy.specialties.length > 0
               ? psy.specialties
               : ['Anxiety & Stress Management', 'Depression & Mood Concerns', 'Academic & Career Guidance', 'Relationship Counseling'],
             hoursText: displayHours,
@@ -70,7 +70,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             reviewsCount: Number(psy.reviewsCount) || 98,
             nextAvailable: nextAvailable || 'Available Today',
             education: psy.education || 'MPhil Clinical Psychology · Certified Specialist',
-            bio: psy.experience || 'Dedicated consultant psychologist specializing in evidence-based cognitive behavioral therapy, anxiety reduction, and personalized student guidance. Committed to providing a safe, confidential, and empathetic environment for personal and academic growth.',
+            about: psy.experience || psy.bio || 'Dedicated consultant psychologist specializing in evidence-based cognitive behavioral therapy, anxiety reduction, and personalized student guidance. Committed to providing a safe, confidential, and empathetic environment for personal and academic growth.',
             type: 'counselling',
             modes: filteredModes
           });
@@ -91,7 +91,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
     return (
       <div className="min-h-screen pt-28 pb-16 bg-slate-50 flex items-center justify-center px-4">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+          <div className="w-10 h-10 border-4 border-[#00e5ff] border-t-transparent rounded-full animate-spin" />
           <p className="text-slate-600 font-bold tracking-wide">Loading verified specialist details...</p>
         </div>
       </div>
@@ -109,7 +109,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
         <button
           type="button"
           onClick={onBack}
-          className="min-h-[44px] px-6 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 rounded-md font-bold shadow-sm transition-colors border-0 cursor-pointer"
+          className="min-h-[44px] px-6 py-2.5 bg-[#0f172a] hover:bg-[#1e293b] text-white rounded-full font-bold text-xs uppercase tracking-widest transition-all shadow-sm border border-[#00e5ff]/30 cursor-pointer"
         >
           Go Back to Directory
         </button>
@@ -129,8 +129,8 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
           >
             <ChevronLeft className="w-4 h-4 text-surface-500 group-hover:-translate-x-0.5 transition-transform" /> Back to Specialists
           </button>
-          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#0f172a] bg-surface-100 border border-surface-200 px-4 py-2 rounded-full shadow-2xs">
-            <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" /> Verified BEHOLD Practitioner
+          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#0f172a] bg-white border border-surface-200 px-4 py-2 rounded-full shadow-2xs">
+            <ShieldCheck className="w-4 h-4 text-[#00e5ff] shrink-0" /> Verified BEHOLD Practitioner
           </div>
         </div>
 
@@ -144,8 +144,8 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
               ) : (
                 <span>{getInitials(advisor.name)}</span>
               )}
-              <div className="absolute bottom-2 right-2 w-6 h-6 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center shadow-md" title="Active Specialist">
-                <CheckCircle2 className="w-3.5 h-3.5 text-white" />
+              <div className="absolute bottom-2 right-2 w-6 h-6 rounded-full bg-[#0f172a] border-2 border-[#00e5ff] flex items-center justify-center shadow-md" title="Verified Specialist">
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#00e5ff]" />
               </div>
             </div>
 
@@ -159,8 +159,8 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-surface-200 text-[#0f172a] text-xs font-bold rounded-full">
                     <Video className="w-3.5 h-3.5 text-surface-500" /> {advisor.modes && advisor.modes.length > 0 ? advisor.modes.map(m => m === 'DOOR_STEP' ? 'Doorstep' : m.charAt(0) + m.slice(1).toLowerCase()).join(' & ') : 'Online & In-Person'}
                   </span>
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-surface-200 text-emerald-700 text-xs font-bold rounded-full">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" /> {advisor.nextAvailable}
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-surface-200 text-[#0f172a] text-xs font-bold rounded-full">
+                    <span className="w-2 h-2 rounded-full bg-[#00e5ff] shadow-[0_0_6px_#00e5ff]" /> {advisor.nextAvailable}
                   </span>
                 </div>
                 <h1 className="text-3xl sm:text-4xl font-sans font-black uppercase text-[#0f172a] tracking-tight leading-tight">
@@ -276,7 +276,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-[10px] font-bold uppercase tracking-widest text-[#00e5ff]">Direct Consultation</span>
-                    <span className="text-[10px] font-bold text-emerald-400 bg-emerald-955/60 px-2.5 py-0.5 rounded-full border border-emerald-800">🟢 Active</span>
+                    <span className="text-[10px] font-bold text-[#00e5ff] bg-[#00e5ff]/10 px-2.5 py-0.5 rounded-full border border-[#00e5ff]/30 uppercase tracking-wider">Active</span>
                   </div>
                   <h3 className="text-2xl font-sans font-black uppercase text-white tracking-tight">Book 1-on-1 Session</h3>
                   <p className="text-xs text-surface-300 font-medium mt-1 leading-relaxed">Schedule directly with {advisor.name} for tailored guidance.</p>
@@ -288,27 +288,27 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                     <span className="text-2xl font-bold text-white">₹{advisor.price.toLocaleString('en-IN')}</span>
                   </div>
                   <div className="flex items-center gap-1.5 text-[11px] text-surface-300 pt-1 border-t border-surface-800">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#00e5ff] shrink-0" />
                     <span>Includes 60-min session & report</span>
                   </div>
                 </div>
 
                 <div className="space-y-2.5 py-1 text-xs text-surface-300">
                   <div className="flex items-center gap-2.5 font-semibold">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" /> Instant Calendar Slot Confirmation
+                    <CheckCircle2 className="w-4 h-4 text-[#00e5ff] shrink-0" /> Instant Calendar Slot Confirmation
                   </div>
                   <div className="flex items-center gap-2.5 font-semibold">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" /> Choice of Online or Clinic Visit
+                    <CheckCircle2 className="w-4 h-4 text-[#00e5ff] shrink-0" /> Choice of Online or Clinic Visit
                   </div>
                   <div className="flex items-center gap-2.5 font-semibold">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" /> 100% Confidential Care
+                    <CheckCircle2 className="w-4 h-4 text-[#00e5ff] shrink-0" /> 100% Confidential Care
                   </div>
                 </div>
 
                 <button
                   type="button"
                   onClick={() => onBook?.(advisor)}
-                  className="w-full py-4 bg-[#00e5ff] hover:bg-[#00cce6] text-[#0f172a] font-bold text-xs uppercase tracking-widest rounded-full transition-all shadow-md cursor-pointer border-none flex items-center justify-center gap-2"
+                  className="w-full py-4 bg-[#00e5ff] hover:bg-[#00cce6] text-[#0f172a] font-bold text-xs uppercase tracking-widest rounded-full transition-all shadow-md cursor-pointer border-none flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98]"
                 >
                   <span>Select Date & Time Slot</span>
                 </button>
