@@ -262,7 +262,7 @@ class BlogController {
       if (content !== undefined) blog.content = content;
       if (category !== undefined) blog.category = category;
       if (readTime !== undefined) blog.readTime = readTime;
-      if (isPublished !== undefined) blog.isPublished = Boolean(isPublished);
+      if (isPublished !== undefined) blog.isPublished = String(isPublished) === 'true' || isPublished === true;
 
       if (coverImage !== undefined) blog.coverImage = coverImage;
       if (req.file && req.file.path) {

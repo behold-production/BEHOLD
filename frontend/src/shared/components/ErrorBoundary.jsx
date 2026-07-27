@@ -21,8 +21,25 @@ export default class ErrorBoundary extends React.Component {
  };
 
  handleGoHome = () => {
- window.location.href = '/';
- };
+    try {
+      const stored = localStorage.getItem('behold_user');
+      if (stored) {
+        const user = JSON.parse(stored);
+        const role = user?.role?.toUpperCase();
+        if (role === 'ADMIN' || role === 'SUPER_ADMIN' || role === 'SUB_ADMIN') {
+          window.location.href = '/admin';
+          return;
+        } else if (role === 'PSYCHOLOGIST' || role === 'COUNSELLOR') {
+          window.location.href = '/counsellor';
+          return;
+        } else if (role === 'USER') {
+          window.location.href = '/profile';
+          return;
+        }
+      }
+    } catch (e) {}
+    window.location.href = '/';
+  };
 
  render() {
  if (this.state.hasError) {

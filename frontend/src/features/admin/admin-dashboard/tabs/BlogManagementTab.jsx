@@ -203,16 +203,21 @@ export default function BlogManagementTab() {
   };
 
   const handleTogglePublish = async (blog) => {
+    const targetId = blog._id || blog.id;
+    if (!targetId) return;
+    const nextState = !blog.isPublished;
     try {
       const payload = new FormData();
-      payload.append('isPublished', !blog.isPublished);
-      const res = await ApiService.updateBlog(blog._id, payload);
-      if (res?.success) {
-        toast.success(`Article ${!blog.isPublished ? 'Published' : 'Unpublished'}`);
-        setBlogs(prev => prev.map(b => b._id === blog._id ? { ...b, isPublished: !blog.isPublished } : b));
+      payload.append('isPublished', String(nextState));
+      const res = await ApiService.updateBlog(targetId, payload);
+      if (res?.success || res?.data || res?.blog) {
+        toast.success(`Article ${nextState ? 'Published' : 'Unpublished'}`);
+        setBlogs(prev => prev.map(b => (b._id === targetId || b.id === targetId) ? { ...b, isPublished: nextState } : b));
+      } else {
+        toast.error(res?.message || 'Failed to toggle publication state');
       }
     } catch (err) {
-      toast.error('Failed to toggle publication state');
+      toast.error(err.message || 'Failed to toggle publication state');
     }
   };
 
