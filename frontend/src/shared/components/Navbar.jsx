@@ -156,13 +156,18 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                 {user ? (
                   <button
                     onClick={handleProfileClick}
-                    className={`px-4 py-2.5 font-bold text-xs uppercase tracking-widest rounded-full transition-all flex items-center gap-2 cursor-pointer border ${isHomeTop
-                      ? 'bg-white/10 hover:bg-white/20 text-white border-white/30 backdrop-blur-md'
-                      : 'bg-slate-100 hover:bg-slate-200 text-[#0f172a] border-slate-200'
+                    title={user.name || 'Dashboard'}
+                    aria-label="User Profile"
+                    className={`w-10 h-10 rounded-full flex items-center justify-center transition-all cursor-pointer border shrink-0 overflow-hidden shadow-xs ${isHomeTop
+                      ? 'bg-white/10 hover:bg-white/20 text-white border-[#00e5ff]/50 backdrop-blur-md'
+                      : 'bg-[#0f172a] hover:bg-[#1e293b] text-white border-[#00e5ff]/50'
                       }`}
                   >
-                    <User className="w-3.5 h-3.5 text-[#00e5ff]" />
-                    <span>{user.name?.split(' ')[0] || 'Profile'}</span>
+                    {user.profilePic ? (
+                      <img src={user.profilePic} alt={user.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <User className="w-4 h-4 text-[#00e5ff]" />
+                    )}
                   </button>
                 ) : (
                   <button
@@ -200,7 +205,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                 />
 
                 <div className="fixed inset-y-0 right-0 z-[10000] w-80 max-w-[85vw] bg-white text-[#0f172a] shadow-2xl flex flex-col justify-between p-6 sm:p-8 border-l border-slate-200 animate-in slide-in-from-right duration-300 overflow-y-auto">
-                  
+
                   <div>
                     <div className="flex items-center justify-between pb-6 border-b border-slate-200 mb-6">
                       <span className="text-xl font-black tracking-tight font-sans uppercase text-[#0f172a]">
