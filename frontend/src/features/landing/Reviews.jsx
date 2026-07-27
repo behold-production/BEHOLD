@@ -343,7 +343,7 @@ export default function Reviews({ siteSettings }) {
 
             {/* Pagination Controls */}
             {totalPages > 1 && (
-              <div className="flex items-center justify-center gap-2 pt-6">
+              <div className="hidden md:flex items-center justify-center gap-2 pt-6">
                 <button
                   onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                   disabled={currentPage === 1}

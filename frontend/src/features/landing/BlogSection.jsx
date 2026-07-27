@@ -178,7 +178,7 @@ const BlogSection = () => {
 
         {/* Pagination Bar */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-center gap-2 pt-12">
+          <div className="hidden md:flex items-center justify-center gap-2 pt-12">
             <button
               onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
               disabled={currentPage === 1}

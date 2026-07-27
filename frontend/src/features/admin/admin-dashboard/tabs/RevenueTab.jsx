@@ -38,6 +38,44 @@ export default function RevenueTab(props) {
  return settingsForm.counsellorSplitPercent !== undefined ? Number(settingsForm.counsellorSplitPercent) : 50;
  }, [settingsForm]);
 
+ // Export Payout CSV handler
+ const handleExportPayoutCSV = () => {
+   try {
+     const headers = ['Counsellor Name', 'Email', 'Paid Sessions', 'Gross Earned (INR)', 'Platform Retention (INR)', 'Counsellor Payout Share (INR)', 'Razorpay Route Account ID'];
+     const rows = counsellors.map(c => {
+       const cBookings = bookingsDb.filter(b => b.counsellorId === c.id || b.advisorId === c.id);
+       const paidBookings = cBookings.filter(b => b.paymentStatus === 'PAID' && b.refundStatus !== 'REFUNDED');
+       const gross = paidBookings.reduce((sum, b) => sum + (Number(b.amountPaid) || 0), 0);
+       const payout = paidBookings.reduce((sum, b) => {
+         const commPercent = b.commissionPercent !== undefined ? Number(b.commissionPercent) : defaultSplit;
+         return sum + (Number(b.amountPaid) || 0) * (commPercent / 100);
+       }, 0);
+       const ret = gross - payout;
+
+       return [
+         `"${(c.name || '').replace(/"/g, '""')}"`,
+         `"${(c.email || '').replace(/"/g, '""')}"`,
+         paidBookings.length,
+         gross.toFixed(2),
+         ret.toFixed(2),
+         payout.toFixed(2),
+         `"${(c.razorpayAccountId || 'N/A').replace(/"/g, '""')}"`
+       ];
+     });
+
+     const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+     const encodedUri = encodeURI(csvContent);
+     const link = document.createElement('a');
+     link.setAttribute('href', encodedUri);
+     link.setAttribute('download', `counsellor_payouts_${new Date().toISOString().slice(0, 10)}.csv`);
+     document.body.appendChild(link);
+     link.click();
+     document.body.removeChild(link);
+   } catch (err) {
+     console.error('Failed to export payout CSV:', err);
+   }
+ };
+
  // Main Calculations
  const metrics = useMemo(() => {
  let grossVolume = 0;
