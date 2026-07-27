@@ -115,22 +115,22 @@ const OverviewTab = ({
       {/* Action Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         {/* Expert Consultation */}
-        <div className="bg-white rounded-3xl p-6 border border-[#d6cecb] shadow-xs flex flex-col justify-between space-y-4">
+        <div className="bg-white rounded-3xl p-6 border border-surface-200 shadow-xs flex flex-col justify-between space-y-4">
           <div>
-            <span className="px-3.5 py-1 bg-[#eae4dc] text-[#1c1514] font-bold text-[10px] rounded-full uppercase tracking-wider border border-[#d8d0c7] inline-block">
+            <span className="px-3.5 py-1 bg-surface-100 text-[#0f172a] font-bold text-[10px] rounded-full uppercase tracking-wider border border-surface-200 inline-block">
               Verified Specialists
             </span>
-            <h3 className="text-lg font-bold uppercase text-[#1c1514] mt-3 tracking-tight">1-on-1 Psychological Care</h3>
-            <p className="text-xs text-[#6e635e] font-normal mt-1 leading-relaxed">
+            <h3 className="text-lg font-bold uppercase text-[#0f172a] mt-3 tracking-tight">1-on-1 Psychological Care</h3>
+            <p className="text-xs text-surface-600 font-normal mt-1 leading-relaxed">
               Connect with certified clinical psychologists for emotional support, stress relief, and mental wellness.
             </p>
           </div>
-          <div className="pt-4 border-t border-[#eae4dc] flex items-center justify-between">
-            <span className="text-xs font-semibold text-[#7c7069]">60-min personalized session</span>
+          <div className="pt-4 border-t border-surface-100 flex items-center justify-between">
+            <span className="text-xs font-semibold text-surface-500">60-min personalized session</span>
             <button
               type="button"
               onClick={() => navigate('/booking')}
-              className="px-5 py-2 bg-[#2b211e] hover:bg-[#1c1514] text-[#f7f4ef] rounded-full font-bold text-xs uppercase tracking-wider transition-colors border-none cursor-pointer shadow-2xs"
+              className="px-5 py-2 bg-[#0f172a] hover:bg-[#1e293b] text-white rounded-full font-bold text-xs uppercase tracking-wider transition-colors border border-[#00e5ff]/30 cursor-pointer shadow-2xs"
             >
               Book Now
             </button>
@@ -139,22 +139,22 @@ const OverviewTab = ({
 
         {/* C-DAT Aptitude Card */}
         {enableAptitude && (
-          <div className="bg-white rounded-3xl p-6 border border-[#d6cecb] shadow-xs flex flex-col justify-between space-y-4">
+          <div className="bg-white rounded-3xl p-6 border border-surface-200 shadow-xs flex flex-col justify-between space-y-4">
             <div>
-              <span className="px-3.5 py-1 bg-[#eae4dc] text-[#1c1514] font-bold text-[10px] rounded-full uppercase tracking-wider border border-[#d8d0c7] inline-block">
+              <span className="px-3.5 py-1 bg-surface-100 text-[#0f172a] font-bold text-[10px] rounded-full uppercase tracking-wider border border-surface-200 inline-block">
                 {testProfile ? 'Report Ready' : 'C-DAT Evaluation'}
               </span>
-              <h3 className="text-lg font-bold uppercase text-[#1c1514] mt-3 tracking-tight">C-DAT Aptitude Assessment</h3>
-              <p className="text-xs text-[#6e635e] font-normal mt-1 leading-relaxed">
+              <h3 className="text-lg font-bold uppercase text-[#0f172a] mt-3 tracking-tight">C-DAT Aptitude Assessment</h3>
+              <p className="text-xs text-surface-600 font-normal mt-1 leading-relaxed">
                 Comprehensive psychometric assessment uncovering natural aptitudes, learning styles, and suitable career tracks.
               </p>
             </div>
-            <div className="pt-4 border-t border-[#eae4dc] flex items-center justify-between">
-              <span className="text-xs font-semibold text-[#7c7069]">{testProfile ? 'Verified Results' : '45-min scientific evaluation'}</span>
+            <div className="pt-4 border-t border-surface-100 flex items-center justify-between">
+              <span className="text-xs font-semibold text-surface-500">{testProfile ? 'Verified Results' : '45-min scientific evaluation'}</span>
               <button
                 type="button"
                 onClick={() => handleSectionChange('cdat')}
-                className="px-5 py-2 bg-[#2b211e] hover:bg-[#1c1514] text-[#f7f4ef] rounded-full font-bold text-xs uppercase tracking-wider transition-colors border-none cursor-pointer shadow-2xs"
+                className="px-5 py-2 bg-[#0f172a] hover:bg-[#1e293b] text-white rounded-full font-bold text-xs uppercase tracking-wider transition-colors border border-[#00e5ff]/30 cursor-pointer shadow-2xs"
               >
                 {testProfile ? 'View Report' : 'Take Assessment'}
               </button>
@@ -166,13 +166,13 @@ const OverviewTab = ({
       {/* History & Achievements Row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         {/* Recent Session History */}
-        <div className="lg:col-span-2 rounded-3xl p-6 bg-white border border-[#d6cecb] shadow-xs">
-          <div className="flex items-center justify-between mb-4 border-b border-[#eae4dc] pb-3">
-            <h4 className="text-sm font-bold uppercase tracking-tight text-[#1c1514]">Recent Session History</h4>
+        <div className="lg:col-span-2 rounded-3xl p-6 bg-white border border-surface-200 shadow-xs">
+          <div className="flex items-center justify-between mb-4 border-b border-surface-100 pb-3">
+            <h4 className="text-sm font-bold uppercase tracking-tight text-[#0f172a]">Recent Session History</h4>
             <button
               type="button"
               onClick={() => { handleSectionChange('booked'); setSessionSubTab('history'); }}
-              className="text-xs text-[#7c7069] hover:text-[#1c1514] font-bold uppercase cursor-pointer border-0 bg-transparent tracking-wider"
+              className="text-xs text-surface-500 hover:text-[#00e5ff] font-bold uppercase cursor-pointer border-0 bg-transparent tracking-wider"
             >
               View all
             </button>
@@ -180,27 +180,27 @@ const OverviewTab = ({
           {completedSessions.length > 0 ? (
             <div className="space-y-2.5">
               {completedSessions.slice(0, 3).map((s, i) => (
-                <div key={i} className="flex items-center justify-between p-3.5 rounded-2xl hover:bg-[#fcfbf9] border border-[#eae4dc] transition-colors">
+                <div key={i} className="flex items-center justify-between p-3.5 rounded-2xl hover:bg-surface-50 border border-surface-100 transition-colors">
                   <div>
-                    <p className="text-xs font-bold text-[#1c1514]">{s.advisorName}</p>
-                    <p className="text-[11px] text-[#6e635e] font-medium">{s.advisorRole || 'Consultation'} &middot; {formatDateString(s.date)}</p>
+                    <p className="text-xs font-bold text-[#0f172a]">{s.advisorName}</p>
+                    <p className="text-[11px] text-surface-600 font-medium">{s.advisorRole || 'Consultation'} &middot; {formatDateString(s.date)}</p>
                   </div>
-                  <span className="text-[10px] tracking-widest font-bold uppercase text-[#1c1514] bg-[#eae4dc] border border-[#d8d0c7] px-3 py-1 rounded-full">Completed</span>
+                  <span className="text-[10px] tracking-widest font-bold uppercase text-[#0f172a] bg-surface-100 border border-surface-200 px-3 py-1 rounded-full">Completed</span>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="text-center py-8 text-[#7c7069] border border-dashed border-[#d6cecb] rounded-2xl bg-[#f7f4ef]/50">
-              <p className="text-xs font-bold text-[#1c1514] uppercase tracking-wider">No completed sessions yet</p>
-              <p className="text-[11px] text-[#6e635e] font-normal mt-1">Finished session records and doctor notes will appear here.</p>
+            <div className="text-center py-8 text-surface-500 border border-dashed border-surface-200 rounded-2xl bg-surface-50/50">
+              <p className="text-xs font-bold text-[#0f172a] uppercase tracking-wider">No completed sessions yet</p>
+              <p className="text-[11px] text-surface-600 font-normal mt-1">Finished session records and doctor notes will appear here.</p>
             </div>
           )}
         </div>
 
         {/* Milestones */}
-        <div className="rounded-3xl p-6 bg-white border border-[#d6cecb] shadow-xs">
-          <div className="mb-4 border-b border-[#eae4dc] pb-3">
-            <h4 className="text-sm font-bold uppercase tracking-tight text-[#1c1514]">Milestones</h4>
+        <div className="rounded-3xl p-6 bg-white border border-surface-200 shadow-xs">
+          <div className="mb-4 border-b border-surface-100 pb-3">
+            <h4 className="text-sm font-bold uppercase tracking-tight text-[#0f172a]">Milestones</h4>
           </div>
           <div className="space-y-2">
             {[
@@ -214,14 +214,14 @@ const OverviewTab = ({
               <div
                 key={i}
                 className={`flex items-center justify-between text-xs px-3.5 py-2.5 rounded-2xl border transition-colors ${a.done
-                    ? 'bg-[#f7f4ef] border-[#d8d0c7] text-[#1c1514]'
-                    : 'bg-[#f7f4ef]/40 border-[#eae4dc] text-[#7c7069]'
+                    ? 'bg-surface-50 border-surface-200 text-[#0f172a]'
+                    : 'bg-surface-50/40 border-surface-100 text-surface-400'
                   }`}
               >
-                <span className={`truncate ${a.done ? 'font-bold text-[#1c1514]' : 'line-through text-[#7c7069]'}`}>
+                <span className={`truncate ${a.done ? 'font-bold text-[#0f172a]' : 'line-through text-surface-400'}`}>
                   {a.label}
                 </span>
-                {a.done && <span className="text-[9px] font-bold uppercase tracking-widest text-[#f7f4ef] bg-[#2b211e] px-2.5 py-0.5 rounded-full shadow-2xs">Done</span>}
+                {a.done && <span className="text-[9px] font-bold uppercase tracking-widest text-[#00e5ff] bg-[#0f172a] px-2.5 py-0.5 rounded-full shadow-2xs border border-[#00e5ff]/30">Done</span>}
               </div>
             ))}
           </div>

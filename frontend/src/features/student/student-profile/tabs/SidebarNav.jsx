@@ -23,7 +23,7 @@ const SidebarNav = ({ currentSection, handleSectionChange, bookedSessions, testP
  return (
  <>
  {/* Desktop sidebar */}
- <nav className="hidden lg:flex flex-col gap-1.5 p-3 bg-white border border-[#d6cecb] rounded-3xl shadow-xs sticky top-24 max-h-[calc(100vh-110px)] overflow-y-auto overscroll-contain [&::-webkit-scrollbar]:hidden">
+ <nav className="hidden lg:flex flex-col gap-1.5 p-3 bg-white border border-surface-200 rounded-3xl shadow-xs sticky top-24 max-h-[calc(100vh-110px)] overflow-y-auto overscroll-contain [&::-webkit-scrollbar]:hidden">
  {visibleTabs.map(tab => {
  const Icon = ICON_MAP[tab.iconName];
  const isActive = currentSection === tab.id;
@@ -35,21 +35,21 @@ const SidebarNav = ({ currentSection, handleSectionChange, bookedSessions, testP
  key={tab.id}
  type="button"
  onClick={() => handleSectionChange(tab.id)}
- className={`relative flex items-center gap-3 px-4 min-h-[46px] rounded-2xl text-xs font-bold uppercase tracking-wider transition-all duration-200 group cursor-pointer border-0 ${
+ className={`relative flex items-center gap-3 px-4 min-h-[46px] rounded-2xl text-xs font-bold uppercase tracking-wider transition-all duration-200 group cursor-pointer border ${
  isActive
- ? 'bg-[#2b211e] text-[#f7f4ef] font-bold shadow-xs scale-[1.01]'
- : 'text-[#6e635e] hover:bg-[#eae4dc] hover:text-[#1c1514]'
+ ? 'bg-[#0f172a] text-white border-[#00e5ff]/40 shadow-xs scale-[1.01]'
+ : 'text-surface-600 hover:bg-surface-100 hover:text-[#0f172a] border-transparent'
  }`}
  >
- {Icon && <Icon className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 ${isActive ? 'text-[#f7f4ef]' : 'text-[#7c7069] group-hover:text-[#1c1514]'}`} />}
+ {Icon && <Icon className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 ${isActive ? 'text-[#00e5ff]' : 'text-surface-500 group-hover:text-[#0f172a]'}`} />}
  <span className="flex-1 text-left">{tab.label}</span>
  {badge !== null && badge !== 0 && (
  <span className={`text-[10px] font-bold px-2 min-w-[20px] h-5 rounded-full flex items-center justify-center ${
  isActive
- ? 'bg-[#f7f4ef] text-[#2b211e] shadow-2xs'
+ ? 'bg-[#00e5ff] text-[#0f172a] shadow-2xs'
  : tab.id === 'results' && !testProfile
  ? 'bg-amber-100 text-amber-800 animate-pulse'
- : 'bg-[#eae4dc] text-[#1c1514]'
+ : 'bg-surface-100 text-[#0f172a]'
  }`}>
  {badge}
  </span>

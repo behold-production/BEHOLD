@@ -21,8 +21,8 @@ const HeroHeader = ({
   ];
 
   return (
-    <div className="bg-white text-[#1c1514] border border-[#d6cecb] rounded-3xl shadow-xs overflow-hidden relative">
-      <div className="h-1 bg-[#2b211e] w-full" />
+    <div className="bg-white text-[#0f172a] border border-surface-200 rounded-3xl shadow-xs overflow-hidden relative">
+      <div className="h-1 bg-[#00e5ff] shadow-[0_0_8px_#00e5ff] w-full" />
 
       <div className="p-6 sm:p-7 relative z-10">
         <div className="flex flex-col lg:flex-row items-center lg:items-center justify-between gap-6">
@@ -35,14 +35,14 @@ const HeroHeader = ({
                 <img
                   src={avatarUrl}
                   alt={displayName}
-                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-2 border-white shadow-sm bg-[#eae4dc] ring-1 ring-[#d6cecb]"
+                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-2 border-white shadow-sm bg-surface-100 ring-1 ring-surface-200"
                 />
               ) : (
-                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-[#2b211e] border-2 border-white shadow-sm ring-1 ring-[#d6cecb] flex items-center justify-center text-[#f7f4ef] font-bold text-2xl sm:text-3xl uppercase">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-[#0f172a] border-2 border-white shadow-sm ring-1 ring-surface-200 flex items-center justify-center text-[#00e5ff] font-bold text-2xl sm:text-3xl uppercase">
                   {getInitials(profile.name, user?.name)}
                 </div>
               )}
-              <label className="absolute inset-0 rounded-full bg-[#1c1514]/75 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 cursor-pointer transition-all text-[#f7f4ef] gap-0.5">
+              <label className="absolute inset-0 rounded-full bg-[#0f172a]/80 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 cursor-pointer transition-all text-[#00e5ff] gap-0.5">
                 <span className="text-[10px] font-bold uppercase tracking-wider">Update</span>
                 <input
                   type="file"
@@ -55,26 +55,27 @@ const HeroHeader = ({
 
             {/* Profile Info */}
             <div className="flex-1 text-center sm:text-left min-w-0">
-              <p className="text-xs text-[#7c7069] font-bold mb-1 tracking-widest uppercase">
+              <p className="text-xs text-[#00e5ff] font-bold mb-1 tracking-widest uppercase flex items-center justify-center sm:justify-start gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_6px_#00e5ff]" />
                 {greeting}
               </p>
-              <h1 className="text-2xl font-bold text-[#1c1514] tracking-tight">
+              <h1 className="text-2xl font-bold text-[#0f172a] tracking-tight">
                 {(displayName || '').toLowerCase().replace(/\b\w/g, l => l.toUpperCase())}
               </h1>
 
               {/* Text-Only Badges */}
               <div className="mt-2.5 flex flex-wrap items-center gap-2 justify-center sm:justify-start text-xs font-semibold">
                 {profile.grade && (
-                  <span className="inline-block px-3 py-1 rounded-full bg-[#eae4dc] border border-[#d8d0c7] text-[#1c1514] text-[10px] font-bold uppercase tracking-wider">
+                  <span className="inline-block px-3 py-1 rounded-full bg-surface-100 border border-surface-200 text-[#0f172a] text-[10px] font-bold uppercase tracking-wider">
                     Grade {profile.grade}
                   </span>
                 )}
                 {profile.schoolName && (
-                  <span className="inline-block px-3 py-1 rounded-full bg-[#eae4dc] border border-[#d8d0c7] text-[#1c1514] text-[10px] font-bold uppercase tracking-wider max-w-[200px] truncate">
+                  <span className="inline-block px-3 py-1 rounded-full bg-surface-100 border border-surface-200 text-[#0f172a] text-[10px] font-bold uppercase tracking-wider max-w-[200px] truncate">
                     {profile.schoolName}
                   </span>
                 )}
-                <span className="inline-block px-3 py-1 rounded-full bg-[#2b211e] text-[#f7f4ef] text-[10px] font-bold uppercase tracking-widest shadow-2xs">
+                <span className="inline-block px-3 py-1 rounded-full bg-[#0f172a] text-white border border-[#00e5ff]/30 text-[10px] font-bold uppercase tracking-widest shadow-2xs">
                   Verified Student
                 </span>
               </div>
