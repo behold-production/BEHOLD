@@ -3,8 +3,26 @@ const mongoose = require('mongoose');
 const settingSchema = new mongoose.Schema(
   {
     id: { type: String, required: true, unique: true },
+    heroBgImage: { type: String, default: '' },
+    heroEyebrow: { type: String, default: '' },
     heroTitle: { type: String, default: '' },
     heroSub: { type: String, default: '' },
+    heroBtnText: { type: String, default: '' },
+    whyChooseUsImage: { type: String, default: '' },
+    reviewsSectionTitle: { type: String, default: '' },
+    reviewsSectionSub: { type: String, default: '' },
+    blogSectionTitle: { type: String, default: '' },
+    blogSectionSub: { type: String, default: '' },
+    faqSectionTitle: { type: String, default: '' },
+    faqSectionSub: { type: String, default: '' },
+    faqSectionDesc: { type: String, default: '' },
+    inquirySectionTitle: { type: String, default: '' },
+    inquirySectionSub: { type: String, default: '' },
+    inquirySectionDesc: { type: String, default: '' },
+    enableReviews: { type: Boolean, default: true },
+    enableBlog: { type: Boolean, default: true },
+    enableFaq: { type: Boolean, default: true },
+    enableInquiry: { type: Boolean, default: true },
     whatsapp: { type: String, default: '' },
     contactEmail: { type: String, default: '' },
     contactPhone: { type: String, default: '9207 07 51 51' },
@@ -132,7 +150,7 @@ const settingSchema = new mongoose.Schema(
       ]
     }
   },
-  { timestamps: true }
+  { timestamps: true, strict: false }
 );
 
 module.exports = mongoose.model('Setting', settingSchema);
