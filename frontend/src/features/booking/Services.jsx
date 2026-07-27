@@ -396,72 +396,72 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                           </div>
 
                           {/* Languages */}
-                          <p className="text-xs text-[#6e635e] font-normal mb-2">
-                            <strong className="font-bold text-[#1c1514]">Language:</strong> {advisor.lang}
+                          <p className="text-xs text-surface-600 font-normal mb-2">
+                            <strong className="font-bold text-[#0f172a]">Language:</strong> {advisor.lang}
                           </p>
                         </div>
 
-                        {/* Actions */}
-                        <div className="flex items-center gap-2.5 pt-4 border-t border-[#eae4dc]">
-                          <button
-                            onClick={() => { if (onBookTherapist) onBookTherapist(advisor.id); else window.spaNavigate('/booking'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                            className="flex-1 py-3 bg-[#2b211e] hover:bg-[#1c1514] text-[#f7f4ef] font-bold text-xs uppercase tracking-widest rounded-full transition-all border-none cursor-pointer text-center"
-                          >
-                            Book Now
-                          </button>
-                          <button
-                            onClick={() => { window.spaNavigate?.(`/advisor/${advisor.id}`); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                            className="flex-1 py-3 bg-[#eae4dc] hover:bg-[#e2dad2] text-[#1c1514] font-bold text-xs uppercase tracking-widest rounded-full border border-[#d8d0c7] transition-all cursor-pointer text-center"
-                          >
-                            View Profile
-                          </button>
-                        </div>
+                      {/* Actions */}
+                      <div className="flex items-center gap-2.5 pt-4 border-t border-surface-100">
+                        <button
+                          onClick={() => { if (onBookTherapist) onBookTherapist(advisor.id); else window.spaNavigate('/booking'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                          className="flex-1 py-3 bg-[#0f172a] hover:bg-[#1e293b] text-white font-bold text-xs uppercase tracking-widest rounded-full border border-[#00e5ff]/30 transition-all cursor-pointer text-center shadow-xs"
+                        >
+                          Book Now
+                        </button>
+                        <button
+                          onClick={() => { window.spaNavigate?.(`/advisor/${advisor.id}`); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                          className="flex-1 py-3 bg-surface-100 hover:bg-surface-200 text-[#0f172a] font-bold text-xs uppercase tracking-widest rounded-full border border-surface-200 transition-all cursor-pointer text-center"
+                        >
+                          View Profile
+                        </button>
                       </div>
                     </div>
-                  ))}
-                </div>
-
-                {/* Pagination Controls */}
-                {totalPages > 1 && (
-                  <div className="flex items-center justify-center gap-2 pt-6">
-                    <button
-                      onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                      disabled={currentPage === 1}
-                      aria-label="Previous Page"
-                      className={`w-9 h-9 rounded-full text-sm font-bold transition-all cursor-pointer border flex items-center justify-center ${currentPage === 1
-                          ? 'border-[#d8d0c7] text-[#a39891] bg-[#ebe5df] cursor-not-allowed'
-                          : 'border-[#2b211e] bg-[#2b211e] text-[#f7f4ef] hover:bg-[#1c1514]'
-                        }`}
-                    >
-                      <ChevronLeft className="w-4 h-4" />
-                    </button>
-
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
-                      <button
-                        key={num}
-                        onClick={() => setCurrentPage(num)}
-                        className={`w-9 h-9 rounded-full text-xs font-bold transition-all cursor-pointer border flex items-center justify-center ${currentPage === num
-                            ? 'bg-[#2b211e] text-[#f7f4ef] border-[#2b211e] shadow-xs'
-                            : 'bg-white text-[#2b211e] border-[#d8d0c7] hover:border-[#1c1514]'
-                          }`}
-                      >
-                        {num}
-                      </button>
-                    ))}
-
-                    <button
-                      onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                      disabled={currentPage === totalPages}
-                      aria-label="Next Page"
-                      className={`w-9 h-9 rounded-full text-sm font-bold transition-all cursor-pointer border flex items-center justify-center ${currentPage === totalPages
-                          ? 'border-[#d8d0c7] text-[#a39891] bg-[#ebe5df] cursor-not-allowed'
-                          : 'border-[#2b211e] bg-[#2b211e] text-[#f7f4ef] hover:bg-[#1c1514]'
-                        }`}
-                    >
-                      <ChevronRight className="w-4 h-4" />
-                    </button>
                   </div>
-                )}
+                ))}
+              </div>
+
+              {/* Pagination Controls */}
+              {totalPages > 1 && (
+                <div className="flex items-center justify-center gap-2 pt-6">
+                  <button
+                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                    disabled={currentPage === 1}
+                    aria-label="Previous Page"
+                    className={`w-9 h-9 rounded-full text-sm font-bold transition-all cursor-pointer border flex items-center justify-center ${currentPage === 1
+                        ? 'border-surface-200 text-surface-400 bg-surface-100 cursor-not-allowed'
+                        : 'border-[#0f172a] bg-[#0f172a] text-white hover:bg-[#1e293b]'
+                      }`}
+                  >
+                    <ChevronLeft className="w-4 h-4 text-[#00e5ff]" />
+                  </button>
+
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
+                    <button
+                      key={num}
+                      onClick={() => setCurrentPage(num)}
+                      className={`w-9 h-9 rounded-full text-xs font-bold transition-all cursor-pointer border flex items-center justify-center ${currentPage === num
+                          ? 'bg-[#0f172a] text-white border-[#00e5ff] shadow-xs'
+                          : 'bg-white text-[#0f172a] border-surface-200 hover:border-[#00e5ff]'
+                        }`}
+                    >
+                      {num}
+                    </button>
+                  ))}
+
+                  <button
+                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                    disabled={currentPage === totalPages}
+                    aria-label="Next Page"
+                    className={`w-9 h-9 rounded-full text-sm font-bold transition-all cursor-pointer border flex items-center justify-center ${currentPage === totalPages
+                        ? 'border-surface-200 text-surface-400 bg-surface-100 cursor-not-allowed'
+                        : 'border-[#0f172a] bg-[#0f172a] text-white hover:bg-[#1e293b]'
+                      }`}
+                  >
+                    <ChevronRight className="w-4 h-4 text-[#00e5ff]" />
+                  </button>
+                </div>
+              )}
               </div>
             )}
           </div>
