@@ -59,10 +59,10 @@ export default function CdatSection({ setView, siteSettings }) {
               <span className="text-xs font-bold tracking-widest uppercase text-[#7c7069] block mb-2">
                 {sectionSub}
               </span>
-              <h2 id="aptitude-title" className="text-3xl sm:text-5xl font-sans font-bold uppercase text-[#1c1514] tracking-tight leading-[0.98]">
-                <span>{settings.aptitudeSectionTitle ? settings.aptitudeSectionTitle.replace(/\s*\(C-DAT\)$/i, '') : 'Differential Aptitude Test'}</span>
-                <span className="inline ml-2">
-                  <span>(C-DAT)</span>
+              <h2 id="aptitude-title" className="text-3xl sm:text-5xl font-sans font-bold uppercase text-[#1c1514] tracking-tight leading-[1.05]">
+                <span>{settings.aptitudeSectionTitle ? settings.aptitudeSectionTitle.replace(/\s*\(C-DAT\)$/i, '') : 'Differential Aptitude Test'}</span>{' '}
+                <span className="inline-block whitespace-nowrap">
+                  (C-DAT)
                   <ScrollDot nextId="experts-title" label="Scroll to Meet Our Experts ↓" size="md" inlineText={true} />
                 </span>
               </h2>

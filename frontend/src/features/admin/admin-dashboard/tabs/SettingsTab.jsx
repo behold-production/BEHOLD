@@ -1285,6 +1285,71 @@ export default function SettingsTab(props) {
  </div>
  </div>
 
+ {/* Hero Main Content & Background Visual */}
+  <div className="bg-zinc-950/40 border border-zinc-800 p-5 rounded-lg space-y-4">
+    <h4 className="text-xs font-bold text-brand tracking-wider flex items-center gap-2">
+      <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+      Main Hero Headline & Background Image
+    </h4>
+
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block mb-1">Hero Background Image URL</label>
+        <input
+          type="text"
+          value={settingsForm.heroBgImage || ''}
+          onChange={(e) => setSettingsForm({ ...settingsForm, heroBgImage: e.target.value })}
+          className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none"
+          placeholder="https://... (Leave blank to use default luxury editorial image)"
+        />
+      </div>
+      <div>
+        <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block mb-1">Eyebrow Script Text</label>
+        <input
+          type="text"
+          value={settingsForm.heroEyebrow || ''}
+          onChange={(e) => setSettingsForm({ ...settingsForm, heroEyebrow: e.target.value })}
+          className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none"
+          placeholder="Whatever you feel,"
+        />
+      </div>
+    </div>
+
+    <div>
+      <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block mb-1">Hero Title (Use \n for new lines)</label>
+      <textarea
+        rows={3}
+        value={settingsForm.heroTitle || ''}
+        onChange={(e) => setSettingsForm({ ...settingsForm, heroTitle: e.target.value })}
+        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-mono"
+        placeholder={'WE DESIGN\nTHE CLARITY\nOF YOU'}
+      />
+    </div>
+
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block mb-1">Hero Subtitle Paragraph</label>
+        <textarea
+          rows={2}
+          value={settingsForm.heroSub || ''}
+          onChange={(e) => setSettingsForm({ ...settingsForm, heroSub: e.target.value })}
+          className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none"
+          placeholder="Should guide your new experience..."
+        />
+      </div>
+      <div>
+        <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block mb-1">Hero CTA Button Text</label>
+        <input
+          type="text"
+          value={settingsForm.heroBtnText || ''}
+          onChange={(e) => setSettingsForm({ ...settingsForm, heroBtnText: e.target.value })}
+          className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none"
+          placeholder="BOOK CONSULTATION"
+        />
+      </div>
+    </div>
+  </div>
+
  {/* About Us Statistics Grid Customization */}
   <div className="bg-zinc-950/40 border border-zinc-800 p-5 rounded-lg space-y-4">
     <div className="flex justify-between items-center">

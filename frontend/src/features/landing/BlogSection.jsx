@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Clock } from 'lucide-react';
+import { Clock, ChevronLeft, ChevronRight } from 'lucide-react';
 import ApiService from '../../shared/services/api';
 import { DEFAULT_BLOGS_DATA } from '../blog/defaultBlogsData';
 import { ScrollDot } from '../../shared/components/BrandDot';
@@ -9,6 +9,7 @@ const BlogSection = () => {
   const navigate = useNavigate();
   const [blogs, setBlogs] = useState(DEFAULT_BLOGS_DATA);
   const [currentPage, setCurrentPage] = useState(1);
+  const blogScrollRef = useRef(null);
   const itemsPerPage = 3;
 
   useEffect(() => {
@@ -34,6 +35,28 @@ const BlogSection = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const scrollBlogs = (direction) => {
+    if (blogScrollRef.current) {
+      const container = blogScrollRef.current;
+      const cards = container.children;
+      if (!cards || cards.length === 0) return;
+
+      const firstCardWidth = cards[0].offsetWidth;
+      const gap = 24;
+      const step = firstCardWidth + gap;
+
+      const currentIndex = Math.round(container.scrollLeft / step);
+      const targetIndex = direction === 'right'
+        ? Math.min(currentIndex + 1, cards.length - 1)
+        : Math.max(currentIndex - 1, 0);
+
+      container.scrollTo({
+        left: targetIndex * step,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   const totalPages = Math.ceil(blogs.length / itemsPerPage);
   const paginatedBlogs = blogs.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
@@ -42,14 +65,14 @@ const BlogSection = () => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-10">
           <span className="text-xs font-bold tracking-widest uppercase text-[#7c7069] block mb-3">
             Latest Insights
           </span>
           <h2 id="blog-title" className="text-3xl sm:text-4xl md:text-5xl font-sans font-bold text-[#1c1514] mb-4 tracking-tight leading-tight uppercase">
             Guidance for Your Journey.
           </h2>
-          <p className="text-sm sm:text-base text-[#6e635e] max-w-xl mx-auto leading-relaxed font-normal mb-8">
+          <p className="text-sm sm:text-base text-[#6e635e] max-w-xl mx-auto leading-relaxed font-normal mb-6">
             Research-backed articles, student guides, and mental health resources from our clinical team.
           </p>
           <button
@@ -60,13 +83,37 @@ const BlogSection = () => {
           </button>
         </div>
 
-        {/* Blog Cards Grid */}
-        <div id="blog-grid" className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {paginatedBlogs.map((post) => (
+        {/* Mobile Scroll Controls (<768px) */}
+        <div className="flex md:hidden items-center justify-end px-1 mb-2">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => scrollBlogs('left')}
+              className="w-8 h-8 rounded-full bg-[#eae4dc] text-[#1c1514] flex items-center justify-center border border-[#d8d0c7] active:scale-95 transition-all p-0 shadow-2xs"
+              aria-label="Previous Article"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => scrollBlogs('right')}
+              className="w-8 h-8 rounded-full bg-[#eae4dc] text-[#1c1514] flex items-center justify-center border border-[#d8d0c7] active:scale-95 transition-all p-0 shadow-2xs"
+              aria-label="Next Article"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+
+        {/* Blog Cards Grid / Mobile Horizontal Carousel */}
+        <div
+          ref={blogScrollRef}
+          id="blog-grid"
+          className="flex md:grid overflow-x-auto md:overflow-x-visible snap-x snap-mandatory md:snap-none scrollbar-none md:grid-cols-3 gap-8 pb-4"
+        >
+          {blogs.map((post) => (
             <article
               key={post._id || post.slug}
               onClick={() => handleOpenBlog(post.slug)}
-              className="group relative bg-white border border-[#d6cecb] hover:border-[#2b211e] rounded-xl overflow-hidden transition-all duration-300 flex flex-col cursor-pointer shadow-xs hover:shadow-md h-full"
+              className="group relative bg-white border border-[#d6cecb] hover:border-[#2b211e] rounded-xl overflow-hidden transition-all duration-300 flex flex-col cursor-pointer shadow-xs hover:shadow-md h-full shrink-0 w-full snap-start snap-always md:w-auto md:max-w-none"
             >
               {/* Cover Image Container */}
               <div className="relative h-56 w-full overflow-hidden bg-[#eae4dc] shrink-0">

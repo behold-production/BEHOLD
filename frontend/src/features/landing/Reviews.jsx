@@ -232,6 +232,7 @@ export default function Reviews({ siteSettings }) {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const reviewScrollRef = useRef(null);
   const itemsPerPage = 3;
 
   const fetchReviews = async () => {
@@ -256,12 +257,34 @@ export default function Reviews({ siteSettings }) {
     currentPage * itemsPerPage
   );
 
+  const scrollReviews = (direction) => {
+    if (reviewScrollRef.current) {
+      const container = reviewScrollRef.current;
+      const cards = container.children;
+      if (!cards || cards.length === 0) return;
+
+      const firstCardWidth = cards[0].offsetWidth;
+      const gap = 24;
+      const step = firstCardWidth + gap;
+
+      const currentIndex = Math.round(container.scrollLeft / step);
+      const targetIndex = direction === 'right'
+        ? Math.min(currentIndex + 1, cards.length - 1)
+        : Math.max(currentIndex - 1, 0);
+
+      container.scrollTo({
+        left: targetIndex * step,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   return (
     <section className="py-16 sm:py-24 bg-[#f7f4ef] border-b border-[#e2dad2]">
       <div className="max-w-6xl mx-auto">
 
         {/* Header */}
-        <div className="text-center mb-14 px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-10 px-4 sm:px-6 lg:px-8">
           <span className="text-xs font-bold tracking-widest uppercase text-[#7c7069] block mb-3">
             Testimonials
           </span>
@@ -282,10 +305,37 @@ export default function Reviews({ siteSettings }) {
             <div className="w-6 h-6 border-2 border-[#2b211e] border-t-transparent rounded-full animate-spin" />
           </div>
         ) : (
-          <div className="px-4 sm:px-6 lg:px-8 space-y-8">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
-              {paginatedReviews.map((rev, i) => (
-                <div key={rev._id || i} className="w-full h-full flex flex-col">
+          <div className="px-4 sm:px-6 lg:px-8 space-y-4">
+            {/* Mobile Scroll Controls (<768px) */}
+            <div className="flex md:hidden items-center justify-end px-1 mb-2">
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => scrollReviews('left')}
+                  className="w-8 h-8 rounded-full bg-[#eae4dc] text-[#1c1514] flex items-center justify-center border border-[#d8d0c7] active:scale-95 transition-all p-0 shadow-2xs"
+                  aria-label="Previous Testimonial"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => scrollReviews('right')}
+                  className="w-8 h-8 rounded-full bg-[#eae4dc] text-[#1c1514] flex items-center justify-center border border-[#d8d0c7] active:scale-95 transition-all p-0 shadow-2xs"
+                  aria-label="Next Testimonial"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* Horizontal 1-by-1 Carousel on Mobile (<768px) & Grid on Desktop (>=768px) */}
+            <div
+              ref={reviewScrollRef}
+              className="flex md:grid overflow-x-auto md:overflow-x-visible snap-x snap-mandatory md:snap-none scrollbar-none md:grid-cols-3 gap-6 items-stretch pb-4"
+            >
+              {displayReviews.map((rev, i) => (
+                <div
+                  key={rev._id || i}
+                  className="w-full h-full flex flex-col shrink-0 snap-start snap-always md:w-auto md:max-w-none"
+                >
                   <ReviewCard review={rev} />
                 </div>
               ))}

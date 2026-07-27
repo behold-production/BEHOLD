@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import LogoutConfirmModal from './LogoutConfirmModal';
@@ -208,17 +209,17 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
 
             </div>
 
-            {/* Mobile Side Mount Slide-In Drawer */}
-            {mobileMenuOpen && (
-              <>
+            {/* Mobile Side Mount Slide-In Drawer Portal */}
+            {mobileMenuOpen && createPortal(
+              <div className="fixed inset-0 z-[9999] overflow-hidden">
                 {/* Backdrop Blur Overlay */}
                 <div
                   onClick={() => setMobileMenuOpen(false)}
-                  className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 transition-opacity duration-300"
+                  className="fixed inset-0 bg-black/75 backdrop-blur-sm transition-opacity duration-300"
                 />
 
-                {/* Side Mount Drawer Panel */}
-                <div className="fixed inset-y-0 right-0 z-50 w-80 max-w-[85vw] bg-[#f7f4ef] text-[#1c1514] shadow-2xl flex flex-col justify-between p-6 sm:p-8 border-l border-[#d6cecb] animate-in slide-in-from-right duration-300">
+                {/* Opaque Side Mount Drawer Panel */}
+                <div className="fixed inset-y-0 right-0 z-[10000] w-80 max-w-[85vw] bg-[#f7f4ef] text-[#1c1514] shadow-2xl flex flex-col justify-between p-6 sm:p-8 border-l border-[#d6cecb] animate-in slide-in-from-right duration-300 overflow-y-auto">
                   
                   {/* Drawer Top Header */}
                   <div>
@@ -278,7 +279,8 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                   </div>
 
                 </div>
-              </>
+              </div>,
+              document.body
             )}
           </header>
         );

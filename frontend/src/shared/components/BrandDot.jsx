@@ -38,7 +38,7 @@ export function ScrollDot({
       ref={dotRef}
       onClick={handleClick}
       title={label}
-      className={`text-[#00F0FF] font-black cursor-pointer inline transition-transform duration-200 hover:opacity-80 drop-shadow-[0_0_8px_rgba(0,240,255,0.6)] ${className}`}
+      className={`text-[#2b211e] font-black cursor-pointer inline transition-transform duration-200 hover:opacity-80 ${className}`}
     >
       .
     </span>
@@ -46,12 +46,12 @@ export function ScrollDot({
 }
 
 /**
- * BrandDot — A simple, clean normal neon blue period (.) or flat circular accent
+ * BrandDot — A simple, clean normal dark stone period (.) or flat circular accent
  */
 export function BrandDot({ size = 'md', pulse = false, float = false, className = '' }) {
   return (
     <span
-      className={`text-[#00F0FF] font-black inline drop-shadow-[0_0_6px_rgba(0,240,255,0.5)] ${className}`}
+      className={`text-[#2b211e] font-black inline ${className}`}
       aria-hidden="true"
     >
       .

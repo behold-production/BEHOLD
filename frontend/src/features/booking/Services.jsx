@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import ApiService from '../../shared/services/api';
 
@@ -42,7 +42,46 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
   const [filter, setFilter] = useState('All');
   const [currentPage, setCurrentPage] = useState(1);
   const [expandedBios, setExpandedBios] = useState({});
+  const [activeCardIndex, setActiveCardIndex] = useState(0);
+  const scrollContainerRef = useRef(null);
   const settings = siteSettings || JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
+
+  const scrollHorizontal = (direction) => {
+    if (scrollContainerRef.current) {
+      const container = scrollContainerRef.current;
+      const cards = container.children;
+      if (!cards || cards.length === 0) return;
+
+      const firstCardWidth = cards[0].offsetWidth;
+      const gap = 24;
+      const step = firstCardWidth + gap;
+      
+      const currentIndex = Math.round(container.scrollLeft / step);
+      const targetIndex = direction === 'right'
+        ? Math.min(currentIndex + 1, cards.length - 1)
+        : Math.max(currentIndex - 1, 0);
+
+      container.scrollTo({
+        left: targetIndex * step,
+        behavior: 'smooth'
+      });
+      setActiveCardIndex(targetIndex);
+    }
+  };
+
+  const handleScrollUpdate = () => {
+    if (scrollContainerRef.current) {
+      const container = scrollContainerRef.current;
+      const cards = container.children;
+      if (!cards || cards.length === 0) return;
+
+      const firstCardWidth = cards[0].offsetWidth;
+      const gap = 24;
+      const step = firstCardWidth + gap;
+      const idx = Math.round(container.scrollLeft / step);
+      setActiveCardIndex(idx);
+    }
+  };
 
   const toggleBio = (id) => {
     setExpandedBios(prev => ({ ...prev, [id]: !prev[id] }));
@@ -253,12 +292,37 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                 </button>
               </div>
             ) : (
-              <div className="space-y-8">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
+              <div className="space-y-4">
+                {/* Mobile Swipe Navigation Controls (<768px) */}
+                <div className="flex md:hidden items-center justify-end px-1 mb-2">
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => scrollHorizontal('left')}
+                      className="w-8 h-8 rounded-full bg-[#eae4dc] text-[#1c1514] flex items-center justify-center border border-[#d8d0c7] active:scale-95 transition-all p-0 shadow-2xs"
+                      aria-label="Previous Expert"
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => scrollHorizontal('right')}
+                      className="w-8 h-8 rounded-full bg-[#eae4dc] text-[#1c1514] flex items-center justify-center border border-[#d8d0c7] active:scale-95 transition-all p-0 shadow-2xs"
+                      aria-label="Next Expert"
+                    >
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Horizontal 1-by-1 Swipe Carousel on Mobile (<768px) & Grid on Desktop (>=768px) */}
+                <div
+                  ref={scrollContainerRef}
+                  onScroll={handleScrollUpdate}
+                  className="flex md:grid overflow-x-auto md:overflow-x-visible snap-x snap-mandatory md:snap-none scrollbar-none md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 items-stretch pb-4 pt-1"
+                >
                   {paginatedAdvisors.map(advisor => (
                     <div
                       key={advisor.id}
-                      className="bg-white rounded-3xl border border-[#d6cecb] hover:border-[#1c1514] shadow-xs hover:shadow-md overflow-hidden flex flex-col justify-between group transition-all h-full"
+                      className="bg-white rounded-3xl border border-[#d6cecb] hover:border-[#1c1514] shadow-xs hover:shadow-md overflow-hidden flex flex-col justify-between group transition-all h-full shrink-0 w-full snap-start snap-always md:w-auto md:max-w-none"
                     >
                       {/* Photo or Branded Initial Header */}
                       {advisor.profilePic ? (
