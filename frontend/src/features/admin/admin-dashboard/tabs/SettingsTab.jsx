@@ -1095,8 +1095,8 @@ export default function SettingsTab(props) {
                               setDraggedIndex(null);
                             }}
                             className={`flex items-center justify-between p-4 rounded-lg border transition-all duration-200 select-none ${isDragging
-                                ? 'bg-brand/10 border-brand/50 opacity-50 scale-[0.98]'
-                                : 'bg-zinc-900/60 hover:bg-zinc-900/90 border-zinc-800 hover:border-zinc-700'
+                              ? 'bg-brand/10 border-brand/50 opacity-50 scale-[0.98]'
+                              : 'bg-zinc-900/60 hover:bg-zinc-900/90 border-zinc-800 hover:border-zinc-700'
                               }`}
                           >
                             <div className="flex items-center gap-3.5 min-w-0">
