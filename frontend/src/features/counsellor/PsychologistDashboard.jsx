@@ -856,20 +856,20 @@ export default function PsychologistDashboard({ setView }) {
  return `${hourStr}:${minStr} ${period}`;
  };
 
- const addTimeRangeSlots = (fromStr, toStr, isReg = false) => {
- const fromMins = parseTimeToMinutes(fromStr);
- const toMins = parseTimeToMinutes(toStr);
- if (fromMins >= toMins) {
- const err = 'Start time must be before end time.';
- if (isReg) setRegSlotError(err); else setSlotError(err);
- return;
- }
+ const addTimeRangeSlots = (fromStr, toStr, isReg = false, intervalMins = 30) => {
+    const fromMins = parseTimeToMinutes(fromStr);
+    const toMins = parseTimeToMinutes(toStr);
+    if (fromMins >= toMins) {
+      const err = 'Start time must be before end time.';
+      if (isReg) setRegSlotError(err); else setSlotError(err);
+      return;
+    }
 
- const generated = [];
- // Generate every 60 minutes (1 hour)
- for (let m = fromMins; m <= toMins; m += 60) {
- generated.push(formatMinutesToTime(m));
- }
+    const generated = [];
+    const step = Number(intervalMins) || 30;
+    for (let m = fromMins; m <= toMins; m += step) {
+      generated.push(formatMinutesToTime(m));
+    }
 
  if (isReg) {
  setRegAllSlots(prev => {
