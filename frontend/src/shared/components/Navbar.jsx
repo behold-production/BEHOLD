@@ -121,7 +121,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                 className="flex items-center gap-2 text-left bg-transparent border-none cursor-pointer p-0"
               >
                 <span
-                  className={`text-xl sm:text-2xl font-black tracking-tight font-sans uppercase transition-colors ${isHomeTop ? 'text-white' : 'text-[#0f172a]'
+                  className={`text-2xl sm:text-3xl font-black tracking-tight font-sans uppercase transition-colors ${isHomeTop ? 'text-white' : 'text-[#0f172a]'
                     }`}
                 >
                   {(siteName || 'BEHOLD').replace(/\.$/, '')}
@@ -169,15 +169,15 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                     onClick={handleProfileClick}
                     title={user.name || 'Dashboard'}
                     aria-label="User Profile"
-                    className={`w-10 h-10 rounded-full flex items-center justify-center transition-all cursor-pointer border shrink-0 overflow-hidden shadow-xs ${isHomeTop
-                      ? 'bg-white/10 hover:bg-white/20 text-white border-[#00e5ff]/50 backdrop-blur-md'
-                      : 'bg-[#0f172a] hover:bg-[#1e293b] text-white border-[#00e5ff]/50'
+                    className={`w-11 h-11 rounded-full flex items-center justify-center transition-all cursor-pointer border shrink-0 overflow-hidden shadow-sm ${isHomeTop
+                      ? 'bg-white/10 hover:bg-white/20 text-white border-[#00e5ff]/60 backdrop-blur-md'
+                      : 'bg-[#0f172a] hover:bg-[#1e293b] text-white border-[#00e5ff]/60'
                       }`}
                   >
                     {user.profilePic ? (
                       <img src={user.profilePic} alt={user.name} className="w-full h-full object-cover" />
                     ) : (
-                      <User className="w-4 h-4 text-[#00e5ff]" />
+                      <span className="text-base font-black text-[#00e5ff] uppercase">{(user.name || user.email || 'U').charAt(0)}</span>
                     )}
                   </button>
                 ) : (
@@ -241,7 +241,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                             {user.profilePic ? (
                               <img src={user.profilePic} alt={user.name} className="w-full h-full object-cover" />
                             ) : (
-                              <User className="w-5 h-5 text-[#00e5ff]" />
+                              <span className="text-sm font-black text-[#00e5ff] uppercase">{(user.name || user.email || 'U').charAt(0)}</span>
                             )}
                           </div>
                           <div className="min-w-0 flex-1">
