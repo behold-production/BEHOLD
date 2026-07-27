@@ -800,7 +800,6 @@ export default function SettingsTab(props) {
           />
         </div>
       </div>
-
       {/* 2. Unfold With Behold / Services First Card Section */}
       <div className="bg-zinc-950/60 border border-zinc-800 p-5 rounded-lg space-y-5">
         <h4 className="text-xs font-bold text-brand tracking-wider flex items-center gap-2">
