@@ -112,45 +112,25 @@ const OverviewTab = ({
         </div>
       )}
 
-      {/* KPI Stats Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
-        {[
-          { label: 'Upcoming', value: stats.upcoming, sub: 'booked sessions', dot: '#0f172a' },
-          { label: 'Completed', value: stats.completed, sub: 'finished sessions', dot: '#10b981' },
-          { label: 'C-DAT Assessment', value: testProfile ? 'Ready' : 'Pending', sub: testProfile ? 'report generated' : 'take evaluation', dot: testProfile ? '#8b5cf6' : '#f59e0b', condition: enableAptitude },
-          { label: 'Guided Hours', value: `${stats.hours}h`, sub: '1-on-1 mentorship', dot: '#f43f5e' },
-        ].filter(k => k.condition !== false).map((kpi, i) => (
-          <div
-            key={i}
-            className="relative overflow-hidden rounded-xl p-4 border border-slate-200 bg-white shadow-xs"
-          >
-            <div className="absolute top-0 left-0 right-0 h-1" style={{ background: kpi.dot }} />
-            <p className="text-[9px] text-slate-500 font-bold tracking-wider uppercase">{kpi.label}</p>
-            <p className="text-xl font-bold text-slate-900 mt-1 tracking-tight">{kpi.value}</p>
-            <p className="text-[11px] text-slate-400 mt-0.5 font-medium">{kpi.sub}</p>
-          </div>
-        ))}
-      </div>
-
       {/* Action Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         {/* Expert Consultation */}
-        <div className="bg-white rounded-xl p-5 border border-slate-200 shadow-xs flex flex-col justify-between">
+        <div className="bg-white rounded-3xl p-6 border border-[#d6cecb] shadow-xs flex flex-col justify-between space-y-4">
           <div>
-            <span className="px-2 py-0.5 bg-slate-100 text-slate-700 font-semibold text-[10px] rounded-md uppercase tracking-wider border border-slate-200 inline-block">
+            <span className="px-3.5 py-1 bg-[#eae4dc] text-[#1c1514] font-bold text-[10px] rounded-full uppercase tracking-wider border border-[#d8d0c7] inline-block">
               Verified Specialists
             </span>
-            <h3 className="text-base font-bold text-slate-900 mt-2 tracking-tight">1-on-1 Psychological Care</h3>
-            <p className="text-xs text-slate-500 font-medium mt-1 leading-relaxed">
+            <h3 className="text-lg font-bold uppercase text-[#1c1514] mt-3 tracking-tight">1-on-1 Psychological Care</h3>
+            <p className="text-xs text-[#6e635e] font-normal mt-1 leading-relaxed">
               Connect with certified clinical psychologists for emotional support, stress relief, and mental wellness.
             </p>
           </div>
-          <div className="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-500">60-min personalized session</span>
+          <div className="pt-4 border-t border-[#eae4dc] flex items-center justify-between">
+            <span className="text-xs font-semibold text-[#7c7069]">60-min personalized session</span>
             <button
               type="button"
               onClick={() => navigate('/booking')}
-              className="px-3.5 py-1.5 bg-slate-900 hover:bg-black text-white rounded-lg font-bold text-xs transition-colors border-none cursor-pointer"
+              className="px-5 py-2 bg-[#2b211e] hover:bg-[#1c1514] text-[#f7f4ef] rounded-full font-bold text-xs uppercase tracking-wider transition-colors border-none cursor-pointer shadow-2xs"
             >
               Book Now
             </button>
@@ -159,22 +139,22 @@ const OverviewTab = ({
 
         {/* C-DAT Aptitude Card */}
         {enableAptitude && (
-          <div className="bg-white rounded-xl p-5 border border-slate-200 shadow-xs flex flex-col justify-between">
+          <div className="bg-white rounded-3xl p-6 border border-[#d6cecb] shadow-xs flex flex-col justify-between space-y-4">
             <div>
-              <span className="px-2 py-0.5 bg-slate-100 text-slate-700 font-semibold text-[10px] rounded-md uppercase tracking-wider inline-block">
+              <span className="px-3.5 py-1 bg-[#eae4dc] text-[#1c1514] font-bold text-[10px] rounded-full uppercase tracking-wider border border-[#d8d0c7] inline-block">
                 {testProfile ? 'Report Ready' : 'C-DAT Evaluation'}
               </span>
-              <h3 className="text-base font-bold text-slate-900 mt-2 tracking-tight">C-DAT Aptitude Assessment</h3>
-              <p className="text-xs text-slate-500 font-medium mt-1 leading-relaxed">
+              <h3 className="text-lg font-bold uppercase text-[#1c1514] mt-3 tracking-tight">C-DAT Aptitude Assessment</h3>
+              <p className="text-xs text-[#6e635e] font-normal mt-1 leading-relaxed">
                 Comprehensive psychometric assessment uncovering natural aptitudes, learning styles, and suitable career tracks.
               </p>
             </div>
-            <div className="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between">
-              <span className="text-xs font-semibold text-slate-500">{testProfile ? 'Verified Results' : '45-min scientific evaluation'}</span>
+            <div className="pt-4 border-t border-[#eae4dc] flex items-center justify-between">
+              <span className="text-xs font-semibold text-[#7c7069]">{testProfile ? 'Verified Results' : '45-min scientific evaluation'}</span>
               <button
                 type="button"
                 onClick={() => handleSectionChange('cdat')}
-                className="px-3.5 py-1.5 bg-slate-900 hover:bg-black text-white rounded-lg font-bold text-xs transition-colors border-none cursor-pointer"
+                className="px-5 py-2 bg-[#2b211e] hover:bg-[#1c1514] text-[#f7f4ef] rounded-full font-bold text-xs uppercase tracking-wider transition-colors border-none cursor-pointer shadow-2xs"
               >
                 {testProfile ? 'View Report' : 'Take Assessment'}
               </button>
@@ -186,13 +166,13 @@ const OverviewTab = ({
       {/* History & Achievements Row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         {/* Recent Session History */}
-        <div className="lg:col-span-2 rounded-xl p-5 bg-white border border-slate-200 shadow-xs">
-          <div className="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
-            <h4 className="text-sm font-bold text-slate-900 tracking-tight">Recent Session History</h4>
+        <div className="lg:col-span-2 rounded-3xl p-6 bg-white border border-[#d6cecb] shadow-xs">
+          <div className="flex items-center justify-between mb-4 border-b border-[#eae4dc] pb-3">
+            <h4 className="text-sm font-bold uppercase tracking-tight text-[#1c1514]">Recent Session History</h4>
             <button
               type="button"
               onClick={() => { handleSectionChange('booked'); setSessionSubTab('history'); }}
-              className="text-xs text-slate-700 hover:text-slate-900 font-bold uppercase cursor-pointer border-0 bg-transparent"
+              className="text-xs text-[#7c7069] hover:text-[#1c1514] font-bold uppercase cursor-pointer border-0 bg-transparent tracking-wider"
             >
               View all
             </button>
@@ -200,27 +180,27 @@ const OverviewTab = ({
           {completedSessions.length > 0 ? (
             <div className="space-y-2.5">
               {completedSessions.slice(0, 3).map((s, i) => (
-                <div key={i} className="flex items-center justify-between p-3 rounded-lg hover:bg-slate-50 border border-slate-100 transition-colors">
+                <div key={i} className="flex items-center justify-between p-3.5 rounded-2xl hover:bg-[#fcfbf9] border border-[#eae4dc] transition-colors">
                   <div>
-                    <p className="text-xs font-bold text-slate-900">{s.advisorName}</p>
-                    <p className="text-[11px] text-slate-500 font-medium">{s.advisorRole || 'Consultation'} &middot; {formatDateString(s.date)}</p>
+                    <p className="text-xs font-bold text-[#1c1514]">{s.advisorName}</p>
+                    <p className="text-[11px] text-[#6e635e] font-medium">{s.advisorRole || 'Consultation'} &middot; {formatDateString(s.date)}</p>
                   </div>
-                  <span className="text-[9px] tracking-wider font-bold uppercase text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">Completed</span>
+                  <span className="text-[10px] tracking-widest font-bold uppercase text-[#1c1514] bg-[#eae4dc] border border-[#d8d0c7] px-3 py-1 rounded-full">Completed</span>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="text-center py-8 text-slate-400 border border-dashed border-slate-200 rounded-lg bg-slate-50/50">
-              <p className="text-xs font-bold text-slate-500">No completed sessions yet</p>
-              <p className="text-[11px] text-slate-400 font-medium">Finished session records and doctor notes will appear here.</p>
+            <div className="text-center py-8 text-[#7c7069] border border-dashed border-[#d6cecb] rounded-2xl bg-[#f7f4ef]/50">
+              <p className="text-xs font-bold text-[#1c1514] uppercase tracking-wider">No completed sessions yet</p>
+              <p className="text-[11px] text-[#6e635e] font-normal mt-1">Finished session records and doctor notes will appear here.</p>
             </div>
           )}
         </div>
 
         {/* Milestones */}
-        <div className="rounded-xl p-5 bg-white border border-slate-200 shadow-xs">
-          <div className="mb-4 border-b border-slate-100 pb-3">
-            <h4 className="text-sm font-bold text-slate-900 tracking-tight">Milestones</h4>
+        <div className="rounded-3xl p-6 bg-white border border-[#d6cecb] shadow-xs">
+          <div className="mb-4 border-b border-[#eae4dc] pb-3">
+            <h4 className="text-sm font-bold uppercase tracking-tight text-[#1c1514]">Milestones</h4>
           </div>
           <div className="space-y-2">
             {[
@@ -233,15 +213,15 @@ const OverviewTab = ({
             ].filter(a => a.condition !== false).map((a, i) => (
               <div
                 key={i}
-                className={`flex items-center justify-between text-xs px-3 py-2 rounded-lg border transition-colors ${a.done
-                    ? 'bg-slate-50 border-slate-200 text-slate-900'
-                    : 'bg-slate-50/50 border-slate-100 text-slate-400'
+                className={`flex items-center justify-between text-xs px-3.5 py-2.5 rounded-2xl border transition-colors ${a.done
+                    ? 'bg-[#f7f4ef] border-[#d8d0c7] text-[#1c1514]'
+                    : 'bg-[#f7f4ef]/40 border-[#eae4dc] text-[#7c7069]'
                   }`}
               >
-                <span className={`truncate ${a.done ? 'font-bold text-slate-800' : 'line-through text-slate-400'}`}>
+                <span className={`truncate ${a.done ? 'font-bold text-[#1c1514]' : 'line-through text-[#7c7069]'}`}>
                   {a.label}
                 </span>
-                {a.done && <span className="text-[9px] font-bold text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded-md border border-slate-200">Done</span>}
+                {a.done && <span className="text-[9px] font-bold uppercase tracking-widest text-[#f7f4ef] bg-[#2b211e] px-2.5 py-0.5 rounded-full shadow-2xs">Done</span>}
               </div>
             ))}
           </div>

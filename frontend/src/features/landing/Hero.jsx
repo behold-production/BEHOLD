@@ -17,7 +17,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
   };
 
   return (
-    <section id="home" className="w-full relative bg-[#1c1514] text-white overflow-hidden min-h-[85vh] flex items-center">
+    <section id="home" className="w-full relative bg-[#1c1514] text-white overflow-hidden min-h-screen flex items-center">
       {/* Background Visual matching reference image */}
       <div className="absolute inset-0 pointer-events-none">
         <img
@@ -29,16 +29,16 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
       </div>
 
       {/* Hero Content Overlay */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20 sm:pt-40 sm:pb-28 flex flex-col justify-between min-h-[85vh]">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-12 sm:pt-36 sm:pb-16 flex flex-col justify-start lg:justify-between gap-8 lg:gap-0 min-h-screen">
         
         {/* Top & Statement Headline Box */}
-        <div className="max-w-5xl space-y-4">
-          <span className="text-[#e2dad2] font-['Cormorant_Garamond',serif] italic text-2xl sm:text-3xl font-medium tracking-wide block mb-1">
+        <div className="max-w-5xl space-y-3 sm:space-y-4 pt-4 sm:pt-0">
+          <span className="text-[#e2dad2] font-['Cormorant_Garamond',serif] italic text-xl xs:text-2xl sm:text-3xl font-medium tracking-wide block mb-1 sm:mb-2">
             Whatever you feel,
           </span>
           
           {/* Multi-Line Uppercase Typography */}
-          <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-7xl font-climate uppercase text-white tracking-wide leading-[1.08] drop-shadow-md">
+          <h1 className="text-[34px] xs:text-4xl sm:text-6xl md:text-6xl lg:text-7xl xl:text-7xl font-climate uppercase text-white tracking-wide leading-[1.08] drop-shadow-md">
             {titleLines.map((line, idx) => (
               <React.Fragment key={idx}>
                 {line}
@@ -48,16 +48,16 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
           </h1>
         </div>
 
-        {/* Bottom Overlay Subtitle & White Pill Button matching reference image */}
-        <div className="pt-16 sm:pt-24 flex justify-end">
+        {/* Subtitle & White Pill Button - Directly under title on mobile <768px, bottom-right on desktop */}
+        <div className="pt-0 lg:pt-24 flex justify-start lg:justify-end">
           {/* Right Subtitle & White Pill Button matching bottom-right of image */}
-          <div className="flex flex-col items-start lg:items-end text-left lg:text-right space-y-4 max-w-sm">
-            <p className="text-xs sm:text-sm text-white/90 font-normal leading-relaxed drop-shadow-sm">
+          <div className="flex flex-col items-start lg:items-end text-left lg:text-right space-y-4 max-w-md">
+            <p className="text-xs sm:text-sm text-white/95 font-medium leading-relaxed drop-shadow-sm max-w-xs sm:max-w-sm">
               {displaySubtitle}
             </p>
             <button
               onClick={handleBook}
-              className="px-8 py-3.5 bg-white hover:bg-[#f7f4ef] text-[#1c1514] font-bold text-xs uppercase tracking-widest rounded-full transition-all shadow-lg border-none cursor-pointer flex items-center gap-2"
+              className="w-full sm:w-auto px-8 py-3.5 bg-white hover:bg-[#f7f4ef] text-[#1c1514] font-bold text-xs uppercase tracking-widest rounded-full transition-all shadow-lg border-none cursor-pointer flex items-center justify-center gap-2"
             >
               <span>BOOK CONSULTATION</span>
             </button>

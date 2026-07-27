@@ -208,42 +208,77 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
 
             </div>
 
-            {/* Mobile Menu */}
+            {/* Mobile Side Mount Slide-In Drawer */}
             {mobileMenuOpen && (
-              <div className="md:hidden bg-white border-b border-slate-200 px-4 py-4 flex flex-col gap-3">
-                {navLinks.map(({ label, action }) => (
-                  <button
-                    key={label}
-                    onClick={action}
-                    className="text-left py-2 text-slate-700 hover:text-slate-900 font-semibold transition bg-transparent border-none cursor-pointer text-sm"
-                  >
-                    {label}
-                  </button>
-                ))}
-                <div className="pt-2 border-t border-slate-100 flex flex-col gap-2">
-                  <button
-                    onClick={() => { setMobileMenuOpen(false); navigate('/booking'); }}
-                    className="w-full py-2.5 bg-slate-900 text-white font-bold rounded-lg transition border-none cursor-pointer text-sm"
-                  >
-                    Book Appointment
-                  </button>
-                  {user ? (
+              <>
+                {/* Backdrop Blur Overlay */}
+                <div
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 transition-opacity duration-300"
+                />
+
+                {/* Side Mount Drawer Panel */}
+                <div className="fixed inset-y-0 right-0 z-50 w-80 max-w-[85vw] bg-[#f7f4ef] text-[#1c1514] shadow-2xl flex flex-col justify-between p-6 sm:p-8 border-l border-[#d6cecb] animate-in slide-in-from-right duration-300">
+                  
+                  {/* Drawer Top Header */}
+                  <div>
+                    <div className="flex items-center justify-between pb-6 border-b border-[#d6cecb] mb-6">
+                      <span className="text-xl font-black tracking-tight font-sans uppercase text-[#1c1514]">
+                        {(siteName || 'BEHOLD').replace(/\.$/, '')}.
+                      </span>
+                      <button
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="w-9 h-9 rounded-full bg-[#eae4dc] hover:bg-[#e2dad2] text-[#1c1514] flex items-center justify-center cursor-pointer border border-[#d8d0c7] transition-all p-0"
+                        aria-label="Close Menu"
+                      >
+                        <X className="w-5 h-5" />
+                      </button>
+                    </div>
+
+                    {/* Navigation Links List */}
+                    <div className="flex flex-col gap-4">
+                      {navLinks.map(({ label, action }) => (
+                        <button
+                          key={label}
+                          onClick={() => {
+                            action();
+                            setMobileMenuOpen(false);
+                          }}
+                          className="text-left py-2.5 text-sm font-bold uppercase tracking-widest text-[#1c1514] hover:text-[#7c7069] transition-colors bg-transparent border-b border-[#eae4dc] cursor-pointer"
+                        >
+                          {label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Drawer Footer Actions */}
+                  <div className="pt-6 border-t border-[#d6cecb] flex flex-col gap-3">
                     <button
-                      onClick={() => { setMobileMenuOpen(false); setIsLogoutOpen(true); }}
-                      className="w-full py-2 border border-rose-200 text-rose-600 font-semibold rounded-lg transition bg-white text-xs"
+                      onClick={() => { setMobileMenuOpen(false); navigate('/booking'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                      className="w-full py-3 bg-[#2b211e] hover:bg-[#1c1514] text-[#f7f4ef] font-bold text-xs uppercase tracking-widest rounded-full transition-all border-none cursor-pointer shadow-xs text-center"
                     >
-                      Sign Out
+                      Book Appointment
                     </button>
-                  ) : (
-                    <button
-                      onClick={() => { setMobileMenuOpen(false); onOpenAuth?.(); }}
-                      className="w-full py-2 border border-slate-200 text-slate-800 font-semibold rounded-lg transition bg-white text-xs"
-                    >
-                      Sign In
-                    </button>
-                  )}
+                    {user ? (
+                      <button
+                        onClick={() => { setMobileMenuOpen(false); setIsLogoutOpen(true); }}
+                        className="w-full py-2.5 border border-rose-200 text-rose-600 font-bold text-xs uppercase tracking-wider rounded-full transition bg-white text-center cursor-pointer"
+                      >
+                        Sign Out
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => { setMobileMenuOpen(false); onOpenAuth?.(); }}
+                        className="w-full py-2.5 border border-[#d8d0c7] text-[#1c1514] font-bold text-xs uppercase tracking-wider rounded-full transition bg-[#eae4dc] hover:bg-[#e2dad2] text-center cursor-pointer"
+                      >
+                        Sign In
+                      </button>
+                    )}
+                  </div>
+
                 </div>
-              </div>
+              </>
             )}
           </header>
         );

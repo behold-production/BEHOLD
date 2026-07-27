@@ -134,31 +134,56 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                 </div>
               </div>
 
-              {/* Right Column: 2x2 Feature Grid */}
-              <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-6 lg:border-l lg:border-[#d6cecb] lg:pl-10">
-                <div className="flex flex-col">
-                  <h4 className="text-base font-bold text-[#1c1514] uppercase mb-1.5">Dual Support Architecture</h4>
-                  <p className="text-xs sm:text-sm text-[#6e635e] leading-relaxed">
-                    Transition seamlessly between clinical psychologists and career strategists under one unified roof.
-                  </p>
+              {/* Right Column: 2x2 Feature Grid (2-column on mobile <768px & desktop) */}
+              <div className="lg:col-span-6 grid grid-cols-2 gap-4 sm:gap-6 lg:border-l lg:border-[#d6cecb] lg:pl-10 pt-6 lg:pt-0 border-t lg:border-t-0 border-[#d6cecb]">
+                <div className="flex flex-col justify-between p-4 sm:p-5 rounded-2xl bg-white/60 border border-[#d6cecb] shadow-2xs space-y-3">
+                  <div>
+                    <h4 className="text-xs sm:text-sm font-bold text-[#1c1514] uppercase tracking-wide mb-1.5 leading-snug">Dual Support Architecture</h4>
+                    <p className="text-[11px] sm:text-xs text-[#6e635e] leading-relaxed font-normal">
+                      Transition seamlessly between clinical psychologists and career strategists under one roof.
+                    </p>
+                  </div>
+                  <div className="text-right pt-2 border-t border-[#eae4dc]">
+                    <span className="text-xl sm:text-2xl font-black text-[#1c1514] font-sans tracking-tight">01</span>
+                  </div>
                 </div>
-                <div className="flex flex-col">
-                  <h4 className="text-base font-bold text-[#1c1514] uppercase mb-1.5">100% Safe & Scientific</h4>
-                  <p className="text-xs sm:text-sm text-[#6e635e] leading-relaxed">
-                    Backed by CIGI assessment data and strictly private, non-judgmental counseling protocols.
-                  </p>
+
+                <div className="flex flex-col justify-between p-4 sm:p-5 rounded-2xl bg-white/60 border border-[#d6cecb] shadow-2xs space-y-3">
+                  <div>
+                    <h4 className="text-xs sm:text-sm font-bold text-[#1c1514] uppercase tracking-wide mb-1.5 leading-snug">100% Safe & Scientific</h4>
+                    <p className="text-[11px] sm:text-xs text-[#6e635e] leading-relaxed font-normal">
+                      Backed by CIGI assessment data and strictly private, non-judgmental counseling protocols.
+                    </p>
+                  </div>
+                  <div className="text-right pt-2 border-t border-[#eae4dc]">
+                    <span className="text-xl sm:text-2xl font-black text-[#1c1514] font-sans tracking-tight">100%</span>
+                  </div>
                 </div>
-                <div className="flex flex-col">
-                  <h4 className="text-base font-bold text-[#1c1514] uppercase mb-1.5">CIGI-Certified Aptitude Assessment</h4>
-                  <p className="text-xs sm:text-sm text-[#6e635e] leading-relaxed">
-                    C-DAT evaluations designed for grades 8-12 to align cognitive strengths with career aspirations.
-                  </p>
+
+                <div className="flex flex-col justify-between p-4 sm:p-5 rounded-2xl bg-white/60 border border-[#d6cecb] shadow-2xs space-y-3">
+                  <div>
+                    <h4 className="text-xs sm:text-sm font-bold text-[#1c1514] uppercase tracking-wide mb-1.5 leading-snug">C-DAT Aptitude Assessment</h4>
+                    <p className="text-[11px] sm:text-xs text-[#6e635e] leading-relaxed font-normal">
+                      Evaluations designed for grades 8-12 to align cognitive strengths with aspirations.
+                    </p>
+                  </div>
+                  <div className="text-right pt-2 border-t border-[#eae4dc]">
+                    <span className="text-sm sm:text-base font-black text-[#1c1514] uppercase tracking-wider">C-DAT</span>
+                  </div>
                 </div>
-                <div className="flex flex-col">
-                  <h4 className="text-base font-bold text-[#1c1514] uppercase mb-1.5">Holistic Career Roadmapping</h4>
-                  <p className="text-xs sm:text-sm text-[#6e635e] leading-relaxed">
-                    Comprehensive stream selection, degree guidance, and university planning in one cohesive journey.
-                  </p>
+
+                <div className="flex flex-col justify-between p-4 sm:p-5 rounded-2xl bg-[#2b211e] text-[#f7f4ef] shadow-xs space-y-3">
+                  <div>
+                    <p className="text-[11px] sm:text-xs text-[#e2dad2] italic leading-relaxed mb-3">
+                      "True growth happens when emotional peace and career direction align."
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => { window.spaNavigate?.('/booking'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                    className="w-full py-2 bg-[#f7f4ef] hover:bg-white text-[#1c1514] font-bold text-[10px] sm:text-xs uppercase tracking-widest rounded-full transition-all cursor-pointer border-none shadow-2xs text-center"
+                  >
+                    Book a Session
+                  </button>
                 </div>
               </div>
 
