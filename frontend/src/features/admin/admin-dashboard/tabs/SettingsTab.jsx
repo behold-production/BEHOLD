@@ -1149,48 +1149,6 @@ export default function SettingsTab(props) {
                   </div>
                 </div>
 
-                {/* Mentorship Services Section Header Customization */}
-                <div className="bg-zinc-950/40 border border-zinc-800 p-5 rounded-lg space-y-4">
-                  <h4 className="text-xs font-bold text-brand tracking-wider flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-brand" />
-                    Mentorship Services Section Header Customization
-                  </h4>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-1">
-                      <label className="text-xs font-bold text-zinc-500 ">Section Title</label>
-                      <input
-                        type="text"
-                        required
-                        value={settingsForm.servicesSectionTitle || ''}
-                        onChange={(e) => setSettingsForm({ ...settingsForm, servicesSectionTitle: e.target.value })}
-                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800/80 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
-                        placeholder="e.g. We Design Your Path to Success"
-                      />
-                    </div>
-                    <div className="space-y-1">
-                      <label className="text-xs font-bold text-zinc-500 ">Section Subtitle</label>
-                      <input
-                        type="text"
-                        required
-                        value={settingsForm.servicesSectionSub || ''}
-                        onChange={(e) => setSettingsForm({ ...settingsForm, servicesSectionSub: e.target.value })}
-                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800/80 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
-                        placeholder="e.g. OUR MENTORSHIP SERVICES"
-                      />
-                    </div>
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-zinc-500 ">Section Description / Helper Text</label>
-                    <textarea
-                      required
-                      rows={2}
-                      value={settingsForm.servicesSectionDesc || ''}
-                      onChange={(e) => setSettingsForm({ ...settingsForm, servicesSectionDesc: e.target.value })}
-                      className="w-full px-3.5 py-2 bg-zinc-955 border border-zinc-800/80 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors resize-none"
-                      placeholder="e.g. Access standard, expert counselling sessions and lifetime career mentoring."
-                    />
-                  </div>
-                </div>
 
                 {/* Career Mentoring Section */}
                 <div className="bg-zinc-950/40 border border-zinc-800 p-5 rounded-lg space-y-4">
@@ -1465,70 +1423,6 @@ export default function SettingsTab(props) {
                   </div>
                 </div>
 
-                {/* Hero Main Content & Background Visual */}
-                <div className="bg-zinc-950/40 border border-zinc-800 p-5 rounded-lg space-y-4">
-                  <h4 className="text-xs font-bold text-brand tracking-wider flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-brand" />
-                    Main Hero Headline & Background Image
-                  </h4>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block mb-1">Hero Background Image URL</label>
-                      <input
-                        type="text"
-                        value={settingsForm.heroBgImage || ''}
-                        onChange={(e) => setSettingsForm({ ...settingsForm, heroBgImage: e.target.value })}
-                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none"
-                        placeholder="https://... (Leave blank to use default luxury editorial image)"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block mb-1">Eyebrow Script Text</label>
-                      <input
-                        type="text"
-                        value={settingsForm.heroEyebrow || ''}
-                        onChange={(e) => setSettingsForm({ ...settingsForm, heroEyebrow: e.target.value })}
-                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none"
-                        placeholder="Whatever you feel,"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block mb-1">Hero Title (Use \n for new lines)</label>
-                    <textarea
-                      rows={3}
-                      value={settingsForm.heroTitle || ''}
-                      onChange={(e) => setSettingsForm({ ...settingsForm, heroTitle: e.target.value })}
-                      className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-mono"
-                      placeholder={'WE DESIGN\nTHE CLARITY\nOF YOU'}
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block mb-1">Hero Subtitle Paragraph</label>
-                      <textarea
-                        rows={2}
-                        value={settingsForm.heroSub || ''}
-                        onChange={(e) => setSettingsForm({ ...settingsForm, heroSub: e.target.value })}
-                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none"
-                        placeholder="Should guide your new experience..."
-                      />
-                    </div>
-                    <div>
-                      <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block mb-1">Hero CTA Button Text</label>
-                      <input
-                        type="text"
-                        value={settingsForm.heroBtnText || ''}
-                        onChange={(e) => setSettingsForm({ ...settingsForm, heroBtnText: e.target.value })}
-                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none"
-                        placeholder="BOOK CONSULTATION"
-                      />
-                    </div>
-                  </div>
-                </div>
 
                 {/* About Us Statistics Grid Customization */}
                 <div className="bg-zinc-950/40 border border-zinc-800 p-5 rounded-lg space-y-4">
