@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { LogOut, X, AlertTriangle } from 'lucide-react';
 
 /**
@@ -25,24 +26,24 @@ export default function LogoutConfirmModal({ isOpen, onConfirm, onCancel, theme 
 
  if (!isOpen) return null;
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-[130] flex items-center justify-center p-4 animate-in fade-in duration-150"
+      className="fixed inset-0 z-[99999] flex items-center justify-center p-4 animate-in fade-in duration-150 overflow-hidden"
       role="dialog"
       aria-modal="true"
       aria-labelledby="logout-confirm-title"
       onClick={onCancel}
     >
-      {/* Backdrop */}
+      {/* Opaque Dark Backdrop */}
       <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-xs"
+        className="fixed inset-0 bg-black/75 backdrop-blur-sm z-[99999]"
         onClick={onCancel}
         aria-hidden="true"
       />
 
-      {/* Modal card */}
+      {/* Modal Card */}
       <div
-        className="relative z-10 w-full max-w-sm rounded-3xl shadow-2xl animate-in zoom-in-95 duration-200 bg-[#f7f4ef] border border-[#d6cecb] text-[#1c1514]"
+        className="relative z-[100000] w-full max-w-sm rounded-3xl shadow-2xl animate-in zoom-in-95 duration-200 bg-[#f7f4ef] border border-[#d6cecb] text-[#1c1514]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close button */}
@@ -58,39 +59,43 @@ export default function LogoutConfirmModal({ isOpen, onConfirm, onCancel, theme 
         <div className="p-7 text-center space-y-5">
           {/* Warning icon */}
           <div className="w-12 h-12 rounded-2xl flex items-center justify-center mx-auto bg-[#eae4dc] border border-[#d8d0c7]">
-            <AlertTriangle className="w-6 h-6 text-[#2b211e]" />
+            <AlertTriangle className="w-6 h-6 text-[#1c1514]" />
           </div>
 
-          {/* Text */}
           <div className="space-y-1.5">
-            <h3 id="logout-confirm-title" className="text-lg font-bold uppercase tracking-tight text-[#1c1514]">
+            <h3
+              id="logout-confirm-title"
+              className="text-lg font-bold text-[#1c1514] uppercase tracking-wide font-sans"
+            >
               Sign Out?
             </h3>
-            <p className="text-xs text-[#6e635e] leading-relaxed">
+            <p className="text-xs text-[#6e635e] font-normal leading-relaxed">
               You are about to end your current session. You will need to sign in again to access your dashboard.
             </p>
           </div>
 
-          {/* Actions */}
-          <div className="flex flex-col-reverse sm:flex-row gap-3 pt-2">
+          {/* Action buttons */}
+          <div className="grid grid-cols-2 gap-3 pt-2">
             <button
               type="button"
               onClick={onCancel}
-              className="min-h-[44px] flex-1 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider transition cursor-pointer border border-[#d8d0c7] bg-[#eae4dc] hover:bg-[#e2dad2] text-[#1c1514]"
+              className="w-full py-3 bg-[#eae4dc] hover:bg-[#e2dad2] text-[#1c1514] font-bold text-xs uppercase tracking-wider rounded-full transition-all border border-[#d8d0c7] cursor-pointer"
             >
               Stay Signed In
             </button>
+
             <button
               type="button"
               onClick={onConfirm}
-              className="min-h-[44px] flex-1 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider transition cursor-pointer border-none bg-[#2b211e] hover:bg-[#1c1514] text-[#f7f4ef] flex items-center justify-center gap-1.5 shadow-xs"
+              className="w-full py-3 bg-[#2b211e] hover:bg-[#1c1514] text-[#f7f4ef] font-bold text-xs uppercase tracking-widest rounded-full transition-all border-none cursor-pointer shadow-md flex items-center justify-center gap-1.5"
             >
               <LogOut className="w-3.5 h-3.5" />
-              Sign Out
+              <span>Sign Out</span>
             </button>
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

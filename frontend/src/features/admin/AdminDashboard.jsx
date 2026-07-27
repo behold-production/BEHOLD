@@ -1572,6 +1572,8 @@ export default function AdminDashboard({ setView }) {
  ['view_psychologists','add_psychologists','edit_psychologists','delete_psychologists','verify_psychologists'].some(k => _p.includes(k));
  const hasBookingPermission = isSuperAdmin || _p.includes('MANAGE_BOOKINGS') || _p.includes('manage_bookings') ||
  ['view_bookings','add_bookings','edit_bookings','delete_bookings','verify_bookings'].some(k => _p.includes(k));
+ const hasBlogPermission = isSuperAdmin || _p.includes('MANAGE_BLOGS') || _p.includes('manage_blogs') ||
+ ['view_blogs','add_blogs','edit_blogs','delete_blogs','manage_blogs'].some(k => _p.includes(k));
 
  // Granular per-action permission helpers
  const _hasModuleOrAction = (legacyKey, actionKey) =>
