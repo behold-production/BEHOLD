@@ -70,22 +70,22 @@ const BlogPostDetail = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex justify-center items-center bg-[#f7f4ef] text-[#1c1514] pt-28 pb-16">
-        <div className="w-10 h-10 border-3 border-[#2b211e] border-t-transparent rounded-full animate-spin"></div>
+      <div className="min-h-screen flex justify-center items-center bg-white text-surface-900 pt-28 pb-16">
+        <div className="w-10 h-10 border-3 border-[#0f172a] border-t-[#00e5ff] rounded-full animate-spin"></div>
       </div>
     );
   }
 
   if (!post) {
     return (
-      <div className="min-h-screen flex flex-col justify-center items-center text-center px-4 bg-[#f7f4ef] text-[#1c1514] pt-28 pb-16">
-        <BookOpen className="w-14 h-14 text-[#2b211e] mb-4 opacity-75" />
+      <div className="min-h-screen flex flex-col justify-center items-center text-center px-4 bg-white text-surface-900 pt-28 pb-16">
+        <BookOpen className="w-14 h-14 text-[#0f172a] mb-4 opacity-75" />
         <h1 className="text-2xl font-bold mb-2 uppercase tracking-wide">Article Not Found</h1>
-        <p className="text-[#6e635e] mb-6 text-sm">The article you are looking for may have been moved or unpublished.</p>
+        <p className="text-surface-600 mb-6 text-sm">The article you are looking for may have been moved or unpublished.</p>
         <button
           type="button"
           onClick={handleBack}
-          className="px-7 py-3 rounded-full bg-[#2b211e] hover:bg-[#1c1514] text-[#f7f4ef] font-bold text-xs uppercase tracking-widest cursor-pointer border-none shadow-xs transition-all"
+          className="px-7 py-3 rounded-full bg-[#0f172a] hover:bg-[#1e293b] text-white font-bold text-xs uppercase tracking-widest cursor-pointer border border-[#00e5ff]/30 shadow-xs transition-all"
         >
           Back to All Articles
         </button>
@@ -94,54 +94,54 @@ const BlogPostDetail = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#f7f4ef] text-[#1c1514] pt-28 pb-20 selection:bg-[#2b211e] selection:text-[#f7f4ef]">
+    <div className="min-h-screen flex flex-col bg-white text-surface-900 pt-28 pb-20 selection:bg-[#0f172a] selection:text-[#00e5ff]">
       <main className="flex-1">
         <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Back Button */}
           <button
             type="button"
             onClick={handleBack}
-            className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#1c1514] hover:text-[#7c7069] mb-8 transition-colors cursor-pointer bg-transparent border-none p-0"
+            className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#0f172a] hover:text-[#00e5ff] mb-8 transition-colors cursor-pointer bg-transparent border-none p-0"
           >
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowLeft className="w-4 h-4 text-[#00e5ff]" />
             <span>Back to All Articles</span>
           </button>
 
           {/* Category & Read Time */}
           <div className="flex flex-wrap items-center gap-3 mb-5">
-            <span className="px-4 py-1.5 rounded-full bg-[#eae4dc] border border-[#d8d0c7] text-[#1c1514] text-[10px] font-bold tracking-widest uppercase shadow-2xs">
+            <span className="px-4 py-1.5 rounded-full bg-[#0f172a] border border-[#00e5ff]/30 text-white text-[10px] font-bold tracking-widest uppercase shadow-2xs">
               {post.category || 'Career Guidance'}
             </span>
-            <div className="flex items-center gap-1.5 text-xs font-semibold text-[#7c7069] uppercase tracking-wider">
-              <Clock className="w-3.5 h-3.5 text-[#2b211e]" />
+            <div className="flex items-center gap-1.5 text-xs font-semibold text-surface-500 uppercase tracking-wider">
+              <Clock className="w-3.5 h-3.5 text-[#00e5ff]" />
               <span>{post.readTime || '5 min read'}</span>
             </div>
           </div>
 
           {/* Title */}
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-sans tracking-tight text-[#1c1514] leading-tight mb-8">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black font-sans tracking-tight text-[#0f172a] leading-tight mb-8">
             {post.title}
           </h1>
 
           {/* Author & Share Row */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-8 mb-10 border-b border-[#d6cecb]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-8 mb-10 border-b border-surface-200">
             <div className="flex items-center gap-4">
               {post.author?.avatar ? (
                 <img
                   src={post.author.avatar}
                   alt={post.author?.name}
-                  className="w-12 h-12 rounded-full object-cover border border-[#d6cecb] shrink-0"
+                  className="w-12 h-12 rounded-full object-cover border border-surface-200 shrink-0"
                 />
               ) : (
-                <div className="w-12 h-12 rounded-full bg-[#2b211e] text-[#f7f4ef] border border-[#d6cecb] flex items-center justify-center font-sans text-base font-black uppercase shrink-0 shadow-2xs">
+                <div className="w-12 h-12 rounded-full bg-[#0f172a] text-[#00e5ff] border border-[#00e5ff]/30 flex items-center justify-center font-sans text-base font-black uppercase shrink-0 shadow-2xs">
                   {(post.author?.name || 'B').charAt(0)}
                 </div>
               )}
               <div>
-                <h3 className="text-sm font-bold text-[#1c1514]">
+                <h3 className="text-sm font-bold text-[#0f172a]">
                   {post.author?.name || 'Behold Aspire Editorial Team'}
                 </h3>
-                <p className="text-xs text-[#6e635e] font-medium">
+                <p className="text-xs text-surface-500 font-medium">
                   {post.author?.role || 'Senior Career Counsellor & Mentor'}
                 </p>
               </div>
@@ -152,18 +152,18 @@ const BlogPostDetail = () => {
               <button
                 type="button"
                 onClick={handleShareWhatsApp}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#2b211e] hover:bg-[#1c1514] text-[#f7f4ef] text-xs font-bold uppercase tracking-wider transition-all cursor-pointer border-none shadow-xs"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#0f172a] hover:bg-[#1e293b] text-white text-xs font-bold uppercase tracking-wider transition-all cursor-pointer border border-[#00e5ff]/30 shadow-xs"
               >
-                <MessageCircle className="w-4 h-4" />
+                <MessageCircle className="w-4 h-4 text-[#00e5ff]" />
                 <span>Share WhatsApp</span>
               </button>
 
               <button
                 type="button"
                 onClick={handleCopyLink}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#eae4dc] hover:bg-[#e2dad2] text-[#1c1514] text-xs font-bold uppercase tracking-wider transition-all cursor-pointer border border-[#d8d0c7]"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-surface-100 hover:bg-surface-200 text-[#0f172a] text-xs font-bold uppercase tracking-wider transition-all cursor-pointer border border-surface-200"
               >
-                {copied ? <Check className="w-4 h-4 text-[#1c1514]" /> : <Copy className="w-4 h-4" />}
+                {copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4 text-surface-600" />}
                 <span>{copied ? 'Copied!' : 'Copy Link'}</span>
               </button>
             </div>
@@ -171,38 +171,38 @@ const BlogPostDetail = () => {
 
           {/* Cover Image */}
           {post.coverImage && (
-            <div className="mb-12 rounded-3xl overflow-hidden border border-[#d6cecb] shadow-sm bg-[#eae4dc]">
+            <div className="mb-12 rounded-3xl overflow-hidden border border-surface-200 shadow-sm bg-surface-100 relative group">
               <img
                 src={post.coverImage}
                 alt={post.title}
-                className="w-full h-auto max-h-[480px] object-cover"
+                className="w-full h-auto max-h-[480px] object-cover group-hover:scale-105 transition-transform duration-700"
               />
             </div>
           )}
 
           {/* Article Excerpt Banner */}
           {post.excerpt && (
-            <div className="p-6 sm:p-8 rounded-2xl bg-[#eae4dc] border-l-4 border-[#2b211e] border border-[#d8d0c7] mb-12 shadow-2xs">
-              <p className="text-base sm:text-lg text-[#2b211e] font-medium leading-relaxed">
-                {post.excerpt}
+            <div className="p-6 sm:p-8 rounded-2xl bg-surface-50 border-l-4 border-[#00e5ff] border border-surface-200 mb-12 shadow-2xs">
+              <p className="text-base sm:text-lg text-[#0f172a] font-medium leading-relaxed italic">
+                "{post.excerpt}"
               </p>
             </div>
           )}
 
           {/* Rich Content Body */}
           <div
-            className="prose max-w-none text-[#4a3f3a] text-base sm:text-lg leading-relaxed space-y-6 [&_h2]:text-2xl [&_h2]:sm:text-3xl [&_h2]:font-bold [&_h2]:uppercase [&_h2]:text-[#1c1514] [&_h2]:mt-12 [&_h2]:mb-4 [&_h2]:tracking-tight [&_h3]:text-xl [&_h3]:font-bold [&_h3]:uppercase [&_h3]:text-[#2b211e] [&_h3]:mt-8 [&_h3]:mb-3 [&_p]:leading-relaxed [&_ul]:list-disc [&_ul]:pl-6 [&_li]:mb-2"
+            className="prose max-w-none text-surface-700 text-base sm:text-lg leading-relaxed space-y-6 [&_h2]:text-2xl [&_h2]:sm:text-3xl [&_h2]:font-black [&_h2]:uppercase [&_h2]:text-[#0f172a] [&_h2]:mt-12 [&_h2]:mb-4 [&_h2]:tracking-tight [&_h3]:text-xl [&_h3]:font-bold [&_h3]:uppercase [&_h3]:text-[#0f172a] [&_h3]:mt-8 [&_h3]:mb-3 [&_p]:leading-relaxed [&_ul]:list-disc [&_ul]:pl-6 [&_li]:mb-2"
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
 
           {/* Tags */}
           {post.tags && post.tags.length > 0 && (
-            <div className="mt-12 pt-8 border-t border-[#d6cecb] flex flex-wrap items-center gap-2">
-              <span className="text-xs font-bold text-[#7c7069] uppercase tracking-wider mr-2">Topics:</span>
+            <div className="mt-12 pt-8 border-t border-surface-200 flex flex-wrap items-center gap-2">
+              <span className="text-xs font-bold text-surface-500 uppercase tracking-wider mr-2">Topics:</span>
               {post.tags.map((tag, idx) => (
                 <span
                   key={idx}
-                  className="px-3.5 py-1 rounded-full bg-[#eae4dc] border border-[#d8d0c7] text-[10px] font-bold uppercase tracking-wider text-[#1c1514]"
+                  className="px-3.5 py-1 rounded-full bg-surface-100 border border-surface-200 text-[10px] font-bold uppercase tracking-wider text-[#0f172a]"
                 >
                   #{tag}
                 </span>
@@ -213,9 +213,9 @@ const BlogPostDetail = () => {
 
         {/* Related Articles Section */}
         {relatedBlogs.length > 0 && (
-          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-20 pt-16 border-t border-[#d6cecb]">
-            <h2 className="text-2xl sm:text-3xl font-bold uppercase tracking-tight text-[#1c1514] mb-8">
-              More Insights From BEHOLD.
+          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-20 pt-16 border-t border-surface-200">
+            <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-[#0f172a] mb-8">
+              More Insights From BEHOLD<span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)]">.</span>
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -223,15 +223,15 @@ const BlogPostDetail = () => {
                 <div
                   key={item.slug}
                   onClick={() => navigate(`/blog/${item.slug}`)}
-                  className="bg-white hover:bg-[#fcfbf9] border border-[#d6cecb] hover:border-[#1c1514] rounded-3xl p-6 cursor-pointer transition-all duration-300 space-y-3 shadow-2xs group"
+                  className="bg-white hover:bg-surface-50 border border-surface-200 hover:border-[#00e5ff] rounded-3xl p-6 cursor-pointer transition-all duration-300 space-y-3 shadow-2xs group"
                 >
-                  <span className="text-[10px] font-bold text-[#7c7069] uppercase tracking-widest block">
+                  <span className="text-[10px] font-bold text-[#00e5ff] uppercase tracking-widest block">
                     {item.category}
                   </span>
-                  <h3 className="text-base font-bold text-[#1c1514] group-hover:text-[#2b211e] transition-colors line-clamp-2 leading-tight">
+                  <h3 className="text-base font-bold text-[#0f172a] group-hover:text-[#00e5ff] transition-colors line-clamp-2 leading-tight">
                     {item.title}
                   </h3>
-                  <p className="text-xs text-[#6e635e] line-clamp-2 leading-relaxed">{item.excerpt}</p>
+                  <p className="text-xs text-surface-600 line-clamp-2 leading-relaxed">{item.excerpt}</p>
                 </div>
               ))}
             </div>

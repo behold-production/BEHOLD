@@ -41,7 +41,7 @@ export default function WhyChooseUs({ siteSettings }) {
                   )}
                 </h2>
 
-                <p className="text-xs sm:text-sm text-surface-300 leading-relaxed font-normal max-w-lg">
+                <p className="text-xs sm:text-sm text-white/90 leading-relaxed font-medium max-w-lg">
                   {siteSettings?.servicesSectionDesc || 'True growth happens when emotional peace and career direction align. Behold brings both psychological care and CIGI-certified career mentoring into one cohesive model.'}
                 </p>
 

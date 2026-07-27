@@ -55,7 +55,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
       const firstCardWidth = cards[0].offsetWidth;
       const gap = 24;
       const step = firstCardWidth + gap;
-      
+
       const currentIndex = Math.round(container.scrollLeft / step);
       const targetIndex = direction === 'right'
         ? Math.min(currentIndex + 1, cards.length - 1)
@@ -135,24 +135,25 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
   const sectionId = mode === 'experts' ? 'counsellors' : 'services';
 
   return (
-    <section id={sectionId} className="py-12 sm:py-16 bg-[#f7f4ef] text-[#1c1514] border-b border-[#e2dad2]">
+    <section id={sectionId} className="py-12 sm:py-16 bg-white text-surface-900 border-b border-surface-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* ── SERVICES INTRO: UNFOLD WITH BEHOLD ── */}
         {(!mode || mode === 'intro') && (
           <div className="mb-10">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-              
+
               {/* Left Column: Heading & Buttons */}
               <div className="lg:col-span-6 flex flex-col justify-between">
                 <div>
-                  <span className="text-xs font-bold tracking-widest uppercase text-[#7c7069] block mb-2">
+                  <span className="text-xs font-bold tracking-widest uppercase text-[#00e5ff] flex items-center gap-1.5 mb-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_8px_#00e5ff]" />
                     {settings.servicesSectionSub || 'UNFOLD WITH BEHOLD'}
                   </span>
-                  <h2 id="services-title" className="text-3xl sm:text-4xl md:text-5xl font-sans font-bold uppercase text-[#1c1514] mb-4 leading-tight tracking-tight">
+                  <h2 id="services-title" className="text-3xl sm:text-4xl md:text-5xl font-sans font-black uppercase text-[#0f172a] mb-4 leading-tight tracking-tight">
                     {settings.servicesSectionTitle || 'Comprehensive Care for Your Mind & Future.'}
                   </h2>
-                  <p className="text-sm sm:text-base text-[#6e635e] leading-relaxed max-w-lg font-normal mb-6">
+                  <p className="text-sm sm:text-base text-surface-600 leading-relaxed max-w-lg font-normal mb-6">
                     {settings.servicesSectionDesc || 'True growth happens when emotional peace and career direction align. Behold Aspire brings both pillars into one cohesive mentoring model.'}
                   </p>
                 </div>
@@ -160,66 +161,69 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                 <div className="flex flex-wrap items-center gap-3">
                   <button
                     onClick={() => { window.spaNavigate?.('/booking'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                    className="px-7 py-3 bg-[#2b211e] hover:bg-[#1c1514] text-[#f7f4ef] font-bold text-xs uppercase tracking-widest rounded-full transition-all border-none cursor-pointer shadow-xs"
+                    className="px-7 py-3 bg-[#0f172a] hover:bg-[#1e293b] text-white font-bold text-xs uppercase tracking-widest rounded-full transition-all border border-[#00e5ff]/30 cursor-pointer shadow-xs"
                   >
                     Explore All Programs
                   </button>
                   <button
                     onClick={() => { window.spaNavigate?.('/booking'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                    className="px-7 py-3 bg-[#eae4dc] hover:bg-[#e2dad2] text-[#1c1514] font-bold text-xs uppercase tracking-widest rounded-full transition-all border border-[#d8d0c7] cursor-pointer"
+                    className="px-7 py-3 bg-surface-100 hover:bg-surface-200 text-[#0f172a] font-bold text-xs uppercase tracking-widest rounded-full transition-all border border-surface-200 cursor-pointer"
                   >
                     Book a Session
                   </button>
                 </div>
               </div>
 
-              {/* Right Column: 2x2 Feature Grid (2-column on mobile <768px & desktop) */}
-              <div className="lg:col-span-6 grid grid-cols-2 gap-4 sm:gap-6 lg:border-l lg:border-[#d6cecb] lg:pl-10 pt-6 lg:pt-0 border-t lg:border-t-0 border-[#d6cecb]">
-                <div className="flex flex-col justify-between p-4 sm:p-5 rounded-2xl bg-white/60 border border-[#d6cecb] shadow-2xs space-y-3">
+              {/* Right Column: 2x2 Feature Grid */}
+              <div className="lg:col-span-6 grid grid-cols-2 gap-4 sm:gap-6 lg:border-l lg:border-surface-200 lg:pl-10 pt-6 lg:pt-0 border-t lg:border-t-0 border-surface-200">
+                <div className="flex flex-col justify-between p-4 sm:p-5 rounded-2xl bg-white border border-surface-200 shadow-2xs space-y-3 group hover:border-[#00e5ff] transition-all">
                   <div>
-                    <h4 className="text-xs sm:text-sm font-bold text-[#1c1514] uppercase tracking-wide mb-1.5 leading-snug">Dual Support Architecture</h4>
-                    <p className="text-[11px] sm:text-xs text-[#6e635e] leading-relaxed font-normal">
+                    <h4 className="text-xs sm:text-sm font-bold text-[#0f172a] uppercase tracking-wide mb-1.5 leading-snug group-hover:text-[#00e5ff] transition-colors">Dual Support Architecture</h4>
+                    <p className="text-[11px] sm:text-xs text-surface-600 leading-relaxed font-normal">
                       Transition seamlessly between clinical psychologists and career strategists under one roof.
                     </p>
                   </div>
-                  <div className="text-right pt-2 border-t border-[#eae4dc]">
-                    <span className="text-xl sm:text-2xl font-black text-[#1c1514] font-sans tracking-tight">01</span>
+                  <div className="text-right pt-2 border-t border-surface-100 flex items-center justify-between">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_6px_#00e5ff]" />
+                    <span className="text-xl sm:text-2xl font-black text-[#0f172a] font-sans tracking-tight">01</span>
                   </div>
                 </div>
 
-                <div className="flex flex-col justify-between p-4 sm:p-5 rounded-2xl bg-white/60 border border-[#d6cecb] shadow-2xs space-y-3">
+                <div className="flex flex-col justify-between p-4 sm:p-5 rounded-2xl bg-white border border-surface-200 shadow-2xs space-y-3 group hover:border-[#00e5ff] transition-all">
                   <div>
-                    <h4 className="text-xs sm:text-sm font-bold text-[#1c1514] uppercase tracking-wide mb-1.5 leading-snug">100% Safe & Scientific</h4>
-                    <p className="text-[11px] sm:text-xs text-[#6e635e] leading-relaxed font-normal">
+                    <h4 className="text-xs sm:text-sm font-bold text-[#0f172a] uppercase tracking-wide mb-1.5 leading-snug group-hover:text-[#00e5ff] transition-colors">100% Safe & Scientific</h4>
+                    <p className="text-[11px] sm:text-xs text-surface-600 leading-relaxed font-normal">
                       Backed by CIGI assessment data and strictly private, non-judgmental counseling protocols.
                     </p>
                   </div>
-                  <div className="text-right pt-2 border-t border-[#eae4dc]">
-                    <span className="text-xl sm:text-2xl font-black text-[#1c1514] font-sans tracking-tight">100%</span>
+                  <div className="text-right pt-2 border-t border-surface-100 flex items-center justify-between">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_6px_#00e5ff]" />
+                    <span className="text-xl sm:text-2xl font-black text-[#0f172a] font-sans tracking-tight">100%</span>
                   </div>
                 </div>
 
-                <div className="flex flex-col justify-between p-4 sm:p-5 rounded-2xl bg-white/60 border border-[#d6cecb] shadow-2xs space-y-3">
+                <div className="flex flex-col justify-between p-4 sm:p-5 rounded-2xl bg-white border border-surface-200 shadow-2xs space-y-3 group hover:border-[#00e5ff] transition-all">
                   <div>
-                    <h4 className="text-xs sm:text-sm font-bold text-[#1c1514] uppercase tracking-wide mb-1.5 leading-snug">C-DAT Aptitude Assessment</h4>
-                    <p className="text-[11px] sm:text-xs text-[#6e635e] leading-relaxed font-normal">
+                    <h4 className="text-xs sm:text-sm font-bold text-[#0f172a] uppercase tracking-wide mb-1.5 leading-snug group-hover:text-[#00e5ff] transition-colors">C-DAT Aptitude Assessment</h4>
+                    <p className="text-[11px] sm:text-xs text-surface-600 leading-relaxed font-normal">
                       Evaluations designed for grades 8-12 to align cognitive strengths with aspirations.
                     </p>
                   </div>
-                  <div className="text-right pt-2 border-t border-[#eae4dc]">
-                    <span className="text-sm sm:text-base font-black text-[#1c1514] uppercase tracking-wider">C-DAT</span>
+                  <div className="text-right pt-2 border-t border-surface-100 flex items-center justify-between">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_6px_#00e5ff]" />
+                    <span className="text-sm sm:text-base font-black text-[#0f172a] uppercase tracking-wider">C-DAT</span>
                   </div>
                 </div>
 
-                <div className="flex flex-col justify-between p-4 sm:p-5 rounded-2xl bg-[#2b211e] text-[#f7f4ef] shadow-xs space-y-3">
+                <div className="flex flex-col justify-between p-4 sm:p-5 rounded-2xl bg-[#0f172a] text-white shadow-md border border-[#00e5ff]/30 space-y-3">
                   <div>
-                    <p className="text-[11px] sm:text-xs text-[#e2dad2] italic leading-relaxed mb-3">
-                      "True growth happens when emotional peace and career direction align."
+                    <p className="text-[11px] sm:text-xs text-surface-200 italic leading-relaxed mb-3">
+                      "True growth happens when emotional peace and career direction align<span className="text-[#00e5ff] not-italic font-bold">.</span>"
                     </p>
                   </div>
                   <button
                     onClick={() => { window.spaNavigate?.('/booking'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                    className="w-full py-2 bg-[#f7f4ef] hover:bg-white text-[#1c1514] font-bold text-[10px] sm:text-xs uppercase tracking-widest rounded-full transition-all cursor-pointer border-none shadow-2xs text-center"
+                    className="w-full py-2 bg-[#00e5ff] hover:bg-[#00cce6] text-[#0f172a] font-bold text-[10px] sm:text-xs uppercase tracking-widest rounded-full transition-all cursor-pointer border-none shadow-2xs text-center"
                   >
                     Book a Session
                   </button>
@@ -232,17 +236,18 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
 
         {/* ── EXPERTS LISTING ── */}
         {(!mode || mode === 'experts') && (
-          <div className={mode === 'experts' ? '' : 'pt-10 border-t border-[#d6cecb]'}>
-            
+          <div className={mode === 'experts' ? '' : 'pt-10 border-t border-surface-200'}>
+
             {/* Header */}
             <div className="max-w-3xl mb-10">
-              <span className="text-xs font-bold tracking-widest uppercase text-[#7c7069] block mb-2">
+              <span className="text-xs font-bold tracking-widest uppercase text-[#00e5ff] flex items-center gap-1.5 mb-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_8px_#00e5ff]" />
                 OUR CLINICAL TEAM
               </span>
-              <h2 id="experts-title" className="text-3xl sm:text-5xl font-sans font-bold uppercase text-[#1c1514] mb-3 tracking-tight leading-none">
-                Meet Our Experts.
+              <h2 id="experts-title" className="text-3xl sm:text-5xl font-sans font-black uppercase text-[#0f172a] mb-3 tracking-tight leading-none">
+                Meet Our Experts<span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)]">.</span>
               </h2>
-              <p className="text-sm sm:text-base text-[#6e635e] font-normal leading-relaxed">
+              <p className="text-sm sm:text-base text-surface-600 font-normal leading-relaxed">
                 Certified professionals dedicated to your wellbeing and career success.
               </p>
             </div>
@@ -254,11 +259,10 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                   <button
                     key={f}
                     onClick={() => setFilter(f)}
-                    className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all border cursor-pointer ${
-                      filter === f
-                        ? 'bg-[#2b211e] text-[#f7f4ef] border-[#2b211e] shadow-xs'
-                        : 'bg-white text-[#6e635e] hover:text-[#1c1514] border-[#d8d0c7] hover:border-[#1c1514]'
-                    }`}
+                    className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all border cursor-pointer ${filter === f
+                        ? 'bg-[#0f172a] text-white border-[#00e5ff] shadow-xs'
+                        : 'bg-white text-surface-600 hover:text-[#0f172a] border-surface-200 hover:border-[#00e5ff]'
+                      }`}
                   >
                     {f === 'All' ? 'All Roles' : f}
                   </button>
@@ -270,7 +274,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                   placeholder="Search by name or specialty..."
                   value={search}
                   onChange={e => setSearch(e.target.value)}
-                  className="w-full px-5 py-2.5 bg-white border border-[#d8d0c7] rounded-full focus:outline-none focus:border-[#1c1514] text-xs font-medium placeholder:text-[#8a7e77]"
+                  className="w-full px-5 py-2.5 bg-white border border-surface-200 rounded-full focus:outline-none focus:border-[#00e5ff] text-xs font-medium placeholder:text-surface-400"
                 />
               </div>
             </div>
@@ -278,15 +282,15 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
             {/* Cards Grid */}
             {isLoading ? (
               <div className="flex justify-center py-20">
-                <div className="w-8 h-8 border-2 border-[#2b211e] border-t-transparent rounded-full animate-spin" />
+                <div className="w-8 h-8 border-2 border-[#0f172a] border-t-[#00e5ff] rounded-full animate-spin" />
               </div>
             ) : filtered.length === 0 ? (
-              <div className="text-center py-20 bg-white rounded-3xl border border-[#d6cecb] p-8 shadow-xs">
-                <p className="text-lg font-bold text-[#1c1514] uppercase mb-1">No Specialists Found</p>
-                <p className="text-xs text-[#6e635e] mb-5">Try adjusting your search or filters.</p>
+              <div className="text-center py-20 bg-white rounded-3xl border border-surface-200 p-8 shadow-xs">
+                <p className="text-lg font-bold text-[#0f172a] uppercase mb-1">No Specialists Found</p>
+                <p className="text-xs text-surface-600 mb-5">Try adjusting your search or filters.</p>
                 <button
                   onClick={() => { setFilter('All'); setSearch(''); }}
-                  className="px-6 py-3 bg-[#2b211e] hover:bg-[#1c1514] text-[#f7f4ef] font-bold text-xs uppercase tracking-widest rounded-full transition-all border-none cursor-pointer"
+                  className="px-6 py-3 bg-[#0f172a] hover:bg-[#1e293b] text-white font-bold text-xs uppercase tracking-widest rounded-full transition-all border border-[#00e5ff]/30 cursor-pointer"
                 >
                   Reset Filters
                 </button>
@@ -298,17 +302,17 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => scrollHorizontal('left')}
-                      className="w-8 h-8 rounded-full bg-[#eae4dc] text-[#1c1514] flex items-center justify-center border border-[#d8d0c7] active:scale-95 transition-all p-0 shadow-2xs"
+                      className="w-8 h-8 rounded-full bg-[#0f172a] text-white flex items-center justify-center border border-[#00e5ff]/30 active:scale-95 transition-all p-0 shadow-2xs"
                       aria-label="Previous Expert"
                     >
-                      <ChevronLeft className="w-4 h-4" />
+                      <ChevronLeft className="w-4 h-4 text-[#00e5ff]" />
                     </button>
                     <button
                       onClick={() => scrollHorizontal('right')}
-                      className="w-8 h-8 rounded-full bg-[#eae4dc] text-[#1c1514] flex items-center justify-center border border-[#d8d0c7] active:scale-95 transition-all p-0 shadow-2xs"
+                      className="w-8 h-8 rounded-full bg-[#0f172a] text-white flex items-center justify-center border border-[#00e5ff]/30 active:scale-95 transition-all p-0 shadow-2xs"
                       aria-label="Next Expert"
                     >
-                      <ChevronRight className="w-4 h-4" />
+                      <ChevronRight className="w-4 h-4 text-[#00e5ff]" />
                     </button>
                   </div>
                 </div>
@@ -322,23 +326,23 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                   {paginatedAdvisors.map(advisor => (
                     <div
                       key={advisor.id}
-                      className="bg-white rounded-3xl border border-[#d6cecb] hover:border-[#1c1514] shadow-xs hover:shadow-md overflow-hidden flex flex-col justify-between group transition-all h-full shrink-0 w-full snap-start snap-always md:w-auto md:max-w-none"
+                      className="bg-white rounded-3xl border border-surface-200 hover:border-[#00e5ff] shadow-xs hover:shadow-md overflow-hidden flex flex-col justify-between group transition-all h-full shrink-0 w-full snap-start snap-always md:w-auto md:max-w-none"
                     >
                       {/* Photo or Branded Initial Header */}
                       {advisor.profilePic ? (
-                        <div className="h-80 w-full bg-[#eae4dc] overflow-hidden relative shrink-0">
+                        <div className="h-80 w-full bg-surface-100 overflow-hidden relative shrink-0">
                           <img
                             src={advisor.profilePic}
                             alt={advisor.name}
-                            className="w-full h-full object-cover object-top transition-transform duration-500"
+                            className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
                           />
                         </div>
                       ) : (
-                        <div className="h-64 w-full bg-[#2b211e] text-[#f7f4ef] flex flex-col items-center justify-center relative shrink-0 p-8 text-center border-b border-[#d6cecb]">
-                          <div className="w-20 h-20 rounded-full bg-[#f7f4ef]/10 border border-[#f7f4ef]/20 flex items-center justify-center text-[#f7f4ef] font-sans text-3xl font-black uppercase mb-3 shadow-xs">
+                        <div className="h-64 w-full bg-[#0f172a] text-white flex flex-col items-center justify-center relative shrink-0 p-8 text-center border-b border-surface-200">
+                          <div className="w-20 h-20 rounded-full bg-[#00e5ff]/10 border border-[#00e5ff]/30 flex items-center justify-center text-[#00e5ff] font-sans text-3xl font-black uppercase mb-3 shadow-xs">
                             {(advisor.name || 'C').charAt(0)}
                           </div>
-                          <span className="text-xs font-bold tracking-widest text-[#e2dad2] uppercase">
+                          <span className="text-xs font-bold tracking-widest text-[#00e5ff] uppercase">
                             Certified Specialist
                           </span>
                         </div>
@@ -349,29 +353,29 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                         <div>
                           {/* Name + Price */}
                           <div className="flex items-baseline justify-between gap-2 mb-1">
-                            <h4 className="font-bold text-[#1c1514] text-lg tracking-tight leading-tight truncate">
+                            <h4 className="font-bold text-[#0f172a] text-lg tracking-tight leading-tight truncate group-hover:text-[#00e5ff] transition-colors">
                               {advisor.name}
                             </h4>
                             <div className="text-right shrink-0">
-                              <span className="font-bold text-[#1c1514] text-base">₹{advisor.price?.toLocaleString('en-IN')}</span>
-                              <span className="block text-[10px] text-[#8a7e77] font-bold uppercase">Per Session</span>
+                              <span className="font-bold text-[#0f172a] text-base">₹{advisor.price?.toLocaleString('en-IN')}</span>
+                              <span className="block text-[10px] text-surface-500 font-bold uppercase">Per Session</span>
                             </div>
                           </div>
 
                           {/* Role */}
-                          <p className="text-xs text-[#7c7069] font-semibold mb-3 uppercase tracking-wider">{advisor.role}</p>
+                          <p className="text-xs text-surface-500 font-semibold mb-3 uppercase tracking-wider">{advisor.role}</p>
 
                           {/* Bio / Description with Read More Toggle */}
                           {advisor.bio && (
                             <div className="mb-4">
-                              <p className={`text-xs text-[#6e635e] leading-relaxed font-normal ${expandedBios[advisor.id] ? '' : 'line-clamp-2'}`}>
+                              <p className={`text-xs text-surface-600 leading-relaxed font-normal ${expandedBios[advisor.id] ? '' : 'line-clamp-2'}`}>
                                 {advisor.bio}
                               </p>
                               {advisor.bio.length > 70 && (
                                 <button
                                   type="button"
                                   onClick={() => toggleBio(advisor.id)}
-                                  className="text-[11px] font-bold text-[#1c1514] hover:underline mt-1 cursor-pointer bg-transparent border-none p-0 inline-flex items-center gap-1 uppercase tracking-wider"
+                                  className="text-[11px] font-bold text-[#0f172a] hover:text-[#00e5ff] hover:underline mt-1 cursor-pointer bg-transparent border-none p-0 inline-flex items-center gap-1 uppercase tracking-wider"
                                 >
                                   {expandedBios[advisor.id] ? 'Show Less ↑' : 'Read More ↓'}
                                 </button>
@@ -381,10 +385,10 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
 
                           {/* Specialties & Categories */}
                           <div className="mb-4">
-                            <span className="text-[10px] font-bold tracking-widest text-[#7c7069] uppercase block mb-2">Specialties</span>
+                            <span className="text-[10px] font-bold tracking-widest text-surface-500 uppercase block mb-2">Specialties</span>
                             <div className="flex flex-wrap gap-1.5">
                               {advisor.specialties.map((s, i) => (
-                                <span key={i} className="px-3 py-1 bg-[#eae4dc] text-[#1c1514] text-[10px] font-bold rounded-full uppercase tracking-wider border border-[#d8d0c7] shadow-2xs hover:bg-[#2b211e] hover:text-[#f7f4ef] transition-all">
+                                <span key={i} className="px-3 py-1 bg-surface-50 text-[#0f172a] text-[10px] font-bold rounded-full uppercase tracking-wider border border-surface-200 shadow-2xs hover:bg-[#0f172a] hover:text-[#00e5ff] transition-all">
                                   {s}
                                 </span>
                               ))}
@@ -424,11 +428,10 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                       onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                       disabled={currentPage === 1}
                       aria-label="Previous Page"
-                      className={`w-9 h-9 rounded-full text-sm font-bold transition-all cursor-pointer border flex items-center justify-center ${
-                        currentPage === 1
+                      className={`w-9 h-9 rounded-full text-sm font-bold transition-all cursor-pointer border flex items-center justify-center ${currentPage === 1
                           ? 'border-[#d8d0c7] text-[#a39891] bg-[#ebe5df] cursor-not-allowed'
                           : 'border-[#2b211e] bg-[#2b211e] text-[#f7f4ef] hover:bg-[#1c1514]'
-                      }`}
+                        }`}
                     >
                       <ChevronLeft className="w-4 h-4" />
                     </button>
@@ -437,11 +440,10 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                       <button
                         key={num}
                         onClick={() => setCurrentPage(num)}
-                        className={`w-9 h-9 rounded-full text-xs font-bold transition-all cursor-pointer border flex items-center justify-center ${
-                          currentPage === num
+                        className={`w-9 h-9 rounded-full text-xs font-bold transition-all cursor-pointer border flex items-center justify-center ${currentPage === num
                             ? 'bg-[#2b211e] text-[#f7f4ef] border-[#2b211e] shadow-xs'
                             : 'bg-white text-[#2b211e] border-[#d8d0c7] hover:border-[#1c1514]'
-                        }`}
+                          }`}
                       >
                         {num}
                       </button>
@@ -451,11 +453,10 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                       onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                       disabled={currentPage === totalPages}
                       aria-label="Next Page"
-                      className={`w-9 h-9 rounded-full text-sm font-bold transition-all cursor-pointer border flex items-center justify-center ${
-                        currentPage === totalPages
+                      className={`w-9 h-9 rounded-full text-sm font-bold transition-all cursor-pointer border flex items-center justify-center ${currentPage === totalPages
                           ? 'border-[#d8d0c7] text-[#a39891] bg-[#ebe5df] cursor-not-allowed'
                           : 'border-[#2b211e] bg-[#2b211e] text-[#f7f4ef] hover:bg-[#1c1514]'
-                      }`}
+                        }`}
                     >
                       <ChevronRight className="w-4 h-4" />
                     </button>
