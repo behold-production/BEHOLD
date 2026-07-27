@@ -76,13 +76,13 @@ export default function Inquiry({ testProfile, siteSettings }) {
       <section className="py-20 sm:py-28 bg-[#2b211e] text-[#f7f4ef] relative border-b border-[#1c1514]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <span className="text-xs font-bold tracking-widest uppercase text-[#e2dad2] block mb-3">
-            START YOUR JOURNEY
+            {settings.inquirySectionSub || 'START YOUR JOURNEY'}
           </span>
           <h2 className="text-3xl sm:text-5xl font-sans font-bold uppercase text-[#f7f4ef] mb-4 tracking-tight leading-none">
-            Ready to Build Your Future.
+            {settings.inquirySectionTitle || 'Ready to Build Your Future.'}
           </h2>
           <p className="text-sm sm:text-base text-[#e2dad2] font-normal max-w-xl mx-auto mb-10 leading-relaxed">
-            Take the first step toward discovering your true potential. Our mentors are here to guide you through every stage of your academic and career journey.
+            {settings.inquirySectionDesc || 'Take the first step toward discovering your true potential. Our mentors are here to guide you through every stage of your academic and career journey.'}
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <button

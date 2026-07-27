@@ -25,7 +25,8 @@ const defaultFaqs = [
   },
 ];
 
-export default function Faq() {
+export default function Faq({ siteSettings }) {
+  const settings = siteSettings || JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
   const [openIndex, setOpenIndex] = useState(null);
   const [faqs, setFaqs] = useState([]);
 
@@ -41,7 +42,7 @@ export default function Faq() {
     return () => window.removeEventListener('behold_faqs_updated', handler);
   }, []);
 
-  const displayFaqs = faqs.length > 0 ? faqs.slice(0, 6) : defaultFaqs;
+  const displayFaqs = faqs.length > 0 ? faqs : defaultFaqs;
 
   return (
     <section id="faqs" className="py-20 sm:py-28 bg-[#f7f4ef] text-[#1c1514] border-b border-[#e2dad2]">
@@ -50,13 +51,13 @@ export default function Faq() {
         {/* Header */}
         <div className="text-center mb-14">
           <span className="text-xs font-bold tracking-widest uppercase text-[#7c7069] block mb-2">
-            FREQUENTLY ASKED QUESTIONS
+            {settings.faqSectionSub || 'FREQUENTLY ASKED QUESTIONS'}
           </span>
           <h2 id="faq-title" className="text-3xl sm:text-5xl font-sans font-bold uppercase text-[#1c1514] mb-3 tracking-tight leading-none">
-            Everything You Need to Know.
+            {settings.faqSectionTitle || 'Everything You Need to Know.'}
           </h2>
           <p className="text-sm sm:text-base text-[#6e635e] font-normal max-w-xl mx-auto leading-relaxed">
-            We've answered the most common questions about our counseling model, C-DAT assessments, and mentorship programs.
+            {settings.faqSectionDesc || "We've answered the most common questions about our counseling model, C-DAT assessments, and mentorship programs."}
           </p>
         </div>
 
