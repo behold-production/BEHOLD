@@ -21,8 +21,8 @@ const HeroHeader = ({
   ];
 
   return (
-    <div className="bg-white text-slate-900 border border-slate-200 rounded-xl shadow-xs overflow-hidden relative">
-      <div className="h-1 bg-slate-900 w-full" />
+    <div className="bg-white text-[#1c1514] border border-[#d6cecb] rounded-3xl shadow-xs overflow-hidden relative">
+      <div className="h-1 bg-[#2b211e] w-full" />
 
       <div className="p-6 sm:p-7 relative z-10">
         <div className="flex flex-col lg:flex-row items-center lg:items-center justify-between gap-6">
@@ -35,15 +35,15 @@ const HeroHeader = ({
                 <img
                   src={avatarUrl}
                   alt={displayName}
-                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-2 border-white shadow-sm bg-slate-100 ring-1 ring-slate-200"
+                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-2 border-white shadow-sm bg-[#eae4dc] ring-1 ring-[#d6cecb]"
                 />
               ) : (
-                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-slate-100 border-2 border-white shadow-sm ring-1 ring-slate-200 flex items-center justify-center text-slate-800 font-bold text-2xl sm:text-3xl">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-[#2b211e] border-2 border-white shadow-sm ring-1 ring-[#d6cecb] flex items-center justify-center text-[#f7f4ef] font-bold text-2xl sm:text-3xl uppercase">
                   {getInitials(profile.name, user?.name)}
                 </div>
               )}
-              <label className="absolute inset-0 rounded-full bg-slate-950/60 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 cursor-pointer transition-all text-white gap-0.5">
-                <span className="text-[10px] font-bold uppercase">Update</span>
+              <label className="absolute inset-0 rounded-full bg-[#1c1514]/75 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 cursor-pointer transition-all text-[#f7f4ef] gap-0.5">
+                <span className="text-[10px] font-bold uppercase tracking-wider">Update</span>
                 <input
                   type="file"
                   onChange={handleProfilePicUpload}
@@ -55,26 +55,26 @@ const HeroHeader = ({
 
             {/* Profile Info */}
             <div className="flex-1 text-center sm:text-left min-w-0">
-              <p className="text-xs text-slate-500 font-bold mb-1 tracking-wide uppercase">
+              <p className="text-xs text-[#7c7069] font-bold mb-1 tracking-widest uppercase">
                 {greeting}
               </p>
-              <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+              <h1 className="text-2xl font-bold text-[#1c1514] tracking-tight">
                 {(displayName || '').toLowerCase().replace(/\b\w/g, l => l.toUpperCase())}
               </h1>
 
               {/* Text-Only Badges */}
               <div className="mt-2.5 flex flex-wrap items-center gap-2 justify-center sm:justify-start text-xs font-semibold">
                 {profile.grade && (
-                  <span className="inline-block px-2.5 py-0.5 rounded-md bg-slate-100 border border-slate-200 text-slate-700">
+                  <span className="inline-block px-3 py-1 rounded-full bg-[#eae4dc] border border-[#d8d0c7] text-[#1c1514] text-[10px] font-bold uppercase tracking-wider">
                     Grade {profile.grade}
                   </span>
                 )}
                 {profile.schoolName && (
-                  <span className="inline-block px-2.5 py-0.5 rounded-md bg-slate-100 border border-slate-200 text-slate-700 max-w-[200px] truncate">
+                  <span className="inline-block px-3 py-1 rounded-full bg-[#eae4dc] border border-[#d8d0c7] text-[#1c1514] text-[10px] font-bold uppercase tracking-wider max-w-[200px] truncate">
                     {profile.schoolName}
                   </span>
                 )}
-                <span className="inline-block px-2.5 py-0.5 rounded-md bg-slate-900 text-white font-bold">
+                <span className="inline-block px-3 py-1 rounded-full bg-[#2b211e] text-[#f7f4ef] text-[10px] font-bold uppercase tracking-widest shadow-2xs">
                   Verified Student
                 </span>
               </div>

@@ -156,9 +156,6 @@ const ProfileDetailsTab = ({
  <h2 className="text-xl font-bold text-surface-900 tracking-tight">My Profile</h2>
  <p className="text-sm text-surface-500 mt-0.5">Keep your details up to date.</p>
  </div>
- <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[10px] tracking-widest bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-black">
- <Shield className="w-3.5 h-3.5" /> Saved securely in Cloud
- </div>
  </div>
 
  {/* Progress — gradient bar */}

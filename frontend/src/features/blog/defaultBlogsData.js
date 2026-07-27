@@ -1,3 +1,6 @@
+import luxuryClinicRoom from '../../assets/luxury_clinic_room.png';
+import luxuryHeroBg from '../../assets/luxury_hero_bg.png';
+
 export const DEFAULT_BLOGS_DATA = [
   {
     _id: 'default-1',
@@ -11,9 +14,9 @@ export const DEFAULT_BLOGS_DATA = [
     author: {
       name: 'Dr. Arun Varma',
       role: 'Lead Career Mentor & CIGI Specialist',
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80'
+      avatar: null
     },
-    coverImage: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1000&auto=format&fit=crop&q=80',
+    coverImage: luxuryHeroBg,
     tags: ['After 12th', 'Career Roadmap', 'New Age Careers'],
     content: `
       <h2>Why Traditional Careers Are Transforming</h2>
@@ -44,9 +47,9 @@ export const DEFAULT_BLOGS_DATA = [
     author: {
       name: 'Meera Nair',
       role: 'Senior Psychologist & Counsellor',
-      avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&auto=format&fit=crop&q=80'
+      avatar: null
     },
-    coverImage: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1000&auto=format&fit=crop&q=80',
+    coverImage: luxuryClinicRoom,
     tags: ['Aptitude Test', 'Stream Selection', 'CIGI Assessment'],
     content: `
       <h2>The Dilemma of Class 10: Science, Commerce, or Humanities?</h2>
@@ -71,9 +74,9 @@ export const DEFAULT_BLOGS_DATA = [
     author: {
       name: 'Rev. Dr. Thomas K.',
       role: 'Principal Mentor & Educational Psychologist',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&auto=format&fit=crop&q=80'
+      avatar: null
     },
-    coverImage: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1000&auto=format&fit=crop&q=80',
+    coverImage: luxuryClinicRoom,
     tags: ['Exam Stress', 'Mental Health', 'Parenting'],
     content: `
       <h2>Understanding Exam Stress</h2>
