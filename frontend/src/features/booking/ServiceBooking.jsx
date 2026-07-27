@@ -903,290 +903,294 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
                                                             const advisorsToRender = selectedAdvisor ? [selectedAdvisor] : availableAdvisors.slice((advisorPage - 1) * 4, advisorPage * 4);
 
-                                                            return advisorsToRender.map((advisor) => {
-                                                                const slots = getAdvisorSlotsForDate(advisor, selectedDate);
-                                                                const isAvailable = slots.length > 0;
-                                                                const isSelected = selectedAdvisor?.id === advisor.id;
+                                                            return (
+                                                                <>
+                                                                    {advisorsToRender.map((advisor) => {
+                                                                        const slots = getAdvisorSlotsForDate(advisor, selectedDate);
+                                                                        const isAvailable = slots.length > 0;
+                                                                        const isSelected = selectedAdvisor?.id === advisor.id;
 
-                                                                if (isSelected) {
-                                                                    return (
-                                                                        <div key={advisor.id} className="border-[2px] border-brand rounded-[8px] bg-white overflow-hidden animate-in fade-in slide-in-from-top-2 text-left shadow-sm relative">
-                                                                            {/* TOP SECTION: Avatar + Name/Title */}
-                                                                            <div className="p-4 sm:p-5 flex items-center gap-4 bg-surface-50 border-b border-surface-200">
-                                                                                {(() => {
-                                                                                    const avatarSrc = advisor.profilePic || advisor.image;
-                                                                                    return (
-                                                                                        <div className="w-16 h-16 rounded-full shrink-0 flex items-center justify-center border-2 border-cyan-500 bg-white shadow-sm overflow-hidden relative">
-                                                                                            {avatarSrc ? (
-                                                                                                <>
-                                                                                                    <img
-                                                                                                        src={avatarSrc}
-                                                                                                        alt={advisor.name}
-                                                                                                        className="w-full h-full object-cover"
-                                                                                                        onError={(e) => {
-                                                                                                            e.currentTarget.style.display = 'none';
-                                                                                                            const fallback = e.currentTarget.nextElementSibling;
-                                                                                                            if (fallback) fallback.style.display = 'flex';
-                                                                                                        }}
-                                                                                                    />
-                                                                                                    <span style={{ display: 'none' }} className="font-bold text-2xl text-cyan-600 items-center justify-center w-full h-full">
-                                                                                                        {getInitials(advisor.name)}
-                                                                                                    </span>
-                                                                                                </>
-                                                                                            ) : (
-                                                                                                <span className="font-bold text-2xl text-cyan-600 flex items-center justify-center w-full h-full">
-                                                                                                    {getInitials(advisor.name)}
-                                                                                                </span>
-                                                                                            )}
+                                                                        if (isSelected) {
+                                                                            return (
+                                                                                <div key={advisor.id} className="border-[2px] border-brand rounded-[8px] bg-white overflow-hidden animate-in fade-in slide-in-from-top-2 text-left shadow-sm relative">
+                                                                                    {/* TOP SECTION: Avatar + Name/Title */}
+                                                                                    <div className="p-4 sm:p-5 flex items-center gap-4 bg-surface-50 border-b border-surface-200">
+                                                                                        {(() => {
+                                                                                            const avatarSrc = advisor.profilePic || advisor.image;
+                                                                                            return (
+                                                                                                <div className="w-16 h-16 rounded-full shrink-0 flex items-center justify-center border-2 border-cyan-500 bg-white shadow-sm overflow-hidden relative">
+                                                                                                    {avatarSrc ? (
+                                                                                                        <>
+                                                                                                            <img
+                                                                                                                src={avatarSrc}
+                                                                                                                alt={advisor.name}
+                                                                                                                className="w-full h-full object-cover"
+                                                                                                                onError={(e) => {
+                                                                                                                    e.currentTarget.style.display = 'none';
+                                                                                                                    const fallback = e.currentTarget.nextElementSibling;
+                                                                                                                    if (fallback) fallback.style.display = 'flex';
+                                                                                                                }}
+                                                                                                            />
+                                                                                                            <span style={{ display: 'none' }} className="font-bold text-2xl text-cyan-600 items-center justify-center w-full h-full">
+                                                                                                                {getInitials(advisor.name)}
+                                                                                                            </span>
+                                                                                                        </>
+                                                                                                    ) : (
+                                                                                                        <span className="font-bold text-2xl text-cyan-600 flex items-center justify-center w-full h-full">
+                                                                                                            {getInitials(advisor.name)}
+                                                                                                        </span>
+                                                                                                    )}
+                                                                                                </div>
+                                                                                            );
+                                                                                        })()}
+                                                                                        <div>
+                                                                                            <h4 className="font-bold text-xl text-surface-900 leading-none mb-1">{advisor.name}</h4>
+                                                                                            <p className="text-sm font-medium text-surface-600">{advisor.role}</p>
                                                                                         </div>
-                                                                                    );
-                                                                                })()}
-                                                                                <div>
-                                                                                    <h4 className="font-bold text-xl text-surface-900 leading-none mb-1">{advisor.name}</h4>
-                                                                                    <p className="text-sm font-medium text-surface-600">{advisor.role}</p>
-                                                                                </div>
-                                                                            </div>
+                                                                                    </div>
 
-                                                                            {/* MIDDLE SECTION 1: Specialties + Quote */}
-                                                                            <div className="p-4 sm:p-5 border-b border-surface-200 space-y-4">
-                                                                                <div>
-                                                                                    <span className="text-sm font-semibold text-surface-900 block mb-2">Specialties</span>
-                                                                                    <div className="flex flex-wrap gap-2">
-                                                                                        {advisor.specialties?.length > 0 ? (
-                                                                                            <>
-                                                                                                {(expandedSpecialties[advisor.id] ? advisor.specialties : advisor.specialties.slice(0, 5)).map((spec, i) => (
-                                                                                                    <span key={i} className="px-3 py-1 bg-white border border-surface-200 text-surface-700 text-xs font-medium rounded-lg">{spec}</span>
-                                                                                                ))}
-                                                                                                {advisor.specialties.length > 5 && (
+                                                                                    {/* MIDDLE SECTION 1: Specialties + Quote */}
+                                                                                    <div className="p-4 sm:p-5 border-b border-surface-200 space-y-4">
+                                                                                        <div>
+                                                                                            <span className="text-sm font-semibold text-surface-900 block mb-2">Specialties</span>
+                                                                                            <div className="flex flex-wrap gap-2">
+                                                                                                {advisor.specialties?.length > 0 ? (
+                                                                                                    <>
+                                                                                                        {(expandedSpecialties[advisor.id] ? advisor.specialties : advisor.specialties.slice(0, 5)).map((spec, i) => (
+                                                                                                            <span key={i} className="px-3 py-1 bg-white border border-surface-200 text-surface-700 text-xs font-medium rounded-lg">{spec}</span>
+                                                                                                        ))}
+                                                                                                        {advisor.specialties.length > 5 && (
+                                                                                                            <button
+                                                                                                                type="button"
+                                                                                                                onClick={(e) => {
+                                                                                                                    e.stopPropagation();
+                                                                                                                    setExpandedSpecialties(prev => ({ ...prev, [advisor.id]: !prev[advisor.id] }));
+                                                                                                                }}
+                                                                                                                className="px-3 py-1 bg-surface-50 border border-surface-200 text-surface-700 text-xs font-bold rounded-lg hover:bg-surface-100 transition-colors cursor-pointer"
+                                                                                                            >
+                                                                                                                {expandedSpecialties[advisor.id] ? '- Less' : `+ ${advisor.specialties.length - 5} More`}
+                                                                                                            </button>
+                                                                                                        )}
+                                                                                                    </>
+                                                                                                ) : (
+                                                                                                    <span className="px-3 py-1 bg-white border border-surface-200 text-surface-500 text-xs font-medium rounded-lg">General</span>
+                                                                                                )}
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        {advisor.bio && (
+                                                                                            <div className="relative">
+                                                                                                <p className={`text-sm font-medium text-surface-600 italic leading-relaxed ${expandedBios[advisor.id] ? '' : 'line-clamp-2'}`}>
+                                                                                                    "{advisor.bio}"
+                                                                                                </p>
+                                                                                                {advisor.bio.length > 100 && (
                                                                                                     <button
-                                                                                                        type="button"
                                                                                                         onClick={(e) => {
                                                                                                             e.stopPropagation();
-                                                                                                            setExpandedSpecialties(prev => ({ ...prev, [advisor.id]: !prev[advisor.id] }));
+                                                                                                            setExpandedBios(prev => ({ ...prev, [advisor.id]: !prev[advisor.id] }));
                                                                                                         }}
-                                                                                                        className="px-3 py-1 bg-surface-50 border border-surface-200 text-surface-700 text-xs font-bold rounded-lg hover:bg-surface-100 transition-colors cursor-pointer"
+                                                                                                        className="text-brand-dark font-black hover:underline cursor-pointer text-[11px] mt-1 tracking-wider"
                                                                                                     >
-                                                                                                        {expandedSpecialties[advisor.id] ? '- Less' : `+ ${advisor.specialties.length - 5} More`}
+                                                                                                        {expandedBios[advisor.id] ? 'Read Less' : 'Read More'}
                                                                                                     </button>
                                                                                                 )}
-                                                                                            </>
-                                                                                        ) : (
-                                                                                            <span className="px-3 py-1 bg-white border border-surface-200 text-surface-500 text-xs font-medium rounded-lg">General</span>
+                                                                                            </div>
                                                                                         )}
                                                                                     </div>
-                                                                                </div>
-                                                                                {advisor.bio && (
-                                                                                    <div className="relative">
-                                                                                        <p className={`text-sm font-medium text-surface-600 italic leading-relaxed ${expandedBios[advisor.id] ? '' : 'line-clamp-2'}`}>
-                                                                                            "{advisor.bio}"
-                                                                                        </p>
-                                                                                        {advisor.bio.length > 100 && (
+
+                                                                                    {/* MIDDLE SECTION 2: Grid Stats */}
+                                                                                    <div className="grid grid-cols-3 divide-x divide-surface-200 border-b border-surface-200 bg-surface-50">
+                                                                                        <div className="p-4 sm:p-5 flex flex-col items-center justify-center text-center">
+                                                                                            <span className="font-bold text-xl sm:text-2xl text-surface-900 leading-none">{advisor.hours || '0'}+</span>
+                                                                                            <span className="text-xs font-medium text-surface-500 mt-1">Hours</span>
+                                                                                        </div>
+                                                                                        <div className="p-4 sm:p-5 flex flex-col items-center justify-center text-center">
+                                                                                            <span className="font-bold text-sm sm:text-lg text-surface-900 leading-none truncate w-full px-1">{advisor.lang || 'English'}</span>
+                                                                                            <span className="text-xs font-medium text-surface-500 mt-1">Language</span>
+                                                                                        </div>
+                                                                                        <div className="p-4 sm:p-5 flex flex-col items-center justify-center text-center">
+                                                                                            <span className="font-bold text-xl sm:text-2xl text-surface-900 leading-none">₹{advisor.price}</span>
+                                                                                            <span className="text-xs font-medium text-surface-500 mt-1">Session</span>
+                                                                                        </div>
+                                                                                    </div>
+
+                                                                                    {/* BOTTOM SECTION: Availability + Buttons */}
+                                                                                    <div className="p-4 sm:p-5 bg-white">
+                                                                                        <div className="flex items-center justify-between mb-5">
+                                                                                            <span className="text-sm font-semibold text-surface-900">Next Available</span>
+                                                                                            <div className="px-3 py-1 bg-emerald-50 border border-emerald-200 text-xs font-medium text-emerald-700 rounded-full flex items-center gap-2">
+                                                                                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                                                                                Available Today
+                                                                                            </div>
+                                                                                        </div>
+
+                                                                                        <div className="flex items-center gap-3">
                                                                                             <button
+                                                                                                type="button"
                                                                                                 onClick={(e) => {
                                                                                                     e.stopPropagation();
-                                                                                                    setExpandedBios(prev => ({ ...prev, [advisor.id]: !prev[advisor.id] }));
+                                                                                                    window.open(`/advisor/${advisor.id}`, '_blank');
                                                                                                 }}
-                                                                                                className="text-brand-dark font-black hover:underline cursor-pointer text-[11px] mt-1 tracking-wider"
+                                                                                                className="flex-1 py-3 bg-white border-2 border-surface-200 text-surface-900 font-semibold text-sm rounded-[8px] hover:border-surface-900 hover:bg-surface-50 transition-colors text-center cursor-pointer shadow-none"
                                                                                             >
-                                                                                                {expandedBios[advisor.id] ? 'Read Less' : 'Read More'}
+                                                                                                View Profile
                                                                                             </button>
-                                                                                        )}
-                                                                                    </div>
-                                                                                )}
-                                                                            </div>
-
-                                                                            {/* MIDDLE SECTION 2: Grid Stats */}
-                                                                            <div className="grid grid-cols-3 divide-x divide-surface-200 border-b border-surface-200 bg-surface-50">
-                                                                                <div className="p-4 sm:p-5 flex flex-col items-center justify-center text-center">
-                                                                                    <span className="font-bold text-xl sm:text-2xl text-surface-900 leading-none">{advisor.hours || '0'}+</span>
-                                                                                    <span className="text-xs font-medium text-surface-500 mt-1">Hours</span>
-                                                                                </div>
-                                                                                <div className="p-4 sm:p-5 flex flex-col items-center justify-center text-center">
-                                                                                    <span className="font-bold text-sm sm:text-lg text-surface-900 leading-none truncate w-full px-1">{advisor.lang || 'English'}</span>
-                                                                                    <span className="text-xs font-medium text-surface-500 mt-1">Language</span>
-                                                                                </div>
-                                                                                <div className="p-4 sm:p-5 flex flex-col items-center justify-center text-center">
-                                                                                    <span className="font-bold text-xl sm:text-2xl text-surface-900 leading-none">₹{advisor.price}</span>
-                                                                                    <span className="text-xs font-medium text-surface-500 mt-1">Session</span>
-                                                                                </div>
-                                                                            </div>
-
-                                                                            {/* BOTTOM SECTION: Availability + Buttons */}
-                                                                            <div className="p-4 sm:p-5 bg-white">
-                                                                                <div className="flex items-center justify-between mb-5">
-                                                                                    <span className="text-sm font-semibold text-surface-900">Next Available</span>
-                                                                                    <div className="px-3 py-1 bg-emerald-50 border border-emerald-200 text-xs font-medium text-emerald-700 rounded-full flex items-center gap-2">
-                                                                                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                                                                        Available Today
+                                                                                            <button
+                                                                                                type="button"
+                                                                                                onClick={(e) => {
+                                                                                                    e.stopPropagation();
+                                                                                                    if (!selectedTime) {
+                                                                                                        toast.error('Please select a time slot below to proceed.');
+                                                                                                    } else {
+                                                                                                        handleStepChange('payment');
+                                                                                                    }
+                                                                                                }}
+                                                                                                className="flex-1 py-3 bg-surface-900 text-white font-semibold text-sm rounded-[8px] hover:bg-black transition-colors text-center border-2 border-surface-900 cursor-pointer shadow-sm"
+                                                                                            >
+                                                                                                Book Now
+                                                                                            </button>
+                                                                                        </div>
                                                                                     </div>
                                                                                 </div>
+                                                                            );
+                                                                        }
 
-                                                                                <div className="flex items-center gap-3">
-                                                                                    <button
-                                                                                        type="button"
-                                                                                        onClick={(e) => {
-                                                                                            e.stopPropagation();
-                                                                                            window.open(`/advisor/${advisor.id}`, '_blank');
-                                                                                        }}
-                                                                                        className="flex-1 py-3 bg-white border-2 border-surface-200 text-surface-900 font-semibold text-sm rounded-[8px] hover:border-surface-900 hover:bg-surface-50 transition-colors text-center cursor-pointer shadow-none"
-                                                                                    >
-                                                                                        View Profile
-                                                                                    </button>
-                                                                                    <button
-                                                                                        type="button"
-                                                                                        onClick={(e) => {
-                                                                                            e.stopPropagation();
-                                                                                            if (!selectedTime) {
-                                                                                                toast.error('Please select a time slot below to proceed.');
-                                                                                            } else {
-                                                                                                handleStepChange('payment');
-                                                                                            }
-                                                                                        }}
-                                                                                        className="flex-1 py-3 bg-surface-900 text-white font-semibold text-sm rounded-[8px] hover:bg-black transition-colors text-center border-2 border-surface-900 cursor-pointer shadow-sm"
-                                                                                    >
-                                                                                        Book Now
-                                                                                    </button>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    );
-                                                                }
-
-                                                                return (
-                                                                    <div
-                                                                        key={advisor.id}
-                                                                        onClick={() => {
-                                                                            if (!isAvailable) return;
-                                                                            setSelectedAdvisor(advisor);
-                                                                            setAdvisorConfirmed(false); // Reset confirmation so Step 3 hides
-                                                                            if (errors.advisor) setErrors(prev => ({ ...prev, advisor: null }));
-                                                                            if (advisor.modes && advisor.modes.length > 0 && !advisor.modes.includes(bookingMode)) {
-                                                                                setBookingMode(advisor.modes[0]);
-                                                                            }
-                                                                            setSelectedTime('');
-                                                                        }}
-                                                                        className={`p-4 sm:p-5 border-[2px] rounded-[8px] transition ${!isAvailable
-                                                                            ? 'bg-surface-50 border-surface-200 opacity-50 cursor-not-allowed'
-                                                                            : 'bg-white border-surface-200 hover:border-surface-900 hover:shadow-sm cursor-pointer active:scale-[0.99]'
-                                                                            }`}
-                                                                    >
-                                                                        <div className="flex items-center justify-between gap-4">
-                                                                            <div className="flex items-center gap-3 min-w-0 flex-1">
-                                                                                {(() => {
-                                                                                    const avatarSrc = advisor.profilePic || advisor.image;
-                                                                                    return (
-                                                                                        <div className={`w-12 h-12 rounded-full shrink-0 flex items-center justify-center border-2 overflow-hidden relative ${!isAvailable ? 'border-surface-200 opacity-50 bg-surface-50' : 'border-cyan-500 bg-white'}`}>
-                                                                                            {avatarSrc ? (
-                                                                                                <>
-                                                                                                    <img
-                                                                                                        src={avatarSrc}
-                                                                                                        alt={advisor.name}
-                                                                                                        className="w-full h-full object-cover"
-                                                                                                        onError={(e) => {
-                                                                                                            e.currentTarget.style.display = 'none';
-                                                                                                            const fallback = e.currentTarget.nextElementSibling;
-                                                                                                            if (fallback) fallback.style.display = 'flex';
-                                                                                                        }}
-                                                                                                    />
-                                                                                                    <span style={{ display: 'none' }} className={`font-bold text-lg items-center justify-center w-full h-full ${!isAvailable ? 'text-surface-400' : 'text-cyan-600'}`}>
-                                                                                                        {getInitials(advisor.name)}
-                                                                                                    </span>
-                                                                                                </>
-                                                                                            ) : (
-                                                                                                <span className={`font-bold text-lg flex items-center justify-center w-full h-full ${!isAvailable ? 'text-surface-400' : 'text-cyan-600'}`}>
-                                                                                                    {getInitials(advisor.name)}
+                                                                        return (
+                                                                            <div
+                                                                                key={advisor.id}
+                                                                                onClick={() => {
+                                                                                    if (!isAvailable) return;
+                                                                                    setSelectedAdvisor(advisor);
+                                                                                    setAdvisorConfirmed(false); // Reset confirmation so Step 3 hides
+                                                                                    if (errors.advisor) setErrors(prev => ({ ...prev, advisor: null }));
+                                                                                    if (advisor.modes && advisor.modes.length > 0 && !advisor.modes.includes(bookingMode)) {
+                                                                                        setBookingMode(advisor.modes[0]);
+                                                                                    }
+                                                                                    setSelectedTime('');
+                                                                                }}
+                                                                                className={`p-4 sm:p-5 border-[2px] rounded-[8px] transition ${!isAvailable
+                                                                                    ? 'bg-surface-50 border-surface-200 opacity-50 cursor-not-allowed'
+                                                                                    : 'bg-white border-surface-200 hover:border-surface-900 hover:shadow-sm cursor-pointer active:scale-[0.99]'
+                                                                                    }`}
+                                                                            >
+                                                                                <div className="flex items-center justify-between gap-4">
+                                                                                    <div className="flex items-center gap-3 min-w-0 flex-1">
+                                                                                        {(() => {
+                                                                                            const avatarSrc = advisor.profilePic || advisor.image;
+                                                                                            return (
+                                                                                                <div className={`w-12 h-12 rounded-full shrink-0 flex items-center justify-center border-2 overflow-hidden relative ${!isAvailable ? 'border-surface-200 opacity-50 bg-surface-50' : 'border-cyan-500 bg-white'}`}>
+                                                                                                    {avatarSrc ? (
+                                                                                                        <>
+                                                                                                            <img
+                                                                                                                src={avatarSrc}
+                                                                                                                alt={advisor.name}
+                                                                                                                className="w-full h-full object-cover"
+                                                                                                                onError={(e) => {
+                                                                                                                    e.currentTarget.style.display = 'none';
+                                                                                                                    const fallback = e.currentTarget.nextElementSibling;
+                                                                                                                    if (fallback) fallback.style.display = 'flex';
+                                                                                                                }}
+                                                                                                            />
+                                                                                                            <span style={{ display: 'none' }} className={`font-bold text-lg items-center justify-center w-full h-full ${!isAvailable ? 'text-surface-400' : 'text-cyan-600'}`}>
+                                                                                                                {getInitials(advisor.name)}
+                                                                                                            </span>
+                                                                                                        </>
+                                                                                                    ) : (
+                                                                                                        <span className={`font-bold text-lg flex items-center justify-center w-full h-full ${!isAvailable ? 'text-surface-400' : 'text-cyan-600'}`}>
+                                                                                                            {getInitials(advisor.name)}
+                                                                                                        </span>
+                                                                                                    )}
+                                                                                                </div>
+                                                                                            );
+                                                                                        })()}
+                                                                                        <div className="space-y-1 text-left min-w-0">
+                                                                                            <h4 className={`font-bold text-base sm:text-lg leading-none truncate ${!isAvailable ? 'text-surface-400' : 'text-surface-900'}`}>
+                                                                                                {advisor.name}
+                                                                                            </h4>
+                                                                                            <p className="text-xs font-medium text-surface-600 truncate">{advisor.role}</p>
+                                                                                            {bookingMode === 'OFFLINE' && advisor.locationName && (
+                                                                                                <span className="text-xs font-medium mt-1.5 block leading-tight text-surface-500 truncate">
+                                                                                                    📍 Center: {advisor.locationName}
+                                                                                                </span>
+                                                                                            )}
+                                                                                            {bookingMode === 'DOOR_STEP' && (() => {
+                                                                                                const clientLat = parseFloat(bookingForm.clientLatitude);
+                                                                                                const clientLng = parseFloat(bookingForm.clientLongitude);
+                                                                                                const advLat = Number(advisor.latitude);
+                                                                                                const advLng = Number(advisor.longitude);
+                                                                                                if (!isNaN(clientLat) && !isNaN(clientLng) && advLat && advLng) {
+                                                                                                    const distance = getHaversineDistance(clientLat, clientLng, advLat, advLng);
+                                                                                                    return (
+                                                                                                        <span className="text-xs text-surface-900 font-semibold mt-1.5 block">
+                                                                                                            📍 Distance: {distance.toFixed(2)} km
+                                                                                                        </span>
+                                                                                                    );
+                                                                                                }
+                                                                                                return null;
+                                                                                            })()}
+                                                                                            {!isAvailable && (
+                                                                                                <span className="text-xs text-rose-500 font-medium mt-1.5 inline-block">
+                                                                                                    Unavailable on this date
                                                                                                 </span>
                                                                                             )}
                                                                                         </div>
-                                                                                    );
-                                                                                })()}
-                                                                                <div className="space-y-1 text-left min-w-0">
-                                                                                    <h4 className={`font-bold text-base sm:text-lg leading-none truncate ${!isAvailable ? 'text-surface-400' : 'text-surface-900'}`}>
-                                                                                        {advisor.name}
-                                                                                    </h4>
-                                                                                    <p className="text-xs font-medium text-surface-600 truncate">{advisor.role}</p>
-                                                                                    {bookingMode === 'OFFLINE' && advisor.locationName && (
-                                                                                        <span className="text-xs font-medium mt-1.5 block leading-tight text-surface-500 truncate">
-                                                                                            📍 Center: {advisor.locationName}
+                                                                                    </div>
+                                                                                    <div className="flex flex-col items-end gap-2 shrink-0">
+                                                                                        <span className={`font-bold text-xl sm:text-2xl ${!isAvailable ? 'text-surface-400' : 'text-surface-900'}`}>
+                                                                                            ₹{advisor.price}
                                                                                         </span>
-                                                                                    )}
-                                                                                    {bookingMode === 'DOOR_STEP' && (() => {
-                                                                                        const clientLat = parseFloat(bookingForm.clientLatitude);
-                                                                                        const clientLng = parseFloat(bookingForm.clientLongitude);
-                                                                                        const advLat = Number(advisor.latitude);
-                                                                                        const advLng = Number(advisor.longitude);
-                                                                                        if (!isNaN(clientLat) && !isNaN(clientLng) && advLat && advLng) {
-                                                                                            const distance = getHaversineDistance(clientLat, clientLng, advLat, advLng);
-                                                                                            return (
-                                                                                                <span className="text-xs text-surface-900 font-semibold mt-1.5 block">
-                                                                                                    📍 Distance: {distance.toFixed(2)} km
-                                                                                                </span>
-                                                                                            );
-                                                                                        }
-                                                                                        return null;
-                                                                                    })()}
-                                                                                    {!isAvailable && (
-                                                                                        <span className="text-xs text-rose-500 font-medium mt-1.5 inline-block">
-                                                                                            Unavailable on this date
-                                                                                        </span>
-                                                                                    )}
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
-                                                                            <div className="flex flex-col items-end gap-2 shrink-0">
-                                                                                <span className={`font-bold text-xl sm:text-2xl ${!isAvailable ? 'text-surface-400' : 'text-surface-900'}`}>
-                                                                                    ₹{advisor.price}
-                                                                                </span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                );
-                                                            });
-                                                        })()}
+                                                                        );
+                                                                    })}
 
-                                                        {!selectedAdvisor && Math.ceil(availableAdvisors.length / 4) > 1 && (
-                                                            <div className="flex items-center justify-center gap-2 pt-4">
-                                                                <button
-                                                                    type="button"
-                                                                    onClick={() => setAdvisorPage(p => Math.max(1, p - 1))}
-                                                                    disabled={advisorPage === 1}
-                                                                    aria-label="Previous Page"
-                                                                    className={`w-8 h-8 rounded-full text-sm font-bold transition-all cursor-pointer border flex items-center justify-center ${
-                                                                        advisorPage === 1
-                                                                            ? 'border-surface-200 text-surface-400 bg-surface-100 cursor-not-allowed'
-                                                                            : 'border-[#0f172a] bg-[#0f172a] text-white hover:bg-[#1e293b]'
-                                                                    }`}
-                                                                >
-                                                                    ‹
-                                                                </button>
-                                                                {Array.from({ length: Math.ceil(availableAdvisors.length / 4) }, (_, i) => i + 1).map((num) => (
-                                                                    <button
-                                                                        key={num}
-                                                                        type="button"
-                                                                        onClick={() => setAdvisorPage(num)}
-                                                                        className={`w-8 h-8 rounded-full text-xs font-bold transition-all cursor-pointer border flex items-center justify-center ${
-                                                                            advisorPage === num
-                                                                                ? 'bg-[#0f172a] text-[#00e5ff] border-[#00e5ff] shadow-xs'
-                                                                                : 'bg-white text-[#0f172a] border-surface-200 hover:border-[#00e5ff]'
-                                                                        }`}
-                                                                    >
-                                                                        {num}
-                                                                    </button>
-                                                                ))}
-                                                                <button
-                                                                    type="button"
-                                                                    onClick={() => setAdvisorPage(p => Math.min(Math.ceil(availableAdvisors.length / 4), p + 1))}
-                                                                    disabled={advisorPage === Math.ceil(availableAdvisors.length / 4)}
-                                                                    aria-label="Next Page"
-                                                                    className={`w-8 h-8 rounded-full text-sm font-bold transition-all cursor-pointer border flex items-center justify-center ${
-                                                                        advisorPage === Math.ceil(availableAdvisors.length / 4)
-                                                                            ? 'border-surface-200 text-surface-400 bg-surface-100 cursor-not-allowed'
-                                                                            : 'border-[#0f172a] bg-[#0f172a] text-white hover:bg-[#1e293b]'
-                                                                    }`}
-                                                                >
-                                                                    ›
-                                                                </button>
-                                                            </div>
-                                                        )}
+                                                                    {!selectedAdvisor && Math.ceil(availableAdvisors.length / 4) > 1 && (
+                                                                        <div className="flex items-center justify-center gap-2 pt-4">
+                                                                            <button
+                                                                                type="button"
+                                                                                onClick={() => setAdvisorPage(p => Math.max(1, p - 1))}
+                                                                                disabled={advisorPage === 1}
+                                                                                aria-label="Previous Page"
+                                                                                className={`w-8 h-8 rounded-full text-sm font-bold transition-all cursor-pointer border flex items-center justify-center ${
+                                                                                    advisorPage === 1
+                                                                                        ? 'border-surface-200 text-surface-400 bg-surface-100 cursor-not-allowed'
+                                                                                        : 'border-[#0f172a] bg-[#0f172a] text-white hover:bg-[#1e293b]'
+                                                                                }`}
+                                                                            >
+                                                                                ‹
+                                                                            </button>
+                                                                            {Array.from({ length: Math.ceil(availableAdvisors.length / 4) }, (_, i) => i + 1).map((num) => (
+                                                                                <button
+                                                                                    key={num}
+                                                                                    type="button"
+                                                                                    onClick={() => setAdvisorPage(num)}
+                                                                                    className={`w-8 h-8 rounded-full text-xs font-bold transition-all cursor-pointer border flex items-center justify-center ${
+                                                                                        advisorPage === num
+                                                                                            ? 'bg-[#0f172a] text-[#00e5ff] border-[#00e5ff] shadow-xs'
+                                                                                            : 'bg-white text-[#0f172a] border-surface-200 hover:border-[#00e5ff]'
+                                                                                    }`}
+                                                                                >
+                                                                                    {num}
+                                                                                </button>
+                                                                            ))}
+                                                                            <button
+                                                                                type="button"
+                                                                                onClick={() => setAdvisorPage(p => Math.min(Math.ceil(availableAdvisors.length / 4), p + 1))}
+                                                                                disabled={advisorPage === Math.ceil(availableAdvisors.length / 4)}
+                                                                                aria-label="Next Page"
+                                                                                className={`w-8 h-8 rounded-full text-sm font-bold transition-all cursor-pointer border flex items-center justify-center ${
+                                                                                    advisorPage === Math.ceil(availableAdvisors.length / 4)
+                                                                                        ? 'border-surface-200 text-surface-400 bg-surface-100 cursor-not-allowed'
+                                                                                        : 'border-[#0f172a] bg-[#0f172a] text-white hover:bg-[#1e293b]'
+                                                                                }`}
+                                                                            >
+                                                                                ›
+                                                                            </button>
+                                                                        </div>
+                                                                    )}
+                                                                </>
+                                                            );
+                                                        })()}
 
                                                         {selectedAdvisor && !isAdvisorLocked && (
                                                             <div className="pt-3 pb-1 flex justify-center">
