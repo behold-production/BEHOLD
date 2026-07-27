@@ -285,19 +285,20 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
     }
 
     return (
-        <div className="min-h-screen pt-24 sm:pt-28 pb-16 sm:pb-24 bg-[#f7f4ef] text-[#1c1514] text-left border-b border-[#e2dad2]">
+        <div className="min-h-screen pt-24 sm:pt-28 pb-16 sm:pb-24 bg-white text-[#0f172a] text-left border-b border-surface-200">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-10">
 
                 {/* Header */}
                 <div className="text-center flex flex-col items-center space-y-3">
-                    <span className="text-xs font-bold uppercase tracking-widest text-[#7c7069] block mb-1">
+                    <span className="text-xs font-bold uppercase tracking-widest text-[#00e5ff] flex items-center justify-center gap-1.5 block mb-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_8px_#00e5ff]" />
                         {rescheduleSession ? 'RESCHEDULE SESSION' : 'BOOK A CONFIDENTIAL SESSION'}
                     </span>
-                    <h1 className="text-3xl sm:text-5xl md:text-6xl font-sans font-black uppercase tracking-tight leading-none text-[#1c1514] flex items-center justify-center flex-wrap gap-1">
+                    <h1 className="text-3xl sm:text-5xl md:text-6xl font-sans font-black uppercase tracking-tight leading-none text-[#0f172a] flex items-center justify-center flex-wrap gap-1">
                         <span>{rescheduleSession ? 'Reschedule Your Session' : 'Book Your Session'}</span>
                         <ScrollDot nextId="booking-console" label="Scroll to booking form ↓" size="md" inlineText={true} />
                     </h1>
-                    <p className="text-[#6e635e] max-w-xl mx-auto text-sm sm:text-base leading-relaxed font-normal">
+                    <p className="text-surface-600 max-w-xl mx-auto text-sm sm:text-base leading-relaxed font-normal">
                         {rescheduleSession
                             ? `Reschedule your appointment with ${rescheduleSession.advisorName || rescheduleSession.counsellorName}. Pick a new date and time.`
                             : 'Choose your service, pick a date and time, and confirm with a certified specialist.'}
@@ -306,8 +307,8 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
                 {/* BOOKING FORM */}
                 <div id="booking-console" className="space-y-6 sm:space-y-8 w-full mt-6">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#d6cecb] pb-4">
-                        <h2 className="text-xl sm:text-2xl font-sans font-black uppercase text-[#1c1514] flex items-center gap-1">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-surface-200 pb-4">
+                        <h2 className="text-xl sm:text-2xl font-sans font-black uppercase text-[#0f172a] flex items-center gap-1">
                             <span>Your Booking</span>
                             <ScrollDot nextId="booking-console" label="Scroll down ↓" size="md" inlineText={true} />
                         </h2>
@@ -319,31 +320,31 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                         const currentStepIdx = stepMapping[bookingStep] || 0;
                         const stepLabels = ['Schedule & Advisor', 'Account & Payment', 'Session Confirmed'];
                         return (
-                            <div className="bg-white border border-[#d6cecb] p-5 sm:p-6 space-y-5 rounded-2xl shadow-xs animate-in fade-in duration-300">
+                            <div className="bg-white border border-surface-200 p-5 sm:p-6 space-y-5 rounded-2xl shadow-xs animate-in fade-in duration-300">
                                 {/* Mobile: compact progress bar */}
                                 <div className="flex sm:hidden items-center gap-2">
                                     <div className="flex items-center gap-1.5 flex-1 min-w-0">
-                                        <span className="text-xs font-bold text-[#1c1514] shrink-0">
+                                        <span className="text-xs font-bold text-[#0f172a] shrink-0">
                                             Step {currentStepIdx + 1} of 3
                                         </span>
-                                        <div className="h-2 flex-1 bg-[#eae4dc] rounded-full overflow-hidden">
+                                        <div className="h-2 flex-1 bg-surface-100 rounded-full overflow-hidden">
                                             <div
-                                                className="h-full bg-[#2b211e] rounded-full transition-all duration-500"
+                                                className="h-full bg-[#00e5ff] shadow-[0_0_8px_#00e5ff] rounded-full transition-all duration-500"
                                                 style={{ width: `${((currentStepIdx + 1) / 3) * 100}%` }}
                                             />
                                         </div>
                                     </div>
-                                    <span className="text-xs font-bold text-[#2b211e] truncate">
+                                    <span className="text-xs font-bold text-[#0f172a] truncate">
                                         {stepLabels[currentStepIdx]}
                                     </span>
                                 </div>
 
                                 {/* Desktop/tablet: full stepper */}
                                 <div className="hidden sm:block">
-                                    <div className="flex items-center justify-between gap-2 border-b border-[#eae4dc] pb-3.5">
+                                    <div className="flex items-center justify-between gap-2 border-b border-surface-200 pb-3.5">
                                         <div className="flex items-center gap-2">
-                                            <span className="px-3.5 py-1 rounded-full bg-[#eae4dc] border border-[#d8d0c7] text-[#1c1514] font-bold text-xs inline-flex items-center gap-2">
-                                                <span className="w-2 h-2 rounded-full bg-[#2b211e]" />
+                                            <span className="px-3.5 py-1 rounded-full bg-surface-100 border border-surface-200 text-[#0f172a] font-bold text-xs inline-flex items-center gap-2">
+                                                <span className="w-2 h-2 rounded-full bg-[#00e5ff] shadow-[0_0_6px_#00e5ff]" />
                                                 <span>{bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring'} &middot; {bookingMode === 'ONLINE' ? 'Video Call' : bookingMode === 'DOOR_STEP' ? 'Home Visit' : 'At Center'}</span>
                                             </span>
                                         </div>
@@ -358,23 +359,23 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                                 <div key={idx} className="flex flex-col items-start gap-2 relative">
                                                     <div className="flex items-center w-full">
                                                         <div className={`flex items-center justify-center w-8 h-8 rounded-xl font-bold text-xs border transition-all duration-300 shrink-0 ${isCompleted
-                                                            ? 'bg-[#2b211e] border-[#2b211e] text-[#f7f4ef] shadow-xs'
+                                                            ? 'bg-[#0f172a] border-[#00e5ff] text-[#00e5ff] shadow-xs'
                                                             : isActive
-                                                                ? 'bg-[#2b211e] border-[#2b211e] text-[#f7f4ef] shadow-sm ring-4 ring-[#eae4dc]'
-                                                                : 'bg-[#eae4dc] border-[#d8d0c7] text-[#7c7069]'
+                                                                ? 'bg-[#0f172a] border-[#00e5ff] text-[#00e5ff] shadow-sm ring-4 ring-[#00e5ff]/20'
+                                                                : 'bg-surface-100 border-surface-200 text-surface-400'
                                                             }`}>
                                                             {isCompleted ? '✓' : idx + 1}
                                                         </div>
                                                         {idx < activeSteps.length - 1 && (
-                                                            <div className={`h-[2px] w-full ml-3 transition-all duration-300 rounded-full ${isCompleted || isActive ? 'bg-[#2b211e]' : 'bg-[#eae4dc]'
+                                                            <div className={`h-[2px] w-full ml-3 transition-all duration-300 rounded-full ${isCompleted || isActive ? 'bg-[#0f172a]' : 'bg-surface-200'
                                                                 }`} />
                                                         )}
                                                     </div>
                                                     <div className="flex flex-col text-left min-w-0 mt-1">
-                                                        <span className={`text-xs sm:text-sm font-bold ${isActive ? 'text-[#1c1514]' : isCompleted ? 'text-[#2b211e]' : 'text-[#a39891]'}`}>
+                                                        <span className={`text-xs sm:text-sm font-bold ${isActive ? 'text-[#0f172a]' : isCompleted ? 'text-[#0f172a]' : 'text-surface-400'}`}>
                                                             {stepLabels[idx]}
                                                         </span>
-                                                        <span className={`text-[11px] transition-colors duration-300 mt-0.5 leading-relaxed ${isActive ? 'text-slate-600 font-medium' : 'text-slate-400'}`}>
+                                                        <span className={`text-[11px] transition-colors duration-300 mt-0.5 leading-relaxed ${isActive ? 'text-surface-600 font-medium' : 'text-surface-400'}`}>
                                                             {step}
                                                         </span>
                                                     </div>
@@ -611,53 +612,53 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                                                     setBookingService(s.id);
                                                                 }}
                                                                 className={`min-h-[48px] px-4 py-3 rounded-xl transition-all duration-300 cursor-pointer flex items-center justify-center text-center border text-sm font-bold ${isSelected
-                                                                    ? 'bg-[#2b211e] border-[#2b211e] text-[#f7f4ef] shadow-xs'
-                                                                    : 'bg-white border-[#d8d0c7] text-[#1c1514] hover:border-[#1c1514] hover:bg-[#f7f4ef]'
+                                                                    ? 'bg-[#0f172a] border-[#00e5ff] text-white shadow-xs'
+                                                                    : 'bg-white border-surface-200 text-[#0f172a] hover:border-[#00e5ff] hover:bg-surface-50'
                                                                     } ${rescheduleSession ? 'opacity-65 cursor-not-allowed' : ''}`}
-                                                            >
-                                                                {s.label}
-                                                            </button>
-                                                        );
-                                                    })}
-                                                </div>
-                                            </div>
-                                            {/* Mode of Session Select */}
-                                            <div className="space-y-2">
-                                                <label className="text-sm font-semibold text-surface-700 block">Select Session Mode</label>
-                                                <div className="grid grid-cols-3 gap-2.5 w-full">
-                                                    {(() => {
-                                                        let siteSettings = {};
-                                                        try {
-                                                            const stored = localStorage.getItem('behold_site_settings');
-                                                            if (stored) siteSettings = JSON.parse(stored);
-                                                        } catch (e) { }
+                                                             >
+                                                                 {s.label}
+                                                             </button>
+                                                         );
+                                                     })}
+                                                 </div>
+                                             </div>
+                                             {/* Mode of Session Select */}
+                                             <div className="space-y-2">
+                                                 <label className="text-sm font-semibold text-surface-700 block">Select Session Mode</label>
+                                                 <div className="grid grid-cols-3 gap-2.5 w-full">
+                                                     {(() => {
+                                                         let siteSettings = {};
+                                                         try {
+                                                             const stored = localStorage.getItem('behold_site_settings');
+                                                             if (stored) siteSettings = JSON.parse(stored);
+                                                         } catch (e) { }
 
-                                                        return [
-                                                            { id: 'ONLINE', label: 'Online', desc: 'Video call', active: siteSettings.enableOnline !== false },
-                                                            { id: 'DOOR_STEP', label: 'Doorstep', desc: 'Home visit', active: siteSettings.enableDoorstep !== false },
-                                                            { id: 'OFFLINE', label: 'Offline', desc: 'At center', active: siteSettings.enableOffline !== false }
-                                                        ].map((m) => {
-                                                            const isAvailable = m.active;
-                                                            return (
-                                                                <button
-                                                                    type="button"
-                                                                    key={m.id}
-                                                                    disabled={!isAvailable || rescheduleSession}
-                                                                    onClick={() => {
-                                                                        if (rescheduleSession) return;
-                                                                        setBookingMode(m.id);
-                                                                    }}
-                                                                    className={`flex flex-col items-center justify-center gap-1 px-3 py-2 border rounded-xl transition cursor-pointer text-center min-h-[48px] leading-tight ${bookingMode === m.id
-                                                                        ? 'bg-[#2b211e] text-[#f7f4ef] border-[#2b211e] shadow-xs'
-                                                                        : 'bg-white text-[#1c1514] border-[#d8d0c7] hover:border-[#1c1514] hover:bg-[#f7f4ef]'
-                                                                        } ${(!isAvailable || rescheduleSession) ? 'opacity-40 cursor-not-allowed' : ''}`}
-                                                                >
-                                                                    <span className="flex flex-col items-center">
-                                                                        <span className={`font-bold text-sm ${bookingMode === m.id ? 'text-[#f7f4ef]' : 'text-[#1c1514]'}`}>{m.label}</span>
-                                                                        <span className={`text-xs mt-0.5 ${bookingMode === m.id ? 'text-[#e2dad2]' : 'text-[#6e635e]'}`}>{m.desc}</span>
-                                                                        {!isAvailable && <span className="text-sm text-rose-500 font-medium mt-1">Disabled</span>}
-                                                                    </span>
-                                                                </button>
+                                                         return [
+                                                             { id: 'ONLINE', label: 'Online', desc: 'Video call', active: siteSettings.enableOnline !== false },
+                                                             { id: 'DOOR_STEP', label: 'Doorstep', desc: 'Home visit', active: siteSettings.enableDoorstep !== false },
+                                                             { id: 'OFFLINE', label: 'Offline', desc: 'At center', active: siteSettings.enableOffline !== false }
+                                                         ].map((m) => {
+                                                             const isAvailable = m.active;
+                                                             return (
+                                                                 <button
+                                                                     type="button"
+                                                                     key={m.id}
+                                                                     disabled={!isAvailable || rescheduleSession}
+                                                                     onClick={() => {
+                                                                         if (rescheduleSession) return;
+                                                                         setBookingMode(m.id);
+                                                                     }}
+                                                                     className={`flex flex-col items-center justify-center gap-1 px-3 py-2 border rounded-xl transition cursor-pointer text-center min-h-[48px] leading-tight ${bookingMode === m.id
+                                                                         ? 'bg-[#0f172a] text-white border-[#00e5ff] shadow-xs'
+                                                                         : 'bg-white text-[#0f172a] border-surface-200 hover:border-[#00e5ff] hover:bg-surface-50'
+                                                                         } ${(!isAvailable || rescheduleSession) ? 'opacity-40 cursor-not-allowed' : ''}`}
+                                                                 >
+                                                                     <span className="flex flex-col items-center">
+                                                                         <span className={`font-bold text-sm ${bookingMode === m.id ? 'text-white' : 'text-[#0f172a]'}`}>{m.label}</span>
+                                                                         <span className={`text-xs mt-0.5 ${bookingMode === m.id ? 'text-[#00e5ff]' : 'text-surface-500'}`}>{m.desc}</span>
+                                                                         {!isAvailable && <span className="text-sm text-rose-500 font-medium mt-1">Disabled</span>}
+                                                                     </span>
+                                                                 </button>
                                                             );
                                                         });
                                                     })()}
@@ -1151,8 +1152,8 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                                                     aria-label="Previous Page"
                                                                     className={`w-8 h-8 rounded-full text-sm font-bold transition-all cursor-pointer border flex items-center justify-center ${
                                                                         advisorPage === 1
-                                                                            ? 'border-[#d8d0c7] text-[#a39891] bg-[#ebe5df] cursor-not-allowed'
-                                                                            : 'border-[#2b211e] bg-[#2b211e] text-[#f7f4ef] hover:bg-[#1c1514]'
+                                                                            ? 'border-surface-200 text-surface-400 bg-surface-100 cursor-not-allowed'
+                                                                            : 'border-[#0f172a] bg-[#0f172a] text-white hover:bg-[#1e293b]'
                                                                     }`}
                                                                 >
                                                                     ‹
@@ -1164,8 +1165,8 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                                                         onClick={() => setAdvisorPage(num)}
                                                                         className={`w-8 h-8 rounded-full text-xs font-bold transition-all cursor-pointer border flex items-center justify-center ${
                                                                             advisorPage === num
-                                                                                ? 'bg-[#2b211e] text-[#f7f4ef] border-[#2b211e] shadow-xs'
-                                                                                : 'bg-white text-[#2b211e] border-[#d8d0c7] hover:border-[#1c1514]'
+                                                                                ? 'bg-[#0f172a] text-[#00e5ff] border-[#00e5ff] shadow-xs'
+                                                                                : 'bg-white text-[#0f172a] border-surface-200 hover:border-[#00e5ff]'
                                                                         }`}
                                                                     >
                                                                         {num}
@@ -1178,8 +1179,8 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                                                     aria-label="Next Page"
                                                                     className={`w-8 h-8 rounded-full text-sm font-bold transition-all cursor-pointer border flex items-center justify-center ${
                                                                         advisorPage === Math.ceil(availableAdvisors.length / 4)
-                                                                            ? 'border-[#d8d0c7] text-[#a39891] bg-[#ebe5df] cursor-not-allowed'
-                                                                            : 'border-[#2b211e] bg-[#2b211e] text-[#f7f4ef] hover:bg-[#1c1514]'
+                                                                            ? 'border-surface-200 text-surface-400 bg-surface-100 cursor-not-allowed'
+                                                                            : 'border-[#0f172a] bg-[#0f172a] text-white hover:bg-[#1e293b]'
                                                                     }`}
                                                                 >
                                                                     ›
