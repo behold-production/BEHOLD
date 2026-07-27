@@ -6,7 +6,15 @@ import { formatDateString } from '../utils';
 
 export default function SubAdminManagementTab(props) {
  
-  const { rolesDb, usersDb, reloadData, isSuperAdmin, PRIVILEGE_MODULES, showAlert, showConfirm } = props;
+  const {
+    rolesDb = [],
+    usersDb = [],
+    reloadData,
+    isSuperAdmin,
+    PRIVILEGE_MODULES = [],
+    showAlert,
+    showConfirm
+  } = props;
 
   const [activeRoleTab, setActiveRoleTab] = useState('roles');
   

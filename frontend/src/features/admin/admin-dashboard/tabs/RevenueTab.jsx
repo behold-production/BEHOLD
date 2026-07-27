@@ -13,9 +13,9 @@ const formatAmount = (num) => {
 
 export default function RevenueTab(props) {
  const {
- bookingsDb,
- usersDb,
- settingsForm,
+ bookingsDb = [],
+ usersDb = [],
+ settingsForm = {},
  downloadPDFReceipt,
  isDbLoading
  } = props;

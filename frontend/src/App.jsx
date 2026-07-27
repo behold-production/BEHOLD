@@ -339,17 +339,8 @@ export default function App() {
 
     if (user) {
       const userRole = user?.role?.toUpperCase();
-      if (userRole === 'ADMIN' || userRole === 'SUPER_ADMIN' || userRole === 'SUB_ADMIN') {
-        if (!path.startsWith('/admin')) {
-          toast.error('Admin Console Active: Navigating outside Admin Control Room is restricted.', { id: 'admin-route-guard' });
-          navigate('/admin', { replace: true });
-        }
-      } else if (userRole === 'PSYCHOLOGIST' || userRole === 'COUNSELLOR') {
-        if (path !== '/counsellor' && path !== '/conceller' && path !== '/cousellor') {
-          toast.error('Specialist Console Active: Navigating outside Counsellor Console is restricted.', { id: 'counsellor-route-guard' });
-          navigate('/counsellor', { replace: true });
-        }
-      } else if (userRole === 'USER') {
+      // Block regular USER accounts from attempting to access admin/counsellor portals
+      if (userRole === 'USER') {
         if (path === '/counsellor' || path === '/conceller' || path === '/cousellor' || path.startsWith('/admin')) {
           toast.error('Access Denied: You do not have permission to access this portal.', { id: 'user-access-denied' });
           navigate('/profile', { replace: true });

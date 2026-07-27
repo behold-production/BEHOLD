@@ -19,7 +19,7 @@ export default function WhyChooseUs({ siteSettings }) {
             <div className="relative w-full min-h-[460px] sm:min-h-[520px] rounded-3xl overflow-hidden shadow-lg flex flex-col justify-end p-6 sm:p-10 border border-[#d6cecb]">
               {/* Background Image with Dark Luxury Opacity Overlay */}
               <img
-                src={luxuryClinicRoom}
+                src={siteSettings?.whyChooseUsImage || siteSettings?.servicesFirstCardImage || luxuryClinicRoom}
                 alt="Behold Mentorship & Psychological Care"
                 className="absolute inset-0 w-full h-full object-cover opacity-60"
               />
@@ -28,16 +28,20 @@ export default function WhyChooseUs({ siteSettings }) {
               {/* Content Overlay Layer */}
               <div className="relative z-10 space-y-4">
                 <span className="text-xs font-bold uppercase tracking-widest text-[#e2dad2] block">
-                  UNFOLD WITH BEHOLD
+                  {siteSettings?.servicesSectionSub || 'UNFOLD WITH BEHOLD'}
                 </span>
 
                 <h2 className="text-2xl sm:text-4xl lg:text-5xl font-sans font-bold uppercase text-[#f7f4ef] tracking-tight leading-[1.02]">
-                  Comprehensive Care<br />
-                  For Your Mind & Future.
+                  {siteSettings?.servicesSectionTitle || (
+                    <>
+                      Comprehensive Care<br />
+                      For Your Mind & Future.
+                    </>
+                  )}
                 </h2>
 
                 <p className="text-xs sm:text-sm text-[#e2dad2] leading-relaxed font-normal max-w-lg">
-                  True growth happens when emotional peace and career direction align. Behold brings both psychological care and CIGI-certified career mentoring into one cohesive model.
+                  {siteSettings?.servicesSectionDesc || 'True growth happens when emotional peace and career direction align. Behold brings both psychological care and CIGI-certified career mentoring into one cohesive model.'}
                 </p>
 
                 {/* Action Buttons inside Card */}

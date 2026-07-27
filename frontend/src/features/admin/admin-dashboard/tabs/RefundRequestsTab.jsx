@@ -86,17 +86,23 @@ export default function RefundRequestsTab(props) {
  setExpandedId(expandedId === id ? null : id);
  };
 
- // Filtering
- const filtered = refunds.filter(r => {
- const matchesSearch =
- (r.studentName && r.studentName.toLowerCase().includes(searchQuery.toLowerCase())) ||
- (r.counsellorName && r.counsellorName.toLowerCase().includes(searchQuery.toLowerCase())) ||
- (r.razorpayPaymentId && r.razorpayPaymentId.toLowerCase().includes(searchQuery.toLowerCase())) ||
- (r.cancellationReason && r.cancellationReason.toLowerCase().includes(searchQuery.toLowerCase()));
+  // Filtering
+  const filtered = refunds.filter(r => {
+    const query = (searchQuery || '').toLowerCase();
+    const matchesSearch = !query ||
+      (r.studentName && r.studentName.toLowerCase().includes(query)) ||
+      (r.userEmail && r.userEmail.toLowerCase().includes(query)) ||
+      (r.counsellorName && r.counsellorName.toLowerCase().includes(query)) ||
+      (r.razorpayPaymentId && r.razorpayPaymentId.toLowerCase().includes(query)) ||
+      (r.cancellationReason && r.cancellationReason.toLowerCase().includes(query));
 
- if (statusFilter === 'ALL') return matchesSearch;
- return matchesSearch && r.refundStatus === statusFilter;
- });
+    if (statusFilter === 'ALL') return matchesSearch;
+    const rStatus = (r.refundStatus || r.status || '').toUpperCase();
+    if (statusFilter === 'PENDING') {
+      return matchesSearch && (rStatus === 'PENDING' || rStatus === 'REFUND_PENDING' || rStatus === 'CANCELLED' || rStatus === 'REQUESTED');
+    }
+    return matchesSearch && rStatus === statusFilter;
+  });
 
  // Pagination
  const pagedRefunds = filtered.slice((page - 1) * limit, page * limit);

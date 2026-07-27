@@ -704,6 +704,188 @@ export default function SettingsTab(props) {
  </div>
  </div>
 
+      {/* 1. Hero Main Visual & Headline Settings */}
+      <div className="bg-zinc-950/60 border border-zinc-800 p-5 rounded-lg space-y-5">
+        <h4 className="text-xs font-bold text-brand tracking-wider flex items-center gap-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+          Main Hero Section Background & Copy
+        </h4>
+
+        {/* Hero Background Image Upload or URL */}
+        <div className="p-4 bg-zinc-900/80 border border-zinc-800 rounded-lg space-y-3">
+          <label className="text-xs font-bold text-zinc-300 block">Hero Background Image</label>
+          <div className="flex flex-col sm:flex-row items-center gap-3">
+            <input
+              type="text"
+              value={settingsForm.heroBgImage || ''}
+              onChange={(e) => setSettingsForm({ ...settingsForm, heroBgImage: e.target.value })}
+              className="flex-1 px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none w-full"
+              placeholder="Paste Image URL or select file below..."
+            />
+            <label className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs rounded-lg cursor-pointer transition shrink-0 border border-zinc-700 flex items-center gap-1.5">
+              <Download className="w-3.5 h-3.5" />
+              <span>Upload Image</span>
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    const reader = new FileReader();
+                    reader.onloadend = () => setSettingsForm(prev => ({ ...prev, heroBgImage: reader.result }));
+                    reader.readAsDataURL(file);
+                  }
+                }}
+              />
+            </label>
+          </div>
+          {settingsForm.heroBgImage && (
+            <div className="relative h-28 w-full rounded-lg overflow-hidden border border-zinc-800 mt-2">
+              <img src={settingsForm.heroBgImage} alt="Hero Preview" className="w-full h-full object-cover" />
+              <button
+                type="button"
+                onClick={() => setSettingsForm({ ...settingsForm, heroBgImage: '' })}
+                className="absolute top-2 right-2 p-1 bg-red-600/80 hover:bg-red-600 text-white rounded-full text-xs"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Hero Eyebrow & Title */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block mb-1">Eyebrow Script Text</label>
+            <input
+              type="text"
+              value={settingsForm.heroEyebrow || ''}
+              onChange={(e) => setSettingsForm({ ...settingsForm, heroEyebrow: e.target.value })}
+              className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none"
+              placeholder="Whatever you feel,"
+            />
+          </div>
+          <div>
+            <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block mb-1">CTA Button Label</label>
+            <input
+              type="text"
+              value={settingsForm.heroBtnText || ''}
+              onChange={(e) => setSettingsForm({ ...settingsForm, heroBtnText: e.target.value })}
+              className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none"
+              placeholder="BOOK CONSULTATION"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block mb-1">Hero Title (Use \n for line breaks)</label>
+          <textarea
+            rows={3}
+            value={settingsForm.heroTitle || ''}
+            onChange={(e) => setSettingsForm({ ...settingsForm, heroTitle: e.target.value })}
+            className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-mono"
+            placeholder={'WE DESIGN\nTHE CLARITY\nOF YOU'}
+          />
+        </div>
+
+        <div>
+          <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block mb-1">Hero Subtitle Paragraph</label>
+          <textarea
+            rows={2}
+            value={settingsForm.heroSub || ''}
+            onChange={(e) => setSettingsForm({ ...settingsForm, heroSub: e.target.value })}
+            className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none"
+            placeholder="Should guide your new experience..."
+          />
+        </div>
+      </div>
+
+      {/* 2. Unfold With Behold / Services First Card Section */}
+      <div className="bg-zinc-950/60 border border-zinc-800 p-5 rounded-lg space-y-5">
+        <h4 className="text-xs font-bold text-brand tracking-wider flex items-center gap-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+          Unfold With Behold (Services / Why Choose Us Hero Card)
+        </h4>
+
+        {/* Card Background Image */}
+        <div className="p-4 bg-zinc-900/80 border border-zinc-800 rounded-lg space-y-3">
+          <label className="text-xs font-bold text-zinc-300 block">First Feature Card Background Image</label>
+          <div className="flex flex-col sm:flex-row items-center gap-3">
+            <input
+              type="text"
+              value={settingsForm.whyChooseUsImage || ''}
+              onChange={(e) => setSettingsForm({ ...settingsForm, whyChooseUsImage: e.target.value })}
+              className="flex-1 px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none w-full"
+              placeholder="Paste Image URL or select file below..."
+            />
+            <label className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs rounded-lg cursor-pointer transition shrink-0 border border-zinc-700 flex items-center gap-1.5">
+              <Download className="w-3.5 h-3.5" />
+              <span>Upload Image</span>
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    const reader = new FileReader();
+                    reader.onloadend = () => setSettingsForm(prev => ({ ...prev, whyChooseUsImage: reader.result }));
+                    reader.readAsDataURL(file);
+                  }
+                }}
+              />
+            </label>
+          </div>
+          {settingsForm.whyChooseUsImage && (
+            <div className="relative h-28 w-full rounded-lg overflow-hidden border border-zinc-800 mt-2">
+              <img src={settingsForm.whyChooseUsImage} alt="Feature Card Preview" className="w-full h-full object-cover" />
+              <button
+                type="button"
+                onClick={() => setSettingsForm({ ...settingsForm, whyChooseUsImage: '' })}
+                className="absolute top-2 right-2 p-1 bg-red-600/80 hover:bg-red-600 text-white rounded-full text-xs"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          )}
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block mb-1">Section Subtitle / Tag</label>
+            <input
+              type="text"
+              value={settingsForm.servicesSectionSub || ''}
+              onChange={(e) => setSettingsForm({ ...settingsForm, servicesSectionSub: e.target.value })}
+              className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none"
+              placeholder="UNFOLD WITH BEHOLD"
+            />
+          </div>
+          <div>
+            <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block mb-1">Section Main Title</label>
+            <input
+              type="text"
+              value={settingsForm.servicesSectionTitle || ''}
+              onChange={(e) => setSettingsForm({ ...settingsForm, servicesSectionTitle: e.target.value })}
+              className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none"
+              placeholder="Comprehensive Care For Your Mind & Future."
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block mb-1">Section Description Paragraph</label>
+          <textarea
+            rows={2}
+            value={settingsForm.servicesSectionDesc || ''}
+            onChange={(e) => setSettingsForm({ ...settingsForm, servicesSectionDesc: e.target.value })}
+            className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none"
+            placeholder="True growth happens when emotional peace..."
+          />
+        </div>
+      </div>
+
   {/* Hero Trust Stats Bar (Below Hero Buttons) */}
   <div className="bg-zinc-950/40 border border-zinc-800 p-5 rounded-lg space-y-4">
     <div className="flex justify-between items-center">
