@@ -22,12 +22,24 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
             if (part.startsWith('{') && part.endsWith('}')) {
               const innerText = part.slice(1, -1);
               return (
-                <span key={partIdx} className="text-[#00e5ff] drop-shadow-[0_0_12px_rgba(0,229,255,0.8)]">
-                  {innerText}
+                <span
+                  key={partIdx}
+                  style={{ fontFamily: "'Climate Crisis', sans-serif" }}
+                  className="font-climate uppercase text-[#00e5ff] drop-shadow-[0_0_12px_rgba(0,229,255,0.8)]"
+                >
+                  {innerText.toUpperCase()}
                 </span>
               );
             }
-            return <span key={partIdx}>{part}</span>;
+            return (
+              <span
+                key={partIdx}
+                style={{ fontFamily: "'Climate Crisis', sans-serif" }}
+                className="font-climate uppercase"
+              >
+                {part.toUpperCase()}
+              </span>
+            );
           })}
           {lineIdx < lines.length - 1 && <br />}
         </React.Fragment>
