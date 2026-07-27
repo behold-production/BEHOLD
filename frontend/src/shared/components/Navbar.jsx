@@ -130,7 +130,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
               </button>
 
               {/* Desktop Nav Links - Uppercase Editorial */}
-              <nav className="hidden md:flex items-center gap-8">
+              <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
                 {navLinks.map(({ label, action, path }) => {
                   const isActive = location.pathname === path;
                   return (
@@ -153,7 +153,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
               </nav>
 
               {/* Desktop Action Buttons */}
-              <div className="hidden md:flex items-center gap-3">
+              <div className="hidden lg:flex items-center gap-3">
                 <button
                   onClick={() => { navigate('/booking'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                   className={`px-5 py-2.5 font-bold text-xs uppercase tracking-widest rounded-full transition-all shadow-xs cursor-pointer border ${isHomeTop
@@ -193,8 +193,8 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                 )}
               </div>
 
-              {/* Mobile Hamburger Trigger */}
-              <div className="flex items-center gap-2 md:hidden">
+              {/* Mobile/Tablet Hamburger Trigger (<1024px) */}
+              <div className="flex items-center gap-2 lg:hidden">
                 <button
                   onClick={() => setMobileMenuOpen(true)}
                   className={`p-2 rounded-full transition-colors cursor-pointer border-none bg-transparent ${isHomeTop ? 'text-white' : 'text-[#0f172a]'
