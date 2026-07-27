@@ -131,7 +131,10 @@ async function executeRequest(endpoint, options = {}) {
         errorMsg.includes('MongooseServerSelectionError') ||
         errorMsg.includes('ECONNREFUSED') ||
         errorMsg.includes('ENOTFOUND') ||
-        errorMsg.includes('connection timed out')
+        errorMsg.includes('connection timed out') ||
+        errorMsg.includes('MONGODB ATLAS BLOCKED') ||
+        errorMsg.includes('Database connection error') ||
+        errorMsg.includes('VERCEL ENVIRONMENT VARIABLE')
       )
     ) {
       errorMsg = 'Database connection error. Please try again later.';
