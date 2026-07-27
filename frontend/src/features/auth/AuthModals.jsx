@@ -190,17 +190,17 @@ export default function AuthModals({ isOpen, onClose }) {
  >
  {/* Modal Card */}
  <div 
- className="relative w-full max-w-md my-auto bg-white rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 border border-[#d6cecb]"
+ className="relative w-full max-w-md my-auto bg-white rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 border border-surface-200"
  onClick={(e) => e.stopPropagation()}
  >
 
  {/* Header */}
- <div className="flex justify-between items-start gap-4 p-6 sm:p-7 border-b border-[#eae4dc]">
+ <div className="flex justify-between items-start gap-4 p-6 sm:p-7 border-b border-surface-200">
  <div className="min-w-0">
- <h2 id="auth-modal-title" className="text-xl sm:text-2xl font-sans font-bold tracking-tight text-[#1c1514] uppercase">
+ <h2 id="auth-modal-title" className="text-xl sm:text-2xl font-sans font-bold tracking-tight text-[#0f172a] uppercase">
  {rejectionReason ? 'Application Rejected' : titles[mode].title}
  </h2>
- <p className="text-xs text-[#6e635e] font-normal mt-1">
+ <p className="text-xs text-surface-500 font-normal mt-1">
  {rejectionReason ? 'Your counselor application has been declined.' : titles[mode].subtitle}
  </p>
  </div>
@@ -208,9 +208,9 @@ export default function AuthModals({ isOpen, onClose }) {
  type="button"
  onClick={onClose}
  aria-label="Close dialog"
- className="w-9 h-9 shrink-0 bg-[#eae4dc] hover:bg-[#d8d0c7] rounded-full transition-colors cursor-pointer flex items-center justify-center border-none"
+ className="w-9 h-9 shrink-0 bg-surface-100 hover:bg-surface-200 rounded-full transition-colors cursor-pointer flex items-center justify-center border-none"
  >
- <X className="w-4 h-4 text-[#1c1514]" />
+ <X className="w-4 h-4 text-[#0f172a]" />
  </button>
  </div>
 
@@ -218,7 +218,7 @@ export default function AuthModals({ isOpen, onClose }) {
  {rejectionReason ? (
  <div className="p-6 space-y-4">
  <div className="bg-rose-50 border border-rose-200 p-4 rounded-2xl space-y-3">
- <p className="text-sm text-[#1c1514] leading-relaxed font-medium">
+ <p className="text-sm text-[#0f172a] leading-relaxed font-medium">
  We regret to inform you that your professional counsellor application has been rejected by the system administrator.
  </p>
  <div className="bg-white border border-rose-100 p-3 rounded-xl">
@@ -228,7 +228,7 @@ export default function AuthModals({ isOpen, onClose }) {
  </div>
  <button
  onClick={() => { setRejectionReason(null); setMode('login'); }}
- className="w-full py-3.5 bg-[#2b211e] hover:bg-[#1c1514] text-[#f7f4ef] font-bold text-xs uppercase tracking-widest rounded-full transition-all cursor-pointer border-none"
+ className="w-full py-3.5 bg-[#0f172a] hover:bg-[#1e293b] text-white font-bold text-xs uppercase tracking-widest rounded-full transition-all cursor-pointer border border-[#00e5ff]/30"
  >
  Return to Login
  </button>
@@ -238,14 +238,14 @@ export default function AuthModals({ isOpen, onClose }) {
 
  {/* Login Method Toggle */}
  {mode === 'login' && (
- <div className="flex rounded-full border border-[#d8d0c7] bg-[#eae4dc]/60 p-1 text-xs font-bold mb-3">
+ <div className="flex rounded-full border border-surface-200 bg-surface-100 p-1 text-xs font-bold mb-3">
  <button
  type="button"
  onClick={() => { setLoginMethod('email'); setForgotSuccess(null); }}
  className={`flex-1 px-3 min-h-[36px] rounded-full cursor-pointer transition-all duration-200 flex items-center justify-center border-none ${
  loginMethod === 'email'
- ? 'bg-[#2b211e] text-[#f7f4ef] shadow-xs'
- : 'text-[#6e635e] hover:text-[#1c1514]'
+ ? 'bg-[#0f172a] text-[#00e5ff] shadow-xs font-bold'
+ : 'text-surface-600 hover:text-[#0f172a]'
  }`}
  >
  Email
@@ -255,8 +255,8 @@ export default function AuthModals({ isOpen, onClose }) {
  onClick={() => { setLoginMethod('phone'); setForgotSuccess(null); }}
  className={`flex-1 px-3 min-h-[36px] rounded-full cursor-pointer transition-all duration-200 flex items-center justify-center border-none ${
  loginMethod === 'phone'
- ? 'bg-[#2b211e] text-[#f7f4ef] shadow-xs'
- : 'text-[#6e635e] hover:text-[#1c1514]'
+ ? 'bg-[#0f172a] text-[#00e5ff] shadow-xs font-bold'
+ : 'text-surface-600 hover:text-[#0f172a]'
  }`}
  >
  WhatsApp OTP

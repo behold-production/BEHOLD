@@ -51,8 +51,8 @@ export const sendLocalNotification = async (title, body, options = {}) => {
           },
           className: 'cursor-pointer flex flex-col gap-1 pr-2 max-w-xs'
         },
-        React.createElement('span', { className: 'font-bold text-xs text-[#1c1514] font-sans uppercase tracking-wide' }, title),
-        React.createElement('span', { className: 'text-[11px] text-[#6e635e] font-normal leading-tight' }, body)
+        React.createElement('span', { className: 'font-bold text-xs text-[#0f172a] font-sans uppercase tracking-wide' }, title),
+        React.createElement('span', { className: 'text-[11px] text-surface-600 font-normal leading-tight' }, body)
       ),
       {
         icon: '🔔',

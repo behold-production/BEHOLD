@@ -211,17 +211,17 @@ export default function Inquiry({ testProfile, siteSettings }) {
 
               {/* Contact info */}
               {(settings.contactPhone || settings.contactEmail) && (
-                <div className="mt-8 p-6 bg-white rounded-2xl border border-[#d6cecb] shadow-xs">
-                  <h4 className="font-bold text-[#1c1514] mb-3 text-xs uppercase tracking-widest">Reach Us Directly</h4>
+                <div className="mt-8 p-6 bg-white rounded-2xl border border-surface-200 shadow-xs">
+                  <h4 className="font-bold text-[#0f172a] mb-3 text-xs uppercase tracking-widest">Reach Us Directly</h4>
                   {settings.contactPhone && (
-                    <a href={`tel:${settings.contactPhone}`} className="flex items-center gap-2 text-[#1c1514] font-semibold text-sm mb-2 hover:underline">
-                      <svg className="w-4 h-4 text-[#7c7069]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.5a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.83h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l.76-.76a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.72 17z" /></svg>
+                    <a href={`tel:${settings.contactPhone}`} className="flex items-center gap-2 text-[#0f172a] font-semibold text-sm mb-2 hover:underline">
+                      <svg className="w-4 h-4 text-[#00e5ff]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.5a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.83h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l.76-.76a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.72 17z" /></svg>
                       {settings.contactPhone}
                     </a>
                   )}
                   {settings.contactEmail && (
-                    <a href={`mailto:${settings.contactEmail}`} className="flex items-center gap-2 text-[#1c1514] font-semibold text-sm hover:underline">
-                      <svg className="w-4 h-4 text-[#7c7069]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
+                    <a href={`mailto:${settings.contactEmail}`} className="flex items-center gap-2 text-[#0f172a] font-semibold text-sm hover:underline">
+                      <svg className="w-4 h-4 text-[#00e5ff]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
                       {settings.contactEmail}
                     </a>
                   )}
