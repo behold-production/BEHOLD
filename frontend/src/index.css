@@ -2,23 +2,15 @@
 @import "tailwindcss";
 
 @font-face {
-  font-family: 'ClimateCrisisLocal';
-  src: url('/src/assets/Climate-Crisis.ttf') format('truetype'), url('./assets/Climate-Crisis.ttf') format('truetype');
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
   font-family: 'Climate Crisis';
-  src: url('/src/assets/Climate-Crisis.ttf') format('truetype'), url('./assets/Climate-Crisis.ttf') format('truetype');
+  src: url('./assets/Climate-Crisis.ttf') format('truetype');
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
 }
 
 .font-climate {
-  font-family: 'ClimateCrisisLocal', 'Climate Crisis', sans-serif !important;
+  font-family: 'Climate Crisis', sans-serif !important;
   letter-spacing: 0.015em;
 }
 

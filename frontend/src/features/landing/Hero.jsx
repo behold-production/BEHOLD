@@ -1,5 +1,6 @@
 import React from 'react';
 import luxuryHeroBg from '../../assets/luxury_hero_bg.png';
+import climateCrisisFont from '../../assets/Climate-Crisis.ttf';
 
 export default function Hero({ setView, navigateToSection, siteSettings }) {
   const settings = siteSettings || {};
@@ -43,6 +44,15 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
 
   return (
     <section id="home" className="w-full relative bg-[#0f172a] text-white overflow-hidden min-h-screen flex items-center">
+      <style>{`
+        @font-face {
+          font-family: 'Climate Crisis';
+          src: url('${climateCrisisFont}') format('truetype');
+          font-weight: 100 900;
+          font-style: normal;
+          font-display: swap;
+        }
+      `}</style>
       {/* Background Visual */}
       <div className="absolute inset-0 pointer-events-none">
         <img
@@ -63,7 +73,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
           </span>
 
           {/* Multi-Line Uppercase Typography */}
-          <h1 style={{ fontFamily: "'ClimateCrisisLocal', 'Climate Crisis', sans-serif" }} className="text-[32px] xs:text-[38px] sm:text-5xl md:text-6xl lg:text-6xl xl:text-6xl font-climate uppercase text-white tracking-wide leading-[0.98] sm:leading-[1.05] drop-shadow-lg">
+          <h1 style={{ fontFamily: "'Climate Crisis', sans-serif" }} className="text-[32px] xs:text-[38px] sm:text-5xl md:text-6xl lg:text-6xl xl:text-6xl font-climate uppercase text-white tracking-wide leading-[0.98] sm:leading-[1.05] drop-shadow-lg">
             {renderTitle(rawTitle)}
           </h1>
         </div>
