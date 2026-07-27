@@ -9,9 +9,30 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
   const displayEyebrow = settings.heroEyebrow || 'Whatever you feel,';
   const displayBtnText = settings.heroBtnText || 'BOOK CONSULTATION';
 
-  // Replace {highlight} syntax if present, or split by line breaks
-  const displayTitle = rawTitle.replace(/\{|\}/g, '');
-  const titleLines = displayTitle.split('\n');
+  // Parse multi-line title and curly-bracket highlight tags {text}
+  const renderTitle = (titleText) => {
+    if (!titleText) return null;
+    const lines = titleText.split('\n');
+    return lines.map((line, lineIdx) => {
+      const parts = line.split(/(\{[^}]+\})/g);
+      return (
+        <React.Fragment key={lineIdx}>
+          {parts.map((part, partIdx) => {
+            if (part.startsWith('{') && part.endsWith('}')) {
+              const innerText = part.slice(1, -1);
+              return (
+                <span key={partIdx} className="text-[#00e5ff] drop-shadow-[0_0_12px_rgba(0,229,255,0.8)]">
+                  {innerText}
+                </span>
+              );
+            }
+            return <span key={partIdx}>{part}</span>;
+          })}
+          {lineIdx < lines.length - 1 && <br />}
+        </React.Fragment>
+      );
+    });
+  };
 
   const displaySubtitle = settings.heroSub || 'Should guide your new experience, one step at a time, toward your full clarity and peace of mind.';
 
@@ -34,21 +55,16 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
 
       {/* Hero Content Overlay */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-8 sm:pt-32 sm:pb-16 flex flex-col justify-end md:justify-between space-y-6 md:space-y-0 min-h-dvh sm:min-h-screen">
-        
+
         {/* Top & Statement Headline Box */}
         <div className="max-w-5xl space-y-2 sm:space-y-4 pt-2 sm:pt-0">
           <span className="text-[#00e5ff] font-['Cormorant_Garamond',serif] italic text-xl xs:text-2xl sm:text-3xl font-medium tracking-wide block mb-1 drop-shadow-[0_0_8px_rgba(0,229,255,0.6)]">
             {displayEyebrow}
           </span>
-          
+
           {/* Multi-Line Uppercase Typography */}
           <h1 className="text-[32px] xs:text-[38px] sm:text-5xl md:text-6xl lg:text-6xl xl:text-6xl font-climate uppercase text-white tracking-wide leading-[0.98] sm:leading-[1.05] drop-shadow-lg">
-            {titleLines.map((line, idx) => (
-              <React.Fragment key={idx}>
-                {line}
-                {idx < titleLines.length - 1 && <br />}
-              </React.Fragment>
-            ))}
+            {renderTitle(rawTitle)}
           </h1>
         </div>
 
