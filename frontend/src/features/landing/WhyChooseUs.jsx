@@ -59,72 +59,61 @@ export default function WhyChooseUs({ siteSettings }) {
             </div>
           </div>
 
-          {/* Right Column: 2x2 Thin-Border Grid Matrix matching reference image */}
-          <div className="lg:col-span-6 border-t lg:border-t-0 border-[#d6cecb]">
+          {/* Right Column: 2x2 Feature Grid Matrix */}
+          <div className="lg:col-span-6 grid grid-cols-2 gap-4 sm:gap-6 pt-6 lg:pt-0">
             
-            {/* Top Row: Cell 1 & Cell 2 */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-[#d6cecb] border-b border-[#d6cecb]">
-              
-              {/* Cell 1: Dual Support */}
-              <div className="p-6 sm:p-8 flex flex-col justify-between h-48 sm:h-56 border-b border-[#d6cecb]">
-                <div>
-                  <h3 className="text-sm font-bold text-[#1c1514] uppercase mb-2 font-sans">Dual Support Architecture</h3>
-                  <p className="text-xs text-[#6e635e] font-normal leading-relaxed">
-                    Transition seamlessly between clinical psychologists and career strategists under one unified roof.
-                  </p>
-                </div>
-                <div className="text-right pt-4">
-                  <span className="text-4xl sm:text-5xl font-semibold text-[#2b211e] font-sans">01</span>
-                </div>
+            {/* Cell 1: Dual Support */}
+            <div className="p-5 sm:p-7 rounded-3xl bg-white border border-[#d6cecb] shadow-2xs flex flex-col justify-between h-52 sm:h-60 space-y-3">
+              <div>
+                <h3 className="text-xs sm:text-sm font-bold text-[#1c1514] uppercase mb-1.5 font-sans leading-snug">Dual Support Architecture</h3>
+                <p className="text-[11px] sm:text-xs text-[#6e635e] font-normal leading-relaxed">
+                  Transition seamlessly between clinical psychologists and career strategists under one roof.
+                </p>
               </div>
-
-              {/* Cell 2: Safe & Scientific */}
-              <div className="p-6 sm:p-8 flex flex-col justify-between h-48 sm:h-56 border-b border-[#d6cecb]">
-                <div>
-                  <h3 className="text-sm font-bold text-[#1c1514] uppercase mb-2 font-sans">100% Safe & Scientific</h3>
-                  <p className="text-xs text-[#6e635e] font-normal leading-relaxed">
-                    Backed by CIGI assessment data and strictly private, non-judgmental counseling protocols.
-                  </p>
-                </div>
-                <div className="text-right pt-4">
-                  <span className="text-4xl sm:text-5xl font-semibold text-[#2b211e] font-sans">100%</span>
-                </div>
+              <div className="text-right pt-2 border-t border-[#eae4dc]">
+                <span className="text-2xl sm:text-4xl font-bold text-[#2b211e] font-sans">01</span>
               </div>
-
             </div>
 
-            {/* Bottom Row: Cell 3 & Cell 4 */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-[#d6cecb]">
-              
-              {/* Cell 3: CIGI-Certified Aptitude */}
-              <div className="p-6 sm:p-8 flex flex-col justify-between h-52 sm:h-64">
-                <div>
-                  <h3 className="text-sm font-bold text-[#1c1514] uppercase mb-2 font-sans">C-DAT Aptitude Assessment</h3>
-                  <p className="text-xs text-[#6e635e] font-normal leading-relaxed">
-                    Evaluations designed for grades 8–12 to align cognitive strengths with career aspirations.
-                  </p>
-                </div>
-                <div className="text-right pt-4">
-                  <span className="text-3xl sm:text-4xl font-semibold text-[#2b211e] font-sans">C-DAT</span>
-                </div>
-              </div>
-
-              {/* Cell 4: Dark Espresso Statement Highlight Box matching reference image */}
-              <div className="p-6 sm:p-8 bg-[#2b211e] text-[#f7f4ef] flex flex-col justify-between h-52 sm:h-64">
-                <p className="text-xs sm:text-sm text-[#e2dad2] font-medium leading-relaxed">
-                  "True growth happens when emotional peace and career direction align."
+            {/* Cell 2: Safe & Scientific */}
+            <div className="p-5 sm:p-7 rounded-3xl bg-white border border-[#d6cecb] shadow-2xs flex flex-col justify-between h-52 sm:h-60 space-y-3">
+              <div>
+                <h3 className="text-xs sm:text-sm font-bold text-[#1c1514] uppercase mb-1.5 font-sans leading-snug">100% Safe & Scientific</h3>
+                <p className="text-[11px] sm:text-xs text-[#6e635e] font-normal leading-relaxed">
+                  Backed by CIGI assessment data and strictly private, non-judgmental counseling protocols.
                 </p>
-                <div className="pt-4">
-                  <button
-                    onClick={handleBook}
-                    className="text-xs font-bold uppercase tracking-widest text-[#f7f4ef] hover:underline bg-transparent border-none p-0 cursor-pointer flex items-center gap-1.5"
-                  >
-                    <span>Book a Session</span>
-                    <span className="text-xs">›</span>
-                  </button>
-                </div>
               </div>
+              <div className="text-right pt-2 border-t border-[#eae4dc]">
+                <span className="text-2xl sm:text-4xl font-bold text-[#2b211e] font-sans">100%</span>
+              </div>
+            </div>
 
+            {/* Cell 3: CIGI-Certified Aptitude */}
+            <div className="p-5 sm:p-7 rounded-3xl bg-white border border-[#d6cecb] shadow-2xs flex flex-col justify-between h-52 sm:h-60 space-y-3">
+              <div>
+                <h3 className="text-xs sm:text-sm font-bold text-[#1c1514] uppercase mb-1.5 font-sans leading-snug">C-DAT Aptitude Assessment</h3>
+                <p className="text-[11px] sm:text-xs text-[#6e635e] font-normal leading-relaxed">
+                  Evaluations designed for grades 8–12 to align cognitive strengths with career aspirations.
+                </p>
+              </div>
+              <div className="text-right pt-2 border-t border-[#eae4dc]">
+                <span className="text-base sm:text-2xl font-bold text-[#2b211e] font-sans uppercase">C-DAT</span>
+              </div>
+            </div>
+
+            {/* Cell 4: Dark Espresso Statement Highlight Box */}
+            <div className="p-5 sm:p-7 rounded-3xl bg-[#2b211e] text-[#f7f4ef] shadow-md flex flex-col justify-between h-52 sm:h-60 space-y-3">
+              <p className="text-xs sm:text-sm text-[#e2dad2] font-medium leading-relaxed italic">
+                "True growth happens when emotional peace and career direction align."
+              </p>
+              <div className="pt-2">
+                <button
+                  onClick={handleBook}
+                  className="w-full py-2.5 bg-[#f7f4ef] hover:bg-white text-[#1c1514] font-bold text-[10px] sm:text-xs uppercase tracking-widest rounded-full transition-all border-none cursor-pointer shadow-2xs text-center"
+                >
+                  Book a Session
+                </button>
+              </div>
             </div>
 
           </div>

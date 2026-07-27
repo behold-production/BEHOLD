@@ -29,16 +29,16 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
       </div>
 
       {/* Hero Content Overlay */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-12 sm:pt-36 sm:pb-16 flex flex-col justify-start lg:justify-between gap-8 lg:gap-0 min-h-screen">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-10 sm:pt-36 sm:pb-16 flex flex-col justify-between min-h-screen">
         
         {/* Top & Statement Headline Box */}
         <div className="max-w-5xl space-y-3 sm:space-y-4 pt-4 sm:pt-0">
-          <span className="text-[#e2dad2] font-['Cormorant_Garamond',serif] italic text-xl xs:text-2xl sm:text-3xl font-medium tracking-wide block mb-1 sm:mb-2">
+          <span className="text-[#e2dad2] font-['Cormorant_Garamond',serif] italic text-2xl xs:text-3xl sm:text-3xl font-medium tracking-wide block mb-1 sm:mb-2">
             Whatever you feel,
           </span>
           
           {/* Multi-Line Uppercase Typography */}
-          <h1 className="text-[34px] xs:text-4xl sm:text-6xl md:text-6xl lg:text-7xl xl:text-7xl font-climate uppercase text-white tracking-wide leading-[1.08] drop-shadow-md">
+          <h1 className="text-[42px] xs:text-5xl sm:text-6xl md:text-6xl lg:text-7xl xl:text-7xl font-climate uppercase text-white tracking-wide leading-[1.05] drop-shadow-md">
             {titleLines.map((line, idx) => (
               <React.Fragment key={idx}>
                 {line}
@@ -48,10 +48,10 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
           </h1>
         </div>
 
-        {/* Subtitle & White Pill Button - Directly under title on mobile <768px, bottom-right on desktop */}
-        <div className="pt-0 lg:pt-24 flex justify-start lg:justify-end">
+        {/* Subtitle & White Pill Button - Anchored to bottom on mobile & desktop */}
+        <div className="pt-8 sm:pt-24 flex justify-start lg:justify-end pb-2 sm:pb-0">
           {/* Right Subtitle & White Pill Button matching bottom-right of image */}
-          <div className="flex flex-col items-start lg:items-end text-left lg:text-right space-y-4 max-w-md">
+          <div className="flex flex-col items-start lg:items-end text-left lg:text-right space-y-4 max-w-md w-full sm:w-auto">
             <p className="text-xs sm:text-sm text-white/95 font-medium leading-relaxed drop-shadow-sm max-w-xs sm:max-w-sm">
               {displaySubtitle}
             </p>

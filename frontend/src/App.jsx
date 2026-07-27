@@ -552,9 +552,9 @@ export default function App() {
               <Hero setView={() => { }} navigateToSection={navigateToSection} siteSettings={siteSettings} />
               <div className="relative z-10 bg-white w-full">
                 {(() => {
-                  const defaultOrder = ['counselling-intro', 'whyChooseUs', 'aptitude', 'counsellors', 'about', 'reviews', 'faq', 'blog'];
+                  const defaultOrder = ['whyChooseUs', 'aptitude', 'counsellors', 'about', 'reviews', 'faq', 'blog'];
                   let order = Array.isArray(siteSettings.sectionOrder) && siteSettings.sectionOrder.length > 0
-                    ? siteSettings.sectionOrder.filter(sec => sec !== 'inquiry' && sec !== 'process') // Sanitize
+                    ? siteSettings.sectionOrder.filter(sec => sec !== 'inquiry' && sec !== 'process' && sec !== 'counselling-intro') // Sanitize duplicate intro
                     : defaultOrder;
 
                   // Ensure any new sections not present in the saved database order are still rendered at the bottom
@@ -565,10 +565,6 @@ export default function App() {
 
                   return order.map((sectionKey) => {
                     switch (sectionKey) {
-                      case 'counselling-intro':
-                        return (siteSettings.enablePsychology !== false || siteSettings.enableCareerMentoring !== false) ? (
-                          <Services key="counselling_intro" mode="intro" setView={() => { }} onBookTherapist={handleBookTherapist} siteSettings={siteSettings} />
-                        ) : null;
                       case 'whyChooseUs':
                         return <WhyChooseUs key="whyChooseUs_sec" siteSettings={siteSettings} />;
                       case 'counsellors':
