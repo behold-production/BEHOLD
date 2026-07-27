@@ -45,18 +45,20 @@ export default function Faq({ siteSettings }) {
   const displayFaqs = faqs.length > 0 ? faqs : defaultFaqs;
 
   return (
-    <section id="faqs" className="py-20 sm:py-28 bg-[#f7f4ef] text-[#1c1514] border-b border-[#e2dad2]">
+    <section id="faqs" className="py-20 sm:py-28 bg-white text-surface-900 border-b border-surface-200">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Header */}
         <div className="text-center mb-14">
-          <span className="text-xs font-bold tracking-widest uppercase text-[#7c7069] block mb-2">
+          <span className="text-xs font-bold tracking-widest uppercase text-[#00e5ff] flex items-center justify-center gap-1.5 mb-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_8px_#00e5ff]" />
             {settings.faqSectionSub || 'FREQUENTLY ASKED QUESTIONS'}
           </span>
-          <h2 id="faq-title" className="text-3xl sm:text-5xl font-sans font-bold uppercase text-[#1c1514] mb-3 tracking-tight leading-none">
-            {settings.faqSectionTitle || 'Everything You Need to Know.'}
+          <h2 id="faq-title" className="text-3xl sm:text-5xl font-sans font-bold uppercase text-[#0f172a] mb-3 tracking-tight leading-none">
+            {settings.faqSectionTitle || 'Everything You Need to Know'}
+            <span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)]">.</span>
           </h2>
-          <p className="text-sm sm:text-base text-[#6e635e] font-normal max-w-xl mx-auto leading-relaxed">
+          <p className="text-sm sm:text-base text-surface-600 font-normal max-w-xl mx-auto leading-relaxed">
             {settings.faqSectionDesc || "We've answered the most common questions about our counseling model, C-DAT assessments, and mentorship programs."}
           </p>
         </div>
@@ -68,17 +70,17 @@ export default function Faq({ siteSettings }) {
             return (
               <div
                 key={idx}
-                className={`rounded-2xl border transition-all duration-300 overflow-hidden ${isOpen ? 'border-[#1c1514] bg-white shadow-sm' : 'border-[#d6cecb] bg-white hover:border-[#1c1514]'}`}
+                className={`rounded-2xl border transition-all duration-300 overflow-hidden ${isOpen ? 'border-[#00e5ff] bg-white shadow-sm' : 'border-surface-200 bg-white hover:border-[#00e5ff]'}`}
               >
                 <button
                   type="button"
                   onClick={() => setOpenIndex(isOpen ? null : idx)}
                   className="w-full text-left px-6 py-5 flex items-center justify-between gap-4 cursor-pointer bg-transparent border-none"
                 >
-                  <span className={`font-bold text-sm sm:text-base leading-snug ${isOpen ? 'text-[#1c1514]' : 'text-[#1c1514]'}`}>
+                  <span className={`font-bold text-sm sm:text-base leading-snug ${isOpen ? 'text-[#00e5ff]' : 'text-[#0f172a]'}`}>
                     {faq.question}
                   </span>
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ${isOpen ? 'bg-[#2b211e] text-[#f7f4ef] rotate-180' : 'bg-[#eae4dc] text-[#1c1514]'}`}>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ${isOpen ? 'bg-[#0f172a] text-[#00e5ff] rotate-180 border border-[#00e5ff]/40' : 'bg-surface-100 text-[#0f172a]'}`}>
                     <ChevronDown className="w-4 h-4" />
                   </div>
                 </button>
@@ -86,7 +88,7 @@ export default function Faq({ siteSettings }) {
                   className="overflow-hidden transition-all duration-300 ease-in-out"
                   style={{ maxHeight: isOpen ? '400px' : '0px' }}
                 >
-                  <div className="px-6 pb-6 text-[#6e635e] leading-relaxed text-xs sm:text-sm border-t border-[#eae4dc] pt-4 font-normal">
+                  <div className="px-6 pb-6 text-surface-600 leading-relaxed text-xs sm:text-sm border-t border-surface-100 pt-4 font-normal">
                     {faq.answer}
                   </div>
                 </div>
@@ -97,13 +99,13 @@ export default function Faq({ siteSettings }) {
 
         {/* Bottom CTA */}
         <div className="mt-12 text-center">
-          <p className="text-[#6e635e] mb-4 text-xs sm:text-sm font-normal">Still have questions?</p>
+          <p className="text-surface-600 mb-4 text-xs sm:text-sm font-normal">Still have questions?</p>
           <button
             onClick={() => {
               const el = document.getElementById('inquiry');
               if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }}
-            className="px-7 py-3 bg-[#2b211e] hover:bg-[#1c1514] text-[#f7f4ef] font-bold text-xs uppercase tracking-widest rounded-full transition-all border-none cursor-pointer shadow-xs"
+            className="px-7 py-3 bg-[#0f172a] hover:bg-[#1e293b] text-white font-bold text-xs uppercase tracking-widest rounded-full transition-all border border-[#00e5ff]/30 cursor-pointer shadow-xs"
           >
             Contact Our Team
           </button>

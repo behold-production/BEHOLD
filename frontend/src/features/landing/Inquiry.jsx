@@ -73,27 +73,29 @@ export default function Inquiry({ testProfile, siteSettings }) {
   return (
     <>
       {/* Ready CTA Banner */}
-      <section className="py-20 sm:py-28 bg-[#2b211e] text-[#f7f4ef] relative border-b border-[#1c1514]">
+      <section className="py-20 sm:py-28 bg-[#0f172a] text-white relative border-b border-[#00e5ff]/30">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <span className="text-xs font-bold tracking-widest uppercase text-[#e2dad2] block mb-3">
+          <span className="text-xs font-bold tracking-widest uppercase text-[#00e5ff] flex items-center justify-center gap-1.5 mb-3">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_8px_#00e5ff]" />
             {settings.inquirySectionSub || 'START YOUR JOURNEY'}
           </span>
-          <h2 className="text-3xl sm:text-5xl font-sans font-bold uppercase text-[#f7f4ef] mb-4 tracking-tight leading-none">
-            {settings.inquirySectionTitle || 'Ready to Build Your Future.'}
+          <h2 className="text-3xl sm:text-5xl font-sans font-bold uppercase text-white mb-4 tracking-tight leading-none">
+            {settings.inquirySectionTitle || 'Ready to Build Your Future'}
+            <span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)]">.</span>
           </h2>
-          <p className="text-sm sm:text-base text-[#e2dad2] font-normal max-w-xl mx-auto mb-10 leading-relaxed">
+          <p className="text-sm sm:text-base text-surface-300 font-normal max-w-xl mx-auto mb-10 leading-relaxed">
             {settings.inquirySectionDesc || 'Take the first step toward discovering your true potential. Our mentors are here to guide you through every stage of your academic and career journey.'}
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <button
               onClick={() => { const el = document.getElementById('inquiry'); if (el) el.scrollIntoView({ behavior: 'smooth' }); }}
-              className="px-8 py-3.5 bg-[#f7f4ef] hover:bg-white text-[#1c1514] font-bold text-xs uppercase tracking-widest rounded-full transition-all shadow-md border-none cursor-pointer"
+              className="px-8 py-3.5 bg-[#00e5ff] hover:bg-[#00cce6] text-[#0f172a] font-bold text-xs uppercase tracking-widest rounded-full transition-all shadow-md border-none cursor-pointer"
             >
               Book Your Consultation
             </button>
             <button
               onClick={() => { window.spaNavigate?.('/sample-test'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-              className="px-8 py-3.5 bg-white/10 hover:bg-white/20 text-[#f7f4ef] font-bold text-xs uppercase tracking-widest rounded-full border border-white/30 backdrop-blur-md transition-all cursor-pointer"
+              className="px-8 py-3.5 bg-white/10 hover:bg-white/20 text-white font-bold text-xs uppercase tracking-widest rounded-full border border-white/30 backdrop-blur-md transition-all cursor-pointer"
             >
               Take Aptitude Test
             </button>
@@ -102,40 +104,41 @@ export default function Inquiry({ testProfile, siteSettings }) {
       </section>
 
       {/* Contact Form Section */}
-      <section id="inquiry" className="py-20 sm:py-28 bg-[#f7f4ef] text-[#1c1514] border-b border-[#e2dad2]">
+      <section id="inquiry" className="py-20 sm:py-28 bg-white text-surface-900 border-b border-surface-200">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
 
             {/* Form — 7 cols */}
-            <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-10 border border-[#d6cecb] shadow-md">
+            <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-10 border border-surface-200 hover:border-[#00e5ff] transition-all shadow-md">
               <div className="mb-8">
-                <span className="text-xs font-bold tracking-widest uppercase text-[#7c7069] block mb-2">
+                <span className="text-xs font-bold tracking-widest uppercase text-[#00e5ff] flex items-center gap-1.5 mb-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_8px_#00e5ff]" />
                   GET IN TOUCH
                 </span>
-                <h2 id="inquiry-title" className="text-3xl font-sans font-bold uppercase text-[#1c1514] mb-3 leading-tight">
-                  Want to Know More.
+                <h2 id="inquiry-title" className="text-3xl font-sans font-bold uppercase text-[#0f172a] mb-3 leading-tight">
+                  Want to Know More<span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)]">.</span>
                 </h2>
-                <p className="text-sm text-[#6e635e] font-normal leading-relaxed">
+                <p className="text-sm text-surface-600 font-normal leading-relaxed">
                   Submit your request and we'll match you with the right expert within 24 hours.
                 </p>
               </div>
 
               {testProfile && (
-                <div className="mb-6 p-4 bg-[#eae4dc] border border-[#d8d0c7] rounded-xl text-[#1c1514] text-xs sm:text-sm font-semibold">
+                <div className="mb-6 p-4 bg-surface-50 border border-[#00e5ff]/40 rounded-xl text-[#0f172a] text-xs sm:text-sm font-semibold">
                   ✓ Pre-filled with your aptitude test results ({testProfile.dominantDomain} profile).
                 </div>
               )}
 
               {submitStatus === 'success' ? (
                 <div className="text-center py-12">
-                  <div className="w-12 h-12 bg-[#2b211e] text-[#f7f4ef] rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-lg">
+                  <div className="w-12 h-12 bg-[#0f172a] text-[#00e5ff] rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-lg border border-[#00e5ff]/40">
                     ✓
                   </div>
-                  <h3 className="text-xl font-sans font-bold uppercase text-[#1c1514] mb-2">Request Sent.</h3>
-                  <p className="text-[#6e635e] text-sm">Our coordinator will contact you shortly.</p>
+                  <h3 className="text-xl font-sans font-bold uppercase text-[#0f172a] mb-2">Request Sent.</h3>
+                  <p className="text-surface-600 text-sm">Our coordinator will contact you shortly.</p>
                   <button
                     onClick={() => setSubmitStatus(null)}
-                    className="mt-6 px-7 py-3 bg-[#2b211e] hover:bg-[#1c1514] text-[#f7f4ef] font-bold text-xs uppercase tracking-widest rounded-full transition-all border-none cursor-pointer"
+                    className="mt-6 px-7 py-3 bg-[#0f172a] hover:bg-[#1e293b] text-white font-bold text-xs uppercase tracking-widest rounded-full transition-all border border-[#00e5ff]/30 cursor-pointer"
                   >
                     Send Another
                   </button>
@@ -144,34 +147,34 @@ export default function Inquiry({ testProfile, siteSettings }) {
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label htmlFor="name-input" className="block text-xs font-bold text-[#1c1514] uppercase mb-1.5">Full Name *</label>
+                      <label htmlFor="name-input" className="block text-xs font-bold text-[#0f172a] uppercase mb-1.5">Full Name *</label>
                       <input
                         type="text" name="name" id="name-input"
                         value={formData.name} onChange={handleChange}
                         placeholder="e.g. Priya Nair"
-                        className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#1c1514] transition-all ${formErrors.name ? 'border-rose-400' : 'border-[#d8d0c7]'}`}
+                        className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00e5ff] focus:ring-1 focus:ring-[#00e5ff] transition-all ${formErrors.name ? 'border-rose-400' : 'border-surface-200'}`}
                       />
                       {formErrors.name && <p className="text-rose-600 text-xs mt-1 font-semibold">{formErrors.name}</p>}
                     </div>
                     <div>
-                      <label htmlFor="email-input" className="block text-xs font-bold text-[#1c1514] uppercase mb-1.5">Email Address *</label>
+                      <label htmlFor="email-input" className="block text-xs font-bold text-[#0f172a] uppercase mb-1.5">Email Address *</label>
                       <input
                         type="email" name="email" id="email-input"
                         value={formData.email} onChange={handleChange}
                         placeholder="name@email.com"
-                        className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#1c1514] transition-all ${formErrors.email ? 'border-rose-400' : 'border-[#d8d0c7]'}`}
+                        className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00e5ff] focus:ring-1 focus:ring-[#00e5ff] transition-all ${formErrors.email ? 'border-rose-400' : 'border-surface-200'}`}
                       />
                       {formErrors.email && <p className="text-rose-600 text-xs mt-1 font-semibold">{formErrors.email}</p>}
                     </div>
                   </div>
 
                   <div>
-                    <label htmlFor="message-textarea" className="block text-xs font-bold text-[#1c1514] uppercase mb-1.5">Your Message</label>
+                    <label htmlFor="message-textarea" className="block text-xs font-bold text-[#0f172a] uppercase mb-1.5">Your Message</label>
                     <textarea
                       rows={4} name="message" id="message-textarea"
                       value={formData.message} onChange={handleChange}
                       placeholder="Details regarding stream, class or queries..."
-                      className="w-full border border-[#d8d0c7] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#1c1514] transition-all resize-none"
+                      className="w-full border border-surface-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00e5ff] focus:ring-1 focus:ring-[#00e5ff] transition-all resize-none"
                     />
                   </div>
 
@@ -179,7 +182,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
 
                   <button
                     type="submit" disabled={isSubmitting}
-                    className="w-full py-4 bg-[#2b211e] hover:bg-[#1c1514] text-[#f7f4ef] font-bold text-xs uppercase tracking-widest rounded-full transition-all border-none cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2 shadow-xs"
+                    className="w-full py-4 bg-[#0f172a] hover:bg-[#1e293b] text-white font-bold text-xs uppercase tracking-widest rounded-full transition-all border border-[#00e5ff]/30 cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2 shadow-xs"
                   >
                     {isSubmitting ? <><Loader2 className="w-4 h-4 animate-spin" /> Sending...</> : 'Send Request'}
                   </button>
@@ -189,16 +192,18 @@ export default function Inquiry({ testProfile, siteSettings }) {
 
             {/* Info — 5 cols */}
             <div className="lg:col-span-5 flex flex-col justify-center space-y-6">
-              <h3 className="text-2xl font-sans font-bold uppercase text-[#1c1514]">What Happens Next.</h3>
+              <h3 className="text-2xl font-sans font-bold uppercase text-[#0f172a]">
+                What Happens Next<span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)]">.</span>
+              </h3>
               <div className="space-y-6">
                 {steps.map((step, i) => (
                   <div key={i} className="flex gap-4 items-start">
-                    <div className="w-10 h-10 bg-[#2b211e] text-[#f7f4ef] rounded-xl flex items-center justify-center shrink-0 mt-0.5 shadow-xs">
+                    <div className="w-10 h-10 bg-[#0f172a] text-[#00e5ff] rounded-xl flex items-center justify-center shrink-0 mt-0.5 shadow-xs border border-[#00e5ff]/40">
                       {step.icon}
                     </div>
                     <div>
-                      <h4 className="font-bold text-[#1c1514] text-sm uppercase mb-1">{step.title}</h4>
-                      <p className="text-[#6e635e] text-xs sm:text-sm leading-relaxed font-normal">{step.desc}</p>
+                      <h4 className="text-sm font-bold uppercase text-[#0f172a] mb-1 font-sans">{step.title}</h4>
+                      <p className="text-xs text-surface-600 font-normal leading-relaxed">{step.desc}</p>
                     </div>
                   </div>
                 ))}

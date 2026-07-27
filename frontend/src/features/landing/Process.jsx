@@ -25,18 +25,19 @@ const steps = [
 
 export default function Process() {
   return (
-    <section id="process" className="py-20 sm:py-28 bg-[#eae4dc] text-[#1c1514] border-b border-[#d8d0c7]">
+    <section id="process" className="py-20 sm:py-28 bg-white text-surface-900 border-b border-surface-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Header */}
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <span className="text-xs font-bold uppercase tracking-widest text-[#7c7069] block mb-2">
-            OUR PROCESS
+        <div className="text-center mb-16 max-w-3xl mx-auto">
+          <span className="text-xs font-bold tracking-widest uppercase text-[#00e5ff] flex items-center justify-center gap-1.5 mb-3">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_8px_#00e5ff]" />
+            HOW IT WORKS
           </span>
-          <h2 className="text-3xl sm:text-4xl font-sans font-black text-[#1c1514] uppercase tracking-tight leading-tight mb-4">
-            How Your Journey Works.
+          <h2 id="process-title" className="text-3xl sm:text-5xl font-sans font-bold uppercase text-[#0f172a] mb-4 tracking-tight leading-none">
+            Four Steps To Clarity<span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)]">.</span>
           </h2>
-          <p className="text-[#6e635e] text-sm leading-relaxed font-normal">
+          <p className="text-sm sm:text-base text-surface-600 font-normal leading-relaxed">
             Zero cognitive friction. A clear, stress-free pathway from initial selection to ongoing mentorship.
           </p>
         </div>
@@ -46,23 +47,24 @@ export default function Process() {
           {steps.map((step, idx) => (
             <div
               key={idx}
-              className="flex flex-col justify-between p-7 rounded-2xl bg-[#f7f4ef] border border-[#d6cecb] hover:border-[#2b211e] transition-all duration-300 min-h-[220px]"
+              className="flex flex-col justify-between p-7 rounded-2xl bg-white border border-surface-200 hover:border-[#00e5ff] transition-all duration-300 min-h-[220px] shadow-xs group"
             >
               <div>
                 <div className="flex items-center justify-between w-full mb-6">
-                  <span className="text-4xl font-black text-[#2b211e] font-sans">
+                  <span className="text-4xl font-black text-[#0f172a] font-sans group-hover:text-[#00e5ff] transition-colors">
                     {step.num}
                   </span>
+                  <span className="w-2 h-2 rounded-full bg-[#00e5ff] shadow-[0_0_6px_#00e5ff]" />
                 </div>
 
-                <h3 className="text-base font-bold text-[#1c1514] uppercase mb-2 font-sans">{step.title}</h3>
-                <p className="text-[#6e635e] text-xs leading-relaxed font-normal">
+                <h3 className="text-base font-bold text-[#0f172a] uppercase mb-2 font-sans">{step.title}</h3>
+                <p className="text-surface-600 text-xs leading-relaxed font-normal">
                   {step.desc}
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-[#e2dad2] mt-4">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-[#8a7e77]">STEP {step.num}</span>
+              <div className="pt-4 border-t border-surface-100 mt-4">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-[#00e5ff]">STEP {step.num}</span>
               </div>
             </div>
           ))}
@@ -72,13 +74,12 @@ export default function Process() {
         <div className="mt-14 text-center">
           <button
             onClick={() => { window.spaNavigate?.('/booking'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-            className="px-8 py-3.5 bg-[#2b211e] hover:bg-[#1c1514] text-[#f7f4ef] font-bold text-xs uppercase tracking-widest rounded-full transition-all cursor-pointer border-none shadow-sm inline-flex items-center gap-2"
+            className="px-8 py-3.5 bg-[#0f172a] hover:bg-[#1e293b] text-white font-bold text-xs uppercase tracking-widest rounded-full transition-all cursor-pointer border border-[#00e5ff]/30 shadow-sm inline-flex items-center gap-2"
           >
             <span>Start Your Session Today</span>
-            <span className="text-xs">›</span>
+            <span className="text-xs text-[#00e5ff]">›</span>
           </button>
         </div>
-
       </div>
     </section>
   );

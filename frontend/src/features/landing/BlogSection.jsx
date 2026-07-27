@@ -139,44 +139,27 @@ const BlogSection = () => {
               {/* Content Body */}
               <div className="p-6 sm:p-7 flex-1 flex flex-col justify-between space-y-6">
                 <div className="space-y-3">
-                  <h3 className="text-lg font-bold text-[#1c1514] group-hover:text-[#2b211e] transition-colors line-clamp-2 leading-snug font-sans uppercase">
+                  <h3 className="text-lg font-bold text-[#0f172a] group-hover:text-[#00e5ff] transition-colors line-clamp-2 leading-snug font-sans uppercase">
                     {post.title}
                   </h3>
-                  <p className="text-xs text-[#6e635e] line-clamp-3 leading-relaxed font-normal">
+                  <p className="text-xs text-surface-600 line-clamp-3 leading-relaxed font-normal">
                     {post.excerpt}
                   </p>
                 </div>
 
-                {/* Author Info & Read Action */}
-                <div className="pt-4 border-t border-[#d6cecb] flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-8 h-8 rounded-full bg-[#eae4dc] border border-[#d8d0c7] flex items-center justify-center text-[#1c1514] font-bold text-xs overflow-hidden shrink-0">
-                      {post.author?.avatar ? (
-                        <img src={post.author.avatar} alt={post.author.name} className="w-full h-full object-cover" />
-                      ) : (
-                        <span>{(post.author?.name || 'B')[0]}</span>
-                      )}
-                    </div>
-                    <div className="min-w-0">
-                      <h4 className="text-xs font-bold text-[#1c1514] truncate">
-                        {post.author?.name || 'Editorial Team'}
-                      </h4>
-                      <p className="text-[10px] text-[#7c7069] font-normal truncate">
-                        {post.author?.role || 'Senior Mentor'}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="shrink-0 text-xs font-bold uppercase tracking-widest text-[#2b211e] group-hover:underline">
-                    Read ›
-                  </div>
+                {/* Card Footer */}
+                <div className="pt-4 border-t border-surface-100 flex items-center justify-between">
+                  <span className="text-xs font-bold text-[#0f172a] group-hover:text-[#00e5ff] transition-colors flex items-center gap-1">
+                    Read Article →
+                  </span>
+                  <span className="text-[11px] text-surface-500">{post.author?.name || 'Editorial Team'}</span>
                 </div>
               </div>
             </article>
           ))}
         </div>
 
-        {/* Pagination Bar */}
+        {/* Pagination (>=768px) */}
         {totalPages > 1 && (
           <div className="hidden md:flex items-center justify-center gap-2 pt-12">
             <button
@@ -184,8 +167,8 @@ const BlogSection = () => {
               disabled={currentPage === 1}
               aria-label="Previous Page"
               className={`w-8 h-8 rounded-full text-sm font-bold transition-all cursor-pointer border flex items-center justify-center ${currentPage === 1
-                ? 'border-[#d8d0c7] text-[#a39891] bg-[#ebe5df] cursor-not-allowed'
-                : 'border-[#2b211e] bg-[#2b211e] text-[#f7f4ef] hover:bg-[#1c1514]'
+                ? 'border-surface-200 text-surface-400 bg-surface-100 cursor-not-allowed'
+                : 'border-[#0f172a] bg-[#0f172a] text-white hover:bg-[#1e293b]'
                 }`}
             >
               ‹
@@ -196,8 +179,8 @@ const BlogSection = () => {
                 key={num}
                 onClick={() => setCurrentPage(num)}
                 className={`w-8 h-8 rounded-full text-xs font-bold transition-all cursor-pointer border flex items-center justify-center ${currentPage === num
-                  ? 'bg-[#2b211e] text-[#f7f4ef] border-[#2b211e] shadow-xs'
-                  : 'bg-white text-[#2b211e] border-[#d8d0c7] hover:border-[#1c1514]'
+                  ? 'bg-[#0f172a] text-white border-[#00e5ff] shadow-xs'
+                  : 'bg-white text-[#0f172a] border-surface-200 hover:border-[#00e5ff]'
                   }`}
               >
                 {num}
@@ -209,8 +192,8 @@ const BlogSection = () => {
               disabled={currentPage === totalPages}
               aria-label="Next Page"
               className={`w-8 h-8 rounded-full text-sm font-bold transition-all cursor-pointer border flex items-center justify-center ${currentPage === totalPages
-                ? 'border-[#d8d0c7] text-[#a39891] bg-[#ebe5df] cursor-not-allowed'
-                : 'border-[#2b211e] bg-[#2b211e] text-[#f7f4ef] hover:bg-[#1c1514]'
+                ? 'border-surface-200 text-surface-400 bg-surface-100 cursor-not-allowed'
+                : 'border-[#0f172a] bg-[#0f172a] text-white hover:bg-[#1e293b]'
                 }`}
             >
               ›
