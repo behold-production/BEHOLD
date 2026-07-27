@@ -33,7 +33,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
       </div>
 
       {/* Hero Content Overlay */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-8 sm:pt-32 sm:pb-16 flex flex-col justify-between min-h-dvh sm:min-h-screen">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-8 sm:pt-32 sm:pb-16 flex flex-col justify-end md:justify-between space-y-6 md:space-y-0 min-h-dvh sm:min-h-screen">
         
         {/* Top & Statement Headline Box */}
         <div className="max-w-5xl space-y-2 sm:space-y-4 pt-2 sm:pt-0">
@@ -53,7 +53,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
         </div>
 
         {/* Subtitle & Action Button */}
-        <div className="pt-4 sm:pt-16 flex justify-start lg:justify-end pb-2 sm:pb-0">
+        <div className="pt-2 md:pt-16 flex justify-start lg:justify-end pb-2 sm:pb-0">
           <div className="flex flex-col items-start lg:items-end text-left lg:text-right space-y-3 sm:space-y-4 max-w-md">
             <p className="text-xs sm:text-sm text-white/90 font-medium leading-relaxed drop-shadow-sm max-w-xs sm:max-w-sm">
               {displaySubtitle}
