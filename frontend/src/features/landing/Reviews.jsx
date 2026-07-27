@@ -70,31 +70,31 @@ function Stars({ count = 5, total = 5, interactive = false, onSelect }) {
 function ReviewCard({ review }) {
   const initial = (review.name || '?')[0].toUpperCase();
   return (
-    <div className="bg-white rounded-2xl border border-[#d6cecb] shadow-xs hover:shadow-md transition-shadow flex flex-col justify-between h-full p-6 sm:p-7 w-full">
+    <div className="bg-white rounded-2xl border border-surface-200 hover:border-[#00e5ff] shadow-xs hover:shadow-md transition-all flex flex-col justify-between h-full p-6 sm:p-7 w-full group">
       <div className="flex-1 flex flex-col justify-between">
         {/* Stars */}
         <div className="flex gap-1 mb-4">
           {Array.from({ length: 5 }).map((_, i) => (
-            <svg key={i} className={`w-4 h-4 fill-current ${i < (review.rating || 5) ? 'text-amber-400' : 'text-gray-200'}`} viewBox="0 0 24 24">
+            <svg key={i} className={`w-4 h-4 fill-current ${i < (review.rating || 5) ? 'text-amber-400' : 'text-surface-200'}`} viewBox="0 0 24 24">
               <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
             </svg>
           ))}
         </div>
 
         {/* Quote */}
-        <p className="text-[#3a312d] text-sm leading-relaxed mb-6 font-normal">
+        <p className="text-surface-700 text-sm leading-relaxed mb-6 font-normal">
           &ldquo;{review.comment || review.text}&rdquo;
         </p>
       </div>
 
       {/* Author */}
-      <div className="flex items-center gap-3 pt-4 border-t border-[#eae4dc]">
-        <div className="w-9 h-9 bg-[#1c1514] text-[#f7f4ef] font-sans font-bold rounded-full flex items-center justify-center text-sm shrink-0">
+      <div className="flex items-center gap-3 pt-4 border-t border-surface-100">
+        <div className="w-9 h-9 bg-[#0f172a] text-[#00e5ff] border border-[#00e5ff]/40 font-sans font-bold rounded-full flex items-center justify-center text-sm shrink-0">
           {initial}
         </div>
         <div>
-          <div className="font-bold text-[#1c1514] text-sm leading-tight">{review.name}</div>
-          <div className="text-[#7c7069] text-xs font-normal mt-0.5">{review.role || 'Student'}</div>
+          <div className="font-bold text-[#0f172a] text-sm leading-tight group-hover:text-[#00e5ff] transition-colors">{review.name}</div>
+          <div className="text-surface-500 text-xs font-normal mt-0.5">{review.role || 'Student'}</div>
         </div>
       </div>
     </div>
@@ -280,21 +280,22 @@ export default function Reviews({ siteSettings }) {
   };
 
   return (
-    <section className="py-16 sm:py-24 bg-[#f7f4ef] border-b border-[#e2dad2]">
+    <section className="py-16 sm:py-24 bg-white border-b border-surface-200">
       <div className="max-w-6xl mx-auto">
 
         {/* Header */}
         <div className="text-center mb-10 px-4 sm:px-6 lg:px-8">
-          <span className="text-xs font-bold tracking-widest uppercase text-[#7c7069] block mb-3">
+          <span className="text-xs font-bold tracking-widest uppercase text-[#00e5ff] flex items-center justify-center gap-1.5 mb-3">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_8px_#00e5ff]" />
             Testimonials
           </span>
           <h2
             id="reviews-title"
-            className="text-3xl sm:text-4xl md:text-5xl font-sans font-bold text-[#1c1514] mb-4 tracking-tight leading-tight uppercase"
+            className="text-3xl sm:text-4xl md:text-5xl font-sans font-bold text-[#0f172a] mb-4 tracking-tight leading-tight uppercase"
           >
-            What Our Community Says.
+            What Our Community Says<span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)]">.</span>
           </h2>
-          <p className="text-sm sm:text-base text-[#6e635e] max-w-xl mx-auto leading-relaxed font-normal">
+          <p className="text-sm sm:text-base text-surface-600 max-w-xl mx-auto leading-relaxed font-normal">
             Real stories from students, parents, and professionals who found clarity through BEHOLD.
           </p>
         </div>
@@ -302,7 +303,7 @@ export default function Reviews({ siteSettings }) {
         {/* Paginated Review Cards Grid */}
         {loading ? (
           <div className="flex justify-center py-12">
-            <div className="w-6 h-6 border-2 border-[#2b211e] border-t-transparent rounded-full animate-spin" />
+            <div className="w-6 h-6 border-2 border-[#0f172a] border-t-[#00e5ff] rounded-full animate-spin" />
           </div>
         ) : (
           <div className="px-4 sm:px-6 lg:px-8 space-y-4">
@@ -311,17 +312,17 @@ export default function Reviews({ siteSettings }) {
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => scrollReviews('left')}
-                  className="w-8 h-8 rounded-full bg-[#eae4dc] text-[#1c1514] flex items-center justify-center border border-[#d8d0c7] active:scale-95 transition-all p-0 shadow-2xs"
+                  className="w-8 h-8 rounded-full bg-[#0f172a] text-white flex items-center justify-center border border-[#00e5ff]/30 active:scale-95 transition-all p-0 shadow-2xs"
                   aria-label="Previous Testimonial"
                 >
-                  <ChevronLeft className="w-4 h-4" />
+                  <ChevronLeft className="w-4 h-4 text-[#00e5ff]" />
                 </button>
                 <button
                   onClick={() => scrollReviews('right')}
-                  className="w-8 h-8 rounded-full bg-[#eae4dc] text-[#1c1514] flex items-center justify-center border border-[#d8d0c7] active:scale-95 transition-all p-0 shadow-2xs"
+                  className="w-8 h-8 rounded-full bg-[#0f172a] text-white flex items-center justify-center border border-[#00e5ff]/30 active:scale-95 transition-all p-0 shadow-2xs"
                   aria-label="Next Testimonial"
                 >
-                  <ChevronRight className="w-4 h-4" />
+                  <ChevronRight className="w-4 h-4 text-[#00e5ff]" />
                 </button>
               </div>
             </div>
@@ -350,11 +351,11 @@ export default function Reviews({ siteSettings }) {
                   aria-label="Previous Page"
                   className={`w-9 h-9 rounded-full text-sm font-bold transition-all cursor-pointer border flex items-center justify-center ${
                     currentPage === 1
-                      ? 'border-[#d8d0c7] text-[#a39891] bg-[#ebe5df] cursor-not-allowed'
-                      : 'border-[#2b211e] bg-[#2b211e] text-[#f7f4ef] hover:bg-[#1c1514]'
+                      ? 'border-surface-200 text-surface-400 bg-surface-100 cursor-not-allowed'
+                      : 'border-[#0f172a] bg-[#0f172a] text-white hover:bg-[#1e293b]'
                   }`}
                 >
-                  <ChevronLeft className="w-4 h-4" />
+                  <ChevronLeft className="w-4 h-4 text-[#00e5ff]" />
                 </button>
 
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
@@ -363,8 +364,8 @@ export default function Reviews({ siteSettings }) {
                     onClick={() => setCurrentPage(num)}
                     className={`w-9 h-9 rounded-full text-xs font-bold transition-all cursor-pointer border flex items-center justify-center ${
                       currentPage === num
-                        ? 'bg-[#2b211e] text-[#f7f4ef] border-[#2b211e] shadow-xs'
-                        : 'bg-white text-[#2b211e] border-[#d8d0c7] hover:border-[#1c1514]'
+                        ? 'bg-[#0f172a] text-white border-[#00e5ff] shadow-xs'
+                        : 'bg-white text-[#0f172a] border-surface-200 hover:border-[#00e5ff]'
                     }`}
                   >
                     {num}
@@ -377,11 +378,11 @@ export default function Reviews({ siteSettings }) {
                   aria-label="Next Page"
                   className={`w-9 h-9 rounded-full text-sm font-bold transition-all cursor-pointer border flex items-center justify-center ${
                     currentPage === totalPages
-                      ? 'border-[#d8d0c7] text-[#a39891] bg-[#ebe5df] cursor-not-allowed'
-                      : 'border-[#2b211e] bg-[#2b211e] text-[#f7f4ef] hover:bg-[#1c1514]'
+                      ? 'border-surface-200 text-surface-400 bg-surface-100 cursor-not-allowed'
+                      : 'border-[#0f172a] bg-[#0f172a] text-white hover:bg-[#1e293b]'
                   }`}
                 >
-                  <ChevronRight className="w-4 h-4" />
+                  <ChevronRight className="w-4 h-4 text-[#00e5ff]" />
                 </button>
               </div>
             )}

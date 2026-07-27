@@ -99,21 +99,22 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
           <header
             className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isHomeTop
               ? 'bg-transparent border-b border-transparent text-white'
-              : 'bg-[#f7f4ef]/95 backdrop-blur-md border-b border-[#e2dad2] shadow-xs text-[#1c1514]'
+              : 'bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm text-[#0f172a]'
               }`}
           >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
 
-              {/* Logo - OURA & CO style */}
+              {/* Brand Title Logo */}
               <button
                 onClick={handleLogoClick}
                 className="flex items-center gap-2 text-left bg-transparent border-none cursor-pointer p-0"
               >
                 <span
-                  className={`text-xl sm:text-2xl font-black tracking-tight font-sans uppercase transition-colors ${isHomeTop ? 'text-white' : 'text-[#1c1514]'
+                  className={`text-xl sm:text-2xl font-black tracking-tight font-sans uppercase transition-colors ${isHomeTop ? 'text-white' : 'text-[#0f172a]'
                     }`}
                 >
-                  {(siteName || 'BEHOLD').replace(/\.$/, '')}.
+                  {(siteName || 'BEHOLD').replace(/\.$/, '')}
+                  <span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)] font-black">.</span>
                 </span>
               </button>
 
@@ -127,11 +128,11 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                       onClick={action}
                       className={`text-xs font-bold uppercase tracking-widest transition-colors bg-transparent border-none cursor-pointer p-0 ${isHomeTop
                         ? isActive
-                          ? 'text-white font-extrabold border-b border-white pb-1'
+                          ? 'text-white font-extrabold border-b border-[#00e5ff] pb-1'
                           : 'text-white/80 hover:text-white'
                         : isActive
-                          ? 'text-[#1c1514] font-extrabold border-b border-[#1c1514] pb-1'
-                          : 'text-[#6e635e] hover:text-[#1c1514]'
+                          ? 'text-[#0f172a] font-extrabold border-b border-[#00e5ff] pb-1'
+                          : 'text-slate-600 hover:text-[#0f172a]'
                         }`}
                     >
                       {label}
@@ -140,45 +141,35 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                 })}
               </nav>
 
-              {/* Right Action Buttons */}
+              {/* Desktop Action Buttons */}
               <div className="hidden md:flex items-center gap-3">
                 <button
-                  onClick={() => navigate('/booking')}
-                  className={`px-6 py-2.5 font-bold text-[11px] uppercase tracking-widest rounded-full transition-all shadow-xs border-none cursor-pointer flex items-center gap-1.5 ${isHomeTop
-                    ? 'bg-white hover:bg-[#f7f4ef] text-[#1c1514]'
-                    : 'bg-[#2b211e] hover:bg-[#1c1514] text-[#f7f4ef]'
+                  onClick={() => { navigate('/booking'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                  className={`px-5 py-2.5 font-bold text-xs uppercase tracking-widest rounded-full transition-all shadow-xs cursor-pointer border ${isHomeTop
+                    ? 'bg-white hover:bg-slate-100 text-[#0f172a] border-white'
+                    : 'bg-[#0f172a] hover:bg-[#1e293b] text-white border-[#00e5ff]/30'
                     }`}
                 >
-                  <span>Book Appointment</span>
+                  Book Session
                 </button>
 
                 {user ? (
                   <button
                     onClick={handleProfileClick}
-                    className={`w-9 h-9 rounded-full border text-xs flex items-center justify-center transition-all p-0 overflow-hidden cursor-pointer shrink-0 shadow-xs ${isHomeTop
-                      ? 'border-white/40 bg-white/10 text-white'
-                      : 'border-[#d8d0c7] bg-[#ebe5df] text-[#1c1514]'
+                    className={`px-4 py-2.5 font-bold text-xs uppercase tracking-widest rounded-full transition-all flex items-center gap-2 cursor-pointer border ${isHomeTop
+                      ? 'bg-white/10 hover:bg-white/20 text-white border-white/30 backdrop-blur-md'
+                      : 'bg-slate-100 hover:bg-slate-200 text-[#0f172a] border-slate-200'
                       }`}
-                    title={`${user.name || 'User'} Profile`}
                   >
-                    {(user.profilePic || user.avatar || user.profileImage || user.photoURL || user.image) ? (
-                      <img
-                        src={user.profilePic || user.avatar || user.profileImage || user.photoURL || user.image}
-                        alt={user.name || 'Profile'}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <span className={`font-bold ${isHomeTop ? 'text-white' : 'text-[#1c1514]'}`}>
-                        {(user.name || user.email || 'U').charAt(0).toUpperCase()}
-                      </span>
-                    )}
+                    <User className="w-3.5 h-3.5 text-[#00e5ff]" />
+                    <span>{user.name?.split(' ')[0] || 'Profile'}</span>
                   </button>
                 ) : (
                   <button
-                    onClick={handleProfileClick}
-                    className={`px-4 py-2 border font-bold text-[11px] uppercase tracking-widest rounded-full transition-all cursor-pointer ${isHomeTop
-                      ? 'border-white/40 hover:border-white text-white bg-white/10 hover:bg-white/20'
-                      : 'border-[#d8d0c7] hover:border-[#1c1514] text-[#2b211e] bg-[#f7f4ef]'
+                    onClick={() => onOpenAuth?.()}
+                    className={`px-4 py-2.5 font-bold text-xs uppercase tracking-widest rounded-full transition-all cursor-pointer border ${isHomeTop
+                      ? 'bg-white/10 hover:bg-white/20 text-white border-white/30 backdrop-blur-md'
+                      : 'bg-slate-100 hover:bg-slate-200 text-[#0f172a] border-slate-200'
                       }`}
                   >
                     Sign In
@@ -186,66 +177,50 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                 )}
               </div>
 
-              {/* Mobile Hamburger */}
-              <div className="md:hidden flex items-center gap-2">
-                {user && (
-                  <button
-                    onClick={handleProfileClick}
-                    className={`w-8 h-8 rounded-lg border text-xs flex items-center justify-center transition-all p-0 overflow-hidden cursor-pointer ${isHomeTop ? 'border-white/30 bg-white/10 text-white' : 'border-slate-200 bg-slate-100 text-slate-900'
-                      }`}
-                  >
-                    <span className="font-bold">{(user.name || user.email || 'U').charAt(0).toUpperCase()}</span>
-                  </button>
-                )}
+              {/* Mobile Hamburger Trigger */}
+              <div className="flex items-center gap-2 md:hidden">
                 <button
-                  className={`p-2 rounded-lg transition border-none cursor-pointer bg-transparent ${isHomeTop ? 'text-white hover:bg-white/10' : 'text-slate-700 hover:bg-slate-100'
+                  onClick={() => setMobileMenuOpen(true)}
+                  className={`p-2 rounded-full transition-colors cursor-pointer border-none bg-transparent ${isHomeTop ? 'text-white' : 'text-[#0f172a]'
                     }`}
-                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                  aria-label="Toggle Menu"
+                  aria-label="Open Menu"
                 >
-                  {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                  <Menu className="w-6 h-6" />
                 </button>
               </div>
 
             </div>
 
-            {/* Mobile Side Mount Slide-In Drawer Portal */}
+            {/* Mobile Navigation Sidebar Drawer overlay */}
             {mobileMenuOpen && createPortal(
-              <div className="fixed inset-0 z-[9999] overflow-hidden">
-                {/* Backdrop Blur Overlay */}
+              <div className="fixed inset-0 z-[9999]">
                 <div
+                  className="fixed inset-0 bg-[#0f172a]/60 backdrop-blur-xs transition-opacity animate-in fade-in duration-300"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="fixed inset-0 bg-black/75 backdrop-blur-sm transition-opacity duration-300"
                 />
 
-                {/* Opaque Side Mount Drawer Panel */}
-                <div className="fixed inset-y-0 right-0 z-[10000] w-80 max-w-[85vw] bg-[#f7f4ef] text-[#1c1514] shadow-2xl flex flex-col justify-between p-6 sm:p-8 border-l border-[#d6cecb] animate-in slide-in-from-right duration-300 overflow-y-auto">
+                <div className="fixed inset-y-0 right-0 z-[10000] w-80 max-w-[85vw] bg-white text-[#0f172a] shadow-2xl flex flex-col justify-between p-6 sm:p-8 border-l border-slate-200 animate-in slide-in-from-right duration-300 overflow-y-auto">
                   
-                  {/* Drawer Top Header */}
                   <div>
-                    <div className="flex items-center justify-between pb-6 border-b border-[#d6cecb] mb-6">
-                      <span className="text-xl font-black tracking-tight font-sans uppercase text-[#1c1514]">
-                        {(siteName || 'BEHOLD').replace(/\.$/, '')}.
+                    <div className="flex items-center justify-between pb-6 border-b border-slate-200 mb-6">
+                      <span className="text-xl font-black tracking-tight font-sans uppercase text-[#0f172a]">
+                        {(siteName || 'BEHOLD').replace(/\.$/, '')}
+                        <span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)] font-black">.</span>
                       </span>
                       <button
                         onClick={() => setMobileMenuOpen(false)}
-                        className="w-9 h-9 rounded-full bg-[#eae4dc] hover:bg-[#e2dad2] text-[#1c1514] flex items-center justify-center cursor-pointer border border-[#d8d0c7] transition-all p-0"
-                        aria-label="Close Menu"
+                        className="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-[#0f172a] flex items-center justify-center cursor-pointer border border-slate-200 transition-all p-0"
                       >
                         <X className="w-5 h-5" />
                       </button>
                     </div>
 
-                    {/* Navigation Links List */}
                     <div className="flex flex-col gap-4">
                       {navLinks.map(({ label, action }) => (
                         <button
                           key={label}
-                          onClick={() => {
-                            action();
-                            setMobileMenuOpen(false);
-                          }}
-                          className="text-left py-2.5 text-sm font-bold uppercase tracking-widest text-[#1c1514] hover:text-[#7c7069] transition-colors bg-transparent border-b border-[#eae4dc] cursor-pointer"
+                          onClick={() => { action(); setMobileMenuOpen(false); }}
+                          className="text-left py-2.5 text-sm font-bold uppercase tracking-widest text-[#0f172a] hover:text-[#00e5ff] transition-colors bg-transparent border-b border-slate-100 cursor-pointer"
                         >
                           {label}
                         </button>
@@ -253,13 +228,12 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                     </div>
                   </div>
 
-                  {/* Drawer Footer Actions */}
-                  <div className="pt-6 border-t border-[#d6cecb] flex flex-col gap-3">
+                  <div className="pt-6 border-t border-slate-200 flex flex-col gap-3">
                     <button
-                      onClick={() => { setMobileMenuOpen(false); navigate('/booking'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                      className="w-full py-3 bg-[#2b211e] hover:bg-[#1c1514] text-[#f7f4ef] font-bold text-xs uppercase tracking-widest rounded-full transition-all border-none cursor-pointer shadow-xs text-center"
+                      onClick={() => { setMobileMenuOpen(false); navigate('/booking'); }}
+                      className="w-full py-3 bg-[#0f172a] hover:bg-[#1e293b] text-white font-bold text-xs uppercase tracking-widest rounded-full transition-all border border-[#00e5ff]/30 cursor-pointer shadow-xs text-center"
                     >
-                      Book Appointment
+                      Book Session
                     </button>
                     {user ? (
                       <button
