@@ -63,7 +63,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
           </span>
 
           {/* Multi-Line Uppercase Typography */}
-          <h1 className="text-[32px] xs:text-[38px] sm:text-5xl md:text-6xl lg:text-6xl xl:text-6xl font-climate uppercase text-white tracking-wide leading-[0.98] sm:leading-[1.05] drop-shadow-lg">
+          <h1 className="text-[32px] xs:text-[38px] sm:text-5xl md:text-6xl lg:text-6xl xl:text-6xl font-sans font-black uppercase text-white tracking-tight leading-[0.98] sm:leading-[1.05] drop-shadow-lg">
             {renderTitle(rawTitle)}
           </h1>
         </div>

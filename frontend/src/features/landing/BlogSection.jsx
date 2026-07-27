@@ -61,23 +61,24 @@ const BlogSection = () => {
   const paginatedBlogs = blogs.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
-    <section id="blog" className="py-16 sm:py-24 bg-[#f7f4ef] border-b border-[#e2dad2]">
+    <section id="blog" className="py-16 sm:py-24 bg-white border-b border-surface-200">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Header */}
         <div className="text-center mb-10">
-          <span className="text-xs font-bold tracking-widest uppercase text-[#7c7069] block mb-3">
+          <span className="text-xs font-bold tracking-widest uppercase text-[#00e5ff] flex items-center justify-center gap-1.5 mb-3">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_8px_#00e5ff]" />
             Latest Insights
           </span>
-          <h2 id="blog-title" className="text-3xl sm:text-4xl md:text-5xl font-sans font-bold text-[#1c1514] mb-4 tracking-tight leading-tight uppercase">
-            Guidance for Your Journey.
+          <h2 id="blog-title" className="text-3xl sm:text-4xl md:text-5xl font-sans font-black text-[#0f172a] mb-4 tracking-tight leading-tight uppercase">
+            Guidance for Your Journey<span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)] font-black">.</span>
           </h2>
-          <p className="text-sm sm:text-base text-[#6e635e] max-w-xl mx-auto leading-relaxed font-normal mb-6">
+          <p className="text-sm sm:text-base text-surface-600 max-w-xl mx-auto leading-relaxed font-normal mb-6">
             Research-backed articles, student guides, and mental health resources from our clinical team.
           </p>
           <button
             onClick={handleOpenAllBlogs}
-            className="px-6 py-2.5 bg-[#2b211e] hover:bg-[#1c1514] text-[#f7f4ef] font-bold text-xs uppercase tracking-widest rounded-full transition-all shadow-xs border-none cursor-pointer"
+            className="px-6 py-2.5 bg-[#0f172a] hover:bg-[#1e293b] text-white font-bold text-xs uppercase tracking-widest rounded-full transition-all border border-[#00e5ff]/30 cursor-pointer shadow-xs"
           >
             Explore All Articles
           </button>
@@ -88,17 +89,17 @@ const BlogSection = () => {
           <div className="flex items-center gap-2">
             <button
               onClick={() => scrollBlogs('left')}
-              className="w-8 h-8 rounded-full bg-[#eae4dc] text-[#1c1514] flex items-center justify-center border border-[#d8d0c7] active:scale-95 transition-all p-0 shadow-2xs"
+              className="w-8 h-8 rounded-full bg-[#0f172a] text-white flex items-center justify-center border border-[#00e5ff]/30 active:scale-95 transition-all p-0 shadow-2xs"
               aria-label="Previous Article"
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft className="w-4 h-4 text-[#00e5ff]" />
             </button>
             <button
               onClick={() => scrollBlogs('right')}
-              className="w-8 h-8 rounded-full bg-[#eae4dc] text-[#1c1514] flex items-center justify-center border border-[#d8d0c7] active:scale-95 transition-all p-0 shadow-2xs"
+              className="w-8 h-8 rounded-full bg-[#0f172a] text-white flex items-center justify-center border border-[#00e5ff]/30 active:scale-95 transition-all p-0 shadow-2xs"
               aria-label="Next Article"
             >
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="w-4 h-4 text-[#00e5ff]" />
             </button>
           </div>
         </div>
@@ -113,25 +114,25 @@ const BlogSection = () => {
             <article
               key={post._id || post.slug}
               onClick={() => handleOpenBlog(post.slug)}
-              className="group relative bg-white border border-[#d6cecb] hover:border-[#2b211e] rounded-xl overflow-hidden transition-all duration-300 flex flex-col cursor-pointer shadow-xs hover:shadow-md h-full shrink-0 w-full snap-start snap-always md:w-auto md:max-w-none"
+              className="group relative bg-white border border-surface-200 hover:border-[#00e5ff] rounded-2xl overflow-hidden transition-all duration-300 flex flex-col cursor-pointer shadow-xs hover:shadow-md h-full shrink-0 w-full snap-start snap-always md:w-auto md:max-w-none"
             >
               {/* Cover Image Container */}
-              <div className="relative h-56 w-full overflow-hidden bg-[#eae4dc] shrink-0">
+              <div className="relative h-56 w-full overflow-hidden bg-surface-100 shrink-0">
                 <img
                   src={post.coverImage || 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&auto=format&fit=crop&q=80'}
                   alt={post.title}
-                  className="w-full h-full object-cover transition-transform duration-500"
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#1c1514]/40 to-transparent opacity-40 group-hover:opacity-20 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a]/50 to-transparent opacity-50 group-hover:opacity-30 transition-opacity duration-300" />
 
                 {/* Category Badge */}
-                <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-white/95 backdrop-blur-sm text-[#1c1514] text-[10px] font-bold tracking-wider uppercase border border-[#d8d0c7]">
+                <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-white/95 backdrop-blur-sm text-[#0f172a] text-[10px] font-bold tracking-wider uppercase border border-surface-200">
                   {post.category || 'Career Guidance'}
                 </span>
 
                 {/* Read Time */}
-                <div className="absolute bottom-4 right-4 flex items-center gap-1 text-[10px] font-semibold text-[#1c1514] bg-white/95 backdrop-blur-sm px-3 py-1 rounded-full border border-[#d8d0c7] uppercase">
-                  <Clock className="w-3 h-3 text-[#7c7069]" />
+                <div className="absolute bottom-4 right-4 flex items-center gap-1 text-[10px] font-semibold text-[#0f172a] bg-white/95 backdrop-blur-sm px-3 py-1 rounded-full border border-surface-200 uppercase">
+                  <Clock className="w-3 h-3 text-[#00e5ff]" />
                   <span>{post.readTime || '5 min read'}</span>
                 </div>
               </div>
