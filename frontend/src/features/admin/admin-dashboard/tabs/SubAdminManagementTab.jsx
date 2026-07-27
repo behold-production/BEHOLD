@@ -14,7 +14,8 @@ export default function SubAdminManagementTab(props) {
     PRIVILEGE_MODULES = [],
     showAlert,
     showConfirm,
-    isDbLoading = false
+    isDbLoading = false,
+    isRegistering = false
   } = props;
 
   const [activeRoleTab, setActiveRoleTab] = useState('roles');
