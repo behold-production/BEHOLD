@@ -132,6 +132,14 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
     useEffect(() => {
         setAdvisorPage(1);
     }, [selectedDate, bookingMode, bookingService]);
+
+    useEffect(() => {
+        const consoleEl = document.getElementById('booking-console');
+        if (consoleEl) {
+            consoleEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }, [bookingStep]);
+
     const [clientSearchResults, setClientSearchResults] = useState([]);
     const [isClientSearching, setIsClientSearching] = useState(false);
     const [isClientLocating, setIsClientLocating] = useState(false);

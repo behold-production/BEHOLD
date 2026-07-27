@@ -720,6 +720,14 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     }
     setBookingStep(newStep);
     window.history.pushState({ component: 'booking', step: newStep }, '');
+    setTimeout(() => {
+      const consoleEl = document.getElementById('booking-console');
+      if (consoleEl) {
+        consoleEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }, 50);
   };
 
   // Autofill form from Auth user
