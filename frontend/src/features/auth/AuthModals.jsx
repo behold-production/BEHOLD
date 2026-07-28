@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Mail, Lock, User, ArrowRight, Loader2, Eye, EyeOff, KeyRound, CheckCircle2 } from 'lucide-react';
+import { X, Mail, Lock, User, Phone, ArrowRight, Loader2, Eye, EyeOff, KeyRound, CheckCircle2 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../shared/context/AuthContext';
 import ApiService from '../../shared/services/api';
@@ -10,7 +10,7 @@ export default function AuthModals({ isOpen, onClose }) {
  const navigate = useNavigate();
  const location = useLocation();
 
- const [formData, setFormData] = useState({ name: '', email: '', password: '', confirmPassword: '', resetToken: '', newPassword: '' });
+ const [formData, setFormData] = useState({ name: '', phone: '', email: '', password: '', confirmPassword: '', resetToken: '', newPassword: '' });
  const [isLoading, setIsLoading] = useState(false);
  const [showPassword, setShowPassword] = useState(false);
  const [forgotSuccess, setForgotSuccess] = useState(null); // stores { resetToken }
@@ -26,7 +26,7 @@ export default function AuthModals({ isOpen, onClose }) {
  // Reset state when opened/closed
  useEffect(() => {
  if (isOpen) {
- setFormData({ name: '', email: '', password: '', confirmPassword: '', resetToken: '', newPassword: '' });
+ setFormData({ name: '', phone: '', email: '', password: '', confirmPassword: '', resetToken: '', newPassword: '' });
  setMode('login');
  setLoginMethod('email');
  setOtpPhone('');
@@ -124,11 +124,13 @@ export default function AuthModals({ isOpen, onClose }) {
  }
  }
  } else {
- if (!formData.name.trim() || !formData.email.trim() || !formData.password || !formData.confirmPassword) throw new Error('Please fill in all fields');
+ const phoneRegex = /^[6-9]\d{9}$/;
+ if (!formData.name.trim() || !formData.phone.trim() || !formData.email.trim() || !formData.password || !formData.confirmPassword) throw new Error('Please fill in all fields');
+ if (!phoneRegex.test(formData.phone.trim())) throw new Error('Please enter a valid 10-digit phone number');
  if (!emailRegex.test(formData.email)) throw new Error('Please enter a valid email address');
  if (formData.password.length < 6) throw new Error('Password must be at least 6 characters');
  if (formData.password !== formData.confirmPassword) throw new Error('Passwords do not match');
- loggedUser = await register(formData.name, formData.email, formData.password);
+ loggedUser = await register(formData.name, formData.email, formData.password, 'USER', { phone: formData.phone.trim() });
  }
 
  onClose();
@@ -355,6 +357,26 @@ export default function AuthModals({ isOpen, onClose }) {
  onChange={handleInputChange}
  placeholder="John Doe"
  autoComplete="name"
+ className="w-full pl-10 pr-4 py-3 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 focus:bg-white focus:border-brand focus:ring-1 focus:ring-brand outline-none transition-all"
+ />
+ </div>
+ </div>
+ )}
+
+ {/* Phone Number — register only */}
+ {mode === 'register' && (
+ <div className="space-y-1.5">
+ <label className="text-xs font-bold text-zinc-500 block">Phone Number</label>
+ <div className="relative">
+ <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+ <input
+ type="tel"
+ name="phone"
+ value={formData.phone}
+ onChange={handleInputChange}
+ placeholder="10-digit mobile number"
+ autoComplete="tel"
+ maxLength={10}
  className="w-full pl-10 pr-4 py-3 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 focus:bg-white focus:border-brand focus:ring-1 focus:ring-brand outline-none transition-all"
  />
  </div>
