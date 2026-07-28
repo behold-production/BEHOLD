@@ -24,6 +24,7 @@ import {
   MessageSquare,
   FileSpreadsheet,
   HelpCircle,
+  Percent,
   X,
   ChevronRight,
   ChevronLeft,
@@ -582,6 +583,45 @@ export default function PsychologistManagementTab(props) {
     }
   };
 
+  // Quick Share Percentage modal state & handlers
+  const [shareModalTarget, setShareModalTarget] = useState(null);
+  const [sharePercentValue, setSharePercentValue] = useState(50);
+  const [isUpdatingShare, setIsUpdatingShare] = useState(false);
+
+  const handleOpenShareModal = (psy) => {
+    setShareModalTarget(psy);
+    setSharePercentValue(psy.commissionPercent !== undefined ? psy.commissionPercent : 50);
+  };
+
+  const handleSaveSharePercentage = async (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    if (!shareModalTarget) return;
+
+    const val = Number(sharePercentValue);
+    if (isNaN(val) || val < 0 || val > 100) {
+      await showAlert("Please enter a valid share percentage between 0 and 100.");
+      return;
+    }
+
+    setIsUpdatingShare(true);
+    try {
+      await ApiService.updateAdminCounsellor(shareModalTarget.id, {
+        commissionPercent: val,
+      });
+
+      if (typeof reloadData === 'function') {
+        reloadData();
+      }
+
+      import('react-hot-toast').then(m => m.toast.success(`Share percentage updated to ${val}% for ${shareModalTarget.name}!`));
+      setShareModalTarget(null);
+    } catch (err) {
+      await showAlert(err.message || "Failed to update share percentage.");
+    } finally {
+      setIsUpdatingShare(false);
+    }
+  };
+
   return (
     <>
       <div className="space-y-6 animate-in fade-in duration-200 text-sm">
@@ -879,6 +919,16 @@ export default function PsychologistManagementTab(props) {
                             >
                               Details
                             </button>
+                            {canEditPsy && (
+                              <button
+                                onClick={() => handleOpenShareModal(psy)}
+                                className="px-2.5 py-1 bg-cyan-950/40 hover:bg-cyan-900/60 text-cyan-400 rounded border border-cyan-800/60 transition cursor-pointer text-xs font-bold flex items-center gap-1"
+                                title="Change Share Percentage"
+                              >
+                                <Percent className="w-3.5 h-3.5 text-cyan-400" />
+                                <span>{psy.commissionPercent !== undefined ? psy.commissionPercent : 50}%</span>
+                              </button>
+                            )}
                             {canEditPsy && (
                               <button
                                 onClick={() =>
@@ -3078,6 +3128,99 @@ export default function PsychologistManagementTab(props) {
                 Close Profile
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Quick Share Percentage Modal */}
+      {shareModalTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-md p-6 space-y-4 shadow-2xl animate-in zoom-in-95 duration-200">
+            <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
+              <div className="flex items-center gap-2">
+                <Percent className="w-5 h-5 text-cyan-400" />
+                <h3 className="text-base font-bold text-white uppercase tracking-wider">
+                  Set Share Percentage
+                </h3>
+              </div>
+              <button
+                onClick={() => setShareModalTarget(null)}
+                className="text-zinc-400 hover:text-white p-1 rounded-lg bg-zinc-800 border-none cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="space-y-1">
+              <p className="text-xs text-zinc-400">
+                Counsellor: <span className="text-white font-bold">{shareModalTarget.name}</span>
+              </p>
+              <p className="text-xs text-zinc-500">
+                Set the revenue share percentage allocated to this counsellor for bookings.
+              </p>
+            </div>
+
+            <form onSubmit={handleSaveSharePercentage} className="space-y-4 pt-2">
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-zinc-400 block uppercase">
+                  Share Percentage (%)
+                </label>
+                <div className="relative">
+                  <input
+                    type="number"
+                    min={0}
+                    max={100}
+                    step={1}
+                    value={sharePercentValue}
+                    onChange={(e) => setSharePercentValue(e.target.value)}
+                    className="w-full px-4 py-3 bg-zinc-955 border border-zinc-800 rounded-xl text-lg font-bold text-cyan-400 outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition"
+                    placeholder="e.g. 50"
+                    autoFocus
+                  />
+                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 font-bold text-lg">%</span>
+                </div>
+              </div>
+
+              {/* Quick percentage presets */}
+              <div className="flex items-center gap-2 pt-1 flex-wrap">
+                <span className="text-xs text-zinc-500 font-medium">Presets:</span>
+                {[50, 60, 70, 80, 90, 100].map((preset) => (
+                  <button
+                    key={preset}
+                    type="button"
+                    onClick={() => setSharePercentValue(preset)}
+                    className={`px-2.5 py-1 text-xs font-bold rounded-lg border transition cursor-pointer ${
+                      Number(sharePercentValue) === preset
+                        ? 'bg-cyan-500 text-zinc-955 border-cyan-400 font-black'
+                        : 'bg-zinc-800 text-zinc-300 border-zinc-700 hover:bg-zinc-750'
+                    }`}
+                  >
+                    {preset}%
+                  </button>
+                ))}
+              </div>
+
+              <div className="flex items-center gap-3 pt-3">
+                <button
+                  type="button"
+                  onClick={() => setShareModalTarget(null)}
+                  className="flex-1 py-3 bg-zinc-800 hover:bg-zinc-750 text-zinc-300 font-bold text-xs uppercase tracking-wider rounded-xl transition border-none cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isUpdatingShare}
+                  className="flex-1 py-3 bg-cyan-500 hover:bg-cyan-400 text-zinc-955 font-bold text-xs uppercase tracking-wider rounded-xl transition border-none cursor-pointer shadow-md disabled:opacity-60 flex items-center justify-center gap-2"
+                >
+                  {isUpdatingShare ? (
+                    <div className="w-4 h-4 border-2 border-zinc-955 border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <span>Save Share %</span>
+                  )}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

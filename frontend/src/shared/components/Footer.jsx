@@ -68,8 +68,8 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
                 { label: 'Psychological Counselling', action: () => goTo('services') },
                 { label: 'Stream & Degree Selection', action: () => goTo('/booking') },
                 { label: 'Aptitude Mapping', action: () => goTo('/booking') },
-                { label: 'Sample Aptitude Assessment', action: () => goTo('/sample-test') },
-              ].map(({ label, action }) => (
+                settings?.enableSampleTest !== false && { label: 'Sample Aptitude Assessment', action: () => goTo('/sample-test') },
+              ].filter(Boolean).map(({ label, action }) => (
                 <li key={label}>
                   <button
                     onClick={action}

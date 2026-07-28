@@ -657,7 +657,7 @@ export default function App() {
 
           {/* Aptitude Test */}
           <Route path="/aptitude" element={<AptitudeLanding />} />
-          {siteSettings.enableAptitude !== false && (
+          {siteSettings.enableAptitude !== false && siteSettings.enableSampleTest !== false && (
             <Route path="/sample-test" element={
               <AptitudeTest onFinishTest={handleFinishTest} />
             } />

@@ -39,101 +39,105 @@ export default function RevenueTab(props) {
  return 50;
  });
 
- const [isLoadingSettings, setIsLoadingSettings] = useState(true);
- const [searchQuery, setSearchQuery] = useState('');
- const [serviceFilter, setServiceFilter] = useState('ALL');
- const [paymentStatusFilter, setPaymentStatusFilter] = useState('ALL');
- const [page, setPage] = useState(1);
- const [limit, setLimit] = useState(10);
+  const effectiveSplitPercent = profile?.commissionPercent !== undefined
+    ? Number(profile.commissionPercent)
+    : splitPercent;
 
- useEffect(() => {
- let active = true;
- const fetchLatestSettings = async () => {
- try {
- const res = await ApiService.getSettings();
- if (res.success && res.data && active) {
- const fetchedPercent = res.data.counsellorSplitPercent !== undefined
- ? Number(res.data.counsellorSplitPercent)
- : 50;
- setSplitPercent(fetchedPercent);
- localStorage.setItem('behold_site_settings', JSON.stringify(res.data));
- }
- } catch (err) {
- console.error("Failed to fetch settings in RevenueTab", err);
- } finally {
- if (active) setIsLoadingSettings(false);
- }
- };
- fetchLatestSettings();
- return () => {
- active = false;
- };
- }, []);
+  const [isLoadingSettings, setIsLoadingSettings] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [serviceFilter, setServiceFilter] = useState('ALL');
+  const [paymentStatusFilter, setPaymentStatusFilter] = useState('ALL');
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
 
- // Main Calculations
- const metrics = useMemo(() => {
- let grossEarnings = 0; // Total client payments for paid, completed sessions (net of refunds)
- let netPayoutEarned = 0; // Payout share for completed paid sessions
- let completedPaidCount = 0; // Count of paid completed sessions
- let pendingPayouts = 0; // Payout share for booked sessions (CONFIRMED/APPROVED/PENDING) that are PAID but not completed yet
- let pendingPaidCount = 0;
+  useEffect(() => {
+    let active = true;
+    const fetchLatestSettings = async () => {
+      try {
+        const res = await ApiService.getSettings();
+        if (res.success && res.data && active) {
+          const fetchedPercent = res.data.counsellorSplitPercent !== undefined
+            ? Number(res.data.counsellorSplitPercent)
+            : 50;
+          setSplitPercent(fetchedPercent);
+          localStorage.setItem('behold_site_settings', JSON.stringify(res.data));
+        }
+      } catch (err) {
+        console.error("Failed to fetch settings in RevenueTab", err);
+      } finally {
+        if (active) setIsLoadingSettings(false);
+      }
+    };
+    fetchLatestSettings();
+    return () => {
+      active = false;
+    };
+  }, []);
 
- bookings.forEach(b => {
- const amount = Number(b.amountPaid) || 0;
- if (b.refundStatus === 'REFUNDED') {
- return; // Ignore refunded sessions
- }
+  // Summary Metrics calculations
+  const metrics = useMemo(() => {
+    let grossEarnings = 0; // Total client payments for paid, completed sessions (net of refunds)
+    let netPayoutEarned = 0; // Payout share for completed paid sessions
+    let completedPaidCount = 0; // Count of paid completed sessions
+    let pendingPayouts = 0; // Payout share for booked sessions (CONFIRMED/APPROVED/PENDING) that are PAID but not completed yet
+    let pendingPaidCount = 0;
 
- if (b.paymentStatus === 'PAID') {
- const commPercent = b.commissionPercent !== undefined ? Number(b.commissionPercent) : splitPercent;
- const payoutShare = amount * (commPercent / 100);
+    bookings.forEach(b => {
+      const amount = Number(b.amountPaid) || 0;
+      if (b.refundStatus === 'REFUNDED') {
+        return; // Ignore refunded sessions
+      }
 
- if (b.status === 'COMPLETED') {
- grossEarnings += amount;
- netPayoutEarned += payoutShare;
- completedPaidCount++;
- } else if (b.status === 'CONFIRMED' || b.status === 'APPROVED' || b.status === 'PENDING') {
- pendingPayouts += payoutShare;
- pendingPaidCount++;
- }
- }
- });
+      if (b.paymentStatus === 'PAID') {
+        const commPercent = b.commissionPercent !== undefined ? Number(b.commissionPercent) : effectiveSplitPercent;
+        const payoutShare = amount * (commPercent / 100);
 
- return {
- grossEarnings,
- netPayoutEarned,
- completedPaidCount,
- pendingPayouts,
- pendingPaidCount,
- totalEarnedSessionCount: completedPaidCount
- };
- }, [bookings, splitPercent]);
+        if (b.status === 'COMPLETED') {
+          grossEarnings += amount;
+          netPayoutEarned += payoutShare;
+          completedPaidCount++;
+        } else if (b.status === 'CONFIRMED' || b.status === 'APPROVED' || b.status === 'PENDING') {
+          pendingPayouts += payoutShare;
+          pendingPaidCount++;
+        }
+      }
+    });
 
- // Chart data calculations (Monthly SVG-based chart showing net payout earnings)
- const monthlyChartData = useMemo(() => {
- const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
- const data = months.map(m => ({ month: m, payout: 0, gross: 0 }));
+    return {
+      grossEarnings,
+      netPayoutEarned,
+      completedPaidCount,
+      pendingPayouts,
+      pendingPaidCount,
+      totalEarnedSessionCount: completedPaidCount
+    };
+  }, [bookings, effectiveSplitPercent]);
 
- bookings.forEach(b => {
- if (b.paymentStatus === 'PAID' && b.refundStatus !== 'REFUNDED' && b.date) {
- const parts = b.date.split('-');
- if (parts.length === 3) {
- const monthIndex = parseInt(parts[1]) - 1;
- if (monthIndex >= 0 && monthIndex < 12) {
- const val = Number(b.amountPaid) || 0;
- const commPercent = b.commissionPercent !== undefined ? Number(b.commissionPercent) : splitPercent;
- const payoutShare = val * (commPercent / 100);
- data[monthIndex].payout += payoutShare;
- data[monthIndex].gross += val;
- }
- }
- }
- });
+  // Chart data calculations (Monthly SVG-based chart showing net payout earnings)
+  const monthlyChartData = useMemo(() => {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const data = months.map(m => ({ month: m, payout: 0, gross: 0 }));
 
- // Find max value to scale the SVG chart
- const maxVal = Math.max(...data.map(d => d.gross), 1000);
- return { data, maxVal };
- }, [bookings, splitPercent]);
+    bookings.forEach(b => {
+      if (b.paymentStatus === 'PAID' && b.refundStatus !== 'REFUNDED' && b.date) {
+        const parts = b.date.split('-');
+        if (parts.length === 3) {
+          const monthIndex = parseInt(parts[1]) - 1;
+          if (monthIndex >= 0 && monthIndex < 12) {
+            const val = Number(b.amountPaid) || 0;
+            const commPercent = b.commissionPercent !== undefined ? Number(b.commissionPercent) : effectiveSplitPercent;
+            const payoutShare = val * (commPercent / 100);
+            data[monthIndex].payout += payoutShare;
+            data[monthIndex].gross += val;
+          }
+        }
+      }
+    });
+
+    // Find max value to scale the SVG chart
+    const maxVal = Math.max(...data.map(d => d.gross), 1000);
+    return { data, maxVal };
+  }, [bookings, effectiveSplitPercent]);
 
  // Filtering
  const filteredBookings = useMemo(() => {
@@ -234,27 +238,27 @@ export default function RevenueTab(props) {
  <h3 className="text-sm font-bold text-white font-header">Revenue Console</h3>
  <p className="text-xs text-zinc-500 font-medium pt-1">Track your consultant earnings, service volume metrics, and check linked bank routing accounts</p>
  </div>
- <div className="flex items-center gap-2">
- <span className="text-xs bg-emerald-950/40 border border-emerald-900/50 text-emerald-400 px-3 py-1.5 rounded-[10px] font-bold flex items-center gap-1.5">
- <Wallet className="w-3.5 h-3.5 text-emerald-400" />
- Allocated Share: {profile.commissionPercent !== undefined ? profile.commissionPercent : splitPercent}%
- </span>
- </div>
- </div>
-
- {/* Admin Payment Collection Notice */}
- <div className="bg-zinc-900/60 border border-zinc-800 rounded-xl p-4 flex items-start gap-3 text-xs leading-relaxed shadow-sm">
-   <div className="p-2 bg-brand/10 border border-brand/20 rounded-lg text-brand shrink-0">
-     <Building className="w-4 h-4" />
-   </div>
-   <div className="space-y-1">
-     <h4 className="font-bold text-white text-xs">Platform Payment Collection & Allocation</h4>
-     <p className="text-zinc-400">
-       All client payments are collected centrally into the Admin Razorpay Account. Your allocated commission share of 
-       <strong className="text-brand font-semibold"> {profile.commissionPercent !== undefined ? profile.commissionPercent : splitPercent}%</strong> is automatically calculated on every paid session and displayed below.
-     </p>
-   </div>
- </div>
+  <div className="flex items-center gap-2">
+  <span className="text-xs bg-emerald-950/40 border border-emerald-900/50 text-emerald-400 px-3 py-1.5 rounded-[10px] font-bold flex items-center gap-1.5">
+  <Wallet className="w-3.5 h-3.5 text-emerald-400" />
+  Allocated Share: {effectiveSplitPercent}%
+  </span>
+  </div>
+  </div>
+ 
+  {/* Admin Payment Collection Notice */}
+  <div className="bg-zinc-900/60 border border-zinc-800 rounded-xl p-4 flex items-start gap-3 text-xs leading-relaxed shadow-sm">
+    <div className="p-2 bg-brand/10 border border-brand/20 rounded-lg text-brand shrink-0">
+      <Building className="w-4 h-4" />
+    </div>
+    <div className="space-y-1">
+      <h4 className="font-bold text-white text-xs">Platform Payment Collection & Allocation</h4>
+      <p className="text-zinc-400">
+        All client payments are collected centrally into the Admin Razorpay Account. Your allocated commission share of 
+        <strong className="text-brand font-semibold"> {effectiveSplitPercent}%</strong> is automatically calculated on every paid session and displayed below.
+      </p>
+    </div>
+  </div>
 
  {/* Metrics Cards */}
  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

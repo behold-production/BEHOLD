@@ -22,10 +22,11 @@ const OverviewTab = ({ profile, bookings, isSessionCompleted, setCurrentSection 
 
  const siteSettings = JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
  const defaultSplit = siteSettings.counsellorSplitPercent !== undefined ? Number(siteSettings.counsellorSplitPercent) : 50;
+ const activeCommissionPercent = profile?.commissionPercent !== undefined ? Number(profile.commissionPercent) : defaultSplit;
 
  const completedPaidBookings = bookings.filter(b => isSessionCompleted(b) && b.paymentStatus === 'PAID');
  const completedEarnings = completedPaidBookings.reduce((acc, b) => {
- const commPercent = b.commissionPercent !== undefined ? Number(b.commissionPercent) : defaultSplit;
+ const commPercent = b.commissionPercent !== undefined ? Number(b.commissionPercent) : activeCommissionPercent;
  return acc + (Number(b.amountPaid || 0) * (commPercent / 100));
  }, 0);
 
@@ -35,7 +36,7 @@ const OverviewTab = ({ profile, bookings, isSessionCompleted, setCurrentSection 
  b.paymentStatus === 'PAID'
  );
  const pendingPayouts = pendingPaidBookings.reduce((acc, b) => {
- const commPercent = b.commissionPercent !== undefined ? Number(b.commissionPercent) : defaultSplit;
+ const commPercent = b.commissionPercent !== undefined ? Number(b.commissionPercent) : activeCommissionPercent;
  return acc + (Number(b.amountPaid || 0) * (commPercent / 100));
  }, 0);
 
@@ -133,7 +134,7 @@ const OverviewTab = ({ profile, bookings, isSessionCompleted, setCurrentSection 
  style={shadowStyle}
  >
  <div className="space-y-2">
- <span className="text-xs bg-emerald-950/50 border border-emerald-900/50 text-emerald-400 px-2 py-0.5 rounded font-bold ">Earnings & Payouts (({profile.commissionPercent !== undefined ? profile.commissionPercent : defaultSplit}% Split))</span>
+ <span className="text-xs bg-emerald-950/50 border border-emerald-900/50 text-emerald-400 px-2 py-0.5 rounded font-bold ">Earnings & Payouts ({activeCommissionPercent}% Share)</span>
  <div className="space-y-1.5 pt-2">
  <div className="flex justify-between font-bold text-zinc-400">
  <span>Completed Earnings</span>

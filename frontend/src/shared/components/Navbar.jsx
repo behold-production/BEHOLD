@@ -103,10 +103,10 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
   const navLinks = [
     { label: 'Home', action: () => goTo('home'), sectionId: 'home', path: '/' },
     { label: 'Services', action: () => goTo('services'), sectionId: 'services', path: '/booking' },
-    { label: 'Sample Test', action: () => goTo('/sample-test'), sectionId: 'sample-test', path: '/sample-test' },
+    siteSettings?.enableSampleTest !== false && { label: 'Sample Test', action: () => goTo('/sample-test'), sectionId: 'sample-test', path: '/sample-test' },
     { label: 'Blog', action: () => goTo('/blog'), sectionId: 'blog', path: '/blog' },
     { label: 'Contact', action: () => goTo('contact'), sectionId: 'contact', path: '#contact' },
-  ];
+  ].filter(Boolean);
 
   return (
     <>
