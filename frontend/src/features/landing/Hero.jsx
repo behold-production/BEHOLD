@@ -70,7 +70,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
         <img
           src={heroBg}
           alt="Luxury Editorial Interior"
-          className="w-full h-full object-cover opacity-85 filter brightness-90 contrast-105"
+          className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[#0f172a]/70 via-[#0f172a]/40 to-[#0f172a]/60" />
       </div>
