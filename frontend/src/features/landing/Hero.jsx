@@ -25,9 +25,9 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
                 <span
                   key={partIdx}
                   style={{ fontFamily: "'Climate Crisis', sans-serif" }}
-                  className="font-climate uppercase text-[#00e5ff] drop-shadow-[0_0_12px_rgba(0,229,255,0.8)]"
+                  className="font-climate text-[#00e5ff] drop-shadow-[0_0_12px_rgba(0,229,255,0.8)]"
                 >
-                  {innerText.toUpperCase()}
+                  {innerText.toLowerCase()}
                 </span>
               );
             }
@@ -35,9 +35,9 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
               <span
                 key={partIdx}
                 style={{ fontFamily: "'Climate Crisis', sans-serif" }}
-                className="font-climate uppercase"
+                className="font-climate"
               >
-                {part.toUpperCase()}
+                {part.toLowerCase()}
               </span>
             );
           })}
@@ -85,8 +85,11 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
           </span>
 
           {/* Multi-Line Uppercase Typography */}
-          <h1 style={{ fontFamily: "'Climate Crisis', sans-serif" }} className="text-[32px] xs:text-[38px] sm:text-5xl md:text-6xl lg:text-6xl xl:text-6xl font-climate uppercase text-white tracking-wide leading-[0.98] sm:leading-[1.05] drop-shadow-lg">
-            {renderTitle(rawTitle)}
+          <h1
+            style={{ fontFamily: "'Climate Crisis', sans-serif" }}
+            className="text-[39px] xs:text-[38px] sm:text-7xl md:text-8xl lg:text-12xl xl:text-12xl font-climate text-white tracking-wide leading-[0.98] sm:leading-[1.05] drop-shadow-lg lowercase"
+          >
+            {renderTitle(rawTitle.toLowerCase())}
           </h1>
         </div>
 
@@ -98,7 +101,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
             </p>
             <button
               onClick={handleBook}
-              className="w-auto inline-flex items-center justify-center gap-2 px-7 py-3 bg-[#00e5ff] hover:bg-[#00cce6] text-[#0f172a] font-black text-xs uppercase tracking-widest rounded-full transition-all shadow-lg border-none cursor-pointer hover:scale-105 active:scale-95"
+              className="w-auto inline-flex items-center justify-center gap-2 px-7 py-3 bg-[#00e5ff] hover:bg-[#00cce6] text-[#0f172a] font-black text-xs tracking-widest rounded-full transition-all shadow-lg border-none cursor-pointer hover:scale-105 active:scale-95"
             >
               <span>{displayBtnText}</span>
             </button>
