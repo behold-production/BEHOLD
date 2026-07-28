@@ -50,7 +50,7 @@ export default function Hero({ setView, navigateToSection, siteSettings }) {
   const displaySubtitle = settings.heroSub || 'A personal development and mentoring ecosystem — combining psychological care, self-discovery, and career guidance to help you grow with confidence and peace of mind.';
 
   const handleBook = () => {
-    window.spaNavigate?.('/booking');
+    window.spaNavigate?.('/book-session');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 

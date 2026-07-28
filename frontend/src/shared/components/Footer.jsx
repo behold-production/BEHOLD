@@ -32,7 +32,7 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
               <span>{(siteName || 'BEHOLD').replace(/\.$/, '')}<span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)] font-black">.</span></span>
             </button>
             <p className="text-surface-300 text-xs sm:text-sm leading-relaxed mb-6 font-normal max-w-sm">
-              Expert career guidance, psychological care, and aptitude assessments for students and individuals.
+              Expert career mentoring and psychological counselling — helping students and individuals grow with clarity and confidence.
             </p>
             <div className="space-y-3 text-xs font-normal">
               {emailAddr && (
@@ -67,9 +67,8 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
                 { label: 'Career Mentoring', action: () => goTo('services') },
                 { label: 'Psychological Counselling', action: () => goTo('services') },
                 { label: 'Stream & Degree Selection', action: () => goTo('/booking') },
-                { label: 'Aptitude Mapping', action: () => goTo('/booking') },
-                settings?.enableSampleTest !== false && { label: 'Sample Aptitude Assessment', action: () => goTo('/sample-test') },
-              ].filter(Boolean).map(({ label, action }) => (
+                { label: 'Book a Session', action: () => goTo('/book-session') },
+              ].map(({ label, action }) => (
                 <li key={label}>
                   <button
                     onClick={action}

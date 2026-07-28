@@ -166,7 +166,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                     Explore All Programs
                   </button>
                   <button
-                    onClick={() => { window.spaNavigate?.('/booking'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                    onClick={() => { window.spaNavigate?.('/book-session'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                     className="px-7 py-3 bg-surface-100 hover:bg-surface-200 text-[#0f172a] font-bold text-xs uppercase tracking-widest rounded-full transition-all border border-surface-200 cursor-pointer"
                   >
                     Book a Session
@@ -222,7 +222,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                     </p>
                   </div>
                   <button
-                    onClick={() => { window.spaNavigate?.('/booking'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                    onClick={() => { window.spaNavigate?.('/book-session'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                     className="w-full py-2 bg-[#00e5ff] hover:bg-[#00cce6] text-[#0f172a] font-bold text-[10px] sm:text-xs uppercase tracking-widest rounded-full transition-all cursor-pointer border-none shadow-2xs text-center"
                   >
                     Book a Session
@@ -404,7 +404,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                       {/* Actions */}
                       <div className="flex items-center gap-2.5 pt-4 border-t border-surface-100">
                         <button
-                          onClick={() => { if (onBookTherapist) onBookTherapist(advisor.id); else window.spaNavigate('/booking'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                          onClick={() => { if (onBookTherapist) onBookTherapist(advisor.id); else window.spaNavigate('/book-session'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                           className="flex-1 py-3 bg-[#0f172a] hover:bg-[#1e293b] text-white font-bold text-xs uppercase tracking-widest rounded-full border border-[#00e5ff]/30 transition-all cursor-pointer text-center shadow-xs"
                         >
                           Book Now

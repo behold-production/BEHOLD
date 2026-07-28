@@ -414,15 +414,8 @@ export default function App() {
 
   const handleBookTherapist = (advisorId) => {
     setBookingAdvisor(advisorId);
-    if (location.pathname !== '/booking') {
-      navigate('/booking');
-    }
-    setTimeout(() => {
-      const bookingEl = document.getElementById('booking-console');
-      if (bookingEl) {
-        bookingEl.scrollIntoView({ behavior: 'smooth' });
-      }
-    }, 100);
+    navigate('/book-session');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleFinishTest = async (dominantDomain, scores) => {
@@ -655,21 +648,20 @@ export default function App() {
           <Route path="/blog/:slug" element={<BlogPostDetail />} />
           <Route path="/faqs" element={<FaqsPage />} />
 
-          {/* Aptitude Test */}
-          <Route path="/aptitude" element={<AptitudeLanding />} />
-          {siteSettings.enableAptitude !== false && siteSettings.enableSampleTest !== false && (
-            <Route path="/sample-test" element={
-              <AptitudeTest onFinishTest={handleFinishTest} />
-            } />
-          )}
+          {/* Redirect old aptitude/sample-test URLs gracefully */}
+          <Route path="/aptitude" element={<Navigate to="/booking" replace />} />
+          <Route path="/sample-test" element={<Navigate to="/booking" replace />} />
 
-          {/* Dedicated Services & Booking Page */}
+          {/* Services Page — Career Mentoring + Psychological Counselling + Expert Listing */}
           <Route path="/booking" element={
             <main className="fade-in-up pt-16 sm:pt-20 bg-white">
               <Services setView={() => { }} onBookTherapist={handleBookTherapist} siteSettings={siteSettings} />
-              {siteSettings.enableAptitude !== false && (
-                <CdatSection setView={() => { }} siteSettings={siteSettings} />
-              )}
+            </main>
+          } />
+
+          {/* Book Session Page — dedicated booking form */}
+          <Route path="/book-session" element={
+            <main className="fade-in-up pt-16 sm:pt-20 bg-white">
               <ServiceBooking
                 preselectedAdvisorId={bookingAdvisor}
                 clearPreselectedAdvisor={() => setBookingAdvisor(null)}

@@ -103,7 +103,6 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
   const navLinks = [
     { label: 'Home', action: () => goTo('home'), sectionId: 'home', path: '/' },
     { label: 'Services', action: () => goTo('services'), sectionId: 'services', path: '/booking' },
-    siteSettings?.enableSampleTest !== false && { label: 'Sample Test', action: () => goTo('/sample-test'), sectionId: 'sample-test', path: '/sample-test' },
     { label: 'Blog', action: () => goTo('/blog'), sectionId: 'blog', path: '/blog' },
     { label: 'Contact', action: () => goTo('contact'), sectionId: 'contact', path: '#contact' },
   ].filter(Boolean);
@@ -183,7 +182,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
               {/* Desktop Action Buttons */}
               <div className="hidden lg:flex items-center gap-3">
                 <button
-                  onClick={() => { navigate('/booking'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                  onClick={() => { navigate('/book-session'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                   className={`px-5 py-2.5 font-bold text-xs uppercase tracking-widest rounded-full transition-all shadow-xs cursor-pointer border ${isHomeTop
                     ? 'bg-white hover:bg-slate-100 text-[#0f172a] border-white'
                     : 'bg-[#0f172a] hover:bg-[#1e293b] text-white border-[#00e5ff]/30'
@@ -304,7 +303,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                       </button>
                     )}
                     <button
-                      onClick={() => { setMobileMenuOpen(false); navigate('/booking'); }}
+                      onClick={() => { setMobileMenuOpen(false); navigate('/book-session'); }}
                       className={`w-full py-3 font-bold text-xs uppercase tracking-widest rounded-full transition-all cursor-pointer text-center ${user
                         ? 'bg-slate-100 hover:bg-slate-200 text-[#0f172a] border border-slate-200'
                         : 'bg-[#0f172a] hover:bg-[#1e293b] text-white border border-[#00e5ff]/30 shadow-xs'
