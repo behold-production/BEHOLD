@@ -64,7 +64,7 @@ const BookingsTab = ({
       </div>
 
       {/* Tab switcher */}
-      <div className="flex flex-wrap sm:flex-nowrap gap-2 p-1.5 bg-zinc-950 border border-zinc-800 rounded-[10px] max-w-md w-full">
+      <div className="inline-flex flex-wrap items-center gap-1.5 p-1.5 bg-zinc-955 border border-zinc-800 rounded-xl max-w-full overflow-x-auto">
         {[
           { id: 'CONFIRMED', label: 'Confirmed', count: confirmedCount },
           { id: 'COMPLETED', label: 'Completed', count: completedCount },
@@ -77,13 +77,18 @@ const BookingsTab = ({
               key={tab.id}
               type="button"
               onClick={() => setActiveBookingTab(tab.id)}
-              className={`flex-1 min-w-[85px] sm:min-w-0 py-2 px-2 sm:px-3 rounded-[10px] text-xs sm:text-sm font-bold transition-all duration-300 cursor-pointer flex items-center justify-center gap-1 sm:gap-1.5 border ${isActive
-                ? 'bg-brand text-zinc-955 border-brand shadow-sm'
-                : 'bg-transparent border-transparent text-zinc-400 hover:text-white hover:bg-zinc-850/60'
-                }`}
+              className={`px-4 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer flex items-center gap-2 whitespace-nowrap border select-none ${
+                isActive
+                  ? 'bg-brand text-zinc-955 border-brand shadow-sm font-black'
+                  : 'bg-transparent border-transparent text-zinc-400 hover:text-white hover:bg-zinc-855/60'
+              }`}
             >
-              <span>{tab.label}</span>
-              <span className={`px-1.5 py-0.5 rounded text-xs shrink-0 ${isActive ? 'bg-zinc-955 text-brand font-bold' : 'bg-zinc-800 text-zinc-500'}`}>
+              <span className="whitespace-nowrap">{tab.label}</span>
+              <span className={`px-2 py-0.5 rounded-md text-[11px] font-bold shrink-0 transition-colors ${
+                isActive
+                  ? 'bg-zinc-955 text-cyan-400 border border-cyan-400/20 font-black'
+                  : 'bg-zinc-900 text-zinc-400 border border-zinc-800'
+              }`}>
                 {tab.count}
               </span>
             </button>
