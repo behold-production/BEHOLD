@@ -2954,6 +2954,15 @@ export default function PsychologistManagementTab(props) {
                           <span className="font-bold text-brand">₹{price} / hour</span>
                         </div>
                         <div>
+                          <span className="text-zinc-500 block text-xs font-semibold">Revenue Share Allocation</span>
+                          <span className="font-bold text-cyan-400 text-sm block">
+                            {viewingPsychologist.commissionPercent !== undefined ? viewingPsychologist.commissionPercent : 50}% Share
+                            <span className="text-xs text-zinc-400 font-normal ml-1">
+                              (₹{(((price) * (viewingPsychologist.commissionPercent !== undefined ? viewingPsychologist.commissionPercent : 50)) / 100).toFixed(2)} Payout / Session)
+                            </span>
+                          </span>
+                        </div>
+                        <div>
                           <span className="text-zinc-500 block text-sm ">Languages Spoken</span>
                           <span className="font-medium text-zinc-300">{lang}</span>
                         </div>
@@ -3199,6 +3208,24 @@ export default function PsychologistManagementTab(props) {
                   </button>
                 ))}
               </div>
+
+              {/* Live Calculation Preview */}
+              {shareModalTarget && (
+                <div className="bg-zinc-955 border border-zinc-800/80 p-3.5 rounded-xl space-y-2 text-xs">
+                  <div className="flex justify-between items-center text-zinc-400 font-medium">
+                    <span>Session Fee / Price:</span>
+                    <span className="font-bold text-white">₹{shareModalTarget.price || 1200}</span>
+                  </div>
+                  <div className="flex justify-between items-center text-cyan-400 font-bold border-t border-zinc-850 pt-1.5">
+                    <span>Counsellor Share ({Number(sharePercentValue) || 0}%):</span>
+                    <span>₹{(((shareModalTarget.price || 1200) * (Number(sharePercentValue) || 0)) / 100).toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between items-center text-zinc-400 font-medium">
+                    <span>Platform / Admin Share ({100 - (Number(sharePercentValue) || 0)}%):</span>
+                    <span>₹{(((shareModalTarget.price || 1200) * (100 - (Number(sharePercentValue) || 0))) / 100).toFixed(2)}</span>
+                  </div>
+                </div>
+              )}
 
               <div className="flex items-center gap-3 pt-3">
                 <button

@@ -10,11 +10,14 @@ import { generateReceiptPDFDoc } from '../../../student/student-profile/utils';
 import toast from 'react-hot-toast';
 
 const formatAmount = (num) => {
- const val = Number(num) || 0;
- return Number(val.toFixed(2)).toLocaleString('en-IN', {
- minimumFractionDigits: 0,
- maximumFractionDigits: 2
- });
+  const val = Number(num) || 0;
+  if (val % 1 === 0) {
+    return val.toLocaleString('en-IN');
+  }
+  return val.toLocaleString('en-IN', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
 };
 
 export default function RevenueTab(props) {
