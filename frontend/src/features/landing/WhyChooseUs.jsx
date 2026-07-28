@@ -95,19 +95,34 @@ export default function WhyChooseUs({ siteSettings }) {
               </div>
             </div>
 
-            {/* Cell 3: Personalised Career Roadmap */}
-            <div className="p-5 sm:p-7 rounded-3xl bg-white border border-surface-200 hover:border-[#00e5ff] transition-all shadow-xs flex flex-col justify-between h-52 sm:h-60 space-y-3 group">
-              <div>
-                <h3 className="text-xs sm:text-sm font-bold text-[#0f172a] uppercase mb-1.5 font-sans leading-snug group-hover:text-[#00e5ff] transition-colors">Personalised Career Roadmap</h3>
-                <p className="text-[11px] sm:text-xs text-surface-600 font-normal leading-relaxed">
-                  CIGI-certified mentors craft tailored stream & degree roadmaps aligned with each student's strengths.
-                </p>
+            {/* Cell 3: Conditional — C-DAT when aptitude enabled, Career Roadmap when disabled */}
+            {siteSettings?.enableAptitude !== false ? (
+              <div className="p-5 sm:p-7 rounded-3xl bg-white border border-surface-200 hover:border-[#00e5ff] transition-all shadow-xs flex flex-col justify-between h-52 sm:h-60 space-y-3 group">
+                <div>
+                  <h3 className="text-xs sm:text-sm font-bold text-[#0f172a] uppercase mb-1.5 font-sans leading-snug group-hover:text-[#00e5ff] transition-colors">C-DAT Aptitude Assessment</h3>
+                  <p className="text-[11px] sm:text-xs text-surface-600 font-normal leading-relaxed">
+                    Evaluations designed for grades 8–12 to align cognitive strengths with career aspirations.
+                  </p>
+                </div>
+                <div className="text-right pt-2 border-t border-surface-100 flex items-center justify-between">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_6px_#00e5ff]" />
+                  <span className="text-base sm:text-2xl font-bold text-[#0f172a] font-sans uppercase">C-DAT</span>
+                </div>
               </div>
-              <div className="text-right pt-2 border-t border-surface-100 flex items-center justify-between">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_6px_#00e5ff]" />
-                <span className="text-base sm:text-2xl font-bold text-[#0f172a] font-sans uppercase">CIGI</span>
+            ) : (
+              <div className="p-5 sm:p-7 rounded-3xl bg-white border border-surface-200 hover:border-[#00e5ff] transition-all shadow-xs flex flex-col justify-between h-52 sm:h-60 space-y-3 group">
+                <div>
+                  <h3 className="text-xs sm:text-sm font-bold text-[#0f172a] uppercase mb-1.5 font-sans leading-snug group-hover:text-[#00e5ff] transition-colors">Personalised Career Roadmap</h3>
+                  <p className="text-[11px] sm:text-xs text-surface-600 font-normal leading-relaxed">
+                    CIGI-certified mentors craft tailored stream & degree roadmaps aligned with each student's strengths.
+                  </p>
+                </div>
+                <div className="text-right pt-2 border-t border-surface-100 flex items-center justify-between">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_6px_#00e5ff]" />
+                  <span className="text-base sm:text-2xl font-bold text-[#0f172a] font-sans uppercase">CIGI</span>
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Cell 4: Dark Blue Statement Highlight Box */}
             <div className="p-5 sm:p-7 rounded-3xl bg-[#0f172a] text-white border border-[#00e5ff]/30 shadow-md flex flex-col justify-between h-52 sm:h-60 space-y-3">

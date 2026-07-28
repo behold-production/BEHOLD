@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
 import ApiService from '../../shared/services/api';
 
+const cdatFaq = {
+  question: 'What is the C-DAT aptitude assessment?',
+  answer: "The C-DAT (Career Domain Aptitude Test) is a scientifically designed evaluation that identifies a student's natural aptitude domains — helping match them with the most suitable university programs and career paths aligned to their innate strengths.",
+};
+
 const defaultFaqs = [
-  {
-    question: 'What is the C-DAT aptitude assessment?',
-    answer: "The C-DAT (Career Domain Aptitude Test) is a scientifically designed evaluation that identifies a student's natural aptitude domains — helping match them with the most suitable university programs and career paths aligned to their innate strengths.",
-  },
+  cdatFaq,
   {
     question: 'Who can book a counseling session with Behold?',
     answer: 'Behold serves students from Class 8 onwards, parents, and young professionals seeking career clarity. Our sessions are available in-person (Kerala), doorstep visits, and online via video call — making expert guidance accessible everywhere.',
@@ -17,7 +19,7 @@ const defaultFaqs = [
   },
   {
     question: 'What documents or preparation is needed before a session?',
-    answer: 'No special preparation is required. We recommend having recent academic records available. For C-DAT sessions, students complete the online test before the counselor interprets results and builds a personalized career roadmap.',
+    answer: 'No special preparation is required. We recommend having recent academic records available. Our counselors will guide you through every step during your first session.',
   },
   {
     question: 'Do you provide support after the initial session?',
@@ -27,6 +29,7 @@ const defaultFaqs = [
 
 export default function Faq({ siteSettings }) {
   const settings = siteSettings || JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
+  const enableAptitude = settings.enableAptitude !== false;
   const [openIndex, setOpenIndex] = useState(null);
   const [faqs, setFaqs] = useState([]);
 
@@ -42,7 +45,14 @@ export default function Faq({ siteSettings }) {
     return () => window.removeEventListener('behold_faqs_updated', handler);
   }, []);
 
-  const displayFaqs = faqs.length > 0 ? faqs : defaultFaqs;
+  // When aptitude is disabled, filter out the C-DAT FAQ from defaults
+  const filteredDefaultFaqs = enableAptitude
+    ? defaultFaqs
+    : defaultFaqs.filter(f => f !== cdatFaq);
+
+  const displayFaqs = faqs.length > 0
+    ? (enableAptitude ? faqs : faqs.filter(f => !f.question?.toLowerCase().includes('c-dat') && !f.question?.toLowerCase().includes('aptitude')))
+    : filteredDefaultFaqs;
 
   return (
     <section id="faqs" className="py-20 sm:py-28 bg-white text-surface-900 border-b border-surface-200">
@@ -59,7 +69,10 @@ export default function Faq({ siteSettings }) {
             <span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)]">.</span>
           </h2>
           <p className="text-sm sm:text-base text-surface-600 font-normal max-w-xl mx-auto leading-relaxed">
-            {settings.faqSectionDesc || "We've answered the most common questions about our counseling model, C-DAT assessments, and mentorship programs."}
+            {settings.faqSectionDesc || (enableAptitude
+              ? "We've answered the most common questions about our counseling model, C-DAT assessments, and mentorship programs."
+              : "We've answered the most common questions about our career mentoring and psychological counselling programs."
+            )}
           </p>
         </div>
 

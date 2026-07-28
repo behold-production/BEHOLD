@@ -67,8 +67,13 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
                 { label: 'Career Mentoring', action: () => goTo('services') },
                 { label: 'Psychological Counselling', action: () => goTo('services') },
                 { label: 'Stream & Degree Selection', action: () => goTo('/booking') },
+                // Aptitude Mapping shown only when admin enables aptitude
+                settings?.enableAptitude !== false && { label: 'Aptitude Mapping', action: () => goTo('/booking') },
+                // Sample test link shown only when admin enables both aptitude AND sample test
+                settings?.enableAptitude !== false && settings?.enableSampleTest !== false &&
+                  { label: 'Sample Aptitude Assessment', action: () => goTo('/sample-test') },
                 { label: 'Book a Session', action: () => goTo('/book-session') },
-              ].map(({ label, action }) => (
+              ].filter(Boolean).map(({ label, action }) => (
                 <li key={label}>
                   <button
                     onClick={action}
