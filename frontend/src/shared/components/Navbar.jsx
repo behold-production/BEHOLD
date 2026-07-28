@@ -30,23 +30,51 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
     };
   }, [mobileMenuOpen]);
 
+  const [activeSection, setActiveSection] = useState('home');
+
+  useEffect(() => {
+    if (location.pathname !== '/') return;
+
+    const sectionIds = ['home', 'services', 'experts', 'why-choose-us', 'cdat', 'faqs', 'blog', 'inquiry'];
+    const handleScrollSection = () => {
+      const scrollPos = window.scrollY + 140;
+      for (const id of sectionIds) {
+        const el = document.getElementById(id);
+        if (el) {
+          const top = el.offsetTop;
+          const height = el.offsetHeight;
+          if (scrollPos >= top && scrollPos < top + height) {
+            if (id === 'inquiry') setActiveSection('contact');
+            else if (id === 'experts' || id === 'why-choose-us') setActiveSection('services');
+            else setActiveSection(id);
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScrollSection, { passive: true });
+    handleScrollSection();
+    return () => window.removeEventListener('scroll', handleScrollSection);
+  }, [location.pathname]);
+
   const goTo = (section) => {
     setMobileMenuOpen(false);
     if (section.startsWith('/')) {
       navigate(section);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
-      if (location.pathname !== '/') {
-        navigate('/');
-        setTimeout(() => navigateToSection?.(section), 100);
-      } else {
-        navigateToSection?.(section);
-      }
+      navigateToSection?.(section);
     }
   };
 
   const handleLogoClick = () => {
-    navigate('/');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setMobileMenuOpen(false);
+    if (location.pathname === '/') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      navigateToSection?.('top');
+    }
   };
 
   const handleProfileClick = () => {
@@ -73,11 +101,11 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
   })();
 
   const navLinks = [
-    { label: 'Home', action: () => goTo('home'), path: '/' },
-    { label: 'Services', action: () => goTo('services'), path: '/booking' },
-    { label: 'Sample Test', action: () => goTo('/sample-test'), path: '/sample-test' },
-    { label: 'Blog', action: () => goTo('/blog'), path: '/blog' },
-    { label: 'Contact', action: () => goTo('contact'), path: '#contact' },
+    { label: 'Home', action: () => goTo('home'), sectionId: 'home', path: '/' },
+    { label: 'Services', action: () => goTo('services'), sectionId: 'services', path: '/booking' },
+    { label: 'Sample Test', action: () => goTo('/sample-test'), sectionId: 'sample-test', path: '/sample-test' },
+    { label: 'Blog', action: () => goTo('/blog'), sectionId: 'blog', path: '/blog' },
+    { label: 'Contact', action: () => goTo('contact'), sectionId: 'contact', path: '#contact' },
   ];
 
   return (
@@ -131,18 +159,18 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
 
               {/* Desktop Nav Links - Uppercase Editorial */}
               <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
-                {navLinks.map(({ label, action, path }) => {
-                  const isActive = location.pathname === path;
+                {navLinks.map(({ label, action, sectionId, path }) => {
+                  const isActive = location.pathname === path || (location.pathname === '/' && activeSection === sectionId);
                   return (
                     <button
                       key={label}
                       onClick={action}
                       className={`text-xs font-bold uppercase tracking-widest transition-colors bg-transparent border-none cursor-pointer p-0 ${isHomeTop
                         ? isActive
-                          ? 'text-white font-extrabold border-b border-[#00e5ff] pb-1'
+                          ? 'text-white font-extrabold border-b-2 border-[#00e5ff] pb-1'
                           : 'text-white/80 hover:text-white'
                         : isActive
-                          ? 'text-[#0f172a] font-extrabold border-b border-[#00e5ff] pb-1'
+                          ? 'text-[#0f172a] font-extrabold border-b-2 border-[#00e5ff] pb-1'
                           : 'text-slate-600 hover:text-[#0f172a]'
                         }`}
                     >

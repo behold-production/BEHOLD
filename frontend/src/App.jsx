@@ -353,19 +353,14 @@ export default function App() {
     }
   }, [user, isLoading, location.pathname, navigate]);
 
-  // Handle pending scrolls once landing view is active
+  // Handle pending scrolls once landing or booking view is active
   useEffect(() => {
-    if (location.pathname === '/' && pendingScrollSection) {
-      if (pendingScrollSection === 'top') {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        setTimeout(() => setPendingScrollSection(null), 0);
-        return;
-      }
+    if (!pendingScrollSection) return;
 
+    if (location.pathname === '/booking' && (pendingScrollSection === 'services' || pendingScrollSection === 'aptitude' || pendingScrollSection === 'cdat')) {
+      let targetId = pendingScrollSection === 'aptitude' ? 'cdat' : pendingScrollSection;
       let attempts = 0;
       const tryScroll = () => {
-        let targetId = pendingScrollSection;
-        if (targetId === 'contact') targetId = 'inquiry';
         const element = document.getElementById(targetId);
         if (element) {
           const offset = 80;
@@ -375,22 +370,70 @@ export default function App() {
           setPendingScrollSection(null);
         } else if (attempts < 15) {
           attempts++;
-          setTimeout(tryScroll, 50);
+          setTimeout(tryScroll, 60);
         } else {
           setPendingScrollSection(null);
         }
       };
-      tryScroll();
+      setTimeout(tryScroll, 100);
+      return;
+    }
+
+    if (location.pathname === '/') {
+      if (pendingScrollSection === 'top' || pendingScrollSection === 'home') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setPendingScrollSection(null);
+        return;
+      }
+
+      let attempts = 0;
+      const tryScroll = () => {
+        let targetId = pendingScrollSection;
+        if (targetId === 'contact') targetId = 'inquiry';
+        if (targetId === 'counselling-intro') targetId = 'services';
+        if (targetId === 'faq') targetId = 'faqs';
+        if (targetId === 'whyChooseUs') targetId = 'why-choose-us';
+
+        const element = document.getElementById(targetId);
+        if (element) {
+          const offset = 80;
+          const bodyRect = document.body.getBoundingClientRect().top;
+          const elementRect = element.getBoundingClientRect().top;
+          window.scrollTo({ top: elementRect - bodyRect - offset, behavior: 'smooth' });
+          setPendingScrollSection(null);
+        } else if (attempts < 15) {
+          attempts++;
+          setTimeout(tryScroll, 60);
+        } else {
+          setPendingScrollSection(null);
+        }
+      };
+      setTimeout(tryScroll, 100);
     }
   }, [location.pathname, pendingScrollSection]);
 
   const handleBookTherapist = (advisorId) => {
     setBookingAdvisor(advisorId);
-    navigate('/booking');
+    if (location.pathname !== '/booking') {
+      navigate('/booking');
+    }
+    setTimeout(() => {
+      const bookingEl = document.getElementById('booking-console');
+      if (bookingEl) {
+        bookingEl.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
   };
 
   const handleFinishTest = async (dominantDomain, scores) => {
-    setTestProfile({ dominantDomain, scores });
+    setTestProfile({
+      dominantDomain,
+      scores,
+      date: (() => {
+        const d = new Date();
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      })()
+    });
 
     try {
       await ApiService.saveTestResult({
@@ -412,18 +455,40 @@ export default function App() {
   };
 
   const navigateToSection = (sectionId) => {
-    // Handle navigation to the booking page if requested as a section
+    if (!sectionId) return;
+
     if (sectionId === 'booking' || sectionId === '/booking') {
-      navigate('/booking');
+      if (location.pathname !== '/booking') {
+        navigate('/booking');
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
 
-    if (sectionId === 'top') {
+    if (sectionId === 'services' || sectionId === 'aptitude') {
+      const targetId = sectionId === 'aptitude' ? 'cdat' : 'services';
+      if (location.pathname === '/booking') {
+        const el = document.getElementById(targetId);
+        if (el) {
+          const offset = 80;
+          const bodyRect = document.body.getBoundingClientRect().top;
+          const elementRect = el.getBoundingClientRect().top;
+          window.scrollTo({ top: elementRect - bodyRect - offset, behavior: 'smooth' });
+          return;
+        }
+      } else {
+        setPendingScrollSection(sectionId);
+        navigate('/booking');
+        return;
+      }
+    }
+
+    if (sectionId === 'top' || sectionId === 'home') {
       if (location.pathname === '/') {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
+        setPendingScrollSection('top');
         navigate('/');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
       return;
     }
@@ -431,6 +496,9 @@ export default function App() {
     let targetId = sectionId;
     if (targetId === 'contact') targetId = 'inquiry';
     if (targetId === 'counselling-intro') targetId = 'services';
+    if (targetId === 'faq') targetId = 'faqs';
+    if (targetId === 'whyChooseUs') targetId = 'why-choose-us';
+
     const element = document.getElementById(targetId);
     if (location.pathname === '/' && element) {
       const offset = 80;
@@ -439,7 +507,9 @@ export default function App() {
       window.scrollTo({ top: elementRect - bodyRect - offset, behavior: 'smooth' });
     } else {
       setPendingScrollSection(sectionId);
-      navigate('/');
+      if (location.pathname !== '/') {
+        navigate('/');
+      }
     }
   };
 
@@ -543,12 +613,12 @@ export default function App() {
               <Hero setView={() => { }} navigateToSection={navigateToSection} siteSettings={siteSettings} />
               <div className="relative z-10 bg-white w-full">
                 {(() => {
-                  const defaultOrder = ['whyChooseUs', 'aptitude', 'counsellors', 'about', 'reviews', 'faq', 'blog'];
+                  const defaultOrder = ['whyChooseUs', 'counsellors', 'reviews', 'faq', 'blog'];
                   let order = Array.isArray(siteSettings.sectionOrder) && siteSettings.sectionOrder.length > 0
-                    ? siteSettings.sectionOrder.filter(sec => sec !== 'inquiry' && sec !== 'process' && sec !== 'counselling-intro') // Sanitize duplicate intro
+                    ? siteSettings.sectionOrder.filter(sec => sec !== 'inquiry' && sec !== 'process' && sec !== 'counselling-intro' && sec !== 'aptitude' && sec !== 'counselling')
                     : defaultOrder;
 
-                  // Ensure any new sections not present in the saved database order are still rendered at the bottom
+                  // Ensure any missing default sections are rendered
                   const missingSections = defaultOrder.filter(sec => !order.includes(sec));
                   if (missingSections.length > 0) {
                     order = [...order, ...missingSections];
@@ -562,16 +632,6 @@ export default function App() {
                         return (siteSettings.enablePsychology !== false) ? (
                           <Services key="counsellors_list" mode="experts" setView={() => { }} onBookTherapist={handleBookTherapist} siteSettings={siteSettings} />
                         ) : null;
-                      case 'counselling':
-                        return (siteSettings.enablePsychology !== false || siteSettings.enableCareerMentoring !== false) ? (
-                          <Services key="services_sec" setView={() => { }} onBookTherapist={handleBookTherapist} siteSettings={siteSettings} />
-                        ) : null;
-                      case 'aptitude':
-                        return siteSettings.enableAptitude !== false ? (
-                          <CdatSection key="aptitude_sec" setView={() => { }} siteSettings={siteSettings} />
-                        ) : null;
-                      case 'about':
-                        return null;
                       case 'reviews':
                         return <Reviews key="reviews_sec" siteSettings={siteSettings} />;
                       case 'faq':
@@ -603,13 +663,19 @@ export default function App() {
             } />
           )}
 
-          {/* Booking — open to guests; auth is enforced inside at "Proceed to Payment" */}
+          {/* Dedicated Services & Booking Page */}
           <Route path="/booking" element={
-            <ServiceBooking
-              preselectedAdvisorId={bookingAdvisor}
-              clearPreselectedAdvisor={() => setBookingAdvisor(null)}
-              onOpenAuth={() => setIsAuthModalOpen(true)}
-            />
+            <main className="fade-in-up pt-16 sm:pt-20 bg-white">
+              <Services setView={() => { }} onBookTherapist={handleBookTherapist} siteSettings={siteSettings} />
+              {siteSettings.enableAptitude !== false && (
+                <CdatSection setView={() => { }} siteSettings={siteSettings} />
+              )}
+              <ServiceBooking
+                preselectedAdvisorId={bookingAdvisor}
+                clearPreselectedAdvisor={() => setBookingAdvisor(null)}
+                onOpenAuth={() => setIsAuthModalOpen(true)}
+              />
+            </main>
           } />
 
           {/* Student Profile */}

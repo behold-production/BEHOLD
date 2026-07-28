@@ -280,7 +280,7 @@ export default function Reviews({ siteSettings }) {
   };
 
   return (
-    <section className="py-16 sm:py-24 bg-white border-b border-surface-200">
+    <section id="reviews" className="py-16 sm:py-24 bg-white border-b border-surface-200">
       <div className="max-w-6xl mx-auto">
 
         {/* Header */}

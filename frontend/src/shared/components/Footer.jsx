@@ -9,9 +9,12 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
   const addressVal = settings.contactAddress?.trim() || null;
 
   const goTo = (section) => {
-    if (section.startsWith('/')) window.spaNavigate?.(section);
-    else navigateToSection?.(section);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (section.startsWith('/')) {
+      window.spaNavigate?.(section);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      navigateToSection?.(section);
+    }
   };
 
   return (
