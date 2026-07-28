@@ -204,14 +204,14 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
 
                 <div className="flex flex-col justify-between p-4 sm:p-5 rounded-2xl bg-white border border-surface-200 shadow-2xs space-y-3 group hover:border-[#00e5ff] transition-all">
                   <div>
-                    <h4 className="text-xs sm:text-sm font-bold text-[#0f172a] uppercase tracking-wide mb-1.5 leading-snug group-hover:text-[#00e5ff] transition-colors">C-DAT Aptitude Assessment</h4>
+                    <h4 className="text-xs sm:text-sm font-bold text-[#0f172a] uppercase tracking-wide mb-1.5 leading-snug group-hover:text-[#00e5ff] transition-colors">Personalised Mentoring Sessions</h4>
                     <p className="text-[11px] sm:text-xs text-surface-600 leading-relaxed font-normal">
-                      Evaluations designed for grades 8-12 to align cognitive strengths with aspirations.
+                      One-on-one sessions tailored to each student's goals — from stream selection to career clarity.
                     </p>
                   </div>
                   <div className="text-right pt-2 border-t border-surface-100 flex items-center justify-between">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_6px_#00e5ff]" />
-                    <span className="text-sm sm:text-base font-black text-[#0f172a] uppercase tracking-wider">C-DAT</span>
+                    <span className="text-sm sm:text-base font-black text-[#0f172a] uppercase tracking-wider">1:1</span>
                   </div>
                 </div>
 

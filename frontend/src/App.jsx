@@ -4,7 +4,6 @@ import { MessageCircle, X, Download, ShieldAlert, Eye, EyeOff } from 'lucide-rea
 import { Toaster, useToasterStore, toast } from 'react-hot-toast';
 import Navbar from './shared/components/Navbar';
 import Hero from './features/landing/Hero';
-import CdatSection from './features/student/CdatSection';
 import Services from './features/booking/Services';
 import About from './features/landing/About';
 import Faq from './features/landing/Faq';
@@ -34,8 +33,6 @@ const AdvisorProfile = lazyWithRetry(() => import('./features/counsellor/Advisor
 const StudentProfile = lazyWithRetry(() => import('./features/student/StudentProfile'));
 const PsychologistDashboard = lazyWithRetry(() => import('./features/counsellor/PsychologistDashboard'));
 const AdminDashboard = lazyWithRetry(() => import('./features/admin/AdminDashboard'));
-const AptitudeTest = lazyWithRetry(() => import('./features/student/AptitudeTest'));
-const AptitudeLanding = lazyWithRetry(() => import('./features/student/AptitudeLanding'));
 const ResetPassword = lazyWithRetry(() => import('./features/auth/ResetPassword'));
 const BlogList = lazyWithRetry(() => import('./features/blog/BlogList'));
 const BlogPostDetail = lazyWithRetry(() => import('./features/blog/BlogPostDetail'));

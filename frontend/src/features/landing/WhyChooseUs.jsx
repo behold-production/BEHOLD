@@ -3,7 +3,7 @@ import luxuryClinicRoom from '../../assets/luxury_clinic_room.png';
 
 export default function WhyChooseUs({ siteSettings }) {
   const handleBook = () => {
-    window.spaNavigate?.('/booking');
+    window.spaNavigate?.('/book-session');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -54,10 +54,10 @@ export default function WhyChooseUs({ siteSettings }) {
                     <span>Book a Session</span>
                   </button>
                   <button
-                    onClick={() => { window.spaNavigate?.('/services'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                    onClick={() => { window.spaNavigate?.('/booking'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                     className="px-6 py-3 bg-white/10 hover:bg-white/20 text-white font-bold text-xs uppercase tracking-widest rounded-full transition-all border border-white/30 backdrop-blur-md cursor-pointer"
                   >
-                    Explore All Programs
+                    Explore All Services
                   </button>
                 </div>
               </div>
@@ -95,17 +95,17 @@ export default function WhyChooseUs({ siteSettings }) {
               </div>
             </div>
 
-            {/* Cell 3: CIGI-Certified Aptitude */}
+            {/* Cell 3: Personalised Career Roadmap */}
             <div className="p-5 sm:p-7 rounded-3xl bg-white border border-surface-200 hover:border-[#00e5ff] transition-all shadow-xs flex flex-col justify-between h-52 sm:h-60 space-y-3 group">
               <div>
-                <h3 className="text-xs sm:text-sm font-bold text-[#0f172a] uppercase mb-1.5 font-sans leading-snug group-hover:text-[#00e5ff] transition-colors">C-DAT Aptitude Assessment</h3>
+                <h3 className="text-xs sm:text-sm font-bold text-[#0f172a] uppercase mb-1.5 font-sans leading-snug group-hover:text-[#00e5ff] transition-colors">Personalised Career Roadmap</h3>
                 <p className="text-[11px] sm:text-xs text-surface-600 font-normal leading-relaxed">
-                  Evaluations designed for grades 8–12 to align cognitive strengths with career aspirations.
+                  CIGI-certified mentors craft tailored stream & degree roadmaps aligned with each student's strengths.
                 </p>
               </div>
               <div className="text-right pt-2 border-t border-surface-100 flex items-center justify-between">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_6px_#00e5ff]" />
-                <span className="text-base sm:text-2xl font-bold text-[#0f172a] font-sans uppercase">C-DAT</span>
+                <span className="text-base sm:text-2xl font-bold text-[#0f172a] font-sans uppercase">CIGI</span>
               </div>
             </div>
 
