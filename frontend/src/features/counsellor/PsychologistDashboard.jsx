@@ -85,7 +85,7 @@ export default function PsychologistDashboard({ setView }) {
  locationName: '',
  latitude: 0,
  longitude: 0,
- 
+ commissionPercent: user?.commissionPercent !== undefined ? Number(user.commissionPercent) : 50,
  bankAccountNumber: '',
  bankIfscCode: '',
  bankAccountName: ''
@@ -259,7 +259,7 @@ export default function PsychologistDashboard({ setView }) {
  locationName: c.locationName || '',
  latitude: c.latitude || 0,
  longitude: c.longitude || 0,
- 
+ commissionPercent: c.commissionPercent !== undefined ? Number(c.commissionPercent) : 50,
  bankAccountNumber: c.bankAccountNumber || '',
  bankIfscCode: c.bankIfscCode || '',
  bankAccountName: c.bankAccountName || ''
