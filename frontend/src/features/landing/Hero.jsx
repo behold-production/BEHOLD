@@ -92,7 +92,14 @@ export default function Hero({ siteSettings }) {
         <img
           src={heroBg}
           alt="Hero Background"
-          className="h-full w-full object-cover"
+          className="
+    h-full
+    w-full
+    object-cover
+
+    object-right
+    md:object-center
+  "
         />
 
         <div className="absolute inset-0 bg-gradient-to-r from-[#0f172a]/75 via-[#0f172a]/45 to-[#0f172a]/65" />
