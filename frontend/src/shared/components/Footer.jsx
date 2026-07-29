@@ -94,7 +94,9 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
             </h4>
             <ul className="space-y-3 text-xs sm:text-sm font-normal">
               {[
+                { label: 'About Us', action: () => goTo('/about') },
                 { label: 'Articles & Insights', action: () => goTo('/blog') },
+                { label: 'FAQs', action: () => goTo('/faqs') },
                 { label: 'Privacy Policy', action: () => onOpenDocs?.('privacy') },
                 { label: 'Terms of Service', action: () => onOpenDocs?.('terms') },
                 { label: 'Return & Refund Policy', action: () => onOpenDocs?.('refund') },

@@ -13,6 +13,9 @@ import Inquiry from './features/landing/Inquiry';
 import Reviews from './features/landing/Reviews';
 import Footer from './shared/components/Footer';
 import AuthModals from './features/auth/AuthModals';
+import TherapistSwipeSection from './features/landing/TherapistSwipeSection';
+import FaqBlogSection from './features/landing/FaqBlogSection';
+import ContactInquirySection from './features/landing/ContactInquirySection';
 function lazyWithRetry(importFn) {
   return lazy(() =>
     importFn().catch((error) => {
@@ -600,46 +603,22 @@ export default function App() {
         </div>
       }>
         <Routes>
-          {/* Landing Page */}
+          {/* Landing Page - Exactly 4 Sections */}
           <Route path="/" element={
             <main className="fade-in-up">
               <Hero setView={() => { }} navigateToSection={navigateToSection} siteSettings={siteSettings} />
-              <div className="relative z-10 bg-white w-full">
-                {(() => {
-                  const defaultOrder = ['whyChooseUs', 'counsellors', 'reviews', 'faq', 'blog'];
-                  let order = Array.isArray(siteSettings.sectionOrder) && siteSettings.sectionOrder.length > 0
-                    ? siteSettings.sectionOrder.filter(sec => sec !== 'inquiry' && sec !== 'process' && sec !== 'counselling-intro' && sec !== 'aptitude' && sec !== 'counselling')
-                    : defaultOrder;
+              <TherapistSwipeSection onBookTherapist={handleBookTherapist} navigateToSection={navigateToSection} />
+              <FaqBlogSection />
+              <ContactInquirySection />
+            </main>
+          } />
 
-                  // Ensure any missing default sections are rendered
-                  const missingSections = defaultOrder.filter(sec => !order.includes(sec));
-                  if (missingSections.length > 0) {
-                    order = [...order, ...missingSections];
-                  }
-
-                  return order.map((sectionKey) => {
-                    switch (sectionKey) {
-                      case 'whyChooseUs':
-                        return <WhyChooseUs key="whyChooseUs_sec" siteSettings={siteSettings} />;
-                      case 'counsellors':
-                        return (siteSettings.enablePsychology !== false) ? (
-                          <Services key="counsellors_list" mode="experts" setView={() => { }} onBookTherapist={handleBookTherapist} siteSettings={siteSettings} />
-                        ) : null;
-                      case 'reviews':
-                        return <Reviews key="reviews_sec" siteSettings={siteSettings} />;
-                      case 'faq':
-                        return <Faq key="faq_sec" />;
-                      case 'blog':
-                        return <BlogSection key="blog_sec" />;
-                      default:
-                        return null;
-                    }
-                  });
-                })()}
-
-                {/* Fixed Inquiry Section */}
-                <Inquiry key="inquiry_fixed" testProfile={testProfile} siteSettings={siteSettings} />
-              </div>
+          {/* About Page Route */}
+          <Route path="/about" element={
+            <main className="fade-in-up pt-16 sm:pt-20 bg-white">
+              <About siteSettings={siteSettings} />
+              <WhyChooseUs siteSettings={siteSettings} />
+              <Reviews siteSettings={siteSettings} />
             </main>
           } />
 

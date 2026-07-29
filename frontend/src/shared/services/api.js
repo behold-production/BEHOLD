@@ -412,6 +412,10 @@ const ApiService = {
     return await request(`/users/counsellors${qs ? `?${qs}` : ''}`);
   },
 
+  async getAdvisors(query = {}, forceRefresh = false) {
+    return this.getCounsellors(query, forceRefresh);
+  },
+
   async getCounsellorDetails(id) {
     return await request(`/users/counsellors/${id}`);
   },

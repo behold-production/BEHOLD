@@ -103,9 +103,10 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
   const navLinks = [
     { label: 'Home', action: () => goTo('home'), sectionId: 'home', path: '/' },
     { label: 'Services', action: () => goTo('services'), sectionId: 'services', path: '/booking' },
+    { label: 'About Us', action: () => goTo('/about'), sectionId: 'about', path: '/about' },
     // Sample Test only visible when admin enables both aptitude AND sample test
     siteSettings?.enableAptitude !== false && siteSettings?.enableSampleTest !== false &&
-      { label: 'Sample Test', action: () => goTo('/sample-test'), sectionId: 'sample-test', path: '/sample-test' },
+    { label: 'Sample Test', action: () => goTo('/sample-test'), sectionId: 'sample-test', path: '/sample-test' },
     { label: 'Blog', action: () => goTo('/blog'), sectionId: 'blog', path: '/blog' },
     { label: 'Contact', action: () => goTo('contact'), sectionId: 'contact', path: '#contact' },
   ].filter(Boolean);
@@ -139,23 +140,20 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
         return (
           <header
             className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isHomeTop
-              ? 'bg-transparent border-b border-transparent text-white'
+              ? 'bg-white/70 backdrop-blur-md border-b border-slate-200/50 shadow-xs text-[#0f172a]'
               : 'bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm text-[#0f172a]'
               }`}
           >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between">
 
               {/* Brand Title Logo */}
               <button
                 onClick={handleLogoClick}
                 className="flex items-center gap-2 text-left bg-transparent border-none cursor-pointer p-0"
               >
-                <span
-                  className={`text-2xl sm:text-3xl font-black tracking-tight font-sans uppercase transition-colors ${isHomeTop ? 'text-white' : 'text-[#0f172a]'
-                    }`}
-                >
+                <span className="text-2xl sm:text-3xl font-black tracking-tight font-sans uppercase text-[#0f172a]">
                   {(siteName || 'BEHOLD').replace(/\.$/, '')}
-                  <span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)] font-black">.</span>
+                  <span className="text-[#1c7974] font-black">.</span>
                 </span>
               </button>
 
@@ -167,13 +165,9 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                     <button
                       key={label}
                       onClick={action}
-                      className={`text-xs font-bold uppercase tracking-widest transition-colors bg-transparent border-none cursor-pointer p-0 ${isHomeTop
-                        ? isActive
-                          ? 'text-white font-extrabold border-b-2 border-[#00e5ff] pb-1'
-                          : 'text-white/80 hover:text-white'
-                        : isActive
-                          ? 'text-[#0f172a] font-extrabold border-b-2 border-[#00e5ff] pb-1'
-                          : 'text-slate-600 hover:text-[#0f172a]'
+                      className={`text-xs font-bold uppercase tracking-widest transition-colors bg-transparent border-none cursor-pointer p-0 ${isActive
+                        ? 'text-[#1c7974] font-black border-b-2 border-[#1c7974] pb-1'
+                        : 'text-slate-700 hover:text-[#1c7974]'
                         }`}
                     >
                       {label}
@@ -186,10 +180,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
               <div className="hidden lg:flex items-center gap-3">
                 <button
                   onClick={() => { navigate('/book-session'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                  className={`px-5 py-2.5 font-bold text-xs uppercase tracking-widest rounded-full transition-all shadow-xs cursor-pointer border ${isHomeTop
-                    ? 'bg-white hover:bg-slate-100 text-[#0f172a] border-white'
-                    : 'bg-[#0f172a] hover:bg-[#1e293b] text-white border-[#00e5ff]/30'
-                    }`}
+                  className="px-5 py-2.5 font-bold text-xs uppercase tracking-widest rounded-full transition-all shadow-xs cursor-pointer border bg-[#3f9d95] hover:bg-[#338982] text-white border-transparent"
                 >
                   Book Session
                 </button>
@@ -199,24 +190,18 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                     onClick={handleProfileClick}
                     title={user.name || 'Dashboard'}
                     aria-label="User Profile"
-                    className={`w-11 h-11 rounded-full flex items-center justify-center transition-all cursor-pointer border shrink-0 overflow-hidden shadow-sm ${isHomeTop
-                      ? 'bg-white/10 hover:bg-white/20 text-white border-[#00e5ff]/60 backdrop-blur-md'
-                      : 'bg-[#0f172a] hover:bg-[#1e293b] text-white border-[#00e5ff]/60'
-                      }`}
+                    className="w-10 h-10 rounded-full flex items-center justify-center transition-all cursor-pointer border shrink-0 overflow-hidden shadow-sm bg-slate-100 hover:bg-slate-200 text-[#0f172a] border-slate-200"
                   >
                     {user.profilePic ? (
                       <img src={user.profilePic} alt={user.name} className="w-full h-full object-cover" />
                     ) : (
-                      <span className="text-base font-black text-[#00e5ff] uppercase">{(user.name || user.email || 'U').charAt(0)}</span>
+                      <span className="text-sm font-black text-[#1c7974] uppercase">{(user.name || user.email || 'U').charAt(0)}</span>
                     )}
                   </button>
                 ) : (
                   <button
                     onClick={() => onOpenAuth?.()}
-                    className={`px-4 py-2.5 font-bold text-xs uppercase tracking-widest rounded-full transition-all cursor-pointer border ${isHomeTop
-                      ? 'bg-white/10 hover:bg-white/20 text-white border-white/30 backdrop-blur-md'
-                      : 'bg-slate-100 hover:bg-slate-200 text-[#0f172a] border-slate-200'
-                      }`}
+                    className="px-5 py-2.5 font-bold text-xs uppercase tracking-widest rounded-full transition-all cursor-pointer border bg-slate-100 hover:bg-slate-200 text-[#0f172a] border-slate-200"
                   >
                     Sign In
                   </button>
