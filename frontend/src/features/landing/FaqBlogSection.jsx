@@ -83,16 +83,22 @@ export default function FaqBlogSection() {
             </button>
           </div>
 
-          {/* FAQ Cards OR Empty State */}
+          {/* FAQ Cards: shimmer while loading, real content after */}
           <div className="flex flex-col gap-5 flex-1 justify-between">
-            {faqs.length === 0 ? (
+            {loadingFaqs ? (
+              [1, 2, 3].map((i) => (
+                <div key={i} className="w-full rounded-xl p-6 bg-white/60 border border-slate-200 flex flex-col gap-3 flex-1">
+                  <div className="shimmer h-5 w-3/4 rounded-md" />
+                  <div className="shimmer h-3 w-full rounded-md" />
+                  <div className="shimmer h-3 w-5/6 rounded-md" />
+                </div>
+              ))
+            ) : faqs.length === 0 ? (
               <div className="w-full flex-1 min-h-[260px] border border-dashed border-slate-300 rounded-xl p-8 bg-white/10 backdrop-blur-xs flex flex-col items-center justify-center text-center space-y-3 shadow-sm">
                 <div className="w-12 h-12 rounded-full bg-cyan-500/20 text-cyan-800 flex items-center justify-center">
                   <HelpCircle className="w-6 h-6" />
                 </div>
-                <h3 className="font-['Outfit',sans-serif] text-lg font-bold text-slate-900">
-                  No FAQs Found
-                </h3>
+                <h3 className="font-['Outfit',sans-serif] text-lg font-bold text-slate-900">No FAQs Found</h3>
                 <p className="text-xs text-slate-700 max-w-xs leading-relaxed font-normal">
                   We currently don't have any frequently asked questions listed here. Check back soon or send us an inquiry!
                 </p>
@@ -116,7 +122,6 @@ export default function FaqBlogSection() {
                         <ChevronDown className="w-4 h-4 text-slate-900" />
                       </div>
                     </div>
-
                     <p className={`text-xs sm:text-sm text-slate-800 font-light leading-relaxed transition-all duration-300 ${isExpanded ? 'pt-3 block' : 'pt-2 line-clamp-2'}`}>
                       {faq.answer || faq.text}
                     </p>
@@ -144,16 +149,24 @@ export default function FaqBlogSection() {
             </button>
           </div>
 
-          {/* Blog Cards OR Empty State */}
+          {/* Blog Cards: shimmer while loading, real content after */}
           <div className="flex flex-col gap-5 flex-1 justify-between">
-            {blogs.length === 0 ? (
+            {loadingBlogs ? (
+              [1, 2].map((i) => (
+                <div key={i} className="w-full rounded-xl p-6 bg-white/60 border border-slate-200 flex flex-col gap-3 flex-1">
+                  <div className="shimmer h-3 w-1/3 rounded-full" />
+                  <div className="shimmer h-6 w-5/6 rounded-md" />
+                  <div className="shimmer h-3 w-full rounded-md" />
+                  <div className="shimmer h-3 w-4/5 rounded-md" />
+                  <div className="shimmer h-3 w-1/4 rounded-md mt-2" />
+                </div>
+              ))
+            ) : blogs.length === 0 ? (
               <div className="w-full flex-1 min-h-[260px] border border-dashed border-slate-300 rounded-xl p-8 bg-white/10 backdrop-blur-xs flex flex-col items-center justify-center text-center space-y-3 shadow-sm">
                 <div className="w-12 h-12 rounded-full bg-cyan-500/20 text-[#00c9d6] flex items-center justify-center">
                   <FileText className="w-6 h-6" />
                 </div>
-                <h3 className="font-['Outfit',sans-serif] text-lg font-bold text-slate-900">
-                  No Blog Articles Found
-                </h3>
+                <h3 className="font-['Outfit',sans-serif] text-lg font-bold text-slate-900">No Blog Articles Found</h3>
                 <p className="text-xs text-slate-700 max-w-xs leading-relaxed font-normal">
                   Articles and guidance posts will be published here soon. Stay tuned for expert insights!
                 </p>
@@ -176,7 +189,6 @@ export default function FaqBlogSection() {
                       {post.excerpt || post.snippet || post.summary || 'Explore expert insights and guidance from Behold team.'}
                     </p>
                   </div>
-
                   <div className="flex items-center gap-1.5 text-xs font-bold text-[slate-900] group-hover:translate-x-1 transition-transform pt-4">
                     <span className="underline">Read Article</span>
                     <ArrowUpRight className="w-3.5 h-3.5" />

@@ -366,8 +366,8 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
                 key={role.id}
                 onClick={() => { setSelectedRole(role.id); setCurrentIndex(0); }}
                 className={`px-3 py-1.5 rounded-full text-[11px] sm:text-xs font-bold whitespace-nowrap transition-all duration-300 cursor-pointer ${selectedRole === role.id
-                    ? 'bg-slate-900 text-white shadow-sm'
-                    : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200'
+                  ? 'bg-slate-900 text-white shadow-sm'
+                  : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200'
                   }`}
               >
                 {role.label}
@@ -411,9 +411,8 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
               {[0, 1, 2].map((i) => (
                 <div
                   key={i}
-                  className={`flex-shrink-0 bg-white/80 rounded-3xl border border-slate-200 flex flex-col items-center p-6 gap-4 ${
-                    i === 1 ? 'w-[260px] sm:w-[290px] opacity-100 scale-100' : 'w-[220px] sm:w-[250px] opacity-50 scale-90'
-                  }`}
+                  className={`flex-shrink-0 bg-white/80 rounded-3xl border border-slate-200 flex flex-col items-center p-6 gap-4 ${i === 1 ? 'w-[260px] sm:w-[290px] opacity-100 scale-100' : 'w-[220px] sm:w-[250px] opacity-50 scale-90'
+                    }`}
                 >
                   <div className="shimmer w-24 h-24 rounded-full" />
                   <div className="shimmer h-4 w-3/4 rounded-md" />
@@ -429,65 +428,65 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
           </div>
         ) : (
           <>
-        {/* 5-Card Coverflow Carousel */}
-        <div
-          className="relative w-full max-w-6xl mx-auto h-[410px] sm:h-[470px] flex items-center justify-center perspective-[1200px] overflow-visible px-[10px]"
-          onMouseDown={(e) => handleTouchStart(e.clientX)}
-          onMouseMove={(e) => handleTouchMove(e.clientX)}
-          onMouseUp={handleTouchEnd}
-          onMouseLeave={handleTouchEnd}
-          onTouchStart={(e) => handleTouchStart(e.touches[0].clientX)}
-          onTouchMove={(e) => handleTouchMove(e.touches[0].clientX)}
-          onTouchEnd={handleTouchEnd}
-        >
-          {/* Left Navigation Arrow (Icon Only, Far Left Edge) */}
-          <button
-            onClick={(e) => { e.stopPropagation(); handlePrevCard(); }}
-            aria-label="Previous Psychologist"
-            className="absolute left-0 sm:left-2 lg:left-4 top-1/2 -translate-y-1/2 z-50 p-2 text-slate-800 hover:text-[#00c9d6] transition-all duration-300 active:scale-90 cursor-pointer bg-transparent border-none outline-none group"
-          >
-            <ChevronLeft className="w-8 h-8 sm:w-10 sm:h-10 drop-shadow-md group-hover:-translate-x-1 transition-transform" />
-          </button>
-
-          {/* Right Navigation Arrow (Icon Only, Far Right Edge) */}
-          <button
-            onClick={(e) => { e.stopPropagation(); handleNextCard(); }}
-            aria-label="Next Psychologist"
-            className="absolute right-0 sm:right-2 lg:right-4 top-1/2 -translate-y-1/2 z-50 p-2 text-slate-800 hover:text-[#00c9d6] transition-all duration-300 active:scale-90 cursor-pointer bg-transparent border-none outline-none group"
-          >
-            <ChevronRight className="w-8 h-8 sm:w-10 sm:h-10 drop-shadow-md group-hover:translate-x-1 transition-transform" />
-          </button>
-
-          {displayAdvisors.map((advisor, index) => {
-            const diff = getRelativePosition(index);
-            const styleClass = getCardStyles(diff);
-            return (
-              <div
-                key={advisor.id}
-                onClick={() => setCurrentIndex(index)}
-                className={`absolute w-[280px] xs:w-[320px] sm:w-[350px] md:w-[380px] h-[390px] sm:h-[450px] transform transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${styleClass}`}
+            {/* 5-Card Coverflow Carousel */}
+            <div
+              className="relative w-full max-w-6xl mx-auto h-[410px] sm:h-[470px] flex items-center justify-center perspective-[1200px] overflow-visible px-[10px]"
+              onMouseDown={(e) => handleTouchStart(e.clientX)}
+              onMouseMove={(e) => handleTouchMove(e.clientX)}
+              onMouseUp={handleTouchEnd}
+              onMouseLeave={handleTouchEnd}
+              onTouchStart={(e) => handleTouchStart(e.touches[0].clientX)}
+              onTouchMove={(e) => handleTouchMove(e.touches[0].clientX)}
+              onTouchEnd={handleTouchEnd}
+            >
+              {/* Left Navigation Arrow (Icon Only, Far Left Edge) */}
+              <button
+                onClick={(e) => { e.stopPropagation(); handlePrevCard(); }}
+                aria-label="Previous Psychologist"
+                className="absolute left-0 sm:left-2 lg:left-4 top-1/2 -translate-y-1/2 z-50 p-2 text-slate-800 hover:text-[#00c9d6] transition-all duration-300 active:scale-90 cursor-pointer bg-transparent border-none outline-none group"
               >
-                {renderCard(advisor, diff === 0)}
-              </div>
-            )
-          })}
-        </div>
+                <ChevronLeft className="w-8 h-8 sm:w-10 sm:h-10 drop-shadow-md group-hover:-translate-x-1 transition-transform" />
+              </button>
 
-        {/* Text & Button Centered Under Cards (Smaller Refined Text Size) */}
-        <div className="mt-8 sm:mt-10 flex flex-col items-center text-center space-y-5 max-w-lg px-4">
-          <p className="font-sans text-xs sm:text-sm md:text-base text-slate-600 font-normal leading-relaxed drop-shadow-xs">
-            Sometimes healing begins with a conversation. Whenever you're ready, we'll meet you with understanding, care, and professional support.
-          </p>
+              {/* Right Navigation Arrow (Icon Only, Far Right Edge) */}
+              <button
+                onClick={(e) => { e.stopPropagation(); handleNextCard(); }}
+                aria-label="Next Psychologist"
+                className="absolute right-0 sm:right-2 lg:right-4 top-1/2 -translate-y-1/2 z-50 p-2 text-slate-800 hover:text-[#00c9d6] transition-all duration-300 active:scale-90 cursor-pointer bg-transparent border-none outline-none group"
+              >
+                <ChevronRight className="w-8 h-8 sm:w-10 sm:h-10 drop-shadow-md group-hover:translate-x-1 transition-transform" />
+              </button>
 
-          <button
-            onClick={handleConnectClick}
-            className="bg-gradient-to-r from-[#00f0ff] via-[#00e5ff] to-[#00c9d6] hover:from-[#00c9d6] hover:to-[#00f0ff] active:scale-95 text-[#060e20] font-['Outfit','Plus_Jakarta_Sans',sans-serif] text-xs sm:text-sm font-extrabold uppercase tracking-widest px-8 py-3 rounded-full shadow-[0_0_20px_rgba(0,229,255,0.6)] hover:shadow-[0_0_32px_rgba(0,229,255,0.9)] border border-[#00f0ff]/60 transition-all duration-300 cursor-pointer flex items-center justify-center"
-          >
-            Let's Connect
-          </button>
-        </div>
+              {displayAdvisors.map((advisor, index) => {
+                const diff = getRelativePosition(index);
+                const styleClass = getCardStyles(diff);
+                return (
+                  <div
+                    key={advisor.id}
+                    onClick={() => setCurrentIndex(index)}
+                    className={`absolute w-[280px] xs:w-[320px] sm:w-[350px] md:w-[380px] h-[390px] sm:h-[450px] transform transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${styleClass}`}
+                  >
+                    {renderCard(advisor, diff === 0)}
+                  </div>
+                )
+              })}
+            </div>
 
-          </> {/* end loading === false fragment */}
+            {/* Text & Button Centered Under Cards (Smaller Refined Text Size) */}
+            <div className="mt-8 sm:mt-10 flex flex-col items-center text-center space-y-5 max-w-lg px-4">
+              <p className="font-sans text-xs sm:text-sm md:text-base text-slate-600 font-normal leading-relaxed drop-shadow-xs">
+                Sometimes healing begins with a conversation. Whenever you're ready, we'll meet you with understanding, care, and professional support.
+              </p>
+
+              <button
+                onClick={handleConnectClick}
+                className="bg-gradient-to-r from-[#00f0ff] via-[#00e5ff] to-[#00c9d6] hover:from-[#00c9d6] hover:to-[#00f0ff] active:scale-95 text-[#060e20] font-['Outfit','Plus_Jakarta_Sans',sans-serif] text-xs sm:text-sm font-extrabold uppercase tracking-widest px-8 py-3 rounded-full shadow-[0_0_20px_rgba(0,229,255,0.6)] hover:shadow-[0_0_32px_rgba(0,229,255,0.9)] border border-[#00f0ff]/60 transition-all duration-300 cursor-pointer flex items-center justify-center"
+              >
+                Let's Connect
+              </button>
+            </div>
+
+          </>
         )} {/* end loading ternary */}
 
       </div>
