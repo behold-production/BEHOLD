@@ -13,8 +13,8 @@ import {
  Loader2
 } from 'lucide-react';
 
-import ApiService from '../../shared/services/api';
-import greenTexture from '../../assets/clarity_bg.png';
+import ApiService from '../../../../shared/services/api';
+import greenTexture from '../../../../assets/clarity_bg.png';
 
 const DOMAIN_DETAILS = {
  Aptitude: {
@@ -195,7 +195,7 @@ export default function AptitudeTest({ onFinishTest }) {
  Logical: { career: "Data Scientist", reason: "Excellent numerical sequencing & logical patterns score" },
  Creativity: { career: "Creative Director", reason: "Top scores in lateral brainstorming and layout design" },
  Leadership: { career: "Project Lead / Consultant", reason: "Capable of milestone tracking and coordinate roles" },
- Emotional: { career: "Educational Counselor", reason: "Shows warmth, active conflict mediation & self-reflection" },
+ Emotional: { career: "Educational Psychologist", reason: "Shows warmth, active conflict mediation & self-reflection" },
  Communication: { career: "Technical Writer / Educator", reason: "Excellent verbal explanation and analogical speech" },
  Aptitude: { career: "Academic Researcher", reason: "Robust cognitive problem-solving metrics" },
  Career: { career: "Strategic Planner", reason: "Highly structured milestone planning and roadmap outline" },
@@ -216,14 +216,8 @@ export default function AptitudeTest({ onFinishTest }) {
 
  if (isLoading || shuffledQuestions.length === 0) {
  return (
- <div 
-        className="pt-24 pb-16 min-h-screen text-surface-900 flex items-center justify-center font-sans"
-        style={{
-          backgroundImage: `url(${greenTexture})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundColor: '#d4f8fc'
-        }}
+  <div 
+        className="pt-24 pb-16 min-h-screen text-surface-900 flex items-center justify-center font-sans bg-transparent"
       >
  <p className="text-[10px] font-black tracking-widest text-surface-500 animate-pulse">Initializing quiz console...</p>
  </div>
@@ -235,13 +229,7 @@ export default function AptitudeTest({ onFinishTest }) {
 
  return (
     <div 
-      className="pt-20 sm:pt-24 pb-12 sm:pb-16 min-h-screen text-surface-900 relative overflow-hidden font-sans border-b border-surface-200 text-left"
-      style={{
-        backgroundImage: `url(${greenTexture})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundColor: '#d4f8fc'
-      }}
+      className="pt-20 sm:pt-24 pb-12 sm:pb-16 min-h-screen text-surface-900 relative overflow-hidden font-sans bg-transparent text-left"
     >
  <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
 

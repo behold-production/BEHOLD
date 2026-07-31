@@ -3,7 +3,7 @@ import {
  BarChart3, Activity, Target, RefreshCw, Briefcase,
  Check, Award, ExternalLink, X as XIcon
 } from 'lucide-react';
-import { CAREER_SUGGESTIONS } from '../studentProfileConstants';
+import { CAREER_SUGGESTIONS } from '../../utils/studentProfileConstants';
 import { formatDateString } from '../../../../shared/utils/dateFormatter';
 
 const ResultsTab = ({

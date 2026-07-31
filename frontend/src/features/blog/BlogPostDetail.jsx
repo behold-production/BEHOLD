@@ -85,13 +85,7 @@ const BlogPostDetail = () => {
 
   return (
     <div 
-      className="min-h-screen flex flex-col text-surface-900 pt-28 pb-20 selection:bg-[#0f172a] selection:text-[#00e5ff]"
-      style={{
-        backgroundImage: `url(${greenTexture})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundColor: '#d4f8fc'
-      }}
+      className="min-h-screen flex flex-col text-surface-900 pt-28 pb-20 selection:bg-[#0f172a] selection:text-[#00e5ff] bg-transparent"
     >
       <main className="flex-1">
         <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">

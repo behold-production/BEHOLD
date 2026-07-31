@@ -1,6 +1,6 @@
 import React from 'react';
-import { formatDateString } from '../../../../shared/utils/dateFormatter';
-import { formatCountdown } from '../utils';
+import { formatDateString } from "../../../../shared/utils/dateFormatter";
+import { formatCountdown } from '../../utils/utils';
 
 const OverviewTab = ({
   nextSession,

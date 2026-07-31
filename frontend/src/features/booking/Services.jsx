@@ -104,14 +104,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
   const sectionId = mode === 'experts' ? 'counsellors' : 'services';
 
   return (
-    <section id={sectionId} className="py-12 sm:py-16 bg-transparent text-surface-900 border-b border-surface-200"
-      style={{
-        backgroundImage: `url(${greenTexture})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundColor: '#d4f8fc'
-      }}
-    >
+    <section id={sectionId} className="py-12 sm:py-16 bg-transparent text-surface-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* ── SERVICES INTRO: UNFOLD WITH BEHOLD ── */}
@@ -142,7 +135,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                     Explore All Programs
                   </button>
                   <button
-                    onClick={() => { window.spaNavigate?.('/book-session'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                    onClick={() => { if (onBookTherapist) onBookTherapist(); }}
                     className="px-7 py-3 bg-surface-100 hover:bg-surface-200 text-slate-900 font-bold text-xs uppercase tracking-widest rounded-full transition-all border border-surface-200 cursor-pointer"
                   >
                     Book a Session
@@ -214,7 +207,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                     </p>
                   </div>
                   <button
-                    onClick={() => { window.spaNavigate?.('/book-session'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                    onClick={() => { if (onBookTherapist) onBookTherapist(); }}
                     className="w-full py-2 bg-brand hover:bg-brand-dark text-slate-900 font-bold text-[10px] sm:text-xs uppercase tracking-widest rounded-full transition-all cursor-pointer border-none shadow-2xs text-center"
                   >
                     Book a Session
@@ -264,7 +257,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
 
               {/* Role Pills */}
               <div className="flex items-center gap-2 overflow-x-auto scrollbar-none pb-2 xl:pb-0">
-                {['All', 'Consultant Psychologist', 'Clinical Psychologist', 'Career Mentor'].map(f => (
+                {['All', 'Consultant Psychologist', 'Clinical Psychologist', 'Psychiatrist'].map(f => (
                   <button
                     key={f}
                     onClick={() => setFilter(f)}
@@ -436,7 +429,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                       {/* Actions */}
                       <div className="flex items-center gap-2.5 pt-4 border-t border-surface-100">
                         <button
-                          onClick={() => { if (onBookTherapist) onBookTherapist(advisor.id); else window.spaNavigate('/book-session'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                          onClick={() => { if (onBookTherapist) onBookTherapist(advisor.id); }}
                           className="flex-1 py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-widest rounded-full border border-brand/30 transition-all cursor-pointer text-center shadow-xs"
                         >
                           Book Now

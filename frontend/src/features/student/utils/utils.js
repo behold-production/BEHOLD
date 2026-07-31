@@ -1,6 +1,6 @@
 import { jsPDF } from 'jspdf';
 import toast from 'react-hot-toast';
-import { formatDateString } from '../../../shared/utils/dateFormatter';
+import { formatDateString } from "../../../shared/utils/dateFormatter";
 
 export function getGreeting() {
   const h = new Date().getHours();
@@ -160,7 +160,7 @@ export const generateReceiptPDFDoc = async (bookingDetails, showAlert) => {
     doc.setFontSize(8.5);
     doc.setTextColor(82, 82, 91);
     doc.text(`Service Type: ${bookingDetails.service}`, 20, 86);
-    doc.text(`Advisor Assigned: ${bookingDetails.advisorName} (${bookingDetails.advisorRole})`, 20, 92);
+    doc.text(`Consultant Assigned: ${bookingDetails.advisorName} (${bookingDetails.advisorRole})`, 20, 92);
     doc.text(`Session Schedule: ${formatDateString(bookingDetails.date)} at ${bookingDetails.time}`, 20, 98);
     doc.text(`Session Mode: ${bookingDetails.mode}`, 20, 104);
 

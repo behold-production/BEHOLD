@@ -1,5 +1,5 @@
 import React from 'react';
-import { getInitials } from '../utils';
+import { getInitials } from '../../utils/utils';
 
 const HeroHeader = ({
   completion,

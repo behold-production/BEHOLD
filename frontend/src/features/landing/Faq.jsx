@@ -56,14 +56,7 @@ export default function Faq({ siteSettings }) {
     : filteredDefaultFaqs;
 
   return (
-    <section id="faqs" className="py-20 sm:py-28 bg-transparent text-surface-900 border-b border-surface-200"
-      style={{
-        backgroundImage: `url(${greenTexture})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundColor: '#d4f8fc'
-      }}
-    >
+    <section id="faqs" className="py-20 sm:py-28 bg-transparent text-surface-900">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Header */}

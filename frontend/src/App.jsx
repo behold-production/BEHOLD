@@ -4,7 +4,7 @@ import { MessageCircle, X, Download, ShieldAlert, Eye, EyeOff } from 'lucide-rea
 import { Toaster, useToasterStore, toast } from 'react-hot-toast';
 import Navbar from './shared/components/Navbar';
 import Hero from './features/landing/Hero';
-import CdatSection from './features/student/CdatSection';
+import CdatSection from './features/student/components/aptitude/CdatSection';
 import Services from './features/booking/Services';
 import About from './features/landing/About';
 import Faq from './features/landing/Faq';
@@ -17,6 +17,7 @@ import TherapistSwipeSection from './features/landing/TherapistSwipeSection';
 import FaqBlogSection from './features/landing/FaqBlogSection';
 import ContactInquirySection from './features/landing/ContactInquirySection';
 import globalBg from './assets/hero_watercolor_bg.png';
+import bShadeGreenBg from './assets/b.shade green.png';
 
 function lazyWithRetry(importFn) {
   return lazy(() =>
@@ -36,11 +37,12 @@ function lazyWithRetry(importFn) {
 
 const ServiceBooking = lazyWithRetry(() => import('./features/booking/ServiceBooking'));
 const AdvisorProfile = lazyWithRetry(() => import('./features/counsellor/AdvisorProfile'));
-const StudentProfile = lazyWithRetry(() => import('./features/student/StudentProfile'));
+const StudentProfile = lazyWithRetry(() => import('./features/student/components/profile/StudentProfile'));
 const PsychologistDashboard = lazyWithRetry(() => import('./features/counsellor/PsychologistDashboard'));
 const AdminDashboard = lazyWithRetry(() => import('./features/admin/AdminDashboard'));
-const AptitudeTest = lazyWithRetry(() => import('./features/student/AptitudeTest'));
-const AptitudeLanding = lazyWithRetry(() => import('./features/student/AptitudeLanding'));
+const TestResultsTab = lazyWithRetry(() => import('./features/admin/admin-dashboard/tabs/TestResultsTab'));
+const AptitudeTest = lazyWithRetry(() => import('./features/student/components/aptitude/AptitudeTest'));
+const AptitudeLanding = lazyWithRetry(() => import('./features/student/components/aptitude/AptitudeLanding'));
 const ResetPassword = lazyWithRetry(() => import('./features/auth/ResetPassword'));
 const BlogList = lazyWithRetry(() => import('./features/blog/BlogList'));
 const BlogPostDetail = lazyWithRetry(() => import('./features/blog/BlogPostDetail'));
@@ -215,6 +217,7 @@ function UnauthorizedFallback({ roleRequired }) {
 
 export default function App() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [testProfile, setTestProfile] = useState(null);
   const [bookingAdvisor, setBookingAdvisor] = useState(null);
   const [pendingScrollSection, setPendingScrollSection] = useState(null);
@@ -419,8 +422,7 @@ export default function App() {
 
   const handleBookTherapist = (advisorId) => {
     setBookingAdvisor(advisorId);
-    navigate('/book-session');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setIsBookingModalOpen(true);
   };
 
   const handleFinishTest = async (dominantDomain, scores) => {
@@ -585,20 +587,30 @@ export default function App() {
         </div>
       )}
 
-      {/* Global Background Image for User Sections */}
+      {/* Global Fixed Background Image Layer (b.shade green.png) for all sections except Hero */}
       {!hideNavbarAndFooter && (
-         <div 
-           className="fixed inset-0 z-[-1] pointer-events-none"
-           style={{
-             backgroundImage: `url(${globalBg})`,
-             backgroundSize: 'cover',
-             backgroundPosition: 'center',
-             backgroundColor: '#86ad66'
-           }}
-         />
+        <div 
+          className="fixed inset-0 z-[-1] pointer-events-none overflow-hidden select-none"
+        >
+          <div 
+            className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat pointer-events-none"
+            style={{
+              backgroundImage: `url(${bShadeGreenBg})`,
+            }}
+          />
+          {/* Subtle Ambient Light Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#d4f8fc]/5 to-[#d4f8fc]/15 pointer-events-none" />
+        </div>
       )}
 
       <AuthModals isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
+
+      <ServiceBooking 
+        isOpen={isBookingModalOpen} 
+        onClose={() => setIsBookingModalOpen(false)} 
+        preselectedAdvisorId={bookingAdvisor} 
+        clearPreselectedAdvisor={() => setBookingAdvisor(null)} 
+      />
 
       {/* Navbar — hidden on admin/counsellor dashboards */}
       {!hideNavbarAndFooter && (
@@ -606,6 +618,7 @@ export default function App() {
           navigateToSection={navigateToSection}
           currentView={location.pathname}
           onOpenAuth={() => setIsAuthModalOpen(true)}
+          onOpenBooking={() => setIsBookingModalOpen(true)}
           siteName={siteSettings.siteName}
           siteSettings={siteSettings}
         />
@@ -632,7 +645,7 @@ export default function App() {
           <Route path="/about" element={
             <main className="fade-in-up pt-16 sm:pt-20 bg-transparent">
               <About siteSettings={siteSettings} />
-              <WhyChooseUs siteSettings={siteSettings} />
+              <WhyChooseUs siteSettings={siteSettings} onOpenBooking={() => setIsBookingModalOpen(true)} />
               <Reviews siteSettings={siteSettings} />
             </main>
           } />
@@ -667,16 +680,7 @@ export default function App() {
             </main>
           } />
 
-          {/* Book Session Page — dedicated booking form */}
-          <Route path="/book-session" element={
-            <main className="fade-in-up pt-16 sm:pt-20 bg-transparent">
-              <ServiceBooking
-                preselectedAdvisorId={bookingAdvisor}
-                clearPreselectedAdvisor={() => setBookingAdvisor(null)}
-                onOpenAuth={() => setIsAuthModalOpen(true)}
-              />
-            </main>
-          } />
+
 
           {/* Student Profile */}
           <Route path="/profile" element={
@@ -737,6 +741,7 @@ export default function App() {
           enablePsychology={siteSettings.enablePsychology !== false}
           enableCareerMentoring={siteSettings.enableCareerMentoring !== false}
           siteSettings={siteSettings}
+          onOpenBooking={() => setIsBookingModalOpen(true)}
         />
       )}
 

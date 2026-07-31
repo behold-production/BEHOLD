@@ -3,7 +3,7 @@ import { useBookingViewModel } from './useBookingViewModel';
 import DateTimePicker from './DateTimePicker';
 import TimePicker from './TimePicker';
 import BookingAuthModal from './BookingAuthModal';
-import { FileDown } from 'lucide-react';
+import { FileDown, X } from 'lucide-react';
 import { formatDateString } from '../../shared/utils/dateFormatter';
 import toast from 'react-hot-toast';
 import { ScrollDot } from '../../shared/components/BrandDot';
@@ -52,7 +52,9 @@ const CAREER_FLOW = {
     ]
 };
 
-export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedAdvisor }) {
+export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, clearPreselectedAdvisor }) {
+    if (!isOpen) return null;
+
     const {
         user,
         bookingService,
@@ -246,15 +248,16 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
     if (!enablePsychology && !enableCareerMentoring && !isRescheduleParam) {
         return (
+            <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
             <div 
-                className="min-h-[75vh] flex flex-col items-center justify-center text-center px-4 py-16 font-sans select-none"
-                style={{
-                    backgroundImage: `url(${greenTexture})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    backgroundColor: '#d4f8fc'
-                }}
+                className="relative w-full max-w-md max-h-screen sm:max-h-[90vh] bg-white sm:rounded-2xl shadow-2xl overflow-y-auto flex flex-col items-center justify-center text-center px-4 py-16 font-sans select-none"
             >
+                <button 
+                    onClick={onClose}
+                    className="absolute top-4 right-4 z-10 w-10 h-10 bg-surface-100 hover:bg-surface-200 rounded-full flex items-center justify-center transition-colors cursor-pointer border-none"
+                >
+                    <X className="w-5 h-5 text-surface-600" />
+                </button>
                 <div className="max-w-md w-full bg-white border border-surface-200 p-8 rounded-xl shadow-sm space-y-6 animate-in fade-in zoom-in-95 duration-500">
                     <div className="w-16 h-16 bg-surface-100 border border-surface-200 rounded-xl flex items-center justify-center mx-auto text-surface-900 shadow-sm">
                         <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -298,20 +301,25 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                     </div>
                 </div>
             </div>
+            </div>
         );
     }
 
     return (
-        <div 
-            className="min-h-screen pt-24 sm:pt-28 pb-16 sm:pb-24 text-[#0f172a] text-left border-b border-surface-200"
-            style={{
-                backgroundImage: `url(${greenTexture})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                backgroundColor: '#d4f8fc'
-            }}
-        >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-10">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-0 sm:p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
+            <div className="relative w-full max-w-7xl h-full sm:h-auto sm:max-h-[90vh] bg-white sm:rounded-2xl shadow-2xl overflow-y-auto overflow-x-hidden text-[#0f172a] text-left">
+                {/* Close Button */}
+                <button 
+                    onClick={onClose}
+                    className="absolute top-4 right-4 z-10 w-10 h-10 bg-white border border-surface-200 shadow-sm hover:bg-surface-50 rounded-full flex items-center justify-center transition-colors cursor-pointer"
+                >
+                    <X className="w-5 h-5 text-surface-600" />
+                </button>
+
+                <div 
+                    className="min-h-full py-10 sm:py-12 px-4 sm:px-6 lg:px-8 bg-[#f8fafc]"
+                >
+                    <div className="space-y-8 sm:space-y-10">
 
                 {/* Header */}
                 <div className="text-center flex flex-col items-center space-y-3">
@@ -1583,6 +1591,8 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                     )}
 
                 </div>
+                </div>
+                </div>
 
                 <BookingAuthModal
                     isOpen={showAuthModal}
@@ -1596,7 +1606,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                 />
 
                 {showNoCounsellorsModal && (
-                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
+                    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
                         <div className="bg-white border border-surface-200 rounded-xl w-full max-w-sm p-6 shadow-sm space-y-4 text-center animate-in zoom-in-95 duration-200">
                             <div className="w-12 h-12 bg-amber-50 border border-amber-200 rounded-full flex items-center justify-center mx-auto text-amber-600 shadow-sm text-xl font-semibold ">
                                 !

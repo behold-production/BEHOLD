@@ -65,13 +65,7 @@ const BlogList = () => {
 
   return (
     <div 
-      className="min-h-screen flex flex-col text-surface-900 pt-24 pb-20 border-b border-surface-200"
-      style={{
-        backgroundImage: `url(${greenTexture})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundColor: '#d4f8fc'
-      }}
+      className="min-h-screen flex flex-col text-surface-900 pt-24 pb-20 bg-transparent"
     >
       
       {/* Hero Header */}

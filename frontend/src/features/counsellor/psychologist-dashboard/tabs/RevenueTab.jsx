@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 import ApiService from '../../../../shared/services/api';
 import { formatDateString } from '../../../../shared/utils/dateFormatter';
-import { generateReceiptPDFDoc } from '../../../student/student-profile/utils';
+import { generateReceiptPDFDoc } from "../../../student/utils/utils";
 import toast from 'react-hot-toast';
 
 const formatAmount = (num) => {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Bell, LayoutDashboard, User, Calendar, BarChart3, LogOut } from 'lucide-react';
-import { TABS } from '../studentProfileConstants';
+import { TABS } from '../../utils/studentProfileConstants';
 import { useAuth } from '../../../../shared/context/AuthContext';
 import LogoutConfirmModal from '../../../../shared/components/LogoutConfirmModal';
 

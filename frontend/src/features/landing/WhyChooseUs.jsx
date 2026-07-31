@@ -2,21 +2,15 @@ import React from 'react';
 import luxuryClinicRoom from '../../assets/luxury_clinic_room.png';
 import greenTexture from '../../assets/clarity_bg.png';
 
-export default function WhyChooseUs({ siteSettings }) {
+export default function WhyChooseUs({ siteSettings, onOpenBooking }) {
   const handleBook = () => {
-    window.spaNavigate?.('/book-session');
+    if (onOpenBooking) onOpenBooking();
+    else window.spaNavigate?.('/booking');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
-    <section id="why-choose-us" className="py-20 sm:py-28 bg-transparent text-surface-900 border-b border-surface-200"
-      style={{
-        backgroundImage: `url(${greenTexture})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundColor: '#d4f8fc'
-      }}
-    >
+    <section id="why-choose-us" className="py-20 sm:py-28 text-surface-900 bg-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Editorial Split Matrix Layout */}

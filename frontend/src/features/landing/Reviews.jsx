@@ -281,14 +281,7 @@ export default function Reviews({ siteSettings }) {
   };
 
   return (
-    <section id="reviews" className="py-16 sm:py-24 bg-transparent border-b border-surface-200"
-      style={{
-        backgroundImage: `url(${greenTexture})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundColor: '#d4f8fc'
-      }}
-    >
+    <section id="reviews" className="py-16 sm:py-24 bg-transparent">
       <div className="max-w-6xl mx-auto">
 
         {/* Header */}

@@ -1025,8 +1025,8 @@ export default function SettingsTab(props) {
                       return currentOrder.map((sectionKey, idx) => {
                         const sectionMetadata = {
                           'counselling-intro': {
-                            title: "Counselling & Mentorship Cards",
-                            desc: "Displays the dual blocks for Career Mentoring & Psychological Counselling."
+                            title: "Psychology & Mentorship Cards",
+                            desc: "Displays the dual blocks for Career Mentoring & Psychological Care."
                           },
                           'whyChooseUs': {
                             title: "Why Choose Us",
@@ -1037,8 +1037,8 @@ export default function SettingsTab(props) {
                             desc: "Displays the grid, search filter, and list of consultant psychologists."
                           },
                           counselling: {
-                            title: "Counselling & Mentorship (Combined legacy)",
-                            desc: "Displays emotional wellbeing services and professional advisors list."
+                            title: "Psychological Care & Mentorship",
+                            desc: "Displays emotional wellbeing services and professional psychologists list."
                           },
                           aptitude: {
                             title: "CIGI Aptitude Test",
@@ -2015,7 +2015,7 @@ export default function SettingsTab(props) {
                           className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold cursor-pointer transition-colors"
                         >
                           <option value="user">All Students / Users</option>
-                          <option value="counsellor">All Psychologists / Psychologists</option>
+                          <option value="counsellor">All Psychologists</option>
                           <option value="everyone">Everyone (Students & Psychologists)</option>
                         </select>
                       </div>

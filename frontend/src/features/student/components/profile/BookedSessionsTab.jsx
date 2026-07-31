@@ -4,8 +4,8 @@ import {
  ExternalLink, Lock, Download, RefreshCw, X as XIcon,
  CalendarDays, CheckCircle2, Star, Award, Trophy, Trash2
 } from 'lucide-react';
-import { formatDateString } from '../../../../shared/utils/dateFormatter';
-import { formatCountdown } from '../utils';
+import { formatDateString } from "../../../../shared/utils/dateFormatter";
+import { formatCountdown } from '../../utils/utils';
 
 const BookedSessionsTab = ({
  sessionSubTab,

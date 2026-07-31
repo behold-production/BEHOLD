@@ -2,7 +2,7 @@ import React from 'react';
 import { Mail, Phone, MapPin } from 'lucide-react';
 import { ScrollDot } from './BrandDot';
 
-export default function Footer({ navigateToSection, siteName, siteCopyright, onOpenDocs, enablePsychology, enableCareerMentoring, siteSettings }) {
+export default function Footer({ navigateToSection, siteName, siteCopyright, onOpenDocs, enablePsychology, enableCareerMentoring, siteSettings, onOpenBooking }) {
   const settings = siteSettings || {};
   const emailAddr = settings.contactEmail?.trim() || null;
   const phoneVal = settings.contactPhone?.trim() || null;
@@ -72,7 +72,7 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
                 // Sample test link shown only when admin enables both aptitude AND sample test
                 settings?.enableAptitude !== false && settings?.enableSampleTest !== false &&
                   { label: 'Sample Aptitude Assessment', action: () => goTo('/sample-test') },
-                { label: 'Book a Session', action: () => goTo('/book-session') },
+                { label: 'Book a Session', action: () => { if (onOpenBooking) onOpenBooking(); else goTo('/booking'); } },
               ].filter(Boolean).map(({ label, action }) => (
                 <li key={label}>
                   <button

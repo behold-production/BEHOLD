@@ -1,5 +1,5 @@
 import React from 'react';
-import greenTexture from '../../assets/clarity_bg.png';
+import greenTexture from '../../../../assets/clarity_bg.png';
 
 export default function AptitudeLanding({ setView }) {
   const handleProceed = () => {
@@ -19,13 +19,7 @@ export default function AptitudeLanding({ setView }) {
 
   return (
     <div 
-      className="w-full min-h-screen pt-28 pb-20 text-surface-900 border-b border-surface-200"
-      style={{
-        backgroundImage: `url(${greenTexture})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundColor: '#d4f8fc'
-      }}
+      className="w-full min-h-screen pt-28 pb-20 text-surface-900 bg-transparent"
     >
       <div className="max-w-6xl mx-auto px-6 sm:px-10 lg:px-12 flex flex-col items-center text-center">
         

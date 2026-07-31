@@ -8,14 +8,7 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
   const settings = siteSettings || {};
 
   return (
-    <section id="about" className="py-20 sm:py-28 bg-transparent text-surface-900 border-b border-surface-200"
-      style={{
-        backgroundImage: `url(${greenTexture})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundColor: '#d4f8fc'
-      }}
-    >
+    <section id="about" className="py-20 sm:py-28 text-surface-900 bg-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Main 2-Column Section */}
