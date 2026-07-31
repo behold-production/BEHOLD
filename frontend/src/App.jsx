@@ -48,6 +48,7 @@ const BlogList = lazyWithRetry(() => import('./features/blog/BlogList'));
 const BlogPostDetail = lazyWithRetry(() => import('./features/blog/BlogPostDetail'));
 const FaqsPage = lazyWithRetry(() => import('./features/faqs/FaqsPage'));
 import BlogSection from './features/landing/BlogSection';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 import { useAuth } from './shared/context/AuthContext';
 import ApiService from './shared/services/api';
@@ -789,6 +790,7 @@ export default function App() {
           </div>
         </div>
       )}
+      <SpeedInsights />
     </div>
   );
 }

@@ -487,8 +487,9 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
           </button>
         </div>
 
-          </> {/* end loading === false fragment */}
-        )} {/* end loading ternary */}
+          </>
+        )}
+        {/* end loading ternary */}
 
       </div>
     </section>
