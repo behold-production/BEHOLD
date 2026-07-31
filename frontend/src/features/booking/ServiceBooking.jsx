@@ -1425,7 +1425,6 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                                 </div>
                                             </form>
                                         </div>
-                                    </div>
                                 )}
                             </div>
 
