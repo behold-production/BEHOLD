@@ -1,5 +1,5 @@
 import React from "react";
-import heroWatercolorBg from "../../assets/hero_watercolor_bg.png";
+import heroWatercolorBg from "../../assets/clarity_bg.png";
 
 export default function Hero({ siteSettings, navigateToSection }) {
   const settings = siteSettings || {};
@@ -28,15 +28,8 @@ export default function Hero({ siteSettings, navigateToSection }) {
       id="home"
       className="relative min-h-screen w-full overflow-hidden flex items-center justify-center pt-24 pb-16 px-5 sm:px-10 lg:px-16"
     >
-      {/* Background Watercolor Painting */}
+      {/* Background left empty to show global App.jsx background */}
       <div className="absolute inset-0 z-0">
-        <img
-          src={settings.heroBgImage || heroWatercolorBg}
-          alt="Watercolor Landscape"
-          className="w-full h-full object-cover object-center filter brightness-[1.02] contrast-[0.98]"
-        />
-        {/* Soft lighting overlay to blend nicely with surrounding UI */}
-        <div className="absolute inset-0 bg-gradient-to-b from-sky-100/30 via-transparent to-emerald-900/10 pointer-events-none" />
       </div>
 
       {/* Main Container */}

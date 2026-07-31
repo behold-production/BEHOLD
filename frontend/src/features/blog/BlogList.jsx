@@ -79,7 +79,7 @@ const BlogList = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white text-surface-900 pt-24 pb-20 border-b border-surface-200">
+    <div className="min-h-screen flex flex-col bg-transparent text-surface-900 pt-24 pb-20 border-b border-surface-200">
       
       {/* Hero Header */}
       <section className="relative z-10 py-16 sm:py-20 px-4 sm:px-6 lg:px-8">
@@ -147,7 +147,7 @@ const BlogList = () => {
             <div className="w-8 h-8 border-2 border-[#0f172a] border-t-[#00e5ff] rounded-full animate-spin"></div>
           </div>
         ) : blogs.length === 0 ? (
-          <div className="text-center py-20 bg-white rounded-2xl border border-surface-200 shadow-xs max-w-2xl mx-auto p-8">
+          <div className="text-center py-20 bg-white rounded-xl border border-surface-200 shadow-xs max-w-2xl mx-auto p-8">
             <div className="w-16 h-16 bg-surface-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <BookOpen className="w-8 h-8 text-[#0f172a]" />
             </div>
@@ -161,7 +161,7 @@ const BlogList = () => {
                 <article
                   key={post._id || post.slug}
                   onClick={() => handleOpenBlog(post.slug)}
-                  className="group relative bg-white border border-surface-200 hover:border-[#00e5ff] rounded-2xl overflow-hidden transition-all duration-300 flex flex-col cursor-pointer shadow-xs hover:shadow-md h-full justify-between"
+                  className="group relative bg-white border border-surface-200 hover:border-[#00e5ff] rounded-xl overflow-hidden transition-all duration-300 flex flex-col cursor-pointer shadow-xs hover:shadow-md h-full justify-between"
                 >
                   {/* Cover Image */}
                   <div className="relative h-56 w-full overflow-hidden bg-surface-100 shrink-0">

@@ -246,15 +246,15 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
     if (!enablePsychology && !enableCareerMentoring && !isRescheduleParam) {
         return (
             <div className="min-h-[75vh] flex flex-col items-center justify-center text-center px-4 py-16 bg-surface-50 font-sans select-none">
-                <div className="max-w-md w-full bg-white border border-surface-200 p-8 rounded-[8px] shadow-sm space-y-6 animate-in fade-in zoom-in-95 duration-500">
-                    <div className="w-16 h-16 bg-surface-100 border border-surface-200 rounded-[8px] flex items-center justify-center mx-auto text-surface-900 shadow-sm">
+                <div className="max-w-md w-full bg-white border border-surface-200 p-8 rounded-xl shadow-sm space-y-6 animate-in fade-in zoom-in-95 duration-500">
+                    <div className="w-16 h-16 bg-surface-100 border border-surface-200 rounded-xl flex items-center justify-center mx-auto text-surface-900 shadow-sm">
                         <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                         </svg>
                     </div>
 
                     <div className="space-y-2">
-                        <span className="text-sm bg-surface-900 text-white px-3 py-1 rounded-[8px] font-bold w-fit mx-auto block">
+                        <span className="text-sm bg-surface-900 text-white px-3 py-1 rounded-xl font-bold w-fit mx-auto block">
                             System Notice
                         </span>
                         <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-surface-900 ">
@@ -272,7 +272,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                 window.spaNavigate('/');
                                 window.scrollTo({ top: 0, behavior: 'smooth' });
                             }}
-                            className="px-6 py-3 min-h-[48px] bg-surface-900 hover:bg-surface-800 text-white text-sm font-semibold rounded-[8px] transition-all cursor-pointer shadow-none w-full sm:w-auto text-center border-none"
+                            className="px-6 py-3 min-h-[48px] bg-surface-900 hover:bg-surface-800 text-white text-sm font-semibold rounded-xl transition-all cursor-pointer shadow-none w-full sm:w-auto text-center border-none"
                         >
                             Home Page
                         </button>
@@ -282,7 +282,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                 window.spaNavigate('/sample-test');
                                 window.scrollTo({ top: 0, behavior: 'smooth' });
                             }}
-                            className="px-6 py-3 min-h-[48px] bg-white border border-surface-200 hover:bg-surface-50 text-surface-900 text-sm font-semibold rounded-[8px] transition-all cursor-pointer w-full sm:w-auto text-center"
+                            className="px-6 py-3 min-h-[48px] bg-white border border-surface-200 hover:bg-surface-50 text-surface-900 text-sm font-semibold rounded-xl transition-all cursor-pointer w-full sm:w-auto text-center"
                         >
                             Take Sample Test
                         </button>
@@ -293,7 +293,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
     }
 
     return (
-        <div className="min-h-screen pt-24 sm:pt-28 pb-16 sm:pb-24 bg-white text-[#0f172a] text-left border-b border-surface-200">
+        <div className="min-h-screen pt-24 sm:pt-28 pb-16 sm:pb-24 bg-transparent text-[#0f172a] text-left border-b border-surface-200">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-10">
 
                 {/* Header */}
@@ -328,7 +328,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                         const currentStepIdx = stepMapping[bookingStep] || 0;
                         const stepLabels = ['Schedule & Advisor', 'Account & Payment', 'Session Confirmed'];
                         return (
-                            <div className="bg-white border border-surface-200 p-5 sm:p-6 space-y-5 rounded-2xl shadow-xs animate-in fade-in duration-300">
+                            <div className="bg-white border border-surface-200 p-5 sm:p-6 space-y-5 rounded-xl shadow-xs animate-in fade-in duration-300">
                                 {/* Mobile: compact progress bar */}
                                 <div className="flex sm:hidden items-center gap-2">
                                     <div className="flex items-center gap-1.5 flex-1 min-w-0">
@@ -398,7 +398,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
                     {bookingStep === 'success' ? (
                         /* STEP 5: Success & Confirmation View */
-                        <div className="p-6 sm:p-10 bg-white border border-surface-200 rounded-[8px] max-w-2xl mx-auto shadow-sm space-y-6 text-center animate-in fade-in duration-300">
+                        <div className="p-6 sm:p-10 bg-white border border-surface-200 rounded-xl max-w-2xl mx-auto shadow-sm space-y-6 text-center animate-in fade-in duration-300">
                             <style>{`
  @keyframes checkmark-circle {
  0% { transform: scale(0); opacity: 0; }
@@ -429,14 +429,14 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
  }
  `}</style>
 
-                            <div className="w-20 h-20 bg-surface-50 border border-surface-200 rounded-[8px] flex items-center justify-center mx-auto text-surface-900 shadow-sm animate-checkmark-circle">
+                            <div className="w-20 h-20 bg-surface-50 border border-surface-200 rounded-xl flex items-center justify-center mx-auto text-surface-900 shadow-sm animate-checkmark-circle">
                                 <svg className="w-10 h-10 text-surface-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                                     <path className="animate-checkmark-path" strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                                 </svg>
                             </div>
 
                             <div className="space-y-2 animate-scale-pop">
-                                <span className="text-sm bg-surface-900 text-white border border-surface-900 px-3 py-1 rounded-[8px] font-semibold w-fit mx-auto block">
+                                <span className="text-sm bg-surface-900 text-white border border-surface-900 px-3 py-1 rounded-xl font-semibold w-fit mx-auto block">
                                     {rescheduleSession ? 'reschedule requested' : 'session confirmed'}
                                 </span>
                                 <h3 className="text-xl sm:text-2xl font-semibold text-surface-900 mt-2">
@@ -457,7 +457,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                             </div>
 
                             {/* Invoice & Meeting Card */}
-                            <div className="bg-surface-50 border border-surface-200 rounded-[8px] p-5 text-left space-y-4 shadow-sm animate-card-fade">
+                            <div className="bg-surface-50 border border-surface-200 rounded-xl p-5 text-left space-y-4 shadow-sm animate-card-fade">
                                 <h4 className="text-sm font-semibold text-surface-900 border-b border-surface-200 pb-2">
                                     {rescheduleSession ? 'Reschedule Details' : 'Booking Confirmation'}
                                 </h4>
@@ -493,7 +493,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
                                 {/* Google Meet Link if Online */}
                                 {bookingMode === 'ONLINE' && !rescheduleSession && (
-                                    <div className="pt-4 border-t border-surface-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-[8px] border border-surface-200 mt-2">
+                                    <div className="pt-4 border-t border-surface-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-xl border border-surface-200 mt-2">
                                         <div>
                                             <span className="text-sm font-semibold text-surface-900 block mb-1">
                                                 Google Meet Session Link
@@ -565,7 +565,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                                     appliedDiscount: appliedDiscount
                                                 });
                                             }}
-                                            className="px-6 py-3 bg-white border border-surface-200 text-surface-900 hover:bg-surface-50 text-sm font-semibold rounded-[8px] transition cursor-pointer w-full sm:w-auto flex items-center justify-center gap-2"
+                                            className="px-6 py-3 bg-white border border-surface-200 text-surface-900 hover:bg-surface-50 text-sm font-semibold rounded-xl transition cursor-pointer w-full sm:w-auto flex items-center justify-center gap-2"
                                         >
                                             <FileDown className="w-4 h-4 text-surface-700" />
                                             {downloadingPdf ? 'Generating PDF...' : 'Download PDF Receipt'}
@@ -675,7 +675,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
                                             {/* DOORSTEP LOCATION INPUTS - CONFIG STEP */}
                                             {bookingMode === 'DOOR_STEP' && (
-                                                <div className="space-y-4 p-0 sm:p-5 bg-transparent sm:bg-surface-50 border-0 sm:border border-surface-200 rounded-[8px] animate-in fade-in slide-in-from-top-2 duration-300 text-left">
+                                                <div className="space-y-4 p-0 sm:p-5 bg-transparent sm:bg-surface-50 border-0 sm:border border-surface-200 rounded-xl animate-in fade-in slide-in-from-top-2 duration-300 text-left">
                                                     <div className="border-b border-surface-200 pb-2 mb-2">
                                                         <h4 className="text-sm font-semibold text-surface-900 flex items-center gap-1.5">
                                                             <span className="w-1.5 h-3 bg-surface-900 rounded-full"></span>
@@ -695,7 +695,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                                                 placeholder="Type your address to search... (e.g. Kozhikode, Kerala)"
                                                                 value={clientSearchQuery}
                                                                 onChange={(e) => setClientSearchQuery(e.target.value)}
-                                                                className="flex-1 min-w-0 px-3.5 py-2.5 bg-white border border-surface-200 text-sm font-medium text-surface-900 outline-none focus:border-surface-900 rounded-[8px] transition"
+                                                                className="flex-1 min-w-0 px-3.5 py-2.5 bg-white border border-surface-200 text-sm font-medium text-surface-900 outline-none focus:border-surface-900 rounded-xl transition"
                                                                 onKeyDown={(e) => {
                                                                     if (e.key === 'Enter') {
                                                                         e.preventDefault();
@@ -715,7 +715,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
                                                         {/* Autocomplete Dropdown */}
                                                         {clientSearchResults.length > 0 && (
-                                                            <div className="absolute left-0 right-0 mt-1 bg-white border border-surface-200 rounded-[8px] max-h-40 overflow-y-auto z-50 shadow-sm divide-y divide-surface-100">
+                                                            <div className="absolute left-0 right-0 mt-1 bg-white border border-surface-200 rounded-xl max-h-40 overflow-y-auto z-50 shadow-sm divide-y divide-surface-100">
                                                                 {clientSearchResults.map((res, index) => (
                                                                     <button
                                                                         key={index}
@@ -827,7 +827,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                         {!(bookingMode === 'DOOR_STEP' && (!bookingForm.clientLatitude || !bookingForm.clientLongitude)) ? (
                                             <div className="space-y-2 pt-4 border-t border-surface-200 animate-in fade-in duration-300">
                                                 <label className="text-sm font-semibold text-surface-900 block ">1. Select Date</label>
-                                                <div className="p-0 sm:p-4 bg-transparent sm:bg-surface-50 border-0 sm:border border-surface-200 rounded-[8px]">
+                                                <div className="p-0 sm:p-4 bg-transparent sm:bg-surface-50 border-0 sm:border border-surface-200 rounded-xl">
                                                     <DateTimePicker
                                                         selectedDate={selectedDate}
                                                         selectedTime={selectedTime}
@@ -843,7 +843,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                                 </div>
                                             </div>
                                         ) : (
-                                            <div className="p-4 sm:p-6 border border-dashed border-surface-200 rounded-[8px] bg-surface-50 text-surface-600 text-center font-medium text-sm mt-4">
+                                            <div className="p-4 sm:p-6 border border-dashed border-surface-200 rounded-xl bg-surface-50 text-surface-600 text-center font-medium text-sm mt-4">
                                                 Please search or detect your location address to show available psychologists within 10 km.
                                             </div>
                                         )}
@@ -857,7 +857,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                                     </label>
                                                 </div>
                                                 {isAdvisorLocked && selectedAdvisor ? (
-                                                    <div className="p-4 border border-surface-900 bg-surface-50 shadow-sm rounded-[8px]">
+                                                    <div className="p-4 border border-surface-900 bg-surface-50 shadow-sm rounded-xl">
                                                         <div className="flex items-start justify-between gap-3">
                                                             <div className="space-y-1.5 text-left min-w-0 flex-1">
                                                                 <h4 className="font-bold text-surface-900 text-sm sm:text-base leading-tight ">{selectedAdvisor.name}</h4>
@@ -893,7 +893,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
                                                             if (filteredAdvisors.length === 0) {
                                                                 return (
-                                                                    <div className="p-4 border border-dashed border-surface-200 rounded-[8px] bg-surface-50 text-surface-600 text-center font-medium text-sm">
+                                                                    <div className="p-4 border border-dashed border-surface-200 rounded-xl bg-surface-50 text-surface-600 text-center font-medium text-sm">
                                                                         No psychologists are available matching your criteria.
                                                                     </div>
                                                                 );
@@ -903,7 +903,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
                                                             if (availableAdvisors.length === 0) {
                                                                 return (
-                                                                    <div className="p-4 border border-dashed border-surface-200 rounded-[8px] bg-surface-50 text-surface-600 text-center font-medium text-sm">
+                                                                    <div className="p-4 border border-dashed border-surface-200 rounded-xl bg-surface-50 text-surface-600 text-center font-medium text-sm">
                                                                 No psychologists are available on this selected date. Please choose another date.
                                                                     </div>
                                                                 );
@@ -920,7 +920,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
                                                                         if (isSelected) {
                                                                             return (
-                                                                                <div key={advisor.id} className="border-[2px] border-brand rounded-[8px] bg-white overflow-hidden animate-in fade-in slide-in-from-top-2 text-left shadow-sm relative">
+                                                                                <div key={advisor.id} className="border-[2px] border-brand rounded-xl bg-white overflow-hidden animate-in fade-in slide-in-from-top-2 text-left shadow-sm relative">
                                                                                     {/* TOP SECTION: Avatar + Name/Title */}
                                                                                     <div className="p-4 sm:p-5 flex items-center gap-4 bg-surface-50 border-b border-surface-200">
                                                                                         {(() => {
@@ -1038,7 +1038,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                                                                                     e.stopPropagation();
                                                                                                     window.open(`/advisor/${advisor.id}`, '_blank');
                                                                                                 }}
-                                                                                                className="flex-1 py-3 bg-white border-2 border-surface-200 text-surface-900 font-semibold text-sm rounded-[8px] hover:border-surface-900 hover:bg-surface-50 transition-colors text-center cursor-pointer shadow-none"
+                                                                                                className="flex-1 py-3 bg-white border-2 border-surface-200 text-surface-900 font-semibold text-sm rounded-xl hover:border-surface-900 hover:bg-surface-50 transition-colors text-center cursor-pointer shadow-none"
                                                                                             >
                                                                                                 View Profile
                                                                                             </button>
@@ -1052,7 +1052,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                                                                                         handleStepChange('payment');
                                                                                                     }
                                                                                                 }}
-                                                                                                className="flex-1 py-3 bg-surface-900 text-white font-semibold text-sm rounded-[8px] hover:bg-black transition-colors text-center border-2 border-surface-900 cursor-pointer shadow-sm"
+                                                                                                className="flex-1 py-3 bg-surface-900 text-white font-semibold text-sm rounded-xl hover:bg-black transition-colors text-center border-2 border-surface-900 cursor-pointer shadow-sm"
                                                                                             >
                                                                                                 Book Now
                                                                                             </button>
@@ -1075,7 +1075,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                                                                     }
                                                                                     setSelectedTime('');
                                                                                 }}
-                                                                                className={`p-4 sm:p-5 border-[2px] rounded-[8px] transition ${!isAvailable
+                                                                                className={`p-4 sm:p-5 border-[2px] rounded-xl transition ${!isAvailable
                                                                                     ? 'bg-surface-50 border-surface-200 opacity-50 cursor-not-allowed'
                                                                                     : 'bg-white border-surface-200 hover:border-surface-900 hover:shadow-sm cursor-pointer active:scale-[0.99]'
                                                                                     }`}
@@ -1258,7 +1258,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                                     type="button"
                                                     disabled={!selectedDate || !selectedTime || !selectedAdvisor}
                                                     onClick={() => handleStepChange('payment')}
-                                                    className="px-6 py-2.5 min-h-[48px] bg-surface-900 text-white font-semibold text-sm rounded-[8px] transition hover:bg-black disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center border-none shadow-none w-full sm:w-auto"
+                                                    className="px-6 py-2.5 min-h-[48px] bg-surface-900 text-white font-semibold text-sm rounded-xl transition hover:bg-black disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center border-none shadow-none w-full sm:w-auto"
                                                 >
                                                     Account & Payment
                                                 </button>
@@ -1292,12 +1292,12 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                         </div>
 
                                         {user && (
-                                            <div className="bg-surface-50 border border-surface-200 rounded-[8px] p-4 flex items-center justify-between gap-3 animate-in fade-in duration-300 shadow-sm">
+                                            <div className="bg-surface-50 border border-surface-200 rounded-xl p-4 flex items-center justify-between gap-3 animate-in fade-in duration-300 shadow-sm">
                                                 <div className="flex-1 min-w-0">
                                                     <span className="text-sm font-semibold text-surface-900 block truncate">{user.name}</span>
                                                     <span className="text-sm font-bold text-surface-600 truncate block">{user.email}</span>
                                                 </div>
-                                                <span className="shrink-0 text-sm font-semibold bg-surface-900 text-white px-2.5 py-1 rounded-[8px]">
+                                                <span className="shrink-0 text-sm font-semibold bg-surface-900 text-white px-2.5 py-1 rounded-xl">
                                                     ✓ Authenticated
                                                 </span>
                                             </div>
@@ -1305,7 +1305,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
                                         {/* DOORSTEP LOCATION SUMMARY - PAYMENT STEP */}
                                         {bookingMode === 'DOOR_STEP' && (
-                                            <div className="p-0 sm:p-4 bg-transparent sm:bg-surface-50 border-0 sm:border border-surface-200 rounded-[8px] text-left space-y-1 animate-in fade-in duration-300">
+                                            <div className="p-0 sm:p-4 bg-transparent sm:bg-surface-50 border-0 sm:border border-surface-200 rounded-xl text-left space-y-1 animate-in fade-in duration-300">
                                                 <span className="font-semibold text-surface-900 block text-sm">
                                                     Doorstep Visit Location
                                                 </span>
@@ -1317,7 +1317,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                                     const distance = getCalculatedDistance();
                                                     if (distance !== null) {
                                                         return (
-                                                            <span className="inline-block mt-1.5 font-semibold text-surface-900 bg-surface-50 border border-surface-200 px-2 py-0.5 rounded-[8px] text-sm">
+                                                            <span className="inline-block mt-1.5 font-semibold text-surface-900 bg-surface-50 border border-surface-200 px-2 py-0.5 rounded-xl text-sm">
                                                                 ✓ Distance: {distance.toFixed(2)} km away
                                                             </span>
                                                         );
@@ -1329,7 +1329,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
                                         {/* OFFLINE LOCATION SUMMARY - PAYMENT STEP */}
                                         {bookingMode === 'OFFLINE' && selectedAdvisor && (
-                                            <div className="p-0 sm:p-4 bg-transparent sm:bg-surface-50 border-0 sm:border border-surface-200 rounded-[8px] text-left space-y-1.5 animate-in fade-in duration-300">
+                                            <div className="p-0 sm:p-4 bg-transparent sm:bg-surface-50 border-0 sm:border border-surface-200 rounded-xl text-left space-y-1.5 animate-in fade-in duration-300">
                                                 <span className="font-semibold text-surface-900 block text-sm">
                                                     Office / Center Visit Address
                                                 </span>
@@ -1422,9 +1422,9 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
                                             <form onSubmit={handlePaymentSubmit} className="space-y-6">
 
-                                                <div className="p-4 bg-surface-50 border border-surface-200 rounded-[8px] space-y-4">
+                                                <div className="p-4 bg-surface-50 border border-surface-200 rounded-xl space-y-4">
                                                     <div className="flex flex-col sm:flex-row items-center gap-4 text-left">
-                                                        <div className="w-12 h-12 bg-white border border-surface-200 rounded-[8px] flex items-center justify-center shrink-0 shadow-sm">
+                                                        <div className="w-12 h-12 bg-white border border-surface-200 rounded-xl flex items-center justify-center shrink-0 shadow-sm">
                                                             <svg className="w-6 h-6 text-surface-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                                                             </svg>
@@ -1474,12 +1474,12 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                 <button
                                     type="button"
                                     onClick={() => setShowSummary(!showSummary)}
-                                    className="flex lg:hidden items-center justify-between w-full bg-surface-50 border border-surface-200 p-3 rounded-[8px] text-left shadow-none mb-3 hover:bg-surface-100 transition cursor-pointer"
+                                    className="flex lg:hidden items-center justify-between w-full bg-surface-50 border border-surface-200 p-3 rounded-xl text-left shadow-none mb-3 hover:bg-surface-100 transition cursor-pointer"
                                 >
                                     <span className="text-sm font-semibold text-surface-900 flex items-center gap-2">
                                         <span>Booking Summary</span>
                                         {selectedAdvisor && (
-                                            <span className="text-xs bg-surface-900 text-white px-2 py-0.5 rounded-[8px] font-semibold ">
+                                            <span className="text-xs bg-surface-900 text-white px-2 py-0.5 rounded-xl font-semibold ">
                                                 {bookingService === 'counselling' ? 'Counselling' : 'Career'}
                                             </span>
                                         )}
@@ -1506,7 +1506,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                             <span className="font-bold text-surface-900 block text-left">
                                                 {bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring'}
                                             </span>
-                                            <span className="text-xs text-surface-500 font-bold block mt-0.5 bg-white border border-surface-200 rounded-[8px] px-2 py-0.5 w-fit">
+                                            <span className="text-xs text-surface-500 font-bold block mt-0.5 bg-white border border-surface-200 rounded-xl px-2 py-0.5 w-fit">
                                                 {bookingMode.replace('_', ' ')}
                                             </span>
                                         </div>
@@ -1515,7 +1515,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                         <div>
                                             <span className="text-xs text-surface-400 block font-bold mb-0.5">Date & Time</span>
                                             {selectedDate && selectedTime ? (
-                                                <div className="space-y-1 bg-white border border-surface-200 p-2 rounded-[8px] text-left">
+                                                <div className="space-y-1 bg-white border border-surface-200 p-2 rounded-xl text-left">
                                                     <span className="font-bold text-surface-900 block">
                                                         {formatDateString(selectedDate)}
                                                     </span>
@@ -1532,7 +1532,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                         <div>
                                             <span className="text-xs text-surface-400 block font-bold mb-0.5">Advisor</span>
                                             {selectedAdvisor ? (
-                                                <div className="bg-white border border-surface-200 p-2.5 rounded-[8px] text-left">
+                                                <div className="bg-white border border-surface-200 p-2.5 rounded-xl text-left">
                                                     <span className="font-bold text-surface-900 block text-xs">{selectedAdvisor.name}</span>
                                                     <span className="text-xs text-surface-500 block font-semibold">{selectedAdvisor.role}</span>
                                                 </div>
@@ -1551,7 +1551,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                                     value={couponInput}
                                                     onChange={(e) => setCouponInput(e.target.value)}
                                                     disabled={appliedDiscount > 0}
-                                                    className="flex-1 px-3 py-1.5 bg-white border border-surface-200 rounded-[8px] text-sm font-bold outline-none focus:border-surface-900 transition"
+                                                    className="flex-1 px-3 py-1.5 bg-white border border-surface-200 rounded-xl text-sm font-bold outline-none focus:border-surface-900 transition"
                                                 />
                                                 {appliedDiscount > 0 ? (
                                                     <button
@@ -1637,7 +1637,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
                 {showNoCounsellorsModal && (
                     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
-                        <div className="bg-white border border-surface-200 rounded-[8px] w-full max-w-sm p-6 shadow-sm space-y-4 text-center animate-in zoom-in-95 duration-200">
+                        <div className="bg-white border border-surface-200 rounded-xl w-full max-w-sm p-6 shadow-sm space-y-4 text-center animate-in zoom-in-95 duration-200">
                             <div className="w-12 h-12 bg-amber-50 border border-amber-200 rounded-full flex items-center justify-center mx-auto text-amber-600 shadow-sm text-xl font-semibold ">
                                 !
                             </div>

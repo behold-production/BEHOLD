@@ -49,7 +49,7 @@ export default function CdatSection({ setView, siteSettings }) {
   ];
 
   return (
-    <section id="cdat" className="py-20 sm:py-28 bg-white text-surface-900 border-b border-surface-200">
+    <section id="cdat" className="py-20 sm:py-28 bg-transparent text-surface-900 border-b border-surface-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
 
@@ -103,7 +103,7 @@ export default function CdatSection({ setView, siteSettings }) {
           </div>
 
           {/* Right: Registration Form (5 cols) */}
-          <div className="lg:col-span-5 bg-white rounded-3xl p-6 sm:p-10 shadow-md border border-surface-200">
+          <div className="lg:col-span-5 bg-white rounded-xl p-6 sm:p-10 shadow-md border border-surface-200">
             <h3 className="text-xl sm:text-2xl font-sans font-black uppercase text-[#0f172a] mb-2">
               Register for the C-DAT<span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)] font-black">.</span>
             </h3>

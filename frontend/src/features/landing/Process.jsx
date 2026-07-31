@@ -25,7 +25,7 @@ const steps = [
 
 export default function Process() {
   return (
-    <section id="process" className="py-20 sm:py-28 bg-white text-surface-900 border-b border-surface-200">
+    <section id="process" className="py-20 sm:py-28 bg-transparent text-surface-900 border-b border-surface-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Header */}
@@ -47,7 +47,7 @@ export default function Process() {
           {steps.map((step, idx) => (
             <div
               key={idx}
-              className="flex flex-col justify-between p-7 rounded-2xl bg-white border border-surface-200 hover:border-[#00e5ff] transition-all duration-300 min-h-[220px] shadow-xs group"
+              className="flex flex-col justify-between p-7 rounded-xl bg-white border border-surface-200 hover:border-[#00e5ff] transition-all duration-300 min-h-[220px] shadow-xs group"
             >
               <div>
                 <div className="flex items-center justify-between w-full mb-6">

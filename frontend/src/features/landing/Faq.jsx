@@ -55,7 +55,7 @@ export default function Faq({ siteSettings }) {
     : filteredDefaultFaqs;
 
   return (
-    <section id="faqs" className="py-20 sm:py-28 bg-white text-surface-900 border-b border-surface-200">
+    <section id="faqs" className="py-20 sm:py-28 bg-transparent text-surface-900 border-b border-surface-200">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Header */}
@@ -83,7 +83,7 @@ export default function Faq({ siteSettings }) {
             return (
               <div
                 key={idx}
-                className={`rounded-2xl border transition-all duration-300 overflow-hidden ${isOpen ? 'border-[#00e5ff] bg-white shadow-sm' : 'border-surface-200 bg-white hover:border-[#00e5ff]'}`}
+                className={`rounded-xl border transition-all duration-300 overflow-hidden ${isOpen ? 'border-[#00e5ff] bg-white shadow-sm' : 'border-surface-200 bg-white hover:border-[#00e5ff]'}`}
               >
                 <button
                   type="button"

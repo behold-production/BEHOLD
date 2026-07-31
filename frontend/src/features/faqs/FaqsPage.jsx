@@ -46,11 +46,11 @@ export default function FaqsPage() {
   });
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 pt-28 pb-20 selection:bg-[#00E5FF] selection:text-slate-900">
+    <div className="min-h-screen flex flex-col bg-transparent text-slate-900 pt-28 pb-20 selection:bg-[#00E5FF] selection:text-slate-900">
       <Navbar />
 
       {/* Header */}
-      <section className="relative py-12 sm:py-16 border-b border-slate-200 bg-white">
+      <section className="relative py-12 sm:py-16 border-b border-slate-200 bg-transparent">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <button
             type="button"

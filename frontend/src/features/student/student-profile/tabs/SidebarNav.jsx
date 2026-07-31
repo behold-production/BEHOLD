@@ -23,7 +23,7 @@ const SidebarNav = ({ currentSection, handleSectionChange, bookedSessions, testP
  return (
  <>
  {/* Desktop sidebar */}
- <nav className="hidden lg:flex flex-col gap-1.5 p-3 bg-white border border-surface-200 rounded-3xl shadow-xs sticky top-24 max-h-[calc(100vh-110px)] overflow-y-auto overscroll-contain [&::-webkit-scrollbar]:hidden">
+ <nav className="hidden lg:flex flex-col gap-1.5 p-3 bg-white border border-surface-200 rounded-xl shadow-xs sticky top-24 max-h-[calc(100vh-110px)] overflow-y-auto overscroll-contain [&::-webkit-scrollbar]:hidden">
  {visibleTabs.map(tab => {
  const Icon = ICON_MAP[tab.iconName];
  const isActive = currentSection === tab.id;
@@ -35,7 +35,7 @@ const SidebarNav = ({ currentSection, handleSectionChange, bookedSessions, testP
  key={tab.id}
  type="button"
  onClick={() => handleSectionChange(tab.id)}
- className={`relative flex items-center gap-3 px-4 min-h-[46px] rounded-2xl text-xs font-bold uppercase tracking-wider transition-all duration-200 group cursor-pointer border ${
+ className={`relative flex items-center gap-3 px-4 min-h-[46px] rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-200 group cursor-pointer border ${
  isActive
  ? 'bg-[#0f172a] text-white border-[#00e5ff]/40 shadow-xs scale-[1.01]'
  : 'text-surface-600 hover:bg-surface-100 hover:text-[#0f172a] border-transparent'
@@ -60,7 +60,7 @@ const SidebarNav = ({ currentSection, handleSectionChange, bookedSessions, testP
 
  <button
  onClick={() => setIsLogoutOpen(true)}
- className="mt-3 flex items-center gap-3 px-4 min-h-[44px] rounded-2xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer text-rose-600 hover:bg-rose-50 border border-transparent hover:border-rose-100 group"
+ className="mt-3 flex items-center gap-3 px-4 min-h-[44px] rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer text-rose-600 hover:bg-rose-50 border border-transparent hover:border-rose-100 group"
  >
  <LogOut className="w-4 h-4 shrink-0 text-rose-500 group-hover:scale-110 transition-transform" />
  <span className="flex-1 text-left">Sign Out</span>

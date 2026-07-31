@@ -104,12 +104,12 @@ export default function Inquiry({ testProfile, siteSettings }) {
       </section>
 
       {/* Contact Form Section */}
-      <section id="inquiry" className="py-20 sm:py-28 bg-white text-surface-900 border-b border-surface-200">
+      <section id="inquiry" className="py-20 sm:py-28 bg-transparent text-surface-900 border-b border-surface-200">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
 
             {/* Form — 7 cols */}
-            <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-10 border border-surface-200 hover:border-[#00e5ff] transition-all shadow-md">
+            <div className="lg:col-span-7 bg-white rounded-xl p-6 sm:p-10 border border-surface-200 hover:border-[#00e5ff] transition-all shadow-md">
               <div className="mb-8">
                 <span className="text-xs font-bold tracking-widest uppercase text-[#00e5ff] flex items-center gap-1.5 mb-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_8px_#00e5ff]" />
@@ -211,7 +211,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
 
               {/* Contact info */}
               {(settings.contactPhone || settings.contactEmail) && (
-                <div className="mt-8 p-6 bg-white rounded-2xl border border-surface-200 shadow-xs">
+                <div className="mt-8 p-6 bg-white rounded-xl border border-surface-200 shadow-xs">
                   <h4 className="font-bold text-[#0f172a] mb-3 text-xs uppercase tracking-widest">Reach Us Directly</h4>
                   {settings.contactPhone && (
                     <a href={`tel:${settings.contactPhone}`} className="flex items-center gap-2 text-[#0f172a] font-semibold text-sm mb-2 hover:underline">

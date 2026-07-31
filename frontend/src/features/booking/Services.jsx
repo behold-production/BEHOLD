@@ -135,7 +135,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
   const sectionId = mode === 'experts' ? 'counsellors' : 'services';
 
   return (
-    <section id={sectionId} className="py-12 sm:py-16 bg-white text-surface-900 border-b border-surface-200">
+    <section id={sectionId} className="py-12 sm:py-16 bg-transparent text-surface-900 border-b border-surface-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* ── SERVICES INTRO: UNFOLD WITH BEHOLD ── */}
@@ -176,7 +176,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
 
               {/* Right Column: 2x2 Feature Grid */}
               <div className="lg:col-span-6 grid grid-cols-2 gap-4 sm:gap-6 lg:border-l lg:border-surface-200 lg:pl-10 pt-6 lg:pt-0 border-t lg:border-t-0 border-surface-200">
-                <div className="flex flex-col justify-between p-4 sm:p-5 rounded-2xl bg-white border border-surface-200 shadow-2xs space-y-3 group hover:border-[#00e5ff] transition-all">
+                <div className="flex flex-col justify-between p-4 sm:p-5 rounded-xl bg-white border border-surface-200 shadow-2xs space-y-3 group hover:border-[#00e5ff] transition-all">
                   <div>
                     <h4 className="text-xs sm:text-sm font-bold text-[#0f172a] uppercase tracking-wide mb-1.5 leading-snug group-hover:text-[#00e5ff] transition-colors">Dual Support Architecture</h4>
                     <p className="text-[11px] sm:text-xs text-surface-600 leading-relaxed font-normal">
@@ -189,7 +189,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                   </div>
                 </div>
 
-                <div className="flex flex-col justify-between p-4 sm:p-5 rounded-2xl bg-white border border-surface-200 shadow-2xs space-y-3 group hover:border-[#00e5ff] transition-all">
+                <div className="flex flex-col justify-between p-4 sm:p-5 rounded-xl bg-white border border-surface-200 shadow-2xs space-y-3 group hover:border-[#00e5ff] transition-all">
                   <div>
                     <h4 className="text-xs sm:text-sm font-bold text-[#0f172a] uppercase tracking-wide mb-1.5 leading-snug group-hover:text-[#00e5ff] transition-colors">100% Safe & Scientific</h4>
                     <p className="text-[11px] sm:text-xs text-surface-600 leading-relaxed font-normal">
@@ -204,7 +204,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
 
                 {/* Card 3: Conditional — C-DAT when aptitude enabled, Personalised Mentoring when disabled */}
                 {settings?.enableAptitude !== false ? (
-                  <div className="flex flex-col justify-between p-4 sm:p-5 rounded-2xl bg-white border border-surface-200 shadow-2xs space-y-3 group hover:border-[#00e5ff] transition-all">
+                  <div className="flex flex-col justify-between p-4 sm:p-5 rounded-xl bg-white border border-surface-200 shadow-2xs space-y-3 group hover:border-[#00e5ff] transition-all">
                     <div>
                       <h4 className="text-xs sm:text-sm font-bold text-[#0f172a] uppercase tracking-wide mb-1.5 leading-snug group-hover:text-[#00e5ff] transition-colors">C-DAT Aptitude Assessment</h4>
                       <p className="text-[11px] sm:text-xs text-surface-600 leading-relaxed font-normal">
@@ -217,7 +217,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                     </div>
                   </div>
                 ) : (
-                  <div className="flex flex-col justify-between p-4 sm:p-5 rounded-2xl bg-white border border-surface-200 shadow-2xs space-y-3 group hover:border-[#00e5ff] transition-all">
+                  <div className="flex flex-col justify-between p-4 sm:p-5 rounded-xl bg-white border border-surface-200 shadow-2xs space-y-3 group hover:border-[#00e5ff] transition-all">
                     <div>
                       <h4 className="text-xs sm:text-sm font-bold text-[#0f172a] uppercase tracking-wide mb-1.5 leading-snug group-hover:text-[#00e5ff] transition-colors">Personalised Mentoring Sessions</h4>
                       <p className="text-[11px] sm:text-xs text-surface-600 leading-relaxed font-normal">
@@ -231,7 +231,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                   </div>
                 )}
 
-                <div className="flex flex-col justify-between p-4 sm:p-5 rounded-2xl bg-[#0f172a] text-white shadow-md border border-[#00e5ff]/30 space-y-3">
+                <div className="flex flex-col justify-between p-4 sm:p-5 rounded-xl bg-[#0f172a] text-white shadow-md border border-[#00e5ff]/30 space-y-3">
                   <div>
                     <p className="text-[11px] sm:text-xs text-surface-200 italic leading-relaxed mb-3">
                       "True growth happens when emotional peace and career direction align<span className="text-[#00e5ff] not-italic font-bold">.</span>"
@@ -301,7 +301,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                 <div className="w-8 h-8 border-2 border-[#0f172a] border-t-[#00e5ff] rounded-full animate-spin" />
               </div>
             ) : filtered.length === 0 ? (
-              <div className="text-center py-20 bg-white rounded-3xl border border-surface-200 p-8 shadow-xs">
+              <div className="text-center py-20 bg-white rounded-xl border border-surface-200 p-8 shadow-xs">
                 <p className="text-lg font-bold text-[#0f172a] uppercase mb-1">No Specialists Found</p>
                 <p className="text-xs text-surface-600 mb-5">Try adjusting your search or filters.</p>
                 <button
@@ -342,7 +342,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                   {paginatedAdvisors.map(advisor => (
                     <div
                       key={advisor.id}
-                      className="bg-white rounded-3xl border border-surface-200 hover:border-[#00e5ff] shadow-xs hover:shadow-md overflow-hidden flex flex-col justify-between group transition-all h-full shrink-0 w-full snap-start snap-always md:w-auto md:max-w-none"
+                      className="bg-white rounded-xl border border-surface-200 hover:border-[#00e5ff] shadow-xs hover:shadow-md overflow-hidden flex flex-col justify-between group transition-all h-full shrink-0 w-full snap-start snap-always md:w-auto md:max-w-none"
                     >
                       {/* Photo or Branded Initial Header */}
                       {advisor.profilePic ? (

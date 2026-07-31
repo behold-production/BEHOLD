@@ -7,7 +7,7 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
   const settings = siteSettings || {};
 
   return (
-    <section id="about" className="py-20 sm:py-28 bg-white text-surface-900 border-b border-surface-200">
+    <section id="about" className="py-20 sm:py-28 bg-transparent text-surface-900 border-b border-surface-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Main 2-Column Section */}
@@ -31,7 +31,7 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
 
             {/* Featured Image Asset */}
             <div className="pt-4">
-              <div className="w-full h-64 sm:h-80 rounded-2xl overflow-hidden bg-[#0f172a] border border-[#00e5ff]/40 shadow-sm relative group">
+              <div className="w-full h-64 sm:h-80 rounded-xl overflow-hidden bg-[#0f172a] border border-[#00e5ff]/40 shadow-sm relative group">
                 <img
                   src={luxuryClinicRoom}
                   alt="BEHOLD Mentorship & Psychological Care"
@@ -84,7 +84,7 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
               </div>
 
               {/* Stat Card 4: Dark Blue Highlight Box */}
-              <div className="p-6 sm:p-8 bg-[#0f172a] text-white flex flex-col justify-between h-52 sm:h-60 border border-[#00e5ff]/30 rounded-br-2xl shadow-md">
+              <div className="p-6 sm:p-8 bg-[#0f172a] text-white flex flex-col justify-between h-52 sm:h-60 border border-[#00e5ff]/30 rounded-br-xl shadow-md">
                 <p className="text-xs sm:text-sm text-surface-200 font-normal leading-relaxed italic">
                   "Mental wellness isn't just what you see — it's how a space lives with you<span className="text-[#00e5ff] not-italic font-bold">.</span>"
                 </p>

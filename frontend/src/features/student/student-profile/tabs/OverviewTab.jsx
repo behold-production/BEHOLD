@@ -115,7 +115,7 @@ const OverviewTab = ({
       {/* Action Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         {/* Expert Consultation */}
-        <div className="bg-white rounded-3xl p-6 border border-surface-200 shadow-xs flex flex-col justify-between space-y-4">
+        <div className="bg-white rounded-xl p-6 border border-surface-200 shadow-xs flex flex-col justify-between space-y-4">
           <div>
             <span className="px-3.5 py-1 bg-surface-100 text-[#0f172a] font-bold text-[10px] rounded-full uppercase tracking-wider border border-surface-200 inline-block">
               Verified Specialists
@@ -139,7 +139,7 @@ const OverviewTab = ({
 
         {/* C-DAT Aptitude Card */}
         {enableAptitude && (
-          <div className="bg-white rounded-3xl p-6 border border-surface-200 shadow-xs flex flex-col justify-between space-y-4">
+          <div className="bg-white rounded-xl p-6 border border-surface-200 shadow-xs flex flex-col justify-between space-y-4">
             <div>
               <span className="px-3.5 py-1 bg-surface-100 text-[#0f172a] font-bold text-[10px] rounded-full uppercase tracking-wider border border-surface-200 inline-block">
                 {testProfile ? 'Report Ready' : 'C-DAT Evaluation'}
@@ -166,7 +166,7 @@ const OverviewTab = ({
       {/* History & Achievements Row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         {/* Recent Session History */}
-        <div className="lg:col-span-2 rounded-3xl p-6 bg-white border border-surface-200 shadow-xs">
+        <div className="lg:col-span-2 rounded-xl p-6 bg-white border border-surface-200 shadow-xs">
           <div className="flex items-center justify-between mb-4 border-b border-surface-100 pb-3">
             <h4 className="text-sm font-bold uppercase tracking-tight text-[#0f172a]">Recent Session History</h4>
             <button
@@ -180,7 +180,7 @@ const OverviewTab = ({
           {completedSessions.length > 0 ? (
             <div className="space-y-2.5">
               {completedSessions.slice(0, 3).map((s, i) => (
-                <div key={i} className="flex items-center justify-between p-3.5 rounded-2xl hover:bg-surface-50 border border-surface-100 transition-colors">
+                <div key={i} className="flex items-center justify-between p-3.5 rounded-xl hover:bg-surface-50 border border-surface-100 transition-colors">
                   <div>
                     <p className="text-xs font-bold text-[#0f172a]">{s.advisorName}</p>
                     <p className="text-[11px] text-surface-600 font-medium">{s.advisorRole || 'Consultation'} &middot; {formatDateString(s.date)}</p>
@@ -190,7 +190,7 @@ const OverviewTab = ({
               ))}
             </div>
           ) : (
-            <div className="text-center py-8 text-surface-500 border border-dashed border-surface-200 rounded-2xl bg-surface-50/50">
+            <div className="text-center py-8 text-surface-500 border border-dashed border-surface-200 rounded-xl bg-surface-50/50">
               <p className="text-xs font-bold text-[#0f172a] uppercase tracking-wider">No completed sessions yet</p>
               <p className="text-[11px] text-surface-600 font-normal mt-1">Finished session records and doctor notes will appear here.</p>
             </div>
@@ -198,7 +198,7 @@ const OverviewTab = ({
         </div>
 
         {/* Milestones */}
-        <div className="rounded-3xl p-6 bg-white border border-surface-200 shadow-xs">
+        <div className="rounded-xl p-6 bg-white border border-surface-200 shadow-xs">
           <div className="mb-4 border-b border-surface-100 pb-3">
             <h4 className="text-sm font-bold uppercase tracking-tight text-[#0f172a]">Milestones</h4>
           </div>
@@ -213,7 +213,7 @@ const OverviewTab = ({
             ].filter(a => a.condition !== false).map((a, i) => (
               <div
                 key={i}
-                className={`flex items-center justify-between text-xs px-3.5 py-2.5 rounded-2xl border transition-colors ${a.done
+                className={`flex items-center justify-between text-xs px-3.5 py-2.5 rounded-xl border transition-colors ${a.done
                     ? 'bg-surface-50 border-surface-200 text-[#0f172a]'
                     : 'bg-surface-50/40 border-surface-100 text-surface-400'
                   }`}

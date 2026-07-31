@@ -21,7 +21,7 @@ const HeroHeader = ({
   ];
 
   return (
-    <div className="bg-white text-[#0f172a] border border-surface-200 rounded-3xl shadow-xs overflow-hidden relative">
+    <div className="bg-white text-[#0f172a] border border-surface-200 rounded-xl shadow-xs overflow-hidden relative">
       <div className="h-1 bg-[#00e5ff] shadow-[0_0_8px_#00e5ff] w-full" />
 
       <div className="p-6 sm:p-7 relative z-10">

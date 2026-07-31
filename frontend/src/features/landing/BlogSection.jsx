@@ -61,7 +61,7 @@ const BlogSection = () => {
   const paginatedBlogs = blogs.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
-    <section id="blog" className="py-16 sm:py-24 bg-white border-b border-surface-200">
+    <section id="blog" className="py-16 sm:py-24 bg-transparent border-b border-surface-200">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Header */}
@@ -114,7 +114,7 @@ const BlogSection = () => {
             <article
               key={post._id || post.slug}
               onClick={() => handleOpenBlog(post.slug)}
-              className="group relative bg-white border border-surface-200 hover:border-[#00e5ff] rounded-2xl overflow-hidden transition-all duration-300 flex flex-col cursor-pointer shadow-xs hover:shadow-md h-full shrink-0 w-full snap-start snap-always md:w-auto md:max-w-none"
+              className="group relative bg-white border border-surface-200 hover:border-[#00e5ff] rounded-xl overflow-hidden transition-all duration-300 flex flex-col cursor-pointer shadow-xs hover:shadow-md h-full shrink-0 w-full snap-start snap-always md:w-auto md:max-w-none"
             >
               {/* Cover Image Container */}
               <div className="relative h-56 w-full overflow-hidden bg-surface-100 shrink-0">

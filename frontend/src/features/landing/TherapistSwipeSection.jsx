@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import greenTexture from '../../assets/green_watercolor_texture.png';
+import greenTexture from '../../assets/clarity_bg.png';
 import ApiService from '../../shared/services/api';
 import { useNavigate } from 'react-router-dom';
 
@@ -43,18 +43,24 @@ const defaultPsychologists = [
     photo: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=500&auto=format&fit=crop&q=80',
     specialties: ['EMOTIONAL HEALING', 'PARENT COUNSELING', 'ACADEMIC FOCUS'],
     languages: 'English, Malayalam'
+  },
+  {
+    id: '5',
+    name: 'Dr. Vikram Patel',
+    designation: 'CLINICAL PSYCHIATRIST',
+    title: 'Mental Health Expert',
+    fee: '600',
+    photo: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=500&auto=format&fit=crop&q=80',
+    specialties: ['MOOD DISORDERS', 'TRAUMA RECOVERY', 'CBT THERAPY'],
+    languages: 'English, Hindi'
   }
 ];
 
 export default function TherapistSwipeSection({ onBookTherapist, navigateToSection }) {
   const [advisors, setAdvisors] = useState(defaultPsychologists);
   const [currentIndex, setCurrentIndex] = useState(0);
-  
-  // Transition states for silky-smooth motion
-  const [transitionState, setTransitionState] = useState(null); // 'next' | 'prev' | null
-  
+
   // Drag State
-  const [dragOffset, setDragOffset] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const startXRef = useRef(0);
   const navigate = useNavigate();
@@ -84,49 +90,34 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
   }, []);
 
   const handleNextCard = () => {
-    if (transitionState || advisors.length <= 1) return;
-    setTransitionState('next');
-    setTimeout(() => {
-      setCurrentIndex((prev) => (prev + 1) % advisors.length);
-      setTransitionState(null);
-      setDragOffset(0);
-    }, 450);
+    setCurrentIndex((prev) => (prev + 1) % advisors.length);
   };
 
   const handlePrevCard = () => {
-    if (transitionState || advisors.length <= 1) return;
-    setTransitionState('prev');
-    setTimeout(() => {
-      setCurrentIndex((prev) => (prev - 1 + advisors.length) % advisors.length);
-      setTransitionState(null);
-      setDragOffset(0);
-    }, 450);
+    setCurrentIndex((prev) => (prev - 1 + advisors.length) % advisors.length);
   };
 
   // Drag Gesture Handlers
   const handleTouchStart = (clientX) => {
-    if (transitionState) return;
     setIsDragging(true);
     startXRef.current = clientX;
   };
 
   const handleTouchMove = (clientX) => {
-    if (!isDragging || transitionState) return;
+    if (!isDragging) return;
     const deltaX = clientX - startXRef.current;
-    setDragOffset(deltaX);
+    if (Math.abs(deltaX) > 60) {
+      if (deltaX < 0) {
+        handleNextCard();
+      } else {
+        handlePrevCard();
+      }
+      setIsDragging(false);
+    }
   };
 
   const handleTouchEnd = () => {
-    if (!isDragging || transitionState) return;
     setIsDragging(false);
-
-    if (dragOffset < -40) {
-      handleNextCard();
-    } else if (dragOffset > 40) {
-      handlePrevCard();
-    } else {
-      setDragOffset(0);
-    }
   };
 
   const handleConnectClick = () => {
@@ -141,12 +132,43 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
     }
   };
 
-  const renderCard = (advisor) => {
+  const getRelativePosition = (index) => {
+    const total = advisors.length;
+    if (total === 0) return 0;
+    let diff = (index - currentIndex) % total;
+    if (diff > Math.floor(total / 2)) diff -= total;
+    if (diff < -Math.floor(total / 2)) diff += total;
+    return diff;
+  };
+
+  const getCardStyles = (diff) => {
+    switch (diff) {
+      case 0:
+        return 'translate-x-0 scale-100 opacity-100 z-30 shadow-2xl cursor-default';
+      case -1:
+        return '-translate-x-[110px] sm:-translate-x-[140px] scale-[0.85] opacity-90 z-20 shadow-xl cursor-pointer hover:scale-[0.88]';
+      case 1:
+        return 'translate-x-[110px] sm:translate-x-[140px] scale-[0.85] opacity-90 z-20 shadow-xl cursor-pointer hover:scale-[0.88]';
+      case -2:
+        return '-translate-x-[180px] sm:-translate-x-[220px] scale-[0.65] opacity-0 z-10 pointer-events-none';
+      case 2:
+        return 'translate-x-[180px] sm:translate-x-[220px] scale-[0.65] opacity-0 z-10 pointer-events-none';
+      default:
+        // Hide cards that are far away
+        if (diff < 0) {
+          return '-translate-x-[250px] scale-[0.5] opacity-0 z-0 pointer-events-none';
+        } else {
+          return 'translate-x-[250px] scale-[0.5] opacity-0 z-0 pointer-events-none';
+        }
+    }
+  };
+
+  const renderCard = (advisor, isCenter) => {
     if (!advisor) return null;
     return (
-      <div className="w-full h-full flex flex-col justify-between overflow-hidden bg-white rounded-[32px] shadow-2xl border border-slate-200/80">
+      <div className={`w-full h-full flex flex-col justify-between overflow-hidden bg-white rounded-xl shadow-2xl border border-slate-200/80 transition-opacity duration-300 ${isCenter ? 'pointer-events-auto' : 'pointer-events-none'}`}>
         {/* Top Image Section */}
-        <div className="relative w-full h-48 sm:h-52 bg-slate-100 overflow-hidden pointer-events-none">
+        <div className="relative w-full h-44 sm:h-52 bg-slate-100 overflow-hidden pointer-events-none">
           <img
             src={advisor.photo}
             alt={advisor.name}
@@ -154,80 +176,84 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
           />
         </div>
 
-        {/* Content Section matching Image 2 */}
-        <div className="p-5 flex flex-col space-y-2.5 text-left bg-white">
-          
-          {/* Row 1: Name & Price */}
-          <div className="flex items-start justify-between gap-2">
-            <h3 className="font-['Outfit','Plus_Jakarta_Sans',sans-serif] text-xl sm:text-2xl font-bold text-[#0c1424] leading-tight">
-              {advisor.name}
-            </h3>
-            <div className="text-right shrink-0">
-              <span className="font-['Outfit',sans-serif] text-lg sm:text-xl font-bold text-[#0c1424] block leading-none">
-                ₹{advisor.fee}
-              </span>
-              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mt-1">
-                PER SESSION
-              </span>
-            </div>
-          </div>
+        {/* Content Section */}
+        <div className="p-4 sm:p-5 flex flex-col space-y-2 text-left bg-white h-full justify-between">
 
-          {/* Designation */}
-          <p className="text-[10.5px] font-bold text-slate-500 uppercase tracking-widest leading-none">
-            {advisor.designation}
-          </p>
-
-          {/* Title / Sub-category */}
-          <p className="text-xs text-slate-500 font-medium leading-none">
-            {advisor.title}
-          </p>
-
-          {/* SPECIALTIES Header & Tags */}
-          <div className="pt-0.5">
-            <span className="text-[9.5px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
-              SPECIALTIES
-            </span>
-            <div className="flex flex-wrap gap-1">
-              {advisor.specialties.map((tag, idx) => (
-                <span
-                  key={idx}
-                  className="bg-slate-100/90 text-slate-700 text-[9px] font-bold px-2.5 py-0.5 rounded-full border border-slate-200/80 uppercase tracking-wider"
-                >
-                  {tag}
+          <div>
+            {/* Row 1: Name & Price */}
+            <div className="flex items-start justify-between gap-2">
+              <h3 className="font-['Outfit','Plus_Jakarta_Sans',sans-serif] text-lg sm:text-2xl font-bold text-[#0c1424] leading-tight line-clamp-1">
+                {advisor.name}
+              </h3>
+              <div className="text-right shrink-0">
+                <span className="font-['Outfit',sans-serif] text-base sm:text-xl font-bold text-[#0c1424] block leading-none">
+                  ₹{advisor.fee}
                 </span>
-              ))}
+                <span className="text-[8px] sm:text-[9px] font-bold text-slate-400 uppercase tracking-wider block mt-1">
+                  PER SESSION
+                </span>
+              </div>
+            </div>
+
+            {/* Designation */}
+            <p className="text-[9px] sm:text-[10.5px] font-bold text-slate-500 uppercase tracking-widest leading-none mt-2">
+              {advisor.designation}
+            </p>
+
+            {/* Title / Sub-category */}
+            <p className="text-[10px] sm:text-xs text-slate-500 font-medium leading-none mt-1">
+              {advisor.title}
+            </p>
+
+            {/* SPECIALTIES Header & Tags */}
+            <div className="pt-2">
+              <span className="text-[8px] sm:text-[9.5px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                SPECIALTIES
+              </span>
+              <div className="flex flex-wrap gap-1">
+                {advisor.specialties.slice(0, 3).map((tag, idx) => (
+                  <span
+                    key={idx}
+                    className="bg-slate-100/90 text-slate-700 text-[8px] sm:text-[9px] font-bold px-2 py-0.5 rounded-full border border-slate-200/80 uppercase tracking-wider truncate max-w-[120px]"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
 
-          {/* Language */}
-          <p className="text-xs text-slate-700">
-            <strong className="font-bold text-slate-900">Language:</strong> {advisor.languages}
-          </p>
+          <div className="space-y-3">
+            {/* Language */}
+            <p className="text-[10px] sm:text-xs text-slate-700">
+              <strong className="font-bold text-slate-900">Lang:</strong> {advisor.languages}
+            </p>
 
-          {/* Separator Line */}
-          <div className="border-t border-slate-100 my-0.5" />
+            {/* Separator Line */}
+            <div className="border-t border-slate-100" />
 
-          {/* Row 2: Action Buttons */}
-          <div className="flex items-center gap-3 pt-0.5 pointer-events-auto">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                if (onBookTherapist) onBookTherapist(advisor.id);
-                else window.spaNavigate?.('/book-session');
-              }}
-              className="flex-1 bg-[#0c1424] hover:bg-[#1a263d] active:scale-95 text-white text-xs font-bold py-2.5 rounded-full shadow-md transition cursor-pointer text-center uppercase tracking-wider"
-            >
-              BOOK NOW
-            </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                navigate(`/advisor/${advisor.id}`);
-              }}
-              className="flex-1 bg-[#f0f4f8] hover:bg-[#e2eaf0] active:scale-95 text-[#0c1424] text-xs font-bold py-2.5 rounded-full border border-slate-200 transition cursor-pointer text-center uppercase tracking-wider"
-            >
-              VIEW PROFILE
-            </button>
+            {/* Row 2: Action Buttons */}
+            <div className="flex items-center gap-2 sm:gap-3 pointer-events-auto">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (onBookTherapist) onBookTherapist(advisor.id);
+                  else window.spaNavigate?.('/book-session');
+                }}
+                className="flex-1 bg-[#0c1424] hover:bg-[#1a263d] active:scale-95 text-white text-[10px] sm:text-xs font-bold py-2 sm:py-2.5 rounded-full shadow-md transition cursor-pointer text-center uppercase tracking-wider"
+              >
+                BOOK
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/advisor/${advisor.id}`);
+                }}
+                className="flex-1 bg-[#f0f4f8] hover:bg-[#e2eaf0] active:scale-95 text-[#0c1424] text-[10px] sm:text-xs font-bold py-2 sm:py-2.5 rounded-full border border-slate-200 transition cursor-pointer text-center uppercase tracking-wider"
+              >
+                PROFILE
+              </button>
+            </div>
           </div>
 
         </div>
@@ -235,16 +261,10 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
     );
   };
 
-  const getAdvisorAt = (offset) => {
-    const len = advisors.length;
-    if (len === 0) return null;
-    return advisors[(currentIndex + offset + len * 100) % len];
-  };
-
   return (
     <section
       id="therapists"
-      className="relative w-full flex items-center justify-center py-16 sm:py-20 lg:py-24 px-5 sm:px-10 lg:px-16 overflow-hidden text-white select-none"
+      className="relative w-full flex items-center justify-center py-16 sm:py-20 lg:py-24 px-5 sm:px-10 lg:px-16 overflow-hidden text-[#0f172a] select-none"
       style={{
         backgroundImage: `url(${greenTexture})`,
         backgroundSize: 'cover',
@@ -253,15 +273,14 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
       }}
     >
       {/* Background Soft Overlay */}
-      <div className="absolute inset-0 bg-emerald-950/20 backdrop-blur-[2px] pointer-events-none" />
 
       <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16">
-        
-        {/* LEFT SIDE: Straight Upright Stacked Card Deck + "Meet Our Experts" */}
+
+        {/* LEFT SIDE: Coverflow Carousel Container + Title */}
         <div className="flex-1 flex flex-col items-center justify-center w-full max-w-xl overflow-visible">
-          
-          {/* Straight Cards Container */}
+
           <div
+            className="relative w-full h-[400px] sm:h-[460px] flex items-center justify-center perspective-[1200px] overflow-visible"
             onMouseDown={(e) => handleTouchStart(e.clientX)}
             onMouseMove={(e) => handleTouchMove(e.clientX)}
             onMouseUp={handleTouchEnd}
@@ -269,89 +288,36 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
             onTouchStart={(e) => handleTouchStart(e.touches[0].clientX)}
             onTouchMove={(e) => handleTouchMove(e.touches[0].clientX)}
             onTouchEnd={handleTouchEnd}
-            className="relative w-[320px] sm:w-[360px] min-h-[510px] flex items-center justify-center cursor-grab active:cursor-grabbing perspective overflow-visible py-4"
           >
-            {/* Left Prev Card (-1) */}
-            <div
-              onClick={handlePrevCard}
-              className={`absolute w-full h-full transform transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] cursor-pointer ${
-                transitionState === 'prev'
-                  ? 'translate-x-0 scale-100 opacity-100 z-30 shadow-2xl'
-                  : '-translate-x-[90px] sm:-translate-x-[110px] translate-y-1 scale-[0.88] opacity-80 z-10 hover:opacity-100 hover:scale-[0.90]'
-              }`}
-              title="Click to view previous expert"
-            >
-              <div className="w-full h-full rounded-[32px] border-4 border-white/90 bg-[#7ba65a] shadow-xl overflow-hidden pointer-events-none">
-                {renderCard(getAdvisorAt(-1))}
-              </div>
-            </div>
-
-            {/* Right Next Card (+1) (Peeking Halfway Right) */}
-            <div
-              onClick={handleNextCard}
-              className={`absolute w-full h-full transform transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] cursor-pointer ${
-                transitionState === 'next'
-                  ? 'translate-x-0 scale-100 opacity-100 z-30 shadow-2xl'
-                  : 'translate-x-[115px] sm:translate-x-[140px] translate-y-0.5 scale-[0.94] opacity-95 z-20 hover:opacity-100 hover:scale-[0.96]'
-              }`}
-              title="Click to view next expert"
-            >
-              <div className="w-full h-full rounded-[32px] border-4 border-white bg-[#8bb56d] shadow-2xl overflow-hidden pointer-events-none">
-                {renderCard(getAdvisorAt(1))}
-              </div>
-            </div>
-
-            {/* Deep Layer Right (+2) */}
-            <div
-              className={`absolute w-full h-full transform transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] pointer-events-none ${
-                transitionState === 'next'
-                  ? 'translate-x-[115px] sm:translate-x-[140px] scale-[0.94] opacity-95 z-20'
-                  : 'translate-x-[180px] sm:translate-x-[210px] translate-y-2 scale-[0.85] opacity-70 z-0'
-              }`}
-            >
-              <div className="w-full h-full rounded-[32px] border-4 border-white/80 bg-[#729b52] shadow-md overflow-hidden">
-                {renderCard(getAdvisorAt(2))}
-              </div>
-            </div>
-
-            {/* Active Front Card (0) */}
-            <div
-              style={
-                isDragging && dragOffset !== 0 && !transitionState
-                  ? {
-                      transform: `translateX(${dragOffset}px)`,
-                      transition: 'none'
-                    }
-                  : {}
-              }
-              className={`relative w-full h-full z-30 transform transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] rounded-[32px] ${
-                transitionState === 'next'
-                  ? '-translate-x-[130%] opacity-0 scale-95'
-                  : transitionState === 'prev'
-                  ? 'translate-x-[130%] opacity-0 scale-95'
-                  : 'translate-x-0 scale-100 opacity-100 shadow-2xl'
-              }`}
-            >
-              {renderCard(getAdvisorAt(0))}
-            </div>
-
+            {advisors.map((advisor, index) => {
+              const diff = getRelativePosition(index);
+              const styleClass = getCardStyles(diff);
+              return (
+                <div
+                  key={advisor.id}
+                  onClick={() => setCurrentIndex(index)}
+                  className={`absolute w-[260px] sm:w-[300px] h-[380px] sm:h-[440px] transform transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${styleClass}`}
+                >
+                  {renderCard(advisor, diff === 0)}
+                </div>
+              )
+            })}
           </div>
 
-          {/* Title Below Deck */}
-          <h2 className="mt-8 font-['Cormorant_Garamond',serif] text-2xl sm:text-3xl font-bold tracking-wide text-white drop-shadow-md text-center">
+          <h2 className="mt-8 font-['Cormorant_Garamond',serif] text-2xl sm:text-3xl font-bold tracking-wide text-[#0f172a] drop-shadow-md text-center">
             Meet Our Experts
           </h2>
         </div>
 
         {/* RIGHT SIDE: Text & Button */}
         <div className="flex-1 flex flex-col items-start text-left space-y-8 max-w-xl">
-          <p className="font-['Cormorant_Garamond',serif] text-2xl sm:text-3xl md:text-4xl text-white/95 font-medium leading-relaxed drop-shadow-sm">
+          <p className="font-['Cormorant_Garamond',serif] text-2xl sm:text-3xl md:text-4xl text-[#0f172a]/95 font-medium leading-relaxed drop-shadow-sm">
             Sometimes healing begins with a conversation. Whenever you're ready, we'll meet you with understanding, care, and professional support.
           </p>
 
           <button
             onClick={handleConnectClick}
-            className="bg-[#3f9d95] hover:bg-[#338982] active:scale-95 transition-all duration-300 text-white font-['Outfit','Plus_Jakarta_Sans',sans-serif] text-base sm:text-lg font-medium px-8 py-3 rounded-full shadow-md hover:shadow-lg flex items-center justify-center border border-white/20 cursor-pointer"
+            className="bg-[#3f9d95] hover:bg-[#338982] active:scale-95 transition-all duration-300 text-white font-['Outfit','Plus_Jakarta_Sans',sans-serif] text-base sm:text-lg font-medium px-8 py-3 rounded-full shadow-md hover:shadow-lg flex items-center justify-center border border-[#0f172a]/20 cursor-pointer"
           >
             Let's Connect
           </button>

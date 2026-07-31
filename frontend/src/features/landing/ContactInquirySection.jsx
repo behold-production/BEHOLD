@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import greenTexture from '../../assets/green_watercolor_texture.png';
 import ApiService from '../../shared/services/api';
 import { toast } from 'react-hot-toast';
 import { Send, CheckCircle2 } from 'lucide-react';
@@ -42,31 +41,24 @@ export default function ContactInquirySection() {
   return (
     <section
       id="inquiry"
-      className="relative min-h-[85vh] w-full flex items-center justify-center py-20 px-4 sm:px-8 lg:px-16 overflow-hidden text-white"
-      style={{
-        backgroundImage: `url(${greenTexture})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundColor: '#86ad66'
-      }}
+      className="relative min-h-[85vh] w-full flex items-center justify-center py-20 px-4 sm:px-8 lg:px-16 overflow-hidden text-[#0f172a] bg-transparent"
     >
       {/* Background Overlay */}
-      <div className="absolute inset-0 bg-emerald-950/20 backdrop-blur-[2px] pointer-events-none" />
 
       <div className="relative z-10 w-full max-w-5xl mx-auto flex flex-col items-center justify-center text-center space-y-12">
         
         {/* Header Title */}
-        <h2 className="font-['Cormorant_Garamond',serif] text-3xl sm:text-4xl lg:text-5xl font-bold tracking-widest text-white uppercase drop-shadow-md">
+        <h2 className="font-['Cormorant_Garamond',serif] text-3xl sm:text-4xl lg:text-5xl font-bold tracking-widest text-[#0f172a] uppercase drop-shadow-md">
           WANT TO KNOW MORE
         </h2>
 
         {submitted ? (
-          <div className="bg-white/20 backdrop-blur-md border-2 border-white/80 rounded-3xl p-10 max-w-xl text-center space-y-4 animate-in fade-in zoom-in-95 duration-300">
+          <div className="bg-white/20 backdrop-blur-md border-2 border-[#0f172a]/20 rounded-xl p-10 max-w-xl text-center space-y-4 animate-in fade-in zoom-in-95 duration-300">
             <CheckCircle2 className="w-16 h-16 text-emerald-200 mx-auto" />
-            <h3 className="font-['Cormorant_Garamond',serif] text-3xl font-bold text-white">
+            <h3 className="font-['Cormorant_Garamond',serif] text-3xl font-bold text-[#0f172a]">
               Message Received
             </h3>
-            <p className="text-sm text-white/90 font-light leading-relaxed">
+            <p className="text-sm text-[#0f172a]/90 font-light leading-relaxed">
               Thank you for connecting with us. Our care team will get back to you via email very soon.
             </p>
             <button
@@ -83,17 +75,17 @@ export default function ContactInquirySection() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
               
               {/* NAME Container Pill */}
-              <div className="border-2 border-white/80 rounded-3xl p-3 sm:p-4 bg-white/10 backdrop-blur-xs flex items-center gap-4 shadow-lg hover:border-white transition">
-                <span className="font-['Cormorant_Garamond',serif] text-xl sm:text-2xl font-bold tracking-wider text-white shrink-0 pl-3 uppercase">
+              <div className="border-2 border-[#0f172a]/20 rounded-xl p-3 sm:p-4 bg-white/10 backdrop-blur-xs flex items-center gap-4 shadow-lg hover:border-[#0f172a]/40 transition">
+                <span className="font-['Cormorant_Garamond',serif] text-xl sm:text-2xl font-bold tracking-wider text-[#0f172a] shrink-0 pl-3 uppercase">
                   NAME
                 </span>
-                <div className="flex-1 bg-white/20 border border-white/40 rounded-full px-4 py-2 sm:py-2.5">
+                <div className="flex-1 bg-white/20 border border-[#0f172a]/20 rounded-full px-4 py-2 sm:py-2.5">
                   <input
                     type="text"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     placeholder="Enter your name..."
-                    className="w-full bg-transparent text-white placeholder-white/60 text-sm sm:text-base font-light focus:outline-none"
+                    className="w-full bg-transparent text-[#0f172a] placeholder-[#0f172a]/50 text-sm sm:text-base font-light focus:outline-none"
                     disabled={loading}
                     required
                   />
@@ -101,17 +93,17 @@ export default function ContactInquirySection() {
               </div>
 
               {/* MAIL Container Pill */}
-              <div className="border-2 border-white/80 rounded-3xl p-3 sm:p-4 bg-white/10 backdrop-blur-xs flex items-center gap-4 shadow-lg hover:border-white transition">
-                <span className="font-['Cormorant_Garamond',serif] text-xl sm:text-2xl font-bold tracking-wider text-white shrink-0 pl-3 uppercase">
+              <div className="border-2 border-[#0f172a]/20 rounded-xl p-3 sm:p-4 bg-white/10 backdrop-blur-xs flex items-center gap-4 shadow-lg hover:border-[#0f172a]/40 transition">
+                <span className="font-['Cormorant_Garamond',serif] text-xl sm:text-2xl font-bold tracking-wider text-[#0f172a] shrink-0 pl-3 uppercase">
                   MAIL
                 </span>
-                <div className="flex-1 bg-white/20 border border-white/40 rounded-full px-4 py-2 sm:py-2.5">
+                <div className="flex-1 bg-white/20 border border-[#0f172a]/20 rounded-full px-4 py-2 sm:py-2.5">
                   <input
                     type="email"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     placeholder="Enter your email..."
-                    className="w-full bg-transparent text-white placeholder-white/60 text-sm sm:text-base font-light focus:outline-none"
+                    className="w-full bg-transparent text-[#0f172a] placeholder-[#0f172a]/50 text-sm sm:text-base font-light focus:outline-none"
                     disabled={loading}
                     required
                   />
@@ -121,17 +113,17 @@ export default function ContactInquirySection() {
             </div>
 
             {/* ROW 2: YOUR MESSAGE Container Pill */}
-            <div className="border-2 border-white/80 rounded-3xl p-3 sm:p-4 bg-white/10 backdrop-blur-xs flex items-center gap-4 shadow-lg hover:border-white transition">
-              <span className="font-['Cormorant_Garamond',serif] text-xl sm:text-2xl font-bold tracking-wider text-white shrink-0 pl-3 uppercase">
+            <div className="border-2 border-[#0f172a]/20 rounded-xl p-3 sm:p-4 bg-white/10 backdrop-blur-xs flex items-center gap-4 shadow-lg hover:border-[#0f172a]/40 transition">
+              <span className="font-['Cormorant_Garamond',serif] text-xl sm:text-2xl font-bold tracking-wider text-[#0f172a] shrink-0 pl-3 uppercase">
                 YOUR MESSAGE
               </span>
-              <div className="flex-1 bg-white/20 border border-white/40 rounded-full px-5 py-2 sm:py-2.5">
+              <div className="flex-1 bg-white/20 border border-[#0f172a]/20 rounded-full px-5 py-2 sm:py-2.5">
                 <input
                   type="text"
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   placeholder="Type your message here..."
-                  className="w-full bg-transparent text-white placeholder-white/60 text-sm sm:text-base font-light focus:outline-none"
+                  className="w-full bg-transparent text-[#0f172a] placeholder-[#0f172a]/50 text-sm sm:text-base font-light focus:outline-none"
                   disabled={loading}
                   required
                 />

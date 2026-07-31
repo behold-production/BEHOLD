@@ -192,7 +192,7 @@ export default function AuthModals({ isOpen, onClose }) {
  >
  {/* Modal Card */}
  <div 
- className="relative w-full max-w-md my-auto bg-white rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 border border-surface-200"
+ className="relative w-full max-w-md my-auto bg-white rounded-xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 border border-surface-200"
  onClick={(e) => e.stopPropagation()}
  >
 
@@ -219,7 +219,7 @@ export default function AuthModals({ isOpen, onClose }) {
  {/* Form body */}
  {rejectionReason ? (
  <div className="p-6 space-y-4">
- <div className="bg-rose-50 border border-rose-200 p-4 rounded-2xl space-y-3">
+ <div className="bg-rose-50 border border-rose-200 p-4 rounded-xl space-y-3">
  <p className="text-sm text-[#0f172a] leading-relaxed font-medium">
  We regret to inform you that your professional counsellor application has been rejected by the system administrator.
  </p>

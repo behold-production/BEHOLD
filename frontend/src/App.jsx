@@ -16,6 +16,8 @@ import AuthModals from './features/auth/AuthModals';
 import TherapistSwipeSection from './features/landing/TherapistSwipeSection';
 import FaqBlogSection from './features/landing/FaqBlogSection';
 import ContactInquirySection from './features/landing/ContactInquirySection';
+import globalBg from './assets/hero_watercolor_bg.png';
+
 function lazyWithRetry(importFn) {
   return lazy(() =>
     importFn().catch((error) => {
@@ -583,6 +585,19 @@ export default function App() {
         </div>
       )}
 
+      {/* Global Background Image for User Sections */}
+      {!hideNavbarAndFooter && (
+         <div 
+           className="fixed inset-0 z-[-1] pointer-events-none"
+           style={{
+             backgroundImage: `url(${globalBg})`,
+             backgroundSize: 'cover',
+             backgroundPosition: 'center',
+             backgroundColor: '#86ad66'
+           }}
+         />
+      )}
+
       <AuthModals isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
 
       {/* Navbar — hidden on admin/counsellor dashboards */}
@@ -615,7 +630,7 @@ export default function App() {
 
           {/* About Page Route */}
           <Route path="/about" element={
-            <main className="fade-in-up pt-16 sm:pt-20 bg-white">
+            <main className="fade-in-up pt-16 sm:pt-20 bg-transparent">
               <About siteSettings={siteSettings} />
               <WhyChooseUs siteSettings={siteSettings} />
               <Reviews siteSettings={siteSettings} />
@@ -644,7 +659,7 @@ export default function App() {
           {/* Services Page — Career Mentoring + Psychological Counselling + Expert Listing */}
           {/* C-DAT section shown only when admin has enabled aptitude */}
           <Route path="/booking" element={
-            <main className="fade-in-up pt-16 sm:pt-20 bg-white">
+            <main className="fade-in-up pt-16 sm:pt-20 bg-transparent">
               <Services setView={() => { }} onBookTherapist={handleBookTherapist} siteSettings={siteSettings} />
               {siteSettings.enableAptitude !== false && (
                 <CdatSection setView={() => { }} siteSettings={siteSettings} />
@@ -654,7 +669,7 @@ export default function App() {
 
           {/* Book Session Page — dedicated booking form */}
           <Route path="/book-session" element={
-            <main className="fade-in-up pt-16 sm:pt-20 bg-white">
+            <main className="fade-in-up pt-16 sm:pt-20 bg-transparent">
               <ServiceBooking
                 preselectedAdvisorId={bookingAdvisor}
                 clearPreselectedAdvisor={() => setBookingAdvisor(null)}

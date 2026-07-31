@@ -89,7 +89,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen pt-28 pb-16 bg-slate-50 flex items-center justify-center px-4">
+      <div className="min-h-screen pt-28 pb-16 bg-transparent flex items-center justify-center px-4">
         <div className="flex flex-col items-center gap-4">
           <div className="w-10 h-10 border-4 border-[#00e5ff] border-t-transparent rounded-full animate-spin" />
           <p className="text-slate-600 font-bold tracking-wide">Loading verified specialist details...</p>
@@ -100,7 +100,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
 
   if (!advisor) {
     return (
-      <div className="min-h-screen pt-28 pb-16 bg-slate-50 text-center px-4 flex flex-col items-center justify-center">
+      <div className="min-h-screen pt-28 pb-16 bg-transparent text-center px-4 flex flex-col items-center justify-center">
         <div className="w-16 h-16 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center mb-4">
           <UserCheck className="w-8 h-8 text-slate-400" />
         </div>
@@ -118,7 +118,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
   }
 
   return (
-    <div className="min-h-screen bg-white text-surface-900 font-sans pt-24 sm:pt-28 pb-20 animate-in fade-in duration-300">
+    <div className="min-h-screen bg-transparent text-surface-900 font-sans pt-24 sm:pt-28 pb-20 animate-in fade-in duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Top Back Navigation Bar */}
         <div className="mb-8 flex items-center justify-between">
@@ -135,10 +135,10 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
         </div>
 
         {/* Hero Profile Header Card */}
-        <div className="bg-surface-50 rounded-2xl shadow-xs border border-surface-200 p-6 sm:p-8 md:p-10 relative overflow-hidden mb-8 transition-all">
+        <div className="bg-surface-50 rounded-xl shadow-xs border border-surface-200 p-6 sm:p-8 md:p-10 relative overflow-hidden mb-8 transition-all">
           <div className="flex flex-col md:flex-row gap-6 sm:gap-8 items-start md:items-center relative z-10">
             {/* Avatar Circle/Square */}
-            <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-2xl bg-[#0f172a] text-white shadow-md border border-[#00e5ff]/40 flex items-center justify-center font-bold text-4xl sm:text-5xl shrink-0 overflow-hidden relative group">
+            <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-xl bg-[#0f172a] text-white shadow-md border border-[#00e5ff]/40 flex items-center justify-center font-bold text-4xl sm:text-5xl shrink-0 overflow-hidden relative group">
               {advisor.profilePic ? (
                 <img src={advisor.profilePic} alt={advisor.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
               ) : (
@@ -211,7 +211,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
           <div className="lg:col-span-2 space-y-8">
             
             {/* About Card */}
-            <div className="bg-white p-6 sm:p-8 rounded-2xl border border-surface-200 space-y-5 shadow-xs">
+            <div className="bg-white p-6 sm:p-8 rounded-xl border border-surface-200 space-y-5 shadow-xs">
               <div className="flex items-center gap-3 text-[#0f172a] border-b border-surface-200 pb-4">
                 <div className="p-2.5 bg-[#0f172a] text-[#00e5ff] rounded-xl">
                   <UserCheck className="w-5 h-5" />
@@ -225,7 +225,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             </div>
 
             {/* Specialties Card */}
-            <div className="bg-white p-6 sm:p-8 rounded-2xl border border-surface-200 space-y-5 shadow-xs">
+            <div className="bg-white p-6 sm:p-8 rounded-xl border border-surface-200 space-y-5 shadow-xs">
               <div className="flex items-center gap-3 text-[#0f172a] border-b border-surface-200 pb-4">
                 <div className="p-2.5 bg-[#0f172a] text-[#00e5ff] rounded-xl">
                   <Sparkles className="w-5 h-5" />
@@ -245,7 +245,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             </div>
 
             {/* Qualifications Card */}
-            <div className="bg-white p-6 sm:p-8 rounded-2xl border border-surface-200 space-y-5 shadow-xs">
+            <div className="bg-white p-6 sm:p-8 rounded-xl border border-surface-200 space-y-5 shadow-xs">
               <div className="flex items-center gap-3 text-[#0f172a] border-b border-surface-200 pb-4">
                 <div className="p-2.5 bg-[#0f172a] text-[#00e5ff] rounded-xl">
                   <BookOpen className="w-5 h-5" />
@@ -272,7 +272,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
           {/* Right Column: Sticky Dark Blue Booking Box */}
           {enableBooking && (
             <div className="lg:col-span-1">
-              <div className="lg:sticky lg:top-28 bg-[#0f172a] text-white p-6 sm:p-8 rounded-2xl border border-[#00e5ff]/30 shadow-lg space-y-6">
+              <div className="lg:sticky lg:top-28 bg-[#0f172a] text-white p-6 sm:p-8 rounded-xl border border-[#00e5ff]/30 shadow-lg space-y-6">
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-[10px] font-bold uppercase tracking-widest text-[#00e5ff]">Direct Consultation</span>

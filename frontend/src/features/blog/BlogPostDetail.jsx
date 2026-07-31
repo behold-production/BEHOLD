@@ -70,7 +70,7 @@ const BlogPostDetail = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex justify-center items-center bg-white text-surface-900 pt-28 pb-16">
+      <div className="min-h-screen flex justify-center items-center bg-transparent text-surface-900 pt-28 pb-16">
         <div className="w-10 h-10 border-3 border-[#0f172a] border-t-[#00e5ff] rounded-full animate-spin"></div>
       </div>
     );
@@ -78,7 +78,7 @@ const BlogPostDetail = () => {
 
   if (!post) {
     return (
-      <div className="min-h-screen flex flex-col justify-center items-center text-center px-4 bg-white text-surface-900 pt-28 pb-16">
+      <div className="min-h-screen flex flex-col justify-center items-center text-center px-4 bg-transparent text-surface-900 pt-28 pb-16">
         <BookOpen className="w-14 h-14 text-[#0f172a] mb-4 opacity-75" />
         <h1 className="text-2xl font-bold mb-2 uppercase tracking-wide">Article Not Found</h1>
         <p className="text-surface-600 mb-6 text-sm">The article you are looking for may have been moved or unpublished.</p>
@@ -94,7 +94,7 @@ const BlogPostDetail = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-white text-surface-900 pt-28 pb-20 selection:bg-[#0f172a] selection:text-[#00e5ff]">
+    <div className="min-h-screen flex flex-col bg-transparent text-surface-900 pt-28 pb-20 selection:bg-[#0f172a] selection:text-[#00e5ff]">
       <main className="flex-1">
         <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Back Button */}
@@ -171,7 +171,7 @@ const BlogPostDetail = () => {
 
           {/* Cover Image */}
           {post.coverImage && (
-            <div className="mb-12 rounded-3xl overflow-hidden border border-surface-200 shadow-sm bg-surface-100 relative group">
+            <div className="mb-12 rounded-xl overflow-hidden border border-surface-200 shadow-sm bg-surface-100 relative group">
               <img
                 src={post.coverImage}
                 alt={post.title}
@@ -182,7 +182,7 @@ const BlogPostDetail = () => {
 
           {/* Article Excerpt Banner */}
           {post.excerpt && (
-            <div className="p-6 sm:p-8 rounded-2xl bg-surface-50 border-l-4 border-[#00e5ff] border border-surface-200 mb-12 shadow-2xs">
+            <div className="p-6 sm:p-8 rounded-xl bg-surface-50 border-l-4 border-[#00e5ff] border border-surface-200 mb-12 shadow-2xs">
               <p className="text-base sm:text-lg text-[#0f172a] font-medium leading-relaxed italic">
                 "{post.excerpt}"
               </p>
@@ -223,7 +223,7 @@ const BlogPostDetail = () => {
                 <div
                   key={item.slug}
                   onClick={() => navigate(`/blog/${item.slug}`)}
-                  className="bg-white hover:bg-surface-50 border border-surface-200 hover:border-[#00e5ff] rounded-3xl p-6 cursor-pointer transition-all duration-300 space-y-3 shadow-2xs group"
+                  className="bg-white hover:bg-surface-50 border border-surface-200 hover:border-[#00e5ff] rounded-xl p-6 cursor-pointer transition-all duration-300 space-y-3 shadow-2xs group"
                 >
                   <span className="text-[10px] font-bold text-[#00e5ff] uppercase tracking-widest block">
                     {item.category}

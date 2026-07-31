@@ -42,7 +42,7 @@ export default function ResetPassword() {
 
  if (!token) {
  return (
- <div className="min-h-screen flex items-center justify-center bg-zinc-50">
+ <div className="min-h-screen flex items-center justify-center bg-transparent">
  <div className="p-8 max-w-md bg-white rounded-lg shadow-xl text-center border border-zinc-200">
  <h2 className="text-xl font-bold text-rose-500 mb-2">Invalid Link</h2>
  <p className="text-zinc-600 mb-6">No reset token found in the URL. Please use a valid reset link.</p>
@@ -55,7 +55,7 @@ export default function ResetPassword() {
  }
 
  return (
- <div className="min-h-screen flex items-center justify-center bg-zinc-50 relative overflow-hidden">
+ <div className="min-h-screen flex items-center justify-center bg-transparent relative overflow-hidden">
  <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
  
  <div className="w-full max-w-md p-8 bg-white/80 backdrop-blur-xl border border-white rounded-lg sm:rounded-[2rem] shadow-2xl relative z-10">

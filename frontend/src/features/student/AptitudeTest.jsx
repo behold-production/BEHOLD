@@ -215,7 +215,7 @@ export default function AptitudeTest({ onFinishTest }) {
 
  if (isLoading || shuffledQuestions.length === 0) {
  return (
- <div className="pt-24 pb-16 min-h-screen bg-surface-50 text-surface-900 flex items-center justify-center font-sans">
+ <div className="pt-24 pb-16 min-h-screen bg-transparent text-surface-900 flex items-center justify-center font-sans">
  <p className="text-[10px] font-black tracking-widest text-surface-500 animate-pulse">Initializing quiz console...</p>
  </div>
  );
@@ -225,7 +225,7 @@ export default function AptitudeTest({ onFinishTest }) {
  if (!currentQObj) return null;
 
  return (
- <div className="pt-20 sm:pt-24 pb-12 sm:pb-16 min-h-screen bg-surface-50 text-surface-900 relative overflow-hidden font-sans border-b border-surface-200 text-left">
+ <div className="pt-20 sm:pt-24 pb-12 sm:pb-16 min-h-screen bg-transparent text-surface-900 relative overflow-hidden font-sans border-b border-surface-200 text-left">
  <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
 
  {!testFinished ? (

@@ -8,7 +8,7 @@ export default function WhyChooseUs({ siteSettings }) {
   };
 
   return (
-    <section id="why-choose-us" className="py-20 sm:py-28 bg-white text-surface-900 border-b border-surface-200">
+    <section id="why-choose-us" className="py-20 sm:py-28 bg-transparent text-surface-900 border-b border-surface-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Editorial Split Matrix Layout */}
@@ -16,7 +16,7 @@ export default function WhyChooseUs({ siteSettings }) {
 
           {/* Left Column: Image Hero Card with Text Overlay */}
           <div className="lg:col-span-6">
-            <div className="relative w-full min-h-[460px] sm:min-h-[520px] rounded-3xl overflow-hidden shadow-lg flex flex-col justify-end p-6 sm:p-10 border border-[#00e5ff]/40 group">
+            <div className="relative w-full min-h-[460px] sm:min-h-[520px] rounded-xl overflow-hidden shadow-lg flex flex-col justify-end p-6 sm:p-10 border border-[#00e5ff]/40 group">
               {/* Background Image with Dark Luxury Opacity Overlay */}
               <img
                 src={siteSettings?.whyChooseUsImage || siteSettings?.servicesFirstCardImage || luxuryClinicRoom}
@@ -68,7 +68,7 @@ export default function WhyChooseUs({ siteSettings }) {
           <div className="lg:col-span-6 grid grid-cols-2 gap-4 sm:gap-6 pt-6 lg:pt-0">
             
             {/* Cell 1: Dual Support */}
-            <div className="p-5 sm:p-7 rounded-3xl bg-white border border-surface-200 hover:border-[#00e5ff] transition-all shadow-xs flex flex-col justify-between h-52 sm:h-60 space-y-3 group">
+            <div className="p-5 sm:p-7 rounded-xl bg-white border border-surface-200 hover:border-[#00e5ff] transition-all shadow-xs flex flex-col justify-between h-52 sm:h-60 space-y-3 group">
               <div>
                 <h3 className="text-xs sm:text-sm font-bold text-[#0f172a] uppercase mb-1.5 font-sans leading-snug group-hover:text-[#00e5ff] transition-colors">Dual Support Architecture</h3>
                 <p className="text-[11px] sm:text-xs text-surface-600 font-normal leading-relaxed">
@@ -82,7 +82,7 @@ export default function WhyChooseUs({ siteSettings }) {
             </div>
 
             {/* Cell 2: Safe & Scientific */}
-            <div className="p-5 sm:p-7 rounded-3xl bg-white border border-surface-200 hover:border-[#00e5ff] transition-all shadow-xs flex flex-col justify-between h-52 sm:h-60 space-y-3 group">
+            <div className="p-5 sm:p-7 rounded-xl bg-white border border-surface-200 hover:border-[#00e5ff] transition-all shadow-xs flex flex-col justify-between h-52 sm:h-60 space-y-3 group">
               <div>
                 <h3 className="text-xs sm:text-sm font-bold text-[#0f172a] uppercase mb-1.5 font-sans leading-snug group-hover:text-[#00e5ff] transition-colors">100% Safe & Scientific</h3>
                 <p className="text-[11px] sm:text-xs text-surface-600 font-normal leading-relaxed">
@@ -97,7 +97,7 @@ export default function WhyChooseUs({ siteSettings }) {
 
             {/* Cell 3: Conditional — C-DAT when aptitude enabled, Career Roadmap when disabled */}
             {siteSettings?.enableAptitude !== false ? (
-              <div className="p-5 sm:p-7 rounded-3xl bg-white border border-surface-200 hover:border-[#00e5ff] transition-all shadow-xs flex flex-col justify-between h-52 sm:h-60 space-y-3 group">
+              <div className="p-5 sm:p-7 rounded-xl bg-white border border-surface-200 hover:border-[#00e5ff] transition-all shadow-xs flex flex-col justify-between h-52 sm:h-60 space-y-3 group">
                 <div>
                   <h3 className="text-xs sm:text-sm font-bold text-[#0f172a] uppercase mb-1.5 font-sans leading-snug group-hover:text-[#00e5ff] transition-colors">C-DAT Aptitude Assessment</h3>
                   <p className="text-[11px] sm:text-xs text-surface-600 font-normal leading-relaxed">
@@ -110,7 +110,7 @@ export default function WhyChooseUs({ siteSettings }) {
                 </div>
               </div>
             ) : (
-              <div className="p-5 sm:p-7 rounded-3xl bg-white border border-surface-200 hover:border-[#00e5ff] transition-all shadow-xs flex flex-col justify-between h-52 sm:h-60 space-y-3 group">
+              <div className="p-5 sm:p-7 rounded-xl bg-white border border-surface-200 hover:border-[#00e5ff] transition-all shadow-xs flex flex-col justify-between h-52 sm:h-60 space-y-3 group">
                 <div>
                   <h3 className="text-xs sm:text-sm font-bold text-[#0f172a] uppercase mb-1.5 font-sans leading-snug group-hover:text-[#00e5ff] transition-colors">Personalised Career Roadmap</h3>
                   <p className="text-[11px] sm:text-xs text-surface-600 font-normal leading-relaxed">
@@ -125,7 +125,7 @@ export default function WhyChooseUs({ siteSettings }) {
             )}
 
             {/* Cell 4: Dark Blue Statement Highlight Box */}
-            <div className="p-5 sm:p-7 rounded-3xl bg-[#0f172a] text-white border border-[#00e5ff]/30 shadow-md flex flex-col justify-between h-52 sm:h-60 space-y-3">
+            <div className="p-5 sm:p-7 rounded-xl bg-[#0f172a] text-white border border-[#00e5ff]/30 shadow-md flex flex-col justify-between h-52 sm:h-60 space-y-3">
               <p className="text-xs sm:text-sm text-surface-200 font-medium leading-relaxed italic">
                 "True growth happens when emotional peace and career direction align<span className="text-[#00e5ff] not-italic font-bold">.</span>"
               </p>

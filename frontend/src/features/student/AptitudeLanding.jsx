@@ -17,7 +17,7 @@ export default function AptitudeLanding({ setView }) {
   };
 
   return (
-    <div className="w-full bg-white min-h-screen pt-28 pb-20 text-surface-900 border-b border-surface-200">
+    <div className="w-full bg-transparent min-h-screen pt-28 pb-20 text-surface-900 border-b border-surface-200">
       <div className="max-w-6xl mx-auto px-6 sm:px-10 lg:px-12 flex flex-col items-center text-center">
         
         <div className="w-full">
@@ -37,7 +37,7 @@ export default function AptitudeLanding({ setView }) {
           </p>
 
           {/* Main Teaser Hook Card */}
-          <div className="bg-[#0f172a] text-white rounded-3xl p-8 sm:p-12 max-w-3xl mx-auto border border-[#00e5ff]/30 text-left mb-14 shadow-lg">
+          <div className="bg-[#0f172a] text-white rounded-xl p-8 sm:p-12 max-w-3xl mx-auto border border-[#00e5ff]/30 text-left mb-14 shadow-lg">
             <span className="inline-block px-3.5 py-1.5 rounded-full bg-[#00e5ff] text-[#0f172a] text-[10px] font-extrabold uppercase tracking-widest mb-4">
               Teaser Assessment
             </span>
@@ -64,7 +64,7 @@ export default function AptitudeLanding({ setView }) {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div
                 onClick={handleDetailedCdat}
-                className="bg-white p-7 rounded-3xl border border-surface-200 hover:border-[#00e5ff] transition-all shadow-xs cursor-pointer flex flex-col justify-between group"
+                className="bg-white p-7 rounded-xl border border-surface-200 hover:border-[#00e5ff] transition-all shadow-xs cursor-pointer flex flex-col justify-between group"
               >
                 <div>
                   <span className="text-[10px] font-bold uppercase tracking-widest text-[#0f172a] bg-surface-100 px-3 py-1 rounded-full border border-surface-200 inline-block mb-4">
@@ -77,7 +77,7 @@ export default function AptitudeLanding({ setView }) {
 
               <div
                 onClick={handleCounsellorAssign}
-                className="bg-white p-7 rounded-3xl border border-surface-200 hover:border-[#00e5ff] transition-all shadow-xs cursor-pointer flex flex-col justify-between group"
+                className="bg-white p-7 rounded-xl border border-surface-200 hover:border-[#00e5ff] transition-all shadow-xs cursor-pointer flex flex-col justify-between group"
               >
                 <div>
                   <span className="text-[10px] font-bold uppercase tracking-widest text-[#0f172a] bg-surface-100 px-3 py-1 rounded-full border border-surface-200 inline-block mb-4">
