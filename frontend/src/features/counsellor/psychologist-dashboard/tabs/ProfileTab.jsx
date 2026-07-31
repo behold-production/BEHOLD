@@ -140,7 +140,7 @@ const ProfileTab = ({
  </button>
  </div>
  <div className="flex-1 space-y-1.5 text-left">
- <p className="text-sm font-bold text-white">{profile.name || 'Unnamed Counsellor'}</p>
+ <p className="text-sm font-bold text-white">{profile.name || 'Unnamed Psychologist'}</p>
  <p className="text-xs text-zinc-500 font-medium">{user?.email || ''}</p>
  <input
  ref={avatarFileRef}

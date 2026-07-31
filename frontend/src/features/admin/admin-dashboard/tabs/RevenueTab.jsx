@@ -221,7 +221,7 @@ export default function RevenueTab(props) {
  {/* Card 3 */}
  <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-lg space-y-2 shadow-lg">
  <div className="flex justify-between items-center text-zinc-500">
- <span className="text-xs font-bold tracking-wider">Counsellor Payouts Volume</span>
+ <span className="text-xs font-bold tracking-wider">Psychologist Payouts Volume</span>
  <Users className="w-4 h-4 text-indigo-400" />
  </div>
  <div className="text-2xl font-bold text-white font-header">
@@ -312,7 +312,7 @@ export default function RevenueTab(props) {
  {/* Counsellor breakdown matrix */}
  <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-lg shadow-lg space-y-4">
  <div className="pb-2 border-b border-zinc-800/60 flex items-center justify-between">
- <h4 className="text-xs font-bold text-white tracking-wider">Counsellors Ledger & Account Routing</h4>
+ <h4 className="text-xs font-bold text-white tracking-wider">Psychologists Ledger & Account Routing</h4>
  <button
     type="button"
     onClick={handleExportPayoutCSV}
@@ -327,7 +327,7 @@ export default function RevenueTab(props) {
  <table className="w-full text-xs text-left border-collapse">
  <thead>
  <tr className="bg-zinc-950 text-zinc-500 border-b border-zinc-800 font-bold ">
- <th className="p-3">Counsellor</th>
+ <th className="p-3">Psychologist</th>
  <th className="p-3 text-center">Sessions</th>
  <th className="p-3 text-right">Gross Earned</th>
  <th className="p-3 text-right">Retained Commission</th>
@@ -348,7 +348,7 @@ export default function RevenueTab(props) {
 
  return (
  <tr key={c.id} className="border-b border-zinc-850 hover:bg-zinc-950/40 transition-colors">
- <td className="p-3 font-semibold text-white">{c.name || 'Counsellor'}</td>
+ <td className="p-3 font-semibold text-white">{c.name || 'Psychologist'}</td>
  <td className="p-3 text-center text-zinc-300 font-bold">{paidBookings.length}</td>
  <td className="p-3 text-right text-zinc-455 font-semibold">₹{formatAmount(gross)}</td>
  <td className="p-3 text-right text-zinc-455 font-semibold">₹{formatAmount(ret)}</td>
@@ -392,7 +392,7 @@ export default function RevenueTab(props) {
  onChange={(e) => setCounsellorFilter(e.target.value)}
  className="bg-zinc-955 border border-zinc-800 rounded-lg text-xs font-semibold px-2 py-1.5 text-white outline-none cursor-pointer"
  >
- <option value="ALL">All Counsellors</option>
+ <option value="ALL">All Psychologists</option>
  {counsellors.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
  </select>
 
@@ -427,11 +427,11 @@ export default function RevenueTab(props) {
  <tr className="bg-zinc-900 text-zinc-400 font-bold border-b border-zinc-800 text-left ">
  <th className="p-3">Ref ID</th>
  <th className="p-3">Student Name</th>
- <th className="p-3">Counsellor</th>
+ <th className="p-3">Psychologist</th>
  <th className="p-3">Session Date</th>
  <th className="p-3 text-right">Gross Paid</th>
  <th className="p-3 text-right">Commission (Platform)</th>
- <th className="p-3 text-right font-bold text-brand">Payout (Counsellor)</th>
+ <th className="p-3 text-right font-bold text-brand">Payout (Psychologist)</th>
  <th className="p-3 text-center">Payment Status</th>
  <th className="p-3 text-center">Receipt</th>
  </tr>
@@ -457,7 +457,7 @@ export default function RevenueTab(props) {
  <tr key={b.id} className="border-b border-zinc-900 hover:bg-zinc-900/30 transition-colors">
  <td className="p-3 font-mono font-semibold">SB-{b.id}</td>
  <td className="p-3 font-bold text-white">{b.userName || b.studentName || 'Student'}</td>
- <td className="p-3 text-zinc-400 font-medium">{b.advisorName || b.counsellorName || 'Counsellor'}</td>
+ <td className="p-3 text-zinc-400 font-medium">{b.advisorName || b.counsellorName || 'Psychologist'}</td>
  <td className="p-3 text-zinc-350">{formatDateString(b.date)} at {b.time}</td>
  <td className="p-3 text-right font-bold text-white">₹{formatAmount(gross)}</td>
  <td className="p-3 text-right text-zinc-500">₹{formatAmount(commission)}</td>

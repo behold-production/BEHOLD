@@ -92,7 +92,7 @@ export default function AptitudeLanding({ setView }) {
                   <span className="text-[10px] font-bold uppercase tracking-widest text-[#0f172a] bg-surface-100 px-3 py-1 rounded-full border border-surface-200 inline-block mb-4">
                     Expert Assignment
                   </span>
-                  <h5 className="font-bold uppercase text-[#0f172a] group-hover:text-[#00e5ff] transition-colors text-base mb-2 font-sans">Counsellor & Mentor Assignment</h5>
+                  <h5 className="font-bold uppercase text-[#0f172a] group-hover:text-[#00e5ff] transition-colors text-base mb-2 font-sans">Psychologist & Mentor Assignment</h5>
                   <p className="text-xs text-surface-600 leading-relaxed">Connect directly with certified career mentors and clinical psychologists for personalized roadmaps.</p>
                 </div>
               </div>

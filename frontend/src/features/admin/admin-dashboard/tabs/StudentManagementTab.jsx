@@ -820,7 +820,7 @@ const handleAdminCigiUpload = async (e) => {
  <thead>
  <tr className="bg-zinc-900/50 text-zinc-500 font-bold border-b border-zinc-855">
  <th className="p-2.5">Date & Time</th>
- <th className="p-2.5">Advisor</th>
+ <th className="p-2.5">Psychologist</th>
  <th className="p-2.5">Service Type</th>
  <th className="p-2.5 text-center">Status</th>
  </tr>

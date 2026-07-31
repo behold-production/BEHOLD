@@ -3,41 +3,8 @@ import { ChevronLeft, ChevronRight, Search, ChevronDown, LayoutGrid, List } from
 import ApiService from '../../shared/services/api';
 import greenTexture from '../../assets/clarity_bg.png';
 
-const DEFAULT_EXPERTS = [
-  {
-    id: 'exp-1',
-    name: 'Dr. Ananya Ramesh',
-    profilePic: '',
-    role: 'Clinical Psychologist',
-    bio: 'Specializes in adolescent cognitive care, CDAT data evaluation, and stress management with 8+ years of clinical practice.',
-    specialties: ['Adolescent Psychology', 'CDAT Evaluation', 'Stress Care'],
-    price: 1500,
-    lang: 'English, Malayalam',
-  },
-  {
-    id: 'exp-2',
-    name: 'Rahul K. Varma',
-    profilePic: '',
-    role: 'Career Mentor',
-    bio: 'CIGI-certified career strategist guiding Class 8-12 students through stream selection, engineering & medical entrance roadmaps.',
-    specialties: ['Stream Selection', 'Degree Roadmaps', 'Engineering & Medical'],
-    price: 1200,
-    lang: 'English, Malayalam, Hindi',
-  },
-  {
-    id: 'exp-3',
-    name: 'Fathima Sahla',
-    profilePic: '',
-    role: 'Consultant Psychologist',
-    bio: 'Expert in behavioral therapy, parenting guidance, and relieving exam anxiety for high school & university aspirants.',
-    specialties: ['Parenting Guidance', 'Academic Anxiety', 'Behavioral Care'],
-    price: 1350,
-    lang: 'Malayalam, English',
-  }
-];
-
 export default function Services({ setView, onBookTherapist, siteSettings, mode }) {
-  const [advisors, setAdvisors] = useState(DEFAULT_EXPERTS);
+  const [advisors, setAdvisors] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState('All');
@@ -110,11 +77,11 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
             lang: c.lang || 'Malayalam, English',
           })));
         } else {
-          setAdvisors(DEFAULT_EXPERTS);
+          setAdvisors([]);
         }
       } catch (err) {
         console.error('Failed to load counsellors', err);
-        setAdvisors(DEFAULT_EXPERTS);
+        setAdvisors([]);
       } finally {
         setIsLoading(false);
       }

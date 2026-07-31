@@ -607,7 +607,7 @@ export default function OverviewTab(props) {
  <span className="text-sm font-bold text-zinc-500 block text-center">Verification Ratio</span>
  <div className="space-y-2">
  <div className="flex justify-between text-sm bg-zinc-950 p-2.5 rounded border border-zinc-850">
- <span className="text-zinc-400 font-bold text-sm">Approved Advisors</span>
+ <span className="text-zinc-400 font-bold text-sm">Approved Psychologists</span>
  <span className="text-brand font-bold ">{approvedPsyCount}</span>
  </div>
  <div className="flex justify-between text-sm bg-zinc-950 p-2.5 rounded border border-zinc-850">
@@ -820,7 +820,7 @@ export default function OverviewTab(props) {
   <span className="text-xs text-zinc-650 font-bold block mt-1">Variable Platform service share</span>
   </div>
   <div className="bg-zinc-900/60 p-4.5 rounded-lg border border-zinc-850 space-y-1">
-  <span className="text-sm text-zinc-500 font-bold block">Counsellor Payouts</span>
+  <span className="text-sm text-zinc-500 font-bold block">Psychologist Payouts</span>
   <p className="text-xl font-bold text-emerald-400 ">₹{formatAmount(payoutTotal)}</p>
   <span className="text-xs text-zinc-650 font-bold block mt-1">Variable routing to Accounts</span>
   </div>
@@ -985,7 +985,7 @@ export default function OverviewTab(props) {
  <div className="w-full mt-3 pt-3 border-t border-zinc-900/60 space-y-2 text-zinc-455 animate-in slide-in-from-top-2 duration-200">
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm bg-zinc-955/60 p-2.5 rounded border border-zinc-900">
  <div>
- <span className="text-zinc-550 block font-bold text-xs ">Advisor Designation</span>
+ <span className="text-zinc-550 block font-bold text-xs ">Psychologist Designation</span>
  <span className="text-white font-medium block mt-0.5">{b.advisorRole || 'Consultant Psychologist'}</span>
  </div>
  <div>

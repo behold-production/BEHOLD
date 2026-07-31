@@ -475,7 +475,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                 </h4>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm ">
                                     <div className="space-y-1">
-                                        <span className="text-slate-500 block font-semibold text-[10px] uppercase tracking-wider">Advisor</span>
+                                        <span className="text-slate-500 block font-semibold text-[10px] uppercase tracking-wider">Psychologist</span>
                                         <span className="font-bold text-slate-900 text-sm block">{selectedAdvisor?.name || 'Assigned Advisor'}</span>
                                         <span className="text-slate-500 block font-medium text-xs">{selectedAdvisor?.role || 'Consultant Psychologist'}</span>
                                     </div>
@@ -612,7 +612,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                                 <span className="w-6 h-6 rounded-md bg-surface-900 text-white text-xs flex items-center justify-center shrink-0 font-bold">1</span>
                                                 Schedule & Advisor
                                             </h3>
-                                            <p className="text-sm text-surface-600 mt-1">Select a date, choose your advisor, and pick a time.</p>
+                                            <p className="text-sm text-surface-600 mt-1">Select a date, choose your psychologist, and pick a time.</p>
                                         </div>
 
                                         <div className="space-y-6">
@@ -1490,14 +1490,14 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
                                         {/* Selected Advisor */}
                                         <div>
-                                            <span className="text-xs text-surface-400 block font-bold mb-0.5">Advisor</span>
+                                            <span className="text-xs text-surface-400 block font-bold mb-0.5">Psychologist</span>
                                             {selectedAdvisor ? (
                                                 <div className="bg-white border border-surface-200 p-2.5 rounded-xl text-left">
                                                     <span className="font-bold text-surface-900 block text-xs">{selectedAdvisor.name}</span>
                                                     <span className="text-xs text-surface-500 block font-semibold">{selectedAdvisor.role}</span>
                                                 </div>
                                             ) : (
-                                                <span className="text-surface-400 italic font-semibold text-xs block text-left">No advisor selected</span>
+                                                <span className="text-surface-400 italic font-semibold text-xs block text-left">No psychologist selected</span>
                                             )}
                                         </div>
 

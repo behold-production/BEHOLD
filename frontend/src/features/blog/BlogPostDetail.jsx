@@ -25,20 +25,9 @@ const BlogPostDetail = () => {
           if (allRes?.data && Array.isArray(allRes.data)) {
             setRelatedBlogs(allRes.data.filter(b => b.slug !== slug).slice(0, 3));
           }
-        } else {
-          const localMatch = DEFAULT_BLOGS_DATA.find(b => b.slug === slug);
-          if (localMatch) {
-            setPost(localMatch);
-            setRelatedBlogs(DEFAULT_BLOGS_DATA.filter(b => b.slug !== slug).slice(0, 3));
-          }
         }
       } catch (err) {
-        console.warn('Using local fallback for blog detail:', err);
-        const localMatch = DEFAULT_BLOGS_DATA.find(b => b.slug === slug);
-        if (localMatch) {
-          setPost(localMatch);
-          setRelatedBlogs(DEFAULT_BLOGS_DATA.filter(b => b.slug !== slug).slice(0, 3));
-        }
+        console.warn('Failed to load blog detail:', err);
       } finally {
         setLoading(false);
       }

@@ -373,11 +373,11 @@ export default function PsychologistDashboard({ setView }) {
  doc.setFontSize(8.5);
  doc.setTextColor(71, 85, 105); // slate-600
 
- const cName = booking.counsellorName || (booking.counsellor && booking.counsellor.name) || 'Consultant Psychologist';
- const cTitle = (booking.counsellor && booking.counsellor.title) || 'Consultant Psychologist';
- const cEdu = (booking.counsellor && booking.counsellor.education) || 'Professional Degree';
- const cPhone = (booking.counsellor && booking.counsellor.phone) || 'N/A';
- const cEmail = (booking.counsellor && booking.counsellor.email) || 'N/A';
+ const cName = booking.counsellorName || (booking.counsellor && booking.psychologist.name) || 'Consultant Psychologist';
+ const cTitle = (booking.counsellor && booking.psychologist.title) || 'Consultant Psychologist';
+ const cEdu = (booking.counsellor && booking.psychologist.education) || 'Professional Degree';
+ const cPhone = (booking.counsellor && booking.psychologist.phone) || 'N/A';
+ const cEmail = (booking.counsellor && booking.psychologist.email) || 'N/A';
 
  doc.text(`Name: ${cName}`, 20, 51);
  doc.text(`Title: ${cTitle}`, 20, 56);
@@ -1115,7 +1115,7 @@ export default function PsychologistDashboard({ setView }) {
           <div className='p-8'>
             {gateMode === 'login' ? (
               <div>
-                <h2 className='text-lg font-bold text-white text-left font-header'>Counsellor Sign In</h2>
+                <h2 className='text-lg font-bold text-white text-left font-header'>Psychologist Sign In</h2>
                 <p className='text-xs text-slate-500 text-left mt-1.5 mb-6 leading-relaxed'>
                   Access schedules, update clinic slots, and edit video rooms.
                 </p>
@@ -1232,7 +1232,7 @@ export default function PsychologistDashboard({ setView }) {
                       <input
                         type='email'
                         required
-                        placeholder='counsellor@example.com'
+                        placeholder='psychologist@example.com'
                         value={regForm.email}
                         onChange={(e) => setRegForm({ ...regForm, email: e.target.value })}
                         className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'

@@ -171,7 +171,7 @@ const BookedSessionsTab = ({
  {session.mode === 'ONLINE' && !session.meetLink && (
  <div className="mt-3 p-2.5 bg-amber-50 border border-amber-200 text-amber-700 text-[10px] tracking-widest font-bold rounded-[10px] flex items-center gap-2">
  <AlertCircle className="w-3.5 h-3.5 shrink-0" />
- <span>Meet link pending from counsellor.</span>
+ <span>Meet link pending from psychologist.</span>
  </div>
  )}
 
@@ -380,7 +380,7 @@ const BookedSessionsTab = ({
 
  {session.feedback && (
  <div className="mt-3 p-3 bg-surface-50 border border-surface-200 rounded-[10px]">
- <p className="text-[10px] font-bold text-surface-500 tracking-widest mb-1.5">Counsellor Feedback</p>
+ <p className="text-[10px] font-bold text-surface-500 tracking-widest mb-1.5">Psychologist Feedback</p>
  <p className="text-xs text-surface-900 font-medium leading-relaxed">"{session.feedback}"</p>
  </div>
  )}
@@ -421,7 +421,7 @@ const BookedSessionsTab = ({
  <Trophy className="w-6 h-6 text-surface-500" />
  </div>
  <p className="text-sm font-black text-surface-900 tracking-widest">No completed sessions yet</p>
- <p className="text-xs text-surface-500 mt-1">Finished sessions will appear here with counsellor feedback.</p>
+ <p className="text-xs text-surface-500 mt-1">Finished sessions will appear here with psychologist feedback.</p>
  {(enablePsychology || enableCareerMentoring) && (
  <button
  type="button"

@@ -639,7 +639,7 @@ export default function PsychologistManagementTab(props) {
             <div className="relative w-full sm:max-w-[200px]">
               <input
                 type="text"
-                placeholder="Search advisors..."
+                placeholder="Search psychologists..."
                 value={searchPsy}
                 onChange={(e) => setSearchPsy(e.target.value)}
                 className="w-full pl-9 pr-4 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-sm font-semibold focus:border-brand text-white outline-none"
@@ -1107,7 +1107,7 @@ export default function PsychologistManagementTab(props) {
                   <input
                     type="email"
                     required
-                    placeholder="counsellor@example.com"
+                    placeholder="psychologist@example.com"
                     value={psyForm.email}
                     onChange={(e) =>
                       setPsyForm({ ...psyForm, email: e.target.value })
@@ -1956,7 +1956,7 @@ export default function PsychologistManagementTab(props) {
                     {/* Professional Info */}
                     <div className="bg-zinc-955 border border-zinc-850 rounded-lg p-4 space-y-3.5 text-sm">
                       <span className="text-sm font-bold text-zinc-500 block">
-                        Advisor Credentials
+                        Psychologist Credentials
                       </span>
                       <div className="space-y-2.5">
                         <div>
@@ -2337,7 +2337,7 @@ export default function PsychologistManagementTab(props) {
                   <input
                     type="email"
                     required
-                    placeholder="counsellor@example.com"
+                    placeholder="psychologist@example.com"
                     value={psyForm.email}
                     onChange={(e) => setPsyForm({ ...psyForm, email: e.target.value })}
                     className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
@@ -2923,7 +2923,7 @@ export default function PsychologistManagementTab(props) {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* Professional Info */}
                     <div className="bg-zinc-955 border border-zinc-850 rounded-lg p-4 space-y-3.5 text-sm">
-                      <span className="text-sm font-bold text-zinc-500 block">Advisor Credentials</span>
+                      <span className="text-sm font-bold text-zinc-500 block">Psychologist Credentials</span>
                       <div className="space-y-2.5">
                         <div>
                           <span className="text-zinc-500 block text-xs ">Professional Title</span>
@@ -3217,7 +3217,7 @@ export default function PsychologistManagementTab(props) {
                     <span className="font-bold text-white">₹{shareModalTarget.price || 1200}</span>
                   </div>
                   <div className="flex justify-between items-center text-cyan-400 font-bold border-t border-zinc-850 pt-1.5">
-                    <span>Counsellor Share ({Number(sharePercentValue) || 0}%):</span>
+                    <span>Psychologist Share ({Number(sharePercentValue) || 0}%):</span>
                     <span>₹{(((shareModalTarget.price || 1200) * (Number(sharePercentValue) || 0)) / 100).toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between items-center text-zinc-400 font-medium">

@@ -15,7 +15,7 @@ const CATEGORIES = [
 
 const BlogList = () => {
   const navigate = useNavigate();
-  const [blogs, setBlogs] = useState(DEFAULT_BLOGS_DATA);
+  const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
@@ -37,30 +37,14 @@ const BlogList = () => {
         params.search = searchQuery.trim();
       }
       const res = await ApiService.getBlogs(params);
-      if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
+      if (res?.data && Array.isArray(res.data)) {
         setBlogs(res.data);
       } else {
-        let filtered = DEFAULT_BLOGS_DATA;
-        if (selectedCategory && selectedCategory !== 'All') {
-          filtered = filtered.filter(b => b.category === selectedCategory);
-        }
-        if (searchQuery.trim()) {
-          const q = searchQuery.toLowerCase();
-          filtered = filtered.filter(b => b.title.toLowerCase().includes(q) || b.excerpt.toLowerCase().includes(q));
-        }
-        setBlogs(filtered);
+        setBlogs([]);
       }
     } catch (err) {
-      console.warn('Using local fallback blog list:', err);
-      let filtered = DEFAULT_BLOGS_DATA;
-      if (selectedCategory && selectedCategory !== 'All') {
-        filtered = filtered.filter(b => b.category === selectedCategory);
-      }
-      if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase();
-        filtered = filtered.filter(b => b.title.toLowerCase().includes(q) || b.excerpt.toLowerCase().includes(q));
-      }
-      setBlogs(filtered);
+      console.warn('Failed to fetch blogs:', err);
+      setBlogs([]);
     } finally {
       setLoading(false);
     }

@@ -7,7 +7,7 @@ import { ScrollDot } from '../../shared/components/BrandDot';
 
 const BlogSection = () => {
   const navigate = useNavigate();
-  const [blogs, setBlogs] = useState(DEFAULT_BLOGS_DATA);
+  const [blogs, setBlogs] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const blogScrollRef = useRef(null);
   const itemsPerPage = 3;
@@ -16,11 +16,11 @@ const BlogSection = () => {
     const fetchBlogs = async () => {
       try {
         const res = await ApiService.getBlogs({ limit: 12 });
-        if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
+        if (res?.data && Array.isArray(res.data)) {
           setBlogs(res.data);
         }
       } catch (err) {
-        console.warn('Using fallback default blog data for landing section:', err);
+        console.warn('Failed to fetch blogs for landing section:', err);
       }
     };
     fetchBlogs();

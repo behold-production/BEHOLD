@@ -59,7 +59,7 @@ const SidebarNav = ({
  </div>
  <div className="min-w-0 flex-1">
  <h4 className="text-sm font-bold text-white truncate leading-tight font-header">
- {profile.name || 'Counsellor'}
+ {profile.name || 'Psychologist'}
  </h4>
  <span className="text-xs text-zinc-500 font-bold truncate block">
  {profile.education || 'Consultant'}

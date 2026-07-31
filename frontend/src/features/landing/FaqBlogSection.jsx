@@ -25,32 +25,28 @@ const beholdDefaultFaqs = [
 
 export default function FaqBlogSection() {
   const navigate = useNavigate();
-  const [faqs, setFaqs] = useState(beholdDefaultFaqs);
-  const [blogs, setBlogs] = useState(DEFAULT_BLOGS_DATA.slice(0, 2));
+  const [faqs, setFaqs] = useState([]);
+  const [blogs, setBlogs] = useState([]);
   const [expandedIndex, setExpandedIndex] = useState(null);
 
   useEffect(() => {
     // Fetch FAQs from API
     ApiService.getFaqs()
       .then((res) => {
-        if (res.success && Array.isArray(res.data) && res.data.length > 0) {
-          const apiFaqs = res.data.slice(0, 3).map((f, i) => ({
-            ...f,
-            author: beholdDefaultFaqs[i]?.author || 'Student FAQ'
-          }));
-          setFaqs(apiFaqs);
+        if (res.success && Array.isArray(res.data)) {
+          setFaqs(res.data.slice(0, 3));
         }
       })
-      .catch((err) => console.warn('Using default FAQs:', err));
+      .catch((err) => console.warn('Failed to load FAQs:', err));
 
     // Fetch Blogs from API
     ApiService.getBlogs({ limit: 4 })
       .then((res) => {
-        if (res.success && Array.isArray(res.data) && res.data.length > 0) {
+        if (res.success && Array.isArray(res.data)) {
           setBlogs(res.data.slice(0, 2));
         }
       })
-      .catch((err) => console.warn('Using default Blogs:', err));
+      .catch((err) => console.warn('Failed to load Blogs:', err));
   }, []);
 
   return (

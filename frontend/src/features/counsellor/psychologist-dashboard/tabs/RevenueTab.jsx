@@ -190,7 +190,7 @@ export default function RevenueTab(props) {
  id: booking.id,
  service: booking.service === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring',
  mode: booking.mode === 'ONLINE' ? 'Video Call' : booking.mode === 'DOOR_STEP' ? 'Home Visit' : 'At Center',
- advisorName: booking.advisorName || profile.name || 'Counsellor',
+ advisorName: booking.advisorName || profile.name || 'Psychologist',
  advisorRole: profile.role || 'Consultant Psychologist',
  date: booking.date,
  time: booking.time,

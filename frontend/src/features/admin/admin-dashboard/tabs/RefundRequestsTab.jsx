@@ -168,7 +168,7 @@ export default function RefundRequestsTab(props) {
  <tr className="bg-zinc-900 text-zinc-400 font-bold border-b border-zinc-850 text-left">
  <th className="p-3 w-8 text-center"></th>
  <th className="p-3">Student / Payer</th>
- <th className="p-3">Counsellor</th>
+ <th className="p-3">Psychologist</th>
  <th className="p-3">Booking Details</th>
  <th className="p-3 text-right">Amount</th>
  <th className="p-3 text-center">Status</th>
@@ -323,7 +323,7 @@ export default function RefundRequestsTab(props) {
  </div>
  </>
  ) : (
- <div className="text-zinc-500 italic pt-1">No bank details configured in counsellor profile.</div>
+ <div className="text-zinc-500 italic pt-1">No bank details configured in psychologist profile.</div>
  )}
  {booking.razorpayAccountId && (
  <div className="pt-1.5 border-t border-zinc-850/50 mt-1">

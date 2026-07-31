@@ -1756,7 +1756,7 @@ export default function SettingsTab(props) {
                   </h4>
 
                   <div className="space-y-1 max-w-xs animate-in slide-in-from-top-2 duration-200">
-                    <label className="text-xs font-bold text-zinc-400 ">Counsellor Payment Share (%)</label>
+                    <label className="text-xs font-bold text-zinc-400 ">Psychologist Payment Share (%)</label>
                     <input
                       type="number"
                       min={0}
@@ -1772,7 +1772,7 @@ export default function SettingsTab(props) {
                       className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
                       placeholder="e.g. 50"
                     />
-                    <p className="text-[11px] text-zinc-500 font-medium leading-relaxed pt-1">Configure the percentage of the booking payment routed automatically to the counsellor's Razorpay linked account. The remaining percentage will be kept by the platform.</p>
+                    <p className="text-[11px] text-zinc-500 font-medium leading-relaxed pt-1">Configure the percentage of the booking payment routed automatically to the psychologist's Razorpay linked account. The remaining percentage will be kept by the platform.</p>
                   </div>
                 </div>
 
@@ -2015,8 +2015,8 @@ export default function SettingsTab(props) {
                           className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold cursor-pointer transition-colors"
                         >
                           <option value="user">All Students / Users</option>
-                          <option value="counsellor">All Counsellors / Psychologists</option>
-                          <option value="everyone">Everyone (Students & Counsellors)</option>
+                          <option value="counsellor">All Psychologists / Psychologists</option>
+                          <option value="everyone">Everyone (Students & Psychologists)</option>
                         </select>
                       </div>
 
