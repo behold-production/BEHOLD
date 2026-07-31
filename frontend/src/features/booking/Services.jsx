@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import ApiService from '../../shared/services/api';
+import greenTexture from '../../assets/clarity_bg.png';
 
 const DEFAULT_EXPERTS = [
   {
@@ -135,7 +136,14 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
   const sectionId = mode === 'experts' ? 'counsellors' : 'services';
 
   return (
-    <section id={sectionId} className="py-12 sm:py-16 bg-transparent text-surface-900 border-b border-surface-200">
+    <section id={sectionId} className="py-12 sm:py-16 bg-transparent text-surface-900 border-b border-surface-200"
+      style={{
+        backgroundImage: `url(${greenTexture})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundColor: '#89b26b'
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* ── SERVICES INTRO: UNFOLD WITH BEHOLD ── */}

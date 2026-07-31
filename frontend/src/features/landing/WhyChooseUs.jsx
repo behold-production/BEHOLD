@@ -1,5 +1,6 @@
 import React from 'react';
 import luxuryClinicRoom from '../../assets/luxury_clinic_room.png';
+import greenTexture from '../../assets/clarity_bg.png';
 
 export default function WhyChooseUs({ siteSettings }) {
   const handleBook = () => {
@@ -8,7 +9,14 @@ export default function WhyChooseUs({ siteSettings }) {
   };
 
   return (
-    <section id="why-choose-us" className="py-20 sm:py-28 bg-transparent text-surface-900 border-b border-surface-200">
+    <section id="why-choose-us" className="py-20 sm:py-28 bg-transparent text-surface-900 border-b border-surface-200"
+      style={{
+        backgroundImage: `url(${greenTexture})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundColor: '#89b26b'
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Editorial Split Matrix Layout */}

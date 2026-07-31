@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ApiService from '../../shared/services/api';
 import { ScrollDot } from '../../shared/components/BrandDot';
+import greenTexture from '../../assets/clarity_bg.png';
 
 export default function CdatSection({ setView, siteSettings }) {
   const settings = siteSettings || JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
@@ -49,7 +50,14 @@ export default function CdatSection({ setView, siteSettings }) {
   ];
 
   return (
-    <section id="cdat" className="py-20 sm:py-28 bg-transparent text-surface-900 border-b border-surface-200">
+    <section id="cdat" className="py-20 sm:py-28 bg-transparent text-surface-900 border-b border-surface-200"
+      style={{
+        backgroundImage: `url(${greenTexture})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundColor: '#89b26b'
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
 

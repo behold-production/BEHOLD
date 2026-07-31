@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { renderTitleWithFullstopDot } from '../../shared/components/BrandDot';
 import ApiService from '../../shared/services/api';
 import { useAuth } from '../../shared/context/AuthContext';
+import greenTexture from '../../assets/clarity_bg.png';
 
 const fallbackReviews = [
   {
@@ -280,7 +281,14 @@ export default function Reviews({ siteSettings }) {
   };
 
   return (
-    <section id="reviews" className="py-16 sm:py-24 bg-transparent border-b border-surface-200">
+    <section id="reviews" className="py-16 sm:py-24 bg-transparent border-b border-surface-200"
+      style={{
+        backgroundImage: `url(${greenTexture})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundColor: '#89b26b'
+      }}
+    >
       <div className="max-w-6xl mx-auto">
 
         {/* Header */}

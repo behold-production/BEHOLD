@@ -27,6 +27,12 @@ export default function Hero({ siteSettings, navigateToSection }) {
     <section
       id="home"
       className="relative min-h-screen w-full overflow-hidden flex items-center justify-center pt-24 pb-16 px-5 sm:px-10 lg:px-16"
+      style={{
+        backgroundImage: `url(${heroWatercolorBg})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundColor: '#89b26b'
+      }}
     >
       {/* Background left empty to show global App.jsx background */}
       <div className="absolute inset-0 z-0">

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowUpRight, ChevronDown } from 'lucide-react';
 import ApiService from '../../shared/services/api';
 import { DEFAULT_BLOGS_DATA } from '../blog/defaultBlogsData';
+import greenTexture from '../../assets/clarity_bg.png';
 
 const beholdDefaultFaqs = [
   {
@@ -56,6 +57,12 @@ export default function FaqBlogSection() {
     <section
       id="faqs-blogs"
       className="relative w-full flex items-center justify-center py-20 sm:py-24 px-5 sm:px-10 lg:px-16 overflow-hidden text-[#0f172a] bg-transparent"
+      style={{
+        backgroundImage: `url(${greenTexture})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundColor: '#89b26b'
+      }}
     >
       {/* Background Overlay */}
 

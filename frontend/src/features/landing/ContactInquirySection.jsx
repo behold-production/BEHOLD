@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import ApiService from '../../shared/services/api';
 import { toast } from 'react-hot-toast';
 import { Send, CheckCircle2 } from 'lucide-react';
+import greenTexture from '../../assets/clarity_bg.png';
 
 export default function ContactInquirySection() {
   const [formData, setFormData] = useState({
@@ -42,6 +43,12 @@ export default function ContactInquirySection() {
     <section
       id="inquiry"
       className="relative min-h-[85vh] w-full flex items-center justify-center py-20 px-4 sm:px-8 lg:px-16 overflow-hidden text-[#0f172a] bg-transparent"
+      style={{
+        backgroundImage: `url(${greenTexture})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundColor: '#89b26b'
+      }}
     >
       {/* Background Overlay */}
 

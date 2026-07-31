@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
 import ApiService from '../../shared/services/api';
+import greenTexture from '../../assets/clarity_bg.png';
 
 const cdatFaq = {
   question: 'What is the C-DAT aptitude assessment?',
@@ -55,7 +56,14 @@ export default function Faq({ siteSettings }) {
     : filteredDefaultFaqs;
 
   return (
-    <section id="faqs" className="py-20 sm:py-28 bg-transparent text-surface-900 border-b border-surface-200">
+    <section id="faqs" className="py-20 sm:py-28 bg-transparent text-surface-900 border-b border-surface-200"
+      style={{
+        backgroundImage: `url(${greenTexture})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundColor: '#89b26b'
+      }}
+    >
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Header */}
