@@ -8,7 +8,7 @@ export default function Hero({ siteSettings, navigateToSection }) {
   const displayEyebrow = settings.heroEyebrow || "Whatever you feel,";
   const eyebrowLine1 = displayEyebrow.includes(",") ? displayEyebrow : "It's Okay to be";
   
-  const displayTitle = settings.heroTitle || "not okey";
+  const displayTitle = settings.heroTitle || "not okay";
   const subtitleText = settings.heroSub || "A personal development and mentoring ecosystem — combining psychological care, self-discovery, and career guidance to help you grow with confidence and peace of mind.";
   const btnText = settings.heroBtnText || "Book a Session";
 

@@ -69,7 +69,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
           setAdvisors(res.data.map(c => ({
             id: c._id || c.id,
             name: c.name,
-            profilePic: (c.profilePic && !c.profilePic.includes('unsplash.com')) ? c.profilePic : '',
+            profilePic: (c.profilePic && c.profilePic.includes('res.cloudinary.com')) ? c.profilePic : '',
             role: (c.role || 'Consultant Psychologist').replace(/\b\w/g, l => l.toUpperCase()),
             bio: c.bio || c.description || 'Dedicated specialist providing personalized clinical & career guidance.',
             specialties: c.specialties?.length > 0 ? c.specialties : ['Anxiety', 'Stress', 'Career'],

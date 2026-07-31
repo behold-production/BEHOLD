@@ -58,7 +58,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
           setAdvisor({
             id: psy._id || psy.id,
             name: psy.name || 'Expert Counselor',
-            profilePic: psy.profilePic || '',
+            profilePic: (psy.profilePic && psy.profilePic.includes('res.cloudinary.com')) ? psy.profilePic : '',
             role: formattedRole,
             specs: Array.isArray(psy.specialties) && psy.specialties.length > 0
               ? psy.specialties
