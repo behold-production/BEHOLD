@@ -56,7 +56,7 @@ const HeroHeader = ({
             {/* Profile Info */}
             <div className="flex-1 text-center sm:text-left min-w-0">
               <p className="text-xs text-[#00e5ff] font-bold mb-1 tracking-widest uppercase flex items-center justify-center sm:justify-start gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_6px_#00e5ff]" />
+
                 {greeting}
               </p>
               <h1 className="text-2xl font-bold text-[#0f172a] tracking-tight">

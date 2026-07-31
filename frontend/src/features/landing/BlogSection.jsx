@@ -67,7 +67,7 @@ const BlogSection = () => {
         {/* Header */}
         <div className="text-center mb-10">
           <span className="text-xs font-bold tracking-widest uppercase text-[#00e5ff] flex items-center justify-center gap-1.5 mb-3">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_8px_#00e5ff]" />
+
             Latest Insights
           </span>
           <h2 id="blog-title" className="text-3xl sm:text-4xl md:text-5xl font-sans font-black text-[#0f172a] mb-4 tracking-tight leading-tight uppercase">

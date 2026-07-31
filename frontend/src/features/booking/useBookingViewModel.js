@@ -1080,6 +1080,12 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
 
   const handlePaymentSubmit = (e) => {
     e.preventDefault();
+
+    if (!user) {
+      setShowAuthModal(true);
+      return;
+    }
+
     setErrors({});
     
     const baseErrors = {};
@@ -1163,11 +1169,6 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       };
       sessionStorage.setItem(BOOKING_DRAFT_KEY, JSON.stringify(draft));
     } catch (e) { /* ignore */ }
-
-    if (!user) {
-      setShowAuthModal(true);
-      return;
-    }
 
     processPayment();
   };

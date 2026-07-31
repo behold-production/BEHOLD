@@ -394,7 +394,7 @@ export default function SettingsTab(props) {
 
                 <div className="bg-zinc-950/20 border border-zinc-800 p-5 rounded-lg space-y-4">
                   <h4 className="text-xs font-bold text-zinc-300 tracking-wider flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+
                     Branding Details
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -425,7 +425,7 @@ export default function SettingsTab(props) {
 
                 <div className="bg-zinc-955/20 border border-zinc-800 p-5 rounded-lg space-y-4">
                   <h4 className="text-xs font-bold text-zinc-300 tracking-wider flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+
                     Contact & Support Endpoints
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -479,7 +479,7 @@ export default function SettingsTab(props) {
                 {/* Social Media Channels Section */}
                 <div className="bg-zinc-955/20 border border-zinc-800 p-5 rounded-lg space-y-4">
                   <h4 className="text-xs font-bold text-zinc-300 tracking-wider flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+
                     Social Media Channels (Navbar & Footer)
                   </h4>
                   <div className="space-y-3">
@@ -620,7 +620,7 @@ export default function SettingsTab(props) {
                 <div className="bg-zinc-950/40 border border-zinc-800 p-5 rounded-lg space-y-4">
                   <div className="flex justify-between items-center">
                     <h4 className="text-xs font-bold text-brand tracking-wider flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+
                       Hero Carousel Slides
                     </h4>
                     <button
@@ -707,7 +707,7 @@ export default function SettingsTab(props) {
                 {/* 1. Hero Main Visual & Headline Settings */}
                 <div className="bg-zinc-950/60 border border-zinc-800 p-5 rounded-lg space-y-5">
                   <h4 className="text-xs font-bold text-brand tracking-wider flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+
                     Main Hero Section Background & Copy
                   </h4>
 
@@ -803,7 +803,7 @@ export default function SettingsTab(props) {
                 {/* 2. Unfold With Behold / Services First Card Section */}
                 <div className="bg-zinc-950/60 border border-zinc-800 p-5 rounded-lg space-y-5">
                   <h4 className="text-xs font-bold text-brand tracking-wider flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+
                     Unfold With Behold (Services / Why Choose Us Hero Card)
                   </h4>
 
@@ -890,7 +890,7 @@ export default function SettingsTab(props) {
                   <div className="flex justify-between items-center">
                     <div>
                       <h4 className="text-xs font-bold text-brand tracking-wider flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+
                         Hero Trust Stats Bar (Below Hero Buttons)
                       </h4>
                       <p className="text-[11px] text-zinc-400 mt-0.5">These numbers display directly beneath the action buttons on the main screen (e.g. 500+ Students Guided).</p>
@@ -1001,7 +1001,7 @@ export default function SettingsTab(props) {
                 {/* Section Ordering Configuration */}
                 <div className="bg-zinc-955/40 border border-zinc-800 p-5 rounded-lg space-y-4 mb-4">
                   <h4 className="text-xs font-bold text-brand tracking-wider flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+
                     Landing Page Sections Ordering (Drag & Save)
                   </h4>
                   <p className="text-xs text-zinc-400 leading-relaxed font-semibold">
@@ -1153,7 +1153,7 @@ export default function SettingsTab(props) {
                 {/* Career Mentoring Section */}
                 <div className="bg-zinc-950/40 border border-zinc-800 p-5 rounded-lg space-y-4">
                   <h4 className="text-xs font-bold text-brand tracking-wider flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+
                     Career Mentoring Card Customization
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -1213,7 +1213,7 @@ export default function SettingsTab(props) {
                 {/* Psychological Counselling Section */}
                 <div className="bg-zinc-950/40 border border-zinc-800 p-5 rounded-lg space-y-4">
                   <h4 className="text-xs font-bold text-brand tracking-wider flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+
                     Psychological Counselling Card Customization
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -1273,7 +1273,7 @@ export default function SettingsTab(props) {
                 {/* What We Offer Section */}
                 <div className="bg-zinc-955/40 border border-zinc-800 p-5 rounded-lg space-y-4">
                   <h4 className="text-xs font-bold text-brand tracking-wider flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+
                     "What We Offer" Section Customization
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -1429,7 +1429,7 @@ export default function SettingsTab(props) {
                   <div className="flex justify-between items-center">
                     <div>
                       <h4 className="text-xs font-bold text-brand tracking-wider flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+
                         About Us Section Statistics Grid
                       </h4>
                       <p className="text-[11px] text-zinc-400 mt-0.5">These numbers display in the 4-card grid on the "What We Offer / About Us" section.</p>
@@ -1704,7 +1704,7 @@ export default function SettingsTab(props) {
                 {/* GST / Tax Configuration */}
                 <div className="bg-zinc-955/20 border border-zinc-800 rounded-lg p-5 space-y-4">
                   <h4 className="text-xs font-bold text-zinc-300 tracking-wider flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+
                     Tax / GST Configuration
                   </h4>
 
@@ -1751,7 +1751,7 @@ export default function SettingsTab(props) {
                 {/* Razorpay Route Commission Split Configuration */}
                 <div className="bg-zinc-955/20 border border-zinc-800 rounded-lg p-5 space-y-4">
                   <h4 className="text-xs font-bold text-zinc-300 tracking-wider flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+
                     Razorpay Route Split Configuration
                   </h4>
 
@@ -1779,7 +1779,7 @@ export default function SettingsTab(props) {
                 {/* Platform Payout Bank Details */}
                 <div className="bg-zinc-955/20 border border-zinc-800 rounded-lg p-5 space-y-4 animate-in slide-in-from-top-2 duration-200">
                   <h4 className="text-xs font-bold text-zinc-300 tracking-wider flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+
                     Platform Payout Bank Account Details
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -1846,7 +1846,7 @@ export default function SettingsTab(props) {
                   {/* Aptitude Section Header Customization */}
                   <div className="bg-zinc-955/20 border border-zinc-800 p-5 rounded-lg space-y-4">
                     <h4 className="text-xs font-bold text-zinc-300 tracking-wider flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+
                       Aptitude Section Header Customization
                     </h4>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -1888,7 +1888,7 @@ export default function SettingsTab(props) {
 
                   <div className="bg-zinc-955/20 border border-zinc-800 p-5 rounded-lg space-y-4">
                     <h4 className="text-xs font-bold text-zinc-300 tracking-wider flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+
                       CDAT Group Integration Code
                     </h4>
                     <div className="space-y-1">

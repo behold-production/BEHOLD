@@ -25,7 +25,7 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
           <div className="lg:col-span-6 space-y-6">
             <div>
               <span className="text-xs font-bold uppercase tracking-widest text-[#00e5ff] flex items-center gap-1.5 mb-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_8px_#00e5ff]" />
+
                 AT
               </span>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-sans font-black uppercase text-[#0f172a] tracking-tight leading-none">
@@ -60,7 +60,7 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
                   years into reimagining personal growth — and rewriting the rules of student guidance.
                 </p>
                 <div className="text-right flex items-center justify-between">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_6px_#00e5ff]" />
+
                   <span className="text-4xl sm:text-5xl font-black text-[#0f172a] font-sans group-hover:text-[#00e5ff] transition-colors">10</span>
                 </div>
               </div>
@@ -71,7 +71,7 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
                   certified psychologists & mentors who know their craft inside and out.
                 </p>
                 <div className="text-right flex items-center justify-between">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_6px_#00e5ff]" />
+
                   <span className="text-4xl sm:text-5xl font-black text-[#0f172a] font-sans group-hover:text-[#00e5ff] transition-colors">50</span>
                 </div>
               </div>
@@ -86,7 +86,7 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
                   students guided and countless satisfied families who trust our work.
                 </p>
                 <div className="text-right flex items-center justify-between">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_6px_#00e5ff]" />
+
                   <span className="text-4xl sm:text-5xl font-black text-[#0f172a] font-sans group-hover:text-[#00e5ff] transition-colors">500+</span>
                 </div>
               </div>

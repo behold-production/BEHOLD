@@ -43,7 +43,7 @@ export default function Hero({ siteSettings, navigateToSection }) {
           {/* Main Title Block */}
           <div className="relative leading-none">
             {/* Serif Line 1 */}
-            <h1 className="font-['Cormorant_Garamond',serif] text-[slate-900] text-4xl sm:text-5xl md:text-6xl lg:text-[68px] font-medium tracking-tight leading-tight">
+            <h1 className="font-['Cormorant_Garamond',serif] text-slate-900 text-4xl sm:text-5xl md:text-6xl lg:text-[68px] font-medium tracking-tight leading-tight">
               {eyebrowLine1}
             </h1>
 
@@ -74,55 +74,35 @@ export default function Hero({ siteSettings, navigateToSection }) {
           <div className="pt-2">
             <button
               onClick={handleConnectClick}
-              className="bg-[brand] hover:bg-[brand-dark] active:scale-95 transition-all duration-300 text-[slate-900] font-['Outfit','Plus_Jakarta_Sans',sans-serif] text-base sm:text-lg font-bold px-8 py-3 rounded-full shadow-md hover:shadow-lg flex items-center justify-center border border-[slate-900]/10 cursor-pointer"
+              className="bg-brand hover:bg-brand-dark active:scale-95 transition-all duration-300 text-slate-900 font-['Outfit','Plus_Jakarta_Sans',sans-serif] text-base sm:text-lg font-bold px-8 py-3 rounded-full shadow-md hover:shadow-lg flex items-center justify-center border border-slate-900/10 cursor-pointer"
             >
               {btnText}
             </button>
           </div>
         </div>
 
-        {/* RIGHT COLUMN: Circular Sage-Green Badge / Seal */}
+        {/* RIGHT COLUMN: Glassmorphism Circle Badge */}
         <div className="flex-1 flex items-center justify-center lg:justify-end w-full">
-          <div className="relative w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 rounded-full bg-[slate-900]/90 backdrop-blur-xs flex flex-col items-center justify-center shadow-xl border-4 border-[brand] p-6 text-center group hover:scale-[1.02] transition-transform duration-500">
+          <div className="relative w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 rounded-full bg-white/20 backdrop-blur-md flex flex-col items-center justify-center shadow-[0_8px_32px_rgba(0,0,0,0.1)] border-[3px] border-slate-900 text-center group hover:scale-[1.02] transition-transform duration-500">
             
-            {/* Inner & Outer Hand-drawn stroke circles */}
-            <svg
-              className="absolute inset-0 w-full h-full pointer-events-none text-white/40"
-              viewBox="0 0 100 100"
-            >
-              <circle
-                cx="50"
-                cy="50"
-                r="46"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.2"
-                strokeDasharray="180 8"
-              />
-              <circle
-                cx="50"
-                cy="50"
-                r="42"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="0.8"
-                opacity="0.7"
-              />
-            </svg>
+            {/* Concentric Inner Rings */}
+            <div className="absolute inset-3 sm:inset-4 rounded-full border-4 border-white/70 pointer-events-none transition-transform duration-700 group-hover:rotate-12" />
+            <div className="absolute inset-6 sm:inset-8 rounded-full border border-white/50 pointer-events-none transition-transform duration-700 group-hover:-rotate-12" />
+
+            {/* Subtle Light Reflection */}
+            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/40 via-transparent to-black/5 pointer-events-none" />
 
             {/* Badge Text Content */}
-            <div className="relative z-10 flex flex-col items-center justify-center space-y-2 sm:space-y-3 text-white font-['Cormorant_Garamond',serif] tracking-wider uppercase">
-              <span className="text-2xl sm:text-3xl md:text-4xl font-bold leading-tight drop-shadow-xs">
+            <div className="relative z-10 flex flex-col items-center justify-center space-y-1 sm:space-y-2 text-white font-sans font-black tracking-widest uppercase">
+              <span className="text-3xl sm:text-4xl md:text-5xl leading-tight drop-shadow-md">
                 WE HEAL
               </span>
-              <span className="text-2xl sm:text-3xl md:text-4xl font-bold leading-tight drop-shadow-xs">
+              <span className="text-3xl sm:text-4xl md:text-5xl leading-tight drop-shadow-md">
                 WE GROW
               </span>
-              <div className="flex items-center gap-1">
-                <span className="text-2xl sm:text-3xl md:text-4xl font-bold leading-tight drop-shadow-xs">
-                  TOGETHER
-                </span>
-              </div>
+              <span className="text-3xl sm:text-4xl md:text-5xl leading-tight drop-shadow-md">
+                TOGETHER
+              </span>
             </div>
           </div>
         </div>

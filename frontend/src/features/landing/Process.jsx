@@ -31,7 +31,7 @@ export default function Process() {
         {/* Header */}
         <div className="text-center mb-16 max-w-3xl mx-auto">
           <span className="text-xs font-bold tracking-widest uppercase text-[#00e5ff] flex items-center justify-center gap-1.5 mb-3">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_8px_#00e5ff]" />
+
             HOW IT WORKS
           </span>
           <h2 id="process-title" className="text-3xl sm:text-5xl font-sans font-bold uppercase text-[#0f172a] mb-4 tracking-tight leading-none">

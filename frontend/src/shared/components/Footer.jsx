@@ -59,7 +59,7 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
           {/* Services */}
           <div className="col-span-1 md:col-span-3 lg:col-span-3 pt-6 md:pt-0 border-t border-surface-800 md:border-t-0 md:pl-4 lg:pl-8">
             <h4 className="text-white font-sans font-bold uppercase text-xs tracking-widest mb-4 md:mb-5 flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_6px_#00e5ff]" />
+
               Services
             </h4>
             <ul className="space-y-3 text-xs sm:text-sm font-normal">
@@ -89,7 +89,7 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
           {/* Company */}
           <div className="col-span-1 md:col-span-3 lg:col-span-4 pt-6 md:pt-0 border-t border-surface-800 md:border-t-0 md:pl-4 lg:pl-8">
             <h4 className="text-white font-sans font-bold uppercase text-xs tracking-widest mb-4 md:mb-5 flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_6px_#00e5ff]" />
+
               Company
             </h4>
             <ul className="space-y-3 text-xs sm:text-sm font-normal">

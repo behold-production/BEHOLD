@@ -3850,7 +3850,7 @@ export default function AdminDashboard({ setView }) {
  <div className="bg-zinc-955/60 border border-zinc-850 rounded-lg p-4 space-y-2 max-h-48 overflow-y-auto scrollbar-thin">
  {(user?.permissions || []).map((perm, idx) => (
  <div key={idx} className="flex items-center gap-2 text-xs font-bold text-zinc-300 bg-zinc-900 px-2.5 py-1.5 rounded border border-zinc-850">
- <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+
  <span className="">{perm.replace(/_/g, ' ')}</span>
  </div>
  ))}

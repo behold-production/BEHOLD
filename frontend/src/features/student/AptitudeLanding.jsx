@@ -32,7 +32,7 @@ export default function AptitudeLanding({ setView }) {
         <div className="w-full">
           <div className="mb-3">
             <span className="text-xs font-bold uppercase tracking-widest text-[#00e5ff] flex items-center justify-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_8px_#00e5ff]" />
+
               CIGI DIFFERENTIAL APTITUDE TEST
             </span>
           </div>

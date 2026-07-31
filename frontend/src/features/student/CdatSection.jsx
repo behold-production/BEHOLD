@@ -65,7 +65,7 @@ export default function CdatSection({ setView, siteSettings }) {
           <div className="lg:col-span-7 space-y-6">
             <div>
               <span className="text-xs font-bold tracking-widest uppercase text-[#00e5ff] flex items-center gap-1.5 mb-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_8px_#00e5ff]" />
+
                 {sectionSub}
               </span>
               <h2 id="aptitude-title" className="text-3xl sm:text-5xl font-sans font-black uppercase text-[#0f172a] tracking-tight leading-[1.05]">

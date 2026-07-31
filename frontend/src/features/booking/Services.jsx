@@ -100,10 +100,10 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
         const res = await ApiService.getCounsellors();
         if (res.success && Array.isArray(res.data) && res.data.length > 0) {
           setAdvisors(res.data.map(c => ({
-            id: c.id,
+            id: c._id || c.id,
             name: c.name,
-            profilePic: c.profilePic || '',
-            role: c.title || 'Consultant Psychologist',
+            profilePic: (c.profilePic && !c.profilePic.includes('unsplash.com')) ? c.profilePic : '',
+            role: (c.role || 'Consultant Psychologist').replace(/\b\w/g, l => l.toUpperCase()),
             bio: c.bio || c.description || 'Dedicated specialist providing personalized clinical & career guidance.',
             specialties: c.specialties?.length > 0 ? c.specialties : ['Anxiety', 'Stress', 'Career'],
             price: c.price || 1200,
@@ -156,7 +156,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
               <div className="lg:col-span-6 flex flex-col justify-between">
                 <div>
                   <span className="text-xs font-bold tracking-widest uppercase text-[brand] flex items-center gap-1.5 mb-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[brand] shadow-[0_0_8px_brand]" />
+
                     {settings.servicesSectionSub || 'UNFOLD WITH BEHOLD'}
                   </span>
                   <h2 id="services-title" className="text-3xl sm:text-4xl md:text-5xl font-sans font-black uppercase text-[slate-900] mb-4 leading-tight tracking-tight">
@@ -193,7 +193,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                     </p>
                   </div>
                   <div className="text-right pt-2 border-t border-surface-100 flex items-center justify-between">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[brand] shadow-[0_0_6px_brand]" />
+
                     <span className="text-xl sm:text-2xl font-black text-[slate-900] font-sans tracking-tight">01</span>
                   </div>
                 </div>
@@ -206,7 +206,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                     </p>
                   </div>
                   <div className="text-right pt-2 border-t border-surface-100 flex items-center justify-between">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[brand] shadow-[0_0_6px_brand]" />
+
                     <span className="text-xl sm:text-2xl font-black text-[slate-900] font-sans tracking-tight">100%</span>
                   </div>
                 </div>
@@ -221,7 +221,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                       </p>
                     </div>
                     <div className="text-right pt-2 border-t border-surface-100 flex items-center justify-between">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[brand] shadow-[0_0_6px_brand]" />
+
                       <span className="text-sm sm:text-base font-black text-[slate-900] uppercase tracking-wider">C-DAT</span>
                     </div>
                   </div>
@@ -234,7 +234,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                       </p>
                     </div>
                     <div className="text-right pt-2 border-t border-surface-100 flex items-center justify-between">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[brand] shadow-[0_0_6px_brand]" />
+
                       <span className="text-sm sm:text-base font-black text-[slate-900] uppercase tracking-wider">1:1</span>
                     </div>
                   </div>
@@ -266,7 +266,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
             {/* Header */}
             <div className="max-w-3xl mb-10">
               <span className="text-xs font-bold tracking-widest uppercase text-[brand] flex items-center gap-1.5 mb-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-[brand] shadow-[0_0_8px_brand]" />
+
                 OUR CLINICAL TEAM
               </span>
               <h2 id="experts-title" className="text-3xl sm:text-5xl font-sans font-black uppercase text-[slate-900] mb-3 tracking-tight leading-none">

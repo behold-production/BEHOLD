@@ -294,7 +294,7 @@ export default function Reviews({ siteSettings }) {
         {/* Header */}
         <div className="text-center mb-10 px-4 sm:px-6 lg:px-8">
           <span className="text-xs font-bold tracking-widest uppercase text-[#00e5ff] flex items-center justify-center gap-1.5 mb-3">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_8px_#00e5ff]" />
+
             Testimonials
           </span>
           <h2

@@ -143,15 +143,22 @@ export default function DateTimePicker({
  return { isPast: isPast || isBeyondMax, isAvailable, slotCount };
  };
 
- // Auto-scroll selected date card into view (only if in strip mode)
- useEffect(() => {
- if (viewType === 'strip' && selectedDate && scrollRef.current) {
- const el = scrollRef.current.querySelector(`[data-date="${selectedDate}"]`);
- if (el) {
- el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
- }
- }
- }, [selectedDate, viewType]);
+  // Auto-scroll selected date card into view (only if in strip mode)
+  useEffect(() => {
+    if (viewType === 'strip' && selectedDate && scrollRef.current) {
+      const container = scrollRef.current;
+      const el = container.querySelector(`[data-date="${selectedDate}"]`);
+      if (el) {
+        const containerRect = container.getBoundingClientRect();
+        const elRect = el.getBoundingClientRect();
+        const scrollLeftPos = el.offsetLeft - (containerRect.width / 2) + (elRect.width / 2);
+        container.scrollTo({
+          left: scrollLeftPos,
+          behavior: 'smooth'
+        });
+      }
+    }
+  }, [selectedDate, viewType]);
 
  // Adjust current month when selectedDate changes from outside (e.g. quick-jump)
  const [prevSelectedDate, setPrevSelectedDate] = useState(selectedDate);

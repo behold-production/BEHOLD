@@ -36,7 +36,7 @@ export default function WhyChooseUs({ siteSettings }) {
               {/* Content Overlay Layer */}
               <div className="relative z-10 space-y-4">
                 <span className="text-xs font-bold uppercase tracking-widest text-[#00e5ff] block flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_8px_#00e5ff]" />
+
                   {siteSettings?.servicesSectionSub || 'UNFOLD WITH BEHOLD'}
                 </span>
 
@@ -84,7 +84,7 @@ export default function WhyChooseUs({ siteSettings }) {
                 </p>
               </div>
               <div className="text-right pt-2 border-t border-surface-100 flex items-center justify-between">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_6px_#00e5ff]" />
+
                 <span className="text-2xl sm:text-4xl font-bold text-[#0f172a] font-sans">01</span>
               </div>
             </div>
@@ -98,7 +98,7 @@ export default function WhyChooseUs({ siteSettings }) {
                 </p>
               </div>
               <div className="text-right pt-2 border-t border-surface-100 flex items-center justify-between">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_6px_#00e5ff]" />
+
                 <span className="text-2xl sm:text-4xl font-bold text-[#0f172a] font-sans">100%</span>
               </div>
             </div>
@@ -113,7 +113,7 @@ export default function WhyChooseUs({ siteSettings }) {
                   </p>
                 </div>
                 <div className="text-right pt-2 border-t border-surface-100 flex items-center justify-between">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_6px_#00e5ff]" />
+
                   <span className="text-base sm:text-2xl font-bold text-[#0f172a] font-sans uppercase">C-DAT</span>
                 </div>
               </div>
@@ -126,7 +126,7 @@ export default function WhyChooseUs({ siteSettings }) {
                   </p>
                 </div>
                 <div className="text-right pt-2 border-t border-surface-100 flex items-center justify-between">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_6px_#00e5ff]" />
+
                   <span className="text-base sm:text-2xl font-bold text-[#0f172a] font-sans uppercase">CIGI</span>
                 </div>
               </div>

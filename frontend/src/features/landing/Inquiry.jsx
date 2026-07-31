@@ -76,7 +76,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
       <section className="py-20 sm:py-28 bg-[#0f172a] text-white relative border-b border-[#00e5ff]/30">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <span className="text-xs font-bold tracking-widest uppercase text-[#00e5ff] flex items-center justify-center gap-1.5 mb-3">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_8px_#00e5ff]" />
+
             {settings.inquirySectionSub || 'START YOUR JOURNEY'}
           </span>
           <h2 className="text-3xl sm:text-5xl font-sans font-bold uppercase text-white mb-4 tracking-tight leading-none">
@@ -112,7 +112,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
             <div className="lg:col-span-7 bg-white rounded-xl p-6 sm:p-10 border border-surface-200 hover:border-[#00e5ff] transition-all shadow-md">
               <div className="mb-8">
                 <span className="text-xs font-bold tracking-widest uppercase text-[#00e5ff] flex items-center gap-1.5 mb-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_8px_#00e5ff]" />
+
                   GET IN TOUCH
                 </span>
                 <h2 id="inquiry-title" className="text-3xl font-sans font-bold uppercase text-[#0f172a] mb-3 leading-tight">
