@@ -47,7 +47,7 @@ export default function ContactInquirySection() {
         backgroundImage: `url(${greenTexture})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundColor: '#89b26b'
+        backgroundColor: '#d4f8fc'
       }}
     >
       {/* Background Overlay */}
@@ -120,20 +120,20 @@ export default function ContactInquirySection() {
             </div>
 
             {/* ROW 2: YOUR MESSAGE Container Pill */}
-            <div className="border-2 border-[#0f172a]/20 rounded-xl p-3 sm:p-4 bg-white/10 backdrop-blur-xs flex items-center gap-4 shadow-lg hover:border-[#0f172a]/40 transition">
-              <span className="font-['Cormorant_Garamond',serif] text-xl sm:text-2xl font-bold tracking-wider text-[#0f172a] shrink-0 pl-3 uppercase">
+            <div className="border-2 border-[#0f172a]/20 rounded-xl p-3 sm:p-4 bg-white/10 backdrop-blur-xs flex items-start gap-4 shadow-lg hover:border-[#0f172a]/40 transition">
+              <span className="font-['Cormorant_Garamond',serif] text-xl sm:text-2xl font-bold tracking-wider text-[#0f172a] shrink-0 pl-3 pt-2 sm:pt-3 uppercase">
                 YOUR MESSAGE
               </span>
-              <div className="flex-1 bg-white/20 border border-[#0f172a]/20 rounded-full px-5 py-2 sm:py-2.5">
-                <input
-                  type="text"
+              <div className="flex-1 bg-white/20 border border-[#0f172a]/20 rounded-2xl px-5 py-3 sm:py-4">
+                <textarea
+                  rows="4"
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   placeholder="Type your message here..."
-                  className="w-full bg-transparent text-[#0f172a] placeholder-[#0f172a]/50 text-sm sm:text-base font-light focus:outline-none"
+                  className="w-full bg-transparent text-[#0f172a] placeholder-[#0f172a]/50 text-sm sm:text-base font-light focus:outline-none resize-none"
                   disabled={loading}
                   required
-                />
+                ></textarea>
               </div>
             </div>
 

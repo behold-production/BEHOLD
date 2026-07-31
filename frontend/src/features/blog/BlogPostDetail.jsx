@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Clock, Copy, Check, MessageCircle, BookOpen } from 'lucide-react';
 import ApiService from '../../shared/services/api';
 import { DEFAULT_BLOGS_DATA } from './defaultBlogsData';
+import greenTexture from '../../assets/clarity_bg.png';
 
 const BlogPostDetail = () => {
   const { slug } = useParams();
@@ -94,7 +95,15 @@ const BlogPostDetail = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-transparent text-surface-900 pt-28 pb-20 selection:bg-[#0f172a] selection:text-[#00e5ff]">
+    <div 
+      className="min-h-screen flex flex-col text-surface-900 pt-28 pb-20 selection:bg-[#0f172a] selection:text-[#00e5ff]"
+      style={{
+        backgroundImage: `url(${greenTexture})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundColor: '#d4f8fc'
+      }}
+    >
       <main className="flex-1">
         <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Back Button */}

@@ -153,7 +153,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
               >
                 <span className="text-2xl sm:text-3xl font-black tracking-tight font-sans uppercase text-[#0f172a]">
                   {(siteName || 'BEHOLD').replace(/\.$/, '')}
-                  <span className="text-[#1c7974] font-black">.</span>
+                  <span className="text-[#00e5ff] font-black">.</span>
                 </span>
               </button>
 
@@ -166,8 +166,8 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                       key={label}
                       onClick={action}
                       className={`text-xs font-bold uppercase tracking-widest transition-colors bg-transparent border-none cursor-pointer p-0 ${isActive
-                        ? 'text-[#1c7974] font-black border-b-2 border-[#1c7974] pb-1'
-                        : 'text-slate-700 hover:text-[#1c7974]'
+                        ? 'text-[#00e5ff] font-black border-b-2 border-[#00e5ff] pb-1'
+                        : 'text-slate-700 hover:text-[#00e5ff]'
                         }`}
                     >
                       {label}
@@ -180,7 +180,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
               <div className="hidden lg:flex items-center gap-3">
                 <button
                   onClick={() => { navigate('/book-session'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                  className="px-5 py-2.5 font-bold text-xs uppercase tracking-widest rounded-full transition-all shadow-xs cursor-pointer border bg-[#3f9d95] hover:bg-[#338982] text-white border-transparent"
+                  className="px-5 py-2.5 font-bold text-xs uppercase tracking-widest rounded-full transition-all shadow-xs cursor-pointer border bg-[#00e5ff] hover:bg-[#00cce6] text-[#0f172a] border-transparent"
                 >
                   Book Session
                 </button>
@@ -195,7 +195,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, sit
                     {user.profilePic ? (
                       <img src={user.profilePic} alt={user.name} className="w-full h-full object-cover" />
                     ) : (
-                      <span className="text-sm font-black text-[#1c7974] uppercase">{(user.name || user.email || 'U').charAt(0)}</span>
+                      <span className="text-sm font-black text-[#00e5ff] uppercase">{(user.name || user.email || 'U').charAt(0)}</span>
                     )}
                   </button>
                 ) : (

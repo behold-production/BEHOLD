@@ -61,7 +61,7 @@ export default function FaqBlogSection() {
         backgroundImage: `url(${greenTexture})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundColor: '#89b26b'
+        backgroundColor: '#d4f8fc'
       }}
     >
       {/* Background Overlay */}

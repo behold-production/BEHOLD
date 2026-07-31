@@ -7,6 +7,7 @@ import { FileDown } from 'lucide-react';
 import { formatDateString } from '../../shared/utils/dateFormatter';
 import toast from 'react-hot-toast';
 import { ScrollDot } from '../../shared/components/BrandDot';
+import greenTexture from '../../assets/clarity_bg.png';
 
 const getInitials = (name) => {
     if (!name) return '';
@@ -245,7 +246,15 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
     if (!enablePsychology && !enableCareerMentoring && !isRescheduleParam) {
         return (
-            <div className="min-h-[75vh] flex flex-col items-center justify-center text-center px-4 py-16 bg-surface-50 font-sans select-none">
+            <div 
+                className="min-h-[75vh] flex flex-col items-center justify-center text-center px-4 py-16 font-sans select-none"
+                style={{
+                    backgroundImage: `url(${greenTexture})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundColor: '#d4f8fc'
+                }}
+            >
                 <div className="max-w-md w-full bg-white border border-surface-200 p-8 rounded-xl shadow-sm space-y-6 animate-in fade-in zoom-in-95 duration-500">
                     <div className="w-16 h-16 bg-surface-100 border border-surface-200 rounded-xl flex items-center justify-center mx-auto text-surface-900 shadow-sm">
                         <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -293,7 +302,15 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
     }
 
     return (
-        <div className="min-h-screen pt-24 sm:pt-28 pb-16 sm:pb-24 bg-transparent text-[#0f172a] text-left border-b border-surface-200">
+        <div 
+            className="min-h-screen pt-24 sm:pt-28 pb-16 sm:pb-24 text-[#0f172a] text-left border-b border-surface-200"
+            style={{
+                backgroundImage: `url(${greenTexture})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundColor: '#d4f8fc'
+            }}
+        >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-10">
 
                 {/* Header */}

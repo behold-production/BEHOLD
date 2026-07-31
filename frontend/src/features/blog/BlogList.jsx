@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Search, Clock, ArrowRight, BookOpen, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
 import ApiService from '../../shared/services/api';
 import { DEFAULT_BLOGS_DATA } from './defaultBlogsData';
+import greenTexture from '../../assets/clarity_bg.png';
 
 const CATEGORIES = [
   'All',
@@ -79,7 +80,15 @@ const BlogList = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-transparent text-surface-900 pt-24 pb-20 border-b border-surface-200">
+    <div 
+      className="min-h-screen flex flex-col text-surface-900 pt-24 pb-20 border-b border-surface-200"
+      style={{
+        backgroundImage: `url(${greenTexture})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundColor: '#d4f8fc'
+      }}
+    >
       
       {/* Hero Header */}
       <section className="relative z-10 py-16 sm:py-20 px-4 sm:px-6 lg:px-8">

@@ -55,7 +55,7 @@ export default function CdatSection({ setView, siteSettings }) {
         backgroundImage: `url(${greenTexture})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundColor: '#89b26b'
+        backgroundColor: '#d4f8fc'
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

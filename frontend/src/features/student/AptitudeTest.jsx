@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 
 import ApiService from '../../shared/services/api';
+import greenTexture from '../../assets/clarity_bg.png';
 
 const DOMAIN_DETAILS = {
  Aptitude: {
@@ -215,7 +216,15 @@ export default function AptitudeTest({ onFinishTest }) {
 
  if (isLoading || shuffledQuestions.length === 0) {
  return (
- <div className="pt-24 pb-16 min-h-screen bg-transparent text-surface-900 flex items-center justify-center font-sans">
+ <div 
+        className="pt-24 pb-16 min-h-screen text-surface-900 flex items-center justify-center font-sans"
+        style={{
+          backgroundImage: `url(${greenTexture})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundColor: '#d4f8fc'
+        }}
+      >
  <p className="text-[10px] font-black tracking-widest text-surface-500 animate-pulse">Initializing quiz console...</p>
  </div>
  );
@@ -225,7 +234,15 @@ export default function AptitudeTest({ onFinishTest }) {
  if (!currentQObj) return null;
 
  return (
- <div className="pt-20 sm:pt-24 pb-12 sm:pb-16 min-h-screen bg-transparent text-surface-900 relative overflow-hidden font-sans border-b border-surface-200 text-left">
+    <div 
+      className="pt-20 sm:pt-24 pb-12 sm:pb-16 min-h-screen text-surface-900 relative overflow-hidden font-sans border-b border-surface-200 text-left"
+      style={{
+        backgroundImage: `url(${greenTexture})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundColor: '#d4f8fc'
+      }}
+    >
  <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
 
  {!testFinished ? (

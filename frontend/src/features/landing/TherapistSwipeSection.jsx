@@ -269,7 +269,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
         backgroundImage: `url(${greenTexture})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundColor: '#89b26b'
+        backgroundColor: '#d4f8fc'
       }}
     >
       {/* Background Soft Overlay */}
@@ -310,14 +310,14 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
         </div>
 
         {/* RIGHT SIDE: Text & Button */}
-        <div className="flex-1 flex flex-col items-start text-left space-y-8 max-w-xl">
-          <p className="font-['Cormorant_Garamond',serif] text-2xl sm:text-3xl md:text-4xl text-[#0f172a]/95 font-medium leading-relaxed drop-shadow-sm">
+        <div className="flex-1 flex flex-col items-start text-left space-y-6 sm:space-y-8 max-w-xl">
+          <p className="font-['Cormorant_Garamond',serif] text-lg sm:text-xl md:text-2xl text-[#0f172a]/95 font-medium leading-relaxed drop-shadow-sm">
             Sometimes healing begins with a conversation. Whenever you're ready, we'll meet you with understanding, care, and professional support.
           </p>
 
           <button
             onClick={handleConnectClick}
-            className="bg-[#3f9d95] hover:bg-[#338982] active:scale-95 transition-all duration-300 text-white font-['Outfit','Plus_Jakarta_Sans',sans-serif] text-base sm:text-lg font-medium px-8 py-3 rounded-full shadow-md hover:shadow-lg flex items-center justify-center border border-[#0f172a]/20 cursor-pointer"
+            className="bg-[#00e5ff] hover:bg-[#00cce6] active:scale-95 transition-all duration-300 text-[#0f172a] font-['Outfit','Plus_Jakarta_Sans',sans-serif] text-base sm:text-lg font-bold px-8 py-3 rounded-full shadow-md hover:shadow-lg flex items-center justify-center border border-[#0f172a]/10 cursor-pointer"
           >
             Let's Connect
           </button>

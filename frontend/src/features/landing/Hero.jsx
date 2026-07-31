@@ -9,7 +9,7 @@ export default function Hero({ siteSettings, navigateToSection }) {
   
   const displayTitle = settings.heroTitle || "not okey";
   const subtitleText = settings.heroSub || "A personal development and mentoring ecosystem — combining psychological care, self-discovery, and career guidance to help you grow with confidence and peace of mind.";
-  const btnText = settings.heroBtnText || "Let's Connect";
+  const btnText = settings.heroBtnText || "Book a Session";
 
   const handleConnectClick = () => {
     const contactEl = document.getElementById("inquiry");
@@ -31,7 +31,7 @@ export default function Hero({ siteSettings, navigateToSection }) {
         backgroundImage: `url(${heroWatercolorBg})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundColor: '#89b26b'
+        backgroundColor: '#d4f8fc'
       }}
     >
       {/* Background left empty to show global App.jsx background */}
@@ -47,7 +47,7 @@ export default function Hero({ siteSettings, navigateToSection }) {
           {/* Main Title Block */}
           <div className="relative leading-none">
             {/* Serif Line 1 */}
-            <h1 className="font-['Cormorant_Garamond',serif] text-[#1c7974] text-4xl sm:text-5xl md:text-6xl lg:text-[68px] font-medium tracking-tight leading-tight">
+            <h1 className="font-['Cormorant_Garamond',serif] text-[#0f172a] text-4xl sm:text-5xl md:text-6xl lg:text-[68px] font-medium tracking-tight leading-tight">
               {eyebrowLine1}
             </h1>
 
@@ -78,7 +78,7 @@ export default function Hero({ siteSettings, navigateToSection }) {
           <div className="pt-2">
             <button
               onClick={handleConnectClick}
-              className="bg-[#3f9d95] hover:bg-[#348981] active:scale-95 transition-all duration-300 text-white font-['Outfit','Plus_Jakarta_Sans',sans-serif] text-base sm:text-lg font-medium px-8 py-3 rounded-full shadow-md hover:shadow-lg flex items-center justify-center border border-white/20 cursor-pointer"
+              className="bg-[#00e5ff] hover:bg-[#00cce6] active:scale-95 transition-all duration-300 text-[#0f172a] font-['Outfit','Plus_Jakarta_Sans',sans-serif] text-base sm:text-lg font-bold px-8 py-3 rounded-full shadow-md hover:shadow-lg flex items-center justify-center border border-[#0f172a]/10 cursor-pointer"
             >
               {btnText}
             </button>
@@ -87,7 +87,7 @@ export default function Hero({ siteSettings, navigateToSection }) {
 
         {/* RIGHT COLUMN: Circular Sage-Green Badge / Seal */}
         <div className="flex-1 flex items-center justify-center lg:justify-end w-full">
-          <div className="relative w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 rounded-full bg-[#87be9f]/90 backdrop-blur-xs flex flex-col items-center justify-center shadow-xl border-4 border-[#76b08e] p-6 text-center group hover:scale-[1.02] transition-transform duration-500">
+          <div className="relative w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 rounded-full bg-[#0f172a]/90 backdrop-blur-xs flex flex-col items-center justify-center shadow-xl border-4 border-[#00e5ff] p-6 text-center group hover:scale-[1.02] transition-transform duration-500">
             
             {/* Inner & Outer Hand-drawn stroke circles */}
             <svg
