@@ -366,16 +366,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
                                 {/* Desktop/tablet: full stepper */}
                                 <div className="hidden sm:block">
-                                    <div className="flex items-center justify-between gap-2 border-b border-surface-200 pb-3.5">
-                                        <div className="flex items-center gap-2">
-                                            <span className="px-3.5 py-1 rounded-full bg-surface-100 border border-surface-200 text-[#0f172a] font-bold text-xs inline-flex items-center gap-2">
-                                                <span className="w-2 h-2 rounded-full bg-[#00e5ff] shadow-[0_0_6px_#00e5ff]" />
-                                                <span>{bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring'} &middot; {bookingMode === 'ONLINE' ? 'Video Call' : bookingMode === 'DOOR_STEP' ? 'Home Visit' : 'At Center'}</span>
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <div className="grid grid-cols-3 gap-6 w-full pt-4">
+                                    <div className="grid grid-cols-3 gap-6 w-full">
                                         {activeSteps.map((step, idx) => {
                                             const isCompleted = idx < currentStepIdx;
                                             const isActive = idx === currentStepIdx;
@@ -650,7 +641,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                              {/* Mode of Session Select */}
                                              <div className="space-y-2">
                                                  <label className="text-sm font-semibold text-surface-700 block">Select Session Mode</label>
-                                                 <div className="grid grid-cols-3 gap-2.5 w-full">
+                                                 <div className="flex gap-2.5 w-full">
                                                      {(() => {
                                                          let siteSettings = {};
                                                          try {
@@ -662,26 +653,25 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                                              { id: 'ONLINE', label: 'Online', desc: 'Video call', active: siteSettings.enableOnline !== false },
                                                              { id: 'DOOR_STEP', label: 'Doorstep', desc: 'Home visit', active: siteSettings.enableDoorstep !== false },
                                                              { id: 'OFFLINE', label: 'Offline', desc: 'At center', active: siteSettings.enableOffline !== false }
-                                                         ].map((m) => {
-                                                             const isAvailable = m.active;
+                                                         ].filter(m => m.active).map((m) => {
+                                                             const isAvailable = true;
                                                              return (
                                                                  <button
                                                                      type="button"
                                                                      key={m.id}
-                                                                     disabled={!isAvailable || rescheduleSession}
+                                                                     disabled={rescheduleSession}
                                                                      onClick={() => {
                                                                          if (rescheduleSession) return;
                                                                          setBookingMode(m.id);
                                                                      }}
-                                                                     className={`flex flex-col items-center justify-center gap-1 px-3 py-2 border rounded-xl transition cursor-pointer text-center min-h-[48px] leading-tight ${bookingMode === m.id
+                                                                     className={`flex-1 flex flex-col items-center justify-center gap-1 px-3 py-2 border rounded-xl transition cursor-pointer text-center min-h-[48px] leading-tight ${bookingMode === m.id
                                                                          ? 'bg-[#0f172a] text-white border-[#00e5ff] shadow-xs'
                                                                          : 'bg-white text-[#0f172a] border-surface-200 hover:border-[#00e5ff] hover:bg-surface-50'
-                                                                         } ${(!isAvailable || rescheduleSession) ? 'opacity-40 cursor-not-allowed' : ''}`}
+                                                                         } ${rescheduleSession ? 'opacity-40 cursor-not-allowed' : ''}`}
                                                                  >
                                                                      <span className="flex flex-col items-center">
                                                                          <span className={`font-bold text-sm ${bookingMode === m.id ? 'text-white' : 'text-[#0f172a]'}`}>{m.label}</span>
                                                                          <span className={`text-xs mt-0.5 ${bookingMode === m.id ? 'text-[#00e5ff]' : 'text-surface-500'}`}>{m.desc}</span>
-                                                                         {!isAvailable && <span className="text-sm text-rose-500 font-medium mt-1">Disabled</span>}
                                                                      </span>
                                                                  </button>
                                                             );
@@ -866,7 +856,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                         )}
 
                                         {/* Step 2: Advisor Selection */}
-                                        {(selectedDate || isAdvisorLocked) && (
+                                        {(!isAdvisorLocked && selectedDate) && (
                                             <div ref={step2Ref} className="space-y-3 pt-6 border-t border-surface-200 animate-in fade-in slide-in-from-top-2 duration-300">
                                                 <div className="flex items-center justify-between mb-4">
                                                     <label className="text-sm font-semibold text-surface-900 block ">
@@ -1244,7 +1234,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                         {/* Step 3: Time Selection */}
                                         {selectedDate && selectedAdvisor && (
                                             <div ref={step3Ref} className="space-y-3 pt-6 border-t border-surface-200 animate-in fade-in slide-in-from-top-2 duration-300">
-                                                <label className="text-sm font-semibold text-surface-900 block ">3. Select Time</label>
+                                                <label className="text-sm font-semibold text-surface-900 block ">{isAdvisorLocked ? '2' : '3'}. Select Time</label>
                                                 <TimePicker
                                                     selectedDate={selectedDate}
                                                     selectedTime={selectedTime}

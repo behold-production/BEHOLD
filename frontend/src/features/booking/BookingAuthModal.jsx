@@ -172,7 +172,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
 
       {/* Modal Container */}
       <div
-        className="fixed inset-0 z-[125] flex items-start justify-center p-4 overflow-y-auto overscroll-contain"
+        className="fixed inset-0 z-[125] flex items-center justify-center p-4 overflow-y-auto overscroll-contain"
         role="dialog"
         aria-modal="true"
         aria-labelledby="booking-auth-modal-title"
@@ -180,7 +180,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
       >
         {/* Modal Card */}
         <div
-          className="relative w-full max-w-md my-auto bg-white rounded-xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 border border-surface-200"
+          className="relative w-full max-w-md bg-white rounded-xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 border border-surface-200 text-left"
           onClick={(e) => e.stopPropagation()}
         >
 
