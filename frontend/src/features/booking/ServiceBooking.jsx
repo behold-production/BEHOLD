@@ -315,7 +315,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
 
                 {/* Header */}
                 <div className="text-center flex flex-col items-center space-y-3">
-                    <span className="text-xs font-bold uppercase tracking-widest text-[#00e5ff] flex items-center justify-center gap-1.5 block mb-1">
+                    <span className="text-xs font-bold uppercase tracking-widest text-[#06b6d4] flex items-center justify-center gap-1.5 block mb-1">
 
                         {rescheduleSession ? 'RESCHEDULE SESSION' : 'BOOK A CONFIDENTIAL SESSION'}
                     </span>
@@ -354,7 +354,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                         </span>
                                         <div className="h-2 flex-1 bg-surface-100 rounded-full overflow-hidden">
                                             <div
-                                                className="h-full bg-[#00e5ff] shadow-[0_0_8px_#00e5ff] rounded-full transition-all duration-500"
+                                                className="h-full bg-[#06b6d4] shadow-[0_0_8px_#06b6d4] rounded-full transition-all duration-500"
                                                 style={{ width: `${((currentStepIdx + 1) / 3) * 100}%` }}
                                             />
                                         </div>
@@ -375,9 +375,9 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                                 <div key={idx} className="flex flex-col items-start gap-2 relative">
                                                     <div className="flex items-center w-full">
                                                         <div className={`flex items-center justify-center w-8 h-8 rounded-xl font-bold text-xs border transition-all duration-300 shrink-0 ${isCompleted
-                                                            ? 'bg-[#0f172a] border-[#00e5ff] text-[#00e5ff] shadow-xs'
+                                                            ? 'bg-[#0f172a] border-[#06b6d4] text-[#06b6d4] shadow-xs'
                                                             : isActive
-                                                                ? 'bg-[#0f172a] border-[#00e5ff] text-[#00e5ff] shadow-sm ring-4 ring-[#00e5ff]/20'
+                                                                ? 'bg-[#0f172a] border-[#06b6d4] text-[#06b6d4] shadow-sm ring-4 ring-[#06b6d4]/20'
                                                                 : 'bg-surface-100 border-surface-200 text-surface-400'
                                                             }`}>
                                                             {isCompleted ? '✓' : idx + 1}
@@ -635,8 +635,8 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                                                     setBookingService(s.id);
                                                                 }}
                                                                 className={`min-h-[48px] px-4 py-3 rounded-xl transition-all duration-300 cursor-pointer flex items-center justify-center text-center border text-sm font-bold ${isSelected
-                                                                    ? 'bg-[#0f172a] border-[#00e5ff] text-white shadow-xs'
-                                                                    : 'bg-white border-surface-200 text-[#0f172a] hover:border-[#00e5ff] hover:bg-surface-50'
+                                                                    ? 'bg-[#0f172a] border-[#06b6d4] text-white shadow-xs'
+                                                                    : 'bg-white border-surface-200 text-[#0f172a] hover:border-[#06b6d4] hover:bg-surface-50'
                                                                     } ${rescheduleSession ? 'opacity-65 cursor-not-allowed' : ''}`}
                                                              >
                                                                  {s.label}
@@ -671,13 +671,13 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                                                          setBookingMode(m.id);
                                                                      }}
                                                                      className={`flex-1 min-w-[120px] max-w-[160px] flex flex-col items-center justify-center gap-1 px-3 py-2 border rounded-xl transition cursor-pointer text-center min-h-[48px] leading-tight ${bookingMode === m.id
-                                                                         ? 'bg-[#0f172a] text-white border-[#00e5ff] shadow-xs'
-                                                                         : 'bg-white text-[#0f172a] border-surface-200 hover:border-[#00e5ff] hover:bg-surface-50'
+                                                                         ? 'bg-[#0f172a] text-white border-[#06b6d4] shadow-xs'
+                                                                         : 'bg-white text-[#0f172a] border-surface-200 hover:border-[#06b6d4] hover:bg-surface-50'
                                                                          } ${rescheduleSession ? 'opacity-40 cursor-not-allowed' : ''}`}
                                                                  >
                                                                      <span className="flex flex-col items-center">
                                                                          <span className={`font-bold text-sm ${bookingMode === m.id ? 'text-white' : 'text-[#0f172a]'}`}>{m.label}</span>
-                                                                         <span className={`text-xs mt-0.5 ${bookingMode === m.id ? 'text-[#00e5ff]' : 'text-surface-500'}`}>{m.desc}</span>
+                                                                         <span className={`text-xs mt-0.5 ${bookingMode === m.id ? 'text-[#06b6d4]' : 'text-surface-500'}`}>{m.desc}</span>
                                                                      </span>
                                                                  </button>
                                                              );
@@ -1090,7 +1090,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                                                                 }}
                                                                                 className={`group p-4 sm:p-5 border-[2px] rounded-2xl transition-all duration-300 relative overflow-hidden shadow-xs ${!isAvailable
                                                                                     ? 'bg-surface-50 border-surface-200 opacity-60 cursor-not-allowed'
-                                                                                    : 'bg-white border-surface-200 hover:border-[#00e5ff] hover:shadow-md cursor-pointer hover:-translate-y-1'
+                                                                                    : 'bg-white border-surface-200 hover:border-[#06b6d4] hover:shadow-md cursor-pointer hover:-translate-y-1'
                                                                                     }`}
                                                                             >
                                                                                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
@@ -1098,7 +1098,7 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                                                                         {(() => {
                                                                                             const avatarSrc = advisor.profilePic || advisor.image;
                                                                                             return (
-                                                                                                <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-full shrink-0 flex items-center justify-center border-2 overflow-hidden shadow-sm transition-transform duration-300 group-hover:scale-105 ${!isAvailable ? 'border-surface-200 bg-surface-50' : 'border-[#00e5ff] bg-white'}`}>
+                                                                                                <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-full shrink-0 flex items-center justify-center border-2 overflow-hidden shadow-sm transition-transform duration-300 group-hover:scale-105 ${!isAvailable ? 'border-surface-200 bg-surface-50' : 'border-[#06b6d4] bg-white'}`}>
                                                                                                     {avatarSrc ? (
                                                                                                         <>
                                                                                                             <img
@@ -1214,8 +1214,8 @@ export default function ServiceBooking({ preselectedAdvisorId, clearPreselectedA
                                                                                     onClick={() => setAdvisorPage(num)}
                                                                                     className={`w-8 h-8 rounded-full text-xs font-bold transition-all cursor-pointer border flex items-center justify-center ${
                                                                                         advisorPage === num
-                                                                                            ? 'bg-[#0f172a] text-[#00e5ff] border-[#00e5ff] shadow-xs'
-                                                                                            : 'bg-white text-[#0f172a] border-surface-200 hover:border-[#00e5ff]'
+                                                                                            ? 'bg-[#0f172a] text-[#06b6d4] border-[#06b6d4] shadow-xs'
+                                                                                            : 'bg-white text-[#0f172a] border-surface-200 hover:border-[#06b6d4]'
                                                                                     }`}
                                                                                 >
                                                                                     {num}

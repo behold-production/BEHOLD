@@ -91,7 +91,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
     return (
       <div className="min-h-screen pt-28 pb-16 bg-transparent flex items-center justify-center px-4">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 border-4 border-[#00e5ff] border-t-transparent rounded-full animate-spin" />
+          <div className="w-10 h-10 border-4 border-[#06b6d4] border-t-transparent rounded-full animate-spin" />
           <p className="text-slate-600 font-bold tracking-wide">Loading verified specialist details...</p>
         </div>
       </div>
@@ -109,7 +109,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
         <button
           type="button"
           onClick={onBack}
-          className="min-h-[44px] px-6 py-2.5 bg-[#0f172a] hover:bg-[#1e293b] text-white rounded-full font-bold text-xs uppercase tracking-widest transition-all shadow-sm border border-[#00e5ff]/30 cursor-pointer"
+          className="min-h-[44px] px-6 py-2.5 bg-[#0f172a] hover:bg-[#1e293b] text-white rounded-full font-bold text-xs uppercase tracking-widest transition-all shadow-sm border border-[#06b6d4]/30 cursor-pointer"
         >
           Go Back to Directory
         </button>
@@ -130,7 +130,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             <ChevronLeft className="w-4 h-4 text-surface-500 group-hover:-translate-x-0.5 transition-transform" /> Back to Specialists
           </button>
           <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#0f172a] bg-white border border-surface-200 px-4 py-2 rounded-full shadow-2xs">
-            <ShieldCheck className="w-4 h-4 text-[#00e5ff] shrink-0" /> Verified BEHOLD Practitioner
+            <ShieldCheck className="w-4 h-4 text-[#06b6d4] shrink-0" /> Verified BEHOLD Practitioner
           </div>
         </div>
 
@@ -138,14 +138,14 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
         <div className="bg-surface-50 rounded-xl shadow-xs border border-surface-200 p-6 sm:p-8 md:p-10 relative overflow-hidden mb-8 transition-all">
           <div className="flex flex-col md:flex-row gap-6 sm:gap-8 items-start md:items-center relative z-10">
             {/* Avatar Circle/Square */}
-            <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-xl bg-[#0f172a] text-white shadow-md border border-[#00e5ff]/40 flex items-center justify-center font-bold text-4xl sm:text-5xl shrink-0 overflow-hidden relative group">
+            <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-xl bg-[#0f172a] text-white shadow-md border border-[#06b6d4]/40 flex items-center justify-center font-bold text-4xl sm:text-5xl shrink-0 overflow-hidden relative group">
               {advisor.profilePic ? (
                 <img src={advisor.profilePic} alt={advisor.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
               ) : (
                 <span>{getInitials(advisor.name)}</span>
               )}
-              <div className="absolute bottom-2 right-2 w-6 h-6 rounded-full bg-[#0f172a] border-2 border-[#00e5ff] flex items-center justify-center shadow-md" title="Verified Specialist">
-                <CheckCircle2 className="w-3.5 h-3.5 text-[#00e5ff]" />
+              <div className="absolute bottom-2 right-2 w-6 h-6 rounded-full bg-[#0f172a] border-2 border-[#06b6d4] flex items-center justify-center shadow-md" title="Verified Specialist">
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#06b6d4]" />
               </div>
             </div>
 
@@ -160,7 +160,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                     <Video className="w-3.5 h-3.5 text-surface-500" /> {advisor.modes && advisor.modes.length > 0 ? advisor.modes.map(m => m === 'DOOR_STEP' ? 'Doorstep' : m.charAt(0) + m.slice(1).toLowerCase()).join(' & ') : 'Online & In-Person'}
                   </span>
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-surface-200 text-[#0f172a] text-xs font-bold rounded-full">
-                    <span className="w-2 h-2 rounded-full bg-[#00e5ff] shadow-[0_0_6px_#00e5ff]" /> {advisor.nextAvailable}
+                    <span className="w-2 h-2 rounded-full bg-[#06b6d4] shadow-[0_0_6px_#06b6d4]" /> {advisor.nextAvailable}
                   </span>
                 </div>
                 <h1 className="text-3xl sm:text-4xl font-sans font-black uppercase text-[#0f172a] tracking-tight leading-tight">
@@ -172,7 +172,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
               {/* 3 Stat Tiles */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-4 border-t border-surface-200">
                 <div className="flex items-center gap-3.5 p-3.5 bg-white border border-surface-200 rounded-xl">
-                  <div className="w-10 h-10 rounded-lg bg-[#0f172a] text-[#00e5ff] flex items-center justify-center shrink-0 font-bold">
+                  <div className="w-10 h-10 rounded-lg bg-[#0f172a] text-[#06b6d4] flex items-center justify-center shrink-0 font-bold">
                     <Clock className="w-5 h-5" />
                   </div>
                   <div>
@@ -182,7 +182,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                 </div>
 
                 <div className="flex items-center gap-3.5 p-3.5 bg-white border border-surface-200 rounded-xl">
-                  <div className="w-10 h-10 rounded-lg bg-[#0f172a] text-[#00e5ff] flex items-center justify-center shrink-0 font-bold">
+                  <div className="w-10 h-10 rounded-lg bg-[#0f172a] text-[#06b6d4] flex items-center justify-center shrink-0 font-bold">
                     <Globe className="w-5 h-5" />
                   </div>
                   <div>
@@ -192,7 +192,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                 </div>
 
                 <div className="flex items-center gap-3.5 p-3.5 bg-white border border-surface-200 rounded-xl">
-                  <div className="w-10 h-10 rounded-lg bg-[#0f172a] text-[#00e5ff] flex items-center justify-center shrink-0 font-bold">
+                  <div className="w-10 h-10 rounded-lg bg-[#0f172a] text-[#06b6d4] flex items-center justify-center shrink-0 font-bold">
                     <Award className="w-5 h-5" />
                   </div>
                   <div>
@@ -213,7 +213,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             {/* About Card */}
             <div className="bg-white p-6 sm:p-8 rounded-xl border border-surface-200 space-y-5 shadow-xs">
               <div className="flex items-center gap-3 text-[#0f172a] border-b border-surface-200 pb-4">
-                <div className="p-2.5 bg-[#0f172a] text-[#00e5ff] rounded-xl">
+                <div className="p-2.5 bg-[#0f172a] text-[#06b6d4] rounded-xl">
                   <UserCheck className="w-5 h-5" />
                 </div>
                 <div>
@@ -227,7 +227,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             {/* Specialties Card */}
             <div className="bg-white p-6 sm:p-8 rounded-xl border border-surface-200 space-y-5 shadow-xs">
               <div className="flex items-center gap-3 text-[#0f172a] border-b border-surface-200 pb-4">
-                <div className="p-2.5 bg-[#0f172a] text-[#00e5ff] rounded-xl">
+                <div className="p-2.5 bg-[#0f172a] text-[#06b6d4] rounded-xl">
                   <Sparkles className="w-5 h-5" />
                 </div>
                 <div>
@@ -247,7 +247,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             {/* Qualifications Card */}
             <div className="bg-white p-6 sm:p-8 rounded-xl border border-surface-200 space-y-5 shadow-xs">
               <div className="flex items-center gap-3 text-[#0f172a] border-b border-surface-200 pb-4">
-                <div className="p-2.5 bg-[#0f172a] text-[#00e5ff] rounded-xl">
+                <div className="p-2.5 bg-[#0f172a] text-[#06b6d4] rounded-xl">
                   <BookOpen className="w-5 h-5" />
                 </div>
                 <div>
@@ -256,7 +256,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                 </div>
               </div>
               <div className="flex items-center gap-4 p-5 border border-surface-200 rounded-xl bg-surface-50">
-                <div className="w-12 h-12 rounded-xl bg-[#0f172a] text-[#00e5ff] border border-[#00e5ff]/40 flex items-center justify-center shrink-0">
+                <div className="w-12 h-12 rounded-xl bg-[#0f172a] text-[#06b6d4] border border-[#06b6d4]/40 flex items-center justify-center shrink-0">
                   <ShieldCheck className="w-6 h-6" />
                 </div>
                 <div>
@@ -272,43 +272,43 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
           {/* Right Column: Sticky Dark Blue Booking Box */}
           {enableBooking && (
             <div className="lg:col-span-1">
-              <div className="lg:sticky lg:top-28 bg-[#0f172a] text-white p-6 sm:p-8 rounded-xl border border-[#00e5ff]/30 shadow-lg space-y-6">
+              <div className="lg:sticky lg:top-28 bg-[#0f172a] text-white p-6 sm:p-8 rounded-xl border border-[#06b6d4]/30 shadow-lg space-y-6">
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-[#00e5ff]">Direct Consultation</span>
-                    <span className="text-[10px] font-bold text-[#00e5ff] bg-[#00e5ff]/10 px-2.5 py-0.5 rounded-full border border-[#00e5ff]/30 uppercase tracking-wider">Active</span>
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-[#06b6d4]">Direct Consultation</span>
+                    <span className="text-[10px] font-bold text-[#06b6d4] bg-[#06b6d4]/10 px-2.5 py-0.5 rounded-full border border-[#06b6d4]/30 uppercase tracking-wider">Active</span>
                   </div>
                   <h3 className="text-2xl font-sans font-black uppercase text-white tracking-tight">Book 1-on-1 Session</h3>
                   <p className="text-xs text-surface-300 font-medium mt-1 leading-relaxed">Schedule directly with {advisor.name} for tailored guidance.</p>
                 </div>
 
-                <div className="p-4 bg-surface-900 rounded-xl border border-[#00e5ff]/20 space-y-2">
+                <div className="p-4 bg-surface-900 rounded-xl border border-[#06b6d4]/20 space-y-2">
                   <div className="flex items-baseline justify-between">
                     <span className="text-xs text-surface-400 font-bold uppercase tracking-wider">Fee per session</span>
                     <span className="text-2xl font-bold text-white">₹{advisor.price.toLocaleString('en-IN')}</span>
                   </div>
                   <div className="flex items-center gap-1.5 text-[11px] text-surface-300 pt-1 border-t border-surface-800">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-[#00e5ff] shrink-0" />
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#06b6d4] shrink-0" />
                     <span>Includes 60-min session & report</span>
                   </div>
                 </div>
 
                 <div className="space-y-2.5 py-1 text-xs text-surface-300">
                   <div className="flex items-center gap-2.5 font-semibold">
-                    <CheckCircle2 className="w-4 h-4 text-[#00e5ff] shrink-0" /> Instant Calendar Slot Confirmation
+                    <CheckCircle2 className="w-4 h-4 text-[#06b6d4] shrink-0" /> Instant Calendar Slot Confirmation
                   </div>
                   <div className="flex items-center gap-2.5 font-semibold">
-                    <CheckCircle2 className="w-4 h-4 text-[#00e5ff] shrink-0" /> Choice of Online or Clinic Visit
+                    <CheckCircle2 className="w-4 h-4 text-[#06b6d4] shrink-0" /> Choice of Online or Clinic Visit
                   </div>
                   <div className="flex items-center gap-2.5 font-semibold">
-                    <CheckCircle2 className="w-4 h-4 text-[#00e5ff] shrink-0" /> 100% Confidential Care
+                    <CheckCircle2 className="w-4 h-4 text-[#06b6d4] shrink-0" /> 100% Confidential Care
                   </div>
                 </div>
 
                 <button
                   type="button"
                   onClick={() => onBook?.(advisor)}
-                  className="w-full py-4 bg-[#00e5ff] hover:bg-[#00cce6] text-[#0f172a] font-bold text-xs uppercase tracking-widest rounded-full transition-all shadow-md cursor-pointer border-none flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98]"
+                  className="w-full py-4 bg-[#06b6d4] hover:bg-[#00cce6] text-[#0f172a] font-bold text-xs uppercase tracking-widest rounded-full transition-all shadow-md cursor-pointer border-none flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98]"
                 >
                   <span>Select Date & Time Slot</span>
                 </button>
