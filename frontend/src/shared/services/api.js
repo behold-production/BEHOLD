@@ -43,7 +43,16 @@ async function executeRequest(endpoint, options = {}) {
   try {
     data = text ? JSON.parse(text) : {};
   } catch (err) {
-    data = { success: false, message: 'Invalid response format from server' };
+    if (response.ok) {
+      data = { success: true, data: text };
+    } else {
+      data = {
+        success: false,
+        message: response.status === 404
+          ? `Resource non-existent or endpoint not found (${endpoint}).`
+          : (response.statusText || 'Server error occurred. Please try again.')
+      };
+    }
   }
 
   // Handle expired/missing token transparently
