@@ -3,31 +3,22 @@ const crypto = require('crypto');
 const router = express.Router();
 const WhatsAppMessage = require('../models/WhatsAppMessage');
 
+const url = require('url');
+
 /**
  * GET /api/whatsapp/webhook
  * Meta Webhook Verification Endpoint
  * Validates hub.mode, hub.verify_token and returns hub.challenge
  */
 router.get('/webhook', (req, res) => {
-  const mode = req.query['hub.mode'];
-  const token = req.query['hub.verify_token'] || req.query.verify_token;
-  const challenge = req.query['hub.challenge'] || req.query.challenge;
+  const parsedUrl = url.parse(req.url, true);
+  const challenge = parsedUrl.query['hub.challenge'] || parsedUrl.query.challenge || req.query['hub.challenge'] || req.query.challenge;
+  const token = parsedUrl.query['hub.verify_token'] || req.query['hub.verify_token'];
 
-  const expectedToken = (
-    process.env.META_WA_VERIFY_TOKEN ||
-    process.env.WHATSAPP_VERIFY_TOKEN ||
-    process.env.VERIFY_TOKEN ||
-    '12345'
-  ).trim();
+  console.log('[Meta Webhook Verification GET Request]:', { token, challenge });
 
-  console.log('[Meta Webhook Verification GET Request]:', { mode, token, challenge, expectedToken });
-
-  if (challenge) {
-    res.setHeader('Content-Type', 'text/plain');
-    return res.status(200).send(String(challenge));
-  }
-
-  return res.status(200).send('12345');
+  res.setHeader('Content-Type', 'text/plain');
+  return res.status(200).send(String(challenge || '12345'));
 });
 
 /**
