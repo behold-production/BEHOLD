@@ -81,12 +81,20 @@ router.post('/webhook', async (req, res) => {
                   const senderPhone = msg.from;
                   const wamid = msg.id;
                   const messageType = msg.type || 'text';
-                  const textBody = msg.text?.body || msg.caption || (msg.interactive ? 'Interactive Action' : messageType);
+                  let textBody = msg.text?.body || msg.caption || (msg.interactive ? 'Interactive Action' : messageType);
+
+                  if (messageType === 'contacts' && Array.isArray(msg.contacts)) {
+                    textBody = `Contact Shared: ${msg.contacts.map(c => c.name?.formatted_name || c.name?.first_name || 'Contact').join(', ')}`;
+                  } else if (msg.referral) {
+                    textBody = `[Ad Referral: ${msg.referral.headline || msg.referral.body || 'Click to WhatsApp Ad'}] ${textBody}`;
+                  } else if (msg.context?.referred_product) {
+                    textBody = `[Product Inquiry: Catalog ${msg.context.referred_product.catalog_id}] ${textBody}`;
+                  }
 
                   const contactMatch = contacts.find((c) => c.wa_id === senderPhone);
                   const senderName = contactMatch?.profile?.name || 'WhatsApp User';
 
-                  console.log(`[WhatsApp Incoming Message] From: ${senderName} (+${senderPhone}) | ID: ${wamid} | Content: ${textBody}`);
+                  console.log(`[WhatsApp Incoming Message] From: ${senderName} (+${senderPhone}) | Type: ${messageType} | Content: ${textBody}`);
 
                   WhatsAppMessage.create({
                     wamid,
