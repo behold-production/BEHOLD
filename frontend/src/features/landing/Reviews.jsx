@@ -3,45 +3,9 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { renderTitleWithFullstopDot } from '../../shared/components/BrandDot';
 import ApiService from '../../shared/services/api';
 import { useAuth } from '../../shared/context/AuthContext';
-import greenTexture from '../../assets/clarity_bg.png';
+import greenTexture from '../../assets/greygreen.png';
 
-const fallbackReviews = [
-  {
-    _id: 'f1',
-    comment: "The career mentoring I received here completely changed my perspective. The C-DAT assessment and my mentor's guidance gave me a clear, confident path forward.",
-    name: 'Sneha Menon',
-    role: 'Student, Class 12',
-    rating: 5,
-  },
-  {
-    _id: 'f2',
-    comment: "Seeing my son struggle with exam anxiety was heartbreaking. The psychological counseling at BEHOLD was a turning point — he's now confident, focused, and so much happier.",
-    name: 'Rajesh K.',
-    role: 'Parent',
-    rating: 5,
-  },
-  {
-    _id: 'f3',
-    comment: 'The safe, non-judgmental space provided by the therapists helped me overcome a very tough phase. I highly recommend BEHOLD to anyone seeking real mental health support.',
-    name: 'Anjali V.',
-    role: 'Young Professional',
-    rating: 5,
-  },
-  {
-    _id: 'f4',
-    comment: "My daughter was completely unsure about her stream after Class 10. BEHOLD's C-DAT gave us clarity we didn't expect. Best investment we've made in her future.",
-    name: 'Divya R.',
-    role: 'Parent',
-    rating: 5,
-  },
-  {
-    _id: 'f5',
-    comment: 'The mentorship sessions felt personal and truly caring. My mentor understood my situation and helped me chart a university path that perfectly fits my strengths.',
-    name: 'Arjun P.',
-    role: 'Student, Class 11',
-    rating: 5,
-  },
-];
+
 
 /* ── Star Display / Picker ────────────────────────────────── */
 function Stars({ count = 5, total = 5, interactive = false, onSelect }) {
@@ -229,8 +193,17 @@ function SubmitReviewForm({ onSubmitSuccess }) {
 
 /* ── Main Reviews Component ───────────────────────────────── */
 export default function Reviews({ siteSettings }) {
-  const [apiReviews, setApiReviews] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [apiReviews, setApiReviews] = useState(() => {
+    try {
+      const cached = localStorage.getItem('behold_reviews_cache');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) { }
+    return [];
+  });
+  const [loading, setLoading] = useState(() => apiReviews.length === 0);
   const [showForm, setShowForm] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const reviewScrollRef = useRef(null);
@@ -238,12 +211,17 @@ export default function Reviews({ siteSettings }) {
 
   const fetchReviews = async () => {
     try {
+      if (apiReviews.length === 0) setLoading(true);
       const res = await ApiService.getPublicReviews();
       if (res?.success && Array.isArray(res.data) && res.data.length > 0) {
         setApiReviews(res.data);
+        localStorage.setItem('behold_reviews_cache', JSON.stringify(res.data));
+      } else {
+        setApiReviews([]);
       }
-    } catch {
-      // fall back to static
+    } catch (err) {
+      console.warn('Failed to load reviews:', err);
+      setApiReviews([]);
     } finally {
       setLoading(false);
     }
@@ -251,7 +229,7 @@ export default function Reviews({ siteSettings }) {
 
   useEffect(() => { fetchReviews(); }, []);
 
-  const displayReviews = apiReviews.length > 0 ? apiReviews : fallbackReviews;
+  const displayReviews = apiReviews;
   const totalPages = Math.ceil(displayReviews.length / itemsPerPage);
   const paginatedReviews = displayReviews.slice(
     (currentPage - 1) * itemsPerPage,
@@ -303,8 +281,23 @@ export default function Reviews({ siteSettings }) {
 
         {/* Paginated Review Cards Grid */}
         {loading ? (
-          <div className="flex justify-center py-12">
-            <div className="w-6 h-6 border-2 border-[#0f172a] border-t-[#00e5ff] rounded-full animate-spin" />
+          <div className="px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="bg-white rounded-xl border border-surface-200 p-6 flex flex-col justify-between h-56 space-y-4 shadow-xs">
+                <div className="space-y-3">
+                  <div className="shimmer h-4 w-28 rounded-md" />
+                  <div className="shimmer h-3 w-full rounded-md" />
+                  <div className="shimmer h-3 w-4/5 rounded-md" />
+                </div>
+                <div className="flex items-center gap-3 pt-4 border-t border-surface-100">
+                  <div className="shimmer w-9 h-9 rounded-full shrink-0" />
+                  <div className="space-y-1.5 flex-1">
+                    <div className="shimmer h-3.5 w-24 rounded-md" />
+                    <div className="shimmer h-2.5 w-16 rounded-md" />
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         ) : (
           <div className="px-4 sm:px-6 lg:px-8 space-y-4">

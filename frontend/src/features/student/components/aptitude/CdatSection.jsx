@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ApiService from '../../../../shared/services/api';
 import { ScrollDot } from '../../../../shared/components/BrandDot';
-import greenTexture from '../../../../assets/clarity_bg.png';
+import greenTexture from '../../../../assets/greygreen.png';
 
 export default function CdatSection({ setView, siteSettings }) {
   const settings = siteSettings || JSON.parse(localStorage.getItem('behold_site_settings') || '{}');

@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 
 import ApiService from '../../../../shared/services/api';
-import greenTexture from '../../../../assets/clarity_bg.png';
+import greenTexture from '../../../../assets/greygreen.png';
 
 const DOMAIN_DETAILS = {
  Aptitude: {

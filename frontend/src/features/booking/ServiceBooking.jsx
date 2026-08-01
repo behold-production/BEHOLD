@@ -7,7 +7,7 @@ import { FileDown, X } from 'lucide-react';
 import { formatDateString } from '../../shared/utils/dateFormatter';
 import toast from 'react-hot-toast';
 import { ScrollDot } from '../../shared/components/BrandDot';
-import greenTexture from '../../assets/clarity_bg.png';
+import greenTexture from '../../assets/greygreen.png';
 
 const getInitials = (name) => {
     if (!name) return '';

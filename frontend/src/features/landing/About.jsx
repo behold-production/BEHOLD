@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { renderTitleWithFullstopDot } from '../../shared/components/BrandDot';
 import luxuryClinicRoom from '../../assets/luxury_clinic_room.png';
-import greenTexture from '../../assets/clarity_bg.png';
+import greenTexture from '../../assets/greygreen.png';
 
 export default function About({ enablePsychology = true, enableCareerMentoring = true, siteSettings }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -10,7 +10,7 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
   return (
     <section id="about" className="py-20 sm:py-28 text-surface-900 bg-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Main 2-Column Section */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
 
@@ -46,7 +46,7 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
           {/* Right Column: 2x2 Thin-Border Grid Matrix */}
           <div className="lg:col-span-6 border-t lg:border-t-0 border-surface-200">
             <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-surface-200 border-b border-surface-200">
-              
+
               {/* Stat Card 1 */}
               <div className="p-6 sm:p-8 flex flex-col justify-between h-44 sm:h-52 border-b border-surface-200 group">
                 <p className="text-xs text-surface-600 font-normal leading-relaxed max-w-[160px]">
@@ -72,7 +72,7 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-surface-200">
-              
+
               {/* Stat Card 3 */}
               <div className="p-6 sm:p-8 flex flex-col justify-between h-52 sm:h-60 group">
                 <p className="text-xs text-surface-600 font-normal leading-relaxed max-w-[170px]">

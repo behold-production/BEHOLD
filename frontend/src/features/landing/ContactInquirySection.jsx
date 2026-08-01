@@ -39,11 +39,13 @@ export default function ContactInquirySection() {
       id="inquiry"
       className="relative w-full flex items-center justify-center py-20 sm:py-28 px-4 sm:px-8"
     >
-      {/* Background Image with top & bottom fade */}
+      {/* Background Image with smooth mask-image fade (no cutout lines) */}
       <div className="absolute inset-0 z-0 pointer-events-none">
-        <img src={greyGreenBg} alt="" className="w-full h-full object-cover object-center opacity-55" />
-        <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-slate-50 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-slate-50 to-transparent" />
+        <img
+          src={greyGreenBg}
+          alt=""
+          className="w-full h-full object-cover object-center opacity-55 [mask-image:linear-gradient(to_bottom,transparent_0%,black_15%,black_85%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_15%,black_85%,transparent_100%)]"
+        />
       </div>
       <div className="relative z-10 w-full max-w-xl mx-auto">
 

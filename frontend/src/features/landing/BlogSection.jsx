@@ -7,7 +7,17 @@ import { ScrollDot } from '../../shared/components/BrandDot';
 
 const BlogSection = () => {
   const navigate = useNavigate();
-  const [blogs, setBlogs] = useState([]);
+  const [blogs, setBlogs] = useState(() => {
+    try {
+      const cached = localStorage.getItem('behold_blogs_cache');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) { }
+    return [];
+  });
+  const [loading, setLoading] = useState(() => blogs.length === 0);
   const [currentPage, setCurrentPage] = useState(1);
   const blogScrollRef = useRef(null);
   const itemsPerPage = 3;
@@ -15,12 +25,16 @@ const BlogSection = () => {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
+        if (blogs.length === 0) setLoading(true);
         const res = await ApiService.getBlogs({ limit: 12 });
-        if (res?.data && Array.isArray(res.data)) {
+        if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
           setBlogs(res.data);
+          localStorage.setItem('behold_blogs_cache', JSON.stringify(res.data));
         }
       } catch (err) {
         console.warn('Failed to fetch blogs for landing section:', err);
+      } finally {
+        setLoading(false);
       }
     };
     fetchBlogs();
@@ -105,12 +119,32 @@ const BlogSection = () => {
         </div>
 
         {/* Blog Cards Grid / Mobile Horizontal Carousel */}
-        <div
-          ref={blogScrollRef}
-          id="blog-grid"
-          className="flex md:grid overflow-x-auto md:overflow-x-visible snap-x snap-mandatory md:snap-none scrollbar-none md:grid-cols-3 gap-8 pb-4"
-        >
-          {blogs.map((post) => (
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="bg-white border border-surface-200 rounded-xl overflow-hidden shadow-xs flex flex-col h-96">
+                <div className="shimmer h-56 w-full shrink-0" />
+                <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
+                  <div className="space-y-2">
+                    <div className="shimmer h-4 w-3/4 rounded-md" />
+                    <div className="shimmer h-3 w-full rounded-md" />
+                    <div className="shimmer h-3 w-5/6 rounded-md" />
+                  </div>
+                  <div className="pt-4 border-t border-surface-100 flex items-center justify-between">
+                    <div className="shimmer h-3 w-20 rounded-md" />
+                    <div className="shimmer h-3 w-24 rounded-md" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div
+            ref={blogScrollRef}
+            id="blog-grid"
+            className="flex md:grid overflow-x-auto md:overflow-x-visible snap-x snap-mandatory md:snap-none scrollbar-none md:grid-cols-3 gap-8 pb-4"
+          >
+            {blogs.map((post) => (
             <article
               key={post._id || post.slug}
               onClick={() => handleOpenBlog(post.slug)}
@@ -159,6 +193,7 @@ const BlogSection = () => {
             </article>
           ))}
         </div>
+        )}
 
         {/* Pagination (>=768px) */}
         {totalPages > 1 && (

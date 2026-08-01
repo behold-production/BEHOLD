@@ -119,7 +119,17 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
         {/* Bottom Bar */}
         <div className="mt-16 pt-8 border-t border-surface-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-surface-400">
           <div>
-            © {new Date().getFullYear()} {siteCopyright || 'BEHOLD'}. All rights reserved.
+            {(() => {
+              const year = new Date().getFullYear();
+              if (!siteCopyright) return `© ${year} BEHOLD Ltd. All rights reserved.`;
+              let clean = String(siteCopyright)
+                .replace(/^©\s*/, '')
+                .replace(/\.?\s*All rights reserved\.?$/i, '')
+                .replace(/,?\s*\d{4}\.?$/, '')
+                .trim();
+              if (!clean) clean = 'BEHOLD Ltd.';
+              return `© ${year} ${clean}. All rights reserved.`;
+            })()}
           </div>
           <div className="flex items-center gap-6">
             <button onClick={() => onOpenDocs?.('privacy')} className="hover:text-[#00e5ff] transition-colors bg-transparent border-none cursor-pointer p-0 text-xs">Privacy</button>

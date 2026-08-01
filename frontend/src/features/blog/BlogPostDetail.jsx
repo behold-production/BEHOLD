@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Clock, Copy, Check, MessageCircle, BookOpen } from 'lucide-react';
 import ApiService from '../../shared/services/api';
 import { DEFAULT_BLOGS_DATA } from './defaultBlogsData';
-import greenTexture from '../../assets/clarity_bg.png';
+import greenTexture from '../../assets/greygreen.png';
 
 const BlogPostDetail = () => {
   const { slug } = useParams();

@@ -16,7 +16,7 @@ const defaultPsychologists = [
     name: 'Amal',
     designation: 'CONSULTANT PSYCHOLOGIST',
     title: 'Psychologist',
-    fee: '10',
+    fee: '500',
     photo: null,
     specialties: ['ANXIETY STRESS & PANIC', 'DEPRESSION & MOOD CONCERNS', 'RELATIONSHIP'],
     languages: 'Malayalam, English'
@@ -64,8 +64,17 @@ const defaultPsychologists = [
 ];
 
 export default function TherapistSwipeSection({ onBookTherapist, navigateToSection }) {
-  const [advisors, setAdvisors] = useState(defaultPsychologists);
-  const [loading, setLoading] = useState(true);
+  const [advisors, setAdvisors] = useState(() => {
+    try {
+      const cached = localStorage.getItem('behold_counsellors_cache');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) { }
+    return defaultPsychologists;
+  });
+  const [loading, setLoading] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   // Search & Category Filter State
@@ -98,9 +107,15 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
             };
           });
           setAdvisors(formatted);
+          localStorage.setItem('behold_counsellors_cache', JSON.stringify(formatted));
+        } else if (advisors.length === 0) {
+          setAdvisors(defaultPsychologists);
         }
       } catch (err) {
         console.warn('Using default psychologist profiles:', err);
+        if (advisors.length === 0) {
+          setAdvisors(defaultPsychologists);
+        }
       } finally {
         setLoading(false);
       }
@@ -195,18 +210,18 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
       case 0:
         return 'translate-x-0 scale-100 opacity-100 z-30 shadow-2xl cursor-default brightness-100';
       case -1:
-        return '-translate-x-[150px] sm:-translate-x-[210px] md:-translate-x-[260px] lg:-translate-x-[300px] scale-[0.88] opacity-95 z-20 shadow-xl cursor-pointer hover:scale-[0.90] brightness-[0.75]';
+        return '-translate-x-[100px] xs:-translate-x-[130px] sm:-translate-x-[170px] md:-translate-x-[200px] lg:-translate-x-[225px] scale-[0.88] opacity-95 z-20 shadow-xl cursor-pointer hover:scale-[0.90] brightness-[0.75]';
       case 1:
-        return 'translate-x-[150px] sm:translate-x-[210px] md:translate-x-[260px] lg:translate-x-[300px] scale-[0.88] opacity-95 z-20 shadow-xl cursor-pointer hover:scale-[0.90] brightness-[0.75]';
+        return 'translate-x-[100px] xs:translate-x-[130px] sm:translate-x-[170px] md:translate-x-[200px] lg:translate-x-[225px] scale-[0.88] opacity-95 z-20 shadow-xl cursor-pointer hover:scale-[0.90] brightness-[0.75]';
       case -2:
-        return '-translate-x-[280px] sm:-translate-x-[400px] md:-translate-x-[500px] lg:-translate-x-[580px] scale-[0.75] opacity-85 z-10 shadow-lg cursor-pointer hover:scale-[0.78] brightness-[0.55]';
+        return '-translate-x-[190px] xs:-translate-x-[240px] sm:-translate-x-[320px] md:-translate-x-[380px] lg:-translate-x-[425px] scale-[0.76] opacity-85 z-10 shadow-lg cursor-pointer hover:scale-[0.78] brightness-[0.55]';
       case 2:
-        return 'translate-x-[280px] sm:translate-x-[400px] md:translate-x-[500px] lg:translate-x-[580px] scale-[0.75] opacity-85 z-10 shadow-lg cursor-pointer hover:scale-[0.78] brightness-[0.55]';
+        return 'translate-x-[190px] xs:translate-x-[240px] sm:translate-x-[320px] md:translate-x-[380px] lg:translate-x-[425px] scale-[0.76] opacity-85 z-10 shadow-lg cursor-pointer hover:scale-[0.78] brightness-[0.55]';
       default:
         if (diff < 0) {
-          return '-translate-x-[350px] scale-[0.6] opacity-0 z-0 pointer-events-none';
+          return '-translate-x-[300px] scale-[0.6] opacity-0 z-0 pointer-events-none';
         } else {
-          return 'translate-x-[350px] scale-[0.6] opacity-0 z-0 pointer-events-none';
+          return 'translate-x-[300px] scale-[0.6] opacity-0 z-0 pointer-events-none';
         }
     }
   };
@@ -321,13 +336,13 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
       id="therapists"
       className="relative w-full flex flex-col items-center justify-center py-16 sm:py-20 lg:py-24 px-[15px] sm:px-6 lg:px-10 overflow-hidden text-[#0f172a] select-none"
     >
-      {/* Background Image with subtle fade */}
+      {/* Background Image with smooth mask-image fade (no hard cutout lines) */}
       <div className="absolute inset-0 z-0 pointer-events-none">
-        <img src={shadeGreenBg} alt="" className="w-full h-full object-cover object-center opacity-55" />
-        {/* Top fade — matches page bg */}
-        <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-slate-50 to-transparent" />
-        {/* Bottom fade — matches page bg */}
-        <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-slate-50 to-transparent" />
+        <img
+          src={shadeGreenBg}
+          alt=""
+          className="w-full h-full object-cover object-center opacity-55 [mask-image:linear-gradient(to_bottom,transparent_0%,black_15%,black_85%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_15%,black_85%,transparent_100%)]"
+        />
       </div>
       {/* SECTION TOPPER TITLE */}
       <div className="w-full max-w-7xl mx-auto mb-6 sm:mb-8 text-center">
@@ -428,48 +443,52 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
           </div>
         ) : (
           <>
-            {/* 5-Card Coverflow Carousel */}
-            <div
-              className="relative w-full max-w-6xl mx-auto h-[410px] sm:h-[470px] flex items-center justify-center perspective-[1200px] overflow-visible px-[10px]"
-              onMouseDown={(e) => handleTouchStart(e.clientX)}
-              onMouseMove={(e) => handleTouchMove(e.clientX)}
-              onMouseUp={handleTouchEnd}
-              onMouseLeave={handleTouchEnd}
-              onTouchStart={(e) => handleTouchStart(e.touches[0].clientX)}
-              onTouchMove={(e) => handleTouchMove(e.touches[0].clientX)}
-              onTouchEnd={handleTouchEnd}
-            >
-              {/* Left Navigation Arrow (Icon Only, Far Left Edge) */}
+            {/* 5-Card Coverflow Carousel Wrapper */}
+            <div className="relative w-full max-w-7xl mx-auto">
+
+              {/* Left Floating Navigation Arrow (Outer Screen Margin) */}
               <button
                 onClick={(e) => { e.stopPropagation(); handlePrevCard(); }}
                 aria-label="Previous Psychologist"
-                className="absolute left-0 sm:left-2 lg:left-4 top-1/2 -translate-y-1/2 z-50 p-2 text-slate-800 hover:text-[#00c9d6] transition-all duration-300 active:scale-90 cursor-pointer bg-transparent border-none outline-none group"
+                className="absolute left-0 sm:-left-4 lg:-left-8 top-[200px] -translate-y-1/2 z-50 w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-white/95 text-slate-800 hover:text-slate-950 hover:bg-[#00e5ff] shadow-xl border border-slate-200/80 transition-all duration-300 active:scale-95 cursor-pointer flex items-center justify-center group"
               >
-                <ChevronLeft className="w-8 h-8 sm:w-10 sm:h-10 drop-shadow-md group-hover:-translate-x-1 transition-transform" />
+                <ChevronLeft className="w-6 h-6 sm:w-7 sm:h-7 group-hover:-translate-x-0.5 transition-transform" />
               </button>
 
-              {/* Right Navigation Arrow (Icon Only, Far Right Edge) */}
+              {/* Right Floating Navigation Arrow (Outer Screen Margin) */}
               <button
                 onClick={(e) => { e.stopPropagation(); handleNextCard(); }}
                 aria-label="Next Psychologist"
-                className="absolute right-0 sm:right-2 lg:right-4 top-1/2 -translate-y-1/2 z-50 p-2 text-slate-800 hover:text-[#00c9d6] transition-all duration-300 active:scale-90 cursor-pointer bg-transparent border-none outline-none group"
+                className="absolute right-0 sm:-right-4 lg:-right-8 top-[200px] -translate-y-1/2 z-50 w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-white/95 text-slate-800 hover:text-slate-950 hover:bg-[#00e5ff] shadow-xl border border-slate-200/80 transition-all duration-300 active:scale-95 cursor-pointer flex items-center justify-center group"
               >
-                <ChevronRight className="w-8 h-8 sm:w-10 sm:h-10 drop-shadow-md group-hover:translate-x-1 transition-transform" />
+                <ChevronRight className="w-6 h-6 sm:w-7 sm:h-7 group-hover:translate-x-0.5 transition-transform" />
               </button>
 
-              {displayAdvisors.map((advisor, index) => {
-                const diff = getRelativePosition(index);
-                const styleClass = getCardStyles(diff);
-                return (
-                  <div
-                    key={advisor.id}
-                    onClick={() => setCurrentIndex(index)}
-                    className={`absolute w-[280px] xs:w-[320px] sm:w-[350px] md:w-[380px] h-[390px] sm:h-[450px] transform transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${styleClass}`}
-                  >
-                    {renderCard(advisor, diff === 0)}
-                  </div>
-                )
-              })}
+              {/* Card Perspective Area */}
+              <div
+                className="relative w-full max-w-5xl mx-auto h-[410px] sm:h-[470px] flex items-center justify-center perspective-[1200px] overflow-visible"
+                onMouseDown={(e) => handleTouchStart(e.clientX)}
+                onMouseMove={(e) => handleTouchMove(e.clientX)}
+                onMouseUp={handleTouchEnd}
+                onMouseLeave={handleTouchEnd}
+                onTouchStart={(e) => handleTouchStart(e.touches[0].clientX)}
+                onTouchMove={(e) => handleTouchMove(e.touches[0].clientX)}
+                onTouchEnd={handleTouchEnd}
+              >
+                {displayAdvisors.map((advisor, index) => {
+                  const diff = getRelativePosition(index);
+                  const styleClass = getCardStyles(diff);
+                  return (
+                    <div
+                      key={advisor.id}
+                      onClick={() => setCurrentIndex(index)}
+                      className={`absolute w-[280px] xs:w-[320px] sm:w-[350px] md:w-[380px] h-[390px] sm:h-[450px] transform transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${styleClass}`}
+                    >
+                      {renderCard(advisor, diff === 0)}
+                    </div>
+                  )
+                })}
+              </div>
             </div>
 
             {/* Text & Button Centered Under Cards (Smaller Refined Text Size) */}

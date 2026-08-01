@@ -58,11 +58,13 @@ export default function FaqBlogSection() {
       id="faqs-blogs"
       className="relative w-full flex items-center justify-center py-20 sm:py-24 px-5 sm:px-10 lg:px-16 overflow-hidden text-[#0f172a]"
     >
-      {/* Background Image with top & bottom fade */}
+      {/* Background Image with smooth mask-image fade (no cutout lines) */}
       <div className="absolute inset-0 z-0 pointer-events-none">
-        <img src={greyGreenBg} alt="" className="w-full h-full object-cover object-center opacity-55" />
-        <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-slate-50 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-slate-50 to-transparent" />
+        <img
+          src={greyGreenBg}
+          alt=""
+          className="w-full h-full object-cover object-center opacity-55 [mask-image:linear-gradient(to_bottom,transparent_0%,black_15%,black_85%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_15%,black_85%,transparent_100%)]"
+        />
       </div>
       <div className="relative z-10 w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-stretch">
         

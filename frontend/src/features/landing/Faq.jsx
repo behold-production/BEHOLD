@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
 import ApiService from '../../shared/services/api';
-import greenTexture from '../../assets/clarity_bg.png';
+import greenTexture from '../../assets/greygreen.png';
 
 const cdatFaq = {
   question: 'What is the C-DAT aptitude assessment?',
@@ -32,15 +32,36 @@ export default function Faq({ siteSettings }) {
   const settings = siteSettings || JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
   const enableAptitude = settings.enableAptitude !== false;
   const [openIndex, setOpenIndex] = useState(null);
-  const [faqs, setFaqs] = useState([]);
+  const [faqs, setFaqs] = useState(() => {
+    try {
+      const cached = localStorage.getItem('behold_faqs_cache');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) { }
+    return [];
+  });
+  const [loading, setLoading] = useState(() => faqs.length === 0);
 
   useEffect(() => {
+    if (faqs.length === 0) setLoading(true);
     ApiService.getFaqs()
-      .then(res => { if (res.success && res.data?.length > 0) setFaqs(res.data); })
-      .catch(() => {});
+      .then((res) => {
+        if (res.success && Array.isArray(res.data) && res.data.length > 0) {
+          setFaqs(res.data);
+          localStorage.setItem('behold_faqs_cache', JSON.stringify(res.data));
+        }
+      })
+      .catch((err) => console.error('Failed to load FAQs', err))
+      .finally(() => setLoading(false));
+
     const handler = async () => {
       const res = await ApiService.getFaqs().catch(() => ({}));
-      if (res.success && res.data) setFaqs(res.data);
+      if (res.success && res.data) {
+        setFaqs(res.data);
+        localStorage.setItem('behold_faqs_cache', JSON.stringify(res.data));
+      }
     };
     window.addEventListener('behold_faqs_updated', handler);
     return () => window.removeEventListener('behold_faqs_updated', handler);
@@ -78,8 +99,18 @@ export default function Faq({ siteSettings }) {
         </div>
 
         {/* Accordion */}
-        <div className="space-y-4">
-          {displayFaqs.map((faq, idx) => {
+        {loading ? (
+          <div className="space-y-4">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="rounded-xl border border-surface-200 bg-white px-6 py-5 flex items-center justify-between gap-4">
+                <div className="shimmer h-4 w-3/4 rounded-md" />
+                <div className="shimmer w-8 h-8 rounded-full shrink-0" />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {displayFaqs.map((faq, idx) => {
             const isOpen = openIndex === idx;
             return (
               <div
@@ -110,6 +141,7 @@ export default function Faq({ siteSettings }) {
             );
           })}
         </div>
+        )}
 
         {/* Bottom CTA */}
         <div className="mt-12 text-center">

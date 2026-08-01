@@ -1,496 +1,229 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { ChevronLeft, ChevronRight, Search, ChevronDown, LayoutGrid, List } from 'lucide-react';
-import ApiService from '../../shared/services/api';
-import greenTexture from '../../assets/clarity_bg.png';
+import React from 'react';
+import { Sparkles, Brain, Compass, BookOpen, Users, ArrowRight, CheckCircle2 } from 'lucide-react';
+import greyGreenBg from '../../assets/greygreen.png';
 
 export default function Services({ setView, onBookTherapist, siteSettings, mode }) {
-  const [advisors, setAdvisors] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [search, setSearch] = useState('');
-  const [filter, setFilter] = useState('All');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [expandedBios, setExpandedBios] = useState({});
-  const [activeCardIndex, setActiveCardIndex] = useState(0);
-  const [isGridView, setIsGridView] = useState(true);
-  const scrollContainerRef = useRef(null);
   const settings = siteSettings || JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
 
-  const scrollHorizontal = (direction) => {
-    if (scrollContainerRef.current) {
-      const container = scrollContainerRef.current;
-      const cards = container.children;
-      if (!cards || cards.length === 0) return;
-
-      const firstCardWidth = cards[0].offsetWidth;
-      const gap = 24;
-      const step = firstCardWidth + gap;
-
-      const currentIndex = Math.round(container.scrollLeft / step);
-      const targetIndex = direction === 'right'
-        ? Math.min(currentIndex + 1, cards.length - 1)
-        : Math.max(currentIndex - 1, 0);
-
-      container.scrollTo({
-        left: targetIndex * step,
-        behavior: 'smooth'
-      });
-      setActiveCardIndex(targetIndex);
+  const servicesList = [
+    {
+      id: 'counselling',
+      icon: Brain,
+      tag: 'Mental Health & Wellbeing',
+      title: 'Psychological Counselling',
+      subtitle: 'Safe, Confidential & Doorstep Care',
+      description: 'One-on-one therapeutic sessions for anxiety, academic stress, depression, and personal growth guided by certified clinical psychologists.',
+      features: [
+        'Doorstep & Online Private Sessions',
+        'Academic Stress & Burnout Recovery',
+        'Anxiety, Depression & Emotional Healing',
+        'Strictly Confidential & Safe Protocol'
+      ],
+      price: 'From ₹500 / Session',
+      badge: 'POPULAR',
+      actionText: 'Book Counselling'
+    },
+    {
+      id: 'aptitude',
+      icon: Compass,
+      tag: 'Scientific Evaluation',
+      title: 'C-DAT Aptitude Assessment',
+      subtitle: 'Standardized Psychometric Testing',
+      description: 'The CIGI Differential Aptitude Test evaluates 7 core cognitive domains to match students in Grades 8–12 with ideal stream and career options.',
+      features: [
+        '7-Domain Scientific Evaluation',
+        'Comprehensive 15-Page Career Report',
+        'Stream & Subject Selection Roadmap',
+        '1:1 Psychologist Report Debrief'
+      ],
+      price: 'Scientific Protocol',
+      badge: 'ASSESSMENT',
+      actionText: 'Book Aptitude Test'
+    },
+    {
+      id: 'mentorship',
+      icon: BookOpen,
+      tag: 'Career & University Pathway',
+      title: '1:1 Career Mentorship',
+      subtitle: 'Long-term Guidance & Action Plans',
+      description: 'Personalized career mentoring to translate aptitude findings into achievable milestones, university selection, and skill building.',
+      features: [
+        'Stream & Degree Mapping',
+        'University Admission Guidance',
+        'Skill & Profile Enhancement',
+        'Quarterly Goal Tracking'
+      ],
+      price: 'Customized Mentoring',
+      badge: 'CAREER',
+      actionText: 'Book Mentoring'
+    },
+    {
+      id: 'workshops',
+      icon: Users,
+      tag: 'Institutional & School Care',
+      title: 'School & Parent Workshops',
+      subtitle: 'Campus Orientations & Guidance',
+      description: 'Interactive workshops and orientations conducted at schools to build healthy learning environments and align parent expectations.',
+      features: [
+        'Student Mental Health Seminars',
+        'Parenting & Friction Reduction',
+        'Teacher Guidance Orientation',
+        'Group Aptitude Drives'
+      ],
+      price: 'Institutional Care',
+      badge: 'WORKSHOPS',
+      actionText: 'Inquire for School'
     }
-  };
-
-  const handleScrollUpdate = () => {
-    if (scrollContainerRef.current) {
-      const container = scrollContainerRef.current;
-      const cards = container.children;
-      if (!cards || cards.length === 0) return;
-
-      const firstCardWidth = cards[0].offsetWidth;
-      const gap = 24;
-      const step = firstCardWidth + gap;
-      const idx = Math.round(container.scrollLeft / step);
-      setActiveCardIndex(idx);
-    }
-  };
-
-  const toggleBio = (id) => {
-    setExpandedBios(prev => ({ ...prev, [id]: !prev[id] }));
-  };
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [search, filter]);
-
-  useEffect(() => {
-    const fetchCounsellors = async () => {
-      try {
-        setIsLoading(true);
-        const res = await ApiService.getCounsellors();
-        if (res.success && Array.isArray(res.data) && res.data.length > 0) {
-          setAdvisors(res.data.map(c => ({
-            id: c._id || c.id,
-            name: c.name,
-            profilePic: (c.profilePic && c.profilePic.includes('res.cloudinary.com')) ? c.profilePic : '',
-            role: (c.role || 'Consultant Psychologist').replace(/\b\w/g, l => l.toUpperCase()),
-            bio: c.bio || c.description || 'Dedicated specialist providing personalized clinical & career guidance.',
-            specialties: c.specialties?.length > 0 ? c.specialties : ['Anxiety', 'Stress', 'Career'],
-            price: c.price || 1200,
-            lang: c.lang || 'Malayalam, English',
-          })));
-        } else {
-          setAdvisors([]);
-        }
-      } catch (err) {
-        console.error('Failed to load counsellors', err);
-        setAdvisors([]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchCounsellors();
-  }, []);
-
-  const filtered = advisors.filter(a => {
-    const matchSearch = !search.trim() ||
-      a.name?.toLowerCase().includes(search.toLowerCase()) ||
-      a.specialties?.some(s => s.toLowerCase().includes(search.toLowerCase()));
-    const matchFilter = filter === 'All' || a.role?.toLowerCase().includes(filter.toLowerCase());
-    return matchSearch && matchFilter;
-  });
-
-  const itemsPerPage = 3;
-  const totalPages = Math.ceil(filtered.length / itemsPerPage);
-  const paginatedAdvisors = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  ];
 
   const sectionId = mode === 'experts' ? 'counsellors' : 'services';
 
   return (
-    <section id={sectionId} className="py-12 sm:py-16 bg-transparent text-surface-900">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id={sectionId} className="relative py-16 sm:py-24 overflow-hidden text-slate-900 select-none">
+      {/* Background Image Layer with smooth mask gradient fade */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <img
+          src={greyGreenBg}
+          alt=""
+          className="w-full h-full object-cover object-center opacity-60 [mask-image:linear-gradient(to_bottom,transparent_0%,black_15%,black_85%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_15%,black_85%,transparent_100%)]"
+        />
+      </div>
 
-        {/* ── SERVICES INTRO: UNFOLD WITH BEHOLD ── */}
-        {(!mode || mode === 'intro') && (
-          <div className="mb-10">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-              {/* Left Column: Heading & Buttons */}
-              <div className="lg:col-span-6 flex flex-col justify-between">
+        {/* Section Header */}
+        <div className="max-w-3xl mb-12 sm:mb-16">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 text-[#00e5ff] text-[11px] sm:text-xs font-extrabold uppercase tracking-widest mb-4 shadow-sm">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>{settings.servicesSectionSub || 'UNFOLD WITH BEHOLD'}</span>
+          </div>
+
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-sans font-black uppercase text-slate-900 tracking-tight leading-none mb-4">
+            {settings.servicesSectionTitle || 'Comprehensive Care for Your Mind & Future'}
+            <span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)]">.</span>
+          </h2>
+
+          <p className="text-sm sm:text-base text-slate-600 font-normal leading-relaxed max-w-2xl">
+            {settings.servicesSectionDesc || 'True growth happens when emotional peace and career direction align. Behold Aspire brings both psychological counseling and scientific career mentoring into one cohesive model.'}
+          </p>
+        </div>
+
+        {/* Services Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 mb-16">
+          {servicesList.map((service) => {
+            const Icon = service.icon;
+            return (
+              <div
+                key={service.id}
+                className="group relative bg-white/85 backdrop-blur-md rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-lg hover:shadow-2xl hover:border-[#00e5ff]/60 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between overflow-hidden"
+              >
+                {/* Decorative Top Gradient Line on Hover */}
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#00e5ff] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
                 <div>
-                  <span className="text-xs font-bold tracking-widest uppercase text-brand flex items-center gap-1.5 mb-2">
+                  {/* Top Bar: Icon + Badge */}
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="w-12 h-12 rounded-2xl bg-slate-900 text-[#00e5ff] flex items-center justify-center shadow-md group-hover:scale-110 group-hover:bg-[#00e5ff] group-hover:text-slate-950 transition-all duration-300">
+                      <Icon className="w-6 h-6" />
+                    </div>
+                    <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest px-3 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200 group-hover:bg-[#00e5ff]/15 group-hover:text-slate-900 transition-colors">
+                      {service.badge}
+                    </span>
+                  </div>
 
-                    {settings.servicesSectionSub || 'UNFOLD WITH BEHOLD'}
+                  {/* Category Tag */}
+                  <span className="text-[11px] font-bold uppercase tracking-widest text-[#00c9d6] block mb-1">
+                    {service.tag}
                   </span>
-                  <h2 id="services-title" className="text-3xl sm:text-4xl md:text-5xl font-sans font-black uppercase text-slate-900 mb-4 leading-tight tracking-tight">
-                    {settings.servicesSectionTitle || 'Comprehensive Care for Your Mind & Future.'}
-                  </h2>
-                  <p className="text-sm sm:text-base text-surface-600 leading-relaxed max-w-lg font-normal mb-6">
-                    {settings.servicesSectionDesc || 'True growth happens when emotional peace and career direction align. Behold Aspire brings both pillars into one cohesive mentoring model.'}
+
+                  {/* Service Title */}
+                  <h3 className="text-xl sm:text-2xl font-black text-slate-900 uppercase tracking-tight mb-1 group-hover:text-[#00c9d6] transition-colors">
+                    {service.title}
+                  </h3>
+                  <p className="text-xs font-semibold text-slate-500 mb-4">
+                    {service.subtitle}
                   </p>
-                </div>
 
-                <div className="flex flex-wrap items-center gap-3">
-                  <button
-                    onClick={() => { window.spaNavigate?.('/booking'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                    className="px-7 py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-widest rounded-full transition-all border border-brand/30 cursor-pointer shadow-xs"
-                  >
-                    Explore All Programs
-                  </button>
-                  <button
-                    onClick={() => { if (onBookTherapist) onBookTherapist(); }}
-                    className="px-7 py-3 bg-surface-100 hover:bg-surface-200 text-slate-900 font-bold text-xs uppercase tracking-widest rounded-full transition-all border border-surface-200 cursor-pointer"
-                  >
-                    Book a Session
-                  </button>
-                </div>
-              </div>
+                  {/* Service Description */}
+                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal mb-6">
+                    {service.description}
+                  </p>
 
-              {/* Right Column: 2x2 Feature Grid */}
-              <div className="lg:col-span-6 grid grid-cols-2 gap-4 sm:gap-6 lg:border-l lg:border-surface-200 lg:pl-10 pt-6 lg:pt-0 border-t lg:border-t-0 border-surface-200">
-                <div className="flex flex-col justify-between p-4 sm:p-5 rounded-xl bg-white border border-surface-200 shadow-2xs space-y-3 group hover:border-brand transition-all">
-                  <div>
-                    <h4 className="text-xs sm:text-sm font-bold text-slate-900 uppercase tracking-wide mb-1.5 leading-snug group-hover:text-brand transition-colors">Dual Support Architecture</h4>
-                    <p className="text-[11px] sm:text-xs text-surface-600 leading-relaxed font-normal">
-                      Transition seamlessly between clinical psychologists and career strategists under one roof.
-                    </p>
-                  </div>
-                  <div className="text-right pt-2 border-t border-surface-100 flex items-center justify-between">
-
-                    <span className="text-xl sm:text-2xl font-black text-slate-900 font-sans tracking-tight">01</span>
-                  </div>
-                </div>
-
-                <div className="flex flex-col justify-between p-4 sm:p-5 rounded-xl bg-white border border-surface-200 shadow-2xs space-y-3 group hover:border-brand transition-all">
-                  <div>
-                    <h4 className="text-xs sm:text-sm font-bold text-slate-900 uppercase tracking-wide mb-1.5 leading-snug group-hover:text-brand transition-colors">100% Safe & Scientific</h4>
-                    <p className="text-[11px] sm:text-xs text-surface-600 leading-relaxed font-normal">
-                      Backed by CIGI assessment data and strictly private, non-judgmental counseling protocols.
-                    </p>
-                  </div>
-                  <div className="text-right pt-2 border-t border-surface-100 flex items-center justify-between">
-
-                    <span className="text-xl sm:text-2xl font-black text-slate-900 font-sans tracking-tight">100%</span>
-                  </div>
-                </div>
-
-                {/* Card 3: Conditional — C-DAT when aptitude enabled, Personalised Mentoring when disabled */}
-                {settings?.enableAptitude !== false ? (
-                  <div className="flex flex-col justify-between p-4 sm:p-5 rounded-xl bg-white border border-surface-200 shadow-2xs space-y-3 group hover:border-brand transition-all">
-                    <div>
-                      <h4 className="text-xs sm:text-sm font-bold text-slate-900 uppercase tracking-wide mb-1.5 leading-snug group-hover:text-brand transition-colors">C-DAT Aptitude Assessment</h4>
-                      <p className="text-[11px] sm:text-xs text-surface-600 leading-relaxed font-normal">
-                        Evaluations designed for grades 8-12 to align cognitive strengths with aspirations.
-                      </p>
-                    </div>
-                    <div className="text-right pt-2 border-t border-surface-100 flex items-center justify-between">
-
-                      <span className="text-sm sm:text-base font-black text-slate-900 uppercase tracking-wider">C-DAT</span>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex flex-col justify-between p-4 sm:p-5 rounded-xl bg-white border border-surface-200 shadow-2xs space-y-3 group hover:border-brand transition-all">
-                    <div>
-                      <h4 className="text-xs sm:text-sm font-bold text-slate-900 uppercase tracking-wide mb-1.5 leading-snug group-hover:text-brand transition-colors">Personalised Mentoring Sessions</h4>
-                      <p className="text-[11px] sm:text-xs text-surface-600 leading-relaxed font-normal">
-                        One-on-one sessions tailored to each student's goals — from stream selection to career clarity.
-                      </p>
-                    </div>
-                    <div className="text-right pt-2 border-t border-surface-100 flex items-center justify-between">
-
-                      <span className="text-sm sm:text-base font-black text-slate-900 uppercase tracking-wider">1:1</span>
-                    </div>
-                  </div>
-                )}
-
-                <div className="flex flex-col justify-between p-4 sm:p-5 rounded-xl bg-slate-900 text-white shadow-md border border-brand/30 space-y-3">
-                  <div>
-                    <p className="text-[11px] sm:text-xs text-surface-200 italic leading-relaxed mb-3">
-                      "True growth happens when emotional peace and career direction align<span className="text-brand not-italic font-bold">.</span>"
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => { if (onBookTherapist) onBookTherapist(); }}
-                    className="w-full py-2 bg-brand hover:bg-brand-dark text-slate-900 font-bold text-[10px] sm:text-xs uppercase tracking-widest rounded-full transition-all cursor-pointer border-none shadow-2xs text-center"
-                  >
-                    Book a Session
-                  </button>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        )}
-
-        {/* ── EXPERTS LISTING ── */}
-        {(!mode || mode === 'experts') && (
-          <div className={mode === 'experts' ? '' : 'pt-10 border-t border-surface-200'}>
-
-            {/* Header */}
-            <div className="max-w-3xl mb-10">
-              <span className="text-xs font-bold tracking-widest uppercase text-brand flex items-center gap-1.5 mb-2">
-
-                OUR CLINICAL TEAM
-              </span>
-              <h2 id="experts-title" className="text-3xl sm:text-5xl font-sans font-black uppercase text-slate-900 mb-3 tracking-tight leading-none">
-                Meet Our Experts<span className="text-brand drop-shadow-[0_0_8px_rgba(0,229,255,0.8)]">.</span>
-              </h2>
-              <p className="text-sm sm:text-base text-surface-600 font-normal leading-relaxed">
-                Certified professionals dedicated to your wellbeing and career success.
-              </p>
-            </div>
-
-            {/* Beautiful Filter Bar */}
-            <div className="bg-white border border-slate-200 rounded-2xl p-2 flex flex-col xl:flex-row items-stretch xl:items-center gap-4 w-full shadow-sm mb-10">
-              
-              {/* Search */}
-              <div className="relative flex-1 min-w-[250px]">
-                <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
-                <input
-                  type="text"
-                  placeholder="Search experts or skills..."
-                  value={search}
-                  onChange={e => setSearch(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 bg-transparent border-none focus:outline-none focus:ring-0 text-sm font-medium placeholder:text-slate-400 text-slate-900"
-                />
-              </div>
-
-              {/* Separator */}
-              <div className="hidden xl:block w-[1px] h-8 bg-slate-200"></div>
-
-              {/* Role Pills */}
-              <div className="flex items-center gap-2 overflow-x-auto scrollbar-none pb-2 xl:pb-0">
-                {['All', 'Consultant Psychologist', 'Clinical Psychologist', 'Psychiatrist'].map(f => (
-                  <button
-                    key={f}
-                    onClick={() => setFilter(f)}
-                    className={`whitespace-nowrap px-4 py-2 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
-                      filter === f
-                        ? 'bg-slate-900 text-white shadow-sm'
-                        : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border border-transparent'
-                    }`}
-                  >
-                    {f === 'All' ? 'All Roles' : f}
-                  </button>
-                ))}
-              </div>
-
-              {/* Separator */}
-              <div className="hidden xl:block w-[1px] h-8 bg-slate-200"></div>
-
-              {/* Sort Dropdown & Toggles */}
-              <div className="flex items-center justify-between xl:justify-start gap-4">
-                <div className="flex items-center bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 cursor-pointer hover:bg-slate-100 transition-colors">
-                  <span className="text-sm font-semibold text-slate-700 whitespace-nowrap">Sort: Recommended</span>
-                  <ChevronDown className="w-4 h-4 text-slate-500 ml-2" />
-                </div>
-
-                {/* Grid/List View Toggles */}
-                <div className="flex items-center bg-white border border-slate-200 rounded-xl p-1 shrink-0">
-                  <button 
-                    onClick={() => setIsGridView(true)}
-                    className={`p-1.5 rounded-lg transition-colors cursor-pointer ${isGridView ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'}`}
-                  >
-                    <LayoutGrid className="w-4 h-4" />
-                  </button>
-                  <button 
-                    onClick={() => setIsGridView(false)}
-                    className={`p-1.5 rounded-lg transition-colors cursor-pointer ${!isGridView ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'}`}
-                  >
-                    <List className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Cards Grid */}
-            {isLoading ? (
-              <div className="flex justify-center py-20">
-                <div className="w-8 h-8 border-2 border-slate-900 border-t-brand rounded-full animate-spin" />
-              </div>
-            ) : filtered.length === 0 ? (
-              <div className="text-center py-20 bg-white rounded-xl border border-surface-200 p-8 shadow-xs">
-                <p className="text-lg font-bold text-slate-900 uppercase mb-1">No Specialists Found</p>
-                <p className="text-xs text-surface-600 mb-5">Try adjusting your search or filters.</p>
-                <button
-                  onClick={() => { setFilter('All'); setSearch(''); }}
-                  className="px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-widest rounded-full transition-all border border-brand/30 cursor-pointer"
-                >
-                  Reset Filters
-                </button>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {/* Mobile Swipe Navigation Controls (<768px) */}
-                <div className="flex md:hidden items-center justify-end px-1 mb-2">
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => scrollHorizontal('left')}
-                      className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center border border-brand/30 active:scale-95 transition-all p-0 shadow-2xs"
-                      aria-label="Previous Expert"
-                    >
-                      <ChevronLeft className="w-4 h-4 text-brand" />
-                    </button>
-                    <button
-                      onClick={() => scrollHorizontal('right')}
-                      className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center border border-brand/30 active:scale-95 transition-all p-0 shadow-2xs"
-                      aria-label="Next Expert"
-                    >
-                      <ChevronRight className="w-4 h-4 text-brand" />
-                    </button>
-                  </div>
-                </div>
-
-                {/* Horizontal 1-by-1 Swipe Carousel on Mobile (<768px) & Grid on Desktop (>=768px) */}
-                <div
-                  ref={scrollContainerRef}
-                  onScroll={handleScrollUpdate}
-                  className={`
-                    ${isGridView 
-                      ? 'flex md:grid overflow-x-auto md:overflow-x-visible snap-x snap-mandatory md:snap-none scrollbar-none md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 items-stretch pb-4 pt-1' 
-                      : 'flex flex-col gap-6 md:gap-8 items-stretch pb-4 pt-1'}
-                  `}
-                >
-                  {paginatedAdvisors.map(advisor => (
-                    <div
-                      key={advisor.id}
-                      className={`bg-white rounded-2xl border border-slate-200 hover:border-brand shadow-xs hover:shadow-md overflow-hidden flex group transition-all shrink-0 snap-start snap-always ${isGridView ? 'flex-col h-full w-full md:w-auto md:max-w-none' : 'flex-col sm:flex-row w-full items-stretch'}`}
-                    >
-                      {/* Photo or Branded Initial Header */}
-                      {advisor.profilePic ? (
-                        <div className={`${isGridView ? 'h-80 w-full' : 'h-64 sm:h-auto sm:w-64 sm:min-h-full'} bg-slate-100 overflow-hidden relative shrink-0`}>
-                          <img
-                            src={advisor.profilePic}
-                            alt={advisor.name}
-                            className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
-                          />
-                        </div>
-                      ) : (
-                        <div className={`${isGridView ? 'h-64 w-full border-b' : 'h-64 sm:h-auto sm:w-64 sm:min-h-full border-b sm:border-b-0 sm:border-r'} bg-slate-900 text-white flex flex-col items-center justify-center relative shrink-0 p-8 text-center border-slate-200`}>
-                          <div className="w-20 h-20 rounded-full bg-brand/10 border border-brand/30 flex items-center justify-center text-brand font-sans text-3xl font-black uppercase mb-3 shadow-xs">
-                            {(advisor.name || 'C').charAt(0)}
-                          </div>
-                          <span className="text-xs font-bold tracking-widest text-brand uppercase">
-                            Certified Specialist
-                          </span>
-                        </div>
-                      )}
-
-                      {/* Content Box */}
-                      <div className="p-6 sm:p-7 flex-1 flex flex-col justify-between space-y-6">
-                        <div>
-                          {/* Name + Price */}
-                          <div className="flex items-baseline justify-between gap-2 mb-1">
-                            <h4 className="font-bold text-slate-900 text-lg tracking-tight leading-tight truncate group-hover:text-brand transition-colors">
-                              {advisor.name}
-                            </h4>
-                            <div className="text-right shrink-0">
-                              <span className="font-bold text-slate-900 text-base">₹{advisor.price?.toLocaleString('en-IN')}</span>
-                              <span className="block text-[10px] text-surface-500 font-bold uppercase">Per Session</span>
-                            </div>
-                          </div>
-
-                          {/* Role */}
-                          <p className="text-xs text-surface-500 font-semibold mb-3 uppercase tracking-wider">{advisor.role}</p>
-
-                          {/* Bio / Description with Read More Toggle */}
-                          {advisor.bio && (
-                            <div className="mb-4">
-                              <p className={`text-xs text-surface-600 leading-relaxed font-normal ${expandedBios[advisor.id] ? '' : 'line-clamp-2'}`}>
-                                {advisor.bio}
-                              </p>
-                              {advisor.bio.length > 70 && (
-                                <button
-                                  type="button"
-                                  onClick={() => toggleBio(advisor.id)}
-                                  className="text-[11px] font-bold text-slate-900 hover:text-brand hover:underline mt-1 cursor-pointer bg-transparent border-none p-0 inline-flex items-center gap-1 uppercase tracking-wider"
-                                >
-                                  {expandedBios[advisor.id] ? 'Show Less ↑' : 'Read More ↓'}
-                                </button>
-                              )}
-                            </div>
-                          )}
-
-                          {/* Specialties & Categories */}
-                          <div className="mb-4">
-                            <span className="text-[10px] font-bold tracking-widest text-surface-500 uppercase block mb-2">Specialties</span>
-                            <div className="flex flex-wrap gap-1.5">
-                              {advisor.specialties.map((s, i) => (
-                                <span key={i} className="px-3 py-1 bg-surface-50 text-slate-900 text-[10px] font-bold rounded-full uppercase tracking-wider border border-surface-200 shadow-2xs hover:bg-slate-900 hover:text-brand transition-all">
-                                  {s}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-
-                          {/* Languages */}
-                          <p className="text-xs text-surface-600 font-normal mb-2">
-                            <strong className="font-bold text-slate-900">Language:</strong> {advisor.lang}
-                          </p>
-                        </div>
-
-                      {/* Actions */}
-                      <div className="flex items-center gap-2.5 pt-4 border-t border-surface-100">
-                        <button
-                          onClick={() => { if (onBookTherapist) onBookTherapist(advisor.id); }}
-                          className="flex-1 py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-widest rounded-full border border-brand/30 transition-all cursor-pointer text-center shadow-xs"
-                        >
-                          Book Now
-                        </button>
-                        <button
-                          onClick={() => { window.spaNavigate?.(`/advisor/${advisor.id}`); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                          className="flex-1 py-3 bg-surface-100 hover:bg-surface-200 text-slate-900 font-bold text-xs uppercase tracking-widest rounded-full border border-surface-200 transition-all cursor-pointer text-center"
-                        >
-                          View Profile
-                        </button>
+                  {/* Features List */}
+                  <div className="space-y-2 mb-6 pt-4 border-t border-slate-100">
+                    {service.features.map((feat, idx) => (
+                      <div key={idx} className="flex items-center gap-2 text-xs font-medium text-slate-700">
+                        <CheckCircle2 className="w-4 h-4 text-[#00c9d6] shrink-0" />
+                        <span>{feat}</span>
                       </div>
-                    </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </div>
 
-              {/* Pagination Controls */}
-              {totalPages > 1 && (
-                <div className="flex items-center justify-center gap-2 pt-6">
-                  <button
-                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                    disabled={currentPage === 1}
-                    aria-label="Previous Page"
-                    className={`w-9 h-9 rounded-full text-sm font-bold transition-all cursor-pointer border flex items-center justify-center ${currentPage === 1
-                        ? 'border-surface-200 text-surface-400 bg-surface-100 cursor-not-allowed'
-                        : 'border-slate-900 bg-slate-900 text-white hover:bg-slate-800'
-                      }`}
-                  >
-                    <ChevronLeft className="w-4 h-4 text-brand" />
-                  </button>
-
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
-                    <button
-                      key={num}
-                      onClick={() => setCurrentPage(num)}
-                      className={`w-9 h-9 rounded-full text-xs font-bold transition-all cursor-pointer border flex items-center justify-center ${currentPage === num
-                          ? 'bg-slate-900 text-white border-brand shadow-xs'
-                          : 'bg-white text-slate-900 border-surface-200 hover:border-brand'
-                        }`}
-                    >
-                      {num}
-                    </button>
-                  ))}
+                {/* Bottom Bar: Price & CTA */}
+                <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-4">
+                  <span className="text-xs font-extrabold text-slate-900 uppercase tracking-wider">
+                    {service.price}
+                  </span>
 
                   <button
-                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                    disabled={currentPage === totalPages}
-                    aria-label="Next Page"
-                    className={`w-9 h-9 rounded-full text-sm font-bold transition-all cursor-pointer border flex items-center justify-center ${currentPage === totalPages
-                        ? 'border-surface-200 text-surface-400 bg-surface-100 cursor-not-allowed'
-                        : 'border-slate-900 bg-slate-900 text-white hover:bg-slate-800'
-                      }`}
+                    onClick={() => {
+                      if (service.id === 'aptitude') {
+                        window.spaNavigate?.('/aptitude-test');
+                      } else if (onBookTherapist) {
+                        onBookTherapist();
+                      } else {
+                        window.spaNavigate?.('/booking');
+                      }
+                    }}
+                    className="px-5 py-2.5 rounded-full bg-slate-900 hover:bg-[#00e5ff] hover:text-slate-950 text-white font-extrabold text-xs uppercase tracking-widest transition-all duration-300 cursor-pointer shadow-md flex items-center gap-1.5 active:scale-95 group/btn"
                   >
-                    <ChevronRight className="w-4 h-4 text-brand" />
+                    <span>{service.actionText}</span>
+                    <ArrowRight className="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform" />
                   </button>
                 </div>
-              )}
               </div>
-            )}
+            );
+          })}
+        </div>
+
+        {/* Bottom Banner Matrix: 4 Key Pillars */}
+        <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-10 border border-[#00e5ff]/30 shadow-2xl relative overflow-hidden">
+          <div className="absolute -right-20 -bottom-20 w-80 h-80 rounded-full bg-[#00e5ff]/10 blur-3xl pointer-events-none" />
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 relative z-10 divide-y md:divide-y-0 md:divide-x divide-slate-800">
+            <div className="pt-4 md:pt-0 md:pr-6 space-y-1">
+              <span className="text-3xl font-black text-[#00e5ff] font-sans">01.</span>
+              <h4 className="text-sm font-bold uppercase tracking-wider text-white">Dual Architecture</h4>
+              <p className="text-xs text-slate-400 font-normal leading-relaxed">Clinical psychologists & career strategists under one roof.</p>
+            </div>
+
+            <div className="pt-4 md:pt-0 md:px-6 space-y-1">
+              <span className="text-3xl font-black text-[#00e5ff] font-sans">100%</span>
+              <h4 className="text-sm font-bold uppercase tracking-wider text-white">Scientific Protocols</h4>
+              <p className="text-xs text-slate-400 font-normal leading-relaxed">CIGI assessment data & strictly private counseling.</p>
+            </div>
+
+            <div className="pt-4 md:pt-0 md:px-6 space-y-1">
+              <span className="text-3xl font-black text-[#00e5ff] font-sans">C-DAT</span>
+              <h4 className="text-sm font-bold uppercase tracking-wider text-white">Aptitude Evaluation</h4>
+              <p className="text-xs text-slate-400 font-normal leading-relaxed">Standardized cognitive testing for Grades 8–12.</p>
+            </div>
+
+            <div className="pt-4 md:pt-0 md:pl-6 space-y-2 flex flex-col justify-between">
+              <div>
+                <span className="text-xs font-bold uppercase tracking-widest text-[#00e5ff]">Ready to Begin?</span>
+                <h4 className="text-sm font-bold text-white">Book Your First Session</h4>
+              </div>
+              <button
+                onClick={() => { if (onBookTherapist) onBookTherapist(); }}
+                className="w-full py-2.5 rounded-full bg-[#00e5ff] hover:bg-[#00c9d6] text-slate-950 font-extrabold text-xs uppercase tracking-widest transition-all cursor-pointer shadow-md text-center"
+              >
+                Book Session Now
+              </button>
+            </div>
           </div>
-        )}
+        </div>
 
       </div>
     </section>

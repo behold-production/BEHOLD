@@ -2815,7 +2815,7 @@ export default function AdminDashboard({ setView }) {
         whatsapp: 'https://wa.me/919497174011',
         contactEmail: 'support@behold.com',
         siteName: 'BEHOLD',
-        siteCopyright: '© BEHOLD Ltd., 2026. All rights reserved.',
+        siteCopyright: 'BEHOLD Ltd.',
         contactPhone: '9207 07 51 51',
         openHours: 'Open Hours: Mon - Sat: 9:00 AM - 9:00 PM (Sun: 9:00 AM - 5:00 PM)',
         bannerNotice: '🚨 Maintenance Notice: Schedulers undergoing maintenance tonight between 12:00 AM - 02:00 AM IST.',

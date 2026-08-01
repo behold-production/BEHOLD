@@ -24,6 +24,7 @@
 
 .font-rough {
   font-family: 'Rough', 'Caveat', cursive, sans-serif !important;
+  word-spacing: -0.2em;
 }
 
 .font-serif-hero {
@@ -32,6 +33,7 @@
 
 .font-script-hero {
   font-family: 'Rough', 'Caveat', 'Dancing Script', 'Satisfy', cursive !important;
+  word-spacing: -0.2em;
 }
 
 @theme {
@@ -862,17 +864,20 @@ textarea:focus {
 
 /* ─── Shimmer Loading Skeleton ─── */
 @keyframes shimmer {
-  0%   { background-position: -600px 0; }
-  100% { background-position: 600px 0; }
+  0% {
+    background-position: -600px 0;
+  }
+
+  100% {
+    background-position: 600px 0;
+  }
 }
 
 .shimmer {
-  background: linear-gradient(
-    90deg,
-    #e8eff5 0%,
-    #f4f8fb 40%,
-    #e8eff5 80%
-  );
+  background: linear-gradient(90deg,
+      #e8eff5 0%,
+      #f4f8fb 40%,
+      #e8eff5 80%);
   background-size: 600px 100%;
   animation: shimmer 1.4s ease-in-out infinite;
   border-radius: 8px;

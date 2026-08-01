@@ -53,7 +53,7 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
 
             {/* Accent Line 2 - Custom Rough Font (Maximized for Mobile <768px) */}
             <div className="relative inline-block mt-3 sm:mt-6">
-              <span className="font-rough text-[#00c9d6] text-[108px] xs:text-[116px] sm:text-[130px] md:text-[140px] lg:text-[155px] font-normal tracking-wide block leading-[0.95] drop-shadow-sm select-none animate-hero-pulse">
+              <span className="font-rough text-[#00c9d6] text-[108px] xs:text-[116px] sm:text-[130px] md:text-[140px] lg:text-[155px] font-normal tracking-tight [word-spacing:-0.3em] block leading-[0.95] drop-shadow-sm select-none animate-hero-pulse">
                 {displayTitle.toLowerCase()}
               </span>
 

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Search, Clock, ArrowRight, BookOpen, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
 import ApiService from '../../shared/services/api';
 import { DEFAULT_BLOGS_DATA } from './defaultBlogsData';
-import greenTexture from '../../assets/clarity_bg.png';
+import greenTexture from '../../assets/greygreen.png';
 
 const CATEGORIES = [
   'All',
@@ -15,8 +15,17 @@ const CATEGORIES = [
 
 const BlogList = () => {
   const navigate = useNavigate();
-  const [blogs, setBlogs] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [blogs, setBlogs] = useState(() => {
+    try {
+      const cached = localStorage.getItem('behold_blogs_cache');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) { }
+    return [];
+  });
+  const [loading, setLoading] = useState(() => blogs.length === 0);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -27,7 +36,7 @@ const BlogList = () => {
   }, [selectedCategory, searchQuery]);
 
   const fetchBlogs = async () => {
-    setLoading(true);
+    if (blogs.length === 0) setLoading(true);
     try {
       const params = {};
       if (selectedCategory && selectedCategory !== 'All') {
@@ -37,8 +46,11 @@ const BlogList = () => {
         params.search = searchQuery.trim();
       }
       const res = await ApiService.getBlogs(params);
-      if (res?.data && Array.isArray(res.data)) {
+      if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
         setBlogs(res.data);
+        if (selectedCategory === 'All' && !searchQuery.trim()) {
+          localStorage.setItem('behold_blogs_cache', JSON.stringify(res.data));
+        }
       } else {
         setBlogs([]);
       }
@@ -130,8 +142,23 @@ const BlogList = () => {
       {/* Main Blog Grid */}
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full relative z-10">
         {loading ? (
-          <div className="flex justify-center items-center py-24">
-            <div className="w-8 h-8 border-2 border-[#0f172a] border-t-[#00e5ff] rounded-full animate-spin"></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i} className="bg-white border border-surface-200 rounded-xl overflow-hidden shadow-xs flex flex-col h-96">
+                <div className="shimmer h-56 w-full shrink-0" />
+                <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
+                  <div className="space-y-2">
+                    <div className="shimmer h-4 w-3/4 rounded-md" />
+                    <div className="shimmer h-3 w-full rounded-md" />
+                    <div className="shimmer h-3 w-5/6 rounded-md" />
+                  </div>
+                  <div className="pt-4 border-t border-surface-100 flex items-center justify-between">
+                    <div className="shimmer h-3 w-20 rounded-md" />
+                    <div className="shimmer h-3 w-24 rounded-md" />
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         ) : blogs.length === 0 ? (
           <div className="text-center py-20 bg-white rounded-xl border border-surface-200 shadow-xs max-w-2xl mx-auto p-8">

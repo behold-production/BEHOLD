@@ -16,8 +16,8 @@ import AuthModals from './features/auth/AuthModals';
 import TherapistSwipeSection from './features/landing/TherapistSwipeSection';
 import FaqBlogSection from './features/landing/FaqBlogSection';
 import ContactInquirySection from './features/landing/ContactInquirySection';
-import globalBg from './assets/hero_watercolor_bg.png';
-import bShadeGreenBg from './assets/b.shade green.png';
+import globalBg from './assets/greygreen.png';
+import globalBgTexture from './assets/greygreen.png';
 
 function lazyWithRetry(importFn) {
   return lazy(() =>
@@ -226,7 +226,7 @@ export default function App() {
   const [siteSettings, setSiteSettings] = useState(() => {
     const defaultSettings = {
       siteName: 'BEHOLD',
-      siteCopyright: '© BEHOLD Ltd., 2026. All rights reserved.',
+      siteCopyright: 'BEHOLD Ltd.',
       showBanner: false,
       bannerNotice: '',
       termsOfUse: '',
@@ -347,11 +347,29 @@ export default function App() {
 
     if (user) {
       const userRole = user?.role?.toUpperCase();
-      // Block regular USER accounts from attempting to access admin/counsellor portals
+
+      // STRICT ADMIN LOCK: Admin users must stay inside /admin portal
+      if (userRole === 'ADMIN' || userRole === 'SUPER_ADMIN' || userRole === 'SUB_ADMIN') {
+        if (!path.startsWith('/admin')) {
+          navigate('/admin', { replace: true });
+          return;
+        }
+      }
+
+      // STRICT COUNSELLOR LOCK: Counsellor users must stay inside /counsellor portal
+      if (userRole === 'PSYCHOLOGIST' || userRole === 'COUNSELLOR') {
+        if (path !== '/counsellor' && path !== '/conceller' && path !== '/cousellor') {
+          navigate('/counsellor', { replace: true });
+          return;
+        }
+      }
+
+      // STRICT USER LOCK: Regular student/user accounts cannot access admin/counsellor portals
       if (userRole === 'USER') {
         if (path === '/counsellor' || path === '/conceller' || path === '/cousellor' || path.startsWith('/admin')) {
           toast.error('Access Denied: You do not have permission to access this portal.', { id: 'user-access-denied' });
           navigate('/profile', { replace: true });
+          return;
         }
       }
     } else {
@@ -516,8 +534,18 @@ export default function App() {
   // Show blank screen while auth is resolving to avoid flash
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-zinc-955 flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-brand border-t-transparent rounded-full animate-spin" />
+      <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white/70 backdrop-blur-md transition-all duration-300">
+        <div className="flex flex-col items-center gap-4">
+          <div className="relative flex items-center justify-center">
+            <div className="w-14 h-14 rounded-full border-3 border-[#00e5ff]/20 border-t-[#00e5ff] animate-spin shadow-[0_0_15px_rgba(0,229,255,0.4)]" />
+            <span className="absolute font-sans font-black text-xs text-slate-900 tracking-widest uppercase">
+              B<span className="text-[#00e5ff]">.</span>
+            </span>
+          </div>
+          <span className="text-xs font-bold uppercase tracking-widest text-slate-600 animate-pulse">
+            Loading...
+          </span>
+        </div>
       </div>
     );
   }
@@ -587,29 +615,29 @@ export default function App() {
         </div>
       )}
 
-      {/* Global Fixed Background Image Layer (b.shade green.png) for all sections except Hero */}
+      {/* Global Fixed Background Image Layer for all sections */}
       {!hideNavbarAndFooter && (
-        <div 
+        <div
           className="fixed inset-0 z-[-1] pointer-events-none overflow-hidden select-none"
         >
-          <div 
-            className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat pointer-events-none"
+          <div
+            className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat pointer-events-none opacity-50"
             style={{
-              backgroundImage: `url(${bShadeGreenBg})`,
+              backgroundImage: `url(${globalBgTexture})`,
             }}
           />
           {/* Subtle Ambient Light Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#d4f8fc]/5 to-[#d4f8fc]/15 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#d4f8fc]/5 to-transparent pointer-events-none" />
         </div>
       )}
 
       <AuthModals isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
 
-      <ServiceBooking 
-        isOpen={isBookingModalOpen} 
-        onClose={() => setIsBookingModalOpen(false)} 
-        preselectedAdvisorId={bookingAdvisor} 
-        clearPreselectedAdvisor={() => setBookingAdvisor(null)} 
+      <ServiceBooking
+        isOpen={isBookingModalOpen}
+        onClose={() => setIsBookingModalOpen(false)}
+        preselectedAdvisorId={bookingAdvisor}
+        clearPreselectedAdvisor={() => setBookingAdvisor(null)}
       />
 
       {/* Navbar — hidden on admin/counsellor dashboards */}
@@ -626,8 +654,18 @@ export default function App() {
 
 
       <Suspense fallback={
-        <div className="min-h-screen bg-zinc-955 flex items-center justify-center">
-          <div className="w-8 h-8 border-2 border-brand border-t-transparent rounded-full animate-spin" />
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white/70 backdrop-blur-md transition-all duration-300">
+          <div className="flex flex-col items-center gap-4">
+            <div className="relative flex items-center justify-center">
+              <div className="w-14 h-14 rounded-full border-3 border-[#00e5ff]/20 border-t-[#00e5ff] animate-spin shadow-[0_0_15px_rgba(0,229,255,0.4)]" />
+              <span className="absolute font-sans font-black text-xs text-slate-900 tracking-widest uppercase">
+                B<span className="text-[#00e5ff]">.</span>
+              </span>
+            </div>
+            <span className="text-xs font-bold uppercase tracking-widest text-slate-600 animate-pulse">
+              Loading...
+            </span>
+          </div>
         </div>
       }>
         <Routes>

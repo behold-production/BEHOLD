@@ -1,5 +1,5 @@
 import React from 'react';
-import greenTexture from '../../../../assets/clarity_bg.png';
+import greenTexture from '../../../../assets/greygreen.png';
 
 export default function AptitudeLanding({ setView }) {
   const handleProceed = () => {

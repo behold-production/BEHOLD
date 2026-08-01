@@ -1,6 +1,6 @@
 import React from 'react';
 import luxuryClinicRoom from '../../assets/luxury_clinic_room.png';
-import greenTexture from '../../assets/clarity_bg.png';
+import greenTexture from '../../assets/greygreen.png';
 
 export default function WhyChooseUs({ siteSettings, onOpenBooking }) {
   const handleBook = () => {
@@ -12,7 +12,7 @@ export default function WhyChooseUs({ siteSettings, onOpenBooking }) {
   return (
     <section id="why-choose-us" className="py-20 sm:py-28 text-surface-900 bg-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Editorial Split Matrix Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
 
@@ -68,7 +68,7 @@ export default function WhyChooseUs({ siteSettings, onOpenBooking }) {
 
           {/* Right Column: 2x2 Feature Grid Matrix */}
           <div className="lg:col-span-6 grid grid-cols-2 gap-4 sm:gap-6 pt-6 lg:pt-0">
-            
+
             {/* Cell 1: Dual Support */}
             <div className="p-5 sm:p-7 rounded-xl bg-white border border-surface-200 hover:border-[#00e5ff] transition-all shadow-xs flex flex-col justify-between h-52 sm:h-60 space-y-3 group">
               <div>
