@@ -13,6 +13,21 @@ export default defineConfig({
     host: true, // Expose to LAN so other devices can connect
     port: 5173,
   },
+  build: {
+    chunkSizeWarningLimit: 1600,
+    rolldownOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('jspdf') || id.includes('html2canvas')) {
+            return 'vendor-pdf';
+          }
+          if (id.includes('lucide-react')) {
+            return 'vendor-icons';
+          }
+        }
+      }
+    }
+  },
   test: {
     globals: true,
     environment: 'jsdom',
