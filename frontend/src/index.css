@@ -24,7 +24,7 @@
 
 .font-rough {
   font-family: 'Rough', 'Caveat', cursive, sans-serif !important;
-  word-spacing: -0.2em;
+  word-spacing: 0.25em;
 }
 
 .font-serif-hero {
@@ -33,7 +33,7 @@
 
 .font-script-hero {
   font-family: 'Rough', 'Caveat', 'Dancing Script', 'Satisfy', cursive !important;
-  word-spacing: -0.2em;
+  word-spacing: 0.25em;
 }
 
 @theme {
