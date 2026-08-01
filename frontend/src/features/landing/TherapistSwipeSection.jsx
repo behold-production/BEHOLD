@@ -10,59 +10,6 @@ const getInitial = (name) => {
   return cleanName.charAt(0).toUpperCase() || 'P';
 };
 
-const defaultPsychologists = [
-  {
-    id: '1',
-    name: 'Amal',
-    designation: 'CONSULTANT PSYCHOLOGIST',
-    title: 'Psychologist',
-    fee: '500',
-    photo: null,
-    specialties: ['ANXIETY STRESS & PANIC', 'DEPRESSION & MOOD CONCERNS', 'RELATIONSHIP'],
-    languages: 'Malayalam, English'
-  },
-  {
-    id: '2',
-    name: 'Dr. Ananya Sharma',
-    designation: 'SENIOR CLINICAL PSYCHOLOGIST',
-    title: 'Clinical Psychologist',
-    fee: '500',
-    photo: null,
-    specialties: ['ACADEMIC STRESS & BURNOUT', 'C-DAT CAREER GUIDANCE', 'STUDENT MENTORING'],
-    languages: 'English, Malayalam, Hindi'
-  },
-  {
-    id: '3',
-    name: 'Rahil V. Nambiar',
-    designation: 'CAREER & PSYCHOMETRIC SPECIALIST',
-    title: 'Career Guidance Mentor',
-    fee: '400',
-    photo: null,
-    specialties: ['APTITUDE EVALUATION', 'STREAM SELECTION', 'GOAL SETTING'],
-    languages: 'Malayalam, English'
-  },
-  {
-    id: '4',
-    name: 'Sneha K. Roy',
-    designation: 'CHILD & ADOLESCENT PSYCHOLOGIST',
-    title: 'Child Psychologist',
-    fee: '450',
-    photo: null,
-    specialties: ['EMOTIONAL HEALING', 'PARENT COUNSELING', 'ACADEMIC FOCUS'],
-    languages: 'English, Malayalam'
-  },
-  {
-    id: '5',
-    name: 'Dr. Vikram Patel',
-    designation: 'CLINICAL PSYCHIATRIST',
-    title: 'Mental Health Expert',
-    fee: '600',
-    photo: null,
-    specialties: ['MOOD DISORDERS', 'TRAUMA RECOVERY', 'CBT THERAPY'],
-    languages: 'English, Hindi'
-  }
-];
-
 export default function TherapistSwipeSection({ onBookTherapist, navigateToSection }) {
   const [advisors, setAdvisors] = useState(() => {
     try {
@@ -72,9 +19,9 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
         if (Array.isArray(parsed) && parsed.length > 0) return parsed;
       }
     } catch (e) { }
-    return defaultPsychologists;
+    return [];
   });
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(() => advisors.length === 0);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   // Search & Category Filter State
@@ -108,14 +55,13 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
           });
           setAdvisors(formatted);
           localStorage.setItem('behold_counsellors_cache', JSON.stringify(formatted));
-        } else if (advisors.length === 0) {
-          setAdvisors(defaultPsychologists);
+        } else {
+          setAdvisors([]);
+          localStorage.removeItem('behold_counsellors_cache');
         }
       } catch (err) {
-        console.warn('Using default psychologist profiles:', err);
-        if (advisors.length === 0) {
-          setAdvisors(defaultPsychologists);
-        }
+        console.warn('Failed to load counsellors:', err);
+        setAdvisors([]);
       } finally {
         setLoading(false);
       }
@@ -440,6 +386,22 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
                 </div>
               ))}
             </div>
+          </div>
+        ) : displayAdvisors.length === 0 ? (
+          <div className="w-full max-w-xl mx-auto bg-white/90 backdrop-blur-md rounded-3xl border border-dashed border-slate-300 p-8 sm:p-12 text-center shadow-sm my-6">
+            <div className="w-16 h-16 bg-[#0f172a] rounded-full flex items-center justify-center mx-auto mb-4 border border-[#00e5ff]/40 shadow-xs">
+              <span className="text-[#00e5ff] text-2xl font-bold">🎓</span>
+            </div>
+            <h3 className="text-xl font-bold text-slate-900 mb-2 uppercase tracking-wide">No Counsellors Currently Listed</h3>
+            <p className="text-sm text-slate-600 max-w-sm mx-auto leading-relaxed mb-6 font-normal">
+              Our team of certified psychologists and career mentors is being onboarded. Please check back shortly or connect directly with our support desk.
+            </p>
+            <button
+              onClick={handleConnectClick}
+              className="px-8 py-3 bg-[#0f172a] hover:bg-[#1e293b] text-white font-bold text-xs tracking-widest uppercase rounded-full transition shadow-md border border-[#00e5ff]/30 cursor-pointer"
+            >
+              Contact Support Desk
+            </button>
           </div>
         ) : (
           <>
