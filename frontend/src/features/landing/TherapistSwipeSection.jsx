@@ -35,38 +35,52 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
   const navigate = useNavigate();
 
   useEffect(() => {
+    let isMounted = true;
+    const timer = setTimeout(() => {
+      if (isMounted) setLoading(false);
+    }, 3000);
+
     const fetchAdvisors = async () => {
       try {
         const res = await ApiService.getCounsellors();
-        if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
-          const formatted = res.data.map((c) => {
-            const rawPhoto = c.photo || c.avatar || c.profilePicture || c.image;
-            const hasValidPhoto = rawPhoto && typeof rawPhoto === 'string' && !rawPhoto.includes('unsplash.com') && !rawPhoto.includes('via.placeholder') && !rawPhoto.includes('lorempicsum');
-            return {
-              id: c.id || c._id,
-              name: c.name || c.user?.name || c.fullName || 'Psychologist',
-              designation: c.designation || c.role || 'CONSULTANT PSYCHOLOGIST',
-              title: c.title || c.qualification || 'Psychologist',
-              fee: c.fee || c.price || c.consultationFee || '500',
-              photo: hasValidPhoto ? rawPhoto : null,
-              specialties: Array.isArray(c.specialties) ? c.specialties : (c.tags ? (Array.isArray(c.tags) ? c.tags : [c.tags]) : ['ANXIETY STRESS & PANIC', 'CAREER GUIDANCE']),
-              languages: Array.isArray(c.languages) ? c.languages.join(', ') : (c.languages || c.language || 'Malayalam, English')
-            };
-          });
-          setAdvisors(formatted);
-          localStorage.setItem('behold_counsellors_cache', JSON.stringify(formatted));
-        } else {
-          setAdvisors([]);
-          localStorage.removeItem('behold_counsellors_cache');
+        if (isMounted) {
+          if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
+            const formatted = res.data.map((c) => {
+              const rawPhoto = c.photo || c.avatar || c.profilePicture || c.image;
+              const hasValidPhoto = rawPhoto && typeof rawPhoto === 'string' && !rawPhoto.includes('unsplash.com') && !rawPhoto.includes('via.placeholder') && !rawPhoto.includes('lorempicsum');
+              return {
+                id: c.id || c._id,
+                name: c.name || c.user?.name || c.fullName || 'Psychologist',
+                designation: c.designation || c.role || 'CONSULTANT PSYCHOLOGIST',
+                title: c.title || c.qualification || 'Psychologist',
+                fee: c.fee || c.price || c.consultationFee || '500',
+                photo: hasValidPhoto ? rawPhoto : null,
+                specialties: Array.isArray(c.specialties) ? c.specialties : (c.tags ? (Array.isArray(c.tags) ? c.tags : [c.tags]) : ['ANXIETY STRESS & PANIC', 'CAREER GUIDANCE']),
+                languages: Array.isArray(c.languages) ? c.languages.join(', ') : (c.languages || c.language || 'Malayalam, English')
+              };
+            });
+            setAdvisors(formatted);
+            localStorage.setItem('behold_counsellors_cache', JSON.stringify(formatted));
+          } else {
+            setAdvisors([]);
+            localStorage.removeItem('behold_counsellors_cache');
+          }
         }
       } catch (err) {
         console.warn('Failed to load counsellors:', err);
-        setAdvisors([]);
+        if (isMounted) setAdvisors([]);
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          clearTimeout(timer);
+          setLoading(false);
+        }
       }
     };
     fetchAdvisors();
+    return () => {
+      isMounted = false;
+      clearTimeout(timer);
+    };
   }, []);
 
   // Filtered & Sorted Advisors

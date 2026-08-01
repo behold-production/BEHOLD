@@ -52,20 +52,6 @@ export default function FaqsPage() {
       {/* Header */}
       <section className="relative py-12 sm:py-16 border-b border-slate-200 bg-transparent">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <button
-            type="button"
-            onClick={() => navigate('/')}
-            className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-wider text-[#00A8FF] hover:text-slate-900 mb-6 transition-colors cursor-pointer bg-transparent border-none p-0"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Back to Home</span>
-          </button>
-
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00E5FF]/15 border border-[#00E5FF]/40 text-[#00A8FF] text-xs font-black tracking-widest uppercase mb-4 shadow-xs">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>CLARITY DESK & KNOWLEDGE BASE</span>
-          </div>
-
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black font-header tracking-tight text-slate-900 leading-tight">
             Frequently Asked <span className="text-[#00A8FF]">Questions</span>
           </h1>
