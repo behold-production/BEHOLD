@@ -32,7 +32,11 @@ const modelMap = {
 };
 
 function getModel(table) {
-  const model = modelMap[table];
+  if (!table || typeof table !== 'string') {
+    throw new Error(`Invalid database table name provided: ${table}`);
+  }
+  const key = table.toLowerCase().replace(/[^a-z]/g, '');
+  const model = modelMap[key];
   if (!model) {
     throw new Error(`Unknown database table/model: ${table}`);
   }
