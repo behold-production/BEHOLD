@@ -46,11 +46,19 @@ async function executeRequest(endpoint, options = {}) {
     if (response.ok) {
       data = { success: true, data: text };
     } else {
+      let fallbackMsg = 'Server error occurred. Please try again.';
+      if (response.status === 404) {
+        fallbackMsg = `Resource non-existent or endpoint not found (${endpoint}).`;
+      } else if (response.status === 500) {
+        fallbackMsg = 'Server internal error. Please check server logs and environment configuration.';
+      } else if (response.status === 502 || response.status === 504) {
+        fallbackMsg = 'Server gateway timeout or unavailable. Please try again later.';
+      } else if (response.status === 503) {
+        fallbackMsg = 'Database connection unavailable. Please verify database connection.';
+      }
       data = {
         success: false,
-        message: response.status === 404
-          ? `Resource non-existent or endpoint not found (${endpoint}).`
-          : (response.statusText || 'Server error occurred. Please try again.')
+        message: fallbackMsg
       };
     }
   }
