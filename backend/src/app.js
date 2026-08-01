@@ -149,6 +149,8 @@ app.get('/api/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/counsellors', counsellorRoutes);
+app.use('/api/users/counsellors', counsellorRoutes);
+app.use('/counsellors', counsellorRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/appointments', appointmentRoutes);
 app.use('/api/sessions', sessionRoutes);
