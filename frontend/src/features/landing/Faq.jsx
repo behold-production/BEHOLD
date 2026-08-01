@@ -3,31 +3,6 @@ import { ChevronDown } from 'lucide-react';
 import ApiService from '../../shared/services/api';
 import greenTexture from '../../assets/greygreen.png';
 
-const cdatFaq = {
-  question: 'What is the C-DAT aptitude assessment?',
-  answer: "The C-DAT (Career Domain Aptitude Test) is a scientifically designed evaluation that identifies a student's natural aptitude domains — helping match them with the most suitable university programs and career paths aligned to their innate strengths.",
-};
-
-const defaultFaqs = [
-  cdatFaq,
-  {
-    question: 'Who can book a counseling session with Behold?',
-    answer: 'Behold serves students from Class 8 onwards, parents, and young professionals seeking career clarity. Our sessions are available in-person (Kerala), doorstep visits, and online via video call — making expert guidance accessible everywhere.',
-  },
-  {
-    question: 'How does doorstep counseling work?',
-    answer: 'Our trained counselors visit your home at a scheduled time. This ensures maximum comfort and emotional privacy for the student, especially important for sensitive topics like academic pressure, stream selection, and personal goal setting.',
-  },
-  {
-    question: 'What documents or preparation is needed before a session?',
-    answer: 'No special preparation is required. We recommend having recent academic records available. Our counselors will guide you through every step during your first session.',
-  },
-  {
-    question: 'Do you provide support after the initial session?',
-    answer: 'Absolutely. Our extended mentorship model includes follow-up reviews, goal tracking, and parent guidance sessions to ensure students stay on course and achieve their long-term academic and career milestones.',
-  },
-];
-
 export default function Faq({ siteSettings }) {
   const settings = siteSettings || JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
   const enableAptitude = settings.enableAptitude !== false;
@@ -37,7 +12,7 @@ export default function Faq({ siteSettings }) {
       const cached = localStorage.getItem('behold_faqs_cache');
       if (cached) {
         const parsed = JSON.parse(cached);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed)) return parsed;
       }
     } catch (e) { }
     return [];
@@ -51,30 +26,32 @@ export default function Faq({ siteSettings }) {
         if (res.success && Array.isArray(res.data) && res.data.length > 0) {
           setFaqs(res.data);
           localStorage.setItem('behold_faqs_cache', JSON.stringify(res.data));
+        } else {
+          setFaqs([]);
         }
       })
-      .catch((err) => console.error('Failed to load FAQs', err))
+      .catch((err) => {
+        console.error('Failed to load FAQs', err);
+        setFaqs([]);
+      })
       .finally(() => setLoading(false));
 
     const handler = async () => {
       const res = await ApiService.getFaqs().catch(() => ({}));
-      if (res.success && res.data) {
+      if (res.success && Array.isArray(res.data)) {
         setFaqs(res.data);
-        localStorage.setItem('behold_faqs_cache', JSON.stringify(res.data));
+        if (res.data.length > 0) {
+          localStorage.setItem('behold_faqs_cache', JSON.stringify(res.data));
+        }
       }
     };
     window.addEventListener('behold_faqs_updated', handler);
     return () => window.removeEventListener('behold_faqs_updated', handler);
   }, []);
 
-  // When aptitude is disabled, filter out the C-DAT FAQ from defaults
-  const filteredDefaultFaqs = enableAptitude
-    ? defaultFaqs
-    : defaultFaqs.filter(f => f !== cdatFaq);
-
-  const displayFaqs = faqs.length > 0
-    ? (enableAptitude ? faqs : faqs.filter(f => !f.question?.toLowerCase().includes('c-dat') && !f.question?.toLowerCase().includes('aptitude')))
-    : filteredDefaultFaqs;
+  const displayFaqs = enableAptitude
+    ? faqs
+    : faqs.filter(f => !f.question?.toLowerCase().includes('c-dat') && !f.question?.toLowerCase().includes('aptitude'));
 
   return (
     <section id="faqs" className="py-20 sm:py-28 bg-transparent text-surface-900">
@@ -83,7 +60,6 @@ export default function Faq({ siteSettings }) {
         {/* Header */}
         <div className="text-center mb-14">
           <span className="text-xs font-bold tracking-widest uppercase text-[#00e5ff] flex items-center justify-center gap-1.5 mb-2">
-
             {settings.faqSectionSub || 'FREQUENTLY ASKED QUESTIONS'}
           </span>
           <h2 id="faq-title" className="text-3xl sm:text-5xl font-sans font-bold uppercase text-[#0f172a] mb-3 tracking-tight leading-none">

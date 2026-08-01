@@ -2,31 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowUpRight, ChevronDown, HelpCircle, FileText } from 'lucide-react';
 import ApiService from '../../shared/services/api';
-import { DEFAULT_BLOGS_DATA } from '../blog/defaultBlogsData';
-import greyGreenBg from '../../assets/greygreen.png';
-
-const beholdDefaultFaqs = [
-  {
-    author: 'Sarina Gwan',
-    question: 'What is the C-DAT aptitude assessment?',
-    answer: "The C-DAT (Career Domain Aptitude Test) is a scientific evaluation that identifies a student's natural aptitude domains — helping match them with ideal university programs and career paths."
-  },
-  {
-    author: 'Dominico Pascal',
-    question: 'Who can book a counseling session with Behold?',
-    answer: 'Behold serves students from Class 8 onwards, parents, and young professionals seeking career clarity. Sessions are available in-person (Kerala), doorstep visits, and online video calls.'
-  },
-  {
-    author: 'Katrianne Schulz',
-    question: 'How does doorstep counseling work?',
-    answer: 'Our trained counselors visit your home at a scheduled time, ensuring maximum comfort and emotional privacy for sensitive topics like academic pressure and stream selection.'
-  }
-];
 
 export default function FaqBlogSection() {
   const navigate = useNavigate();
-  const [faqs, setFaqs] = useState(beholdDefaultFaqs);
-  const [blogs, setBlogs] = useState(DEFAULT_BLOGS_DATA.slice(0, 2));
+  const [faqs, setFaqs] = useState([]);
+  const [blogs, setBlogs] = useState([]);
   const [expandedIndex, setExpandedIndex] = useState(null);
   const [loadingFaqs, setLoadingFaqs] = useState(true);
   const [loadingBlogs, setLoadingBlogs] = useState(true);
@@ -37,9 +17,14 @@ export default function FaqBlogSection() {
       .then((res) => {
         if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
           setFaqs(res.data.slice(0, 3));
+        } else {
+          setFaqs([]);
         }
       })
-      .catch((err) => console.warn('Failed to load FAQs:', err))
+      .catch((err) => {
+        console.warn('Failed to load FAQs:', err);
+        setFaqs([]);
+      })
       .finally(() => setLoadingFaqs(false));
 
     // Fetch Blogs from API
@@ -47,9 +32,14 @@ export default function FaqBlogSection() {
       .then((res) => {
         if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
           setBlogs(res.data.slice(0, 2));
+        } else {
+          setBlogs([]);
         }
       })
-      .catch((err) => console.warn('Failed to load Blogs:', err))
+      .catch((err) => {
+        console.warn('Failed to load Blogs:', err);
+        setBlogs([]);
+      })
       .finally(() => setLoadingBlogs(false));
   }, []);
 
