@@ -162,8 +162,8 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
                       key={label}
                       onClick={action}
                       className={`text-xs font-bold uppercase tracking-widest transition-colors bg-transparent cursor-pointer p-0 border-b-2 pb-1 ${isActive
-                        ? 'text-[brand] border-[brand]'
-                        : 'text-slate-700 border-transparent hover:text-[brand]'
+                        ? 'text-[#00c9d6] border-[#00c9d6]'
+                        : 'text-slate-700 border-transparent hover:text-[#00c9d6]'
                         }`}
                     >
                       {label}
@@ -176,7 +176,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
               <div className="hidden lg:flex items-center gap-3">
                 <button
                   onClick={() => { onOpenBooking(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                  className="px-5 py-2.5 font-bold text-xs uppercase tracking-widest rounded-full transition-all shadow-xs cursor-pointer border bg-[brand] hover:bg-[brand-dark] text-[slate-900] border-transparent"
+                  className="px-5 py-2.5 font-bold text-xs uppercase tracking-widest rounded-full transition-all shadow-sm cursor-pointer border bg-[#00c9d6] hover:bg-[#00b2be] text-slate-950 border-transparent"
                 >
                   Book Session
                 </button>
@@ -186,18 +186,18 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
                     onClick={handleProfileClick}
                     title={user.name || 'Dashboard'}
                     aria-label="User Profile"
-                    className="w-10 h-10 rounded-full flex items-center justify-center transition-all cursor-pointer border shrink-0 overflow-hidden shadow-sm bg-slate-100 hover:bg-slate-200 text-[slate-900] border-slate-200"
+                    className="w-10 h-10 rounded-full flex items-center justify-center transition-all cursor-pointer border shrink-0 overflow-hidden shadow-sm bg-slate-100 hover:bg-slate-200 text-slate-900 border-slate-200"
                   >
                     {user.profilePic ? (
                       <img src={user.profilePic} alt={user.name} className="w-full h-full object-cover" />
                     ) : (
-                      <span className="text-sm font-black text-[brand] uppercase">{(user.name || user.email || 'U').charAt(0)}</span>
+                      <span className="text-sm font-black text-[#00c9d6] uppercase">{(user.name || user.email || 'U').charAt(0)}</span>
                     )}
                   </button>
                 ) : (
                   <button
                     onClick={() => onOpenAuth?.()}
-                    className="px-5 py-2.5 font-bold text-xs uppercase tracking-widest rounded-full transition-all cursor-pointer border bg-slate-100 hover:bg-slate-200 text-[slate-900] border-slate-200"
+                    className="px-5 py-2.5 font-bold text-xs uppercase tracking-widest rounded-full transition-all cursor-pointer border bg-slate-100 hover:bg-slate-200 text-slate-900 border-slate-200"
                   >
                     Sign In
                   </button>
