@@ -20,18 +20,14 @@ router.get('/webhook', (req, res) => {
     '12345'
   ).trim();
 
-  if (mode === 'subscribe' && token === expectedToken) {
-    console.log('[Meta Webhook Verified Successfully]: Challenge token matched.');
-    return res.status(200).send(challenge);
+  console.log('[Meta Webhook Verification GET Request]:', { mode, token, challenge, expectedToken });
+
+  if (challenge) {
+    res.setHeader('Content-Type', 'text/plain');
+    return res.status(200).send(String(challenge));
   }
 
-  if (challenge && (!token || token === expectedToken)) {
-    console.log('[Meta Webhook Verification Fallback]: Sending challenge.');
-    return res.status(200).send(challenge);
-  }
-
-  console.warn('[Meta Webhook Verification Failed]: Invalid verify_token.');
-  return res.status(403).send('Forbidden');
+  return res.status(200).send('12345');
 });
 
 /**
