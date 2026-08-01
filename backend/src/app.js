@@ -146,8 +146,10 @@ app.get('/api/health', (req, res) => {
 });
 
 // ─── Routes ───────────────────────────────────────────────────────────────
+const UserController = require('./controllers/userController');
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+app.get('/api/counsellors', UserController.getCounsellors);
 app.use('/api/counsellors', counsellorRoutes);
 app.use('/api/users/counsellors', counsellorRoutes);
 app.use('/counsellors', counsellorRoutes);
