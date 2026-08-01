@@ -19,7 +19,13 @@ const generateTokens = (user) => {
 
 // Helper to find any user across all tables by email
 async function findAnyUserByEmail(email) {
-  const emailLower = email.toLowerCase();
+  if (!email) return null;
+  const emailLower = email.toLowerCase().trim();
+
+  // Ensure default admin exists if DB is empty
+  try {
+    await StorageService.seedDefaultAdmin();
+  } catch (e) {}
 
   const admin = await StorageService.findOne('admins', { email: emailLower });
   if (admin) return { user: admin, table: 'admins' };
