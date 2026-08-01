@@ -87,7 +87,11 @@ async function executeRequest(endpoint, options = {}) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ refreshToken })
           });
-          const refreshResult = await refreshResponse.json();
+          let refreshResult = {};
+          try {
+            const refreshText = await refreshResponse.text();
+            refreshResult = refreshText ? JSON.parse(refreshText) : {};
+          } catch (e) {}
           if (refreshResult.success && refreshResult.data && refreshResult.data.accessToken) {
             localStorage.setItem('behold_token', refreshResult.data.accessToken);
             if (refreshResult.data.refreshToken) {
