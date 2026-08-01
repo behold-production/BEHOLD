@@ -27,33 +27,10 @@ const PublicController = {
     }
   },
 
-  // Get FAQs (seeds default ones if empty)
+  // Get FAQs
   async getFaqs(req, res, next) {
     try {
-      let faqs = await StorageService.findAll('faqs');
-      if (faqs.length === 0) {
-        const defaultFaqs = [
-          {
-            question: 'What is C-DAT and who should take it?',
-            answer:
-              'C-DAT (Cognitive Domain Aptitude Test) is an assessment designed for students between grades 8-12 to align their cognitive strengths with specific stream preferences.'
-          },
-          {
-            question: 'How can I book an appointment with a counsellor?',
-            answer:
-              'Sign in to your student dashboard, navigate to services, choose your preferred counsellor and schedule from their available slots.'
-          },
-          {
-            question: 'Can I cancel a scheduled appointment?',
-            answer:
-              'Yes, you can cancel appointments up to 2 hours before the scheduled session directly from your student profile drawer.'
-          }
-        ];
-        for (const item of defaultFaqs) {
-          await StorageService.create('faqs', item);
-        }
-        faqs = await StorageService.findAll('faqs');
-      }
+      const faqs = await StorageService.findAll('faqs');
       res.status(200).json({
         success: true,
         data: faqs
