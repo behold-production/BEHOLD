@@ -3,6 +3,8 @@ const StorageService = require('../services/storageService');
 
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/behold_aspire';
 
+mongoose.set('bufferCommands', false);
+
 let isConnected = false;
 let dbPromise = null;
 
