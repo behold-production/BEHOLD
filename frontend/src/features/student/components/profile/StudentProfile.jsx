@@ -1,9 +1,10 @@
-import React, { useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { 
   requestNotificationPermission, 
-  sendLocalNotification 
+  sendLocalNotification,
+  getNotificationPermission
 } from '../../../../shared/services/notificationHelper';
 import { useCustomDialog } from '../../../../shared/context/CustomDialogContext';
 
@@ -24,6 +25,7 @@ export default function StudentProfile() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const currentSection = useMemo(() => searchParams.get('tab') || 'overview', [searchParams]);
+  const [permissionState, setPermissionState] = useState(() => getNotificationPermission());
 
   const handleSectionChange = (sectionId) => {
     setSearchParams({ tab: sectionId });
@@ -75,6 +77,7 @@ export default function StudentProfile() {
 
   const handleEnableNotifications = async () => {
     const result = await requestNotificationPermission();
+    setPermissionState(result);
     if (result === 'granted') {
       toast.success('Browser notifications enabled successfully!');
       sendLocalNotification('Notifications Active!', 'You will now receive desktop alerts from BEHOLD.');
