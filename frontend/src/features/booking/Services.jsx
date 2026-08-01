@@ -187,44 +187,6 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
           })}
         </div>
 
-        {/* Bottom Banner Matrix: 4 Key Pillars */}
-        <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-10 border border-[#00e5ff]/30 shadow-2xl relative overflow-hidden">
-          <div className="absolute -right-20 -bottom-20 w-80 h-80 rounded-full bg-[#00e5ff]/10 blur-3xl pointer-events-none" />
-
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 relative z-10 divide-y md:divide-y-0 md:divide-x divide-slate-800">
-            <div className="pt-4 md:pt-0 md:pr-6 space-y-1">
-              <span className="text-3xl font-black text-[#00e5ff] font-sans">01.</span>
-              <h4 className="text-sm font-bold uppercase tracking-wider text-white">Dual Architecture</h4>
-              <p className="text-xs text-slate-400 font-normal leading-relaxed">Clinical psychologists & career strategists under one roof.</p>
-            </div>
-
-            <div className="pt-4 md:pt-0 md:px-6 space-y-1">
-              <span className="text-3xl font-black text-[#00e5ff] font-sans">100%</span>
-              <h4 className="text-sm font-bold uppercase tracking-wider text-white">Scientific Protocols</h4>
-              <p className="text-xs text-slate-400 font-normal leading-relaxed">CIGI assessment data & strictly private counseling.</p>
-            </div>
-
-            <div className="pt-4 md:pt-0 md:px-6 space-y-1">
-              <span className="text-3xl font-black text-[#00e5ff] font-sans">C-DAT</span>
-              <h4 className="text-sm font-bold uppercase tracking-wider text-white">Aptitude Evaluation</h4>
-              <p className="text-xs text-slate-400 font-normal leading-relaxed">Standardized cognitive testing for Grades 8–12.</p>
-            </div>
-
-            <div className="pt-4 md:pt-0 md:pl-6 space-y-2 flex flex-col justify-between">
-              <div>
-                <span className="text-xs font-bold uppercase tracking-widest text-[#00e5ff]">Ready to Begin?</span>
-                <h4 className="text-sm font-bold text-white">Book Your First Session</h4>
-              </div>
-              <button
-                onClick={() => { if (onBookTherapist) onBookTherapist(); }}
-                className="w-full py-2.5 rounded-full bg-[#00e5ff] hover:bg-[#00c9d6] text-slate-950 font-extrabold text-xs uppercase tracking-widest transition-all cursor-pointer shadow-md text-center"
-              >
-                Book Session Now
-              </button>
-            </div>
-          </div>
-        </div>
-
       </div>
     </section>
   );
