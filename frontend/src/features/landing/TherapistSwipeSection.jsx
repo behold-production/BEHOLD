@@ -97,7 +97,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
     return 0;
   });
 
-  const displayAdvisors = filteredAdvisors.length > 0 ? filteredAdvisors : advisors;
+  const displayAdvisors = filteredAdvisors;
 
   const handleNextCard = () => {
     setCurrentIndex((prev) => (prev + 1) % displayAdvisors.length);
@@ -358,15 +358,6 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
         {/* ── SHIMMER SKELETON while loading from API ── */}
         {loading ? (
           <div className="w-full max-w-6xl mx-auto px-[10px]">
-            {/* Skeleton filter bar */}
-            <div className="w-full max-w-4xl mx-auto mb-8 bg-white/90 rounded-2xl border border-slate-200/80 p-4 flex flex-col gap-3">
-              <div className="shimmer h-10 w-full rounded-xl" />
-              <div className="flex gap-2 flex-wrap">
-                {[120, 180, 160, 130].map((w, i) => (
-                  <div key={i} className="shimmer h-8 rounded-full" style={{ width: w }} />
-                ))}
-              </div>
-            </div>
             {/* Skeleton cards row */}
             <div className="flex items-center justify-center gap-4 overflow-hidden h-[410px] sm:h-[470px]">
               {[0, 1, 2].map((i) => (
