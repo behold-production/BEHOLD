@@ -235,6 +235,37 @@ class WhatsAppService {
     const summary = `Reminder: Appointment scheduled for today!\n👤 ${otherParty}\n⏰ Time: ${details.time || 'N/A'}`;
     return this.sendNotification(phone, summary);
   }
+
+  /**
+   * Get WhatsApp Account Number Details & Quality Rating
+   * Meta Graph API: GET /{Version}/{WhatsApp-Account-Number-ID}
+   */
+  async getAccountStatus() {
+    this._init();
+    if (!this.isConfigured) {
+      return { success: false, error: 'WhatsApp service is not configured' };
+    }
+
+    try {
+      const fields = 'id,display_phone_number,verified_name,status,quality_rating,name_status,messaging_limit_tier,account_mode';
+      const url = `https://graph.facebook.com/${this.apiVersion}/${this.phoneId}?fields=${fields}`;
+
+      const response = await axios.get(url, {
+        headers: {
+          'Authorization': `Bearer ${this.token}`,
+          'Content-Type': 'application/json'
+        },
+        timeout: 10000
+      });
+
+      console.log(`[WhatsApp Account Status Success]:`, response.data);
+      return { success: true, data: response.data };
+    } catch (error) {
+      const errData = error.response?.data || error.message;
+      console.error('[WhatsApp Account Status Error]:', JSON.stringify(errData, null, 2));
+      return { success: false, error: errData };
+    }
+  }
 }
 
 module.exports = new WhatsAppService();
