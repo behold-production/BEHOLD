@@ -45,28 +45,35 @@ function getModel(table) {
 
 async function seedDefaultAdmin() {
   try {
-    const email = (process.env.DEFAULT_ADMIN_EMAIL || 'admin@behold.com').toLowerCase();
+    const adminEmails = [
+      (process.env.DEFAULT_ADMIN_EMAIL || 'admin@behold.com').toLowerCase().trim(),
+      'admin@behold.com',
+      'admin@behold.co.in'
+    ];
+    const uniqueEmails = [...new Set(adminEmails)];
     const rawPassword = process.env.DEFAULT_ADMIN_PASSWORD || 'Admin@123';
     const salt = bcrypt.genSaltSync(10);
     const hashedPassword = bcrypt.hashSync(rawPassword, salt);
 
-    let existingAdmin = await Admin.findOne({ email });
-    if (!existingAdmin) {
-      existingAdmin = new Admin({
-        id: 'admin_' + Date.now(),
-        name: 'System Admin',
-        email: email,
-        password: hashedPassword,
-        role: 'admin'
-      });
-      await existingAdmin.save();
-      console.log(`[Storage] Created default admin account: ${email}`);
-    } else {
-      const isMatch = bcrypt.compareSync(rawPassword, existingAdmin.password);
-      if (!isMatch) {
-        existingAdmin.password = hashedPassword;
+    for (const email of uniqueEmails) {
+      let existingAdmin = await Admin.findOne({ email });
+      if (!existingAdmin) {
+        existingAdmin = new Admin({
+          id: 'admin_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+          name: 'System Admin',
+          email: email,
+          password: hashedPassword,
+          role: 'admin'
+        });
         await existingAdmin.save();
-        console.log(`[Storage] Reset password for admin account: ${email}`);
+        console.log(`[Storage] Created admin account: ${email}`);
+      } else {
+        const isMatch = bcrypt.compareSync(rawPassword, existingAdmin.password);
+        if (!isMatch) {
+          existingAdmin.password = hashedPassword;
+          await existingAdmin.save();
+          console.log(`[Storage] Reset password for admin account: ${email}`);
+        }
       }
     }
   } catch (error) {
