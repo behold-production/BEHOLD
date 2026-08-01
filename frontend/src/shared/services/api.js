@@ -1095,27 +1095,17 @@ const ApiService = {
   },
 
   async createBlog(formData) {
-    const token = localStorage.getItem('token');
-    const response = await fetch(`${API_BASE_URL}/blogs`, {
+    return await request('/blogs', {
       method: 'POST',
-      headers: {
-        ...(token ? { Authorization: `Bearer ${token}` } : {})
-      },
       body: formData
     });
-    return await response.json();
   },
 
   async updateBlog(id, formData) {
-    const token = localStorage.getItem('token');
-    const response = await fetch(`${API_BASE_URL}/blogs/${id}`, {
+    return await request(`/blogs/${id}`, {
       method: 'PUT',
-      headers: {
-        ...(token ? { Authorization: `Bearer ${token}` } : {})
-      },
       body: formData
     });
-    return await response.json();
   },
 
   async deleteBlog(id) {
