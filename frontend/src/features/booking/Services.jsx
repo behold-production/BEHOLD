@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, Brain, Compass, BookOpen, Users, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Brain, Compass, FileText, ArrowRight, CheckCircle2 } from 'lucide-react';
 import greyGreenBg from '../../assets/greygreen.png';
 
 export default function Services({ setView, onBookTherapist, siteSettings, mode }) {
@@ -38,41 +38,24 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
       ],
       price: 'Scientific Protocol',
       badge: 'ASSESSMENT',
-      actionText: 'Book Aptitude Test'
+      actionText: 'Register C-DAT'
     },
     {
-      id: 'mentorship',
-      icon: BookOpen,
-      tag: 'Career & University Pathway',
-      title: '1:1 Career Mentorship',
-      subtitle: 'Long-term Guidance & Action Plans',
-      description: 'Personalized career mentoring to translate aptitude findings into achievable milestones, university selection, and skill building.',
+      id: 'sample-test',
+      icon: FileText,
+      tag: 'Free Practice Preview',
+      title: 'C-DAT Sample & Demo Test',
+      subtitle: 'Try Sample Aptitude Questions',
+      description: 'Take a free interactive sample test preview to explore C-DAT question formats, domain logic, and instant scoring feedback before official registration.',
       features: [
-        'Stream & Degree Mapping',
-        'University Admission Guidance',
-        'Skill & Profile Enhancement',
-        'Quarterly Goal Tracking'
+        'Free Instant Online Access',
+        'Verbal, Numerical & Spatial Samples',
+        'Instant Score & Performance Preview',
+        'No Prior Preparation Required'
       ],
-      price: 'Customized Mentoring',
-      badge: 'CAREER',
-      actionText: 'Book Mentoring'
-    },
-    {
-      id: 'workshops',
-      icon: Users,
-      tag: 'Institutional & School Care',
-      title: 'School & Parent Workshops',
-      subtitle: 'Campus Orientations & Guidance',
-      description: 'Interactive workshops and orientations conducted at schools to build healthy learning environments and align parent expectations.',
-      features: [
-        'Student Mental Health Seminars',
-        'Parenting & Friction Reduction',
-        'Teacher Guidance Orientation',
-        'Group Aptitude Drives'
-      ],
-      price: 'Institutional Care',
-      badge: 'WORKSHOPS',
-      actionText: 'Inquire for School'
+      price: '100% Free Demo',
+      badge: 'FREE DEMO',
+      actionText: 'Try Sample Test'
     }
   ];
 
@@ -103,8 +86,8 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
           </p>
         </div>
 
-        {/* Services Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 mb-0">
+        {/* Services Cards Grid — 3 Column Focused Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 mb-0">
           {servicesList.map((service) => {
             const Icon = service.icon;
             return (
@@ -156,14 +139,14 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                 </div>
 
                 {/* Bottom Bar: Price & CTA */}
-                <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-4">
+                <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
                   <span className="text-xs font-extrabold text-slate-900 uppercase tracking-wider">
                     {service.price}
                   </span>
 
                   <button
                     onClick={() => {
-                      if (service.id === 'aptitude') {
+                      if (service.id === 'aptitude' || service.id === 'sample-test') {
                         window.spaNavigate?.('/aptitude-test');
                       } else if (onBookTherapist) {
                         onBookTherapist();
@@ -171,7 +154,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                         window.spaNavigate?.('/booking');
                       }
                     }}
-                    className="px-5 py-2.5 rounded-full bg-slate-900 hover:bg-[#00e5ff] hover:text-slate-950 text-white font-extrabold text-xs uppercase tracking-widest transition-all duration-300 cursor-pointer shadow-md flex items-center gap-1.5 active:scale-95 group/btn"
+                    className="px-4 py-2.5 rounded-full bg-slate-900 hover:bg-[#00e5ff] hover:text-slate-950 text-white font-extrabold text-xs uppercase tracking-widest transition-all duration-300 cursor-pointer shadow-md flex items-center gap-1.5 active:scale-95 group/btn shrink-0"
                   >
                     <span>{service.actionText}</span>
                     <ArrowRight className="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform" />
