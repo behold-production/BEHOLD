@@ -427,7 +427,7 @@ const AuthController = {
 
         return res.status(500).json({ 
           success: false, 
-          message: `WhatsApp API Error: ${metaErrorDetails}. Ensure your Meta Template 'otp_verification' exists and is approved, and your token is valid.` 
+          message: `WhatsApp API Error: ${metaErrorDetails}. (Note: If using Meta Test Number, add your recipient phone number under Meta Dashboard -> WhatsApp -> API Setup -> 'To Phone Number').` 
         });
       }
 
