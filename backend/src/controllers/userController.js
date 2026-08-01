@@ -127,6 +127,10 @@ const UserController = {
     }
   },
 
+  async getCounsellors(req, res, next) {
+    return this.searchCounsellors(req, res, next);
+  },
+
   // Get Counsellor Details with Reviews
   async getCounsellorDetails(req, res, next) {
     try {
