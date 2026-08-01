@@ -1,69 +1,17 @@
 {
   "version": 2,
-  "builds": [
+  "rewrites": [
     {
-      "src": "backend/server.js",
-      "use": "@vercel/node"
+      "source": "/api/(.*)",
+      "destination": "/backend/server.js"
     },
     {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "frontend/dist"
-      }
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/backend/server.js"
+      "source": "/uploads/(.*)",
+      "destination": "/backend/server.js"
     },
     {
-      "src": "/uploads/(.*)",
-      "dest": "/backend/server.js"
-    },
-    {
-      "src": "/admin(.*)",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/counsellor(.*)",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/conceller(.*)",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/cousellor(.*)",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/profile(.*)",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/booking(.*)",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/sample-test(.*)",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/reset-password(.*)",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/advisor/(.*)",
-      "dest": "/index.html"
-    },
-    {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "source": "/((?!api/|uploads/|assets/).*)",
+      "destination": "/index.html"
     }
   ]
 }
