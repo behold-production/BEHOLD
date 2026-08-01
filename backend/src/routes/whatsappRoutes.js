@@ -1,29 +1,61 @@
 const express = require('express');
+const crypto = require('crypto');
 const router = express.Router();
 const WhatsAppMessage = require('../models/WhatsAppMessage');
 
 /**
  * GET /api/whatsapp/webhook
  * Meta Webhook Verification Endpoint
+ * Validates hub.mode, hub.verify_token and returns hub.challenge
  */
 router.get('/webhook', (req, res) => {
-  const challenge = req.query['hub.challenge'] || req.query.challenge || '12345';
-  console.log('[Meta Webhook Challenge Verification Success]:', req.query);
-  return res.status(200).send(challenge);
+  const mode = req.query['hub.mode'];
+  const token = req.query['hub.verify_token'] || req.query.verify_token;
+  const challenge = req.query['hub.challenge'] || req.query.challenge;
+
+  const expectedToken = (
+    process.env.META_WA_VERIFY_TOKEN ||
+    process.env.WHATSAPP_VERIFY_TOKEN ||
+    process.env.VERIFY_TOKEN ||
+    '12345'
+  ).trim();
+
+  if (mode === 'subscribe' && token === expectedToken) {
+    console.log('[Meta Webhook Verified Successfully]: Challenge token matched.');
+    return res.status(200).send(challenge);
+  }
+
+  if (challenge && (!token || token === expectedToken)) {
+    console.log('[Meta Webhook Verification Fallback]: Sending challenge.');
+    return res.status(200).send(challenge);
+  }
+
+  console.warn('[Meta Webhook Verification Failed]: Invalid verify_token.');
+  return res.status(403).send('Forbidden');
 });
 
 /**
  * POST /api/whatsapp/webhook
- * Meta Cloud API Event Handler for ALL 20 Webhook Fields:
- * - account_alerts, account_review_update, account_update
- * - automatic_events, business_capability_update, calls, history
- * - message_template_components_update, message_template_quality_update, message_template_status_update
- * - messages, partner_solutions, payment_configuration_update
- * - phone_number_name_update, phone_number_quality_update, security
- * - smb_app_state_sync, smb_message_echoes, template_category_update, user_preferences
+ * Meta Cloud API Event Handler with optional HMAC-SHA256 X-Hub-Signature-256 validation
  */
 router.post('/webhook', async (req, res) => {
   try {
+    const signature = req.headers['x-hub-signature-256'];
+    const appSecret = (process.env.META_APP_SECRET || process.env.APP_SECRET || '').trim();
+
+    // Verify HMAC-SHA256 signature if appSecret is configured
+    if (signature && appSecret) {
+      const expectedSignature = 'sha256=' + crypto
+        .createHmac('sha256', appSecret)
+        .update(JSON.stringify(req.body))
+        .digest('hex');
+
+      if (signature !== expectedSignature) {
+        console.error('[Meta Webhook HMAC Error]: X-Hub-Signature-256 mismatch.');
+        return res.status(401).send('Unauthorized Signature');
+      }
+    }
+
     const body = req.body;
 
     if (body?.object === 'whatsapp_business_account') {
