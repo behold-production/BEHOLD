@@ -22,8 +22,8 @@ router.put(
 );
 router.delete('/profile', verifyJWT, requireRole('user'), UserController.deleteProfile);
 
-// Counsellor search and details (accessible by users, and optionally others)
-router.get('/counsellors', UserController.searchCounsellors);
+// Counsellor search and details (accessible by users, and public)
+router.get('/counsellors', UserController.getCounsellors);
 router.get('/counsellors/:id', UserController.getCounsellorDetails);
 
 module.exports = router;

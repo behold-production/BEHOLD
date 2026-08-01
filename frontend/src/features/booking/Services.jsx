@@ -79,7 +79,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
   const sectionId = mode === 'experts' ? 'counsellors' : 'services';
 
   return (
-    <section id={sectionId} className="relative py-16 sm:py-24 overflow-hidden text-slate-900 select-none">
+    <section id={sectionId} className="relative py-10 sm:py-14 overflow-hidden text-slate-900 select-none">
       {/* Background Image Layer with smooth mask gradient fade */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <img
@@ -92,12 +92,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Section Header */}
-        <div className="max-w-3xl mb-12 sm:mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 text-[#00e5ff] text-[11px] sm:text-xs font-extrabold uppercase tracking-widest mb-4 shadow-sm">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>{settings.servicesSectionSub || 'UNFOLD WITH BEHOLD'}</span>
-          </div>
-
+        <div className="max-w-3xl mb-8 sm:mb-10">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-sans font-black uppercase text-slate-900 tracking-tight leading-none mb-4">
             {settings.servicesSectionTitle || 'Comprehensive Care for Your Mind & Future'}
             <span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)]">.</span>
@@ -109,7 +104,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
         </div>
 
         {/* Services Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 mb-0">
           {servicesList.map((service) => {
             const Icon = service.icon;
             return (
