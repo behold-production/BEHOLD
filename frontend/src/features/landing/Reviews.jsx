@@ -299,6 +299,22 @@ export default function Reviews({ siteSettings }) {
               </div>
             ))}
           </div>
+        ) : displayReviews.length === 0 ? (
+          <div className="bg-white/80 backdrop-blur-md rounded-2xl border border-dashed border-gray-300 p-8 text-center max-w-lg mx-auto my-6 shadow-xs">
+            <div className="w-14 h-14 bg-[#0f172a] rounded-full flex items-center justify-center mx-auto mb-4 border border-[#00e5ff]/40 shadow-xs">
+              <span className="text-[#00e5ff] text-xl font-bold">★</span>
+            </div>
+            <h3 className="text-lg font-bold text-gray-900 mb-1">Be the First to Leave a Review</h3>
+            <p className="text-sm text-gray-500 mb-5 max-w-sm mx-auto">
+              Share your experience with BEHOLD. Your feedback helps us shape future student & psychological support.
+            </p>
+            <button
+              onClick={() => setShowForm(!showForm)}
+              className="px-6 py-2.5 bg-[#0f172a] hover:bg-[#1e293b] text-white font-semibold text-xs tracking-wider uppercase rounded-full transition shadow-xs border border-[#00e5ff]/30 cursor-pointer"
+            >
+              {showForm ? 'Close Form' : 'Write a Review'}
+            </button>
+          </div>
         ) : (
           <div className="px-4 sm:px-6 lg:px-8 space-y-4">
             {/* Mobile Scroll Controls (<768px) */}
