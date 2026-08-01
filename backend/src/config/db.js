@@ -15,10 +15,16 @@ async function connectDB() {
     return dbPromise;
   }
 
+  const mongoUri = process.env.MONGODB_URI;
+  if (!mongoUri && process.env.NODE_ENV === 'production') {
+    throw new Error("VERCEL ENVIRONMENT VARIABLE 'MONGODB_URI' is missing. Please add MONGODB_URI to Vercel Project Settings.");
+  }
+
+  const targetUri = mongoUri || 'mongodb://127.0.0.1:27017/behold_aspire';
   console.log('[Database] Connecting to MongoDB...');
 
   dbPromise = mongoose
-    .connect(MONGODB_URI, {
+    .connect(targetUri, {
       serverSelectionTimeoutMS: 5000,
       connectTimeoutMS: 10000,
       socketTimeoutMS: 45000

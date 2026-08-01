@@ -66,21 +66,24 @@ const UserController = {
 
       let filtered = allCounsellors;
 
-      if (specialty) {
-        filtered = filtered.filter((c) => c.specialties && c.specialties.includes(specialty));
+      if (mode && mode !== 'ALL') {
+        filtered = filtered.filter((c) => Array.isArray(c.modes) && c.modes.includes(mode.toUpperCase()));
       }
 
-      if (mode) {
-        // e.g. ONLINE or OFFLINE
+      if (specialty && specialty !== 'ALL') {
         filtered = filtered.filter(
-          (c) => c.modePreference === mode || !c.modePreference || c.modePreference === 'BOTH'
+          (c) => Array.isArray(c.specialties) && c.specialties.some((s) => s && typeof s === 'string' && s.toLowerCase() === specialty.toLowerCase())
         );
       }
 
       if (search) {
         const query = search.toLowerCase();
         filtered = filtered.filter(
-          (c) => c.name.toLowerCase().includes(query) || (c.experience && c.experience.toLowerCase().includes(query))
+          (c) =>
+            (c.name && c.name.toLowerCase().includes(query)) ||
+            (c.title && c.title.toLowerCase().includes(query)) ||
+            (c.experience && c.experience.toLowerCase().includes(query)) ||
+            (c.bio && c.bio.toLowerCase().includes(query))
         );
       }
 
