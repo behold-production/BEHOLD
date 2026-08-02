@@ -233,8 +233,8 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
           </div>
         </div>
 
-        {/* White Body Card (Overlaps Top Banner with Smooth Curved Rounded Top Corners) */}
-        <div className="relative z-20 -mt-4 bg-white rounded-t-[22px] p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3">
+        {/* White Body Card (Overlaps Top Banner with Smooth Curved Rounded Corners on All Sides) */}
+        <div className="relative z-20 -mt-4 bg-white rounded-t-[22px] rounded-b-[26px] p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3 overflow-hidden">
           
           {/* Specialties Tags Row */}
           <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none pb-0.5 shrink-0">
@@ -478,7 +478,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
                     <div
                       key={advisor.id}
                       onClick={() => setCurrentIndex(index)}
-                      className={`absolute w-[335px] xs:w-[365px] sm:w-[395px] md:w-[410px] h-[395px] sm:h-[445px] transform transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${styleClass}`}
+                      className={`absolute w-[335px] xs:w-[365px] sm:w-[395px] md:w-[410px] h-[395px] sm:h-[445px] rounded-[28px] overflow-hidden transform transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${styleClass}`}
                     >
                       {renderCard(advisor, diff === 0)}
                     </div>
