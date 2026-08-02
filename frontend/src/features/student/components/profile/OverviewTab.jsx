@@ -2,7 +2,7 @@ import React from 'react';
 import { formatDateString } from "../../../../shared/utils/dateFormatter";
 import { formatCountdown } from '../../utils/utils';
 
-const OverviewTab = ({
+export default function OverviewTab({
   nextSession,
   enablePsychology,
   enableCareerMentoring,
@@ -14,8 +14,9 @@ const OverviewTab = ({
   bookedSessions,
   completedSessions,
   profile,
-  enableAptitude
-}) => {
+  enableAptitude,
+  onOpenBooking
+}) {
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -29,7 +30,10 @@ const OverviewTab = ({
         {(enablePsychology || enableCareerMentoring) && (
           <button
             type="button"
-            onClick={() => navigate('/booking')}
+            onClick={() => {
+              if (onOpenBooking) onOpenBooking();
+              else navigate('/booking');
+            }}
             className="inline-block px-4 py-2 bg-slate-900 hover:bg-black text-white text-xs font-bold rounded-lg transition-colors shadow-xs cursor-pointer border-none"
           >
             Book Consultation
@@ -103,7 +107,10 @@ const OverviewTab = ({
           {(enablePsychology || enableCareerMentoring) && (
             <button
               type="button"
-              onClick={() => navigate('/booking')}
+              onClick={() => {
+                if (onOpenBooking) onOpenBooking();
+                else navigate('/booking');
+              }}
               className="mt-5 inline-block px-5 py-2 bg-slate-900 hover:bg-black text-white text-xs font-bold rounded-lg transition-colors shadow-xs cursor-pointer border-none"
             >
               Schedule Consultation Now
@@ -129,7 +136,10 @@ const OverviewTab = ({
             <span className="text-xs font-semibold text-surface-500">60-min personalized session</span>
             <button
               type="button"
-              onClick={() => navigate('/booking')}
+              onClick={() => {
+                if (onOpenBooking) onOpenBooking();
+                else navigate('/booking');
+              }}
               className="px-5 py-2 bg-[#0f172a] hover:bg-[#1e293b] text-white rounded-full font-bold text-xs uppercase tracking-wider transition-colors border border-[#00e5ff]/30 cursor-pointer shadow-2xs"
             >
               Book Now
@@ -229,6 +239,4 @@ const OverviewTab = ({
       </div>
     </div>
   );
-};
-
-export default OverviewTab;
+}

@@ -49,15 +49,23 @@ export const sendLocalNotification = async (title, body, options = {}) => {
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }
           },
-          className: 'cursor-pointer flex flex-col gap-1 pr-2 max-w-xs'
+          className: 'cursor-pointer flex flex-col gap-1 pr-1 text-left'
         },
-        React.createElement('span', { className: 'font-bold text-xs text-[#0f172a] font-sans uppercase tracking-wide' }, title),
-        React.createElement('span', { className: 'text-[11px] text-surface-600 font-normal leading-tight' }, body)
+        React.createElement('span', { className: 'font-extrabold text-xs text-[#0f172a] font-sans uppercase tracking-wide block' }, title),
+        React.createElement('span', { className: 'text-xs text-slate-600 font-medium leading-snug block' }, body)
       ),
       {
         icon: '🔔',
         duration: 6000,
-        id: options.tag || undefined
+        id: options.tag || undefined,
+        style: {
+          background: '#ffffff',
+          color: '#0f172a',
+          border: '1px solid #e2e8f0',
+          borderRadius: '16px',
+          padding: '12px 16px',
+          boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)'
+        }
       }
     );
   } catch (e) {

@@ -1602,7 +1602,8 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                         {/* Standalone Account & Payment Action Button (Below all cards in right column) */}
                                         <button
                                             type="button"
-                                            onClick={() => {
+                                            disabled={isProcessingPayment}
+                                            onClick={(e) => {
                                                 if (bookingStep === 'config') {
                                                     if (!selectedDate || !selectedTime || !selectedAdvisor) {
                                                         toast.error('Please select date, time slot, and psychologist to proceed.');
@@ -1610,13 +1611,14 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                         handleStepChange('payment');
                                                     }
                                                 } else if (bookingStep === 'payment') {
-                                                    const submitBtn = document.querySelector('form button[type="submit"]');
-                                                    if (submitBtn) submitBtn.click();
+                                                    handlePaymentSubmit(e);
                                                 }
                                             }}
-                                            className="w-full py-4 bg-[#0f172a] hover:bg-slate-800 active:scale-[0.98] text-white font-black text-xs uppercase tracking-widest rounded-2xl transition-all shadow-lg hover:shadow-xl cursor-pointer text-center border-none block mt-3"
+                                            className="w-full py-4 bg-[#0f172a] hover:bg-slate-800 active:scale-[0.98] text-[#00c9d6] hover:text-white font-black text-xs uppercase tracking-widest rounded-2xl transition-all shadow-lg hover:shadow-xl cursor-pointer text-center border-none block mt-3 disabled:opacity-50 disabled:cursor-not-allowed"
                                         >
-                                            Account & Payment
+                                            {bookingStep === 'config'
+                                                ? 'Proceed to Payment'
+                                                : (isProcessingPayment ? 'Processing Payment...' : 'Pay & Confirm')}
                                         </button>
                                     </div>
 

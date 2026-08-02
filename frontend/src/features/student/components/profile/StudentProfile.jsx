@@ -20,7 +20,7 @@ import ProfileDetailsTab from './ProfileDetailsTab';
 import BookedSessionsTab from './BookedSessionsTab';
 import ResultsTab from './ResultsTab';
 
-export default function StudentProfile() {
+export default function StudentProfile({ onOpenBooking }) {
   const { showAlert } = useCustomDialog();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -177,6 +177,7 @@ export default function StudentProfile() {
  completedSessions={completedSessions}
  profile={profile}
  enableAptitude={enableAptitude}
+ onOpenBooking={onOpenBooking}
  />
  )}
  {currentSection === 'details' && (
@@ -212,6 +213,7 @@ export default function StudentProfile() {
  handleCancelSession={handleCancelSession}
  downloadPDFReceiptForSession={(session) => downloadPDFReceiptForSession(session, profile, user, showAlert)}
  downloadCertificatePDF={downloadCertificatePDF}
+ onOpenBooking={onOpenBooking}
  />
  )}
  {currentSection === 'results' && (

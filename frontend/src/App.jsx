@@ -723,7 +723,7 @@ export default function App() {
           {/* Student Profile */}
           <Route path="/profile" element={
             user?.role?.toUpperCase() === 'USER' ? (
-              <StudentProfile />
+              <StudentProfile onOpenBooking={() => setIsBookingModalOpen(true)} />
             ) : (
               <Navigate to="/" replace />
             )

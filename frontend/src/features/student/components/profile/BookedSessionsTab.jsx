@@ -23,7 +23,8 @@ const BookedSessionsTab = ({
  showAlert,
  handleCancelSession,
  downloadPDFReceiptForSession,
- downloadCertificatePDF
+ downloadCertificatePDF,
+ onOpenBooking
 }) => {
  return (
  <div className="space-y-5">
@@ -67,8 +68,11 @@ const BookedSessionsTab = ({
  {sessionSubTab === 'upcoming' && (enablePsychology || enableCareerMentoring) && (
  <button
  type="button"
- onClick={() => navigate('/booking')}
- className="inline-flex items-center gap-1.5 min-h-[36px] px-3.5 py-1.5 bg-surface-900 hover:bg-surface-800 text-white tracking-widest text-[10px] font-black rounded-[10px] transition-colors border-none sm:self-center"
+ onClick={() => {
+   if (onOpenBooking) onOpenBooking();
+   else navigate('/booking');
+ }}
+ className="inline-flex items-center gap-1.5 min-h-[36px] px-3.5 py-1.5 bg-surface-900 hover:bg-surface-800 text-white tracking-widest text-[10px] font-black rounded-[10px] transition-colors border-none sm:self-center cursor-pointer"
  >
  <Plus className="w-3.5 h-3.5" /> New Booking
  </button>
