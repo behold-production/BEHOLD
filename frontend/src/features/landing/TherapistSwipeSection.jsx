@@ -287,7 +287,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
           <div className="pt-2 flex items-center justify-between gap-2 border-t border-slate-100 shrink-0">
             <div className="text-left shrink-0">
               <span className="text-[9px] sm:text-[10px] font-semibold text-slate-400 block uppercase tracking-wider">Next available</span>
-              <span className="text-[10.5px] sm:text-xs font-black text-slate-900 block mt-0.5">Available Today</span>
+              <span className="text-[10.5px] sm:text-xs font-black text-slate-900 block mt-0.5 whitespace-nowrap">Available Today</span>
             </div>
 
             <div className="flex items-center gap-1.5 shrink-0">
@@ -297,7 +297,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
                   e.stopPropagation();
                   navigate(`/advisor/${advisor.id}`);
                 }}
-                className="px-3 sm:px-3.5 py-1.5 border border-slate-300 hover:border-slate-900 text-slate-800 hover:bg-slate-900 hover:text-white rounded-full text-[10px] sm:text-[11px] font-bold transition cursor-pointer whitespace-nowrap"
+                className="px-2.5 xs:px-3 sm:px-4 py-1.5 sm:py-2 border border-slate-300 hover:border-slate-900 text-slate-800 hover:bg-slate-900 hover:text-white rounded-full text-[9.5px] xs:text-[10px] sm:text-[11px] font-bold transition cursor-pointer whitespace-nowrap"
               >
                 VIEW PROFILE
               </button>
@@ -308,7 +308,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
                   if (onBookTherapist) onBookTherapist(advisor.id);
                   else window.spaNavigate?.('/book-session');
                 }}
-                className="bg-[#00c9d6] hover:bg-[#00b2be] active:scale-95 text-slate-950 font-black text-[10px] sm:text-[11px] uppercase tracking-wider px-3.5 sm:px-4 py-1.5 rounded-full shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer whitespace-nowrap"
+                className="bg-[#00c9d6] hover:bg-[#00b2be] active:scale-95 text-slate-950 font-black text-[9.5px] xs:text-[10px] sm:text-[11px] uppercase tracking-wider px-3 xs:px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer whitespace-nowrap"
               >
                 BOOK NOW
               </button>
@@ -446,23 +446,23 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
               <button
                 onClick={(e) => { e.stopPropagation(); handlePrevCard(); }}
                 aria-label="Previous Psychologist"
-                className="absolute left-0 sm:-left-4 lg:-left-8 top-[200px] -translate-y-1/2 z-50 w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-white/95 text-slate-800 hover:text-slate-950 hover:bg-[#00e5ff] shadow-xl border border-slate-200/80 transition-all duration-300 active:scale-95 cursor-pointer flex items-center justify-center group"
+                className="absolute -left-2 sm:-left-4 lg:-left-8 top-1/2 -translate-y-1/2 z-50 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/95 text-slate-800 hover:text-slate-950 hover:bg-[#00e5ff] shadow-xl border border-slate-200/80 transition-all duration-300 active:scale-95 cursor-pointer flex items-center justify-center group"
               >
-                <ChevronLeft className="w-6 h-6 sm:w-7 sm:h-7 group-hover:-translate-x-0.5 transition-transform" />
+                <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 group-hover:-translate-x-0.5 transition-transform" />
               </button>
 
               {/* Right Floating Navigation Arrow (Outer Screen Margin) */}
               <button
                 onClick={(e) => { e.stopPropagation(); handleNextCard(); }}
                 aria-label="Next Psychologist"
-                className="absolute right-0 sm:-right-4 lg:-right-8 top-[200px] -translate-y-1/2 z-50 w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-white/95 text-slate-800 hover:text-slate-950 hover:bg-[#00e5ff] shadow-xl border border-slate-200/80 transition-all duration-300 active:scale-95 cursor-pointer flex items-center justify-center group"
+                className="absolute -right-2 sm:-right-4 lg:-right-8 top-1/2 -translate-y-1/2 z-50 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/95 text-slate-800 hover:text-slate-950 hover:bg-[#00e5ff] shadow-xl border border-slate-200/80 transition-all duration-300 active:scale-95 cursor-pointer flex items-center justify-center group"
               >
-                <ChevronRight className="w-6 h-6 sm:w-7 sm:h-7 group-hover:translate-x-0.5 transition-transform" />
+                <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-0.5 transition-transform" />
               </button>
 
               {/* Card Perspective Area */}
               <div
-                className="relative w-full max-w-5xl mx-auto h-[460px] sm:h-[520px] flex items-center justify-center perspective-[1200px] overflow-visible"
+                className="relative w-full max-w-5xl mx-auto h-[415px] sm:h-[465px] flex items-center justify-center perspective-[1200px] overflow-visible"
                 onMouseDown={(e) => handleTouchStart(e.clientX)}
                 onMouseMove={(e) => handleTouchMove(e.clientX)}
                 onMouseUp={handleTouchEnd}
@@ -478,7 +478,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
                     <div
                       key={advisor.id}
                       onClick={() => setCurrentIndex(index)}
-                      className={`absolute w-[285px] xs:w-[325px] sm:w-[360px] md:w-[390px] h-[440px] sm:h-[495px] transform transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${styleClass}`}
+                      className={`absolute w-[335px] xs:w-[365px] sm:w-[395px] md:w-[410px] h-[395px] sm:h-[445px] transform transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${styleClass}`}
                     >
                       {renderCard(advisor, diff === 0)}
                     </div>
