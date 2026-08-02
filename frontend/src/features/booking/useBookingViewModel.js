@@ -198,7 +198,9 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
               specialties: c.specialties || [],
               bio: c.bio || '',
               hours: c.hours || c.completedHours || 100,
-              lang: c.lang || ''
+              lang: c.lang || '',
+              rating: Number(c.rating) || 5.0,
+              reviewCount: Number(c.reviewCount) || 0
             };
           });
           setAdvisors(resolved);

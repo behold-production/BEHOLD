@@ -1,5 +1,6 @@
 const StorageService = require('../services/storageService');
 const User = require('../models/User');
+const Feedback = require('../models/Feedback');
 const cloudinary = require('../config/cloudinary');
 const { uploadToCloudinary, uploadProfilePicToCloudinary } = require('../utils/cloudinaryHelper');
 const { autoExpireSessions } = require('../utils/sessionHelper');
@@ -99,6 +100,18 @@ const UserController = {
       const globalOffline = settings.enableOffline !== false;
       const globalDoorstep = settings.enableDoorstep !== false;
 
+      // Fetch all feedbacks to compute per-counsellor reviewCount and rating
+      const allFeedbacks = await Feedback.find({ isModerated: false }).lean();
+
+      // Build a map: counsellorId -> { count, totalRating }
+      const feedbackMap = {};
+      for (const fb of allFeedbacks) {
+        if (!fb.counsellorId) continue;
+        if (!feedbackMap[fb.counsellorId]) feedbackMap[fb.counsellorId] = { count: 0, total: 0 };
+        feedbackMap[fb.counsellorId].count += 1;
+        feedbackMap[fb.counsellorId].total += Number(fb.rating) || 0;
+      }
+
       // Format response to hide sensitive details
       const responseData = filtered.map(({ password, ...data }) => {
         const allowedModes = (data.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP']).filter(m => {
@@ -110,10 +123,19 @@ const UserController = {
         const booked = allActiveAppointments
           .filter((appt) => appt.counsellorId === data.id)
           .map((appt) => ({ date: appt.date, time: appt.time }));
+
+        const fbStats = feedbackMap[data.id] || { count: 0, total: 0 };
+        const computedReviewCount = fbStats.count;
+        const computedRating = fbStats.count > 0
+          ? parseFloat((fbStats.total / fbStats.count).toFixed(1))
+          : parseFloat((Number(data.rating) || 5.0).toFixed(1));
+
         return {
           ...data,
           modes: allowedModes,
-          bookedSlots: booked
+          bookedSlots: booked,
+          reviewCount: computedReviewCount,
+          rating: computedRating
         };
       });
 
@@ -156,8 +178,14 @@ const UserController = {
         return true;
       });
 
-      // Load feedbacks
-      const feedbacks = await StorageService.findAll('feedbacks', { counsellorId: id, isModerated: false });
+      // Load feedbacks for this counsellor
+      const feedbacks = await Feedback.find({ counsellorId: id, isModerated: false }).lean();
+
+      // Compute live rating and reviewCount from feedbacks
+      const reviewCount = feedbacks.length;
+      const computedRating = reviewCount > 0
+        ? parseFloat((feedbacks.reduce((sum, f) => sum + (Number(f.rating) || 0), 0) / reviewCount).toFixed(1))
+        : parseFloat((Number(counsellorData.rating) || 5.0).toFixed(1));
 
       // Load booked slots
       const activeAppointments = await StorageService.findAll('appointments', {
@@ -172,7 +200,9 @@ const UserController = {
         data: {
           ...counsellorData,
           feedbacks,
-          bookedSlots
+          bookedSlots,
+          reviewCount,
+          rating: computedRating
         }
       });
     } catch (error) {

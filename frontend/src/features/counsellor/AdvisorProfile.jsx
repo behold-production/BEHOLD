@@ -67,7 +67,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             lang: psy.lang || 'Malayalam, English',
             price: Number(psy.price) || 899,
             rating: Number(psy.rating) || 4.9,
-            reviewsCount: Number(psy.reviewsCount) || 98,
+            reviewCount: Number(psy.reviewCount) || 0,
             nextAvailable: nextAvailable || 'Available Today',
             education: psy.education || 'MPhil Clinical Psychology · Certified Specialist',
             about: psy.experience || psy.bio || 'Dedicated consultant psychologist specializing in evidence-based cognitive behavioral therapy, anxiety reduction, and personalized student guidance. Committed to providing a safe, confidential, and empathetic environment for personal and academic growth.',
@@ -150,7 +150,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                 <div className="flex flex-wrap items-center gap-2 mb-3">
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-50 border border-slate-200/80 text-slate-800 text-xs font-bold rounded-full">
                     <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
-                    <span>{advisor.rating} ({advisor.reviewsCount} Reviews)</span>
+                    <span>{advisor.rating}{advisor.reviewCount > 0 ? ` (${advisor.reviewCount} ${advisor.reviewCount === 1 ? 'Review' : 'Reviews'})` : ''}</span>
                   </span>
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-50 border border-slate-200/80 text-slate-800 text-xs font-bold rounded-full">
                     <Video className="w-3.5 h-3.5 text-slate-500" />
