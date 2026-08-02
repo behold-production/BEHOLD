@@ -1899,7 +1899,15 @@ export default function PsychologistDashboard({ setView }) {
  </div>
 
  {/* Quick Stats Grid */}
- <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full sm:w-auto shrink-0 relative z-10 text-center">
+ <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full sm:w-auto shrink-0 relative z-10 text-center">
+ <div className="bg-zinc-950 border border-zinc-850 px-5 py-2.5 rounded-[10px]">
+ <span className="text-sm text-zinc-500 font-bold block">Total Revenue</span>
+ <p className="text-sm font-bold text-emerald-400 mt-0.5">
+ ₹{bookings
+ .reduce((sum, b) => (b.status === 'CONFIRMED' || b.status === 'COMPLETED' || b.status === 'APPROVED' || b.status === 'PAID' ? sum + Number(b.amount || b.price || profile.price || 0) : sum), 0)
+ .toLocaleString('en-IN')}
+ </p>
+ </div>
  <div className="bg-zinc-950 border border-zinc-850 px-5 py-2.5 rounded-[10px]">
  <span className="text-sm text-zinc-500 font-bold block">Upcoming Slots</span>
  <p className="text-sm font-bold text-brand mt-0.5">{bookings.filter(b => (b.status === 'CONFIRMED' || b.status === 'APPROVED' || b.status === 'PENDING') && !isSessionCompleted(b)).length} Bookings</p>
