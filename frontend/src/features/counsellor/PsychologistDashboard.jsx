@@ -1987,6 +1987,10 @@ export default function PsychologistDashboard({ setView }) {
  handleCounsellorAvatarUpload={handleCounsellorAvatarUpload}
  user={user}
  isProfileSaved={isProfileSaved}
+ permissionState={permissionState}
+ handleEnableNotifications={handleEnableNotifications}
+ handleTestNotification={handleTestNotification}
+ loadBookingsData={loadBookingsData}
  />
  )}
 

@@ -541,26 +541,32 @@ const ProfileTab = ({
  </p>
  </div>
 
- <div className="flex flex-wrap gap-2 shrink-0">
- {isNotificationSupported() && permissionState === 'default' && (
- <button
- type="button"
- onClick={handleEnableNotifications}
- className="min-h-[36px] px-4 py-2 bg-brand hover:bg-brand-dark text-zinc-955 rounded-full text-xs font-bold transition cursor-pointer border-none shadow-md"
- >
- Enable Notifications
- </button>
- )}
- {isNotificationSupported() && permissionState === 'granted' && (
- <button
- type="button"
- onClick={handleTestNotification}
- className="min-h-[36px] px-4 py-2 bg-zinc-900 border border-zinc-800 text-zinc-355 hover:text-white hover:bg-zinc-800 rounded-full text-xs font-bold transition cursor-pointer shadow-sm"
- >
- Test Alert
- </button>
- )}
- </div>
+  <div className="flex flex-wrap gap-2 shrink-0">
+  {isNotificationSupported() && (
+  <>
+  <button
+  type="button"
+  onClick={handleEnableNotifications}
+  className={`min-h-[36px] px-4 py-2 rounded-full text-xs font-bold transition cursor-pointer border shadow-md flex items-center gap-1.5 ${
+  permissionState === 'granted'
+  ? 'bg-zinc-900 border-zinc-800 text-zinc-300 hover:text-white hover:bg-zinc-800'
+  : 'bg-brand hover:bg-brand-dark text-zinc-955 border-none font-extrabold'
+  }`}
+  >
+  <Bell className="w-3.5 h-3.5" />
+  {permissionState === 'granted' ? 'Re-request Permission' : 'Enable Notifications'}
+  </button>
+
+  <button
+  type="button"
+  onClick={handleTestNotification}
+  className="min-h-[36px] px-4 py-2 bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white hover:bg-zinc-800 rounded-full text-xs font-bold transition cursor-pointer shadow-sm flex items-center gap-1.5"
+  >
+  Test Alert
+  </button>
+  </>
+  )}
+  </div>
  </div>
  </div>
  </div>
