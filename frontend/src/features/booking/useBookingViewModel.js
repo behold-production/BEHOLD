@@ -197,7 +197,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
               image: ((c.image || c.profilePic) && (c.image || c.profilePic).includes('res.cloudinary.com')) ? (c.image || c.profilePic) : '',
               specialties: c.specialties || [],
               bio: c.bio || '',
-              hours: c.hours || 0,
+              hours: c.hours || c.completedHours || 100,
               lang: c.lang || ''
             };
           });
@@ -252,6 +252,25 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
 
     initBookingData();
   }, [user]);
+
+  // Auto-preselect advisor when preselectedAdvisorId prop or URL param ?advisor= / ?counsellor= is present
+  useEffect(() => {
+    if (!advisors || advisors.length === 0) return;
+
+    const queryParams = new URLSearchParams(window.location.search);
+    const targetAdvisorId = preselectedAdvisorId || queryParams.get('advisor') || queryParams.get('counsellor') || queryParams.get('psychologist');
+
+    if (targetAdvisorId) {
+      const match = advisors.find(a => String(a.id) === String(targetAdvisorId) || String(a._id) === String(targetAdvisorId));
+      if (match) {
+        setSelectedAdvisor(match);
+        setAdvisorConfirmed(true);
+        if (match.modes && match.modes.length > 0 && !match.modes.includes(bookingMode)) {
+          setBookingMode(match.modes[0]);
+        }
+      }
+    }
+  }, [preselectedAdvisorId, advisors]);
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);

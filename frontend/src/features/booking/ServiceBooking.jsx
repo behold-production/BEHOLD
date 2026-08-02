@@ -1057,7 +1057,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                     {/* MIDDLE SECTION 2: Grid Stats */}
                                                                                     <div className="grid grid-cols-3 divide-x divide-surface-200 border-b border-surface-200 bg-surface-50">
                                                                                         <div className="p-4 sm:p-5 flex flex-col items-center justify-center text-center">
-                                                                                            <span className="font-bold text-xl sm:text-2xl text-surface-900 leading-none">{advisor.hours || '0'}+</span>
+                                                                                            <span className="font-bold text-xl sm:text-2xl text-surface-900 leading-none">{advisor.hours || '100'}+</span>
                                                                                             <span className="text-xs font-medium text-surface-500 mt-1">Hours</span>
                                                                                         </div>
                                                                                         <div className="p-4 sm:p-5 flex flex-col items-center justify-center text-center">
