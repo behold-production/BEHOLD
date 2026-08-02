@@ -192,50 +192,52 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
   const renderCard = (advisor, isCenter) => {
     if (!advisor) return null;
     return (
-      <div className={`w-full h-full flex flex-col justify-between overflow-hidden bg-white rounded-[26px] transition-all duration-500 text-left ${isCenter ? 'pointer-events-auto border-[2px] border-[#00c9d6] shadow-[0_12px_40px_rgba(0,201,214,0.25)]' : 'pointer-events-none border border-slate-200/80 shadow-md'}`}>
+      <div className={`w-full h-full flex flex-col overflow-hidden bg-white rounded-[28px] transition-all duration-500 text-left ${isCenter ? 'pointer-events-auto border-[2px] border-[#00c9d6] shadow-[0_16px_44px_rgba(0,201,214,0.3)]' : 'pointer-events-none border border-slate-200/80 shadow-md'}`}>
         
-        {/* Top Header Section (Primary Teal Theme Background with Matched Rounded Top Corners) */}
-        <div className="relative w-full p-4 sm:p-5 bg-gradient-to-r from-[#00c9d6]/25 via-[#d4f8fc] to-[#00c9d6]/35 flex items-center justify-between border-b border-[#00c9d6]/20 rounded-t-[24px]">
-          <div className="pr-2 space-y-1">
-            <h3 className="font-sans text-base sm:text-xl font-black text-slate-900 leading-tight truncate max-w-[170px] sm:max-w-[200px]">
+        {/* Top Header Section (Light Primary Teal Background with Full Height Right Image) */}
+        <div className="relative w-full h-[135px] sm:h-[150px] p-4 sm:p-5 bg-gradient-to-r from-[#bcf4f8] via-[#d7f9fb] to-[#a8eff4] flex items-start justify-between overflow-hidden">
+          <div className="pr-2 space-y-1 z-10 max-w-[60%]">
+            <h3 className="font-sans text-base sm:text-xl font-black text-slate-900 leading-tight truncate">
               {advisor.name}
             </h3>
-            <p className="text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-wide truncate max-w-[170px] sm:max-w-[200px]">
+            <p className="text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-wider truncate">
               {advisor.designation || 'Consultant Psychologist'}
             </p>
           </div>
 
-          {/* Counsellor Profile Image in Top Right */}
-          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl border-2 border-white shadow-md overflow-hidden shrink-0 bg-white flex items-center justify-center relative">
+          {/* Counsellor Profile Image (Rendered directly in top right banner without circle badge) */}
+          <div className="w-[110px] sm:w-[135px] h-[135px] sm:h-[150px] absolute right-2 bottom-0 z-10 flex items-end justify-center pointer-events-none">
             {advisor.photo ? (
-              <>
-                <img
-                  src={advisor.photo}
-                  alt={advisor.name}
-                  className="w-full h-full object-cover object-top"
-                  onError={(e) => {
-                    e.currentTarget.style.display = 'none';
-                    const fallback = e.currentTarget.nextElementSibling;
-                    if (fallback) fallback.style.display = 'flex';
-                  }}
-                />
-                <span style={{ display: 'none' }} className="font-black text-2xl text-[#00c9d6] uppercase items-center justify-center w-full h-full">
+              <img
+                src={advisor.photo}
+                alt={advisor.name}
+                className="w-full h-full object-cover object-top filter brightness-[1.02] drop-shadow-sm rounded-t-xl"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                  const fallback = e.currentTarget.nextElementSibling;
+                  if (fallback) fallback.style.display = 'flex';
+                }}
+              />
+            ) : (
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-white/90 shadow-md flex items-center justify-center mb-4 border border-white">
+                <span className="font-black text-2xl text-[#00c9d6] uppercase">
                   {getInitial(advisor.name)}
                 </span>
-              </>
-            ) : (
-              <span className="font-black text-2xl text-[#00c9d6] uppercase flex items-center justify-center w-full h-full">
+              </div>
+            )}
+            <div style={{ display: 'none' }} className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-white/90 shadow-md items-center justify-center mb-4 border border-white">
+              <span className="font-black text-2xl text-[#00c9d6] uppercase">
                 {getInitial(advisor.name)}
               </span>
-            )}
+            </div>
           </div>
         </div>
 
-        {/* Middle Body Section */}
-        <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3 bg-white">
+        {/* White Body Card (Overlaps Top Banner with Smooth Curved Rounded Top Corners) */}
+        <div className="relative z-20 -mt-6 bg-white rounded-t-[26px] p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3">
           
           {/* Specialties Tags Row */}
-          <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none pb-1">
+          <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none pb-0.5">
             {advisor.specialties.slice(0, 3).map((spec, i) => (
               <span
                 key={i}
