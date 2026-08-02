@@ -1611,6 +1611,26 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                             <span>SSL Secure Checkout</span>
                                         </div>
 
+                                        {/* Account & Payment Action Button (Bottom of Booking Summary) */}
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                if (bookingStep === 'config') {
+                                                    if (!selectedDate || !selectedTime || !selectedAdvisor) {
+                                                        toast.error('Please select date, time slot, and psychologist to proceed.');
+                                                    } else {
+                                                        handleStepChange('payment');
+                                                    }
+                                                } else if (bookingStep === 'payment') {
+                                                    const submitBtn = document.querySelector('form button[type="submit"]');
+                                                    if (submitBtn) submitBtn.click();
+                                                }
+                                            }}
+                                            className="w-full py-3.5 bg-[#0f172a] hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-widest rounded-xl transition-all shadow-md cursor-pointer text-center border-none mt-2 active:scale-95"
+                                        >
+                                            Account & Payment
+                                        </button>
+
                                     </div>
 
                                 </div>

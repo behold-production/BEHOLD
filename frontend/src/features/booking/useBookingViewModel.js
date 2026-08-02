@@ -269,7 +269,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
 
   const [copiedMeet, setCopiedMeet] = useState(false);
   const [copiedReceipt, setCopiedReceipt] = useState(false);
-  const [showSummary, setShowSummary] = useState(false);
+  const [showSummary, setShowSummary] = useState(true);
   const [downloadingPdf, setDownloadingPdf] = useState(false);
 
   // Read GST & Promo settings from site settings
