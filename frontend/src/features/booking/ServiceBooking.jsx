@@ -879,6 +879,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                     <DateTimePicker
                                                         selectedDate={selectedDate}
                                                         selectedTime={selectedTime}
+                                                        bookingDuration={bookingDuration}
                                                         onDateChange={handleDateChange}
                                                         onTimeChange={(t) => {
                                                             setSelectedTime(t);
@@ -1306,6 +1307,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                 <TimePicker
                                                     selectedDate={selectedDate}
                                                     selectedTime={selectedTime}
+                                                    bookingDuration={bookingDuration}
                                                     onTimeChange={(t) => {
                                                         setSelectedTime(t);
                                                         if (errors.time) setErrors(prev => ({ ...prev, time: null }));

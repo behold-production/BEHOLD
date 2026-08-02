@@ -38,81 +38,114 @@ function formatHumanDate(dateStr) {
  }
 }
 
+function getTimeIntervalLabel(timeStr, durationMinutes = 60) {
+  if (!timeStr) return '';
+  try {
+    const [time, meridiem] = timeStr.split(' ');
+    let [hours, minutes] = time.split(':').map(Number);
+    if (meridiem === 'PM' && hours !== 12) hours += 12;
+    if (meridiem === 'AM' && hours === 12) hours = 0;
+
+    const startTotal = hours * 60 + minutes;
+    const endTotal = startTotal + (Number(durationMinutes) || 60);
+
+    const formatMins = (totalMins) => {
+      let h = Math.floor(totalMins / 60) % 24;
+      const m = totalMins % 60;
+      const period = h >= 12 ? 'PM' : 'AM';
+      let displayH = h % 12;
+      if (displayH === 0) displayH = 12;
+      return `${displayH}:${String(m).padStart(2, '0')} ${period}`;
+    };
+
+    return `${timeStr} - ${formatMins(endTotal)}`;
+  } catch (e) {
+    return timeStr;
+  }
+}
+
 export default function TimePicker({
- selectedDate,
- selectedTime,
- onTimeChange,
- availableSlots = [],
- bookedSlots = [],
- errors = {}
+  selectedDate,
+  selectedTime,
+  onTimeChange,
+  availableSlots = [],
+  bookedSlots = [],
+  errors = {},
+  bookingDuration = 60
 }) {
- const groupedSlots = useMemo(() => {
- const groups = { morning: [], afternoon: [], evening: [] };
- availableSlots.forEach(slot => {
- groups[getTimeBucket(slot)].push(slot);
- });
- return groups;
- }, [availableSlots]);
+  const groupedSlots = useMemo(() => {
+    const groups = { morning: [], afternoon: [], evening: [] };
+    availableSlots.forEach(slot => {
+      groups[getTimeBucket(slot)].push(slot);
+    });
+    return groups;
+  }, [availableSlots]);
 
- return (
- <div className="bg-transparent sm:bg-white border-0 sm:border border-surface-200 rounded-[10px] p-0 sm:p-5 h-full">
- <div className="flex items-center justify-between mb-3 border-b border-surface-200 pb-2">
- <div className="flex items-center gap-1.5">
- <span className="text-sm font-semibold text-surface-900">
- Available Time Slots
- </span>
- </div>
- <span className="text-[9px] font-black text-surface-900 bg-surface-100 border border-surface-200 px-2 py-0.5 rounded-[10px] tracking-widest">
- 1 Hour
- </span>
- </div>
+  return (
+    <div className="bg-transparent sm:bg-white border-0 sm:border border-surface-200 rounded-[10px] p-0 sm:p-5 h-full">
+      <div className="flex items-center justify-between mb-3 border-b border-surface-200 pb-2">
+        <div className="flex items-center gap-1.5">
+          <span className="text-sm font-semibold text-surface-900">
+            Available Time Slots
+          </span>
+        </div>
+        <span className="text-[10px] font-extrabold text-[#06b6d4] bg-[#06b6d4]/10 border border-[#06b6d4]/30 px-2.5 py-1 rounded-[10px] tracking-wider uppercase">
+          {bookingDuration === 30 ? '30 Mins (Half Session)' : '1 Hour (Full Session)'}
+        </span>
+      </div>
 
- {selectedDate ? (
- availableSlots.length > 0 ? (
- <div className="space-y-4 max-h-[320px] sm:max-h-[420px] overflow-y-auto pr-1">
- {['morning', 'afternoon', 'evening'].map(bucket => {
- const items = groupedSlots[bucket];
- if (!items || items.length === 0) return null;
- const meta = BUCKET_META[bucket];
- return (
- <div key={bucket} className="space-y-2">
- <div className={`flex items-center gap-1.5 text-xs font-bold tracking-widest ${meta.color}`}>
- <span>{meta.label}</span>
- <span className="text-surface-400 normal-case">({items.length})</span>
- </div>
- <div className="grid grid-cols-2 gap-1.5">
- {items.map(time => {
- const isSelected = selectedTime === time;
- const isBooked = bookedSlots && bookedSlots.includes(time);
- return (
- <button
- key={time}
- type="button"
- onClick={() => {
- if (isBooked) {
- import('react-hot-toast').then(mod => mod.toast.error("This time slot is already booked by another user."));
- return;
- }
- onTimeChange(time);
- }}
- className={`min-h-[48px] py-2.5 px-2 text-xs font-bold tracking-widest border rounded-[10px] transition cursor-pointer text-center ${
- isSelected
- ? 'bg-surface-900 text-white border-surface-900'
- : isBooked
- ? 'bg-surface-50 border-surface-200 text-surface-400 cursor-not-allowed opacity-60'
- : 'bg-white border-surface-200 text-surface-700 hover:border-surface-400 hover:bg-surface-50'
- }`}
- >
- {time}
- {isBooked && <span className="block text-[10px] text-rose-500 font-semibold mt-0.5">Booked</span>}
- </button>
- );
- })}
- </div>
- </div>
- );
- })}
- </div>
+      {selectedDate ? (
+        availableSlots.length > 0 ? (
+          <div className="space-y-4 max-h-[320px] sm:max-h-[420px] overflow-y-auto pr-1">
+            {['morning', 'afternoon', 'evening'].map(bucket => {
+              const items = groupedSlots[bucket];
+              if (!items || items.length === 0) return null;
+              const meta = BUCKET_META[bucket];
+              return (
+                <div key={bucket} className="space-y-2">
+                  <div className={`flex items-center gap-1.5 text-xs font-bold tracking-widest ${meta.color}`}>
+                    <span>{meta.label}</span>
+                    <span className="text-surface-400 normal-case">({items.length})</span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {items.map(time => {
+                      const isSelected = selectedTime === time;
+                      const isBooked = bookedSlots && bookedSlots.includes(time);
+                      const intervalText = getTimeIntervalLabel(time, bookingDuration);
+
+                      return (
+                        <button
+                          key={time}
+                          type="button"
+                          onClick={() => {
+                            if (isBooked) {
+                              import('react-hot-toast').then(mod => mod.toast.error("This time slot is already booked by another user."));
+                              return;
+                            }
+                            onTimeChange(time);
+                          }}
+                          className={`py-3 px-3 text-xs font-bold tracking-wide border rounded-[10px] transition cursor-pointer text-center flex items-center justify-between ${
+                            isSelected
+                              ? 'bg-surface-900 text-white border-surface-900 shadow-md'
+                              : isBooked
+                              ? 'bg-surface-50 border-surface-200 text-surface-400 cursor-not-allowed opacity-60'
+                              : 'bg-white border-surface-200 text-surface-800 hover:border-surface-400 hover:bg-surface-50'
+                          }`}
+                        >
+                          <span className="font-bold">{intervalText}</span>
+                          {isBooked ? (
+                            <span className="text-[10px] text-rose-500 font-bold uppercase tracking-wider bg-rose-50 px-1.5 py-0.5 rounded">Booked</span>
+                          ) : isSelected ? (
+                            <span className="text-[10px] text-[#06b6d4] font-bold uppercase tracking-wider bg-white/10 px-1.5 py-0.5 rounded">Selected ✓</span>
+                          ) : null}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
  ) : (
  <div className="py-8 text-center space-y-2">
  <p className="text-[10px] font-black text-rose-600 tracking-widest">
