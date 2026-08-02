@@ -46,14 +46,14 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
 
           {/* Main Title Block */}
           <div className="relative leading-none flex flex-col items-center md:items-start group">
-            {/* Line 1 - Slender & Elegant (Maximized for Mobile <768px) */}
-            <h1 className="font-sans font-medium text-slate-800 text-4xl xs:text-[40px] sm:text-5xl md:text-5xl lg:text-[50px] tracking-normal leading-tight transition-all duration-300">
+            {/* Line 1 - Slender & Elegant */}
+            <h1 className="font-sans font-medium text-slate-800 text-3xl sm:text-4xl md:text-4xl lg:text-[44px] tracking-normal leading-tight transition-all duration-300">
               {eyebrowLine1}
             </h1>
 
-            {/* Accent Line 2 - Custom Rough Font (Maximized for Mobile <768px) */}
-            <div className="relative inline-block mt-3 sm:mt-6">
-              <span className="font-rough text-[#00c9d6] text-[108px] xs:text-[116px] sm:text-[130px] md:text-[140px] lg:text-[155px] font-normal tracking-tight [word-spacing:10px] block leading-[0.95] drop-shadow-sm select-none animate-hero-pulse">
+            {/* Accent Line 2 - Custom Cursive Font (Balanced size for md/lg >768px) */}
+            <div className="relative inline-block mt-2 sm:mt-4">
+              <span className="font-rough text-[#00c9d6] text-[72px] sm:text-[82px] md:text-[88px] lg:text-[98px] font-normal tracking-tight [word-spacing:6px] block leading-[0.95] drop-shadow-sm select-none animate-hero-pulse">
                 {displayTitle.toLowerCase()}
               </span>
 
