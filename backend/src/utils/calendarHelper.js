@@ -11,13 +11,13 @@ const { google } = require('googleapis');
  */
 async function generateSessionMeetingLink({ counsellor, user, date, time, service, appointmentId }) {
   let meetingLink = counsellor?.defaultMeetLink || '';
-  const fallbackRoomLink = `https://meet.jit.si/Behold_Session_${appointmentId || Date.now()}`;
+  const fallbackRoomLink = `https://meet.google.com/new`;
 
   if (counsellor && counsellor.googleRefreshToken) {
     try {
       const keyId = process.env.GOOGLE_CLIENT_ID;
       const keySecret = process.env.GOOGLE_CLIENT_SECRET;
-      const redirectUri = process.env.GOOGLE_REDIRECT_URI || 'http://localhost:5000/api/google/callback';
+      const redirectUri = process.env.GOOGLE_REDIRECT_URI || 'https://www.behold.co.in/api/google/callback';
 
       if (keyId && keySecret) {
         const oauth2Client = new google.auth.OAuth2(keyId, keySecret, redirectUri);
@@ -37,19 +37,19 @@ async function generateSessionMeetingLink({ counsellor, user, date, time, servic
         const startTime = new Date(startTimeStr);
         const endTime = new Date(startTime.getTime() + 60 * 60 * 1000); // 1 hour duration
 
-        const frontendUrl = process.env.FRONTEND_URL || 'https://behold-aspire.vercel.app';
+        const frontendUrl = process.env.FRONTEND_URL || 'https://www.behold.co.in';
         
         // Construct event: Counsellor is ORGANIZER, User is ATTENDEE.
         // DO NOT put counsellor in attendees array to avoid Google Meet treating them as guest!
         const event = {
-          summary: `BEHOLD Session: ${user ? user.name : 'Student'} & ${counsellor.name}`,
-          description: `Service: ${service || 'Psychological Counselling'}\nMode: ONLINE\n\nJoin Portal:\n- Student Portal: ${frontendUrl}/profile\n- Advisor Console: ${frontendUrl}/counsellor`,
+          summary: `BEHOLD Counselling Session: ${user ? user.name : 'Student'} & ${counsellor.name}`,
+          description: `Service: ${service || 'Psychological Counselling'}\nMode: ONLINE (Google Meet)\n\nJoin Portals:\n- Student Portal: ${frontendUrl}/profile\n- Advisor Console: ${frontendUrl}/counsellor`,
           start: { dateTime: startTime.toISOString() },
           end: { dateTime: endTime.toISOString() },
           organizer: { email: counsellor.email, displayName: counsellor.name, self: true },
           attendees: user && user.email ? [{ email: user.email, displayName: user.name, responseStatus: 'accepted' }] : [],
           guestsCanModify: true,
-          guestsCanInviteOthers: false,
+          guestsCanInviteOthers: true,
           guestsCanSeeOtherGuests: true,
           conferenceData: {
             createRequest: {
@@ -68,16 +68,16 @@ async function generateSessionMeetingLink({ counsellor, user, date, time, servic
 
         if (response.data && response.data.hangoutLink) {
           meetingLink = response.data.hangoutLink;
-          console.log(`[Google Calendar Success]: Generated Meet link for appointment ${appointmentId}: ${meetingLink}`);
+          console.log(`[Google Calendar Success]: Generated Google Meet link for appointment ${appointmentId}: ${meetingLink}`);
           return meetingLink;
         }
       }
     } catch (calError) {
-      console.error('[Google Calendar API Warning]: Could not create event via Google API, falling back to default/instant room:', calError.message);
+      console.error('[Google Calendar API Warning]: Could not create event via Google API, using default/Google Meet room:', calError.message);
     }
   }
 
-  // Fallback to defaultMeetLink or instant room
+  // Fallback to counsellor defaultMeetLink or Google Meet instant link
   if (!meetingLink || meetingLink.trim() === '') {
     meetingLink = fallbackRoomLink;
   }

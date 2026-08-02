@@ -5,11 +5,24 @@ const Counsellor = require('../models/Counsellor');
 const { verifyJWT } = require('../middleware/authMiddleware');
 
 // Initialize OAuth2 client
-const getOAuth2Client = () => {
+// Initialize OAuth2 client dynamically based on host header or environment variable
+const getOAuth2Client = (req) => {
+  let redirectUri = (process.env.GOOGLE_REDIRECT_URI || '').trim();
+
+  if (!redirectUri) {
+    if (req) {
+      const protocol = req.headers['x-forwarded-proto'] || req.protocol || 'https';
+      const host = req.headers['x-forwarded-host'] || req.headers.host;
+      redirectUri = `${protocol}://${host}/api/google/callback`;
+    } else {
+      redirectUri = 'https://www.behold.co.in/api/google/callback';
+    }
+  }
+
   return new google.auth.OAuth2(
     process.env.GOOGLE_CLIENT_ID,
     process.env.GOOGLE_CLIENT_SECRET,
-    process.env.GOOGLE_REDIRECT_URI || 'http://localhost:5000/api/google/callback'
+    redirectUri
   );
 };
 
@@ -28,7 +41,7 @@ router.get('/url', verifyJWT, async (req, res) => {
       return res.status(403).json({ success: false, message: 'Forbidden: Access denied' });
     }
 
-    const oauth2Client = getOAuth2Client();
+    const oauth2Client = getOAuth2Client(req);
 
     // Generate an auth URL
     // We pass the counsellorId as 'state' so we can associate the token with the correct user in the callback
@@ -57,7 +70,7 @@ router.get('/callback', async (req, res) => {
     }
 
     const counsellorId = state;
-    const oauth2Client = getOAuth2Client();
+    const oauth2Client = getOAuth2Client(req);
 
     // Exchange the authorization code for tokens
     const { tokens } = await oauth2Client.getToken(code);

@@ -161,16 +161,16 @@ const BookingsTab = ({
                         type="text"
                         value={meetLinkInput}
                         onChange={(e) => setMeetLinkInput(e.target.value)}
-                        placeholder="https://meet.google.com/xyz or https://meet.jit.si/room"
+                        placeholder="https://meet.google.com/abc-defg-hij"
                         className="px-3 py-1.5 bg-zinc-950 border border-zinc-800 text-xs text-white rounded-lg outline-none focus:border-brand flex-1 min-w-[220px]"
                       />
                       <button
                         type="button"
-                        onClick={() => setMeetLinkInput(`https://meet.jit.si/Behold_Session_${booking.id}`)}
+                        onClick={() => setMeetLinkInput(`https://meet.google.com/new`)}
                         className="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-brand text-xs font-bold rounded-lg cursor-pointer border border-zinc-700"
-                        title="Auto-generate instant zero-friction HD room"
+                        title="Create new Google Meet room"
                       >
-                        ⚡ Auto HD Room
+                        🎥 Create Google Meet
                       </button>
                       <button
                         type="button"
