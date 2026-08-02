@@ -124,20 +124,18 @@ export default function TimePicker({
                             }
                             onTimeChange(time);
                           }}
-                          className={`py-2.5 px-2 text-[10.5px] xs:text-xs sm:text-[11.5px] font-bold border rounded-xl transition cursor-pointer text-center flex flex-col items-center justify-center gap-0.5 min-h-[44px] ${
+                          className={`py-3 px-2 text-[11px] xs:text-xs sm:text-[12px] font-bold border rounded-xl transition cursor-pointer text-center flex flex-col items-center justify-center min-h-[44px] ${
                             isSelected
-                              ? 'bg-slate-900 text-white border-slate-900 shadow-sm ring-2 ring-[#00c9d6]/40'
+                              ? 'bg-slate-900 text-white border-slate-900 shadow-sm ring-2 ring-[#00c9d6]/50'
                               : isBooked
                               ? 'bg-slate-50 border-slate-200 text-slate-400 cursor-not-allowed opacity-50'
                               : 'bg-white border-slate-200 text-slate-800 hover:border-slate-400 hover:bg-slate-50'
                           }`}
                         >
                           <span className="font-extrabold whitespace-nowrap">{intervalText}</span>
-                          {isBooked ? (
-                            <span className="text-[9px] text-rose-500 font-extrabold uppercase tracking-wider bg-rose-50 px-1.5 py-0.2 rounded">Booked</span>
-                          ) : isSelected ? (
-                            <span className="text-[9px] text-[#00c9d6] font-extrabold uppercase tracking-wider bg-white/10 px-1.5 py-0.2 rounded">Selected ✓</span>
-                          ) : null}
+                          {isBooked && (
+                            <span className="text-[9px] text-rose-500 font-extrabold uppercase tracking-wider mt-0.5">Booked</span>
+                          )}
                         </button>
                       );
                     })}
