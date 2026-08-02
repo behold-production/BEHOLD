@@ -700,24 +700,29 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                             <div className="space-y-2">
                                                 <label className="text-sm font-semibold text-surface-700 block">Select Session Duration</label>
                                                 <div className="grid grid-cols-2 gap-3 w-full">
-                                                    {[
-                                                        { id: 30, label: '30 Minutes (Half Hour)', desc: 'Half Session • ₹499' },
-                                                        { id: 60, label: '1 Hour (Full Session)', desc: 'Full Session • ₹899' }
-                                                    ].map((d) => (
-                                                        <button
-                                                            type="button"
-                                                            key={d.id}
-                                                            disabled={rescheduleSession}
-                                                            onClick={() => setBookingDuration(d.id)}
-                                                            className={`px-4 py-2.5 rounded-xl transition-all duration-300 cursor-pointer flex flex-col items-center justify-center text-center border ${bookingDuration === d.id
-                                                                ? 'bg-[#0f172a] border-[#06b6d4] text-white shadow-xs'
-                                                                : 'bg-white border-surface-200 text-[#0f172a] hover:border-[#06b6d4] hover:bg-surface-50'
-                                                                } ${rescheduleSession ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                                        >
-                                                            <span className="font-bold text-xs sm:text-sm">{d.label}</span>
-                                                            <span className={`text-[11px] mt-0.5 font-semibold ${bookingDuration === d.id ? 'text-[#06b6d4]' : 'text-surface-500'}`}>{d.desc}</span>
-                                                        </button>
-                                                    ))}
+                                                    {(() => {
+                                                        const rawPrice = selectedAdvisor ? (selectedAdvisor.price || 1200) : 1200;
+                                                        const halfPrice = Math.round(rawPrice * 0.5);
+                                                        const fullPrice = rawPrice;
+                                                        return [
+                                                            { id: 30, label: '30 Minutes (Half Hour)', desc: `Half Session • ₹${halfPrice}` },
+                                                            { id: 60, label: '1 Hour (Full Session)', desc: `Full Session • ₹${fullPrice}` }
+                                                        ].map((d) => (
+                                                            <button
+                                                                type="button"
+                                                                key={d.id}
+                                                                disabled={rescheduleSession}
+                                                                onClick={() => setBookingDuration(d.id)}
+                                                                className={`px-4 py-2.5 rounded-xl transition-all duration-300 cursor-pointer flex flex-col items-center justify-center text-center border ${bookingDuration === d.id
+                                                                    ? 'bg-[#0f172a] border-[#06b6d4] text-white shadow-xs'
+                                                                    : 'bg-white border-surface-200 text-[#0f172a] hover:border-[#06b6d4] hover:bg-surface-50'
+                                                                    } ${rescheduleSession ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                                            >
+                                                                <span className="font-bold text-xs sm:text-sm">{d.label}</span>
+                                                                <span className={`text-[11px] mt-0.5 font-semibold ${bookingDuration === d.id ? 'text-[#06b6d4]' : 'text-surface-500'}`}>{d.desc}</span>
+                                                            </button>
+                                                        ));
+                                                    })()}
                                                 </div>
                                             </div>
 
