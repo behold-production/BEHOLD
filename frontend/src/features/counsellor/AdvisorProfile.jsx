@@ -130,26 +130,18 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             <ChevronLeft className="w-4 h-4 text-slate-500 group-hover:text-white group-hover:-translate-x-0.5 transition-all" />
             <span>Back to Specialists</span>
           </button>
-
-          <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-slate-800 bg-white border border-slate-200/90 px-4 py-2 rounded-full shadow-2xs">
-            <ShieldCheck className="w-4 h-4 text-[#00c9d6] shrink-0" />
-            <span>Verified BEHOLD Practitioner</span>
-          </div>
         </div>
 
         {/* Hero Profile Header Card */}
         <div className="bg-white rounded-3xl shadow-sm border border-slate-200/80 p-6 sm:p-8 md:p-10 relative overflow-hidden mb-8 transition-all">
           <div className="flex flex-col md:flex-row gap-6 sm:gap-8 items-start md:items-center relative z-10">
-            {/* Avatar Badge */}
+            {/* Avatar Container */}
             <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-2xl bg-gradient-to-tr from-[#00c9d6] to-[#008b94] text-white shadow-md border-2 border-white flex items-center justify-center font-black text-4xl sm:text-5xl shrink-0 overflow-hidden relative group">
               {advisor.profilePic ? (
                 <img src={advisor.profilePic} alt={advisor.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
               ) : (
                 <span>{getInitials(advisor.name)}</span>
               )}
-              <div className="absolute bottom-2 right-2 w-7 h-7 rounded-full bg-slate-900 border-2 border-white flex items-center justify-center shadow-md" title="Verified Specialist">
-                <CheckCircle2 className="w-4 h-4 text-[#00c9d6]" />
-              </div>
             </div>
 
             {/* Title & Key Metrics */}
