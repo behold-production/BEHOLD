@@ -107,7 +107,7 @@ export default function TimePicker({
                     <span>{meta.label}</span>
                     <span className="text-surface-400 normal-case">({items.length})</span>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-2.5">
                     {items.map(time => {
                       const isSelected = selectedTime === time;
                       const isBooked = bookedSlots && bookedSlots.includes(time);
@@ -124,19 +124,19 @@ export default function TimePicker({
                             }
                             onTimeChange(time);
                           }}
-                          className={`py-3 px-3 text-xs font-bold tracking-wide border rounded-[10px] transition cursor-pointer text-center flex items-center justify-between ${
+                          className={`py-2.5 px-2 text-[10.5px] xs:text-xs sm:text-[11.5px] font-bold border rounded-xl transition cursor-pointer text-center flex flex-col items-center justify-center gap-0.5 min-h-[44px] ${
                             isSelected
-                              ? 'bg-surface-900 text-white border-surface-900 shadow-md'
+                              ? 'bg-slate-900 text-white border-slate-900 shadow-sm ring-2 ring-[#00c9d6]/40'
                               : isBooked
-                              ? 'bg-surface-50 border-surface-200 text-surface-400 cursor-not-allowed opacity-60'
-                              : 'bg-white border-surface-200 text-surface-800 hover:border-surface-400 hover:bg-surface-50'
+                              ? 'bg-slate-50 border-slate-200 text-slate-400 cursor-not-allowed opacity-50'
+                              : 'bg-white border-slate-200 text-slate-800 hover:border-slate-400 hover:bg-slate-50'
                           }`}
                         >
-                          <span className="font-bold">{intervalText}</span>
+                          <span className="font-extrabold whitespace-nowrap">{intervalText}</span>
                           {isBooked ? (
-                            <span className="text-[10px] text-rose-500 font-bold uppercase tracking-wider bg-rose-50 px-1.5 py-0.5 rounded">Booked</span>
+                            <span className="text-[9px] text-rose-500 font-extrabold uppercase tracking-wider bg-rose-50 px-1.5 py-0.2 rounded">Booked</span>
                           ) : isSelected ? (
-                            <span className="text-[10px] text-[#06b6d4] font-bold uppercase tracking-wider bg-white/10 px-1.5 py-0.5 rounded">Selected ✓</span>
+                            <span className="text-[9px] text-[#00c9d6] font-extrabold uppercase tracking-wider bg-white/10 px-1.5 py-0.2 rounded">Selected ✓</span>
                           ) : null}
                         </button>
                       );
