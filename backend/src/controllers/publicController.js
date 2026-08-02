@@ -122,7 +122,9 @@ const PublicController = {
             { value: '98%', label: 'Success Rate' }
           ],
           enablePsychology: settings.enablePsychology !== false,
+          enableCareerMentoring: settings.enableCareerMentoring !== false,
           enableAptitude: settings.enableAptitude !== false,
+          enableSampleTest: settings.enableSampleTest !== false,
           enableOnline: settings.enableOnline !== false,
           enableOffline: settings.enableOffline !== false,
           enableDoorstep: settings.enableDoorstep !== false

@@ -158,8 +158,8 @@ const UserController = {
     try {
       const { id } = req.params;
       const counsellor = await StorageService.findById('counsellors', id);
-      if (!counsellor || counsellor.isActive === false || counsellor.isDeleted === true) {
-        return res.status(404).json({ success: false, message: 'Counsellor not found or currently suspended' });
+      if (!counsellor || counsellor.isActive === false || counsellor.isDeleted === true || counsellor.isVerified === false) {
+        return res.status(404).json({ success: false, message: 'Counsellor not found or pending admin approval' });
       }
 
       const { password, ...counsellorData } = counsellor;
