@@ -672,7 +672,7 @@ export default function App() {
           {/* Landing Page - Exactly 4 Sections */}
           <Route path="/" element={
             <main className="fade-in-up">
-              <Hero setView={() => { }} navigateToSection={navigateToSection} siteSettings={siteSettings} />
+              <Hero setView={() => { }} navigateToSection={navigateToSection} siteSettings={siteSettings} onOpenBooking={() => setIsBookingModalOpen(true)} />
               <TherapistSwipeSection onBookTherapist={handleBookTherapist} navigateToSection={navigateToSection} />
               <FaqBlogSection />
               <ContactInquirySection />

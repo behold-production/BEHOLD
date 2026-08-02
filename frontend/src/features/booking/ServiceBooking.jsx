@@ -902,75 +902,56 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                             </div>
                                         )}
 
-                                        {/* Step 2: Advisor Selection */}
-                                        {(!isAdvisorLocked && selectedDate) && (
+                                        {/* Step 2: Advisor Selection (Shown only when no advisor is selected yet) */}
+                                        {(!selectedAdvisor && selectedDate) && (
                                             <div ref={step2Ref} className="space-y-3 pt-6 border-t border-surface-200 animate-in fade-in slide-in-from-top-2 duration-300">
                                                 <div className="flex items-center justify-between mb-4">
                                                     <label className="text-sm font-semibold text-surface-900 block ">
-                                                        2. {isAdvisorLocked ? 'Advisor Pre-Selected' : (selectedAdvisor ? 'Selected Advisor' : 'Choose Advisor')}
+                                                        Choose Psychologist
                                                     </label>
                                                 </div>
-                                                {isAdvisorLocked && selectedAdvisor ? (
-                                                    <div className="p-4 border border-surface-900 bg-surface-50 shadow-sm rounded-xl">
-                                                        <div className="flex items-start justify-between gap-3">
-                                                            <div className="space-y-1.5 text-left min-w-0 flex-1">
-                                                                <h4 className="font-bold text-surface-900 text-sm sm:text-base leading-tight ">{selectedAdvisor.name}</h4>
-                                                                <p className="text-xs text-surface-600 font-medium ">{selectedAdvisor.role}</p>
-                                                                {bookingMode === 'OFFLINE' && selectedAdvisor.locationName && (
-                                                                    <span className="text-xs text-surface-600 font-medium mt-1 block ">
-                                                                        📍 Center: {selectedAdvisor.locationName}
-                                                                    </span>
-                                                                )}
-                                                                <span className="text-xs font-semibold text-surface-900 mt-1 inline-block ">Pre-selected</span>
-                                                            </div>
-                                                            <div className="flex flex-col items-end gap-2 shrink-0">
-                                                                <span className="text-sm font-bold text-surface-900 ">₹{selectedAdvisor.price}</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                ) : (
-                                                    <div className="space-y-3">
-                                                        {(() => {
-                                                            const filteredAdvisors = advisors
-                                                                .filter(advisor => advisor.type === bookingService)
-                                                                .filter(advisor => !advisor.modes || advisor.modes.includes(bookingMode))
-                                                                .filter(advisor => {
-                                                                    if (bookingMode !== 'DOOR_STEP') return true;
-                                                                    const clientLat = parseFloat(bookingForm.clientLatitude);
-                                                                    const clientLng = parseFloat(bookingForm.clientLongitude);
-                                                                    const advLat = Number(advisor.latitude);
-                                                                    const advLng = Number(advisor.longitude);
-                                                                    if (isNaN(clientLat) || isNaN(clientLng) || !advLat || !advLng) return false;
-                                                                    const distance = getHaversineDistance(clientLat, clientLng, advLat, advLng);
-                                                                    return distance <= 10;
-                                                                });
+                                                <div className="space-y-3">
+                                                    {(() => {
+                                                        const filteredAdvisors = advisors
+                                                            .filter(advisor => advisor.type === bookingService)
+                                                            .filter(advisor => !advisor.modes || advisor.modes.includes(bookingMode))
+                                                            .filter(advisor => {
+                                                                if (bookingMode !== 'DOOR_STEP') return true;
+                                                                const clientLat = parseFloat(bookingForm.clientLatitude);
+                                                                const clientLng = parseFloat(bookingForm.clientLongitude);
+                                                                const advLat = Number(advisor.latitude);
+                                                                const advLng = Number(advisor.longitude);
+                                                                if (isNaN(clientLat) || isNaN(clientLng) || !advLat || !advLng) return false;
+                                                                const distance = getHaversineDistance(clientLat, clientLng, advLat, advLng);
+                                                                return distance <= 10;
+                                                            });
 
-                                                            if (filteredAdvisors.length === 0) {
-                                                                return (
-                                                                    <div className="p-4 border border-dashed border-surface-200 rounded-xl bg-surface-50 text-surface-600 text-center font-medium text-sm">
-                                                                        No psychologists are available matching your criteria.
-                                                                    </div>
-                                                                );
-                                                            }
-
-                                                            const availableAdvisors = filteredAdvisors.filter(advisor => getAdvisorSlotsForDate(advisor, selectedDate).length > 0);
-
-                                                            if (availableAdvisors.length === 0) {
-                                                                return (
-                                                                    <div className="p-4 border border-dashed border-surface-200 rounded-xl bg-surface-50 text-surface-600 text-center font-medium text-sm">
-                                                                No psychologists are available on this selected date. Please choose another date.
-                                                                    </div>
-                                                                );
-                                                            }
-
-                                                            const advisorsToRender = selectedAdvisor ? [selectedAdvisor] : availableAdvisors.slice((advisorPage - 1) * 4, advisorPage * 4);
-
+                                                        if (filteredAdvisors.length === 0) {
                                                             return (
-                                                                <>
-                                                                    {advisorsToRender.map((advisor) => {
-                                                                        const slots = getAdvisorSlotsForDate(advisor, selectedDate);
-                                                                        const isAvailable = slots.length > 0;
-                                                                        const isSelected = selectedAdvisor?.id === advisor.id;
+                                                                <div className="p-4 border border-dashed border-surface-200 rounded-xl bg-surface-50 text-surface-600 text-center font-medium text-sm">
+                                                                    No psychologists are available matching your criteria.
+                                                                </div>
+                                                            );
+                                                        }
+
+                                                        const availableAdvisors = filteredAdvisors.filter(advisor => getAdvisorSlotsForDate(advisor, selectedDate).length > 0);
+
+                                                        if (availableAdvisors.length === 0) {
+                                                            return (
+                                                                <div className="p-4 border border-dashed border-surface-200 rounded-xl bg-surface-50 text-surface-600 text-center font-medium text-sm">
+                                                                    No psychologists are available on this selected date. Please choose another date.
+                                                                </div>
+                                                            );
+                                                        }
+
+                                                        const advisorsToRender = availableAdvisors.slice((advisorPage - 1) * 4, advisorPage * 4);
+
+                                                        return (
+                                                            <>
+                                                                {advisorsToRender.map((advisor) => {
+                                                                    const slots = getAdvisorSlotsForDate(advisor, selectedDate);
+                                                                    const isAvailable = slots.length > 0;
+                                                                    const isSelected = selectedAdvisor?.id === advisor.id;
 
                                                                         if (isSelected) {
                                                                             return (
@@ -1281,27 +1262,8 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             );
                                                         })()}
 
-                                                        {selectedAdvisor && !isAdvisorLocked && (
-                                                            <div className="pt-3 pb-1 flex justify-center">
-                                                                <button
-                                                                    type="button"
-                                                                    onClick={() => {
-                                                                        setSelectedAdvisor(null);
-                                                                        setSelectedTime('');
-                                                                        setTimeout(() => {
-                                                                            step2Ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                                                                        }, 100);
-                                                                    }}
-                                                                    className="px-8 py-2.5 bg-white border-2 border-surface-200 text-brand font-semibold text-sm rounded-full hover:border-brand transition-colors cursor-pointer active:scale-[0.98]"
-                                                                >
-                                                                    Change Advisor
-                                                                </button>
-                                                            </div>
-                                                        )}
-
                                                         {errors.advisor && <p className="text-xs text-rose-500 font-medium mt-1 ">{errors.advisor}</p>}
                                                     </div>
-                                                )}
                                             </div>
                                         )}
 

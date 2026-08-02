@@ -15,9 +15,11 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
   const navigate = useNavigate();
 
   const handleConnectClick = () => {
-    if (onOpenBooking) onOpenBooking();
-    else navigate('/booking');
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (onOpenBooking) {
+      onOpenBooking();
+    } else {
+      navigate('/booking');
+    }
   };
 
   return (
