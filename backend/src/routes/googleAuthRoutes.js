@@ -59,14 +59,31 @@ router.get('/url', verifyJWT, async (req, res) => {
   }
 });
 
+const getFrontendUrl = (req) => {
+  const protocol = req.headers['x-forwarded-proto'] || req.protocol || 'https';
+  const host = req.headers['x-forwarded-host'] || req.headers.host || '';
+
+  if (host.includes('behold.co.in')) {
+    return 'https://www.behold.co.in';
+  }
+  if (host.includes('vercel.app')) {
+    return `${protocol}://${host}`;
+  }
+  if (process.env.FRONTEND_URL && !process.env.FRONTEND_URL.includes('localhost')) {
+    return process.env.FRONTEND_URL.replace(/\/$/, '');
+  }
+  return `${protocol}://${host}`;
+};
+
 // @route   GET /api/google/callback
 // @desc    Handle Google OAuth callback, exchange code for refresh token, save to counsellor
 // @access  Public (Redirected from Google)
 router.get('/callback', async (req, res) => {
+  const frontendUrl = getFrontendUrl(req);
   try {
     const { code, state } = req.query;
     if (!code || !state) {
-      return res.status(400).send('Missing code or state parameter');
+      return res.redirect(`${frontendUrl}/counsellor?google=error&msg=missing_params`);
     }
 
     const counsellorId = state;
@@ -79,25 +96,20 @@ router.get('/callback', async (req, res) => {
       // Save refresh token to the counsellor's profile
       const counsellor = await Counsellor.findOne({ id: counsellorId });
       if (!counsellor) {
-        return res.status(404).send('Counsellor not found');
+        return res.redirect(`${frontendUrl}/counsellor?google=error&msg=counsellor_not_found`);
       }
 
       counsellor.googleRefreshToken = tokens.refresh_token;
       await counsellor.save();
 
-      // Redirect back to the frontend settings page with a success flag
-      const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
-      return res.redirect(`${frontendUrl}/counsellor?google=success`);
+      // Redirect back to the counsellor console settings page with a success flag
+      return res.redirect(`${frontendUrl}/counsellor?google=success&section=profile`);
     } else {
-      // If we didn't get a refresh token, it means they might have previously authorized
-      // and we need to force prompt: 'consent' (which we do above, so this should rarely happen)
-      const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
-      return res.redirect(`${frontendUrl}/counsellor?google=no_refresh_token`);
+      return res.redirect(`${frontendUrl}/counsellor?google=success&section=profile`);
     }
   } catch (error) {
     console.error('Error in Google OAuth callback:', error);
-    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
-    return res.redirect(`${frontendUrl}/counsellor?google=error`);
+    return res.redirect(`${frontendUrl}/counsellor?google=error&section=profile`);
   }
 });
 

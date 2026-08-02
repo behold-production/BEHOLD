@@ -604,18 +604,26 @@ export default function PsychologistDashboard({ setView }) {
 
  // Handle Google Auth Return Params
  useEffect(() => {
- const params = new URLSearchParams(window.location.search);
- const googleStatus = params.get('google');
- if (googleStatus) {
- if (googleStatus === 'success') {
- import('react-hot-toast').then(mod => mod.toast.success('Google Calendar Connected!'));
- } else if (googleStatus === 'error') {
- import('react-hot-toast').then(mod => mod.toast.error('Failed to connect Google Calendar'));
- }
- // Remove query param
- window.history.replaceState({}, document.title, window.location.pathname);
- }
- }, []);
+    const params = new URLSearchParams(window.location.search);
+    const googleStatus = params.get('google');
+    const targetSection = params.get('section');
+
+    if (targetSection) {
+      setCurrentSection(targetSection);
+    }
+
+    if (googleStatus) {
+      setCurrentSection('profile');
+      if (googleStatus === 'success') {
+        import('react-hot-toast').then(mod => mod.toast.success('Google Calendar Connected Successfully!'));
+        if (loadBookingsData) loadBookingsData();
+      } else if (googleStatus === 'error') {
+        import('react-hot-toast').then(mod => mod.toast.error('Failed to connect Google Calendar. Please try again.'));
+      }
+      // Remove query param cleanly without reloading page
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
 
  // Auto-refresh bookings silently when switching to bookings or overview tab
  useEffect(() => {
