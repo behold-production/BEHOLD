@@ -1319,9 +1319,9 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                             </div>
                                         )}
 
-                                        {/* Navigation */}
-                                        <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-8 mt-4 border-t border-surface-200">
-                                            {rescheduleSession ? (
+                                        {/* Navigation for Reschedule Sessions only */}
+                                        {rescheduleSession && (
+                                            <div className="flex items-center justify-end pt-6 mt-4 border-t border-surface-200">
                                                 <button
                                                     type="button"
                                                     disabled={!selectedDate || !selectedTime || isSubmitting}
@@ -1330,17 +1330,8 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                 >
                                                     {isSubmitting ? 'Rescheduling...' : 'Confirm Reschedule'}
                                                 </button>
-                                            ) : (
-                                                <button
-                                                    type="button"
-                                                    disabled={!selectedDate || !selectedTime || !selectedAdvisor}
-                                                    onClick={() => handleStepChange('payment')}
-                                                    className="px-6 py-2.5 min-h-[48px] bg-surface-900 text-white font-semibold text-sm rounded-xl transition hover:bg-black disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center border-none shadow-none w-full sm:w-auto"
-                                                >
-                                                    Account & Payment
-                                                </button>
-                                            )}
-                                        </div>
+                                            </div>
+                                        )}
                                     </div>
                                 )}
 
