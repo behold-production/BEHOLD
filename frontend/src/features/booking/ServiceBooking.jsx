@@ -52,7 +52,7 @@ const CAREER_FLOW = {
     ]
 };
 
-export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, clearPreselectedAdvisor }) {
+export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, clearPreselectedAdvisor, onOpenDocs }) {
     if (!isOpen) return null;
 
     const {
@@ -1424,7 +1424,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                 A secure Razorpay checkout overlay will open to complete your payment using UPI, Cards, Netbanking, or Wallet.
                                                             </p>
                                                             <p className="text-[11px] text-surface-500 font-normal mt-2">
-                                                                By proceeding, you agree to our platform <button type="button" onClick={() => props.onOpenDocs?.('terms')} className="underline hover:text-surface-900 bg-transparent border-none p-0 cursor-pointer text-[11px]">Terms</button> and <button type="button" onClick={() => props.onOpenDocs?.('refund')} className="underline hover:text-surface-900 bg-transparent border-none p-0 cursor-pointer text-[11px]">Return & Refund Policy</button>.
+                                                                By proceeding, you agree to our platform <button type="button" onClick={() => onOpenDocs?.('terms')} className="underline hover:text-surface-900 bg-transparent border-none p-0 cursor-pointer text-[11px]">Terms</button> and <button type="button" onClick={() => onOpenDocs?.('refund')} className="underline hover:text-surface-900 bg-transparent border-none p-0 cursor-pointer text-[11px]">Return & Refund Policy</button>.
                                                             </p>
                                                         </div>
                                                     </div>

@@ -34,6 +34,18 @@ window.spaNavigate = function (path) {
   window.location.pathname = path;
 };
 
+// Suppress non-critical third-party analytics (e.g. Razorpay lumberjack / adblocker blocks) console errors
+window.addEventListener('unhandledrejection', (event) => {
+  const reasonStr = String(event.reason || '');
+  if (
+    reasonStr.includes('lumberjack.razorpay') ||
+    reasonStr.includes('ERR_BLOCKED_BY_CLIENT') ||
+    reasonStr.includes('otp-credentials')
+  ) {
+    event.preventDefault();
+  }
+});
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <AuthProvider>
