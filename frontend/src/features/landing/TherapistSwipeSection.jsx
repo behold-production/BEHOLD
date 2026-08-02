@@ -46,12 +46,12 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
         if (isMounted) {
           if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
             const formatted = res.data.map((c) => {
-              const rawPhoto = c.photo || c.avatar || c.profilePicture || c.image;
-              const hasValidPhoto = rawPhoto && typeof rawPhoto === 'string' && !rawPhoto.includes('unsplash.com') && !rawPhoto.includes('via.placeholder') && !rawPhoto.includes('lorempicsum');
+              const rawPhoto = c.profilePic || c.photo || c.avatar || c.profilePicture || c.image || c.user?.profilePic;
+              const hasValidPhoto = rawPhoto && typeof rawPhoto === 'string' && rawPhoto.trim().length > 0 && !rawPhoto.includes('via.placeholder');
               return {
                 id: c.id || c._id,
                 name: c.name || c.user?.name || c.fullName || 'Psychologist',
-                designation: c.designation || c.role || 'CONSULTANT PSYCHOLOGIST',
+                designation: c.designation || c.role || 'Consultant Psychologist',
                 title: c.title || c.qualification || 'Psychologist',
                 fee: c.fee || c.price || c.consultationFee || '1000',
                 hours: c.hours || 100,
@@ -191,29 +191,39 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
   const renderCard = (advisor, isCenter) => {
     if (!advisor) return null;
     return (
-      <div className={`w-full h-full flex flex-col justify-between overflow-hidden bg-white rounded-3xl transition-all duration-500 text-left ${isCenter ? 'pointer-events-auto border-2 border-[#00c9d6] shadow-[0_12px_40px_rgba(0,201,214,0.25)]' : 'pointer-events-none border border-slate-200/80 shadow-md'}`}>
+      <div className={`w-full h-full flex flex-col justify-between overflow-hidden bg-white rounded-[26px] transition-all duration-500 text-left ${isCenter ? 'pointer-events-auto border-[2px] border-[#00c9d6] shadow-[0_12px_40px_rgba(0,201,214,0.25)]' : 'pointer-events-none border border-slate-200/80 shadow-md'}`}>
         
-        {/* Top Header Section (Primary Teal Theme Background) */}
-        <div className="relative w-full p-4 sm:p-5 bg-gradient-to-r from-[#00c9d6]/20 via-[#d4f8fc] to-[#00c9d6]/30 flex items-center justify-between border-b border-[#00c9d6]/20">
+        {/* Top Header Section (Primary Teal Theme Background with Matched Rounded Top Corners) */}
+        <div className="relative w-full p-4 sm:p-5 bg-gradient-to-r from-[#00c9d6]/25 via-[#d4f8fc] to-[#00c9d6]/35 flex items-center justify-between border-b border-[#00c9d6]/20 rounded-t-[24px]">
           <div className="pr-2 space-y-1">
-            <h3 className="font-sans text-base sm:text-xl font-black text-slate-900 leading-tight truncate max-w-[180px] sm:max-w-[210px]">
+            <h3 className="font-sans text-base sm:text-xl font-black text-slate-900 leading-tight truncate max-w-[170px] sm:max-w-[200px]">
               {advisor.name}
             </h3>
-            <p className="text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-wide truncate max-w-[180px] sm:max-w-[210px]">
+            <p className="text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-wide truncate max-w-[170px] sm:max-w-[200px]">
               {advisor.designation || 'Consultant Psychologist'}
             </p>
           </div>
 
-          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-white shadow-md overflow-hidden shrink-0 bg-white flex items-center justify-center">
+          {/* Counsellor Profile Image in Top Right */}
+          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl border-2 border-white shadow-md overflow-hidden shrink-0 bg-white flex items-center justify-center relative">
             {advisor.photo ? (
-              <img
-                src={advisor.photo}
-                alt={advisor.name}
-                className="w-full h-full object-cover object-top"
-                onError={(e) => { e.target.style.display = 'none'; }}
-              />
+              <>
+                <img
+                  src={advisor.photo}
+                  alt={advisor.name}
+                  className="w-full h-full object-cover object-top"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                    const fallback = e.currentTarget.nextElementSibling;
+                    if (fallback) fallback.style.display = 'flex';
+                  }}
+                />
+                <span style={{ display: 'none' }} className="font-black text-2xl text-[#00c9d6] uppercase items-center justify-center w-full h-full">
+                  {getInitial(advisor.name)}
+                </span>
+              </>
             ) : (
-              <span className="font-black text-xl text-[#00c9d6] uppercase">
+              <span className="font-black text-2xl text-[#00c9d6] uppercase flex items-center justify-center w-full h-full">
                 {getInitial(advisor.name)}
               </span>
             )}
