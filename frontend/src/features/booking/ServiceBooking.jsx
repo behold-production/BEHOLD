@@ -1435,12 +1435,15 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                         <button
                                                             type="submit"
                                                             disabled={isProcessingPayment}
-                                                            className="px-6 py-3 min-h-[48px] btn-primary text-xs rounded-full transition flex items-center justify-center cursor-pointer disabled:opacity-50 w-full sm:w-auto "
+                                                            className="px-8 py-3.5 min-h-[48px] bg-[#0f172a] hover:bg-black text-[#00c9d6] hover:text-white font-bold text-xs uppercase tracking-wider rounded-full transition flex items-center justify-center cursor-pointer disabled:opacity-50 w-full sm:w-auto border-none shadow-md"
                                                         >
                                                             {isProcessingPayment ? (
-                                                                <div className="w-4 h-4 border-2 border-surface-900/30 border-t-brand rounded-full animate-spin" />
+                                                                <div className="flex items-center gap-2">
+                                                                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                                                    <span>Processing Payment...</span>
+                                                                </div>
                                                             ) : (
-                                                                <span>Pay & Confirm</span>
+                                                                <span>Pay & Confirm (₹{netTotal})</span>
                                                             )}
                                                         </button>
                                                     </div>
@@ -1599,27 +1602,23 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
                                         </div>
 
-                                        {/* Standalone Account & Payment Action Button (Below all cards in right column) */}
-                                        <button
-                                            type="button"
-                                            disabled={isProcessingPayment}
-                                            onClick={(e) => {
-                                                if (bookingStep === 'config') {
+                                        {/* Standalone Action Button in right column for config step */}
+                                        {bookingStep === 'config' && (
+                                            <button
+                                                type="button"
+                                                disabled={isProcessingPayment}
+                                                onClick={() => {
                                                     if (!selectedDate || !selectedTime || !selectedAdvisor) {
                                                         toast.error('Please select date, time slot, and psychologist to proceed.');
                                                     } else {
                                                         handleStepChange('payment');
                                                     }
-                                                } else if (bookingStep === 'payment') {
-                                                    handlePaymentSubmit(e);
-                                                }
-                                            }}
-                                            className="w-full py-4 bg-[#0f172a] hover:bg-slate-800 active:scale-[0.98] text-[#00c9d6] hover:text-white font-black text-xs uppercase tracking-widest rounded-2xl transition-all shadow-lg hover:shadow-xl cursor-pointer text-center border-none block mt-3 disabled:opacity-50 disabled:cursor-not-allowed"
-                                        >
-                                            {bookingStep === 'config'
-                                                ? 'Proceed to Payment'
-                                                : (isProcessingPayment ? 'Processing Payment...' : 'Pay & Confirm')}
-                                        </button>
+                                                }}
+                                                className="w-full py-4 bg-[#0f172a] hover:bg-slate-800 active:scale-[0.98] text-[#00c9d6] hover:text-white font-black text-xs uppercase tracking-widest rounded-2xl transition-all shadow-lg hover:shadow-xl cursor-pointer text-center border-none block mt-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                                            >
+                                                Proceed to Payment
+                                            </button>
+                                        )}
                                     </div>
 
                                 </div>

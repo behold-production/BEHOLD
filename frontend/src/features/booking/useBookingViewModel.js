@@ -778,10 +778,10 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       setTimeout(() => {
         setBookingForm(prev => {
           const merged = {
-            name: prev.name && prev.name.trim().length > 0 ? prev.name : user.name,
-            email: user.email,
-            phone: prev.phone || '',
-            groupCode: prev.groupCode || '',
+            name: prev.name && prev.name.trim().length > 0 ? prev.name : (user.name || ''),
+            email: user.email || prev.email || '',
+            phone: prev.phone && prev.phone.trim().length > 0 ? prev.phone : (user.phone || ''),
+            groupCode: prev.groupCode || user.groupCode || '',
             clientLocationName: prev.clientLocationName || user.locationName || '',
             clientLatitude: prev.clientLatitude || user.latitude || '',
             clientLongitude: prev.clientLongitude || user.longitude || ''
@@ -1046,9 +1046,9 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
           }
         },
         prefill: {
-          name: bookingForm.name,
-          email: bookingForm.email,
-          contact: bookingForm.phone
+          name: bookingForm.name || user?.name || '',
+          email: bookingForm.email || user?.email || '',
+          contact: bookingForm.phone || user?.phone || ''
         },
         theme: {
           color: "#00E5FF"
@@ -1121,7 +1121,9 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
   };
 
   const handlePaymentSubmit = (e) => {
-    e.preventDefault();
+    if (e && typeof e.preventDefault === 'function') {
+      e.preventDefault();
+    }
 
     if (!user) {
       setShowAuthModal(true);
@@ -1132,25 +1134,16 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     
     const baseErrors = {};
 
-    if (!bookingForm.name.trim()) baseErrors.name = 'Name is required';
-    else if (bookingForm.name.trim().length < 3) baseErrors.name = 'Name must be at least 3 characters';
+    const resolvedName = (bookingForm.name || user?.name || '').trim();
+    const resolvedEmail = (bookingForm.email || user?.email || '').trim();
+    const resolvedPhone = (bookingForm.phone || user?.phone || '').trim();
 
-    if (!bookingForm.phone.trim()) {
-      baseErrors.phone = 'Phone number is required';
-    } else {
-      const phoneRegex = /^(\+?\d{1,4}[- ]?)?[6-9]\d{9}$/;
-      if (!phoneRegex.test(bookingForm.phone)) {
-        baseErrors.phone = 'Please enter a valid 10-digit phone number';
-      }
+    if (!resolvedName) {
+      baseErrors.name = 'Name is required';
     }
 
-    if (!bookingForm.email.trim()) {
+    if (!resolvedEmail) {
       baseErrors.email = 'Email is required';
-    } else {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(bookingForm.email)) {
-        baseErrors.email = 'Please enter a valid email address';
-      }
     }
 
     if (bookingMode === 'DOOR_STEP') {
@@ -1187,17 +1180,17 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
 
     if (Object.keys(baseErrors).length > 0) {
       setErrors(baseErrors);
-      const firstErrorField = ['name', 'phone', 'email', 'clientLocationName', 'clientLatitude', 'clientLongitude'].find(
-        (k) => baseErrors[k]
-      );
-      if (firstErrorField) {
-        const el = document.getElementsByName(firstErrorField)[0] || document.getElementById('booking-console');
-        if (el && el.scrollIntoView) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-      }
+      const firstError = Object.values(baseErrors)[0];
+      toast.error(firstError);
       return;
     }
+
+    setBookingForm(prev => ({
+      ...prev,
+      name: resolvedName,
+      email: resolvedEmail,
+      phone: resolvedPhone
+    }));
 
     try {
       const draft = {
@@ -1207,10 +1200,15 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         selectedTime,
         selectedAdvisorId: selectedAdvisor ? selectedAdvisor.id : null,
         advisorConfirmed,
-        bookingForm
+        bookingForm: {
+          ...bookingForm,
+          name: resolvedName,
+          email: resolvedEmail,
+          phone: resolvedPhone
+        }
       };
       sessionStorage.setItem(BOOKING_DRAFT_KEY, JSON.stringify(draft));
-    } catch (e) { /* ignore */ }
+    } catch (err) { /* ignore */ }
 
     processPayment();
   };
