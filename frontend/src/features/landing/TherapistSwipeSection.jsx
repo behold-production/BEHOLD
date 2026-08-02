@@ -28,6 +28,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRole, setSelectedRole] = useState('ALL');
   const [sortBy, setSortBy] = useState('RECOMMENDED');
+  const [expandedBios, setExpandedBios] = useState({});
 
   // Drag State
   const [isDragging, setIsDragging] = useState(false);
@@ -245,17 +246,33 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
             ))}
           </div>
 
-          {/* Description Card Section (Replaces audio wave section) */}
-          <div className="bg-slate-50/90 border border-slate-200/80 rounded-2xl p-3 flex items-center justify-between gap-3 shadow-xs">
-            <p className="text-[10px] sm:text-xs text-slate-600 italic font-medium leading-relaxed line-clamp-2 flex-1">
-              "{advisor.bio || 'Specializing in compassionate psychological counselling and mental wellbeing.'}"
-            </p>
+          {/* Description Card Section with Interactive Read More Toggle */}
+          <div className="bg-slate-50/90 border border-slate-200/80 rounded-2xl p-3 flex items-start justify-between gap-2 shadow-xs transition-all duration-300">
+            <div className="flex-1 pr-1">
+              <p className={`text-[10px] sm:text-xs text-slate-700 italic font-medium leading-relaxed ${expandedBios[advisor.id] ? '' : 'line-clamp-2'}`}>
+                "{advisor.bio || 'Specializing in compassionate psychological counselling and mental wellbeing.'}"
+              </p>
+              {advisor.bio && advisor.bio.length > 50 && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setExpandedBios(prev => ({ ...prev, [advisor.id]: !prev[advisor.id] }));
+                  }}
+                  className="text-[10px] sm:text-[11px] font-extrabold text-[#00c9d6] hover:text-[#008b94] hover:underline cursor-pointer mt-1 inline-block uppercase tracking-wider"
+                >
+                  {expandedBios[advisor.id] ? 'Read Less ▲' : 'Read More ▼'}
+                </button>
+              )}
+            </div>
+
             <button
+              type="button"
               onClick={(e) => {
                 e.stopPropagation();
                 navigate(`/advisor/${advisor.id}`);
               }}
-              className="px-3 py-1.5 border border-slate-900 text-slate-900 hover:bg-slate-900 hover:text-white rounded-full text-[10px] sm:text-xs font-bold transition cursor-pointer shrink-0 whitespace-nowrap"
+              className="px-3 py-1.5 border border-slate-900 text-slate-900 hover:bg-slate-900 hover:text-white rounded-full text-[10px] sm:text-xs font-bold transition cursor-pointer shrink-0 whitespace-nowrap self-center"
             >
               View Profile
             </button>
