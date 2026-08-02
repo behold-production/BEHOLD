@@ -184,15 +184,21 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
                 {user ? (
                   <button
                     onClick={handleProfileClick}
-                    title={user.name || 'Dashboard'}
+                    title={`Logged in as ${user.name || user.email}`}
                     aria-label="User Profile"
-                    className="w-10 h-10 rounded-full flex items-center justify-center transition-all cursor-pointer border shrink-0 overflow-hidden shadow-sm bg-slate-100 hover:bg-slate-200 text-slate-900 border-slate-200"
+                    className="flex items-center gap-2.5 px-3 py-1.5 rounded-full transition-all cursor-pointer border shrink-0 bg-slate-100/90 hover:bg-slate-200/90 text-slate-900 border-slate-200/80 shadow-xs"
                   >
-                    {user.profilePic ? (
-                      <img src={user.profilePic} alt={user.name} className="w-full h-full object-cover" />
-                    ) : (
-                      <span className="text-sm font-black text-[#00c9d6] uppercase">{(user.name || user.email || 'U').charAt(0)}</span>
-                    )}
+                    <div className="w-7 h-7 rounded-full overflow-hidden shrink-0 bg-[#00c9d6]/10 flex items-center justify-center border border-[#00c9d6]/30">
+                      {user.profilePic ? (
+                        <img src={user.profilePic} alt={user.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <span className="text-xs font-black text-[#00c9d6] uppercase">{(user.name || user.email || 'U').charAt(0)}</span>
+                      )}
+                    </div>
+                    <div className="flex flex-col text-left leading-tight pr-1 hidden sm:flex">
+                      <span className="text-xs font-bold text-slate-900 truncate max-w-[120px]">{user.name || 'Account'}</span>
+                      {user.email && <span className="text-[10px] text-slate-500 font-medium truncate max-w-[130px]">{user.email}</span>}
+                    </div>
                   </button>
                 ) : (
                   <button
@@ -228,7 +234,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
                 <div className="fixed inset-y-0 right-0 z-[10000] w-80 max-w-[85vw] bg-white text-slate-900 shadow-2xl flex flex-col justify-between p-6 sm:p-8 border-l border-slate-200 animate-in slide-in-from-right duration-300 overflow-y-auto">
 
                   <div>
-                    <div className="flex items-center justify-between pb-6 border-b border-slate-200 mb-6">
+                    <div className="flex items-center justify-between pb-6 border-b border-slate-200 mb-4">
                       <span className="text-xl font-black tracking-tight font-sans uppercase text-slate-900">
                         {(siteName || 'BEHOLD').replace(/\.$/, '')}
                         <span className="text-[#00c9d6] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)] font-black">.</span>
@@ -243,8 +249,8 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
 
                     {user && (
                       <div
-                        onClick={handleProfileClick}
-                        className="mb-6 p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between cursor-pointer hover:border-[#00c9d6] transition-all group shadow-xs"
+                        onClick={() => { setMobileMenuOpen(false); handleProfileClick(); }}
+                        className="mb-6 p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between cursor-pointer hover:border-[#00c9d6] transition-all group shadow-xs"
                       >
                         <div className="flex items-center gap-3 min-w-0">
                           <div className="w-10 h-10 rounded-full bg-slate-900 text-[#00e5ff] flex items-center justify-center font-bold overflow-hidden shrink-0 border border-[#00e5ff]/40">
@@ -254,9 +260,9 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
                               <span className="text-sm font-black text-[#00e5ff] uppercase">{(user.name || user.email || 'U').charAt(0)}</span>
                             )}
                           </div>
-                          <div className="min-w-0 flex-1">
-                            <p className="text-xs font-bold text-slate-900 truncate group-hover:text-[#00c9d6] transition-colors">{user.name}</p>
-                            <p className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">My Profile / Dashboard &rarr;</p>
+                          <div className="min-w-0 flex-1 text-left">
+                            <p className="text-xs font-bold text-slate-900 truncate group-hover:text-[#00c9d6] transition-colors">{user.name || 'Account'}</p>
+                            {user.email && <p className="text-[10px] text-slate-500 font-medium truncate">{user.email}</p>}
                           </div>
                         </div>
                       </div>

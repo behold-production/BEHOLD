@@ -72,6 +72,16 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     } catch (e) {}
     return 'ONLINE';
   }); // ONLINE, DOOR_STEP, OFFLINE
+  const [bookingDuration, setBookingDuration] = useState(() => {
+    try {
+      const raw = sessionStorage.getItem(BOOKING_DRAFT_KEY);
+      if (raw) {
+        const draft = JSON.parse(raw);
+        if (draft.bookingDuration) return draft.bookingDuration;
+      }
+    } catch (e) {}
+    return 60; // 30 mins or 60 mins (default 60)
+  });
   const [bookingForm, setBookingForm] = useState(() => {
     const defaultForm = {
       name: '',
@@ -276,7 +286,9 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     }
   } catch (err) {}
 
-  const baseFee = selectedAdvisor ? (selectedAdvisor.price || 0) : 0;
+  const durationMultiplier = bookingDuration === 30 ? 0.5 : 1;
+  const rawPrice = selectedAdvisor ? (selectedAdvisor.price || 0) : 0;
+  const baseFee = Math.round(rawPrice * durationMultiplier);
   const gstAmount = gstEnabled && gstPercent > 0 ? Math.round(baseFee * (gstPercent / 100)) : 0;
   const netTotal = Math.max(0, baseFee + gstAmount - appliedDiscount);
 
@@ -1215,6 +1227,8 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     setBookingService,
     bookingMode,
     setBookingMode,
+    bookingDuration,
+    setBookingDuration,
     bookingForm,
     setBookingForm,
     selectedDate,

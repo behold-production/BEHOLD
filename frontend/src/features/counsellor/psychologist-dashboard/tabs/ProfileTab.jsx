@@ -426,45 +426,6 @@ const ProfileTab = ({
  </div>
  </div>
 
- 
-
- <div className="sm:col-span-2 border-t border-zinc-850 pt-4">
- <h4 className="text-xs font-bold text-white tracking-wider mb-1">Bank Account Details (For Payout Transfers)</h4>
- <p className="text-[11px] text-zinc-500 font-medium mb-3">Provide your bank details below. Admin settles your console earnings directly to this account.</p>
- <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 animate-in fade-in duration-200">
- <div className="space-y-1.5">
- <label className="text-zinc-400 font-bold text-xs tracking-wide">Account Holder Name</label>
- <input
- type="text"
- placeholder="e.g. Dr. Jane Doe"
- value={ep.bankAccountName || ''}
- onChange={(e) => setEp({ bankAccountName: e.target.value })}
- className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-[10px] outline-none focus:border-brand transition-all font-semibold"
- />
- </div>
- <div className="space-y-1.5">
- <label className="text-zinc-400 font-bold text-xs tracking-wide">Account Number</label>
- <input
- type="text"
- placeholder="e.g. 5010023485938"
- value={ep.bankAccountNumber || ''}
- onChange={(e) => setEp({ bankAccountNumber: e.target.value })}
- className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-[10px] outline-none focus:border-brand transition-all font-semibold"
- />
- </div>
- <div className="space-y-1.5">
- <label className="text-zinc-400 font-bold text-xs tracking-wide">IFSC Code</label>
- <input
- type="text"
- placeholder="e.g. HDFC0000123"
- value={ep.bankIfscCode || ''}
- onChange={(e) => setEp({ bankIfscCode: e.target.value })}
- className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-[10px] outline-none focus:border-brand transition-all font-semibold"
- />
- </div>
- </div>
- </div>
-
  <div className="sm:col-span-2 space-y-1.5">
  <label className="text-zinc-400 font-bold text-xs tracking-wide">Professional Bio</label>
  <textarea

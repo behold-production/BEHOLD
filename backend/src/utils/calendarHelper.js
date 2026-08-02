@@ -9,7 +9,7 @@ const { google } = require('googleapis');
  * 3. Sets guestsCanModify: true, guestsCanInviteOthers: false, guestsCanSeeOtherGuests: true
  * 4. Fallbacks to counsellor.defaultMeetLink or instant secure room URL (meet.jit.si) if Google API fails or is unconnected.
  */
-async function generateSessionMeetingLink({ counsellor, user, date, time, service, appointmentId }) {
+async function generateSessionMeetingLink({ counsellor, user, date, time, service, appointmentId, durationMinutes }) {
   let meetingLink = counsellor?.defaultMeetLink || '';
   const fallbackRoomLink = `https://meet.google.com/new`;
 
@@ -35,7 +35,8 @@ async function generateSessionMeetingLink({ counsellor, user, date, time, servic
 
         const startTimeStr = `${year}-${month}-${day}T${hours.toString().padStart(2, '0')}:${minutes || '00'}:00+05:30`;
         const startTime = new Date(startTimeStr);
-        const endTime = new Date(startTime.getTime() + 60 * 60 * 1000); // 1 hour duration
+        const durationMs = (Number(durationMinutes) || 60) * 60 * 1000;
+        const endTime = new Date(startTime.getTime() + durationMs);
 
         const frontendUrl = process.env.FRONTEND_URL || 'https://www.behold.co.in';
         
