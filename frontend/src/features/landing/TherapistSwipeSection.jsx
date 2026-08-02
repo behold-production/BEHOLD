@@ -53,10 +53,12 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
                 name: c.name || c.user?.name || c.fullName || 'Psychologist',
                 designation: c.designation || c.role || 'CONSULTANT PSYCHOLOGIST',
                 title: c.title || c.qualification || 'Psychologist',
-                fee: c.fee || c.price || c.consultationFee || '500',
+                fee: c.fee || c.price || c.consultationFee || '1000',
+                hours: c.hours || 100,
+                bio: c.bio || 'Specializing in compassionate psychological counselling and mental wellbeing.',
                 photo: hasValidPhoto ? rawPhoto : null,
-                specialties: Array.isArray(c.specialties) ? c.specialties : (c.tags ? (Array.isArray(c.tags) ? c.tags : [c.tags]) : ['ANXIETY STRESS & PANIC', 'CAREER GUIDANCE']),
-                languages: Array.isArray(c.languages) ? c.languages.join(', ') : (c.languages || c.language || 'Malayalam, English')
+                specialties: Array.isArray(c.specialties) ? c.specialties : (c.tags ? (Array.isArray(c.tags) ? c.tags : [c.tags]) : ['Identity Concerns', 'Anxiety Stress & Panic', 'Depression']),
+                languages: Array.isArray(c.languages) ? c.languages.join(', ') : (c.languages || c.language || 'Malayalam')
               };
             });
             setAdvisors(formatted);
@@ -189,101 +191,99 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
   const renderCard = (advisor, isCenter) => {
     if (!advisor) return null;
     return (
-      <div className={`w-full h-full flex flex-col justify-between overflow-hidden bg-white rounded-xl shadow-2xl transition-all duration-500 ${isCenter ? 'pointer-events-auto border-2 border-[#00c9d6] shadow-[0_0_24px_rgba(0,201,214,0.45)]' : 'pointer-events-none border border-slate-200/80'}`}>
-        {/* Top Image / Initial Badge Section */}
-        <div className="relative w-full h-44 sm:h-52 bg-gradient-to-br from-[#00c9d6]/20 via-[#d4f8fc]/40 to-[#00f0ff]/10 flex items-center justify-center overflow-hidden border-b border-slate-100 pointer-events-none">
-          {advisor.photo ? (
-            <img
-              src={advisor.photo}
-              alt={advisor.name}
-              className="w-full h-full object-cover object-top filter brightness-[1.02]"
-              onError={(e) => { e.target.style.display = 'none'; }}
-            />
-          ) : (
-            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-br from-[#06b6d4] to-[#0891b2] text-white flex items-center justify-center text-4xl sm:text-5xl font-black shadow-lg border-2 border-white tracking-widest select-none">
-              {getInitial(advisor.name)}
-            </div>
-          )}
+      <div className={`w-full h-full flex flex-col justify-between overflow-hidden bg-white rounded-3xl transition-all duration-500 text-left ${isCenter ? 'pointer-events-auto border-2 border-[#00c9d6] shadow-[0_12px_40px_rgba(0,201,214,0.25)]' : 'pointer-events-none border border-slate-200/80 shadow-md'}`}>
+        
+        {/* Top Header Section (Primary Teal Theme Background) */}
+        <div className="relative w-full p-4 sm:p-5 bg-gradient-to-r from-[#00c9d6]/20 via-[#d4f8fc] to-[#00c9d6]/30 flex items-center justify-between border-b border-[#00c9d6]/20">
+          <div className="pr-2 space-y-1">
+            <h3 className="font-sans text-base sm:text-xl font-black text-slate-900 leading-tight truncate max-w-[180px] sm:max-w-[210px]">
+              {advisor.name}
+            </h3>
+            <p className="text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-wide truncate max-w-[180px] sm:max-w-[210px]">
+              {advisor.designation || 'Consultant Psychologist'}
+            </p>
+          </div>
+
+          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-white shadow-md overflow-hidden shrink-0 bg-white flex items-center justify-center">
+            {advisor.photo ? (
+              <img
+                src={advisor.photo}
+                alt={advisor.name}
+                className="w-full h-full object-cover object-top"
+                onError={(e) => { e.target.style.display = 'none'; }}
+              />
+            ) : (
+              <span className="font-black text-xl text-[#00c9d6] uppercase">
+                {getInitial(advisor.name)}
+              </span>
+            )}
+          </div>
         </div>
 
-        {/* Content Section */}
-        <div className="p-4 sm:p-5 flex flex-col space-y-2 text-left bg-white h-full justify-between">
-
-          <div>
-            {/* Row 1: Name & Price */}
-            <div className="flex items-start justify-between gap-2">
-              <h3 className="font-['Outfit','Plus_Jakarta_Sans',sans-serif] text-lg sm:text-2xl font-bold text-[#0c1424] leading-tight line-clamp-1">
-                {advisor.name}
-              </h3>
-              <div className="text-right shrink-0">
-                <span className="font-['Outfit',sans-serif] text-base sm:text-xl font-bold text-[#0c1424] block leading-none">
-                  ₹{advisor.fee}
-                </span>
-                <span className="text-[8px] sm:text-[9px] font-bold text-slate-400 uppercase tracking-wider block mt-1">
-                  PER SESSION
-                </span>
-              </div>
-            </div>
-
-            {/* Designation */}
-            <p className="text-[9px] sm:text-[10.5px] font-bold text-slate-500 uppercase tracking-widest leading-none mt-2">
-              {advisor.designation}
-            </p>
-
-            {/* Title / Sub-category */}
-            <p className="text-[10px] sm:text-xs text-slate-500 font-medium leading-none mt-1">
-              {advisor.title}
-            </p>
-
-            {/* SPECIALTIES Header & Tags */}
-            <div className="pt-2">
-              <span className="text-[8px] sm:text-[9.5px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
-                SPECIALTIES
+        {/* Middle Body Section */}
+        <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3 bg-white">
+          
+          {/* Specialties Tags Row */}
+          <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none pb-1">
+            {advisor.specialties.slice(0, 3).map((spec, i) => (
+              <span
+                key={i}
+                className="px-3 py-1 bg-slate-50 border border-slate-200/80 text-slate-800 text-[9px] sm:text-[10px] font-bold rounded-xl whitespace-nowrap shrink-0"
+              >
+                {spec}
               </span>
-              <div className="flex flex-wrap gap-1">
-                {advisor.specialties.slice(0, 3).map((tag, idx) => (
-                  <span
-                    key={idx}
-                    className="bg-slate-100/90 text-slate-700 text-[8px] sm:text-[9px] font-bold px-2 py-0.5 rounded-full border border-slate-200/80 uppercase tracking-wider truncate max-w-[120px]"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
+            ))}
+          </div>
+
+          {/* Description Card Section (Replaces audio wave section) */}
+          <div className="bg-slate-50/90 border border-slate-200/80 rounded-2xl p-3 flex items-center justify-between gap-3 shadow-xs">
+            <p className="text-[10px] sm:text-xs text-slate-600 italic font-medium leading-relaxed line-clamp-2 flex-1">
+              "{advisor.bio || 'Specializing in compassionate psychological counselling and mental wellbeing.'}"
+            </p>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate(`/advisor/${advisor.id}`);
+              }}
+              className="px-3 py-1.5 border border-slate-900 text-slate-900 hover:bg-slate-900 hover:text-white rounded-full text-[10px] sm:text-xs font-bold transition cursor-pointer shrink-0 whitespace-nowrap"
+            >
+              View Profile
+            </button>
+          </div>
+
+          {/* 3 Metric Stat Boxes */}
+          <div className="grid grid-cols-3 gap-2">
+            <div className="bg-slate-50/70 border border-slate-150 rounded-2xl p-2.5 text-left">
+              <span className="text-xs sm:text-sm font-black text-slate-900 block leading-none">{advisor.hours}+</span>
+              <span className="text-[9px] sm:text-[10px] font-medium text-slate-500 block mt-1">Therapy hrs</span>
+            </div>
+            <div className="bg-slate-50/70 border border-slate-150 rounded-2xl p-2.5 text-left truncate">
+              <span className="text-xs sm:text-sm font-black text-slate-900 block leading-none truncate">{advisor.languages || 'Malayalam'}</span>
+              <span className="text-[9px] sm:text-[10px] font-medium text-slate-500 block mt-1">Languages</span>
+            </div>
+            <div className="bg-slate-50/70 border border-slate-150 rounded-2xl p-2.5 text-left">
+              <span className="text-xs sm:text-sm font-black text-slate-900 block leading-none">₹{advisor.fee}</span>
+              <span className="text-[9px] sm:text-[10px] font-medium text-slate-500 block mt-1">Per session</span>
             </div>
           </div>
 
-          <div className="space-y-3">
-            {/* Language */}
-            <p className="text-[10px] sm:text-xs text-slate-700">
-              <strong className="font-bold text-slate-900">Lang:</strong> {advisor.languages}
-            </p>
-
-            {/* Separator Line */}
-            <div className="border-t border-slate-100" />
-
-            {/* Row 2: Action Buttons */}
-            <div className="flex items-center gap-2 sm:gap-3 pointer-events-auto">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  if (onBookTherapist) onBookTherapist(advisor.id);
-                  else window.spaNavigate?.('/book-session');
-                }}
-                className="flex-1 bg-[#0c1424] hover:bg-[#1a263d] active:scale-95 text-white text-[10px] sm:text-xs font-bold py-2 sm:py-2.5 rounded-full shadow-md transition cursor-pointer text-center uppercase tracking-wider"
-              >
-                BOOK
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  navigate(`/advisor/${advisor.id}`);
-                }}
-                className="flex-1 bg-[#f0f4f8] hover:bg-[#e2eaf0] active:scale-95 text-[#0c1424] text-[10px] sm:text-xs font-bold py-2 sm:py-2.5 rounded-full border border-slate-200 transition cursor-pointer text-center uppercase tracking-wider"
-              >
-                PROFILE
-              </button>
+          {/* Bottom Availability & BOOK NOW Row */}
+          <div className="pt-2 flex items-center justify-between gap-2 border-t border-slate-100">
+            <div className="text-left">
+              <span className="text-[9px] sm:text-[10px] font-semibold text-slate-400 block uppercase tracking-wider">Next available</span>
+              <span className="text-xs sm:text-sm font-black text-slate-900 block mt-0.5">Available Today</span>
             </div>
+
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                if (onBookTherapist) onBookTherapist(advisor.id);
+                else window.spaNavigate?.('/book-session');
+              }}
+              className="bg-[#00c9d6] hover:bg-[#00b2be] active:scale-95 text-slate-950 font-black text-xs sm:text-sm uppercase tracking-widest px-6 py-2.5 rounded-full shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer"
+            >
+              BOOK NOW
+            </button>
           </div>
 
         </div>
