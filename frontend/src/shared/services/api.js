@@ -344,10 +344,10 @@ const ApiService = {
     });
   },
 
-  async resetPassword(token, newPassword) {
+  async resetPassword(email, otpCode, newPassword) {
     return await request('/auth/reset-password', {
       method: 'POST',
-      body: JSON.stringify({ token, newPassword })
+      body: JSON.stringify({ email, otpCode, newPassword })
     });
   },
 

@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const StorageService = require('../services/storageService');
 const WhatsAppService = require('../services/whatsappService');
+const PasswordResetOtp = require('../models/PasswordResetOtp');
 
 const ACCESS_EXPIRY = '15m';
 const REFRESH_EXPIRY = '7d';
@@ -283,7 +284,7 @@ const AuthController = {
     }
   },
 
-  // Forgot Password (Mock returning reset token)
+  // Forgot Password — sends 6-digit OTP to user's registered WhatsApp number
   async forgotPassword(req, res, next) {
     try {
       const { email } = req.body;
@@ -293,54 +294,116 @@ const AuthController = {
 
       const match = await findAnyUserByEmail(email);
       if (!match) {
-        return res.status(404).json({ success: false, message: 'User with this email does not exist' });
+        // Security: don't reveal if email exists or not
+        return res.status(200).json({
+          success: true,
+          message: 'If this email is registered, a reset code has been sent to the linked WhatsApp number.'
+        });
       }
 
-      const resetToken = jwt.sign(
-        { id: match.user.id, email: match.user.email },
-        process.env.JWT_SECRET || 'behold_jwt_secret_key_2026_xyz',
-        { expiresIn: '10m' }
+      const { user } = match;
+
+      // Check user has a phone number registered
+      if (!user.phone || user.phone.trim() === '') {
+        return res.status(400).json({
+          success: false,
+          message: 'No phone number is linked to this account. Please contact support to reset your password.'
+        });
+      }
+
+      // Invalidate any previous unused OTPs for this email
+      await PasswordResetOtp.updateMany(
+        { email: email.toLowerCase().trim(), used: false },
+        { used: true }
       );
 
-      // Return mock reset instructions and token for development convenience
+      // Generate 6-digit OTP
+      const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+      const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+      await PasswordResetOtp.create({
+        email: email.toLowerCase().trim(),
+        otpCode,
+        expiresAt,
+        used: false
+      });
+
+      // Log for dev convenience
+      console.log(`\n======================================`);
+      console.log(`🔑 PASSWORD RESET OTP: ${otpCode}`);
+      console.log(`📧 FOR EMAIL: ${email}`);
+      console.log(`======================================\n`);
+
+      // Send via WhatsApp to registered phone
+      const message = `*BEHOLD Aspire — Password Reset*\n\nYour password reset code is:\n\n*${otpCode}*\n\nThis code is valid for 10 minutes. Do not share it with anyone.`;
+      await WhatsAppService.sendNotification(user.phone, message).catch(err => {
+        console.error('[WhatsApp reset OTP error]:', err);
+      });
+
       res.status(200).json({
         success: true,
-        message: 'Password reset link generated. Reset using the provided token.',
-        data: { resetToken }
+        message: 'A 6-digit reset code has been sent to your registered WhatsApp number.',
+        // Mask the phone for UI display: show last 4 digits only
+        data: { maskedPhone: user.phone.replace(/.(?=.{4})/g, '•') }
       });
     } catch (error) {
       next(error);
     }
   },
 
-  // Reset Password using token
+  // Reset Password — verify OTP + new password together
   async resetPassword(req, res, next) {
     try {
-      const { token, newPassword } = req.body;
-      if (!token || !newPassword) {
-        return res.status(400).json({ success: false, message: 'Reset token and new password are required' });
+      const { email, otpCode, newPassword } = req.body;
+
+      if (!email || !otpCode || !newPassword) {
+        return res.status(400).json({ success: false, message: 'Email, OTP code, and new password are required' });
       }
 
-      try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'behold_jwt_secret_key_2026_xyz');
-        const match = await findAnyUserByEmail(decoded.email);
-        if (!match) {
-          return res.status(404).json({ success: false, message: 'User not found' });
-        }
-
-        const { user, table } = match;
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(newPassword, salt);
-
-        await StorageService.update(table, user.id, { password: hashedPassword });
-
-        res.status(200).json({
-          success: true,
-          message: 'Password has been reset successfully'
-        });
-      } catch (err) {
-        return res.status(400).json({ success: false, message: 'Invalid or expired reset token' });
+      if (newPassword.length < 6) {
+        return res.status(400).json({ success: false, message: 'New password must be at least 6 characters' });
       }
+
+      // Find valid OTP
+      const otpRecord = await PasswordResetOtp.findOne({
+        email: email.toLowerCase().trim(),
+        otpCode: otpCode.trim(),
+        used: false,
+        expiresAt: { $gt: new Date() }
+      });
+
+      if (!otpRecord) {
+        return res.status(400).json({ success: false, message: 'Invalid or expired reset code. Please request a new one.' });
+      }
+
+      // Mark OTP as used
+      otpRecord.used = true;
+      await otpRecord.save();
+
+      // Find user and update password
+      const match = await findAnyUserByEmail(email);
+      if (!match) {
+        return res.status(404).json({ success: false, message: 'User not found' });
+      }
+
+      const { user, table } = match;
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+      await StorageService.update(table, user.id, { password: hashedPassword });
+
+      // Notify user on WhatsApp
+      if (user.phone) {
+        WhatsAppService.sendNotification(
+          user.phone,
+          `*BEHOLD Aspire*\n\nYour password has been successfully reset. If you did not do this, please contact our support team immediately.`
+        ).catch(() => {});
+      }
+
+      res.status(200).json({
+        success: true,
+        message: 'Password has been reset successfully. You can now sign in.'
+      });
     } catch (error) {
       next(error);
     }
