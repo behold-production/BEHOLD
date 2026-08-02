@@ -758,11 +758,14 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     setBookingStep(newStep);
     window.history.pushState({ component: 'booking', step: newStep }, '');
     setTimeout(() => {
-      const consoleEl = document.getElementById('booking-console');
-      if (consoleEl) {
-        consoleEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const modalScroll = document.getElementById('booking-modal-scroll');
+      if (modalScroll) {
+        modalScroll.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        const consoleEl = document.getElementById('booking-console');
+        if (consoleEl) {
+          consoleEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       }
     }, 50);
   };

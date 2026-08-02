@@ -22,22 +22,29 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
   const [isOtpSent, setIsOtpSent] = useState(false);
 
   useEffect(() => {
-    if (!isOpen) return;
-    setForm({
-      name: bookingForm?.name || '',
-      email: bookingForm?.email || '',
-      phone: bookingForm?.phone || '',
-      password: '',
-      confirmPassword: ''
-    });
-    setFieldErrors({});
-    setMode('login');
-    setLoginMethod('email');
-    setOtpPhone('');
-    setOtpCode('');
-    setIsOtpSent(false);
-    setShowPassword(false);
-    setShowConfirmPassword(false);
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      setForm({
+        name: bookingForm?.name || '',
+        email: bookingForm?.email || '',
+        phone: bookingForm?.phone || '',
+        password: '',
+        confirmPassword: ''
+      });
+      setFieldErrors({});
+      setMode('login');
+      setLoginMethod('email');
+      setOtpPhone('');
+      setOtpCode('');
+      setIsOtpSent(false);
+      setShowPassword(false);
+      setShowConfirmPassword(false);
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, [isOpen, bookingForm]);
 
   // Body scroll lock + Esc to close

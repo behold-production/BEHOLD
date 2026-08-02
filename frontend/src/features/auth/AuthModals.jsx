@@ -23,21 +23,26 @@ export default function AuthModals({ isOpen, onClose }) {
  const [otpCode, setOtpCode] = useState('');
  const [isOtpSent, setIsOtpSent] = useState(false);
 
- // Reset state when opened/closed
- useEffect(() => {
- if (isOpen) {
- setFormData({ name: '', phone: '', email: '', password: '', confirmPassword: '', resetToken: '', newPassword: '' });
- setMode('login');
- setLoginMethod('email');
- setOtpPhone('');
- setOtpCode('');
- setIsOtpSent(false);
- setShowPassword(false);
- setForgotSuccess(null);
- setResetSuccess(false);
- setRejectionReason(null);
- }
- }, [isOpen]);
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      setFormData({ name: '', phone: '', email: '', password: '', confirmPassword: '', resetToken: '', newPassword: '' });
+      setMode('login');
+      setLoginMethod('email');
+      setOtpPhone('');
+      setOtpCode('');
+      setIsOtpSent(false);
+      setShowPassword(false);
+      setForgotSuccess(null);
+      setResetSuccess(false);
+      setRejectionReason(null);
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
 
  // Body scroll lock + Esc to close
  useEffect(() => {

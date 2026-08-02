@@ -135,13 +135,24 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
     const [advisorPage, setAdvisorPage] = useState(1);
 
     useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [isOpen]);
+
+    useEffect(() => {
         setAdvisorPage(1);
     }, [selectedDate, bookingMode, bookingService]);
 
     useEffect(() => {
-        const consoleEl = document.getElementById('booking-console');
-        if (consoleEl) {
-            consoleEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const modalScroll = document.getElementById('booking-modal-scroll');
+        if (modalScroll) {
+            modalScroll.scrollTo({ top: 0, behavior: 'smooth' });
         }
     }, [bookingStep]);
 
@@ -308,8 +319,8 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
     }
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-0 sm:p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
-            <div className="relative w-full max-w-7xl h-full sm:h-auto sm:max-h-[90vh] bg-white sm:rounded-2xl shadow-2xl overflow-y-auto overflow-x-hidden text-[#0f172a] text-left">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-0 sm:p-4 bg-black/60 backdrop-blur-sm overflow-y-auto overscroll-contain">
+            <div id="booking-modal-scroll" className="relative w-full max-w-7xl h-full sm:h-auto sm:max-h-[90vh] bg-white sm:rounded-2xl shadow-2xl overflow-y-auto overflow-x-hidden text-[#0f172a] text-left overscroll-contain">
                 {/* Close Button */}
                 <button
                     onClick={onClose}
