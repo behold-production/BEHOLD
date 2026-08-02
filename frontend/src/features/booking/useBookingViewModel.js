@@ -180,7 +180,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
               availability: calculateNextAvailable(c.availability, c.bookedSlots || []),
               type: c.type || (c.title?.toLowerCase().includes('career') || c.title?.toLowerCase().includes('mentor') ? 'career' : 'counselling'),
               defaultMeetLink: c.defaultMeetLink || '',
-              price: Number(c.price) || 1200,
+              price: Number(c.price) || 899,
               modes: (Array.isArray(c.modes) ? c.modes : ['ONLINE', 'OFFLINE', 'DOOR_STEP']).filter(m => {
                 const settings = JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
                 if (m === 'ONLINE') return settings.enableOnline !== false;
@@ -305,9 +305,15 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     }
   } catch (err) {}
 
-  const durationMultiplier = bookingDuration === 30 ? 0.5 : 1;
-  const rawPrice = selectedAdvisor ? (selectedAdvisor.price || 0) : 0;
-  const baseFee = Math.round(rawPrice * durationMultiplier);
+  const getDurationPrice = (fullPrice, duration) => {
+    if (duration === 60) return fullPrice;
+    if (fullPrice <= 899) return 499;
+    if (fullPrice >= 1200) return 699;
+    return Math.round(fullPrice * 0.5);
+  };
+
+  const rawPrice = selectedAdvisor ? (selectedAdvisor.price || 899) : 899;
+  const baseFee = getDurationPrice(rawPrice, bookingDuration);
   const gstAmount = gstEnabled && gstPercent > 0 ? Math.round(baseFee * (gstPercent / 100)) : 0;
   const netTotal = Math.max(0, baseFee + gstAmount - appliedDiscount);
 

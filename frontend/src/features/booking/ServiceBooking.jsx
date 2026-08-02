@@ -701,8 +701,8 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                 <label className="text-sm font-semibold text-surface-700 block">Select Session Duration</label>
                                                 <div className="grid grid-cols-2 gap-3 w-full">
                                                     {(() => {
-                                                        const rawPrice = selectedAdvisor ? (selectedAdvisor.price || 1200) : 1200;
-                                                        const halfPrice = Math.round(rawPrice * 0.5);
+                                                        const rawPrice = selectedAdvisor ? (selectedAdvisor.price || 899) : 899;
+                                                        const halfPrice = rawPrice <= 899 ? 499 : rawPrice >= 1200 ? 699 : Math.round(rawPrice * 0.5);
                                                         const fullPrice = rawPrice;
                                                         return [
                                                             { id: 30, label: '30 Minutes (Half Hour)', desc: `Half Session • ₹${halfPrice}` },
