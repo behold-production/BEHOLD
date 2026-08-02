@@ -3,22 +3,35 @@ const crypto = require('crypto');
 const router = express.Router();
 const WhatsAppMessage = require('../models/WhatsAppMessage');
 
-const url = require('url');
-
 /**
  * GET /api/whatsapp/webhook
  * Meta Webhook Verification Endpoint
  * Validates hub.mode, hub.verify_token and returns hub.challenge
  */
 router.get('/webhook', (req, res) => {
-  const parsedUrl = url.parse(req.url, true);
-  const challenge = parsedUrl.query['hub.challenge'] || parsedUrl.query.challenge || req.query['hub.challenge'] || req.query.challenge;
-  const token = parsedUrl.query['hub.verify_token'] || req.query['hub.verify_token'];
+  const mode = req.query['hub.mode'];
+  const token = req.query['hub.verify_token'];
+  const challenge = req.query['hub.challenge'];
 
-  console.log('[Meta Webhook Verification GET Request]:', { token, challenge });
+  const verifyToken = (process.env.META_WA_VERIFY_TOKEN || '').trim();
 
-  res.setHeader('Content-Type', 'text/plain');
-  return res.status(200).send(String(challenge || '12345'));
+  console.log('[Meta Webhook Verification]:', { mode, token, challenge });
+
+  // If no verify token is configured, just echo challenge (dev-mode fallback)
+  if (!verifyToken) {
+    console.warn('[Meta Webhook] META_WA_VERIFY_TOKEN is not set — accepting all verification requests (dev mode)');
+    res.setHeader('Content-Type', 'text/plain');
+    return res.status(200).send(String(challenge || ''));
+  }
+
+  if (mode === 'subscribe' && token === verifyToken) {
+    console.log('[Meta Webhook] Verification successful ✅');
+    res.setHeader('Content-Type', 'text/plain');
+    return res.status(200).send(String(challenge));
+  }
+
+  console.error('[Meta Webhook] Verification FAILED ❌ — token mismatch or wrong mode');
+  return res.status(403).send('Forbidden: Invalid verify_token');
 });
 
 /**
