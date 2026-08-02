@@ -234,23 +234,23 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
         </div>
 
         {/* White Body Card (Overlaps Top Banner with Smooth Curved Rounded Top Corners) */}
-        <div className="relative z-20 -mt-4 bg-white rounded-t-[22px] p-3.5 sm:p-4 flex-1 flex flex-col justify-between space-y-2.5 overflow-hidden">
+        <div className="relative z-20 -mt-4 bg-white rounded-t-[22px] p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3">
           
           {/* Specialties Tags Row */}
           <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none pb-0.5 shrink-0">
             {advisor.specialties.slice(0, 3).map((spec, i) => (
               <span
                 key={i}
-                className="px-2.5 py-0.5 bg-slate-50 border border-slate-200/80 text-slate-800 text-[9px] sm:text-[10px] font-bold rounded-xl whitespace-nowrap shrink-0"
+                className="px-3 py-1 bg-slate-50 border border-slate-200/80 text-slate-800 text-[9.5px] sm:text-[10.5px] font-bold rounded-xl whitespace-nowrap shrink-0"
               >
                 {spec}
               </span>
             ))}
           </div>
 
-          {/* Description Card Box with Full-Width Quote & Interactive Read More Toggle */}
-          <div className="bg-slate-50/90 border border-slate-200/80 rounded-2xl p-2.5 shadow-xs transition-all duration-300 flex-1 flex flex-col justify-center">
-            <p className={`text-[10px] sm:text-xs text-slate-700 italic font-medium leading-relaxed ${expandedBios[advisor.id] ? 'max-h-[100px] overflow-y-auto pr-1 scrollbar-thin' : 'line-clamp-2'}`}>
+          {/* Description Card Box (Compact Fit Around Text - No Empty White Space) */}
+          <div className="bg-slate-50/90 border border-slate-200/80 rounded-2xl p-3 sm:p-3.5 shadow-xs transition-all duration-300">
+            <p className={`text-[10.5px] sm:text-xs text-slate-700 italic font-medium leading-relaxed ${expandedBios[advisor.id] ? 'max-h-[100px] overflow-y-auto pr-1 scrollbar-thin' : 'line-clamp-2'}`}>
               "{advisor.bio || 'Specializing in compassionate psychological counselling and mental wellbeing.'}"
             </p>
             {advisor.bio && advisor.bio.length > 45 && (
@@ -260,7 +260,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
                   e.stopPropagation();
                   setExpandedBios(prev => ({ ...prev, [advisor.id]: !prev[advisor.id] }));
                 }}
-                className="text-[9.5px] sm:text-[10.5px] font-extrabold text-[#00c9d6] hover:text-[#008b94] hover:underline cursor-pointer mt-1 inline-block uppercase tracking-wider self-start"
+                className="text-[9.5px] sm:text-[10.5px] font-extrabold text-[#00c9d6] hover:text-[#008b94] hover:underline cursor-pointer mt-1.5 inline-block uppercase tracking-wider"
               >
                 {expandedBios[advisor.id] ? 'Read Less ▲' : 'Read More ▼'}
               </button>
@@ -268,26 +268,26 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
           </div>
 
           {/* 3 Metric Stat Boxes */}
-          <div className="grid grid-cols-3 gap-1.5 shrink-0">
-            <div className="bg-slate-50/70 border border-slate-150 rounded-xl p-2 text-left">
+          <div className="grid grid-cols-3 gap-2 shrink-0">
+            <div className="bg-slate-50/70 border border-slate-150 rounded-xl p-2.5 text-left">
               <span className="text-xs sm:text-sm font-black text-slate-900 block leading-none">{advisor.hours}+</span>
-              <span className="text-[8.5px] sm:text-[9.5px] font-medium text-slate-500 block mt-1">Therapy hrs</span>
+              <span className="text-[9px] sm:text-[10px] font-medium text-slate-500 block mt-1">Therapy hrs</span>
             </div>
-            <div className="bg-slate-50/70 border border-slate-150 rounded-xl p-2 text-left truncate">
+            <div className="bg-slate-50/70 border border-slate-150 rounded-xl p-2.5 text-left truncate">
               <span className="text-xs sm:text-sm font-black text-slate-900 block leading-none truncate">{advisor.languages || 'Malayalam'}</span>
-              <span className="text-[8.5px] sm:text-[9.5px] font-medium text-slate-500 block mt-1">Languages</span>
+              <span className="text-[9px] sm:text-[10px] font-medium text-slate-500 block mt-1">Languages</span>
             </div>
-            <div className="bg-slate-50/70 border border-slate-150 rounded-xl p-2 text-left">
+            <div className="bg-slate-50/70 border border-slate-150 rounded-xl p-2.5 text-left">
               <span className="text-xs sm:text-sm font-black text-slate-900 block leading-none">₹{advisor.fee}</span>
-              <span className="text-[8.5px] sm:text-[9.5px] font-medium text-slate-500 block mt-1">Per session</span>
+              <span className="text-[9px] sm:text-[10px] font-medium text-slate-500 block mt-1">Per session</span>
             </div>
           </div>
 
           {/* Bottom Availability & Action Buttons Row (VIEW PROFILE & BOOK NOW) */}
-          <div className="pt-1.5 pb-0.5 flex items-center justify-between gap-2 border-t border-slate-100 shrink-0">
+          <div className="pt-2 flex items-center justify-between gap-2 border-t border-slate-100 shrink-0">
             <div className="text-left shrink-0">
-              <span className="text-[8.5px] sm:text-[9.5px] font-semibold text-slate-400 block uppercase tracking-wider">Next available</span>
-              <span className="text-[10px] sm:text-[11.5px] font-black text-slate-900 block mt-0.5">Available Today</span>
+              <span className="text-[9px] sm:text-[10px] font-semibold text-slate-400 block uppercase tracking-wider">Next available</span>
+              <span className="text-[10.5px] sm:text-xs font-black text-slate-900 block mt-0.5">Available Today</span>
             </div>
 
             <div className="flex items-center gap-1.5 shrink-0">
@@ -297,7 +297,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
                   e.stopPropagation();
                   navigate(`/advisor/${advisor.id}`);
                 }}
-                className="px-2.5 sm:px-3 py-1.5 border border-slate-300 hover:border-slate-900 text-slate-800 hover:bg-slate-900 hover:text-white rounded-full text-[9.5px] sm:text-[10.5px] font-bold transition cursor-pointer whitespace-nowrap"
+                className="px-3 sm:px-3.5 py-1.5 border border-slate-300 hover:border-slate-900 text-slate-800 hover:bg-slate-900 hover:text-white rounded-full text-[10px] sm:text-[11px] font-bold transition cursor-pointer whitespace-nowrap"
               >
                 VIEW PROFILE
               </button>
@@ -308,7 +308,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
                   if (onBookTherapist) onBookTherapist(advisor.id);
                   else window.spaNavigate?.('/book-session');
                 }}
-                className="bg-[#00c9d6] hover:bg-[#00b2be] active:scale-95 text-slate-950 font-black text-[9.5px] sm:text-[10.5px] uppercase tracking-wider px-3 sm:px-4 py-1.5 rounded-full shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer whitespace-nowrap"
+                className="bg-[#00c9d6] hover:bg-[#00b2be] active:scale-95 text-slate-950 font-black text-[10px] sm:text-[11px] uppercase tracking-wider px-3.5 sm:px-4 py-1.5 rounded-full shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer whitespace-nowrap"
               >
                 BOOK NOW
               </button>
