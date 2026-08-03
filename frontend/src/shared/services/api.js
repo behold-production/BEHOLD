@@ -1111,17 +1111,17 @@ const ApiService = {
     return await request('/blogs/admin/all');
   },
 
-  async createBlog(formData) {
+  async createBlog(payload) {
     return await request('/blogs', {
       method: 'POST',
-      body: formData
+      body: JSON.stringify(payload)
     });
   },
 
-  async updateBlog(id, formData) {
+  async updateBlog(id, payload) {
     return await request(`/blogs/${id}`, {
       method: 'PUT',
-      body: formData
+      body: JSON.stringify(payload)
     });
   },
 

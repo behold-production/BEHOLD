@@ -98,9 +98,6 @@ class BlogController {
       const finalSlug = existing ? `${postSlug}-${Date.now().toString().slice(-4)}` : postSlug;
 
       let finalCoverImage = coverImage || '';
-      if (req.file && req.file.path) {
-        finalCoverImage = req.file.path;
-      }
 
       const tagArray = Array.isArray(tags)
         ? tags
@@ -172,9 +169,6 @@ class BlogController {
       if (isPublished !== undefined) blog.isPublished = String(isPublished) === 'true' || isPublished === true;
 
       if (coverImage !== undefined) blog.coverImage = coverImage;
-      if (req.file && req.file.path) {
-        blog.coverImage = req.file.path;
-      }
 
       if (tags !== undefined) {
         blog.tags = Array.isArray(tags)

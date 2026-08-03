@@ -52,10 +52,13 @@ export default function BlogManagementTab() {
     setDragActive(false);
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const file = e.dataTransfer.files[0];
-      if (file.type.startsWith('image/')) {
-        setFormData({ ...formData, coverImageFile: file, coverImage: URL.createObjectURL(file) });
-      } else {
-        toast.error('Please upload a valid image file');
+      if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData({ ...formData, coverImageFile: null, coverImage: reader.result });
+      };
+      reader.readAsDataURL(file);
+    } else if (file) {      toast.error('Please upload a valid image file');
       }
     }
   };
@@ -64,7 +67,11 @@ export default function BlogManagementTab() {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       if (file.type.startsWith('image/')) {
-        setFormData({ ...formData, coverImageFile: file, coverImage: URL.createObjectURL(file) });
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setFormData({ ...formData, coverImageFile: null, coverImage: reader.result });
+        };
+        reader.readAsDataURL(file);
       } else {
         toast.error('Please upload a valid image file');
       }
@@ -158,23 +165,20 @@ export default function BlogManagementTab() {
 
     setIsSubmitting(true);
     try {
-      const payload = new FormData();
-      payload.append('title', formData.title);
-      payload.append('slug', formData.slug);
-      payload.append('category', formData.category);
-      payload.append('excerpt', formData.excerpt);
-      payload.append('readTime', formData.readTime);
-      if (formData.coverImageFile) {
-        payload.append('coverImage', formData.coverImageFile);
-      } else {
-        payload.append('coverImage', formData.coverImage);
-      }
-      payload.append('authorName', formData.authorName);
-      payload.append('authorRole', formData.authorRole);
-      payload.append('authorAvatar', formData.authorAvatar);
-      payload.append('tags', formData.tags);
-      payload.append('content', formData.content);
-      payload.append('isPublished', formData.isPublished);
+      const payload = {
+        title: formData.title,
+        slug: formData.slug,
+        category: formData.category,
+        excerpt: formData.excerpt,
+        readTime: formData.readTime,
+        coverImage: formData.coverImage,
+        authorName: formData.authorName,
+        authorRole: formData.authorRole,
+        authorAvatar: formData.authorAvatar,
+        tags: formData.tags,
+        content: formData.content,
+        isPublished: formData.isPublished
+      };
 
       if (editingBlog) {
         const res = await ApiService.updateBlog(editingBlog._id, payload);
@@ -208,8 +212,7 @@ export default function BlogManagementTab() {
     if (!targetId) return;
     const nextState = !blog.isPublished;
     try {
-      const payload = new FormData();
-      payload.append('isPublished', String(nextState));
+      const payload = { isPublished: nextState };
       const res = await ApiService.updateBlog(targetId, payload);
       if (res?.success || res?.data || res?.blog) {
         toast.success(`Article ${nextState ? 'Published' : 'Unpublished'}`);

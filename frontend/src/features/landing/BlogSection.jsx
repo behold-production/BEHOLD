@@ -137,6 +137,11 @@ const BlogSection = () => {  const navigate = useNavigate();
               </div>
             ))}
           </div>
+        ) : blogs.length === 0 ? (
+          <div className="text-center py-16 bg-white rounded-xl border border-surface-200 shadow-xs">
+            <h3 className="text-xl font-bold text-[#0f172a] mb-2 uppercase">No Articles Found</h3>
+            <p className="text-surface-600 font-normal text-sm max-w-md mx-auto">Check back soon for new insights and research articles.</p>
+          </div>
         ) : (
           <div
             ref={blogScrollRef}

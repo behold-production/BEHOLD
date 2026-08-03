@@ -115,14 +115,14 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
           <span className="inline-block text-cyan-400 bg-slate-800 px-2.5 py-0.5 rounded-md text-[11px] font-bold border border-slate-700">
             {siteSettings.bannerNotice}
           </span>
-          {siteSettings?.phone && (
+          {siteSettings?.contactPhone && (
             <>
               <span className="hidden sm:inline text-slate-300">&middot;</span>
               <a
-                href={`tel:${siteSettings.phone}`}
+                href={`tel:${siteSettings.contactPhone}`}
                 className="text-white hover:underline font-bold transition-colors"
               >
-                Helpline: {siteSettings.phone}
+                Helpline: {siteSettings.contactPhone}
               </a>
             </>
           )}

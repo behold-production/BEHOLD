@@ -1,16 +1,35 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import headerBg from "../../assets/header.svg";
 
 export default function Hero({ siteSettings, navigateToSection, onOpenBooking }) {
   const settings = siteSettings || {};
 
-  const displayEyebrow = settings.heroEyebrow || "Whatever you feel,";
-  const eyebrowLine1 = displayEyebrow.includes(",") ? displayEyebrow : "It's Okay to be";
+  const slides = (settings.heroSlides && settings.heroSlides.length > 0) ? settings.heroSlides : [{
+    image: settings.heroBgImage || '',
+    title: settings.heroTitle || 'not okay',
+    subtitle: settings.heroSub || 'A personal development and mentoring ecosystem — combining psychological care, self-discovery, and career guidance to help you grow with confidence and peace of mind.',
+    btn1Text: settings.heroBtnText || 'Book a Session',
+    eyebrow: settings.heroEyebrow || 'Whatever you feel,'
+  }];
 
-  const displayTitle = settings.heroTitle || "not okay";
-  const subtitleText = settings.heroSub || "A personal development and mentoring ecosystem — combining psychological care, self-discovery, and career guidance to help you grow with confidence and peace of mind.";
-  const btnText = settings.heroBtnText || "Book a Session";
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  useEffect(() => {
+    if (slides.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [slides.length]);
+
+  const slide = slides[currentSlide];
+
+  const displayEyebrow = slide.eyebrow || "Whatever you feel,";
+  const eyebrowLine1 = displayEyebrow.includes(",") ? displayEyebrow : "It's Okay to be";
+  const displayTitle = slide.title || "not okay";
+  const subtitleText = slide.subtitle || "";
+  const btnText = slide.btn1Text || "Book a Session";
 
   const navigate = useNavigate();
 
@@ -25,17 +44,18 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
   return (
     <section
       id="home"
-      className="relative min-h-screen w-full overflow-hidden flex items-center justify-center pt-24 pb-16 px-5 sm:px-10 lg:px-16 bg-transparent"
+      className="relative min-h-screen w-full overflow-hidden flex items-center justify-center pt-24 pb-16 px-5 sm:px-10 lg:px-16 bg-transparent transition-opacity duration-500"
     >
-      {/* Hero Background SVG with Floating & Ambient Pulse Animations */}
+      {/* Hero Background SVG/Image with Floating & Ambient Pulse Animations */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex items-center justify-center">
-        {/* Soft Ambient Radial Glow behind Hero SVG */}
+        {/* Soft Ambient Radial Glow behind Hero */}
         <div className="absolute w-[45rem] h-[45rem] bg-[#00c9d6]/20 rounded-full blur-[140px] animate-hero-pulse pointer-events-none" />
 
         <img
-          src={headerBg}
+          src={slide.image || headerBg}
           alt="Hero Background"
-          className="w-full h-full object-cover object-center opacity-95 transition-all duration-700 animate-hero-float pointer-events-none"
+          key={currentSlide}
+          className="w-full h-full object-cover object-center opacity-95 transition-opacity duration-1000 animate-hero-float pointer-events-none"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#d4f8fc]/10 to-[#d4f8fc]/20 pointer-events-none" />
       </div>

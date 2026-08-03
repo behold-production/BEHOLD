@@ -54,8 +54,31 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
                 </div>
               )}
             </div>
+            
+            {/* Social Links rendering */}
+            {settings.socialLinks && Array.isArray(settings.socialLinks) && settings.socialLinks.length > 0 && (
+              <div className="flex items-center gap-4 mt-6">
+                {settings.socialLinks.map((social, idx) => (
+                  social.url ? (
+                    <a 
+                      key={idx}
+                      href={social.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-surface-400 hover:text-[#00e5ff] transition-colors"
+                      title={social.name}
+                    >
+                      {social.logo && social.logo.toLowerCase() !== social.name.toLowerCase() ? (
+                        <span className="text-xs font-medium uppercase tracking-wider">{social.logo}</span>
+                      ) : (
+                        <span className="text-xs font-medium uppercase tracking-wider">{social.name}</span>
+                      )}
+                    </a>
+                  ) : null
+                ))}
+              </div>
+            )}
           </div>
-
           {/* Services */}
           <div className="col-span-1 md:col-span-3 lg:col-span-3 pt-6 md:pt-0 border-t border-surface-800 md:border-t-0 md:pl-4 lg:pl-8">
             <h4 className="text-white font-sans font-bold uppercase text-xs tracking-widest mb-4 md:mb-5 flex items-center gap-1.5">
