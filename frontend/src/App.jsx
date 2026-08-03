@@ -697,7 +697,7 @@ export default function App() {
           <Route path="/test" element={<><Navbar onOpenAuth={() => { }} /><AptitudeTest /></>} />
           <Route path="/results/:testId" element={<><Navbar onOpenAuth={() => { }} /><TestResultsTab /></>} />
           
-          <Route path="/privacy" element={<><Navbar onOpenAuth={() => { }} /><PrivacyPolicy siteSettings={siteSettings} /><Footer /></>} />
+          <Route path="/privacy" element={<><Navbar onOpenAuth={() => { }} /><PrivacyPolicy /><Footer /></>} />
 
           {/* Aptitude routes: only active when admin enables aptitude */}
           {siteSettings.enableAptitude !== false ? (
