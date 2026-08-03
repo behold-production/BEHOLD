@@ -1355,6 +1355,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                         <div className="flex-1 min-w-0">
                                                             <span className="text-sm font-semibold text-surface-900 block truncate">{user.name}</span>
                                                             <span className="text-sm font-bold text-surface-600 truncate block">{user.email}</span>
+                                                            {user.phone && <span className="text-sm font-bold text-surface-600 truncate block">{user.phone}</span>}
                                                         </div>
                                                         <span className="shrink-0 text-sm font-semibold bg-surface-900 text-white px-2.5 py-1 rounded-xl">
                                                             ✓ Authenticated
