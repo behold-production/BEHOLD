@@ -117,6 +117,7 @@ export default function PsychologistDashboard({ setView }) {
  const [customHour, setCustomHour] = useState('09');
  const [customMinute, setCustomMinute] = useState('00');
  const [customPeriod, setCustomPeriod] = useState('AM');
+ const [slotInterval, setSlotInterval] = useState(60);
  const setSlotError = (msg) => { if (msg && !msg.includes('Status:')) import('react-hot-toast').then(mod => mod.toast.error(msg)) };
  const slotError = '';
  const [isAvailabilitySaved, setIsAvailabilitySaved] = useState(false);
@@ -262,7 +263,10 @@ export default function PsychologistDashboard({ setView }) {
  commissionPercent: c.commissionPercent !== undefined ? Number(c.commissionPercent) : 50,
  bankAccountNumber: c.bankAccountNumber || '',
  bankIfscCode: c.bankIfscCode || '',
- bankAccountName: c.bankAccountName || ''
+ bankAccountName: c.bankAccountName || '',
+ googleRefreshToken: c.googleRefreshToken || '',
+ googleEmail: c.googleEmail || '',
+ googleName: c.googleName || ''
  });
 
  // Load availability
@@ -823,6 +827,8 @@ export default function PsychologistDashboard({ setView }) {
  console.error("Failed to save counsellor profile via API", err);
  }
  };
+
+
 
  const handleAvailabilitySave = async (e) => {
  e.preventDefault();
@@ -2029,6 +2035,8 @@ export default function PsychologistDashboard({ setView }) {
  setToMinute={setToMinute}
  toPeriod={toPeriod}
  setToPeriod={setToPeriod}
+ slotInterval={slotInterval}
+ setSlotInterval={setSlotInterval}
  setSlotError={setSlotError}
  addTimeRangeSlots={addTimeRangeSlots}
  handleAvailabilitySave={handleAvailabilitySave}

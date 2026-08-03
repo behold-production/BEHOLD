@@ -1148,6 +1148,7 @@ export default function AdminDashboard({ setView }) {
  const [adminToHour, setAdminToHour] = useState('05');
  const [adminToMinute, setAdminToMinute] = useState('00');
  const [adminToPeriod, setAdminToPeriod] = useState('PM');
+ const [adminSlotInterval, setAdminSlotInterval] = useState(60);
 
  const [isAddBookingOpen, setIsAddBookingOpen] = useState(false);
  const [isEditBookingOpen, setIsEditBookingOpen] = useState(false);
@@ -1883,7 +1884,7 @@ export default function AdminDashboard({ setView }) {
  return `${hourStr}:${minStr} ${period}`;
  };
 
- const addAdminTimeRangeSlots = (fromStr, toStr) => {
+ const addAdminTimeRangeSlots = (fromStr, toStr, interval = 60) => {
  const fromMins = parseAdminTimeToMinutes(fromStr);
  const toMins = parseAdminTimeToMinutes(toStr);
  if (fromMins >= toMins) {
@@ -1892,8 +1893,8 @@ export default function AdminDashboard({ setView }) {
  }
 
  const generated = [];
- // Generate every 60 minutes (1 hour)
- for (let m = fromMins; m <= toMins; m += 60) {
+ const step = Number(interval) || 60;
+ for (let m = fromMins; m <= toMins; m += step) {
  generated.push(formatAdminMinutesToTime(m));
  }
 
@@ -3416,6 +3417,8 @@ export default function AdminDashboard({ setView }) {
  setOverviewActivityTab,
  selectedOverviewBooking,
  setSelectedOverviewBooking,
+ adminSlotInterval,
+ setAdminSlotInterval,
  isScanning,
  setIsScanning,
  scanProgress,

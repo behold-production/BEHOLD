@@ -101,14 +101,28 @@ router.get('/callback', async (req, res) => {
     // Exchange the authorization code for tokens
     const { tokens } = await oauth2Client.getToken(code);
 
-    if (tokens.refresh_token) {
+    if (tokens.refresh_token || tokens.access_token) {
       // Save refresh token to the counsellor's profile
       const counsellor = await Counsellor.findOne({ id: counsellorId });
       if (!counsellor) {
         return res.redirect(`${frontendUrl}/counsellor?google=error&msg=counsellor_not_found`);
       }
 
-      counsellor.googleRefreshToken = tokens.refresh_token;
+      if (tokens.refresh_token) {
+        counsellor.googleRefreshToken = tokens.refresh_token;
+      }
+
+      // Fetch Google account info (email + name) to display on the card
+      try {
+        oauth2Client.setCredentials(tokens);
+        const oauth2 = google.oauth2({ version: 'v2', auth: oauth2Client });
+        const { data: userInfo } = await oauth2.userinfo.get();
+        if (userInfo.email) counsellor.googleEmail = userInfo.email;
+        if (userInfo.name) counsellor.googleName = userInfo.name;
+      } catch (infoErr) {
+        console.warn('Could not fetch Google user info:', infoErr.message);
+      }
+
       await counsellor.save();
 
       // Redirect back to the counsellor console settings page with a success flag
@@ -145,6 +159,8 @@ router.post('/disconnect', verifyJWT, async (req, res) => {
     // Optional: We could revoke the token on Google's side here
     // But simply deleting it from DB is enough to stop our app from using it
     counsellor.googleRefreshToken = '';
+    counsellor.googleEmail = '';
+    counsellor.googleName = '';
     await counsellor.save();
 
     res.json({ success: true, message: 'Google Calendar disconnected successfully' });

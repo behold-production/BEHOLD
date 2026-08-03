@@ -11,6 +11,7 @@ import Faq from './features/landing/Faq';
 import WhyChooseUs from './features/landing/WhyChooseUs';
 import Inquiry from './features/landing/Inquiry';
 import Reviews from './features/landing/Reviews';
+import PrivacyPolicy from './features/landing/PrivacyPolicy';
 import Footer from './shared/components/Footer';
 import AuthModals from './features/auth/AuthModals';
 import TherapistSwipeSection from './features/landing/TherapistSwipeSection';
@@ -693,6 +694,10 @@ export default function App() {
           <Route path="/blog" element={<BlogList />} />
           <Route path="/blog/:slug" element={<BlogPostDetail />} />
           <Route path="/faqs" element={<FaqsPage />} />
+          <Route path="/test" element={<><Navbar onOpenAuth={() => { }} /><AptitudeTest /></>} />
+          <Route path="/results/:testId" element={<><Navbar onOpenAuth={() => { }} /><TestResultsTab /></>} />
+          
+          <Route path="/privacy" element={<><Navbar onOpenAuth={() => { }} /><PrivacyPolicy /><Footer /></>} />
 
           {/* Aptitude routes: only active when admin enables aptitude */}
           {siteSettings.enableAptitude !== false ? (

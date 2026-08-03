@@ -29,6 +29,8 @@ const AvailabilityTab = ({
  toPeriod,
  setToPeriod,
  setSlotError,
+ slotInterval,
+ setSlotInterval,
  addTimeRangeSlots,
  isAvailabilitySaved,
  handleAvailabilitySave
@@ -238,18 +240,38 @@ const AvailabilityTab = ({
  </div>
  </div>
 
- <button
- type="button"
- onClick={() => {
- setSlotError('');
- const fromStr = `${fromHour}:${fromMinute} ${fromPeriod}`;
- const toStr = `${toHour}:${toMinute} ${toPeriod}`;
- addTimeRangeSlots(fromStr, toStr, false);
- }}
- className="w-full mt-2 bg-zinc-900 hover:bg-zinc-800 text-white py-2.5 text-sm font-bold rounded-[10px] transition-colors border border-zinc-800 cursor-pointer flex items-center justify-center shadow-sm"
- >
- Generate Hourly Slots
- </button>
+  <div className="flex gap-1.5 items-center mt-3">
+    <span className="text-xs text-zinc-500 font-bold tracking-wide w-20 text-left">
+      Duration:
+    </span>
+    <div className="flex-1">
+      <select
+        value={slotInterval || 60}
+        onChange={(e) => setSlotInterval(Number(e.target.value))}
+        className="w-full px-2.5 py-2 bg-zinc-950 border border-zinc-800 rounded-[10px] text-sm text-white outline-none focus:border-brand cursor-pointer shadow-sm"
+      >
+        <option value={15}>15 Minutes</option>
+        <option value={30}>30 Minutes</option>
+        <option value={45}>45 Minutes</option>
+        <option value={60}>60 Minutes</option>
+        <option value={90}>90 Minutes</option>
+        <option value={120}>120 Minutes</option>
+      </select>
+    </div>
+  </div>
+
+  <button
+    type="button"
+    onClick={() => {
+      setSlotError('');
+      const fromStr = `${fromHour}:${fromMinute} ${fromPeriod}`;
+      const toStr = `${toHour}:${toMinute} ${toPeriod}`;
+      addTimeRangeSlots(fromStr, toStr, false, slotInterval);
+    }}
+    className="w-full mt-3 bg-zinc-900 hover:bg-zinc-800 text-white py-2.5 text-sm font-bold rounded-[10px] transition-colors border border-zinc-800 cursor-pointer flex items-center justify-center shadow-sm"
+  >
+    Generate Time Slots
+  </button>
  </div>
  </div>
 

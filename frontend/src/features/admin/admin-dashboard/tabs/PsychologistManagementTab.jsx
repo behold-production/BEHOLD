@@ -58,6 +58,8 @@ export default function PsychologistManagementTab(props) {
     canEditPsy,
     canDeletePsy,
     isDbLoading,
+    adminSlotInterval,
+    setAdminSlotInterval
   } = props;
 
   const [searchPsy, setSearchPsy] = useState("");
@@ -214,7 +216,7 @@ export default function PsychologistManagementTab(props) {
     return `${hourStr}:${minStr} ${period}`;
   };
 
-  const addAdminTimeRangeSlots = (fromStr, toStr) => {
+  const addAdminTimeRangeSlots = (fromStr, toStr, interval = 60) => {
     const fromMins = parseAdminTimeToMinutes(fromStr);
     const toMins = parseAdminTimeToMinutes(toStr);
     if (fromMins >= toMins) {
@@ -223,8 +225,8 @@ export default function PsychologistManagementTab(props) {
     }
 
     const generated = [];
-    // Generate every 60 minutes (1 hour)
-    for (let m = fromMins; m <= toMins; m += 60) {
+    const step = Number(interval) || 60;
+    for (let m = fromMins; m <= toMins; m += step) {
       generated.push(formatAdminMinutesToTime(m));
     }
 
@@ -1819,16 +1821,36 @@ export default function PsychologistManagementTab(props) {
                         </div>
                       </div>
 
+                      <div className="flex gap-1.5 items-center mt-1">
+                        <span className="text-xs text-zinc-500 font-bold tracking-wide w-24 text-left">
+                          Session Duration:
+                        </span>
+                        <div className="flex-1">
+                          <select
+                            value={adminSlotInterval || 60}
+                            onChange={(e) => setAdminSlotInterval(Number(e.target.value))}
+                            className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+                          >
+                            <option value={15}>15 Minutes</option>
+                            <option value={30}>30 Minutes</option>
+                            <option value={45}>45 Minutes</option>
+                            <option value={60}>60 Minutes</option>
+                            <option value={90}>90 Minutes</option>
+                            <option value={120}>120 Minutes</option>
+                          </select>
+                        </div>
+                      </div>
+
                       <button
                         type="button"
                         onClick={() => {
                           const fromStr = `${adminFromHour}:${adminFromMinute} ${adminFromPeriod}`;
                           const toStr = `${adminToHour}:${adminToMinute} ${adminToPeriod}`;
-                          addAdminTimeRangeSlots(fromStr, toStr);
+                          addAdminTimeRangeSlots(fromStr, toStr, adminSlotInterval);
                         }}
-                        className="w-full mt-1 bg-brand/10 hover:bg-brand text-brand hover:text-zinc-955 py-2 text-xs font-bold rounded-lg transition-colors border border-brand/30 hover:border-brand cursor-pointer flex items-center justify-center font-header"
+                        className="w-full mt-2 bg-brand/10 hover:bg-brand text-brand hover:text-zinc-955 py-2 text-xs font-bold rounded-lg transition-colors border border-brand/30 hover:border-brand cursor-pointer flex items-center justify-center font-header"
                       >
-                        Generate Hourly Slots from Range
+                        Generate Time Slots
                       </button>
                     </div>
                   </div>
@@ -2827,16 +2849,36 @@ export default function PsychologistManagementTab(props) {
                         </div>
                       </div>
 
+                      <div className="flex gap-1.5 items-center mt-1">
+                        <span className="text-xs text-zinc-500 font-bold tracking-wide w-24 text-left">
+                          Session Duration:
+                        </span>
+                        <div className="flex-1">
+                          <select
+                            value={adminSlotInterval || 60}
+                            onChange={(e) => setAdminSlotInterval(Number(e.target.value))}
+                            className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+                          >
+                            <option value={15}>15 Minutes</option>
+                            <option value={30}>30 Minutes</option>
+                            <option value={45}>45 Minutes</option>
+                            <option value={60}>60 Minutes</option>
+                            <option value={90}>90 Minutes</option>
+                            <option value={120}>120 Minutes</option>
+                          </select>
+                        </div>
+                      </div>
+
                       <button
                         type="button"
                         onClick={() => {
                           const fromStr = `${adminFromHour}:${adminFromMinute} ${adminFromPeriod}`;
                           const toStr = `${adminToHour}:${adminToMinute} ${adminToPeriod}`;
-                          addAdminTimeRangeSlots(fromStr, toStr);
+                          addAdminTimeRangeSlots(fromStr, toStr, adminSlotInterval);
                         }}
-                        className="w-full mt-1 bg-brand/10 hover:bg-brand text-brand hover:text-zinc-955 py-2 text-xs font-bold rounded-lg transition-colors border border-brand/30 hover:border-brand cursor-pointer flex items-center justify-center font-header"
+                        className="w-full mt-2 bg-brand/10 hover:bg-brand text-brand hover:text-zinc-955 py-2 text-xs font-bold rounded-lg transition-colors border border-brand/30 hover:border-brand cursor-pointer flex items-center justify-center font-header"
                       >
-                        Generate Hourly Slots from Range
+                        Generate Time Slots
                       </button>
                     </div>
                   </div>

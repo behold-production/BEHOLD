@@ -31,6 +31,8 @@ const counsellorSchema = new mongoose.Schema(
     profilePic: { type: String, default: '' },
     profilePicPublicId: { type: String, default: '' },
     googleRefreshToken: { type: String, default: '' },
+    googleEmail: { type: String, default: '' },
+    googleName: { type: String, default: '' },
     isTopFive: { type: Boolean, default: false },
     locationName: { type: String, default: '' },
     latitude: { type: Number, default: 0 },
