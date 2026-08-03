@@ -1003,7 +1003,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       setPaymentStepText("Awaiting payment...");
 
       const options = {
-        key: import.meta.env.VITE_RAZORPAY_KEY_ID || keyId || 'rzp_test_THJcTWUaeHzOnn',
+        key: keyId || import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_THJcTWUaeHzOnn',
         amount: amount,
         currency: currency || 'INR',
         name: "BEHOLD.",
