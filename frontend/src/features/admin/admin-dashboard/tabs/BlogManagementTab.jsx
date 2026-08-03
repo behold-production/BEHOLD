@@ -47,32 +47,71 @@ export default function BlogManagementTab() {
     }
   };
 
-  const handleDrop = (e) => {
+  const compressImage = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let { width, height } = img;
+          const MAX_WIDTH = 1200;
+          const MAX_HEIGHT = 800;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL('image/jpeg', 0.8));
+        };
+        img.onerror = reject;
+        img.src = e.target.result;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const handleDrop = async (e) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const file = e.dataTransfer.files[0];
       if (file && file.type.startsWith('image/')) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData({ ...formData, coverImageFile: null, coverImage: reader.result });
-      };
-      reader.readAsDataURL(file);
-    } else if (file) {      toast.error('Please upload a valid image file');
+        try {
+          const compressedBase64 = await compressImage(file);
+          setFormData({ ...formData, coverImageFile: null, coverImage: compressedBase64 });
+        } catch (error) {
+          toast.error('Failed to process image');
+        }
+      } else if (file) {
+        toast.error('Please upload a valid image file');
       }
     }
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       if (file.type.startsWith('image/')) {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setFormData({ ...formData, coverImageFile: null, coverImage: reader.result });
-        };
-        reader.readAsDataURL(file);
+        try {
+          const compressedBase64 = await compressImage(file);
+          setFormData({ ...formData, coverImageFile: null, coverImage: compressedBase64 });
+        } catch (error) {
+          toast.error('Failed to process image');
+        }
       } else {
         toast.error('Please upload a valid image file');
       }

@@ -15,10 +15,10 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
       id: 'counselling',
       enabled: enablePsychology,
       icon: Brain,
-      title: 'Psychological Counselling',
-      description: 'One-on-one therapeutic sessions for anxiety, academic stress, depression, and personal wellbeing guided by certified clinical psychologists.',
+      title: settings.psychTitle || 'Psychological Counselling',
+      description: settings.psychDesc || 'One-on-one therapeutic sessions for anxiety, academic stress, depression, and personal wellbeing guided by certified clinical psychologists.',
       price: 'From ₹500 / Session',
-      actionText: 'Book Counselling',
+      actionText: settings.psychBtnText || 'Book Your Therapist',
       onAction: () => {
         if (onBookTherapist) onBookTherapist();
         else window.spaNavigate?.('/booking');
@@ -28,10 +28,10 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
       id: 'mentoring',
       enabled: enableCareerMentoring,
       icon: Compass,
-      title: 'Career Mentoring',
-      description: 'Personalized 1:1 career guidance, stream selection, higher education roadmaps, and profile building with experienced education advisors.',
+      title: settings.careerTitle || 'Career Mentoring',
+      description: settings.careerDesc || 'Personalized 1:1 career guidance, stream selection, higher education roadmaps, and profile building with experienced education advisors.',
       price: 'From ₹800 / Session',
-      actionText: 'Book Mentoring',
+      actionText: settings.careerBtnText || 'Book Your Mentor',
       onAction: () => {
         if (onBookTherapist) onBookTherapist();
         else window.spaNavigate?.('/booking');
