@@ -1,11 +1,11 @@
 import React, { useState, useRef } from 'react';
 import ApiService from '../../../../shared/services/api';
-import { User, ShieldAlert, Award, Trash, Check, Plus, Lock, Settings, KeyRound, BarChart3, LogOut, Search, ShieldCheck, Calendar, Clock, Link, AlertCircle, Edit, Video, UserPlus, MessageSquare, FileSpreadsheet, HelpCircle, X, ChevronRight, ChevronLeft, Mail, Shield, Menu, Brain, Download, FileText, Eye, EyeOff, Bell, Send } from 'lucide-react';
+import { User, ShieldAlert, Award, Trash, Check, Plus, Lock, Settings, KeyRound, BarChart3, LogOut, Search, ShieldCheck, Calendar, Clock, Link, AlertCircle, Edit, Video, UserPlus, MessageSquare, FileSpreadsheet, HelpCircle, X, ChevronRight, ChevronLeft, Mail, Shield, Menu, Brain, Download, FileText, Eye, EyeOff, Bell, Send, Loader2 } from 'lucide-react';
 import { SkeletonTableRows, PaginationBar } from '../components/SharedAdminUI';
 
 export default function StudentManagementTab(props) {
  
-  const { usersDb, bookingsDb, reloadData, isSuperAdmin, hasUserPermission, getInitials, showAlert, showConfirm, showPrompt, handleExportPDF, handleExportImage, canAddStudents, canEditStudents, canDeleteStudents, isDbLoading } = props;
+  const { usersDb, setUsersDb, bookingsDb, testResultsDb = [], reloadData, isSuperAdmin, hasUserPermission, getInitials, showAlert, showConfirm, showPrompt, handleExportPDF, handleExportImage, handleExportAptitudeResults, canAddStudents, canEditStudents, canDeleteStudents, isDbLoading } = props;
 
   const [searchUser, setSearchUser] = useState('');
   const [studentPage, setStudentPage] = useState(1);
@@ -32,6 +32,22 @@ export default function StudentManagementTab(props) {
   const [isAdminUserLocating, setIsAdminUserLocating] = useState(false);
   const [adminUserSearchQuery, setAdminUserSearchQuery] = useState('');
   const [adminUserSearchResults, setAdminUserSearchResults] = useState([]);
+  const [isAdminUserSearching, setIsAdminUserSearching] = useState(false);
+
+  const handleAdminUserAddressSearch = async () => {
+    const query = adminUserSearchQuery.trim();
+    if (!query) return;
+    setIsAdminUserSearching(true);
+    try {
+      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
+      setAdminUserSearchResults(response.ok ? await response.json() : []);
+    } catch (error) {
+      console.error('Student address search failed:', error);
+      setAdminUserSearchResults([]);
+    } finally {
+      setIsAdminUserSearching(false);
+    }
+  };
 
   // Filter students based on search query
   const studentsList = usersDb.filter(u => {

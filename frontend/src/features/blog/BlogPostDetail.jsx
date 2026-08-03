@@ -163,16 +163,14 @@ const BlogPostDetail = () => {
           </div>
 
           {/* Cover Image */}
-          {(post.coverImage || true) && (
-            <div className="mb-12 rounded-xl overflow-hidden border border-surface-200 shadow-sm bg-surface-100 relative group">
+          <div className="mb-12 rounded-xl overflow-hidden border border-surface-200 shadow-sm bg-surface-100 relative group">
               <img
                 src={post.coverImage ? getImageUrl(post.coverImage) : defaultBlogImage}
                 alt={post.title}
                 onError={(e) => { e.target.onerror = null; e.target.src = defaultBlogImage; }}
                 className="w-full h-auto max-h-[480px] object-cover group-hover:scale-105 transition-transform duration-700"
               />
-            </div>
-          )}
+          </div>
 
           {/* Article Excerpt Banner */}
           {post.excerpt && (

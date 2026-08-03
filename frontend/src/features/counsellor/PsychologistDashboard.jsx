@@ -787,6 +787,7 @@ export default function PsychologistDashboard({ setView }) {
  ? formData.specialties.split(',').map(s => s.trim()).filter(Boolean)
  : [];
 
+ const modes = Array.isArray(formData.modes) ? formData.modes : [];
  const payload = {
  name: formData.name,
  education: formData.education,
@@ -796,7 +797,7 @@ export default function PsychologistDashboard({ setView }) {
  bio: formData.bio,
  defaultMeetLink: formData.defaultMeetLink,
  hours: Number(formData.hours) || 0,
- modes: formData.modes,
+ modes,
  locationName: formData.locationName || '',
  latitude: Number(formData.latitude) || 0,
  longitude: Number(formData.longitude) || 0,
@@ -805,6 +806,11 @@ export default function PsychologistDashboard({ setView }) {
  bankIfscCode: formData.bankIfscCode || '',
  bankAccountName: formData.bankAccountName || ''
  };
+
+ if (payload.modes.length === 0) {
+ toast.error("Select at least one supported session mode.");
+ return;
+ }
 
  if ((payload.modes.includes('DOOR_STEP') || payload.modes.includes('OFFLINE')) && (!payload.locationName.trim() || !payload.latitude || !payload.longitude)) {
  toast.error("Clinic / Office Address and coordinates are required when Offline or Doorstep modes are enabled.");
@@ -825,6 +831,7 @@ export default function PsychologistDashboard({ setView }) {
  }
  } catch (err) {
  console.error("Failed to save counsellor profile via API", err);
+ toast.error(err.message || "Failed to save profile.");
  }
  };
 

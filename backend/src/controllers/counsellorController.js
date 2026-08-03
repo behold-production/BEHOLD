@@ -4,6 +4,15 @@ const cloudinary = require('../config/cloudinary');
 const { uploadProfilePicToCloudinary } = require('../utils/cloudinaryHelper');
 const { autoExpireSessions } = require('../utils/sessionHelper');
 
+const COUNSELLOR_MODES = new Set(['ONLINE', 'OFFLINE', 'DOOR_STEP']);
+
+const normalizeList = (value) => {
+  const values = Array.isArray(value) ? value : typeof value === 'string' ? value.split(',') : [];
+  return [...new Set(values.map((item) => String(item).trim()).filter(Boolean))];
+};
+
+const normalizeModes = (value) => normalizeList(value).map((mode) => mode.toUpperCase()).filter((mode) => COUNSELLOR_MODES.has(mode));
+
 const CounsellorController = {
   // Get Counsellor Profile
   async getProfile(req, res, next) {
@@ -50,22 +59,56 @@ const CounsellorController = {
       } = req.body;
       const updates = {};
 
-      if (name !== undefined) updates.name = name;
+      if (name !== undefined) {
+        if (!String(name).trim()) {
+          return res.status(400).json({ success: false, message: 'Name cannot be empty' });
+        }
+        updates.name = String(name).trim();
+      }
       if (phone !== undefined) updates.phone = phone;
-      if (specialties !== undefined) updates.specialties = specialties;
-      if (qualifications !== undefined) updates.qualifications = qualifications;
+      if (specialties !== undefined) updates.specialties = normalizeList(specialties);
+      if (qualifications !== undefined) updates.qualifications = normalizeList(qualifications);
       if (experience !== undefined) updates.experience = experience;
       if (modePreference !== undefined) updates.modePreference = modePreference;
       if (bio !== undefined) updates.bio = bio;
       if (education !== undefined) updates.education = education;
-      if (price !== undefined) updates.price = price;
+      if (price !== undefined) {
+        const parsedPrice = Number(price);
+        if (!Number.isFinite(parsedPrice) || parsedPrice < 0) {
+          return res.status(400).json({ success: false, message: 'Price must be a non-negative number' });
+        }
+        updates.price = parsedPrice;
+      }
       if (lang !== undefined) updates.lang = lang;
       if (defaultMeetLink !== undefined) updates.defaultMeetLink = defaultMeetLink;
-      if (hours !== undefined) updates.hours = hours;
-      if (modes !== undefined) updates.modes = modes;
+      if (hours !== undefined) {
+        const parsedHours = Number(hours);
+        if (!Number.isFinite(parsedHours) || parsedHours < 0) {
+          return res.status(400).json({ success: false, message: 'Experience hours must be a non-negative number' });
+        }
+        updates.hours = parsedHours;
+      }
+      if (modes !== undefined) {
+        updates.modes = normalizeModes(modes);
+        if (updates.modes.length === 0) {
+          return res.status(400).json({ success: false, message: 'Select at least one valid consultation mode' });
+        }
+      }
       if (locationName !== undefined) updates.locationName = locationName;
-      if (latitude !== undefined) updates.latitude = Number(latitude);
-      if (longitude !== undefined) updates.longitude = Number(longitude);
+      if (latitude !== undefined) {
+        const parsedLatitude = Number(latitude);
+        if (!Number.isFinite(parsedLatitude) || parsedLatitude < -90 || parsedLatitude > 90) {
+          return res.status(400).json({ success: false, message: 'Latitude must be between -90 and 90' });
+        }
+        updates.latitude = parsedLatitude;
+      }
+      if (longitude !== undefined) {
+        const parsedLongitude = Number(longitude);
+        if (!Number.isFinite(parsedLongitude) || parsedLongitude < -180 || parsedLongitude > 180) {
+          return res.status(400).json({ success: false, message: 'Longitude must be between -180 and 180' });
+        }
+        updates.longitude = parsedLongitude;
+      }
       if (bankAccountNumber !== undefined) updates.bankAccountNumber = bankAccountNumber;
       if (bankIfscCode !== undefined) updates.bankIfscCode = bankIfscCode;
       if (bankAccountName !== undefined) updates.bankAccountName = bankAccountName;

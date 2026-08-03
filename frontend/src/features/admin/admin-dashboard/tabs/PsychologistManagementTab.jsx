@@ -304,6 +304,7 @@ export default function PsychologistManagementTab(props) {
         lang: psyForm.lang,
         bio: psyForm.bio,
         defaultMeetLink: psyForm.defaultMeetLink,
+        phone: psyForm.phone,
         hours: psyForm.hours,
         modes: psyForm.modes,
         title: psyForm.title,
@@ -312,6 +313,9 @@ export default function PsychologistManagementTab(props) {
         locationName: psyForm.locationName,
         latitude: Number(psyForm.latitude) || 0,
         longitude: Number(psyForm.longitude) || 0,
+        commissionPercent: Number.isFinite(Number(psyForm.commissionPercent))
+          ? Number(psyForm.commissionPercent)
+          : 50,
         availability: {
           activeDays: adminActiveDays,
           availableSlots: adminAvailableSlots,
@@ -477,6 +481,7 @@ export default function PsychologistManagementTab(props) {
         bio: psyForm.bio,
         defaultMeetLink: psyForm.defaultMeetLink,
         phone: psyForm.phone,
+        hours: psyForm.hours,
         modes: psyForm.modes,
         title: psyForm.title,
         isTopFive: psyForm.isTopFive,
@@ -484,7 +489,9 @@ export default function PsychologistManagementTab(props) {
         locationName: psyForm.locationName,
         latitude: Number(psyForm.latitude) || 0,
         longitude: Number(psyForm.longitude) || 0,
-        commissionPercent: Number(psyForm.commissionPercent) || 50,
+        commissionPercent: Number.isFinite(Number(psyForm.commissionPercent))
+          ? Number(psyForm.commissionPercent)
+          : 50,
         availability: {
           activeDays: adminActiveDays,
           availableSlots: adminAvailableSlots,
@@ -683,6 +690,11 @@ export default function PsychologistManagementTab(props) {
                     bio: "",
                     isTopFive: false,
                     isActive: true,
+                    phone: '',
+                    hours: 0,
+                    title: 'Consultant Psychologist',
+                    defaultMeetLink: '',
+                    commissionPercent: 50,
                     locationName: "",
                     latitude: 0,
                     longitude: 0,

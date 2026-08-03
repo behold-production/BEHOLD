@@ -53,8 +53,6 @@ const CAREER_FLOW = {
 };
 
 export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, clearPreselectedAdvisor, onOpenDocs }) {
-    if (!isOpen) return null;
-
     const {
         user,
         bookingService,
@@ -258,6 +256,11 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
             return () => clearTimeout(timer);
         }
     }, [bookingMode]);
+
+    // Keep every hook above this guard. The modal can be opened after an
+    // initially closed render, and returning before hooks would violate React's
+    // hook ordering and crash the booking flow.
+    if (!isOpen) return null;
 
     if (!enablePsychology && !enableCareerMentoring && !isRescheduleParam) {
         return (
@@ -1668,6 +1671,5 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
         </div>
     );
 }
-
 
 

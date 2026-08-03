@@ -6,6 +6,52 @@ const { uploadToCloudinary, uploadProfilePicToCloudinary } = require('../utils/c
 const EmailService = require('../services/emailService');
 const { autoExpireSessions } = require('../utils/sessionHelper');
 
+const COUNSELLOR_MODES = new Set(['ONLINE', 'OFFLINE', 'DOOR_STEP']);
+
+const normalizeEmail = (email) => String(email || '').trim().toLowerCase();
+
+const normalizeStringList = (value) => {
+  const values = Array.isArray(value) ? value : typeof value === 'string' ? value.split(',') : [];
+  return [...new Set(values.map((item) => String(item).trim()).filter(Boolean))];
+};
+
+const normalizeModes = (value) =>
+  normalizeStringList(value)
+    .map((mode) => mode.toUpperCase())
+    .filter((mode) => COUNSELLOR_MODES.has(mode));
+
+const getNumber = (value, field, { min = 0, max = Number.MAX_SAFE_INTEGER } = {}) => {
+  const number = Number(value);
+  if (!Number.isFinite(number) || number < min || number > max) {
+    const error = new Error(`${field} must be a number between ${min} and ${max}`);
+    error.statusCode = 400;
+    throw error;
+  }
+  return number;
+};
+
+async function ensureEmailAvailable(email, excludeId) {
+  const normalizedEmail = normalizeEmail(email);
+  if (!normalizedEmail || !/^\S+@\S+\.\S+$/.test(normalizedEmail)) {
+    const error = new Error('A valid email address is required');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const [user, counsellor] = await Promise.all([
+    StorageService.findOne('users', { email: normalizedEmail }),
+    StorageService.findOne('counsellors', { email: normalizedEmail })
+  ]);
+
+  if ((user && user.id !== excludeId) || (counsellor && counsellor.id !== excludeId)) {
+    const error = new Error('An account already exists with this email address');
+    error.statusCode = 409;
+    throw error;
+  }
+
+  return normalizedEmail;
+}
+
 const AdminController = {
   // Admin Dashboard Statistics
   async getDashboard(req, res, next) {
@@ -99,11 +145,12 @@ const AdminController = {
   async verifyCounsellor(req, res, next) {
     try {
       const { id } = req.params;
-      const { isVerified } = req.body;
+      const { isVerified: rawIsVerified } = req.body;
 
-      if (isVerified === undefined) {
+      if (rawIsVerified === undefined || ![true, false, 'true', 'false'].includes(rawIsVerified)) {
         return res.status(400).json({ success: false, message: 'isVerified status is required' });
       }
+      const isVerified = rawIsVerified === true || rawIsVerified === 'true';
 
       const updated = await StorageService.update('counsellors', id, {
         isVerified,
@@ -469,12 +516,19 @@ const AdminController = {
         guardianPhone,
         groupCode
       } = req.body;
+      if (!String(name || '').trim() || !String(password || '')) {
+        return res.status(400).json({ success: false, message: 'Name, email, and password are required' });
+      }
+      if (String(password).length < 6) {
+        return res.status(400).json({ success: false, message: 'Password must be at least 6 characters long' });
+      }
+      const normalizedEmail = await ensureEmailAvailable(email);
       const bcrypt = require('bcryptjs');
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
       const newUser = await StorageService.create('users', {
-        name,
-        email: email.toLowerCase(),
+        name: name.trim(),
+        email: normalizedEmail,
         password: hashedPassword,
         phone: phone || '',
         schoolName: schoolName || '',
@@ -522,8 +576,11 @@ const AdminController = {
         longitude
       } = req.body;
       const updates = {};
-      if (name !== undefined) updates.name = name;
-      if (email !== undefined) updates.email = email.toLowerCase();
+      if (name !== undefined) {
+        if (!String(name).trim()) return res.status(400).json({ success: false, message: 'Name cannot be empty' });
+        updates.name = String(name).trim();
+      }
+      if (email !== undefined) updates.email = await ensureEmailAvailable(email, id);
       if (role !== undefined) updates.role = role;
       if (permissions !== undefined) updates.permissions = permissions;
       if (customRoleTitle !== undefined) updates.customRoleTitle = customRoleTitle;
@@ -541,6 +598,9 @@ const AdminController = {
       if (profilePicPublicId !== undefined) updates.profilePicPublicId = profilePicPublicId;
 
       if (password) {
+        if (String(password).length < 6) {
+          return res.status(400).json({ success: false, message: 'Password must be at least 6 characters long' });
+        }
         const bcrypt = require('bcryptjs');
         const salt = await bcrypt.genSalt(10);
         updates.password = await bcrypt.hash(password, salt);
@@ -595,48 +655,51 @@ const AdminController = {
         isTopFive,
         commissionPercent
       } = req.body;
+      if (!String(name || '').trim() || !String(password || '')) {
+        return res.status(400).json({ success: false, message: 'Name, email, and password are required' });
+      }
+      if (String(password).length < 6) {
+        return res.status(400).json({ success: false, message: 'Password must be at least 6 characters long' });
+      }
+      const normalizedEmail = await ensureEmailAvailable(email);
+      const normalizedModes = modes === undefined ? ['ONLINE', 'OFFLINE', 'DOOR_STEP'] : normalizeModes(modes);
+      if (modes !== undefined && normalizedModes.length === 0) {
+        return res.status(400).json({ success: false, message: 'Select at least one valid consultation mode' });
+      }
+      const normalizedPrice = price === undefined || price === '' ? 1200 : getNumber(price, 'Price', { min: 0 });
+      const normalizedHours = hours === undefined || hours === '' ? 0 : getNumber(hours, 'Experience hours', { min: 0 });
+      const normalizedCommission = commissionPercent === undefined || commissionPercent === ''
+        ? 50
+        : getNumber(commissionPercent, 'Commission percentage', { min: 0, max: 100 });
       const bcrypt = require('bcryptjs');
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
       const newCounsellor = await StorageService.create('counsellors', {
-        name,
-        email: email.toLowerCase(),
+        name: name.trim(),
+        email: normalizedEmail,
         password: hashedPassword,
         phone: phone || '',
         role: 'counsellor',
         education: education || '',
-        specialties: Array.isArray(specialties)
-          ? specialties
-          : specialties && typeof specialties === 'string'
-            ? specialties
-                .split(',')
-                .map((s) => s.trim())
-                .filter(Boolean)
-            : [],
+        specialties: normalizeStringList(specialties),
         qualifications: education ? [education] : [],
         experience: bio || '',
         bio: bio || '',
         availability: availability || {},
         isVerified: true,
+        status: 'APPROVED',
         isActive: true,
         rating: 5.0,
         reviewCount: 0,
-        price: Number(price) || 1200,
+        price: normalizedPrice,
         lang: lang || 'English',
         defaultMeetLink: defaultMeetLink || '',
         modePreference: 'BOTH',
-        hours: Number(hours) || 0,
-        modes: Array.isArray(modes)
-          ? modes
-          : modes && typeof modes === 'string'
-            ? modes
-                .split(',')
-                .map((m) => m.trim().toUpperCase())
-                .filter(Boolean)
-            : ['ONLINE', 'OFFLINE', 'DOOR_STEP'],
+        hours: normalizedHours,
+        modes: normalizedModes,
         title: title || 'Consultant Psychologist',
         isTopFive: isTopFive === true || isTopFive === 'true',
-        commissionPercent: commissionPercent !== undefined ? Number(commissionPercent) : 50
+        commissionPercent: normalizedCommission
       });
       const { password: _, ...counsellorData } = newCounsellor;
       res.status(201).json({ success: true, message: 'Counsellor created successfully', data: counsellorData });
@@ -674,23 +737,19 @@ const AdminController = {
         commissionPercent
       } = req.body;
       const updates = {};
-      if (name !== undefined) updates.name = name;
-      if (email !== undefined) updates.email = email.toLowerCase();
+      if (name !== undefined) {
+        if (!String(name).trim()) return res.status(400).json({ success: false, message: 'Name cannot be empty' });
+        updates.name = String(name).trim();
+      }
+      if (email !== undefined) updates.email = await ensureEmailAvailable(email, id);
       if (education !== undefined) {
         updates.education = education;
         updates.qualifications = [education];
       }
       if (specialties !== undefined) {
-        updates.specialties = Array.isArray(specialties)
-          ? specialties
-          : typeof specialties === 'string'
-            ? specialties
-                .split(',')
-                .map((s) => s.trim())
-                .filter(Boolean)
-            : [];
+        updates.specialties = normalizeStringList(specialties);
       }
-      if (price !== undefined) updates.price = Number(price);
+      if (price !== undefined) updates.price = getNumber(price, 'Price', { min: 0 });
       if (lang !== undefined) updates.lang = lang;
       if (bio !== undefined) {
         updates.experience = bio;
@@ -698,16 +757,12 @@ const AdminController = {
       }
       if (defaultMeetLink !== undefined) updates.defaultMeetLink = defaultMeetLink;
       if (phone !== undefined) updates.phone = phone;
-      if (hours !== undefined) updates.hours = Number(hours) || 0;
+      if (hours !== undefined) updates.hours = getNumber(hours, 'Experience hours', { min: 0 });
       if (modes !== undefined) {
-        updates.modes = Array.isArray(modes)
-          ? (updates.modes = modes)
-          : typeof modes === 'string'
-            ? (updates.modes = modes
-                .split(',')
-                .map((m) => m.trim().toUpperCase())
-                .filter(Boolean))
-            : [];
+        updates.modes = normalizeModes(modes);
+        if (updates.modes.length === 0) {
+          return res.status(400).json({ success: false, message: 'Select at least one valid consultation mode' });
+        }
       }
       if (title !== undefined) updates.title = title;
       if (availability !== undefined) updates.availability = availability;
@@ -718,9 +773,14 @@ const AdminController = {
       if (bankAccountNumber !== undefined) updates.bankAccountNumber = bankAccountNumber;
       if (bankIfscCode !== undefined) updates.bankIfscCode = bankIfscCode;
       if (bankAccountName !== undefined) updates.bankAccountName = bankAccountName;
-      if (commissionPercent !== undefined) updates.commissionPercent = Number(commissionPercent);
+      if (commissionPercent !== undefined) {
+        updates.commissionPercent = getNumber(commissionPercent, 'Commission percentage', { min: 0, max: 100 });
+      }
 
       if (password) {
+        if (String(password).length < 6) {
+          return res.status(400).json({ success: false, message: 'Password must be at least 6 characters long' });
+        }
         const bcrypt = require('bcryptjs');
         const salt = await bcrypt.genSalt(10);
         updates.password = await bcrypt.hash(password, salt);

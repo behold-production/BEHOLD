@@ -14,8 +14,15 @@ export default function SubAdminManagementTab(props) {
     PRIVILEGE_MODULES = [],
     showAlert,
     showConfirm,
+    setRolesDb,
+    handleExportPDF,
+    handleExportImage,
+    handleGenerateResetToken,
+    handleDeleteUser,
+    parseStaffDetails,
     isDbLoading = false,
-    isRegistering = false
+    isRegistering = false,
+    setIsRegistering
   } = props;
 
   const [activeRoleTab, setActiveRoleTab] = useState('roles');
@@ -41,6 +48,7 @@ export default function SubAdminManagementTab(props) {
   const [isSavingForm, setIsSavingForm] = useState(false);
 
   const subAdmins = usersDb.filter(u => u.role === 'SUB_ADMIN');
+  const subAdminsList = subAdmins;
 
 
 
@@ -159,7 +167,7 @@ const handleRoleChangeInForm = (roleName) => {
  await showAlert(res.message || "Failed to delete role.");
  }
  } catch (err) {
- await showAlert(res.message || "An error occurred deleting the role.");
+ await showAlert(err.message || "An error occurred deleting the role.");
  } finally {
  setRoleToDelete(null);
  }
