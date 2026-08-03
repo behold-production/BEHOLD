@@ -4,6 +4,7 @@ import { Search, Clock, ArrowRight, BookOpen, Sparkles, ChevronLeft, ChevronRigh
 import ApiService from '../../shared/services/api';
 import { DEFAULT_BLOGS_DATA } from './defaultBlogsData';
 import greenTexture from '../../assets/greygreen.png';
+import { getImageUrl } from '../../shared/utils/formatters';
 
 const CATEGORIES = [
   'All',
@@ -15,17 +16,8 @@ const CATEGORIES = [
 
 const BlogList = () => {
   const navigate = useNavigate();
-  const [blogs, setBlogs] = useState(() => {
-    try {
-      const cached = localStorage.getItem('behold_blogs_cache');
-      if (cached) {
-        const parsed = JSON.parse(cached);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-      }
-    } catch (e) { }
-    return [];
-  });
-  const [loading, setLoading] = useState(() => blogs.length === 0);
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -48,9 +40,6 @@ const BlogList = () => {
       const res = await ApiService.getBlogs(params);
       if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
         setBlogs(res.data);
-        if (selectedCategory === 'All' && !searchQuery.trim()) {
-          localStorage.setItem('behold_blogs_cache', JSON.stringify(res.data));
-        }
       } else {
         setBlogs([]);
       }
@@ -180,7 +169,7 @@ const BlogList = () => {
                   {/* Cover Image */}
                   <div className="relative h-56 w-full overflow-hidden bg-surface-100 shrink-0">
                     <img
-                      src={post.coverImage || 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&auto=format&fit=crop&q=80'}
+                      src={post.coverImage ? getImageUrl(post.coverImage) : 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&auto=format&fit=crop&q=80'}
                       alt={post.title}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
@@ -213,7 +202,7 @@ const BlogList = () => {
                       <div className="flex items-center gap-3">
                         <div className="w-9 h-9 rounded-full bg-[#0f172a] text-[#00e5ff] border border-[#00e5ff]/30 flex items-center justify-center font-bold text-xs overflow-hidden shrink-0 shadow-xs">
                           {post.author?.avatar ? (
-                            <img src={post.author.avatar} alt={post.author.name} className="w-full h-full object-cover" />
+                            <img src={getImageUrl(post.author.avatar)} alt={post.author.name} className="w-full h-full object-cover" />
                           ) : (
                             <span>{(post.author?.name || 'B')[0]}</span>
                           )}

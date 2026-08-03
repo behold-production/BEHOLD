@@ -9,6 +9,11 @@ const { verifyJWT } = require('../middleware/authMiddleware');
 const getOAuth2Client = (req) => {
   let redirectUri = (process.env.GOOGLE_REDIRECT_URI || '').trim();
 
+  // If in production and the env var is mistakenly set to localhost, ignore it
+  if (process.env.NODE_ENV === 'production' && redirectUri.includes('localhost')) {
+    redirectUri = '';
+  }
+
   if (!redirectUri) {
     if (req) {
       const protocol = req.headers['x-forwarded-proto'] || req.protocol || 'https';

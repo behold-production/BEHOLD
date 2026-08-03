@@ -4,6 +4,7 @@ import { ArrowLeft, Clock, Copy, Check, MessageCircle, BookOpen } from 'lucide-r
 import ApiService from '../../shared/services/api';
 import { DEFAULT_BLOGS_DATA } from './defaultBlogsData';
 import greenTexture from '../../assets/greygreen.png';
+import { getImageUrl, formatBlogContent } from '../../shared/utils/formatters';
 
 const BlogPostDetail = () => {
   const { slug } = useParams();
@@ -120,7 +121,7 @@ const BlogPostDetail = () => {
             <div className="flex items-center gap-4">
               {post.author?.avatar ? (
                 <img
-                  src={post.author.avatar}
+                  src={getImageUrl(post.author.avatar)}
                   alt={post.author?.name}
                   className="w-12 h-12 rounded-full object-cover border border-surface-200 shrink-0"
                 />
@@ -165,7 +166,7 @@ const BlogPostDetail = () => {
           {post.coverImage && (
             <div className="mb-12 rounded-xl overflow-hidden border border-surface-200 shadow-sm bg-surface-100 relative group">
               <img
-                src={post.coverImage}
+                src={getImageUrl(post.coverImage)}
                 alt={post.title}
                 className="w-full h-auto max-h-[480px] object-cover group-hover:scale-105 transition-transform duration-700"
               />
@@ -184,7 +185,7 @@ const BlogPostDetail = () => {
           {/* Rich Content Body */}
           <div
             className="prose max-w-none text-surface-700 text-base sm:text-lg leading-relaxed space-y-6 [&_h2]:text-2xl [&_h2]:sm:text-3xl [&_h2]:font-black [&_h2]:uppercase [&_h2]:text-[#0f172a] [&_h2]:mt-12 [&_h2]:mb-4 [&_h2]:tracking-tight [&_h3]:text-xl [&_h3]:font-bold [&_h3]:uppercase [&_h3]:text-[#0f172a] [&_h3]:mt-8 [&_h3]:mb-3 [&_p]:leading-relaxed [&_ul]:list-disc [&_ul]:pl-6 [&_li]:mb-2"
-            dangerouslySetInnerHTML={{ __html: post.content }}
+            dangerouslySetInnerHTML={{ __html: formatBlogContent(post.content) }}
           />
 
           {/* Tags */}
