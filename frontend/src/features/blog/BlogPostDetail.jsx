@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Clock, Copy, Check, MessageCircle, BookOpen, Send } from 'lucide-react';
+import { ArrowLeft, Clock, Copy, Check, MessageCircle, BookOpen, Send, Linkedin } from 'lucide-react';
 import ApiService from '../../shared/services/api';
 import greenTexture from '../../assets/greygreen.png';
 import { getImageUrl, formatBlogContent } from '../../shared/utils/formatters';
@@ -59,6 +59,11 @@ const BlogPostDetail = () => {
     const text = encodeURIComponent(`Check out this insightful article on Behold Aspire: "${post?.title}"`);
     const url = encodeURIComponent(window.location.href);
     window.open(`https://t.me/share/url?url=${url}&text=${text}`, '_blank');
+  };
+
+  const handleShareLinkedIn = () => {
+    const url = encodeURIComponent(window.location.href);
+    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
   };
 
   const handleBack = () => {
@@ -147,32 +152,41 @@ const BlogPostDetail = () => {
             </div>
 
             {/* Share Buttons */}
-            <div className="flex items-center gap-2.5">
+            <div className="flex flex-wrap items-center gap-2.5">
               <button
                 type="button"
                 onClick={handleShareWhatsApp}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#0f172a] hover:bg-[#1e293b] text-white text-xs font-bold uppercase tracking-wider transition-all cursor-pointer border border-[#00e5ff]/30 shadow-xs"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#0f172a] hover:bg-[#1e293b] text-white text-xs font-bold uppercase tracking-wider transition-all cursor-pointer border border-[#00e5ff]/30 shadow-xs"
               >
                 <MessageCircle className="w-4 h-4 text-[#00e5ff]" />
-                <span>Share WhatsApp</span>
+                <span className="hidden sm:inline">WhatsApp</span>
               </button>
 
               <button
                 type="button"
                 onClick={handleShareTelegram}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#0088cc] hover:bg-[#0077b3] text-white text-xs font-bold uppercase tracking-wider transition-all cursor-pointer border border-[#0088cc]/30 shadow-xs"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#0088cc] hover:bg-[#0077b3] text-white text-xs font-bold uppercase tracking-wider transition-all cursor-pointer border border-[#0088cc]/30 shadow-xs"
               >
                 <Send className="w-4 h-4 text-white" />
-                <span>Share Telegram</span>
+                <span className="hidden sm:inline">Telegram</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleShareLinkedIn}
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#0077b5] hover:bg-[#005582] text-white text-xs font-bold uppercase tracking-wider transition-all cursor-pointer border border-[#0077b5]/30 shadow-xs"
+              >
+                <Linkedin className="w-4 h-4 text-white" />
+                <span className="hidden sm:inline">LinkedIn</span>
               </button>
 
               <button
                 type="button"
                 onClick={handleCopyLink}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-surface-100 hover:bg-surface-200 text-[#0f172a] text-xs font-bold uppercase tracking-wider transition-all cursor-pointer border border-surface-200"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-surface-100 hover:bg-surface-200 text-[#0f172a] text-xs font-bold uppercase tracking-wider transition-all cursor-pointer border border-surface-200"
               >
                 {copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4 text-surface-600" />}
-                <span>{copied ? 'Copied!' : 'Copy Link'}</span>
+                <span className="hidden sm:inline">{copied ? 'Copied' : 'Copy'}</span>
               </button>
             </div>
           </div>
