@@ -108,6 +108,8 @@ export default function PsychologistManagementTab(props) {
   });
   const [adminAvailableSlots, setAdminAvailableSlots] = useState([]);
   const [adminAllSlots, setAdminAllSlots] = useState([]);
+  const [adminDaySlots, setAdminDaySlots] = useState({});
+  const [selectedAdminDay, setSelectedAdminDay] = useState(1);
   const [adminFromHour, setAdminFromHour] = useState("09");
   const [adminFromMinute, setAdminFromMinute] = useState("00");
   const [adminFromPeriod, setAdminFromPeriod] = useState("AM");
@@ -319,6 +321,7 @@ export default function PsychologistManagementTab(props) {
         availability: {
           activeDays: adminActiveDays,
           availableSlots: adminAvailableSlots,
+          daySlots: adminDaySlots,
         },
       });
       if (res.success && res.data && psyProfilePicFile) {
@@ -415,6 +418,17 @@ export default function PsychologistManagementTab(props) {
         setAdminAvailableSlots([]);
         setAdminAllSlots([]);
       }
+      if (avail.daySlots) {
+        setAdminDaySlots(avail.daySlots);
+      } else if (avail.availableSlots) {
+        const fallback = {};
+        Object.keys(avail.activeDays || {}).forEach(dayIndex => {
+          if (avail.activeDays[dayIndex]) fallback[dayIndex] = [...avail.availableSlots];
+        });
+        setAdminDaySlots(fallback);
+      } else {
+        setAdminDaySlots({});
+      }
     } else {
       setAdminActiveDays({
         1: true,
@@ -495,6 +509,7 @@ export default function PsychologistManagementTab(props) {
         availability: {
           activeDays: adminActiveDays,
           availableSlots: adminAvailableSlots,
+          daySlots: adminDaySlots,
         },
       });
       setPsyFormSuccess("Psychologist details updated!");
@@ -711,6 +726,7 @@ export default function PsychologistManagementTab(props) {
                   });
                   setAdminAvailableSlots([]);
                   setAdminAllSlots([]);
+                  setAdminDaySlots({});
                   setPsyFormError("");
                   setPsyFormSuccess("");
                   setIsAddPsyOpen(true);
@@ -1543,10 +1559,10 @@ export default function PsychologistManagementTab(props) {
                     Availability Timings
                   </h4>
 
-                  {/* Operational Days */}
+                  {/* Select Day */}
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold text-zinc-400 block">
-                      Operational Days
+                      Select Day to Manage
                     </label>
                     <div className="flex flex-wrap gap-1.5">
                       {[
@@ -1558,32 +1574,40 @@ export default function PsychologistManagementTab(props) {
                         { label: "Sat", index: 6 },
                         { label: "Sun", index: 0 },
                       ].map((day) => {
-                        const active = adminActiveDays[day.index];
+                        const isSelected = selectedAdminDay === day.index;
+                        const isActive = adminActiveDays[day.index];
                         return (
-                          <button
-                            key={day.index}
-                            type="button"
-                            onClick={() => toggleAdminDay(day.index)}
-                            className={`px-3 py-1.5 border rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer ${active
-                                ? "bg-brand text-zinc-955 font-bold border-none"
-                                : "bg-zinc-955 border-zinc-850 text-zinc-500 hover:border-zinc-750"
-                              }`}
-                          >
-                            {day.label}
-                          </button>
+                          <div key={day.index} className="flex flex-col items-center gap-1">
+                            <button
+                              type="button"
+                              onClick={() => setSelectedAdminDay(day.index)}
+                              className={`px-3 py-1.5 border rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer ${isSelected
+                                  ? "bg-brand text-zinc-955 font-bold border-none"
+                                  : "bg-zinc-955 border-zinc-850 text-zinc-500 hover:border-zinc-750"
+                                }`}
+                            >
+                              {day.label}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => toggleAdminDay(day.index)}
+                              className={`text-[9px] px-2 py-0.5 rounded font-bold transition-colors border cursor-pointer ${isActive ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : 'bg-zinc-800 text-zinc-500 border-zinc-700'}`}
+                            >
+                              {isActive ? 'ACTIVE' : 'OFF'}
+                            </button>
+                          </div>
                         );
                       })}
                     </div>
                   </div>
 
                   {/* Active Timing Slots */}
-                  <div className="space-y-1.5">
+                  <div className="space-y-1.5 pt-4">
                     <label className="text-xs font-bold text-zinc-400 block">
                       Timing Slots (Active)
                     </label>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[200px] overflow-y-auto pr-1">
-                      {adminAllSlots.map((slot) => {
-                        const exists = adminAvailableSlots.includes(slot);
+                      {(adminDaySlots[selectedAdminDay] || []).map((slot) => {
                         return (
                           <div
                             key={slot}
@@ -1591,22 +1615,7 @@ export default function PsychologistManagementTab(props) {
                           >
                             <button
                               type="button"
-                              onClick={() => {
-                                if (exists) {
-                                  setAdminAvailableSlots((prev) =>
-                                    prev.filter((s) => s !== slot),
-                                  );
-                                } else {
-                                  setAdminAvailableSlots((prev) => [
-                                    ...prev,
-                                    slot,
-                                  ]);
-                                }
-                              }}
-                              className={`flex-1 py-2 border rounded-lg font-bold transition cursor-pointer text-xs ${exists
-                                  ? "bg-brand/10 border-brand text-brand"
-                                  : "bg-zinc-955 border-zinc-850 text-zinc-400 hover:border-zinc-750"
-                                }`}
+                              className="flex-1 py-2 border rounded-lg font-bold transition cursor-default text-xs bg-brand/10 border-brand text-brand pointer-events-none"
                             >
                               {slot}
                             </button>
@@ -1621,9 +1630,9 @@ export default function PsychologistManagementTab(props) {
                           </div>
                         );
                       })}
-                      {adminAllSlots.length === 0 && (
+                      {(!adminDaySlots[selectedAdminDay] || adminDaySlots[selectedAdminDay].length === 0) && (
                         <div className="col-span-2 py-4 bg-zinc-955/40 border border-dashed border-zinc-850 rounded-lg text-zinc-550 italic text-xs text-center w-full">
-                          No timing slots configured. Use the controls below to
+                          No timing slots configured for this day. Use the controls below to
                           add custom slots or generate from a time range.
                         </div>
                       )}
@@ -2658,58 +2667,63 @@ export default function PsychologistManagementTab(props) {
                 <div className="sm:col-span-2 border-t border-zinc-800 pt-4 space-y-4">
                   <h4 className="text-sm font-bold text-zinc-300 font-header">Availability Timings</h4>
 
-                  {/* Operational Days */}
+                  {/* Select Day */}
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-zinc-400 block">Operational Days</label>
+                    <label className="text-xs font-bold text-zinc-400 block">
+                      Select Day to Manage
+                    </label>
                     <div className="flex flex-wrap gap-1.5">
                       {[
-                        { label: 'Mon', index: 1 },
-                        { label: 'Tue', index: 2 },
-                        { label: 'Wed', index: 3 },
-                        { label: 'Thu', index: 4 },
-                        { label: 'Fri', index: 5 },
-                        { label: 'Sat', index: 6 },
-                        { label: 'Sun', index: 0 }
-                      ].map(day => {
-                        const active = adminActiveDays[day.index];
+                        { label: "Mon", index: 1 },
+                        { label: "Tue", index: 2 },
+                        { label: "Wed", index: 3 },
+                        { label: "Thu", index: 4 },
+                        { label: "Fri", index: 5 },
+                        { label: "Sat", index: 6 },
+                        { label: "Sun", index: 0 },
+                      ].map((day) => {
+                        const isSelected = selectedAdminDay === day.index;
+                        const isActive = adminActiveDays[day.index];
                         return (
-                          <button
-                            key={day.index}
-                            type="button"
-                            onClick={() => toggleAdminDay(day.index)}
-                            className={`px-3 py-1.5 border rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer ${active
-                              ? 'bg-brand text-zinc-955 font-bold border-none'
-                              : 'bg-zinc-955 border-zinc-850 text-zinc-500 hover:border-zinc-750'
-                              }`}
-                          >
-                            {day.label}
-                          </button>
+                          <div key={day.index} className="flex flex-col items-center gap-1">
+                            <button
+                              type="button"
+                              onClick={() => setSelectedAdminDay(day.index)}
+                              className={`px-3 py-1.5 border rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer ${isSelected
+                                  ? "bg-brand text-zinc-955 font-bold border-none"
+                                  : "bg-zinc-955 border-zinc-850 text-zinc-500 hover:border-zinc-750"
+                                }`}
+                            >
+                              {day.label}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => toggleAdminDay(day.index)}
+                              className={`text-[9px] px-2 py-0.5 rounded font-bold transition-colors border cursor-pointer ${isActive ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : 'bg-zinc-800 text-zinc-500 border-zinc-700'}`}
+                            >
+                              {isActive ? 'ACTIVE' : 'OFF'}
+                            </button>
+                          </div>
                         );
                       })}
                     </div>
                   </div>
 
                   {/* Active Timing Slots */}
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-zinc-400 block">Timing Slots (Active)</label>
+                  <div className="space-y-1.5 pt-4">
+                    <label className="text-xs font-bold text-zinc-400 block">
+                      Timing Slots (Active)
+                    </label>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[200px] overflow-y-auto pr-1">
-                      {adminAllSlots.map(slot => {
-                        const exists = adminAvailableSlots.includes(slot);
+                      {(adminDaySlots[selectedAdminDay] || []).map((slot) => {
                         return (
-                          <div key={slot} className="flex items-center gap-1.5 w-full">
+                          <div
+                            key={slot}
+                            className="flex items-center gap-1.5 w-full"
+                          >
                             <button
                               type="button"
-                              onClick={() => {
-                                if (exists) {
-                                  setAdminAvailableSlots(prev => prev.filter(s => s !== slot));
-                                } else {
-                                  setAdminAvailableSlots(prev => [...prev, slot]);
-                                }
-                              }}
-                              className={`flex-1 py-2 border rounded-lg font-bold transition cursor-pointer text-xs ${exists
-                                ? 'bg-brand/10 border-brand text-brand'
-                                : 'bg-zinc-955 border-zinc-850 text-zinc-400 hover:border-zinc-750'
-                                }`}
+                              className="flex-1 py-2 border rounded-lg font-bold transition cursor-default text-xs bg-brand/10 border-brand text-brand pointer-events-none"
                             >
                               {slot}
                             </button>
@@ -2724,9 +2738,10 @@ export default function PsychologistManagementTab(props) {
                           </div>
                         );
                       })}
-                      {adminAllSlots.length === 0 && (
+                      {(!adminDaySlots[selectedAdminDay] || adminDaySlots[selectedAdminDay].length === 0) && (
                         <div className="col-span-2 py-4 bg-zinc-955/40 border border-dashed border-zinc-850 rounded-lg text-zinc-550 italic text-xs text-center w-full">
-                          No timing slots configured. Use the controls below to add custom slots or generate from a time range.
+                          No timing slots configured for this day. Use the controls below to
+                          add custom slots or generate from a time range.
                         </div>
                       )}
                     </div>

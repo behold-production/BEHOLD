@@ -201,7 +201,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
               {advisor.name}
             </h3>
             <p className="text-[9.5px] sm:text-[11px] font-bold text-slate-600 uppercase tracking-wider truncate">
-              {advisor.designation || 'Consultant Psychologist'}
+              {advisor.designation === 'counsellor' || advisor.designation === 'COUNSELLOR' ? 'Psychologist' : (advisor.designation || 'Consultant Psychologist')}
             </p>
           </div>
 
@@ -426,7 +426,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
             <div className="w-16 h-16 bg-[#0f172a] rounded-full flex items-center justify-center mx-auto mb-4 border border-[#00e5ff]/40 shadow-xs">
               <span className="text-[#00e5ff] text-2xl font-bold">🎓</span>
             </div>
-            <h3 className="text-xl font-bold text-slate-900 mb-2 uppercase tracking-wide">No Counsellors Currently Listed</h3>
+            <h3 className="text-xl font-bold text-slate-900 mb-2 uppercase tracking-wide">No Psychologists Currently Listed</h3>
             <p className="text-sm text-slate-600 max-w-sm mx-auto leading-relaxed mb-6 font-normal">
               Our team of certified psychologists and career mentors is being onboarded. Please check back shortly or connect directly with our support desk.
             </p>

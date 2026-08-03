@@ -109,19 +109,23 @@ const validateBookingDetails = async (counsellorId, date, time, mode, service, a
 
   // 5. Counsellor Availability Schedule check
   const availability = counsellor.availability;
-  if (!availability || !availability.activeDays || !availability.availableSlots) {
+  if (!availability || (!availability.activeDays && !availability.daySlots)) {
     return { valid: false, message: 'Counsellor has no availability configured.' };
   }
 
   const [year, month, day] = date.split('-').map(Number);
   const dayOfWeek = new Date(Date.UTC(year, month - 1, day)).getUTCDay(); // 0 = Sunday, 6 = Saturday
-  const isDayActive = availability.activeDays[dayOfWeek];
+  const isDayActive = availability.activeDays ? availability.activeDays[dayOfWeek] : false;
+  
   if (!isDayActive) {
     const weekdayName = new Date(Date.UTC(year, month - 1, day)).toLocaleDateString('en-IN', { weekday: 'long', timeZone: 'UTC' });
     return { valid: false, message: `Counsellor is not available on ${weekdayName}s.` };
   }
 
-  if (!availability.availableSlots.includes(time)) {
+  const daySpecificSlots = availability.daySlots && availability.daySlots[dayOfWeek];
+  const activeSlots = Array.isArray(daySpecificSlots) ? daySpecificSlots : (availability.availableSlots || []);
+
+  if (!activeSlots.includes(time)) {
     return { valid: false, message: `Counsellor is not available at ${time}.` };
   }
 

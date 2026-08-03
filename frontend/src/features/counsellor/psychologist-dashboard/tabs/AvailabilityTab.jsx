@@ -5,7 +5,10 @@ import { DAYS_OF_WEEK } from '../counsellorDashboardConstants';
 const AvailabilityTab = ({
  activeDays,
  toggleDay,
- allSlots,
+ daySlots,
+ setDaySlots,
+ selectedDay,
+ setSelectedDay,
  availableSlots,
  setAvailableSlots,
  handleRemoveSlot,
@@ -51,22 +54,31 @@ const AvailabilityTab = ({
  <div className="space-y-6 text-left font-medium p-5 rounded-[10px] transition-all" style={shadowStyle}>
  {/* Select Days */}
  <div className="space-y-2.5">
- <label className="text-zinc-400 font-bold block text-xs tracking-wide">Active Operational Days</label>
+ <label className="text-zinc-400 font-bold block text-xs tracking-wide">Select Day to Manage</label>
  <div className="flex flex-wrap gap-2.5">
  {DAYS_OF_WEEK.map(day => {
- const active = activeDays[day.index];
+ const isSelected = selectedDay === day.index;
+ const isActive = activeDays[day.index];
  return (
+ <div key={day.index} className="flex flex-col items-center gap-1">
  <button
- key={day.index}
  type="button"
- onClick={() => toggleDay(day.index)}
- className={`px-4 py-2 border rounded-[10px] text-sm font-bold transition-all duration-300 cursor-pointer ${active
+ onClick={() => setSelectedDay(day.index)}
+ className={`px-4 py-2 border rounded-[10px] text-sm font-bold transition-all duration-300 cursor-pointer ${isSelected
  ? 'bg-brand border-brand text-zinc-955 shadow-sm'
  : 'bg-zinc-950 border-zinc-800 text-zinc-450 hover:border-zinc-700 hover:bg-zinc-900'
  }`}
  >
  {day.label}
  </button>
+ <button
+ type="button"
+ onClick={() => toggleDay(day.index)}
+ className={`text-[10px] px-2 py-0.5 rounded font-bold transition-colors border ${isActive ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : 'bg-zinc-800 text-zinc-500 border-zinc-700'}`}
+ >
+ {isActive ? 'ACTIVE' : 'OFF'}
+ </button>
+ </div>
  );
  })}
  </div>
@@ -74,10 +86,14 @@ const AvailabilityTab = ({
 
  {/* Active Timings Checkbox */}
  <div className="space-y-3 pt-5 border-t border-zinc-800">
- <label className="text-zinc-400 font-bold block text-xs tracking-wide">Select Active Timing Slots</label>
+ <div className="flex justify-between items-center">
+ <label className="text-zinc-400 font-bold block text-xs tracking-wide">
+ Slots for {DAYS_OF_WEEK.find(d => d.index === selectedDay)?.label}
+ </label>
+ </div>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
- {allSlots.map(slot => {
- const exists = availableSlots.includes(slot);
+ {(daySlots[selectedDay] || []).map(slot => {
+ const exists = true;
  return (
  <div key={slot} className="flex items-center gap-2 w-full group">
  <button
@@ -107,9 +123,9 @@ const AvailabilityTab = ({
  </div>
  );
  })}
- {allSlots.length === 0 && (
+ {(!daySlots[selectedDay] || daySlots[selectedDay].length === 0) && (
  <div className="col-span-1 sm:col-span-2 py-5 bg-zinc-950/40 border border-dashed border-zinc-800 rounded-[10px] text-zinc-500 italic text-sm text-center w-full">
- No timing slots configured. Use the controls below to add custom slots or generate from a time range.
+ No timing slots configured for this day. Use the controls below to add custom slots or generate from a time range.
  </div>
  )}
  </div>

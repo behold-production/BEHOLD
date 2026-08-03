@@ -113,6 +113,9 @@ export default function PsychologistDashboard({ setView }) {
  0: false // Sunday
  });
  const [availableSlots, setAvailableSlots] = useState([]);
+ const [daySlots, setDaySlots] = useState({});
+ const [selectedDay, setSelectedDay] = useState(1);
+
  const [allSlots, setAllSlots] = useState([]);
  const [customHour, setCustomHour] = useState('09');
  const [customMinute, setCustomMinute] = useState('00');
@@ -2034,7 +2037,10 @@ export default function PsychologistDashboard({ setView }) {
  <AvailabilityTab
  activeDays={activeDays}
  toggleDay={toggleDay}
- allSlots={allSlots}
+ daySlots={daySlots}
+ setDaySlots={setDaySlots}
+ selectedDay={selectedDay}
+ setSelectedDay={setSelectedDay}
  availableSlots={availableSlots}
  setAvailableSlots={setAvailableSlots}
  handleRemoveSlot={handleRemoveSlot}
