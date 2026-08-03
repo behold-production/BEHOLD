@@ -190,6 +190,7 @@ export default function PsychologistDashboard({ setView }) {
  const [regFromHour, setRegFromHour] = useState('09');
  const [regFromMinute, setRegFromMinute] = useState('00');
  const [regFromPeriod, setRegFromPeriod] = useState('AM');
+ const [regSlotInterval, setRegSlotInterval] = useState(60);
  const [regToHour, setRegToHour] = useState('05');
  const [regToMinute, setRegToMinute] = useState('00');
  const [regToPeriod, setRegToPeriod] = useState('PM');
@@ -1747,13 +1748,27 @@ export default function PsychologistDashboard({ setView }) {
                           </div>
                         </div>
 
+                        <div className='flex gap-2 items-center mt-3'>
+                          <span className='text-xs text-slate-500 font-bold w-20'>Interval:</span>
+                          <div className='flex-1'>
+                            <select
+                              value={regSlotInterval}
+                              onChange={(e) => setRegSlotInterval(Number(e.target.value))}
+                              className='w-full bg-[#050811] border border-slate-800 focus:border-[#00E5FF] rounded-lg px-2.5 py-2 text-xs text-white outline-none cursor-pointer'
+                            >
+                              <option value={30}>30 Minutes</option>
+                              <option value={60}>60 Minutes</option>
+                            </select>
+                          </div>
+                        </div>
+
                         <button
                           type='button'
                           onClick={() => {
                             setRegSlotError('');
                             const fromStr = `${regFromHour}:${regFromMinute} ${regFromPeriod}`;
                             const toStr = `${regToHour}:${regToMinute} ${regToPeriod}`;
-                            addTimeRangeSlots(fromStr, toStr, true);
+                            addTimeRangeSlots(fromStr, toStr, true, regSlotInterval);
                           }}
                           className='w-full bg-[#00E5FF]/20 hover:bg-[#00E5FF] text-[#00E5FF] hover:text-slate-950 py-2.5 text-xs font-bold rounded-lg transition border border-[#00E5FF]/30 hover:border-none cursor-pointer flex items-center justify-center font-header'
                         >

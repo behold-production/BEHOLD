@@ -1843,12 +1843,8 @@ export default function PsychologistManagementTab(props) {
                             onChange={(e) => setAdminSlotInterval(Number(e.target.value))}
                             className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
                           >
-                            <option value={15}>15 Minutes</option>
                             <option value={30}>30 Minutes</option>
-                            <option value={45}>45 Minutes</option>
                             <option value={60}>60 Minutes</option>
-                            <option value={90}>90 Minutes</option>
-                            <option value={120}>120 Minutes</option>
                           </select>
                         </div>
                       </div>
@@ -2871,12 +2867,8 @@ export default function PsychologistManagementTab(props) {
                             onChange={(e) => setAdminSlotInterval(Number(e.target.value))}
                             className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
                           >
-                            <option value={15}>15 Minutes</option>
                             <option value={30}>30 Minutes</option>
-                            <option value={45}>45 Minutes</option>
                             <option value={60}>60 Minutes</option>
-                            <option value={90}>90 Minutes</option>
-                            <option value={120}>120 Minutes</option>
                           </select>
                         </div>
                       </div>

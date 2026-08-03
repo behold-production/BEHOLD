@@ -250,12 +250,8 @@ const AvailabilityTab = ({
         onChange={(e) => setSlotInterval(Number(e.target.value))}
         className="w-full px-2.5 py-2 bg-zinc-950 border border-zinc-800 rounded-[10px] text-sm text-white outline-none focus:border-brand cursor-pointer shadow-sm"
       >
-        <option value={15}>15 Minutes</option>
         <option value={30}>30 Minutes</option>
-        <option value={45}>45 Minutes</option>
         <option value={60}>60 Minutes</option>
-        <option value={90}>90 Minutes</option>
-        <option value={120}>120 Minutes</option>
       </select>
     </div>
   </div>

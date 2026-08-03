@@ -59,7 +59,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
                 bio: c.bio || 'Specializing in compassionate psychological counselling and mental wellbeing.',
                 photo: hasValidPhoto ? rawPhoto : null,
                 specialties: Array.isArray(c.specialties) ? c.specialties : (c.tags ? (Array.isArray(c.tags) ? c.tags : [c.tags]) : ['Identity Concerns', 'Anxiety Stress & Panic', 'Depression']),
-                languages: Array.isArray(c.languages) ? c.languages.join(', ') : (c.languages || c.language || 'Malayalam')
+                languages: Array.isArray(c.lang) ? c.lang.join(', ') : (c.lang || (Array.isArray(c.languages) ? c.languages.join(', ') : (c.languages || c.language || 'English, Malayalam')))
               };
             });
             setAdvisors(formatted);
@@ -273,13 +273,13 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
               <span className="text-xs sm:text-sm font-black text-slate-900 block leading-none">{advisor.hours}+</span>
               <span className="text-[9px] sm:text-[10px] font-medium text-slate-500 block mt-1">Therapy hrs</span>
             </div>
-            <div className="bg-slate-50/70 border border-slate-150 rounded-xl p-2.5 text-left truncate">
-              <span className="text-xs sm:text-sm font-black text-slate-900 block leading-none truncate">{advisor.languages || 'Malayalam'}</span>
+            <div className="bg-slate-50/70 border border-slate-150 rounded-xl p-2.5 text-left">
+              <span className="text-xs sm:text-sm font-black text-slate-900 block leading-tight line-clamp-2">{advisor.languages || 'Malayalam'}</span>
               <span className="text-[9px] sm:text-[10px] font-medium text-slate-500 block mt-1">Languages</span>
             </div>
             <div className="bg-slate-50/70 border border-slate-150 rounded-xl p-2.5 text-left">
-              <span className="text-xs sm:text-sm font-black text-slate-900 block leading-none">₹{advisor.fee}</span>
-              <span className="text-[9px] sm:text-[10px] font-medium text-slate-500 block mt-1">Per session</span>
+              <span className="text-xs sm:text-sm font-black text-slate-900 block leading-none">₹{advisor.fee <= 899 ? 499 : (advisor.fee >= 1200 ? 699 : Math.round(advisor.fee * 0.5))}</span>
+              <span className="text-[9px] sm:text-[10px] font-medium text-slate-500 block mt-1">Starting from</span>
             </div>
           </div>
 
