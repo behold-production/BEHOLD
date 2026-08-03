@@ -2,9 +2,11 @@ import React, { useEffect } from 'react';
 
 const GoogleCallbackRedirect = () => {
   useEffect(() => {
-    const baseUrl = import.meta.env.VITE_API_URL || '/api';
-    window.location.href = `${baseUrl}/google/callback${window.location.search}`;
-  }, []);
+    let baseUrl = import.meta.env.VITE_API_URL || '/api';
+    if (baseUrl && !baseUrl.endsWith('/api') && baseUrl !== '/api') {
+      baseUrl = baseUrl.endsWith('/') ? `${baseUrl}api` : `${baseUrl}/api`;
+    }
+    window.location.href = `${baseUrl}/google/callback${window.location.search}`;  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-[#050811]">

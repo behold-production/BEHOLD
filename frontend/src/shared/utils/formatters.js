@@ -36,9 +36,13 @@ export const formatBlogContent = (content) => {
   // Basic heuristic to check if the content already contains HTML tags (like <p>, <br>, <h2>)
   // We ignore self-closing simple tags just in case, but typically rich HTML has opening/closing tags.
   if (/<[a-z][\s\S]*>/i.test(content)) {
-    return content;
+    // Also, if the content contains images with relative paths (e.g. src="uploads/..."),
+    // we need to resolve them so they don't break on sub-routes like /blog/:slug
+    return content.replace(/<img\s+([^>]*?)src=["'](?!http|data:)(.*?)["']([^>]*)>/gi, (match, before, src, after) => {
+      const resolvedSrc = getImageUrl(src);
+      return `<img ${before}src="${resolvedSrc}"${after}>`;
+    });
   }
-
   // Handle plain text:
   // 1. Split by double newlines to create paragraphs
   // 2. Replace single newlines within paragraphs with <br/>

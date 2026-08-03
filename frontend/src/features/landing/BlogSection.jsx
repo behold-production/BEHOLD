@@ -4,9 +4,9 @@ import { Clock, ChevronLeft, ChevronRight } from 'lucide-react';
 import ApiService from '../../shared/services/api';
 import { DEFAULT_BLOGS_DATA } from '../blog/defaultBlogsData';
 import { ScrollDot } from '../../shared/components/BrandDot';
+import { getImageUrl } from '../../shared/utils/formatters';
 
-const BlogSection = () => {
-  const navigate = useNavigate();
+const BlogSection = () => {  const navigate = useNavigate();
   const [blogs, setBlogs] = useState(() => {
     try {
       const cached = localStorage.getItem('behold_blogs_cache');
@@ -27,11 +27,10 @@ const BlogSection = () => {
       try {
         if (blogs.length === 0) setLoading(true);
         const res = await ApiService.getBlogs({ limit: 12 });
-        if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
+        if (res?.data && Array.isArray(res.data)) {
           setBlogs(res.data);
           localStorage.setItem('behold_blogs_cache', JSON.stringify(res.data));
-        }
-      } catch (err) {
+        }      } catch (err) {
         console.warn('Failed to fetch blogs for landing section:', err);
       } finally {
         setLoading(false);
@@ -153,12 +152,11 @@ const BlogSection = () => {
               {/* Cover Image Container */}
               <div className="relative h-56 w-full overflow-hidden bg-surface-100 shrink-0">
                 <img
-                  src={post.coverImage || 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&auto=format&fit=crop&q=80'}
+                  src={post.coverImage ? getImageUrl(post.coverImage) : 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&auto=format&fit=crop&q=80'}
                   alt={post.title}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a]/50 to-transparent opacity-50 group-hover:opacity-30 transition-opacity duration-300" />
-
                 {/* Category Badge */}
                 <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-white/95 backdrop-blur-sm text-[#0f172a] text-[10px] font-bold tracking-wider uppercase border border-surface-200">
                   {post.category || 'Career Guidance'}

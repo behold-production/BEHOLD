@@ -1,7 +1,11 @@
 import toast from 'react-hot-toast';
 
-const BASE_URL = import.meta.env.VITE_API_URL || '/api';
-
+let envUrl = import.meta.env.VITE_API_URL || '/api';
+if (envUrl && !envUrl.endsWith('/api') && envUrl !== '/api') {
+  // Trim trailing slash before appending /api
+  envUrl = envUrl.endsWith('/') ? `${envUrl}api` : `${envUrl}/api`;
+}
+const BASE_URL = envUrl;
 let isRefreshing = false;
 let refreshSubscribers = [];
 
@@ -49,8 +53,9 @@ async function executeRequest(endpoint, options = {}) {
       let fallbackMsg = 'Server error occurred. Please try again.';
       if (response.status === 404) {
         fallbackMsg = `Resource non-existent or endpoint not found (${endpoint}).`;
-      } else if (response.status === 500) {
-        fallbackMsg = 'Server internal error. Please check server logs and environment configuration.';
+      } else if (response.status === 405) {
+        fallbackMsg = 'Method Not Allowed. Please verify API url and endpoint configuration.';
+      } else if (response.status === 500) {        fallbackMsg = 'Server internal error. Please check server logs and environment configuration.';
       } else if (response.status === 502 || response.status === 504) {
         fallbackMsg = 'Server gateway timeout or unavailable. Please try again later.';
       } else if (response.status === 503) {
