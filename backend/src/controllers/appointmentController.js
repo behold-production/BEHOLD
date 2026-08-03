@@ -8,7 +8,7 @@ const AppointmentController = {
   // Create Appointment (User / Student)
   async createAppointment(req, res, next) {
     try {
-      const { counsellorId, date, time, mode, service, clientLocationName, clientLatitude, clientLongitude } = req.body;
+      const { counsellorId, date, time, mode, service, clientLocationName, clientLatitude, clientLongitude, clientName, clientEmail, clientPhone } = req.body;
       const userId = req.user.id;
 
       if (!counsellorId || !date || !time || !mode) {
@@ -45,6 +45,9 @@ const AppointmentController = {
         meetLink: mode === 'ONLINE' ? counsellor.defaultMeetLink || '' : '',
         status: 'PENDING',
         service: service || 'counselling',
+        clientName: clientName || user.name || '',
+        clientEmail: clientEmail || user.email || '',
+        clientPhone: clientPhone || user.phone || '',
         clientLocationName: clientLocationName || '',
         clientLatitude: Number(clientLatitude) || 0,
         clientLongitude: Number(clientLongitude) || 0

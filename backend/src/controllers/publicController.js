@@ -1,4 +1,5 @@
 const StorageService = require('../services/storageService');
+const EmailService = require('../services/emailService');
 
 const PublicController = {
   // Submit inquiry
@@ -16,6 +17,20 @@ const PublicController = {
         status: 'PENDING',
         note: ''
       });
+
+      try {
+        const adminEmail = process.env.DEFAULT_ADMIN_EMAIL || 'beholdoffice@gmail.com';
+        const html = `
+          <h2>New Inquiry Received</h2>
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Message:</strong></p>
+          <blockquote style="background:#f9f9f9;border-left:5px solid #ccc;padding:10px;margin:10px 0;">${message}</blockquote>
+        `;
+        await EmailService.sendEmail(adminEmail, '🔔 New Contact Inquiry - Behold Aspire', html);
+      } catch (emailErr) {
+        console.error('Failed to send inquiry email:', emailErr);
+      }
 
       res.status(201).json({
         success: true,

@@ -1,13 +1,13 @@
 export const PRIVILEGE_MODULES = [
   {
     id: 'manage_users',
-    name: 'Student Management',
+    name: 'User Management',
     actions: [
-      { id: 'view_students', name: 'View Students' },
-      { id: 'add_students', name: 'Add Student' },
-      { id: 'edit_students', name: 'Edit Student' },
-      { id: 'delete_students', name: 'Delete Student' },
-      { id: 'verify_students', name: 'Verify Student' }
+      { id: 'view_students', name: 'View Users' },
+      { id: 'add_students', name: 'Add User' },
+      { id: 'edit_students', name: 'Edit User' },
+      { id: 'delete_students', name: 'Delete User' },
+      { id: 'verify_students', name: 'Verify User' }
     ]
   },
   {

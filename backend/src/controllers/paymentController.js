@@ -488,6 +488,12 @@ const PaymentController = {
                     amountPaid: netTotal,
                     appliedDiscount: Number(notes.appliedDiscount) || 0,
                     couponCode: notes.couponCode || '',
+                    clientName: notes.clientName || '',
+                    clientEmail: notes.clientEmail || '',
+                    clientPhone: notes.clientPhone || '',
+                    clientLocationName: notes.clientLocationName || '',
+                    clientLatitude: Number(notes.clientLatitude) || 0,
+                    clientLongitude: Number(notes.clientLongitude) || 0,
                     commissionPercent,
                     counsellorShareAmount
                   });

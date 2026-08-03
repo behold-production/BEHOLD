@@ -836,6 +836,21 @@ export default function App() {
           </div>
         </div>
       )}
+
+      {/* Floating WhatsApp Icon */}
+      {siteSettings?.whatsapp && !hideNavbarAndFooter && (
+        <a
+          href={siteSettings.whatsapp.startsWith('http') ? siteSettings.whatsapp : `https://wa.me/${siteSettings.whatsapp.replace(/[^0-9]/g, '')}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white p-3.5 sm:p-4 rounded-full shadow-[0_4px_14px_0_rgba(37,211,102,0.39)] hover:shadow-[0_6px_20px_rgba(37,211,102,0.23)] hover:scale-110 transition-all duration-300 flex items-center justify-center cursor-pointer"
+          title="Chat with us on WhatsApp"
+        >
+          <svg className="w-7 h-7 sm:w-8 sm:h-8" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12.031 0C5.383 0 0 5.383 0 12.031c0 2.128.552 4.195 1.6 6L.23 24l6.15-1.6c1.745.968 3.708 1.481 5.65 1.481 6.648 0 12.03-5.383 12.03-12.031C24.06 5.383 18.679 0 12.031 0zm3.627 17.27c-.43.43-1.07.698-1.74.82-.577.106-1.428.182-2.313-.153-.88-.334-1.896-.867-2.92-1.89-1.294-1.293-1.874-2.502-2.115-3.353-.186-.65-.18-1.127.022-1.503.203-.377.568-.742.92-1.094.135-.135.342-.234.568-.19.227.045.384.225.568.514.288.455.787 1.517.904 1.764.117.247.037.495-.08.694-.118.2-.284.343-.442.495-.158.153-.332.355-.153.644.18.29 1.135 1.83 2.766 2.378.368.122.56-.037.753-.254.194-.216.717-.834.904-1.118.187-.285.49-.186.76-.08.27.105 1.704.815 1.954.945.25.13.414.19.475.295.06.105.06.634-.37 1.064z"/>
+          </svg>
+        </a>
+      )}
     </div>
   );
 }

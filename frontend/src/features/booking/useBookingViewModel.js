@@ -972,15 +972,6 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     setPaymentStepText("Initializing secure checkout...");
 
     try {
-      const isScriptLoaded = await loadRazorpayScript();
-      if (!isScriptLoaded) {
-        toast.error("Failed to load Razorpay Payment Gateway. Check your connection.");
-        setIsProcessingPayment(false);
-        return;
-      }
-
-      setPaymentStepText("Creating payment order...");
-      
       const bookingDetails = {
         counsellorId: selectedAdvisor ? selectedAdvisor.id : '',
         date: selectedDate,
@@ -996,6 +987,33 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         clientLongitude: Number(bookingForm.clientLongitude) || 0
       };
 
+      if (netTotal === 0) {
+        setPaymentStepText("Processing free booking...");
+        const bookRes = await ApiService.bookAppointment(bookingDetails.counsellorId, bookingDetails);
+        if (bookRes.success) {
+          toast.success("Booking confirmed!");
+          sendLocalNotification(
+            "Booking Confirmed!",
+            `Your session with ${selectedAdvisor?.name || 'Assigned Advisor'} on ${selectedDate} at ${selectedTime} is confirmed.`
+          );
+          setIsProcessingPayment(false);
+          setIsSuccess(true);
+          handleStepChange('success');
+        } else {
+          throw new Error(bookRes.message || 'Failed to book free appointment');
+        }
+        return;
+      }
+
+      const isScriptLoaded = await loadRazorpayScript();
+      if (!isScriptLoaded) {
+        toast.error("Failed to load Razorpay Payment Gateway. Check your connection.");
+        setIsProcessingPayment(false);
+        return;
+      }
+
+      setPaymentStepText("Creating payment order...");
+      
       const orderRes = await ApiService.createPaymentOrder(selectedAdvisor ? selectedAdvisor.id : '', bookingDetails);
       if (!orderRes.success || !orderRes.data) {
         throw new Error(orderRes.message || 'Failed to create payment order');

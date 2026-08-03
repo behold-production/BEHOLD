@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Clock, Copy, Check, MessageCircle, BookOpen } from 'lucide-react';
+import { ArrowLeft, Clock, Copy, Check, MessageCircle, BookOpen, Send } from 'lucide-react';
 import ApiService from '../../shared/services/api';
 import greenTexture from '../../assets/greygreen.png';
 import { getImageUrl, formatBlogContent } from '../../shared/utils/formatters';
@@ -53,6 +53,12 @@ const BlogPostDetail = () => {
   const handleShareWhatsApp = () => {
     const text = encodeURIComponent(`Check out this insightful article on Behold Aspire: "${post?.title}"\n${window.location.href}`);
     window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+  };
+
+  const handleShareTelegram = () => {
+    const text = encodeURIComponent(`Check out this insightful article on Behold Aspire: "${post?.title}"`);
+    const url = encodeURIComponent(window.location.href);
+    window.open(`https://t.me/share/url?url=${url}&text=${text}`, '_blank');
   };
 
   const handleBack = () => {
@@ -149,6 +155,15 @@ const BlogPostDetail = () => {
               >
                 <MessageCircle className="w-4 h-4 text-[#00e5ff]" />
                 <span>Share WhatsApp</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleShareTelegram}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#0088cc] hover:bg-[#0077b3] text-white text-xs font-bold uppercase tracking-wider transition-all cursor-pointer border border-[#0088cc]/30 shadow-xs"
+              >
+                <Send className="w-4 h-4 text-white" />
+                <span>Share Telegram</span>
               </button>
 
               <button

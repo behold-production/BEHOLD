@@ -300,11 +300,11 @@ export function getInitials(name) {
       doc.setFontSize(8.5);
       doc.setTextColor(71, 85, 105); // slate-600
 
-      const cName = booking.counsellorName || (booking.counsellor && booking.psychologist.name) || 'Consultant Psychologist';
-      const cTitle = (booking.counsellor && booking.psychologist.title) || 'Consultant Psychologist';
-      const cEdu = (booking.counsellor && booking.psychologist.education) || 'Professional Degree';
-      const cPhone = (booking.counsellor && booking.psychologist.phone) || 'N/A';
-      const cEmail = (booking.counsellor && booking.psychologist.email) || 'N/A';
+      const cName = booking.counsellorName || (booking.counsellor && booking.counsellor.name) || (booking.psychologist && booking.psychologist.name) || 'Consultant Psychologist';
+      const cTitle = (booking.counsellor && booking.counsellor.title) || (booking.psychologist && booking.psychologist.title) || 'Consultant Psychologist';
+      const cEdu = (booking.counsellor && booking.counsellor.education) || (booking.psychologist && booking.psychologist.education) || 'Professional Degree';
+      const cPhone = (booking.counsellor && booking.counsellor.phone) || (booking.psychologist && booking.psychologist.phone) || 'N/A';
+      const cEmail = (booking.counsellor && booking.counsellor.email) || (booking.psychologist && booking.psychologist.email) || 'N/A';
 
       doc.text(`Name: ${cName}`, 20, 51);
       doc.text(`Title: ${cTitle}`, 20, 56);

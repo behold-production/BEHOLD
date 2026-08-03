@@ -120,11 +120,11 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
                 { label: 'About Us', action: () => goTo('/about') },
                 { label: 'Articles & Insights', action: () => goTo('/blog') },
                 { label: 'FAQs', action: () => goTo('/faqs') },
-                { label: 'Privacy Policy', action: () => onOpenDocs?.('privacy') },
-                { label: 'Terms of Service', action: () => onOpenDocs?.('terms') },
-                { label: 'Return & Refund Policy', action: () => onOpenDocs?.('refund') },
+                siteSettings?.privacyPolicy && { label: 'Privacy Policy', action: () => onOpenDocs?.('privacy') },
+                siteSettings?.termsOfUse && { label: 'Terms of Service', action: () => onOpenDocs?.('terms') },
+                siteSettings?.refundPolicy && { label: 'Return & Refund Policy', action: () => onOpenDocs?.('refund') },
                 { label: 'Support & Contact', action: () => goTo('inquiry') },
-              ].map(({ label, action }) => (
+              ].filter(Boolean).map(({ label, action }) => (
                 <li key={label}>
                   <button
                     onClick={action}

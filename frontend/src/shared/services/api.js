@@ -447,10 +447,10 @@ const ApiService = {
   },
 
   // Appointments
-  async bookAppointment(counsellorId, date, time, mode, service = 'counselling') {
+  async bookAppointment(counsellorId, bookingDetails = {}) {
     return await request('/appointments', {
       method: 'POST',
-      body: JSON.stringify({ counsellorId, date, time, mode, service })
+      body: JSON.stringify({ counsellorId, ...bookingDetails })
     });
   },
 

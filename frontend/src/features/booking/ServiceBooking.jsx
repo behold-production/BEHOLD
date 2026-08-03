@@ -19,17 +19,17 @@ const getInitials = (name) => {
 const COUNSELLING_FLOW = {
     online: [
         "Schedule Date, Time & choose consultant psychologist",
-        "Fill student profile & process online payment fee",
+        "Fill user profile & process online payment fee",
         "Access Google Meet link, schedule, & WhatsApp notifications"
     ],
     doorstep: [
         "Schedule Date, Time & choose consultant psychologist",
-        "Fill student profile & process online payment fee",
+        "Fill user profile & process online payment fee",
         "Receive doorstep counselor assignment & WhatsApp notifications"
     ],
     offline: [
         "Schedule Date, Time & choose consultant psychologist",
-        "Fill student profile & process online payment fee",
+        "Fill user profile & process online payment fee",
         "Receive center address, instructions, & WhatsApp notifications"
     ]
 };
@@ -37,17 +37,17 @@ const COUNSELLING_FLOW = {
 const CAREER_FLOW = {
     online: [
         "Schedule Date, Time & choose career coach/advisor",
-        "Fill student profile & process online payment fee",
+        "Fill user profile & process online payment fee",
         "Access Google Meet link, checklist, & WhatsApp notifications"
     ],
     doorstep: [
         "Schedule Date, Time & choose career coach/advisor",
-        "Fill student profile & process online payment fee",
+        "Fill user profile & process online payment fee",
         "Receive doorstep advisor assignment & WhatsApp notifications"
     ],
     offline: [
         "Schedule Date, Time & choose career coach/advisor",
-        "Fill student profile & process online payment fee",
+        "Fill user profile & process online payment fee",
         "Receive center address, preparation guide, & WhatsApp notifications"
     ]
 };
@@ -481,12 +481,12 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                         <p className="text-sm text-slate-600 max-w-md mx-auto leading-relaxed font-medium mt-2">
                                             {rescheduleSession ? (
                                                 <>
-                                                    Your reschedule request for <strong>{bookingForm.name || user?.name || 'Student'}</strong> has been submitted.
+                                                    Your reschedule request for <strong>{bookingForm.name || user?.name || 'User'}</strong> has been submitted.
                                                     The counsellor <strong>{selectedAdvisor?.name}</strong> has been notified and needs to approve this request.
                                                 </>
                                             ) : (
                                                 <>
-                                                    Thank you, <strong className="text-slate-900">{bookingForm.name || 'Student'}</strong>. Your payment is confirmed and your session is successfully booked. Here is your booking summary:
+                                                    Thank you, <strong className="text-slate-900">{bookingForm.name || 'User'}</strong>. Your payment is confirmed and your session is successfully booked. Here is your booking summary:
                                                 </>
                                             )}
                                         </p>
@@ -580,7 +580,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                         const service = bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring';
                                                         const mode = bookingMode === 'ONLINE' ? 'Video Call' : bookingMode === 'DOOR_STEP' ? 'Home Visit' : 'At Center';
                                                         const amount = netTotal;
-                                                        const clientName = bookingForm.name || 'Student';
+                                                        const clientName = bookingForm.name || 'User';
                                                         const clientEmail = bookingForm.email;
                                                         const clientPhone = bookingForm.phone;
                                                         const meetLink = bookingMode === 'ONLINE' ? (selectedAdvisor?.defaultMeetLink || 'https://meet.google.com/abc-defg-hij') : null;
