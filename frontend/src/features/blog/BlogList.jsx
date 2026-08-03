@@ -66,10 +66,17 @@ const BlogList = () => {
   };
 
   return (
-    <div 
-      className="min-h-screen flex flex-col text-surface-900 pt-24 pb-20 bg-transparent"
-    >
-      
+    <div className="min-h-screen flex flex-col text-surface-900 pt-24 pb-20 relative">
+      {/* Background Image Layer */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+        <img
+          src={greenTexture}
+          alt=""
+          className="w-full h-full object-cover object-center opacity-80"
+        />
+        {/* Optional overlay to adjust the "green shade" brightness if needed, e.g. bg-white/20 */}
+      </div>
+
       {/* Hero Header */}
       <section className="relative z-10 py-16 sm:py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center space-y-6">

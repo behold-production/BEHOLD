@@ -38,104 +38,97 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        {/* Main 2-Column Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
-
-          {/* Left Column: AT BEHOLD Content & Clinic Card */}
-          <div className="lg:col-span-6 space-y-6">
-            <div>
-              <span className="text-xs font-bold uppercase tracking-widest text-[#00c9d6] flex items-center gap-1.5 mb-2">
-                AT
-              </span>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-sans font-black uppercase text-slate-900 tracking-tight leading-none">
-                BEHOLD<span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)]">.</span>
-              </h2>
-            </div>
-
-            <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-normal max-w-xl">
+        {/* Bento Box Main Section */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 lg:gap-6 items-stretch">
+          
+          {/* Cell 1: Intro Text (lg:col-span-5) */}
+          <div className="md:col-span-2 lg:col-span-5 bg-white/70 backdrop-blur-xl border border-white/80 p-8 lg:p-10 rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col justify-center">
+            <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-[#00c9d6] flex items-center gap-2 mb-3">
+              <span className="w-6 h-0.5 bg-[#00c9d6] rounded-full"></span>
+              AT BEHOLD
+            </span>
+            <h2 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-sans font-black uppercase text-slate-900 tracking-tight leading-[1.05] mb-5">
+              BEHOLD<span className="text-[#00e5ff] drop-shadow-[0_0_12px_rgba(0,229,255,0.6)]">.</span>
+            </h2>
+            <p className="text-sm sm:text-[15px] text-slate-600 leading-relaxed font-medium">
               {settings.aboutSectionDesc || "We believe psychological care and career mentorship is more than just counseling — it's about creating mental clarity that inspires, functions beautifully, and reflects the true potential of every individual."}
             </p>
+          </div>
 
-            {/* Featured Image Asset */}
-            <div className="pt-2">
-              <div className="w-full h-60 sm:h-72 lg:h-80 rounded-3xl overflow-hidden bg-slate-900 border border-[#00e5ff]/30 shadow-xl relative group">
-                <img
-                  src={luxuryClinicRoom}
-                  alt="BEHOLD Mentorship & Psychological Care"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
-                <div className="absolute bottom-4 left-4 right-4 p-4 rounded-2xl bg-slate-900/80 backdrop-blur-md border border-white/10 text-white flex items-center justify-between">
-                  <div>
-                    <h4 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-white">Safe & Inspiring Environment</h4>
-                    <p className="text-[11px] text-slate-300 font-normal">Personalized in-person & doorstep counseling.</p>
-                  </div>
-                  <ShieldCheck className="w-5 h-5 text-[#00e5ff] shrink-0" />
-                </div>
-              </div>
+          {/* Cell 2: Stat 1 (lg:col-span-3) */}
+          <div className="md:col-span-1 lg:col-span-3 bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col justify-between group hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
+            <Award className="w-6 h-6 text-[#00c9d6] mb-4" />
+            <div>
+              <span className="block text-4xl sm:text-5xl font-black text-slate-900 font-sans tracking-tight mb-2 group-hover:text-[#00c9d6] transition-colors">
+                {stats[0].value}
+              </span>
+              <p className="text-xs sm:text-sm text-slate-500 font-medium leading-relaxed">
+                {stats[0].label}
+              </p>
             </div>
           </div>
 
-          {/* Right Column: 2x2 Thin-Border Matrix */}
-          <div className="lg:col-span-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 border border-slate-200/90 rounded-3xl overflow-hidden bg-white/80 backdrop-blur-md shadow-xl divide-y sm:divide-y-0 sm:divide-x divide-slate-200/80">
+          {/* Cell 3: Stat 2 (lg:col-span-4) */}
+          <div className="md:col-span-1 lg:col-span-4 bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col justify-between group hover:-translate-y-1 hover:shadow-xl transition-all duration-300 relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-8 opacity-5">
+              <Users className="w-32 h-32" />
+            </div>
+            <Users className="w-6 h-6 text-[#00c9d6] mb-4 relative z-10" />
+            <div className="relative z-10">
+              <span className="block text-4xl sm:text-5xl font-black text-slate-900 font-sans tracking-tight mb-2 group-hover:text-[#00c9d6] transition-colors">
+                {stats[1].value}
+              </span>
+              <p className="text-xs sm:text-sm text-slate-500 font-medium leading-relaxed max-w-[200px]">
+                {stats[1].label}
+              </p>
+            </div>
+          </div>
 
-              {/* Stat 1 */}
-              <div className="p-6 sm:p-8 flex flex-col justify-between h-48 sm:h-56 group hover:bg-white transition-all">
-                <p className="text-xs sm:text-sm text-slate-600 font-normal leading-relaxed">
-                  {stats[0].label}
-                </p>
-                <div className="text-right flex items-center justify-between pt-4 border-t border-slate-100">
-                  <Award className="w-5 h-5 text-[#00c9d6]" />
-                  <span className="text-4xl sm:text-5xl font-black text-slate-900 font-sans group-hover:text-[#00c9d6] transition-colors">
-                    {stats[0].value}
-                  </span>
-                </div>
+          {/* Cell 4: Image (lg:col-span-5) */}
+          <div className="md:col-span-2 lg:col-span-5 h-72 sm:h-80 lg:h-auto rounded-[2.5rem] overflow-hidden bg-slate-900 shadow-xl relative group">
+            <img
+              src={luxuryClinicRoom}
+              alt="BEHOLD Mentorship & Psychological Care"
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-900/20 to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
+              <div className="flex items-center gap-3 mb-2">
+                <ShieldCheck className="w-5 h-5 text-[#00e5ff] shrink-0" />
+                <h4 className="text-sm font-black uppercase tracking-wider text-white">Safe & Inspiring Environment</h4>
               </div>
+              <p className="text-xs text-slate-300 font-medium">Personalized in-person & doorstep counseling.</p>
+            </div>
+          </div>
 
-              {/* Stat 2 */}
-              <div className="p-6 sm:p-8 flex flex-col justify-between h-48 sm:h-56 group hover:bg-white transition-all border-t sm:border-t-0">
-                <p className="text-xs sm:text-sm text-slate-600 font-normal leading-relaxed">
-                  {stats[1].label}
-                </p>
-                <div className="text-right flex items-center justify-between pt-4 border-t border-slate-100">
-                  <Users className="w-5 h-5 text-[#00c9d6]" />
-                  <span className="text-4xl sm:text-5xl font-black text-slate-900 font-sans group-hover:text-[#00c9d6] transition-colors">
-                    {stats[1].value}
-                  </span>
-                </div>
-              </div>
+          {/* Cell 5: Stat 3 (lg:col-span-4) */}
+          <div className="md:col-span-1 lg:col-span-4 bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col justify-between group hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
+            <Heart className="w-6 h-6 text-[#00c9d6] mb-4" />
+            <div>
+              <span className="block text-4xl sm:text-5xl font-black text-slate-900 font-sans tracking-tight mb-2 group-hover:text-[#00c9d6] transition-colors">
+                {stats[2].value}
+              </span>
+              <p className="text-xs sm:text-sm text-slate-500 font-medium leading-relaxed">
+                {stats[2].label}
+              </p>
+            </div>
+          </div>
 
-              {/* Stat 3 */}
-              <div className="p-6 sm:p-8 flex flex-col justify-between h-48 sm:h-56 group hover:bg-white transition-all border-t divide-slate-200/80">
-                <p className="text-xs sm:text-sm text-slate-600 font-normal leading-relaxed">
-                  {stats[2].label}
-                </p>
-                <div className="text-right flex items-center justify-between pt-4 border-t border-slate-100">
-                  <Heart className="w-5 h-5 text-[#00c9d6]" />
-                  <span className="text-4xl sm:text-5xl font-black text-slate-900 font-sans group-hover:text-[#00c9d6] transition-colors">
-                    {stats[2].value}
-                  </span>
-                </div>
-              </div>
+          {/* Cell 6: Dark Card (lg:col-span-3) */}
+          <div className="md:col-span-1 lg:col-span-3 bg-slate-900 text-white p-8 rounded-[2.5rem] shadow-2xl flex flex-col justify-between relative overflow-hidden group">
+            <div className="absolute -top-12 -right-12 w-32 h-32 bg-[#00e5ff] rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity"></div>
+            <p className="text-sm text-slate-300 font-medium leading-relaxed italic relative z-10">
+              "{stats[3].label}<span className="text-[#00e5ff] not-italic font-black text-lg leading-none">.</span>"
+            </p>
 
-              {/* Stat 4: Dark Highlight Card */}
-              <div className="p-6 sm:p-8 bg-slate-900 text-white flex flex-col justify-between h-48 sm:h-56 border-t border-slate-200/80 shadow-inner">
-                <p className="text-xs sm:text-sm text-slate-300 font-normal leading-relaxed italic">
-                  "{stats[3].label}<span className="text-[#00e5ff] not-italic font-bold">.</span>"
-                </p>
-
-                <div className="pt-4 border-t border-slate-800">
-                  <button
-                    onClick={() => { window.spaNavigate?.('/booking'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                    className="text-xs font-extrabold uppercase tracking-widest text-[#00e5ff] hover:text-white bg-transparent border-none p-0 cursor-pointer flex items-center gap-1.5 transition-colors group/btn"
-                  >
-                    <span>Learn More</span>
-                    <ArrowRight className="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform" />
-                  </button>
-                </div>
-              </div>
-
+            <div className="mt-8 relative z-10">
+              <button
+                onClick={() => { window.spaNavigate?.('/booking'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                className="w-full flex items-center justify-between py-3 px-5 bg-white/10 hover:bg-white/20 rounded-2xl text-xs font-black uppercase tracking-widest text-white transition-colors cursor-pointer group/btn"
+              >
+                <span>Learn More</span>
+                <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform text-[#00e5ff]" />
+              </button>
             </div>
           </div>
 
