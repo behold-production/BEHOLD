@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const mongoose = require('mongoose');
 const User = require('../models/User');
 const Counsellor = require('../models/Counsellor');
 const Admin = require('../models/Admin');
@@ -13,6 +14,7 @@ const TestResult = require('../models/TestResult');
 const Role = require('../models/Role');
 const AptitudeQuestion = require('../models/AptitudeQuestion');
 const Otp = require('../models/Otp');
+const Blog = require('../models/Blog');
 
 const modelMap = {
   users: User,
@@ -28,8 +30,21 @@ const modelMap = {
   testresults: TestResult,
   roles: Role,
   aptitudequestions: AptitudeQuestion,
-  otps: Otp
+  otps: Otp,
+  blogs: Blog
 };
+
+function getRecordFilter(id) {
+  const filters = [{ id }];
+
+  // Some older records only have MongoDB's `_id`; accept it alongside the
+  // application-level ID so they remain manageable.
+  if (mongoose.isValidObjectId(id)) {
+    filters.push({ _id: id });
+  }
+
+  return filters.length === 1 ? filters[0] : { $or: filters };
+}
 
 function getModel(table) {
   if (!table || typeof table !== 'string') {
@@ -91,7 +106,7 @@ const StorageService = {
   // Find record by custom ID
   async findById(table, id) {
     const Model = getModel(table);
-    const record = await Model.findOne({ id }).lean();
+    const record = await Model.findOne(getRecordFilter(id)).lean();
     return record || null;
   },
 
@@ -117,13 +132,13 @@ const StorageService = {
   // Update existing record
   async update(table, id, updates) {
     const Model = getModel(table);
-    return await Model.findOneAndUpdate({ id }, { $set: updates }, { new: true }).lean();
+    return await Model.findOneAndUpdate(getRecordFilter(id), { $set: updates }, { new: true }).lean();
   },
 
   // Delete record
   async delete(table, id) {
     const Model = getModel(table);
-    const result = await Model.deleteOne({ id });
+    const result = await Model.deleteOne(getRecordFilter(id));
     return result.deletedCount > 0;
   },
 

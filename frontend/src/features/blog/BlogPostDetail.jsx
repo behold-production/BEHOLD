@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Clock, Copy, Check, MessageCircle, BookOpen } from 'lucide-react';
 import ApiService from '../../shared/services/api';
-import { DEFAULT_BLOGS_DATA } from './defaultBlogsData';
 import greenTexture from '../../assets/greygreen.png';
 import { getImageUrl, formatBlogContent } from '../../shared/utils/formatters';
 import defaultBlogImage from '../../assets/luxury_clinic_room.png';
@@ -23,7 +22,7 @@ const BlogPostDetail = () => {
         const res = await ApiService.getBlogBySlug(slug);
         if (res?.data) {
           setPost(res.data);
-          const allRes = await ApiService.getBlogs({ limit: 3 });
+          const allRes = await ApiService.getBlogs({ limit: 4 });
           if (allRes?.data && Array.isArray(allRes.data)) {
             setRelatedBlogs(allRes.data.filter(b => b.slug !== slug).slice(0, 3));
           }

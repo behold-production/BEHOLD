@@ -988,6 +988,9 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         mode: bookingMode,
         service: bookingService,
         couponCode: couponInput,
+        clientName: bookingForm.name || user?.name || '',
+        clientEmail: bookingForm.email || user?.email || '',
+        clientPhone: bookingForm.phone || user?.phone || '',
         clientLocationName: bookingForm.clientLocationName || '',
         clientLatitude: Number(bookingForm.clientLatitude) || 0,
         clientLongitude: Number(bookingForm.clientLongitude) || 0
@@ -1021,6 +1024,9 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
               mode: bookingMode,
               service: bookingService,
               couponCode: couponInput,
+              clientName: bookingForm.name || user?.name || '',
+              clientEmail: bookingForm.email || user?.email || '',
+              clientPhone: bookingForm.phone || user?.phone || '',
               clientLocationName: bookingForm.clientLocationName || '',
               clientLatitude: Number(bookingForm.clientLatitude) || 0,
               clientLongitude: Number(bookingForm.clientLongitude) || 0

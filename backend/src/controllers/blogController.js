@@ -39,8 +39,9 @@ class BlogController {
         return dateB - dateA;
       });
 
-      if (limit) {
-        blogs = blogs.slice(0, parseInt(limit, 10));
+      const parsedLimit = Number.parseInt(limit, 10);
+      if (Number.isFinite(parsedLimit) && parsedLimit > 0) {
+        blogs = blogs.slice(0, parsedLimit);
       }
 
       res.status(200).json({ success: true, count: blogs.length, data: blogs });
@@ -61,6 +62,10 @@ class BlogController {
       }
 
       if (!blog) {
+        return res.status(404).json({ success: false, message: 'Blog post not found' });
+      }
+
+      if (!blog.isPublished) {
         return res.status(404).json({ success: false, message: 'Blog post not found' });
       }
 
@@ -108,6 +113,9 @@ class BlogController {
       }
 
       const postSlug = slug && slug.trim() ? generateSlug(slug) : generateSlug(title);
+      if (!postSlug) {
+        return res.status(400).json({ success: false, message: 'Title must contain letters or numbers' });
+      }
 
       // Check if slug already exists
       const existing = await StorageService.findOne('blogs', { slug: postSlug });
@@ -187,6 +195,9 @@ class BlogController {
       if (title) updates.title = title.trim();
       if (slug && slug.trim()) {
         const newSlug = generateSlug(slug);
+        if (!newSlug) {
+          return res.status(400).json({ success: false, message: 'Slug must contain letters or numbers' });
+        }
         if (newSlug !== blog.slug) {
           const existing = await StorageService.findOne('blogs', { slug: newSlug });
           updates.slug = existing && existing.id !== id ? `${newSlug}-${Date.now().toString().slice(-4)}` : newSlug;

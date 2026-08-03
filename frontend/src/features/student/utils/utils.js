@@ -137,9 +137,13 @@ export const generateReceiptPDFDoc = async (bookingDetails, showAlert) => {
     doc.setTextColor(82, 82, 91); // zinc-600
     
     // Client info
-    doc.text(`Name: ${bookingDetails.clientName}`, 20, 52);
-    doc.text(`Email: ${bookingDetails.clientEmail || 'N/A'}`, 20, 58);
-    doc.text(`Phone: ${bookingDetails.clientPhone || 'N/A'}`, 20, 64);
+    const cName = bookingDetails.student?.name || bookingDetails.clientName || bookingDetails.userName || bookingDetails.studentName || 'Student';
+    const cEmail = bookingDetails.student?.email || bookingDetails.clientEmail || 'N/A';
+    const cPhone = bookingDetails.student?.phone || bookingDetails.clientPhone || 'N/A';
+    
+    doc.text(`Name: ${cName}`, 20, 52);
+    doc.text(`Email: ${cEmail}`, 20, 58);
+    doc.text(`Phone: ${cPhone}`, 20, 64);
 
     // Receipt Metadata info
     const displayId = bookingDetails.id ? bookingDetails.id.toString().substring(Math.max(0, bookingDetails.id.toString().length - 6)) : 'N/A';

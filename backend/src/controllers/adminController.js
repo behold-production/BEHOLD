@@ -207,22 +207,20 @@ const AdminController = {
         const session = sessionMap.get(a.id);
         return {
           ...a,
-          studentName: user ? user.name : 'Unknown Student',
+          studentName: a.clientName || (user ? user.name : 'Unknown Student'),
           counsellorName: counsellor ? counsellor.name : 'Unknown Counsellor',
           notes: session ? session.notes || a.notes || '' : a.notes || '',
           feedback: session ? session.feedback || a.feedback || '' : a.feedback || '',
           nextSession: session ? session.nextSession || a.nextSession || '' : a.nextSession || '',
-          student: user
-            ? {
-                name: user.name,
-                email: user.email,
-                phone: user.phone,
-                schoolName: user.schoolName,
-                grade: user.grade,
-                guardianName: user.guardianName,
-                guardianPhone: user.guardianPhone
-              }
-            : null,
+          student: {
+            name: a.clientName || (user ? user.name : 'Unknown Student'),
+            email: a.clientEmail || (user ? user.email : ''),
+            phone: a.clientPhone || (user ? user.phone : ''),
+            schoolName: user ? user.schoolName : '',
+            grade: user ? user.grade : '',
+            guardianName: user ? user.guardianName : '',
+            guardianPhone: user ? user.guardianPhone : ''
+          },
           counsellor: counsellor
             ? {
                 name: counsellor.name,
@@ -1777,10 +1775,13 @@ const AdminController = {
           const counsellor = counsellorMap.get(a.counsellorId);
           return {
             ...a,
-            studentName: user ? user.name : 'Unknown Student',
+            studentName: a.clientName || (user ? user.name : 'Unknown Student'),
             counsellorName: counsellor ? counsellor.name : 'Unknown Counsellor',
-            studentEmail: user ? user.email : '',
-            counsellorEmail: counsellor ? counsellor.email : '',
+            student: {
+              name: a.clientName || (user ? user.name : 'Unknown Student'),
+              email: a.clientEmail || (user ? user.email : ''),
+              phone: a.clientPhone || (user ? user.phone : '')
+            },
             counsellorBank: counsellor ? {
               accountName: counsellor.bankAccountName || '',
               accountNumber: counsellor.bankAccountNumber || '',

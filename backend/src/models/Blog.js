@@ -2,11 +2,15 @@ const mongoose = require('mongoose');
 
 const blogSchema = new mongoose.Schema(
   {
+    // New records receive this from StorageService. `sparse` keeps existing
+    // records that only have MongoDB's `_id` valid during the transition.
+    id: { type: String, unique: true, sparse: true },
     title: { type: String, required: true, trim: true },
     slug: { type: String, required: true, unique: true, lowercase: true, trim: true },
     excerpt: { type: String, required: true },
     content: { type: String, required: true },
     coverImage: { type: String, default: '' },
+    coverImagePublicId: { type: String, default: '' },
     category: { type: String, default: 'Career Guidance', trim: true },
     tags: [{ type: String }],
     author: {

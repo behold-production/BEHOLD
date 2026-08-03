@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Clock, ChevronLeft, ChevronRight } from 'lucide-react';
 import ApiService from '../../shared/services/api';
-import { DEFAULT_BLOGS_DATA } from '../blog/defaultBlogsData';
 import { ScrollDot } from '../../shared/components/BrandDot';
 import { getImageUrl } from '../../shared/utils/formatters';
 import defaultBlogImage from '../../assets/luxury_clinic_room.png';
@@ -149,7 +148,7 @@ const BlogSection = () => {  const navigate = useNavigate();
             id="blog-grid"
             className="flex md:grid overflow-x-auto md:overflow-x-visible snap-x snap-mandatory md:snap-none scrollbar-none md:grid-cols-3 gap-8 pb-4"
           >
-            {blogs.map((post) => (
+            {paginatedBlogs.map((post) => (
             <article
               key={post._id || post.slug}
               onClick={() => handleOpenBlog(post.slug)}

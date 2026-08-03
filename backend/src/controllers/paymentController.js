@@ -27,6 +27,9 @@ const PaymentController = {
         couponCode,
         clientLatitude,
         clientLongitude,
+        clientName,
+        clientEmail,
+        clientPhone,
         notes: customNotes
       } = req.body;
 
@@ -102,6 +105,9 @@ const PaymentController = {
           ...orderNotes,
           counsellorId,
           userId: req.user ? req.user.id : '',
+          clientName: clientName || '',
+          clientEmail: clientEmail || '',
+          clientPhone: clientPhone || '',
           date,
           time,
           mode,
@@ -235,7 +241,7 @@ const PaymentController = {
         });
       }
 
-      const { counsellorId, date, time, mode, service, clientLocationName, clientLatitude, clientLongitude } = bookingDetails;
+      const { counsellorId, date, time, mode, service, clientLocationName, clientLatitude, clientLongitude, clientName, clientEmail, clientPhone } = bookingDetails;
       const userId = req.user ? req.user.id : '';
 
       if (!counsellorId || !date || !time || !mode) {
@@ -325,6 +331,9 @@ const PaymentController = {
         amountPaid: netTotal,
         appliedDiscount,
         couponCode,
+        clientName: notes.clientName || clientName || user.name || '',
+        clientEmail: notes.clientEmail || clientEmail || user.email || '',
+        clientPhone: notes.clientPhone || clientPhone || user.phone || '',
         clientLocationName: clientLocationName || '',
         clientLatitude: Number(clientLatitude) || 0,
         clientLongitude: Number(clientLongitude) || 0,
@@ -406,6 +415,11 @@ const PaymentController = {
       const paymentId = payloadEntity.id;
 
       if (event === 'payment.captured' || event === 'order.paid') {
+        // ADD DELAY TO PREVENT RACE CONDITION WITH FRONTEND verifyPaymentAndBook
+        // Razorpay webhooks fire almost exactly at the same time as the frontend success callback.
+        // Waiting 3 seconds allows the frontend to create the appointment first.
+        await new Promise(resolve => setTimeout(resolve, 3000));
+
         const existingAppointment = await StorageService.findOne('appointments', {
           $or: [
             { razorpayOrderId: orderId },

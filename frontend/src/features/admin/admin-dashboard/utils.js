@@ -69,11 +69,9 @@ export function getInitials(name) {
         format: 'a4'
       });
 
-      // Find student details from usersDb
-      const student = usersDb.find(u => u.id === booking.userId);
-      const clientName = booking.userName || (student ? student.name : 'Student');
-      const clientEmail = student ? student.email : 'N/A';
-      const clientPhone = student ? student.phone : 'N/A';
+      const clientName = booking.student?.name || booking.studentName || booking.userName || 'Student';
+      const clientEmail = booking.student?.email || 'N/A';
+      const clientPhone = booking.student?.phone || 'N/A';
 
       const service = booking.service === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring';
       const mode = booking.mode === 'ONLINE' ? 'Video Call' : booking.mode === 'DOOR_STEP' ? 'Home Visit' : 'At Center';

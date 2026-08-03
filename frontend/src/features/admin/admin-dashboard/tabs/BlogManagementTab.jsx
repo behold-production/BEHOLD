@@ -217,7 +217,7 @@ export default function BlogManagementTab() {
       const payload = fd;
 
       if (editingBlog) {
-        const res = await ApiService.updateBlog(editingBlog._id, payload);
+        const res = await ApiService.updateBlog(editingBlog.id || editingBlog._id, payload);
         if (res?.success) {
           toast.success('Article updated successfully!');
           fetchBlogs();
@@ -267,7 +267,7 @@ export default function BlogManagementTab() {
       const res = await ApiService.deleteBlog(id);
       if (res?.success) {
         toast.success('Article deleted successfully');
-        setBlogs(prev => prev.filter(b => b._id !== id));
+        setBlogs(prev => prev.filter(b => b.id !== id && b._id !== id));
       }
     } catch (err) {
       toast.error('Failed to delete article');
@@ -387,7 +387,7 @@ export default function BlogManagementTab() {
               </thead>
               <tbody className="divide-y divide-slate-800/60 text-xs">
                 {filteredBlogs.map((post) => (
-                  <tr key={post._id} className="hover:bg-slate-800/40 transition-colors">
+                  <tr key={post.id || post._id} className="hover:bg-slate-800/40 transition-colors">
                     <td className="py-4 px-5">
                       <div className="flex items-center gap-3">
                         <div className="w-14 h-10 rounded-lg bg-slate-950 overflow-hidden shrink-0 border border-slate-800">
@@ -453,7 +453,7 @@ export default function BlogManagementTab() {
                         </button>
 
                         <button
-                          onClick={() => handleDeleteBlog(post._id, post.title)}
+                          onClick={() => handleDeleteBlog(post.id || post._id, post.title)}
                           title="Delete Article"
                           className="p-2 rounded-lg bg-red-500/15 hover:bg-red-600 text-red-400 hover:text-white transition-all cursor-pointer border border-red-500/30"
                         >
