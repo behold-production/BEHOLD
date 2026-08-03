@@ -498,14 +498,15 @@ export default function AuthModals({ isOpen, onClose }) {
              {mode === 'login' && loginMethod === 'phone' && !isOtpSent && (
                <div className="space-y-1.5">
                  <label className="text-xs font-bold text-zinc-500 block">WhatsApp Phone Number</label>
-                 <div className="relative">
-                   <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+                 <div className="relative flex items-center">
+                   <Phone className="absolute left-3 w-4 h-4 text-zinc-400" />
+                   <span className="absolute left-9 text-sm font-semibold text-zinc-700">+91</span>
                    <input
                      type="tel"
                      value={otpPhone}
                      onChange={(e) => setOtpPhone(e.target.value)}
-                     placeholder="Enter your 10-digit number"
-                     className="w-full pl-10 pr-4 py-3 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 focus:bg-white focus:border-brand focus:ring-1 focus:ring-brand outline-none transition-all"
+                     placeholder="10-digit number"
+                     className="w-full pl-16 pr-4 py-3 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 focus:bg-white focus:border-brand focus:ring-1 focus:ring-brand outline-none transition-all"
                    />
                  </div>
                </div>
