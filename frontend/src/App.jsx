@@ -2,6 +2,7 @@ import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { Routes, Route, Navigate, useNavigate, useLocation, useParams } from 'react-router-dom';
 import { MessageCircle, X, Download, ShieldAlert, Eye, EyeOff } from 'lucide-react';
 import { Toaster, useToasterStore, toast } from 'react-hot-toast';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import Navbar from './shared/components/Navbar';
 import Hero from './features/landing/Hero';
 import CdatSection from './features/student/components/aptitude/CdatSection';
@@ -174,7 +175,7 @@ function UnauthorizedFallback({ roleRequired }) {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-650 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] pr-10 transition duration-200'
-                    placeholder='••••••••'
+                    placeholder='��•••••••'
                     disabled={loading}
                   />
                   <button
@@ -607,6 +608,7 @@ export default function App() {
         }}
       />
       <ToastLimitManager />
+      <SpeedInsights />
 
       {/* Top Banner Notice Alert */}
       {!hideNavbarAndFooter && siteSettings.showBanner && siteSettings.bannerNotice && (
