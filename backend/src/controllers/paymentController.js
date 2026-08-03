@@ -279,14 +279,20 @@ const PaymentController = {
 
       // 3. Final validation check (double booking, past date, counsellor availability)
       const validation = await validateBookingDetails(counsellorId, date, time, mode, service || 'counselling', null, clientLatitude, clientLongitude);
+      let conflictWarning = null;
       if (!validation.valid) {
-        return res.status(400).json({ success: false, message: validation.message });
+        console.warn(`[Payment Verification] Validation failed but payment received. Proceeding to prevent money loss. Reason: ${validation.message}`);
+        conflictWarning = validation.message;
       }
 
       const user = await StorageService.findById('users', userId);
       if (!user) return res.status(404).json({ success: false, message: 'Student profile not found' });
-      const counsellor = validation.counsellor;
-
+      
+      let counsellor = validation.counsellor;
+      if (!counsellor) {
+        counsellor = await StorageService.findById('counsellors', counsellorId);
+      }
+      if (!counsellor) return res.status(404).json({ success: false, message: 'Counsellor not found' });
       // 4. Compute price for records (taking into account any discount from order notes)
       const appliedDiscount = Number(notes.appliedDiscount) || 0;
       const couponCode = notes.couponCode || '';
@@ -345,8 +351,8 @@ const PaymentController = {
       await StorageService.create('notifications', {
         recipientId: counsellorId,
         recipientRole: 'counsellor',
-        title: 'New Paid Appointment Request',
-        message: `Student ${user.name} has requested an appointment on ${date} at ${time}. Payment of ₹${netTotal} is verified.`,
+        title: conflictWarning ? 'Conflict: Paid Appointment Request' : 'New Paid Appointment Request',
+        message: `Student ${user.name} has requested an appointment on ${date} at ${time}. Payment of ₹${netTotal} is verified.${conflictWarning ? ` [ACTION REQUIRED: ${conflictWarning}]` : ''}`,
         type: 'appointment_created',
         isRead: false
       });
@@ -356,7 +362,7 @@ const PaymentController = {
         recipientId: userId,
         recipientRole: 'user',
         title: 'Appointment Booked Successfully',
-        message: `Your booking with ${counsellor.name} on ${date} at ${time} has been submitted (Paid ₹${netTotal}).`,
+        message: `Your booking with ${counsellor.name} on ${date} at ${time} has been submitted (Paid ₹${netTotal}).${conflictWarning ? ' Our team will contact you shortly regarding a scheduling conflict.' : ''}`,
         type: 'appointment_created',
         isRead: false
       });
