@@ -341,6 +341,42 @@ export default function SettingsTab(props) {
   const [activeSettingsTab, setActiveSettingsTab] = useState('general');
   const [draggedIndex, setDraggedIndex] = useState(null);
 
+  const compressImage = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let { width, height } = img;
+          const MAX_WIDTH = 1200;
+          const MAX_HEIGHT = 800;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL('image/jpeg', 0.8));
+        };
+        img.onerror = reject;
+        img.src = e.target.result;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+
   const settingsTabs = [
     { id: 'general', label: 'General & Contact', icon: Settings },
     { id: 'landing', label: 'Landing Page Content', icon: Brain },
@@ -642,12 +678,15 @@ export default function SettingsTab(props) {
                           type="file"
                           accept="image/*"
                           className="hidden"
-                          onChange={(e) => {
+                          onChange={async (e) => {
                             const file = e.target.files?.[0];
                             if (file) {
-                              const reader = new FileReader();
-                              reader.onloadend = () => setSettingsForm(prev => ({ ...prev, heroBgImage: reader.result }));
-                              reader.readAsDataURL(file);
+                              try {
+                                const compressedBase64 = await compressImage(file);
+                                setSettingsForm(prev => ({ ...prev, heroBgImage: compressedBase64 }));
+                              } catch (error) {
+                                toast.error('Failed to process image');
+                              }
                             }
                           }}
                         />
@@ -738,12 +777,15 @@ export default function SettingsTab(props) {
                           type="file"
                           accept="image/*"
                           className="hidden"
-                          onChange={(e) => {
+                          onChange={async (e) => {
                             const file = e.target.files?.[0];
                             if (file) {
-                              const reader = new FileReader();
-                              reader.onloadend = () => setSettingsForm(prev => ({ ...prev, whyChooseUsImage: reader.result }));
-                              reader.readAsDataURL(file);
+                              try {
+                                const compressedBase64 = await compressImage(file);
+                                setSettingsForm(prev => ({ ...prev, whyChooseUsImage: compressedBase64 }));
+                              } catch (error) {
+                                toast.error('Failed to process image');
+                              }
                             }
                           }}
                         />
@@ -1060,127 +1102,68 @@ export default function SettingsTab(props) {
                       />
                     </div>
 
-                    <div className="sm:col-span-2 border-t border-zinc-800/80 pt-4 mt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {/* Offer 1 */}
-                      <div className="space-y-2 border border-zinc-800/40 p-3 rounded-lg bg-zinc-950/20">
-                        <h5 className="font-bold text-zinc-500 text-xs">Card 01</h5>
-                        <input
-                          type="text"
-                          required
-                          placeholder="Title"
-                          value={settingsForm.offer1Title || ''}
-                          onChange={(e) => setSettingsForm({ ...settingsForm, offer1Title: e.target.value })}
-                          className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold mb-2 transition-colors"
-                        />
-                        <textarea
-                          rows={2}
-                          required
-                          placeholder="Description"
-                          value={settingsForm.offer1Desc || ''}
-                          onChange={(e) => setSettingsForm({ ...settingsForm, offer1Desc: e.target.value })}
-                          className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none resize-none font-semibold transition-colors"
-                        />
+                    <div className="sm:col-span-2 border-t border-zinc-800/80 pt-4 mt-2">
+                      <div className="flex justify-between items-center mb-4">
+                        <h5 className="font-bold text-zinc-300 text-xs">Dynamic Offer Cards</h5>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const currentCards = settingsForm.aboutCards || [];
+                            setSettingsForm({ ...settingsForm, aboutCards: [...currentCards, { title: '', desc: '' }] });
+                          }}
+                          className="px-3 py-1.5 bg-brand/10 hover:bg-brand/20 text-brand text-[10px] uppercase tracking-wider font-black rounded transition-colors"
+                        >
+                          + Add Card
+                        </button>
                       </div>
-                      {/* Offer 2 */}
-                      <div className="space-y-2 border border-zinc-800/40 p-3 rounded-lg bg-zinc-950/20">
-                        <h5 className="font-bold text-zinc-500 text-xs">Card 02</h5>
-                        <input
-                          type="text"
-                          required
-                          placeholder="Title"
-                          value={settingsForm.offer2Title || ''}
-                          onChange={(e) => setSettingsForm({ ...settingsForm, offer2Title: e.target.value })}
-                          className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold mb-2 transition-colors"
-                        />
-                        <textarea
-                          rows={2}
-                          required
-                          placeholder="Description"
-                          value={settingsForm.offer2Desc || ''}
-                          onChange={(e) => setSettingsForm({ ...settingsForm, offer2Desc: e.target.value })}
-                          className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none resize-none font-semibold transition-colors"
-                        />
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {(settingsForm.aboutCards || []).map((card, idx) => (
+                          <div key={idx} className="space-y-2 border border-zinc-800/40 p-3 rounded-lg bg-zinc-950/20 relative">
+                            <div className="flex justify-between items-center mb-2">
+                              <h5 className="font-bold text-zinc-500 text-xs">Card {idx + 1}</h5>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const newCards = (settingsForm.aboutCards || []).filter((_, i) => i !== idx);
+                                  setSettingsForm({ ...settingsForm, aboutCards: newCards });
+                                }}
+                                className="p-1 hover:bg-red-500/20 text-red-400 rounded transition-colors"
+                              >
+                                <Trash className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                            <input
+                              type="text"
+                              required
+                              placeholder="Title"
+                              value={card.title || ''}
+                              onChange={(e) => {
+                                const newCards = [...(settingsForm.aboutCards || [])];
+                                newCards[idx].title = e.target.value;
+                                setSettingsForm({ ...settingsForm, aboutCards: newCards });
+                              }}
+                              className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold mb-2 transition-colors"
+                            />
+                            <textarea
+                              rows={2}
+                              required
+                              placeholder="Description"
+                              value={card.desc || ''}
+                              onChange={(e) => {
+                                const newCards = [...(settingsForm.aboutCards || [])];
+                                newCards[idx].desc = e.target.value;
+                                setSettingsForm({ ...settingsForm, aboutCards: newCards });
+                              }}
+                              className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none resize-none font-semibold transition-colors"
+                            />
+                          </div>
+                        ))}
                       </div>
-                      {/* Offer 3 */}
-                      <div className="space-y-2 border border-zinc-800/40 p-3 rounded-lg bg-zinc-950/20">
-                        <h5 className="font-bold text-zinc-500 text-xs">Card 03</h5>
-                        <input
-                          type="text"
-                          required
-                          placeholder="Title"
-                          value={settingsForm.offer3Title || ''}
-                          onChange={(e) => setSettingsForm({ ...settingsForm, offer3Title: e.target.value })}
-                          className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold mb-2 transition-colors"
-                        />
-                        <textarea
-                          rows={2}
-                          required
-                          placeholder="Description"
-                          value={settingsForm.offer3Desc || ''}
-                          onChange={(e) => setSettingsForm({ ...settingsForm, offer3Desc: e.target.value })}
-                          className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none resize-none font-semibold transition-colors"
-                        />
-                      </div>
-                      {/* Offer 4 */}
-                      <div className="space-y-2 border border-zinc-800/40 p-3 rounded-lg bg-zinc-950/20">
-                        <h5 className="font-bold text-zinc-500 text-xs">Card 04</h5>
-                        <input
-                          type="text"
-                          required
-                          placeholder="Title"
-                          value={settingsForm.offer4Title || ''}
-                          onChange={(e) => setSettingsForm({ ...settingsForm, offer4Title: e.target.value })}
-                          className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold mb-2 transition-colors"
-                        />
-                        <textarea
-                          rows={2}
-                          required
-                          placeholder="Description"
-                          value={settingsForm.offer4Desc || ''}
-                          onChange={(e) => setSettingsForm({ ...settingsForm, offer4Desc: e.target.value })}
-                          className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none resize-none font-semibold transition-colors"
-                        />
-                      </div>
-                      {/* Offer 5 */}
-                      <div className="space-y-2 border border-zinc-800/40 p-3 rounded-lg bg-zinc-950/20">
-                        <h5 className="font-bold text-zinc-500 text-xs">Card 05</h5>
-                        <input
-                          type="text"
-                          required
-                          placeholder="Title"
-                          value={settingsForm.offer5Title || ''}
-                          onChange={(e) => setSettingsForm({ ...settingsForm, offer5Title: e.target.value })}
-                          className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold mb-2 transition-colors"
-                        />
-                        <textarea
-                          rows={2}
-                          required
-                          placeholder="Description"
-                          value={settingsForm.offer5Desc || ''}
-                          onChange={(e) => setSettingsForm({ ...settingsForm, offer5Desc: e.target.value })}
-                          className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none resize-none font-semibold transition-colors"
-                        />
-                      </div>
-                      {/* Offer 6 */}
-                      <div className="space-y-2 border border-zinc-800/40 p-3 rounded-lg bg-zinc-950/20">
-                        <h5 className="font-bold text-zinc-500 text-xs">Card 06</h5>
-                        <input
-                          type="text"
-                          required
-                          placeholder="Title"
-                          value={settingsForm.offer6Title || ''}
-                          onChange={(e) => setSettingsForm({ ...settingsForm, offer6Title: e.target.value })}
-                          className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold mb-2 transition-colors"
-                        />
-                        <textarea
-                          rows={2}
-                          required
-                          placeholder="Description"
-                          value={settingsForm.offer6Desc || ''}
-                          onChange={(e) => setSettingsForm({ ...settingsForm, offer6Desc: e.target.value })}
-                          className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none resize-none font-semibold transition-colors"
-                        />
-                      </div>
+                      {(!settingsForm.aboutCards || settingsForm.aboutCards.length === 0) && (
+                        <div className="text-center p-4 border border-dashed border-zinc-800 rounded-lg text-zinc-500 text-xs font-semibold mt-4">
+                          No cards added yet. Click "+ Add Card" to create one.
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

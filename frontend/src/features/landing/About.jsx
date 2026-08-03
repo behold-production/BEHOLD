@@ -141,6 +141,37 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
 
         </div>
 
+        {/* Dynamic What We Offer Cards */}
+        {settings.aboutCards && settings.aboutCards.length > 0 && (
+          <div className="mt-20 sm:mt-32">
+            <div className="text-center mb-12">
+              <span className="text-xs font-bold uppercase tracking-widest text-[#00c9d6] flex items-center justify-center gap-1.5 mb-2">
+                OUR SERVICES
+              </span>
+              <h3 className="text-2xl sm:text-4xl font-sans font-black uppercase text-slate-900 tracking-tight leading-none">
+                {settings.aboutTitle || 'WHAT WE OFFER'}<span className="text-[#00e5ff]">.</span>
+              </h3>
+              {settings.aboutSub && (
+                <p className="mt-4 text-sm sm:text-base text-slate-600 max-w-2xl mx-auto">
+                  {settings.aboutSub}
+                </p>
+              )}
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+              {settings.aboutCards.map((card, idx) => (
+                <div key={idx} className="bg-white/80 backdrop-blur-md border border-slate-200/90 p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 group hover:-translate-y-1">
+                  <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center mb-6 group-hover:bg-[#00e5ff]/10 transition-colors">
+                    <span className="text-lg font-black text-slate-400 font-sans group-hover:text-[#00c9d6]">0{idx + 1}</span>
+                  </div>
+                  <h4 className="text-lg font-bold text-slate-900 uppercase tracking-wide mb-3">{card.title}</h4>
+                  <p className="text-sm text-slate-600 leading-relaxed">{card.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
       </div>
     </section>
   );
