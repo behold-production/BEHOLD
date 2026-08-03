@@ -5,6 +5,7 @@ import ApiService from '../../shared/services/api';
 import { DEFAULT_BLOGS_DATA } from './defaultBlogsData';
 import greenTexture from '../../assets/greygreen.png';
 import { getImageUrl } from '../../shared/utils/formatters';
+import defaultBlogImage from '../../assets/luxury_clinic_room.png';
 
 const CATEGORIES = [
   'All',
@@ -169,8 +170,9 @@ const BlogList = () => {
                   {/* Cover Image */}
                   <div className="relative h-56 w-full overflow-hidden bg-surface-100 shrink-0">
                     <img
-                      src={post.coverImage ? getImageUrl(post.coverImage) : 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&auto=format&fit=crop&q=80'}
+                      src={post.coverImage ? getImageUrl(post.coverImage) : defaultBlogImage}
                       alt={post.title}
+                      onError={(e) => { e.target.onerror = null; e.target.src = defaultBlogImage; }}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                     

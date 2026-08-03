@@ -3,6 +3,7 @@ import { Plus, Search, Edit, Trash2, ExternalLink, Eye, EyeOff, BookOpen, Clock,
 import ApiService from '../../../../shared/services/api';
 import { toast } from 'react-hot-toast';
 import { getImageUrl } from '../../../../shared/utils/formatters';
+import defaultBlogImage from '../../../../assets/luxury_clinic_room.png';
 
 export default function BlogManagementTab() {
   const [blogs, setBlogs] = useState([]);
@@ -356,8 +357,9 @@ export default function BlogManagementTab() {
                       <div className="flex items-center gap-3">
                         <div className="w-14 h-10 rounded-lg bg-slate-950 overflow-hidden shrink-0 border border-slate-800">
                           <img
-                            src={post.coverImage ? getImageUrl(post.coverImage) : 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=400&auto=format&fit=crop&q=80'}
+                            src={post.coverImage ? getImageUrl(post.coverImage) : defaultBlogImage}
                             alt={post.title}
+                            onError={(e) => { e.target.onerror = null; e.target.src = defaultBlogImage; }}
                             className="w-full h-full object-cover"
                           />
                         </div>
