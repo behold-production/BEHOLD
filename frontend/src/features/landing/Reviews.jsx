@@ -342,7 +342,7 @@ export default function Reviews({ siteSettings }) {
               ref={reviewScrollRef}
               className="flex md:grid overflow-x-auto md:overflow-x-visible snap-x snap-mandatory md:snap-none scrollbar-none md:grid-cols-3 gap-6 items-stretch pb-4"
             >
-              {displayReviews.map((rev, i) => (
+              {paginatedReviews.map((rev, i) => (
                 <div
                   key={rev._id || i}
                   className="w-full h-full flex flex-col shrink-0 snap-start snap-always md:w-auto md:max-w-none"

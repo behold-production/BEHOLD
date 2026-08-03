@@ -71,9 +71,9 @@ const BlogList = () => {
         <img
           src={greenTexture}
           alt=""
-          className="w-full h-full object-cover object-center opacity-80"
+          className="w-full h-full object-cover object-center opacity-20"
         />
-        {/* Optional overlay to adjust the "green shade" brightness if needed, e.g. bg-white/20 */}
+        <div className="absolute inset-0 bg-white/70" />
       </div>
 
       {/* Hero Header */}

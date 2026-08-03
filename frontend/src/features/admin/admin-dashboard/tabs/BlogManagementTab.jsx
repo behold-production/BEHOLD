@@ -243,6 +243,16 @@ export default function BlogManagementTab() {
     }
   };
 
+  const handleShareToTelegram = (post) => {
+    const title = post.title || 'Behold Aspire Blog';
+    const category = post.category ? `[${post.category}]\n\n` : '';
+    const excerpt = post.excerpt ? `${post.excerpt}\n\n` : '';
+    const url = `${window.location.origin}/blog/${post.slug}`;
+    
+    const message = `*${title}*\n${category}${excerpt}Read the full article here:\n${url}`;
+    window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(message)}`, '_blank');
+  };
+
   const handleTogglePublish = async (blog) => {
     const targetId = blog._id || blog.id;
     if (!targetId) return;
@@ -442,6 +452,16 @@ export default function BlogManagementTab() {
                           className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors cursor-pointer border border-slate-700"
                         >
                           <ExternalLink className="w-3.5 h-3.5" />
+                        </button>
+
+                        <button
+                          onClick={() => handleShareToTelegram(post)}
+                          title="Share to Telegram"
+                          className="p-2 rounded-lg bg-blue-500/15 hover:bg-blue-500 text-blue-400 hover:text-white transition-all cursor-pointer border border-blue-500/30"
+                        >
+                          <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.18-.08-.05-.19-.02-.27 0-.11.03-1.84 1.18-5.18 3.44-.49.34-.93.5-1.33.49-.44-.01-1.28-.25-1.9-.45-.77-.25-1.38-.38-1.32-.8.03-.22.34-.44.93-.68 3.65-1.59 6.08-2.64 7.31-3.15 3.47-1.45 4.19-1.7 4.67-1.71.1 0 .34.02.48.13.12.09.16.22.17.34.02.09.02.19.01.26z"/>
+                          </svg>
                         </button>
 
                         <button

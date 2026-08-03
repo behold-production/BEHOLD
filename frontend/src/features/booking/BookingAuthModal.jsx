@@ -146,6 +146,14 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
         window.dispatchEvent(new CustomEvent('storage_update', { detail: { key: 'behold_student_profile' } }));
       } catch (_) { /* ignore */ }
 
+      if (authData?.role === 'ADMIN') {
+        window.location.href = '/admin';
+        return;
+      } else if (authData?.role === 'COUNSELLOR' || authData?.role === 'PSYCHOLOGIST') {
+        window.location.href = '/counsellor';
+        return;
+      }
+
       if (onSuccess) onSuccess(authData);
     } catch (err) {
       if (err.message && !err.message.includes('Status:')) {
@@ -162,10 +170,9 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
   };
 
   const inputCls = (field) =>
-    `w-full pl-10 pr-4 py-3 rounded-lg text-sm text-zinc-900 outline-none transition-all border ${
-      fieldErrors[field]
-        ? 'bg-rose-50/40 border-rose-400 focus:border-rose-500 focus:ring-1 focus:ring-rose-200'
-        : 'bg-zinc-50 border-zinc-200 focus:bg-white focus:border-brand focus:ring-1 focus:ring-brand'
+    `w-full pl-10 pr-4 py-3 rounded-lg text-sm text-zinc-900 outline-none transition-all border ${fieldErrors[field]
+      ? 'bg-rose-50/40 border-rose-400 focus:border-rose-500 focus:ring-1 focus:ring-rose-200'
+      : 'bg-zinc-50 border-zinc-200 focus:bg-white focus:border-brand focus:ring-1 focus:ring-brand'
     }`;
 
   return (
@@ -220,22 +227,20 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                 <button
                   type="button"
                   onClick={() => { setLoginMethod('email'); setFieldErrors({}); }}
-                  className={`flex-1 px-3 min-h-[36px] rounded-full cursor-pointer transition-all duration-200 flex items-center justify-center border-none ${
-                    loginMethod === 'email'
-                      ? 'bg-[#0f172a] text-[#00e5ff] shadow-xs font-bold'
-                      : 'text-surface-600 hover:text-[#0f172a]'
-                  }`}
+                  className={`flex-1 px-3 min-h-[36px] rounded-full cursor-pointer transition-all duration-200 flex items-center justify-center border-none ${loginMethod === 'email'
+                    ? 'bg-[#0f172a] text-[#00e5ff] shadow-xs font-bold'
+                    : 'text-surface-600 hover:text-[#0f172a]'
+                    }`}
                 >
                   Email
                 </button>
                 <button
                   type="button"
                   onClick={() => { setLoginMethod('phone'); setFieldErrors({}); setIsOtpSent(false); setOtpCode(''); }}
-                  className={`flex-1 px-3 min-h-[36px] rounded-full cursor-pointer transition-all duration-200 flex items-center justify-center border-none ${
-                    loginMethod === 'phone'
-                      ? 'bg-[#0f172a] text-[#00e5ff] shadow-xs font-bold'
-                      : 'text-surface-600 hover:text-[#0f172a]'
-                  }`}
+                  className={`flex-1 px-3 min-h-[36px] rounded-full cursor-pointer transition-all duration-200 flex items-center justify-center border-none ${loginMethod === 'phone'
+                    ? 'bg-[#0f172a] text-[#00e5ff] shadow-xs font-bold'
+                    : 'text-surface-600 hover:text-[#0f172a]'
+                    }`}
                 >
                   WhatsApp OTP
                 </button>

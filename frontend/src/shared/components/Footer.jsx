@@ -87,7 +87,6 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
             </h4>
             <ul className="space-y-3 text-xs sm:text-sm font-normal">
               {[
-                { label: 'Career Mentoring', action: () => goTo('services') },
                 { label: 'Psychological Counselling', action: () => goTo('services') },
                 { label: 'Stream & Degree Selection', action: () => goTo('/booking') },
                 // Aptitude Mapping shown only when admin enables aptitude
@@ -120,9 +119,6 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
                 { label: 'About Us', action: () => goTo('/about') },
                 { label: 'Articles & Insights', action: () => goTo('/blog') },
                 { label: 'FAQs', action: () => goTo('/faqs') },
-                siteSettings?.privacyPolicy && { label: 'Privacy Policy', action: () => onOpenDocs?.('privacy') },
-                siteSettings?.termsOfUse && { label: 'Terms of Service', action: () => onOpenDocs?.('terms') },
-                siteSettings?.refundPolicy && { label: 'Return & Refund Policy', action: () => onOpenDocs?.('refund') },
                 { label: 'Support & Contact', action: () => goTo('inquiry') },
               ].filter(Boolean).map(({ label, action }) => (
                 <li key={label}>
