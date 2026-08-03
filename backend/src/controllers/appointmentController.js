@@ -2,6 +2,7 @@ const StorageService = require('../services/storageService');
 const { validateBookingDetails } = require('../utils/bookingValidator');
 const { autoExpireSessions } = require('../utils/sessionHelper');
 const WhatsAppService = require('../services/whatsappService');
+const EmailService = require('../services/emailService');
 
 const AppointmentController = {
   // Create Appointment (User / Student)
@@ -69,7 +70,6 @@ const AppointmentController = {
         isRead: false
       });
 
-      // --- WhatsApp Alerts ---
       if (counsellor && counsellor.phone) {
         WhatsAppService.sendBookingAlert(counsellor.phone, 'created', {
           studentName: user.name,
@@ -86,6 +86,8 @@ const AppointmentController = {
           time
         }).catch(err => console.error(err));
       }
+      // --- Email Alerts ---
+      EmailService.sendAppointmentBooked({ user, counsellor, appointment: newAppointment }).catch(err => console.error('[Email Booked Error]:', err));
 
       res.status(201).json({
         success: true,
@@ -186,6 +188,10 @@ const AppointmentController = {
           time: appointment.time
         }).catch(err => console.error(err));
       }
+      // --- Email Alerts ---
+      if (user) {
+        EmailService.sendAppointmentApproved({ user, counsellor, appointment: { ...appointment, meetLink } }).catch(err => console.error('[Email Approve Error]:', err));
+      }
 
       res.status(200).json({
         success: true,
@@ -241,6 +247,10 @@ const AppointmentController = {
           time: appointment.time,
           reason: reason || 'Declined'
         }).catch(err => console.error(err));
+      }
+      // --- Email Alerts ---
+      if (user) {
+        EmailService.sendAppointmentRejected({ user, counsellor, appointment, reason }).catch(err => console.error('[Email Reject Error]:', err));
       }
 
       res.status(200).json({
@@ -413,6 +423,8 @@ const AppointmentController = {
 
       if (user && user.phone) WhatsAppService.sendBookingAlert(user.phone, 'rescheduled', details).catch(err => console.error(err));
       if (counsellor && counsellor.phone) WhatsAppService.sendBookingAlert(counsellor.phone, 'rescheduled', details).catch(err => console.error(err));
+      // --- Email Alerts ---
+      EmailService.sendAppointmentRescheduled({ user, counsellor, appointment: updated }).catch(err => console.error('[Email Reschedule Error]:', err));
 
       res.status(200).json({
         success: true,
@@ -533,6 +545,9 @@ const AppointmentController = {
 
       if (user && user.phone) WhatsAppService.sendBookingAlert(user.phone, 'cancelled', details).catch(err => console.error(err));
       if (counsellor && counsellor.phone) WhatsAppService.sendBookingAlert(counsellor.phone, 'cancelled', details).catch(err => console.error(err));
+      // --- Email Alerts ---
+      const cancelledByLabel = req.user.role === 'user' ? user?.name : counsellor?.name || 'Admin';
+      if (user) EmailService.sendAppointmentCancelled({ user, counsellor, appointment, cancelledBy: cancelledByLabel, reason }).catch(err => console.error('[Email Cancel Error]:', err));
 
       res.status(200).json({
         success: true,
@@ -561,6 +576,15 @@ const AppointmentController = {
       const session = await StorageService.findOne('sessions', { appointmentId: id });
       if (session) {
         await StorageService.update('sessions', session.id, { meetLink });
+      }
+
+      // Notify user via email that meet link is ready
+      if (meetLink) {
+        const meetUser = await StorageService.findById('users', appointment.userId);
+        const meetCounsellor = await StorageService.findById('counsellors', appointment.counsellorId);
+        if (meetUser) {
+          EmailService.sendMeetLinkAdded({ user: meetUser, counsellor: meetCounsellor, appointment: { ...appointment, meetLink } }).catch(err => console.error('[Email MeetLink Error]:', err));
+        }
       }
 
       res.status(200).json({

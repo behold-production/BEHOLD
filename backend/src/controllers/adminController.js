@@ -3,6 +3,7 @@ const User = require('../models/User');
 const Counsellor = require('../models/Counsellor');
 const cloudinary = require('../config/cloudinary');
 const { uploadToCloudinary, uploadProfilePicToCloudinary } = require('../utils/cloudinaryHelper');
+const EmailService = require('../services/emailService');
 const { autoExpireSessions } = require('../utils/sessionHelper');
 
 const AdminController = {
@@ -126,6 +127,12 @@ const AdminController = {
       });
 
       const { password, ...counsellorData } = updated;
+
+      // Send email notification
+      if (isVerified && updated.email) {
+        EmailService.sendCounsellorVerified(updated).catch(err => console.error('[Email Verify Error]:', err));
+      }
+
       res.status(200).json({
         success: true,
         message: `Counsellor verification status updated to ${isVerified}`,
@@ -163,6 +170,12 @@ const AdminController = {
       });
 
       const { password, ...counsellorData } = updated;
+
+      // Send email notification
+      if (updated.email) {
+        EmailService.sendCounsellorRejected(updated, reason).catch(err => console.error('[Email Reject Counsellor Error]:', err));
+      }
+
       res.status(200).json({
         success: true,
         message: 'Counsellor status updated to REJECTED',
@@ -339,6 +352,15 @@ const AdminController = {
               console.warn(`[WhatsApp Broadcast Fail] To ${recipient.phone}:`, waErr.message);
             }
           }
+        }
+      }
+      // Optional Email Broadcast Dispatch
+      let emailSentCount = 0;
+      for (const recipient of recipientsToNotify) {
+        if (recipient.email) {
+          EmailService.sendBroadcast([recipient], title, message)
+            .then(() => { emailSentCount++; })
+            .catch(err => console.warn(`[Email Broadcast Fail] To ${recipient.email}:`, err.message));
         }
       }
 

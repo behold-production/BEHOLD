@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const StorageService = require('../services/storageService');
 const WhatsAppService = require('../services/whatsappService');
+const EmailService = require('../services/emailService');
 const PasswordResetOtp = require('../models/PasswordResetOtp');
 
 const ACCESS_EXPIRY = '15m';
@@ -106,6 +107,8 @@ const AuthController = {
       if (newUser.phone) {
         WhatsAppService.sendNotification(newUser.phone, `Welcome to Behold Aspire, ${newUser.name}! Your account has been created successfully.`).catch(err => console.error(err));
       }
+      // Send welcome email
+      EmailService.sendWelcomeUser(newUser).catch(err => console.error('[Email Welcome Error]:', err));
 
       res.status(201).json({
         success: true,
@@ -201,6 +204,8 @@ const AuthController = {
       if (newCounsellor.phone) {
         WhatsAppService.sendNotification(newCounsellor.phone, `Welcome to Behold Aspire, ${newCounsellor.name}! Your application is under review by our admin team.`).catch(err => console.error(err));
       }
+      // Send welcome email to counsellor
+      EmailService.sendWelcomeCounsellor(newCounsellor).catch(err => console.error('[Email Welcome Counsellor Error]:', err));
 
       res.status(201).json({
         success: true,
@@ -336,8 +341,14 @@ const AuthController = {
 
       // Send via WhatsApp to registered phone
       const message = `*BEHOLD Aspire — Password Reset*\n\nYour password reset code is:\n\n*${otpCode}*\n\nThis code is valid for 10 minutes. Do not share it with anyone.`;
-      await WhatsAppService.sendNotification(user.phone, message).catch(err => {
-        console.error('[WhatsApp reset OTP error]:', err);
+      if (user.phone) {
+        WhatsAppService.sendNotification(user.phone, message).catch(err => {
+          console.error('[WhatsApp reset OTP error]:', err);
+        });
+      }
+      // Also send OTP via email
+      EmailService.sendPasswordResetOTP(user.email, user.name, otpCode).catch(err => {
+        console.error('[Email OTP Error]:', err);
       });
 
       res.status(200).json({

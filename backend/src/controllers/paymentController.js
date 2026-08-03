@@ -2,6 +2,7 @@ const Razorpay = require('razorpay');
 const crypto = require('crypto');
 const StorageService = require('../services/storageService');
 const { validateBookingDetails } = require('../utils/bookingValidator');
+const EmailService = require('../services/emailService');
 
 const PaymentController = {
   // Create Razorpay Order
@@ -350,6 +351,15 @@ const PaymentController = {
         type: 'appointment_created',
         isRead: false
       });
+
+      // 8. Send payment receipt email
+      EmailService.sendPaymentReceipt({
+        user,
+        appointment: newAppointment,
+        counsellor,
+        amount: netTotal,
+        transactionId: razorpay_payment_id
+      }).catch(err => console.error('[Email Receipt Error]:', err));
 
       res.status(201).json({
         success: true,
