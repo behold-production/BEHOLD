@@ -220,8 +220,8 @@ export default function AuthModals({ isOpen, onClose }) {
    login: { title: 'Welcome Back', subtitle: 'Enter your details to sign in.' },
    register: { title: 'Create Account', subtitle: 'Join BEHOLD and book your sessions.' },
    forgot: {
-     email: { title: 'Forgot Password', subtitle: 'Enter your email to receive a reset code on WhatsApp.' },
-     verify: { title: 'Enter Reset Code', subtitle: `A 6-digit code was sent to your WhatsApp${maskedPhone ? ` (${maskedPhone})` : ''}.` },
+     email: { title: 'Forgot Password', subtitle: 'Enter your email to receive a reset code.' },
+     verify: { title: 'Enter Reset Code', subtitle: `A 6-digit code was sent to your email and WhatsApp${maskedPhone ? ` (${maskedPhone})` : ''}.` },
      success: { title: 'Password Reset!', subtitle: 'Your password has been changed successfully.' }
    }
  };
@@ -326,7 +326,7 @@ export default function AuthModals({ isOpen, onClose }) {
                    onClick={handleSendResetOtp}
                    className="w-full py-3.5 min-h-[48px] bg-zinc-900 hover:bg-zinc-800 text-white font-semibold text-sm rounded-full transition-all flex items-center justify-center gap-2 disabled:opacity-70 cursor-pointer border-none shadow-sm"
                  >
-                   {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Send Reset Code via WhatsApp'}
+                   {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Send Reset Code'}
                  </button>
                </>
              )}
@@ -337,7 +337,7 @@ export default function AuthModals({ isOpen, onClose }) {
                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-3.5 flex items-start gap-2.5">
                    <ShieldCheck className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" />
                    <p className="text-xs text-blue-800 font-medium leading-relaxed">
-                     A 6-digit code was sent to the WhatsApp number linked to <strong>{forgotEmail}</strong>. Enter it below along with your new password.
+                     A 6-digit code was sent to your email and the WhatsApp number linked to <strong>{forgotEmail}</strong>. Enter it below along with your new password.
                    </p>
                  </div>
 
@@ -553,8 +553,9 @@ export default function AuthModals({ isOpen, onClose }) {
              {mode === 'register' && (
                <div className="space-y-1.5">
                  <label className="text-xs font-bold text-zinc-500 block">Phone Number</label>
-                 <div className="relative">
-                   <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+                 <div className="relative flex items-center">
+                   <Phone className="absolute left-3 w-4 h-4 text-zinc-400" />
+                   <span className="absolute left-9 text-sm font-semibold text-zinc-700">+91</span>
                    <input
                      type="tel"
                      name="phone"
@@ -563,7 +564,7 @@ export default function AuthModals({ isOpen, onClose }) {
                      placeholder="10-digit mobile number"
                      autoComplete="tel"
                      maxLength={10}
-                     className="w-full pl-10 pr-4 py-3 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 focus:bg-white focus:border-brand focus:ring-1 focus:ring-brand outline-none transition-all"
+                     className="w-full pl-16 pr-4 py-3 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 focus:bg-white focus:border-brand focus:ring-1 focus:ring-brand outline-none transition-all"
                    />
                  </div>
                </div>

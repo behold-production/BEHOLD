@@ -11,7 +11,7 @@ const { google } = require('googleapis');
  */
 async function generateSessionMeetingLink({ counsellor, user, date, time, service, appointmentId, durationMinutes }) {
   let meetingLink = counsellor?.defaultMeetLink || '';
-  const fallbackRoomLink = `https://meet.google.com/new`;
+  const fallbackRoomLink = `https://meet.jit.si/behold-aspire-${appointmentId || Date.now()}`;
 
   if (counsellor && counsellor.googleRefreshToken) {
     try {
@@ -81,7 +81,7 @@ async function generateSessionMeetingLink({ counsellor, user, date, time, servic
     }
   }
 
-  // Fallback to counsellor defaultMeetLink or Google Meet instant link
+  // Fallback to counsellor defaultMeetLink or Jitsi instant link (prevents 'Ask to Join' completely)
   if (!meetingLink || meetingLink.trim() === '') {
     meetingLink = fallbackRoomLink;
   }
