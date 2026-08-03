@@ -748,6 +748,18 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
   }, []);
 
   const handleStepChange = (newStep) => {
+    if (newStep === 'payment') {
+      if (!selectedAdvisor || !selectedDate || !selectedTime) {
+        toast.error("Please select a date, time slot, and psychologist to proceed.");
+        return;
+      }
+      const status = getAdvisorAvailabilityStatus(selectedAdvisor.id, selectedDate, selectedTime);
+      if (status === 'Booked' || status === 'Unavailable') {
+        toast.error("This slot is already booked for this counsellor. Please select another slot.");
+        return;
+      }
+    }
+
     if (newStep === 'advisor') {
       const matchingAdvisors = advisors.filter(
         advisor => advisor.type === bookingService && (!advisor.modes || advisor.modes.includes(bookingMode))
@@ -972,6 +984,11 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     setPaymentStepText("Initializing secure checkout...");
 
     try {
+      const status = getAdvisorAvailabilityStatus(selectedAdvisor?.id, selectedDate, selectedTime);
+      if (status === 'Booked' || status === 'Unavailable') {
+        throw new Error("This slot is already booked for this counsellor. Please select another slot.");
+      }
+
       const bookingDetails = {
         counsellorId: selectedAdvisor ? selectedAdvisor.id : '',
         date: selectedDate,
