@@ -90,12 +90,7 @@ export default function BlogManagementTab() {
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const file = e.dataTransfer.files[0];
       if (file && file.type.startsWith('image/')) {
-        try {
-          const compressedBase64 = await compressImage(file);
-          setFormData({ ...formData, coverImageFile: null, coverImage: compressedBase64 });
-        } catch (error) {
-          toast.error('Failed to process image');
-        }
+        setFormData({ ...formData, coverImageFile: file, coverImage: URL.createObjectURL(file) });
       } else if (file) {
         toast.error('Please upload a valid image file');
       }
@@ -106,12 +101,7 @@ export default function BlogManagementTab() {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       if (file.type.startsWith('image/')) {
-        try {
-          const compressedBase64 = await compressImage(file);
-          setFormData({ ...formData, coverImageFile: null, coverImage: compressedBase64 });
-        } catch (error) {
-          toast.error('Failed to process image');
-        }
+        setFormData({ ...formData, coverImageFile: file, coverImage: URL.createObjectURL(file) });
       } else {
         toast.error('Please upload a valid image file');
       }
@@ -205,20 +195,26 @@ export default function BlogManagementTab() {
 
     setIsSubmitting(true);
     try {
-      const payload = {
-        title: formData.title,
-        slug: formData.slug,
-        category: formData.category,
-        excerpt: formData.excerpt,
-        readTime: formData.readTime,
-        coverImage: formData.coverImage,
-        authorName: formData.authorName,
-        authorRole: formData.authorRole,
-        authorAvatar: formData.authorAvatar,
-        tags: formData.tags,
-        content: formData.content,
-        isPublished: formData.isPublished
-      };
+      const fd = new FormData();
+      fd.append('title', formData.title);
+      fd.append('slug', formData.slug || '');
+      fd.append('category', formData.category);
+      fd.append('excerpt', formData.excerpt || '');
+      fd.append('readTime', formData.readTime);
+      fd.append('authorName', formData.authorName);
+      fd.append('authorRole', formData.authorRole);
+      fd.append('authorAvatar', formData.authorAvatar || '');
+      fd.append('tags', formData.tags);
+      fd.append('content', formData.content);
+      fd.append('isPublished', formData.isPublished);
+      
+      if (formData.coverImageFile) {
+        fd.append('coverImage', formData.coverImageFile);
+      } else if (formData.coverImage) {
+        fd.append('coverImage', formData.coverImage);
+      }
+
+      const payload = fd;
 
       if (editingBlog) {
         const res = await ApiService.updateBlog(editingBlog._id, payload);

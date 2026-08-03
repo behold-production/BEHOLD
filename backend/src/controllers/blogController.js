@@ -1,4 +1,6 @@
-const Blog = require('../models/Blog');
+const StorageService = require('../services/storageService');
+const cloudinary = require('../config/cloudinary');
+const { uploadToCloudinary } = require('../utils/cloudinaryHelper');
 
 // Helper to generate slug from title
 const generateSlug = (title) => {
@@ -13,25 +15,33 @@ class BlogController {
   static async getPublishedBlogs(req, res) {
     try {
       const { category, search, limit = 50 } = req.query;
-      const query = { isPublished: true };
+      let blogs = await StorageService.findAll('blogs', { isPublished: true });
 
       if (category && category !== 'All') {
-        query.category = category;
+        blogs = blogs.filter((b) => b.category === category);
       }
 
       if (search && search.trim() !== '') {
-        const regex = new RegExp(search.trim(), 'i');
-        query.$or = [
-          { title: regex },
-          { excerpt: regex },
-          { category: regex },
-          { tags: regex }
-        ];
+        const lowerSearch = search.trim().toLowerCase();
+        blogs = blogs.filter(
+          (b) =>
+            b.title?.toLowerCase().includes(lowerSearch) ||
+            b.excerpt?.toLowerCase().includes(lowerSearch) ||
+            b.category?.toLowerCase().includes(lowerSearch) ||
+            (b.tags && b.tags.some((t) => t.toLowerCase().includes(lowerSearch)))
+        );
       }
 
-      const blogs = await Blog.find(query)
-        .sort({ publishedAt: -1, createdAt: -1 })
-        .limit(parseInt(limit, 10));
+      // Sort by publishedAt/createdAt descending
+      blogs.sort((a, b) => {
+        const dateA = new Date(a.publishedAt || a.createdAt || 0);
+        const dateB = new Date(b.publishedAt || b.createdAt || 0);
+        return dateB - dateA;
+      });
+
+      if (limit) {
+        blogs = blogs.slice(0, parseInt(limit, 10));
+      }
 
       res.status(200).json({ success: true, count: blogs.length, data: blogs });
     } catch (error) {
@@ -44,9 +54,10 @@ class BlogController {
     try {
       const { slug } = req.params;
 
-      let blog = await Blog.findOne({ slug });
-      if (!blog && slug.match(/^[0-9a-fA-F]{24}$/)) {
-        blog = await Blog.findById(slug);
+      let blog = await StorageService.findOne('blogs', { slug });
+      if (!blog) {
+        // Fallback check if id was passed instead of slug
+        blog = await StorageService.findById('blogs', slug);
       }
 
       if (!blog) {
@@ -62,7 +73,12 @@ class BlogController {
   // GET /api/blogs/admin/all (Admin - all blogs including draft)
   static async getAllBlogsAdmin(req, res) {
     try {
-      const blogs = await Blog.find().sort({ createdAt: -1 });
+      const blogs = await StorageService.findAll('blogs');
+      blogs.sort((a, b) => {
+        const dateA = new Date(a.createdAt || 0);
+        const dateB = new Date(b.createdAt || 0);
+        return dateB - dateA;
+      });
       res.status(200).json({ success: true, count: blogs.length, data: blogs });
     } catch (error) {
       res.status(500).json({ success: false, message: error.message });
@@ -77,7 +93,7 @@ class BlogController {
         slug,
         excerpt,
         content,
-        coverImage,
+        coverImage, // might be a string if no file uploaded
         category,
         tags,
         authorName,
@@ -94,23 +110,32 @@ class BlogController {
       const postSlug = slug && slug.trim() ? generateSlug(slug) : generateSlug(title);
 
       // Check if slug already exists
-      const existing = await Blog.findOne({ slug: postSlug });
+      const existing = await StorageService.findOne('blogs', { slug: postSlug });
       const finalSlug = existing ? `${postSlug}-${Date.now().toString().slice(-4)}` : postSlug;
 
       let finalCoverImage = coverImage || '';
+      let coverImagePublicId = '';
+
+      // Upload to Cloudinary if file provided
+      if (req.file) {
+        const uploadResult = await uploadToCloudinary(req.file.buffer);
+        finalCoverImage = uploadResult.secure_url;
+        coverImagePublicId = uploadResult.public_id;
+      }
 
       const tagArray = Array.isArray(tags)
         ? tags
         : typeof tags === 'string'
-        ? tags.split(',').map(t => t.trim()).filter(Boolean)
+        ? tags.split(',').map((t) => t.trim()).filter(Boolean)
         : [];
 
-      const newBlog = await Blog.create({
+      const newBlogData = {
         title: title.trim(),
         slug: finalSlug,
         excerpt: excerpt || title,
         content,
         coverImage: finalCoverImage,
+        coverImagePublicId,
         category: category || 'Career Guidance',
         tags: tagArray,
         author: {
@@ -119,12 +144,15 @@ class BlogController {
           avatar: authorAvatar || ''
         },
         readTime: readTime || '5 min read',
-        isPublished: isPublished !== undefined ? Boolean(isPublished) : true,
+        isPublished: isPublished !== undefined ? String(isPublished) === 'true' || isPublished === true : true,
         publishedAt: new Date()
-      });
+      };
+
+      const newBlog = await StorageService.create('blogs', newBlogData);
 
       res.status(201).json({ success: true, data: newBlog });
     } catch (error) {
+      console.error('[Create Blog Error]', error);
       res.status(500).json({ success: false, message: error.message });
     }
   }
@@ -133,7 +161,7 @@ class BlogController {
   static async updateBlog(req, res) {
     try {
       const { id } = req.params;
-      const blog = await Blog.findById(id);
+      const blog = await StorageService.findById('blogs', id);
 
       if (!blog) {
         return res.status(404).json({ success: false, message: 'Blog post not found' });
@@ -144,7 +172,7 @@ class BlogController {
         slug,
         excerpt,
         content,
-        coverImage,
+        coverImage, // fallback if no file
         category,
         tags,
         authorName,
@@ -154,38 +182,61 @@ class BlogController {
         isPublished
       } = req.body;
 
-      if (title) blog.title = title.trim();
+      const updates = {};
+
+      if (title) updates.title = title.trim();
       if (slug && slug.trim()) {
         const newSlug = generateSlug(slug);
         if (newSlug !== blog.slug) {
-          const existing = await Blog.findOne({ slug: newSlug, _id: { $ne: id } });
-          blog.slug = existing ? `${newSlug}-${Date.now().toString().slice(-4)}` : newSlug;
+          const existing = await StorageService.findOne('blogs', { slug: newSlug });
+          updates.slug = existing && existing.id !== id ? `${newSlug}-${Date.now().toString().slice(-4)}` : newSlug;
         }
       }
-      if (excerpt !== undefined) blog.excerpt = excerpt;
-      if (content !== undefined) blog.content = content;
-      if (category !== undefined) blog.category = category;
-      if (readTime !== undefined) blog.readTime = readTime;
-      if (isPublished !== undefined) blog.isPublished = String(isPublished) === 'true' || isPublished === true;
+      
+      if (excerpt !== undefined) updates.excerpt = excerpt;
+      if (content !== undefined) updates.content = content;
+      if (category !== undefined) updates.category = category;
+      if (readTime !== undefined) updates.readTime = readTime;
+      if (isPublished !== undefined) updates.isPublished = String(isPublished) === 'true' || isPublished === true;
 
-      if (coverImage !== undefined) blog.coverImage = coverImage;
+      // Handle Image Update
+      if (req.file) {
+        // Delete old from Cloudinary
+        if (blog.coverImagePublicId) {
+          try {
+            await cloudinary.uploader.destroy(blog.coverImagePublicId);
+          } catch (err) {
+            console.error('[Cloudinary Delete Blog Image Error]:', err);
+          }
+        }
+        // Upload new
+        const uploadResult = await uploadToCloudinary(req.file.buffer);
+        updates.coverImage = uploadResult.secure_url;
+        updates.coverImagePublicId = uploadResult.public_id;
+      } else if (coverImage !== undefined) {
+        updates.coverImage = coverImage;
+      }
 
       if (tags !== undefined) {
-        blog.tags = Array.isArray(tags)
+        updates.tags = Array.isArray(tags)
           ? tags
           : typeof tags === 'string'
-          ? tags.split(',').map(t => t.trim()).filter(Boolean)
+          ? tags.split(',').map((t) => t.trim()).filter(Boolean)
           : blog.tags;
       }
 
-      if (authorName !== undefined) blog.author.name = authorName;
-      if (authorRole !== undefined) blog.author.role = authorRole;
-      if (authorAvatar !== undefined) blog.author.avatar = authorAvatar;
+      if (authorName !== undefined || authorRole !== undefined || authorAvatar !== undefined) {
+        updates.author = { ...blog.author };
+        if (authorName !== undefined) updates.author.name = authorName;
+        if (authorRole !== undefined) updates.author.role = authorRole;
+        if (authorAvatar !== undefined) updates.author.avatar = authorAvatar;
+      }
 
-      await blog.save();
+      const updatedBlog = await StorageService.update('blogs', id, updates);
 
-      res.status(200).json({ success: true, data: blog });
+      res.status(200).json({ success: true, data: updatedBlog });
     } catch (error) {
+      console.error('[Update Blog Error]', error);
       res.status(500).json({ success: false, message: error.message });
     }
   }
@@ -194,10 +245,25 @@ class BlogController {
   static async deleteBlog(req, res) {
     try {
       const { id } = req.params;
-      const deleted = await Blog.findByIdAndDelete(id);
+      const blog = await StorageService.findById('blogs', id);
+      
+      if (!blog) {
+        return res.status(404).json({ success: false, message: 'Blog post not found' });
+      }
+
+      if (blog.coverImagePublicId) {
+        try {
+          await cloudinary.uploader.destroy(blog.coverImagePublicId);
+        } catch (err) {
+          console.error('[Cloudinary Delete Blog Image Error]:', err);
+        }
+      }
+
+      const deleted = await StorageService.delete('blogs', id);
       if (!deleted) {
         return res.status(404).json({ success: false, message: 'Blog post not found' });
       }
+      
       res.status(200).json({ success: true, message: 'Blog post deleted successfully' });
     } catch (error) {
       res.status(500).json({ success: false, message: error.message });

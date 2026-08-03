@@ -1112,16 +1112,18 @@ const ApiService = {
   },
 
   async createBlog(payload) {
+    const isFormData = payload instanceof FormData;
     return await request('/blogs', {
       method: 'POST',
-      body: JSON.stringify(payload)
+      body: isFormData ? payload : JSON.stringify(payload)
     });
   },
 
   async updateBlog(id, payload) {
+    const isFormData = payload instanceof FormData;
     return await request(`/blogs/${id}`, {
       method: 'PUT',
-      body: JSON.stringify(payload)
+      body: isFormData ? payload : JSON.stringify(payload)
     });
   },
 
