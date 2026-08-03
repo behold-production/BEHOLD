@@ -900,19 +900,39 @@ const AdminController = {
   // Purge all items expired beyond 30 days from trash
   async purgeExpiredTrash(req, res, next) {
     try {
-      const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-      const Counsellor = require('../models/Counsellor');
-      const User = require('../models/User');
-      const Appointment = require('../models/Appointment');
-      const [c, u, a] = await Promise.all([
-        Counsellor.deleteMany({ isDeleted: true, deletedAt: { $lt: thirtyDaysAgo } }),
-        User.deleteMany({ isDeleted: true, deletedAt: { $lt: thirtyDaysAgo } }),
-        Appointment.deleteMany({ isDeleted: true, deletedAt: { $lt: thirtyDaysAgo } })
-      ]);
+      const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).getTime();
+      
+      const counsellors = await StorageService.findAll('counsellors');
+      const users = await StorageService.findAll('users');
+      const appointments = await StorageService.findAll('appointments');
+
+      let cCount = 0, uCount = 0, aCount = 0;
+
+      for (const c of counsellors) {
+        if (c.isDeleted && new Date(c.deletedAt).getTime() < thirtyDaysAgo) {
+          await StorageService.delete('counsellors', c.id);
+          cCount++;
+        }
+      }
+
+      for (const u of users) {
+        if (u.isDeleted && new Date(u.deletedAt).getTime() < thirtyDaysAgo) {
+          await StorageService.delete('users', u.id);
+          uCount++;
+        }
+      }
+
+      for (const a of appointments) {
+        if (a.isDeleted && new Date(a.deletedAt).getTime() < thirtyDaysAgo) {
+          await StorageService.delete('appointments', a.id);
+          aCount++;
+        }
+      }
+
       res.status(200).json({
         success: true,
         message: 'Expired trash purged successfully',
-        data: { counsellorsRemoved: c.deletedCount, usersRemoved: u.deletedCount, appointmentsRemoved: a.deletedCount }
+        data: { counsellorsRemoved: cCount, usersRemoved: uCount, appointmentsRemoved: aCount }
       });
     } catch (error) {
       next(error);
@@ -1489,7 +1509,7 @@ const AdminController = {
         });
       }
 
-      const user = await User.findOne({ id: userId });
+      const user = await StorageService.findById('users', userId);
       if (!user) {
         return res.status(404).json({ success: false, message: 'Student user not found' });
       }
@@ -1508,13 +1528,10 @@ const AdminController = {
         uploadedAt: new Date()
       };
 
-      if (!user.cigiResults) {
-        user.cigiResults = [];
-      }
-      user.cigiResults.push(newResult);
-      await user.save();
+      const cigiResults = Array.isArray(user.cigiResults) ? [...user.cigiResults, newResult] : [newResult];
+      const updated = await StorageService.update('users', userId, { cigiResults });
 
-      const { password, ...userData } = user.toObject();
+      const { password, ...userData } = updated || user;
 
       res.status(200).json({
         success: true,
@@ -1532,18 +1549,18 @@ const AdminController = {
       const { userId, resultId } = req.params;
       const { testDate, testTime, note } = req.body;
 
-      const user = await User.findOne({ id: userId });
+      const user = await StorageService.findById('users', userId);
       if (!user) {
         return res.status(404).json({ success: false, message: 'Student user not found' });
       }
 
-      const Cigis = user.cigiResults || [];
+      const Cigis = user.cigiResults ? [...user.cigiResults] : [];
       const resultIndex = Cigis.findIndex((r) => r.id === resultId);
       if (resultIndex === -1) {
         return res.status(404).json({ success: false, message: 'Result record not found' });
       }
 
-      const targetResult = Cigis[resultIndex];
+      const targetResult = { ...Cigis[resultIndex] };
 
       // If a new file is uploaded, replace the existing file
       if (req.file) {
@@ -1568,11 +1585,11 @@ const AdminController = {
       if (testTime !== undefined) targetResult.testTime = testTime;
       if (note !== undefined) targetResult.note = note;
 
-      // Mark the array element as modified
-      user.markModified('cigiResults');
-      await user.save();
+      Cigis[resultIndex] = targetResult;
+      
+      const updated = await StorageService.update('users', userId, { cigiResults: Cigis });
 
-      const { password, ...userData } = user.toObject();
+      const { password, ...userData } = updated || user;
 
       res.status(200).json({
         success: true,
@@ -1589,12 +1606,12 @@ const AdminController = {
     try {
       const { userId, resultId } = req.params;
 
-      const user = await User.findOne({ id: userId });
+      const user = await StorageService.findById('users', userId);
       if (!user) {
         return res.status(404).json({ success: false, message: 'Student user not found' });
       }
 
-      const Cigis = user.cigiResults || [];
+      const Cigis = user.cigiResults ? [...user.cigiResults] : [];
       const resultIndex = Cigis.findIndex((r) => r.id === resultId);
       if (resultIndex === -1) {
         return res.status(404).json({ success: false, message: 'Result record not found' });
@@ -1612,11 +1629,10 @@ const AdminController = {
       }
 
       Cigis.splice(resultIndex, 1);
-      user.cigiResults = Cigis;
-      user.markModified('cigiResults');
-      await user.save();
+      
+      const updated = await StorageService.update('users', userId, { cigiResults: Cigis });
 
-      const { password, ...userData } = user.toObject();
+      const { password, ...userData } = updated || user;
 
       res.status(200).json({
         success: true,
@@ -1640,7 +1656,7 @@ const AdminController = {
         });
       }
 
-      const user = await User.findOne({ id: userId });
+      const user = await StorageService.findById('users', userId);
       if (!user) {
         return res.status(404).json({ success: false, message: 'Student user not found' });
       }
@@ -1657,11 +1673,12 @@ const AdminController = {
       // Upload and compress new profile pic
       const uploadResult = await uploadProfilePicToCloudinary(req.file.buffer);
 
-      user.profilePic = uploadResult.secure_url;
-      user.profilePicPublicId = uploadResult.public_id;
-      await user.save();
+      const updated = await StorageService.update('users', userId, {
+        profilePic: uploadResult.secure_url,
+        profilePicPublicId: uploadResult.public_id
+      });
 
-      const { password, ...userData } = user.toObject();
+      const { password, ...userData } = updated || user;
 
       res.status(200).json({
         success: true,
@@ -1685,7 +1702,7 @@ const AdminController = {
         });
       }
 
-      const counsellor = await Counsellor.findOne({ id: counsellorId });
+      const counsellor = await StorageService.findById('counsellors', counsellorId);
       if (!counsellor) {
         return res.status(404).json({ success: false, message: 'Psychologist not found' });
       }
@@ -1702,11 +1719,12 @@ const AdminController = {
       // Upload and compress new profile pic
       const uploadResult = await uploadProfilePicToCloudinary(req.file.buffer);
 
-      counsellor.profilePic = uploadResult.secure_url;
-      counsellor.profilePicPublicId = uploadResult.public_id;
-      await counsellor.save();
+      const updated = await StorageService.update('counsellors', counsellorId, {
+        profilePic: uploadResult.secure_url,
+        profilePicPublicId: uploadResult.public_id
+      });
 
-      const { password, ...counsellorData } = counsellor.toObject();
+      const { password, ...counsellorData } = updated || counsellor;
 
       res.status(200).json({
         success: true,

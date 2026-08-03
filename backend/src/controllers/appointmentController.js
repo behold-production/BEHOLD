@@ -325,8 +325,7 @@ const AppointmentController = {
         }
 
         // 3. Daily limit check (3 reschedules max)
-        const User = require('../models/User');
-        const studentUser = await User.findOne({ id: appointment.userId });
+        const studentUser = await StorageService.findById('users', appointment.userId);
         if (studentUser) {
           const todayStr = new Date().toISOString().split('T')[0];
           let count = studentUser.rescheduleCountToday || 0;
@@ -344,10 +343,10 @@ const AppointmentController = {
           }
 
           const newCount = count + 1;
-          await User.updateOne(
-            { id: appointment.userId },
-            { $set: { rescheduleCountToday: newCount, lastRescheduleDate: todayStr } }
-          );
+          await StorageService.update('users', appointment.userId, {
+            rescheduleCountToday: newCount,
+            lastRescheduleDate: todayStr
+          });
 
           if (newCount === 2) {
             warning = 'You have only 1 reschedule remaining for today.';

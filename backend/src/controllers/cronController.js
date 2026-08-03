@@ -1,6 +1,4 @@
-const Appointment = require('../models/Appointment');
-const User = require('../models/User');
-const Counsellor = require('../models/Counsellor');
+const StorageService = require('../services/storageService');
 const WhatsAppService = require('../services/whatsappService');
 
 exports.sendDailyReminders = async (req, res) => {
@@ -8,17 +6,18 @@ exports.sendDailyReminders = async (req, res) => {
     const today = new Date();
     const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
     
-    const appointments = await Appointment.find({
+    const allAppointments = await StorageService.findAll('appointments', {
       date: todayStr,
-      status: { $in: ['PENDING', 'APPROVED'] },
       isDeleted: false
     });
+    
+    const appointments = allAppointments.filter(a => a.status === 'PENDING' || a.status === 'APPROVED');
 
     let sentCount = 0;
     
     for (const appt of appointments) {
-      const student = await User.findOne({ id: appt.userId });
-      const counsellor = await Counsellor.findOne({ id: appt.counsellorId });
+      const student = await StorageService.findById('users', appt.userId);
+      const counsellor = await StorageService.findById('counsellors', appt.counsellorId);
       
       const details = {
         date: appt.date,

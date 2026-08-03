@@ -293,8 +293,7 @@ const UserController = {
         });
       }
 
-      // Find user
-      const user = await User.findOne({ id: userId });
+      const user = await StorageService.findById('users', userId);
       if (!user) {
         return res.status(404).json({ success: false, message: 'User not found' });
       }
@@ -314,13 +313,11 @@ const UserController = {
         uploadedAt: new Date()
       };
 
-      if (!user.cigiResults) {
-        user.cigiResults = [];
-      }
-      user.cigiResults.push(newResult);
-      await user.save();
+      const cigiResults = Array.isArray(user.cigiResults) ? [...user.cigiResults, newResult] : [newResult];
+      
+      const updated = await StorageService.update('users', userId, { cigiResults });
 
-      const { password, ...userData } = user.toObject();
+      const { password, ...userData } = updated || user;
 
       res.status(200).json({
         success: true,
@@ -338,9 +335,13 @@ const UserController = {
       const userId = req.user.id;
       const { resultId } = req.params;
 
-      const user = await User.findOne({ id: userId });
+      const user = await StorageService.findById('users', userId);
       if (!user) {
         return res.status(404).json({ success: false, message: 'User not found' });
+      }
+
+      if (!Array.isArray(user.cigiResults)) {
+        return res.status(404).json({ success: false, message: 'Result record not found' });
       }
 
       const resultIndex = user.cigiResults.findIndex((r) => r.id === resultId);
@@ -359,10 +360,12 @@ const UserController = {
         }
       }
 
-      user.cigiResults.splice(resultIndex, 1);
-      await user.save();
+      const updatedCigiResults = [...user.cigiResults];
+      updatedCigiResults.splice(resultIndex, 1);
+      
+      const updated = await StorageService.update('users', userId, { cigiResults: updatedCigiResults });
 
-      const { password, ...userData } = user.toObject();
+      const { password, ...userData } = updated || user;
 
       res.status(200).json({
         success: true,
@@ -386,7 +389,7 @@ const UserController = {
         });
       }
 
-      const user = await User.findOne({ id: userId });
+      const user = await StorageService.findById('users', userId);
       if (!user) {
         return res.status(404).json({ success: false, message: 'User not found' });
       }
@@ -403,11 +406,12 @@ const UserController = {
       // Upload and compress new profile pic
       const uploadResult = await uploadProfilePicToCloudinary(req.file.buffer);
 
-      user.profilePic = uploadResult.secure_url;
-      user.profilePicPublicId = uploadResult.public_id;
-      await user.save();
+      const updated = await StorageService.update('users', userId, {
+        profilePic: uploadResult.secure_url,
+        profilePicPublicId: uploadResult.public_id
+      });
 
-      const { password, ...userData } = user.toObject();
+      const { password, ...userData } = updated || user;
 
       res.status(200).json({
         success: true,

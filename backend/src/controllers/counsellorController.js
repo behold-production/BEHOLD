@@ -183,7 +183,7 @@ const CounsellorController = {
         });
       }
 
-      const counsellor = await Counsellor.findOne({ id: counsellorId });
+      const counsellor = await StorageService.findById('counsellors', counsellorId);
       if (!counsellor) {
         return res.status(404).json({ success: false, message: 'Counsellor not found' });
       }
@@ -200,11 +200,12 @@ const CounsellorController = {
       // Upload and compress new profile pic
       const uploadResult = await uploadProfilePicToCloudinary(req.file.buffer);
 
-      counsellor.profilePic = uploadResult.secure_url;
-      counsellor.profilePicPublicId = uploadResult.public_id;
-      await counsellor.save();
+      const updated = await StorageService.update('counsellors', counsellorId, {
+        profilePic: uploadResult.secure_url,
+        profilePicPublicId: uploadResult.public_id
+      });
 
-      const { password, ...counsellorData } = counsellor.toObject();
+      const { password, ...counsellorData } = updated || counsellor;
 
       res.status(200).json({
         success: true,
