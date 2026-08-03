@@ -47,8 +47,11 @@ async function generateSessionMeetingLink({ counsellor, user, date, time, servic
           description: `Service: ${service || 'Psychological Counselling'}\nMode: ONLINE (Google Meet)\n\nJoin Portals:\n- Student Portal: ${frontendUrl}/profile\n- Advisor Console: ${frontendUrl}/counsellor`,
           start: { dateTime: startTime.toISOString() },
           end: { dateTime: endTime.toISOString() },
-          organizer: { email: counsellor.email, displayName: counsellor.name, self: true },
-          attendees: user && user.email ? [{ email: user.email, displayName: user.name, responseStatus: 'accepted' }] : [],
+          organizer: { email: counsellor.googleEmail || counsellor.email, displayName: counsellor.name, self: true },
+          attendees: [
+            ...(user && user.email ? [{ email: user.email, displayName: user.name, responseStatus: 'accepted' }] : []),
+            { email: counsellor.googleEmail || counsellor.email, displayName: counsellor.name, responseStatus: 'accepted' }
+          ],
           guestsCanModify: true,
           guestsCanInviteOthers: true,
           guestsCanSeeOtherGuests: true,
