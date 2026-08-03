@@ -1,21 +1,16 @@
 const axios = require('axios');
 
 /**
- * MSG91 WhatsApp OTP Service
+ * Meta Cloud API WhatsApp Service
  * ─────────────────────────────────────────────────────────────────────────────
- * Replaces the Meta Cloud API WhatsApp integration with MSG91.
- * MSG91 is used for:
- *   - Sending OTPs via WhatsApp (sendOTP)
- *   - Sending general text notifications (sendNotification)
- *   - Sending booking alerts (sendBookingAlert)
- *   - Sending appointment reminders (sendDayOfReminder)
- *
+ * Uses the official Meta WhatsApp Cloud API.
+ * 
  * Required .env variables:
- *   MSG91_AUTH_KEY        — Your MSG91 Auth Key (from MSG91 dashboard)
- *   MSG91_OTP_TEMPLATE_ID — Your MSG91 WhatsApp OTP template ID
- *   MSG91_NOTIF_TEMPLATE_ID — Your MSG91 WhatsApp notification template ID (optional)
- *   MSG91_SENDER_ID       — Your MSG91 registered WhatsApp number (11-digit, no +)
- *                           e.g. 917012345678
+ *   META_WA_ACCESS_TOKEN
+ *   META_WA_PHONE_NUMBER_ID
+ *   META_WA_OTP_TEMPLATE (default: 'hello_world')
+ *   META_WA_NOTIF_TEMPLATE (default: 'hello_world')
+ *   META_WA_API_VERSION (default: 'v19.0')
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
@@ -25,23 +20,50 @@ class WhatsAppService {
   }
 
   _init() {
-    this.authKey = (process.env.MSG91_AUTH_KEY || '').trim();
-    this.otpTemplateId = (process.env.MSG91_OTP_TEMPLATE_ID || '').trim();
-    this.notifTemplateId = (process.env.MSG91_NOTIF_TEMPLATE_ID || '').trim();
-    this.senderId = (process.env.MSG91_SENDER_ID || '').trim();
+    this.token = (
+      process.env.META_WA_ACCESS_TOKEN ||
+      process.env.WHATSAPP_ACCESS_TOKEN ||
+      process.env.META_WHATSAPP_TOKEN ||
+      process.env.ACCESS_TOKEN ||
+      ''
+    ).trim();
 
-    // Service is only active if MSG91_AUTH_KEY is configured
+    this.phoneId = (
+      process.env.META_WA_PHONE_NUMBER_ID ||
+      process.env.WHATSAPP_PHONE_NUMBER_ID ||
+      process.env.META_WHATSAPP_PHONE_NUMBER_ID ||
+      process.env.WHATSAPP_BUSINESS_PHONE_NUMBER_ID ||
+      ''
+    ).trim();
+
+    this.otpTemplate = (
+      process.env.META_WA_OTP_TEMPLATE ||
+      process.env.WHATSAPP_OTP_TEMPLATE ||
+      'hello_world'
+    ).trim();
+
+    this.notifTemplate = (
+      process.env.META_WA_NOTIF_TEMPLATE ||
+      process.env.WHATSAPP_NOTIF_TEMPLATE ||
+      'hello_world'
+    ).trim();
+
+    this.apiVersion = (
+      process.env.META_WA_API_VERSION ||
+      process.env.WHATSAPP_API_VERSION ||
+      'v19.0'
+    ).trim();
+
     this.isConfigured = Boolean(
-      this.authKey &&
-      !this.authKey.includes('your_msg91') &&
-      this.otpTemplateId &&
-      !this.otpTemplateId.includes('your_')
+      this.token && 
+      !this.token.includes('your_meta') && 
+      this.phoneId && 
+      !this.phoneId.includes('your_phone')
     );
   }
 
   /**
-   * Format phone number to E.164 without '+' (MSG91 requirement)
-   * Assumes Indian numbers (+91) if 10 digits provided.
+   * Helper to format phone number to E.164 without '+' symbol (Meta API requirement)
    */
   _formatPhoneNumber(phone) {
     if (!phone) return null;
@@ -53,105 +75,110 @@ class WhatsAppService {
   }
 
   /**
-   * Send OTP via MSG91 WhatsApp
-   * MSG91 Send OTP API: POST https://api.msg91.com/api/v5/whatsapp/whatsapp-otp-send-otp
+   * Core method to send request to Meta Cloud API
    */
-  async sendOTP(phone, code) {
+  async _sendRequest(payload) {
     this._init();
-    const formattedPhone = this._formatPhoneNumber(phone);
-    if (!formattedPhone) return { success: false, error: 'Invalid phone number' };
 
     if (!this.isConfigured) {
-      console.log('------------------------------------------------------------');
-      console.log('📱 MSG91 WHATSAPP OTP LOG [Dev/Mock Mode — Not Configured]');
-      console.log('To:   ', formattedPhone);
-      console.log('OTP:  ', code);
-      console.log('------------------------------------------------------------');
+      console.log('----------------------------------------------------');
+      console.log('📱 WHATSAPP META API LOG (Dev/Mock Mode)');
+      console.log('To:      ', payload.to);
+      console.log('Type:    ', payload.type);
+      console.log('Payload: ', JSON.stringify(payload.template || payload.text, null, 2));
+      console.log('----------------------------------------------------');
       return { success: true, mock: true };
     }
 
     try {
       const response = await axios.post(
-        'https://api.msg91.com/api/v5/whatsapp/whatsapp-otp-send-otp',
-        {
-          mobile: formattedPhone,
-          otp: code,
-          template_id: this.otpTemplateId,
-        },
+        `https://graph.facebook.com/${this.apiVersion}/${this.phoneId}/messages`,
+        payload,
         {
           headers: {
-            authkey: this.authKey,
-            'Content-Type': 'application/json',
+            Authorization: `Bearer ${this.token}`,
+            'Content-Type': 'application/json'
           },
-          timeout: 30000,
+          timeout: 30000
         }
       );
-
-      console.log(`[MSG91 OTP Success] Sent to ${formattedPhone}:`, response.data);
+      
+      console.log(`[WhatsApp Success] Sent to ${payload.to}:`, response.data);
       return { success: true, data: response.data };
     } catch (error) {
       const errData = error.response?.data || error.message;
-      console.error('[MSG91 OTP Error]:', JSON.stringify(errData, null, 2));
+      console.error('[WhatsApp Error]:', JSON.stringify(errData, null, 2));
       return { success: false, error: errData };
     }
   }
 
-  /**
-   * Send a general text notification.
-   * Uses MSG91 WhatsApp flow API if a notification template is configured,
-   * otherwise falls back to a simple text message via MSG91 SMS (as a safety net).
-   */
-  async sendNotification(phone, message) {
-    this._init();
+  async sendOTP(phone, code) {
     const formattedPhone = this._formatPhoneNumber(phone);
     if (!formattedPhone) return { success: false, error: 'Invalid phone number' };
 
-    if (!this.isConfigured) {
-      console.log('------------------------------------------------------------');
-      console.log('📱 MSG91 NOTIFICATION LOG [Dev/Mock Mode — Not Configured]');
-      console.log('To:     ', formattedPhone);
-      console.log('Message:', message);
-      console.log('------------------------------------------------------------');
-      return { success: true, mock: true };
-    }
-
-    // If a dedicated notification template is set, use MSG91 WhatsApp Flow API
-    if (this.notifTemplateId) {
-      try {
-        const response = await axios.post(
-          'https://api.msg91.com/api/v5/whatsapp/whatsapp-otp-send-otp',
+    const payload = {
+      messaging_product: 'whatsapp',
+      to: formattedPhone,
+      type: 'template',
+      template: {
+        name: this.otpTemplate,
+        language: { code: 'en' },
+        components: [
           {
-            mobile: formattedPhone,
-            otp: message, // MSG91 passes this as the variable in the template
-            template_id: this.notifTemplateId,
+            type: 'body',
+            parameters: [
+              {
+                type: 'text',
+                text: code
+              }
+            ]
           },
           {
-            headers: {
-              authkey: this.authKey,
-              'Content-Type': 'application/json',
-            },
-            timeout: 30000,
+            type: 'button',
+            sub_type: 'url',
+            index: '0',
+            parameters: [
+              {
+                type: 'text',
+                text: code
+              }
+            ]
           }
-        );
-        console.log(`[MSG91 Notification Success] Sent to ${formattedPhone}:`, response.data);
-        return { success: true, data: response.data };
-      } catch (error) {
-        const errData = error.response?.data || error.message;
-        console.error('[MSG91 Notification Error]:', JSON.stringify(errData, null, 2));
-        return { success: false, error: errData };
+        ]
       }
-    }
+    };
 
-    // Fallback: Send SMS if WhatsApp notification template is not configured
-    console.log('[MSG91] No notification template set. Logging notification only.');
-    console.log('Notification to', formattedPhone, ':', message);
-    return { success: true, mock: true };
+    return this._sendRequest(payload);
   }
 
-  /**
-   * Send an appointment booking alert
-   * action can be: 'created' | 'approved' | 'rescheduled' | 'cancelled'
-   */
+  async sendNotification(phone, message) {
+    const formattedPhone = this._formatPhoneNumber(phone);
+    if (!formattedPhone) return { success: false, error: 'Invalid phone number' };
+
+    const payload = {
+      messaging_product: 'whatsapp',
+      to: formattedPhone,
+      type: 'template',
+      template: {
+        name: this.notifTemplate,
+        language: { code: 'en' },
+        components: [
+          {
+            type: 'body',
+            parameters: [
+              {
+                type: 'text',
+                text: message.substring(0, 1024)
+              }
+            ]
+          }
+        ]
+      }
+    };
+
+    return this._sendRequest(payload);
+  }
+
   async sendBookingAlert(phone, action, details) {
     const formattedDate = details.date || 'N/A';
     const formattedTime = details.time || 'N/A';
@@ -181,9 +208,6 @@ class WhatsAppService {
     return this.sendNotification(phone, summary);
   }
 
-  /**
-   * Send a day-of appointment reminder
-   */
   async sendDayOfReminder(phone, details) {
     const otherParty = details.counsellorName
       ? `Counsellor: ${details.counsellorName}`
@@ -193,7 +217,7 @@ class WhatsAppService {
   }
 
   async getAccountStatus() {
-    return { success: true, provider: 'MSG91', isConfigured: this.isConfigured };
+    return { success: true, provider: 'Meta Cloud API', isConfigured: this.isConfigured };
   }
 }
 

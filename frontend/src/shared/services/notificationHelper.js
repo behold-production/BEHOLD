@@ -131,13 +131,24 @@ export const syncAndNotifyLocal = async (userId, userRole) => {
         if (stored) notifiedList = JSON.parse(stored);
       } catch (e) {}
 
-      const unreadNotifications = res.data.filter(n => !n.isRead);
-      const newNotifications = unreadNotifications.filter(n => !notifiedList.includes(n.id || n._id));
+      // Show alerts for all unread notifications that haven't been notified yet
+      // For global broadcasts (recipientId === 'ALL'), isRead on the server is not used
+      // because it would affect all users. We rely solely on localStorage for globals.
+      const allNotifications = res.data;
+      const newNotifications = allNotifications.filter(n => {
+        const notifId = n.id || n._id;
+        if (notifiedList.includes(notifId)) return false; // Already shown to this user
+        const isGlobal = n.recipientId === 'ALL';
+        if (isGlobal) return true; // Show globals if not in localStorage
+        return !n.isRead; // Show direct notifications if unread
+      });
 
       if (newNotifications.length > 0) {
         // Trigger a notification for each new alert
         newNotifications.forEach(n => {
           const notifId = n.id || n._id;
+          const isGlobal = n.recipientId === 'ALL';
+
           sendLocalNotification(n.title, n.message, {
             tag: notifId,
             onClickUrl: userRole.toUpperCase() === 'ADMIN' || userRole.toUpperCase() === 'SUPER_ADMIN' || userRole.toUpperCase() === 'SUB_ADMIN'
@@ -147,15 +158,18 @@ export const syncAndNotifyLocal = async (userId, userRole) => {
                 : '/profile?tab=booked'
           });
           notifiedList.push(notifId);
-          // Sync read status to backend database
-          ApiService.markNotificationRead(notifId).catch(err => {
-            console.error(`Failed to mark notification ${notifId} as read on backend:`, err);
-          });
+
+          // Only call markAsRead on the backend for direct (non-global) notifications
+          if (!isGlobal) {
+            ApiService.markNotificationRead(notifId).catch(err => {
+              console.error(`Failed to mark notification ${notifId} as read on backend:`, err);
+            });
+          }
         });
 
-        // Save back to localStorage (keep max 100 items to avoid swelling)
-        if (notifiedList.length > 100) {
-          notifiedList = notifiedList.slice(notifiedList.length - 100);
+        // Save back to localStorage (keep max 200 items to avoid swelling)
+        if (notifiedList.length > 200) {
+          notifiedList = notifiedList.slice(notifiedList.length - 200);
         }
         localStorage.setItem(`behold_notified_${userId}`, JSON.stringify(notifiedList));
       }

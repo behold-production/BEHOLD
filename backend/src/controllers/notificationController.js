@@ -5,7 +5,7 @@ const NotificationController = {
   async getNotifications(req, res, next) {
     try {
       const recipientId = req.user.id;
-      const recipientRole = req.user.role;
+      const recipientRole = req.user.role; // e.g. 'user', 'counsellor', 'admin'
 
       // Find direct notifications + global notifications
       const list = await StorageService.findAll('notifications');
@@ -13,8 +13,10 @@ const NotificationController = {
       const filtered = list
         .filter(
           (n) =>
+            // Direct Notification
             (n.recipientId === recipientId && n.recipientRole === recipientRole) ||
-            (n.recipientId === 'ALL' && n.recipientRole === recipientRole)
+            // Global Notification
+            (n.recipientId === 'ALL' && (n.recipientRole === recipientRole || n.recipientRole === 'ALL' || n.recipientRole === 'all'))
         )
         .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
 
@@ -38,14 +40,19 @@ const NotificationController = {
         return res.status(404).json({ success: false, message: 'Notification not found' });
       }
 
-      // Check authorization (recipient must match user id or be a global notification)
+      // Check authorization
       const isAuthorized = notification.recipientId === 'ALL' || notification.recipientId === req.user.id;
 
       if (!isAuthorized) {
         return res.status(403).json({ success: false, message: 'Unauthorized' });
       }
 
-      const updated = await StorageService.update('notifications', id, { isRead: true });
+      let updated = notification;
+      // Do NOT set isRead = true for global notifications, as they are shared across users.
+      // The frontend tracks read state in localStorage for globals.
+      if (notification.recipientId !== 'ALL') {
+        updated = await StorageService.update('notifications', id, { isRead: true });
+      }
 
       res.status(200).json({
         success: true,
@@ -67,8 +74,8 @@ const NotificationController = {
 
       let updatedCount = 0;
       for (const n of list) {
-        const isMatch =
-          (n.recipientId === recipientId || n.recipientId === 'ALL') && n.recipientRole === recipientRole && !n.isRead;
+        // We only modify direct notifications
+        const isMatch = n.recipientId === recipientId && n.recipientRole === recipientRole && !n.isRead;
 
         if (isMatch) {
           await StorageService.update('notifications', n.id, { isRead: true });
@@ -78,7 +85,7 @@ const NotificationController = {
 
       res.status(200).json({
         success: true,
-        message: `Successfully marked ${updatedCount} notifications as read`
+        message: `Successfully marked ${updatedCount} direct notifications as read`
       });
     } catch (error) {
       next(error);
