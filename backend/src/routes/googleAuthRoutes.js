@@ -74,8 +74,12 @@ const getFrontendUrl = (req) => {
   if (host.includes('vercel.app')) {
     return `${protocol}://${host}`;
   }
-  if (process.env.FRONTEND_URL && !process.env.FRONTEND_URL.includes('localhost')) {
-    return process.env.FRONTEND_URL.replace(/\/$/, '');
+  if (process.env.FRONTEND_URL) {
+    if (process.env.NODE_ENV === 'production' && process.env.FRONTEND_URL.includes('localhost')) {
+      // Ignore localhost frontend url in production
+    } else {
+      return process.env.FRONTEND_URL.replace(/\/$/, '');
+    }
   }
   return `${protocol}://${host}`;
 };

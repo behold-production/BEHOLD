@@ -47,6 +47,7 @@ const ResetPassword = lazyWithRetry(() => import('./features/auth/ResetPassword'
 const BlogList = lazyWithRetry(() => import('./features/blog/BlogList'));
 const BlogPostDetail = lazyWithRetry(() => import('./features/blog/BlogPostDetail'));
 const FaqsPage = lazyWithRetry(() => import('./features/faqs/FaqsPage'));
+const GoogleCallbackRedirect = lazyWithRetry(() => import('./shared/components/GoogleCallbackRedirect'));
 import BlogSection from './features/landing/BlogSection';
 
 import { useAuth } from './shared/context/AuthContext';
@@ -761,6 +762,9 @@ export default function App() {
 
           {/* Reset Password */}
           <Route path="/reset-password" element={<ResetPassword />} />
+
+          {/* Intercept Google OAuth Callback if hitting frontend directly */}
+          <Route path="/api/google/callback" element={<GoogleCallbackRedirect />} />
 
           {/* Catch-all fallback */}
           <Route path="*" element={<Navigate to="/" replace />} />
