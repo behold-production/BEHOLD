@@ -256,8 +256,9 @@ const PaymentController = {
         console.warn('[Razorpay Order Fetch Warning]: Could not fetch order details from Razorpay API:', err.error?.description || err.message || err);
       }
 
+      let notes = {};
       if (order && order.notes) {
-        const notes = order.notes || {};
+        notes = order.notes || {};
         if (
           (notes.counsellorId && notes.counsellorId !== counsellorId) ||
           (notes.userId && notes.userId !== userId)
