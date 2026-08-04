@@ -86,16 +86,20 @@ export default function PsychologistManagementTab(props) {
     email: "",
     password: "",
     phone: "",
-    specialization: "",
-    experience: "",
-    qualifications: "",
-    location: "",
-    biography: "",
-    registrationNumber: "",
+    education: "",
+    specialties: "",
+    price: 1200,
+    halfSessionPrice: 499,
+    lang: "",
+    bio: "",
+    defaultMeetLink: "",
+    hours: 0,
+    modes: ["ONLINE", "OFFLINE", "DOOR_STEP"],
+    title: "Consultant Psychologist",
     profilePic: "",
-    activeDays: [],
-    availableSlots: [],
-    commissionSplitPercent: 50,
+    isTopFive: false,
+    isActive: true,
+    commissionPercent: 50,
     locationName: "",
     latitude: 0,
     longitude: 0,
@@ -381,6 +385,9 @@ export default function PsychologistManagementTab(props) {
       profilePic: psy.profilePic || psy.image || "",
       isTopFive: psy.isTopFive || false,
       isActive: psy.isActive !== false,
+      modes: Array.isArray(psy.modes) && psy.modes.length > 0
+        ? psy.modes
+        : ["ONLINE", "OFFLINE", "DOOR_STEP"],
       locationName: psy.locationName || "",
       latitude: psy.latitude || 0,
       longitude: psy.longitude || 0,
@@ -597,6 +604,62 @@ export default function PsychologistManagementTab(props) {
     } catch (err) {
       await showAlert(err.message || "Failed to toggle top five status.");
     }
+  };
+
+  // Address search & geolocation helpers (used in the edit/add form)
+  const handleAdminAddressSearch = async () => {
+    if (!adminSearchQuery || !adminSearchQuery.trim()) return;
+    setIsAdminSearching(true);
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(adminSearchQuery.trim())}`
+      );
+      const data = await res.json();
+      setAdminSearchResults(data);
+      if (data.length === 0) {
+        import('react-hot-toast').then(m => m.toast.error('No locations found.'));
+      }
+    } catch (err) {
+      console.error('Geocoding error', err);
+      import('react-hot-toast').then(m => m.toast.error('Failed to search location.'));
+    } finally {
+      setIsAdminSearching(false);
+    }
+  };
+
+  const handleAdminDetectLocation = () => {
+    if (!navigator.geolocation) {
+      import('react-hot-toast').then(m => m.toast.error('Geolocation not supported.'));
+      return;
+    }
+    setIsAdminLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        try {
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
+          );
+          const data = await res.json();
+          if (data && data.display_name) {
+            setPsyForm(prev => ({ ...prev, latitude: lat, longitude: lng, locationName: data.display_name }));
+            setAdminSearchQuery(data.display_name);
+          } else {
+            setPsyForm(prev => ({ ...prev, latitude: lat, longitude: lng }));
+          }
+        } catch (err) {
+          console.error('Reverse geocoding error', err);
+          setPsyForm(prev => ({ ...prev, latitude: lat, longitude: lng }));
+        }
+        import('react-hot-toast').then(m => m.toast.success('Location auto-detected!'));
+        setIsAdminLocating(false);
+      },
+      (err) => {
+        import('react-hot-toast').then(m => m.toast.error('Failed to detect coordinates: ' + err.message));
+        setIsAdminLocating(false);
+      }
+    );
   };
 
   // Quick Share Percentage modal state & handlers

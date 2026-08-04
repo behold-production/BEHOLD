@@ -738,7 +738,10 @@ const AdminController = {
         bankAccountNumber,
         bankIfscCode,
         bankAccountName,
-        commissionPercent
+        commissionPercent,
+        locationName,
+        latitude,
+        longitude
       } = req.body;
       const updates = {};
       if (name !== undefined) {
@@ -781,6 +784,9 @@ const AdminController = {
       if (commissionPercent !== undefined) {
         updates.commissionPercent = getNumber(commissionPercent, 'Commission percentage', { min: 0, max: 100 });
       }
+      if (locationName !== undefined) updates.locationName = locationName;
+      if (latitude !== undefined) updates.latitude = Number(latitude) || 0;
+      if (longitude !== undefined) updates.longitude = Number(longitude) || 0;
 
       if (password) {
         if (String(password).length < 6) {
