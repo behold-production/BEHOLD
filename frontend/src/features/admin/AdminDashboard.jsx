@@ -167,9 +167,6 @@ export default function AdminDashboard({ setView: _setView }) {
  }
  };
 
-  const reloadDataRef = React.useRef(null);
-  reloadDataRef.current = reloadData;
-
  const handleExportImage = async (tableId, title) => {
  try {
  const element = document.getElementById(tableId);
@@ -1406,6 +1403,9 @@ const _handleAdminDetectLocation = () => {
    setIsDbLoading(false);
    }
   };
+
+  const reloadDataRef = React.useRef(null);
+  reloadDataRef.current = reloadData;
 
   useEffect(() => {
   setTimeout(() => {
