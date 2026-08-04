@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ApiService from '../../shared/services/api';
+import ApiService from '../../services/api';
 import { toast } from 'react-hot-toast';
 import { Send, CheckCircle2 } from 'lucide-react';
 import greyGreenBg from '../../assets/greygreen.png';

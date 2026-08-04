@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Clock, Copy, Check, MessageCircle, BookOpen, Send } from 'lucide-react';
-import ApiService from '../../shared/services/api';
+import ApiService from '../../services/api';
 import greenTexture from '../../assets/greygreen.png';
-import { getImageUrl, formatBlogContent } from '../../shared/utils/formatters';
+import { getImageUrl, formatBlogContent } from '../../utils/formatters';
 import defaultBlogImage from '../../assets/luxury_clinic_room.png';
 
 const BlogPostDetail = () => {

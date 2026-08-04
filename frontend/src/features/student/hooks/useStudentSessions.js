@@ -1,8 +1,8 @@
 import { useState, useEffect, useMemo } from 'react';
-import ApiService from '../../../shared/services/api';
+import ApiService from '../../../services/api';
 import { isSessionCompleted } from '../utils/utils';
-import { useAuth } from '../../../shared/context/AuthContext';
-import { useCustomDialog } from '../../../shared/context/CustomDialogContext';
+import { useAuth } from '../../../context/AuthContext';
+import { useCustomDialog } from '../../../context/CustomDialogContext';
 
 /**
  * Hook to manage student bookings and sessions logic.

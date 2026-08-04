@@ -2,23 +2,23 @@ import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { Routes, Route, Navigate, useNavigate, useLocation, useParams } from 'react-router-dom';
 import { MessageCircle, X, Download, ShieldAlert, Eye, EyeOff } from 'lucide-react';
 import { Toaster, useToasterStore, toast } from 'react-hot-toast';
-import Navbar from './shared/components/Navbar';
-import Hero from './features/landing/Hero';
-import CdatSection from './features/student/components/aptitude/CdatSection';
-import Services from './features/booking/Services';
-import About from './features/landing/About';
-import Faq from './features/landing/Faq';
-import WhyChooseUs from './features/landing/WhyChooseUs';
-import Inquiry from './features/landing/Inquiry';
-import Reviews from './features/landing/Reviews';
-import PrivacyPolicy from './features/landing/PrivacyPolicy';
-import Footer from './shared/components/Footer';
-import AuthModals from './features/auth/AuthModals';
-import TherapistSwipeSection from './features/landing/TherapistSwipeSection';
-import FaqBlogSection from './features/landing/FaqBlogSection';
-import ContactInquirySection from './features/landing/ContactInquirySection';
-import globalBg from './assets/greygreen.png';
-import globalBgTexture from './assets/greygreen.png';
+import Navbar from '../components/common/Navbar';
+import Hero from '../features/landing/Hero';
+import CdatSection from '../features/student/components/aptitude/CdatSection';
+import Services from '../features/booking/Services';
+import About from '../features/landing/About';
+import Faq from '../features/landing/Faq';
+import WhyChooseUs from '../features/landing/WhyChooseUs';
+import Inquiry from '../features/landing/Inquiry';
+import Reviews from '../features/landing/Reviews';
+import PrivacyPolicy from '../features/landing/PrivacyPolicy';
+import Footer from '../components/common/Footer';
+import AuthModals from '../features/auth/AuthModals';
+import TherapistSwipeSection from '../features/landing/TherapistSwipeSection';
+import FaqBlogSection from '../features/landing/FaqBlogSection';
+import ContactInquirySection from '../features/landing/ContactInquirySection';
+import globalBg from '../assets/greygreen.png';
+import globalBgTexture from '../assets/greygreen.png';
 
 function lazyWithRetry(importFn) {
   return lazy(() =>
@@ -36,24 +36,24 @@ function lazyWithRetry(importFn) {
   );
 }
 
-const ServiceBooking = lazyWithRetry(() => import('./features/booking/ServiceBooking'));
-const AdvisorProfile = lazyWithRetry(() => import('./features/counsellor/AdvisorProfile'));
-const StudentProfile = lazyWithRetry(() => import('./features/student/components/profile/StudentProfile'));
-const PsychologistDashboard = lazyWithRetry(() => import('./features/counsellor/PsychologistDashboard'));
-const AdminDashboard = lazyWithRetry(() => import('./features/admin/AdminDashboard'));
-const TestResultsTab = lazyWithRetry(() => import('./features/admin/admin-dashboard/tabs/TestResultsTab'));
-const AptitudeTest = lazyWithRetry(() => import('./features/student/components/aptitude/AptitudeTest'));
-const AptitudeLanding = lazyWithRetry(() => import('./features/student/components/aptitude/AptitudeLanding'));
-const ResetPassword = lazyWithRetry(() => import('./features/auth/ResetPassword'));
-const BlogList = lazyWithRetry(() => import('./features/blog/BlogList'));
-const BlogPostDetail = lazyWithRetry(() => import('./features/blog/BlogPostDetail'));
-const FaqsPage = lazyWithRetry(() => import('./features/faqs/FaqsPage'));
-const GoogleCallbackRedirect = lazyWithRetry(() => import('./shared/components/GoogleCallbackRedirect'));
-import BlogSection from './features/landing/BlogSection';
+const ServiceBooking = lazyWithRetry(() => import('../features/booking/ServiceBooking'));
+const AdvisorProfile = lazyWithRetry(() => import('../features/counsellor/AdvisorProfile'));
+const StudentProfile = lazyWithRetry(() => import('../features/student/components/profile/StudentProfile'));
+const PsychologistDashboard = lazyWithRetry(() => import('../features/counsellor/PsychologistDashboard'));
+const AdminDashboard = lazyWithRetry(() => import('../features/admin/AdminDashboard'));
+const TestResultsTab = lazyWithRetry(() => import('../features/admin/admin-dashboard/tabs/TestResultsTab'));
+const AptitudeTest = lazyWithRetry(() => import('../features/student/components/aptitude/AptitudeTest'));
+const AptitudeLanding = lazyWithRetry(() => import('../features/student/components/aptitude/AptitudeLanding'));
+const ResetPassword = lazyWithRetry(() => import('../features/auth/ResetPassword'));
+const BlogList = lazyWithRetry(() => import('../features/blog/BlogList'));
+const BlogPostDetail = lazyWithRetry(() => import('../features/blog/BlogPostDetail'));
+const FaqsPage = lazyWithRetry(() => import('../features/faqs/FaqsPage'));
+const GoogleCallbackRedirect = lazyWithRetry(() => import('../components/common/GoogleCallbackRedirect'));
+import BlogSection from '../features/landing/BlogSection';
 
-import { useAuth } from './shared/context/AuthContext';
-import ApiService from './shared/services/api';
-import { requestNotificationPermission, syncAndNotifyLocal } from './shared/services/notificationHelper';
+import { useAuth } from '../context/AuthContext';
+import ApiService from '../services/api';
+import { requestNotificationPermission, syncAndNotifyLocal } from '../services/notificationHelper';
 
 function ToastLimitManager() {
   const { toasts } = useToasterStore();

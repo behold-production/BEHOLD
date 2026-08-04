@@ -9,11 +9,11 @@ import {
  getNotificationPermission,
  requestNotificationPermission,
  sendLocalNotification
-} from '../../shared/services/notificationHelper';
-import { useAuth } from '../../shared/context/AuthContext';
-import { useCustomDialog } from '../../shared/context/CustomDialogContext';
-import LogoutConfirmModal from '../../shared/components/LogoutConfirmModal';
-import ApiService from '../../shared/services/api';
+} from '../../services/notificationHelper';
+import { useAuth } from '../../context/AuthContext';
+import { useCustomDialog } from '../../context/CustomDialogContext';
+import LogoutConfirmModal from '../../components/common/LogoutConfirmModal';
+import ApiService from '../../services/api';
 import jsPDF from 'jspdf';
 
 // Extracted Components
@@ -31,7 +31,7 @@ import {
  parseTimeToMinutes,
  formatMinutesToTime
 } from './psychologist-dashboard/utils';
-import { formatDateString } from '../../shared/utils/dateFormatter';
+import { formatDateString } from '../../utils/dateFormatter';
 import toast from 'react-hot-toast';
 
 
@@ -276,7 +276,11 @@ export default function PsychologistDashboard({ setView }) {
  // Load availability
  if (c.availability) {
  const avail = c.availability;
- if (avail.activeDays) setActiveDays(avail.activeDays);
+ if (avail.activeDays) {
+   setActiveDays(avail.activeDays);
+   const activeIndices = Object.keys(avail.activeDays).filter(k => avail.activeDays[k]).map(Number);
+   setSelectedDays(activeIndices.length > 0 ? activeIndices : [1]);
+ }
  if (avail.availableSlots) {
  setAvailableSlots(avail.availableSlots);
  // Ensure slots are added to the list of displayed slots
@@ -289,6 +293,15 @@ export default function PsychologistDashboard({ setView }) {
  });
  return merged;
  });
+ }
+ if (avail.daySlots) {
+   setDaySlots(avail.daySlots);
+ } else if (avail.availableSlots) {
+   const fallback = {};
+   Object.keys(avail.activeDays || {}).forEach(dayIndex => {
+     if (avail.activeDays[dayIndex]) fallback[dayIndex] = [...avail.availableSlots];
+   });
+   setDaySlots(fallback);
  }
  }
  }

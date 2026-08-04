@@ -1,12 +1,9 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'
 // import { registerSW } from 'virtual:pwa-register'
 import './index.css'
-import App from './App.jsx'
-import { AuthProvider } from './shared/context/AuthContext'
-import { CustomDialogProvider } from './shared/context/CustomDialogContext'
-import ErrorBoundary from './shared/components/ErrorBoundary'
+import App from './app/App.jsx'
+import Providers from './app/Providers.jsx'
 
 // Register PWA service worker
 // if ('serviceWorker' in navigator) {
@@ -48,14 +45,8 @@ window.addEventListener('unhandledrejection', (event) => {
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <AuthProvider>
-      <BrowserRouter>
-        <ErrorBoundary>
-          <CustomDialogProvider>
-            <App />
-          </CustomDialogProvider>
-        </ErrorBoundary>
-      </BrowserRouter>
-    </AuthProvider>
+    <Providers>
+      <App />
+    </Providers>
   </StrictMode>,
 )

@@ -4,9 +4,9 @@ import DateTimePicker from './DateTimePicker';
 import TimePicker from './TimePicker';
 import BookingAuthModal from './BookingAuthModal';
 import { FileDown, X } from 'lucide-react';
-import { formatDateString } from '../../shared/utils/dateFormatter';
+import { formatDateString } from '../../utils/dateFormatter';
 import toast from 'react-hot-toast';
-import { ScrollDot } from '../../shared/components/BrandDot';
+import { ScrollDot } from '../../components/common/BrandDot';
 import greenTexture from '../../assets/greygreen.png';
 
 const getInitials = (name) => {

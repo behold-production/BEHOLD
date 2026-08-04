@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ChevronLeft, Clock, Globe, Award, BookOpen, Calendar, MapPin, Heart, GraduationCap, Star, ShieldCheck, CheckCircle2, Video, Sparkles, UserCheck, Lock } from 'lucide-react';
-import ApiService from '../../shared/services/api';
-import { calculateNextAvailable } from '../../shared/utils/dateFormatter';
+import ApiService from '../../services/api';
+import { calculateNextAvailable } from '../../utils/dateFormatter';
 
 function getInitials(name) {
   if (!name) return 'EX';

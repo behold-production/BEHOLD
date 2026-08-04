@@ -4,7 +4,7 @@ import {
  Check, Award, ExternalLink, X as XIcon
 } from 'lucide-react';
 import { CAREER_SUGGESTIONS } from '../../utils/studentProfileConstants';
-import { formatDateString } from '../../../../shared/utils/dateFormatter';
+import { formatDateString } from '../../../../utils/dateFormatter';
 
 const ResultsTab = ({
  profile,

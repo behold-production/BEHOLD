@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import ApiService from "../../../../shared/services/api";
+import ApiService from "../../../../services/api";
 import {
   User,
   ShieldAlert,
@@ -440,7 +440,13 @@ export default function PsychologistManagementTab(props) {
     // Load availability
     if (psy.availability) {
       const avail = psy.availability;
-      if (avail.activeDays) setAdminActiveDays(avail.activeDays);
+      if (avail.activeDays) {
+        setAdminActiveDays(avail.activeDays);
+        const activeIndices = Object.keys(avail.activeDays).filter(k => avail.activeDays[k]).map(Number);
+        setSelectedAdminDays(activeIndices.length > 0 ? activeIndices : [1]);
+      } else {
+        setSelectedAdminDays([1]);
+      }
       if (avail.availableSlots) {
         setAdminAvailableSlots(avail.availableSlots);
         setAdminAllSlots(avail.availableSlots);
@@ -757,6 +763,7 @@ export default function PsychologistManagementTab(props) {
                   setAdminAvailableSlots([]);
                   setAdminAllSlots([]);
                   setAdminDaySlots({});
+                  setSelectedAdminDays([1, 2, 3, 4, 5]); // Select weekdays by default
                   setPsyFormError("");
                   setPsyFormSuccess("");
                   setIsAddPsyOpen(true);

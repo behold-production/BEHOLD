@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronDown, HelpCircle, ArrowLeft, Search, Sparkles } from 'lucide-react';
-import Navbar from '../../shared/components/Navbar';
-import Footer from '../../shared/components/Footer';
-import ApiService from '../../shared/services/api';
+import Navbar from '../../components/common/Navbar';
+import Footer from '../../components/common/Footer';
+import ApiService from '../../services/api';
 
 export default function FaqsPage() {
   const navigate = useNavigate();

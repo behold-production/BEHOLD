@@ -1,6 +1,6 @@
 import React from 'react';
 import { Clock, AlertCircle, Video } from 'lucide-react';
-import { formatDateString } from '../../../../shared/utils/dateFormatter';
+import { formatDateString } from '../../../../utils/dateFormatter';
 
 const formatAmount = (num) => {
     const val = Number(num) || 0;

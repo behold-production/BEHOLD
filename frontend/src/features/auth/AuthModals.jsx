@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { X, Mail, Lock, User, Phone, Loader2, Eye, EyeOff, KeyRound, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../../shared/context/AuthContext';
-import ApiService from '../../shared/services/api';
+import { useAuth } from '../../context/AuthContext';
+import ApiService from '../../services/api';
 
 export default function AuthModals({ isOpen, onClose }) {
  const [mode, setMode] = useState('login'); // 'login', 'register', 'forgot'

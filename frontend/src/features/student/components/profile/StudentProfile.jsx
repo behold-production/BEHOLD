@@ -5,8 +5,8 @@ import {
   requestNotificationPermission, 
   sendLocalNotification,
   getNotificationPermission
-} from '../../../../shared/services/notificationHelper';
-import { useCustomDialog } from '../../../../shared/context/CustomDialogContext';
+} from '../../../../services/notificationHelper';
+import { useCustomDialog } from '../../../../context/CustomDialogContext';
 
 import { useStudentProfile } from '../../hooks/useStudentProfile';
 import { useStudentSessions } from '../../hooks/useStudentSessions';

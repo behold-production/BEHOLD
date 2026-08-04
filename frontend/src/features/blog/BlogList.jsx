@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, Clock, ArrowRight, BookOpen, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
-import ApiService from '../../shared/services/api';
+import ApiService from '../../services/api';
 import greenTexture from '../../assets/greygreen.png';
-import { getImageUrl } from '../../shared/utils/formatters';
+import { getImageUrl } from '../../utils/formatters';
 import defaultBlogImage from '../../assets/luxury_clinic_room.png';
 
 const CATEGORIES = [

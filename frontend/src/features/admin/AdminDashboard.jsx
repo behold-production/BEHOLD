@@ -31,8 +31,8 @@ import {
 } from 'lucide-react';
 import html2canvas from 'html2canvas-pro';
 import jsPDF from 'jspdf';
-import { useCustomDialog } from '../../shared/context/CustomDialogContext';
-import { formatDateString } from '../../shared/utils/dateFormatter';
+import { useCustomDialog } from '../../context/CustomDialogContext';
+import { formatDateString } from '../../utils/dateFormatter';
 
 function SkeletonTableRows({ cols }) {
  return (
@@ -121,15 +121,15 @@ function PaginationBar({ total, page, limit, onPageChange, onLimitChange }) {
  </div>
  );
 }
-import { useAuth } from '../../shared/context/AuthContext';
-import LogoutConfirmModal from '../../shared/components/LogoutConfirmModal';
-import ApiService from '../../shared/services/api';
+import { useAuth } from '../../context/AuthContext';
+import LogoutConfirmModal from '../../components/common/LogoutConfirmModal';
+import ApiService from '../../services/api';
 import {
  isNotificationSupported,
  getNotificationPermission,
  requestNotificationPermission,
  sendLocalNotification
-} from '../../shared/services/notificationHelper';
+} from '../../services/notificationHelper';
 
 const PRIVILEGE_MODULES = [
  {

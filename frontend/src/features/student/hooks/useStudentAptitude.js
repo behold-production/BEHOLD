@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import ApiService from '../../../shared/services/api';
-import { useAuth } from '../../../shared/context/AuthContext';
-import { useCustomDialog } from '../../../shared/context/CustomDialogContext';
+import ApiService from '../../../services/api';
+import { useAuth } from '../../../context/AuthContext';
+import { useCustomDialog } from '../../../context/CustomDialogContext';
 
 /**
  * Hook to manage student CIGI aptitude test profile and uploads.

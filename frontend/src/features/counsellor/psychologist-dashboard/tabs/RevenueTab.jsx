@@ -4,8 +4,8 @@ import {
  Users, Filter, BookOpen, AlertCircle, ArrowUpRight, FileText, 
  Building, CheckCircle, Wallet
 } from 'lucide-react';
-import ApiService from '../../../../shared/services/api';
-import { formatDateString } from '../../../../shared/utils/dateFormatter';
+import ApiService from '../../../../services/api';
+import { formatDateString } from '../../../../utils/dateFormatter';
 import { generateReceiptPDFDoc } from "../../../student/utils/utils";
 import toast from 'react-hot-toast';
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { SkeletonTableRows, PaginationBar } from '../components/SharedAdminUI';
 import { Check, Trash, Search, MessageSquare, AlertCircle } from 'lucide-react';
-import ApiService from '../../../../shared/services/api';
+import ApiService from '../../../../services/api';
 import toast from 'react-hot-toast';
 
 export default function ReviewsTab() {

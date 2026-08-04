@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Clock, ChevronLeft, ChevronRight } from 'lucide-react';
-import ApiService from '../../shared/services/api';
-import { ScrollDot } from '../../shared/components/BrandDot';
-import { getImageUrl } from '../../shared/utils/formatters';
+import ApiService from '../../services/api';
+import { ScrollDot } from '../../components/common/BrandDot';
+import { getImageUrl } from '../../utils/formatters';
 import defaultBlogImage from '../../assets/luxury_clinic_room.png';
 
 const BlogSection = () => {  const navigate = useNavigate();

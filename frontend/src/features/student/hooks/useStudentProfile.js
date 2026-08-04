@@ -1,9 +1,9 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import ApiService from '../../../shared/services/api';
+import ApiService from '../../../services/api';
 import { INITIAL_STATE } from '../utils/studentProfileConstants';
 import { getGreeting, calculateCompletion } from '../utils/utils';
-import { useAuth } from '../../../shared/context/AuthContext';
+import { useAuth } from '../../../context/AuthContext';
 
 /**
  * Hook to manage student profile data, form state, and updates.

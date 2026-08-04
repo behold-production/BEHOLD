@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { renderTitleWithFullstopDot } from '../../shared/components/BrandDot';
-import ApiService from '../../shared/services/api';
-import { useAuth } from '../../shared/context/AuthContext';
+import { renderTitleWithFullstopDot } from '../../components/common/BrandDot';
+import ApiService from '../../services/api';
+import { useAuth } from '../../context/AuthContext';
 import greenTexture from '../../assets/greygreen.png';
 
 

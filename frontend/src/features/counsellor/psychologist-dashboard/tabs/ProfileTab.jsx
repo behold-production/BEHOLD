@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Edit, Bell } from 'lucide-react';
-import { isNotificationSupported } from '../../../../shared/services/notificationHelper';
-import ApiService from '../../../../shared/services/api';
+import { isNotificationSupported } from '../../../../services/notificationHelper';
+import ApiService from '../../../../services/api';
 
 const ProfileTab = ({
  user,

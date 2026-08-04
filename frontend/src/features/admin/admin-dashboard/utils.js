@@ -1,6 +1,6 @@
 import html2canvas from 'html2canvas-pro';
 import jsPDF from 'jspdf';
-import { formatDateString } from '../../../shared/utils/dateFormatter';
+import { formatDateString } from '../../../utils/dateFormatter';
 export { formatDateString };
 
 export function getInitials(name) {

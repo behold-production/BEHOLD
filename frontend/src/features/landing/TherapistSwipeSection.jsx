@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import shadeGreenBg from '../../assets/greygreen.png';
-import ApiService from '../../shared/services/api';
+import ApiService from '../../services/api';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Search, ChevronDown } from 'lucide-react';
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Trash2, RefreshCw, AlertTriangle, Clock, User, Brain, Calendar, RotateCcw, X, Zap, Loader } from 'lucide-react';
-import ApiService from '../../../../shared/services/api';
+import ApiService from '../../../../services/api';
 
 function daysRemaining(deletedAt) {
  if (!deletedAt) return 0;

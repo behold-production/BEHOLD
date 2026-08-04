@@ -1,6 +1,6 @@
 import { jsPDF } from 'jspdf';
 import toast from 'react-hot-toast';
-import { formatDateString } from "../../../shared/utils/dateFormatter";
+import { formatDateString } from "../../../utils/dateFormatter";
 
 export function getGreeting() {
   const h = new Date().getHours();

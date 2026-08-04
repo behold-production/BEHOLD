@@ -1,5 +1,5 @@
 import React from 'react';
-import { formatDateString } from "../../../../shared/utils/dateFormatter";
+import { formatDateString } from "../../../../utils/dateFormatter";
 import { formatCountdown } from '../../utils/utils';
 
 export default function OverviewTab({

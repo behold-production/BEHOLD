@@ -23,7 +23,7 @@ const googleAuthRoutes = require('./routes/googleAuthRoutes');
 const cronRoutes = require('./routes/cronRoutes');
 const blogRoutes = require('./routes/blogRoutes');
 const whatsappRoutes = require('./routes/whatsappRoutes');
-const errorHandler = require('./middleware/errorMiddleware');
+const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
 

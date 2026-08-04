@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
-import ApiService from '../../shared/services/api';
+import ApiService from '../../services/api';
 import greenTexture from '../../assets/greygreen.png';
 
 export default function Faq({ siteSettings }) {

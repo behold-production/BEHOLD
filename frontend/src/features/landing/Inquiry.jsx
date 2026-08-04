@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Loader2 } from 'lucide-react';
-import ApiService from '../../shared/services/api';
-import { renderTitleWithFullstopDot } from '../../shared/components/BrandDot';
+import ApiService from '../../services/api';
+import { renderTitleWithFullstopDot } from '../../components/common/BrandDot';
 
 const steps = [
   {

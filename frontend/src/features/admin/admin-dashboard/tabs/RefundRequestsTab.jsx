@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, ShieldAlert, Check, X, CreditCard, ChevronDown, ChevronUp, Clock, User, Building2, HelpCircle } from 'lucide-react';
-import ApiService from '../../../../shared/services/api';
+import ApiService from '../../../../services/api';
 import { SkeletonTableRows, PaginationBar } from '../components/SharedAdminUI';
 import { formatDateString } from '../utils';
 import { toast } from 'react-hot-toast';

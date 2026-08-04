@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Plus, Search, Edit, Trash2, ExternalLink, Eye, EyeOff, BookOpen, Clock, Tag, User, Sparkles, Check, X, AlertCircle, UploadCloud, Image as ImageIcon } from 'lucide-react';
-import ApiService from '../../../../shared/services/api';
+import ApiService from '../../../../services/api';
 import { toast } from 'react-hot-toast';
-import { getImageUrl } from '../../../../shared/utils/formatters';
+import { getImageUrl } from '../../../../utils/formatters';
 import defaultBlogImage from '../../../../assets/luxury_clinic_room.png';
 
 export default function BlogManagementTab() {

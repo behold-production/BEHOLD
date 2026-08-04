@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ApiService from '../../../../shared/services/api';
+import ApiService from '../../../../services/api';
 import { SkeletonTableRows, PaginationBar } from '../components/SharedAdminUI';
 import { User, ShieldAlert, Award, Trash, Check, Plus, Lock, Settings, KeyRound, BarChart3, LogOut, Search, ShieldCheck, Calendar, Clock, Link, AlertCircle, Edit, Video, UserPlus, MessageSquare, FileSpreadsheet, HelpCircle, X, ChevronRight, ChevronLeft, Mail, Shield, Menu, Brain, Download, FileText, Eye, EyeOff, Bell, Send, Loader2 } from 'lucide-react';
 import { formatDateString } from '../utils';

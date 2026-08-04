@@ -4,7 +4,7 @@ import {
  BookOpen, Hash, Check, AlertCircle, Bell, Save, CheckCircle2,
  MapPin, Navigation, Search
 } from 'lucide-react';
-import { isNotificationSupported } from '../../../../shared/services/notificationHelper';
+import { isNotificationSupported } from '../../../../services/notificationHelper';
 
 const ProfileDetailsTab = ({
  completion,

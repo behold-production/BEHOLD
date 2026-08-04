@@ -1,7 +1,7 @@
 import React from 'react';
 import { Clock, AlertCircle, Link, Video, FileText, Send, Edit } from 'lucide-react';
-import { formatDateString } from '../../../../shared/utils/dateFormatter';
-import ApiService from '../../../../shared/services/api';
+import { formatDateString } from '../../../../utils/dateFormatter';
+import ApiService from '../../../../services/api';
 import { toast } from 'react-hot-toast';
 
 const BookingsTab = ({

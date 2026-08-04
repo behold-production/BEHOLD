@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowUpRight, ChevronDown, HelpCircle, FileText } from 'lucide-react';
-import ApiService from '../../shared/services/api';
+import ApiService from '../../services/api';
 import greyGreenBg from '../../assets/greygreen.png';
 
 export default function FaqBlogSection() {

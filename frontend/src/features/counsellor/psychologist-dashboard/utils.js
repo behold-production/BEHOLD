@@ -1,5 +1,5 @@
 import jsPDF from 'jspdf';
-import { formatDateString } from '../../../shared/utils/dateFormatter';
+import { formatDateString } from '../../../utils/dateFormatter';
 import toast from 'react-hot-toast';
 
 export const isSessionCompleted = (booking) => {

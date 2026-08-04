@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
-import { useAuth } from '../../shared/context/AuthContext';
-import { useCustomDialog } from '../../shared/context/CustomDialogContext';
+import { useAuth } from '../../context/AuthContext';
+import { useCustomDialog } from '../../context/CustomDialogContext';
 import toast from 'react-hot-toast';
-import ApiService from '../../shared/services/api';
+import ApiService from '../../services/api';
 import { jsPDF } from 'jspdf';
-import { formatDateString, calculateNextAvailable } from '../../shared/utils/dateFormatter';
-import { sendLocalNotification } from '../../shared/services/notificationHelper';
+import { formatDateString, calculateNextAvailable } from '../../utils/dateFormatter';
+import { sendLocalNotification } from '../../services/notificationHelper';
 
 export const BOOKING_DRAFT_KEY = 'behold_booking_draft';
 

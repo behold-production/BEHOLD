@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import ApiService from '../../../../shared/services/api';
-import { ScrollDot } from '../../../../shared/components/BrandDot';
+import ApiService from '../../../../services/api';
+import { ScrollDot } from '../../../../components/common/BrandDot';
 import greenTexture from '../../../../assets/greygreen.png';
 
 export default function CdatSection({ setView, siteSettings }) {

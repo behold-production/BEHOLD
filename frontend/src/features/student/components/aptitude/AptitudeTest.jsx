@@ -13,7 +13,7 @@ import {
  Loader2
 } from 'lucide-react';
 
-import ApiService from '../../../../shared/services/api';
+import ApiService from '../../../../services/api';
 import greenTexture from '../../../../assets/greygreen.png';
 
 const DOMAIN_DETAILS = {

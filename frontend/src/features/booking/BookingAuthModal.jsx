@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { X, Mail, Lock, User, Phone, Eye, EyeOff, KeyRound } from 'lucide-react';
-import { useAuth } from '../../shared/context/AuthContext';
-import ApiService from '../../shared/services/api';
+import { useAuth } from '../../context/AuthContext';
+import ApiService from '../../services/api';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phoneRegex = /^(\+?\d{1,4}[- ]?)?[6-9]\d{9}$/;
