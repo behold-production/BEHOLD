@@ -197,9 +197,10 @@ export default function PsychologistManagementTab(props) {
 
 
   const psychologistsList = usersDb.filter((u) => {
-    if (u.role !== "PSYCHOLOGIST") return false;
-    if (psyFilter === "VERIFIED" && !u.isVerified) return false;
-    if (psyFilter === "UNVERIFIED" && u.isVerified) return false;
+    const role = String(u.role || '').toUpperCase();
+    if (role !== 'PSYCHOLOGIST' && role !== 'COUNSELLOR') return false;
+    if (psyFilter === 'VERIFIED' && !u.isVerified) return false;
+    if (psyFilter === 'UNVERIFIED' && u.isVerified) return false;
     const matchesSearch =
       !searchPsy ||
       (u.name && u.name.toLowerCase().includes(searchPsy.toLowerCase())) ||

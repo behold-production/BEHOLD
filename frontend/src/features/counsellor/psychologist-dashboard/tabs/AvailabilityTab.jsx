@@ -43,18 +43,28 @@ const AvailabilityTab = ({
   const shadowStyle = { boxShadow: "inset 0 1px 1px 0 rgba(255,255,255,0.05), inset 0 -1px 1px 0 rgba(0,0,0,0.5)" };
   
   const isFirstRender = React.useRef(true);
-  
+  const lastSavedState = React.useRef({ activeDays, daySlots });
+  const autoSaveTimer = React.useRef(null);
+
   React.useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
       return;
     }
-    if (autoSave && handleAvailabilitySave) {
-      const timer = setTimeout(() => {
-        handleAvailabilitySave();
-      }, 500);
-      return () => clearTimeout(timer);
-    }
+    if (!autoSave || !handleAvailabilitySave) return;
+
+    const hasChanges = JSON.stringify(lastSavedState.current.activeDays) !== JSON.stringify(activeDays)
+      || JSON.stringify(lastSavedState.current.daySlots) !== JSON.stringify(daySlots);
+
+    if (!hasChanges) return;
+
+    clearTimeout(autoSaveTimer.current);
+    autoSaveTimer.current = setTimeout(async () => {
+      await handleAvailabilitySave();
+      lastSavedState.current = { activeDays, daySlots };
+    }, 900);
+
+    return () => clearTimeout(autoSaveTimer.current);
   }, [activeDays, daySlots, autoSave, handleAvailabilitySave]);
   
   const combinedSlots = Array.from(new Set(selectedDays.flatMap(day => daySlots[day] || []))).sort((a, b) => {

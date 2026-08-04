@@ -117,7 +117,8 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
         handleRemoveCoupon,
         getCalculatedDistance,
         getHaversineDistance,
-        confirmedMeetLink
+        confirmedMeetLink,
+        confirmedBooking
     } = useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvisor });
 
     const step2Ref = useRef(null);
@@ -538,18 +539,17 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             Google Meet Session Link
                                                         </span>
                                                         <span className="text-sm text-slate-900 font-bold truncate block max-w-[280px] sm:max-w-xs">
-                                                            {confirmedMeetLink || selectedAdvisor?.defaultMeetLink || 'https://meet.google.com/abc-defg-hij'}
+                                                            {confirmedBooking?.meetLink || confirmedMeetLink || selectedAdvisor?.defaultMeetLink || 'https://meet.google.com/abc-defg-hij'}
                                                         </span>
-                                                        {confirmedMeetLink && (
-                                                            <span className="text-[10px] text-emerald-600 font-semibold mt-1 block">
-                                                                ✓ Session-specific link generated
-                                                            </span>
-                                                        )}
+                                                        <span className="text-[10px] text-emerald-600 font-semibold mt-1 block">
+                                                            {confirmedBooking?.meetLink || confirmedMeetLink ? '✓ Session-specific link generated' : '✓ Standard booking confirmation'}
+                                                        </span>
                                                     </div>
                                                     <button
                                                         type="button"
                                                         onClick={() => {
-                                                            navigator.clipboard.writeText(confirmedMeetLink || selectedAdvisor?.defaultMeetLink || 'https://meet.google.com/abc-defg-hij');
+                                                            const linkToCopy = confirmedBooking?.meetLink || confirmedMeetLink || selectedAdvisor?.defaultMeetLink || 'https://meet.google.com/abc-defg-hij';
+                                                            navigator.clipboard.writeText(linkToCopy);
                                                             setCopiedMeet(true);
                                                             setTimeout(() => setCopiedMeet(false), 2000);
                                                         }}

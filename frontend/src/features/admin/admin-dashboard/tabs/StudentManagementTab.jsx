@@ -51,7 +51,8 @@ export default function StudentManagementTab(props) {
 
   // Filter students based on search query
   const studentsList = usersDb.filter(u => {
-    if (u.role === 'SUPER_ADMIN') return false;
+    const role = String(u.role || 'USER').toUpperCase();
+    if (role !== 'USER' && role !== 'STUDENT') return false;
     const matchesSearch = !searchUser || 
       (u.name && u.name.toLowerCase().includes(searchUser.toLowerCase())) || 
       (u.email && u.email.toLowerCase().includes(searchUser.toLowerCase())) ||

@@ -282,6 +282,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
   const isAdvisorLocked = !!preselectedAdvisorId;
   const [bookingStep, setBookingStep] = useState('config'); // 'config' | 'payment' | 'success'
   const [confirmedMeetLink, setConfirmedMeetLink] = useState(''); // meet link from server after payment
+  const [confirmedBooking, setConfirmedBooking] = useState(null);
 
   const [couponInput, setCouponInput] = useState('');
   const [appliedDiscount, setAppliedDiscount] = useState(0);
@@ -1003,6 +1004,8 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
   };
 
   const processPayment = async () => {
+    setBookingStep('payment');
+    window.history.pushState({ component: 'booking', step: 'payment' }, '');
     setIsProcessingPayment(true);
     setPaymentStepText("Initializing secure checkout...");
 
@@ -1036,9 +1039,12 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
             "Booking Confirmed!",
             `Your session with ${selectedAdvisor?.name || 'Assigned Advisor'} on ${selectedDate} at ${selectedTime} is confirmed.`
           );
+          setConfirmedBooking(bookRes.data || null);
+          setConfirmedMeetLink(bookRes.data?.meetLink || '');
           setIsProcessingPayment(false);
           setIsSuccess(true);
-          handleStepChange('success');
+          setBookingStep('success');
+          window.history.pushState({ component: 'booking', step: 'success' }, '');
         } else {
           throw new Error(bookRes.message || 'Failed to book free appointment');
         }
@@ -1097,13 +1103,12 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
                 "Booking Confirmed!",
                 `Your session with ${selectedAdvisor?.name || 'Assigned Advisor'} on ${selectedDate} at ${selectedTime} is confirmed.`
               );
-              // Capture the server-generated meet link from the confirmed appointment
-              const serverMeetLink = verifyRes.data?.meetLink || '';
+              const serverBooking = verifyRes.data || null;
+              const serverMeetLink = serverBooking?.meetLink || '';
+              setConfirmedBooking(serverBooking);
               if (serverMeetLink) setConfirmedMeetLink(serverMeetLink);
               setIsProcessingPayment(false);
               setIsSuccess(true);
-              // Use direct setBookingStep to bypass handleStepChange validation
-              // which requires selectedAdvisor/date/time (still valid here, but safer)
               setBookingStep('success');
               window.history.pushState({ component: 'booking', step: 'success' }, '');
             } else {
@@ -1285,6 +1290,8 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
 
   const resetBookingState = () => {
     setIsSuccess(false);
+    setConfirmedBooking(null);
+    setConfirmedMeetLink('');
     setSelectedDate('');
     setSelectedTime('');
     setSelectedAdvisor(null);

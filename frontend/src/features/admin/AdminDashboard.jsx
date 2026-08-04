@@ -1391,14 +1391,12 @@ export default function AdminDashboard({ setView }) {
  role: 'PSYCHOLOGIST',
  verified: c.isVerified
  }));
- const combinedUsers = [
- ...(usersRes.data || []).map(u => ({ ...u, role: u.role ? u.role.toUpperCase() : 'USER' })),
- ...cleanCounsellors
- ];
- setUsersDb(combinedUsers);
- }
-
- if (bookingsRes.success && bookingsRes.data) {
+        const cleanUsers = (usersRes.data || []).map(u => ({
+          ...u,
+          role: String(u.role || 'USER').toUpperCase()
+        }));
+        const combinedUsers = [
+          ...cleanUsers,
  const cleanBookings = bookingsRes.data.map(b => ({
  ...b,
  userName: b.studentName,
