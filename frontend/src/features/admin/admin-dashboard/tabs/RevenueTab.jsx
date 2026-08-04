@@ -33,6 +33,7 @@ export default function RevenueTab(props) {
  return list;
  }, [usersDb]);
 
+ // Settings commission split percentage
  const defaultSplit = useMemo(() => {
  return settingsForm.counsellorSplitPercent !== undefined ? Number(settingsForm.counsellorSplitPercent) : 50;
  }, [settingsForm]);

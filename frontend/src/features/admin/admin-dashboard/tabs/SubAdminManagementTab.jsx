@@ -47,7 +47,7 @@ export default function SubAdminManagementTab(props) {
   const [editSubAdminSuccess, setEditSubAdminSuccess] = useState('');
   const [isSavingForm, setIsSavingForm] = useState(false);
 
-  const subAdmins = usersDb.filter(u => u.role === 'SUB_ADMIN');
+  const subAdmins = usersDb.filter(u => u.role === 'ADMIN' && u.permissions); // Filter for ADMIN role with permissions
   const subAdminsList = subAdmins;
 
 

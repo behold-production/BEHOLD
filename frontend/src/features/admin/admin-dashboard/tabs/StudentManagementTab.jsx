@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import ApiService from '../../../../services/api';
-import { User, ShieldAlert, Award, Trash, Check, Plus, Lock, Settings, KeyRound, BarChart3, LogOut, Search, ShieldCheck, Calendar, Clock, Link, AlertCircle, Edit, Video, UserPlus, MessageSquare, FileSpreadsheet, HelpCircle, X, ChevronRight, ChevronLeft, Mail, Shield, Menu, Brain, Download, FileText, Eye, EyeOff, Bell, Send, Loader2 } from 'lucide-react';
+import { User, Trash, Plus, KeyRound, Search, Edit, X, Loader2 } from 'lucide-react';
 import { SkeletonTableRows, PaginationBar } from '../components/SharedAdminUI';
 
 export default function StudentManagementTab(props) {
@@ -28,26 +28,17 @@ export default function StudentManagementTab(props) {
   const [adminCigiFile, setAdminCigiFile] = useState(null);
   const [isAdminCigiUploading, setIsAdminCigiUploading] = useState(false);
   const adminCigiFileInputRef = useRef(null);
-  const userProfilePicRef = useRef(null);
-  const [isAdminUserLocating, setIsAdminUserLocating] = useState(false);
-  const [adminUserSearchQuery, setAdminUserSearchQuery] = useState('');
-  const [adminUserSearchResults, setAdminUserSearchResults] = useState([]);
-  const [isAdminUserSearching, setIsAdminUserSearching] = useState(false);
-
-  const handleAdminUserAddressSearch = async () => {
-    const query = adminUserSearchQuery.trim();
-    if (!query) return;
-    setIsAdminUserSearching(true);
-    try {
-      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
-      setAdminUserSearchResults(response.ok ? await response.json() : []);
-    } catch (error) {
-      console.error('Student address search failed:', error);
-      setAdminUserSearchResults([]);
-    } finally {
-      setIsAdminUserSearching(false);
-    }
-  };
+  const {
+    userProfilePicRef,
+    isAdminUserLocating,
+    adminUserSearchQuery,
+    setAdminUserSearchQuery,
+    adminUserSearchResults,
+    setAdminUserSearchResults,
+    isAdminUserSearching,
+    handleAdminUserAddressSearch,
+    handleAdminUserDetectLocation,
+  } = props;
 
   // Filter students based on search query
   const studentsList = usersDb.filter(u => {
@@ -59,11 +50,6 @@ export default function StudentManagementTab(props) {
       (u.id && u.id.toLowerCase().includes(searchUser.toLowerCase()));
     return matchesSearch;
   });
-
-  const handleAdminUserDetectLocation = () => {
-    // Mock implementation for now to prevent breaking
-    showAlert("Location detection is currently unavailable in this context.");
-  };
 
   const handleToggleStudentStatus = async (studentId, currentStatus) => {
     if (!hasUserPermission) {
@@ -615,8 +601,8 @@ const handleAdminCigiUpload = async (e) => {
  <p className="text-xs font-bold text-zinc-500 tracking-widest">Home Location & Address</p>
  <button
  type="button"
- onClick={handleAdminUserDetectLocation}
- disabled={isAdminUserLocating}
+ onClick={props.handleAdminUserDetectLocation}
+ disabled={props.isAdminUserLocating}
  className="px-2 py-1 bg-zinc-950 border border-zinc-850 hover:border-brand text-zinc-300 hover:text-white rounded-full text-xs font-bold cursor-pointer transition flex items-center gap-1"
  >
  {isAdminUserLocating ? 'Locating...' : 'Detect GPS'}
@@ -631,20 +617,20 @@ const handleAdminCigiUpload = async (e) => {
  <input
  type="text"
  placeholder="Type to search address... (e.g. Kozhikode, Kerala)"
- value={adminUserSearchQuery}
- onChange={(e) => setAdminUserSearchQuery(e.target.value)}
+ value={props.adminUserSearchQuery}
+ onChange={(e) => props.setAdminUserSearchQuery(e.target.value)}
  className="flex-1 min-w-0 px-3 py-2 bg-zinc-955 border border-zinc-850 text-sm text-white rounded-lg outline-none focus:border-brand transition-colors"
  onKeyDown={(e) => {
  if (e.key === 'Enter') {
  e.preventDefault();
- handleAdminUserAddressSearch();
+ props.handleAdminUserAddressSearch();
  }
  }}
  />
  <button
  type="button"
- onClick={handleAdminUserAddressSearch}
- disabled={isAdminUserSearching}
+ onClick={props.handleAdminUserAddressSearch}
+ disabled={props.isAdminUserSearching}
  className="w-full sm:w-auto px-3 py-2 bg-brand text-zinc-950 text-xs font-bold rounded-full hover:bg-brand-dark transition cursor-pointer border-none shrink-0 flex items-center justify-center"
  >
  {isAdminUserSearching ? 'Searching...' : 'Search'}
@@ -652,9 +638,9 @@ const handleAdminCigiUpload = async (e) => {
  </div>
 
  {/* Search results dropdown */}
- {adminUserSearchResults.length > 0 && (
+ {props.adminUserSearchResults.length > 0 && (
  <div className="absolute left-0 right-0 mt-1 bg-zinc-950 border border-zinc-850 rounded-lg max-h-40 overflow-y-auto z-50 shadow-xl divide-y divide-zinc-850">
- {adminUserSearchResults.map((res, index) => (
+ {props.adminUserSearchResults.map((res, index) => (
  <button
  key={index}
  type="button"
@@ -665,8 +651,8 @@ const handleAdminCigiUpload = async (e) => {
  latitude: parseFloat(res.lat) || 0,
  longitude: parseFloat(res.lon) || 0
  });
- setAdminUserSearchQuery(res.display_name);
- setAdminUserSearchResults([]);
+ props.setAdminUserSearchQuery(res.display_name);
+ props.setAdminUserSearchResults([]);
  }}
  className="w-full text-left px-3.5 py-2.5 text-xs text-zinc-350 hover:text-white hover:bg-zinc-850 transition-colors block truncate border-none cursor-pointer"
  >

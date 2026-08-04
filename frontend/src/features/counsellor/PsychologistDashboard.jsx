@@ -280,11 +280,11 @@ export default function PsychologistDashboard({ setView: _setView }) {
  }
  if (avail.daySlots) {
    setDaySlots(avail.daySlots);
- } else if (Array.isArray(avail.availableSlots)) {
+ } else if (Array.isArray(avail.availableSlots) && avail.activeDays) {
    const fallback = {};
    Object.keys(avail.activeDays || {}).forEach(dayIndex => {
      if (avail.activeDays[dayIndex]) fallback[dayIndex] = [...avail.availableSlots];
-   });ct also 
+   });
    setDaySlots(fallback);
  }
  }

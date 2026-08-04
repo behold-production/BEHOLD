@@ -62,7 +62,15 @@ export default function PsychologistManagementTab(props) {
     canDeletePsy,
     isDbLoading,
     adminSlotInterval,
-    setAdminSlotInterval
+    setAdminSlotInterval,
+    adminSearchQuery,
+    setAdminSearchQuery,
+    adminSearchResults,
+    setAdminSearchResults,
+    isAdminSearching,
+    setIsAdminSearching,
+    isAdminLocating,
+    setIsAdminLocating,
   } = props;
 
   const [searchPsy, setSearchPsy] = useState("");
@@ -135,65 +143,6 @@ export default function PsychologistManagementTab(props) {
 
 
   const { bookingsDb, handleTogglePsyActiveStatus, updatingPsyIds, handleGenerateResetToken } = props;
-
-  const [adminSearchQuery, setAdminSearchQuery] = useState('');
-  const [isAdminSearching, setIsAdminSearching] = useState(false);
-  const [adminSearchResults, setAdminSearchResults] = useState([]);
-  const [isAdminLocating, setIsAdminLocating] = useState(false);
-
-  const handleAdminAddressSearch = async () => {
-    if (!adminSearchQuery.trim()) return;
-    setIsAdminSearching(true);
-    try {
-      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(adminSearchQuery)}`);
-      if (res.ok) {
-        const data = await res.json();
-        setAdminSearchResults(data);
-      } else {
-        setAdminSearchResults([]);
-      }
-    } catch (err) {
-      console.error(err);
-      setAdminSearchResults([]);
-    } finally {
-      setIsAdminSearching(false);
-    }
-  };
-
-  const handleAdminDetectLocation = () => {
-    if (!navigator.geolocation) {
-      import('react-hot-toast').then(m => m.toast.error("Geolocation not supported."));
-      return;
-    }
-    setIsAdminLocating(true);
-    navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        const lat = pos.coords.latitude;
-        const lon = pos.coords.longitude;
-        setPsyForm(prev => ({ ...prev, latitude: lat, longitude: lon }));
-
-        try {
-          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
-          if (res.ok) {
-            const data = await res.json();
-            const locName = data.display_name || "Detected Location";
-            setPsyForm(prev => ({ ...prev, locationName: locName }));
-            setAdminSearchQuery(locName);
-          }
-        } catch (err) {
-          console.error(err);
-        }
-        setIsAdminLocating(false);
-        import('react-hot-toast').then(m => m.toast.success("Location updated."));
-      },
-      (err) => {
-        console.error(err);
-        setIsAdminLocating(false);
-        import('react-hot-toast').then(m => m.toast.error("Failed to detect location."));
-      },
-      { timeout: 10000 }
-    );
-  };
 
 
   const psychologistsList = usersDb.filter((u) => {
@@ -463,7 +412,7 @@ export default function PsychologistManagementTab(props) {
       if (avail.daySlots) {
         setAdminDaySlots(avail.daySlots);
       } else if (Array.isArray(avail.availableSlots) && avail.activeDays) {
-        const fallback = {};
+        const fallback = {}; // Ensure activeDays is an object
         Object.keys(avail.activeDays || {}).forEach(dayIndex => {
           if (avail.activeDays[dayIndex]) fallback[dayIndex] = [...avail.availableSlots];
         });
@@ -1383,7 +1332,7 @@ export default function PsychologistManagementTab(props) {
                       <button
                         type="button"
                         onClick={handleAdminAddressSearch}
-                        disabled={isAdminSearching}
+                        disabled={props.isAdminSearching}
                         className="w-full sm:w-auto px-4 py-2 bg-brand text-zinc-955 text-xs font-bold rounded-full hover:bg-brand-dark transition cursor-pointer shrink-0 flex items-center justify-center"
                       >
                         {isAdminSearching ? "Searching..." : "Search"}
@@ -1395,7 +1344,7 @@ export default function PsychologistManagementTab(props) {
                       <div className="absolute left-0 right-0 mt-1 bg-zinc-900 border border-zinc-800 rounded-lg max-h-40 overflow-y-auto z-50 shadow-xl divide-y divide-zinc-800">
                         {adminSearchResults.map((res, index) => (
                           <button
-                            key={index}
+                            key={`search-result-${index}`}
                             type="button"
                             onClick={() => {
                               setPsyForm({
@@ -1474,7 +1423,7 @@ export default function PsychologistManagementTab(props) {
                   </div>
                   <button
                     type="button"
-                    disabled={isAdminLocating}
+                    disabled={props.isAdminLocating}
                     onClick={handleAdminDetectLocation}
                     className="px-3.5 py-2 bg-zinc-900 hover:bg-zinc-850 border border-zinc-800 text-zinc-300 text-xs font-bold rounded-full transition cursor-pointer flex items-center justify-center gap-1.5 disabled:opacity-50"
                   >

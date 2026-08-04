@@ -208,8 +208,9 @@ export default function AdminDashboard({ setView: _setView }) {
  const amountPaid = typeof booking.amountPaid === 'number' ? booking.amountPaid : 1200;
  const appliedDiscount = booking.appliedDiscount || 0;
  const totalBeforeDiscount = amountPaid + appliedDiscount;
- const gstEnabled = settingsForm.gstEnabled === true;
- const gstPercent = gstEnabled ? (Number(settingsForm.gstPercent) || 0) : 0;
+ const currentSettings = settingsForm || {}; // Ensure settingsForm is an object
+ const gstEnabled = currentSettings.gstEnabled === true;
+ const gstPercent = gstEnabled ? (Number(currentSettings.gstPercent) || 0) : 0;
  
  let baseFeeVal = totalBeforeDiscount;
  let gstAmountVal = 0;
@@ -865,14 +866,14 @@ export default function AdminDashboard({ setView: _setView }) {
  longitude: 0
  });
  const [adminSearchQuery, setAdminSearchQuery] = useState('');
- const [, setAdminSearchResults] = useState([]);
- const [, setIsAdminSearching] = useState(false);
- const [, setIsAdminLocating] = useState(false);
+ const [adminSearchResults, setAdminSearchResults] = useState([]);
+ const [isAdminSearching, setIsAdminSearching] = useState(false);
+ const [isAdminLocating, setIsAdminLocating] = useState(false);
 
  const [adminUserSearchQuery, setAdminUserSearchQuery] = useState('');
- const [, setAdminUserSearchResults] = useState([]);
- const [, setIsAdminUserSearching] = useState(false);
- const [, setIsAdminUserLocating] = useState(false);
+ const [adminUserSearchResults, setAdminUserSearchResults] = useState([]);
+ const [isAdminUserSearching, setIsAdminUserSearching] = useState(false);
+ const [isAdminUserLocating, setIsAdminUserLocating] = useState(false);
 
  useEffect(() => {
  if (!adminUserSearchQuery.trim() || adminUserSearchQuery.trim().length < 3 || adminUserSearchQuery === userForm.locationName) {
