@@ -644,6 +644,7 @@ const AdminController = {
         education,
         specialties,
         price,
+        halfSessionPrice,
         lang,
         bio,
         defaultMeetLink,
@@ -667,6 +668,7 @@ const AdminController = {
         return res.status(400).json({ success: false, message: 'Select at least one valid consultation mode' });
       }
       const normalizedPrice = price === undefined || price === '' ? 1200 : getNumber(price, 'Price', { min: 0 });
+      const normalizedHalfSessionPrice = halfSessionPrice === undefined || halfSessionPrice === '' ? 499 : getNumber(halfSessionPrice, 'Half Session Price', { min: 0 });
       const normalizedHours = hours === undefined || hours === '' ? 0 : getNumber(hours, 'Experience hours', { min: 0 });
       const normalizedCommission = commissionPercent === undefined || commissionPercent === ''
         ? 50
@@ -692,6 +694,7 @@ const AdminController = {
         rating: 5.0,
         reviewCount: 0,
         price: normalizedPrice,
+        halfSessionPrice: normalizedHalfSessionPrice,
         lang: lang || 'English',
         defaultMeetLink: defaultMeetLink || '',
         modePreference: 'BOTH',
@@ -719,6 +722,7 @@ const AdminController = {
         education,
         specialties,
         price,
+        halfSessionPrice,
         lang,
         bio,
         defaultMeetLink,
@@ -750,6 +754,7 @@ const AdminController = {
         updates.specialties = normalizeStringList(specialties);
       }
       if (price !== undefined) updates.price = getNumber(price, 'Price', { min: 0 });
+      if (halfSessionPrice !== undefined) updates.halfSessionPrice = getNumber(halfSessionPrice, 'Half Session Price', { min: 0 });
       if (lang !== undefined) updates.lang = lang;
       if (bio !== undefined) {
         updates.experience = bio;

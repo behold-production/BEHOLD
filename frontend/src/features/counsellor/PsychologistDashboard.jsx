@@ -77,6 +77,7 @@ export default function PsychologistDashboard({ setView }) {
  education: '',
  specialties: '',
  price: '',
+ halfSessionPrice: '',
  lang: '',
  bio: '',
  defaultMeetLink: '',
@@ -159,6 +160,7 @@ export default function PsychologistDashboard({ setView }) {
     education: '',
     specialties: '',
     price: '',
+    halfSessionPrice: '',
     lang: '',
     bio: '',
     defaultMeetLink: '',
@@ -256,6 +258,7 @@ export default function PsychologistDashboard({ setView }) {
  education: c.education || '',
  specialties: specialtiesStr,
  price: c.price !== undefined ? c.price : 1200,
+ halfSessionPrice: c.halfSessionPrice !== undefined ? c.halfSessionPrice : 499,
  lang: c.lang || 'English, Malayalam',
  bio: c.bio || '',
  defaultMeetLink: c.defaultMeetLink || '',
@@ -724,6 +727,7 @@ export default function PsychologistDashboard({ setView }) {
       education: regForm.education.trim(),
       specialties: specialtiesArr,
       price: Number(regForm.price) || 1200,
+      halfSessionPrice: Number(regForm.halfSessionPrice) || 499,
       lang: regForm.lang.trim(),
       bio: regForm.bio.trim(),
       defaultMeetLink: regForm.defaultMeetLink.trim(),
@@ -755,6 +759,7 @@ export default function PsychologistDashboard({ setView }) {
     education: '',
     specialties: '',
     price: '',
+    halfSessionPrice: '',
     lang: '',
     bio: '',
     defaultMeetLink: '',
@@ -810,6 +815,7 @@ export default function PsychologistDashboard({ setView }) {
  education: formData.education,
  specialties: specialtiesArr,
  price: Number(formData.price) || 1200,
+ halfSessionPrice: Number(formData.halfSessionPrice) || 499,
  lang: formData.lang,
  bio: formData.bio,
  defaultMeetLink: formData.defaultMeetLink,
@@ -1404,6 +1410,22 @@ export default function PsychologistDashboard({ setView }) {
                       </div>
                       <div className='w-1/2'>
                         <label className='block text-xs font-medium text-slate-400 mb-2'>
+                          Half Session Fee (INR)
+                        </label>
+                        <input
+                          type='number'
+                          required
+                          placeholder='499'
+                          value={regForm.halfSessionPrice}
+                          onChange={(e) => setRegForm({ ...regForm, halfSessionPrice: e.target.value })}
+                          className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
+                        />
+                      </div>
+                    </div>
+
+                    <div className='flex gap-4'>
+                      <div className='w-full'>
+                        <label className='block text-xs font-medium text-slate-400 mb-2'>
                           Experience (Years)
                         </label>
                         <input
@@ -1977,7 +1999,7 @@ export default function PsychologistDashboard({ setView }) {
  </h1>
  </div>
  <p className="text-sm text-zinc-500 font-medium">
- Role: {profile.role} • Hourly Fee: ₹{profile.price}
+ Role: {profile.role} • Hourly Fee: ₹{profile.price} • Half Session: ₹{profile.halfSessionPrice || 499}
  </p>
  </div>
 
@@ -2219,8 +2241,9 @@ export default function PsychologistDashboard({ setView }) {
  <Shield className="w-3.5 h-3.5 text-indigo-400" />
  </div>
  <div>
- <p className="text-sm font-bold text-zinc-500 ">Session Fee</p>
+ <p className="text-sm text-zinc-400">Consultation Fee</p>
  <p className="text-sm text-white font-semibold">₹{profile.price} / Hour</p>
+ <p className="text-sm text-white font-semibold mt-0.5">₹{profile.halfSessionPrice || 499} / Half Session</p>
  </div>
  </div>
  <div className="flex items-start gap-3">

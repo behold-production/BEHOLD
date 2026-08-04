@@ -42,6 +42,7 @@ import {
 } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { DAYS_OF_WEEK } from "../../../counsellor/psychologist-dashboard/counsellorDashboardConstants";
+import AvailabilityTab from "../../../counsellor/psychologist-dashboard/tabs/AvailabilityTab";
 import { SkeletonTableRows, PaginationBar } from "../components/SharedAdminUI";
 
 export default function PsychologistManagementTab(props) {
@@ -333,6 +334,7 @@ export default function PsychologistManagementTab(props) {
         education: psyForm.education,
         specialties: psyForm.specialties,
         price: psyForm.price,
+        halfSessionPrice: psyForm.halfSessionPrice,
         lang: psyForm.lang,
         bio: psyForm.bio,
         defaultMeetLink: psyForm.defaultMeetLink,
@@ -370,6 +372,7 @@ export default function PsychologistManagementTab(props) {
         education: "",
         specialties: "",
         price: "",
+        halfSessionPrice: "",
         lang: "",
         bio: "",
         defaultMeetLink: "",
@@ -418,6 +421,7 @@ export default function PsychologistManagementTab(props) {
         ? psy.specialties.join(", ")
         : psy.specialties || "",
       price: psy.price || 1200,
+      halfSessionPrice: psy.halfSessionPrice || 499,
       lang: psy.lang || "",
       bio: psy.bio || psy.experience || "",
       defaultMeetLink: psy.defaultMeetLink || "",
@@ -526,6 +530,7 @@ export default function PsychologistManagementTab(props) {
         education: psyForm.education,
         specialties: psyForm.specialties,
         price: psyForm.price,
+        halfSessionPrice: psyForm.halfSessionPrice,
         text: undefined,
         lang: psyForm.lang,
         bio: psyForm.bio,
@@ -737,6 +742,7 @@ export default function PsychologistManagementTab(props) {
                     specialties:
                       "Anxiety Stress & Panic, Depression & Mood Concerns, Relationship",
                     price: 1250,
+                    halfSessionPrice: 499,
                     lang: "Malayalam, English",
                     bio: "",
                     isTopFive: false,
@@ -1256,20 +1262,30 @@ export default function PsychologistManagementTab(props) {
                   />
                 </div>
 
-                <div className="space-y-1">
-                  <label className="text-sm font-bold text-zinc-400">
-                    Hourly price (INR)
-                  </label>
-                  <input
-                    type="number"
-                    placeholder="e.g. 1250"
-                    value={psyForm.price}
-                    onChange={(e) =>
-                      setPsyForm({ ...psyForm, price: e.target.value })
-                    }
-                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
-                  />
-                </div>
+                  <div className="flex flex-col gap-1.5 flex-1 min-w-[200px]">
+                    <label className="text-sm font-bold text-zinc-400">Hourly price (INR)</label>
+                    <input
+                      type="number"
+                      className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-[10px] text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-brand/50 transition-colors"
+                      value={psyForm.price}
+                      onChange={(e) =>
+                        setPsyForm({ ...psyForm, price: e.target.value })
+                      }
+                      placeholder="e.g. 1500"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1.5 flex-1 min-w-[200px]">
+                    <label className="text-sm font-bold text-zinc-400">Half Session Price (INR)</label>
+                    <input
+                      type="number"
+                      className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-[10px] text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-brand/50 transition-colors"
+                      value={psyForm.halfSessionPrice}
+                      onChange={(e) =>
+                        setPsyForm({ ...psyForm, halfSessionPrice: e.target.value })
+                      }
+                      placeholder="e.g. 499"
+                    />
+                  </div>
 
                 <div className="space-y-1">
                   <label className="text-sm font-bold text-zinc-400">
@@ -1589,336 +1605,47 @@ export default function PsychologistManagementTab(props) {
                     className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors resize-none"
                   />
                 </div>
-
                 {/* Availability Timings */}
-                <div className="sm:col-span-2 border-t border-zinc-800 pt-4 space-y-4">
-                  <h4 className="text-sm font-bold text-zinc-300 font-header">
-                    Availability Timings
-                  </h4>
-
-                  {/* Select Day */}
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-zinc-400 block">
-                      Select Day to Manage
-                    </label>
-                    <div className="flex flex-wrap gap-1.5">
-                      {[
-                        { label: "Mon", index: 1 },
-                        { label: "Tue", index: 2 },
-                        { label: "Wed", index: 3 },
-                        { label: "Thu", index: 4 },
-                        { label: "Fri", index: 5 },
-                        { label: "Sat", index: 6 },
-                        { label: "Sun", index: 0 },
-                      ].map((day) => {
-                        const isSelected = selectedAdminDays.includes(day.index);
-                        const isActive = adminActiveDays[day.index];
-                        return (
-                          <div key={day.index} className="flex flex-col items-center gap-1">
-                            <button
-                              type="button"
-                              onClick={() => {
-                                if (selectedAdminDays.includes(day.index)) {
-                                  if (selectedAdminDays.length > 1) setSelectedAdminDays(selectedAdminDays.filter(d => d !== day.index));
-                                } else {
-                                  setSelectedAdminDays([...selectedAdminDays, day.index]);
-                                }
-                              }}
-                              className={`px-3 py-1.5 border rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer ${isSelected
-                                  ? "bg-brand text-zinc-955 font-bold border-none"
-                                  : "bg-zinc-955 border-zinc-850 text-zinc-500 hover:border-zinc-750"
-                                }`}
-                            >
-                              {day.label}
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => toggleAdminDay(day.index)}
-                              className={`text-[9px] px-2 py-0.5 rounded font-bold transition-colors border cursor-pointer ${isActive ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : 'bg-zinc-800 text-zinc-500 border-zinc-700'}`}
-                            >
-                              {isActive ? 'ACTIVE' : 'OFF'}
-                            </button>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Active Timing Slots */}
-                  <div className="space-y-1.5 pt-4">
-                    <label className="text-xs font-bold text-zinc-400 block">
-                      Timing Slots (Active) {selectedAdminDays.length > 1 && "- Multiple Days"}
-                    </label>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[200px] overflow-y-auto pr-1">
-                      {combinedAdminSlots.map((slot) => {
-                        return (
-                          <div
-                            key={slot}
-                            className="flex items-center gap-1.5 w-full"
-                          >
-                            <button
-                              type="button"
-                              className="flex-1 py-2 border rounded-lg font-bold transition cursor-default text-xs bg-brand/10 border-brand text-brand pointer-events-none"
-                            >
-                              {slot}
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => handleRemoveAdminSlot(slot)}
-                              className="px-2 py-2 bg-zinc-950 border border-zinc-850 hover:bg-rose-955/40 hover:border-rose-900 text-zinc-500 hover:text-rose-400 rounded-lg text-xs font-bold transition cursor-pointer shrink-0 font-header"
-                              title="Remove Slot"
-                            >
-                              Remove
-                            </button>
-                          </div>
-                        );
-                      })}
-                      {combinedAdminSlots.length === 0 && (
-                        <div className="col-span-2 py-4 bg-zinc-955/40 border border-dashed border-zinc-850 rounded-lg text-zinc-550 italic text-xs text-center w-full">
-                          No timing slots configured for the selected day(s). Use the controls below to
-                          add custom slots or generate from a time range.
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Add Custom Timing Slot */}
-                  <div className="space-y-1.5 bg-zinc-955/50 border border-zinc-850/60 p-3.5 rounded-lg">
-                    <label className="text-xs font-bold text-zinc-350 block">
-                      Add Custom Timing Slot
-                    </label>
-
-
-
-                    <div className="flex gap-2 items-end">
-                      <div className="flex-1 space-y-0.5">
-                        <label className="text-[10px] text-zinc-500 font-bold block">
-                          Hour
-                        </label>
-                        <select
-                          value={adminCustomHour}
-                          onChange={(e) => setAdminCustomHour(e.target.value)}
-                          className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
-                        >
-                          {[
-                            "01",
-                            "02",
-                            "03",
-                            "04",
-                            "05",
-                            "06",
-                            "07",
-                            "08",
-                            "09",
-                            "10",
-                            "11",
-                            "12",
-                          ].map((h) => (
-                            <option key={h} value={h}>
-                              {h}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                      <div className="flex-1 space-y-0.5">
-                        <label className="text-[10px] text-zinc-500 font-bold block">
-                          Minute
-                        </label>
-                        <select
-                          value={adminCustomMinute}
-                          onChange={(e) => setAdminCustomMinute(e.target.value)}
-                          className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-855 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
-                        >
-                          {[
-                            "00",
-                            "05",
-                            "10",
-                            "15",
-                            "20",
-                            "25",
-                            "30",
-                            "35",
-                            "40",
-                            "45",
-                            "50",
-                            "55",
-                          ].map((m) => (
-                            <option key={m} value={m}>
-                              {m}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                      <div className="flex-1 space-y-0.5">
-                        <label className="text-[10px] text-zinc-500 font-bold block">
-                          AM/PM
-                        </label>
-                        <select
-                          value={adminCustomPeriod}
-                          onChange={(e) => setAdminCustomPeriod(e.target.value)}
-                          className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-855 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
-                        >
-                          <option value="AM">AM</option>
-                          <option value="PM">PM</option>
-                        </select>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={handleAddAdminCustomSlot}
-                        className="bg-brand/10 hover:bg-brand text-brand hover:text-zinc-955 px-3 py-1.5 text-xs font-bold rounded-full transition-colors border border-brand/30 hover:border-brand cursor-pointer shrink-0 h-[30px] flex items-center justify-center font-header"
-                      >
-                        Add Slot
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Add Custom Time Range */}
-                  <div className="space-y-1.5 bg-zinc-955/50 border border-zinc-850/60 p-3.5 rounded-lg">
-                    <label className="text-xs font-bold text-zinc-350 block">
-                      Generate Timing Slots from Range
-                    </label>
-                    <div className="flex flex-col gap-2">
-                      <div className="flex gap-1.5 items-end">
-                        <span className="text-xs text-zinc-500 font-bold pb-1.5 tracking-wide w-10 text-left">
-                          From:
-                        </span>
-                        <div className="flex-1 space-y-0.5">
-                          <select
-                            value={adminFromHour}
-                            onChange={(e) => setAdminFromHour(e.target.value)}
-                            className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
-                          >
-                            {[
-                              "01",
-                              "02",
-                              "03",
-                              "04",
-                              "05",
-                              "06",
-                              "07",
-                              "08",
-                              "09",
-                              "10",
-                              "11",
-                              "12",
-                            ].map((h) => (
-                              <option key={h} value={h}>
-                                {h}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                        <div className="flex-1 space-y-0.5">
-                          <select
-                            value={adminFromMinute}
-                            onChange={(e) => setAdminFromMinute(e.target.value)}
-                            className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
-                          >
-                            {["00", "15", "30", "45"].map((m) => (
-                              <option key={m} value={m}>
-                                {m}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                        <div className="flex-1 space-y-0.5">
-                          <select
-                            value={adminFromPeriod}
-                            onChange={(e) => setAdminFromPeriod(e.target.value)}
-                            className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-855 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
-                          >
-                            <option value="AM">AM</option>
-                            <option value="PM">PM</option>
-                          </select>
-                        </div>
-                      </div>
-
-                      <div className="flex gap-1.5 items-end">
-                        <span className="text-xs text-zinc-500 font-bold pb-1.5 tracking-wide w-10 text-left">
-                          To:
-                        </span>
-                        <div className="flex-1 space-y-0.5">
-                          <select
-                            value={adminToHour}
-                            onChange={(e) => setAdminToHour(e.target.value)}
-                            className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
-                          >
-                            {[
-                              "01",
-                              "02",
-                              "03",
-                              "04",
-                              "05",
-                              "06",
-                              "07",
-                              "08",
-                              "09",
-                              "10",
-                              "11",
-                              "12",
-                            ].map((h) => (
-                              <option key={h} value={h}>
-                                {h}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                        <div className="flex-1 space-y-0.5">
-                          <select
-                            value={adminToMinute}
-                            onChange={(e) => setAdminToMinute(e.target.value)}
-                            className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
-                          >
-                            {["00", "15", "30", "45"].map((m) => (
-                              <option key={m} value={m}>
-                                {m}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                        <div className="flex-1 space-y-0.5">
-                          <select
-                            value={adminToPeriod}
-                            onChange={(e) => setAdminToPeriod(e.target.value)}
-                            className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-855 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
-                          >
-                            <option value="AM">AM</option>
-                            <option value="PM">PM</option>
-                          </select>
-                        </div>
-                      </div>
-
-                      <div className="flex gap-1.5 items-center mt-1">
-                        <span className="text-xs text-zinc-500 font-bold tracking-wide w-24 text-left">
-                          Session Duration:
-                        </span>
-                        <div className="flex-1">
-                          <select
-                            value={adminSlotInterval || 60}
-                            onChange={(e) => setAdminSlotInterval(Number(e.target.value))}
-                            className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
-                          >
-                            <option value={30}>30 Minutes</option>
-                            <option value={60}>60 Minutes</option>
-                          </select>
-                        </div>
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const fromStr = `${adminFromHour}:${adminFromMinute} ${adminFromPeriod}`;
-                          const toStr = `${adminToHour}:${adminToMinute} ${adminToPeriod}`;
-                          addAdminTimeRangeSlots(fromStr, toStr, adminSlotInterval);
-                        }}
-                        className="w-full mt-2 bg-brand/10 hover:bg-brand text-brand hover:text-zinc-955 py-2 text-xs font-bold rounded-lg transition-colors border border-brand/30 hover:border-brand cursor-pointer flex items-center justify-center font-header"
-                      >
-                        Generate Time Slots
-                      </button>
-                    </div>
+                  <div className="sm:col-span-2 border-t border-zinc-800 pt-4 space-y-4">
+                    <AvailabilityTab
+                      activeDays={adminActiveDays}
+                      toggleDay={toggleAdminDay}
+                      daySlots={adminDaySlots}
+                      setDaySlots={setAdminDaySlots}
+                      selectedDays={selectedAdminDays}
+                      setSelectedDays={setSelectedAdminDays}
+                      availableSlots={adminAvailableSlots}
+                      setAvailableSlots={setAdminAvailableSlots}
+                      handleRemoveSlot={handleRemoveAdminSlot}
+                      customHour={adminCustomHour}
+                      setCustomHour={setAdminCustomHour}
+                      customMinute={adminCustomMinute}
+                      setCustomMinute={setAdminCustomMinute}
+                      customPeriod={adminCustomPeriod}
+                      setCustomPeriod={setAdminCustomPeriod}
+                      handleAddCustomSlot={handleAddAdminCustomSlot}
+                      fromHour={adminFromHour}
+                      setFromHour={setAdminFromHour}
+                      fromMinute={adminFromMinute}
+                      setFromMinute={setAdminFromMinute}
+                      fromPeriod={adminFromPeriod}
+                      setFromPeriod={setAdminFromPeriod}
+                      toHour={adminToHour}
+                      setToHour={setAdminToHour}
+                      toMinute={adminToMinute}
+                      setToMinute={setAdminToMinute}
+                      toPeriod={adminToPeriod}
+                      setToPeriod={setAdminToPeriod}
+                      setSlotError={setPsyFormError}
+                      slotInterval={adminSlotInterval}
+                      setSlotInterval={setAdminSlotInterval}
+                      addTimeRangeSlots={addAdminTimeRangeSlots}
+                      isAvailabilitySaved={false}
+                      handleAvailabilitySave={() => {}}
+                      hideSaveButton={true}
+                    />
                   </div>
                 </div>
-              </div>
 
               {psyFormError && (
                 <p className="text-sm text-rose-500 font-bold tracking-wide">
@@ -2028,6 +1755,7 @@ export default function PsychologistManagementTab(props) {
                   ? rawSpecialties.split(",").map((s) => s.trim())
                   : [];
               const price = viewingPsychologist.price || 1200;
+              const halfSessionPrice = viewingPsychologist.halfSessionPrice || 499;
               const lang = viewingPsychologist.lang || "English, Malayalam";
               const bio =
                 viewingPsychologist.bio ||
@@ -2096,6 +1824,9 @@ export default function PsychologistManagementTab(props) {
                           </span>
                           <span className="font-bold text-brand">
                             ₹{price} / hour
+                          </span>
+                          <span className="font-bold text-brand block">
+                            ₹{halfSessionPrice} / half-session
                           </span>
                         </div>
                         <div>
@@ -2479,16 +2210,26 @@ export default function PsychologistManagementTab(props) {
                   />
                 </div>
 
-                <div className="space-y-1">
-                  <label className="text-sm font-bold text-zinc-400">Hourly price (INR)</label>
-                  <input
-                    type="number"
-                    placeholder="e.g. 1250"
-                    value={psyForm.price}
-                    onChange={(e) => setPsyForm({ ...psyForm, price: e.target.value })}
-                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
-                  />
-                </div>
+                  <div className="flex flex-col gap-1.5 flex-1 min-w-[200px]">
+                    <label className="text-sm font-bold text-zinc-400">Hourly price (INR)</label>
+                    <input
+                      type="number"
+                      className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-[10px] text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-brand/50 transition-colors"
+                      value={psyForm.price}
+                      onChange={(e) => setPsyForm({ ...psyForm, price: e.target.value })}
+                      placeholder="e.g. 1500"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1.5 flex-1 min-w-[200px]">
+                    <label className="text-sm font-bold text-zinc-400">Half Session Price (INR)</label>
+                    <input
+                      type="number"
+                      className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-[10px] text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-brand/50 transition-colors"
+                      value={psyForm.halfSessionPrice}
+                      onChange={(e) => setPsyForm({ ...psyForm, halfSessionPrice: e.target.value })}
+                      placeholder="e.g. 499"
+                    />
+                  </div>
 
                 <div className="space-y-1">
                   <label className="text-sm font-bold text-zinc-400">Languages Spoken</label>
@@ -2711,251 +2452,43 @@ export default function PsychologistManagementTab(props) {
 
                 {/* Availability Timings */}
                 <div className="sm:col-span-2 border-t border-zinc-800 pt-4 space-y-4">
-                  <h4 className="text-sm font-bold text-zinc-300 font-header">Availability Timings</h4>
-
-                  {/* Select Day */}
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-zinc-400 block">
-                      Select Day to Manage
-                    </label>
-                    <div className="flex flex-wrap gap-1.5">
-                      {[
-                        { label: "Mon", index: 1 },
-                        { label: "Tue", index: 2 },
-                        { label: "Wed", index: 3 },
-                        { label: "Thu", index: 4 },
-                        { label: "Fri", index: 5 },
-                        { label: "Sat", index: 6 },
-                        { label: "Sun", index: 0 },
-                      ].map((day) => {
-                        const isSelected = selectedAdminDays.includes(day.index);
-                        const isActive = adminActiveDays[day.index];
-                        return (
-                          <div key={day.index} className="flex flex-col items-center gap-1">
-                            <button
-                              type="button"
-                              onClick={() => {
-                                if (selectedAdminDays.includes(day.index)) {
-                                  if (selectedAdminDays.length > 1) setSelectedAdminDays(selectedAdminDays.filter(d => d !== day.index));
-                                } else {
-                                  setSelectedAdminDays([...selectedAdminDays, day.index]);
-                                }
-                              }}
-                              className={`px-3 py-1.5 border rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer ${isSelected
-                                  ? "bg-brand text-zinc-955 font-bold border-none"
-                                  : "bg-zinc-955 border-zinc-850 text-zinc-500 hover:border-zinc-750"
-                                }`}
-                            >
-                              {day.label}
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => toggleAdminDay(day.index)}
-                              className={`text-[9px] px-2 py-0.5 rounded font-bold transition-colors border cursor-pointer ${isActive ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : 'bg-zinc-800 text-zinc-500 border-zinc-700'}`}
-                            >
-                              {isActive ? 'ACTIVE' : 'OFF'}
-                            </button>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Active Timing Slots */}
-                  <div className="space-y-1.5 pt-4">
-                    <label className="text-xs font-bold text-zinc-400 block">
-                      Timing Slots (Active) {selectedAdminDays.length > 1 && "- Multiple Days"}
-                    </label>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[200px] overflow-y-auto pr-1">
-                      {combinedAdminSlots.map((slot) => {
-                        return (
-                          <div
-                            key={slot}
-                            className="flex items-center gap-1.5 w-full"
-                          >
-                            <button
-                              type="button"
-                              className="flex-1 py-2 border rounded-lg font-bold transition cursor-default text-xs bg-brand/10 border-brand text-brand pointer-events-none"
-                            >
-                              {slot}
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => handleRemoveAdminSlot(slot)}
-                              className="px-2 py-2 bg-zinc-950 border border-zinc-850 hover:bg-rose-955/40 hover:border-rose-900 text-zinc-500 hover:text-rose-400 rounded-lg text-xs font-bold transition cursor-pointer shrink-0 font-header"
-                              title="Remove Slot"
-                            >
-                              Remove
-                            </button>
-                          </div>
-                        );
-                      })}
-                      {combinedAdminSlots.length === 0 && (
-                        <div className="col-span-2 py-4 bg-zinc-955/40 border border-dashed border-zinc-850 rounded-lg text-zinc-550 italic text-xs text-center w-full">
-                          No timing slots configured for the selected day(s). Use the controls below to
-                          add custom slots or generate from a time range.
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Add Custom Timing Slot */}
-                  <div className="space-y-1.5 bg-zinc-955/50 border border-zinc-850/60 p-3.5 rounded-lg">
-                    <label className="text-xs font-bold text-zinc-350 block">Add Custom Timing Slot</label>
-
-
-
-                    <div className="flex gap-2 items-end">
-                      <div className="flex-1 space-y-0.5">
-                        <label className="text-[10px] text-zinc-500 font-bold block">Hour</label>
-                        <select
-                          value={adminCustomHour}
-                          onChange={(e) => setAdminCustomHour(e.target.value)}
-                          className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
-                        >
-                          {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map(h => (
-                            <option key={h} value={h}>{h}</option>
-                          ))}
-                        </select>
-                      </div>
-                      <div className="flex-1 space-y-0.5">
-                        <label className="text-[10px] text-zinc-500 font-bold block">Minute</label>
-                        <select
-                          value={adminCustomMinute}
-                          onChange={(e) => setAdminCustomMinute(e.target.value)}
-                          className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-855 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
-                        >
-                          {['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55'].map(m => (
-                            <option key={m} value={m}>{m}</option>
-                          ))}
-                        </select>
-                      </div>
-                      <div className="flex-1 space-y-0.5">
-                        <label className="text-[10px] text-zinc-500 font-bold block">AM/PM</label>
-                        <select
-                          value={adminCustomPeriod}
-                          onChange={(e) => setAdminCustomPeriod(e.target.value)}
-                          className="w-full px-2 py-1.5 bg-zinc-955 border border-zinc-855 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
-                        >
-                          <option value="AM">AM</option>
-                          <option value="PM">PM</option>
-                        </select>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={handleAddAdminCustomSlot}
-                        className="bg-brand/10 hover:bg-brand text-brand hover:text-zinc-955 px-3 py-1.5 text-xs font-bold rounded-full transition-colors border border-brand/30 hover:border-brand cursor-pointer shrink-0 h-[30px] flex items-center justify-center font-header"
-                      >
-                        Add Slot
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Add Custom Time Range */}
-                  <div className="space-y-1.5 bg-zinc-955/50 border border-zinc-850/60 p-3.5 rounded-lg">
-                    <label className="text-xs font-bold text-zinc-350 block">Generate Timing Slots from Range</label>
-                    <div className="flex flex-col gap-2">
-                      <div className="flex gap-1.5 items-end">
-                        <span className="text-xs text-zinc-500 font-bold pb-1.5 tracking-wide w-10 text-left">From:</span>
-                        <div className="flex-1 space-y-0.5">
-                          <select
-                            value={adminFromHour}
-                            onChange={(e) => setAdminFromHour(e.target.value)}
-                            className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
-                          >
-                            {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map(h => (
-                              <option key={h} value={h}>{h}</option>
-                            ))}
-                          </select>
-                        </div>
-                        <div className="flex-1 space-y-0.5">
-                          <select
-                            value={adminFromMinute}
-                            onChange={(e) => setAdminFromMinute(e.target.value)}
-                            className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
-                          >
-                            {['00', '15', '30', '45'].map(m => (
-                              <option key={m} value={m}>{m}</option>
-                            ))}
-                          </select>
-                        </div>
-                        <div className="flex-1 space-y-0.5">
-                          <select
-                            value={adminFromPeriod}
-                            onChange={(e) => setAdminFromPeriod(e.target.value)}
-                            className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-855 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
-                          >
-                            <option value="AM">AM</option>
-                            <option value="PM">PM</option>
-                          </select>
-                        </div>
-                      </div>
-
-                      <div className="flex gap-1.5 items-end">
-                        <span className="text-xs text-zinc-500 font-bold pb-1.5 tracking-wide w-10 text-left">To:</span>
-                        <div className="flex-1 space-y-0.5">
-                          <select
-                            value={adminToHour}
-                            onChange={(e) => setAdminToHour(e.target.value)}
-                            className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
-                          >
-                            {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map(h => (
-                              <option key={h} value={h}>{h}</option>
-                            ))}
-                          </select>
-                        </div>
-                        <div className="flex-1 space-y-0.5">
-                          <select
-                            value={adminToMinute}
-                            onChange={(e) => setAdminToMinute(e.target.value)}
-                            className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
-                          >
-                            {['00', '15', '30', '45'].map(m => (
-                              <option key={m} value={m}>{m}</option>
-                            ))}
-                          </select>
-                        </div>
-                        <div className="flex-1 space-y-0.5">
-                          <select
-                            value={adminToPeriod}
-                            onChange={(e) => setAdminToPeriod(e.target.value)}
-                            className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-855 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
-                          >
-                            <option value="AM">AM</option>
-                            <option value="PM">PM</option>
-                          </select>
-                        </div>
-                      </div>
-
-                      <div className="flex gap-1.5 items-center mt-1">
-                        <span className="text-xs text-zinc-500 font-bold tracking-wide w-24 text-left">
-                          Session Duration:
-                        </span>
-                        <div className="flex-1">
-                          <select
-                            value={adminSlotInterval || 60}
-                            onChange={(e) => setAdminSlotInterval(Number(e.target.value))}
-                            className="w-full px-2 py-1.5 bg-zinc-950 border border-zinc-850 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
-                          >
-                            <option value={30}>30 Minutes</option>
-                            <option value={60}>60 Minutes</option>
-                          </select>
-                        </div>
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const fromStr = `${adminFromHour}:${adminFromMinute} ${adminFromPeriod}`;
-                          const toStr = `${adminToHour}:${adminToMinute} ${adminToPeriod}`;
-                          addAdminTimeRangeSlots(fromStr, toStr, adminSlotInterval);
-                        }}
-                        className="w-full mt-2 bg-brand/10 hover:bg-brand text-brand hover:text-zinc-955 py-2 text-xs font-bold rounded-lg transition-colors border border-brand/30 hover:border-brand cursor-pointer flex items-center justify-center font-header"
-                      >
-                        Generate Time Slots
-                      </button>
-                    </div>
-                  </div>
+                  <AvailabilityTab
+                    activeDays={adminActiveDays}
+                    toggleDay={toggleAdminDay}
+                    daySlots={adminDaySlots}
+                    setDaySlots={setAdminDaySlots}
+                    selectedDays={selectedAdminDays}
+                    setSelectedDays={setSelectedAdminDays}
+                    availableSlots={adminAvailableSlots}
+                    setAvailableSlots={setAdminAvailableSlots}
+                    handleRemoveSlot={handleRemoveAdminSlot}
+                    customHour={adminCustomHour}
+                    setCustomHour={setAdminCustomHour}
+                    customMinute={adminCustomMinute}
+                    setCustomMinute={setAdminCustomMinute}
+                    customPeriod={adminCustomPeriod}
+                    setCustomPeriod={setAdminCustomPeriod}
+                    handleAddCustomSlot={handleAddAdminCustomSlot}
+                    fromHour={adminFromHour}
+                    setFromHour={setAdminFromHour}
+                    fromMinute={adminFromMinute}
+                    setFromMinute={setAdminFromMinute}
+                    fromPeriod={adminFromPeriod}
+                    setFromPeriod={setAdminFromPeriod}
+                    toHour={adminToHour}
+                    setToHour={setAdminToHour}
+                    toMinute={adminToMinute}
+                    setToMinute={setAdminToMinute}
+                    toPeriod={adminToPeriod}
+                    setToPeriod={setAdminToPeriod}
+                    setSlotError={setPsyFormError}
+                    slotInterval={adminSlotInterval}
+                    setSlotInterval={setAdminSlotInterval}
+                    addTimeRangeSlots={addAdminTimeRangeSlots}
+                    isAvailabilitySaved={false}
+                    handleAvailabilitySave={() => {}}
+                    hideSaveButton={true}
+                  />
                 </div>
               </div>
 
@@ -3030,6 +2563,7 @@ export default function PsychologistManagementTab(props) {
               const rawSpecialties = viewingPsychologist.specialties || 'Anxiety, Stress Management, Mood Disorders';
               const specialtiesList = Array.isArray(rawSpecialties) ? rawSpecialties : (typeof rawSpecialties === 'string' ? rawSpecialties.split(',').map(s => s.trim()) : []);
               const price = viewingPsychologist.price || 1200;
+              const halfSessionPrice = viewingPsychologist.halfSessionPrice || 499;
               const lang = viewingPsychologist.lang || 'English, Malayalam';
               const bio = viewingPsychologist.bio || viewingPsychologist.experience || 'Professional clinical therapist committed to student wellbeing.';
 
@@ -3068,15 +2602,20 @@ export default function PsychologistManagementTab(props) {
                         <div>
                           <span className="text-zinc-500 block text-sm ">Consultation Fee</span>
                           <span className="font-bold text-brand">₹{price} / hour</span>
+                          {viewingPsychologist.commissionPercent !== undefined && (
+                            <div className="text-xs text-zinc-500 mt-0.5">
+                              (₹{(((price) * (viewingPsychologist.commissionPercent !== undefined ? viewingPsychologist.commissionPercent : 50)) / 100).toFixed(2)} Payout / Session)
+                            </div>
+                          )}
                         </div>
                         <div>
-                          <span className="text-zinc-500 block text-xs font-semibold">Revenue Share Allocation</span>
-                          <span className="font-bold text-cyan-400 text-sm block">
-                            {viewingPsychologist.commissionPercent !== undefined ? viewingPsychologist.commissionPercent : 50}% Share
-                            <span className="text-xs text-zinc-400 font-normal ml-1">
-                              (₹{(((price) * (viewingPsychologist.commissionPercent !== undefined ? viewingPsychologist.commissionPercent : 50)) / 100).toFixed(2)} Payout / Session)
-                            </span>
-                          </span>
+                          <span className="text-zinc-500 block text-sm ">Half Session Price</span>
+                          <span className="font-bold text-brand">₹{halfSessionPrice} / 30-min</span>
+                          {viewingPsychologist.commissionPercent !== undefined && (
+                            <div className="text-xs text-zinc-500 mt-0.5">
+                              (₹{(((halfSessionPrice) * (viewingPsychologist.commissionPercent !== undefined ? viewingPsychologist.commissionPercent : 50)) / 100).toFixed(2)} Payout / Session)
+                            </div>
+                          )}
                         </div>
                         <div>
                           <span className="text-zinc-500 block text-sm ">Languages Spoken</span>

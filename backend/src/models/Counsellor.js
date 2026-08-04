@@ -23,6 +23,7 @@ const counsellorSchema = new mongoose.Schema(
     bio: { type: String, default: '' },
     education: { type: String, default: '' },
     price: { type: Number, default: 1200 },
+    halfSessionPrice: { type: Number, default: 499 },
     lang: { type: String, default: 'English, Malayalam' },
     defaultMeetLink: { type: String, default: '' },
     hours: { type: Number, default: 0 },

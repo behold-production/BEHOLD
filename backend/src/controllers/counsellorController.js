@@ -46,6 +46,7 @@ const CounsellorController = {
         bio,
         education,
         price,
+        halfSessionPrice,
         lang,
         defaultMeetLink,
         hours,
@@ -78,6 +79,13 @@ const CounsellorController = {
           return res.status(400).json({ success: false, message: 'Price must be a non-negative number' });
         }
         updates.price = parsedPrice;
+      }
+      if (halfSessionPrice !== undefined) {
+        const parsedHalf = Number(halfSessionPrice);
+        if (!Number.isFinite(parsedHalf) || parsedHalf < 0) {
+          return res.status(400).json({ success: false, message: 'Half session price must be a non-negative number' });
+        }
+        updates.halfSessionPrice = parsedHalf;
       }
       if (lang !== undefined) updates.lang = lang;
       if (defaultMeetLink !== undefined) updates.defaultMeetLink = defaultMeetLink;

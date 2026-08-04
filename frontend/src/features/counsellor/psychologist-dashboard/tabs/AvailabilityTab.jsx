@@ -36,20 +36,24 @@ const AvailabilityTab = ({
  setSlotInterval,
  addTimeRangeSlots,
  isAvailabilitySaved,
- handleAvailabilitySave
+ handleAvailabilitySave,
+ hideSaveButton = false
 }) => {
- const shadowStyle = { boxShadow: "inset 0 1px 1px 0 rgba(255,255,255,0.05), inset 0 -1px 1px 0 rgba(0,0,0,0.5)" };
- 
- const combinedSlots = Array.from(new Set(selectedDays.flatMap(day => daySlots[day] || []))).sort((a, b) => {
-   const aTime = new Date('1970/01/01 ' + a);
-   const bTime = new Date('1970/01/01 ' + b);
-   return aTime - bTime;
- });
+  const shadowStyle = { boxShadow: "inset 0 1px 1px 0 rgba(255,255,255,0.05), inset 0 -1px 1px 0 rgba(0,0,0,0.5)" };
+  
+  const combinedSlots = Array.from(new Set(selectedDays.flatMap(day => daySlots[day] || []))).sort((a, b) => {
+    const aTime = new Date('1970/01/01 ' + a);
+    const bTime = new Date('1970/01/01 ' + b);
+    return aTime - bTime;
+  });
 
- return (
- <form onSubmit={handleAvailabilitySave} className="space-y-6 animate-in fade-in duration-200 text-sm">
- <div className="border-b border-zinc-800 pb-3 flex justify-between items-center">
- <h3 className="text-sm font-bold text-zinc-400 font-header">Manage Slot Availability</h3>
+  const Wrapper = hideSaveButton ? 'div' : 'form';
+  const wrapperProps = hideSaveButton ? { className: "space-y-6 animate-in fade-in duration-200 text-sm" } : { onSubmit: handleAvailabilitySave, className: "space-y-6 animate-in fade-in duration-200 text-sm" };
+
+  return (
+  <Wrapper {...wrapperProps}>
+  <div className="border-b border-zinc-800 pb-3 flex justify-between items-center">
+  <h3 className="text-sm font-bold text-zinc-400 font-header">Manage Slot Availability</h3>
  <span className="text-sm text-zinc-500 font-medium">Set Standard Hours</span>
  </div>
 
@@ -284,6 +288,7 @@ const AvailabilityTab = ({
  </div>
  </div>
 
+ {!hideSaveButton && (
  <div className="pt-6 border-t border-zinc-800 flex flex-col sm:flex-row items-center justify-between gap-4">
  {isAvailabilitySaved ? (
  <span className="text-sm text-emerald-450 font-bold flex items-center gap-1 bg-emerald-955/20 px-3 py-1.5 rounded-[10px] border border-emerald-900/30">
@@ -297,8 +302,9 @@ const AvailabilityTab = ({
  <Save className="w-4 h-4" /> Save Slots Matrix
  </button>
  </div>
+ )}
  </div>
- </form>
+ </Wrapper>
  );
 };
 
