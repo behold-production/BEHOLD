@@ -227,7 +227,7 @@ export default function PsychologistManagementTab(props) {
     return `${hourStr}:${minStr} ${period}`;
   };
 
-  const addAdminTimeRangeSlots = (fromStr, toStr, interval = 60) => {
+  const addAdminTimeRangeSlots = (fromStr, toStr, isReg = false, interval = 60) => {
     const fromMins = parseAdminTimeToMinutes(fromStr);
     const toMins = parseAdminTimeToMinutes(toStr);
     if (fromMins >= toMins) {

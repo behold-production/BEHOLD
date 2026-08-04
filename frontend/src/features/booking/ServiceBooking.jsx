@@ -116,7 +116,8 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
         handleApplyCoupon,
         handleRemoveCoupon,
         getCalculatedDistance,
-        getHaversineDistance
+        getHaversineDistance,
+        confirmedMeetLink
     } = useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvisor });
 
     const step2Ref = useRef(null);
@@ -537,13 +538,18 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             Google Meet Session Link
                                                         </span>
                                                         <span className="text-sm text-slate-900 font-bold truncate block max-w-[280px] sm:max-w-xs">
-                                                            {selectedAdvisor?.defaultMeetLink || 'https://meet.google.com/abc-defg-hij'}
+                                                            {confirmedMeetLink || selectedAdvisor?.defaultMeetLink || 'https://meet.google.com/abc-defg-hij'}
                                                         </span>
+                                                        {confirmedMeetLink && (
+                                                            <span className="text-[10px] text-emerald-600 font-semibold mt-1 block">
+                                                                ✓ Session-specific link generated
+                                                            </span>
+                                                        )}
                                                     </div>
                                                     <button
                                                         type="button"
                                                         onClick={() => {
-                                                            navigator.clipboard.writeText(selectedAdvisor?.defaultMeetLink || 'https://meet.google.com/abc-defg-hij');
+                                                            navigator.clipboard.writeText(confirmedMeetLink || selectedAdvisor?.defaultMeetLink || 'https://meet.google.com/abc-defg-hij');
                                                             setCopiedMeet(true);
                                                             setTimeout(() => setCopiedMeet(false), 2000);
                                                         }}
@@ -583,7 +589,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                         const clientName = bookingForm.name || 'User';
                                                         const clientEmail = bookingForm.email;
                                                         const clientPhone = bookingForm.phone;
-                                                        const meetLink = bookingMode === 'ONLINE' ? (selectedAdvisor?.defaultMeetLink || 'https://meet.google.com/abc-defg-hij') : null;
+                                                        const meetLink = bookingMode === 'ONLINE' ? (confirmedMeetLink || selectedAdvisor?.defaultMeetLink || 'https://meet.google.com/abc-defg-hij') : null;
 
                                                         downloadPDFReceipt({
                                                             id: bookingId,

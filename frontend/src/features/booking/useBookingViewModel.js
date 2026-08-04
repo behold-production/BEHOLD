@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useCustomDialog } from '../../context/CustomDialogContext';
 import toast from 'react-hot-toast';
@@ -281,6 +281,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
   
   const isAdvisorLocked = !!preselectedAdvisorId;
   const [bookingStep, setBookingStep] = useState('config'); // 'config' | 'payment' | 'success'
+  const [confirmedMeetLink, setConfirmedMeetLink] = useState(''); // meet link from server after payment
 
   const [couponInput, setCouponInput] = useState('');
   const [appliedDiscount, setAppliedDiscount] = useState(0);
@@ -725,7 +726,10 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     try {
       const parsed = advisor.availabilitySlots;
       const isDayActive = parsed.activeDays && parsed.activeDays[dayOfWeek];
-      const isSlotActive = parsed.availableSlots && parsed.availableSlots.includes(timeStr);
+      // Check daySlots first (newer per-day structure), fall back to legacy availableSlots
+      const daySpecificSlots = parsed.daySlots && parsed.daySlots[dayOfWeek];
+      const slotsForDay = Array.isArray(daySpecificSlots) ? daySpecificSlots : (parsed.availableSlots || []);
+      const isSlotActive = slotsForDay.includes(timeStr);
       if (isDayActive && isSlotActive) {
         const bookings = advisor.bookedSlots || [];
         const isAlreadyBooked = bookings.some(b => 
@@ -743,11 +747,22 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
   };
 
   // History tracking popstate listener
+  // IMPORTANT: We use a ref to track bookingStep so the popstate handler always
+  // has the latest value without causing re-renders, and we NEVER override 'success'.
+  const bookingStepRef = React.useRef(bookingStep);
+  useEffect(() => {
+    bookingStepRef.current = bookingStep;
+  }, [bookingStep]);
+
   useEffect(() => {
     window.history.replaceState({ component: 'booking', step: 'config' }, '');
 
     const handlePopState = (e) => {
-      if (e.state && e.state.component === 'booking' && e.state.step) {
+      // Never allow popstate to override a confirmed success state
+      // Razorpay manipulates browser history when its overlay closes,
+      // which would otherwise reset the step back to 'payment' or 'config'.
+      if (bookingStepRef.current === 'success') return;
+      if (e.state && e.state.component === 'booking' && e.state.step && e.state.step !== 'success') {
         setBookingStep(e.state.step);
       }
     };
@@ -1082,9 +1097,15 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
                 "Booking Confirmed!",
                 `Your session with ${selectedAdvisor?.name || 'Assigned Advisor'} on ${selectedDate} at ${selectedTime} is confirmed.`
               );
+              // Capture the server-generated meet link from the confirmed appointment
+              const serverMeetLink = verifyRes.data?.meetLink || '';
+              if (serverMeetLink) setConfirmedMeetLink(serverMeetLink);
               setIsProcessingPayment(false);
               setIsSuccess(true);
-              handleStepChange('success');
+              // Use direct setBookingStep to bypass handleStepChange validation
+              // which requires selectedAdvisor/date/time (still valid here, but safer)
+              setBookingStep('success');
+              window.history.pushState({ component: 'booking', step: 'success' }, '');
             } else {
               throw new Error(verifyRes.message || "Verification failed");
             }
@@ -1371,6 +1392,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     handleApplyCoupon,
     handleRemoveCoupon,
     getCalculatedDistance,
-    getHaversineDistance
+    getHaversineDistance,
+    confirmedMeetLink
   };
 }

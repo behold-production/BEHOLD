@@ -2135,6 +2135,8 @@ export default function PsychologistDashboard({ setView }) {
  addTimeRangeSlots={addTimeRangeSlots}
  handleAvailabilitySave={handleAvailabilitySave}
  isAvailabilitySaved={isAvailabilitySaved}
+ autoSave={true}
+ hideSaveButton={true}
  />
  )}
 
