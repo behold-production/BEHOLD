@@ -20,112 +20,17 @@ import RevenueTab from './admin-dashboard/tabs/RevenueTab';
 import ReviewsTab from './admin-dashboard/tabs/ReviewsTab';
 import { getInitials } from './admin-dashboard/utils';
 
-const printTextSection = undefined;
-
 import {
- User, ShieldAlert, Award, Trash, Check, Plus, Lock,
- Settings, KeyRound, BarChart3, LogOut, Search, ShieldCheck,
- Calendar, Clock, Link, AlertCircle, Edit, Video, UserPlus,
- MessageSquare, FileSpreadsheet, HelpCircle, X, ChevronRight, ChevronLeft, Mail, Shield, Menu, Brain, Download, FileText,
- Eye, EyeOff, Bell, Send, Loader2
+ Eye, EyeOff, X, Mail, Shield, Loader2, Brain, Lock
 } from 'lucide-react';
 import html2canvas from 'html2canvas-pro';
 import jsPDF from 'jspdf';
 import { useCustomDialog } from '../../context/CustomDialogContext';
 import { formatDateString } from '../../utils/dateFormatter';
-
-function SkeletonTableRows({ cols }) {
- return (
- <>
- {[...Array(5)].map((_, i) => (
- <tr key={i} className="animate-pulse border-b border-zinc-900">
- <td colSpan={cols} className="p-4 whitespace-nowrap">
- <div className="flex items-center gap-3">
- <div className="w-10 h-10 bg-zinc-800 rounded-lg shrink-0" />
- <div className="flex-1 space-y-2 py-1">
- <div className="h-4 bg-zinc-800 rounded w-1/4" />
- <div className="h-3 bg-zinc-855 rounded w-1/2" />
- </div>
- <div className="h-4 bg-zinc-855 rounded w-20 justify-self-end hidden sm:block" />
- <div className="h-8 bg-zinc-855 rounded w-24 justify-self-end" />
- </div>
- </td>
- </tr>
- ))}
- </>
- );
-}
-
-// ─── Reusable Pagination Bar ───────────────────────────────────────────────
-function PaginationBar({ total, page, limit, onPageChange, onLimitChange }) {
- const totalPages = Math.max(1, Math.ceil(total / limit));
- const safeCurrentPage = Math.min(page, totalPages);
-
- const getPageNumbers = () => {
- const pages = [];
- const maxVisible = 5;
- let start = Math.max(1, safeCurrentPage - Math.floor(maxVisible / 2));
- let end = Math.min(totalPages, start + maxVisible - 1);
- if (end - start < maxVisible - 1) start = Math.max(1, end - maxVisible + 1);
- for (let i = start; i <= end; i++) pages.push(i);
- return pages;
- };
-
- const from = total === 0 ? 0 : (safeCurrentPage - 1) * limit + 1;
- const to = Math.min(safeCurrentPage * limit, total);
-
- return (
- <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 px-1 border-t border-zinc-850 mt-1">
- <div className="flex items-center gap-2">
- <span className="text-sm font-semibold text-zinc-500 ">
- Showing <span className="text-zinc-300 font-bold">{from}–{to}</span> of <span className="text-zinc-300 font-bold">{total}</span>
- </span>
- <select
- value={limit}
- onChange={(e) => { onLimitChange(Number(e.target.value)); onPageChange(1); }}
- className="ml-2 bg-zinc-900 border border-zinc-800 text-zinc-300 text-sm font-bold rounded px-2 py-1 cursor-pointer outline-none focus:border-brand"
- >
- {[5, 10, 25, 50].map(n => (
- <option key={n} value={n}>{n} / page</option>
- ))}
- </select>
- </div>
- <div className="flex items-center gap-1">
- <button
- onClick={() => onPageChange(safeCurrentPage - 1)}
- disabled={safeCurrentPage === 1}
- className="px-2 py-1.5 rounded border border-zinc-800 bg-zinc-900 text-xs font-bold text-zinc-400 hover:text-white hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer"
- >
- Prev
- </button>
- {getPageNumbers().map(n => (
- <button
- key={n}
- onClick={() => onPageChange(n)}
- className={`w-7 h-7 rounded border text-sm font-bold transition cursor-pointer ${n === safeCurrentPage
- ? 'bg-brand border-brand text-zinc-950'
- : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-850'
- }`}
- >
- {n}
- </button>
- ))}
- <button
- onClick={() => onPageChange(safeCurrentPage + 1)}
- disabled={safeCurrentPage >= totalPages}
- className="px-2 py-1.5 rounded border border-zinc-800 bg-zinc-900 text-xs font-bold text-zinc-400 hover:text-white hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer"
- >
- Next
- </button>
- </div>
- </div>
- );
-}
 import { useAuth } from '../../context/AuthContext';
 import LogoutConfirmModal from '../../components/common/LogoutConfirmModal';
 import ApiService from '../../services/api';
 import {
- isNotificationSupported,
  getNotificationPermission,
  requestNotificationPermission,
  sendLocalNotification
@@ -233,7 +138,7 @@ const PRIVILEGE_MODULES = [
  }
 ];
 
-export default function AdminDashboard({ setView }) {
+export default function AdminDashboard({ setView: _setView }) {
  const { showAlert, showConfirm, showPrompt } = useCustomDialog();
  const getLocalTodayString = () => {
  const today = new Date();
@@ -261,6 +166,9 @@ export default function AdminDashboard({ setView }) {
  await showAlert("Failed to export PDF: " + err.message);
  }
  };
+
+  const reloadDataRef = React.useRef(null);
+  reloadDataRef.current = reloadData;
 
  const handleExportImage = async (tableId, title) => {
  try {
@@ -479,9 +387,6 @@ export default function AdminDashboard({ setView }) {
  });
 
  // Colors
- const brandDark = '#0f172a'; // slate-900
- const brandTeal = '#0d9488'; // teal-600
- const textGray = '#4b5563'; // gray-600
 
  // Top Accent Line
  doc.setFillColor(13, 148, 136); // Teal
@@ -934,7 +839,7 @@ export default function AdminDashboard({ setView }) {
  const [userFormSuccess, setUserFormSuccess] = useState('');
  const [userProfilePicFile, setUserProfilePicFile] = useState(null);
  const [isUserPicUploading, setIsUserPicUploading] = useState(false);
- const userProfilePicRef = React.useRef(null);
+ const _userProfilePicRef = React.useRef(null);
 
  const [isAddPsyOpen, setIsAddPsyOpen] = useState(false);
  const [isEditPsyOpen, setIsEditPsyOpen] = useState(false);
@@ -960,14 +865,14 @@ export default function AdminDashboard({ setView }) {
  longitude: 0
  });
  const [adminSearchQuery, setAdminSearchQuery] = useState('');
- const [adminSearchResults, setAdminSearchResults] = useState([]);
- const [isAdminSearching, setIsAdminSearching] = useState(false);
- const [isAdminLocating, setIsAdminLocating] = useState(false);
+ const [, setAdminSearchResults] = useState([]);
+ const [, setIsAdminSearching] = useState(false);
+ const [, setIsAdminLocating] = useState(false);
 
  const [adminUserSearchQuery, setAdminUserSearchQuery] = useState('');
- const [adminUserSearchResults, setAdminUserSearchResults] = useState([]);
- const [isAdminUserSearching, setIsAdminUserSearching] = useState(false);
- const [isAdminUserLocating, setIsAdminUserLocating] = useState(false);
+ const [, setAdminUserSearchResults] = useState([]);
+ const [, setIsAdminUserSearching] = useState(false);
+ const [, setIsAdminUserLocating] = useState(false);
 
  useEffect(() => {
  if (!adminUserSearchQuery.trim() || adminUserSearchQuery.trim().length < 3 || adminUserSearchQuery === userForm.locationName) {
@@ -1013,7 +918,7 @@ export default function AdminDashboard({ setView }) {
  return () => clearTimeout(timer);
  }, [adminSearchQuery, psyForm.locationName]);
 
- const handleAdminUserAddressSearch = async () => {
+const _handleAdminUserAddressSearch = async () => {
  if (!adminUserSearchQuery.trim()) return;
  setIsAdminUserSearching(true);
  try {
@@ -1031,7 +936,7 @@ export default function AdminDashboard({ setView }) {
  }
  };
 
- const handleAdminUserDetectLocation = () => {
+const _handleAdminUserDetectLocation = () => {
  if (!navigator.geolocation) {
  import('react-hot-toast').then(m => m.toast.error("Geolocation not supported."));
  return;
@@ -1070,7 +975,7 @@ export default function AdminDashboard({ setView }) {
  );
  };
 
- const handleAdminAddressSearch = async () => {
+const _handleAdminAddressSearch = async () => {
  if (!adminSearchQuery.trim()) return;
  setIsAdminSearching(true);
  try {
@@ -1088,7 +993,7 @@ export default function AdminDashboard({ setView }) {
  }
  };
 
- const handleAdminDetectLocation = () => {
+const _handleAdminDetectLocation = () => {
  if (!navigator.geolocation) {
  import('react-hot-toast').then(m => m.toast.error("Geolocation not supported."));
  return;
@@ -1131,7 +1036,7 @@ export default function AdminDashboard({ setView }) {
  const [psyFormSuccess, setPsyFormSuccess] = useState('');
  const [psyProfilePicFile, setPsyProfilePicFile] = useState(null);
  const [isPsyPicUploading, setIsPsyPicUploading] = useState(false);
- const psyProfilePicRef = React.useRef(null);
+ const _psyProfilePicRef = React.useRef(null);
 
  // Admin Availability state declarations
  const [adminActiveDays, setAdminActiveDays] = useState({
@@ -1356,13 +1261,50 @@ export default function AdminDashboard({ setView }) {
  const [isProfileDrawerOpen, setIsProfileDrawerOpen] = useState(false);
  const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
 
- const reloadData = async () => {
- if (!user || user?.role?.toUpperCase() !== 'ADMIN') return;
- const hasCache = ApiService.hasCachedData && ApiService.hasCachedData('/admin/users');
- if (usersDb.length === 0 && !hasCache) {
- setIsDbLoading(true);
+
+
+ const getAdvisorSlotsForBookingForm = () => {
+ let slots = [];
+ if (bookingForm.advisorId) {
+ const psy = usersDb.find(u => u.id === bookingForm.advisorId);
+ if (psy && psy.availability) {
+ if (psy.availability.availableSlots) {
+ slots = psy.availability.availableSlots;
+ } else if (Array.isArray(psy.availability)) {
+ slots = psy.availability;
+ } else {
+ const bookingDate = new Date(bookingForm.date);
+ const dayName = bookingDate.getDay();
+ slots = psy.availability[dayName] || [];
  }
- try {
+ }
+ }
+
+ if (slots.length > 0) {
+ slots = slots.filter(slot => {
+ const isAlreadyBooked = bookingsDb.some(b =>
+ b.advisorId === bookingForm.advisorId &&
+ b.date === bookingForm.date &&
+ b.time === slot &&
+ (b.status === 'CONFIRMED' || b.status === 'PENDING')
+ );
+ return !isAlreadyBooked;
+ });
+ }
+
+ if (bookingForm.time && !slots.includes(bookingForm.time)) {
+ slots.push(bookingForm.time);
+ }
+ return slots;
+ };
+
+  const reloadData = async () => {
+  if (!user || user?.role?.toUpperCase() !== 'ADMIN') return;
+  const hasCache = ApiService.hasCachedData && ApiService.hasCachedData('/admin/users');
+  if (usersDb.length === 0 && !hasCache) {
+  setIsDbLoading(true);
+  }
+  try {
  const [
  usersRes,
  counsellorsRes,
@@ -1391,12 +1333,15 @@ export default function AdminDashboard({ setView }) {
  role: 'PSYCHOLOGIST',
  verified: c.isVerified
  }));
-        const cleanUsers = (usersRes.data || []).map(u => ({
-          ...u,
-          role: String(u.role || 'USER').toUpperCase()
-        }));
-        const combinedUsers = [
-          ...cleanUsers,
+ const cleanUsers = (usersRes.data || []).map(u => ({
+ ...u,
+ role: String(u.role || 'USER').toUpperCase()
+ }));
+ const combinedUsers = [
+ ...cleanUsers,
+ ...cleanCounsellors
+ ];
+ setUsersDb(combinedUsers);
  const cleanBookings = bookingsRes.data.map(b => ({
  ...b,
  userName: b.studentName,
@@ -1434,82 +1379,38 @@ export default function AdminDashboard({ setView }) {
  const nextPerms = defaultRole.permissions || [];
  setTimeout(() => setSelectedPermissions(nextPerms), 0);
  return { ...prev, roleName: defaultRole.name };
- } else {
- const currentRole = roles.find(r => r.name === prev.roleName);
- if (currentRole) {
- setTimeout(() => setSelectedPermissions(currentRole.permissions || []), 0);
- }
  }
  return prev;
  });
- } else {
- setSubAdminForm(prev => ({ ...prev, roleName: '' }));
- setTimeout(() => setSelectedPermissions([]), 0);
  }
  }
 
  if (settingsRes.success && settingsRes.data) {
  const settings = settingsRes.data;
  setSettingsForm(prev => ({
-   ...prev,
-   ...settings,
-   heroTitle: settings.heroTitle || prev.heroTitle || 'Bridging You \nTo Your {True Growth.}',
-   heroSub: settings.heroSub || prev.heroSub || 'Professional psychological counseling, aptitude assessment, and career mentorship designed to help individuals thrive with confidence and purpose.',
-   heroBgImage: settings.heroBgImage || prev.heroBgImage || '',
-   whyChooseUsImage: settings.whyChooseUsImage || prev.whyChooseUsImage || '',
-   heroEyebrow: settings.heroEyebrow || prev.heroEyebrow || '',
-   heroBtnText: settings.heroBtnText || prev.heroBtnText || '',
-   sectionOrder: settings.sectionOrder || prev.sectionOrder || ['counselling-intro', 'process', 'whyChooseUs', 'aptitude', 'counsellors', 'about', 'faq', 'blog', 'inquiry']
+ ...prev,
+ ...settings,
+ heroTitle: settings.heroTitle || prev.heroTitle || 'Bridging You \nTo Your {True Growth.}',
+ heroSub: settings.heroSub || prev.heroSub || 'Professional psychological counseling, aptitude assessment, and career mentorship designed to help individuals thrive with confidence and purpose.',
+ heroBgImage: settings.heroBgImage || prev.heroBgImage || '',
+ whyChooseUsImage: settings.whyChooseUsImage || prev.whyChooseUsImage || '',
+ heroEyebrow: settings.heroEyebrow || prev.heroEyebrow || '',
+ heroBtnText: settings.heroBtnText || prev.heroBtnText || '',
+ sectionOrder: settings.sectionOrder || prev.sectionOrder || ['counselling-intro', 'process', 'whyChooseUs', 'aptitude', 'counsellors', 'about', 'faq', 'blog', 'inquiry']
  }));
  }
- } catch (error) {
- console.error("Error reloading admin dashboard data:", error);
- } finally {
- setIsDbLoading(false);
- }
- };
+  } catch (error) {
+   console.error("Error reloading admin dashboard data:", error);
+   } finally {
+   setIsDbLoading(false);
+   }
+  };
 
- const getAdvisorSlotsForBookingForm = () => {
- let slots = [];
- if (bookingForm.advisorId) {
- const psy = usersDb.find(u => u.id === bookingForm.advisorId);
- if (psy && psy.availability) {
- if (psy.availability.availableSlots) {
- slots = psy.availability.availableSlots;
- } else if (Array.isArray(psy.availability)) {
- slots = psy.availability;
- } else {
- const bookingDate = new Date(bookingForm.date);
- const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
- const dayName = bookingDate.getDay();
- slots = psy.availability[dayName] || [];
- }
- }
- }
-
- if (slots.length > 0) {
- slots = slots.filter(slot => {
- const isAlreadyBooked = bookingsDb.some(b =>
- b.advisorId === bookingForm.advisorId &&
- b.date === bookingForm.date &&
- b.time === slot &&
- (b.status === 'CONFIRMED' || b.status === 'PENDING')
- );
- return !isAlreadyBooked;
- });
- }
-
- if (bookingForm.time && !slots.includes(bookingForm.time)) {
- slots.push(bookingForm.time);
- }
- return slots;
- };
-
- useEffect(() => {
- setTimeout(() => {
- reloadData();
- }, 0);
- }, [user]);
+  useEffect(() => {
+  setTimeout(() => {
+  if (reloadDataRef.current) reloadDataRef.current();
+  }, 0);
+  }, [user]);
 
  // Determine sub-admin permissions
  const isSuperAdmin = user?.role?.toUpperCase() === 'ADMIN';
@@ -1532,13 +1433,9 @@ export default function AdminDashboard({ setView }) {
  const canAddStudents = isSuperAdmin || _p.includes('MANAGE_USERS') || _p.includes('manage_users') || _p.includes('add_students');
  const canEditStudents = isSuperAdmin || _p.includes('MANAGE_USERS') || _p.includes('manage_users') || _p.includes('edit_students');
  const canDeleteStudents = isSuperAdmin || _p.includes('MANAGE_USERS') || _p.includes('manage_users') || _p.includes('delete_students');
- const canVerifyStudents = isSuperAdmin || _p.includes('MANAGE_USERS') || _p.includes('manage_users') || _p.includes('verify_students');
-
  const canAddPsy = isSuperAdmin || _p.includes('MANAGE_PSYCHOLOGISTS') || _p.includes('manage_psychologists') || _p.includes('add_psychologists');
  const canEditPsy = isSuperAdmin || _p.includes('MANAGE_PSYCHOLOGISTS') || _p.includes('manage_psychologists') || _p.includes('edit_psychologists');
  const canDeletePsy = isSuperAdmin || _p.includes('MANAGE_PSYCHOLOGISTS') || _p.includes('manage_psychologists') || _p.includes('delete_psychologists');
- const canVerifyPsy = isSuperAdmin || _p.includes('MANAGE_PSYCHOLOGISTS') || _p.includes('manage_psychologists') || _p.includes('verify_psychologists');
-
  const canAddBookings = isSuperAdmin || _p.includes('MANAGE_BOOKINGS') || _p.includes('manage_bookings') || _p.includes('add_bookings');
  const canEditBookings = isSuperAdmin || _p.includes('MANAGE_BOOKINGS') || _p.includes('manage_bookings') || _p.includes('edit_bookings');
  const canDeleteBookings = isSuperAdmin || _p.includes('MANAGE_BOOKINGS') || _p.includes('manage_bookings') || _p.includes('delete_bookings');
@@ -2192,12 +2089,12 @@ export default function AdminDashboard({ setView }) {
  return;
  }
 
- if (bookingForm.date === localToday && bookingForm.time) {
+  if (bookingForm.date === localToday && bookingForm.time) {
  try {
  const [time, modifier] = bookingForm.time.split(' ');
  let [hours, minutes] = time.split(':').map(Number);
  if (modifier === 'PM' && hours < 12) hours += 12;
- if (modifier === 'AM' && hours === 12) hours = 0;
+  if (modifier === 'AM' && hours === 12) hours = 0;
 
  const now = new Date();
  const slotDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
@@ -2205,7 +2102,7 @@ export default function AdminDashboard({ setView }) {
  setBookingFormError("This time slot has already passed today.");
  return;
  }
- } catch (e) { }
+  } catch { }
  }
 
  const isDoubleBooked = bookingsDb.some(b =>
@@ -2626,7 +2523,6 @@ export default function AdminDashboard({ setView }) {
  (u.role === 'USER' || !u.role) &&
  (u.name.toLowerCase().includes(searchUser.toLowerCase()) || u.email.toLowerCase().includes(searchUser.toLowerCase()))
  );
- /* eslint-disable react-hooks/preserve-manual-memoization */
  const psychologistsList = React.useMemo(() => {
  let list = usersDb.filter(u =>
  u.role === 'PSYCHOLOGIST' &&
@@ -2648,7 +2544,6 @@ export default function AdminDashboard({ setView }) {
  return a.name.localeCompare(b.name);
  });
  }, [usersDb, searchPsy, psyFilter]);
- /* eslint-enable react-hooks/preserve-manual-memoization */
 
  const subAdminsList = usersDb.filter(u =>
  u.role === 'ADMIN' && u.permissions // Only custom sub-admins
@@ -3638,7 +3533,6 @@ export default function AdminDashboard({ setView }) {
  handleExportImage,
  downloadPDFReceipt,
  downloadDiagnosticPDF,
- printTextSection,
  handleEnableNotifications,
  handleTestNotification,
  handleSendAnnouncement,

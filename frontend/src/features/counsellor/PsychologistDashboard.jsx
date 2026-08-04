@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
- User, Calendar, Clock, BookOpen, Link, ShieldAlert, Award, Globe,
- Edit, Video, BarChart3, AlertCircle, Save, LogOut,
- X, ChevronRight, Mail, Shield, Menu, FileText, Send, Eye, EyeOff, Bell, Check, MapPin, Navigation
+ User, ShieldAlert, Award, Globe, Edit, LogOut,
+ X, Mail, Shield, Menu, Eye, EyeOff, MapPin, Navigation
 } from 'lucide-react';
 import {
- isNotificationSupported,
  getNotificationPermission,
  requestNotificationPermission,
  sendLocalNotification
@@ -26,16 +24,13 @@ import RevenueTab from './psychologist-dashboard/tabs/RevenueTab';
 
 // Shared Utils
 import {
- isSessionCompleted,
- downloadDiagnosticPDF,
- parseTimeToMinutes,
- formatMinutesToTime
+ isSessionCompleted
 } from './psychologist-dashboard/utils';
 import { formatDateString } from '../../utils/dateFormatter';
 import toast from 'react-hot-toast';
 
 
-export default function PsychologistDashboard({ setView }) {
+export default function PsychologistDashboard({ setView: _setView }) {
  const { user, login, register, logout, isLoading, updateUser } = useAuth();
  const { showPrompt } = useCustomDialog();
 
@@ -116,21 +111,18 @@ export default function PsychologistDashboard({ setView }) {
  const [availableSlots, setAvailableSlots] = useState([]);
  const [daySlots, setDaySlots] = useState({});
  const [selectedDays, setSelectedDays] = useState([1]);
-
- const [allSlots, setAllSlots] = useState([]);
+ const [isAvailabilitySaved, setIsAvailabilitySaved] = useState(false);
  const [customHour, setCustomHour] = useState('09');
  const [customMinute, setCustomMinute] = useState('00');
  const [customPeriod, setCustomPeriod] = useState('AM');
  const [slotInterval, setSlotInterval] = useState(60);
  const setSlotError = (msg) => { if (msg && !msg.includes('Status:')) import('react-hot-toast').then(mod => mod.toast.error(msg)) };
- const slotError = '';
- const [isAvailabilitySaved, setIsAvailabilitySaved] = useState(false);
+
 
  // Input meeting link state per booking
  const [editingBookingId, setEditingBookingId] = useState(null);
  const [meetLinkInput, setMeetLinkInput] = useState('');
  const setMeetLinkError = (msg) => { if (msg && !msg.includes('Status:')) import('react-hot-toast').then(mod => mod.toast.error(msg)) };
- const meetLinkError = '';
  const [editingFeedbackId, setEditingFeedbackId] = useState(null);
  const [notesInput, setNotesInput] = useState('');
  const [feedbackInput, setFeedbackInput] = useState('');
@@ -143,8 +135,7 @@ export default function PsychologistDashboard({ setView }) {
  const [showPassword, setShowPassword] = useState(false);
  const [showRegPassword, setShowRegPassword] = useState(false);
  const [showRegConfirmPassword, setShowRegConfirmPassword] = useState(false);
- const setLoginError = (msg) => { if (msg && !msg.includes('Status:')) import('react-hot-toast').then(mod => mod.toast.error(msg)) };
- const loginError = '';
+ const [loginError, setLoginError] = useState('');
  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
  // Onboarding & Registration Gate states
@@ -170,8 +161,11 @@ export default function PsychologistDashboard({ setView }) {
     latitude: 0,
     longitude: 0
   });
- const setRegError = (msg) => { if (msg && !msg.includes('Status:')) import('react-hot-toast').then(mod => mod.toast.error(msg)) };
- const regError = '';
+ const [regError, setRegError] = useState('');
+ const reportRegError = (msg) => {
+   setRegError(msg);
+   if (msg && !msg.includes('Status:')) import('react-hot-toast').then(mod => mod.toast.error(msg));
+ };
  const [regActiveDays, setRegActiveDays] = useState({
  1: true, 2: true, 3: true, 4: true, 5: true, 6: false, 0: false
  });
@@ -181,7 +175,6 @@ export default function PsychologistDashboard({ setView }) {
  const [regCustomMinute, setRegCustomMinute] = useState('00');
  const [regCustomPeriod, setRegCustomPeriod] = useState('AM');
  const setRegSlotError = (msg) => { if (msg && !msg.includes('Status:')) import('react-hot-toast').then(mod => mod.toast.error(msg)) };
- const regSlotError = '';
 
  // Availability time range state
  const [fromHour, setFromHour] = useState('09');
@@ -201,7 +194,6 @@ export default function PsychologistDashboard({ setView }) {
  const [regToPeriod, setRegToPeriod] = useState('PM');
 
  // Profile picture upload state
- const [profilePicFile, setProfilePicFile] = useState(null);
  const [isAvatarUploading, setIsAvatarUploading] = useState(false);
  const avatarFileRef = React.useRef(null);
 
@@ -220,7 +212,6 @@ export default function PsychologistDashboard({ setView }) {
  if (res.success) {
  import('react-hot-toast').then(mod => mod.toast.success('Profile picture updated!'));
  if (updateUser && user && res.data) updateUser({ ...user, profilePic: res.data.profilePic });
- setProfilePicFile(null);
  }
  } catch (err) {
  import('react-hot-toast').then(mod => mod.toast.error(err.message || 'Failed to upload picture.'));
@@ -231,7 +222,7 @@ export default function PsychologistDashboard({ setView }) {
 
  const [isLoadingData, setIsLoadingData] = useState(true);
 
- const loadBookingsData = async (silent = false) => {
+ const loadBookingsData = useCallback(async (silent = false) => {
  try {
  const isCounsellor = user && (user?.role?.toUpperCase() === 'PSYCHOLOGIST' || user?.role?.toUpperCase() === 'COUNSELLOR');
  const hasToken = !!localStorage.getItem('behold_token');
@@ -285,17 +276,7 @@ export default function PsychologistDashboard({ setView }) {
    setSelectedDays(activeIndices.length > 0 ? activeIndices : [1]);
  }
  if (avail.availableSlots) {
- setAvailableSlots(avail.availableSlots);
- // Ensure slots are added to the list of displayed slots
- setAllSlots(prev => {
- const merged = [...prev];
- avail.availableSlots.forEach(slot => {
- if (!merged.includes(slot)) {
- merged.push(slot);
- }
- });
- return merged;
- });
+   setAvailableSlots(avail.availableSlots);
  }
  if (avail.daySlots) {
    setDaySlots(avail.daySlots);
@@ -345,7 +326,7 @@ export default function PsychologistDashboard({ setView }) {
  } finally {
  setIsLoadingData(false);
  }
- };
+ }, [user]);
 
  const downloadDiagnosticPDF = async (booking) => {
  try {
@@ -356,10 +337,6 @@ export default function PsychologistDashboard({ setView }) {
  });
 
  // Colors
- const brandDark = '#0f172a'; // slate-900
- const brandTeal = '#0d9488'; // teal-600
- const textGray = '#4b5563'; // gray-600
-
  // Top Accent Line
  doc.setFillColor(13, 148, 136); // Teal
  doc.rect(0, 0, 210, 10, 'F');
@@ -624,7 +601,7 @@ export default function PsychologistDashboard({ setView }) {
  if (isCounsellor && hasToken) {
  loadBookingsData(false);
  }
- }, [user]);
+ }, [user, loadBookingsData]);
 
  // Handle Google Auth Return Params
  useEffect(() => {
@@ -647,18 +624,7 @@ export default function PsychologistDashboard({ setView }) {
       // Remove query param cleanly without reloading page
       window.history.replaceState({}, document.title, window.location.pathname);
     }
-  }, []);
-
- // Auto-refresh bookings silently when switching to bookings or overview tab
- useEffect(() => {
- if (currentSection === 'bookings' || currentSection === 'overview') {
- loadBookingsData(true);
- }
- // When entering the profile edit section, sync editProfile from latest server data
- if (currentSection === 'profile') {
- setEditProfile({ ...profile });
- }
- }, [currentSection]);
+   }, [loadBookingsData]);
 
  // Onboarding Step Handlers
  const handleStepOneNext = (e) => {
@@ -671,15 +637,15 @@ export default function PsychologistDashboard({ setView }) {
  }
  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
  if (!emailRegex.test(regForm.email)) {
- setRegError("Please enter a valid email address.");
- return;
+reportRegError("Please enter a valid email address.");
+   return;
  }
  if (regForm.password.length < 6) {
- setRegError("Password must be at least 6 characters.");
- return;
+   reportRegError("Password must be at least 6 characters.");
+   return;
  }
  if (regForm.password !== regForm.confirmPassword) {
- setRegError("Passwords do not match.");
+   reportRegError("Passwords do not match.");
  return;
  }
 
@@ -1195,9 +1161,9 @@ export default function PsychologistDashboard({ setView }) {
                   Access schedules, update clinic slots, and edit video rooms.
                 </p>
 
-                {regError && (
+                {loginError && (
                   <div className='mb-5 p-3.5 bg-red-955/30 border border-red-900/50 rounded-lg text-red-200 text-xs font-medium text-left'>
-                    {regError}
+                    {loginError}
                   </div>
                 )}
 
