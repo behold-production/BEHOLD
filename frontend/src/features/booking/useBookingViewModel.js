@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useCustomDialog } from '../../context/CustomDialogContext';
 import toast from 'react-hot-toast';
@@ -23,7 +23,7 @@ export const getHaversineDistance = (lat1, lon1, lat2, lon2) => {
 };
 
 export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvisor }) {
-  const { user, login, register } = useAuth();
+  const { user } = useAuth();
   const { showAlert } = useCustomDialog();
 
   let enablePsychology = true;
@@ -35,7 +35,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       enablePsychology = parsed.enablePsychology !== false;
       enableCareerMentoring = parsed.enableCareerMentoring !== false;
     }
-  } catch (err) {}
+  } catch {}
 
   const isRescheduleParam = !!(new URLSearchParams(window.location.search).get('reschedule'));
   
@@ -59,7 +59,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       if (urlService === 'career' || urlService === 'counselling' || urlService === 'counseling') {
         return urlService === 'counseling' ? 'counselling' : urlService;
       }
-    } catch (e) {}
+    } catch {}
     return 'counselling';
   }); // counselling, career
   const [bookingMode, setBookingMode] = useState(() => {
@@ -69,7 +69,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         const draft = JSON.parse(raw);
         if (draft.bookingMode) return draft.bookingMode;
       }
-    } catch (e) {}
+    } catch {}
     return 'ONLINE';
   }); // ONLINE, DOOR_STEP, OFFLINE
   const [bookingDuration, setBookingDuration] = useState(() => {
@@ -79,7 +79,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         const draft = JSON.parse(raw);
         if (draft.bookingDuration) return draft.bookingDuration;
       }
-    } catch (e) {}
+    } catch {}
     return 60; // 30 mins or 60 mins (default 60)
   });
   const [bookingForm, setBookingForm] = useState(() => {
@@ -98,7 +98,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         const draft = JSON.parse(raw);
         if (draft.bookingForm) return { ...defaultForm, ...draft.bookingForm };
       }
-    } catch (e) {}
+    } catch {}
     return defaultForm;
   });
   const [selectedDate, setSelectedDate] = useState(() => {
@@ -108,7 +108,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         const draft = JSON.parse(raw);
         if (draft.selectedDate) return draft.selectedDate;
       }
-    } catch (e) {}
+    } catch {}
     return '';
   });
   const [selectedTime, setSelectedTime] = useState(() => {
@@ -118,7 +118,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         const draft = JSON.parse(raw);
         if (draft.selectedTime) return draft.selectedTime;
       }
-    } catch (e) {}
+    } catch {}
     return '';
   });
 
@@ -128,7 +128,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     try {
       const stored = localStorage.getItem('behold_site_settings');
       if (stored) settings = JSON.parse(stored);
-    } catch (e) {}
+    } catch {}
 
     const isOnlineEnabled = settings.enableOnline !== false;
     const isOfflineEnabled = settings.enableOffline !== false;
@@ -156,15 +156,13 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         const draft = JSON.parse(raw);
         if (typeof draft.advisorConfirmed === 'boolean') return draft.advisorConfirmed;
       }
-    } catch (e) {}
+    } catch {}
     return false;
   });
   const [advisors, setAdvisors] = useState([]);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showNoCounsellorsModal, setShowNoCounsellorsModal] = useState(false);
   const [rescheduleSession, setRescheduleSession] = useState(null);
-
-  const [existingAppointments, setExistingAppointments] = useState([]);
 
   useEffect(() => {
     const initBookingData = async () => {
@@ -207,10 +205,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         }
 
         if (user) {
-          const apptsRes = await ApiService.getAppointments();
-          if (apptsRes.success && apptsRes.data) {
-            setExistingAppointments(apptsRes.data);
-          }
+          await ApiService.getAppointments();
         }
 
         // Process reschedule param if present
@@ -265,14 +260,16 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     if (targetAdvisorId) {
       const match = advisors.find(a => String(a.id) === String(targetAdvisorId) || String(a._id) === String(targetAdvisorId));
       if (match) {
-        setSelectedAdvisor(match);
-        setAdvisorConfirmed(true);
-        if (match.modes && match.modes.length > 0 && !match.modes.includes(bookingMode)) {
-          setBookingMode(match.modes[0]);
-        }
+        setTimeout(() => {
+          setSelectedAdvisor(match);
+          setAdvisorConfirmed(true);
+          if (match.modes && match.modes.length > 0 && !match.modes.includes(bookingMode)) {
+            setBookingMode(match.modes[0]);
+          }
+        }, 0);
       }
     }
-  }, [preselectedAdvisorId, advisors]);
+  }, [preselectedAdvisorId, advisors, bookingMode]);
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -307,7 +304,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       gstPercent = typeof parsed.gstPercent === 'number' ? parsed.gstPercent : 0;
       sitePromoCodes = parsed.promoCodes || [];
     }
-  } catch (err) {}
+  } catch {}
 
   const getDurationPrice = (fullPrice, duration) => {
     if (duration === 60) return fullPrice;
@@ -512,7 +509,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         const now = new Date();
         const slotDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
         return now >= slotDate;
-      } catch (e) {
+      } catch {
         return false;
       }
     };
@@ -548,8 +545,8 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
               return list.sort((a, b) => parseTimeToMinutes(a) - parseTimeToMinutes(b));
             }
             return [];
-          } catch (e) {
-            console.error("Error parsing advisor availability in booking", e);
+          } catch (err) {
+            console.error("Error parsing advisor availability in booking", err);
           }
         }
         return [];
@@ -579,7 +576,9 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
                 }
               });
             }
-          } catch (e) {}
+          } catch (err) {
+            console.error("Error parsing advisor availability in booking", err);
+          }
         }
       });
 
@@ -601,6 +600,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       return [];
     }
   };
+
 
   const getAdvisorSlotsForDate = (advisor, dateStr) => {
     if (!dateStr || !advisor) return [];
@@ -629,9 +629,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
             const now = new Date();
             const slotDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
             return now >= slotDate;
-          } catch (e) {
-            return false;
-          }
+          } catch { return false; }
         };
         return activeSlots.filter(slot => {
           if (dateStr === todayStr && isSlotInPast(slot)) {
@@ -675,9 +673,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
             const now = new Date();
             const slotDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
             return now >= slotDate;
-          } catch (e) {
-            return false;
-          }
+          } catch { return false; }
         };
         return activeSlots.filter(slot => {
           if (dateStr === todayStr && isSlotInPast(slot)) {
@@ -742,7 +738,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         }
         return 'Available';
       }
-    } catch (e) {}
+    } catch {}
 
     return 'Unavailable';
   };
@@ -842,7 +838,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         bookingForm
       };
       sessionStorage.setItem(BOOKING_DRAFT_KEY, JSON.stringify(draft));
-    } catch (e) { /* ignore */ }
+    } catch { /* ignore */ }
   }, [bookingService, bookingMode, selectedDate, selectedTime, selectedAdvisor, advisorConfirmed, bookingForm]);
 
   useEffect(() => {
@@ -852,7 +848,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         const draft = raw ? JSON.parse(raw) : {};
         draft.selectedAdvisorId = preselectedAdvisorId;
         sessionStorage.setItem(BOOKING_DRAFT_KEY, JSON.stringify(draft));
-      } catch (e) { /* ignore */ }
+      } catch { /* ignore */ }
     }
   }, [preselectedAdvisorId]);
 
@@ -1177,7 +1173,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     }
   };
 
-  const handleAuthSuccess = (authData) => {
+  const handleAuthSuccess = (_authData) => {
     setShowAuthModal(false);
     setIsSubmitting(false);
     processPayment();
@@ -1283,7 +1279,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         }
       };
       sessionStorage.setItem(BOOKING_DRAFT_KEY, JSON.stringify(draft));
-    } catch (err) { /* ignore */ }
+    } catch { /* ignore */ }
 
     processPayment();
   };
@@ -1299,7 +1295,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     setAppliedDiscount(0);
     setCouponInput('');
     setBookingStep('config');
-    try { sessionStorage.removeItem(BOOKING_DRAFT_KEY); } catch (e) { /* ignore */ }
+    try { sessionStorage.removeItem(BOOKING_DRAFT_KEY); } catch { /* ignore */ }
   };
 
   const handleApplyCoupon = () => {
@@ -1400,6 +1396,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     handleRemoveCoupon,
     getCalculatedDistance,
     getHaversineDistance,
-    confirmedMeetLink
+    confirmedMeetLink,
+    confirmedBooking
   };
 }

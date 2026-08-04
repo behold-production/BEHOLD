@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useBookingViewModel } from './useBookingViewModel';
 import DateTimePicker from './DateTimePicker';
 import TimePicker from './TimePicker';
@@ -7,7 +7,6 @@ import { FileDown, X } from 'lucide-react';
 import { formatDateString } from '../../utils/dateFormatter';
 import toast from 'react-hot-toast';
 import { ScrollDot } from '../../components/common/BrandDot';
-import greenTexture from '../../assets/greygreen.png';
 
 const getInitials = (name) => {
     if (!name) return '';
@@ -68,7 +67,6 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
         setSelectedTime,
         selectedAdvisor,
         setSelectedAdvisor,
-        advisorConfirmed,
         setAdvisorConfirmed,
         advisors,
         showAuthModal,
@@ -80,9 +78,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
         setErrors,
         isSubmitting,
         setIsSubmitting,
-        isSuccess,
         bookingStep,
-        setBookingStep,
         couponInput,
         setCouponInput,
         appliedDiscount,
@@ -145,9 +141,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
         };
     }, [isOpen]);
 
-    useEffect(() => {
-        setAdvisorPage(1);
-    }, [selectedDate, bookingMode, bookingService]);
+    const effectiveAdvisorPage = Math.max(1, advisorPage);
 
     useEffect(() => {
         const modalScroll = document.getElementById('booking-modal-scroll');
@@ -200,13 +194,15 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
         }
     };
 
-    const handleClientDetectLocation = () => {
+    const handleClientDetectLocation = useCallback(() => {
         if (!navigator.geolocation) {
             toast.error("Geolocation not supported.");
             return;
         }
+
         setIsClientLocating(true);
         const toastId = toast.loading("Detecting current coordinates...");
+
         navigator.geolocation.getCurrentPosition(
             async (position) => {
                 toast.dismiss(toastId);
@@ -216,20 +212,15 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                 try {
                     const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
                     const data = await res.json();
-                    if (data && data.display_name) {
-                        setBookingForm(prev => ({
-                            ...prev,
-                            clientLatitude: lat.toString(),
-                            clientLongitude: lng.toString(),
-                            clientLocationName: data.display_name
-                        }));
+                    setBookingForm(prev => ({
+                        ...prev,
+                        clientLatitude: lat.toString(),
+                        clientLongitude: lng.toString(),
+                        clientLocationName: data?.display_name || prev.clientLocationName
+                    }));
+
+                    if (data?.display_name) {
                         setClientSearchQuery(data.display_name);
-                    } else {
-                        setBookingForm(prev => ({
-                            ...prev,
-                            clientLatitude: lat.toString(),
-                            clientLongitude: lng.toString()
-                        }));
                     }
                 } catch (err) {
                     console.error("Reverse geocoding error", err);
@@ -238,9 +229,9 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                         clientLatitude: lat.toString(),
                         clientLongitude: lng.toString()
                     }));
+                } finally {
+                    setIsClientLocating(false);
                 }
-                toast.success("Location coordinates & address detected!");
-                setIsClientLocating(false);
             },
             (err) => {
                 toast.dismiss(toastId);
@@ -248,16 +239,15 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                 setIsClientLocating(false);
             }
         );
-    };
+    }, [setBookingForm, setClientSearchQuery]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (bookingMode === 'DOOR_STEP' && !bookingForm.clientLatitude && !bookingForm.clientLongitude) {
-            const timer = setTimeout(() => {
-                handleClientDetectLocation();
-            }, 0);
+            const timer = setTimeout(handleClientDetectLocation, 0);
             return () => clearTimeout(timer);
         }
-    }, [bookingMode]);
+        return undefined;
+    }, [bookingMode, bookingForm.clientLatitude, bookingForm.clientLongitude, handleClientDetectLocation]);
 
     // Keep every hook above this guard. The modal can be opened after an
     // initially closed render, and returning before hooks would violate React's
@@ -508,17 +498,17 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                             <div className="space-y-1">
                                                 <span className="text-slate-500 block font-semibold text-[10px] uppercase tracking-wider">Service</span>
                                                 <span className="font-bold text-slate-900 text-sm block">
-                                                    {bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring'}
+                                                    {confirmedBooking?.service ? (confirmedBooking.service === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring') : (bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring')}
                                                 </span>
-                                                <span className="text-slate-500 block font-medium text-xs">Mode: {bookingMode === 'ONLINE' ? 'Video Call' : bookingMode === 'DOOR_STEP' ? 'Home Visit' : 'At Center'}</span>
+                                                <span className="text-slate-500 block font-medium text-xs">Mode: {confirmedBooking?.mode === 'ONLINE' ? 'Video Call' : confirmedBooking?.mode === 'DOOR_STEP' ? 'Home Visit' : confirmedBooking?.mode === 'OFFLINE' ? 'At Center' : bookingMode === 'ONLINE' ? 'Video Call' : bookingMode === 'DOOR_STEP' ? 'Home Visit' : 'At Center'}</span>
                                             </div>
                                             <div className="space-y-1">
                                                 <span className="text-slate-500 block font-semibold text-[10px] uppercase tracking-wider">New Date & Time Slot</span>
                                                 <span className="font-bold text-slate-900 text-sm block">
-                                                    {formatDateString(selectedDate)}
+                                                    {formatDateString(confirmedBooking?.date || selectedDate)}
                                                 </span>
                                                 <span className="text-slate-500 block font-medium text-xs mt-0.5">
-                                                    {selectedTime}
+                                                    {confirmedBooking?.time || selectedTime}
                                                 </span>
                                             </div>
                                             <div className="space-y-1">
@@ -580,16 +570,16 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                     type="button"
                                                     disabled={downloadingPdf}
                                                     onClick={() => {
-                                                        const bookingId = Date.now();
-                                                        const advisorName = selectedAdvisor?.name || 'Assigned Advisor';
-                                                        const advisorRole = selectedAdvisor?.role || 'Consultant Psychologist';
-                                                        const service = bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring';
-                                                        const mode = bookingMode === 'ONLINE' ? 'Video Call' : bookingMode === 'DOOR_STEP' ? 'Home Visit' : 'At Center';
-                                                        const amount = netTotal;
-                                                        const clientName = bookingForm.name || 'User';
-                                                        const clientEmail = bookingForm.email;
-                                                        const clientPhone = bookingForm.phone;
-                                                        const meetLink = bookingMode === 'ONLINE' ? (confirmedMeetLink || selectedAdvisor?.defaultMeetLink || 'https://meet.google.com/abc-defg-hij') : null;
+                                                                const bookingId = confirmedBooking?.id || Date.now();
+                                                        const advisorName = confirmedBooking?.counsellorName || selectedAdvisor?.name || 'Assigned Advisor';
+                                                        const advisorRole = confirmedBooking?.counsellorRole || selectedAdvisor?.role || 'Consultant Psychologist';
+                                                        const service = confirmedBooking?.service ? (confirmedBooking.service === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring') : (bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring');
+                                                        const mode = confirmedBooking?.mode === 'ONLINE' ? 'Video Call' : confirmedBooking?.mode === 'DOOR_STEP' ? 'Home Visit' : confirmedBooking?.mode === 'OFFLINE' ? 'At Center' : bookingMode === 'ONLINE' ? 'Video Call' : bookingMode === 'DOOR_STEP' ? 'Home Visit' : 'At Center';
+                                                        const amount = confirmedBooking?.amountPaid || netTotal;
+                                                        const clientName = confirmedBooking?.clientName || bookingForm.name || 'User';
+                                                        const clientEmail = confirmedBooking?.clientEmail || bookingForm.email;
+                                                        const clientPhone = confirmedBooking?.clientPhone || bookingForm.phone;
+                                                        const meetLink = bookingMode === 'ONLINE' ? (confirmedBooking?.meetLink || confirmedMeetLink || selectedAdvisor?.defaultMeetLink || 'https://meet.google.com/abc-defg-hij') : null;
 
                                                         downloadPDFReceipt({
                                                             id: bookingId,
@@ -597,16 +587,16 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             mode,
                                                             advisorName,
                                                             advisorRole,
-                                                            date: selectedDate,
-                                                            time: selectedTime,
+                                                            date: confirmedBooking?.date || selectedDate,
+                                                            time: confirmedBooking?.time || selectedTime,
                                                             clientName,
                                                             clientEmail,
                                                             clientPhone,
                                                             amount,
                                                             meetLink,
-                                                            baseFee: baseFee,
+                                                            baseFee: confirmedBooking?.amountPaid ? (confirmedBooking?.amountPaid - (gstEnabled ? gstAmount : 0)) : baseFee,
                                                             gstPercent: gstEnabled ? gstPercent : 0,
-                                                            gstAmount: gstAmount,
+                                                            gstAmount: gstEnabled ? gstAmount : 0,
                                                             appliedDiscount: appliedDiscount
                                                         });
                                                     }}
@@ -684,7 +674,9 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                 try {
                                                                     const stored = localStorage.getItem('behold_site_settings');
                                                                     if (stored) siteSettings = JSON.parse(stored);
-                                                                } catch (e) { }
+                                                                } catch {
+                                                                    // ignore
+                                                                }
 
                                                                 return [
                                                                     { id: 'ONLINE', label: 'Online', desc: 'Video call', active: siteSettings.enableOnline !== false },
@@ -964,7 +956,9 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                     );
                                                                 }
 
-                                                                const advisorsToRender = availableAdvisors.slice((advisorPage - 1) * 4, advisorPage * 4);
+const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
+                                                                  const currentPage = Math.min(effectiveAdvisorPage, totalPages);
+                                                                  const advisorsToRender = availableAdvisors.slice((currentPage - 1) * 4, currentPage * 4);
 
                                                                 return (
                                                                     <>
