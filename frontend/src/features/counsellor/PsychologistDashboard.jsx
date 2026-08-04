@@ -114,10 +114,7 @@ export default function PsychologistDashboard({ setView }) {
  });
  const [availableSlots, setAvailableSlots] = useState([]);
  const [daySlots, setDaySlots] = useState({});
- const [selectedDay, setSelectedDay] = useState(1);
- const [applyMultipleDays, setApplyMultipleDays] = useState(false);
- const [rangeStartDay, setRangeStartDay] = useState(1);
- const [rangeEndDay, setRangeEndDay] = useState(5);
+ const [selectedDays, setSelectedDays] = useState([1]);
 
  const [allSlots, setAllSlots] = useState([]);
  const [customHour, setCustomHour] = useState('09');
@@ -927,17 +924,7 @@ export default function PsychologistDashboard({ setView }) {
  const nextState = { ...prev };
  
  // Determine which days to apply to
- const daysToApply = applyMultipleDays ? [] : [selectedDay];
- if (applyMultipleDays) {
-   let start = parseInt(rangeStartDay);
-   let end = parseInt(rangeEndDay);
-   if (start <= end) {
-     for (let i = start; i <= end; i++) daysToApply.push(i);
-   } else {
-     for (let i = start; i <= 6; i++) daysToApply.push(i);
-     for (let i = 0; i <= end; i++) daysToApply.push(i);
-   }
- }
+ const daysToApply = selectedDays;
 
  daysToApply.forEach(day => {
    const currentDaySlots = nextState[day] || [];
@@ -960,24 +947,11 @@ export default function PsychologistDashboard({ setView }) {
     const slotStr = `${customHour}:${customMinute} ${customPeriod}`;
     setDaySlots(prev => {
       const nextState = { ...prev };
+      const daysToApply = selectedDays;
 
-      const daysToApply = applyMultipleDays ? [] : [selectedDay];
-      if (applyMultipleDays) {
-        let start = parseInt(rangeStartDay);
-        let end = parseInt(rangeEndDay);
-        if (start <= end) {
-          for (let i = start; i <= end; i++) daysToApply.push(i);
-        } else {
-          for (let i = start; i <= 6; i++) daysToApply.push(i);
-          for (let i = 0; i <= end; i++) daysToApply.push(i);
-        }
-      }
-
-      let errorEncountered = false;
       daysToApply.forEach(day => {
         const currentDaySlots = nextState[day] || [];
         if (currentDaySlots.includes(slotStr)) {
-          if (!applyMultipleDays) errorEncountered = true; // only complain if singular
           return;
         }
         const newDaySlots = [...currentDaySlots, slotStr].sort((a, b) => {
@@ -987,19 +961,18 @@ export default function PsychologistDashboard({ setView }) {
         });
         nextState[day] = newDaySlots;
       });
-
-      if (errorEncountered) {
-        setSlotError('This slot already exists.');
-        return prev;
-      }
       return nextState;
     });
   };
 
   const handleRemoveSlot = (slot) => {
     setDaySlots(prev => {
-      const currentDaySlots = prev[selectedDay] || [];
-      return { ...prev, [selectedDay]: currentDaySlots.filter(s => s !== slot) };
+      const nextState = { ...prev };
+      selectedDays.forEach(day => {
+        const currentDaySlots = nextState[day] || [];
+        nextState[day] = currentDaySlots.filter(s => s !== slot);
+      });
+      return nextState;
     });
   };
 
@@ -2097,8 +2070,8 @@ export default function PsychologistDashboard({ setView }) {
  toggleDay={toggleDay}
  daySlots={daySlots}
  setDaySlots={setDaySlots}
- selectedDay={selectedDay}
- setSelectedDay={setSelectedDay}
+ selectedDays={selectedDays}
+ setSelectedDays={setSelectedDays}
  availableSlots={availableSlots}
  setAvailableSlots={setAvailableSlots}
  handleRemoveSlot={handleRemoveSlot}

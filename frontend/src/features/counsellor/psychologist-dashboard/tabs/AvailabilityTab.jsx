@@ -7,8 +7,8 @@ const AvailabilityTab = ({
  toggleDay,
  daySlots,
  setDaySlots,
- selectedDay,
- setSelectedDay,
+ selectedDays,
+ setSelectedDays,
  availableSlots,
  setAvailableSlots,
  handleRemoveSlot,
@@ -36,19 +36,15 @@ const AvailabilityTab = ({
  setSlotInterval,
  addTimeRangeSlots,
  isAvailabilitySaved,
- handleAvailabilitySave,
- applyMultipleDays,
- setApplyMultipleDays,
- rangeStartDay,
- setRangeStartDay,
- rangeEndDay,
- setRangeEndDay
+ handleAvailabilitySave
 }) => {
- const shadowStyle = {
- background: '#18181b', // zinc-900
- border: '1px solid #27272a', // zinc-800
- boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.05), 0 1px 3px rgba(0,0,0,0.4), 0 6px 20px -6px rgba(0,0,0,0.6)'
- };
+ const shadowStyle = { boxShadow: "inset 0 1px 1px 0 rgba(255,255,255,0.05), inset 0 -1px 1px 0 rgba(0,0,0,0.5)" };
+ 
+ const combinedSlots = Array.from(new Set(selectedDays.flatMap(day => daySlots[day] || []))).sort((a, b) => {
+   const aTime = new Date('1970/01/01 ' + a);
+   const bTime = new Date('1970/01/01 ' + b);
+   return aTime - bTime;
+ });
 
  return (
  <form onSubmit={handleAvailabilitySave} className="space-y-6 animate-in fade-in duration-200 text-sm">
@@ -63,13 +59,19 @@ const AvailabilityTab = ({
  <label className="text-zinc-400 font-bold block text-xs tracking-wide">Select Day to Manage</label>
  <div className="flex flex-wrap gap-2.5">
  {DAYS_OF_WEEK.map(day => {
- const isSelected = selectedDay === day.index;
+ const isSelected = selectedDays.includes(day.index);
  const isActive = activeDays[day.index];
  return (
  <div key={day.index} className="flex flex-col items-center gap-1">
  <button
  type="button"
- onClick={() => setSelectedDay(day.index)}
+ onClick={() => {
+   if (selectedDays.includes(day.index)) {
+     if (selectedDays.length > 1) setSelectedDays(selectedDays.filter(d => d !== day.index));
+   } else {
+     setSelectedDays([...selectedDays, day.index]);
+   }
+ }}
  className={`px-4 py-2 border rounded-[10px] text-sm font-bold transition-all duration-300 cursor-pointer ${isSelected
  ? 'bg-brand border-brand text-zinc-955 shadow-sm'
  : 'bg-zinc-950 border-zinc-800 text-zinc-450 hover:border-zinc-700 hover:bg-zinc-900'
@@ -94,30 +96,18 @@ const AvailabilityTab = ({
  <div className="space-y-3 pt-5 border-t border-zinc-800">
  <div className="flex justify-between items-center">
  <label className="text-zinc-400 font-bold block text-xs tracking-wide">
- Slots for {DAYS_OF_WEEK.find(d => d.index === selectedDay)?.label}
+ Slots for {selectedDays.length === 1 ? DAYS_OF_WEEK.find(d => d.index === selectedDays[0])?.label : 'Multiple Days'}
  </label>
  </div>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
- {(daySlots[selectedDay] || []).map(slot => {
- const exists = true;
+ {combinedSlots.map(slot => {
  return (
  <div key={slot} className="flex items-center gap-2 w-full group">
- <button
- type="button"
- onClick={() => {
- if (exists) {
- setAvailableSlots(prev => prev.filter(s => s !== slot));
- } else {
- setAvailableSlots(prev => [...prev, slot]);
- }
- }}
- className={`flex-1 p-2.5 border rounded-[10px] text-center font-bold transition-all cursor-pointer text-sm ${exists
- ? 'bg-brand/10 border-brand/40 text-brand'
- : 'bg-zinc-950 border-zinc-800 text-zinc-450 hover:bg-zinc-900/60'
- }`}
+ <div
+ className="flex-1 p-2.5 border rounded-[10px] text-center font-bold bg-brand/10 border-brand/40 text-brand text-sm"
  >
  {slot}
- </button>
+ </div>
  <button
  type="button"
  onClick={() => handleRemoveSlot(slot)}
@@ -129,9 +119,9 @@ const AvailabilityTab = ({
  </div>
  );
  })}
- {(!daySlots[selectedDay] || daySlots[selectedDay].length === 0) && (
+ {combinedSlots.length === 0 && (
  <div className="col-span-1 sm:col-span-2 py-5 bg-zinc-950/40 border border-dashed border-zinc-800 rounded-[10px] text-zinc-500 italic text-sm text-center w-full">
- No timing slots configured for this day. Use the controls below to add custom slots or generate from a time range.
+ No timing slots configured for the selected day(s). Use the controls below to add custom slots or generate from a time range.
  </div>
  )}
  </div>
@@ -140,48 +130,6 @@ const AvailabilityTab = ({
  {/* Custom Timings Adder */}
  <div className="space-y-4 pt-3">
           <label className="text-zinc-400 font-bold block text-xs tracking-wide">Add Custom Timing Slot</label>
-          
-          <div className="mb-3 space-y-2">
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input 
-                type="checkbox" 
-                checked={applyMultipleDays} 
-                onChange={(e) => setApplyMultipleDays(e.target.checked)}
-                className="rounded border-zinc-800 bg-zinc-950 text-brand focus:ring-brand accent-brand cursor-pointer"
-              />
-              <span className="text-xs text-zinc-300 font-medium">Apply to multiple days</span>
-            </label>
-            
-            {applyMultipleDays && (
-              <div className="flex items-center gap-3 bg-zinc-950/50 p-3 rounded-lg border border-zinc-800/50">
-                <div className="flex-1 space-y-1">
-                  <label className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider block">From Day</label>
-                  <select 
-                    value={rangeStartDay} 
-                    onChange={(e) => setRangeStartDay(e.target.value)}
-                    className="w-full px-2 py-1.5 bg-zinc-900 border border-zinc-800 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
-                  >
-                    {DAYS_OF_WEEK.map((d, i) => (
-                      <option key={d.label} value={d.index}>{d.label}</option>
-                    ))}
-                  </select>
-                </div>
-                <div className="text-zinc-600 text-xs font-bold pt-4">to</div>
-                <div className="flex-1 space-y-1">
-                  <label className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider block">To Day</label>
-                  <select 
-                    value={rangeEndDay} 
-                    onChange={(e) => setRangeEndDay(e.target.value)}
-                    className="w-full px-2 py-1.5 bg-zinc-900 border border-zinc-800 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
-                  >
-                    {DAYS_OF_WEEK.map((d, i) => (
-                      <option key={d.label} value={d.index}>{d.label}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-            )}
-          </div>
 
           <div className="flex gap-3 items-end max-w-sm">
  <div className="flex-1 space-y-1.5">

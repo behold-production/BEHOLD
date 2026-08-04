@@ -111,10 +111,7 @@ export default function PsychologistManagementTab(props) {
   const [adminAvailableSlots, setAdminAvailableSlots] = useState([]);
   const [adminAllSlots, setAdminAllSlots] = useState([]);
   const [adminDaySlots, setAdminDaySlots] = useState({});
-  const [selectedAdminDay, setSelectedAdminDay] = useState(1);
-  const [adminApplyMultipleDays, setAdminApplyMultipleDays] = useState(false);
-  const [adminRangeStartDay, setAdminRangeStartDay] = useState(1);
-  const [adminRangeEndDay, setAdminRangeEndDay] = useState(5);
+  const [selectedAdminDays, setSelectedAdminDays] = useState([1]);
   const [adminFromHour, setAdminFromHour] = useState("09");
   const [adminFromMinute, setAdminFromMinute] = useState("00");
   const [adminFromPeriod, setAdminFromPeriod] = useState("AM");
@@ -128,6 +125,12 @@ export default function PsychologistManagementTab(props) {
   const [viewingPsychologist, setViewingPsychologist] = useState(null);
   const psyProfilePicRef = useRef(null);
   const [isAdminUserLocating, setIsAdminUserLocating] = useState(false);
+
+  const combinedAdminSlots = Array.from(new Set(selectedAdminDays.flatMap(day => adminDaySlots[day] || []))).sort((a, b) => {
+    const aTime = new Date('1970/01/01 ' + a);
+    const bTime = new Date('1970/01/01 ' + b);
+    return aTime - bTime;
+  });
 
 
   const { bookingsDb, handleTogglePsyActiveStatus, updatingPsyIds, handleGenerateResetToken } = props;
@@ -239,18 +242,7 @@ export default function PsychologistManagementTab(props) {
 
     setAdminDaySlots((prev) => {
       const nextState = { ...prev };
-      const daysToApply = adminApplyMultipleDays ? [] : [selectedAdminDay];
-      
-      if (adminApplyMultipleDays) {
-        let start = parseInt(adminRangeStartDay);
-        let end = parseInt(adminRangeEndDay);
-        if (start <= end) {
-          for (let i = start; i <= end; i++) daysToApply.push(i);
-        } else {
-          for (let i = start; i <= 6; i++) daysToApply.push(i);
-          for (let i = 0; i <= end; i++) daysToApply.push(i);
-        }
-      }
+      const daysToApply = selectedAdminDays;
 
       daysToApply.forEach(day => {
         const current = nextState[day] || [];
@@ -272,24 +264,11 @@ export default function PsychologistManagementTab(props) {
     const slotStr = `${adminCustomHour}:${adminCustomMinute} ${adminCustomPeriod}`;
     setAdminDaySlots(prev => {
       const nextState = { ...prev };
-      const daysToApply = adminApplyMultipleDays ? [] : [selectedAdminDay];
-      
-      if (adminApplyMultipleDays) {
-        let start = parseInt(adminRangeStartDay);
-        let end = parseInt(adminRangeEndDay);
-        if (start <= end) {
-          for (let i = start; i <= end; i++) daysToApply.push(i);
-        } else {
-          for (let i = start; i <= 6; i++) daysToApply.push(i);
-          for (let i = 0; i <= end; i++) daysToApply.push(i);
-        }
-      }
+      const daysToApply = selectedAdminDays;
 
-      let errorEncountered = false;
       daysToApply.forEach(day => {
         const current = nextState[day] || [];
         if (current.includes(slotStr)) {
-          if (!adminApplyMultipleDays) errorEncountered = true;
           return;
         }
         const newSlots = [...current, slotStr].sort((a, b) => {
@@ -300,18 +279,18 @@ export default function PsychologistManagementTab(props) {
         nextState[day] = newSlots;
       });
 
-      if (errorEncountered) {
-        setPsyFormError("This slot already exists.");
-        return prev;
-      }
       return nextState;
     });
   };
 
   const handleRemoveAdminSlot = (slot) => {
     setAdminDaySlots(prev => {
-      const current = prev[selectedAdminDay] || [];
-      return { ...prev, [selectedAdminDay]: current.filter((s) => s !== slot) };
+      const nextState = { ...prev };
+      selectedAdminDays.forEach(day => {
+        const current = nextState[day] || [];
+        nextState[day] = current.filter((s) => s !== slot);
+      });
+      return nextState;
     });
   };
 
@@ -1625,13 +1604,19 @@ export default function PsychologistManagementTab(props) {
                         { label: "Sat", index: 6 },
                         { label: "Sun", index: 0 },
                       ].map((day) => {
-                        const isSelected = selectedAdminDay === day.index;
+                        const isSelected = selectedAdminDays.includes(day.index);
                         const isActive = adminActiveDays[day.index];
                         return (
                           <div key={day.index} className="flex flex-col items-center gap-1">
                             <button
                               type="button"
-                              onClick={() => setSelectedAdminDay(day.index)}
+                              onClick={() => {
+                                if (selectedAdminDays.includes(day.index)) {
+                                  if (selectedAdminDays.length > 1) setSelectedAdminDays(selectedAdminDays.filter(d => d !== day.index));
+                                } else {
+                                  setSelectedAdminDays([...selectedAdminDays, day.index]);
+                                }
+                              }}
                               className={`px-3 py-1.5 border rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer ${isSelected
                                   ? "bg-brand text-zinc-955 font-bold border-none"
                                   : "bg-zinc-955 border-zinc-850 text-zinc-500 hover:border-zinc-750"
@@ -1655,10 +1640,10 @@ export default function PsychologistManagementTab(props) {
                   {/* Active Timing Slots */}
                   <div className="space-y-1.5 pt-4">
                     <label className="text-xs font-bold text-zinc-400 block">
-                      Timing Slots (Active)
+                      Timing Slots (Active) {selectedAdminDays.length > 1 && "- Multiple Days"}
                     </label>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[200px] overflow-y-auto pr-1">
-                      {(adminDaySlots[selectedAdminDay] || []).map((slot) => {
+                      {combinedAdminSlots.map((slot) => {
                         return (
                           <div
                             key={slot}
@@ -1681,9 +1666,9 @@ export default function PsychologistManagementTab(props) {
                           </div>
                         );
                       })}
-                      {(!adminDaySlots[selectedAdminDay] || adminDaySlots[selectedAdminDay].length === 0) && (
+                      {combinedAdminSlots.length === 0 && (
                         <div className="col-span-2 py-4 bg-zinc-955/40 border border-dashed border-zinc-850 rounded-lg text-zinc-550 italic text-xs text-center w-full">
-                          No timing slots configured for this day. Use the controls below to
+                          No timing slots configured for the selected day(s). Use the controls below to
                           add custom slots or generate from a time range.
                         </div>
                       )}
@@ -1696,47 +1681,7 @@ export default function PsychologistManagementTab(props) {
                       Add Custom Timing Slot
                     </label>
 
-                    <div className="mb-3 space-y-2">
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input 
-                          type="checkbox" 
-                          checked={adminApplyMultipleDays} 
-                          onChange={(e) => setAdminApplyMultipleDays(e.target.checked)}
-                          className="rounded border-zinc-800 bg-zinc-950 text-brand focus:ring-brand accent-brand cursor-pointer"
-                        />
-                        <span className="text-xs text-zinc-300 font-medium">Apply to multiple days</span>
-                      </label>
-                      
-                      {adminApplyMultipleDays && (
-                        <div className="flex items-center gap-3 bg-zinc-950/50 p-3 rounded-lg border border-zinc-800/50">
-                          <div className="flex-1 space-y-1">
-                            <label className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider block">From Day</label>
-                            <select 
-                              value={adminRangeStartDay} 
-                              onChange={(e) => setAdminRangeStartDay(e.target.value)}
-                              className="w-full px-2 py-1.5 bg-zinc-900 border border-zinc-800 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
-                            >
-                              {DAYS_OF_WEEK.map((d) => (
-                                <option key={d.label} value={d.index}>{d.label}</option>
-                              ))}
-                            </select>
-                          </div>
-                          <div className="text-zinc-600 text-xs font-bold pt-4">to</div>
-                          <div className="flex-1 space-y-1">
-                            <label className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider block">To Day</label>
-                            <select 
-                              value={adminRangeEndDay} 
-                              onChange={(e) => setAdminRangeEndDay(e.target.value)}
-                              className="w-full px-2 py-1.5 bg-zinc-900 border border-zinc-800 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
-                            >
-                              {DAYS_OF_WEEK.map((d) => (
-                                <option key={d.label} value={d.index}>{d.label}</option>
-                              ))}
-                            </select>
-                          </div>
-                        </div>
-                      )}
-                    </div>
+
 
                     <div className="flex gap-2 items-end">
                       <div className="flex-1 space-y-0.5">
@@ -2776,13 +2721,19 @@ export default function PsychologistManagementTab(props) {
                         { label: "Sat", index: 6 },
                         { label: "Sun", index: 0 },
                       ].map((day) => {
-                        const isSelected = selectedAdminDay === day.index;
+                        const isSelected = selectedAdminDays.includes(day.index);
                         const isActive = adminActiveDays[day.index];
                         return (
                           <div key={day.index} className="flex flex-col items-center gap-1">
                             <button
                               type="button"
-                              onClick={() => setSelectedAdminDay(day.index)}
+                              onClick={() => {
+                                if (selectedAdminDays.includes(day.index)) {
+                                  if (selectedAdminDays.length > 1) setSelectedAdminDays(selectedAdminDays.filter(d => d !== day.index));
+                                } else {
+                                  setSelectedAdminDays([...selectedAdminDays, day.index]);
+                                }
+                              }}
                               className={`px-3 py-1.5 border rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer ${isSelected
                                   ? "bg-brand text-zinc-955 font-bold border-none"
                                   : "bg-zinc-955 border-zinc-850 text-zinc-500 hover:border-zinc-750"
@@ -2806,10 +2757,10 @@ export default function PsychologistManagementTab(props) {
                   {/* Active Timing Slots */}
                   <div className="space-y-1.5 pt-4">
                     <label className="text-xs font-bold text-zinc-400 block">
-                      Timing Slots (Active)
+                      Timing Slots (Active) {selectedAdminDays.length > 1 && "- Multiple Days"}
                     </label>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[200px] overflow-y-auto pr-1">
-                      {(adminDaySlots[selectedAdminDay] || []).map((slot) => {
+                      {combinedAdminSlots.map((slot) => {
                         return (
                           <div
                             key={slot}
@@ -2832,9 +2783,9 @@ export default function PsychologistManagementTab(props) {
                           </div>
                         );
                       })}
-                      {(!adminDaySlots[selectedAdminDay] || adminDaySlots[selectedAdminDay].length === 0) && (
+                      {combinedAdminSlots.length === 0 && (
                         <div className="col-span-2 py-4 bg-zinc-955/40 border border-dashed border-zinc-850 rounded-lg text-zinc-550 italic text-xs text-center w-full">
-                          No timing slots configured for this day. Use the controls below to
+                          No timing slots configured for the selected day(s). Use the controls below to
                           add custom slots or generate from a time range.
                         </div>
                       )}
@@ -2845,47 +2796,7 @@ export default function PsychologistManagementTab(props) {
                   <div className="space-y-1.5 bg-zinc-955/50 border border-zinc-850/60 p-3.5 rounded-lg">
                     <label className="text-xs font-bold text-zinc-350 block">Add Custom Timing Slot</label>
 
-                    <div className="mb-3 space-y-2">
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input 
-                          type="checkbox" 
-                          checked={adminApplyMultipleDays} 
-                          onChange={(e) => setAdminApplyMultipleDays(e.target.checked)}
-                          className="rounded border-zinc-800 bg-zinc-950 text-brand focus:ring-brand accent-brand cursor-pointer"
-                        />
-                        <span className="text-xs text-zinc-300 font-medium">Apply to multiple days</span>
-                      </label>
-                      
-                      {adminApplyMultipleDays && (
-                        <div className="flex items-center gap-3 bg-zinc-950/50 p-3 rounded-lg border border-zinc-800/50">
-                          <div className="flex-1 space-y-1">
-                            <label className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider block">From Day</label>
-                            <select 
-                              value={adminRangeStartDay} 
-                              onChange={(e) => setAdminRangeStartDay(e.target.value)}
-                              className="w-full px-2 py-1.5 bg-zinc-900 border border-zinc-800 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
-                            >
-                              {DAYS_OF_WEEK.map((d) => (
-                                <option key={d.label} value={d.index}>{d.label}</option>
-                              ))}
-                            </select>
-                          </div>
-                          <div className="text-zinc-600 text-xs font-bold pt-4">to</div>
-                          <div className="flex-1 space-y-1">
-                            <label className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider block">To Day</label>
-                            <select 
-                              value={adminRangeEndDay} 
-                              onChange={(e) => setAdminRangeEndDay(e.target.value)}
-                              className="w-full px-2 py-1.5 bg-zinc-900 border border-zinc-800 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
-                            >
-                              {DAYS_OF_WEEK.map((d) => (
-                                <option key={d.label} value={d.index}>{d.label}</option>
-                              ))}
-                            </select>
-                          </div>
-                        </div>
-                      )}
-                    </div>
+
 
                     <div className="flex gap-2 items-end">
                       <div className="flex-1 space-y-0.5">
