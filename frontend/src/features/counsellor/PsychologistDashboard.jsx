@@ -829,31 +829,33 @@ reportRegError("Please enter a valid email address.");
   const handleAvailabilitySave = async (e) => {
     if (e && e.preventDefault) e.preventDefault();
     setSlotError('');
-    
+
     // Check if at least one day is active and has slots
-    const hasAnySlots = Object.keys(activeDays).some(day => 
+    const hasAnySlots = Object.keys(activeDays).some(day =>
       activeDays[day] && daySlots[day] && daySlots[day].length > 0
     );
-    
+
     if (!hasAnySlots) {
-      setSlotError("Please configure at least one active day and add a time slot before saving.");
+      setSlotError('Please configure at least one active day and add a time slot before saving.');
       return;
     }
-    
+
     try {
       // Send both legacy availableSlots and new daySlots for backwards compatibility
       const payload = { activeDays, availableSlots, daySlots };
       const res = await ApiService.updateAvailability(payload);
- if (res.success) {
- setIsAvailabilitySaved(true);
- setTimeout(() => setIsAvailabilitySaved(false), 3000);
- await loadBookingsData();
- }
- } catch (err) {
- console.error("Failed to save counsellor availability via API", err);
- setSlotError(err.message || "Failed to save availability.");
- }
- };
+      if (res.success) {
+        // ✅ Local state already reflects what was saved — no full reload needed.
+        // Just show the success indicator briefly and a toast notification.
+        setIsAvailabilitySaved(true);
+        setTimeout(() => setIsAvailabilitySaved(false), 3000);
+        toast.success('Availability saved!', { id: 'avail-save', duration: 2000, icon: '✅' });
+      }
+    } catch (err) {
+      console.error('Failed to save counsellor availability via API', err);
+      setSlotError(err.message || 'Failed to save availability.');
+    }
+  };
 
  const parseTimeToMinutes = (timeStr) => {
  const [time, period] = timeStr.split(' ');
