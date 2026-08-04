@@ -611,7 +611,11 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     if (!parsed) return [];
     try {
       const dayActive = parsed.activeDays && parsed.activeDays[dayOfWeek];
-      if (dayActive && parsed.availableSlots && parsed.availableSlots.length > 0) {
+      
+      const daySpecificSlots = parsed.daySlots && parsed.daySlots[dayOfWeek];
+      const activeSlots = Array.isArray(daySpecificSlots) ? daySpecificSlots : (parsed.availableSlots || []);
+
+      if (dayActive && activeSlots.length > 0) {
         const bookings = advisor.bookedSlots || [];
         const todayStr = getLocalTodayString();
         const isSlotInPast = (timeStr) => {

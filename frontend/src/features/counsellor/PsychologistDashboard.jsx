@@ -115,6 +115,9 @@ export default function PsychologistDashboard({ setView }) {
  const [availableSlots, setAvailableSlots] = useState([]);
  const [daySlots, setDaySlots] = useState({});
  const [selectedDay, setSelectedDay] = useState(1);
+ const [applyMultipleDays, setApplyMultipleDays] = useState(false);
+ const [rangeStartDay, setRangeStartDay] = useState(1);
+ const [rangeEndDay, setRangeEndDay] = useState(5);
 
  const [allSlots, setAllSlots] = useState([]);
  const [customHour, setCustomHour] = useState('09');
@@ -841,16 +844,24 @@ export default function PsychologistDashboard({ setView }) {
 
 
 
- const handleAvailabilitySave = async (e) => {
- e.preventDefault();
- setSlotError('');
- if (!availableSlots || availableSlots.length === 0) {
- setSlotError("Please configure at least one availability slot to save.");
- return;
- }
- try {
- const payload = { activeDays, availableSlots };
- const res = await ApiService.updateAvailability(payload);
+  const handleAvailabilitySave = async (e) => {
+    e.preventDefault();
+    setSlotError('');
+    
+    // Check if at least one day is active and has slots
+    const hasAnySlots = Object.keys(activeDays).some(day => 
+      activeDays[day] && daySlots[day] && daySlots[day].length > 0
+    );
+    
+    if (!hasAnySlots) {
+      setSlotError("Please configure at least one active day and add a time slot before saving.");
+      return;
+    }
+    
+    try {
+      // Send both legacy availableSlots and new daySlots for backwards compatibility
+      const payload = { activeDays, availableSlots, daySlots };
+      const res = await ApiService.updateAvailability(payload);
  if (res.success) {
  setIsAvailabilitySaved(true);
  setTimeout(() => setIsAvailabilitySaved(false), 3000);
@@ -912,38 +923,85 @@ export default function PsychologistDashboard({ setView }) {
  return merged;
  });
  } else {
- setAllSlots(prev => {
- const merged = [...prev];
- generated.forEach(slot => {
- if (!merged.includes(slot)) merged.push(slot);
+ setDaySlots(prev => {
+ const nextState = { ...prev };
+ 
+ // Determine which days to apply to
+ const daysToApply = applyMultipleDays ? [] : [selectedDay];
+ if (applyMultipleDays) {
+   let start = parseInt(rangeStartDay);
+   let end = parseInt(rangeEndDay);
+   if (start <= end) {
+     for (let i = start; i <= end; i++) daysToApply.push(i);
+   } else {
+     for (let i = start; i <= 6; i++) daysToApply.push(i);
+     for (let i = 0; i <= end; i++) daysToApply.push(i);
+   }
+ }
+
+ daysToApply.forEach(day => {
+   const currentDaySlots = nextState[day] || [];
+   const unique = [...new Set([...currentDaySlots, ...generated])];
+   const sorted = unique.sort((a, b) => {
+     const aTime = new Date('1970/01/01 ' + a);
+     const bTime = new Date('1970/01/01 ' + b);
+     return aTime - bTime;
+   });
+   nextState[day] = sorted;
  });
- return merged;
- });
- setAvailableSlots(prev => {
- const merged = [...prev];
- generated.forEach(slot => {
- if (!merged.includes(slot)) merged.push(slot);
- });
- return merged;
+
+ return nextState;
  });
  }
  };
 
- const handleAddCustomSlot = () => {
- setSlotError('');
- const slotStr = `${customHour}:${customMinute} ${customPeriod}`;
- if (allSlots.includes(slotStr)) {
- setSlotError('This slot already exists.');
- return;
- }
- setAllSlots(prev => [...prev, slotStr]);
- setAvailableSlots(prev => [...prev, slotStr]); // Add and select it
- };
+  const handleAddCustomSlot = () => {
+    setSlotError('');
+    const slotStr = `${customHour}:${customMinute} ${customPeriod}`;
+    setDaySlots(prev => {
+      const nextState = { ...prev };
 
- const handleRemoveSlot = (slot) => {
- setAllSlots(prev => prev.filter(s => s !== slot));
- setAvailableSlots(prev => prev.filter(s => s !== slot));
- };
+      const daysToApply = applyMultipleDays ? [] : [selectedDay];
+      if (applyMultipleDays) {
+        let start = parseInt(rangeStartDay);
+        let end = parseInt(rangeEndDay);
+        if (start <= end) {
+          for (let i = start; i <= end; i++) daysToApply.push(i);
+        } else {
+          for (let i = start; i <= 6; i++) daysToApply.push(i);
+          for (let i = 0; i <= end; i++) daysToApply.push(i);
+        }
+      }
+
+      let errorEncountered = false;
+      daysToApply.forEach(day => {
+        const currentDaySlots = nextState[day] || [];
+        if (currentDaySlots.includes(slotStr)) {
+          if (!applyMultipleDays) errorEncountered = true; // only complain if singular
+          return;
+        }
+        const newDaySlots = [...currentDaySlots, slotStr].sort((a, b) => {
+          const aTime = new Date('1970/01/01 ' + a);
+          const bTime = new Date('1970/01/01 ' + b);
+          return aTime - bTime;
+        });
+        nextState[day] = newDaySlots;
+      });
+
+      if (errorEncountered) {
+        setSlotError('This slot already exists.');
+        return prev;
+      }
+      return nextState;
+    });
+  };
+
+  const handleRemoveSlot = (slot) => {
+    setDaySlots(prev => {
+      const currentDaySlots = prev[selectedDay] || [];
+      return { ...prev, [selectedDay]: currentDaySlots.filter(s => s !== slot) };
+    });
+  };
 
  const handleAddRegCustomSlot = () => {
  setRegSlotError('');

@@ -40,6 +40,9 @@ import {
   Send,
   Loader2,
 } from "lucide-react";
+import { toast } from "react-hot-toast";
+import { formatTimeWithAMPM, parseTimeTo24 } from "./utils";
+import { DAYS_OF_WEEK } from "../../counsellor/psychologist-dashboard/counsellorDashboardConstants";
 import { SkeletonTableRows, PaginationBar } from "../components/SharedAdminUI";
 
 export default function PsychologistManagementTab(props) {
@@ -110,6 +113,9 @@ export default function PsychologistManagementTab(props) {
   const [adminAllSlots, setAdminAllSlots] = useState([]);
   const [adminDaySlots, setAdminDaySlots] = useState({});
   const [selectedAdminDay, setSelectedAdminDay] = useState(1);
+  const [adminApplyMultipleDays, setAdminApplyMultipleDays] = useState(false);
+  const [adminRangeStartDay, setAdminRangeStartDay] = useState(1);
+  const [adminRangeEndDay, setAdminRangeEndDay] = useState(5);
   const [adminFromHour, setAdminFromHour] = useState("09");
   const [adminFromMinute, setAdminFromMinute] = useState("00");
   const [adminFromPeriod, setAdminFromPeriod] = useState("AM");
@@ -232,36 +238,82 @@ export default function PsychologistManagementTab(props) {
       generated.push(formatAdminMinutesToTime(m));
     }
 
-    setAdminAllSlots((prev) => {
-      const merged = [...prev];
-      generated.forEach((slot) => {
-        if (!merged.includes(slot)) merged.push(slot);
+    setAdminDaySlots((prev) => {
+      const nextState = { ...prev };
+      const daysToApply = adminApplyMultipleDays ? [] : [selectedAdminDay];
+      
+      if (adminApplyMultipleDays) {
+        let start = parseInt(adminRangeStartDay);
+        let end = parseInt(adminRangeEndDay);
+        if (start <= end) {
+          for (let i = start; i <= end; i++) daysToApply.push(i);
+        } else {
+          for (let i = start; i <= 6; i++) daysToApply.push(i);
+          for (let i = 0; i <= end; i++) daysToApply.push(i);
+        }
+      }
+
+      daysToApply.forEach(day => {
+        const current = nextState[day] || [];
+        const unique = [...new Set([...current, ...generated])];
+        const sorted = unique.sort((a, b) => {
+          const aTime = new Date('1970/01/01 ' + a);
+          const bTime = new Date('1970/01/01 ' + b);
+          return aTime - bTime;
+        });
+        nextState[day] = sorted;
       });
-      return merged;
-    });
-    setAdminAvailableSlots((prev) => {
-      const merged = [...prev];
-      generated.forEach((slot) => {
-        if (!merged.includes(slot)) merged.push(slot);
-      });
-      return merged;
+      
+      return nextState;
     });
   };
 
   const handleAddAdminCustomSlot = () => {
     setPsyFormError("");
     const slotStr = `${adminCustomHour}:${adminCustomMinute} ${adminCustomPeriod}`;
-    if (adminAllSlots.includes(slotStr)) {
-      setPsyFormError("This slot already exists.");
-      return;
-    }
-    setAdminAllSlots((prev) => [...prev, slotStr]);
-    setAdminAvailableSlots((prev) => [...prev, slotStr]);
+    setAdminDaySlots(prev => {
+      const nextState = { ...prev };
+      const daysToApply = adminApplyMultipleDays ? [] : [selectedAdminDay];
+      
+      if (adminApplyMultipleDays) {
+        let start = parseInt(adminRangeStartDay);
+        let end = parseInt(adminRangeEndDay);
+        if (start <= end) {
+          for (let i = start; i <= end; i++) daysToApply.push(i);
+        } else {
+          for (let i = start; i <= 6; i++) daysToApply.push(i);
+          for (let i = 0; i <= end; i++) daysToApply.push(i);
+        }
+      }
+
+      let errorEncountered = false;
+      daysToApply.forEach(day => {
+        const current = nextState[day] || [];
+        if (current.includes(slotStr)) {
+          if (!adminApplyMultipleDays) errorEncountered = true;
+          return;
+        }
+        const newSlots = [...current, slotStr].sort((a, b) => {
+          const aTime = new Date('1970/01/01 ' + a);
+          const bTime = new Date('1970/01/01 ' + b);
+          return aTime - bTime;
+        });
+        nextState[day] = newSlots;
+      });
+
+      if (errorEncountered) {
+        setPsyFormError("This slot already exists.");
+        return prev;
+      }
+      return nextState;
+    });
   };
 
   const handleRemoveAdminSlot = (slot) => {
-    setAdminAllSlots((prev) => prev.filter((s) => s !== slot));
-    setAdminAvailableSlots((prev) => prev.filter((s) => s !== slot));
+    setAdminDaySlots(prev => {
+      const current = prev[selectedAdminDay] || [];
+      return { ...prev, [selectedAdminDay]: current.filter((s) => s !== slot) };
+    });
   };
 
   const toggleAdminDay = (dayIndex) => {
@@ -1644,6 +1696,49 @@ export default function PsychologistManagementTab(props) {
                     <label className="text-xs font-bold text-zinc-350 block">
                       Add Custom Timing Slot
                     </label>
+
+                    <div className="mb-3 space-y-2">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input 
+                          type="checkbox" 
+                          checked={adminApplyMultipleDays} 
+                          onChange={(e) => setAdminApplyMultipleDays(e.target.checked)}
+                          className="rounded border-zinc-800 bg-zinc-950 text-brand focus:ring-brand accent-brand cursor-pointer"
+                        />
+                        <span className="text-xs text-zinc-300 font-medium">Apply to multiple days</span>
+                      </label>
+                      
+                      {adminApplyMultipleDays && (
+                        <div className="flex items-center gap-3 bg-zinc-950/50 p-3 rounded-lg border border-zinc-800/50">
+                          <div className="flex-1 space-y-1">
+                            <label className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider block">From Day</label>
+                            <select 
+                              value={adminRangeStartDay} 
+                              onChange={(e) => setAdminRangeStartDay(e.target.value)}
+                              className="w-full px-2 py-1.5 bg-zinc-900 border border-zinc-800 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+                            >
+                              {DAYS_OF_WEEK.map((d) => (
+                                <option key={d.label} value={d.index}>{d.label}</option>
+                              ))}
+                            </select>
+                          </div>
+                          <div className="text-zinc-600 text-xs font-bold pt-4">to</div>
+                          <div className="flex-1 space-y-1">
+                            <label className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider block">To Day</label>
+                            <select 
+                              value={adminRangeEndDay} 
+                              onChange={(e) => setAdminRangeEndDay(e.target.value)}
+                              className="w-full px-2 py-1.5 bg-zinc-900 border border-zinc-800 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+                            >
+                              {DAYS_OF_WEEK.map((d) => (
+                                <option key={d.label} value={d.index}>{d.label}</option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
                     <div className="flex gap-2 items-end">
                       <div className="flex-1 space-y-0.5">
                         <label className="text-[10px] text-zinc-500 font-bold block">
@@ -2750,6 +2845,49 @@ export default function PsychologistManagementTab(props) {
                   {/* Add Custom Timing Slot */}
                   <div className="space-y-1.5 bg-zinc-955/50 border border-zinc-850/60 p-3.5 rounded-lg">
                     <label className="text-xs font-bold text-zinc-350 block">Add Custom Timing Slot</label>
+
+                    <div className="mb-3 space-y-2">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input 
+                          type="checkbox" 
+                          checked={adminApplyMultipleDays} 
+                          onChange={(e) => setAdminApplyMultipleDays(e.target.checked)}
+                          className="rounded border-zinc-800 bg-zinc-950 text-brand focus:ring-brand accent-brand cursor-pointer"
+                        />
+                        <span className="text-xs text-zinc-300 font-medium">Apply to multiple days</span>
+                      </label>
+                      
+                      {adminApplyMultipleDays && (
+                        <div className="flex items-center gap-3 bg-zinc-950/50 p-3 rounded-lg border border-zinc-800/50">
+                          <div className="flex-1 space-y-1">
+                            <label className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider block">From Day</label>
+                            <select 
+                              value={adminRangeStartDay} 
+                              onChange={(e) => setAdminRangeStartDay(e.target.value)}
+                              className="w-full px-2 py-1.5 bg-zinc-900 border border-zinc-800 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+                            >
+                              {DAYS_OF_WEEK.map((d) => (
+                                <option key={d.label} value={d.index}>{d.label}</option>
+                              ))}
+                            </select>
+                          </div>
+                          <div className="text-zinc-600 text-xs font-bold pt-4">to</div>
+                          <div className="flex-1 space-y-1">
+                            <label className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider block">To Day</label>
+                            <select 
+                              value={adminRangeEndDay} 
+                              onChange={(e) => setAdminRangeEndDay(e.target.value)}
+                              className="w-full px-2 py-1.5 bg-zinc-900 border border-zinc-800 rounded-lg text-xs text-white outline-none focus:border-brand cursor-pointer"
+                            >
+                              {DAYS_OF_WEEK.map((d) => (
+                                <option key={d.label} value={d.index}>{d.label}</option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
                     <div className="flex gap-2 items-end">
                       <div className="flex-1 space-y-0.5">
                         <label className="text-[10px] text-zinc-500 font-bold block">Hour</label>
