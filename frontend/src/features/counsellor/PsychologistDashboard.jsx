@@ -861,7 +861,7 @@ export default function PsychologistDashboard({ setView }) {
 
 
   const handleAvailabilitySave = async (e) => {
-    e.preventDefault();
+    if (e && e.preventDefault) e.preventDefault();
     setSlotError('');
     
     // Check if at least one day is active and has slots
