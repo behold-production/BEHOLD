@@ -41,8 +41,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { toast } from "react-hot-toast";
-import { formatTimeWithAMPM, parseTimeTo24 } from "./utils";
-import { DAYS_OF_WEEK } from "../../counsellor/psychologist-dashboard/counsellorDashboardConstants";
+import { DAYS_OF_WEEK } from "../../../counsellor/psychologist-dashboard/counsellorDashboardConstants";
 import { SkeletonTableRows, PaginationBar } from "../components/SharedAdminUI";
 
 export default function PsychologistManagementTab(props) {
