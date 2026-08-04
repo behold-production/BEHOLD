@@ -275,12 +275,12 @@ export default function PsychologistDashboard({ setView: _setView }) {
    const activeIndices = Object.keys(avail.activeDays).filter(k => avail.activeDays[k]).map(Number);
    setSelectedDays(activeIndices.length > 0 ? activeIndices : [1]);
  }
- if (avail.availableSlots) {
-   setAvailableSlots(avail.availableSlots);
+ if (Array.isArray(avail.availableSlots)) {
+   setAvailableSlots([...avail.availableSlots]);
  }
  if (avail.daySlots) {
    setDaySlots(avail.daySlots);
- } else if (avail.availableSlots) {
+ } else if (Array.isArray(avail.availableSlots)) {
    const fallback = {};
    Object.keys(avail.activeDays || {}).forEach(dayIndex => {
      if (avail.activeDays[dayIndex]) fallback[dayIndex] = [...avail.availableSlots];

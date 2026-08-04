@@ -1951,9 +1951,9 @@ const _handleAdminDetectLocation = () => {
  if (psy.availability) {
  const avail = psy.availability;
  if (avail.activeDays) setAdminActiveDays(avail.activeDays);
- if (avail.availableSlots) {
- setAdminAvailableSlots(avail.availableSlots);
- setAdminAllSlots(avail.availableSlots);
+ if (Array.isArray(avail.availableSlots)) {
+ setAdminAvailableSlots([...avail.availableSlots]);
+ setAdminAllSlots([...avail.availableSlots]);
  } else {
  setAdminAvailableSlots([]);
  setAdminAllSlots([]);

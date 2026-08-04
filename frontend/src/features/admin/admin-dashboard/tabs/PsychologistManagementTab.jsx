@@ -450,18 +450,19 @@ export default function PsychologistManagementTab(props) {
         const activeIndices = Object.keys(avail.activeDays).filter(k => avail.activeDays[k]).map(Number);
         setSelectedAdminDays(activeIndices.length > 0 ? activeIndices : [1]);
       } else {
-        setSelectedAdminDays([1]);
+        setAdminActiveDays({ 1: true, 2: true, 3: true, 4: true, 5: true, 6: false, 0: false });
+        setSelectedAdminDays([1, 2, 3, 4, 5]);
       }
-      if (avail.availableSlots) {
-        setAdminAvailableSlots(avail.availableSlots);
-        setAdminAllSlots(avail.availableSlots);
+      if (Array.isArray(avail.availableSlots)) {
+        setAdminAvailableSlots([...avail.availableSlots]);
+        setAdminAllSlots([...avail.availableSlots]);
       } else {
         setAdminAvailableSlots([]);
         setAdminAllSlots([]);
       }
       if (avail.daySlots) {
         setAdminDaySlots(avail.daySlots);
-      } else if (avail.availableSlots) {
+      } else if (Array.isArray(avail.availableSlots)) {
         const fallback = {};
         Object.keys(avail.activeDays || {}).forEach(dayIndex => {
           if (avail.activeDays[dayIndex]) fallback[dayIndex] = [...avail.availableSlots];
