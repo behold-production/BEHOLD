@@ -425,11 +425,11 @@ export default function AdminDashboard({ setView: _setView }) {
  doc.setFontSize(8.5);
  doc.setTextColor(71, 85, 105); // slate-600
 
- const cName = booking.counsellorName || (booking.counsellor && booking.psychologist.name) || 'Consultant Psychologist';
- const cTitle = (booking.counsellor && booking.psychologist.title) || 'Consultant Psychologist';
- const cEdu = (booking.counsellor && booking.psychologist.education) || 'Professional Degree';
- const cPhone = (booking.counsellor && booking.psychologist.phone) || 'N/A';
- const cEmail = (booking.counsellor && booking.psychologist.email) || 'N/A';
+ const cName = booking.counsellorName || (booking.counsellor?.psychologist?.name) || 'Consultant Psychologist';
+ const cTitle = (booking.counsellor?.psychologist?.title) || 'Consultant Psychologist';
+ const cEdu = (booking.counsellor?.psychologist?.education) || 'Professional Degree';
+ const cPhone = (booking.counsellor?.psychologist?.phone) || 'N/A';
+ const cEmail = (booking.counsellor?.psychologist?.email) || 'N/A';
 
  doc.text(`Name: ${cName}`, 20, 51);
  doc.text(`Title: ${cTitle}`, 20, 56);
@@ -446,11 +446,11 @@ export default function AdminDashboard({ setView: _setView }) {
  doc.setFontSize(8.5);
  doc.setTextColor(71, 85, 105);
 
- const sName = booking.studentName || (booking.student && booking.student.name) || 'N/A';
- const sSchool = (booking.student && booking.student.schoolName) || 'N/A';
- const sGrade = (booking.student && booking.student.grade) || 'N/A';
- const sGName = (booking.student && booking.student.guardianName) || 'N/A';
- const sGPhone = (booking.student && booking.student.guardianPhone) || 'N/A';
+ const sName = booking.studentName || (booking.student?.name) || 'N/A';
+ const sSchool = (booking.student?.schoolName) || 'N/A';
+ const sGrade = (booking.student?.grade) || 'N/A';
+ const sGName = (booking.student?.guardianName) || 'N/A';
+ const sGPhone = (booking.student?.guardianPhone) || 'N/A';
 
  doc.text(`Name: ${sName}`, 115, 51);
  doc.text(`School: ${sSchool}`, 115, 56);
