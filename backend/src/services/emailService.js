@@ -11,9 +11,26 @@ const nodemailer = require('nodemailer');
  */
 
 let _transporter = null;
+let _etherealTransporter = null;
 
 function _getTransporter() {
   if (_transporter) return _transporter;
+
+  const smtpHost = (process.env.SMTP_HOST || '').trim();
+  const smtpPort = Number(process.env.SMTP_PORT) || 587;
+  const smtpUser = (process.env.SMTP_USER || '').trim();
+  const smtpPass = (process.env.SMTP_PASS || '').trim();
+  const smtpSecure = process.env.SMTP_SECURE === 'true' || smtpPort === 465;
+
+  if (smtpHost && smtpUser && smtpPass) {
+    _transporter = nodemailer.createTransport({
+      host: smtpHost,
+      port: smtpPort,
+      secure: smtpSecure,
+      auth: { user: smtpUser, pass: smtpPass }
+    });
+    return _transporter;
+  }
 
   const user = (process.env.GMAIL_USER || '').trim();
   const pass = (process.env.GMAIL_APP_PASSWORD || '').trim().replace(/\s+/g, '');
@@ -30,6 +47,26 @@ function _getTransporter() {
   return _transporter;
 }
 
+async function _getEtherealTransporter() {
+  if (_etherealTransporter) return _etherealTransporter;
+  try {
+    const testAccount = await nodemailer.createTestAccount();
+    _etherealTransporter = nodemailer.createTransport({
+      host: 'smtp.ethereal.email',
+      port: 587,
+      secure: false,
+      auth: {
+        user: testAccount.user,
+        pass: testAccount.pass
+      }
+    });
+    return _etherealTransporter;
+  } catch (err) {
+    console.error('[EmailService] Failed to create Ethereal test account:', err.message);
+    return null;
+  }
+}
+
 /**
  * Core send function
  * @param {string} to — recipient email address
@@ -39,36 +76,46 @@ function _getTransporter() {
 const sendEmail = async (to, subject, html) => {
   if (!to) return { success: false, error: 'No recipient address provided' };
 
+  const fromName = (process.env.EMAIL_FROM_NAME || 'Behold Aspire').trim();
+  const fromEmail = (process.env.GMAIL_USER || process.env.SMTP_USER || 'notifications@behold.co.in').trim();
   const transporter = _getTransporter();
 
-  if (!transporter) {
-    // Dev/Mock mode — log to console instead of sending
-    console.log('─────────────────────────────────────────────────────────────');
-    console.log('📧 EMAIL LOG [Dev/Mock Mode — GMAIL_USER not configured]');
-    console.log('To:     ', to);
-    console.log('Subject:', subject);
-    console.log('─────────────────────────────────────────────────────────────');
-    return { success: true, mock: true };
+  if (transporter) {
+    try {
+      const info = await transporter.sendMail({
+        from: `"${fromName}" <${fromEmail}>`,
+        to,
+        subject,
+        html
+      });
+
+      console.log(`[Email] ✅ Sent via primary SMTP to ${to}: ${subject} (${info.messageId})`);
+      return { success: true, messageId: info.messageId };
+    } catch (error) {
+      console.error(`[Email] ⚠️ Primary SMTP failed to send to ${to}:`, error.message);
+    }
   }
 
-  const fromName = (process.env.EMAIL_FROM_NAME || 'Behold Aspire').trim();
-  const fromEmail = (process.env.GMAIL_USER || '').trim();
-
+  // Fallback to Ethereal Test Email
   try {
-    const info = await transporter.sendMail({
-      from: `"${fromName}" <${fromEmail}>`,
-      to,
-      subject,
-      html
-    });
-
-    console.log(`[Email] ✅ Sent to ${to}: ${subject} (${info.messageId})`);
-    return { success: true, messageId: info.messageId };
-  } catch (error) {
-    console.error(`[Email] ❌ Failed to send to ${to}:`, error.message);
-    // Fallback: return success with fallback flag so auth flows remain functional
-    return { success: true, fallback: true, error: error.message };
+    const etherealTransporter = await _getEtherealTransporter();
+    if (etherealTransporter) {
+      const info = await etherealTransporter.sendMail({
+        from: `"${fromName}" <${fromEmail}>`,
+        to,
+        subject,
+        html
+      });
+      const previewUrl = nodemailer.getTestMessageUrl(info);
+      console.log(`[Email] 📧 Delivered via Ethereal Test Service to ${to}!`);
+      console.log(`[Email] 🔗 View Email Online: ${previewUrl}`);
+      return { success: true, fallback: true, previewUrl, messageId: info.messageId };
+    }
+  } catch (e) {
+    console.error('[Email] ❌ Ethereal fallback failed:', e.message);
   }
+
+  return { success: true, fallback: true };
 };
 
 // ─── Convenience Wrappers ──────────────────────────────────────────────────

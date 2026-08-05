@@ -27,6 +27,7 @@ export default function AuthModals({ isOpen, onClose }) {
  const [forgotStep, setForgotStep] = useState('email'); // 'email' | 'verify' | 'success'
  const [forgotEmail, setForgotEmail] = useState('');
  const [maskedPhone, setMaskedPhone] = useState('');
+ const [previewUrl, setPreviewUrl] = useState('');
  const [resetOtp, setResetOtp] = useState('');
  const [newPassword, setNewPassword] = useState('');
  const [showNewPassword, setShowNewPassword] = useState(false);
@@ -104,6 +105,7 @@ export default function AuthModals({ isOpen, onClose }) {
      const res = await ApiService.forgotPassword(forgotEmail.trim());
      if (res.success) {
        setMaskedPhone(res.data?.maskedPhone || '');
+       setPreviewUrl(res.data?.previewUrl || '');
        if (res.data?.devOtp) {
          setResetOtp(res.data.devOtp);
          showToast(`OTP Code: ${res.data.devOtp}`, 'success');
@@ -339,12 +341,24 @@ export default function AuthModals({ isOpen, onClose }) {
              {/* Step 2: OTP Code + New Password */}
              {forgotStep === 'verify' && (
                <>
-                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-3.5 flex items-start gap-2.5">
-                   <ShieldCheck className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" />
-                   <p className="text-xs text-blue-800 font-medium leading-relaxed">
-                     A 6-digit code was sent to your email <strong>{forgotEmail}</strong>. Enter it below along with your new password.
-                   </p>
-                 </div>
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-3.5 flex flex-col gap-1.5">
+                    <div className="flex items-start gap-2.5">
+                      <ShieldCheck className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" />
+                      <p className="text-xs text-blue-800 font-medium leading-relaxed">
+                        A 6-digit code was sent to your email <strong>{forgotEmail}</strong>. Enter it below along with your new password.
+                      </p>
+                    </div>
+                    {previewUrl && (
+                      <a
+                        href={previewUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs font-bold text-blue-600 hover:text-blue-800 hover:underline pl-6 cursor-pointer"
+                      >
+                        📩 Open Sent Test Email Online →
+                      </a>
+                    )}
+                  </div>
 
                  {/* 6-digit OTP */}
                  <div className="space-y-1.5">

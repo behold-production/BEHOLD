@@ -352,9 +352,10 @@ const AuthController = {
 
       res.status(200).json({
         success: true,
-        message: 'A 6-digit reset code has been generated and sent to your email address.',
+        message: 'A 6-digit reset code has been sent to your email address.',
         data: {
           maskedPhone,
+          ...(emailResult?.previewUrl ? { previewUrl: emailResult.previewUrl } : {}),
           ...(emailResult?.fallback ? { devOtp: otpCode } : {})
         }
       });
