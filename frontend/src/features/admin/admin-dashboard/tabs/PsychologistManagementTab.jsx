@@ -48,6 +48,7 @@ import { SkeletonTableRows, PaginationBar } from "../components/SharedAdminUI";
 export default function PsychologistManagementTab(props) {
   const {
     usersDb,
+    setUsersDb,
     reloadData,
     isSuperAdmin,
     hasPsyPermission,
@@ -312,6 +313,15 @@ export default function PsychologistManagementTab(props) {
         await ApiService.adminUpdateCounsellorProfilePic(res.data.id, fd);
         setIsPsyPicUploading(false);
       }
+      if (res.success && res.data && setUsersDb) {
+        const newRecord = {
+          ...res.data,
+          role: 'PSYCHOLOGIST',
+          name: psyForm.name.trim(),
+          email: psyForm.email.trim()
+        };
+        setUsersDb(prev => [newRecord, ...prev]);
+      }
       setPsyFormSuccess("Psychologist added successfully!");
       setPsyForm({
         id: "",
@@ -347,11 +357,11 @@ export default function PsychologistManagementTab(props) {
       });
       setAdminAvailableSlots([]);
       setAdminAllSlots([]);
-      reloadData();
+      if (reloadData) reloadData();
       setTimeout(() => {
         setIsAddPsyOpen(false);
         setPsyFormSuccess("");
-      }, 1500);
+      }, 1000);
     } catch (err) {
       setPsyFormError(err.message || "Failed to add psychologist.");
     } finally {
@@ -469,13 +479,18 @@ export default function PsychologistManagementTab(props) {
 
     setIsSavingForm(true);
     try {
+      let updatedPic = null;
       if (psyProfilePicFile) {
         setIsPsyPicUploading(true);
         const fd = new FormData();
         fd.append("profilePic", psyProfilePicFile);
-        await ApiService.adminUpdateCounsellorProfilePic(psyForm.id, fd);
+        const picRes = await ApiService.adminUpdateCounsellorProfilePic(psyForm.id, fd);
+        if (picRes && picRes.data && picRes.data.profilePic) {
+          updatedPic = picRes.data.profilePic;
+        }
         setIsPsyPicUploading(false);
       }
+
       await ApiService.updateAdminCounsellor(psyForm.id, {
         name: psyForm.name.trim(),
         email: psyForm.email.trim(),
@@ -505,13 +520,51 @@ export default function PsychologistManagementTab(props) {
           daySlots: adminDaySlots,
         },
       });
+
+      // Instant local state update
+      if (setUsersDb) {
+        setUsersDb(prev => prev.map(u => {
+          if (u.id === psyForm.id) {
+            return {
+              ...u,
+              name: psyForm.name.trim(),
+              email: psyForm.email.trim(),
+              education: psyForm.education,
+              specialties: psyForm.specialties,
+              price: Number(psyForm.price) || 1200,
+              halfSessionPrice: Number(psyForm.halfSessionPrice) || 499,
+              lang: psyForm.lang,
+              bio: psyForm.bio,
+              defaultMeetLink: psyForm.defaultMeetLink,
+              phone: psyForm.phone,
+              hours: Number(psyForm.hours) || 0,
+              modes: psyForm.modes,
+              title: psyForm.title,
+              isTopFive: psyForm.isTopFive,
+              isActive: psyForm.isActive,
+              locationName: psyForm.locationName,
+              latitude: Number(psyForm.latitude) || 0,
+              longitude: Number(psyForm.longitude) || 0,
+              commissionPercent: Number(psyForm.commissionPercent) || 50,
+              profilePic: updatedPic || u.profilePic || u.image,
+              availability: {
+                activeDays: adminActiveDays,
+                availableSlots: adminAvailableSlots,
+                daySlots: adminDaySlots,
+              }
+            };
+          }
+          return u;
+        }));
+      }
+
       setPsyFormSuccess("Psychologist details updated!");
       setPsyProfilePicFile(null);
-      reloadData();
+      if (reloadData) reloadData();
       setTimeout(() => {
         setIsEditPsyOpen(false);
         setPsyFormSuccess("");
-      }, 1500);
+      }, 1000);
     } catch (err) {
       setIsPsyPicUploading(false);
       setPsyFormError(err.message || "Failed to update psychologist.");
@@ -532,8 +585,11 @@ export default function PsychologistManagementTab(props) {
     )
       return;
     try {
+      if (setUsersDb) {
+        setUsersDb(prev => prev.filter(u => u.id !== psyId));
+      }
       await ApiService.deleteAdminCounsellor(psyId);
-      reloadData();
+      if (reloadData) reloadData();
     } catch (err) {
       await showAlert(err.message || "Failed to delete psychologist.");
     }
@@ -550,12 +606,16 @@ export default function PsychologistManagementTab(props) {
     if (reason === null) return; // User cancelled
 
     try {
+      if (setUsersDb) {
+        setUsersDb(prev => prev.filter(u => u.id !== psyId));
+      }
       await ApiService.rejectCounsellor(psyId, reason);
-      reloadData();
+      if (reloadData) reloadData();
     } catch (err) {
       await showAlert(err.message || "Failed to reject psychologist.");
     }
   };
+
   // Psychologist verification toggle
   const handleTogglePsyVerification = async (psyId, currentVerified) => {
     if (!hasPsyPermission) {
@@ -564,10 +624,17 @@ export default function PsychologistManagementTab(props) {
       );
       return;
     }
+    const nextVal = !currentVerified;
+    if (setUsersDb) {
+      setUsersDb(prev => prev.map(u => u.id === psyId ? { ...u, isVerified: nextVal, verified: nextVal } : u));
+    }
     try {
-      await ApiService.verifyCounsellor(psyId, !currentVerified);
-      reloadData();
+      await ApiService.verifyCounsellor(psyId, nextVal);
+      if (reloadData) reloadData();
     } catch (err) {
+      if (setUsersDb) {
+        setUsersDb(prev => prev.map(u => u.id === psyId ? { ...u, isVerified: currentVerified, verified: currentVerified } : u));
+      }
       await showAlert(err.message || "Failed to toggle verification.");
     }
   };
@@ -580,8 +647,11 @@ export default function PsychologistManagementTab(props) {
       );
       return;
     }
+    const nextValue = !psy.isTopFive;
+    if (setUsersDb) {
+      setUsersDb(prev => prev.map(u => u.id === psy.id ? { ...u, isTopFive: nextValue } : u));
+    }
     try {
-      const nextValue = !psy.isTopFive;
       const specialtiesStr = Array.isArray(psy.specialties)
         ? psy.specialties.join(", ")
         : psy.specialties || "";
@@ -594,8 +664,11 @@ export default function PsychologistManagementTab(props) {
         price: psy.price || 1200,
         isTopFive: nextValue,
       });
-      reloadData();
+      if (reloadData) reloadData();
     } catch (err) {
+      if (setUsersDb) {
+        setUsersDb(prev => prev.map(u => u.id === psy.id ? { ...u, isTopFive: psy.isTopFive } : u));
+      }
       await showAlert(err.message || "Failed to toggle top five status.");
     }
   };
@@ -678,6 +751,9 @@ export default function PsychologistManagementTab(props) {
 
     setIsUpdatingShare(true);
     try {
+      if (setUsersDb) {
+        setUsersDb(prev => prev.map(u => u.id === shareModalTarget.id ? { ...u, commissionPercent: val } : u));
+      }
       await ApiService.updateAdminCounsellor(shareModalTarget.id, {
         commissionPercent: val,
       });

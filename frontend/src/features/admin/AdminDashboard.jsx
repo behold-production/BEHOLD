@@ -1660,106 +1660,113 @@ const _handleAdminDetectLocation = () => {
 
  // Aptitude Questions Actions
  const handleCreateAptitudeQuestion = async (e) => {
- e.preventDefault();
- if (!isSuperAdmin) {
- setAptitudeFormError("Access Denied: Only super admins can manage tests.");
- return;
- }
- setAptitudeFormError('');
- setAptitudeFormSuccess('');
+    e.preventDefault();
+    if (!isSuperAdmin) {
+      setAptitudeFormError("Access Denied: Only super admins can manage tests.");
+      return;
+    }
+    setAptitudeFormError('');
+    setAptitudeFormSuccess('');
 
- if (!aptitudeForm.question.trim() || !aptitudeForm.category) {
- setAptitudeFormError("Question and category are required.");
- return;
- }
+    if (!aptitudeForm.question.trim() || !aptitudeForm.category) {
+      setAptitudeFormError("Question and category are required.");
+      return;
+    }
 
- setIsSavingForm(true);
- try {
- await ApiService.createAptitudeQuestion({
- question: aptitudeForm.question,
- category: aptitudeForm.category,
- options: aptitudeForm.options,
- isActive: aptitudeForm.isActive
- });
- setAptitudeFormSuccess("Question created successfully!");
- reloadData();
- setTimeout(() => {
- setIsAddAptitudeOpen(false);
- setAptitudeFormSuccess('');
- }, 1500);
- } catch (err) {
- setAptitudeFormError(err.message || "Failed to create question.");
- } finally {
- setIsSavingForm(false);
- }
- };
+    setIsSavingForm(true);
+    try {
+      const res = await ApiService.createAptitudeQuestion({
+        question: aptitudeForm.question,
+        category: aptitudeForm.category,
+        options: aptitudeForm.options,
+        isActive: aptitudeForm.isActive
+      });
+      if (res && res.success && res.data) {
+        setAptitudeQuestionsDb(prev => [...prev, res.data]);
+      } else {
+        setAptitudeQuestionsDb(prev => [...prev, { ...aptitudeForm, id: 'q_' + Date.now() }]);
+      }
+      setAptitudeFormSuccess("Question created successfully!");
+      if (reloadDataRef.current) reloadDataRef.current();
+      setTimeout(() => {
+        setIsAddAptitudeOpen(false);
+        setAptitudeFormSuccess('');
+      }, 1000);
+    } catch (err) {
+      setAptitudeFormError(err.message || "Failed to create question.");
+    } finally {
+      setIsSavingForm(false);
+    }
+  };
 
- const handleOpenEditAptitudeQuestion = (q) => {
- setAptitudeForm({
- id: q.id,
- question: q.question,
- category: q.category,
- options: q.options || [
- { text: '', weight: 1 },
- { text: '', weight: 1 },
- { text: '', weight: 1 },
- { text: '', weight: 1 }
- ],
- isActive: q.isActive !== undefined ? q.isActive : true
- });
- setAptitudeFormError('');
- setAptitudeFormSuccess('');
- setIsEditAptitudeOpen(true);
- };
+  const handleOpenEditAptitudeQuestion = (q) => {
+    setAptitudeForm({
+      id: q.id,
+      question: q.question,
+      category: q.category,
+      options: q.options || [
+        { text: '', weight: 1 },
+        { text: '', weight: 1 },
+        { text: '', weight: 1 },
+        { text: '', weight: 1 }
+      ],
+      isActive: q.isActive !== undefined ? q.isActive : true
+    });
+    setAptitudeFormError('');
+    setAptitudeFormSuccess('');
+    setIsEditAptitudeOpen(true);
+  };
 
- const handleUpdateAptitudeQuestion = async (e) => {
- e.preventDefault();
- if (!isSuperAdmin) {
- setAptitudeFormError("Access Denied: Only super admins can manage tests.");
- return;
- }
- setAptitudeFormError('');
- setAptitudeFormSuccess('');
+  const handleUpdateAptitudeQuestion = async (e) => {
+    e.preventDefault();
+    if (!isSuperAdmin) {
+      setAptitudeFormError("Access Denied: Only super admins can manage tests.");
+      return;
+    }
+    setAptitudeFormError('');
+    setAptitudeFormSuccess('');
 
- if (!aptitudeForm.question.trim() || !aptitudeForm.category) {
- setAptitudeFormError("Question and category are required.");
- return;
- }
+    if (!aptitudeForm.question.trim() || !aptitudeForm.category) {
+      setAptitudeFormError("Question and category are required.");
+      return;
+    }
 
- setIsSavingForm(true);
- try {
- await ApiService.updateAptitudeQuestion(aptitudeForm.id, {
- question: aptitudeForm.question,
- category: aptitudeForm.category,
- options: aptitudeForm.options,
- isActive: aptitudeForm.isActive
- });
- setAptitudeFormSuccess("Question updated!");
- reloadData();
- setTimeout(() => {
- setIsEditAptitudeOpen(false);
- setAptitudeFormSuccess('');
- }, 1500);
- } catch (err) {
- setAptitudeFormError(err.message || "Failed to update question.");
- } finally {
- setIsSavingForm(false);
- }
- };
+    setIsSavingForm(true);
+    try {
+      await ApiService.updateAptitudeQuestion(aptitudeForm.id, {
+        question: aptitudeForm.question,
+        category: aptitudeForm.category,
+        options: aptitudeForm.options,
+        isActive: aptitudeForm.isActive
+      });
+      setAptitudeQuestionsDb(prev => prev.map(q => q.id === aptitudeForm.id ? { ...q, ...aptitudeForm } : q));
+      setAptitudeFormSuccess("Question updated!");
+      if (reloadDataRef.current) reloadDataRef.current();
+      setTimeout(() => {
+        setIsEditAptitudeOpen(false);
+        setAptitudeFormSuccess('');
+      }, 1000);
+    } catch (err) {
+      setAptitudeFormError(err.message || "Failed to update question.");
+    } finally {
+      setIsSavingForm(false);
+    }
+  };
 
- const handleDeleteAptitudeQuestion = async (id) => {
- if (!isSuperAdmin) {
- await showAlert("Access Denied: Only super admins can manage tests.");
- return;
- }
- if (!await showConfirm("Delete this question?")) return;
- try {
- await ApiService.deleteAptitudeQuestion(id);
- reloadData();
- } catch (err) {
- await showAlert(err.message || "Failed to delete question.");
- }
- };
+  const handleDeleteAptitudeQuestion = async (id) => {
+    if (!isSuperAdmin) {
+      await showAlert("Access Denied: Only super admins can manage tests.");
+      return;
+    }
+    if (!await showConfirm("Delete this question?")) return;
+    try {
+      setAptitudeQuestionsDb(prev => prev.filter(q => q.id !== id));
+      await ApiService.deleteAptitudeQuestion(id);
+      if (reloadDataRef.current) reloadDataRef.current();
+    } catch (err) {
+      await showAlert(err.message || "Failed to delete question.");
+    }
+  };
 
  // Psychologist Actions
  const parseAdminTimeToMinutes = (timeStr) => {
@@ -2071,174 +2078,202 @@ const _handleAdminDetectLocation = () => {
  };
 
  // Booking Actions
- const handleCreateBooking = async (e) => {
- e.preventDefault();
- if (!hasBookingPermission) {
- setBookingFormError("Access Denied: You do not have permission to manage bookings.");
- return;
- }
- setBookingFormError('');
- setBookingFormSuccess('');
+  const handleCreateBooking = async (e) => {
+    e.preventDefault();
+    if (!hasBookingPermission) {
+      setBookingFormError("Access Denied: You do not have permission to manage bookings.");
+      return;
+    }
+    setBookingFormError('');
+    setBookingFormSuccess('');
 
- if (!bookingForm.userId || !bookingForm.advisorId || !bookingForm.date || !bookingForm.time) {
- setBookingFormError("Student, Psychologist, Date and Time Slot are required.");
- return;
- }
+    if (!bookingForm.userId || !bookingForm.advisorId || !bookingForm.date || !bookingForm.time) {
+      setBookingFormError("Student, Psychologist, Date and Time Slot are required.");
+      return;
+    }
 
- const localToday = getLocalTodayString();
- if (bookingForm.date < localToday) {
- setBookingFormError("Cannot book a date in the past.");
- return;
- }
+    const localToday = getLocalTodayString();
+    if (bookingForm.date < localToday) {
+      setBookingFormError("Cannot book a date in the past.");
+      return;
+    }
 
-  if (bookingForm.date === localToday && bookingForm.time) {
- try {
- const [time, modifier] = bookingForm.time.split(' ');
- let [hours, minutes] = time.split(':').map(Number);
- if (modifier === 'PM' && hours < 12) hours += 12;
-  if (modifier === 'AM' && hours === 12) hours = 0;
+    if (bookingForm.date === localToday && bookingForm.time) {
+      try {
+        const [time, modifier] = bookingForm.time.split(' ');
+        let [hours, minutes] = time.split(':').map(Number);
+        if (modifier === 'PM' && hours < 12) hours += 12;
+        if (modifier === 'AM' && hours === 12) hours = 0;
 
- const now = new Date();
- const slotDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
- if (now >= slotDate) {
- setBookingFormError("This time slot has already passed today.");
- return;
- }
-  } catch { }
- }
+        const now = new Date();
+        const slotDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+        if (now >= slotDate) {
+          setBookingFormError("This time slot has already passed today.");
+          return;
+        }
+      } catch { }
+    }
 
- const isDoubleBooked = bookingsDb.some(b =>
- b.advisorId === bookingForm.advisorId &&
- b.date === bookingForm.date &&
- b.time === bookingForm.time &&
- (b.status === 'CONFIRMED' || b.status === 'PENDING' || b.status === 'APPROVED')
- );
- if (isDoubleBooked) {
- setBookingFormError("This slot is already booked for the selected date.");
- return;
- }
+    const isDoubleBooked = bookingsDb.some(b =>
+      b.advisorId === bookingForm.advisorId &&
+      b.date === bookingForm.date &&
+      b.time === bookingForm.time &&
+      (b.status === 'CONFIRMED' || b.status === 'PENDING' || b.status === 'APPROVED')
+    );
+    if (isDoubleBooked) {
+      setBookingFormError("This slot is already booked for the selected date.");
+      return;
+    }
 
- const student = usersDb.find(u => u.id === bookingForm.userId);
- const psy = usersDb.find(u => u.id === bookingForm.advisorId);
+    const student = usersDb.find(u => u.id === bookingForm.userId);
+    const psy = usersDb.find(u => u.id === bookingForm.advisorId);
 
- if (!student || !psy) {
- setBookingFormError("Student or Psychologist record invalid.");
- return;
- }
+    if (!student || !psy) {
+      setBookingFormError("Student or Psychologist record invalid.");
+      return;
+    }
 
- setIsSavingForm(true);
- try {
- await ApiService.createAdminAppointment({
- userId: bookingForm.userId,
- advisorId: bookingForm.advisorId,
- service: bookingForm.service,
- mode: bookingForm.mode,
- date: bookingForm.date,
- time: bookingForm.time,
- meetLink: bookingForm.meetLink.trim() || psy.defaultMeetLink || '',
- status: bookingForm.status || 'CONFIRMED'
- });
+    setIsSavingForm(true);
+    try {
+      const res = await ApiService.createAdminAppointment({
+        userId: bookingForm.userId,
+        advisorId: bookingForm.advisorId,
+        service: bookingForm.service,
+        mode: bookingForm.mode,
+        date: bookingForm.date,
+        time: bookingForm.time,
+        meetLink: bookingForm.meetLink.trim() || psy.defaultMeetLink || '',
+        status: bookingForm.status || 'CONFIRMED'
+      });
 
- setBookingFormSuccess("Appointment scheduled successfully!");
- setBookingForm({
- id: '',
- userId: '',
- advisorId: '',
- service: 'counselling',
- mode: 'ONLINE',
- date: getLocalTodayString(),
- time: '',
- meetLink: '',
- status: 'CONFIRMED'
- });
- reloadData();
- setTimeout(() => {
- setIsAddBookingOpen(false);
- setBookingFormSuccess('');
- }, 1500);
- } catch (err) {
- setBookingFormError(err.message || "Failed to create booking.");
- } finally {
- setIsSavingForm(false);
- }
- };
+      if (res.success && res.data) {
+        const newB = {
+          ...res.data,
+          userName: student.name,
+          advisorName: psy.name,
+          advisorRole: psy.title || 'Consultant Psychologist'
+        };
+        setBookingsDb(prev => [newB, ...prev]);
+      }
 
- const handleOpenEditBooking = (booking) => {
- const studentUser = usersDb.find(u => u.name === booking.userName && (u.role === 'USER' || !u.role));
- const advisorUser = usersDb.find(u => u.name === booking.advisorName && u.role === 'PSYCHOLOGIST');
+      setBookingFormSuccess("Appointment scheduled successfully!");
+      setBookingForm({
+        id: '',
+        userId: '',
+        advisorId: '',
+        service: 'counselling',
+        mode: 'ONLINE',
+        date: getLocalTodayString(),
+        time: '',
+        meetLink: '',
+        status: 'CONFIRMED'
+      });
+      if (reloadDataRef.current) reloadDataRef.current();
+      setTimeout(() => {
+        setIsAddBookingOpen(false);
+        setBookingFormSuccess('');
+      }, 1000);
+    } catch (err) {
+      setBookingFormError(err.message || "Failed to create booking.");
+    } finally {
+      setIsSavingForm(false);
+    }
+  };
 
- setBookingForm({
- id: booking.id,
- userId: studentUser?.id || booking.userId || '',
- advisorId: booking.advisorId || advisorUser?.id || '',
- service: booking.service || 'counselling',
- mode: booking.mode || 'ONLINE',
- date: booking.date || '',
- time: booking.time || '',
- meetLink: booking.meetLink || '',
- status: booking.status || 'CONFIRMED',
- adminNotes: booking.adminNotes || ''
- });
+  const handleOpenEditBooking = (booking) => {
+    const studentUser = usersDb.find(u => u.name === booking.userName && (u.role === 'USER' || !u.role));
+    const advisorUser = usersDb.find(u => u.name === booking.advisorName && u.role === 'PSYCHOLOGIST');
 
- setBookingFormError('');
- setBookingFormSuccess('');
- setIsEditBookingOpen(true);
- };
+    setBookingForm({
+      id: booking.id,
+      userId: studentUser?.id || booking.userId || '',
+      advisorId: booking.advisorId || advisorUser?.id || '',
+      service: booking.service || 'counselling',
+      mode: booking.mode || 'ONLINE',
+      date: booking.date || '',
+      time: booking.time || '',
+      meetLink: booking.meetLink || '',
+      status: booking.status || 'CONFIRMED',
+      adminNotes: booking.adminNotes || ''
+    });
 
- const handleUpdateBooking = async (e) => {
- e.preventDefault();
- if (!hasBookingPermission) {
- setBookingFormError("Access Denied: You do not have permission to manage bookings.");
- return;
- }
- setBookingFormError('');
- setBookingFormSuccess('');
+    setBookingFormError('');
+    setBookingFormSuccess('');
+    setIsEditBookingOpen(true);
+  };
 
- if (!bookingForm.date || !bookingForm.time) {
- setBookingFormError("Date and Time Slot are required.");
- return;
- }
+  const handleUpdateBooking = async (e) => {
+    e.preventDefault();
+    if (!hasBookingPermission) {
+      setBookingFormError("Access Denied: You do not have permission to manage bookings.");
+      return;
+    }
+    setBookingFormError('');
+    setBookingFormSuccess('');
 
- setIsSavingForm(true);
- try {
- await ApiService.updateAdminAppointment(bookingForm.id, {
- userId: bookingForm.userId,
- advisorId: bookingForm.advisorId,
- service: bookingForm.service,
- mode: bookingForm.mode,
- date: bookingForm.date,
- time: bookingForm.time,
- meetLink: bookingForm.meetLink.trim(),
- status: bookingForm.status,
- adminNotes: bookingForm.adminNotes ? bookingForm.adminNotes.trim() : ''
- });
+    if (!bookingForm.date || !bookingForm.time) {
+      setBookingFormError("Date and Time Slot are required.");
+      return;
+    }
 
- setBookingFormSuccess("Appointment details updated!");
- reloadData();
- setTimeout(() => {
- setIsEditBookingOpen(false);
- setBookingFormSuccess('');
- }, 1500);
- } catch (err) {
- setBookingFormError(err.message || "Failed to update booking.");
- } finally {
- setIsSavingForm(false);
- }
- };
+    setIsSavingForm(true);
+    try {
+      await ApiService.updateAdminAppointment(bookingForm.id, {
+        userId: bookingForm.userId,
+        advisorId: bookingForm.advisorId,
+        service: bookingForm.service,
+        mode: bookingForm.mode,
+        date: bookingForm.date,
+        time: bookingForm.time,
+        meetLink: bookingForm.meetLink.trim(),
+        status: bookingForm.status,
+        adminNotes: bookingForm.adminNotes ? bookingForm.adminNotes.trim() : ''
+      });
 
- const handleDeleteBooking = async (bookingId) => {
- if (!hasBookingPermission) {
- await showAlert("Access Denied: You do not have permission to manage bookings.");
- return;
- }
- if (!await showConfirm("Are you sure you want to remove this booking?")) return;
- try {
- await ApiService.deleteAdminAppointment(bookingId);
- reloadData();
- } catch (err) {
- await showAlert(err.message || "Failed to delete booking.");
- }
- };
+      // Instant local state update
+      setBookingsDb(prev => prev.map(b => {
+        if (b.id === bookingForm.id) {
+          return {
+            ...b,
+            date: bookingForm.date,
+            time: bookingForm.time,
+            service: bookingForm.service,
+            mode: bookingForm.mode,
+            meetLink: bookingForm.meetLink.trim(),
+            status: bookingForm.status,
+            adminNotes: bookingForm.adminNotes ? bookingForm.adminNotes.trim() : ''
+          };
+        }
+        return b;
+      }));
+
+      setBookingFormSuccess("Appointment details updated!");
+      if (reloadDataRef.current) reloadDataRef.current();
+      setTimeout(() => {
+        setIsEditBookingOpen(false);
+        setBookingFormSuccess('');
+      }, 1000);
+    } catch (err) {
+      setBookingFormError(err.message || "Failed to update booking.");
+    } finally {
+      setIsSavingForm(false);
+    }
+  };
+
+  const handleDeleteBooking = async (bookingId) => {
+    if (!hasBookingPermission) {
+      await showAlert("Access Denied: You do not have permission to manage bookings.");
+      return;
+    }
+    if (!await showConfirm("Are you sure you want to remove this booking?")) return;
+    try {
+      setBookingsDb(prev => prev.filter(b => b.id !== bookingId));
+      await ApiService.deleteAdminAppointment(bookingId);
+      if (reloadDataRef.current) reloadDataRef.current();
+    } catch (err) {
+      await showAlert(err.message || "Failed to delete booking.");
+    }
+  };
 
  const handleRoleChangeInForm = (roleName) => {
  setSubAdminForm(prev => ({ ...prev, roleName }));
@@ -2552,32 +2587,35 @@ const _handleAdminDetectLocation = () => {
  );
 
  // Inquiries Actions
- const handleResolveInquiry = async (inqId) => {
- if (!isSuperAdmin) {
- await showAlert("Access Denied: You do not have permission to manage inquiries.");
- return;
- }
- try {
- await ApiService.resolveInquiry(inqId);
- reloadData();
- } catch (err) {
- await showAlert(err.message || "Failed to update inquiry.");
- }
- };
+  const handleResolveInquiry = async (inqId) => {
+    if (!isSuperAdmin) {
+      await showAlert("Access Denied: You do not have permission to manage inquiries.");
+      return;
+    }
+    setInquiriesDb(prev => prev.map(inq => inq.id === inqId ? { ...inq, status: 'RESOLVED' } : inq));
+    try {
+      await ApiService.resolveInquiry(inqId);
+      if (reloadDataRef.current) reloadDataRef.current();
+    } catch (err) {
+      setInquiriesDb(prev => prev.map(inq => inq.id === inqId ? { ...inq, status: 'PENDING' } : inq));
+      await showAlert(err.message || "Failed to update inquiry.");
+    }
+  };
 
- const handleDeleteInquiry = async (inqId) => {
- if (!isSuperAdmin) {
- await showAlert("Access Denied: You do not have permission to manage inquiries.");
- return;
- }
- if (!await showConfirm("Are you sure you want to delete this student inquiry?")) return;
- try {
- await ApiService.deleteInquiry(inqId);
- reloadData();
- } catch (err) {
- await showAlert(err.message || "Failed to delete inquiry.");
- }
- };
+  const handleDeleteInquiry = async (inqId) => {
+    if (!isSuperAdmin) {
+      await showAlert("Access Denied: You do not have permission to manage inquiries.");
+      return;
+    }
+    if (!await showConfirm("Are you sure you want to delete this student inquiry?")) return;
+    setInquiriesDb(prev => prev.filter(inq => inq.id !== inqId));
+    try {
+      await ApiService.deleteInquiry(inqId);
+      if (reloadDataRef.current) reloadDataRef.current();
+    } catch (err) {
+      await showAlert(err.message || "Failed to delete inquiry.");
+    }
+  };
 
  // Student active/suspended status toggle
  const handleToggleStudentStatus = async (studentId, currentStatus) => {
@@ -3024,7 +3062,7 @@ const _handleAdminDetectLocation = () => {
  await showAlert("Test report copied to clipboard!");
  };
 
- // Bookings Bulk Actions
+// Bookings Bulk Actions
  const handleToggleSelectBooking = (bookingId) => {
  setSelectedBookingIds(prev =>
  prev.includes(bookingId)
@@ -3034,150 +3072,160 @@ const _handleAdminDetectLocation = () => {
  };
 
  const handleBulkBookingStatus = async (status) => {
- if (!hasBookingPermission) {
- await showAlert("Access Denied: You do not have permission to manage bookings.");
- return;
- }
- if (selectedBookingIds.length === 0) return;
- try {
- await Promise.all(
- selectedBookingIds.map(id => ApiService.updateAdminAppointment(id, { status }))
- );
- setSelectedBookingIds([]);
- reloadData();
- await showAlert(`Selected bookings updated to ${status}!`);
- } catch (err) {
- await showAlert(err.message || "Failed to update bookings.");
- }
- };
+    if (!hasBookingPermission) {
+      await showAlert("Access Denied: You do not have permission to manage bookings.");
+      return;
+    }
+    if (selectedBookingIds.length === 0) return;
+    setBookingsDb(prev => prev.map(b => selectedBookingIds.includes(b.id) ? { ...b, status } : b));
+    try {
+      await Promise.all(
+        selectedBookingIds.map(id => ApiService.updateAdminAppointment(id, { status }))
+      );
+      setSelectedBookingIds([]);
+      if (reloadDataRef.current) reloadDataRef.current();
+      await showAlert(`Selected bookings updated to ${status}!`);
+    } catch (err) {
+      await showAlert(err.message || "Failed to update bookings.");
+    }
+  };
 
- const handleBulkDeleteBookings = async () => {
- if (!hasBookingPermission) {
- await showAlert("Access Denied: You do not have permission to manage bookings.");
- return;
- }
- if (selectedBookingIds.length === 0) return;
- if (!await showConfirm(`Are you sure you want to delete ${selectedBookingIds.length} selected bookings?`)) return;
- try {
- await Promise.all(
- selectedBookingIds.map(id => ApiService.deleteAdminAppointment(id))
- );
- setSelectedBookingIds([]);
- reloadData();
- await showAlert("Selected bookings deleted!");
- } catch (err) {
- await showAlert(err.message || "Failed to delete bookings.");
- }
- };
+  const handleBulkDeleteBookings = async () => {
+    if (!hasBookingPermission) {
+      await showAlert("Access Denied: You do not have permission to manage bookings.");
+      return;
+    }
+    if (selectedBookingIds.length === 0) return;
+    if (!await showConfirm(`Are you sure you want to delete ${selectedBookingIds.length} selected bookings?`)) return;
+    setBookingsDb(prev => prev.filter(b => !selectedBookingIds.includes(b.id)));
+    try {
+      await Promise.all(
+        selectedBookingIds.map(id => ApiService.deleteAdminAppointment(id))
+      );
+      setSelectedBookingIds([]);
+      if (reloadDataRef.current) reloadDataRef.current();
+      await showAlert("Selected bookings deleted!");
+    } catch (err) {
+      await showAlert(err.message || "Failed to delete bookings.");
+    }
+  };
 
- // Test Results Actions
- const handleDeleteTestResult = async (resId) => {
- if (!isSuperAdmin) {
- await showAlert("Access Denied: You do not have permission to manage test results.");
- return;
- }
- if (!await showConfirm("Are you sure you want to delete this test result?")) return;
- try {
- await ApiService.deleteTestResult(resId);
- reloadData();
- } catch (err) {
- await showAlert(err.message || "Failed to delete test result.");
- }
- };
+  // Test Results Actions
+  const handleDeleteTestResult = async (resId) => {
+    if (!isSuperAdmin) {
+      await showAlert("Access Denied: You do not have permission to manage test results.");
+      return;
+    }
+    if (!await showConfirm("Are you sure you want to delete this test result?")) return;
+    setTestResultsDb(prev => prev.filter(r => r.id !== resId));
+    try {
+      await ApiService.deleteTestResult(resId);
+      if (reloadDataRef.current) reloadDataRef.current();
+    } catch (err) {
+      await showAlert(err.message || "Failed to delete test result.");
+    }
+  };
 
- // FAQ Desk Actions
- const handleCreateFaq = async (e) => {
- e.preventDefault();
- if (!isSuperAdmin) {
- setFaqFormError("Access Denied: You do not have permission to manage FAQs.");
- return;
- }
- setFaqFormError('');
- setFaqFormSuccess('');
+  // FAQ Desk Actions
+  const handleCreateFaq = async (e) => {
+    e.preventDefault();
+    if (!isSuperAdmin) {
+      setFaqFormError("Access Denied: You do not have permission to manage FAQs.");
+      return;
+    }
+    setFaqFormError('');
+    setFaqFormSuccess('');
 
- if (!faqForm.question.trim() || !faqForm.answer.trim()) {
- setFaqFormError("Both question and answer are required.");
- return;
- }
+    if (!faqForm.question.trim() || !faqForm.answer.trim()) {
+      setFaqFormError("Both question and answer are required.");
+      return;
+    }
 
- setIsSavingForm(true);
- try {
- await ApiService.createFaq(faqForm.question.trim(), faqForm.answer.trim());
- setFaqFormSuccess("FAQ added successfully!");
- setFaqForm({ index: -1, question: '', answer: '' });
- reloadData();
- setTimeout(() => {
- setIsAddFaqOpen(false);
- setFaqFormSuccess('');
- }, 1500);
- } catch (err) {
- setFaqFormError(err.message || "Failed to add FAQ.");
- } finally {
- setIsSavingForm(false);
- }
- };
+    setIsSavingForm(true);
+    try {
+      const res = await ApiService.createFaq(faqForm.question.trim(), faqForm.answer.trim());
+      if (res && res.success && res.data) {
+        setFaqsDb(prev => [...prev, res.data]);
+      } else {
+        setFaqsDb(prev => [...prev, { question: faqForm.question.trim(), answer: faqForm.answer.trim() }]);
+      }
+      setFaqFormSuccess("FAQ added successfully!");
+      setFaqForm({ index: -1, question: '', answer: '' });
+      if (reloadDataRef.current) reloadDataRef.current();
+      setTimeout(() => {
+        setIsAddFaqOpen(false);
+        setFaqFormSuccess('');
+      }, 1000);
+    } catch (err) {
+      setFaqFormError(err.message || "Failed to add FAQ.");
+    } finally {
+      setIsSavingForm(false);
+    }
+  };
 
- const handleOpenEditFaq = (faq, index) => {
- setFaqForm({
- index,
- question: faq.question,
- answer: faq.answer
- });
- setFaqFormError('');
- setFaqFormSuccess('');
- setIsEditFaqOpen(true);
- };
+  const handleOpenEditFaq = (faq, index) => {
+    setFaqForm({
+      index,
+      question: faq.question,
+      answer: faq.answer
+    });
+    setFaqFormError('');
+    setFaqFormSuccess('');
+    setIsEditFaqOpen(true);
+  };
 
- const handleUpdateFaq = async (e) => {
- e.preventDefault();
- if (!isSuperAdmin) {
- setFaqFormError("Access Denied: You do not have permission to manage FAQs.");
- return;
- }
- setFaqFormError('');
- setFaqFormSuccess('');
+  const handleUpdateFaq = async (e) => {
+    e.preventDefault();
+    if (!isSuperAdmin) {
+      setFaqFormError("Access Denied: You do not have permission to manage FAQs.");
+      return;
+    }
+    setFaqFormError('');
+    setFaqFormSuccess('');
 
- if (!faqForm.question.trim() || !faqForm.answer.trim()) {
- setFaqFormError("Both question and answer are required.");
- return;
- }
+    if (!faqForm.question.trim() || !faqForm.answer.trim()) {
+      setFaqFormError("Both question and answer are required.");
+      return;
+    }
 
- setIsSavingForm(true);
- try {
- const faqToUpdate = faqsDb[faqForm.index];
- if (!faqToUpdate) {
- setFaqFormError("FAQ record not found.");
- return;
- }
- await ApiService.updateFaq(faqToUpdate.id, faqForm.question.trim(), faqForm.answer.trim());
- setFaqFormSuccess("FAQ updated successfully!");
- reloadData();
- setTimeout(() => {
- setIsEditFaqOpen(false);
- setFaqFormSuccess('');
- }, 1500);
- } catch (err) {
- setFaqFormError(err.message || "Failed to update FAQ.");
- } finally {
- setIsSavingForm(false);
- }
- };
+    setIsSavingForm(true);
+    try {
+      const faqToUpdate = faqsDb[faqForm.index];
+      if (!faqToUpdate) {
+        setFaqFormError("FAQ record not found.");
+        return;
+      }
+      await ApiService.updateFaq(faqToUpdate.id, faqForm.question.trim(), faqForm.answer.trim());
+      setFaqsDb(prev => prev.map((f, i) => i === faqForm.index ? { ...f, question: faqForm.question.trim(), answer: faqForm.answer.trim() } : f));
+      setFaqFormSuccess("FAQ updated successfully!");
+      if (reloadDataRef.current) reloadDataRef.current();
+      setTimeout(() => {
+        setIsEditFaqOpen(false);
+        setFaqFormSuccess('');
+      }, 1000);
+    } catch (err) {
+      setFaqFormError(err.message || "Failed to update FAQ.");
+    } finally {
+      setIsSavingForm(false);
+    }
+  };
 
- const handleDeleteFaq = async (index) => {
- if (!isSuperAdmin) {
- await showAlert("Access Denied: You do not have permission to manage FAQs.");
- return;
- }
- if (!await showConfirm("Are you sure you want to delete this FAQ question?")) return;
- try {
- const faqToDelete = faqsDb[index];
- if (!faqToDelete) return;
- await ApiService.deleteFaq(faqToDelete.id);
- reloadData();
- } catch (err) {
- await showAlert(err.message || "Failed to delete FAQ.");
- }
- };
+  const handleDeleteFaq = async (index) => {
+    if (!isSuperAdmin) {
+      await showAlert("Access Denied: You do not have permission to manage FAQs.");
+      return;
+    }
+    if (!await showConfirm("Are you sure you want to delete this FAQ question?")) return;
+    try {
+      const faqToDelete = faqsDb[index];
+      if (!faqToDelete) return;
+      setFaqsDb(prev => prev.filter((_, i) => i !== index));
+      await ApiService.deleteFaq(faqToDelete.id);
+      if (reloadDataRef.current) reloadDataRef.current();
+    } catch (err) {
+      await showAlert(err.message || "Failed to delete FAQ.");
+    }
+  };
 
  // Filter inquiries
  const filteredInquiries = inquiriesDb.filter(inq =>

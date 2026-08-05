@@ -9,6 +9,7 @@ export default function SubAdminManagementTab(props) {
   const {
     rolesDb = [],
     usersDb = [],
+    setUsersDb,
     reloadData,
     isSuperAdmin,
     PRIVILEGE_MODULES = [],
@@ -207,46 +208,105 @@ const handleRoleChangeInForm = (roleName) => {
  }
 
  try {
- await ApiService.createAdminUser(
- subAdminForm.name.trim(),
- subAdminForm.email.trim(),
- subAdminForm.password,
- 'ADMIN',
- permissionsArray,
- subAdminForm.roleName
- );
+    const res = await ApiService.createAdminUser(
+      subAdminForm.name.trim(),
+      subAdminForm.email.trim(),
+      subAdminForm.password,
+      'ADMIN',
+      permissionsArray,
+      subAdminForm.roleName
+    );
 
- setSubAdminSuccess(`Sub-admin account for ${subAdminForm.name} created successfully!`);
+    if (res.success && res.data && setUsersDb) {
+      const newAdmin = {
+        ...res.data,
+        role: 'ADMIN',
+        name: subAdminForm.name.trim(),
+        email: subAdminForm.email.trim(),
+        permissions: permissionsArray,
+        customRoleTitle: subAdminForm.roleName
+      };
+      setUsersDb(prev => [newAdmin, ...prev]);
+    }
 
- const defaultRole = rolesDb.length > 0 ? rolesDb[0] : null;
- setSubAdminForm({
- name: '',
- email: '',
- password: '',
- roleName: defaultRole ? defaultRole.name : ''
- });
- if (defaultRole) {
- handleRoleChangeInForm(defaultRole.name);
- } else {
- setSelectedPermissions([]);
- }
- reloadData();
- } catch (err) {
- setSubAdminError(err.message || "Failed to create account.");
- } finally {
- setIsRegistering(false);
- }
- };
+    setSubAdminSuccess(`Sub-admin account for ${subAdminForm.name} created successfully!`);
 
- const togglePermission = (perm) => {
- setSelectedPermissions(prev => {
- if (prev.includes(perm)) {
- return prev.filter(p => p !== perm);
- } else {
- return [...prev, perm];
- }
- });
- };
+    const defaultRole = rolesDb.length > 0 ? rolesDb[0] : null;
+    setSubAdminForm({
+      name: '',
+      email: '',
+      password: '',
+      roleName: defaultRole ? defaultRole.name : ''
+    });
+    if (defaultRole) {
+      handleRoleChangeInForm(defaultRole.name);
+    } else {
+      setSelectedPermissions([]);
+    }
+    if (reloadData) reloadData();
+  } catch (err) {
+    setSubAdminError(err.message || "Failed to create account.");
+  } finally {
+    setIsRegistering(false);
+  }
+  };
+
+  const togglePermission = (perm) => {
+    setSelectedPermissions(prev => {
+      if (prev.includes(perm)) {
+        return prev.filter(p => p !== perm);
+      } else {
+        return [...prev, perm];
+      }
+    });
+  };
+
+  const handleEditSubAdminSave = async (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    if (!editingSubAdmin) return;
+
+    setEditSubAdminError('');
+    setEditSubAdminSuccess('');
+
+    const permsArray = Object.keys(editSubAdminPermissionsObj).filter(p => editSubAdminPermissionsObj[p]);
+
+    setIsSavingForm(true);
+    try {
+      await ApiService.updateAdminUser(
+        editingSubAdmin.id,
+        editingSubAdmin.name,
+        editingSubAdmin.email,
+        undefined,
+        'ADMIN',
+        permsArray,
+        editSubAdminRoleName || editingSubAdmin.customRoleTitle
+      );
+
+      if (setUsersDb) {
+        setUsersDb(prev => prev.map(u => {
+          if (u.id === editingSubAdmin.id) {
+            return {
+              ...u,
+              permissions: permsArray,
+              customRoleTitle: editSubAdminRoleName || u.customRoleTitle
+            };
+          }
+          return u;
+        }));
+      }
+
+      setEditSubAdminSuccess('Permissions updated successfully!');
+      if (reloadData) reloadData();
+      setTimeout(() => {
+        setEditingSubAdmin(null);
+        setEditSubAdminSuccess('');
+      }, 1000);
+    } catch (err) {
+      setEditSubAdminError(err.message || 'Failed to save permissions.');
+    } finally {
+      setIsSavingForm(false);
+    }
+  };
 
  const toggleNewRolePermission = (perm) => {
  setNewRolePermissions(prev => {

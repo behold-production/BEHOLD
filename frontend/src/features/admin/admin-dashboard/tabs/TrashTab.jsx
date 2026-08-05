@@ -145,7 +145,7 @@ export default function TrashTab({ showAlert, showConfirm, reloadData }) {
  try {
  await ApiService.restoreCounsellor(id);
  await showAlert('Psychologist restored successfully!');
- loadTrash(); if (reloadData) reloadData();
+ loadTrash();
  } catch (err) { await showAlert(err.message || 'Failed to restore.'); }
  setAction(id, 'restoring', false);
  };
@@ -156,7 +156,7 @@ export default function TrashTab({ showAlert, showConfirm, reloadData }) {
  try {
  await ApiService.permanentDeleteCounsellor(id);
  await showAlert('Psychologist permanently deleted.');
- loadTrash(); if (reloadData) reloadData();
+ loadTrash();
  } catch (err) { await showAlert(err.message || 'Failed to delete.'); }
  setAction(id, 'deleting', false);
  };
@@ -167,7 +167,7 @@ export default function TrashTab({ showAlert, showConfirm, reloadData }) {
  try {
  await ApiService.restoreUser(id);
  await showAlert('Student restored successfully!');
- loadTrash(); if (reloadData) reloadData();
+ loadTrash();
  } catch (err) { await showAlert(err.message || 'Failed to restore.'); }
  setAction(id, 'restoring', false);
  };
@@ -178,7 +178,7 @@ export default function TrashTab({ showAlert, showConfirm, reloadData }) {
  try {
  await ApiService.permanentDeleteUser(id);
  await showAlert('Student permanently deleted.');
- loadTrash(); if (reloadData) reloadData();
+ loadTrash();
  } catch (err) { await showAlert(err.message || 'Failed to delete.'); }
  setAction(id, 'deleting', false);
  };
@@ -189,7 +189,7 @@ export default function TrashTab({ showAlert, showConfirm, reloadData }) {
  try {
  await ApiService.restoreAppointment(id);
  await showAlert('Booking restored successfully!');
- loadTrash(); if (reloadData) reloadData();
+ loadTrash();
  } catch (err) { await showAlert(err.message || 'Failed to restore.'); }
  setAction(id, 'restoring', false);
  };
@@ -202,7 +202,7 @@ export default function TrashTab({ showAlert, showConfirm, reloadData }) {
  if (res.success) {
  const { counsellorsRemoved, usersRemoved, appointmentsRemoved } = res.data;
  await showAlert('Purge complete! Removed: ' + counsellorsRemoved + ' psychologist(s), ' + usersRemoved + ' student(s), ' + appointmentsRemoved + ' booking(s).');
- loadTrash(); if (reloadData) reloadData();
+ loadTrash();
  }
  } catch (err) { await showAlert(err.message || 'Purge failed.'); }
  setIsPurging(false);

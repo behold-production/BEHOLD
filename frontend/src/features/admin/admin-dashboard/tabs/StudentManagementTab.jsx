@@ -110,6 +110,11 @@ export default function StudentManagementTab(props) {
     const student = usersDb.find(u => u.id === studentId);
     if (!student) return;
     const newStatus = currentStatus === 'ACTIVE' ? 'SUSPENDED' : 'ACTIVE';
+    
+    // Instant local update
+    if (setUsersDb) {
+      setUsersDb(prev => prev.map(u => u.id === studentId ? { ...u, status: newStatus } : u));
+    }
     try {
       await ApiService.updateAdminUser(
         studentId,
@@ -121,169 +126,214 @@ export default function StudentManagementTab(props) {
         student.customRoleTitle,
         newStatus
       );
-      reloadData();
+      if (reloadData) reloadData();
     } catch (err) {
+      // Revert if error
+      if (setUsersDb) {
+        setUsersDb(prev => prev.map(u => u.id === studentId ? { ...u, status: currentStatus } : u));
+      }
       await showAlert(err.message || "Failed to update status.");
     }
   };
 
+  const handleCreateUser = async (e) => {
+    e.preventDefault();
+    if (!hasUserPermission) {
+      setUserFormError("Access Denied: You do not have permission to manage users.");
+      return;
+    }
+    setUserFormError('');
+    setUserFormSuccess('');
 
+    if (!userForm.name.trim() || !userForm.email.trim() || !userForm.password) {
+      setUserFormError("All fields are required.");
+      return;
+    }
 
-const handleCreateUser = async (e) => {
- e.preventDefault();
- if (!hasUserPermission) {
- setUserFormError("Access Denied: You do not have permission to manage users.");
- return;
- }
- setUserFormError('');
- setUserFormSuccess('');
+    setIsSavingForm(true);
+    try {
+      const res = await ApiService.createAdminUser(
+        userForm.name.trim(),
+        userForm.email.trim(),
+        userForm.password,
+        'user',
+        [],
+        '',
+        {
+          phone: userForm.phone,
+          schoolName: userForm.schoolName,
+          grade: userForm.grade,
+          guardianName: userForm.guardianName,
+          guardianPhone: userForm.guardianPhone,
+          groupCode: userForm.groupCode,
+          locationName: userForm.locationName,
+          latitude: userForm.latitude,
+          longitude: userForm.longitude
+        }
+      );
+      if (res.success && res.data && setUsersDb) {
+        const newRecord = {
+          ...res.data,
+          role: 'USER',
+          status: 'ACTIVE',
+          name: userForm.name.trim(),
+          email: userForm.email.trim()
+        };
+        setUsersDb(prev => [newRecord, ...prev]);
+      }
+      setUserFormSuccess("User created successfully!");
+      setUserForm({ id: '', name: '', email: '', password: '', phone: '', schoolName: '', grade: '', guardianName: '', guardianPhone: '', groupCode: '', profilePic: '', locationName: '', latitude: 0, longitude: 0 });
+      setUserProfilePicFile(null);
+      if (reloadData) reloadData();
+      setTimeout(() => {
+        setIsAddUserOpen(false);
+        setUserFormSuccess('');
+      }, 1000);
+    } catch (err) {
+      setUserFormError(err.message || "Failed to create user.");
+    } finally {
+      setIsSavingForm(false);
+    }
+  };
 
- if (!userForm.name.trim() || !userForm.email.trim() || !userForm.password) {
- setUserFormError("All fields are required.");
- return;
- }
+  const handleOpenAddUser = () => {
+    setUserForm({ id: '', name: '', email: '', password: '', phone: '', schoolName: '', grade: '', guardianName: '', guardianPhone: '', groupCode: '', profilePic: '', locationName: '', latitude: 0, longitude: 0 });
+    setAdminUserSearchQuery('');
+    setAdminUserSearchResults([]);
+    setUserProfilePicFile(null);
+    setUserFormError('');
+    setUserFormSuccess('');
+    setIsAddUserOpen(true);
+  };
 
- setIsSavingForm(true);
- try {
- await ApiService.createAdminUser(
- userForm.name.trim(),
- userForm.email.trim(),
- userForm.password,
- 'user',
- [],
- '',
- {
- phone: userForm.phone,
- schoolName: userForm.schoolName,
- grade: userForm.grade,
- guardianName: userForm.guardianName,
- guardianPhone: userForm.guardianPhone,
- groupCode: userForm.groupCode,
- locationName: userForm.locationName,
- latitude: userForm.latitude,
- longitude: userForm.longitude
- }
- );
- setUserFormSuccess("User created successfully!");
- setUserForm({ id: '', name: '', email: '', password: '', phone: '', schoolName: '', grade: '', guardianName: '', guardianPhone: '', groupCode: '', profilePic: '', locationName: '', latitude: 0, longitude: 0 });
- setUserProfilePicFile(null);
- reloadData();
- setTimeout(() => {
- setIsAddUserOpen(false);
- setUserFormSuccess('');
- }, 1500);
- } catch (err) {
- setUserFormError(err.message || "Failed to create user.");
- } finally {
- setIsSavingForm(false);
- }
- };
+  const handleOpenEditUser = (student) => {
+    setUserForm({
+      id: student.id,
+      name: student.name,
+      email: student.email,
+      password: student.password || '',
+      phone: student.phone || '',
+      schoolName: student.schoolName || '',
+      grade: student.grade || '',
+      guardianName: student.guardianName || '',
+      guardianPhone: student.guardianPhone || '',
+      groupCode: student.groupCode || '',
+      profilePic: student.profilePic || student.image || '',
+      locationName: student.locationName || '',
+      latitude: student.latitude || 0,
+      longitude: student.longitude || 0
+    });
+    setUserProfilePicFile(null);
+    setUserFormError('');
+    setUserFormSuccess('');
+    setIsEditUserOpen(true);
+  };
 
- const handleOpenAddUser = () => {
- setUserForm({ id: '', name: '', email: '', password: '', phone: '', schoolName: '', grade: '', guardianName: '', guardianPhone: '', groupCode: '', profilePic: '', locationName: '', latitude: 0, longitude: 0 });
- setAdminUserSearchQuery('');
- setAdminUserSearchResults([]);
- setUserProfilePicFile(null);
- setUserFormError('');
- setUserFormSuccess('');
- setIsAddUserOpen(true);
- };
+  const handleUpdateUser = async (e) => {
+    e.preventDefault();
+    if (!hasUserPermission) {
+      setUserFormError("Access Denied: You do not have permission to manage users.");
+      return;
+    }
+    setUserFormError('');
+    setUserFormSuccess('');
 
- const handleOpenEditUser = (student) => {
- setUserForm({
- id: student.id,
- name: student.name,
- email: student.email,
- password: student.password || '',
- phone: student.phone || '',
- schoolName: student.schoolName || '',
- grade: student.grade || '',
- guardianName: student.guardianName || '',
- guardianPhone: student.guardianPhone || '',
- groupCode: student.groupCode || '',
- profilePic: student.profilePic || student.image || '',
- locationName: student.locationName || '',
- latitude: student.latitude || 0,
- longitude: student.longitude || 0
- });
- setUserProfilePicFile(null);
- setUserFormError('');
- setUserFormSuccess('');
- setIsEditUserOpen(true);
- };
+    if (!userForm.name.trim() || !userForm.email.trim()) {
+      setUserFormError("Name and Email are required.");
+      return;
+    }
 
- const handleUpdateUser = async (e) => {
- e.preventDefault();
- if (!hasUserPermission) {
- setUserFormError("Access Denied: You do not have permission to manage users.");
- return;
- }
- setUserFormError('');
- setUserFormSuccess('');
+    setIsSavingForm(true);
+    try {
+      const res = await ApiService.updateAdminUser(
+        userForm.id,
+        userForm.name.trim(),
+        userForm.email.trim(),
+        userForm.password || undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        {
+          phone: userForm.phone,
+          schoolName: userForm.schoolName,
+          grade: userForm.grade,
+          guardianName: userForm.guardianName,
+          guardianPhone: userForm.guardianPhone,
+          groupCode: userForm.groupCode,
+          locationName: userForm.locationName,
+          latitude: userForm.latitude,
+          longitude: userForm.longitude
+        }
+      );
+      let updatedPicUrl = null;
+      if (userProfilePicFile) {
+        setIsUserPicUploading(true);
+        const fd = new FormData();
+        fd.append('profilePic', userProfilePicFile);
+        const picRes = await ApiService.adminUpdateUserProfilePic(userForm.id, fd);
+        if (picRes && picRes.data && picRes.data.profilePic) {
+          updatedPicUrl = picRes.data.profilePic;
+        }
+        setIsUserPicUploading(false);
+      }
 
- if (!userForm.name.trim() || !userForm.email.trim()) {
- setUserFormError("Name and Email are required.");
- return;
- }
+      // Instant local state update
+      if (setUsersDb) {
+        setUsersDb(prev => prev.map(u => {
+          if (u.id === userForm.id) {
+            return {
+              ...u,
+              name: userForm.name.trim(),
+              email: userForm.email.trim(),
+              phone: userForm.phone,
+              schoolName: userForm.schoolName,
+              grade: userForm.grade,
+              guardianName: userForm.guardianName,
+              guardianPhone: userForm.guardianPhone,
+              groupCode: userForm.groupCode,
+              locationName: userForm.locationName,
+              latitude: userForm.latitude,
+              longitude: userForm.longitude,
+              profilePic: updatedPicUrl || u.profilePic
+            };
+          }
+          return u;
+        }));
+      }
 
- setIsSavingForm(true);
- try {
- await ApiService.updateAdminUser(
- userForm.id,
- userForm.name.trim(),
- userForm.email.trim(),
- userForm.password || undefined,
- undefined,
- undefined,
- undefined,
- undefined,
- {
- phone: userForm.phone,
- schoolName: userForm.schoolName,
- grade: userForm.grade,
- guardianName: userForm.guardianName,
- guardianPhone: userForm.guardianPhone,
- groupCode: userForm.groupCode,
- locationName: userForm.locationName,
- latitude: userForm.latitude,
- longitude: userForm.longitude
- }
- );
- if (userProfilePicFile) {
- setIsUserPicUploading(true);
- const fd = new FormData();
- fd.append('profilePic', userProfilePicFile);
- await ApiService.adminUpdateUserProfilePic(userForm.id, fd);
- setIsUserPicUploading(false);
- }
- setUserFormSuccess("User details updated!");
- setUserProfilePicFile(null);
- reloadData();
- setTimeout(() => {
- setIsEditUserOpen(false);
- setUserFormSuccess('');
- }, 1500);
- } catch (err) {
- setIsUserPicUploading(false);
- setUserFormError(err.message || "Failed to update user.");
- } finally {
- setIsSavingForm(false);
- }
- };
+      setUserFormSuccess("User details updated!");
+      setUserProfilePicFile(null);
+      if (reloadData) reloadData();
+      setTimeout(() => {
+        setIsEditUserOpen(false);
+        setUserFormSuccess('');
+      }, 1000);
+    } catch (err) {
+      setIsUserPicUploading(false);
+      setUserFormError(err.message || "Failed to update user.");
+    } finally {
+      setIsSavingForm(false);
+    }
+  };
 
- const handleDeleteUser = async (userId) => {
- if (!hasUserPermission) {
- await showAlert("Access Denied: You do not have permission to manage users.");
- return;
- }
- if (!await showConfirm("Are you sure you want to delete this account?")) return;
- try {
- await ApiService.deleteAdminUser(userId);
- reloadData();
- } catch (err) {
- await showAlert(err.message || "Failed to delete user.");
- }
- };
+  const handleDeleteUser = async (userId) => {
+    if (!hasUserPermission) {
+      await showAlert("Access Denied: You do not have permission to manage users.");
+      return;
+    }
+    if (!await showConfirm("Are you sure you want to delete this account?")) return;
+    try {
+      // Instant local state removal
+      if (setUsersDb) {
+        setUsersDb(prev => prev.filter(u => u.id !== userId));
+      }
+      await ApiService.deleteAdminUser(userId);
+      if (reloadData) reloadData();
+    } catch (err) {
+      await showAlert(err.message || "Failed to delete user.");
+    }
+  };
 
  const handleGenerateResetToken = async (email) => {
  try {
