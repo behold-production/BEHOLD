@@ -629,6 +629,39 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                 </div>
 
                                                 <div className="space-y-6">
+                                                    {/* Selected Psychologist Banner Card */}
+                                                    {selectedAdvisor && (
+                                                        <div className="p-4 bg-gradient-to-r from-teal-50 via-cyan-50 to-sky-50 border-2 border-[#00c9d6] rounded-2xl flex items-center justify-between gap-4 shadow-sm mb-4 animate-in fade-in slide-in-from-top-2 duration-300">
+                                                            <div className="flex items-center gap-3.5 min-w-0">
+                                                                <div className="w-12 h-12 rounded-xl bg-white border border-teal-200 overflow-hidden shrink-0 flex items-center justify-center shadow-xs">
+                                                                    {selectedAdvisor.profilePic || selectedAdvisor.image ? (
+                                                                        <img src={selectedAdvisor.profilePic || selectedAdvisor.image} alt={selectedAdvisor.name} className="w-full h-full object-cover" />
+                                                                    ) : (
+                                                                        <span className="font-black text-lg text-[#00c9d6] uppercase">{getInitials(selectedAdvisor.name)}</span>
+                                                                    )}
+                                                                </div>
+                                                                <div className="min-w-0 text-left">
+                                                                    <div className="flex items-center gap-2">
+                                                                        <span className="px-2.5 py-0.5 bg-[#00c9d6] text-white text-[9.5px] font-black uppercase tracking-wider rounded-md">Selected Psychologist</span>
+                                                                    </div>
+                                                                    <h4 className="font-bold text-slate-900 text-sm sm:text-base truncate mt-0.5">{selectedAdvisor.name}</h4>
+                                                                    <p className="text-xs text-slate-600 font-medium truncate">{selectedAdvisor.role || 'Consultant Psychologist'}</p>
+                                                                </div>
+                                                            </div>
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => {
+                                                                    setSelectedAdvisor(null);
+                                                                    setSelectedTime('');
+                                                                    clearPreselectedAdvisor?.();
+                                                                }}
+                                                                className="px-3.5 py-1.5 bg-white border border-slate-300 hover:border-slate-800 text-slate-800 hover:bg-slate-900 hover:text-white rounded-full text-xs font-bold transition shrink-0 cursor-pointer shadow-xs"
+                                                            >
+                                                                Change
+                                                            </button>
+                                                        </div>
+                                                    )}
+
                                                     {/* Service Type Selection */}
                                                     <div className="space-y-2">
                                                         <label className="text-sm font-semibold text-surface-700 block">Select Service Type</label>
@@ -907,8 +940,8 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                     </div>
                                                 )}
 
-                                                {/* Step 2: Advisor Selection (Shown only if not preselected via Meet Our Experts) */}
-                                                {(!isAdvisorLocked && selectedDate) && (
+                                                {/* Step 2: Advisor Selection */}
+                                                {(!selectedAdvisor && selectedDate) && (
                                                     <div ref={step2Ref} className="space-y-3 pt-6 border-t border-surface-200 animate-in fade-in slide-in-from-top-2 duration-300">
                                                         <div className="flex items-center justify-between mb-4">
                                                             <label className="text-sm font-semibold text-surface-900 block ">
@@ -918,7 +951,14 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                         <div className="space-y-3">
                                                             {(() => {
                                                                 const filteredAdvisors = advisors
-                                                                    .filter(advisor => advisor.type === bookingService)
+                                                                    .filter(advisor => {
+                                                                        if (!advisor.type) return true;
+                                                                        const r = (advisor.role || advisor.type || '').toLowerCase();
+                                                                        if (bookingService === 'counselling') {
+                                                                            return advisor.type === 'counselling' || advisor.type === 'counseling' || advisor.type === 'psychologist' || r.includes('psychologist') || r.includes('counsellor') || r.includes('counselor');
+                                                                        }
+                                                                        return advisor.type === 'career' || r.includes('career') || r.includes('mentor');
+                                                                    })
                                                                     .filter(advisor => !advisor.modes || advisor.modes.includes(bookingMode))
                                                                     .filter(advisor => {
                                                                         if (bookingMode !== 'DOOR_STEP') return true;
