@@ -122,6 +122,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
     const [expandedBios, setExpandedBios] = useState({});
     const [expandedSpecialties, setExpandedSpecialties] = useState({});
+    const [termsAgreed, setTermsAgreed] = useState(false);
 
     const isAdvisorLocked = !!preselectedAdvisorId;
     const flowKey = bookingMode === 'DOOR_STEP' ? 'doorstep' : bookingMode.toLowerCase();
@@ -1453,9 +1454,33 @@ const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
                                                                 <p className="text-sm text-surface-500 font-bold mt-1">
                                                                     A secure Razorpay checkout overlay will open to complete your payment using UPI, Cards, Netbanking, or Wallet.
                                                                 </p>
-                                                                <p className="text-[11px] text-surface-500 font-normal mt-2">
-                                                                    By proceeding, you agree to our platform <button type="button" onClick={() => onOpenDocs?.('terms')} className="underline hover:text-surface-900 bg-transparent border-none p-0 cursor-pointer text-[11px]">Terms</button> and <button type="button" onClick={() => onOpenDocs?.('refund')} className="underline hover:text-surface-900 bg-transparent border-none p-0 cursor-pointer text-[11px]">Return & Refund Policy</button>.
-                                                                </p>
+                                                                <div className="flex items-start gap-2.5 mt-3 pt-3 border-t border-surface-200/80">
+                                                                    <input
+                                                                        type="checkbox"
+                                                                        id="booking-terms-checkbox"
+                                                                        checked={termsAgreed}
+                                                                        onChange={(e) => setTermsAgreed(e.target.checked)}
+                                                                        className="w-4 h-4 mt-0.5 rounded border-surface-300 text-brand focus:ring-brand accent-[#00c9d6] cursor-pointer shrink-0"
+                                                                    />
+                                                                    <label htmlFor="booking-terms-checkbox" className="text-xs text-surface-700 font-semibold leading-relaxed cursor-pointer select-none">
+                                                                        By proceeding, you agree to our platform{' '}
+                                                                        <button
+                                                                            type="button"
+                                                                            onClick={() => onOpenDocs?.('terms')}
+                                                                            className="font-bold text-[#00c9d6] hover:underline bg-transparent border-none p-0 cursor-pointer text-xs inline"
+                                                                        >
+                                                                            Terms
+                                                                        </button>{' '}
+                                                                        and{' '}
+                                                                        <button
+                                                                            type="button"
+                                                                            onClick={() => onOpenDocs?.('refund')}
+                                                                            className="font-bold text-[#00c9d6] hover:underline bg-transparent border-none p-0 cursor-pointer text-xs inline"
+                                                                        >
+                                                                            Return & Refund Policy
+                                                                        </button>.
+                                                                    </label>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1471,8 +1496,13 @@ const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
 
                                                         <button
                                                             type="submit"
-                                                            disabled={isProcessingPayment}
-                                                            className="px-8 py-3.5 min-h-[48px] bg-[#0f172a] hover:bg-black text-[#00c9d6] hover:text-white font-bold text-xs uppercase tracking-wider rounded-full transition flex items-center justify-center cursor-pointer disabled:opacity-50 w-full sm:w-auto border-none shadow-md"
+                                                            disabled={isProcessingPayment || !termsAgreed}
+                                                            title={!termsAgreed ? "Please check the agreement box to proceed" : ""}
+                                                            className={`px-8 py-3.5 min-h-[48px] font-bold text-xs uppercase tracking-wider rounded-full transition flex items-center justify-center border-none w-full sm:w-auto ${
+                                                                !termsAgreed || isProcessingPayment
+                                                                    ? 'bg-slate-200 text-slate-400 cursor-not-allowed opacity-60 shadow-none'
+                                                                    : 'bg-[#0f172a] hover:bg-black text-[#00c9d6] hover:text-white cursor-pointer active:scale-95 shadow-md'
+                                                            }`}
                                                         >
                                                             {isProcessingPayment ? (
                                                                 <div className="flex items-center gap-2">
