@@ -29,7 +29,6 @@ export default function StudentProfile({ onOpenBooking }) {
 
   const handleSectionChange = (sectionId) => {
     setSearchParams({ tab: sectionId });
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const {

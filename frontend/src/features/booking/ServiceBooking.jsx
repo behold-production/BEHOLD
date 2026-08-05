@@ -143,13 +143,6 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
     const effectiveAdvisorPage = Math.max(1, advisorPage);
 
-    useEffect(() => {
-        const modalScroll = document.getElementById('booking-modal-scroll');
-        if (modalScroll) {
-            modalScroll.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-    }, [bookingStep]);
-
     const [clientSearchResults, setClientSearchResults] = useState([]);
     const [isClientSearching, setIsClientSearching] = useState(false);
     const [isClientLocating, setIsClientLocating] = useState(false);
