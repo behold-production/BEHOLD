@@ -16,6 +16,32 @@ let _etherealTransporter = null;
 function _getTransporter() {
   if (_transporter) return _transporter;
 
+  // 1. Resend SMTP support
+  const resendApiKey = (process.env.RESEND_API_KEY || '').trim();
+  if (resendApiKey) {
+    _transporter = nodemailer.createTransport({
+      host: 'smtp.resend.com',
+      port: 465,
+      secure: true,
+      auth: { user: 'resend', pass: resendApiKey }
+    });
+    return _transporter;
+  }
+
+  // 2. Brevo (Sendinblue) SMTP support
+  const brevoKey = (process.env.BREVO_API_KEY || process.env.BREVO_SMTP_KEY || '').trim();
+  if (brevoKey) {
+    const brevoUser = (process.env.BREVO_USER || process.env.GMAIL_USER || 'beholdoffice@gmail.com').trim();
+    _transporter = nodemailer.createTransport({
+      host: 'smtp-relay.brevo.com',
+      port: 587,
+      secure: false,
+      auth: { user: brevoUser, pass: brevoKey }
+    });
+    return _transporter;
+  }
+
+  // 3. Custom Generic SMTP
   const smtpHost = (process.env.SMTP_HOST || '').trim();
   const smtpPort = Number(process.env.SMTP_PORT) || 587;
   const smtpUser = (process.env.SMTP_USER || '').trim();
@@ -32,6 +58,7 @@ function _getTransporter() {
     return _transporter;
   }
 
+  // 4. Gmail SMTP
   const user = (process.env.GMAIL_USER || '').trim();
   const pass = (process.env.GMAIL_APP_PASSWORD || '').trim().replace(/\s+/g, '');
 
@@ -100,9 +127,11 @@ const sendEmail = async (to, subject, html) => {
     text: plainText,
     html,
     headers: {
-      'X-Mailer': 'BEHOLD Aspire Core Notification Engine',
+      'X-Mailer': 'BEHOLD Aspire Notification Engine',
       'X-Auto-Response-Suppress': 'OOF, AutoReply',
-      'Precedence': 'bulk',
+      'X-Priority': '1 (Highest)',
+      'X-MSMail-Priority': 'High',
+      'Importance': 'High',
       'List-Unsubscribe': `<mailto:${fromEmail}?subject=unsubscribe>`
     }
   };
