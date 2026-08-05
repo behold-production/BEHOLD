@@ -4,6 +4,7 @@ import ApiService from '../../../services/api';
 import { INITIAL_STATE } from '../utils/studentProfileConstants';
 import { getGreeting, calculateCompletion } from '../utils/utils';
 import { useAuth } from '../../../context/AuthContext';
+import { validateEmail, validateIndianPhone, parseIndianPhone } from '../../../utils/validation';
 
 /**
  * Hook to manage student profile data, form state, and updates.
@@ -73,13 +74,13 @@ export function useStudentProfile() {
     if (!formData.name.trim()) err.name = 'Required';
     else if (formData.name.trim().length < 3) err.name = 'Min 3 characters';
     if (!formData.email.trim()) err.email = 'Required';
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) err.email = 'Invalid email';
+    else if (!validateEmail(formData.email)) err.email = 'Invalid email';
     if (!formData.phone.trim()) err.phone = 'Required';
-    else if (!/^(\+?\d{1,4}[- ]?)?[6-9]\d{9}$/.test(formData.phone.trim())) err.phone = 'Invalid phone';
+    else if (!validateIndianPhone(formData.phone)) err.phone = 'Invalid 10-digit Indian phone';
     if (!formData.guardianName.trim()) err.guardianName = 'Required';
     if (formData.guardianPhone.trim()) {
-      if (!/^(\+?\d{1,4}[- ]?)?[6-9]\d{9}$/.test(formData.guardianPhone.trim())) {
-        err.guardianPhone = 'Invalid phone';
+      if (!validateIndianPhone(formData.guardianPhone)) {
+        err.guardianPhone = 'Invalid 10-digit Indian phone';
       }
     }
     return err;

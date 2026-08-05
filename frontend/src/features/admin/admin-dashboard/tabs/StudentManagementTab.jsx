@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import ApiService from '../../../../services/api';
 import { User, Trash, Plus, KeyRound, Search, Edit, X, Loader2 } from 'lucide-react';
 import { SkeletonTableRows, PaginationBar } from '../components/SharedAdminUI';
+import { validateEmail, validateIndianPhone, parseIndianPhone } from '../../../../utils/validation';
 
 export default function StudentManagementTab(props) {
  
@@ -240,6 +241,21 @@ export default function StudentManagementTab(props) {
 
     if (!userForm.name.trim() || !userForm.email.trim()) {
       setUserFormError("Name and Email are required.");
+      return;
+    }
+
+    if (!validateEmail(userForm.email)) {
+      setUserFormError("Please enter a valid email address.");
+      return;
+    }
+
+    if (userForm.phone && !validateIndianPhone(userForm.phone)) {
+      setUserFormError("Please enter a valid 10-digit Indian phone number.");
+      return;
+    }
+
+    if (userForm.guardianPhone && !validateIndianPhone(userForm.guardianPhone)) {
+      setUserFormError("Please enter a valid 10-digit Indian guardian phone number.");
       return;
     }
 

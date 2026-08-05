@@ -3,6 +3,7 @@ import { X, Mail, Lock, User, Phone, Loader2, Eye, EyeOff, KeyRound, CheckCircle
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import ApiService from '../../services/api';
+import { validateEmail, validateIndianPhone, parseIndianPhone } from '../../utils/validation';
 
 export default function AuthModals({ isOpen, onClose }) {
  const [mode, setMode] = useState('login'); // 'login', 'register', 'forgot'
@@ -96,9 +97,8 @@ export default function AuthModals({ isOpen, onClose }) {
 
  // ── Forgot Password: Step 1 — send OTP ──────────────────────────
  const handleSendResetOtp = async () => {
-   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
    if (!forgotEmail.trim()) return showToast('Please enter your email address');
-   if (!emailRegex.test(forgotEmail)) return showToast('Please enter a valid email address');
+   if (!validateEmail(forgotEmail)) return showToast('Please enter a valid email address');
    setIsLoading(true);
    try {
      const res = await ApiService.forgotPassword(forgotEmail.trim());
@@ -141,20 +141,19 @@ export default function AuthModals({ isOpen, onClose }) {
    setIsLoading(true);
 
    try {
-     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
      let loggedUser = null;
 
      if (mode === 'login') {
        if (loginMethod === 'email') {
          if (!formData.email.trim() || !formData.password) throw new Error('Please fill in all fields');
-         if (!emailRegex.test(formData.email)) throw new Error('Please enter a valid email address');
+         if (!validateEmail(formData.email)) throw new Error('Please enter a valid email address');
          loggedUser = await login(formData.email, formData.password);
        } else {
-         const phoneRegex = /^(\+?\d{1,4}[- ]?)?[6-9]\d{9}$/;
          if (!isOtpSent) {
            if (!otpPhone.trim()) throw new Error('Phone number is required');
-           if (!phoneRegex.test(otpPhone.trim())) throw new Error('Please enter a valid phone number');
-           const res = await ApiService.sendOtp(otpPhone);
+           if (!validateIndianPhone(otpPhone)) throw new Error('Please enter a valid 10-digit Indian phone number');
+           const cleanPhone = parseIndianPhone(otpPhone).phone10;
+           const res = await ApiService.sendOtp(cleanPhone);
            if (res.success) {
              setIsOtpSent(true);
              showToast('WhatsApp OTP sent successfully!', 'success');
@@ -165,7 +164,8 @@ export default function AuthModals({ isOpen, onClose }) {
            return;
          } else {
            if (!otpCode.trim() || otpCode.length !== 6) throw new Error('Please enter the 6-digit code');
-           const res = await ApiService.verifyOtp(otpPhone, otpCode, true);
+           const cleanPhone = parseIndianPhone(otpPhone).phone10;
+           const res = await ApiService.verifyOtp(cleanPhone, otpCode, true);
            if (res.success && res.data && res.data.user) {
              loggedUser = res.data.user;
            } else {
@@ -174,13 +174,14 @@ export default function AuthModals({ isOpen, onClose }) {
          }
        }
      } else {
-       const phoneRegex = /^[6-9]\d{9}$/;
        if (!formData.name.trim() || !formData.phone.trim() || !formData.email.trim() || !formData.password || !formData.confirmPassword) throw new Error('Please fill in all fields');
-       if (!phoneRegex.test(formData.phone.trim())) throw new Error('Please enter a valid 10-digit phone number');
-       if (!emailRegex.test(formData.email)) throw new Error('Please enter a valid email address');
+       if (!validateIndianPhone(formData.phone)) throw new Error('Please enter a valid 10-digit Indian phone number starting with 6-9');
+       if (!validateEmail(formData.email)) throw new Error('Please enter a valid email address');
        if (formData.password.length < 6) throw new Error('Password must be at least 6 characters');
        if (formData.password !== formData.confirmPassword) throw new Error('Passwords do not match');
-       loggedUser = await register(formData.name, formData.email, formData.password, 'USER', { phone: formData.phone.trim() });
+       
+       const cleanPhone = parseIndianPhone(formData.phone).phone10;
+       loggedUser = await register(formData.name.trim(), formData.email.trim(), formData.password, 'USER', { phone: cleanPhone });
      }
 
      onClose();

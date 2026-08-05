@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import ApiService from "../../../../services/api";
+import { validateEmail, validateIndianPhone, parseIndianPhone } from "../../../../utils/validation";
 import {
   User,
   ShieldAlert,
@@ -24,7 +25,6 @@ import {
   MessageSquare,
   FileSpreadsheet,
   HelpCircle,
-  Percent,
   X,
   ChevronRight,
   ChevronLeft,
@@ -39,6 +39,8 @@ import {
   Bell,
   Send,
   Loader2,
+  DollarSign,
+  Percent,
 } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { DAYS_OF_WEEK } from "../../../counsellor/psychologist-dashboard/counsellorDashboardConstants";
@@ -265,6 +267,16 @@ export default function PsychologistManagementTab(props) {
       return;
     }
 
+    if (!validateEmail(psyForm.email)) {
+      setPsyFormError("Please enter a valid email address.");
+      return;
+    }
+
+    if (psyForm.phone && !validateIndianPhone(psyForm.phone)) {
+      setPsyFormError("Please enter a valid 10-digit Indian phone number.");
+      return;
+    }
+
     if (
       psyForm.defaultMeetLink &&
       !psyForm.defaultMeetLink.trim().startsWith("https://")
@@ -288,7 +300,7 @@ export default function PsychologistManagementTab(props) {
         lang: psyForm.lang,
         bio: psyForm.bio,
         defaultMeetLink: psyForm.defaultMeetLink,
-        phone: psyForm.phone,
+        phone: psyForm.phone ? parseIndianPhone(psyForm.phone).phone10 : '',
         hours: psyForm.hours,
         modes: psyForm.modes,
         title: psyForm.title,

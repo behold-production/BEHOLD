@@ -6,6 +6,7 @@ import ApiService from '../../services/api';
 import { jsPDF } from 'jspdf';
 import { formatDateString, calculateNextAvailable } from '../../utils/dateFormatter';
 import { sendLocalNotification } from '../../services/notificationHelper';
+import { validateEmail, validateIndianPhone, parseIndianPhone } from '../../utils/validation';
 
 export const BOOKING_DRAFT_KEY = 'behold_booking_draft';
 
@@ -995,6 +996,17 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     setPaymentStepText("Initializing secure checkout...");
 
     try {
+      const clientEmail = bookingForm.email || user?.email || '';
+      const clientPhone = bookingForm.phone || user?.phone || '';
+
+      if (clientEmail && !validateEmail(clientEmail)) {
+        throw new Error("Please enter a valid email address.");
+      }
+
+      if (clientPhone && !validateIndianPhone(clientPhone)) {
+        throw new Error("Please enter a valid 10-digit Indian phone number.");
+      }
+
       const status = getAdvisorAvailabilityStatus(selectedAdvisor?.id, selectedDate, selectedTime);
       if (status === 'Booked' || status === 'Unavailable') {
         throw new Error("This slot is already booked for this counsellor. Please select another slot.");
