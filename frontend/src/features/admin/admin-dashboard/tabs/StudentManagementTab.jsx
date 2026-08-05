@@ -28,17 +28,68 @@ export default function StudentManagementTab(props) {
   const [adminCigiFile, setAdminCigiFile] = useState(null);
   const [isAdminCigiUploading, setIsAdminCigiUploading] = useState(false);
   const adminCigiFileInputRef = useRef(null);
-  const {
-    userProfilePicRef,
-    isAdminUserLocating,
-    adminUserSearchQuery,
-    setAdminUserSearchQuery,
-    adminUserSearchResults,
-    setAdminUserSearchResults,
-    isAdminUserSearching,
-    handleAdminUserAddressSearch,
-    handleAdminUserDetectLocation,
-  } = props;
+  // --- Local refs & state for address search (not passed via tabProps) ---
+  const userProfilePicRef = useRef(null);
+  const [adminUserSearchQuery, setAdminUserSearchQuery] = useState('');
+  const [adminUserSearchResults, setAdminUserSearchResults] = useState([]);
+  const [isAdminUserSearching, setIsAdminUserSearching] = useState(false);
+  const [isAdminUserLocating, setIsAdminUserLocating] = useState(false);
+
+  const handleAdminUserAddressSearch = async () => {
+    if (!adminUserSearchQuery || !adminUserSearchQuery.trim()) return;
+    setIsAdminUserSearching(true);
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(adminUserSearchQuery.trim())}`
+      );
+      const data = await res.json();
+      setAdminUserSearchResults(data);
+      if (data.length === 0) {
+        import('react-hot-toast').then(m => m.toast.error('No locations found.'));
+      }
+    } catch (err) {
+      console.error('Geocoding error', err);
+      import('react-hot-toast').then(m => m.toast.error('Failed to search location.'));
+    } finally {
+      setIsAdminUserSearching(false);
+    }
+  };
+
+  const handleAdminUserDetectLocation = () => {
+    if (!navigator.geolocation) {
+      import('react-hot-toast').then(m => m.toast.error('Geolocation not supported.'));
+      return;
+    }
+    setIsAdminUserLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        try {
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
+          );
+          const data = await res.json();
+          if (data && data.display_name) {
+            setUserForm(prev => ({ ...prev, latitude: lat, longitude: lng, locationName: data.display_name }));
+            setAdminUserSearchQuery(data.display_name);
+          } else {
+            setUserForm(prev => ({ ...prev, latitude: lat, longitude: lng }));
+          }
+        } catch (err) {
+          console.error('Reverse geocoding error', err);
+          setUserForm(prev => ({ ...prev, latitude: lat, longitude: lng }));
+        }
+        import('react-hot-toast').then(m => m.toast.success('Location detected!'));
+        setIsAdminUserLocating(false);
+      },
+      (err) => {
+        import('react-hot-toast').then(m => m.toast.error('Failed to detect location: ' + err.message));
+        setIsAdminUserLocating(false);
+      }
+    );
+  };
+
 
   // Filter students based on search query
   const studentsList = usersDb.filter(u => {
@@ -601,8 +652,8 @@ const handleAdminCigiUpload = async (e) => {
  <p className="text-xs font-bold text-zinc-500 tracking-widest">Home Location & Address</p>
  <button
  type="button"
- onClick={props.handleAdminUserDetectLocation}
- disabled={props.isAdminUserLocating}
+ onClick={handleAdminUserDetectLocation}
+ disabled={isAdminUserLocating}
  className="px-2 py-1 bg-zinc-950 border border-zinc-850 hover:border-brand text-zinc-300 hover:text-white rounded-full text-xs font-bold cursor-pointer transition flex items-center gap-1"
  >
  {isAdminUserLocating ? 'Locating...' : 'Detect GPS'}
@@ -617,20 +668,20 @@ const handleAdminCigiUpload = async (e) => {
  <input
  type="text"
  placeholder="Type to search address... (e.g. Kozhikode, Kerala)"
- value={props.adminUserSearchQuery}
- onChange={(e) => props.setAdminUserSearchQuery(e.target.value)}
+ value={adminUserSearchQuery}
+ onChange={(e) => setAdminUserSearchQuery(e.target.value)}
  className="flex-1 min-w-0 px-3 py-2 bg-zinc-955 border border-zinc-850 text-sm text-white rounded-lg outline-none focus:border-brand transition-colors"
  onKeyDown={(e) => {
  if (e.key === 'Enter') {
  e.preventDefault();
- props.handleAdminUserAddressSearch();
+ handleAdminUserAddressSearch();
  }
  }}
  />
  <button
  type="button"
- onClick={props.handleAdminUserAddressSearch}
- disabled={props.isAdminUserSearching}
+ onClick={handleAdminUserAddressSearch}
+ disabled={isAdminUserSearching}
  className="w-full sm:w-auto px-3 py-2 bg-brand text-zinc-950 text-xs font-bold rounded-full hover:bg-brand-dark transition cursor-pointer border-none shrink-0 flex items-center justify-center"
  >
  {isAdminUserSearching ? 'Searching...' : 'Search'}
@@ -638,9 +689,9 @@ const handleAdminCigiUpload = async (e) => {
  </div>
 
  {/* Search results dropdown */}
- {props.adminUserSearchResults.length > 0 && (
+ {adminUserSearchResults.length > 0 && (
  <div className="absolute left-0 right-0 mt-1 bg-zinc-950 border border-zinc-850 rounded-lg max-h-40 overflow-y-auto z-50 shadow-xl divide-y divide-zinc-850">
- {props.adminUserSearchResults.map((res, index) => (
+ {adminUserSearchResults.map((res, index) => (
  <button
  key={index}
  type="button"
@@ -651,8 +702,8 @@ const handleAdminCigiUpload = async (e) => {
  latitude: parseFloat(res.lat) || 0,
  longitude: parseFloat(res.lon) || 0
  });
- props.setAdminUserSearchQuery(res.display_name);
- props.setAdminUserSearchResults([]);
+ setAdminUserSearchQuery(res.display_name);
+ setAdminUserSearchResults([]);
  }}
  className="w-full text-left px-3.5 py-2.5 text-xs text-zinc-350 hover:text-white hover:bg-zinc-850 transition-colors block truncate border-none cursor-pointer"
  >
