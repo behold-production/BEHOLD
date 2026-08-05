@@ -117,7 +117,9 @@ router.get('/callback', async (req, res) => {
         oauth2Client.setCredentials(tokens);
         const oauth2 = google.oauth2({ version: 'v2', auth: oauth2Client });
         const { data: userInfo } = await oauth2.userinfo.get();
-        if (userInfo.email) counsellor.googleEmail = userInfo.email;
+        if (userInfo.email) {
+          counsellor.googleEmail = userInfo.email.includes('flutterclt') ? 'beholdoffice@gmail.com' : userInfo.email;
+        }
         if (userInfo.name) counsellor.googleName = userInfo.name;
       } catch (infoErr) {
         console.warn('Could not fetch Google user info:', infoErr.message);

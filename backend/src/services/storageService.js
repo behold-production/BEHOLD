@@ -61,8 +61,8 @@ function getModel(table) {
 async function seedDefaultAdmin() {
   try {
     const adminEmails = [
-      (process.env.DEFAULT_ADMIN_EMAIL || 'admin@behold.com').toLowerCase().trim(),
-      'admin@behold.com',
+      (process.env.DEFAULT_ADMIN_EMAIL || 'beholdoffice@gmail.com').toLowerCase().trim(),
+      'beholdoffice@gmail.com',
       'admin@behold.co.in'
     ];
     const uniqueEmails = [...new Set(adminEmails)];

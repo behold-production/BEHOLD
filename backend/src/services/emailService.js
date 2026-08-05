@@ -115,7 +115,8 @@ const sendEmail = async (to, subject, html) => {
   if (!to) return { success: false, error: 'No recipient address provided' };
 
   const fromName = (process.env.EMAIL_FROM_NAME || 'BEHOLD Aspire').trim();
-  const fromEmail = (process.env.GMAIL_USER || process.env.SMTP_USER || 'notifications@behold.co.in').trim();
+  const rawFrom = (process.env.GMAIL_USER || process.env.SMTP_USER || 'beholdoffice@gmail.com').trim();
+  const fromEmail = rawFrom.includes('flutterclt') ? 'beholdoffice@gmail.com' : rawFrom;
   const transporter = _getTransporter();
   const plainText = htmlToText(html);
 

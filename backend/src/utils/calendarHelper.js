@@ -39,6 +39,9 @@ async function generateSessionMeetingLink({ counsellor, user, date, time, servic
         const endTime = new Date(startTime.getTime() + durationMs);
 
         const frontendUrl = process.env.FRONTEND_URL || 'https://www.behold.co.in';
+        const organizerEmail = (counsellor?.email && !counsellor.email.includes('flutterclt'))
+          ? counsellor.email
+          : (process.env.GMAIL_USER || 'beholdoffice@gmail.com').trim();
         
         // Construct event: Counsellor is ORGANIZER, User is ATTENDEE.
         // DO NOT put counsellor in attendees array to avoid Google Meet treating them as guest!
@@ -47,10 +50,10 @@ async function generateSessionMeetingLink({ counsellor, user, date, time, servic
           description: `Service: ${service || 'Psychological Counselling'}\nMode: ONLINE (Google Meet)\n\nJoin Portals:\n- Student Portal: ${frontendUrl}/profile\n- Advisor Console: ${frontendUrl}/counsellor`,
           start: { dateTime: startTime.toISOString() },
           end: { dateTime: endTime.toISOString() },
-          organizer: { email: counsellor.googleEmail || counsellor.email, displayName: counsellor.name, self: true },
+          organizer: { email: organizerEmail, displayName: counsellor.name || 'BEHOLD Aspire', self: true },
           attendees: [
             ...(user && user.email ? [{ email: user.email, displayName: user.name, responseStatus: 'accepted' }] : []),
-            { email: counsellor.googleEmail || counsellor.email, displayName: counsellor.name, responseStatus: 'accepted' }
+            { email: organizerEmail, displayName: counsellor.name, responseStatus: 'accepted' }
           ],
           guestsCanModify: true,
           guestsCanInviteOthers: true,
@@ -67,7 +70,7 @@ async function generateSessionMeetingLink({ counsellor, user, date, time, servic
           calendarId: 'primary',
           resource: event,
           conferenceDataVersion: 1,
-          sendUpdates: 'all'
+          sendUpdates: 'none'
         });
 
         if (response.data && response.data.hangoutLink) {
