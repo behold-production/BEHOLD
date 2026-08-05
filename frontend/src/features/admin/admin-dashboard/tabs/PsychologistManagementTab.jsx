@@ -61,17 +61,14 @@ export default function PsychologistManagementTab(props) {
     canEditPsy,
     canDeletePsy,
     isDbLoading,
-    adminSlotInterval,
-    setAdminSlotInterval,
-    adminSearchQuery,
-    setAdminSearchQuery,
-    adminSearchResults,
-    setAdminSearchResults,
-    isAdminSearching,
-    setIsAdminSearching,
-    isAdminLocating,
-    setIsAdminLocating,
   } = props;
+
+  // --- Local state for address search & slot interval (not in tabProps) ---
+  const [adminSearchQuery, setAdminSearchQuery] = useState("");
+  const [adminSearchResults, setAdminSearchResults] = useState([]);
+  const [isAdminSearching, setIsAdminSearching] = useState(false);
+  const [isAdminLocating, setIsAdminLocating] = useState(false);
+  const [adminSlotInterval, setAdminSlotInterval] = useState(60);
 
   const [searchPsy, setSearchPsy] = useState("");
   const [psyFilter, setPsyFilter] = useState("ALL");
@@ -103,8 +100,6 @@ export default function PsychologistManagementTab(props) {
     locationName: "",
     latitude: 0,
     longitude: 0,
-    isTopFive: false,
-    defaultMeetLink: "",
   });
   const [psyFormError, setPsyFormError] = useState("");
   const [psyFormSuccess, setPsyFormSuccess] = useState("");
@@ -487,14 +482,13 @@ export default function PsychologistManagementTab(props) {
         password: psyForm.password || undefined,
         education: psyForm.education,
         specialties: psyForm.specialties,
-        price: psyForm.price,
-        halfSessionPrice: psyForm.halfSessionPrice,
-        text: undefined,
+        price: Number(psyForm.price) || 1200,
+        halfSessionPrice: Number(psyForm.halfSessionPrice) || 499,
         lang: psyForm.lang,
         bio: psyForm.bio,
         defaultMeetLink: psyForm.defaultMeetLink,
         phone: psyForm.phone,
-        hours: psyForm.hours,
+        hours: Number(psyForm.hours) || 0,
         modes: psyForm.modes,
         title: psyForm.title,
         isTopFive: psyForm.isTopFive,
