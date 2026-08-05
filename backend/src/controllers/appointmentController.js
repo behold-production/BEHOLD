@@ -19,6 +19,23 @@ const AppointmentController = {
       const user = await StorageService.findById('users', userId);
       if (!user) return res.status(404).json({ success: false, message: 'Student profile not found' });
 
+      // Check if an appointment for this user, counsellor, date, and time already exists (prevent double-submit error)
+      const existingAppt = await StorageService.findOne('appointments', {
+        userId,
+        counsellorId,
+        date,
+        time,
+        status: { $ne: 'CANCELLED' }
+      });
+
+      if (existingAppt) {
+        return res.status(200).json({
+          success: true,
+          message: 'Appointment booked successfully',
+          data: existingAppt
+        });
+      }
+
       // Check details validation (availability, double booking, past date)
       const validation = await validateBookingDetails(counsellorId, date, time, mode, service || 'counselling', null, clientLatitude, clientLongitude);
       if (!validation.valid) {

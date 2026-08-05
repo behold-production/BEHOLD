@@ -251,6 +251,33 @@ const PaymentController = {
         });
       }
 
+      // Check if an appointment for this Razorpay order/payment or user slot was ALREADY created (e.g. by webhook or concurrent request)
+      const existingAppt = await StorageService.findOne('appointments', {
+        $or: [
+          { razorpayOrderId: razorpay_order_id },
+          { razorpayPaymentId: razorpay_payment_id },
+          { counsellorId, date, time, userId, status: { $ne: 'CANCELLED' } }
+        ]
+      });
+
+      if (existingAppt) {
+        if (existingAppt.paymentStatus !== 'PAID') {
+          await StorageService.update('appointments', existingAppt.id, {
+            paymentStatus: 'PAID',
+            razorpayOrderId: razorpay_order_id,
+            razorpayPaymentId: razorpay_payment_id || existingAppt.razorpayPaymentId
+          });
+          existingAppt.paymentStatus = 'PAID';
+          existingAppt.razorpayOrderId = razorpay_order_id;
+          existingAppt.razorpayPaymentId = razorpay_payment_id || existingAppt.razorpayPaymentId;
+        }
+        return res.status(200).json({
+          success: true,
+          message: 'Payment verified and appointment confirmed.',
+          data: existingAppt
+        });
+      }
+
       // 2. Fetch Razorpay order details and compare with booking details if available
       const razorpay = new Razorpay({
         key_id: keyId,

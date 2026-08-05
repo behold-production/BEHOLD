@@ -1041,6 +1041,14 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
           setIsSuccess(true);
           setBookingStep('success');
           window.history.pushState({ component: 'booking', step: 'success' }, '');
+          setTimeout(() => {
+            const modalScroll = document.getElementById('booking-modal-scroll');
+            if (modalScroll) {
+              modalScroll.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+          }, 50);
         } else {
           throw new Error(bookRes.message || 'Failed to book free appointment');
         }
@@ -1107,6 +1115,14 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
               setIsSuccess(true);
               setBookingStep('success');
               window.history.pushState({ component: 'booking', step: 'success' }, '');
+              setTimeout(() => {
+                const modalScroll = document.getElementById('booking-modal-scroll');
+                if (modalScroll) {
+                  modalScroll.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+              }, 50);
             } else {
               throw new Error(verifyRes.message || "Verification failed");
             }
