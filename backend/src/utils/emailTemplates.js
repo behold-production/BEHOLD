@@ -97,12 +97,12 @@ const welcomeCounsellor = ({ name }) =>
 
 const passwordResetOTP = ({ name, otp }) =>
   baseLayout(`
-    <h2 style="margin:0 0 8px;font-size:22px;color:#0f172a;font-weight:800;">Password Reset Request 🔐</h2>
-    <p style="margin:0 0 16px;color:#475569;font-size:15px;line-height:1.6;">Hi <strong>${name || 'there'}</strong>, we received a request to reset your password.</p>
+    <h2 style="margin:0 0 8px;font-size:22px;color:#0f172a;font-weight:800;">Password Reset Verification Code</h2>
+    <p style="margin:0 0 16px;color:#475569;font-size:15px;line-height:1.6;">Hi <strong>${name || 'there'}</strong>, we received a request to reset your BEHOLD Aspire account password.</p>
     <div style="text-align:center;margin:28px 0;">
-      <p style="margin:0 0 8px;font-size:13px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Your One-Time Password</p>
+      <p style="margin:0 0 8px;font-size:13px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Your Verification Code</p>
       <div style="display:inline-block;background:#0f172a;color:#ffffff;font-size:36px;font-weight:900;letter-spacing:12px;padding:18px 32px;border-radius:12px;font-family:monospace;">${otp}</div>
-      <p style="margin:12px 0 0;font-size:13px;color:#ef4444;font-weight:600;">⏳ This code expires in 10 minutes.</p>
+      <p style="margin:12px 0 0;font-size:13px;color:#ef4444;font-weight:600;">This code will expire in 10 minutes.</p>
     </div>
     ${divider()}
     <p style="margin:0;font-size:13px;color:#94a3b8;text-align:center;">If you did not request a password reset, please ignore this email or contact support immediately.</p>

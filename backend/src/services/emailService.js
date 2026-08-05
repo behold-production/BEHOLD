@@ -67,6 +67,17 @@ async function _getEtherealTransporter() {
   }
 }
 
+// Helper to generate clean plain-text version from HTML for anti-spam filters
+const htmlToText = (htmlStr) => {
+  if (!htmlStr) return '';
+  return htmlStr
+    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+};
+
 /**
  * Core send function
  * @param {string} to — recipient email address
@@ -76,19 +87,29 @@ async function _getEtherealTransporter() {
 const sendEmail = async (to, subject, html) => {
   if (!to) return { success: false, error: 'No recipient address provided' };
 
-  const fromName = (process.env.EMAIL_FROM_NAME || 'Behold Aspire').trim();
+  const fromName = (process.env.EMAIL_FROM_NAME || 'BEHOLD Aspire').trim();
   const fromEmail = (process.env.GMAIL_USER || process.env.SMTP_USER || 'notifications@behold.co.in').trim();
   const transporter = _getTransporter();
+  const plainText = htmlToText(html);
+
+  const mailOptions = {
+    from: `"${fromName}" <${fromEmail}>`,
+    replyTo: `"${fromName} Support" <${fromEmail}>`,
+    to,
+    subject,
+    text: plainText,
+    html,
+    headers: {
+      'X-Mailer': 'BEHOLD Aspire Core Notification Engine',
+      'X-Auto-Response-Suppress': 'OOF, AutoReply',
+      'Precedence': 'bulk',
+      'List-Unsubscribe': `<mailto:${fromEmail}?subject=unsubscribe>`
+    }
+  };
 
   if (transporter) {
     try {
-      const info = await transporter.sendMail({
-        from: `"${fromName}" <${fromEmail}>`,
-        to,
-        subject,
-        html
-      });
-
+      const info = await transporter.sendMail(mailOptions);
       console.log(`[Email] ✅ Sent via primary SMTP to ${to}: ${subject} (${info.messageId})`);
       return { success: true, messageId: info.messageId };
     } catch (error) {
@@ -100,12 +121,7 @@ const sendEmail = async (to, subject, html) => {
   try {
     const etherealTransporter = await _getEtherealTransporter();
     if (etherealTransporter) {
-      const info = await etherealTransporter.sendMail({
-        from: `"${fromName}" <${fromEmail}>`,
-        to,
-        subject,
-        html
-      });
+      const info = await etherealTransporter.sendMail(mailOptions);
       const previewUrl = nodemailer.getTestMessageUrl(info);
       console.log(`[Email] 📧 Delivered via Ethereal Test Service to ${to}!`);
       console.log(`[Email] 🔗 View Email Online: ${previewUrl}`);
@@ -126,17 +142,17 @@ const EmailService = {
   // Auth
   async sendWelcomeUser(user) {
     const html = Templates.welcomeUser({ name: user.name });
-    return sendEmail(user.email, '🌿 Welcome to Behold Aspire!', html);
+    return sendEmail(user.email, 'Welcome to BEHOLD Aspire', html);
   },
 
   async sendWelcomeCounsellor(counsellor) {
     const html = Templates.welcomeCounsellor({ name: counsellor.name });
-    return sendEmail(counsellor.email, '🌿 Application Received — Behold Aspire', html);
+    return sendEmail(counsellor.email, 'Application Received — BEHOLD Aspire', html);
   },
 
   async sendPasswordResetOTP(email, name, otp) {
     const html = Templates.passwordResetOTP({ name, otp });
-    return sendEmail(email, '🔐 Your Behold Aspire Password Reset Code', html);
+    return sendEmail(email, `BEHOLD Aspire Password Reset Code: ${otp}`, html);
   },
 
   // Appointments
