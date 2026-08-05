@@ -655,31 +655,24 @@ const AppointmentController = {
   async completeAppointment(req, res, next) {
     try {
       const { id } = req.params;
-      const { notes, feedback, nextSession } = req.body;
+      const { notes, feedback, nextSession, adminNotes } = req.body;
 
       const appointment = await StorageService.findById('appointments', id);
       if (!appointment) {
         return res.status(404).json({ success: false, message: 'Appointment not found' });
       }
 
-      if (!notes) {
-        return res
-          .status(400)
-          .json({
-            success: false,
-            message: 'Clinical Assessment & Observation Notes are required to complete the appointment'
-          });
-      }
-
-      const feedbackVal = feedback !== undefined && feedback !== '' ? feedback : appointment.feedback || '';
-      const nextSessionVal =
-        nextSession !== undefined && nextSession !== '' ? nextSession : appointment.nextSession || '';
+      const notesVal = notes !== undefined ? notes.trim() : appointment.notes || '';
+      const feedbackVal = feedback !== undefined ? feedback.trim() : appointment.feedback || '';
+      const nextSessionVal = nextSession !== undefined ? nextSession.trim() : appointment.nextSession || '';
+      const adminNotesVal = adminNotes !== undefined ? adminNotes.trim() : appointment.adminNotes || '';
 
       const updated = await StorageService.update('appointments', id, {
         status: 'COMPLETED',
-        notes: notes,
+        notes: notesVal,
         feedback: feedbackVal,
-        nextSession: nextSessionVal
+        nextSession: nextSessionVal,
+        adminNotes: adminNotesVal
       });
 
       // Also complete matching session if exists
@@ -687,15 +680,16 @@ const AppointmentController = {
       if (session) {
         await StorageService.update('sessions', session.id, {
           status: 'COMPLETED',
-          notes: notes,
+          notes: notesVal,
           feedback: feedbackVal,
-          nextSession: nextSessionVal
+          nextSession: nextSessionVal,
+          adminNotes: adminNotesVal
         });
       }
 
       res.status(200).json({
         success: true,
-        message: 'Appointment completed successfully',
+        message: 'Appointment completed and report updated successfully',
         data: updated
       });
     } catch (error) {
@@ -743,13 +737,20 @@ const AppointmentController = {
   async sendReportToAdmin(req, res, next) {
     try {
       const { id } = req.params;
+      const { adminNotes, notes, feedback, nextSession } = req.body || {};
 
       const appointment = await StorageService.findById('appointments', id);
       if (!appointment) {
         return res.status(404).json({ success: false, message: 'Appointment not found' });
       }
 
-      const updated = await StorageService.update('appointments', id, { sentToAdmin: true });
+      const updates = { sentToAdmin: true };
+      if (adminNotes !== undefined) updates.adminNotes = adminNotes.trim();
+      if (notes !== undefined) updates.notes = notes.trim();
+      if (feedback !== undefined) updates.feedback = feedback.trim();
+      if (nextSession !== undefined) updates.nextSession = nextSession.trim();
+
+      const updated = await StorageService.update('appointments', id, updates);
 
       const counsellor = await StorageService.findById('counsellors', appointment.counsellorId);
 

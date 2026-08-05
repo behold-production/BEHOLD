@@ -425,3 +425,114 @@ export const downloadCertificatePDF = async (session, profile = {}, user = {}) =
     toast.error('Failed to generate Certificate PDF', { id: toastId });
   }
 };
+
+export const downloadConsultationReportPDF = async (session, profile = {}, user = {}) => {
+  const toastId = toast.loading('Generating Consultation Report PDF...');
+  try {
+    const doc = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4'
+    });
+
+    const displayId = (session?.appointmentId || session?.id || Date.now()).toString().slice(-8);
+    const clientName = profile?.name || user?.name || session?.clientName || 'Student';
+    const advisorName = session?.advisorName || 'Consultant Psychologist';
+    const dateStr = formatDateString(session?.date || new Date());
+    const timeStr = session?.time || 'N/A';
+    const serviceStr = session?.service === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring';
+
+    // Header Accent Line
+    doc.setFillColor(6, 182, 212); // Teal
+    doc.rect(0, 0, 210, 8, 'F');
+
+    // Title & Branding
+    doc.setFont('Helvetica', 'bold');
+    doc.setFontSize(22);
+    doc.setTextColor(9, 9, 11);
+    doc.text('BEHOLD.', 20, 24);
+
+    doc.setFontSize(9);
+    doc.setFont('Helvetica', 'bold');
+    doc.setTextColor(6, 182, 212);
+    doc.text('PSYCHOLOGIST CONSULTATION & GUIDANCE REPORT', 20, 30);
+
+    doc.setFont('Helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(113, 113, 122);
+    doc.text('BEHOLD Aspire Platform — Official Confidential Document', 20, 35);
+
+    // Meta Box
+    doc.setFillColor(248, 250, 252);
+    doc.rect(20, 42, 170, 28, 'F');
+    doc.setDrawColor(226, 232, 240);
+    doc.rect(20, 42, 170, 28, 'S');
+
+    doc.setFont('Helvetica', 'bold');
+    doc.setFontSize(8.5);
+    doc.setTextColor(71, 85, 105);
+    doc.text('STUDENT NAME:', 24, 49);
+    doc.text('PSYCHOLOGIST:', 110, 49);
+    doc.text('SERVICE & MODE:', 24, 58);
+    doc.text('SESSION SCHEDULE:', 110, 58);
+
+    doc.setFont('Helvetica', 'normal');
+    doc.setTextColor(15, 23, 42);
+    doc.text(clientName, 55, 49);
+    doc.text(advisorName, 140, 49);
+    doc.text(`${serviceStr} (${session?.mode || 'ONLINE'})`, 55, 58);
+    doc.text(`${dateStr} at ${timeStr}`, 145, 58);
+
+    doc.setFont('Helvetica', 'bold');
+    doc.setTextColor(71, 85, 105);
+    doc.text(`REPORT ID: CL-REP-${displayId}`, 24, 66);
+
+    let y = 78;
+    const printSection = (title, content) => {
+      if (!content || !content.trim()) return;
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(10);
+      doc.setTextColor(6, 182, 212);
+      doc.text(title, 20, y);
+      y += 6;
+
+      doc.setFont('Helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.setTextColor(51, 65, 85);
+      const lines = doc.splitTextToSize(content, 170);
+      lines.forEach(line => {
+        if (y > 270) {
+          doc.addPage();
+          y = 20;
+        }
+        doc.text(line, 20, y);
+        y += 5;
+      });
+      y += 6;
+    };
+
+    const studentReportText = session?.feedback || session?.notes || 'Your psychologist has not entered specific feedback notes for this session yet.';
+    printSection('Psychologist Guidance & Assessment Observations:', studentReportText);
+
+    if (session?.nextSession) {
+      printSection('Recommended Next Session:', session.nextSession);
+    }
+
+    // Footer Stamp
+    if (y < 250) {
+      doc.setDrawColor(226, 232, 240);
+      doc.line(20, 260, 190, 260);
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(8);
+      doc.setTextColor(100, 116, 139);
+      doc.text('Verified & Issued by BEHOLD Psychological Guidance Board', 105, 266, { align: 'center' });
+    }
+
+    doc.save(`Consultation_Report_${clientName.replace(/\s+/g, '_')}_${displayId}.pdf`);
+    toast.success('Consultation Report downloaded successfully!', { id: toastId });
+  } catch (err) {
+    console.error(err);
+    toast.error('Failed to generate Consultation Report PDF', { id: toastId });
+  }
+};
+

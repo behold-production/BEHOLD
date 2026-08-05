@@ -18,7 +18,10 @@ const BookingsTab = ({
   setFeedbackInput,
   nextSessionInput,
   setNextSessionInput,
+  adminNotesInput,
+  setAdminNotesInput,
   saveFeedback,
+  handleSendReportToAdmin,
   downloadDiagnosticPDF,
   editingBookingId,
   setEditingBookingId,
@@ -251,53 +254,81 @@ const BookingsTab = ({
                   </span>
 
                   {editingFeedbackId === booking.id ? (
-                    <div className="space-y-3 font-sans bg-zinc-950 p-4 rounded-[10px] border border-zinc-800">
+                    <div className="space-y-4 font-sans bg-zinc-950 p-4 rounded-[10px] border border-zinc-800">
+                      <div className="border-b border-zinc-800 pb-2 flex items-center justify-between">
+                        <span className="text-xs font-bold text-brand uppercase tracking-wider">Report 1: Student Consultation Report (User-Facing)</span>
+                        <span className="text-[10px] text-zinc-450 italic">Visible & downloadable by Student</span>
+                      </div>
+                      
                       <div className="space-y-1">
-                        <label className="text-xs font-bold text-zinc-400 tracking-wider block">
-                          Clinical Assessment & Observation Notes
+                        <label className="text-xs font-bold text-zinc-300 tracking-wider block">
+                          Clinical Observations & Findings
                         </label>
                         <textarea
                           value={notesInput}
                           onChange={(e) => setNotesInput(e.target.value)}
-                          placeholder="Enter clinical assessments, observations, and findings..."
+                          placeholder="Enter clinical observations and findings for the student..."
                           rows={3}
                           className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 text-white text-sm rounded-[10px] outline-none focus:border-brand resize-none font-medium"
                         />
                       </div>
 
                       <div className="space-y-1">
-                        <label className="text-xs font-bold text-zinc-400 tracking-wider block">
-                          Recommendations & Feedback
+                        <label className="text-xs font-bold text-zinc-300 tracking-wider block">
+                          Student Guidance & Actionable Recommendations
                         </label>
                         <textarea
                           value={feedbackInput}
                           onChange={(e) => setFeedbackInput(e.target.value)}
-                          placeholder="Enter key recommendations, student guidance, and feedback..."
+                          placeholder="Enter key guidance, advice, and recommendations for student download..."
                           rows={3}
                           className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 text-white text-sm rounded-[10px] outline-none focus:border-brand resize-none font-medium"
                         />
                       </div>
 
                       <div className="space-y-1">
-                        <label className="text-xs font-bold text-zinc-400 tracking-wider block">
-                          Next Session Approximate Time (Optional)
+                        <label className="text-xs font-bold text-zinc-300 tracking-wider block">
+                          Next Recommended Session Time (Optional)
                         </label>
                         <input
                           type="text"
                           value={nextSessionInput}
                           onChange={(e) => setNextSessionInput(e.target.value)}
-                          placeholder="e.g., In 2 weeks, Mid-July, or specific date"
+                          placeholder="e.g., In 2 weeks, Mid-August, or specific date"
                           className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 text-white text-sm rounded-[10px] outline-none focus:border-brand font-semibold"
                         />
                       </div>
 
-                      <div className="flex gap-2 pt-2">
+                      <div className="border-t border-b border-zinc-800 py-3 my-2 space-y-1">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1">
+                            <Lock className="w-3 h-3 text-amber-400" /> Report 2: Confidential Admin Clinical Report (Admin-Facing)
+                          </span>
+                          <span className="text-[10px] text-amber-400/70 italic">Hidden from Student · Strictly for Admin</span>
+                        </div>
+                        <textarea
+                          value={adminNotesInput}
+                          onChange={(e) => setAdminNotesInput(e.target.value)}
+                          placeholder="Enter confidential internal case notes strictly for System Administration..."
+                          rows={3}
+                          className="w-full px-3 py-2 bg-zinc-900 border border-amber-500/20 text-amber-100 text-sm rounded-[10px] outline-none focus:border-amber-400 resize-none font-medium"
+                        />
+                      </div>
+
+                      <div className="flex flex-wrap gap-2 pt-2">
                         <button
                           type="button"
                           onClick={() => saveFeedback(booking.id)}
-                          className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-zinc-955 rounded-[10px] text-xs font-bold cursor-pointer shadow-sm border-none"
+                          className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-zinc-955 rounded-[10px] text-xs font-bold cursor-pointer shadow-sm border-none flex items-center gap-1.5"
                         >
-                          Save Records
+                          <Send className="w-3.5 h-3.5" /> Save & Send to Student
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleSendReportToAdmin(booking.id)}
+                          className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-zinc-955 rounded-[10px] text-xs font-bold cursor-pointer shadow-sm border-none flex items-center gap-1.5"
+                        >
+                          <ShieldCheck className="w-3.5 h-3.5" /> Submit Confidential Report to Admin
                         </button>
                         <button
                           type="button"
@@ -312,21 +343,23 @@ const BookingsTab = ({
                     <div className="space-y-3 font-sans">
                       <div className="space-y-1">
                         <span className="text-[10px] font-bold text-zinc-450 tracking-wider block">
-                          Clinical Assessment & Observation Notes:
+                          Student Consultation Report & Guidance:
                         </span>
                         <p className="text-sm text-zinc-300 bg-zinc-950 p-3 rounded-[10px] border border-zinc-800 italic leading-relaxed font-medium">
-                          {booking.notes ? `"${booking.notes}"` : "No notes recorded yet."}
+                          {booking.feedback || booking.notes ? `"${booking.feedback || booking.notes}"` : "No student report recorded yet."}
                         </p>
                       </div>
 
-                      <div className="space-y-1">
-                        <span className="text-[10px] font-bold text-zinc-450 tracking-wider block">
-                          Recommendations & Feedback:
-                        </span>
-                        <p className="text-sm text-zinc-300 bg-zinc-950 p-3 rounded-[10px] border border-zinc-800 italic leading-relaxed font-medium">
-                          {booking.feedback ? `"${booking.feedback}"` : "No recommendations recorded yet."}
-                        </p>
-                      </div>
+                      {booking.adminNotes && (
+                        <div className="space-y-1">
+                          <span className="text-[10px] font-bold text-amber-400 tracking-wider flex items-center gap-1">
+                            <Lock className="w-3 h-3 text-amber-400" /> Confidential Admin Report:
+                          </span>
+                          <p className="text-xs text-amber-200/90 bg-amber-950/20 p-3 rounded-[10px] border border-amber-500/30 italic leading-relaxed font-medium">
+                            "{booking.adminNotes}"
+                          </p>
+                        </div>
+                      )}
 
                       {booking.nextSession && booking.nextSession.trim() !== '' && booking.nextSession.trim().toLowerCase() !== 'n/a' && booking.nextSession.trim().toLowerCase() !== 'none' && booking.nextSession.trim().toLowerCase() !== 'no' && booking.nextSession.trim().toLowerCase() !== 'null' && (
                         <div className="space-y-1">
@@ -347,10 +380,11 @@ const BookingsTab = ({
                             setNotesInput(booking.notes || '');
                             setFeedbackInput(booking.feedback || '');
                             setNextSessionInput(booking.nextSession || '');
+                            setAdminNotesInput(booking.adminNotes || '');
                           }}
                           className="text-xs font-bold text-brand hover:underline flex items-center gap-1 cursor-pointer border-none bg-transparent p-0"
                         >
-                          Edit Records
+                          <Edit className="w-3.5 h-3.5" /> Edit Consultation & Admin Reports
                         </button>
                         {booking.status === 'COMPLETED' && (
                           <>
@@ -358,10 +392,10 @@ const BookingsTab = ({
                               type="button"
                               onClick={() => downloadDiagnosticPDF(booking)}
                               className="text-xs font-bold text-emerald-400 hover:text-emerald-300 hover:underline flex items-center gap-1.5 cursor-pointer border-none bg-transparent p-0"
-                              title="Download Clinical Report PDF"
+                              title="Download Report PDF"
                             >
                               <FileText className="w-3.5 h-3.5 text-emerald-400" />
-                              <span>Download Report PDF</span>
+                              <span>Download PDF Report</span>
                             </button>
 
                             <button

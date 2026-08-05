@@ -24,6 +24,7 @@ const BookedSessionsTab = ({
  handleCancelSession,
  downloadPDFReceiptForSession,
  downloadCertificatePDF,
+ downloadConsultationReportPDF,
  onOpenBooking
 }) => {
  return (
@@ -403,6 +404,17 @@ const BookedSessionsTab = ({
  </button>
  )}
  {session.status === 'COMPLETED' && (
+ <>
+ {downloadConsultationReportPDF && (
+ <button
+ type="button"
+ onClick={() => downloadConsultationReportPDF(session)}
+ className="inline-flex items-center gap-1 text-[10px] font-black tracking-widest text-brand hover:text-brand-dark transition-colors cursor-pointer bg-brand/10 border border-brand/20 px-2.5 py-1 rounded-[6px]"
+ title="Download Consultation Report PDF"
+ >
+ <Download className="w-3.5 h-3.5" /> Download Report PDF
+ </button>
+ )}
  <button
  type="button"
  onClick={() => downloadCertificatePDF(session)}
@@ -411,6 +423,7 @@ const BookedSessionsTab = ({
  >
  <Download className="w-3.5 h-3.5" /> Certificate
  </button>
+ </>
  )}
  </div>
  </div>

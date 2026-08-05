@@ -11,8 +11,7 @@ import { useCustomDialog } from '../../../../context/CustomDialogContext';
 import { useStudentProfile } from '../../hooks/useStudentProfile';
 import { useStudentSessions } from '../../hooks/useStudentSessions';
 import { useStudentAptitude } from '../../hooks/useStudentAptitude';
-import { downloadPDFReceiptForSession, downloadCertificatePDF as downloadCertPDF, getMeetLinkStatus } from '../../utils/utils';
-
+import { downloadPDFReceiptForSession, downloadCertificatePDF as downloadCertPDF, downloadConsultationReportPDF, getMeetLinkStatus } from '../../utils/utils';
 import HeroHeader from './HeroHeader';
 import SidebarNav from './SidebarNav';
 import OverviewTab from './OverviewTab';
@@ -209,6 +208,7 @@ export default function StudentProfile({ onOpenBooking }) {
  handleCancelSession={handleCancelSession}
  downloadPDFReceiptForSession={(session) => downloadPDFReceiptForSession(session, profile, user, showAlert)}
  downloadCertificatePDF={downloadCertificatePDF}
+ downloadConsultationReportPDF={(session) => downloadConsultationReportPDF(session, profile, user)}
  onOpenBooking={onOpenBooking}
  />
  )}

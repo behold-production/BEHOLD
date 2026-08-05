@@ -127,6 +127,7 @@ export default function PsychologistDashboard({ setView: _setView }) {
  const [notesInput, setNotesInput] = useState('');
  const [feedbackInput, setFeedbackInput] = useState('');
  const [nextSessionInput, setNextSessionInput] = useState('');
+ const [adminNotesInput, setAdminNotesInput] = useState('');
  const [activeBookingTab, setActiveBookingTab] = useState('CONFIRMED'); // CONFIRMED, COMPLETED, CANCELLED
 
  // Login form states
@@ -1068,21 +1069,43 @@ reportRegError("Please enter a valid email address.");
  }
  };
 
- const saveFeedback = async (bookingId) => {
- try {
- const res = await ApiService.updateAppointmentFeedback(bookingId, {
- notes: notesInput.trim(),
- feedback: feedbackInput.trim(),
- nextSession: nextSessionInput.trim()
- });
- if (res.success) {
- await loadBookingsData();
- setEditingFeedbackId(null);
- }
- } catch (err) {
- console.error("Failed to save feedback via API", err);
- }
- };
+  const saveFeedback = async (bookingId) => {
+    try {
+      const res = await ApiService.updateAppointmentFeedback(bookingId, {
+        notes: notesInput.trim(),
+        feedback: feedbackInput.trim(),
+        nextSession: nextSessionInput.trim(),
+        adminNotes: adminNotesInput.trim()
+      });
+      if (res.success) {
+        toast.success("Consultation Report saved successfully!");
+        await loadBookingsData();
+        setEditingFeedbackId(null);
+      }
+    } catch (err) {
+      console.error("Failed to save feedback via API", err);
+      toast.error(err.message || "Failed to save report");
+    }
+  };
+
+  const handleSendReportToAdmin = async (bookingId) => {
+    try {
+      const res = await ApiService.sendReportToAdmin(bookingId, {
+        adminNotes: adminNotesInput.trim(),
+        notes: notesInput.trim(),
+        feedback: feedbackInput.trim(),
+        nextSession: nextSessionInput.trim()
+      });
+      if (res.success) {
+        toast.success("Confidential Clinical Report submitted to Admin!");
+        await loadBookingsData();
+        setEditingFeedbackId(null);
+      }
+    } catch (err) {
+      console.error("Failed to send report to admin", err);
+      toast.error(err.message || "Failed to submit report to admin");
+    }
+  };
 
  const toggleDay = (dayIndex) => {
  setActiveDays(prev => ({ ...prev, [dayIndex]: !prev[dayIndex] }));
