@@ -826,7 +826,7 @@ reportRegError("Please enter a valid email address.");
 
 
 
-  const handleAvailabilitySave = async (e) => {
+  const handleAvailabilitySave = useCallback(async (e) => {
     if (e && e.preventDefault) e.preventDefault();
     setSlotError('');
 
@@ -855,7 +855,7 @@ reportRegError("Please enter a valid email address.");
       console.error('Failed to save counsellor availability via API', err);
       setSlotError(err.message || 'Failed to save availability.');
     }
-  };
+  }, [activeDays, availableSlots, daySlots]);
 
  const parseTimeToMinutes = (timeStr) => {
  const [time, period] = timeStr.split(' ');
