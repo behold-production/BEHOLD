@@ -59,7 +59,7 @@ function ReviewCard({ review }) {
         </div>
         <div>
           <div className="font-bold text-[#0f172a] text-sm leading-tight group-hover:text-[#00e5ff] transition-colors">{review.name}</div>
-          <div className="text-surface-500 text-xs font-normal mt-0.5">{review.role || 'Student'}</div>
+          <div className="text-surface-500 text-xs font-normal mt-0.5">{review.role || 'User'}</div>
         </div>
       </div>
     </div>
@@ -71,7 +71,7 @@ function SubmitReviewForm({ onSubmitSuccess }) {
   const { user } = useAuth();
   const [form, setForm] = useState({ 
     name: user ? user.name : '', 
-    role: user ? (user.role === 'USER' ? 'Student' : user.role) : '', 
+    role: user ? (user.role === 'USER' ? 'User' : user.role) : '', 
     rating: 5, 
     comment: '' 
   });
@@ -154,7 +154,7 @@ function SubmitReviewForm({ onSubmitSuccess }) {
           <label className="block text-xs font-bold text-gray-700 mb-1.5">Role</label>
           <input
             type="text"
-            placeholder="e.g. Student, Parent"
+            placeholder="e.g. User, Parent"
             value={form.role}
             onChange={e => setForm(f => ({ ...f, role: e.target.value }))}
             className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-gray-900 transition shadow-sm hover:border-gray-300"

@@ -104,7 +104,7 @@ export default function StudentManagementTab(props) {
 
   const handleToggleStudentStatus = async (studentId, currentStatus) => {
     if (!hasUserPermission) {
-      await showAlert("Access Denied: You do not have permission to manage students.");
+      await showAlert("Access Denied: You do not have permission to manage users.");
       return;
     }
     const student = usersDb.find(u => u.id === studentId);
@@ -132,7 +132,7 @@ export default function StudentManagementTab(props) {
 const handleCreateUser = async (e) => {
  e.preventDefault();
  if (!hasUserPermission) {
- setUserFormError("Access Denied: You do not have permission to manage students.");
+ setUserFormError("Access Denied: You do not have permission to manage users.");
  return;
  }
  setUserFormError('');
@@ -164,7 +164,7 @@ const handleCreateUser = async (e) => {
  longitude: userForm.longitude
  }
  );
- setUserFormSuccess("Student created successfully!");
+ setUserFormSuccess("User created successfully!");
  setUserForm({ id: '', name: '', email: '', password: '', phone: '', schoolName: '', grade: '', guardianName: '', guardianPhone: '', groupCode: '', profilePic: '', locationName: '', latitude: 0, longitude: 0 });
  setUserProfilePicFile(null);
  reloadData();
@@ -215,7 +215,7 @@ const handleCreateUser = async (e) => {
  const handleUpdateUser = async (e) => {
  e.preventDefault();
  if (!hasUserPermission) {
- setUserFormError("Access Denied: You do not have permission to manage students.");
+ setUserFormError("Access Denied: You do not have permission to manage users.");
  return;
  }
  setUserFormError('');
@@ -256,7 +256,7 @@ const handleCreateUser = async (e) => {
  await ApiService.adminUpdateUserProfilePic(userForm.id, fd);
  setIsUserPicUploading(false);
  }
- setUserFormSuccess("Student details updated!");
+ setUserFormSuccess("User details updated!");
  setUserProfilePicFile(null);
  reloadData();
  setTimeout(() => {
@@ -273,7 +273,7 @@ const handleCreateUser = async (e) => {
 
  const handleDeleteUser = async (userId) => {
  if (!hasUserPermission) {
- await showAlert("Access Denied: You do not have permission to manage students.");
+ await showAlert("Access Denied: You do not have permission to manage users.");
  return;
  }
  if (!await showConfirm("Are you sure you want to delete this account?")) return;
@@ -405,21 +405,21 @@ const handleAdminCigiUpload = async (e) => {
  return `"${s.id}","${s.name}","${s.email}","${s.status || 'ACTIVE'}",${count}`;
  }).join('\n');
  navigator.clipboard.writeText(headers + rows);
- await showAlert("Student directory CSV copied to clipboard!");
+ await showAlert("User directory CSV copied to clipboard!");
  };
 
  return (
  <div className="space-y-6 animate-in fade-in duration-200 text-sm">
  <div className="border-b border-zinc-800 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
  <div>
- <h3 className="text-sm font-bold text-white font-header">Students Directory</h3>
- <p className="text-sm text-zinc-500 font-medium pt-1">Register new student accounts, edit profiles, suspend/unsuspend access</p>
+ <h3 className="text-sm font-bold text-white font-header">Users Directory</h3>
+ <p className="text-sm text-zinc-500 font-medium pt-1">Register new user accounts, edit profiles, suspend/unsuspend access</p>
  </div>
  <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full sm:w-auto">
  <div className="relative w-full sm:max-w-[200px]">
  <input
  type="text"
- placeholder="Search students..."
+ placeholder="Search users..."
  value={searchUser}
  onChange={(e) => setSearchUser(e.target.value)}
  className="w-full pl-9 pr-4 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-sm font-semibold focus:border-brand text-white outline-none"
@@ -443,7 +443,7 @@ const handleAdminCigiUpload = async (e) => {
  onClick={handleOpenAddUser}
  className="px-4 py-2 bg-brand hover:bg-brand-dark text-zinc-950 text-sm font-bold rounded-full transition-colors cursor-pointer flex items-center gap-1.5 shrink-0"
  >
- <Plus className="w-3.5 h-3.5 text-zinc-955" /> Add Student
+ <Plus className="w-3.5 h-3.5 text-zinc-955" /> Add User
  </button>
  )}
  </div>
@@ -454,7 +454,7 @@ const handleAdminCigiUpload = async (e) => {
  <table id="students-table" className="w-full text-sm border-collapse min-w-[700px]">
  <thead>
  <tr className="bg-zinc-900 text-zinc-400 font-bold border-b border-zinc-850 text-left">
- <th className="p-3 whitespace-nowrap">Student Name</th>
+ <th className="p-3 whitespace-nowrap">User Name</th>
  <th className="p-3 whitespace-nowrap">Email Address</th>
  <th className="p-3 text-center whitespace-nowrap">Status</th>
  <th className="p-3 text-center whitespace-nowrap">Consultations</th>
@@ -466,7 +466,7 @@ const handleAdminCigiUpload = async (e) => {
  <SkeletonTableRows cols={5} />
  ) : studentsList.length === 0 ? (
  <tr>
- <td colSpan={5} className="p-8 text-center text-zinc-500 italic whitespace-nowrap">No student registries match the active query.</td>
+ <td colSpan={5} className="p-8 text-center text-zinc-500 italic whitespace-nowrap">No user registries match the active query.</td>
  </tr>
  ) : (
  studentsList.slice((studentPage - 1) * studentLimit, studentPage * studentLimit).map(student => (
@@ -494,7 +494,7 @@ const handleAdminCigiUpload = async (e) => {
  ? 'bg-emerald-955/20 border-emerald-900/40 text-emerald-450 hover:bg-rose-955/20 hover:border-rose-900 hover:text-rose-500'
  : 'bg-rose-955/20 border-rose-900/40 text-rose-500 hover:bg-emerald-955/20 hover:border-emerald-900 hover:text-emerald-450'
  }`}
- title={(student.status || 'ACTIVE') === 'ACTIVE' ? "Click to Suspend Student" : "Click to Unsuspend Student"}
+ title={(student.status || 'ACTIVE') === 'ACTIVE' ? "Click to Suspend User" : "Click to Unsuspend User"}
  >
  {student.status || 'ACTIVE'}
  </button>
@@ -514,7 +514,7 @@ const handleAdminCigiUpload = async (e) => {
  <button
  onClick={() => handleOpenEditUser(student)}
  className="p-1.5 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"
- title="Edit Student"
+ title="Edit User"
  >
  <Edit className="w-3.5 h-3.5" />
  </button>
@@ -532,7 +532,7 @@ const handleAdminCigiUpload = async (e) => {
  <button
  onClick={() => handleDeleteUser(student.id)}
  className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
- title="Delete Student"
+ title="Delete User"
  >
  <Trash className="w-3.5 h-3.5" />
  </button>
@@ -564,10 +564,10 @@ const handleAdminCigiUpload = async (e) => {
  <div className="relative w-full max-w-lg bg-zinc-900 border border-zinc-800 rounded-lg p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
  <div>
  <h3 className="text-base font-bold text-white font-header">
- {isAddUserOpen ? 'Register Student' : 'Edit Student Details'}
+ {isAddUserOpen ? 'Register User' : 'Edit User Details'}
  </h3>
  <p className="text-sm text-zinc-500 leading-none mt-1">
- {isAddUserOpen ? 'Provision a new student account.' : 'Modify account registry records.'}
+ {isAddUserOpen ? 'Provision a new user account.' : 'Modify account registry records.'}
  </p>
  </div>
  <form onSubmit={isAddUserOpen ? handleCreateUser : handleUpdateUser} className="space-y-4 font-medium">

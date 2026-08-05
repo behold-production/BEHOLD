@@ -76,7 +76,7 @@ const HeroHeader = ({
                   </span>
                 )}
                 <span className="inline-block px-3 py-1 rounded-full bg-[#0f172a] text-white border border-[#00e5ff]/30 text-[10px] font-bold uppercase tracking-widest shadow-2xs">
-                  Verified Student
+                  Verified User
                 </span>
               </div>
 

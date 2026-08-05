@@ -57,7 +57,7 @@ const BookingsTab = ({
     <div className="space-y-6 animate-in fade-in duration-200 text-sm text-left">
       <div className="border-b border-zinc-800 pb-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="min-w-0 flex-1">
-          <h3 className="text-sm font-bold text-zinc-500 font-header">Student Booking Details & Rooms</h3>
+          <h3 className="text-sm font-bold text-zinc-500 font-header">User Booking Details & Rooms</h3>
           <p className="text-sm text-zinc-400 mt-1 font-medium break-words">Manage virtual consultations, update appointment statuses, and log clinic summaries.</p>
         </div>
         <span className="text-sm bg-brand/10 text-brand border border-brand/20 px-2 py-0.5 rounded font-bold shrink-0">{bookings.length} Total</span>

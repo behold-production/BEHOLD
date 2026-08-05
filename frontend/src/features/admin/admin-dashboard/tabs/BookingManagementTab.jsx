@@ -503,7 +503,7 @@ export default function BookingManagementTab(props) {
  );
  })()}
  </th>
- <th className="p-3 whitespace-nowrap">Student</th>
+ <th className="p-3 whitespace-nowrap">User</th>
  <th className="p-3 whitespace-nowrap">Psychologist</th>
  <th className="p-3 whitespace-nowrap">Service / Mode</th>
  <th className="p-3 whitespace-nowrap">Schedule</th>

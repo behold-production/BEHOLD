@@ -483,7 +483,7 @@ export default function RevenueTab(props) {
  <thead>
  <tr className="bg-zinc-900/60 text-zinc-400 font-bold border-b border-zinc-800 text-left ">
  <th className="p-3">Ref ID</th>
- <th className="p-3">Student Name</th>
+ <th className="p-3">User Name</th>
  <th className="p-3">Session Date</th>
  <th className="p-3">Session Mode</th>
  <th className="p-3 text-right">Gross Paid</th>
@@ -517,7 +517,7 @@ export default function RevenueTab(props) {
  return (
  <tr key={b.id} className="border-b border-zinc-900 hover:bg-zinc-900/30 transition-colors">
  <td className="p-3 font-mono font-semibold">SB-{b.id}</td>
- <td className="p-3 font-bold text-white">{b.userName || b.studentName || 'Student'}</td>
+ <td className="p-3 font-bold text-white">{b.userName || b.studentName || 'User'}</td>
  <td className="p-3 text-zinc-350">{formatDateString(b.date)} at {b.time}</td>
  <td className="p-3">
  <span className="text-xs bg-zinc-900 text-zinc-400 border border-zinc-800 px-2 py-0.5 rounded font-semibold ">

@@ -114,7 +114,7 @@ export default function RefundRequestsTab(props) {
  <div>
  <h3 className="text-sm font-bold text-white font-header">Refund Requests & Payouts</h3>
  <p className="text-sm text-zinc-500 font-medium pt-1">
- Manage refund payouts to students and review linked counsellor bank accounts.
+ Manage refund payouts to users and review linked counsellor bank accounts.
  </p>
  </div>
  <div className="relative w-full sm:max-w-[240px]">
@@ -167,7 +167,7 @@ export default function RefundRequestsTab(props) {
  <thead>
  <tr className="bg-zinc-900 text-zinc-400 font-bold border-b border-zinc-850 text-left">
  <th className="p-3 w-8 text-center"></th>
- <th className="p-3">Student / Payer</th>
+ <th className="p-3">User / Payer</th>
  <th className="p-3">Psychologist</th>
  <th className="p-3">Booking Details</th>
  <th className="p-3 text-right">Amount</th>

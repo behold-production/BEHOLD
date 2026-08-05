@@ -117,7 +117,7 @@ export default function SidebarNav(props) {
  {
  title: "User Directories",
  items: [
- { id: 'users', label: 'Student Database', icon: User, visible: hasUserPermission },
+ { id: 'users', label: 'User Database', icon: User, visible: hasUserPermission },
  { id: 'psychologists', label: 'Psychologists DB', icon: Award, visible: hasPsyPermission },
  { id: 'subadmins', label: 'Roles & Scopes', icon: KeyRound, visible: isSuperAdmin },
  ]
@@ -134,7 +134,7 @@ export default function SidebarNav(props) {
  items: [
  { id: 'aptitude', label: 'Aptitude Questions', icon: Brain, visible: isSuperAdmin },
  { id: 'testresults', label: 'Aptitude Results', icon: FileSpreadsheet, visible: isSuperAdmin },
- { id: 'inquiries', label: 'Student Inquiries', icon: MessageSquare, visible: isSuperAdmin },
+ { id: 'inquiries', label: 'User Inquiries', icon: MessageSquare, visible: isSuperAdmin },
  { id: 'reviews', label: 'Reviews', icon: MessageSquare, visible: isSuperAdmin },
  { id: 'faqs', label: 'FAQ Manager', icon: HelpCircle, visible: isSuperAdmin },
  { id: 'blogs', label: 'Blog Manager', icon: FileText, visible: isSuperAdmin || props.hasBlogPermission },

@@ -428,7 +428,7 @@ export default function OverviewTab(props) {
  }`}
  >
  <div className="flex justify-between items-center">
- <span className="text-sm text-zinc-500 font-bold block">Students</span>
+ <span className="text-sm text-zinc-500 font-bold block">Users</span>
  <User className={`w-3.5 h-3.5 ${activeStatHighlight === 'students' ? 'text-brand' : 'text-zinc-500'}`} />
  </div>
  <p className="text-xl font-bold text-white text-left pt-0.5">{studentsCount}</p>
@@ -549,7 +549,7 @@ export default function OverviewTab(props) {
  <div className="space-y-4">
  <div className="flex items-center gap-2 border-b border-zinc-900 pb-2">
  <User className="w-4 h-4 text-brand" />
- <h4 className="font-header font-bold text-sm text-white">Students Registry Breakdown</h4>
+ <h4 className="font-header font-bold text-sm text-white">Users Registry Breakdown</h4>
  </div>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
  <div className="bg-zinc-900/60 p-4 rounded-lg border border-zinc-850 space-y-3">
@@ -589,7 +589,7 @@ export default function OverviewTab(props) {
  }`}>{st.status || 'ACTIVE'}</span>
  </div>
  ))}
- {studentsCount === 0 && <p className="text-zinc-650 italic text-center py-4">No students registered yet.</p>}
+ {studentsCount === 0 && <p className="text-zinc-650 italic text-center py-4">No users registered yet.</p>}
  </div>
  </div>
  </div>
@@ -733,7 +733,7 @@ export default function OverviewTab(props) {
  <div className="space-y-4">
  <div className="flex items-center gap-2 border-b border-zinc-900 pb-2">
  <MessageSquare className="w-4 h-4 text-brand" />
- <h4 className="font-header font-bold text-sm text-white">Student Inquiries Desk</h4>
+ <h4 className="font-header font-bold text-sm text-white">User Inquiries Desk</h4>
  </div>
  <div className="bg-zinc-900/60 p-4 rounded-lg border border-zinc-850 space-y-3">
  <span className="text-sm font-bold text-zinc-500 block">Pending Inquiries ({pendingInquiriesCount})</span>
@@ -845,7 +845,7 @@ export default function OverviewTab(props) {
  }}
  className="px-4.5 py-2.5 bg-zinc-900 hover:bg-zinc-850 text-white rounded-lg border border-zinc-800 transition cursor-pointer text-sm font-bold flex items-center gap-1.5"
  >
- <UserPlus className="w-3.5 h-3.5 text-brand" /> Provision Student
+ <UserPlus className="w-3.5 h-3.5 text-brand" /> Provision User
  </button>
  <button
  onClick={() => {

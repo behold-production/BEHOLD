@@ -343,7 +343,7 @@ export default function InquiriesTab(props) {
  <div className="space-y-6 animate-in fade-in duration-200 text-sm">
  <div className="border-b border-zinc-800 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
  <div>
- <h3 className="text-sm font-bold text-white font-header">Student Inquiries & Leads</h3>
+ <h3 className="text-sm font-bold text-white font-header">User Inquiries & Leads</h3>
  <p className="text-sm text-zinc-500 font-medium pt-1">Review contact requests submitted from the landing page</p>
  </div>
  <div className="flex items-center gap-3 w-full sm:w-auto">
@@ -458,7 +458,7 @@ export default function InquiriesTab(props) {
  {filteredInquiries.length === 0 && (
  <div className="text-center py-10 bg-zinc-955 border border-zinc-850 rounded-lg space-y-3">
  <MessageSquare className="w-8 h-8 text-zinc-650 mx-auto" />
- <p className="text-zinc-500 font-bold text-sm ">No student inquiries submitted yet.</p>
+ <p className="text-zinc-500 font-bold text-sm ">No user inquiries submitted yet.</p>
  </div>
  )}
  </>

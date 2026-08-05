@@ -344,7 +344,7 @@ export default function TestResultsTab(props) {
  <div className="border-b border-zinc-800 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
  <div>
  <h3 className="text-sm font-bold text-white font-header">Aptitude Test Results</h3>
- <p className="text-sm text-zinc-500 font-medium pt-1">Monitor student diagnostic assessment outcomes and profiles</p>
+ <p className="text-sm text-zinc-500 font-medium pt-1">Monitor user diagnostic assessment outcomes and profiles</p>
  </div>
  <div className="relative w-full sm:max-w-[240px]">
  <input
