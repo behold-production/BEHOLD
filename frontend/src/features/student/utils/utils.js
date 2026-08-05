@@ -326,3 +326,102 @@ export const downloadPDFReceiptForSession = async (session, profile, user, showA
     toast.error('Failed to generate PDF receipt', { id: toastId });
   }
 };
+
+export const downloadCertificatePDF = async (session, profile = {}, user = {}) => {
+  const toastId = toast.loading('Generating certificate PDF...');
+  try {
+    const doc = new jsPDF({
+      orientation: 'landscape',
+      unit: 'mm',
+      format: 'a4'
+    });
+
+    // Outer Dark Border Frame
+    doc.setLineWidth(1.5);
+    doc.setDrawColor(9, 9, 11);
+    doc.rect(10, 10, 277, 190);
+
+    // Inner Teal Accent Frame
+    doc.setLineWidth(0.5);
+    doc.setDrawColor(6, 182, 212);
+    doc.rect(13, 13, 271, 184);
+
+    // Header Title
+    doc.setFont('Helvetica', 'bold');
+    doc.setFontSize(28);
+    doc.setTextColor(9, 9, 11);
+    doc.text('BEHOLD.', 148.5, 38, { align: 'center' });
+
+    doc.setFontSize(10);
+    doc.setFont('Helvetica', 'bold');
+    doc.setTextColor(6, 182, 212);
+    doc.text('CERTIFICATE OF COMPLETION', 148.5, 48, { align: 'center' });
+
+    // Decorative Line
+    doc.setDrawColor(228, 228, 231);
+    doc.line(80, 54, 217, 54);
+
+    doc.setFont('Helvetica', 'normal');
+    doc.setFontSize(11);
+    doc.setTextColor(113, 113, 122);
+    doc.text('This is to certify that', 148.5, 68, { align: 'center' });
+
+    // Recipient Name
+    const recipientName = profile?.name || user?.name || session?.clientName || 'Participant';
+    doc.setFont('Helvetica', 'bold');
+    doc.setFontSize(24);
+    doc.setTextColor(9, 9, 11);
+    doc.text(recipientName.toUpperCase(), 148.5, 84, { align: 'center' });
+
+    doc.setFont('Helvetica', 'normal');
+    doc.setFontSize(11);
+    doc.setTextColor(113, 113, 122);
+    doc.text('has successfully completed a professional consultation session for', 148.5, 98, { align: 'center' });
+
+    // Service Name
+    const serviceName = session?.service === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring';
+    doc.setFont('Helvetica', 'bold');
+    doc.setFontSize(16);
+    doc.setTextColor(6, 182, 212);
+    doc.text(serviceName, 148.5, 110, { align: 'center' });
+
+    // Session Advisor & Date
+    doc.setFont('Helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(82, 82, 91);
+    doc.text(`Guided by ${session?.advisorName || 'Consultant Psychologist'} on ${formatDateString(session?.date || new Date())}`, 148.5, 122, { align: 'center' });
+
+    // Footer Signatures & Certificate ID
+    doc.line(40, 160, 95, 160);
+    doc.setFont('Helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.setTextColor(39, 39, 42);
+    doc.text('Authorized Signature', 67.5, 166, { align: 'center' });
+    doc.setFont('Helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(113, 113, 122);
+    doc.text('BEHOLD Aspire Platform', 67.5, 171, { align: 'center' });
+
+    const certId = `CERT-${(session?.appointmentId || session?.id || Date.now()).toString().slice(-8)}`;
+    doc.setFont('Helvetica', 'bold');
+    doc.setFontSize(8.5);
+    doc.setTextColor(113, 113, 122);
+    doc.text(`ID: ${certId}`, 148.5, 166, { align: 'center' });
+
+    doc.line(202, 160, 257, 160);
+    doc.setFont('Helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.setTextColor(39, 39, 42);
+    doc.text('Lead Psychologist', 229.5, 166, { align: 'center' });
+    doc.setFont('Helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(113, 113, 122);
+    doc.text('BEHOLD Academic Board', 229.5, 171, { align: 'center' });
+
+    doc.save(`Behold_Certificate_${certId}.pdf`);
+    toast.success('Certificate downloaded successfully!', { id: toastId });
+  } catch (err) {
+    console.error(err);
+    toast.error('Failed to generate Certificate PDF', { id: toastId });
+  }
+};

@@ -11,7 +11,7 @@ import { useCustomDialog } from '../../../../context/CustomDialogContext';
 import { useStudentProfile } from '../../hooks/useStudentProfile';
 import { useStudentSessions } from '../../hooks/useStudentSessions';
 import { useStudentAptitude } from '../../hooks/useStudentAptitude';
-import { downloadPDFReceiptForSession, getMeetLinkStatus } from '../../utils/utils';
+import { downloadPDFReceiptForSession, downloadCertificatePDF as downloadCertPDF, getMeetLinkStatus } from '../../utils/utils';
 
 import HeroHeader from './HeroHeader';
 import SidebarNav from './SidebarNav';
@@ -93,10 +93,7 @@ export default function StudentProfile({ onOpenBooking }) {
   };
 
   const downloadCertificatePDF = async (session) => {
-    // We kept this in the original hook but it can be moved to a util for cleaner components. 
-    // It's a complex PDF gen function. For now we will leave a stub or use the external one if needed.
-    // In our refactoring, it's better to just delegate it.
-    toast.error('Certificate generation temporarily disabled during refactor.');
+    await downloadCertPDF(session, profile, user);
   };
 
   const nextSession = bookedSessions[0];

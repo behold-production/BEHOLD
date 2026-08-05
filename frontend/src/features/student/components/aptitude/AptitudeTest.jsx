@@ -261,7 +261,7 @@ export default function AptitudeTest({ onFinishTest }) {
  <div className="h-1.5 w-full bg-surface-100 rounded-[10px] overflow-hidden">
  <div
  className="h-full bg-surface-900 transition-all duration-500 ease-out"
- style={{ width: `${((currentQuestion + 1) / dbQuestions.length) * 100}%` }}
+ style={{ width: `${((currentQuestion + 1) / (shuffledQuestions.length || 1)) * 100}%` }}
  ></div>
  </div>
  </div>
@@ -333,17 +333,17 @@ export default function AptitudeTest({ onFinishTest }) {
 
  {/* Dominant Affinity Profile Card */}
  <div className="lg:col-span-7 space-y-6">
- <h3 className="text-[10px] font-bold text-surface-500 tracking-widest">
+ <h3 className="text-xs font-bold text-surface-500 tracking-wider uppercase">
  Your Dominant Affinity Profile
  </h3>
 
  <div className="p-5 sm:p-6 rounded-[10px] border border-surface-200 bg-surface-50 flex gap-4 text-surface-900 shadow-square-light">
  <div className="shrink-0 mt-1">{dominantInfo.icon}</div>
  <div>
- <h4 className="text-base sm:text-lg font-black text-surface-900 tracking-widest leading-tight mb-2">
+ <h4 className="text-base sm:text-lg font-black text-surface-900 tracking-wider leading-tight mb-2 uppercase">
  {dominantInfo.title}
  </h4>
- <p className="text-surface-600 text-[10px] font-bold tracking-widest leading-relaxed">
+ <p className="text-surface-600 text-xs sm:text-sm font-medium leading-relaxed">
  {dominantInfo.desc}
  </p>
  </div>
@@ -353,7 +353,7 @@ export default function AptitudeTest({ onFinishTest }) {
  {/* Recommendations and Call-to-Action */}
  <div className="lg:col-span-5 lg:row-span-2 space-y-6">
  <div className="p-5 sm:p-6 bg-surface-50 border border-surface-200 rounded-[10px] space-y-6 shadow-square-light">
- <h4 className="font-black text-surface-900 text-[10px] tracking-widest border-b border-surface-200 pb-3">
+ <h4 className="font-black text-surface-900 text-xs tracking-wider uppercase border-b border-surface-200 pb-3">
  Recommended Pathways
  </h4>
  <ul className="space-y-3">
@@ -363,11 +363,11 @@ export default function AptitudeTest({ onFinishTest }) {
  className="flex flex-col bg-white p-3 sm:p-4 rounded-[10px] border border-surface-200 hover:border-surface-400 transition-all duration-200 group text-left"
  >
  <div className="flex justify-between items-center">
- <span className="text-[10px] font-black text-surface-900 tracking-widest">
+ <span className="text-xs font-black text-surface-900 tracking-wider">
  {item.career}
  </span>
  </div>
- <span className="text-[10px] text-surface-500 font-bold tracking-widest mt-1 leading-relaxed">
+ <span className="text-xs text-surface-500 font-medium mt-1 leading-relaxed">
  {item.reason}
  </span>
  </li>
