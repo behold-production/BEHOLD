@@ -28,12 +28,28 @@ const BookingsTab = ({
   saveMeetLink,
   startEditMeetLink
 }) => {
-  const confirmedCount = bookings.filter(b => !b.status || b.status === 'CONFIRMED' || b.status === 'PENDING' || b.status === 'APPROVED').length;
-  const completedCount = bookings.filter(b => b.status === 'COMPLETED').length;
-  const expiredCount = bookings.filter(b => b.status === 'EXPIRED').length;
-  const cancelledCount = bookings.filter(b => b.status === 'CANCELLED').length;
+  const uniqueBookingsMap = new Map();
+  (bookings || []).forEach(b => {
+    const key = (b.razorpayOrderId && b.razorpayOrderId.trim()) 
+      ? b.razorpayOrderId 
+      : `${b.counsellorId || b.advisorId || ''}_${b.date || ''}_${b.time || ''}`;
+    if (!uniqueBookingsMap.has(key)) {
+      uniqueBookingsMap.set(key, b);
+    } else {
+      const prev = uniqueBookingsMap.get(key);
+      if (b.paymentStatus === 'PAID' && prev.paymentStatus !== 'PAID') {
+        uniqueBookingsMap.set(key, b);
+      }
+    }
+  });
 
-  const filteredBookings = bookings.filter(b => {
+  const uniqueBookings = Array.from(uniqueBookingsMap.values());
+  const confirmedCount = uniqueBookings.filter(b => !b.status || b.status === 'CONFIRMED' || b.status === 'PENDING' || b.status === 'APPROVED').length;
+  const completedCount = uniqueBookings.filter(b => b.status === 'COMPLETED').length;
+  const expiredCount = uniqueBookings.filter(b => b.status === 'EXPIRED').length;
+  const cancelledCount = uniqueBookings.filter(b => b.status === 'CANCELLED').length;
+
+  const filteredBookings = uniqueBookings.filter(b => {
     const status = b.status || 'CONFIRMED';
     if (activeBookingTab === 'CONFIRMED') {
       return status === 'CONFIRMED' || status === 'PENDING' || status === 'APPROVED';

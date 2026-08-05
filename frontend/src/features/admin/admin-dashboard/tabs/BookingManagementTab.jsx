@@ -342,19 +342,34 @@ export default function BookingManagementTab(props) {
  } = props;
 
 
- const filteredBookings = bookingsDb.filter(b => {
- const matchesSearch = (b.userName && b.userName.toLowerCase().includes(searchBooking.toLowerCase())) ||
- (b.advisorName && b.advisorName.toLowerCase().includes(searchBooking.toLowerCase())) ||
- (b.status && b.status.toLowerCase().includes(searchBooking.toLowerCase()));
- if (bookingStatusFilter === 'ALL') return matchesSearch;
- return matchesSearch && b.status === bookingStatusFilter;
- }).sort((a, b) => {
- if (a.status === 'PENDING' && b.status !== 'PENDING') return -1;
- if (a.status !== 'PENDING' && b.status === 'PENDING') return 1;
- if (a.status === 'CONFIRMED' && b.status !== 'CONFIRMED' && b.status !== 'PENDING') return -1;
- if (b.status === 'CONFIRMED' && a.status !== 'CONFIRMED' && a.status !== 'PENDING') return 1;
- return (b.date || '').localeCompare(a.date || '');
- });
+  const uniqueBookingsMap = new Map();
+  (bookingsDb || []).forEach(b => {
+    const key = (b.razorpayOrderId && b.razorpayOrderId.trim()) 
+      ? b.razorpayOrderId 
+      : `${b.advisorId || b.counsellorId || ''}_${b.date || ''}_${b.time || ''}`;
+    if (!uniqueBookingsMap.has(key)) {
+      uniqueBookingsMap.set(key, b);
+    } else {
+      const prev = uniqueBookingsMap.get(key);
+      if (b.paymentStatus === 'PAID' && prev.paymentStatus !== 'PAID') {
+        uniqueBookingsMap.set(key, b);
+      }
+    }
+  });
+
+  const filteredBookings = Array.from(uniqueBookingsMap.values()).filter(b => {
+    const matchesSearch = (b.userName && b.userName.toLowerCase().includes(searchBooking.toLowerCase())) ||
+    (b.advisorName && b.advisorName.toLowerCase().includes(searchBooking.toLowerCase())) ||
+    (b.status && b.status.toLowerCase().includes(searchBooking.toLowerCase()));
+    if (bookingStatusFilter === 'ALL') return matchesSearch;
+    return matchesSearch && b.status === bookingStatusFilter;
+  }).sort((a, b) => {
+    if (a.status === 'PENDING' && b.status !== 'PENDING') return -1;
+    if (a.status !== 'PENDING' && b.status === 'PENDING') return 1;
+    if (a.status === 'CONFIRMED' && b.status !== 'CONFIRMED' && b.status !== 'PENDING') return -1;
+    if (b.status === 'CONFIRMED' && a.status !== 'CONFIRMED' && a.status !== 'PENDING') return 1;
+    return (b.date || '').localeCompare(a.date || '');
+  });
 
  return (
  <div className="space-y-6 animate-in fade-in duration-200 text-sm">

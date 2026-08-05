@@ -237,6 +237,9 @@ const AdminController = {
   async getAppointments(req, res, next) {
     try {
       await autoExpireSessions();
+      const { cleanDuplicateAppointments } = require('../utils/appointmentDeduplicator');
+      await cleanDuplicateAppointments();
+
       const [appointments, users, counsellors, sessions] = await Promise.all([
         StorageService.findAll('appointments', { isDeleted: { $ne: true } }),
         StorageService.findAll('users'),
