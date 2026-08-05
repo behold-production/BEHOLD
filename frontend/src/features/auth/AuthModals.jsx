@@ -338,7 +338,7 @@ export default function AuthModals({ isOpen, onClose }) {
                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-3.5 flex items-start gap-2.5">
                    <ShieldCheck className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" />
                    <p className="text-xs text-blue-800 font-medium leading-relaxed">
-                     A 6-digit code was sent to your email and the WhatsApp number linked to <strong>{forgotEmail}</strong>. Enter it below along with your new password.
+                     A 6-digit code was sent to your email <strong>{forgotEmail}</strong>. Enter it below along with your new password.
                    </p>
                  </div>
 

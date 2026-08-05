@@ -291,36 +291,29 @@ const AuthController = {
     }
   },
 
-  // Forgot Password — sends 6-digit OTP to user's registered WhatsApp number
+  // Forgot Password — sends 6-digit OTP to user's registered Email (and WhatsApp if linked)
   async forgotPassword(req, res, next) {
     try {
       const { email } = req.body;
       if (!email) {
-        return res.status(400).json({ success: false, message: 'Email is required' });
+        return res.status(400).json({ success: false, message: 'Email address is required' });
       }
 
-      const match = await findAnyUserByEmail(email);
+      const cleanEmail = email.toLowerCase().trim();
+      const match = await findAnyUserByEmail(cleanEmail);
       if (!match) {
         // Security: don't reveal if email exists or not
         return res.status(200).json({
           success: true,
-          message: 'If this email is registered, a reset code has been sent to the linked WhatsApp number.'
+          message: 'If this email is registered, a 6-digit reset code has been sent to your email address.'
         });
       }
 
       const { user } = match;
 
-      // Check user has a phone number registered
-      if (!user.phone || user.phone.trim() === '') {
-        return res.status(400).json({
-          success: false,
-          message: 'No phone number is linked to this account. Please contact support to reset your password.'
-        });
-      }
-
       // Invalidate any previous unused OTPs for this email
       await PasswordResetOtp.updateMany(
-        { email: email.toLowerCase().trim(), used: false },
+        { email: cleanEmail, used: false },
         { used: true }
       );
 
@@ -329,7 +322,7 @@ const AuthController = {
       const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
       await PasswordResetOtp.create({
-        email: email.toLowerCase().trim(),
+        email: cleanEmail,
         otpCode,
         expiresAt,
         used: false
@@ -338,26 +331,28 @@ const AuthController = {
       // Log for dev convenience
       console.log(`\n======================================`);
       console.log(`🔑 PASSWORD RESET OTP: ${otpCode}`);
-      console.log(`📧 FOR EMAIL: ${email}`);
+      console.log(`📧 FOR EMAIL: ${cleanEmail}`);
       console.log(`======================================\n`);
 
-      // Send via WhatsApp to registered phone
-      const message = `*BEHOLD Aspire — Password Reset*\n\nYour password reset code is:\n\n*${otpCode}*\n\nThis code is valid for 10 minutes. Do not share it with anyone.`;
-      if (user.phone) {
+      // Send OTP via email (Primary)
+      EmailService.sendPasswordResetOTP(cleanEmail, user.name || 'User', otpCode).catch(err => {
+        console.error('[Email Reset OTP Error]:', err);
+      });
+
+      // Also send via WhatsApp if registered phone exists
+      if (user.phone && user.phone.trim() !== '') {
+        const message = `*BEHOLD Aspire — Password Reset*\n\nYour password reset code is:\n\n*${otpCode}*\n\nThis code is valid for 10 minutes. Do not share it with anyone.`;
         WhatsAppService.sendNotification(user.phone, message).catch(err => {
-          console.error('[WhatsApp reset OTP error]:', err);
+          console.error('[WhatsApp Reset OTP Error]:', err);
         });
       }
-      // Also send OTP via email
-      EmailService.sendPasswordResetOTP(user.email, user.name, otpCode).catch(err => {
-        console.error('[Email OTP Error]:', err);
-      });
+
+      const maskedPhone = (user.phone && user.phone.trim()) ? user.phone.replace(/.(?=.{4})/g, '•') : '';
 
       res.status(200).json({
         success: true,
-        message: 'A 6-digit reset code has been sent to your registered WhatsApp number.',
-        // Mask the phone for UI display: show last 4 digits only
-        data: { maskedPhone: user.phone.replace(/.(?=.{4})/g, '•') }
+        message: 'A 6-digit reset code has been sent to your email address.',
+        data: { maskedPhone }
       });
     } catch (error) {
       next(error);
