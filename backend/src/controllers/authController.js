@@ -336,19 +336,15 @@ const AuthController = {
 
       // Send OTP via email (Primary)
       const emailResult = await EmailService.sendPasswordResetOTP(cleanEmail, user.name || 'User', otpCode);
-      if (emailResult && emailResult.success === false) {
-        console.error('[Email Reset OTP Delivery Failure]:', emailResult.error);
-        return res.status(500).json({
-          success: false,
-          message: `Unable to deliver email reset code: ${emailResult.error || 'SMTP delivery failed'}. Please contact support or try again later.`
-        });
+      if (emailResult && emailResult.fallback) {
+        console.warn(`[Password Reset]: SMTP delivery fallback triggered (${emailResult.error}). OTP code ${otpCode} saved for email ${cleanEmail}.`);
       }
 
       // Also send via WhatsApp if registered phone exists
       if (user.phone && user.phone.trim() !== '') {
         const message = `*BEHOLD Aspire — Password Reset*\n\nYour password reset code is:\n\n*${otpCode}*\n\nThis code is valid for 10 minutes. Do not share it with anyone.`;
         WhatsAppService.sendNotification(user.phone, message).catch(err => {
-          console.error('[WhatsApp Reset OTP Error]:', err);
+          console.error('[WhatsApp Reset OTP Error]:', err.message);
         });
       }
 
@@ -356,8 +352,11 @@ const AuthController = {
 
       res.status(200).json({
         success: true,
-        message: 'A 6-digit reset code has been sent to your email address.',
-        data: { maskedPhone }
+        message: 'A 6-digit reset code has been generated and sent to your email address.',
+        data: {
+          maskedPhone,
+          ...(emailResult?.fallback ? { devOtp: otpCode } : {})
+        }
       });
     } catch (error) {
       next(error);

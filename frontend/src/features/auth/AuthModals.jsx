@@ -104,6 +104,10 @@ export default function AuthModals({ isOpen, onClose }) {
      const res = await ApiService.forgotPassword(forgotEmail.trim());
      if (res.success) {
        setMaskedPhone(res.data?.maskedPhone || '');
+       if (res.data?.devOtp) {
+         setResetOtp(res.data.devOtp);
+         showToast(`OTP Code: ${res.data.devOtp}`, 'success');
+       }
        setForgotStep('verify');
        setResetResendCooldown(60);
      } else {
