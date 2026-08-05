@@ -335,9 +335,14 @@ const AuthController = {
       console.log(`======================================\n`);
 
       // Send OTP via email (Primary)
-      EmailService.sendPasswordResetOTP(cleanEmail, user.name || 'User', otpCode).catch(err => {
-        console.error('[Email Reset OTP Error]:', err);
-      });
+      const emailResult = await EmailService.sendPasswordResetOTP(cleanEmail, user.name || 'User', otpCode);
+      if (emailResult && emailResult.success === false) {
+        console.error('[Email Reset OTP Delivery Failure]:', emailResult.error);
+        return res.status(500).json({
+          success: false,
+          message: `Unable to deliver email reset code: ${emailResult.error || 'SMTP delivery failed'}. Please contact support or try again later.`
+        });
+      }
 
       // Also send via WhatsApp if registered phone exists
       if (user.phone && user.phone.trim() !== '') {

@@ -16,7 +16,7 @@ function _getTransporter() {
   if (_transporter) return _transporter;
 
   const user = (process.env.GMAIL_USER || '').trim();
-  const pass = (process.env.GMAIL_APP_PASSWORD || '').trim();
+  const pass = (process.env.GMAIL_APP_PASSWORD || '').trim().replace(/\s+/g, '');
 
   if (!user || !pass || user.includes('your_gmail')) {
     return null; // Mock mode — no credentials configured
@@ -52,7 +52,7 @@ const sendEmail = async (to, subject, html) => {
   }
 
   const fromName = (process.env.EMAIL_FROM_NAME || 'Behold Aspire').trim();
-  const fromEmail = process.env.GMAIL_USER;
+  const fromEmail = (process.env.GMAIL_USER || '').trim();
 
   try {
     const info = await transporter.sendMail({

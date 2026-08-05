@@ -222,7 +222,7 @@ export default function AuthModals({ isOpen, onClose }) {
    register: { title: 'Create Account', subtitle: 'Join BEHOLD and book your sessions.' },
    forgot: {
      email: { title: 'Forgot Password', subtitle: 'Enter your email to receive a reset code.' },
-     verify: { title: 'Enter Reset Code', subtitle: `A 6-digit code was sent to your email and WhatsApp${maskedPhone ? ` (${maskedPhone})` : ''}.` },
+     verify: { title: 'Enter Reset Code', subtitle: `A 6-digit code was sent to your email address (${forgotEmail}).` },
      success: { title: 'Password Reset!', subtitle: 'Your password has been changed successfully.' }
    }
  };
