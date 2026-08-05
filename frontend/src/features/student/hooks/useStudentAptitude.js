@@ -92,14 +92,15 @@ export function useStudentAptitude(updateProfile) {
 
   const handleCigiDelete = async (resultId) => {
     if (!(await showConfirm('Are you sure you want to delete this CIGI result?', 'Delete CIGI Result'))) return;
+    if (updateProfile) {
+      updateProfile(prev => ({ ...prev, cigiResults: (prev.cigiResults || []).filter(item => item.id !== resultId) }));
+    }
     try {
       const res = await ApiService.deleteCigiResult(resultId);
-      if (res.success) {
-        toast.success('CIGI result deleted successfully');
-        if (updateProfile) {
-          updateProfile(prev => ({ ...prev, cigiResults: res.data.cigiResults }));
-        }
+      if (res.success && updateProfile) {
+        updateProfile(prev => ({ ...prev, cigiResults: res.data.cigiResults }));
       }
+      toast.success('CIGI result deleted successfully');
     } catch (err) {
       toast.error(err.message || 'Failed to delete CIGI result');
     }

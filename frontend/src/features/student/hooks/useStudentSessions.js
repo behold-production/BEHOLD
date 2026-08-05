@@ -74,14 +74,18 @@ export function useStudentSessions() {
         }
       }
 
+      // Optimistic local removal
+      setBookedSessions(prev => prev.filter(b => b.id !== sessionId));
+
       await ApiService.cancelAppointment(sessionId, reason);
 
-      const sessionsRes = await ApiService.getSessions();
-      if (sessionsRes.success && Array.isArray(sessionsRes.data)) {
-        const list = sessionsRes.data;
-        setBookedSessions(list.filter(b => b.status !== 'CANCELLED' && b.status !== 'COMPLETED' && !isSessionCompleted(b)));
-        setCompletedSessions(list.filter(b => b.status === 'COMPLETED' || isSessionCompleted(b)));
-      }
+      ApiService.getSessions().then(sessionsRes => {
+        if (sessionsRes.success && Array.isArray(sessionsRes.data)) {
+          const list = sessionsRes.data;
+          setBookedSessions(list.filter(b => b.status !== 'CANCELLED' && b.status !== 'COMPLETED' && !isSessionCompleted(b)));
+          setCompletedSessions(list.filter(b => b.status === 'COMPLETED' || isSessionCompleted(b)));
+        }
+      }).catch(() => {});
     } catch (error) {
       await showAlert(error.message || 'Failed to cancel session', 'Error');
     }
