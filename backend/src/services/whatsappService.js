@@ -279,31 +279,26 @@ class WhatsAppService {
       type: 'template',
       template: {
         name: this.otpTemplate,
-        language: { code: 'en' },
-        components: [
-          {
-            type: 'body',
-            parameters: [
-              {
-                type: 'text',
-                text: code
-              }
-            ]
-          },
-          {
-            type: 'button',
-            sub_type: 'url',
-            index: '0',
-            parameters: [
-              {
-                type: 'text',
-                text: code
-              }
-            ]
-          }
-        ]
+        language: { code: 'en' }
       }
     };
+
+    // Only attach dynamic body parameters if it's NOT the default 'hello_world' template.
+    // Meta rejects the request if parameters are sent to a template that doesn't expect them.
+    if (this.otpTemplate !== 'hello_world') {
+      metaPayload.template.components = [
+        {
+          type: 'body',
+          parameters: [{ type: 'text', text: code }]
+        },
+        {
+          type: 'button',
+          sub_type: 'url',
+          index: '0',
+          parameters: [{ type: 'text', text: code }]
+        }
+      ];
+    }
 
     return this._dispatchMessage({ phone, plainText, metaPayload });
   }
@@ -320,20 +315,18 @@ class WhatsAppService {
       type: 'template',
       template: {
         name: this.notifTemplate,
-        language: { code: 'en' },
-        components: [
-          {
-            type: 'body',
-            parameters: [
-              {
-                type: 'text',
-                text: plainText.substring(0, 1024)
-              }
-            ]
-          }
-        ]
+        language: { code: 'en' }
       }
     };
+
+    if (this.notifTemplate !== 'hello_world') {
+      metaPayload.template.components = [
+        {
+          type: 'body',
+          parameters: [{ type: 'text', text: plainText.substring(0, 1024) }]
+        }
+      ];
+    }
 
     return this._dispatchMessage({ phone, plainText, metaPayload });
   }
