@@ -838,19 +838,37 @@ export default function App() {
       )}
 
       {/* Floating WhatsApp Icon */}
-      {siteSettings?.whatsapp && !hideNavbarAndFooter && (
-        <a
-          href={siteSettings.whatsapp.startsWith('http') ? siteSettings.whatsapp : `https://wa.me/${siteSettings.whatsapp.replace(/[^0-9]/g, '')}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white p-3.5 sm:p-4 rounded-full shadow-[0_4px_14px_0_rgba(37,211,102,0.39)] hover:shadow-[0_6px_20px_rgba(37,211,102,0.23)] hover:scale-110 transition-all duration-300 flex items-center justify-center cursor-pointer"
-          title="Chat with us on WhatsApp"
-        >
-          <svg className="w-7 h-7 sm:w-8 sm:h-8" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12.031 0C5.383 0 0 5.383 0 12.031c0 2.128.552 4.195 1.6 6L.23 24l6.15-1.6c1.745.968 3.708 1.481 5.65 1.481 6.648 0 12.03-5.383 12.03-12.031C24.06 5.383 18.679 0 12.031 0zm3.627 17.27c-.43.43-1.07.698-1.74.82-.577.106-1.428.182-2.313-.153-.88-.334-1.896-.867-2.92-1.89-1.294-1.293-1.874-2.502-2.115-3.353-.186-.65-.18-1.127.022-1.503.203-.377.568-.742.92-1.094.135-.135.342-.234.568-.19.227.045.384.225.568.514.288.455.787 1.517.904 1.764.117.247.037.495-.08.694-.118.2-.284.343-.442.495-.158.153-.332.355-.153.644.18.29 1.135 1.83 2.766 2.378.368.122.56-.037.753-.254.194-.216.717-.834.904-1.118.187-.285.49-.186.76-.08.27.105 1.704.815 1.954.945.25.13.414.19.475.295.06.105.06.634-.37 1.064z"/>
-          </svg>
-        </a>
-      )}
+      {siteSettings?.whatsapp && !hideNavbarAndFooter && (() => {
+        const input = siteSettings.whatsapp;
+        let href = 'https://wa.me/919497174011';
+        if (input && input !== '#') {
+          const str = String(input).trim();
+          if (str.startsWith('http')) {
+            href = str;
+          } else {
+            const digits = str.replace(/\D/g, '');
+            if (digits.length === 10) href = `https://wa.me/91${digits}`;
+            else if (digits.length > 10) href = `https://wa.me/${digits}`;
+          }
+        }
+        return (
+          <a
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="fixed bottom-6 right-6 z-50 bg-[#25D366] hover:bg-[#20ba5a] text-white p-3.5 sm:p-4 rounded-full shadow-[0_4px_16px_rgba(37,211,102,0.45)] hover:shadow-[0_6px_24px_rgba(37,211,102,0.6)] hover:scale-110 active:scale-95 transition-all duration-300 flex items-center justify-center cursor-pointer group"
+            title="Chat with us on WhatsApp"
+            aria-label="Chat with us on WhatsApp"
+          >
+            <span className="absolute -top-10 right-0 bg-zinc-900 text-white text-[11px] font-bold px-2.5 py-1 rounded-md shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap border border-zinc-800">
+              Chat on WhatsApp
+            </span>
+            <svg className="w-7 h-7 sm:w-8 sm:h-8 fill-current text-white" viewBox="0 0 24 24">
+              <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+            </svg>
+          </a>
+        );
+      })()}
     </div>
   );
 }
