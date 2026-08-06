@@ -71,7 +71,7 @@ const BlogPostDetail = () => {
   };
 
   const bgLayer = (
-    <div className="fixed inset-0 z-0 pointer-events-none">
+    <div className="fixed inset-0 -z-10 pointer-events-none">
       <img
         src={greenTexture}
         alt=""

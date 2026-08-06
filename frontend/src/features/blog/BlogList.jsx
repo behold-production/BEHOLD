@@ -67,7 +67,7 @@ const BlogList = () => {
   return (
     <div className="min-h-screen flex flex-col text-surface-900 pt-24 pb-20 relative overflow-hidden">
       {/* Background Image Layer */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
+      <div className="fixed inset-0 -z-10 pointer-events-none">
         <img
           src={greenTexture}
           alt=""

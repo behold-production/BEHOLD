@@ -18,7 +18,7 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
   };
 
   return (
-    <footer className="bg-[#0f172a] text-white pt-16 sm:pt-20 pb-12 border-t border-[#00e5ff]/30">
+    <footer className="relative z-50 bg-[#0f172a] text-white pt-16 sm:pt-20 pb-12 border-t border-[#00e5ff]/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12">
 
