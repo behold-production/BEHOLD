@@ -119,6 +119,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
     const step2Ref = useRef(null);
     const step3Ref = useRef(null);
+    const scrollContainerRef = useRef(null);
 
     const [expandedBios, setExpandedBios] = useState({});
     const [expandedSpecialties, setExpandedSpecialties] = useState({});
@@ -141,6 +142,13 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
             document.body.style.overflow = '';
         };
     }, [isOpen]);
+
+    // Scroll to top when step changes
+    useEffect(() => {
+        if (scrollContainerRef.current) {
+            scrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }, [bookingStep]);
 
     const effectiveAdvisorPage = Math.max(1, advisorPage);
 
@@ -309,7 +317,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-0 sm:p-4 bg-black/60 backdrop-blur-sm overflow-y-auto overscroll-contain">
-            <div id="booking-modal-scroll" className="relative w-full max-w-7xl h-full sm:h-auto sm:max-h-[90vh] bg-white sm:rounded-2xl shadow-2xl overflow-y-auto overflow-x-hidden text-[#0f172a] text-left overscroll-contain">
+            <div id="booking-modal-scroll" ref={scrollContainerRef} className="relative w-full max-w-7xl h-full sm:h-auto sm:max-h-[90vh] bg-white sm:rounded-2xl shadow-2xl overflow-y-auto overflow-x-hidden text-[#0f172a] text-left overscroll-contain">
                 {/* Close Button */}
                 <button
                     onClick={onClose}
