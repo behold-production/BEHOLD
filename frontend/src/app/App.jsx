@@ -640,7 +640,7 @@ export default function App() {
         onClose={() => setIsBookingModalOpen(false)}
         preselectedAdvisorId={bookingAdvisor}
         clearPreselectedAdvisor={() => setBookingAdvisor(null)}
-        onOpenDocs={handleOpenDocs}
+        onOpenDocs={setActiveDocType}
       />
 
       {/* Navbar — hidden on admin/counsellor dashboards */}
