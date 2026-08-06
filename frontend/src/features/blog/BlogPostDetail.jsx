@@ -70,36 +70,52 @@ const BlogPostDetail = () => {
     navigate('/blog');
   };
 
+  const bgLayer = (
+    <div className="fixed inset-0 z-0 pointer-events-none">
+      <img
+        src={greenTexture}
+        alt=""
+        className="w-full h-full object-cover object-center opacity-70"
+      />
+      <div className="absolute inset-0 bg-white/30 backdrop-blur-[0.5px]" />
+    </div>
+  );
+
   if (loading) {
     return (
-      <div className="min-h-screen flex justify-center items-center bg-transparent text-surface-900 pt-28 pb-16">
-        <div className="w-10 h-10 border-3 border-[#0f172a] border-t-[#00e5ff] rounded-full animate-spin"></div>
+      <div className="min-h-screen flex justify-center items-center text-surface-900 pt-28 pb-16 relative overflow-hidden">
+        {bgLayer}
+        <div className="w-10 h-10 border-3 border-[#0f172a] border-t-[#00e5ff] rounded-full animate-spin relative z-10"></div>
       </div>
     );
   }
 
   if (!post) {
     return (
-      <div className="min-h-screen flex flex-col justify-center items-center text-center px-4 bg-transparent text-surface-900 pt-28 pb-16">
-        <BookOpen className="w-14 h-14 text-[#0f172a] mb-4 opacity-75" />
-        <h1 className="text-2xl font-bold mb-2 uppercase tracking-wide">Article Not Found</h1>
-        <p className="text-surface-600 mb-6 text-sm">The article you are looking for may have been moved or unpublished.</p>
-        <button
-          type="button"
-          onClick={handleBack}
-          className="px-7 py-3 rounded-full bg-[#0f172a] hover:bg-[#1e293b] text-white font-bold text-xs uppercase tracking-widest cursor-pointer border border-[#00e5ff]/30 shadow-xs transition-all"
-        >
-          Back to All Articles
-        </button>
+      <div className="min-h-screen flex flex-col justify-center items-center text-center px-4 text-surface-900 pt-28 pb-16 relative overflow-hidden">
+        {bgLayer}
+        <div className="relative z-10 flex flex-col items-center">
+          <BookOpen className="w-14 h-14 text-[#0f172a] mb-4 opacity-75" />
+          <h1 className="text-2xl font-bold mb-2 uppercase tracking-wide">Article Not Found</h1>
+          <p className="text-surface-600 mb-6 text-sm">The article you are looking for may have been moved or unpublished.</p>
+          <button
+            type="button"
+            onClick={handleBack}
+            className="px-7 py-3 rounded-full bg-[#0f172a] hover:bg-[#1e293b] text-white font-bold text-xs uppercase tracking-widest cursor-pointer border border-[#00e5ff]/30 shadow-xs transition-all"
+          >
+            Back to All Articles
+          </button>
+        </div>
       </div>
     );
   }
 
   return (
     <div 
-      className="min-h-screen flex flex-col text-surface-900 pt-28 pb-20 selection:bg-[#0f172a] selection:text-[#00e5ff] bg-transparent"
+      className="min-h-screen flex flex-col text-surface-900 pt-28 pb-20 selection:bg-[#0f172a] selection:text-[#00e5ff] relative overflow-hidden"
     >
-      <main className="flex-1">
+      {bgLayer}
+      <main className="flex-1 relative z-10">
         <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Back Button */}
           <button

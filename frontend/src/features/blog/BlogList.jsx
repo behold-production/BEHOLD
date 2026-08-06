@@ -65,15 +65,15 @@ const BlogList = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col text-surface-900 pt-24 pb-20 relative">
+    <div className="min-h-screen flex flex-col text-surface-900 pt-24 pb-20 relative overflow-hidden">
       {/* Background Image Layer */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+      <div className="fixed inset-0 z-0 pointer-events-none">
         <img
           src={greenTexture}
           alt=""
-          className="w-full h-full object-cover object-center opacity-20"
+          className="w-full h-full object-cover object-center opacity-70"
         />
-        <div className="absolute inset-0 bg-white/70" />
+        <div className="absolute inset-0 bg-white/30 backdrop-blur-[0.5px]" />
       </div>
 
       {/* Hero Header */}
