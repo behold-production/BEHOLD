@@ -88,7 +88,6 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
             <ul className="space-y-3 text-xs sm:text-sm font-normal">
               {[
                 { label: 'Psychological Counselling', action: () => goTo('services') },
-                { label: 'Stream & Degree Selection', action: () => goTo('/booking') },
                 // Aptitude Mapping shown only when admin enables aptitude
                 settings?.enableAptitude !== false && { label: 'Aptitude Mapping', action: () => goTo('/booking') },
                 // Sample test link shown only when admin enables both aptitude AND sample test
