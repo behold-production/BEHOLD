@@ -487,7 +487,12 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       doc.text('For rescheduling queries, cancellations, or support, please reply to your coordinator on WhatsApp.', 20, tableY + 5);
 
       // Save document
-      doc.save(`Behold_Session_Receipt_${bookingDetails.id}.pdf`);
+      const _isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      if (_isIOS) {
+        window.open(doc.output('bloburl'), '_blank');
+      } else {
+        doc.save(`Behold_Session_Receipt_${bookingDetails.id}.pdf`);
+      }
     } catch (e) {
       console.error(e);
       await showAlert("Failed to generate PDF receipt. Please contact platform support.", "Export Error");

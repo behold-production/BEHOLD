@@ -578,7 +578,12 @@ export default function App() {
         y += 6;
       }
 
-      doc.save(`Behold_${activeDocType}.pdf`);
+      const _isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      if (_isIOS) {
+        window.open(doc.output('bloburl'), '_blank');
+      } else {
+        doc.save(`Behold_${activeDocType}.pdf`);
+      }
     } catch (err) {
       console.error('Failed to generate PDF', err);
     }

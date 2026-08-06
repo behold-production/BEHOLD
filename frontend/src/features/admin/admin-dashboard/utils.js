@@ -38,7 +38,12 @@ export function getInitials(name) {
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      pdf.save(`${title.replace(/\s+/g, '_')}_${getLocalTodayString()}.pdf`);
+      const _isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      if (_isIOS) {
+        window.open(pdf.output('bloburl'), '_blank');
+      } else {
+        pdf.save(`${title.replace(/\s+/g, '_')}_${getLocalTodayString()}.pdf`);
+      }
     } catch (err) {
       await showAlert("Failed to export PDF: " + err.message);
     }
@@ -243,7 +248,12 @@ export function getInitials(name) {
       doc.text('For rescheduling queries, cancellations, or support, please reply to your coordinator on WhatsApp.', 20, tableY + 5);
 
       // Save document
-      doc.save(`Behold_Session_Receipt_${booking.id}.pdf`);
+      const _isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      if (_isIOS) {
+        window.open(doc.output('bloburl'), '_blank');
+      } else {
+        doc.save(`Behold_Session_Receipt_${booking.id}.pdf`);
+      }
     } catch (e) {
       console.error(e);
       await showAlert("Failed to generate PDF receipt: " + e.message);
@@ -502,7 +512,12 @@ export function getInitials(name) {
         doc.text(`Page ${i} of ${totalPages}`, 105, 288, { align: 'center' });
       }
 
-      doc.save(`Clinical_Report_${sName.replace(/\s+/g, '_')}_${displayId}.pdf`);
+      const _isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      if (_isIOS) {
+        window.open(doc.output('bloburl'), '_blank');
+      } else {
+        doc.save(`Clinical_Report_${sName.replace(/\s+/g, '_')}_${displayId}.pdf`);
+      }
     } catch (e) {
       console.error(e);
       await showAlert("Failed to generate Clinical Diagnostic PDF: " + e.message);
