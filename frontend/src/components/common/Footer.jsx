@@ -4,8 +4,8 @@ import { ScrollDot } from './BrandDot';
 
 export default function Footer({ navigateToSection, siteName, siteCopyright, onOpenDocs, enablePsychology, enableCareerMentoring, siteSettings, onOpenBooking }) {
   const settings = siteSettings || {};
-  const emailAddr = settings.contactEmail?.trim() || null;
-  const phoneVal = settings.contactPhone?.trim() || null;
+  const emailAddr = settings.contactEmail?.trim() || 'support@behold.co.in';
+  const phoneVal = settings.contactPhone?.trim() || '+91 94000 90106';
   const addressVal = settings.contactAddress?.trim() || null;
 
   const goTo = (section) => {
@@ -32,7 +32,7 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
               <span>{(siteName || 'BEHOLD').replace(/\.$/, '')}<span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)] font-black">.</span></span>
             </button>
             <p className="text-surface-300 text-xs sm:text-sm leading-relaxed mb-6 font-normal max-w-sm">
-              Expert career mentoring and psychological counselling — helping students and individuals grow with clarity and confidence.
+              Professional online psychological counselling for individuals seeking better mental wellbeing. Confidential, evidence-based support from qualified psychologists—wherever you are.
             </p>
             <div className="space-y-3 text-xs font-normal">
               {emailAddr && (
@@ -57,43 +57,38 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
             
             {/* Social Links rendering */}
             {settings.socialLinks && Array.isArray(settings.socialLinks) && settings.socialLinks.length > 0 && (
-              <div className="flex items-center gap-4 mt-6">
-                {settings.socialLinks.map((social, idx) => (
-                  social.url ? (
-                    <a 
-                      key={idx}
-                      href={social.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-surface-400 hover:text-[#00e5ff] transition-colors"
-                      title={social.name}
-                    >
-                      {social.logo && social.logo.toLowerCase() !== social.name.toLowerCase() ? (
-                        <span className="text-xs font-medium uppercase tracking-wider">{social.logo}</span>
-                      ) : (
-                        <span className="text-xs font-medium uppercase tracking-wider">{social.name}</span>
-                      )}
-                    </a>
-                  ) : null
-                ))}
+              <div className="mt-8">
+                <h4 className="text-white font-sans font-bold uppercase text-xs tracking-widest mb-4">Social Links</h4>
+                <div className="flex flex-wrap items-center gap-2 text-surface-400">
+                  {settings.socialLinks.map((social, idx) => (
+                    social.url ? (
+                      <React.Fragment key={idx}>
+                        <a 
+                          href={social.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:text-[#00e5ff] transition-colors text-xs font-medium"
+                          title={social.name}
+                        >
+                          {social.name}
+                        </a>
+                        {idx < settings.socialLinks.length - 1 && <span className="text-surface-600 px-1">•</span>}
+                      </React.Fragment>
+                    ) : null
+                  ))}
+                </div>
               </div>
             )}
           </div>
           {/* Services */}
           <div className="col-span-1 md:col-span-3 lg:col-span-3 pt-6 md:pt-0 border-t border-surface-800 md:border-t-0 md:pl-4 lg:pl-8">
             <h4 className="text-white font-sans font-bold uppercase text-xs tracking-widest mb-4 md:mb-5 flex items-center gap-1.5">
-
               Services
             </h4>
             <ul className="space-y-3 text-xs sm:text-sm font-normal">
               {[
                 { label: 'Psychological Counselling', action: () => goTo('services') },
-                // Aptitude Mapping shown only when admin enables aptitude
-                settings?.enableAptitude !== false && { label: 'Aptitude Mapping', action: () => goTo('/booking') },
-                // Sample test link shown only when admin enables both aptitude AND sample test
-                settings?.enableAptitude !== false && settings?.enableSampleTest !== false &&
-                  { label: 'Sample Aptitude Assessment', action: () => goTo('/sample-test') },
-                { label: 'Book a Session', action: () => { if (onOpenBooking) onOpenBooking(); else goTo('/booking'); } },
+                { label: 'Career Guidance', action: () => goTo('services') },
               ].filter(Boolean).map(({ label, action }) => (
                 <li key={label}>
                   <button
@@ -110,15 +105,14 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
           {/* Company */}
           <div className="col-span-1 md:col-span-3 lg:col-span-4 pt-6 md:pt-0 border-t border-surface-800 md:border-t-0 md:pl-4 lg:pl-8">
             <h4 className="text-white font-sans font-bold uppercase text-xs tracking-widest mb-4 md:mb-5 flex items-center gap-1.5">
-
               Company
             </h4>
             <ul className="space-y-3 text-xs sm:text-sm font-normal">
               {[
-                { label: 'About Us', action: () => goTo('/about') },
+                { label: 'About BEHOLD', action: () => goTo('/about') },
                 { label: 'Articles & Insights', action: () => goTo('/blog') },
                 { label: 'FAQs', action: () => goTo('/faqs') },
-                { label: 'Support & Contact', action: () => goTo('inquiry') },
+                { label: 'Contact Us', action: () => goTo('inquiry') },
               ].filter(Boolean).map(({ label, action }) => (
                 <li key={label}>
                   <button
@@ -139,20 +133,22 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
           <div>
             {(() => {
               const year = new Date().getFullYear();
-              if (!siteCopyright) return `© ${year} BEHOLD Ltd. All rights reserved.`;
+              if (!siteCopyright) return `© ${year} BEHOLD Aspire LLP. All rights reserved.`;
               let clean = String(siteCopyright)
                 .replace(/^©\s*/, '')
                 .replace(/\.?\s*All rights reserved\.?$/i, '')
                 .replace(/,?\s*\d{4}\.?$/, '')
                 .trim();
-              if (!clean) clean = 'BEHOLD Ltd.';
+              if (!clean) clean = 'BEHOLD Aspire LLP.';
               return `© ${year} ${clean}. All rights reserved.`;
             })()}
           </div>
-          <div className="flex items-center gap-6">
-            <button onClick={() => onOpenDocs?.('privacy')} className="hover:text-[#00e5ff] transition-colors bg-transparent border-none cursor-pointer p-0 text-xs">Privacy</button>
-            <button onClick={() => onOpenDocs?.('terms')} className="hover:text-[#00e5ff] transition-colors bg-transparent border-none cursor-pointer p-0 text-xs">Terms</button>
-            <button onClick={() => onOpenDocs?.('refund')} className="hover:text-[#00e5ff] transition-colors bg-transparent border-none cursor-pointer p-0 text-xs">Refund Policy</button>
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            <button onClick={() => onOpenDocs?.('privacy')} className="hover:text-[#00e5ff] transition-colors bg-transparent border-none cursor-pointer p-0 text-xs">Privacy Policy</button>
+            <span className="text-surface-600 px-1">•</span>
+            <button onClick={() => onOpenDocs?.('terms')} className="hover:text-[#00e5ff] transition-colors bg-transparent border-none cursor-pointer p-0 text-xs">Terms & Conditions</button>
+            <span className="text-surface-600 px-1">•</span>
+            <button onClick={() => onOpenDocs?.('refund')} className="hover:text-[#00e5ff] transition-colors bg-transparent border-none cursor-pointer p-0 text-xs">Refund & Cancellation Policy</button>
           </div>
         </div>
 
