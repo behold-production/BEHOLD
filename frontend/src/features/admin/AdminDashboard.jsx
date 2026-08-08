@@ -1483,29 +1483,30 @@ const _handleAdminDetectLocation = () => {
 
  // Admin login handler
  const handleAdminLogin = async (e) => {
- e.preventDefault();
- setLoginError('');
- setIsLoggingIn(true);
- try {
- const loggedInUser = await login(loginEmail, loginPassword);
- if (loggedInUser?.role?.toUpperCase() !== 'ADMIN') {
- logout();
- setLoginError('Access Denied: Account does not have Administrator privileges.');
- }
- } catch (err) {
- setLoginError(err.message || 'Invalid administrator credentials.');
- } finally {
- setIsLoggingIn(false);
- }
+   e.preventDefault();
+   setLoginError('');
+   setIsLoggingIn(true);
+   try {
+     const loggedInUser = await login(loginEmail, loginPassword, 'admin');
+     if (loggedInUser?.role?.toUpperCase() !== 'ADMIN') {
+       logout();
+       setLoginError('Access Denied: Account does not have Administrator privileges.');
+     }
+   } catch (err) {
+     setLoginError(err.message || 'Invalid administrator credentials.');
+     logout();
+   } finally {
+     setIsLoggingIn(false);
+   }
  };
 
  // Student Actions
  const handleCreateUser = async (e) => {
- e.preventDefault();
- if (!hasUserPermission) {
- setUserFormError("Access Denied: You do not have permission to manage students.");
- return;
- }
+   e.preventDefault();
+   if (!hasUserPermission) {
+     setUserFormError("Access Denied: You do not have permission to manage students.");
+     return;
+   }
  setUserFormError('');
  setUserFormSuccess('');
 
