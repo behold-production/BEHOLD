@@ -11,7 +11,6 @@ const SECTIONS = [
   { id: 'home',          label: 'Home' },
   { id: 'about',         label: 'About' },
   { id: 'services',      label: 'Services' },
-  { id: 'why-choose-us', label: 'Why Us' },
   { id: 'process',       label: 'Process' },
   { id: 'reviews',       label: 'Reviews' },
   { id: 'faqs',          label: 'FAQs' },

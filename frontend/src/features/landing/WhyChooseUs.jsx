@@ -17,8 +17,9 @@ export default function WhyChooseUs({ siteSettings, onOpenBooking }) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
 
           {/* Left Column: Image Hero Card with Text Overlay */}
-          <div className="lg:col-span-6 animate-fade-scale">
+          <div className="lg:col-span-6 reveal-on-scroll reveal-slide-left">
             <div className="relative w-full min-h-[460px] sm:min-h-[520px] rounded-xl overflow-hidden shadow-lg flex flex-col justify-end p-6 sm:p-10 border border-[#00e5ff]/40 group hover-scale-card">
+
               {/* Background Image with Dark Luxury Opacity Overlay */}
               <img
                 src={siteSettings?.whyChooseUsImage || siteSettings?.servicesFirstCardImage || luxuryClinicRoom}
@@ -67,7 +68,7 @@ export default function WhyChooseUs({ siteSettings, onOpenBooking }) {
           </div>
 
           {/* Right Column: 2x2 Feature Grid Matrix */}
-          <div className="lg:col-span-6 grid grid-cols-2 gap-4 sm:gap-6 pt-6 lg:pt-0 animate-fade-scale delay-200">
+          <div className="lg:col-span-6 grid grid-cols-2 gap-4 sm:gap-6 pt-6 lg:pt-0 reveal-on-scroll reveal-slide-right reveal-delay-2">
 
             {/* Cell 1: Dual Support */}
             <div className="p-5 sm:p-7 rounded-xl bg-white border border-surface-200 hover-scale-card hover:border-[#00e5ff] transition-all shadow-xs flex flex-col justify-between h-52 sm:h-60 space-y-3 group">

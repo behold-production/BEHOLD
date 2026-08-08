@@ -74,11 +74,11 @@ const BlogSection = () => {  const navigate = useNavigate();
   const paginatedBlogs = blogs.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
-    <section id="blog" className="py-16 sm:py-24 bg-transparent border-b border-surface-200">
+    <section id="blog" className="py-16 sm:py-24 bg-transparent border-b border-surface-200 reveal-on-scroll">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Header */}
-        <div className="text-center mb-10">
+        <div className="text-center mb-10 reveal-on-scroll">
           <span className="text-xs font-bold tracking-widest uppercase text-[#00e5ff] flex items-center justify-center gap-1.5 mb-3">
 
             Latest Insights

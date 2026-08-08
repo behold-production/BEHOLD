@@ -47,7 +47,7 @@ export default function ContactInquirySection() {
           className="w-full h-full object-cover object-center opacity-55 [mask-image:linear-gradient(to_bottom,transparent_0%,black_15%,black_85%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_15%,black_85%,transparent_100%)]"
         />
       </div>
-      <div className="relative z-10 w-full max-w-xl mx-auto">
+      <div className="relative z-10 w-full max-w-xl mx-auto reveal-on-scroll reveal-scale-in">
 
         {/* Section Title */}
         <h2 className="font-['Cormorant_Garamond',serif] text-3xl sm:text-4xl font-bold tracking-widest text-[#0f172a] uppercase text-center mb-10">

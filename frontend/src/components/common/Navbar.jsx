@@ -36,7 +36,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
   useEffect(() => {
     if (location.pathname !== '/') return;
 
-    const sectionIds = ['home', 'services', 'experts', 'why-choose-us', 'cdat', 'faqs', 'blog', 'inquiry'];
+    const sectionIds = ['home', 'services', 'experts', 'cdat', 'faqs', 'blog', 'inquiry'];
     const handleScrollSection = () => {
       const scrollPos = window.scrollY + 140;
       for (const id of sectionIds) {
@@ -46,7 +46,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
           const height = el.offsetHeight;
           if (scrollPos >= top && scrollPos < top + height) {
             if (id === 'inquiry') setActiveSection('contact');
-            else if (id === 'experts' || id === 'why-choose-us') setActiveSection('services');
+            else if (id === 'experts') setActiveSection('services');
             else setActiveSection(id);
             break;
           }

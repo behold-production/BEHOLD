@@ -9,7 +9,6 @@ import CdatSection from '../features/student/components/aptitude/CdatSection';
 import Services from '../features/booking/Services';
 import About from '../features/landing/About';
 import Faq from '../features/landing/Faq';
-import WhyChooseUs from '../features/landing/WhyChooseUs';
 import Inquiry from '../features/landing/Inquiry';
 import Reviews from '../features/landing/Reviews';
 import PrivacyPolicy from '../features/landing/PrivacyPolicy';
@@ -703,7 +702,6 @@ export default function App() {
           <Route path="/about" element={
             <main className="fade-in-up pt-16 sm:pt-20 bg-transparent">
               <About siteSettings={siteSettings} />
-              <WhyChooseUs siteSettings={siteSettings} onOpenBooking={() => setIsBookingModalOpen(true)} />
               <Reviews siteSettings={siteSettings} />
             </main>
           } />

@@ -60,7 +60,7 @@ export default function FaqBlogSection() {
       <div className="relative z-10 w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-stretch">
         
         {/* LEFT COLUMN: FAQ'S */}
-        <div className="w-full flex flex-col justify-between h-full">
+        <div className="w-full flex flex-col justify-between h-full reveal-on-scroll reveal-slide-left">
           
           {/* Section Header */}
           <div className="flex items-center justify-between mb-6 h-12">
@@ -126,7 +126,7 @@ export default function FaqBlogSection() {
         </div>
 
         {/* RIGHT COLUMN: BLOGS */}
-        <div className="w-full flex flex-col justify-between h-full">
+        <div className="w-full flex flex-col justify-between h-full reveal-on-scroll reveal-slide-right reveal-delay-2">
           
           {/* Section Header */}
           <div className="flex items-center justify-between mb-6 h-12">

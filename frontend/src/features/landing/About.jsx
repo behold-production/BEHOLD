@@ -42,7 +42,7 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 lg:gap-6 items-stretch">
           
           {/* Cell 1: Intro Text (lg:col-span-5) */}
-          <div className="md:col-span-2 lg:col-span-5 bg-white/70 backdrop-blur-xl border border-white/80 p-8 lg:p-10 rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col justify-center animate-fade-scale hover-scale-card">
+          <div className="md:col-span-2 lg:col-span-5 bg-white/70 backdrop-blur-xl border border-white/80 p-8 lg:p-10 rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col justify-center reveal-on-scroll reveal-scale-in hover-scale-card">
             <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-[#00c9d6] flex items-center gap-2 mb-3">
               <span className="w-6 h-0.5 bg-[#00c9d6] rounded-full"></span>
               AT BEHOLD
@@ -56,7 +56,7 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
           </div>
 
           {/* Cell 2: Stat 1 (lg:col-span-3) */}
-          <div className="md:col-span-1 lg:col-span-3 bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col justify-between group hover-scale-card transition-all duration-300 animate-fade-scale delay-100">
+          <div className="md:col-span-1 lg:col-span-3 bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col justify-between group hover-scale-card transition-all duration-300 reveal-on-scroll reveal-scale-in reveal-delay-1">
             <Award className="w-6 h-6 text-[#00c9d6] mb-4 group-hover:scale-110 transition-transform" />
             <div>
               <span className="block text-4xl sm:text-5xl font-black text-slate-900 font-sans tracking-tight mb-2 group-hover:text-[#00c9d6] transition-colors">
@@ -69,7 +69,7 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
           </div>
 
           {/* Cell 3: Stat 2 (lg:col-span-4) */}
-          <div className="md:col-span-1 lg:col-span-4 bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col justify-between group hover-scale-card transition-all duration-300 relative overflow-hidden animate-fade-scale delay-200">
+          <div className="md:col-span-1 lg:col-span-4 bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col justify-between group hover-scale-card transition-all duration-300 relative overflow-hidden reveal-on-scroll reveal-scale-in reveal-delay-2">
             <div className="absolute top-0 right-0 p-8 opacity-5">
               <Users className="w-32 h-32" />
             </div>
@@ -85,7 +85,7 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
           </div>
 
           {/* Cell 4: Image (lg:col-span-5) */}
-          <div className="md:col-span-2 lg:col-span-5 h-72 sm:h-80 lg:h-auto rounded-[2.5rem] overflow-hidden bg-slate-900 shadow-xl relative group hover-scale-card animate-fade-scale delay-300">
+          <div className="md:col-span-2 lg:col-span-5 h-72 sm:h-80 lg:h-auto rounded-[2.5rem] overflow-hidden bg-slate-900 shadow-xl relative group hover-scale-card reveal-on-scroll reveal-scale-in reveal-delay-3">
             <img
               src={luxuryClinicRoom}
               alt="BEHOLD Mentorship & Psychological Care"

@@ -512,25 +512,25 @@ body.no-scroll {
   background-size: 40px 40px;
 }
 
-/* Rich Fade & Scaling Animations for User Section */
+/* Rich Ultra-Slow & Silky Animations for User Section */
 .animate-fade-scale {
-  animation: fadeScaleIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeScaleIn 1.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .animate-fade-down {
-  animation: fadeInDown 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeInDown 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .animate-pulse-glow-box {
-  animation: pulseGlowBox 3s ease-in-out infinite alternate;
+  animation: pulseGlowBox 3.5s ease-in-out infinite alternate;
 }
 
 .animate-bounce-gentle {
-  animation: bounceGentle 2.5s ease-in-out infinite alternate;
+  animation: bounceGentle 3s ease-in-out infinite alternate;
 }
 
 .hover-scale-card {
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease !important;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.5s ease !important;
 }
 
 .hover-scale-card:hover {
@@ -539,7 +539,7 @@ body.no-scroll {
 }
 
 .hover-scale-btn {
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 .hover-scale-btn:hover {
@@ -552,24 +552,98 @@ body.no-scroll {
 }
 
 .hover-tilt {
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 .hover-tilt:hover {
   transform: rotate(1deg) scale(1.03) !important;
 }
 
-/* Delay Helpers */
-.delay-100 { animation-delay: 100ms; }
-.delay-200 { animation-delay: 200ms; }
-.delay-300 { animation-delay: 300ms; }
-.delay-400 { animation-delay: 400ms; }
-.delay-500 { animation-delay: 500ms; }
+/* Modal Backdrop & Container Opening/Closing Animations */
+@keyframes backdropFadeIn {
+  0% { opacity: 0; backdrop-filter: blur(0px); }
+  100% { opacity: 1; backdrop-filter: blur(8px); }
+}
+
+@keyframes modalPopIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.92) translateY(24px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-backdrop-in {
+  animation: backdropFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-modal-in {
+  animation: modalPopIn 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Premium Slow & Silky Scroll Reveal System */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(35px) scale(0.96);
+  transition: opacity 1.3s cubic-bezier(0.16, 1, 0.3, 1), transform 1.3s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-on-scroll.is-revealed {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.reveal-scale-in {
+  opacity: 0;
+  transform: scale(0.92);
+  transition: opacity 1.3s cubic-bezier(0.16, 1, 0.3, 1), transform 1.3s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-scale-in.is-revealed {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.reveal-slide-left {
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: opacity 1.3s cubic-bezier(0.16, 1, 0.3, 1), transform 1.3s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-slide-left.is-revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-slide-right {
+  opacity: 0;
+  transform: translateX(40px);
+  transition: opacity 1.3s cubic-bezier(0.16, 1, 0.3, 1), transform 1.3s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-slide-right.is-revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Stagger Delays for Scroll Reveal */
+.reveal-delay-1, .delay-100 { animation-delay: 150ms; transition-delay: 150ms; }
+.reveal-delay-2, .delay-200 { animation-delay: 300ms; transition-delay: 300ms; }
+.reveal-delay-3, .delay-300 { animation-delay: 450ms; transition-delay: 450ms; }
+.reveal-delay-4, .delay-400 { animation-delay: 600ms; transition-delay: 600ms; }
+.reveal-delay-5, .delay-500 { animation-delay: 750ms; transition-delay: 750ms; }
 
 @keyframes fadeScaleIn {
   0% {
     opacity: 0;
-    transform: scale(0.94) translateY(16px);
+    transform: scale(0.94) translateY(20px);
   }
   100% {
     opacity: 1;
@@ -580,7 +654,7 @@ body.no-scroll {
 @keyframes fadeInDown {
   0% {
     opacity: 0;
-    transform: translateY(-20px);
+    transform: translateY(-24px);
   }
   100% {
     opacity: 1;
@@ -608,7 +682,7 @@ body.no-scroll {
 
 /* Animations */
 .fade-in-up {
-  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeInUp 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .float-slow {

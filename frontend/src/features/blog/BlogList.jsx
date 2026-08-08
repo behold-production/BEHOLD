@@ -65,19 +65,18 @@ const BlogList = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col text-surface-900 pt-24 pb-20 relative overflow-hidden">
-      {/* Background Image Layer */}
-      <div className="fixed inset-0 -z-10 pointer-events-none">
+    <div className="min-h-screen flex flex-col text-surface-900 pt-24 pb-20 relative overflow-hidden select-none">
+      {/* Seamless Smooth Background Layer */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
         <img
           src={greenTexture}
           alt=""
-          className="w-full h-full object-cover object-center opacity-70"
+          className="w-full h-full object-cover object-center opacity-45 [mask-image:linear-gradient(to_bottom,transparent_0%,black_15%,black_85%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_15%,black_85%,transparent_100%)]"
         />
-        <div className="absolute inset-0 bg-white/30 backdrop-blur-[0.5px]" />
       </div>
 
       {/* Hero Header */}
-      <section className="relative z-10 py-16 sm:py-20 px-4 sm:px-6 lg:px-8">
+      <section className="relative z-10 py-16 sm:py-20 px-4 sm:px-6 lg:px-8 reveal-on-scroll">
         <div className="max-w-7xl mx-auto text-center space-y-6">
           <span className="text-xs font-bold uppercase tracking-widest text-[#00e5ff] flex items-center justify-center gap-1.5 mb-1">
 

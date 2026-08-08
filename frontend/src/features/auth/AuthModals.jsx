@@ -246,7 +246,7 @@ export default function AuthModals({ isOpen, onClose }) {
    <>
      {/* Backdrop */}
      <div
-       className="fixed inset-0 z-[110] bg-zinc-900/50 backdrop-blur-sm animate-in fade-in duration-300"
+       className="fixed inset-0 z-[110] bg-zinc-900/60 backdrop-blur-md animate-backdrop-in"
        onClick={onClose}
        aria-hidden="true"
      />
@@ -261,7 +261,7 @@ export default function AuthModals({ isOpen, onClose }) {
      >
        {/* Modal Card */}
        <div
-         className="relative w-full max-w-md my-auto bg-white rounded-xl shadow-2xl overflow-hidden animate-fade-scale duration-300 border border-surface-200"
+         className="relative w-full max-w-md my-auto bg-white rounded-xl shadow-2xl overflow-hidden animate-modal-in border border-surface-200"
          onClick={(e) => e.stopPropagation()}
        >
 

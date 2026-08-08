@@ -71,13 +71,12 @@ const BlogPostDetail = () => {
   };
 
   const bgLayer = (
-    <div className="fixed inset-0 -z-10 pointer-events-none">
+    <div className="absolute inset-0 z-0 pointer-events-none">
       <img
         src={greenTexture}
         alt=""
-        className="w-full h-full object-cover object-center opacity-70"
+        className="w-full h-full object-cover object-center opacity-45 [mask-image:linear-gradient(to_bottom,transparent_0%,black_15%,black_85%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_15%,black_85%,transparent_100%)]"
       />
-      <div className="absolute inset-0 bg-white/30 backdrop-blur-[0.5px]" />
     </div>
   );
 
