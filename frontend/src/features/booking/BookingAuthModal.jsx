@@ -111,7 +111,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
           setIsLoading(false);
           return;
         } else {
-          const res = await ApiService.verifyOtp(otpPhone, otpCode, true);
+          const res = await ApiService.verifyOtp(otpPhone, otpCode, true, 'user');
           if (res.success) {
             if (setBookingForm) setBookingForm(prev => ({ ...prev, name: prev.name || res.data.user.name, phone: otpPhone, email: prev.email || res.data.user.email }));
             if (onSuccess) onSuccess(res.data);
@@ -123,7 +123,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
 
       let authData;
       if (mode === 'login') {
-        authData = await login(form.email.trim(), form.password);
+        authData = await login(form.email.trim(), form.password, 'user');
       } else {
         authData = await register(form.name.trim(), form.email.trim(), form.password, 'USER', { phone: form.phone.trim() });
       }

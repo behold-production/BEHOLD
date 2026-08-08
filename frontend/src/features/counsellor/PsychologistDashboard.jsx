@@ -11,6 +11,7 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import { useCustomDialog } from '../../context/CustomDialogContext';
 import LogoutConfirmModal from '../../components/common/LogoutConfirmModal';
+import BrandIcon from '../../components/common/BrandIcon';
 import ApiService from '../../services/api';
 import jsPDF from 'jspdf';
 
@@ -760,7 +761,7 @@ reportRegError("Please enter a valid email address.");
  setLoginError('');
  setIsLoggingIn(true);
  try {
- const loggedInUser = await login(loginEmail, loginPassword);
+ const loggedInUser = await login(loginEmail, loginPassword, 'counsellor');
  const roleUpper = loggedInUser.role?.toUpperCase();
  if (roleUpper !== 'PSYCHOLOGIST' && roleUpper !== 'COUNSELLOR') {
  logout();
@@ -1145,11 +1146,9 @@ reportRegError("Please enter a valid email address.");
              style={{ background: 'radial-gradient(circle at 35% 45%, rgba(0, 229, 255, 0.08), transparent 50%), radial-gradient(circle at 65% 55%, rgba(99, 102, 241, 0.05), transparent 50%)' }} />
         
         {/* Logo Header outside the card */}
-        <div className='text-center mb-8 relative z-10'>
-          <h1 className='text-3xl font-extrabold tracking-wider text-white font-header'>
-            BEHOLD<span className='text-[#00E5FF]'>.</span>
-          </h1>
-          <p className='text-[10px] tracking-[0.25em] font-bold text-[#818CF8] mt-2 uppercase'>
+        <div className='text-center mb-8 relative z-10 flex flex-col items-center justify-center gap-2'>
+          <BrandIcon variant="full" size="xl" darkBg={true} />
+          <p className='text-[10px] tracking-[0.25em] font-bold text-[#818CF8] uppercase'>
             Counsellor Central Portal
           </p>
         </div>

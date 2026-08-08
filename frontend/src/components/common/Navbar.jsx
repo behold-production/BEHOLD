@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import LogoutConfirmModal from './LogoutConfirmModal';
-import { Menu, X, User } from 'lucide-react';
+import BrandIcon from './BrandIcon';
 
 export default function Navbar({ navigateToSection, currentView, onOpenAuth, onOpenBooking, siteName, siteSettings }) {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -145,12 +145,9 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
               {/* Brand Title Logo */}
               <button
                 onClick={handleLogoClick}
-                className="flex items-center gap-2 text-left bg-transparent border-none cursor-pointer p-0"
+                className="flex items-center gap-2 text-left bg-transparent border-none cursor-pointer p-0 group"
               >
-                <span className="text-2xl sm:text-3xl font-black tracking-tight font-sans uppercase text-slate-900">
-                  {(siteName || 'BEHOLD').replace(/\.$/, '')}
-                  <span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)] font-black">.</span>
-                </span>
+                <BrandIcon variant="full" size="md" darkBg={false} />
               </button>
 
               {/* Desktop Nav Links - Uppercase Editorial */}

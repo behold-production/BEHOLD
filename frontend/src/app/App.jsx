@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, useNavigate, useLocation, useParams } from 're
 import { MessageCircle, X, Download, ShieldAlert, Eye, EyeOff } from 'lucide-react';
 import { Toaster, useToasterStore, toast } from 'react-hot-toast';
 import Navbar from '../components/common/Navbar';
+import BrandIcon from '../components/common/BrandIcon';
 import Hero from '../features/landing/Hero';
 import CdatSection from '../features/student/components/aptitude/CdatSection';
 import Services from '../features/booking/Services';
@@ -101,7 +102,7 @@ function UnauthorizedFallback({ roleRequired }) {
 
     setLoading(true);
     try {
-      const loggedUser = await login(email, password);
+      const loggedUser = await login(email, password, 'admin');
       if (loggedUser) {
         const role = loggedUser.role?.toUpperCase();
         if (role !== 'ADMIN' && role !== 'SUPER_ADMIN' && role !== 'SUB_ADMIN') {
@@ -125,11 +126,9 @@ function UnauthorizedFallback({ roleRequired }) {
         style={{ background: 'radial-gradient(circle at 35% 45%, rgba(0, 229, 255, 0.08), transparent 50%), radial-gradient(circle at 65% 55%, rgba(99, 102, 241, 0.05), transparent 50%)' }} />
 
       {/* Logo Header outside the card */}
-      <div className='text-center mb-8 relative z-10'>
-        <h1 className='text-3xl font-extrabold tracking-wider text-white font-header'>
-          BEHOLD<span className='text-[#00E5FF]'>.</span>
-        </h1>
-        <p className='text-[10px] tracking-[0.25em] font-bold text-slate-400 mt-2 uppercase'>
+      <div className='text-center mb-8 relative z-10 flex flex-col items-center justify-center gap-2'>
+        <BrandIcon variant="full" size="xl" darkBg={true} />
+        <p className='text-[10px] tracking-[0.25em] font-bold text-slate-400 uppercase'>
           Administrator Control Gate
         </p>
       </div>
@@ -589,10 +588,21 @@ export default function App() {
     }
   };
 
+  const userRole = user?.role?.toUpperCase();
+  const isSpecialRole =
+    userRole === 'ADMIN' ||
+    userRole === 'SUPER_ADMIN' ||
+    userRole === 'SUB_ADMIN' ||
+    userRole === 'PSYCHOLOGIST' ||
+    userRole === 'COUNSELLOR';
+
   const hideNavbarAndFooter =
+    isSpecialRole ||
     location.pathname === '/admin' ||
+    location.pathname.startsWith('/admin/') ||
     location.pathname === '/counsellor' ||
-    location.pathname === '/conceller';
+    location.pathname === '/conceller' ||
+    location.pathname === '/cousellor';
 
   return (
     <div className="font-sans antialiased selection:bg-brand/30 min-h-screen relative text-zinc-900 bg-zinc-50">
@@ -737,7 +747,13 @@ export default function App() {
             user?.role?.toUpperCase() === 'USER' ? (
               <StudentProfile onOpenBooking={() => setIsBookingModalOpen(true)} />
             ) : (
-              <Navigate to="/" replace />
+              <Navigate to={
+                user?.role?.toUpperCase() === 'PSYCHOLOGIST' || user?.role?.toUpperCase() === 'COUNSELLOR'
+                  ? "/counsellor"
+                  : (user?.role?.toUpperCase() === 'ADMIN' || user?.role?.toUpperCase() === 'SUPER_ADMIN' || user?.role?.toUpperCase() === 'SUB_ADMIN')
+                    ? "/admin"
+                    : "/"
+              } replace />
             )
           } />
 
@@ -778,7 +794,15 @@ export default function App() {
           <Route path="/api/google/callback" element={<GoogleCallbackRedirect />} />
 
           {/* Catch-all fallback */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={
+            <Navigate to={
+              user?.role?.toUpperCase() === 'PSYCHOLOGIST' || user?.role?.toUpperCase() === 'COUNSELLOR'
+                ? "/counsellor"
+                : (user?.role?.toUpperCase() === 'ADMIN' || user?.role?.toUpperCase() === 'SUPER_ADMIN' || user?.role?.toUpperCase() === 'SUB_ADMIN')
+                  ? "/admin"
+                  : "/"
+            } replace />
+          } />
         </Routes>
       </Suspense>
 

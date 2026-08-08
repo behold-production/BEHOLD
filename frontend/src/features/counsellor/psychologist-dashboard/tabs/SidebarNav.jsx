@@ -1,5 +1,6 @@
 import React from 'react';
 import { User, Clock, Video, BarChart3, LogOut, X, CreditCard } from 'lucide-react';
+import BrandIcon from '../../../../components/common/BrandIcon';
 
 const SidebarNav = ({
  user,
@@ -29,9 +30,7 @@ const SidebarNav = ({
  {/* Logo & Header */}
  <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
  <div className="flex items-center gap-2">
- <span className="font-header font-bold text-lg tracking-tighter text-white">
- BEHOLD<span className="text-brand font-bold">.</span>
- </span>
+ <BrandIcon variant="full" size="sm" darkBg={true} />
  </div>
  {/* Close Button inside Drawer (Mobile Only) */}
  <button

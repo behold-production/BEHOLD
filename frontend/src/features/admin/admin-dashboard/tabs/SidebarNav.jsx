@@ -1,4 +1,5 @@
 import React from 'react';
+import BrandIcon from '../../../../components/common/BrandIcon';
 import { SkeletonTableRows, PaginationBar } from '../components/SharedAdminUI';
 import { X, Menu, User, ShieldAlert, Award, Trash, Check, Plus, Lock, Settings, KeyRound, BarChart3, LogOut, Search, ShieldCheck, Calendar, Clock, Link, AlertCircle, Edit, Video, UserPlus, MessageSquare, FileSpreadsheet, HelpCircle, ChevronRight, ChevronLeft, Mail, Shield, Brain, Download, FileText, Eye, EyeOff, Bell, Send, CreditCard } from 'lucide-react';
 
@@ -21,11 +22,9 @@ export default function SidebarNav(props) {
  {isMobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
  </button>
 
- <div className="flex items-center gap-1.5">
- <span className="font-header font-bold text-base tracking-tighter text-white">
- BEHOLD<span className="text-brand font-bold">.</span>
- </span>
- <span className="text-xs bg-zinc-800 border border-zinc-700 text-zinc-400 px-1 py-0.2 rounded font-bold ">
+ <div className="flex items-center gap-2">
+ <BrandIcon variant="full" size="sm" darkBg={true} />
+ <span className="text-xs bg-zinc-800 border border-zinc-700 text-zinc-400 px-1.5 py-0.5 rounded font-bold">
  CONSOLE
  </span>
  </div>

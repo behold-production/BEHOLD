@@ -222,7 +222,7 @@ const AuthController = {
   // Universal Login (Admin, Counsellor, User)
   async login(req, res, next) {
     try {
-      const { email, password } = req.body;
+      const { email, password, portal = 'user' } = req.body;
 
       if (!email || !password) {
         return res.status(400).json({ success: false, message: 'Email and password are required' });
@@ -234,6 +234,37 @@ const AuthController = {
       }
 
       const { user, table } = match;
+      const roleUpper = (user.role || '').toUpperCase();
+
+      // Enforce strict portal & role separation
+      if (portal === 'user') {
+        if (table === 'counsellors' || roleUpper === 'PSYCHOLOGIST' || roleUpper === 'COUNSELLOR') {
+          return res.status(403).json({
+            success: false,
+            message: 'This email belongs to a Psychologist account. Please sign in at behold.co.in/counsellor'
+          });
+        }
+        if (table === 'admins' || roleUpper === 'ADMIN' || roleUpper === 'SUPER_ADMIN' || roleUpper === 'SUB_ADMIN') {
+          return res.status(403).json({
+            success: false,
+            message: 'This email belongs to an Admin account. Please sign in at behold.co.in/admin'
+          });
+        }
+      } else if (portal === 'counsellor') {
+        if (table !== 'counsellors' && roleUpper !== 'PSYCHOLOGIST' && roleUpper !== 'COUNSELLOR') {
+          return res.status(403).json({
+            success: false,
+            message: 'Access Denied: This portal is exclusively for Psychologists/Counsellors.'
+          });
+        }
+      } else if (portal === 'admin') {
+        if (table !== 'admins' && roleUpper !== 'ADMIN' && roleUpper !== 'SUPER_ADMIN' && roleUpper !== 'SUB_ADMIN') {
+          return res.status(403).json({
+            success: false,
+            message: 'Access Denied: This portal is exclusively for System Administrators.'
+          });
+        }
+      }
 
       const isPasswordMatch = await bcrypt.compare(password, user.password);
       if (!isPasswordMatch) {
@@ -519,7 +550,7 @@ const AuthController = {
   // Verify WhatsApp OTP
   async verifyOtp(req, res, next) {
     try {
-      const { phone, otpCode, isLogin } = req.body;
+      const { phone, otpCode, isLogin, portal = 'user' } = req.body;
       
       if (!phone || !otpCode) {
         return res.status(400).json({ success: false, message: 'Phone and OTP code are required' });
@@ -548,7 +579,39 @@ const AuthController = {
           });
         }
 
-        const { user } = match;
+        const { user, table } = match;
+        const roleUpper = (user.role || '').toUpperCase();
+
+        // Enforce strict portal & role separation
+        if (portal === 'user') {
+          if (table === 'counsellors' || roleUpper === 'PSYCHOLOGIST' || roleUpper === 'COUNSELLOR') {
+            return res.status(403).json({
+              success: false,
+              message: 'This phone number belongs to a Psychologist account. Please sign in at behold.co.in/counsellor'
+            });
+          }
+          if (table === 'admins' || roleUpper === 'ADMIN' || roleUpper === 'SUPER_ADMIN' || roleUpper === 'SUB_ADMIN') {
+            return res.status(403).json({
+              success: false,
+              message: 'This phone number belongs to an Admin account. Please sign in at behold.co.in/admin'
+            });
+          }
+        } else if (portal === 'counsellor') {
+          if (table !== 'counsellors' && roleUpper !== 'PSYCHOLOGIST' && roleUpper !== 'COUNSELLOR') {
+            return res.status(403).json({
+              success: false,
+              message: 'Access Denied: This portal is exclusively for Psychologists/Counsellors.'
+            });
+          }
+        } else if (portal === 'admin') {
+          if (table !== 'admins' && roleUpper !== 'ADMIN' && roleUpper !== 'SUPER_ADMIN' && roleUpper !== 'SUB_ADMIN') {
+            return res.status(403).json({
+              success: false,
+              message: 'Access Denied: This portal is exclusively for System Administrators.'
+            });
+          }
+        }
+
         const { password: _, ...userData } = user;
         const tokens = generateTokens(user);
 

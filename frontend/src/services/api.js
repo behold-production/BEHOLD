@@ -305,10 +305,10 @@ const ApiService = {
   },
 
   // Authentication
-  async login(email, password) {
+  async login(email, password, portal = 'user') {
     const res = await request('/auth/login', {
       method: 'POST',
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify({ email, password, portal })
     });
     if (res.success && res.data && res.data.accessToken) {
       localStorage.setItem('behold_token', res.data.accessToken);
@@ -364,10 +364,10 @@ const ApiService = {
     });
   },
 
-  async verifyOtp(phone, otpCode, isLogin = false) {
+  async verifyOtp(phone, otpCode, isLogin = false, portal = 'user') {
     const res = await request('/auth/verify-otp', {
       method: 'POST',
-      body: JSON.stringify({ phone, otpCode, isLogin })
+      body: JSON.stringify({ phone, otpCode, isLogin, portal })
     });
     // If it was a login flow, update session
     if (isLogin && res.success && res.data && res.data.accessToken) {

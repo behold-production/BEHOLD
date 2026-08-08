@@ -153,7 +153,7 @@ export default function AuthModals({ isOpen, onClose }) {
        if (loginMethod === 'email') {
          if (!formData.email.trim() || !formData.password) throw new Error('Please fill in all fields');
          if (!validateEmail(formData.email)) throw new Error('Please enter a valid email address');
-         loggedUser = await login(formData.email, formData.password);
+         loggedUser = await login(formData.email, formData.password, 'user');
        } else {
          if (!isOtpSent) {
            if (!otpPhone.trim()) throw new Error('Phone number is required');
@@ -171,7 +171,7 @@ export default function AuthModals({ isOpen, onClose }) {
          } else {
            if (!otpCode.trim() || otpCode.length !== 6) throw new Error('Please enter the 6-digit code');
            const cleanPhone = parseIndianPhone(otpPhone).phone10;
-           const res = await ApiService.verifyOtp(cleanPhone, otpCode, true);
+           const res = await ApiService.verifyOtp(cleanPhone, otpCode, true, 'user');
            if (res.success && res.data && res.data.user) {
              loggedUser = res.data.user;
            } else {
