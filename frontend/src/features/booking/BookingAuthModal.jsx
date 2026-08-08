@@ -123,10 +123,11 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
       }
 
       let authData;
+      const cleanEmail = form.email.trim().toLowerCase();
       if (mode === 'login') {
-        authData = await login(form.email.trim(), form.password, 'user');
+        authData = await login(cleanEmail, form.password, 'user');
       } else {
-        authData = await register(form.name.trim(), form.email.trim(), form.password, 'USER', { phone: form.phone.trim() });
+        authData = await register(form.name.trim(), cleanEmail, form.password, 'USER', { phone: form.phone.trim() });
       }
 
       if (setBookingForm) {

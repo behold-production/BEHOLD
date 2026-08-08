@@ -306,9 +306,10 @@ const ApiService = {
 
   // Authentication
   async login(email, password, portal = 'user') {
+    const cleanEmail = typeof email === 'string' ? email.trim() : email;
     const res = await request('/auth/login', {
       method: 'POST',
-      body: JSON.stringify({ email, password, portal })
+      body: JSON.stringify({ email: cleanEmail, password, portal })
     });
     if (res.success && res.data && res.data.accessToken) {
       localStorage.setItem('behold_token', res.data.accessToken);
@@ -321,9 +322,10 @@ const ApiService = {
 
   async register(name, email, password, role = 'user', extra = {}) {
     const endpoint = role === 'counsellor' ? '/auth/register-counsellor' : '/auth/register';
+    const cleanEmail = typeof email === 'string' ? email.trim() : email;
     const res = await request(endpoint, {
       method: 'POST',
-      body: JSON.stringify({ name, email, password, ...extra })
+      body: JSON.stringify({ name, email: cleanEmail, password, ...extra })
     });
     if (res.success && res.data && res.data.accessToken) {
       localStorage.setItem('behold_token', res.data.accessToken);

@@ -761,7 +761,7 @@ reportRegError("Please enter a valid email address.");
  setLoginError('');
  setIsLoggingIn(true);
  try {
- const loggedInUser = await login(loginEmail, loginPassword, 'counsellor');
+ const loggedInUser = await login(loginEmail.trim().toLowerCase(), loginPassword, 'counsellor');
  const roleUpper = loggedInUser.role?.toUpperCase();
  if (roleUpper !== 'PSYCHOLOGIST' && roleUpper !== 'COUNSELLOR') {
  logout();

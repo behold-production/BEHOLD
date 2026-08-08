@@ -8,6 +8,11 @@ const PasswordResetOtp = require('../models/PasswordResetOtp');
 const ACCESS_EXPIRY = '15m';
 const REFRESH_EXPIRY = '7d';
 
+function buildEmailQuery(email) {
+  const escaped = email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return { email: { $regex: new RegExp(`^${escaped}$`, 'i') } };
+}
+
 const generateTokens = (user) => {
   const payload = { id: user.id, email: user.email, role: user.role };
   const accessToken = jwt.sign(payload, process.env.JWT_SECRET || 'behold_jwt_secret_key_2026_xyz', {
@@ -22,14 +27,15 @@ const generateTokens = (user) => {
 // Helper to find any user across all tables by email
 async function findAnyUserByEmail(email, portal = 'any') {
   if (!email) return null;
-  const emailLower = email.toLowerCase().trim();
+  const normalizedEmail = typeof email === 'string' ? email.trim().toLowerCase() : email;
 
   // Ensure default admin exists if DB is empty
   try {
     await StorageService.seedDefaultAdmin();
   } catch (e) {}
 
-  const userQuery = { email: emailLower, status: { $ne: 'DELETED' } };
+  const emailQuery = buildEmailQuery(normalizedEmail);
+  const userQuery = { ...emailQuery, status: { $ne: 'DELETED' } };
 
   if (portal === 'user') {
     const student = await StorageService.findOne('users', userQuery);
@@ -38,7 +44,7 @@ async function findAnyUserByEmail(email, portal = 'any') {
     const counsellor = await StorageService.findOne('counsellors', userQuery);
     if (counsellor) return { user: counsellor, table: 'counsellors' };
 
-    const admin = await StorageService.findOne('admins', { email: emailLower });
+    const admin = await StorageService.findOne('admins', emailQuery);
     if (admin) return { user: admin, table: 'admins' };
 
     return null;
@@ -48,7 +54,7 @@ async function findAnyUserByEmail(email, portal = 'any') {
     const counsellor = await StorageService.findOne('counsellors', userQuery);
     if (counsellor) return { user: counsellor, table: 'counsellors' };
 
-    const admin = await StorageService.findOne('admins', { email: emailLower });
+    const admin = await StorageService.findOne('admins', emailQuery);
     if (admin) return { user: admin, table: 'admins' };
 
     const student = await StorageService.findOne('users', userQuery);
@@ -58,7 +64,7 @@ async function findAnyUserByEmail(email, portal = 'any') {
   }
 
   if (portal === 'admin') {
-    const admin = await StorageService.findOne('admins', { email: emailLower });
+    const admin = await StorageService.findOne('admins', emailQuery);
     if (admin) return { user: admin, table: 'admins' };
 
     const counsellor = await StorageService.findOne('counsellors', userQuery);
@@ -70,7 +76,7 @@ async function findAnyUserByEmail(email, portal = 'any') {
     return null;
   }
 
-  const admin = await StorageService.findOne('admins', { email: emailLower });
+  const admin = await StorageService.findOne('admins', emailQuery);
   if (admin) return { user: admin, table: 'admins' };
 
   const counsellor = await StorageService.findOne('counsellors', userQuery);
@@ -161,13 +167,14 @@ const AuthController = {
   async registerUser(req, res, next) {
     try {
       const { name, email, password, phone } = req.body;
+      const normalizedEmail = typeof email === 'string' ? email.trim().toLowerCase() : email;
 
-      if (!name || !email || !password) {
+      if (!name || !normalizedEmail || !password) {
         return res.status(400).json({ success: false, message: 'Name, email, and password are required' });
       }
 
       // Check if email already exists
-      const existing = await findAnyUserByEmail(email);
+      const existing = await findAnyUserByEmail(normalizedEmail);
       if (existing) {
         return res.status(400).json({ success: false, message: 'Email address is already in use' });
       }
@@ -177,7 +184,7 @@ const AuthController = {
 
       const newUser = await StorageService.create('users', {
         name,
-        email: email.toLowerCase(),
+        email: normalizedEmail,
         password: hashedPassword,
         phone: phone || '',
         role: 'user',
@@ -230,13 +237,14 @@ const AuthController = {
         latitude,
         longitude
       } = req.body;
+      const normalizedEmail = typeof email === 'string' ? email.trim().toLowerCase() : email;
 
-      if (!name || !email || !password) {
+      if (!name || !normalizedEmail || !password) {
         return res.status(400).json({ success: false, message: 'Name, email, and password are required' });
       }
 
       // Check if email already exists
-      const existing = await findAnyUserByEmail(email);
+      const existing = await findAnyUserByEmail(normalizedEmail);
       if (existing) {
         return res.status(400).json({ success: false, message: 'Email address is already in use' });
       }
@@ -246,7 +254,7 @@ const AuthController = {
 
       const newCounsellor = await StorageService.create('counsellors', {
         name,
-        email: email.toLowerCase(),
+        email: normalizedEmail,
         password: hashedPassword,
         phone: phone || '',
         role: 'counsellor',
@@ -310,12 +318,13 @@ const AuthController = {
   async login(req, res, next) {
     try {
       const { email, password, portal = 'user' } = req.body;
+      const normalizedEmail = typeof email === 'string' ? email.trim().toLowerCase() : email;
 
-      if (!email || !password) {
+      if (!normalizedEmail || !password) {
         return res.status(400).json({ success: false, message: 'Email and password are required' });
       }
 
-      const match = await findAnyUserByEmail(email, portal);
+      const match = await findAnyUserByEmail(normalizedEmail, portal);
       if (!match) {
         return res.status(401).json({ success: false, message: 'Invalid credentials' });
       }

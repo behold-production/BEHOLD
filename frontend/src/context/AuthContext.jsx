@@ -32,7 +32,8 @@ export function AuthProvider({ children }) {
  }, []);
 
  const login = async (email, password, portal = 'user') => {
- const res = await ApiService.login(email, password, portal);
+ const cleanEmail = typeof email === 'string' ? email.trim().toLowerCase() : email;
+ const res = await ApiService.login(cleanEmail, password, portal);
  if (res.success && res.data && res.data.user) {
  if (res.data.user.status === 'REJECTED' || (res.data.user.status === 'PENDING' && res.data.user.role?.toUpperCase() !== 'COUNSELLOR' && res.data.user.role?.toUpperCase() !== 'PSYCHOLOGIST')) {
  ApiService.logout();

@@ -1487,7 +1487,7 @@ const _handleAdminDetectLocation = () => {
    setLoginError('');
    setIsLoggingIn(true);
    try {
-     const loggedInUser = await login(loginEmail, loginPassword, 'admin');
+     const loggedInUser = await login(loginEmail.trim().toLowerCase(), loginPassword, 'admin');
      if (loggedInUser?.role?.toUpperCase() !== 'ADMIN') {
        logout();
        setLoginError('Access Denied: Account does not have Administrator privileges.');

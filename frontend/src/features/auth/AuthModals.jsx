@@ -152,9 +152,10 @@ export default function AuthModals({ isOpen, onClose }) {
 
      if (mode === 'login') {
        if (loginMethod === 'email') {
-         if (!formData.email.trim() || !formData.password) throw new Error('Please fill in all fields');
-         if (!validateEmail(formData.email)) throw new Error('Please enter a valid email address');
-         loggedUser = await login(formData.email, formData.password, 'user');
+         const cleanEmail = formData.email.trim().toLowerCase();
+         if (!cleanEmail || !formData.password) throw new Error('Please fill in all fields');
+         if (!validateEmail(cleanEmail)) throw new Error('Please enter a valid email address');
+         loggedUser = await login(cleanEmail, formData.password, 'user');
        } else {
          if (!isOtpSent) {
            if (!otpPhone.trim()) throw new Error('Phone number is required');
@@ -183,12 +184,13 @@ export default function AuthModals({ isOpen, onClose }) {
      } else {
        if (!formData.name.trim() || !formData.phone.trim() || !formData.email.trim() || !formData.password || !formData.confirmPassword) throw new Error('Please fill in all fields');
        if (!validateIndianPhone(formData.phone)) throw new Error('Please enter a valid 10-digit Indian phone number starting with 6-9');
-       if (!validateEmail(formData.email)) throw new Error('Please enter a valid email address');
+       const cleanEmail = formData.email.trim().toLowerCase();
+       if (!validateEmail(cleanEmail)) throw new Error('Please enter a valid email address');
        if (formData.password.length < 6) throw new Error('Password must be at least 6 characters');
        if (formData.password !== formData.confirmPassword) throw new Error('Passwords do not match');
        
        const cleanPhone = parseIndianPhone(formData.phone).phone10;
-       loggedUser = await register(formData.name.trim(), formData.email.trim(), formData.password, 'USER', { phone: cleanPhone });
+       loggedUser = await register(formData.name.trim(), cleanEmail, formData.password, 'USER', { phone: cleanPhone });
      }
 
      onClose();
