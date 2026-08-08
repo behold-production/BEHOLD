@@ -20,7 +20,7 @@ const generateTokens = (user) => {
 };
 
 // Helper to find any user across all tables by email
-async function findAnyUserByEmail(email) {
+async function findAnyUserByEmail(email, portal = 'any') {
   if (!email) return null;
   const emailLower = email.toLowerCase().trim();
 
@@ -29,20 +29,61 @@ async function findAnyUserByEmail(email) {
     await StorageService.seedDefaultAdmin();
   } catch (e) {}
 
+  const userQuery = { email: emailLower, status: { $ne: 'DELETED' } };
+
+  if (portal === 'user') {
+    const student = await StorageService.findOne('users', userQuery);
+    if (student) return { user: student, table: 'users' };
+
+    const counsellor = await StorageService.findOne('counsellors', userQuery);
+    if (counsellor) return { user: counsellor, table: 'counsellors' };
+
+    const admin = await StorageService.findOne('admins', { email: emailLower });
+    if (admin) return { user: admin, table: 'admins' };
+
+    return null;
+  }
+
+  if (portal === 'counsellor') {
+    const counsellor = await StorageService.findOne('counsellors', userQuery);
+    if (counsellor) return { user: counsellor, table: 'counsellors' };
+
+    const admin = await StorageService.findOne('admins', { email: emailLower });
+    if (admin) return { user: admin, table: 'admins' };
+
+    const student = await StorageService.findOne('users', userQuery);
+    if (student) return { user: student, table: 'users' };
+
+    return null;
+  }
+
+  if (portal === 'admin') {
+    const admin = await StorageService.findOne('admins', { email: emailLower });
+    if (admin) return { user: admin, table: 'admins' };
+
+    const counsellor = await StorageService.findOne('counsellors', userQuery);
+    if (counsellor) return { user: counsellor, table: 'counsellors' };
+
+    const student = await StorageService.findOne('users', userQuery);
+    if (student) return { user: student, table: 'users' };
+
+    return null;
+  }
+
   const admin = await StorageService.findOne('admins', { email: emailLower });
   if (admin) return { user: admin, table: 'admins' };
 
-  const counsellor = await StorageService.findOne('counsellors', { email: emailLower, status: { $ne: 'DELETED' } });
+  const counsellor = await StorageService.findOne('counsellors', userQuery);
   if (counsellor) return { user: counsellor, table: 'counsellors' };
 
-  const student = await StorageService.findOne('users', { email: emailLower, status: { $ne: 'DELETED' } });
+  const student = await StorageService.findOne('users', userQuery);
   if (student) return { user: student, table: 'users' };
 
   return null;
 }
 
 // Helper to find any user across all tables by phone
-async function findAnyUserByPhone(phone) {
+async function findAnyUserByPhone(phone, portal = 'any') {
   // Normalize phone (strip non-digits, etc if needed, or just exact match)
   const phoneClean = phone.replace(/\D/g, '');
 
@@ -57,13 +98,59 @@ async function findAnyUserByPhone(phone) {
     return uPhone === phoneClean;
   };
 
-  const admin = (await StorageService.findAll('admins', {})).find(a => checkMatch(a.phone));
+  const records = [];
+
+  const tryFind = async (table) => {
+    const items = await StorageService.findAll(table, table === 'admins' ? {} : { status: { $ne: 'DELETED' } });
+    return items.find((item) => checkMatch(item.phone));
+  };
+
+  if (portal === 'user') {
+    const student = await tryFind('users');
+    if (student) return { user: student, table: 'users' };
+
+    const counsellor = await tryFind('counsellors');
+    if (counsellor) return { user: counsellor, table: 'counsellors' };
+
+    const admin = await tryFind('admins');
+    if (admin) return { user: admin, table: 'admins' };
+
+    return null;
+  }
+
+  if (portal === 'counsellor') {
+    const counsellor = await tryFind('counsellors');
+    if (counsellor) return { user: counsellor, table: 'counsellors' };
+
+    const admin = await tryFind('admins');
+    if (admin) return { user: admin, table: 'admins' };
+
+    const student = await tryFind('users');
+    if (student) return { user: student, table: 'users' };
+
+    return null;
+  }
+
+  if (portal === 'admin') {
+    const admin = await tryFind('admins');
+    if (admin) return { user: admin, table: 'admins' };
+
+    const counsellor = await tryFind('counsellors');
+    if (counsellor) return { user: counsellor, table: 'counsellors' };
+
+    const student = await tryFind('users');
+    if (student) return { user: student, table: 'users' };
+
+    return null;
+  }
+
+  const admin = await tryFind('admins');
   if (admin) return { user: admin, table: 'admins' };
 
-  const counsellor = (await StorageService.findAll('counsellors', { status: { $ne: 'DELETED' } })).find(c => checkMatch(c.phone));
+  const counsellor = await tryFind('counsellors');
   if (counsellor) return { user: counsellor, table: 'counsellors' };
 
-  const student = (await StorageService.findAll('users', { status: { $ne: 'DELETED' } })).find(s => checkMatch(s.phone));
+  const student = await tryFind('users');
   if (student) return { user: student, table: 'users' };
 
   return null;
@@ -228,7 +315,7 @@ const AuthController = {
         return res.status(400).json({ success: false, message: 'Email and password are required' });
       }
 
-      const match = await findAnyUserByEmail(email);
+      const match = await findAnyUserByEmail(email, portal);
       if (!match) {
         return res.status(401).json({ success: false, message: 'Invalid credentials' });
       }
@@ -571,7 +658,7 @@ const AuthController = {
 
       // If this is an OTP login flow, find the user and log them in
       if (isLogin) {
-        const match = await findAnyUserByPhone(phone);
+        const match = await findAnyUserByPhone(phone, portal);
         if (!match) {
           return res.status(404).json({ 
             success: false, 

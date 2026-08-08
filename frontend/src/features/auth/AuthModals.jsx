@@ -253,7 +253,7 @@ export default function AuthModals({ isOpen, onClose }) {
 
      {/* Modal Container */}
      <div
-       className="fixed inset-0 z-[115] flex items-start justify-center p-4 overflow-y-auto overscroll-contain"
+       className="fixed inset-0 z-[115] flex items-center justify-center min-h-screen p-4 overflow-y-auto overscroll-contain"
        role="dialog"
        aria-modal="true"
        aria-labelledby="auth-modal-title"
@@ -261,7 +261,7 @@ export default function AuthModals({ isOpen, onClose }) {
      >
        {/* Modal Card */}
        <div
-         className="relative w-full max-w-md my-auto bg-white rounded-xl shadow-2xl overflow-hidden animate-modal-in border border-surface-200"
+         className="relative w-full max-w-md my-auto max-h-[calc(100vh-4rem)] bg-white rounded-xl shadow-2xl overflow-hidden animate-modal-in border border-surface-200"
          onClick={(e) => e.stopPropagation()}
        >
 
