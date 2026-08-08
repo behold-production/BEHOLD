@@ -95,16 +95,17 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
 
         {/* Services Cards Grid — Responsive Dynamic Grid */}
         <div className={`grid grid-cols-1 md:grid-cols-2 ${visibleServices.length >= 3 ? 'lg:grid-cols-3' : ''} ${visibleServices.length === 4 ? 'xl:grid-cols-4' : ''} gap-6 lg:gap-8`}>
-          {visibleServices.map((service) => {
+          {visibleServices.map((service, idx) => {
             const Icon = service.icon;
+            const delayClass = idx === 0 ? 'delay-100' : idx === 1 ? 'delay-200' : idx === 2 ? 'delay-300' : 'delay-400';
             return (
               <div
                 key={service.id}
-                className="group relative bg-white/90 backdrop-blur-md rounded-2xl p-6 sm:p-7 border border-slate-200/90 shadow-md hover:shadow-xl hover:border-[#00c9d6]/60 transition-all duration-300 flex flex-col justify-between overflow-hidden"
+                className={`group relative bg-white/90 backdrop-blur-md rounded-2xl p-6 sm:p-7 border border-slate-200/90 shadow-md hover-scale-card hover:border-[#00c9d6]/60 transition-all duration-300 flex flex-col justify-between overflow-hidden animate-fade-scale ${delayClass}`}
               >
                 <div>
                   {/* Top Bar: Icon */}
-                  <div className="w-11 h-11 rounded-xl bg-[#00c9d6]/10 text-[#007078] flex items-center justify-center mb-5 group-hover:bg-[#00c9d6] group-hover:text-slate-950 transition-all duration-300">
+                  <div className="w-11 h-11 rounded-xl bg-[#00c9d6]/10 text-[#007078] flex items-center justify-center mb-5 group-hover:bg-[#00c9d6] group-hover:text-slate-950 group-hover:scale-110 transition-all duration-300">
                     <Icon className="w-5 h-5" />
                   </div>
 
@@ -128,10 +129,10 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                   <button
                     type="button"
                     onClick={service.onAction}
-                    className="px-4 py-2 rounded-full bg-[#0f172a] hover:bg-[#00c9d6] hover:text-slate-950 text-white font-extrabold text-[11px] uppercase tracking-wider transition-all duration-200 cursor-pointer shadow-sm flex items-center gap-1.5 active:scale-95 group/btn shrink-0 border-none"
+                    className="px-4 py-2 rounded-full bg-[#0f172a] hover:bg-[#00c9d6] hover:text-slate-950 text-white font-extrabold text-[11px] uppercase tracking-wider hover-scale-btn transition-all duration-200 cursor-pointer shadow-sm flex items-center gap-1.5 group/btn shrink-0 border-none"
                   >
                     <span>{service.actionText}</span>
-                    <ArrowRight className="w-3.5 h-3.5 group-hover/btn:translate-x-0.5 transition-transform" />
+                    <ArrowRight className="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform" />
                   </button>
                 </div>
               </div>

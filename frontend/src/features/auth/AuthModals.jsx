@@ -261,7 +261,7 @@ export default function AuthModals({ isOpen, onClose }) {
      >
        {/* Modal Card */}
        <div
-         className="relative w-full max-w-md my-auto bg-white rounded-xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 border border-surface-200"
+         className="relative w-full max-w-md my-auto bg-white rounded-xl shadow-2xl overflow-hidden animate-fade-scale duration-300 border border-surface-200"
          onClick={(e) => e.stopPropagation()}
        >
 

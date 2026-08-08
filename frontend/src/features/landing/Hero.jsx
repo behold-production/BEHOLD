@@ -43,12 +43,12 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
       <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-16 my-auto">
 
         {/* COLUMN: Typography & Action Button */}
-        <div className="flex-1 flex flex-col items-center md:items-start text-center md:text-left space-y-5 max-w-2xl mx-auto md:mx-0 transition-transform duration-500">
+        <div className="flex-1 flex flex-col items-center md:items-start text-center md:text-left space-y-5 max-w-2xl mx-auto md:mx-0 transition-transform duration-500 animate-fade-scale">
 
           {/* Main Title Block */}
           <div className="relative leading-none flex flex-col items-center md:items-start group">
             {/* Line 1 - Slender & Elegant */}
-            <h1 className="font-sans font-medium text-slate-800 text-3xl sm:text-4xl md:text-4xl lg:text-[44px] tracking-normal leading-tight transition-all duration-300">
+            <h1 className="font-sans font-medium text-slate-800 text-3xl sm:text-4xl md:text-4xl lg:text-[44px] tracking-normal leading-tight transition-all duration-300 animate-fade-down">
               {eyebrowLine1}
             </h1>
 
@@ -71,15 +71,15 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
           </div>
 
           {/* Subtitle Paragraph - Refined Compact Size */}
-          <p className="font-sans text-center md:text-left text-slate-700/90 text-sm sm:text-base md:text-base font-normal leading-relaxed max-w-lg">
+          <p className="font-sans text-center md:text-left text-slate-700/90 text-sm sm:text-base md:text-base font-normal leading-relaxed max-w-lg animate-fade-scale delay-200">
             {subtitleText}
           </p>
 
           {/* Action Button */}
-          <div className="pt-2 flex justify-center md:justify-start w-full">
+          <div className="pt-2 flex justify-center md:justify-start w-full animate-fade-scale delay-300">
             <button
               onClick={handleConnectClick}
-              className="bg-brand hover:bg-brand-dark active:scale-95 hover:scale-105 transition-all duration-300 text-slate-900 font-sans text-lg sm:text-xl font-bold px-10 py-4 rounded-full shadow-md hover:shadow-xl flex items-center justify-center border border-slate-900/10 cursor-pointer"
+              className="bg-brand hover:bg-brand-dark hover-scale-btn transition-all duration-300 text-slate-900 font-sans text-lg sm:text-xl font-bold px-10 py-4 rounded-full shadow-md hover:shadow-xl flex items-center justify-center border border-slate-900/10 cursor-pointer"
             >
               {btnText}
             </button>

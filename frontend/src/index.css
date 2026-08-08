@@ -512,6 +512,100 @@ body.no-scroll {
   background-size: 40px 40px;
 }
 
+/* Rich Fade & Scaling Animations for User Section */
+.animate-fade-scale {
+  animation: fadeScaleIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-fade-down {
+  animation: fadeInDown 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-pulse-glow-box {
+  animation: pulseGlowBox 3s ease-in-out infinite alternate;
+}
+
+.animate-bounce-gentle {
+  animation: bounceGentle 2.5s ease-in-out infinite alternate;
+}
+
+.hover-scale-card {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease !important;
+}
+
+.hover-scale-card:hover {
+  transform: translateY(-8px) scale(1.02) !important;
+  box-shadow: 0 20px 40px -10px rgba(0, 229, 255, 0.25), 0 10px 20px -5px rgba(15, 23, 42, 0.15) !important;
+}
+
+.hover-scale-btn {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.hover-scale-btn:hover {
+  transform: scale(1.05) translateY(-2px) !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 229, 255, 0.4) !important;
+}
+
+.hover-scale-btn:active {
+  transform: scale(0.96) translateY(0) !important;
+}
+
+.hover-tilt {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.hover-tilt:hover {
+  transform: rotate(1deg) scale(1.03) !important;
+}
+
+/* Delay Helpers */
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+
+@keyframes fadeScaleIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.94) translateY(16px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseGlowBox {
+  0% {
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
+  }
+  100% {
+    box-shadow: 0 0 35px rgba(0, 229, 255, 0.6);
+  }
+}
+
+@keyframes bounceGentle {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-8px);
+  }
+}
+
 /* Animations */
 .fade-in-up {
   animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;

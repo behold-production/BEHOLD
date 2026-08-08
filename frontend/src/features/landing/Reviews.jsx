@@ -35,7 +35,7 @@ function Stars({ count = 5, total = 5, interactive = false, onSelect }) {
 function ReviewCard({ review }) {
   const initial = (review.name || '?')[0].toUpperCase();
   return (
-    <div className="bg-white rounded-xl border border-surface-200 hover:border-[#00e5ff] shadow-xs hover:shadow-md transition-all flex flex-col justify-between h-full p-6 sm:p-7 w-full group">
+    <div className="bg-white rounded-xl border border-surface-200 hover:border-[#00e5ff] shadow-xs hover-scale-card transition-all flex flex-col justify-between h-full p-6 sm:p-7 w-full group">
       <div className="flex-1 flex flex-col justify-between">
         {/* Stars */}
         <div className="flex gap-1 mb-4">

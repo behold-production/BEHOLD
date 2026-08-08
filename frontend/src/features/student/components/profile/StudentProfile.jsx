@@ -157,7 +157,7 @@ export default function StudentProfile({ onOpenBooking }) {
  />
  </aside>
 
- <main className="lg:col-span-9 min-w-0">
+ <main className="lg:col-span-9 min-w-0 animate-fade-scale">
  {currentSection === 'overview' && (
  <OverviewTab
  nextSession={nextSession}

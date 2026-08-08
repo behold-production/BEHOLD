@@ -17,13 +17,13 @@ export default function WhyChooseUs({ siteSettings, onOpenBooking }) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
 
           {/* Left Column: Image Hero Card with Text Overlay */}
-          <div className="lg:col-span-6">
-            <div className="relative w-full min-h-[460px] sm:min-h-[520px] rounded-xl overflow-hidden shadow-lg flex flex-col justify-end p-6 sm:p-10 border border-[#00e5ff]/40 group">
+          <div className="lg:col-span-6 animate-fade-scale">
+            <div className="relative w-full min-h-[460px] sm:min-h-[520px] rounded-xl overflow-hidden shadow-lg flex flex-col justify-end p-6 sm:p-10 border border-[#00e5ff]/40 group hover-scale-card">
               {/* Background Image with Dark Luxury Opacity Overlay */}
               <img
                 src={siteSettings?.whyChooseUsImage || siteSettings?.servicesFirstCardImage || luxuryClinicRoom}
                 alt="Behold Mentorship & Psychological Care"
-                className="absolute inset-0 w-full h-full object-cover opacity-60 transition-transform duration-700 group-hover:scale-105"
+                className="absolute inset-0 w-full h-full object-cover opacity-60 transition-transform duration-700 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a] via-[#0f172a]/80 to-[#0f172a]/30" />
 
@@ -51,13 +51,13 @@ export default function WhyChooseUs({ siteSettings, onOpenBooking }) {
                 <div className="flex flex-wrap items-center gap-3 pt-3">
                   <button
                     onClick={handleBook}
-                    className="px-6 py-3 bg-[#00e5ff] hover:bg-[#00cce6] text-[#0f172a] font-bold text-xs uppercase tracking-widest rounded-full transition-all shadow-md border-none cursor-pointer flex items-center gap-1.5"
+                    className="px-6 py-3 bg-[#00e5ff] hover:bg-[#00cce6] hover-scale-btn text-[#0f172a] font-bold text-xs uppercase tracking-widest rounded-full transition-all shadow-md border-none cursor-pointer flex items-center gap-1.5"
                   >
                     <span>Book a Session</span>
                   </button>
                   <button
                     onClick={() => { window.spaNavigate?.('/booking'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                    className="px-6 py-3 bg-white/10 hover:bg-white/20 text-white font-bold text-xs uppercase tracking-widest rounded-full transition-all border border-white/30 backdrop-blur-md cursor-pointer"
+                    className="px-6 py-3 bg-white/10 hover:bg-white/20 hover-scale-btn text-white font-bold text-xs uppercase tracking-widest rounded-full transition-all border border-white/30 backdrop-blur-md cursor-pointer"
                   >
                     Explore All Services
                   </button>
@@ -67,10 +67,10 @@ export default function WhyChooseUs({ siteSettings, onOpenBooking }) {
           </div>
 
           {/* Right Column: 2x2 Feature Grid Matrix */}
-          <div className="lg:col-span-6 grid grid-cols-2 gap-4 sm:gap-6 pt-6 lg:pt-0">
+          <div className="lg:col-span-6 grid grid-cols-2 gap-4 sm:gap-6 pt-6 lg:pt-0 animate-fade-scale delay-200">
 
             {/* Cell 1: Dual Support */}
-            <div className="p-5 sm:p-7 rounded-xl bg-white border border-surface-200 hover:border-[#00e5ff] transition-all shadow-xs flex flex-col justify-between h-52 sm:h-60 space-y-3 group">
+            <div className="p-5 sm:p-7 rounded-xl bg-white border border-surface-200 hover-scale-card hover:border-[#00e5ff] transition-all shadow-xs flex flex-col justify-between h-52 sm:h-60 space-y-3 group">
               <div>
                 <h3 className="text-xs sm:text-sm font-bold text-[#0f172a] uppercase mb-1.5 font-sans leading-snug group-hover:text-[#00e5ff] transition-colors">Dual Support Architecture</h3>
                 <p className="text-[11px] sm:text-xs text-surface-600 font-normal leading-relaxed">

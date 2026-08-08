@@ -44,11 +44,13 @@ export default function Process() {
 
         {/* Steps Grid Matrix */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {steps.map((step, idx) => (
-            <div
-              key={idx}
-              className="flex flex-col justify-between p-7 rounded-xl bg-white border border-surface-200 hover:border-[#00e5ff] transition-all duration-300 min-h-[220px] shadow-xs group"
-            >
+          {steps.map((step, idx) => {
+            const delayClass = idx === 0 ? 'delay-100' : idx === 1 ? 'delay-200' : idx === 2 ? 'delay-300' : 'delay-400';
+            return (
+              <div
+                key={idx}
+                className={`flex flex-col justify-between p-7 rounded-xl bg-white border border-surface-200 hover-scale-card hover:border-[#00e5ff] transition-all duration-300 min-h-[220px] shadow-xs group animate-fade-scale ${delayClass}`}
+              >
               <div>
                 <div className="flex items-center justify-between w-full mb-6">
                   <span className="text-4xl font-black text-[#0f172a] font-sans group-hover:text-[#00e5ff] transition-colors">
@@ -67,7 +69,8 @@ export default function Process() {
                 <span className="text-[10px] font-bold uppercase tracking-widest text-[#00e5ff]">STEP {step.num}</span>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* CTA */}
