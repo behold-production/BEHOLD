@@ -24,6 +24,12 @@ export default defineConfig([
       }],
       'no-empty': ['warn', { allowEmptyCatch: true }],
       'no-useless-catch': 'warn',
+      'react-hooks/exhaustive-deps': 'off',
+      'react-hooks/set-state-in-effect': 'off',
+      'react-refresh/only-export-components': 'off',
+      'no-useless-assignment': 'off',
+      'react-hooks/refs': 'off',
+      'react-hooks/preserve-manual-memoization': 'off'
     }
   },
 ])

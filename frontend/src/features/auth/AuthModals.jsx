@@ -256,7 +256,7 @@ return createPortal(
 
       {/* Modal Container */}
       <div
-        className="fixed inset-0 z-[115] flex items-center justify-center min-h-screen p-4 overflow-y-auto overscroll-contain"
+        className="fixed inset-0 z-[115] flex items-center justify-center p-4 sm:p-6 overflow-y-auto overscroll-contain"
         role="dialog"
         aria-modal="true"
         aria-labelledby="auth-modal-title"
@@ -264,7 +264,7 @@ return createPortal(
       >
         {/* Modal Card */}
         <div
-          className="relative w-full max-w-md my-auto max-h-[calc(100vh-4rem)] bg-white rounded-xl shadow-2xl overflow-y-auto animate-modal-in border border-surface-200"
+          className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl max-h-full overflow-y-auto animate-modal-in border border-zinc-200 m-auto flex flex-col"
          onClick={(e) => e.stopPropagation()}
        >
 

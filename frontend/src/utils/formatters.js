@@ -17,7 +17,7 @@ export const getImageUrl = (path) => {
   }
   
   // Clean up leading slashes to prevent double slashes
-  const cleanPath = path.replace(/^[\/\\]+/, '');
+  const cleanPath = path.replace(/^[/\\]+/, '');
   const baseUrl = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
   
   return `${baseUrl}/${cleanPath}`;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Clock, AlertCircle, Link, Video, FileText, Send, Edit } from 'lucide-react';
+import { Clock, AlertCircle, Link, Video, FileText, Send, Edit, ShieldCheck } from 'lucide-react';
 import { formatDateString } from '../../../../utils/dateFormatter';
 import ApiService from '../../../../services/api';
 import { toast } from 'react-hot-toast';
