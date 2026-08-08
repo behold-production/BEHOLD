@@ -1500,11 +1500,11 @@ const _handleAdminDetectLocation = () => {
    }
  };
 
- // Student Actions
+ // User Actions
  const handleCreateUser = async (e) => {
    e.preventDefault();
    if (!hasUserPermission) {
-     setUserFormError("Access Denied: You do not have permission to manage students.");
+     setUserFormError("Access Denied: You do not have permission to manage users.");
      return;
    }
  setUserFormError('');
