@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Mail, Lock, User, Phone, Eye, EyeOff, KeyRound } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import ApiService from '../../services/api';
@@ -175,7 +176,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
       : 'bg-zinc-50 border-zinc-200 focus:bg-white focus:border-brand focus:ring-1 focus:ring-brand'
     }`;
 
-  return (
+  return createPortal(
     <>
       {/* Backdrop */}
       <div
@@ -457,6 +458,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
 
         </div>
       </div>
-    </>
+    </>,
+    document.body
   );
 }

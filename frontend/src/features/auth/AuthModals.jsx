@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Mail, Lock, User, Phone, Loader2, Eye, EyeOff, KeyRound, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
@@ -242,26 +243,26 @@ export default function AuthModals({ isOpen, onClose }) {
    return titles[mode].subtitle;
  };
 
- return (
-   <>
-     {/* Backdrop */}
-     <div
-       className="fixed inset-0 z-[110] bg-zinc-900/60 backdrop-blur-md animate-backdrop-in"
-       onClick={onClose}
-       aria-hidden="true"
-     />
+return createPortal(
+    <>
+      {/* Backdrop */}
+      <div
+        className="fixed inset-0 z-[110] bg-zinc-900/60 backdrop-blur-md animate-backdrop-in"
+        onClick={onClose}
+        aria-hidden="true"
+      />
 
-     {/* Modal Container */}
-     <div
-       className="fixed inset-0 z-[115] flex items-center justify-center min-h-screen p-4 overflow-y-auto overscroll-contain"
-       role="dialog"
-       aria-modal="true"
-       aria-labelledby="auth-modal-title"
-       onClick={onClose}
-     >
-       {/* Modal Card */}
-       <div
-         className="relative w-full max-w-md my-auto max-h-[calc(100vh-4rem)] bg-white rounded-xl shadow-2xl overflow-hidden animate-modal-in border border-surface-200"
+      {/* Modal Container */}
+      <div
+        className="fixed inset-0 z-[115] flex items-center justify-center min-h-screen p-4 overflow-y-auto overscroll-contain"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="auth-modal-title"
+        onClick={onClose}
+      >
+        {/* Modal Card */}
+        <div
+          className="relative w-full max-w-md max-h-[calc(100vh-4rem)] bg-white rounded-xl shadow-2xl overflow-hidden animate-modal-in border border-surface-200"
          onClick={(e) => e.stopPropagation()}
        >
 
@@ -716,6 +717,6 @@ export default function AuthModals({ isOpen, onClose }) {
 
        </div>
      </div>
-   </>
- );
+    </>,
+    document.body
 }
