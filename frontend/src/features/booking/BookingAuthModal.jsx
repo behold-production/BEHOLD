@@ -195,7 +195,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
       >
         {/* Modal Card */}
         <div
-          className="relative w-full max-w-md max-h-[calc(100vh-4rem)] bg-white rounded-xl shadow-2xl overflow-hidden animate-modal-in border border-surface-200 text-left"
+          className="relative w-full max-w-md max-h-[calc(100vh-4rem)] bg-white rounded-xl shadow-2xl overflow-y-auto animate-modal-in border border-surface-200 text-left"
           onClick={(e) => e.stopPropagation()}
         >
 

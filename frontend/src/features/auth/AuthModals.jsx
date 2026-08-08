@@ -262,7 +262,7 @@ return createPortal(
       >
         {/* Modal Card */}
         <div
-          className="relative w-full max-w-md max-h-[calc(100vh-4rem)] bg-white rounded-xl shadow-2xl overflow-hidden animate-modal-in border border-surface-200"
+          className="relative w-full max-w-md my-auto max-h-[calc(100vh-4rem)] bg-white rounded-xl shadow-2xl overflow-y-auto animate-modal-in border border-surface-200"
          onClick={(e) => e.stopPropagation()}
        >
 
@@ -719,4 +719,5 @@ return createPortal(
      </div>
     </>,
     document.body
+  );
 }
