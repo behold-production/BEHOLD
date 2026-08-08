@@ -584,53 +584,57 @@ body.no-scroll {
   animation: modalPopIn 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Premium Slow & Silky Scroll Reveal System */
+/* Premium Hardware-Accelerated & RAM-Optimized Scroll Reveal System */
 .reveal-on-scroll {
   opacity: 0;
-  transform: translateY(35px) scale(0.96);
-  transition: opacity 1.3s cubic-bezier(0.16, 1, 0.3, 1), transform 1.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translate3d(0, 35px, 0) scale(0.96);
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
 }
 
 .reveal-on-scroll.is-revealed {
   opacity: 1;
-  transform: translateY(0) scale(1);
+  transform: translate3d(0, 0, 0) scale(1);
+  will-change: auto;
 }
 
 .reveal-scale-in {
   opacity: 0;
-  transform: scale(0.92);
-  transition: opacity 1.3s cubic-bezier(0.16, 1, 0.3, 1), transform 1.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: scale(0.92) translate3d(0, 0, 0);
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
 }
 
 .reveal-scale-in.is-revealed {
   opacity: 1;
-  transform: scale(1);
+  transform: scale(1) translate3d(0, 0, 0);
+  will-change: auto;
 }
 
 .reveal-slide-left {
   opacity: 0;
-  transform: translateX(-40px);
-  transition: opacity 1.3s cubic-bezier(0.16, 1, 0.3, 1), transform 1.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translate3d(-40px, 0, 0);
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
 }
 
 .reveal-slide-left.is-revealed {
   opacity: 1;
-  transform: translateX(0);
+  transform: translate3d(0, 0, 0);
+  will-change: auto;
 }
 
 .reveal-slide-right {
   opacity: 0;
-  transform: translateX(40px);
-  transition: opacity 1.3s cubic-bezier(0.16, 1, 0.3, 1), transform 1.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translate3d(40px, 0, 0);
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
 }
 
 .reveal-slide-right.is-revealed {
   opacity: 1;
-  transform: translateX(0);
+  transform: translate3d(0, 0, 0);
+  will-change: auto;
 }
 
 /* Stagger Delays for Scroll Reveal */

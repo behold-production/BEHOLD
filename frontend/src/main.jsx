@@ -43,33 +43,52 @@ window.addEventListener('unhandledrejection', (event) => {
   }
 });
 
-// Initialize Global Scroll Reveal Intersection Observer for User Section
+// Initialize High-Performance Global Scroll Reveal System (Singleton & RAM-Optimized)
 if (typeof window !== 'undefined') {
-  const initScrollReveal = () => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-revealed');
-        }
-      });
-    }, {
-      threshold: 0.08,
-      rootMargin: '0px 0px -40px 0px'
-    });
+  let globalObserver = null;
 
-    const elements = document.querySelectorAll('.reveal-on-scroll, .reveal-scale-in, .reveal-slide-left, .reveal-slide-right');
-    elements.forEach(el => observer.observe(el));
+  const getGlobalObserver = () => {
+    if (!globalObserver) {
+      globalObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-revealed');
+            // Unobserve immediately after revealing to release GPU/RAM memory!
+            globalObserver.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.05,
+        rootMargin: '0px 0px -20px 0px'
+      });
+    }
+    return globalObserver;
+  };
+
+  const observeElements = () => {
+    const obs = getGlobalObserver();
+    const elements = document.querySelectorAll('.reveal-on-scroll:not(.is-revealed), .reveal-scale-in:not(.is-revealed), .reveal-slide-left:not(.is-revealed), .reveal-slide-right:not(.is-revealed)');
+    elements.forEach(el => obs.observe(el));
+  };
+
+  let debounceTimer = null;
+  const debouncedObserve = () => {
+    if (debounceTimer) clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(observeElements, 80);
   };
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initScrollReveal);
+    document.addEventListener('DOMContentLoaded', observeElements);
   } else {
-    setTimeout(initScrollReveal, 100);
+    observeElements();
   }
 
-  // Observe DOM additions dynamically
-  const mutationObserver = new MutationObserver(() => {
-    setTimeout(initScrollReveal, 150);
+  // Observe node additions cleanly without duplicate Observers
+  const mutationObserver = new MutationObserver((mutations) => {
+    const hasAddedNodes = mutations.some(m => m.addedNodes.length > 0);
+    if (hasAddedNodes) {
+      debouncedObserve();
+    }
   });
   mutationObserver.observe(document.body, { childList: true, subtree: true });
 }
