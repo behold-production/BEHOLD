@@ -43,11 +43,11 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
           
           {/* Cell 1: Intro Text (lg:col-span-5) */}
           <div className="md:col-span-2 lg:col-span-5 bg-white/70 backdrop-blur-xl border border-white/80 p-8 lg:p-10 rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col justify-center reveal-on-scroll reveal-scale-in hover-scale-card">
-            <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-[#00c9d6] flex items-center gap-2 mb-3">
+            <span className="text-[10px] sm:text-xs font-bold tracking-widest text-[#00c9d6] flex items-center gap-2 mb-3">
               <span className="w-6 h-0.5 bg-[#00c9d6] rounded-full"></span>
-              AT BEHOLD
+              At BEHOLD
             </span>
-            <h2 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-sans font-black uppercase text-slate-900 tracking-tight leading-[1.05] mb-5">
+            <h2 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-sans font-bold text-slate-900 tracking-tight leading-[1.05] mb-5">
               BEHOLD<span className="text-[#00e5ff] drop-shadow-[0_0_12px_rgba(0,229,255,0.6)]">.</span>
             </h2>
             <p className="text-sm sm:text-[15px] text-slate-600 leading-relaxed font-medium">

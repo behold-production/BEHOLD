@@ -108,6 +108,26 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
     { label: 'Blog', action: () => goTo('/blog'), sectionId: 'blog', path: '/blog' },
   ].filter(Boolean);
 
+  const navRefs = useRef([]);
+  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0, opacity: 0 });
+
+  const activeIndex = navLinks.findIndex(({ sectionId, path }) =>
+    location.pathname === path || (location.pathname === '/' && activeSection === sectionId)
+  );
+
+  useEffect(() => {
+    const targetEl = navRefs.current[activeIndex >= 0 ? activeIndex : 0];
+    if (targetEl && activeIndex >= 0) {
+      setIndicatorStyle({
+        left: targetEl.offsetLeft,
+        width: targetEl.offsetWidth,
+        opacity: 1,
+      });
+    } else {
+      setIndicatorStyle(prev => ({ ...prev, opacity: 0 }));
+    }
+  }, [activeIndex, location.pathname, activeSection]);
+
   return (
     <>
       {/* Top Text-Only Announcement Bar - Only shows when Admin enables & assigns details */}
@@ -148,23 +168,34 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
                 onClick={handleLogoClick}
                 className="flex items-center gap-2 text-left bg-transparent border-none cursor-pointer p-0"
               >
-                <span className="text-2xl sm:text-3xl font-black tracking-tight font-sans uppercase text-slate-900">
+                <span className="text-2xl sm:text-3xl font-bold tracking-tight font-sans text-slate-900">
                   {(siteName || 'BEHOLD').replace(/\.$/, '')}
-                  <span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)] font-black">.</span>
+                  <span className="text-[#00c9d6] drop-shadow-[0_0_8px_rgba(0,201,214,0.8)] font-bold">.</span>
                 </span>
               </button>
 
-              {/* Desktop Nav Links - Uppercase Editorial */}
-              <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
-                {navLinks.map(({ label, action, sectionId, path }) => {
-                  const isActive = location.pathname === path || (location.pathname === '/' && activeSection === sectionId);
+              {/* Desktop Nav Links - Smooth Sliding Underline Indicator */}
+              <nav className="hidden lg:flex items-center gap-6 xl:gap-8 relative py-1">
+                {/* Smooth Sliding Active Underline Indicator Bar */}
+                <span
+                  className="absolute bottom-0 h-[2.5px] bg-[#00c9d6] rounded-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] pointer-events-none shadow-[0_0_8px_rgba(0,201,214,0.6)]"
+                  style={{
+                    left: `${indicatorStyle.left}px`,
+                    width: `${indicatorStyle.width}px`,
+                    opacity: indicatorStyle.opacity,
+                  }}
+                />
+
+                {navLinks.map(({ label, action }, idx) => {
+                  const isActive = idx === activeIndex;
                   return (
                     <button
                       key={label}
+                      ref={(el) => (navRefs.current[idx] = el)}
                       onClick={action}
-                      className={`text-xs font-bold uppercase tracking-widest transition-colors bg-transparent cursor-pointer p-0 border-b-2 pb-1 ${isActive
-                        ? 'text-[#00c9d6] border-[#00c9d6]'
-                        : 'text-slate-700 border-transparent hover:text-[#00c9d6]'
+                      className={`text-xs font-bold tracking-wider transition-colors duration-200 bg-transparent cursor-pointer py-1 border-none ${isActive
+                        ? 'text-[#00c9d6]'
+                        : 'text-slate-700 hover:text-[#00c9d6]'
                         }`}
                     >
                       {label}

@@ -30,14 +30,13 @@ export default function Process() {
 
         {/* Header */}
         <div className="text-center mb-16 max-w-3xl mx-auto">
-          <span className="text-xs font-bold tracking-widest uppercase text-[#00e5ff] flex items-center justify-center gap-1.5 mb-3">
-
-            HOW IT WORKS
+          <span className="text-xs font-bold tracking-widest text-[#00c9d6] flex items-center justify-center gap-1.5 mb-3">
+            How It Works
           </span>
-          <h2 id="process-title" className="text-3xl sm:text-5xl font-sans font-bold uppercase text-[#0f172a] mb-4 tracking-tight leading-none">
-            Four Steps To Clarity<span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)]">.</span>
+          <h2 id="process-title" className="text-3xl sm:text-5xl font-sans font-bold text-[#0f172a] mb-4 tracking-tight leading-none">
+            Four Steps To Clarity<span className="text-[#00c9d6] drop-shadow-[0_0_8px_rgba(0,201,214,0.8)] font-bold">.</span>
           </h2>
-          <p className="text-sm sm:text-base text-surface-600 font-normal leading-relaxed">
+          <p className="text-sm sm:text-base text-surface-600 font-medium leading-relaxed">
             Zero cognitive friction. A clear, stress-free pathway from initial selection to ongoing mentorship.
           </p>
         </div>
@@ -49,24 +48,24 @@ export default function Process() {
             return (
               <div
                 key={idx}
-                className={`flex flex-col justify-between p-7 rounded-xl bg-white border border-surface-200 hover-scale-card hover:border-[#00e5ff] transition-all duration-300 min-h-[220px] shadow-xs group reveal-on-scroll reveal-scale-in ${delayClass}`}
+                className={`flex flex-col justify-between p-7 rounded-xl bg-white border border-surface-200 hover-scale-card hover:border-[#00c9d6] transition-all duration-300 min-h-[220px] shadow-xs group reveal-on-scroll reveal-scale-in ${delayClass}`}
               >
               <div>
                 <div className="flex items-center justify-between w-full mb-6">
-                  <span className="text-4xl font-black text-[#0f172a] font-sans group-hover:text-[#00e5ff] transition-colors">
+                  <span className="text-4xl font-bold text-[#0f172a] font-sans group-hover:text-[#00c9d6] transition-colors">
                     {step.num}
                   </span>
-                  <span className="w-2 h-2 rounded-full bg-[#00e5ff] shadow-[0_0_6px_#00e5ff]" />
+                  <span className="w-2 h-2 rounded-full bg-[#00c9d6] shadow-[0_0_6px_#00c9d6]" />
                 </div>
 
-                <h3 className="text-base font-bold text-[#0f172a] uppercase mb-2 font-sans">{step.title}</h3>
+                <h3 className="text-base font-bold text-[#0f172a] mb-2 font-sans">{step.title}</h3>
                 <p className="text-surface-600 text-xs leading-relaxed font-normal">
                   {step.desc}
                 </p>
               </div>
 
               <div className="pt-4 border-t border-surface-100 mt-4">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-[#00e5ff]">STEP {step.num}</span>
+                <span className="text-[10px] font-bold tracking-widest text-[#007078]">Step {step.num}</span>
               </div>
             </div>
             );
@@ -77,10 +76,10 @@ export default function Process() {
         <div className="mt-14 text-center">
           <button
             onClick={() => { window.spaNavigate?.('/booking'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-            className="px-8 py-3.5 bg-[#0f172a] hover:bg-[#1e293b] text-white font-bold text-xs uppercase tracking-widest rounded-full transition-all cursor-pointer border border-[#00e5ff]/30 shadow-sm inline-flex items-center gap-2"
+            className="px-8 py-3.5 bg-[#0f172a] hover:bg-[#00c9d6] hover:text-slate-950 text-white font-bold text-xs tracking-wider rounded-full transition-all cursor-pointer border-none shadow-sm inline-flex items-center gap-2 hover-scale-btn"
           >
             <span>Start Your Session Today</span>
-            <span className="text-xs text-[#00e5ff]">›</span>
+            <span className="text-xs text-[#00c9d6]">›</span>
           </button>
         </div>
       </div>

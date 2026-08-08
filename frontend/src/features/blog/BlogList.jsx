@@ -65,7 +65,7 @@ const BlogList = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col text-slate-900 pt-24 pb-20 relative overflow-hidden select-none">
+    <div className="min-h-screen flex flex-col text-slate-900 pt-20 pb-12 relative overflow-hidden select-none">
       {/* Seamless Smooth Background Layer */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <img
@@ -76,34 +76,34 @@ const BlogList = () => {
       </div>
 
       {/* Hero Header Section */}
-      <section className="relative z-10 py-12 sm:py-16 px-4 sm:px-6 lg:px-8 reveal-on-scroll">
-        <div className="max-w-5xl mx-auto text-center space-y-5">
-          <span className="text-xs font-bold tracking-widest text-[#00c9d6] flex items-center justify-center gap-1.5 mb-1">
+      <section className="relative z-10 pt-4 pb-4 sm:pt-6 sm:pb-6 px-4 sm:px-6 lg:px-8 reveal-on-scroll">
+        <div className="max-w-5xl mx-auto text-center space-y-3">
+          <span className="text-[11px] sm:text-xs font-bold tracking-widest text-[#00c9d6] flex items-center justify-center gap-1.5">
             BEHOLD INSIGHTS & RESEARCH
           </span>
 
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-sans font-bold tracking-tight text-slate-900 max-w-4xl mx-auto leading-none">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-sans font-bold tracking-tight text-slate-900 max-w-4xl mx-auto leading-tight">
             Scientific Insights For <span className="text-slate-900">Future Leaders</span><span className="text-[#00c9d6] drop-shadow-[0_0_8px_rgba(0,201,214,0.6)] font-bold">.</span>
           </h1>
 
-          <p className="text-sm sm:text-base lg:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed font-medium">
+          <p className="text-xs sm:text-sm lg:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed font-medium">
             In-depth career roadmaps, stream selection psychology, C-DAT research, and parenting frameworks authored by CIGI mentors.
           </p>
 
           {/* Search Bar */}
-          <form onSubmit={handleSearchSubmit} className="mt-8 max-w-2xl mx-auto relative">
-            <div className="relative flex items-center bg-white/95 backdrop-blur-md border border-slate-200/90 rounded-full shadow-md focus-within:border-[#00c9d6] focus-within:ring-2 focus-within:ring-[#00c9d6]/20 transition-all p-1.5">
-              <Search className="w-5 h-5 text-slate-400 absolute left-5 pointer-events-none" />
+          <form onSubmit={handleSearchSubmit} className="mt-4 max-w-2xl mx-auto relative">
+            <div className="relative flex items-center bg-white/95 backdrop-blur-md border border-slate-200/90 rounded-full shadow-sm focus-within:border-[#00c9d6] focus-within:ring-2 focus-within:ring-[#00c9d6]/20 transition-all p-1">
+              <Search className="w-4 h-4 text-slate-400 absolute left-4 pointer-events-none" />
               <input
                 type="text"
                 placeholder="Search articles, streams, or guidance topics..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-32 py-3 bg-transparent text-slate-900 placeholder-slate-400 text-sm font-medium outline-none"
+                className="w-full pl-11 pr-28 py-2.5 bg-transparent text-slate-900 placeholder-slate-400 text-xs sm:text-sm font-medium outline-none"
               />
               <button
                 type="submit"
-                className="absolute right-2 top-1.5 bottom-1.5 px-6 rounded-full bg-[#0f172a] hover:bg-[#00c9d6] hover:text-slate-950 text-white font-bold text-xs tracking-wider transition-all cursor-pointer shadow-sm hover-scale-btn border-none flex items-center justify-center gap-1.5"
+                className="absolute right-1.5 top-1.5 bottom-1.5 px-5 rounded-full bg-[#0f172a] hover:bg-[#00c9d6] hover:text-slate-950 text-white font-bold text-xs tracking-wider transition-all cursor-pointer shadow-xs hover-scale-btn border-none flex items-center justify-center gap-1.5"
               >
                 Search
               </button>
@@ -111,7 +111,7 @@ const BlogList = () => {
           </form>
 
           {/* Category Pill Tabs */}
-          <div className="mt-8 flex flex-wrap justify-center items-center gap-2.5">
+          <div className="mt-4 flex flex-wrap justify-center items-center gap-2">
             {CATEGORIES.map((cat) => {
               const active = selectedCategory === cat;
               return (
@@ -119,9 +119,9 @@ const BlogList = () => {
                   key={cat}
                   type="button"
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-5 py-2.5 rounded-full text-xs font-bold tracking-wider transition-all duration-300 cursor-pointer border ${
+                  className={`px-4 py-2 rounded-full text-xs font-bold tracking-wider transition-all duration-300 cursor-pointer border ${
                     active
-                      ? 'bg-[#0f172a] text-white border-[#00c9d6] shadow-md scale-105'
+                      ? 'bg-[#0f172a] text-white border-[#00c9d6] shadow-sm'
                       : 'bg-white/90 text-slate-700 border-slate-200 hover:border-[#00c9d6] hover:text-slate-950'
                   }`}
                 >
@@ -134,7 +134,7 @@ const BlogList = () => {
       </section>
 
       {/* Main Blog Grid Section */}
-      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full relative z-10">
+      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 w-full relative z-10">
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[1, 2, 3, 4, 5, 6].map((i) => (
