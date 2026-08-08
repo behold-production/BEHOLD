@@ -49,6 +49,7 @@ const BlogList = lazyWithRetry(() => import('../features/blog/BlogList'));
 const BlogPostDetail = lazyWithRetry(() => import('../features/blog/BlogPostDetail'));
 const FaqsPage = lazyWithRetry(() => import('../features/faqs/FaqsPage'));
 const GoogleCallbackRedirect = lazyWithRetry(() => import('../components/common/GoogleCallbackRedirect'));
+const NotFound = lazyWithRetry(() => import('../components/common/NotFound'));
 import BlogSection from '../features/landing/BlogSection';
 
 import { useAuth } from '../context/AuthContext';
@@ -793,16 +794,8 @@ export default function App() {
           {/* Intercept Google OAuth Callback if hitting frontend directly */}
           <Route path="/api/google/callback" element={<GoogleCallbackRedirect />} />
 
-          {/* Catch-all fallback */}
-          <Route path="*" element={
-            <Navigate to={
-              user?.role?.toUpperCase() === 'PSYCHOLOGIST' || user?.role?.toUpperCase() === 'COUNSELLOR'
-                ? "/counsellor"
-                : (user?.role?.toUpperCase() === 'ADMIN' || user?.role?.toUpperCase() === 'SUPER_ADMIN' || user?.role?.toUpperCase() === 'SUB_ADMIN')
-                  ? "/admin"
-                  : "/"
-            } replace />
-          } />
+          {/* Catch-all fallback 404 */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
 

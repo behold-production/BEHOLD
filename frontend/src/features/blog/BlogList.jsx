@@ -5,6 +5,7 @@ import ApiService from '../../services/api';
 import greenTexture from '../../assets/greygreen.png';
 import { getImageUrl } from '../../utils/formatters';
 import defaultBlogImage from '../../assets/luxury_clinic_room.png';
+import SEO from '../../components/common/SEO';
 
 const CATEGORIES = [
   'All',
@@ -65,7 +66,13 @@ const BlogList = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col text-slate-900 pt-20 pb-12 relative overflow-hidden select-none">
+    <>
+      <SEO 
+        title="Insights & Research" 
+        description="In-depth career roadmaps, stream selection psychology, C-DAT research, and parenting frameworks authored by CIGI mentors." 
+        canonicalUrl={typeof window !== 'undefined' ? window.location.origin + "/blog" : undefined}
+      />
+      <div className="min-h-screen flex flex-col text-slate-900 pt-20 pb-12 relative overflow-hidden select-none">
       {/* Seamless Smooth Background Layer */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <img
@@ -284,6 +291,7 @@ const BlogList = () => {
         )}
       </main>
     </div>
+    </>
   );
 };
 

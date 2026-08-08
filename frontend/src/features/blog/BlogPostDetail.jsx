@@ -5,6 +5,7 @@ import ApiService from '../../services/api';
 import greenTexture from '../../assets/greygreen.png';
 import { getImageUrl, formatBlogContent } from '../../utils/formatters';
 import defaultBlogImage from '../../assets/luxury_clinic_room.png';
+import SEO from '../../components/common/SEO';
 
 const BlogPostDetail = () => {
   const { slug } = useParams();
@@ -91,28 +92,63 @@ const BlogPostDetail = () => {
 
   if (!post) {
     return (
-      <div className="min-h-screen flex flex-col justify-center items-center text-center px-4 text-surface-900 pt-28 pb-16 relative overflow-hidden">
-        {bgLayer}
-        <div className="relative z-10 flex flex-col items-center">
-          <BookOpen className="w-14 h-14 text-[#0f172a] mb-4 opacity-75" />
-          <h1 className="text-2xl font-bold mb-2 uppercase tracking-wide">Article Not Found</h1>
-          <p className="text-surface-600 mb-6 text-sm">The article you are looking for may have been moved or unpublished.</p>
-          <button
-            type="button"
-            onClick={handleBack}
-            className="px-7 py-3 rounded-full bg-[#0f172a] hover:bg-[#1e293b] text-white font-bold text-xs uppercase tracking-widest cursor-pointer border border-[#00e5ff]/30 shadow-xs transition-all"
-          >
-            Back to All Articles
-          </button>
+      <>
+        <SEO title="Article Not Found" noindex={true} />
+        <div className="min-h-screen flex flex-col justify-center items-center text-center px-4 text-surface-900 pt-28 pb-16 relative overflow-hidden">
+          {bgLayer}
+          <div className="relative z-10 flex flex-col items-center">
+            <BookOpen className="w-14 h-14 text-[#0f172a] mb-4 opacity-75" />
+            <h1 className="text-2xl font-bold mb-2 uppercase tracking-wide">Article Not Found</h1>
+            <p className="text-surface-600 mb-6 text-sm">The article you are looking for may have been moved or unpublished.</p>
+            <button
+              type="button"
+              onClick={handleBack}
+              className="px-7 py-3 rounded-full bg-[#0f172a] hover:bg-[#1e293b] text-white font-bold text-xs uppercase tracking-widest cursor-pointer border border-[#00e5ff]/30 shadow-xs transition-all"
+            >
+              Back to All Articles
+            </button>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": typeof window !== 'undefined' ? window.location.href : ""
+    },
+    "headline": post.title,
+    "image": [
+      post.coverImage ? getImageUrl(post.coverImage) : defaultBlogImage
+    ],
+    "datePublished": new Date(post.createdAt || post.date).toISOString(),
+    "dateModified": new Date(post.updatedAt || post.createdAt || post.date).toISOString(),
+    "author": {
+      "@type": "Person",
+      "name": post.authorName || 'Behold Aspire Editor'
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Behold Aspire",
+      "logo": {
+        "@type": "ImageObject",
+        "url": typeof window !== 'undefined' ? window.location.origin + "/favicon.ico" : ""
+      }
+    }
+  };
+
   return (
-    <div 
-      className="min-h-screen flex flex-col text-slate-900 pt-28 pb-20 selection:bg-[#0f172a] selection:text-[#00c9d6] relative overflow-hidden select-none"
-    >
+    <>
+      <SEO 
+        title={post.title} 
+        description={post.excerpt || (post.content?.substring(0, 150)?.replace(/<[^>]+>/g, '') + '...')} 
+        canonicalUrl={typeof window !== 'undefined' ? window.location.href : undefined}
+        schema={schema}
+      />
+      <div className="min-h-screen flex flex-col text-slate-900 pt-28 pb-20 selection:bg-[#0f172a] selection:text-[#00c9d6] relative overflow-hidden select-none">
       {bgLayer}
       <main className="flex-1 relative z-10">
         <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 reveal-on-scroll">
@@ -277,6 +313,7 @@ const BlogPostDetail = () => {
         )}
       </main>
     </div>
+    </>
   );
 };
 

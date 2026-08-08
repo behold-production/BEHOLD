@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import headerBg from "../../assets/header.svg";
+import SEO from "../../components/common/SEO";
 
 export default function Hero({ siteSettings, navigateToSection, onOpenBooking }) {
   const settings = siteSettings || {};
@@ -22,7 +23,13 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
   };
 
   return (
-    <section
+    <>
+      <SEO 
+        title="Psychological Care & Mentoring" 
+        description={subtitleText} 
+        canonicalUrl={window.location.origin + "/"}
+      />
+      <section
       id="home"
       className="relative min-h-screen w-full overflow-hidden flex items-center justify-center pt-24 pb-16 px-5 sm:px-10 lg:px-16 bg-transparent transition-opacity duration-500"
     >
@@ -88,5 +95,6 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
 
       </div>
     </section>
+    </>
   );
 }

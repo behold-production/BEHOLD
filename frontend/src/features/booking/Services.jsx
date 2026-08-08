@@ -1,6 +1,7 @@
 import React from 'react';
 import { Brain, Compass, FileText, Sparkles, ArrowRight } from 'lucide-react';
 import greyGreenBg from '../../assets/greygreen.png';
+import SEO from '../../components/common/SEO';
 
 export default function Services({ setView, onBookTherapist, siteSettings, mode }) {
   const settings = siteSettings || JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
@@ -77,7 +78,13 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
   };
 
   return (
-    <section id={sectionId} className="relative py-14 sm:py-20 overflow-hidden text-slate-900 select-none">
+    <>
+      <SEO 
+        title="Services & Appointments" 
+        description="Book a session for Psychological Counselling, Career Mentoring, or C-DAT Aptitude tests." 
+        canonicalUrl={window.location.origin + "/booking"}
+      />
+      <section id="services" className="py-24 bg-transparent relative overflow-hidden text-slate-900 reveal-on-scroll">
       {/* Background Image Layer with smooth mask gradient fade */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <img
@@ -153,7 +160,8 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
           })}
         </div>
 
-      </div>
-    </section>
+        </div>
+      </section>
+    </>
   );
 }
