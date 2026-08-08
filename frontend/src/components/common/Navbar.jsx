@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import LogoutConfirmModal from './LogoutConfirmModal';
 import BrandIcon from './BrandIcon';
+import { Menu, X, User } from 'lucide-react';
 
 export default function Navbar({ navigateToSection, currentView, onOpenAuth, onOpenBooking, siteName, siteSettings }) {
   const [isScrolled, setIsScrolled] = useState(false);
