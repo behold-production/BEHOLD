@@ -126,9 +126,11 @@ function UnauthorizedFallback({ roleRequired }) {
         style={{ background: 'radial-gradient(circle at 35% 45%, rgba(0, 229, 255, 0.08), transparent 50%), radial-gradient(circle at 65% 55%, rgba(99, 102, 241, 0.05), transparent 50%)' }} />
 
       {/* Logo Header outside the card */}
-      <div className='text-center mb-8 relative z-10 flex flex-col items-center justify-center gap-2'>
-        <BrandIcon variant="full" size="xl" darkBg={true} />
-        <p className='text-[10px] tracking-[0.25em] font-bold text-slate-400 uppercase'>
+      <div className='text-center mb-8 relative z-10'>
+        <h1 className='text-3xl font-extrabold tracking-wider text-white font-header'>
+          BEHOLD<span className='text-[#00E5FF]'>.</span>
+        </h1>
+        <p className='text-[10px] tracking-[0.25em] font-bold text-slate-400 mt-2 uppercase'>
           Administrator Control Gate
         </p>
       </div>

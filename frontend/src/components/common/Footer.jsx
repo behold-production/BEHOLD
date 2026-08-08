@@ -28,9 +28,9 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
             <button
               id="footer-brand"
               onClick={() => navigateToSection?.('top')}
-              className="bg-transparent border-none cursor-pointer p-0 mb-4 flex items-center"
+              className="text-2xl sm:text-3xl font-sans font-black text-white uppercase tracking-tight bg-transparent border-none cursor-pointer p-0 flex items-baseline gap-0.5 mb-4"
             >
-              <BrandIcon variant="full" size="lg" darkBg={true} />
+              <span>{(siteName || 'BEHOLD').replace(/\.$/, '')}<span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)] font-black">.</span></span>
             </button>
             <p className="text-surface-300 text-xs sm:text-sm leading-relaxed mb-6 font-normal max-w-sm">
               Professional online psychological counselling for individuals seeking better mental wellbeing. Confidential, evidence-based support from qualified psychologists—wherever you are.

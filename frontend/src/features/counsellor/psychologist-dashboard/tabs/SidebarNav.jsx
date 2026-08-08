@@ -30,7 +30,9 @@ const SidebarNav = ({
  {/* Logo & Header */}
  <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
  <div className="flex items-center gap-2">
- <BrandIcon variant="full" size="sm" darkBg={true} />
+ <span className="font-header font-bold text-lg tracking-tighter text-white">
+ BEHOLD<span className="text-brand font-bold">.</span>
+ </span>
  </div>
  {/* Close Button inside Drawer (Mobile Only) */}
  <button

@@ -22,9 +22,11 @@ export default function SidebarNav(props) {
  {isMobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
  </button>
 
- <div className="flex items-center gap-2">
- <BrandIcon variant="full" size="sm" darkBg={true} />
- <span className="text-xs bg-zinc-800 border border-zinc-700 text-zinc-400 px-1.5 py-0.5 rounded font-bold">
+ <div className="flex items-center gap-1.5">
+ <span className="font-header font-bold text-base tracking-tighter text-white">
+ BEHOLD<span className="text-brand font-bold">.</span>
+ </span>
+ <span className="text-xs bg-zinc-800 border border-zinc-700 text-zinc-400 px-1 py-0.2 rounded font-bold">
  CONSOLE
  </span>
  </div>
