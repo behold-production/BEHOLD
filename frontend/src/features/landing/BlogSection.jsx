@@ -79,19 +79,18 @@ const BlogSection = () => {  const navigate = useNavigate();
 
         {/* Header */}
         <div className="text-center mb-10 reveal-on-scroll">
-          <span className="text-xs font-bold tracking-widest uppercase text-[#00e5ff] flex items-center justify-center gap-1.5 mb-3">
-
+          <span className="text-xs font-bold tracking-widest text-[#00e5ff] flex items-center justify-center gap-1.5 mb-3">
             Latest Insights
           </span>
-          <h2 id="blog-title" className="text-3xl sm:text-4xl md:text-5xl font-sans font-black text-[#0f172a] mb-4 tracking-tight leading-tight uppercase">
-            Guidance for Your Journey<span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)] font-black">.</span>
+          <h2 id="blog-title" className="text-3xl sm:text-4xl md:text-5xl font-sans font-bold text-[#0f172a] mb-4 tracking-tight leading-tight">
+            Guidance for Your Journey<span className="text-[#00c9d6] drop-shadow-[0_0_8px_rgba(0,201,214,0.6)] font-bold">.</span>
           </h2>
-          <p className="text-sm sm:text-base text-surface-600 max-w-xl mx-auto leading-relaxed font-normal mb-6">
+          <p className="text-sm sm:text-base text-surface-600 max-w-xl mx-auto leading-relaxed font-medium mb-6">
             Research-backed articles, student guides, and mental health resources from our clinical team.
           </p>
           <button
             onClick={handleOpenAllBlogs}
-            className="px-6 py-2.5 bg-[#0f172a] hover:bg-[#1e293b] text-white font-bold text-xs uppercase tracking-widest rounded-full transition-all border border-[#00e5ff]/30 cursor-pointer shadow-xs"
+            className="px-6 py-2.5 bg-[#0f172a] hover:bg-[#00c9d6] hover:text-slate-950 text-white font-bold text-xs tracking-wider rounded-full transition-all border-none cursor-pointer shadow-sm hover-scale-btn"
           >
             Explore All Articles
           </button>
@@ -139,7 +138,7 @@ const BlogSection = () => {  const navigate = useNavigate();
           </div>
         ) : blogs.length === 0 ? (
           <div className="text-center py-16 bg-white rounded-xl border border-surface-200 shadow-xs">
-            <h3 className="text-xl font-bold text-[#0f172a] mb-2 uppercase">No Articles Found</h3>
+            <h3 className="text-xl font-bold text-[#0f172a] mb-2">No Articles Found</h3>
             <p className="text-surface-600 font-normal text-sm max-w-md mx-auto">Check back soon for new insights and research articles.</p>
           </div>
         ) : (
@@ -164,12 +163,12 @@ const BlogSection = () => {  const navigate = useNavigate();
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a]/50 to-transparent opacity-50 group-hover:opacity-30 transition-opacity duration-300" />
                 {/* Category Badge */}
-                <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-white/95 backdrop-blur-sm text-[#0f172a] text-[10px] font-bold tracking-wider uppercase border border-surface-200">
+                <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-white/95 backdrop-blur-sm text-[#0f172a] text-[10px] font-bold tracking-wider border border-surface-200">
                   {post.category || 'Career Guidance'}
                 </span>
 
                 {/* Read Time */}
-                <div className="absolute bottom-4 right-4 flex items-center gap-1 text-[10px] font-semibold text-[#0f172a] bg-white/95 backdrop-blur-sm px-3 py-1 rounded-full border border-surface-200 uppercase">
+                <div className="absolute bottom-4 right-4 flex items-center gap-1 text-[10px] font-semibold text-[#0f172a] bg-white/95 backdrop-blur-sm px-3 py-1 rounded-full border border-surface-200">
                   <Clock className="w-3 h-3 text-[#00e5ff]" />
                   <span>{post.readTime || '5 min read'}</span>
                 </div>
@@ -178,7 +177,7 @@ const BlogSection = () => {  const navigate = useNavigate();
               {/* Content Body */}
               <div className="p-6 sm:p-7 flex-1 flex flex-col justify-between space-y-6">
                 <div className="space-y-3">
-                  <h3 className="text-lg font-bold text-[#0f172a] group-hover:text-[#00e5ff] transition-colors line-clamp-2 leading-snug font-sans uppercase">
+                  <h3 className="text-lg font-bold text-[#0f172a] group-hover:text-[#00e5ff] transition-colors line-clamp-2 leading-snug font-sans">
                     {post.title}
                   </h3>
                   <p className="text-xs text-surface-600 line-clamp-3 leading-relaxed font-normal">
