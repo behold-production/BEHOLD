@@ -398,6 +398,12 @@ const PaymentController = {
         isRead: false
       });
 
+      // --- Email Alerts for Paid Bookings ---
+      if (user && counsellor) {
+        EmailService.sendAppointmentBooked({ user, counsellor, appointment: newAppointment }).catch(err => console.error('[Email Booked Error]:', err));
+        EmailService.sendPaymentReceipt({ user, appointment: newAppointment, counsellor, amount: netTotal, transactionId: razorpay_payment_id }).catch(err => console.error('[Email Payment Receipt Error]:', err));
+      }
+
       res.status(200).json({
         success: true,
         message: 'Payment verified and appointment confirmed.',

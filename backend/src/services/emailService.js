@@ -67,8 +67,13 @@ function _getTransporter() {
   }
 
   _transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: { user, pass }
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    auth: { user, pass },
+    tls: {
+      rejectUnauthorized: false
+    }
   });
 
   return _transporter;
@@ -169,6 +174,8 @@ const sendEmail = async (to, subject, html) => {
 const Templates = require('../utils/emailTemplates');
 
 const EmailService = {
+  sendEmail,
+
   // Auth
   async sendWelcomeUser(user) {
     const html = Templates.welcomeUser({ name: user.name });
