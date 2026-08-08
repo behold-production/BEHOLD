@@ -601,7 +601,7 @@ export default function SettingsTab(props) {
                   <div className="flex items-center justify-between gap-4">
                     <div>
                       <span className="text-sm font-bold text-zinc-300 block">System Banner Notification Bar</span>
-                      <span className="text-xs text-zinc-500 block font-medium mt-1 leading-relaxed">Display an alert message at the very top of all student-facing views.</span>
+                      <span className="text-xs text-zinc-500 block font-medium mt-1 leading-relaxed">Display an alert message at the very top of all user-facing views.</span>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer shrink-0">
                       <input
@@ -762,7 +762,7 @@ export default function SettingsTab(props) {
 
                         Hero Trust Stats Bar (Below Hero Buttons)
                       </h4>
-                      <p className="text-[11px] text-zinc-400 mt-0.5">These numbers display directly beneath the action buttons on the main screen (e.g. 500+ Students Guided).</p>
+                      <p className="text-[11px] text-zinc-400 mt-0.5">These numbers display directly beneath the action buttons on the main screen (e.g. 500+ Users Guided).</p>
                     </div>
                     <button
                       type="button"
@@ -811,7 +811,7 @@ export default function SettingsTab(props) {
                               <input
                                 type="text"
                                 required
-                                placeholder="e.g. Students Guided"
+                                placeholder="e.g. Users Guided"
                                 value={stat.label || ''}
                                 onChange={(e) => {
                                   const newStats = [...settingsForm.heroStats];
@@ -1673,9 +1673,9 @@ export default function SettingsTab(props) {
                           onChange={(e) => setAnnouncementRole(e.target.value)}
                           className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold cursor-pointer transition-colors"
                         >
-                          <option value="user">All Students / Users</option>
+                          <option value="user">All Users</option>
                           <option value="counsellor">All Psychologists</option>
-                          <option value="everyone">Everyone (Students & Psychologists)</option>
+                          <option value="everyone">Everyone (Users & Psychologists)</option>
                         </select>
                       </div>
 

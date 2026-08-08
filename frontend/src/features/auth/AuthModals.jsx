@@ -97,7 +97,7 @@ export default function AuthModals({ isOpen, onClose }) {
    });
  };
 
- // ── Forgot Password: Step 1 — send OTP ──────────────────────────
+ // Forgot Password: Step 1 - send OTP
  const handleSendResetOtp = async () => {
    if (!forgotEmail.trim()) return showToast('Please enter your email address');
    if (!validateEmail(forgotEmail)) return showToast('Please enter a valid email address');
@@ -123,7 +123,7 @@ export default function AuthModals({ isOpen, onClose }) {
    }
  };
 
- // ── Forgot Password: Step 2 — verify OTP + set new password ────
+ // Forgot Password: Step 2 - verify OTP + set new password
  const handleVerifyResetOtp = async () => {
    if (!resetOtp.trim() || resetOtp.length !== 6) return showToast('Please enter the 6-digit code');
    if (!newPassword || newPassword.length < 6) return showToast('New password must be at least 6 characters');
@@ -142,7 +142,7 @@ export default function AuthModals({ isOpen, onClose }) {
    }
  };
 
- // ── Main form submit (login / register) ─────────────────────────
+ // Main form submit (login / register)
  const handleSubmit = async (e) => {
    e.preventDefault();
    setIsLoading(true);
@@ -308,7 +308,7 @@ return createPortal(
              </button>
            </div>
          ) : mode === 'forgot' ? (
-           /* ─── FORGOT PASSWORD FLOW ─── */
+           /* FORGOT PASSWORD FLOW */
            <div className="p-6 space-y-5">
 
              {/* Step 1: Email Input */}
@@ -552,7 +552,7 @@ return createPortal(
                </div>
              )}
 
-             {/* Full Name — register only */}
+             {/* Full Name - register only */}
              {mode === 'register' && (
                <div className="space-y-1.5">
                  <label className="text-xs font-bold text-zinc-500 block">Full Name</label>
@@ -571,7 +571,7 @@ return createPortal(
                </div>
              )}
 
-             {/* Phone Number — register only */}
+             {/* Phone Number - register only */}
              {mode === 'register' && (
                <div className="space-y-1.5">
                  <label className="text-xs font-bold text-zinc-500 block">Phone Number</label>
@@ -592,7 +592,7 @@ return createPortal(
                </div>
              )}
 
-             {/* Email — login (email method) & register */}
+             {/* Email - login (email method) & register */}
              {(mode === 'register' || (mode === 'login' && loginMethod === 'email')) && (
                <div className="space-y-1.5">
                  <label className="text-xs font-bold text-zinc-500 block">Email Address</label>
@@ -611,7 +611,7 @@ return createPortal(
                </div>
              )}
 
-             {/* Password — login & register */}
+             {/* Password - login & register */}
              {(mode === 'register' || (mode === 'login' && loginMethod === 'email')) && (
                <div className="space-y-1.5">
                  <div className="flex items-center justify-between">
@@ -649,7 +649,7 @@ return createPortal(
                </div>
              )}
 
-             {/* Confirm Password — register */}
+             {/* Confirm Password - register */}
              {mode === 'register' && (
                <div className="space-y-1.5">
                  <label className="text-xs font-bold text-zinc-500 block">Confirm Password</label>

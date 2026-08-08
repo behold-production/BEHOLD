@@ -1856,7 +1856,7 @@ export default function PsychologistManagementTab(props) {
               const bio =
                 viewingPsychologist.bio ||
                 viewingPsychologist.experience ||
-                "Professional clinical therapist committed to student wellbeing.";
+                "Professional clinical therapist committed to user wellbeing.";
 
               return (
                 <div className="space-y-6">
@@ -2092,7 +2092,7 @@ export default function PsychologistManagementTab(props) {
                         <table className="w-full text-sm border-collapse text-left min-w-[420px]">
                           <thead>
                             <tr className="bg-zinc-900/50 text-zinc-500 font-bold border-b border-zinc-855">
-                              <th className="p-2.5">Client Student</th>
+                              <th className="p-2.5">Client User</th>
                               <th className="p-2.5">Date & Time</th>
                               <th className="p-2.5">Type & Mode</th>
                               <th className="p-2.5 text-center">Status</th>
@@ -2132,7 +2132,7 @@ export default function PsychologistManagementTab(props) {
                                       <span className="text-white block font-semibold">
                                         {student
                                           ? student.name
-                                          : "Unknown Student"}
+                                          : "Unknown User"}
                                       </span>
                                       <span className="text-zinc-500 text-sm truncate block max-w-[150px]">
                                         {student ? student.email : ""}
@@ -2661,7 +2661,7 @@ export default function PsychologistManagementTab(props) {
               const price = viewingPsychologist.price || 1200;
               const halfSessionPrice = viewingPsychologist.halfSessionPrice || 499;
               const lang = viewingPsychologist.lang || 'English, Malayalam';
-              const bio = viewingPsychologist.bio || viewingPsychologist.experience || 'Professional clinical therapist committed to student wellbeing.';
+              const bio = viewingPsychologist.bio || viewingPsychologist.experience || 'Professional clinical therapist committed to user wellbeing.';
 
               return (
                 <div className="space-y-6">
@@ -2827,7 +2827,7 @@ export default function PsychologistManagementTab(props) {
                         <table className="w-full text-sm border-collapse text-left min-w-[420px]">
                           <thead>
                             <tr className="bg-zinc-900/50 text-zinc-500 font-bold border-b border-zinc-855">
-                              <th className="p-2.5">Client Student</th>
+                              <th className="p-2.5">Client User</th>
                               <th className="p-2.5">Date & Time</th>
                               <th className="p-2.5">Type & Mode</th>
                               <th className="p-2.5 text-center">Status</th>
@@ -2848,7 +2848,7 @@ export default function PsychologistManagementTab(props) {
                                 return (
                                   <tr key={b.id} className="border-b border-zinc-900/60 hover:bg-zinc-900/30">
                                     <td className="p-2.5">
-                                      <span className="text-white block font-semibold">{student ? student.name : 'Unknown Student'}</span>
+                                      <span className="text-white block font-semibold">{student ? student.name : 'Unknown User'}</span>
                                       <span className="text-zinc-500 text-sm truncate block max-w-[150px]">{student ? student.email : ''}</span>
                                     </td>
                                     <td className="p-2.5">

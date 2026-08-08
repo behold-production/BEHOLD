@@ -102,11 +102,11 @@ export const downloadDiagnosticPDF = async (booking) => {
     doc.text(`Education: ${cEdu}`, 20, 61);
     doc.text(`Contact: ${cPhone} | ${cEmail}`, 20, 66);
 
-    // 2. Student (Client) Details
+    // 2. User (Client) Details
     doc.setFont('Helvetica', 'bold');
     doc.setFontSize(10);
     doc.setTextColor(15, 23, 42);
-    doc.text('STUDENT DETAILS', 115, 45);
+    doc.text('USER DETAILS', 115, 45);
 
     doc.setFont('Helvetica', 'normal');
     doc.setFontSize(8.5);
@@ -212,7 +212,7 @@ export const downloadDiagnosticPDF = async (booking) => {
     const clinicalNotes = booking.notes || 'No clinical/diagnostic notes recorded for this session.';
     printTextSection('Clinical Assessment & Observation Notes:', clinicalNotes, 8);
 
-    const feedbackText = booking.feedback || 'No student-facing feedback or recommendations recorded.';
+    const feedbackText = booking.feedback || 'No user-facing feedback or recommendations recorded.';
     printTextSection('Recommendations & Feedback:', feedbackText, 10);
 
     const hasNextSession = booking.nextSession && 

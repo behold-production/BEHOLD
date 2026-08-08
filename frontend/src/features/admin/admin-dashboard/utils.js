@@ -74,7 +74,7 @@ export function getInitials(name) {
         format: 'a4'
       });
 
-      const clientName = booking.student?.name || booking.studentName || booking.userName || 'Student';
+      const clientName = booking.student?.name || booking.studentName || booking.userName || 'User';
       const clientEmail = booking.student?.email || 'N/A';
       const clientPhone = booking.student?.phone || 'N/A';
 
@@ -321,11 +321,11 @@ export function getInitials(name) {
       doc.text(`Education: ${cEdu}`, 20, 61);
       doc.text(`Contact: ${cPhone} | ${cEmail}`, 20, 66);
 
-      // 2. Student (Client) Details - Right side
+      // 2. User (Client) Details - Right side
       doc.setFont('Helvetica', 'bold');
       doc.setFontSize(10);
       doc.setTextColor(15, 23, 42);
-      doc.text('STUDENT DETAILS', 115, 45);
+      doc.text('USER DETAILS', 115, 45);
 
       doc.setFont('Helvetica', 'normal');
       doc.setFontSize(8.5);
@@ -438,7 +438,7 @@ export function getInitials(name) {
       const clinicalNotes = booking.notes || 'No clinical/diagnostic notes recorded for this session.';
       printTextSection('Clinical Assessment & Observation Notes:', clinicalNotes, 8);
 
-      const feedbackText = booking.feedback || 'No student-facing feedback or recommendations recorded.';
+      const feedbackText = booking.feedback || 'No user-facing feedback or recommendations recorded.';
       printTextSection('Recommendations & Feedback:', feedbackText, 10);
 
       const hasNextSession = booking.nextSession && 

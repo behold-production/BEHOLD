@@ -445,11 +445,11 @@ export default function AdminDashboard({ setView: _setView }) {
  doc.text(`Education: ${cEdu}`, 20, 61);
  doc.text(`Contact: ${cPhone} | ${cEmail}`, 20, 66);
 
- // 2. Student (Client) Details - Right side
+ // 2. User (Client) Details - Right side
  doc.setFont('Helvetica', 'bold');
  doc.setFontSize(10);
  doc.setTextColor(15, 23, 42);
- doc.text('STUDENT DETAILS', 115, 45);
+ doc.text('USER DETAILS', 115, 45);
 
  doc.setFont('Helvetica', 'normal');
  doc.setFontSize(8.5);
@@ -564,7 +564,7 @@ export default function AdminDashboard({ setView: _setView }) {
  printTextSection('Clinical Assessment & Observation Notes:', clinicalNotes, 8);
 
  // 2. Recommendations & Feedback
- const feedbackText = booking.feedback || 'No student-facing feedback or recommendations recorded.';
+ const feedbackText = booking.feedback || 'No user-facing feedback or recommendations recorded.';
  printTextSection('Recommendations & Feedback:', feedbackText, 10);
 
  // 3. Next Session (Optional)
@@ -1433,7 +1433,7 @@ const _handleAdminDetectLocation = () => {
  const isSuperAdmin = user?.role?.toUpperCase() === 'ADMIN';
  const _p = user?.permissions || [];
 
- // Module-level access (broad) — legacy keys OR any action key in that module
+ // Module-level access (broad) - legacy keys OR any action key in that module
  const hasUserPermission = isSuperAdmin || _p.includes('MANAGE_USERS') || _p.includes('manage_users') ||
  ['view_students','add_students','edit_students','delete_students','verify_students'].some(k => _p.includes(k));
  const hasPsyPermission = isSuperAdmin || _p.includes('MANAGE_PSYCHOLOGISTS') || _p.includes('manage_psychologists') ||
@@ -1536,7 +1536,7 @@ const _handleAdminDetectLocation = () => {
  longitude: userForm.longitude
  }
  );
- setUserFormSuccess("Student created successfully!");
+ setUserFormSuccess("User created successfully!");
  setUserForm({ id: '', name: '', email: '', password: '', phone: '', schoolName: '', grade: '', guardianName: '', guardianPhone: '', groupCode: '', profilePic: '', locationName: '', latitude: 0, longitude: 0 });
  setUserProfilePicFile(null);
  reloadData();
@@ -1587,7 +1587,7 @@ const _handleAdminDetectLocation = () => {
  const handleUpdateUser = async (e) => {
  e.preventDefault();
  if (!hasUserPermission) {
- setUserFormError("Access Denied: You do not have permission to manage students.");
+ setUserFormError("Access Denied: You do not have permission to manage users.");
  return;
  }
  setUserFormError('');
@@ -1628,7 +1628,7 @@ const _handleAdminDetectLocation = () => {
  await ApiService.adminUpdateUserProfilePic(userForm.id, fd);
  setIsUserPicUploading(false);
  }
- setUserFormSuccess("Student details updated!");
+ setUserFormSuccess("User details updated!");
  setUserProfilePicFile(null);
  reloadData();
  setTimeout(() => {
@@ -1645,7 +1645,7 @@ const _handleAdminDetectLocation = () => {
 
  const handleDeleteUser = async (userId) => {
  if (!hasUserPermission) {
- await showAlert("Access Denied: You do not have permission to manage students.");
+ await showAlert("Access Denied: You do not have permission to manage users.");
  return;
  }
  if (!await showConfirm("Are you sure you want to delete this account?")) return;
@@ -2104,7 +2104,7 @@ const _handleAdminDetectLocation = () => {
     setBookingFormSuccess('');
 
     if (!bookingForm.userId || !bookingForm.advisorId || !bookingForm.date || !bookingForm.time) {
-      setBookingFormError("Student, Psychologist, Date and Time Slot are required.");
+      setBookingFormError("User, Psychologist, Date and Time Slot are required.");
       return;
     }
 
@@ -2145,7 +2145,7 @@ const _handleAdminDetectLocation = () => {
     const psy = usersDb.find(u => u.id === bookingForm.advisorId);
 
     if (!student || !psy) {
-      setBookingFormError("Student or Psychologist record invalid.");
+      setBookingFormError("User or Psychologist record invalid.");
       return;
     }
 
@@ -2623,7 +2623,7 @@ const _handleAdminDetectLocation = () => {
       await showAlert("Access Denied: You do not have permission to manage inquiries.");
       return;
     }
-    if (!await showConfirm("Are you sure you want to delete this student inquiry?")) return;
+    if (!await showConfirm("Are you sure you want to delete this user inquiry?")) return;
     setInquiriesDb(prev => prev.filter(inq => inq.id !== inqId));
     try {
       await ApiService.deleteInquiry(inqId);
@@ -2636,7 +2636,7 @@ const _handleAdminDetectLocation = () => {
  // Student active/suspended status toggle
  const handleToggleStudentStatus = async (studentId, currentStatus) => {
  if (!hasUserPermission) {
- await showAlert("Access Denied: You do not have permission to manage students.");
+ await showAlert("Access Denied: You do not have permission to manage users.");
  return;
  }
  const student = usersDb.find(u => u.id === studentId);
@@ -2795,7 +2795,7 @@ const _handleAdminDetectLocation = () => {
         aboutTitle: 'What We Offer',
         aboutSub: 'We go beyond traditional guidance by offering mentorship, doorstep counseling, and personalized support in schools.',
         offer1Title: 'Extended Mentorship',
-        offer1Desc: 'We guide students through milestones to turn assessment reports into real achievements.',
+        offer1Desc: 'We guide users through milestones to turn assessment reports into real achievements.',
         offer2Title: 'Doorstep & Online Counseling',
         offer2Desc: 'We provide at-home and virtual counseling to ensure emotional privacy and comfort.',
         offer3Title: 'Personalized School Programs',
@@ -2803,18 +2803,18 @@ const _handleAdminDetectLocation = () => {
         offer4Title: 'C-DAT & Career Roadmaps',
         offer4Desc: 'We use aptitude evaluations to match university pathways with individual natural talents.',
         offer5Title: 'Goal Tracking',
-        offer5Desc: 'We provide continuous reviews to keep students on track with their long-term goals.',
+        offer5Desc: 'We provide continuous reviews to keep users on track with their long-term goals.',
         offer6Title: 'Parent Guidance',
-        offer6Desc: 'We guide parents to reduce academic friction and relieve student stress.',
+        offer6Desc: 'We guide parents to reduce academic friction and relieve user stress.',
           sectionOrder: ['counselling-intro', 'whyChooseUs', 'aptitude', 'counsellors', 'about', 'reviews', 'faq', 'blog'],
           heroStats: [
-            { num: '500+', label: 'Students Guided' },
+            { num: '500+', label: 'Users Guided' },
             { num: '98%', label: 'Clarity & Peace' },
             { num: '50+', label: 'Certified Mentors' }
           ],
           aboutStats: [
             { value: '10+', label: 'Years Experience' },
-            { value: '500+', label: 'Students Guided' },
+            { value: '500+', label: 'Users Guided' },
             { value: '50+', label: 'Expert Mentors' },
             { value: '98%', label: 'Success Rate' }
           ]
@@ -2944,7 +2944,7 @@ const _handleAdminDetectLocation = () => {
  }, 120);
  };
 
- // Sub-Admin edit permissions — uses the full role-based granular permission system
+ // Sub-Admin edit permissions - uses the full role-based granular permission system
  const handleOpenEditSubAdmin = (admin) => {
  setEditingSubAdmin(admin);
  setEditSubAdminError('');
@@ -3073,7 +3073,7 @@ const _handleAdminDetectLocation = () => {
  const breakdown = Object.entries(res.scores || {})
  .map(([key, val]) => ` - ${key.toUpperCase()}: ${val}%`)
  .join('\n');
- const txt = `BEHOLD APTITUDE TEST REPORT\n=========================\nStudent Name: ${res.studentName}\nEmail: ${res.studentEmail}\nDate Completed: ${formatDateString(res.date)}\nDominant Domain: ${res.dominantDomain.toUpperCase()}\n\nCognitive Breakdown:\n${breakdown}\n`;
+ const txt = `BEHOLD APTITUDE TEST REPORT\n=========================\nUser Name: ${res.studentName}\nEmail: ${res.studentEmail}\nDate Completed: ${formatDateString(res.date)}\nDominant Domain: ${res.dominantDomain.toUpperCase()}\n\nCognitive Breakdown:\n${breakdown}\n`;
  navigator.clipboard.writeText(txt);
  await showAlert("Test report copied to clipboard!");
  };
@@ -3739,7 +3739,7 @@ const _handleAdminDetectLocation = () => {
  </main>
  </div>
 
- {/* ── ADMIN PROFILE DRAWER ──────────────────────────────── */}
+ {/* -- ADMIN PROFILE DRAWER -------------------------------- */}
  {isProfileDrawerOpen && (
  <div className="fixed inset-0 z-[60] flex">
  {/* Backdrop */}
@@ -3845,7 +3845,7 @@ const _handleAdminDetectLocation = () => {
 
  <form onSubmit={isAddBookingOpen ? handleCreateBooking : handleUpdateBooking} className="space-y-4 font-medium">
  <div className="space-y-1">
- <label className="text-sm font-bold text-zinc-400">Select Student</label>
+ <label className="text-sm font-bold text-zinc-400">Select User</label>
  <select
  required
  disabled={isEditBookingOpen}
@@ -3853,7 +3853,7 @@ const _handleAdminDetectLocation = () => {
  onChange={(e) => setBookingForm({ ...bookingForm, userId: e.target.value })}
  className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none cursor-pointer"
  >
- <option value="" disabled>-- Select a student --</option>
+ <option value="" disabled>-- Select a user --</option>
  {usersDb.filter(u => u.role === 'USER' || !u.role).map(student => (
  <option key={student.id} value={student.id}>{student.name} ({student.email})</option>
  ))}
@@ -4306,7 +4306,7 @@ const _handleAdminDetectLocation = () => {
  );
  })()}
 
- {/* ── LOGOUT CONFIRMATION ─────────────────────────────────────── */}
+ {/* -- LOGOUT CONFIRMATION --------------------------------------- */}
  <LogoutConfirmModal
  isOpen={isLogoutConfirmOpen}
  onConfirm={() => {
