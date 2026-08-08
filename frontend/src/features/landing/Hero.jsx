@@ -55,7 +55,7 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
           {/* Main Title Block */}
           <div className="relative leading-none flex flex-col items-center md:items-start group">
             {/* Line 1 - Slender & Elegant */}
-            <h1 className="font-sans font-medium text-slate-800 text-3xl sm:text-4xl md:text-4xl lg:text-[44px] tracking-normal leading-tight transition-all duration-300 animate-fade-down">
+            <h1 className="font-sans font-medium text-slate-900 text-[var(--text-4xl)] tracking-normal leading-tight transition-all duration-300 animate-fade-down">
               {eyebrowLine1}
             </h1>
 
@@ -78,7 +78,7 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
           </div>
 
           {/* Subtitle Paragraph - Refined Compact Size */}
-          <p className="font-sans text-center md:text-left text-slate-700/90 text-sm sm:text-base md:text-base font-normal leading-relaxed max-w-lg animate-fade-scale delay-200">
+          <p className="font-sans text-center md:text-left text-slate-600 text-[var(--text-base)] font-normal leading-relaxed max-w-lg animate-fade-scale delay-200">
             {subtitleText}
           </p>
 

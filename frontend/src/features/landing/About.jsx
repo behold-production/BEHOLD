@@ -54,10 +54,10 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
                 <span className="w-6 h-0.5 bg-[#00c9d6] rounded-full"></span>
                 At BEHOLD
               </span>
-              <h2 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-sans font-bold text-slate-900 tracking-tight leading-[1.05] mb-5">
+              <h2 className="text-[var(--text-4xl)] font-sans font-bold text-slate-900 tracking-tight leading-[1.05] mb-5">
                 BEHOLD<span className="text-[#00e5ff] drop-shadow-[0_0_12px_rgba(0,229,255,0.6)]">.</span>
               </h2>
-              <p className="text-sm sm:text-[15px] text-slate-600 leading-relaxed font-medium">
+              <p className="text-[var(--text-base)] text-slate-600 leading-relaxed font-medium">
                 {settings.aboutSectionDesc || "We believe psychological care and career mentorship is more than just counseling — it's about creating mental clarity that inspires, functions beautifully, and reflects the true potential of every individual."}
               </p>
             </div>

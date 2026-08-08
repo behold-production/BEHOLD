@@ -326,7 +326,7 @@ return createPortal(
                        placeholder="you@example.com"
                        autoComplete="email"
                        autoFocus
-                       className="w-full pl-10 pr-4 py-3 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 focus:bg-white focus:border-[#0f172a] focus:ring-1 focus:ring-[#0f172a] outline-none transition-all"
+                       className="w-full pl-10 pr-4 py-3 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 focus:bg-white focus:border-brand focus:ring-2 focus:ring-brand/20 outline-none transition-all"
                      />
                    </div>
                  </div>
@@ -334,7 +334,7 @@ return createPortal(
                    type="button"
                    disabled={isLoading}
                    onClick={handleSendResetOtp}
-                   className="w-full py-3.5 min-h-[48px] bg-zinc-900 hover:bg-zinc-800 text-white font-semibold text-sm rounded-full transition-all flex items-center justify-center gap-2 disabled:opacity-70 cursor-pointer border-none shadow-sm"
+                   className="w-full py-3.5 min-h-[48px] bg-zinc-900 hover:bg-zinc-800 text-white font-semibold hover-scale-btn text-sm rounded-full transition-all flex items-center justify-center gap-2 disabled:opacity-70 cursor-pointer border-none shadow-sm"
                  >
                    {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Send Reset Code'}
                  </button>
@@ -375,7 +375,7 @@ return createPortal(
                        onChange={e => setResetOtp(e.target.value.replace(/\D/g, ''))}
                        placeholder="123456"
                        autoFocus
-                       className="w-full pl-10 pr-4 py-3 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 focus:bg-white focus:border-[#0f172a] focus:ring-1 focus:ring-[#0f172a] outline-none transition-all font-mono tracking-[0.3em] text-center"
+                       className="w-full pl-10 pr-4 py-3 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 focus:bg-white focus:border-brand focus:ring-2 focus:ring-brand/20 outline-none transition-all font-mono tracking-[0.3em] text-center"
                      />
                    </div>
                  </div>
@@ -391,7 +391,7 @@ return createPortal(
                        onChange={e => setNewPassword(e.target.value)}
                        placeholder="Min. 6 characters"
                        autoComplete="new-password"
-                       className="w-full pl-10 pr-12 py-3 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 focus:bg-white focus:border-[#0f172a] focus:ring-1 focus:ring-[#0f172a] outline-none transition-all"
+                       className="w-full pl-10 pr-12 py-3 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 focus:bg-white focus:border-brand focus:ring-2 focus:ring-brand/20 outline-none transition-all"
                      />
                      <button
                        type="button"
@@ -407,7 +407,7 @@ return createPortal(
                    type="button"
                    disabled={isLoading}
                    onClick={handleVerifyResetOtp}
-                   className="w-full py-3.5 min-h-[48px] bg-zinc-900 hover:bg-zinc-800 text-white font-semibold text-sm rounded-full transition-all flex items-center justify-center gap-2 disabled:opacity-70 cursor-pointer border-none shadow-sm"
+                   className="w-full py-3.5 min-h-[48px] bg-zinc-900 hover:bg-zinc-800 text-white font-semibold hover-scale-btn text-sm rounded-full transition-all flex items-center justify-center gap-2 disabled:opacity-70 cursor-pointer border-none shadow-sm"
                  >
                    {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Reset Password'}
                  </button>
@@ -462,7 +462,7 @@ return createPortal(
                  <button
                    type="button"
                    onClick={() => { setMode('login'); setForgotStep('email'); setForgotEmail(''); setResetOtp(''); setNewPassword(''); }}
-                   className="w-full py-3.5 bg-zinc-900 hover:bg-zinc-800 text-white font-semibold text-sm rounded-full transition-all cursor-pointer border-none"
+                   className="w-full py-3.5 bg-zinc-900 hover:bg-zinc-800 text-white font-semibold hover-scale-btn text-sm rounded-full transition-all cursor-pointer border-none"
                  >
                    Sign In Now
                  </button>
@@ -528,7 +528,7 @@ return createPortal(
                      value={otpPhone}
                      onChange={(e) => setOtpPhone(e.target.value)}
                      placeholder="10-digit number"
-                     className="w-full pl-16 pr-4 py-3 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 focus:bg-white focus:border-brand focus:ring-1 focus:ring-brand outline-none transition-all"
+                     className="w-full pl-16 pr-4 py-3 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 focus:bg-white focus:border-brand focus:ring-2 focus:ring-brand/20 outline-none transition-all"
                    />
                  </div>
                </div>
@@ -546,7 +546,7 @@ return createPortal(
                      value={otpCode}
                      onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))}
                      placeholder="123456"
-                     className="w-full pl-10 pr-4 py-3 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 focus:bg-white focus:border-brand focus:ring-1 focus:ring-brand outline-none transition-all font-mono tracking-widest text-center"
+                     className="w-full pl-10 pr-4 py-3 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 focus:bg-white focus:border-brand focus:ring-2 focus:ring-brand/20 outline-none transition-all font-mono tracking-widest text-center"
                    />
                  </div>
                </div>
@@ -565,7 +565,7 @@ return createPortal(
                      onChange={handleInputChange}
                      placeholder="John Doe"
                      autoComplete="name"
-                     className="w-full pl-10 pr-4 py-3 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 focus:bg-white focus:border-brand focus:ring-1 focus:ring-brand outline-none transition-all"
+                     className="w-full pl-10 pr-4 py-3 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 focus:bg-white focus:border-brand focus:ring-2 focus:ring-brand/20 outline-none transition-all"
                    />
                  </div>
                </div>
@@ -586,7 +586,7 @@ return createPortal(
                      placeholder="10-digit mobile number"
                      autoComplete="tel"
                      maxLength={10}
-                     className="w-full pl-16 pr-4 py-3 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 focus:bg-white focus:border-brand focus:ring-1 focus:ring-brand outline-none transition-all"
+                     className="w-full pl-16 pr-4 py-3 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 focus:bg-white focus:border-brand focus:ring-2 focus:ring-brand/20 outline-none transition-all"
                    />
                  </div>
                </div>
@@ -605,7 +605,7 @@ return createPortal(
                      onChange={handleInputChange}
                      placeholder="you@example.com"
                      autoComplete="email"
-                     className="w-full pl-10 pr-4 py-3 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 focus:bg-white focus:border-brand focus:ring-1 focus:ring-brand outline-none transition-all"
+                     className="w-full pl-10 pr-4 py-3 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 focus:bg-white focus:border-brand focus:ring-2 focus:ring-brand/20 outline-none transition-all"
                    />
                  </div>
                </div>
@@ -635,7 +635,7 @@ return createPortal(
                      onChange={handleInputChange}
                      placeholder="••••••••"
                      autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
-                     className="w-full pl-10 pr-12 py-3 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 focus:bg-white focus:border-brand focus:ring-1 focus:ring-brand outline-none transition-all"
+                     className="w-full pl-10 pr-12 py-3 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 focus:bg-white focus:border-brand focus:ring-2 focus:ring-brand/20 outline-none transition-all"
                    />
                    <button
                      type="button"
@@ -662,7 +662,7 @@ return createPortal(
                      onChange={handleInputChange}
                      placeholder="••••••••"
                      autoComplete="new-password"
-                     className="w-full pl-10 pr-12 py-3 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 focus:bg-white focus:border-brand focus:ring-1 focus:ring-brand outline-none transition-all"
+                     className="w-full pl-10 pr-12 py-3 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 focus:bg-white focus:border-brand focus:ring-2 focus:ring-brand/20 outline-none transition-all"
                    />
                    <button
                      type="button"
@@ -680,7 +680,7 @@ return createPortal(
                <button
                  type="submit"
                  disabled={isLoading}
-                 className="w-full py-3.5 min-h-[48px] bg-zinc-900 hover:bg-zinc-800 text-white font-semibold text-sm rounded-full transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-sm"
+                 className="w-full py-3.5 min-h-[48px] bg-zinc-900 hover:bg-zinc-800 text-white font-semibold hover-scale-btn text-sm rounded-full transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-sm"
                >
                  {isLoading ? (
                    <Loader2 className="w-4 h-4 animate-spin" />

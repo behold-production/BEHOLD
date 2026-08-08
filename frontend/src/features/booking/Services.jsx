@@ -101,12 +101,12 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
           <span className="text-xs font-bold tracking-widest text-[#00c9d6] flex items-center justify-center gap-1.5 mb-2">
             Book Your Session
           </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-sans font-bold text-slate-900 tracking-tight leading-tight mb-4">
+          <h2 className="text-[var(--text-4xl)] font-sans font-bold text-slate-900 tracking-tight leading-tight mb-4">
             {settings.servicesSectionTitle && settings.servicesSectionTitle !== 'BOOK YOUR SESSION' ? settings.servicesSectionTitle : 'Book Your Session'}
             <span className="text-[#00c9d6] drop-shadow-[0_0_8px_rgba(0,201,214,0.6)] font-bold">.</span>
           </h2>
 
-          <p className="text-sm sm:text-base text-slate-600 font-medium leading-relaxed max-w-xl mx-auto">
+          <p className="text-[var(--text-base)] text-slate-600 font-medium leading-relaxed max-w-xl mx-auto">
             {settings.servicesSectionDesc || 'Access standard, expert counselling sessions and lifetime career mentoring.'}
           </p>
         </div>

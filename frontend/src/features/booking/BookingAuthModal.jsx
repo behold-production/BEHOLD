@@ -174,7 +174,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
   const inputCls = (field) =>
     `w-full pl-10 pr-4 py-3 rounded-lg text-sm text-zinc-900 outline-none transition-all border ${fieldErrors[field]
       ? 'bg-rose-50/40 border-rose-400 focus:border-rose-500 focus:ring-1 focus:ring-rose-200'
-      : 'bg-zinc-50 border-zinc-200 focus:bg-white focus:border-brand focus:ring-1 focus:ring-brand'
+      : 'bg-zinc-50 border-zinc-200 focus:bg-white focus:border-brand focus:ring-2 focus:ring-brand/20'
     }`;
 
   return createPortal(
@@ -260,7 +260,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                     value={otpPhone}
                     onChange={(e) => setOtpPhone(e.target.value)}
                     placeholder="Enter your 10-digit number"
-                    className={`w-full pl-10 pr-4 py-3 rounded-lg text-sm text-zinc-900 outline-none transition-all border ${fieldErrors.otpPhone ? 'bg-rose-50/40 border-rose-400' : 'bg-zinc-50 border-zinc-200 focus:bg-white focus:border-brand focus:ring-1 focus:ring-brand'}`}
+                    className={`w-full pl-10 pr-4 py-3 rounded-lg text-sm text-zinc-900 outline-none transition-all border ${fieldErrors.otpPhone ? 'bg-rose-50/40 border-rose-400' : 'bg-zinc-50 border-zinc-200 focus:bg-white focus:border-brand focus:ring-2 focus:ring-brand/20'}`}
                   />
                 </div>
                 {fieldErrors.otpPhone && <p className="text-xs font-medium text-rose-500">{fieldErrors.otpPhone}</p>}
@@ -279,7 +279,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                     value={otpCode}
                     onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))}
                     placeholder="123456"
-                    className={`w-full pl-10 pr-4 py-3 rounded-lg text-sm text-zinc-900 outline-none transition-all border font-mono tracking-widest text-center ${fieldErrors.otpCode ? 'bg-rose-50/40 border-rose-400' : 'bg-zinc-50 border-zinc-200 focus:bg-white focus:border-brand focus:ring-1 focus:ring-brand'}`}
+                    className={`w-full pl-10 pr-4 py-3 rounded-lg text-sm text-zinc-900 outline-none transition-all border font-mono tracking-widest text-center ${fieldErrors.otpCode ? 'bg-rose-50/40 border-rose-400' : 'bg-zinc-50 border-zinc-200 focus:bg-white focus:border-brand focus:ring-2 focus:ring-brand/20'}`}
                   />
                 </div>
                 {fieldErrors.otpCode && <p className="text-xs font-medium text-rose-500">{fieldErrors.otpCode}</p>}
@@ -321,7 +321,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                     placeholder="10-digit mobile number"
                     autoComplete="tel"
                     maxLength={10}
-                    className="w-full pl-16 pr-4 py-3 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 focus:bg-white focus:border-brand focus:ring-1 focus:ring-brand outline-none transition-all"
+                    className="w-full pl-16 pr-4 py-3 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 focus:bg-white focus:border-brand focus:ring-2 focus:ring-brand/20 outline-none transition-all"
                   />
                 </div>
                 {fieldErrors.phone && <p className="text-xs font-medium text-rose-500">{fieldErrors.phone}</p>}
