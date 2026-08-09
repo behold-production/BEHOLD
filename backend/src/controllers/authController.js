@@ -621,16 +621,16 @@ const AuthController = {
       if (!waResponse.success && !waResponse.mock) {
         console.error('WhatsApp sending failed:', waResponse.error);
         
-        let metaErrorDetails = 'Unknown Meta API error';
-        if (waResponse.error && waResponse.error.error && waResponse.error.error.message) {
-          metaErrorDetails = waResponse.error.error.message;
+        let waErrorDetails = 'Unknown WhatsApp API error';
+        if (waResponse.error && waResponse.error.message) {
+          waErrorDetails = waResponse.error.message;
         } else if (typeof waResponse.error === 'string') {
-          metaErrorDetails = waResponse.error;
+          waErrorDetails = waResponse.error;
         }
 
         return res.status(500).json({ 
           success: false, 
-          message: `WhatsApp API Error: ${metaErrorDetails}. (Note: If using Meta Test Number, add your recipient phone number under Meta Dashboard -> WhatsApp -> API Setup -> 'To Phone Number').` 
+          message: `WhatsApp API Error: ${waErrorDetails}` 
         });
       }
 
