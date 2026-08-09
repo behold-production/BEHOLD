@@ -46,6 +46,10 @@ class WhatsAppService {
     this.evolutionInstance = (process.env.EVOLUTION_API_INSTANCE || 'behold').trim();
     this.isEvolutionConfigured = Boolean(this.evolutionUrl && this.evolutionKey);
 
+    // 4. WASender API Configuration
+    this.waSenderToken = (process.env.WASENDER_TOKEN || '').trim();
+    this.isWaSenderConfigured = Boolean(this.waSenderToken);
+
     // 4. Meta Cloud API Configuration
     this.metaToken = (
       process.env.META_WA_ACCESS_TOKEN ||
@@ -190,6 +194,35 @@ class WhatsAppService {
   }
 
   /**
+   * Send Direct Plain Text Message via WASender API (Third-party)
+   */
+  async _sendViaWaSender(phone, text) {
+    try {
+      const formattedPhone = this._formatPhoneNumber(phone);
+      const response = await axios.post(
+        'https://www.wasenderapi.com/api/send-message',
+        {
+          to: `+${formattedPhone}`,
+          text: text
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${this.waSenderToken}`,
+            'Content-Type': 'application/json'
+          },
+          timeout: 20000
+        }
+      );
+      console.log(`[WASender API Success] Sent message to ${formattedPhone}:`, response.data);
+      return { success: true, provider: 'WASender API', data: response.data };
+    } catch (error) {
+      const errData = error.response?.data || error.message;
+      console.error('[WASender API Error]:', JSON.stringify(errData, null, 2));
+      return { success: false, provider: 'WASender API', error: errData };
+    }
+  }
+
+  /**
    * Core method to send request to Meta Cloud API (Template based)
    */
   async _sendViaMeta(payload) {
@@ -243,6 +276,12 @@ class WhatsAppService {
     if (this.provider === 'evolution' || (this.provider === 'auto' && this.isEvolutionConfigured)) {
       const result = await this._sendViaEvolution(formattedPhone, plainText);
       if (result.success || this.provider === 'evolution') return result;
+    }
+
+    // 4. Explicit WASender API Request or configured in auto mode
+    if (this.provider === 'wasender' || (this.provider === 'auto' && this.isWaSenderConfigured)) {
+      const result = await this._sendViaWaSender(formattedPhone, plainText);
+      if (result.success || this.provider === 'wasender') return result;
     }
 
     // 4. Attempt Meta Cloud API (Official)
@@ -377,6 +416,7 @@ class WhatsAppService {
         whapi: { isConfigured: this.isWhapiConfigured },
         greenApi: { isConfigured: this.isGreenApiConfigured },
         evolutionApi: { isConfigured: this.isEvolutionConfigured },
+        wasender: { isConfigured: this.isWaSenderConfigured },
         metaCloudApi: { isConfigured: this.isMetaConfigured }
       }
     };

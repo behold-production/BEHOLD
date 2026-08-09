@@ -1,0 +1,40 @@
+--- Testing WASenderAPI Integration ---
+Account Status: {
+  "activeProvider": "wasender",
+  "whapi": {
+    "isConfigured": false
+  },
+  "greenApi": {
+    "isConfigured": false
+  },
+  "evolutionApi": {
+    "isConfigured": false
+  },
+  "wasender": {
+    "isConfigured": true
+  },
+  "metaCloudApi": {
+    "isConfigured": true
+  }
+}
+
+Attempting to send a test message to 919497174011...
+(If this is not your number, please change it in test-wasender.js)
+[WASender API Error]: {
+  "success": false,
+  "message": "invalid API key",
+  "help": "please check your WhatsApp session page for the correct key click on the 🔑 icon"
+}
+
+--- Result ---
+{
+  "success": false,
+  "provider": "WASender API",
+  "error": {
+    "success": false,
+    "message": "invalid API key",
+    "help": "please check your WhatsApp session page for the correct key click on the 🔑 icon"
+  }
+}
+
+❌ FAILED: Message could not be sent.
