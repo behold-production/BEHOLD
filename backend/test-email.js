@@ -1,11 +1,17 @@
 require('dotenv').config();
 const emailService = require('./src/services/emailService');
 
-(async () => {
+async function testEmail() {
+  console.log('Testing Email Service...');
   try {
-    const result = await emailService.sendEmail('test@example.com', 'Test Email', '<p>Testing</p>');
+    const result = await emailService.sendEmail(
+      'beholdoffice@gmail.com', // send to yourself
+      'Behold Aspire - Test Email',
+      '<h1>Test Email</h1><p>This is a test email from the Behold Aspire backend to verify Gmail SMTP configuration.</p>'
+    );
     console.log('Result:', result);
-  } catch (err) {
-    console.error('Error:', err);
+  } catch (error) {
+    console.error('Error:', error);
   }
-})();
+}
+testEmail();
