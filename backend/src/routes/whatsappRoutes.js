@@ -3,28 +3,7 @@ const crypto = require('crypto');
 const router = express.Router();
 const WhatsAppMessage = require('../models/WhatsAppMessage');
 
-// ─────────────────────────────────────────────────────────────────────────────
-// ███  WaSender Webhook Handler
-// ─────────────────────────────────────────────────────────────────────────────
-//
-// Setup in WaSender Dashboard:
-//   1. Go to: wasenderapi.com/whatsapp → your session → Webhook tab
-//   2. Set Payload URL to: https://api.behold.co.in/api/whatsapp/wasender/webhook
-//      (or your deployed backend URL)
-//   3. Copy the Webhook Secret from the dashboard → paste into .env as
-//      WASENDER_WEBHOOK_SECRET=<your_secret>
-//   4. Enable subscriptions: messages.received, session.status, qrcode.updated,
-//      message.sent, messages.update, message-receipt.update
-//
-// ─────────────────────────────────────────────────────────────────────────────
 
-/**
- * Verify WaSender HMAC-SHA256 signature
- * WaSender sends one of these headers:
- *   X-WaSender-Signature: sha256=<hex>
- *   X-Signature: sha256=<hex>
- * Calculated as: HMAC-SHA256(rawBody, WASENDER_WEBHOOK_SECRET)
- */
 function verifyWaSenderSignature(req) {
   const secret = (process.env.WASENDER_WEBHOOK_SECRET || '').trim();
   if (!secret) return true; // Skip verification in dev if secret not set

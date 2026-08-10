@@ -135,89 +135,96 @@ const AppointmentController = {
           .json({ success: false, message: `Cannot approve appointment with status: ${appointment.status}` });
       }
 
-      // Update appointment status to APPROVED
+      // Update appointment status to APPROVED immediately
       const updated = await StorageService.update('appointments', id, { status: 'APPROVED' });
 
-      // Notify User
-      const user = await StorageService.findById('users', appointment.userId);
-      const counsellor = await StorageService.findById('counsellors', appointment.counsellorId);
-
-      // Create matching session
-      let meetLink =
-        appointment.mode === 'ONLINE'
-          ? appointment.meetLink || (counsellor ? counsellor.defaultMeetLink : '') || ''
-          : '';
-
-      if (appointment.mode === 'ONLINE') {
-        const { generateSessionMeetingLink } = require('../utils/calendarHelper');
-        const generatedLink = await generateSessionMeetingLink({
-          counsellor,
-          user,
-          date: appointment.date,
-          time: appointment.time,
-          service: appointment.service,
-          appointmentId: appointment.id
-        });
-        if (generatedLink && generatedLink !== appointment.meetLink) {
-          meetLink = generatedLink;
-          await StorageService.update('appointments', id, { meetLink });
-        }
-      }
-
-      const session = await StorageService.create('sessions', {
-        appointmentId: id,
-        userId: appointment.userId,
-        counsellorId: appointment.counsellorId,
-        date: appointment.date,
-        time: appointment.time,
-        mode: appointment.mode,
-        meetLink,
-        status: 'PENDING',
-        notes: '',
-        feedback: '',
-        clientLocationName: appointment.clientLocationName || '',
-        clientLatitude: Number(appointment.clientLatitude) || 0,
-        clientLongitude: Number(appointment.clientLongitude) || 0
-      });
-
-      await StorageService.create('notifications', {
-        recipientId: appointment.userId,
-        recipientRole: 'user',
-        title: 'Appointment Approved',
-        message: `Your appointment with ${counsellor ? counsellor.name : 'Counsellor'} on ${appointment.date} has been approved.`,
-        type: 'appointment_approved',
-        isRead: false
-      });
-
-      // Notify Counsellor
-      await StorageService.create('notifications', {
-        recipientId: appointment.counsellorId,
-        recipientRole: 'counsellor',
-        title: 'Appointment Approved',
-        message: `You approved the appointment request from ${user ? user.name : 'Student'} on ${appointment.date}.`,
-        type: 'appointment_approved',
-        isRead: false
-      });
-
-      // --- WhatsApp Alerts ---
-      if (user && user.phone) {
-        WhatsAppService.sendBookingAlert(user.phone, 'approved', {
-          studentName: user.name,
-          counsellorName: counsellor ? counsellor.name : 'Your Counsellor',
-          date: appointment.date,
-          time: appointment.time
-        }).catch(err => console.error(err));
-      }
-      // --- Email Alerts ---
-      if (user) {
-        EmailService.sendAppointmentApproved({ user, counsellor, appointment: { ...appointment, meetLink } }).catch(err => console.error('[Email Approve Error]:', err));
-      }
-
+      // Respond immediately to the frontend to eliminate any perceived delay
       res.status(200).json({
         success: true,
         message: 'Appointment approved successfully',
-        data: { appointment: updated, session }
+        data: { appointment: updated }
       });
+
+      // --- Background Processing for Calendar, Session, and Notifications ---
+      (async () => {
+        try {
+          // Notify User internally
+          const user = await StorageService.findById('users', appointment.userId);
+          const counsellor = await StorageService.findById('counsellors', appointment.counsellorId);
+
+          let meetLink =
+            appointment.mode === 'ONLINE'
+              ? appointment.meetLink || (counsellor ? counsellor.defaultMeetLink : '') || ''
+              : '';
+
+          if (appointment.mode === 'ONLINE') {
+            const { generateSessionMeetingLink } = require('../utils/calendarHelper');
+            const generatedLink = await generateSessionMeetingLink({
+              counsellor,
+              user,
+              date: appointment.date,
+              time: appointment.time,
+              service: appointment.service,
+              appointmentId: appointment.id
+            });
+            if (generatedLink && generatedLink !== appointment.meetLink) {
+              meetLink = generatedLink;
+              await StorageService.update('appointments', id, { meetLink });
+            }
+          }
+
+          await StorageService.create('sessions', {
+            appointmentId: id,
+            userId: appointment.userId,
+            counsellorId: appointment.counsellorId,
+            date: appointment.date,
+            time: appointment.time,
+            mode: appointment.mode,
+            meetLink,
+            status: 'PENDING',
+            notes: '',
+            feedback: '',
+            clientLocationName: appointment.clientLocationName || '',
+            clientLatitude: Number(appointment.clientLatitude) || 0,
+            clientLongitude: Number(appointment.clientLongitude) || 0
+          });
+
+          await StorageService.create('notifications', {
+            recipientId: appointment.userId,
+            recipientRole: 'user',
+            title: 'Appointment Approved',
+            message: `Your appointment with ${counsellor ? counsellor.name : 'Counsellor'} on ${appointment.date} has been approved.`,
+            type: 'appointment_approved',
+            isRead: false
+          });
+
+          // Notify Counsellor
+          await StorageService.create('notifications', {
+            recipientId: appointment.counsellorId,
+            recipientRole: 'counsellor',
+            title: 'Appointment Approved',
+            message: `You approved the appointment request from ${user ? user.name : 'Student'} on ${appointment.date}.`,
+            type: 'appointment_approved',
+            isRead: false
+          });
+
+          // --- WhatsApp Alerts ---
+          if (user && user.phone) {
+            WhatsAppService.sendBookingAlert(user.phone, 'approved', {
+              studentName: user.name,
+              counsellorName: counsellor ? counsellor.name : 'Your Counsellor',
+              date: appointment.date,
+              time: appointment.time
+            }).catch(err => console.error(err));
+          }
+          // --- Email Alerts ---
+          if (user) {
+            EmailService.sendAppointmentApproved({ user, counsellor, appointment: { ...appointment, meetLink } }).catch(err => console.error('[Email Approve Error]:', err));
+          }
+        } catch (bgError) {
+          console.error('[Background Task Error in approveAppointment]:', bgError);
+        }
+      })();
     } catch (error) {
       next(error);
     }
