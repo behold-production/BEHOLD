@@ -36,7 +36,54 @@ export const requestNotificationPermission = async () => {
 };
 
 export const sendLocalNotification = async (title, body, options = {}) => {
-  // Always trigger interactive in-app toast so users see alerts on all devices (mobile & desktop)
+  const isSysSupported = isNotificationSupported();
+  const perm = isSysSupported ? getNotificationPermission() : 'denied';
+
+  // If native Notification is supported & granted, ONLY send OS/device system notification
+  if (isSysSupported && perm === 'granted') {
+    const notificationOptions = {
+      body,
+      tag: options.tag || 'behold-alert',
+      renotify: options.renotify !== false,
+      icon: options.icon || '/favicon.svg',
+      badge: options.badge || '/favicon.svg',
+      data: {
+        onClickUrl: options.onClickUrl || '/'
+      },
+      ...options
+    };
+
+    // Try service worker first (mobile Android / PWA)
+    if ('serviceWorker' in navigator) {
+      try {
+        const registration = await navigator.serviceWorker.ready;
+        if (registration && 'showNotification' in registration) {
+          await registration.showNotification(title, notificationOptions);
+          return true;
+        }
+      } catch (e) {
+        console.warn('Service worker notification failed, falling back to standard', e);
+      }
+    }
+
+    // Standard Desktop Notification
+    try {
+      const notification = new Notification(title, notificationOptions);
+      notification.onclick = () => {
+        window.focus();
+        if (options.onClickUrl && window.spaNavigate) {
+          window.spaNavigate(options.onClickUrl);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        notification.close();
+      };
+      return notification;
+    } catch (e) {
+      console.warn('Desktop notification failed', e);
+    }
+  }
+
+  // Fallback: Only trigger interactive in-app toast if system notifications are denied or unsupported
   try {
     toast(
       (t) => React.createElement(
@@ -70,48 +117,6 @@ export const sendLocalNotification = async (title, body, options = {}) => {
     );
   } catch (e) {
     console.error('Error rendering toast notification', e);
-  }
-
-  // If native Notification is supported & granted, also send OS/device system notification
-  if (isNotificationSupported() && getNotificationPermission() === 'granted') {
-    const notificationOptions = {
-      body,
-      tag: options.tag || 'behold-alert',
-      renotify: options.renotify !== false,
-      icon: options.icon || '/favicon.svg',
-      badge: options.badge || '/favicon.svg',
-      data: {
-        onClickUrl: options.onClickUrl || '/'
-      },
-      ...options
-    };
-
-    // Try service worker first (mobile Android / PWA)
-    if ('serviceWorker' in navigator) {
-      try {
-        const registration = await navigator.serviceWorker.ready;
-        if (registration && 'showNotification' in registration) {
-          await registration.showNotification(title, notificationOptions);
-          return true;
-        }
-      } catch (e) {}
-    }
-
-    // Fallback for desktop browsers
-    try {
-      const notification = new Notification(title, notificationOptions);
-      notification.onclick = () => {
-        window.focus();
-        if (options.onClickUrl && window.spaNavigate) {
-          window.spaNavigate(options.onClickUrl);
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-        notification.close();
-      };
-      return notification;
-    } catch (e) {
-      return null;
-    }
   }
 
   return true;
