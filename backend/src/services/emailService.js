@@ -261,7 +261,7 @@ const EmailService = {
       await sendEmail(
         counsellor.email,
         'Appointment Cancelled — Behold Aspire',
-        Templates.appointmentCancelled({
+        Templates.appointmentCancelledCounsellor({
           recipientName: counsellor.name,
           otherPartyName: user.name || 'Student',
           date, time, cancelledBy, reason
@@ -286,7 +286,7 @@ const EmailService = {
       await sendEmail(
         counsellor.email,
         '🔄 Appointment Rescheduled — Behold Aspire',
-        Templates.appointmentRescheduled({ recipientName: counsellor.name, otherPartyName: user.name, ...payload })
+        Templates.appointmentRescheduledCounsellor({ recipientName: counsellor.name, otherPartyName: user.name, ...payload })
       );
     }
   },
@@ -319,7 +319,7 @@ const EmailService = {
       await sendEmail(
         counsellor.email,
         '⏰ Appointment Reminder — Behold Aspire',
-        Templates.appointmentReminder({ recipientName: counsellor.name, otherPartyName: user.name, ...payload })
+        Templates.appointmentReminderCounsellor({ recipientName: counsellor.name, otherPartyName: user.name, ...payload })
       );
     }
   },

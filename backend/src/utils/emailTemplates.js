@@ -191,13 +191,27 @@ const appointmentCancelled = ({ recipientName, otherPartyName, date, time, cance
     <h2 style="margin:0 0 8px;font-size:22px;color:#0f172a;font-weight:800;">Appointment Cancelled</h2>
     <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.6;">Hi <strong>${recipientName}</strong>, your appointment has been cancelled.</p>
     ${infoTable(`
-      ${infoRow('Other Party', otherPartyName)}
+      ${infoRow('With', otherPartyName)}
       ${infoRow('Date', date)}
       ${infoRow('Time', time)}
       ${infoRow('Cancelled By', cancelledBy)}
       ${reason ? infoRow('Reason', reason) : ''}
     `)}
     <div style="text-align:center;">${btn('Book a New Session →', 'https://www.behold.co.in/advisors')}</div>
+  `);
+
+const appointmentCancelledCounsellor = ({ recipientName, otherPartyName, date, time, cancelledBy, reason }) =>
+  baseLayout(`
+    <h2 style="margin:0 0 8px;font-size:22px;color:#0f172a;font-weight:800;">Appointment Cancelled</h2>
+    <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.6;">Hi <strong>${recipientName}</strong>, your appointment with <strong>${otherPartyName}</strong> has been cancelled.</p>
+    ${infoTable(`
+      ${infoRow('Student', otherPartyName)}
+      ${infoRow('Date', date)}
+      ${infoRow('Time', time)}
+      ${infoRow('Cancelled By', cancelledBy)}
+      ${reason ? infoRow('Reason', reason) : ''}
+    `)}
+    <div style="text-align:center;">${btn('View Dashboard →', 'https://www.behold.co.in/counsellor')}</div>
   `);
 
 const appointmentRescheduled = ({ recipientName, otherPartyName, newDate, newTime, mode }) =>
@@ -213,6 +227,19 @@ const appointmentRescheduled = ({ recipientName, otherPartyName, newDate, newTim
     <div style="text-align:center;">${btn('View Updated Booking →', 'https://www.behold.co.in/profile?tab=booked')}</div>
   `);
 
+const appointmentRescheduledCounsellor = ({ recipientName, otherPartyName, newDate, newTime, mode }) =>
+  baseLayout(`
+    <h2 style="margin:0 0 8px;font-size:22px;color:#0f172a;font-weight:800;">Appointment Rescheduled 🔄</h2>
+    <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.6;">Hi <strong>${recipientName}</strong>, your appointment with <strong>${otherPartyName}</strong> has been rescheduled.</p>
+    ${infoTable(`
+      ${infoRow('Student', otherPartyName)}
+      ${infoRow('New Date', newDate)}
+      ${infoRow('New Time', newTime)}
+      ${infoRow('Mode', mode || 'Online')}
+    `)}
+    <div style="text-align:center;">${btn('View Dashboard →', 'https://www.behold.co.in/counsellor')}</div>
+  `);
+
 const appointmentReminder = ({ recipientName, otherPartyName, date, time, mode, meetLink }) =>
   baseLayout(`
     <h2 style="margin:0 0 8px;font-size:22px;color:#0f172a;font-weight:800;">⏰ Appointment Reminder</h2>
@@ -225,6 +252,20 @@ const appointmentReminder = ({ recipientName, otherPartyName, date, time, mode, 
       ${meetLink ? infoRow('Meeting Link', `<a href="${meetLink}" style="color:${BRAND_COLOR};">Join Meeting</a>`) : ''}
     `)}
     ${meetLink ? `<div style="text-align:center;">${btn('Join Meeting Now →', meetLink)}</div>` : `<div style="text-align:center;">${btn('View My Dashboard →', 'https://www.behold.co.in/profile?tab=booked')}</div>`}
+  `);
+
+const appointmentReminderCounsellor = ({ recipientName, otherPartyName, date, time, mode, meetLink }) =>
+  baseLayout(`
+    <h2 style="margin:0 0 8px;font-size:22px;color:#0f172a;font-weight:800;">⏰ Session Reminder</h2>
+    <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.6;">Hi <strong>${recipientName}</strong>, this is a reminder that you have a session with <strong>${otherPartyName}</strong> today!</p>
+    ${infoTable(`
+      ${infoRow('Student', otherPartyName)}
+      ${infoRow('Date', date)}
+      ${infoRow('Time', time)}
+      ${infoRow('Mode', mode || 'Online')}
+      ${meetLink ? infoRow('Meeting Link', `<a href="${meetLink}" style="color:${BRAND_COLOR};">Join Meeting</a>`) : ''}
+    `)}
+    ${meetLink ? `<div style="text-align:center;">${btn('Start Meeting Now →', meetLink)}</div>` : `<div style="text-align:center;">${btn('View Dashboard →', 'https://www.behold.co.in/counsellor')}</div>`}
   `);
 
 const paymentReceipt = ({ userName, amount, appointmentDate, appointmentTime, counsellorName, transactionId }) =>
@@ -294,8 +335,11 @@ module.exports = {
   appointmentApprovedCounsellor,
   appointmentRejected,
   appointmentCancelled,
+  appointmentCancelledCounsellor,
   appointmentRescheduled,
+  appointmentRescheduledCounsellor,
   appointmentReminder,
+  appointmentReminderCounsellor,
   paymentReceipt,
   counsellorVerified,
   counsellorRejected,
