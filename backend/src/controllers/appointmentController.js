@@ -70,50 +70,57 @@ const AppointmentController = {
         clientLongitude: Number(clientLongitude) || 0
       });
 
-      // Send notification to counsellor
-      await StorageService.create('notifications', {
-        recipientId: counsellorId,
-        recipientRole: 'counsellor',
-        title: 'New Appointment Booking Request',
-        message: `Student ${user.name} has requested an appointment on ${date} at ${time}.`,
-        type: 'appointment_created',
-        isRead: false
-      });
-
-      // Send notification to student
-      await StorageService.create('notifications', {
-        recipientId: userId,
-        recipientRole: 'user',
-        title: 'Appointment Request Submitted',
-        message: `Your booking request with ${counsellor.name} on ${date} at ${time} has been submitted.`,
-        type: 'appointment_created',
-        isRead: false
-      });
-
-      if (counsellor && counsellor.phone) {
-        WhatsAppService.sendBookingAlert(counsellor.phone, 'created', {
-          studentName: user.name,
-          counsellorName: counsellor.name,
-          date,
-          time
-        }).catch(err => console.error(err));
-      }
-      if (user && user.phone) {
-        WhatsAppService.sendBookingAlert(user.phone, 'created', {
-          studentName: user.name,
-          counsellorName: counsellor.name,
-          date,
-          time
-        }).catch(err => console.error(err));
-      }
-      // --- Email Alerts ---
-      EmailService.sendAppointmentBooked({ user, counsellor, appointment: newAppointment }).catch(err => console.error('[Email Booked Error]:', err));
-
       res.status(201).json({
         success: true,
         message: 'Appointment request created successfully',
         data: newAppointment
       });
+
+      // --- Background Processing for Notifications ---
+      (async () => {
+        try {
+          // Send notification to counsellor
+          await StorageService.create('notifications', {
+            recipientId: counsellorId,
+            recipientRole: 'counsellor',
+            title: 'New Appointment Booking Request',
+            message: `Student ${user.name} has requested an appointment on ${date} at ${time}.`,
+            type: 'appointment_created',
+            isRead: false
+          });
+
+          // Send notification to student
+          await StorageService.create('notifications', {
+            recipientId: userId,
+            recipientRole: 'user',
+            title: 'Appointment Request Submitted',
+            message: `Your booking request with ${counsellor.name} on ${date} at ${time} has been submitted.`,
+            type: 'appointment_created',
+            isRead: false
+          });
+
+          if (counsellor && counsellor.phone) {
+            WhatsAppService.sendBookingAlert(counsellor.phone, 'created', {
+              studentName: user.name,
+              counsellorName: counsellor.name,
+              date,
+              time
+            }).catch(err => console.error(err));
+          }
+          if (user && user.phone) {
+            WhatsAppService.sendBookingAlert(user.phone, 'created', {
+              studentName: user.name,
+              counsellorName: counsellor.name,
+              date,
+              time
+            }).catch(err => console.error(err));
+          }
+          // --- Email Alerts ---
+          EmailService.sendAppointmentBooked({ user, counsellor, appointment: newAppointment }).catch(err => console.error('[Email Booked Error]:', err));
+        } catch (bgError) {
+          console.error('[Background Task Error in createAppointment]:', bgError);
+        }
+      })();
     } catch (error) {
       next(error);
     }
@@ -253,38 +260,46 @@ const AppointmentController = {
         cancelledBy: req.user.role || 'counsellor'
       });
 
-      // Notify User
-      const counsellor = await StorageService.findById('counsellors', appointment.counsellorId);
-      await StorageService.create('notifications', {
-        recipientId: appointment.userId,
-        recipientRole: 'user',
-        title: 'Appointment Declined',
-        message: `Your appointment request with ${counsellor ? counsellor.name : 'Counsellor'} on ${appointment.date} was declined.${reason ? ` Reason: ${reason}` : ''}`,
-        type: 'appointment_rejected',
-        isRead: false
-      });
-
-      // --- WhatsApp Alerts ---
-      const user = await StorageService.findById('users', appointment.userId);
-      if (user && user.phone) {
-        WhatsAppService.sendBookingAlert(user.phone, 'cancelled', {
-          studentName: user.name,
-          counsellorName: counsellor ? counsellor.name : 'Counsellor',
-          date: appointment.date,
-          time: appointment.time,
-          reason: reason || 'Declined'
-        }).catch(err => console.error(err));
-      }
-      // --- Email Alerts ---
-      if (user) {
-        EmailService.sendAppointmentRejected({ user, counsellor, appointment, reason }).catch(err => console.error('[Email Reject Error]:', err));
-      }
-
       res.status(200).json({
         success: true,
         message: 'Appointment request rejected successfully',
         data: updated
       });
+
+      // --- Background Processing for Notifications ---
+      (async () => {
+        try {
+          // Notify User
+          const counsellor = await StorageService.findById('counsellors', appointment.counsellorId);
+          await StorageService.create('notifications', {
+            recipientId: appointment.userId,
+            recipientRole: 'user',
+            title: 'Appointment Declined',
+            message: `Your appointment request with ${counsellor ? counsellor.name : 'Counsellor'} on ${appointment.date} was declined.${reason ? ` Reason: ${reason}` : ''}`,
+            type: 'appointment_rejected',
+            isRead: false
+          });
+
+          // --- WhatsApp Alerts ---
+          const user = await StorageService.findById('users', appointment.userId);
+          if (user && user.phone) {
+            WhatsAppService.sendBookingAlert(user.phone, 'cancelled', {
+              studentName: user.name,
+              counsellorName: counsellor ? counsellor.name : 'Counsellor',
+              date: appointment.date,
+              time: appointment.time,
+              reason: reason || 'Declined'
+            }).catch(err => console.error(err));
+          }
+          // --- Email Alerts ---
+          if (user) {
+            EmailService.sendAppointmentRejected({ user, counsellor, appointment, reason }).catch(err => console.error('[Email Reject Error]:', err));
+          }
+        } catch (bgError) {
+          console.error('[Background Task Error in rejectAppointment]:', bgError);
+        }
+      })();
+
     } catch (error) {
       next(error);
     }
@@ -422,43 +437,50 @@ const AppointmentController = {
         await StorageService.update('sessions', session.id, { date, time, status: 'PENDING' });
       }
 
-      // Notify other participant
-      const isStudentRescheduling = req.user.role === 'user';
-      const targetId = isStudentRescheduling ? appointment.counsellorId : appointment.userId;
-      const targetRole = isStudentRescheduling ? 'counsellor' : 'user';
-      const actorName = req.user.role === 'user' ? 'The student' : 'The counsellor';
-
-      await StorageService.create('notifications', {
-        recipientId: targetId,
-        recipientRole: targetRole,
-        title: 'Appointment Rescheduled Request',
-        message: `${actorName} has requested to reschedule the appointment on ${date} at ${time}.`,
-        type: 'appointment_rescheduled',
-        isRead: false
-      });
-
-      // --- WhatsApp Alerts ---
-      const user = await StorageService.findById('users', appointment.userId);
-      const counsellor = await StorageService.findById('counsellors', appointment.counsellorId);
-      
-      const details = {
-        studentName: user ? user.name : 'Student',
-        counsellorName: counsellor ? counsellor.name : 'Counsellor',
-        date,
-        time
-      };
-
-      if (user && user.phone) WhatsAppService.sendBookingAlert(user.phone, 'rescheduled', details).catch(err => console.error(err));
-      if (counsellor && counsellor.phone) WhatsAppService.sendBookingAlert(counsellor.phone, 'rescheduled', details).catch(err => console.error(err));
-      // --- Email Alerts ---
-      EmailService.sendAppointmentRescheduled({ user, counsellor, appointment: updated }).catch(err => console.error('[Email Reschedule Error]:', err));
-
       res.status(200).json({
         success: true,
         message: 'Appointment rescheduled successfully. Pending approval.',
         warning: warning || undefined,
         data: updated
       });
+
+      // --- Background Processing for Notifications ---
+      (async () => {
+        try {
+          // Notify other participant
+          const isStudentRescheduling = req.user.role === 'user';
+          const targetId = isStudentRescheduling ? appointment.counsellorId : appointment.userId;
+          const targetRole = isStudentRescheduling ? 'counsellor' : 'user';
+          const actorName = req.user.role === 'user' ? 'The student' : 'The counsellor';
+
+          await StorageService.create('notifications', {
+            recipientId: targetId,
+            recipientRole: targetRole,
+            title: 'Appointment Rescheduled Request',
+            message: `${actorName} has requested to reschedule the appointment on ${date} at ${time}.`,
+            type: 'appointment_rescheduled',
+            isRead: false
+          });
+
+          // --- WhatsApp Alerts ---
+          const user = await StorageService.findById('users', appointment.userId);
+          const counsellor = await StorageService.findById('counsellors', appointment.counsellorId);
+          
+          const details = {
+            studentName: user ? user.name : 'Student',
+            counsellorName: counsellor ? counsellor.name : 'Counsellor',
+            date,
+            time
+          };
+
+          if (user && user.phone) WhatsAppService.sendBookingAlert(user.phone, 'rescheduled', details).catch(err => console.error(err));
+          if (counsellor && counsellor.phone) WhatsAppService.sendBookingAlert(counsellor.phone, 'rescheduled', details).catch(err => console.error(err));
+          // --- Email Alerts ---
+          EmailService.sendAppointmentRescheduled({ user, counsellor, appointment: updated }).catch(err => console.error('[Email Reschedule Error]:', err));
+        } catch (bgError) {
+          console.error('[Background Task Error in rescheduleAppointment]:', bgError);
+        }
+      })();
     } catch (error) {
       next(error);
     }
@@ -541,46 +563,53 @@ const AppointmentController = {
         });
       }
 
-      // Notify the other party
-      const isStudentCancelling = req.user.id === appointment.userId;
-      const targetId = isStudentCancelling ? appointment.counsellorId : appointment.userId;
-      const targetRole = isStudentCancelling ? 'counsellor' : 'user';
-      const cancellerName =
-        req.user.role === 'user' ? 'Student' : req.user.role === 'admin' ? 'Administrator' : 'Counsellor';
-      const reasonText = reason ? ` Reason: "${reason}"` : '';
-
-      await StorageService.create('notifications', {
-        recipientId: targetId,
-        recipientRole: targetRole,
-        title: 'Appointment Cancelled',
-        message: `${cancellerName} has cancelled the appointment scheduled on ${appointment.date}.${reasonText}`,
-        type: 'appointment_cancelled',
-        isRead: false
-      });
-
-      // --- WhatsApp Alerts ---
-      const user = await StorageService.findById('users', appointment.userId);
-      const counsellor = await StorageService.findById('counsellors', appointment.counsellorId);
-      
-      const details = {
-        studentName: user ? user.name : 'Student',
-        counsellorName: counsellor ? counsellor.name : 'Counsellor',
-        date: appointment.date,
-        time: appointment.time,
-        reason: reason || 'Cancelled'
-      };
-
-      if (user && user.phone) WhatsAppService.sendBookingAlert(user.phone, 'cancelled', details).catch(err => console.error(err));
-      if (counsellor && counsellor.phone) WhatsAppService.sendBookingAlert(counsellor.phone, 'cancelled', details).catch(err => console.error(err));
-      // --- Email Alerts ---
-      const cancelledByLabel = req.user.role === 'user' ? user?.name : counsellor?.name || 'Admin';
-      if (user) EmailService.sendAppointmentCancelled({ user, counsellor, appointment, cancelledBy: cancelledByLabel, reason }).catch(err => console.error('[Email Cancel Error]:', err));
-
       res.status(200).json({
         success: true,
         message: 'Appointment cancelled successfully',
         data: updated
       });
+
+      // --- Background Processing for Notifications ---
+      (async () => {
+        try {
+          // Notify the other party
+          const isStudentCancelling = req.user.id === appointment.userId;
+          const targetId = isStudentCancelling ? appointment.counsellorId : appointment.userId;
+          const targetRole = isStudentCancelling ? 'counsellor' : 'user';
+          const cancellerName =
+            req.user.role === 'user' ? 'Student' : req.user.role === 'admin' ? 'Administrator' : 'Counsellor';
+          const reasonText = reason ? ` Reason: "${reason}"` : '';
+
+          await StorageService.create('notifications', {
+            recipientId: targetId,
+            recipientRole: targetRole,
+            title: 'Appointment Cancelled',
+            message: `${cancellerName} has cancelled the appointment scheduled on ${appointment.date}.${reasonText}`,
+            type: 'appointment_cancelled',
+            isRead: false
+          });
+
+          // --- WhatsApp Alerts ---
+          const user = await StorageService.findById('users', appointment.userId);
+          const counsellor = await StorageService.findById('counsellors', appointment.counsellorId);
+          
+          const details = {
+            studentName: user ? user.name : 'Student',
+            counsellorName: counsellor ? counsellor.name : 'Counsellor',
+            date: appointment.date,
+            time: appointment.time,
+            reason: reason || 'Cancelled'
+          };
+
+          if (user && user.phone) WhatsAppService.sendBookingAlert(user.phone, 'cancelled', details).catch(err => console.error(err));
+          if (counsellor && counsellor.phone) WhatsAppService.sendBookingAlert(counsellor.phone, 'cancelled', details).catch(err => console.error(err));
+          // --- Email Alerts ---
+          const cancelledByLabel = req.user.role === 'user' ? user?.name : counsellor?.name || 'Admin';
+          if (user) EmailService.sendAppointmentCancelled({ user, counsellor, appointment, cancelledBy: cancelledByLabel, reason }).catch(err => console.error('[Email Cancel Error]:', err));
+        } catch (bgError) {
+          console.error('[Background Task Error in cancelAppointment]:', bgError);
+        }
+      })();
     } catch (error) {
       next(error);
     }

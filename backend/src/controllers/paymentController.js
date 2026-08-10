@@ -378,38 +378,46 @@ const PaymentController = {
 
       cleanDuplicateAppointments().catch(() => {});
 
-      // Send notification to counsellor
-      await StorageService.create('notifications', {
-        recipientId: counsellorId,
-        recipientRole: 'counsellor',
-        title: 'New Paid Appointment Request',
-        message: `Student ${clientName || user.name} requested an appointment on ${date} at ${time}. Payment ₹${netTotal} confirmed.`,
-        type: 'appointment_created',
-        isRead: false
-      });
-
-      // Send notification to student
-      await StorageService.create('notifications', {
-        recipientId: userId,
-        recipientRole: 'user',
-        title: 'Payment Confirmed & Booking Submitted',
-        message: `Your booking with ${counsellor.name} on ${date} at ${time} is confirmed. Payment ₹${netTotal} received.`,
-        type: 'appointment_created',
-        isRead: false
-      });
-
-      // --- Email Alerts for Paid Bookings ---
-      if (user && counsellor) {
-        EmailService.sendAppointmentBooked({ user, counsellor, appointment: newAppointment }).catch(err => console.error('[Email Booked Error]:', err));
-        EmailService.sendPaymentReceipt({ user, appointment: newAppointment, counsellor, amount: netTotal, transactionId: razorpay_payment_id }).catch(err => console.error('[Email Payment Receipt Error]:', err));
-      }
-
       res.status(200).json({
         success: true,
         message: 'Payment verified and appointment confirmed.',
         warning: conflictWarning || undefined,
         data: newAppointment
       });
+
+      // --- Background Processing for Notifications ---
+      (async () => {
+        try {
+          // Send notification to counsellor
+          await StorageService.create('notifications', {
+            recipientId: counsellorId,
+            recipientRole: 'counsellor',
+            title: 'New Paid Appointment Request',
+            message: `Student ${clientName || user.name} requested an appointment on ${date} at ${time}. Payment ₹${netTotal} confirmed.`,
+            type: 'appointment_created',
+            isRead: false
+          });
+
+          // Send notification to student
+          await StorageService.create('notifications', {
+            recipientId: userId,
+            recipientRole: 'user',
+            title: 'Payment Confirmed & Booking Submitted',
+            message: `Your booking with ${counsellor.name} on ${date} at ${time} is confirmed. Payment ₹${netTotal} received.`,
+            type: 'appointment_created',
+            isRead: false
+          });
+
+          // --- Email Alerts for Paid Bookings ---
+          if (user && counsellor) {
+            EmailService.sendAppointmentBooked({ user, counsellor, appointment: newAppointment }).catch(err => console.error('[Email Booked Error]:', err));
+            EmailService.sendPaymentReceipt({ user, appointment: newAppointment, counsellor, amount: netTotal, transactionId: razorpay_payment_id }).catch(err => console.error('[Email Payment Receipt Error]:', err));
+          }
+        } catch (bgError) {
+          console.error('[Background Task Error in paymentController]:', bgError);
+        }
+      })();
+
     } catch (error) {
       next(error);
     }
