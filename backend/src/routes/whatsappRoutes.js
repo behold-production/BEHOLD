@@ -31,6 +31,7 @@ function verifyWaSenderSignature(req) {
 
   // Check all possible header names WaSender may use
   const signature =
+    req.headers['x-webhook-signature'] ||
     req.headers['x-wasender-signature'] ||
     req.headers['x-signature'] ||
     req.headers['x-hub-signature-256'] ||
