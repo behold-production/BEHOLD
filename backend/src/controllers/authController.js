@@ -636,16 +636,9 @@ const AuthController = {
       if (!waResponse.success && !waResponse.mock) {
         console.error('WhatsApp sending failed:', waResponse.error);
 
-        let waErrorDetails = 'Unknown WhatsApp API error';
-        if (waResponse.error && waResponse.error.message) {
-          waErrorDetails = waResponse.error.message;
-        } else if (typeof waResponse.error === 'string') {
-          waErrorDetails = waResponse.error;
-        }
-
         return res.status(500).json({
           success: false,
-          message: `WhatsApp API Error: ${waErrorDetails}`
+          message: 'Failed to send WhatsApp verification code. Please try again later.'
         });
       }
 
