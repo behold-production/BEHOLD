@@ -22,6 +22,7 @@ const paymentRoutes = require('./routes/paymentRoutes');
 const googleAuthRoutes = require('./routes/googleAuthRoutes');
 const cronRoutes = require('./routes/cronRoutes');
 const blogRoutes = require('./routes/blogRoutes');
+const whatsappRoutes = require('./routes/whatsappRoutes');
 const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
@@ -161,6 +162,7 @@ app.use('/api/payments', paymentRoutes);
 app.use('/api/google', googleAuthRoutes);
 app.use('/api/cron', cronRoutes);
 app.use('/api/blogs', blogRoutes);
+app.use('/api/whatsapp', whatsappRoutes);
 app.use('/api', publicRoutes);
 app.use('/', publicRoutes);
 

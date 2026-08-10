@@ -597,13 +597,28 @@ const AuthController = {
         return res.status(400).json({ success: false, message: 'Phone number is required' });
       }
 
+      // Normalize phone: strip non-digits, prepend 91 for 10-digit Indian numbers
+      const phoneClean = String(phone).replace(/\D/g, '');
+      const normalizedPhone = phoneClean.length === 10 ? '91' + phoneClean : phoneClean;
+
+      if (normalizedPhone.length < 10) {
+        return res.status(400).json({ success: false, message: 'Invalid phone number provided' });
+      }
+
+      // Invalidate any previous unused OTPs for this phone number before creating a new one
+      const existingOtps = await StorageService.findAll('otps', { phone: normalizedPhone });
+      const unusedOtps = existingOtps.filter((o) => !o.used);
+      for (const otp of unusedOtps) {
+        await StorageService.update('otps', otp.id || otp._id, { used: true });
+      }
+
       // Generate 6 digit OTP
       const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
-      const expiresAt = new Date(Date.now() + 5 * 60 * 1000).toISOString(); // 5 minutes validity
+      const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes validity
 
-      // Store in otps collection
+      // Store in otps collection using the normalized phone number
       await StorageService.create('otps', {
-        phone,
+        phone: normalizedPhone,
         otpCode,
         expiresAt,
         used: false
@@ -611,16 +626,16 @@ const AuthController = {
 
       // Securely log the OTP for development / testing
       console.log(`\n======================================`);
-      console.log(`🔐 WHATSAPP OTP CODE GENERATED: ${otpCode}`);
-      console.log(`📱 TO: ${phone}`);
+      console.log(`WHATSAPP OTP CODE GENERATED: ${otpCode}`);
+      console.log(`TO: ${normalizedPhone}`);
       console.log(`======================================\n`);
 
-      // Send via WhatsApp
+      // Send via WhatsApp (use original phone so WaSender formats correctly)
       const waResponse = await WhatsAppService.sendOTP(phone, otpCode);
 
       if (!waResponse.success && !waResponse.mock) {
         console.error('WhatsApp sending failed:', waResponse.error);
-        
+
         let waErrorDetails = 'Unknown WhatsApp API error';
         if (waResponse.error && waResponse.error.message) {
           waErrorDetails = waResponse.error.message;
@@ -628,9 +643,9 @@ const AuthController = {
           waErrorDetails = waResponse.error;
         }
 
-        return res.status(500).json({ 
-          success: false, 
-          message: `WhatsApp API Error: ${waErrorDetails}` 
+        return res.status(500).json({
+          success: false,
+          message: `WhatsApp API Error: ${waErrorDetails}`
         });
       }
 
@@ -647,15 +662,19 @@ const AuthController = {
   async verifyOtp(req, res, next) {
     try {
       const { phone, otpCode, isLogin, portal = 'user' } = req.body;
-      
+
       if (!phone || !otpCode) {
         return res.status(400).json({ success: false, message: 'Phone and OTP code are required' });
       }
 
-      // Find OTP record
-      const otps = await StorageService.findAll('otps', { phone });
-      // Get the latest unused OTP
-      const validOtps = otps.filter(o => !o.used && new Date(o.expiresAt) > new Date());
+      // Normalize phone to match how it was stored during sendOtp
+      const phoneClean = String(phone).replace(/\D/g, '');
+      const normalizedPhone = phoneClean.length === 10 ? '91' + phoneClean : phoneClean;
+
+      // Find OTP records using normalized phone
+      const otps = await StorageService.findAll('otps', { phone: normalizedPhone });
+      // Get the latest unused, non-expired OTP
+      const validOtps = otps.filter((o) => !o.used && new Date(o.expiresAt) > new Date());
       const latestOtp = validOtps.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
 
       if (!latestOtp || latestOtp.otpCode !== otpCode) {
