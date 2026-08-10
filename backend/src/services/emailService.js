@@ -209,7 +209,7 @@ const EmailService = {
   },
 
   async sendAppointmentApproved({ user, counsellor, appointment }) {
-    const html = Templates.appointmentApproved({
+    const htmlUser = Templates.appointmentApproved({
       userName: user.name,
       counsellorName: counsellor?.name,
       date: appointment.date,
@@ -217,7 +217,19 @@ const EmailService = {
       mode: appointment.mode,
       meetLink: appointment.meetLink
     });
-    return sendEmail(user.email, '✅ Appointment Confirmed — Behold Aspire', html);
+    await sendEmail(user.email, '✅ Appointment Confirmed — Behold Aspire', htmlUser);
+
+    if (counsellor?.email) {
+      const htmlCounsellor = Templates.appointmentApprovedCounsellor({
+        userName: user.name,
+        counsellorName: counsellor.name,
+        date: appointment.date,
+        time: appointment.time,
+        mode: appointment.mode,
+        meetLink: appointment.meetLink
+      });
+      await sendEmail(counsellor.email, '✅ Appointment Confirmed — Behold Aspire', htmlCounsellor);
+    }
   },
 
   async sendAppointmentRejected({ user, counsellor, appointment, reason }) {

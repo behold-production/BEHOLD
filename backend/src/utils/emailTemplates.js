@@ -156,6 +156,23 @@ const appointmentApproved = ({ userName, counsellorName, date, time, mode, meetL
     ${meetLink ? `<div style="text-align:center;">${btn('Join Meeting →', meetLink)}</div>` : `<div style="text-align:center;">${btn('View Booking →', 'https://www.behold.co.in/profile?tab=booked')}</div>`}
   `);
 
+const appointmentApprovedCounsellor = ({ userName, counsellorName, date, time, mode, meetLink }) =>
+  baseLayout(`
+    <h2 style="margin:0 0 8px;font-size:22px;color:#0f172a;font-weight:800;">Appointment Confirmed! 🎉</h2>
+    <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.6;">Hi <strong>${counsellorName}</strong>, your upcoming session with <strong>${userName}</strong> is confirmed.</p>
+    ${infoTable(`
+      ${infoRow('Student', userName)}
+      ${infoRow('Date', date)}
+      ${infoRow('Time', time)}
+      ${infoRow('Mode', mode || 'Online')}
+      ${meetLink ? infoRow('Meeting Link', `<a href="${meetLink}" style="color:${BRAND_COLOR};">Join Meeting</a>`) : ''}
+    `)}
+    <div style="background:${BRAND_LIGHT};border-left:4px solid ${BRAND_COLOR};border-radius:6px;padding:14px 18px;margin:20px 0;">
+      <p style="margin:0;color:#166534;font-size:14px;font-weight:600;">✅ Status: Confirmed</p>
+    </div>
+    ${meetLink ? `<div style="text-align:center;">${btn('Join Meeting →', meetLink)}</div>` : `<div style="text-align:center;">${btn('View Dashboard →', 'https://www.behold.co.in/counsellor')}</div>`}
+  `);
+
 const appointmentRejected = ({ userName, counsellorName, date, reason }) =>
   baseLayout(`
     <h2 style="margin:0 0 8px;font-size:22px;color:#0f172a;font-weight:800;">Appointment Not Confirmed</h2>
@@ -274,6 +291,7 @@ module.exports = {
   appointmentBooked,
   appointmentBookedCounsellor,
   appointmentApproved,
+  appointmentApprovedCounsellor,
   appointmentRejected,
   appointmentCancelled,
   appointmentRescheduled,
