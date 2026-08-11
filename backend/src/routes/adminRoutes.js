@@ -10,8 +10,8 @@ const router = express.Router();
 // All admin routes require verifyJWT and admin role
 router.use(verifyJWT, requireRole('admin'));
 
-// Dashboard Statistics (cached for 5 minutes)
-router.get('/dashboard', cacheMiddleware(300), AdminController.getDashboard);
+// Dashboard Statistics (not cached to ensure real-time updates)
+router.get('/dashboard', AdminController.getDashboard);
 
 // Reviews
 router.get('/reviews', reviewController.getAdminReviews);

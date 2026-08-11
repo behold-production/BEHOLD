@@ -6,7 +6,10 @@ const WhatsAppMessage = require('../models/WhatsAppMessage');
 
 function verifyWaSenderSignature(req) {
   const secret = (process.env.WASENDER_WEBHOOK_SECRET || '').trim();
-  if (!secret) return true; // Skip verification in dev if secret not set
+  if (!secret) {
+    console.error('[WaSender Webhook Error]: WASENDER_WEBHOOK_SECRET is not configured.');
+    return false;
+  }
 
   // Check all possible header names WaSender may use
   const signature =
@@ -45,7 +48,7 @@ router.post('/wasender/webhook', async (req, res) => {
   try {
     // Signature verification (non-blocking — already responded 200)
     const secret = (process.env.WASENDER_WEBHOOK_SECRET || '').trim();
-    if (secret && !verifyWaSenderSignature(req)) {
+    if (!verifyWaSenderSignature(req)) {
       console.error('[WaSender Webhook] ❌ Invalid signature — payload rejected');
       return;
     }
