@@ -188,7 +188,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
 
       {/* Modal Container */}
       <div
-        className="fixed inset-0 z-[125] flex items-center justify-center min-h-screen p-4 overflow-y-auto overscroll-contain"
+        className="fixed inset-0 z-[125] flex items-start sm:items-center justify-center min-h-screen p-4 pt-12 sm:pt-4 overflow-y-auto overscroll-contain"
         role="dialog"
         aria-modal="true"
         aria-labelledby="booking-auth-modal-title"
