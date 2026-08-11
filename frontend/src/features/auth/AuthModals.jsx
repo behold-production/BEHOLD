@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Phone, Loader2, KeyRound } from 'lucide-react';
+import { X, Phone, Loader2, KeyRound, RefreshCw } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import ApiService from '../../services/api';
 import { validateIndianPhone, parseIndianPhone } from '../../utils/validation';
+
+const OTP_RESEND_SECONDS = 60;
 
 export default function AuthModals({ isOpen, onClose }) {
   const { login } = useAuth();
@@ -12,6 +14,7 @@ export default function AuthModals({ isOpen, onClose }) {
   const location = useLocation();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isResending, setIsResending] = useState(false);
   const [rejectionReason, setRejectionReason] = useState(null);
 
   // OTP Login State
@@ -19,6 +22,25 @@ export default function AuthModals({ isOpen, onClose }) {
   const [otpCode, setOtpCode] = useState('');
   const [isOtpSent, setIsOtpSent] = useState(false);
 
+  // Resend timer
+  const [resendTimer, setResendTimer] = useState(0);
+  const timerRef = useRef(null);
+
+  const startResendTimer = useCallback(() => {
+    setResendTimer(OTP_RESEND_SECONDS);
+    clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
+      setResendTimer((prev) => {
+        if (prev <= 1) {
+          clearInterval(timerRef.current);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  }, []);
+
+  // Reset state when modal opens/closes
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -26,8 +48,11 @@ export default function AuthModals({ isOpen, onClose }) {
       setOtpCode('');
       setIsOtpSent(false);
       setRejectionReason(null);
+      setResendTimer(0);
+      clearInterval(timerRef.current);
     } else {
       document.body.style.overflow = '';
+      clearInterval(timerRef.current);
     }
     return () => {
       document.body.style.overflow = '';
@@ -47,6 +72,7 @@ export default function AuthModals({ isOpen, onClose }) {
       document.documentElement.classList.remove('no-scroll');
       document.body.classList.remove('no-scroll');
       document.removeEventListener('keydown', handleEsc);
+      clearInterval(timerRef.current);
     };
   }, [isOpen, onClose]);
 
@@ -59,6 +85,15 @@ export default function AuthModals({ isOpen, onClose }) {
     });
   };
 
+  const sendOtp = async (phone) => {
+    const cleanPhone = parseIndianPhone(phone).phone10;
+    const res = await ApiService.sendOtp(cleanPhone);
+    if (res.success) {
+      return true;
+    }
+    throw new Error(res.message || 'Failed to send OTP');
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -69,23 +104,18 @@ export default function AuthModals({ isOpen, onClose }) {
       if (!isOtpSent) {
         if (!otpPhone.trim()) throw new Error('Phone number is required');
         if (!validateIndianPhone(otpPhone)) throw new Error('Please enter a valid 10-digit Indian phone number');
-        
-        const cleanPhone = parseIndianPhone(otpPhone).phone10;
-        const res = await ApiService.sendOtp(cleanPhone);
-        
-        if (res.success) {
-          setIsOtpSent(true);
-          showToast('WhatsApp OTP sent successfully!', 'success');
-        } else {
-          throw new Error(res.message || 'Failed to send OTP');
-        }
+
+        await sendOtp(otpPhone);
+        setIsOtpSent(true);
+        startResendTimer();
+        showToast('OTP sent to your WhatsApp!', 'success');
         setIsLoading(false);
         return;
       } else {
         if (!otpCode.trim() || otpCode.length !== 6) throw new Error('Please enter the 6-digit code');
         const cleanPhone = parseIndianPhone(otpPhone).phone10;
         const res = await ApiService.verifyOtp(cleanPhone, otpCode, true, 'user');
-        
+
         if (res.success && res.data && res.data.user) {
           loggedUser = res.data.user;
         } else {
@@ -126,19 +156,42 @@ export default function AuthModals({ isOpen, onClose }) {
     }
   };
 
+  const handleResend = async () => {
+    if (resendTimer > 0 || isResending) return;
+    setIsResending(true);
+    try {
+      await sendOtp(otpPhone);
+      setOtpCode('');
+      startResendTimer();
+      showToast('OTP resent to your WhatsApp!', 'success');
+    } catch (err) {
+      showToast(err.message || 'Failed to resend OTP');
+    } finally {
+      setIsResending(false);
+    }
+  };
+
+  const formatTimer = (s) => `0:${String(s).padStart(2, '0')}`;
+  const canResend = resendTimer === 0 && !isResending;
+
   return createPortal(
     <>
       <div className="fixed inset-0 z-[110] bg-zinc-900/60 backdrop-blur-md animate-backdrop-in" onClick={onClose} aria-hidden="true" />
       <div className="fixed inset-0 z-[115] flex items-center justify-center p-4 sm:p-6 overflow-y-auto overscroll-contain" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title" onClick={onClose}>
         <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl max-h-full overflow-y-auto animate-modal-in border border-zinc-200 m-auto flex flex-col" onClick={(e) => e.stopPropagation()}>
-          
+
+          {/* Header */}
           <div className="flex justify-between items-start gap-4 p-6 sm:p-7 border-b border-surface-200">
             <div className="min-w-0">
-              <h2 id="auth-modal-title" className="text-xl sm:text-2xl font-sans font-bold tracking-tight text-[#0f172a] uppercase">
-                {rejectionReason ? 'Application Rejected' : 'Sign In'}
+              <h2 id="auth-modal-title" className="text-xl sm:text-2xl font-sans font-bold tracking-tight text-[#0f172a]">
+                {rejectionReason ? 'Application Rejected' : isOtpSent ? 'Verify OTP' : 'Sign In'}
               </h2>
               <p className="text-xs text-surface-500 font-normal mt-1">
-                {rejectionReason ? 'Your counselor application has been declined.' : 'Enter your WhatsApp number to sign in securely.'}
+                {rejectionReason
+                  ? 'Your counselor application has been declined.'
+                  : isOtpSent
+                  ? `Code sent to WhatsApp +91 ${otpPhone}`
+                  : 'Enter your WhatsApp number to sign in securely.'}
               </p>
             </div>
             <button type="button" onClick={onClose} aria-label="Close dialog" className="w-9 h-9 shrink-0 bg-surface-100 hover:bg-surface-200 rounded-full transition-colors cursor-pointer flex items-center justify-center border-none">
@@ -146,6 +199,7 @@ export default function AuthModals({ isOpen, onClose }) {
             </button>
           </div>
 
+          {/* Rejection state */}
           {rejectionReason ? (
             <div className="p-6 space-y-4">
               <div className="bg-rose-50 border border-rose-200 p-4 rounded-xl space-y-3">
@@ -157,12 +211,14 @@ export default function AuthModals({ isOpen, onClose }) {
                   <p className="text-sm text-zinc-800 italic leading-relaxed">"{rejectionReason}"</p>
                 </div>
               </div>
-              <button onClick={() => setRejectionReason(null)} className="w-full py-3.5 bg-[#0f172a] hover:bg-[#1e293b] text-white font-bold text-xs uppercase tracking-widest rounded-full transition-all cursor-pointer border border-[#00e5ff]/30">
+              <button onClick={() => setRejectionReason(null)} className="w-full py-3.5 bg-[#0f172a] hover:bg-[#1e293b] text-white font-bold text-sm rounded-full transition-all cursor-pointer border border-[#00e5ff]/30">
                 Return to Login
               </button>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
+
+              {/* Phone input */}
               {!isOtpSent && (
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold text-zinc-500 block">WhatsApp Phone Number</label>
@@ -180,28 +236,79 @@ export default function AuthModals({ isOpen, onClose }) {
                 </div>
               )}
 
+              {/* OTP input + resend */}
               {isOtpSent && (
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-zinc-500 block">Enter 6-Digit Code</label>
-                  <div className="relative">
-                    <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
-                    <input
-                      type="text"
-                      maxLength={6}
-                      value={otpCode}
-                      onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))}
-                      placeholder="123456"
-                      className="w-full pl-10 pr-4 py-3 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 focus:bg-white focus:border-brand focus:ring-2 focus:ring-brand/20 outline-none transition-all font-mono tracking-widest text-center"
+                <div className="space-y-3">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-zinc-500 block">6-Digit Verification Code</label>
+                    <div className="relative">
+                      <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+                      <input
+                        type="text"
+                        maxLength={6}
+                        value={otpCode}
+                        onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))}
+                        placeholder="— — — — — —"
+                        autoFocus
+                        className="w-full pl-10 pr-4 py-3.5 bg-zinc-50 border border-zinc-200 rounded-lg text-base text-zinc-900 focus:bg-white focus:border-brand focus:ring-2 focus:ring-brand/20 outline-none transition-all font-mono tracking-[0.4em] text-center"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Resend row */}
+                  <div className="flex items-center justify-between px-0.5">
+                    <span className="text-xs text-zinc-400">Didn't receive the code?</span>
+                    {canResend ? (
+                      <button
+                        type="button"
+                        onClick={handleResend}
+                        disabled={isResending}
+                        className="flex items-center gap-1.5 text-xs font-semibold text-brand hover:text-brand/80 transition-colors cursor-pointer border-none bg-transparent disabled:opacity-50"
+                      >
+                        <RefreshCw className={`w-3.5 h-3.5 ${isResending ? 'animate-spin' : ''}`} />
+                        Resend OTP
+                      </button>
+                    ) : (
+                      <span className="text-xs font-semibold text-zinc-500 tabular-nums">
+                        Resend in{' '}
+                        <span className="text-brand font-bold">{formatTimer(resendTimer)}</span>
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Progress bar */}
+                  <div className="w-full h-0.5 bg-zinc-100 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-brand rounded-full transition-all duration-1000 ease-linear"
+                      style={{ width: `${(resendTimer / OTP_RESEND_SECONDS) * 100}%` }}
                     />
                   </div>
                 </div>
               )}
 
+              {/* Submit button */}
               <div className="pt-2">
-                <button type="submit" disabled={isLoading} className="w-full py-3.5 min-h-[48px] bg-zinc-900 hover:bg-zinc-800 text-white font-semibold hover-scale-btn text-sm rounded-full transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-sm">
-                  {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <span>{!isOtpSent ? 'Send OTP' : 'Sign In'}</span>}
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full py-3.5 min-h-[48px] bg-zinc-900 hover:bg-zinc-800 text-white font-semibold text-sm rounded-full transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-sm"
+                >
+                  {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <span>{!isOtpSent ? 'Send OTP via WhatsApp' : 'Verify & Sign In'}</span>}
                 </button>
               </div>
+
+              {/* Back link */}
+              {isOtpSent && (
+                <div className="text-center">
+                  <button
+                    type="button"
+                    onClick={() => { setIsOtpSent(false); setOtpCode(''); clearInterval(timerRef.current); setResendTimer(0); }}
+                    className="text-xs text-zinc-400 hover:text-zinc-600 transition-colors cursor-pointer bg-transparent border-none"
+                  >
+                    ← Change phone number
+                  </button>
+                </div>
+              )}
             </form>
           )}
 
