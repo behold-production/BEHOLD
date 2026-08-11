@@ -1,4 +1,5 @@
 const nodemailer = require('nodemailer');
+const ics = require('ics');
 
 /**
  * Behold Aspire — Email Service
@@ -110,8 +111,9 @@ const htmlToText = (htmlStr) => {
  * @param {string} to — recipient email address
  * @param {string} subject — email subject line
  * @param {string} html — complete HTML body
+ * @param {Array} attachments — array of nodemailer attachment objects
  */
-const sendEmail = async (to, subject, html) => {
+const sendEmail = async (to, subject, html, attachments = []) => {
   if (!to) return { success: false, error: 'No recipient address provided' };
 
   const fromName = (process.env.EMAIL_FROM_NAME || 'BEHOLD Aspire').trim();
@@ -127,6 +129,7 @@ const sendEmail = async (to, subject, html) => {
     subject,
     text: plainText,
     html,
+    attachments,
     headers: {
       'X-Mailer': 'BEHOLD Aspire Notification Engine',
       'X-Auto-Response-Suppress': 'OOF, AutoReply',
@@ -168,6 +171,40 @@ const sendEmail = async (to, subject, html) => {
 
 const Templates = require('../utils/emailTemplates');
 
+function _createIcsAttachment(appointment, userName, counsellorName) {
+  try {
+    const [year, month, day] = appointment.date.split('-').map(Number);
+    const timeParts = appointment.time.split(' ');
+    let [hours, minutes] = timeParts[0].split(':').map(Number);
+    if (timeParts[1] === 'PM' && hours < 12) hours += 12;
+    if (timeParts[1] === 'AM' && hours === 12) hours = 0;
+
+    const event = {
+      start: [year, month, day, hours, minutes],
+      duration: { hours: 1 },
+      title: `Session with ${counsellorName || 'Counsellor'} (Behold Aspire)`,
+      description: `Counselling session for ${userName}. Mode: ${appointment.mode}. ${appointment.meetLink ? 'Link: ' + appointment.meetLink : ''}`,
+      location: appointment.mode === 'ONLINE' ? 'Online' : 'Behold Center',
+      status: 'CONFIRMED',
+      busyStatus: 'BUSY',
+      organizer: { name: 'Behold Aspire', email: 'support@behold.co.in' },
+      attendees: [
+        { name: userName, email: 'student@behold.co.in', rsvp: true, role: 'REQ-PARTICIPANT' }
+      ]
+    };
+
+    const { error, value } = ics.createEvent(event);
+    if (error) {
+      console.error('[ICS Generation Error]:', error);
+      return [];
+    }
+    return [{ filename: 'invite.ics', content: value, contentType: 'text/calendar' }];
+  } catch (err) {
+    console.error('[ICS Parsing Error]:', err);
+    return [];
+  }
+}
+
 const EmailService = {
   sendEmail,
 
@@ -193,22 +230,26 @@ const EmailService = {
     const time = appointment.time;
     const mode = appointment.mode;
     const platform = appointment.platform;
+    const attachments = _createIcsAttachment(appointment, user.name, counsellor?.name);
 
     await sendEmail(
       user.email,
       '📋 Appointment Request Submitted — Behold Aspire',
-      Templates.appointmentBooked({ userName: user.name, counsellorName: counsellor?.name, date, time, mode, platform })
+      Templates.appointmentBooked({ userName: user.name, counsellorName: counsellor?.name, date, time, mode, platform }),
+      attachments
     );
     if (counsellor?.email) {
       await sendEmail(
         counsellor.email,
         '📋 New Booking Request — Behold Aspire',
-        Templates.appointmentBookedCounsellor({ userName: user.name, counsellorName: counsellor.name, date, time, mode })
+        Templates.appointmentBookedCounsellor({ userName: user.name, counsellorName: counsellor.name, date, time, mode }),
+        attachments
       );
     }
   },
 
   async sendAppointmentApproved({ user, counsellor, appointment }) {
+    const attachments = _createIcsAttachment(appointment, user.name, counsellor?.name);
     const htmlUser = Templates.appointmentApproved({
       userName: user.name,
       counsellorName: counsellor?.name,
@@ -217,7 +258,7 @@ const EmailService = {
       mode: appointment.mode,
       meetLink: appointment.meetLink
     });
-    await sendEmail(user.email, '✅ Appointment Confirmed — Behold Aspire', htmlUser);
+    await sendEmail(user.email, '✅ Appointment Confirmed — Behold Aspire', htmlUser, attachments);
 
     if (counsellor?.email) {
       const htmlCounsellor = Templates.appointmentApprovedCounsellor({
@@ -228,7 +269,7 @@ const EmailService = {
         mode: appointment.mode,
         meetLink: appointment.meetLink
       });
-      await sendEmail(counsellor.email, '✅ Appointment Confirmed — Behold Aspire', htmlCounsellor);
+      await sendEmail(counsellor.email, '✅ Appointment Confirmed — Behold Aspire', htmlCounsellor, attachments);
     }
   },
 
