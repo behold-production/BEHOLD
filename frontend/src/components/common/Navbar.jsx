@@ -193,7 +193,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
                       key={label}
                       ref={(el) => (navRefs.current[idx] = el)}
                       onClick={action}
-                      className={`text-xs font-bold tracking-wider transition-colors duration-200 bg-transparent cursor-pointer py-1 border-none ${isActive
+                      className={`text-sm font-bold tracking-wider transition-colors duration-200 bg-transparent cursor-pointer py-1 border-none ${isActive
                         ? 'text-[#00c9d6]'
                         : 'text-slate-700 hover:text-[#00c9d6]'
                         }`}
@@ -208,7 +208,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
               <div className="hidden lg:flex items-center gap-3">
                 <button
                   onClick={() => { onOpenBooking(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                  className="px-5 py-2.5 font-bold text-xs uppercase tracking-widest rounded-full transition-all shadow-sm cursor-pointer border bg-[#00c9d6] hover:bg-[#00b2be] text-slate-950 border-transparent hover-scale-btn"
+                  className="px-5 py-2.5 font-bold text-sm uppercase tracking-wider rounded-full transition-all shadow-sm cursor-pointer border bg-[#00c9d6] hover:bg-[#00b2be] text-slate-950 border-transparent hover-scale-btn"
                 >
                   Book Session
                 </button>
@@ -235,7 +235,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
                 ) : (
                   <button
                     onClick={() => onOpenAuth?.()}
-                    className="px-5 py-2.5 font-bold text-xs uppercase tracking-widest rounded-full transition-all cursor-pointer border bg-slate-100 hover:bg-slate-200 text-slate-900 border-slate-200 hover-scale-btn"
+                    className="px-5 py-2.5 font-bold text-sm uppercase tracking-wider rounded-full transition-all cursor-pointer border bg-slate-100 hover:bg-slate-200 text-slate-900 border-slate-200 hover-scale-btn"
                   >
                     Sign In
                   </button>
