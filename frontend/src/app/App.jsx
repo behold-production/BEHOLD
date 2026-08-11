@@ -14,6 +14,7 @@ import Reviews from '../features/landing/Reviews';
 import PrivacyPolicy from '../features/landing/PrivacyPolicy';
 import Footer from '../components/common/Footer';
 import AuthModals from '../features/auth/AuthModals';
+import CompleteProfileModal from '../features/auth/CompleteProfileModal';
 import TherapistSwipeSection from '../features/landing/TherapistSwipeSection';
 import FaqBlogSection from '../features/landing/FaqBlogSection';
 import ContactInquirySection from '../features/landing/ContactInquirySection';
@@ -651,6 +652,16 @@ export default function App() {
       )}
 
       <AuthModals isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
+      
+      {/* Mandatory profile completion for WhatsApp auto-registered users */}
+      <CompleteProfileModal 
+        isOpen={user && user.email && user.email.startsWith('whatsapp_')} 
+        onSuccess={() => {
+          // The modal relies on user state updating to close itself, 
+          // but we can trigger a re-fetch of profile if necessary.
+          // For now, the modal handles this via ApiService.updateProfile which emits 'storage' event.
+        }} 
+      />
 
       <ServiceBooking
         isOpen={isBookingModalOpen}

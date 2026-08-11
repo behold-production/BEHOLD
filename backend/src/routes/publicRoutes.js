@@ -2,17 +2,18 @@ const express = require('express');
 const PublicController = require('../controllers/publicController');
 const reviewController = require('../controllers/reviewController');
 const { verifyJWT } = require('../middleware/authMiddleware');
+const { cacheMiddleware } = require('../middleware/cacheMiddleware');
 
 const router = express.Router();
 
 router.post('/inquiries', PublicController.submitInquiry);
-router.get('/faqs', PublicController.getFaqs);
-router.get('/settings', PublicController.getSettings);
+router.get('/faqs', cacheMiddleware(300), PublicController.getFaqs);
+router.get('/settings', cacheMiddleware(300), PublicController.getSettings);
 router.post('/test-results', PublicController.saveTestResult);
-router.get('/aptitude-questions', PublicController.getAptitudeQuestions);
+router.get('/aptitude-questions', cacheMiddleware(300), PublicController.getAptitudeQuestions);
 
 // Review routes
-router.get('/reviews', reviewController.getPublicReviews);
+router.get('/reviews', cacheMiddleware(300), reviewController.getPublicReviews);
 router.post('/reviews', verifyJWT, reviewController.submitReview);
 
 module.exports = router;

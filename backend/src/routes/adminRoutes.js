@@ -2,6 +2,7 @@ const express = require('express');
 const AdminController = require('../controllers/adminController');
 const reviewController = require('../controllers/reviewController');
 const { verifyJWT, requireRole } = require('../middleware/authMiddleware');
+const { cacheMiddleware } = require('../middleware/cacheMiddleware');
 const upload = require('../middleware/uploadMiddleware');
 
 const router = express.Router();
@@ -9,7 +10,8 @@ const router = express.Router();
 // All admin routes require verifyJWT and admin role
 router.use(verifyJWT, requireRole('admin'));
 
-router.get('/dashboard', AdminController.getDashboard);
+// Dashboard Statistics (cached for 5 minutes)
+router.get('/dashboard', cacheMiddleware(300), AdminController.getDashboard);
 
 // Reviews
 router.get('/reviews', reviewController.getAdminReviews);

@@ -28,10 +28,11 @@ const UserController = {
   // Update User Profile
   async updateProfile(req, res, next) {
     try {
-      const { name, phone, schoolName, grade, guardianName, guardianPhone, groupCode, locationName, latitude, longitude } = req.body;
+      const { name, email, phone, schoolName, grade, guardianName, guardianPhone, groupCode, locationName, latitude, longitude } = req.body;
       const updates = {};
 
       if (name !== undefined) updates.name = name;
+      if (email !== undefined) updates.email = email;
       if (phone !== undefined) updates.phone = phone;
       if (schoolName !== undefined) updates.schoolName = schoolName;
       if (grade !== undefined) updates.grade = grade;

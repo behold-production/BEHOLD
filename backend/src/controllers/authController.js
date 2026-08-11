@@ -679,8 +679,29 @@ const AuthController = {
 
       // If this is an OTP login flow, find the user and log them in
       if (isLogin) {
-        const match = await findAnyUserByPhone(phone, portal);
-        if (!match) {
+        let match = await findAnyUserByPhone(phone, portal);
+        if (!match && portal === 'user') {
+          // Auto-register the user if they are using WhatsApp login for the first time
+          const tempEmail = `whatsapp_${normalizedPhone}@temp.behold.co.in`;
+          
+          const salt = await bcrypt.genSalt(10);
+          const hashedPassword = await bcrypt.hash(Math.random().toString(36), salt);
+
+          const newUser = await StorageService.create('users', {
+            name: 'New User',
+            email: tempEmail,
+            password: hashedPassword,
+            phone: normalizedPhone,
+            role: 'user',
+            schoolName: '',
+            grade: '',
+            guardianName: '',
+            guardianPhone: '',
+            groupCode: ''
+          });
+          
+          match = { user: newUser, table: 'users' };
+        } else if (!match) {
           return res.status(404).json({ 
             success: false, 
             message: 'No account found with this phone number. Please register.' 

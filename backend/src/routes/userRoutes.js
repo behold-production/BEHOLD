@@ -1,6 +1,7 @@
 const express = require('express');
 const UserController = require('../controllers/userController');
 const { verifyJWT, requireRole } = require('../middleware/authMiddleware');
+const { cacheMiddleware } = require('../middleware/cacheMiddleware');
 
 const router = express.Router();
 
@@ -23,7 +24,7 @@ router.put(
 router.delete('/profile', verifyJWT, requireRole('user'), UserController.deleteProfile);
 
 // Counsellor search and details (accessible by users, and public)
-router.get('/counsellors', UserController.getCounsellors);
-router.get('/counsellors/:id', UserController.getCounsellorDetails);
+router.get('/counsellors', cacheMiddleware(60), UserController.getCounsellors);
+router.get('/counsellors/:id', cacheMiddleware(60), UserController.getCounsellorDetails);
 
 module.exports = router;
