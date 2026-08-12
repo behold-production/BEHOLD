@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Phone, KeyRound, Loader2, RefreshCw } from 'lucide-react';
 import ApiService from '../../services/api';
+import OtpPinInput from '../../components/common/OtpPinInput';
 
 const phoneRegex = /^(\+?\d{1,4}[- ]?)?[6-9]\d{9}$/;
 const OTP_RESEND_SECONDS = 60;
@@ -189,21 +190,15 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
               <div className="space-y-3">
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold text-zinc-500 block">6-Digit Verification Code</label>
-                  <div className="relative">
-                    <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
-                    <input
-                      type="text"
-                      maxLength={6}
-                      value={otpCode}
-                      autoFocus
-                      onChange={(e) => {
-                        setOtpCode(e.target.value.replace(/\D/g, ''));
-                        if (fieldErrors.otpCode) setFieldErrors(prev => ({ ...prev, otpCode: null }));
-                      }}
-                      placeholder="— — — — — —"
-                      className={`w-full pl-10 pr-4 py-3.5 rounded-lg text-base text-zinc-900 outline-none transition-all border font-mono tracking-[0.4em] text-center ${fieldErrors.otpCode ? 'bg-rose-50/40 border-rose-400' : 'bg-zinc-50 border-zinc-200 focus:bg-white focus:border-brand focus:ring-2 focus:ring-brand/20'}`}
-                    />
-                  </div>
+                  <OtpPinInput
+                    value={otpCode}
+                    onChange={(code) => {
+                      setOtpCode(code);
+                      if (fieldErrors.otpCode) setFieldErrors(prev => ({ ...prev, otpCode: null }));
+                    }}
+                    hasError={!!fieldErrors.otpCode}
+                    disabled={isLoading}
+                  />
                   {fieldErrors.otpCode && <p className="text-xs font-medium text-rose-500">{fieldErrors.otpCode}</p>}
                 </div>
 

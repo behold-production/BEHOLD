@@ -64,8 +64,8 @@ export default function FaqBlogSection() {
           
           {/* Section Header */}
           <div className="flex items-center justify-between mb-6 h-12">
-            <h2 className="font-['Cormorant_Garamond',serif] text-3xl sm:text-4xl lg:text-5xl font-bold tracking-widest text-[slate-900] uppercase drop-shadow-md leading-none">
-              FAQ'S
+            <h2 className="font-['Plus_Jakarta_Sans',sans-serif] text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 leading-none">
+              Frequently Asked Questions
             </h2>
             <button
               onClick={() => navigate('/faqs')}
@@ -130,8 +130,8 @@ export default function FaqBlogSection() {
           
           {/* Section Header */}
           <div className="flex items-center justify-between mb-6 h-12">
-            <h2 className="font-['Cormorant_Garamond',serif] text-3xl sm:text-4xl lg:text-5xl font-bold tracking-widest text-slate-900 uppercase drop-shadow-md leading-none">
-              BLOGS
+            <h2 className="font-['Plus_Jakarta_Sans',sans-serif] text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 leading-none">
+              Insights & Articles
             </h2>
             <button
               onClick={() => navigate('/blog')}

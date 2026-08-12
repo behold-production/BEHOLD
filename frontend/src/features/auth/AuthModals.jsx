@@ -5,6 +5,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import ApiService from '../../services/api';
 import { validateIndianPhone, parseIndianPhone } from '../../utils/validation';
+import OtpPinInput from '../../components/common/OtpPinInput';
 
 const OTP_RESEND_SECONDS = 60;
 
@@ -241,18 +242,11 @@ export default function AuthModals({ isOpen, onClose }) {
                 <div className="space-y-3">
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold text-zinc-500 block">6-Digit Verification Code</label>
-                    <div className="relative">
-                      <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
-                      <input
-                        type="text"
-                        maxLength={6}
-                        value={otpCode}
-                        onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))}
-                        placeholder="— — — — — —"
-                        autoFocus
-                        className="w-full pl-10 pr-4 py-3.5 bg-zinc-50 border border-zinc-200 rounded-lg text-base text-zinc-900 focus:bg-white focus:border-brand focus:ring-2 focus:ring-brand/20 outline-none transition-all font-mono tracking-[0.4em] text-center"
-                      />
-                    </div>
+                    <OtpPinInput
+                      value={otpCode}
+                      onChange={(code) => setOtpCode(code)}
+                      disabled={isLoading}
+                    />
                   </div>
 
                   {/* Resend row */}

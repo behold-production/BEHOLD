@@ -50,8 +50,8 @@ export default function ContactInquirySection() {
       <div className="relative z-10 w-full max-w-xl mx-auto reveal-on-scroll reveal-scale-in">
 
         {/* Section Title */}
-        <h2 className="font-['Cormorant_Garamond',serif] text-3xl sm:text-4xl font-bold tracking-widest text-[#0f172a] uppercase text-center mb-10">
-          Want to Know More
+        <h2 className="font-['Plus_Jakarta_Sans',sans-serif] text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 text-center mb-10">
+          Want to Know More?
         </h2>
 
         {/* Card */}

@@ -86,8 +86,8 @@ const BlogList = () => {
       {/* Hero Header Section */}
       <section className="relative z-10 pt-4 pb-4 sm:pt-6 sm:pb-6 px-4 sm:px-6 lg:px-8 reveal-on-scroll">
         <div className="max-w-5xl mx-auto text-center space-y-3">
-          <span className="text-[11px] sm:text-xs font-bold tracking-widest text-[#00c9d6] flex items-center justify-center gap-1.5 uppercase">
-            BEHOLD INSIGHTS & RESEARCH
+          <span className="text-[11px] sm:text-xs font-semibold text-[#00c9d6] flex items-center justify-center gap-1.5">
+            Behold Insights & Research
           </span>
 
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-sans font-bold tracking-tight text-slate-900 max-w-4xl mx-auto leading-tight">
