@@ -86,7 +86,7 @@ async function generateSessionMeetingLink({ counsellor, user, date, time, servic
         calendarId: 'primary',
         resource: event,
         conferenceDataVersion: 1,
-        sendUpdates: 'all'
+        sendUpdates: 'none'
       });
 
       if (response.data && response.data.hangoutLink) {

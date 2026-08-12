@@ -400,7 +400,6 @@ const PaymentController = {
           }),
           counsellor && counsellor.phone ? WhatsAppService.sendBookingAlert(counsellor.phone, 'created', { studentName: user.name, counsellorName: counsellor.name, date, time }) : Promise.resolve(),
           user && user.phone ? WhatsAppService.sendBookingAlert(user.phone, 'created', { studentName: user.name, counsellorName: counsellor.name, date, time }) : Promise.resolve(),
-          user && counsellor ? EmailService.sendAppointmentBooked({ user, counsellor, appointment: newAppointment }) : Promise.resolve(),
           user && counsellor ? EmailService.sendPaymentReceipt({ user, appointment: newAppointment, counsellor, amount: netTotal, transactionId: razorpay_payment_id }) : Promise.resolve()
         ]);
       } catch (notifErr) {

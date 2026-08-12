@@ -325,6 +325,8 @@ const EmailService = {
     // ── 2. Send to PSYCHOLOGIST (counsellor) ──────────────────────────────
     if (!counsellor?.email) {
       console.warn('[Email] ⚠️  Psychologist has no email address in database — skipping psychologist notification');
+    } else if (user?.email && counsellor.email.toLowerCase() === user.email.toLowerCase()) {
+      console.log('[Email] ℹ️  Student & Psychologist have identical email address — skipping duplicate send.');
     } else {
       const counsellorAttachments = _createIcsAttachment(
         appointment, counsellor.name, counsellor.email, user?.name, user?.email
