@@ -17,8 +17,9 @@ async function generateSessionMeetingLink({ counsellor, user, date, time, servic
   const keySecret = process.env.GOOGLE_CLIENT_SECRET;
   const redirectUri = process.env.GOOGLE_REDIRECT_URI || 'https://www.behold.co.in/api/google/callback';
 
-  // System OAuth refresh token MUST take priority so event is created by central system account (beholdoffice@gmail.com / admin@behold.co.in)
-  const refreshToken = process.env.SYSTEM_GOOGLE_REFRESH_TOKEN || process.env.GOOGLE_REFRESH_TOKEN || counsellor?.googleRefreshToken;
+  // ONLY use central system OAuth refresh token so event is created exclusively by central system account (beholdoffice@gmail.com / admin@behold.co.in)
+  // NEVER fall back to psychologist's personal OAuth token to prevent emails being sent from psychologist's personal email
+  const refreshToken = (process.env.SYSTEM_GOOGLE_REFRESH_TOKEN || process.env.GOOGLE_REFRESH_TOKEN || '').trim();
 
   if (keyId && keySecret && refreshToken) {
     try {
