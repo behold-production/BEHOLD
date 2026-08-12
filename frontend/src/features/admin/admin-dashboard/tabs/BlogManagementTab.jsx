@@ -217,7 +217,8 @@ export default function BlogManagementTab() {
       const payload = fd;
 
       if (editingBlog) {
-        const res = await ApiService.updateBlog(editingBlog.id || editingBlog._id, payload);
+        const targetId = editingBlog._id || editingBlog.id || editingBlog.slug;
+        const res = await ApiService.updateBlog(targetId, payload);
         if (res?.success) {
           toast.success('Article updated successfully!');
           fetchBlogs();

@@ -169,7 +169,13 @@ class BlogController {
   static async updateBlog(req, res) {
     try {
       const { id } = req.params;
-      const blog = await StorageService.findById('blogs', id);
+      let blog = await StorageService.findById('blogs', id);
+      if (!blog) {
+        blog = await StorageService.findOne('blogs', { _id: id });
+      }
+      if (!blog) {
+        blog = await StorageService.findOne('blogs', { slug: id });
+      }
 
       if (!blog) {
         return res.status(404).json({ success: false, message: 'Blog post not found' });
@@ -200,7 +206,7 @@ class BlogController {
         }
         if (newSlug !== blog.slug) {
           const existing = await StorageService.findOne('blogs', { slug: newSlug });
-          updates.slug = existing && existing.id !== id ? `${newSlug}-${Date.now().toString().slice(-4)}` : newSlug;
+          updates.slug = existing && (existing.id !== id && existing._id !== id) ? `${newSlug}-${Date.now().toString().slice(-4)}` : newSlug;
         }
       }
       
@@ -243,7 +249,8 @@ class BlogController {
         if (authorAvatar !== undefined) updates.author.avatar = authorAvatar;
       }
 
-      const updatedBlog = await StorageService.update('blogs', id, updates);
+      const targetId = blog._id || blog.id || id;
+      const updatedBlog = await StorageService.update('blogs', targetId, updates);
 
       res.status(200).json({ success: true, data: updatedBlog });
     } catch (error) {
@@ -256,8 +263,14 @@ class BlogController {
   static async deleteBlog(req, res) {
     try {
       const { id } = req.params;
-      const blog = await StorageService.findById('blogs', id);
-      
+      let blog = await StorageService.findById('blogs', id);
+      if (!blog) {
+        blog = await StorageService.findOne('blogs', { _id: id });
+      }
+      if (!blog) {
+        blog = await StorageService.findOne('blogs', { slug: id });
+      }
+
       if (!blog) {
         return res.status(404).json({ success: false, message: 'Blog post not found' });
       }
