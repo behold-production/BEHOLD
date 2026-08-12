@@ -131,7 +131,7 @@ function UnauthorizedFallback({ roleRequired }) {
         <h1 className='text-3xl font-extrabold tracking-wider text-white font-header'>
           BEHOLD<span className='text-[#00E5FF]'>.</span>
         </h1>
-        <p className='text-[10px] tracking-[0.25em] font-bold text-slate-400 mt-2 uppercase'>
+        <p className='text-[10px] tracking-[0.25em] font-semibold text-slate-400 mt-2 uppercase'>
           Administrator Control Gate
         </p>
       </div>
@@ -139,7 +139,7 @@ function UnauthorizedFallback({ roleRequired }) {
       <div className='relative z-10 w-full max-w-[420px] bg-[#0c1424]/95 backdrop-blur-xl border border-slate-800/80 rounded-lg shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-300'>
         <div className='p-8'>
           <div>
-            <h2 className='text-lg font-bold text-white text-left font-header'>
+            <h2 className='text-lg font-semibold text-white text-left font-header'>
               Sign In To Dashboard
             </h2>
             <p className='text-xs text-slate-500 text-left mt-1.5 mb-6 leading-relaxed'>
@@ -194,7 +194,7 @@ function UnauthorizedFallback({ roleRequired }) {
                 <button
                   type='submit'
                   disabled={loading}
-                  className='w-full bg-[#00E5FF] hover:bg-[#00bccc] text-slate-950 font-bold py-3 rounded-lg text-sm transition duration-200 cursor-pointer active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-[#00E5FF]/10'
+                  className='w-full bg-[#00E5FF] hover:bg-[#00bccc] text-slate-950 font-semibold py-3 rounded-lg text-sm transition duration-200 cursor-pointer active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-[#00E5FF]/10'
                 >
                   {loading ? (
                     <div className='w-5 h-5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin mx-auto' />
@@ -542,11 +542,11 @@ export default function App() {
         <div className="flex flex-col items-center gap-4">
           <div className="relative flex items-center justify-center">
             <div className="w-14 h-14 rounded-full border-3 border-[#00e5ff]/20 border-t-[#00e5ff] animate-spin shadow-[0_0_15px_rgba(0,229,255,0.4)]" />
-            <span className="absolute font-sans font-black text-xs text-slate-900 tracking-widest uppercase">
+            <span className="absolute font-sans font-semibold text-xs text-slate-900 tracking-widest uppercase">
               B<span className="text-[#00e5ff]">.</span>
             </span>
           </div>
-          <span className="text-xs font-bold uppercase tracking-widest text-slate-600 animate-pulse">
+          <span className="text-xs font-semibold uppercase tracking-widest text-slate-600 animate-pulse">
             Loading...
           </span>
         </div>
@@ -629,7 +629,7 @@ export default function App() {
 
       {/* Top Banner Notice Alert */}
       {!hideNavbarAndFooter && siteSettings.showBanner && siteSettings.bannerNotice && (
-        <div className="w-full bg-zinc-950 text-zinc-300 text-xs sm:text-xs font-bold py-2.5 px-4 text-center border-b border-zinc-900 relative z-50 flex items-center justify-center gap-2 tracking-wide shadow-md animate-in slide-in-from-top duration-300">
+        <div className="w-full bg-zinc-950 text-zinc-300 text-xs sm:text-xs font-semibold py-2.5 px-4 text-center border-b border-zinc-900 relative z-50 flex items-center justify-center gap-2 tracking-wide shadow-md animate-in slide-in-from-top duration-300">
           <span className="inline-block w-2.5 h-2.5 rounded-full bg-brand animate-pulse" />
           <span>{siteSettings.bannerNotice}</span>
         </div>
@@ -687,11 +687,11 @@ export default function App() {
           <div className="flex flex-col items-center gap-4">
             <div className="relative flex items-center justify-center">
               <div className="w-14 h-14 rounded-full border-3 border-[#00e5ff]/20 border-t-[#00e5ff] animate-spin shadow-[0_0_15px_rgba(0,229,255,0.4)]" />
-              <span className="absolute font-sans font-black text-xs text-slate-900 tracking-widest uppercase">
+              <span className="absolute font-sans font-semibold text-xs text-slate-900 tracking-widest uppercase">
                 B<span className="text-[#00e5ff]">.</span>
               </span>
             </div>
-            <span className="text-xs font-bold uppercase tracking-widest text-slate-600 animate-pulse">
+            <span className="text-xs font-semibold uppercase tracking-widest text-slate-600 animate-pulse">
               Loading...
             </span>
           </div>
@@ -831,9 +831,9 @@ export default function App() {
 
             {/* Modal Header */}
             <div className="px-6 py-4 border-b border-zinc-800 flex justify-between items-center bg-zinc-950/40">
-              <h3 className="text-sm font-bold text-white font-header flex items-center gap-2">
+              <h3 className="text-sm font-semibold text-white font-header flex items-center gap-2">
                 <span>{activeDocType === 'terms' ? 'Terms & Conditions' : activeDocType === 'refund' ? 'Return & Refund Policy' : 'Privacy Policy'}</span>
-                <span className="text-[7.5px] bg-zinc-800 border border-zinc-700 text-zinc-400 px-1.5 py-0.5 rounded font-bold ">DOC</span>
+                <span className="text-[7.5px] bg-zinc-800 border border-zinc-700 text-zinc-400 px-1.5 py-0.5 rounded font-semibold ">DOC</span>
               </h3>
               <button
                 onClick={() => setActiveDocType(null)}
@@ -853,14 +853,14 @@ export default function App() {
             <div className="px-6 py-4 border-t border-zinc-800 flex justify-end gap-3 bg-zinc-955">
               <button
                 onClick={handleDownloadPDF}
-                className="px-5 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white font-bold text-xs rounded-xl cursor-pointer transition border border-zinc-700 shadow-md flex items-center gap-2"
+                className="px-5 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white font-semibold text-xs rounded-xl cursor-pointer transition border border-zinc-700 shadow-md flex items-center gap-2"
               >
                 <Download className="w-3.5 h-3.5" />
                 Download PDF
               </button>
               <button
                 onClick={() => setActiveDocType(null)}
-                className="px-5 py-2.5 bg-zinc-800 hover:bg-zinc-750 text-white hover:text-brand font-bold text-xs rounded-lg cursor-pointer transition border-none shadow-md"
+                className="px-5 py-2.5 bg-zinc-800 hover:bg-zinc-750 text-white hover:text-brand font-semibold text-xs rounded-lg cursor-pointer transition border-none shadow-md"
               >
                 Close Document
               </button>
@@ -892,7 +892,7 @@ export default function App() {
             title="Chat with us on WhatsApp"
             aria-label="Chat with us on WhatsApp"
           >
-            <span className="absolute -top-10 right-0 bg-zinc-900 text-white text-[11px] font-bold px-2.5 py-1 rounded-md shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap border border-zinc-800">
+            <span className="absolute -top-10 right-0 bg-zinc-900 text-white text-[11px] font-semibold px-2.5 py-1 rounded-md shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap border border-zinc-800">
               Chat on WhatsApp
             </span>
             <svg className="w-7 h-7 sm:w-8 sm:h-8 fill-current text-white" viewBox="0 0 24 24">

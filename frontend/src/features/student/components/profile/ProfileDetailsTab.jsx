@@ -155,7 +155,7 @@ const ProfileDetailsTab = ({
  {/* Header */}
  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
  <div>
- <h2 className="text-xl font-bold text-surface-900 tracking-tight">My Profile</h2>
+ <h2 className="text-xl font-semibold text-surface-900 tracking-tight">My Profile</h2>
  <p className="text-sm text-surface-500 mt-0.5">Keep your details up to date.</p>
  </div>
  </div>
@@ -167,7 +167,7 @@ const ProfileDetailsTab = ({
  <div className="flex items-center justify-between mb-3">
 
  <div>
- <p className="text-sm font-black text-surface-900">Profile Strength</p>
+ <p className="text-sm font-semibold text-surface-900">Profile Strength</p>
  <p className="text-xs text-surface-500 mt-0.5">
  {completion < 50 ? 'Fill in more fields to strengthen your profile.' :
  completion < 100 ? 'Almost complete — just a few more fields.' :
@@ -175,7 +175,7 @@ const ProfileDetailsTab = ({
  </p>
  </div>
  <span
- className="text-2xl font-black tracking-tight"
+ className="text-2xl font-semibold tracking-tight"
  style={{ color: completion >= 80 ? '#10b981' : completion >= 50 ? '#f59e0b' : '#f43f5e' }}
  >{completion}%</span>
  </div>
@@ -193,8 +193,8 @@ const ProfileDetailsTab = ({
  />
  </div>
  <div className="flex justify-between mt-2">
- <span className="text-[10px] text-surface-400 font-bold tracking-widest">0%</span>
- <span className="text-[10px] text-surface-400 font-bold tracking-widest">100% Complete</span>
+ <span className="text-[10px] text-surface-400 font-semibold tracking-widest">0%</span>
+ <span className="text-[10px] text-surface-400 font-semibold tracking-widest">100% Complete</span>
  </div>
  </div>
 
@@ -213,7 +213,7 @@ const ProfileDetailsTab = ({
  <SIcon className="w-[18px] h-[18px]" style={{ color: section.accentColor }} />
  </div>
  <div>
- <h3 className="text-sm font-black text-surface-900">{section.title}</h3>
+ <h3 className="text-sm font-semibold text-surface-900">{section.title}</h3>
  <p className="text-xs text-surface-500 mt-0.5">{section.hint}</p>
  </div>
  </div>
@@ -225,7 +225,7 @@ const ProfileDetailsTab = ({
  const hasValue = !!formData[field.name];
  return (
  <div key={field.name} className="space-y-1.5">
- <label htmlFor={`sp-${field.name}`} className="text-[10px] tracking-widest text-surface-600 font-bold flex items-center gap-1">
+ <label htmlFor={`sp-${field.name}`} className="text-[10px] tracking-widest text-surface-600 font-semibold flex items-center gap-1">
  {field.label}
  {field.required && <span className="text-rose-500">*</span>}
  </label>
@@ -283,7 +283,7 @@ const ProfileDetailsTab = ({
  <AlertCircle className="w-3 h-3" /> {errors[field.name]}
  </p>
  ) : (
- <p className="text-[10px] tracking-widest font-bold text-surface-400">{field.required ? 'Required' : 'Optional'}</p>
+ <p className="text-[10px] tracking-widest font-semibold text-surface-400">{field.required ? 'Required' : 'Optional'}</p>
  )}
  </div>
  );
@@ -305,7 +305,7 @@ const ProfileDetailsTab = ({
  <MapPin className="w-[18px] h-[18px] text-amber-600" />
  </div>
  <div>
- <h3 className="text-sm font-black text-surface-900">Home Location & Address</h3>
+ <h3 className="text-sm font-semibold text-surface-900">Home Location & Address</h3>
  <p className="text-xs text-surface-500 mt-0.5">Used for calculating doorstep session booking feasibility (10 km limit)</p>
  </div>
  </div>
@@ -313,7 +313,7 @@ const ProfileDetailsTab = ({
  type="button"
  onClick={handleDetectLocation}
  disabled={isLocating}
- className="min-h-[32px] inline-flex items-center gap-1 px-3 py-1 bg-surface-900 hover:bg-surface-800 text-white rounded-full tracking-widest text-[10px] font-black transition cursor-pointer border-none shadow-none disabled:opacity-50"
+ className="min-h-[32px] inline-flex items-center gap-1 px-3 py-1 bg-surface-900 hover:bg-surface-800 text-white rounded-full tracking-widest text-[10px] font-semibold transition cursor-pointer border-none shadow-none disabled:opacity-50"
  >
  <Navigation className={`w-3.5 h-3.5 ${isLocating ? 'animate-spin' : ''}`} />
  {isLocating ? 'Locating...' : 'Detect Location'}
@@ -323,7 +323,7 @@ const ProfileDetailsTab = ({
  <div className="space-y-4 animate-in fade-in duration-200">
  {/* Address Search Autocomplete Input */}
  <div className="space-y-1.5 text-left relative">
- <label htmlFor="student-location-search" className="text-[10px] tracking-widest text-surface-600 font-bold flex items-center gap-1">
+ <label htmlFor="student-location-search" className="text-[10px] tracking-widest text-surface-600 font-semibold flex items-center gap-1">
  Search Home Address
  </label>
  <div className="relative flex gap-2">
@@ -348,7 +348,7 @@ const ProfileDetailsTab = ({
  type="button"
  onClick={handleAddressSearch}
  disabled={isSearching}
- className="px-4 py-2 bg-surface-900 hover:bg-surface-800 text-white text-[10px] tracking-widest font-black rounded-full transition cursor-pointer border-none shadow-none"
+ className="px-4 py-2 bg-surface-900 hover:bg-surface-800 text-white text-[10px] tracking-widest font-semibold rounded-full transition cursor-pointer border-none shadow-none"
  >
  {isSearching ? 'Searching...' : 'Search'}
  </button>
@@ -377,7 +377,7 @@ const ProfileDetailsTab = ({
 
  {/* Read/Write Coordinates Form Fields */}
  <div className="space-y-1.5">
- <label htmlFor="sp-locationName" className="text-[10px] tracking-widest text-surface-600 font-bold">Selected / Current Address</label>
+ <label htmlFor="sp-locationName" className="text-[10px] tracking-widest text-surface-600 font-semibold">Selected / Current Address</label>
  <input
  id="sp-locationName"
  type="text"
@@ -394,7 +394,7 @@ const ProfileDetailsTab = ({
 
  <div className="grid grid-cols-2 gap-4">
  <div className="space-y-1.5">
- <label htmlFor="sp-latitude" className="text-[10px] tracking-widest text-surface-600 font-bold">Latitude</label>
+ <label htmlFor="sp-latitude" className="text-[10px] tracking-widest text-surface-600 font-semibold">Latitude</label>
  <input
  id="sp-latitude"
  type="number"
@@ -407,7 +407,7 @@ const ProfileDetailsTab = ({
  />
  </div>
  <div className="space-y-1.5">
- <label htmlFor="sp-longitude" className="text-[10px] tracking-widest text-surface-600 font-bold">Longitude</label>
+ <label htmlFor="sp-longitude" className="text-[10px] tracking-widest text-surface-600 font-semibold">Longitude</label>
  <input
  id="sp-longitude"
  type="number"
@@ -430,7 +430,7 @@ const ProfileDetailsTab = ({
  <Bell className="w-4 h-4 text-surface-600" />
  </div>
  <div>
- <h3 className="text-sm font-black text-surface-900">Desktop Alerts & Reminders</h3>
+ <h3 className="text-sm font-semibold text-surface-900">Desktop Alerts & Reminders</h3>
  <p className="text-xs text-surface-500">Receive real-time notifications for booking updates and messages</p>
  </div>
  </div>
@@ -447,7 +447,7 @@ const ProfileDetailsTab = ({
  ? 'bg-rose-500'
  : 'bg-surface-400'
  }`} />
- <span className="text-[10px] font-black tracking-widest text-surface-700">
+ <span className="text-[10px] font-semibold tracking-widest text-surface-700">
  {!isNotificationSupported()
  ? 'Not Supported'
  : permissionState === 'granted'
@@ -473,7 +473,7 @@ const ProfileDetailsTab = ({
  <button
  type="button"
  onClick={handleEnableNotifications}
- className="min-h-[36px] px-4 py-2 bg-surface-900 hover:bg-surface-800 text-white rounded-full text-[10px] tracking-widest font-black transition cursor-pointer border-none shadow-none"
+ className="min-h-[36px] px-4 py-2 bg-surface-900 hover:bg-surface-800 text-white rounded-full text-[10px] tracking-widest font-semibold transition cursor-pointer border-none shadow-none"
  >
  Enable Notifications
  </button>
@@ -482,13 +482,13 @@ const ProfileDetailsTab = ({
  <button
  type="button"
  onClick={handleTestNotification}
- className="min-h-[36px] px-4 py-2 bg-surface-50 border border-surface-200 text-surface-900 hover:bg-surface-100 rounded-full text-[10px] tracking-widest font-black transition cursor-pointer shadow-none"
+ className="min-h-[36px] px-4 py-2 bg-surface-50 border border-surface-200 text-surface-900 hover:bg-surface-100 rounded-full text-[10px] tracking-widest font-semibold transition cursor-pointer shadow-none"
  >
  Test Alert Notification
  </button>
  )}
  {isNotificationSupported() && permissionState === 'denied' && (
- <span className="text-[10px] text-rose-500 font-bold tracking-widest bg-rose-50 border border-rose-100 p-2 rounded-[10px] block max-w-[200px]">
+ <span className="text-[10px] text-rose-500 font-semibold tracking-widest bg-rose-50 border border-rose-100 p-2 rounded-[10px] block max-w-[200px]">
  🔒 Unblock in browser site settings
  </span>
  )}
@@ -501,14 +501,14 @@ const ProfileDetailsTab = ({
  type="button"
  onClick={handleDiscard}
  disabled={isSaving}
- className="min-h-[40px] px-4 py-2 border border-surface-200 hover:border-surface-300 rounded-full text-[10px] tracking-widest font-black text-surface-900 hover:bg-surface-50 transition-colors bg-white shadow-none disabled:opacity-50"
+ className="min-h-[40px] px-4 py-2 border border-surface-200 hover:border-surface-300 rounded-full text-[10px] tracking-widest font-semibold text-surface-900 hover:bg-surface-50 transition-colors bg-white shadow-none disabled:opacity-50"
  >
  Discard
  </button>
  <button
  type="submit"
  disabled={isSaving}
- className="min-h-[40px] inline-flex items-center gap-1.5 px-5 py-2 bg-surface-900 hover:bg-surface-800 disabled:bg-surface-500 text-white text-[10px] tracking-widest font-black rounded-full shadow-none transition-colors border-none"
+ className="min-h-[40px] inline-flex items-center gap-1.5 px-5 py-2 bg-surface-900 hover:bg-surface-800 disabled:bg-surface-500 text-white text-[10px] tracking-widest font-semibold rounded-full shadow-none transition-colors border-none"
  >
  {isSaving ? (
  <><span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />Saving...</>
@@ -522,7 +522,7 @@ const ProfileDetailsTab = ({
  {isSaved && (
  <div className="fixed bottom-[90px] lg:bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-4 py-2.5 bg-surface-900 text-white rounded-[10px] shadow-xl" role="status">
  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
- <span className="text-[10px] tracking-widest font-black">Profile saved successfully!</span>
+ <span className="text-[10px] tracking-widest font-semibold">Profile saved successfully!</span>
  </div>
  )}
  </div>

@@ -35,7 +35,7 @@ const SidebarNav = ({ currentSection, handleSectionChange, bookedSessions, testP
  key={tab.id}
  type="button"
  onClick={() => handleSectionChange(tab.id)}
- className={`relative flex items-center gap-3 px-4 min-h-[46px] rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-200 group cursor-pointer border ${
+ className={`relative flex items-center gap-3 px-4 min-h-[46px] rounded-xl text-xs font-semibold uppercase tracking-wider transition-all duration-200 group cursor-pointer border ${
  isActive
  ? 'bg-[#0f172a] text-white border-[#00e5ff]/40 shadow-xs scale-[1.01]'
  : 'text-surface-600 hover:bg-surface-100 hover:text-[#0f172a] border-transparent'
@@ -44,7 +44,7 @@ const SidebarNav = ({ currentSection, handleSectionChange, bookedSessions, testP
  {Icon && <Icon className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 ${isActive ? 'text-[#00e5ff]' : 'text-surface-500 group-hover:text-[#0f172a]'}`} />}
  <span className="flex-1 text-left">{tab.label}</span>
  {badge !== null && badge !== 0 && (
- <span className={`text-[10px] font-bold px-2 min-w-[20px] h-5 rounded-full flex items-center justify-center ${
+ <span className={`text-[10px] font-semibold px-2 min-w-[20px] h-5 rounded-full flex items-center justify-center ${
  isActive
  ? 'bg-[#00e5ff] text-[#0f172a] shadow-2xs'
  : tab.id === 'results' && !testProfile
@@ -60,7 +60,7 @@ const SidebarNav = ({ currentSection, handleSectionChange, bookedSessions, testP
 
  <button
  onClick={() => setIsLogoutOpen(true)}
- className="mt-3 flex items-center gap-3 px-4 min-h-[44px] rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer text-rose-600 hover:bg-rose-50 border border-transparent hover:border-rose-100 group"
+ className="mt-3 flex items-center gap-3 px-4 min-h-[44px] rounded-xl text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer text-rose-600 hover:bg-rose-50 border border-transparent hover:border-rose-100 group"
  >
  <LogOut className="w-4 h-4 shrink-0 text-rose-500 group-hover:scale-110 transition-transform" />
  <span className="flex-1 text-left">Sign Out</span>
@@ -86,12 +86,12 @@ const SidebarNav = ({ currentSection, handleSectionChange, bookedSessions, testP
  <div className="relative">
  {Icon && <Icon className="w-5 h-5" />}
  {badge !== null && badge > 0 && (
- <span className="absolute -top-1.5 -right-2 text-[10px] font-black px-1 min-w-[14px] h-3.5 rounded-[10px] bg-surface-900 text-white flex items-center justify-center">
+ <span className="absolute -top-1.5 -right-2 text-[10px] font-semibold px-1 min-w-[14px] h-3.5 rounded-[10px] bg-surface-900 text-white flex items-center justify-center">
  {badge}
  </span>
  )}
  </div>
- <span className="text-[10px] font-bold tracking-widest truncate max-w-full">{tab.short}</span>
+ <span className="text-[10px] font-semibold tracking-widest truncate max-w-full">{tab.short}</span>
  {isActive && (
  <span className="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-0.5 bg-surface-900 rounded-[10px]" />
  )}
@@ -105,7 +105,7 @@ const SidebarNav = ({ currentSection, handleSectionChange, bookedSessions, testP
  className="relative flex flex-col items-center justify-center gap-1 min-h-[60px] py-2 px-1 transition-colors text-red-500 hover:text-red-600 cursor-pointer border-none bg-transparent"
  >
  <LogOut className="w-5 h-5" />
- <span className="text-[10px] font-bold tracking-widest truncate max-w-full">Logout</span>
+ <span className="text-[10px] font-semibold tracking-widest truncate max-w-full">Logout</span>
  </button>
  </div>
  </nav>

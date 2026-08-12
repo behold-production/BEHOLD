@@ -100,13 +100,13 @@ const BlogList = () => {
         <section className="relative z-10 pt-6 pb-6 sm:pt-10 sm:pb-8 px-4 sm:px-6 lg:px-8 reveal-on-scroll">
           <div className="max-w-4xl mx-auto text-center">
 
-            <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-bold text-[#00c9d6] tracking-widest uppercase mb-4">
+            <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold text-[#00c9d6] tracking-widest uppercase mb-4">
               <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
               Behold Insights &amp; Research
               <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
             </span>
 
-            <h1 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-black tracking-tight text-slate-900 leading-[1.15] mb-4">
+            <h1 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-semibold tracking-tight text-slate-900 leading-[1.15] mb-4">
               Understanding What Matters<span className="text-[#00c9d6] drop-shadow-[0_0_10px_rgba(0,201,214,0.5)]">.</span>
             </h1>
 
@@ -127,7 +127,7 @@ const BlogList = () => {
                 />
                 <button
                   type="submit"
-                  className="shrink-0 m-1.5 px-5 py-2 rounded-xl bg-[#0f172a] hover:bg-[#00c9d6] hover:text-slate-950 text-white font-bold text-xs tracking-wider transition-all cursor-pointer border-none flex items-center gap-1.5 hover-scale-btn"
+                  className="shrink-0 m-1.5 px-5 py-2 rounded-xl bg-[#0f172a] hover:bg-[#00c9d6] hover:text-slate-950 text-white font-semibold text-xs tracking-wider transition-all cursor-pointer border-none flex items-center gap-1.5 hover-scale-btn"
                 >
                   Search
                 </button>
@@ -143,7 +143,7 @@ const BlogList = () => {
                     key={cat}
                     type="button"
                     onClick={() => setSelectedCategory(cat)}
-                    className={`px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider transition-all duration-200 cursor-pointer border ${
+                    className={`px-4 py-1.5 rounded-full text-[11px] font-semibold tracking-wider transition-all duration-200 cursor-pointer border ${
                       active
                         ? 'bg-[#0f172a] text-white border-[#0f172a] shadow-sm'
                         : 'bg-white/90 text-slate-600 border-slate-200 hover:border-slate-400 hover:text-slate-900'
@@ -188,7 +188,7 @@ const BlogList = () => {
               <div className="w-14 h-14 bg-[#00c9d6]/10 text-[#007078] rounded-2xl flex items-center justify-center mx-auto mb-5 border border-[#00c9d6]/20">
                 <BookOpen className="w-7 h-7" />
               </div>
-              <h3 className="text-lg font-black text-slate-900 mb-2 tracking-tight">No Articles Found</h3>
+              <h3 className="text-lg font-semibold text-slate-900 mb-2 tracking-tight">No Articles Found</h3>
               <p className="text-slate-500 font-medium text-sm">Try a different category or keyword to explore more articles.</p>
             </div>
           ) : (
@@ -217,11 +217,11 @@ const BlogList = () => {
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-slate-950/10 to-transparent" />
 
-                        <span className="absolute top-3.5 left-3.5 px-3 py-1 rounded-xl bg-[#0f172a]/90 backdrop-blur-sm text-white border border-white/10 text-[10px] font-black tracking-widest uppercase">
+                        <span className="absolute top-3.5 left-3.5 px-3 py-1 rounded-xl bg-[#0f172a]/90 backdrop-blur-sm text-white border border-white/10 text-[10px] font-semibold tracking-widest uppercase">
                           {post.category || 'Career Guidance'}
                         </span>
 
-                        <div className="absolute bottom-3.5 right-3.5 flex items-center gap-1 text-[10px] font-bold text-slate-900 bg-white/95 backdrop-blur-sm px-2.5 py-1 rounded-xl shadow-sm">
+                        <div className="absolute bottom-3.5 right-3.5 flex items-center gap-1 text-[10px] font-semibold text-slate-900 bg-white/95 backdrop-blur-sm px-2.5 py-1 rounded-xl shadow-sm">
                           <Clock className="w-3 h-3 text-[#007078]" />
                           <span>{post.readTime || '5 min'}</span>
                         </div>
@@ -230,7 +230,7 @@ const BlogList = () => {
                       {/* Content */}
                       <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between gap-4">
                         <div className="space-y-2">
-                          <h2 className="text-base sm:text-[17px] font-black text-slate-900 group-hover:text-[#007078] transition-colors leading-snug tracking-tight line-clamp-2">
+                          <h2 className="text-base sm:text-[17px] font-semibold text-slate-900 group-hover:text-[#007078] transition-colors leading-snug tracking-tight line-clamp-2">
                             {post.title}
                           </h2>
                           <p className="text-xs sm:text-sm text-slate-500 line-clamp-2 leading-relaxed font-normal">
@@ -241,7 +241,7 @@ const BlogList = () => {
                         {/* Author & CTA */}
                         <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
                           <div className="flex items-center gap-2.5 min-w-0">
-                            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#0f172a] to-[#1e3a5f] text-[#00c9d6] flex items-center justify-center font-black text-xs overflow-hidden shrink-0">
+                            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#0f172a] to-[#1e3a5f] text-[#00c9d6] flex items-center justify-center font-semibold text-xs overflow-hidden shrink-0">
                               {post.author?.avatar ? (
                                 <img src={getImageUrl(post.author.avatar)} alt={post.author.name} className="w-full h-full object-cover" />
                               ) : (
@@ -249,7 +249,7 @@ const BlogList = () => {
                               )}
                             </div>
                             <div className="min-w-0">
-                              <h4 className="text-xs font-bold text-slate-900 truncate leading-tight">
+                              <h4 className="text-xs font-semibold text-slate-900 truncate leading-tight">
                                 {post.author?.name || 'BEHOLD Editorial'}
                               </h4>
                               <p className="text-[10px] text-slate-400 font-semibold tracking-wider truncate">
@@ -258,7 +258,7 @@ const BlogList = () => {
                             </div>
                           </div>
 
-                          <div className="flex items-center gap-1 text-[11px] font-bold text-[#007078] group-hover:text-[#00c9d6] group-hover:translate-x-0.5 transition-all shrink-0">
+                          <div className="flex items-center gap-1 text-[11px] font-semibold text-[#007078] group-hover:text-[#00c9d6] group-hover:translate-x-0.5 transition-all shrink-0">
                             <span>Read</span>
                             <ArrowRight className="w-3.5 h-3.5" />
                           </div>
@@ -276,7 +276,7 @@ const BlogList = () => {
                     onClick={() => goToPage(currentPage - 1)}
                     disabled={currentPage === 1}
                     aria-label="Previous Page"
-                    className={`w-9 h-9 rounded-xl flex items-center justify-center border font-bold transition-all hover-scale-btn ${
+                    className={`w-9 h-9 rounded-xl flex items-center justify-center border font-semibold transition-all hover-scale-btn ${
                       currentPage === 1
                         ? 'border-slate-200 text-slate-300 bg-white cursor-not-allowed'
                         : 'border-slate-200 bg-white text-slate-600 hover:bg-[#0f172a] hover:text-white hover:border-[#0f172a] cursor-pointer'
@@ -289,7 +289,7 @@ const BlogList = () => {
                     <button
                       key={num}
                       onClick={() => goToPage(num)}
-                      className={`w-9 h-9 rounded-xl flex items-center justify-center border text-xs font-bold transition-all cursor-pointer hover-scale-btn ${
+                      className={`w-9 h-9 rounded-xl flex items-center justify-center border text-xs font-semibold transition-all cursor-pointer hover-scale-btn ${
                         currentPage === num
                           ? 'bg-[#0f172a] text-white border-[#0f172a] shadow-sm'
                           : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400 hover:text-slate-900'
@@ -301,10 +301,10 @@ const BlogList = () => {
 
                   {totalPages > 5 && currentPage < totalPages - 2 && (
                     <>
-                      <span className="w-9 h-9 flex items-center justify-center text-slate-400 text-xs font-bold select-none">…</span>
+                      <span className="w-9 h-9 flex items-center justify-center text-slate-400 text-xs font-semibold select-none">…</span>
                       <button
                         onClick={() => goToPage(totalPages)}
-                        className="w-9 h-9 rounded-xl flex items-center justify-center border text-xs font-bold bg-white text-slate-600 border-slate-200 hover:border-slate-400 hover:text-slate-900 cursor-pointer hover-scale-btn"
+                        className="w-9 h-9 rounded-xl flex items-center justify-center border text-xs font-semibold bg-white text-slate-600 border-slate-200 hover:border-slate-400 hover:text-slate-900 cursor-pointer hover-scale-btn"
                       >
                         {totalPages}
                       </button>
@@ -315,7 +315,7 @@ const BlogList = () => {
                     onClick={() => goToPage(currentPage + 1)}
                     disabled={currentPage === totalPages}
                     aria-label="Next Page"
-                    className={`w-9 h-9 rounded-xl flex items-center justify-center border font-bold transition-all hover-scale-btn ${
+                    className={`w-9 h-9 rounded-xl flex items-center justify-center border font-semibold transition-all hover-scale-btn ${
                       currentPage === totalPages
                         ? 'border-slate-200 text-slate-300 bg-white cursor-not-allowed'
                         : 'border-slate-200 bg-white text-slate-600 hover:bg-[#0f172a] hover:text-white hover:border-[#0f172a] cursor-pointer'

@@ -50,12 +50,12 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
             
             {/* Cell 1: Intro Text (lg:col-span-5) */}
             <div className="md:col-span-2 lg:col-span-5 bg-white/70 backdrop-blur-xl border border-white/80 p-8 lg:p-10 rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col justify-center reveal-on-scroll reveal-scale-in hover-scale-card">
-              <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-bold text-[#00c9d6] tracking-widest uppercase mb-3">
+              <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold text-[#00c9d6] tracking-widest uppercase mb-3">
                 <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
                 At BEHOLD
                 <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
               </span>
-              <h2 className="text-[var(--text-4xl)] font-sans font-bold text-slate-900 tracking-tight leading-[1.05] mb-5">
+              <h2 className="text-[var(--text-4xl)] font-sans font-semibold text-slate-900 tracking-tight leading-[1.05] mb-5">
                 BEHOLD<span className="text-[#00e5ff] drop-shadow-[0_0_12px_rgba(0,229,255,0.6)]">.</span>
               </h2>
               <p className="text-[var(--text-base)] text-slate-600 leading-relaxed font-medium">
@@ -67,7 +67,7 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
             <div className="md:col-span-1 lg:col-span-3 bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col justify-between group hover-scale-card transition-all duration-300 reveal-on-scroll reveal-scale-in reveal-delay-1">
               <Award className="w-6 h-6 text-[#00c9d6] mb-4 group-hover:scale-110 transition-transform" />
               <div>
-                <span className="block text-4xl sm:text-5xl font-black text-slate-900 font-sans tracking-tight mb-2 group-hover:text-[#00c9d6] transition-colors">
+                <span className="block text-4xl sm:text-5xl font-semibold text-slate-900 font-sans tracking-tight mb-2 group-hover:text-[#00c9d6] transition-colors">
                   {stats[0].value}
                 </span>
                 <p className="text-xs sm:text-sm text-slate-500 font-medium leading-relaxed">
@@ -83,7 +83,7 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
               </div>
               <Users className="w-6 h-6 text-[#00c9d6] mb-4 relative z-10 group-hover:scale-110 transition-transform" />
               <div className="relative z-10">
-                <span className="block text-4xl sm:text-5xl font-black text-slate-900 font-sans tracking-tight mb-2 group-hover:text-[#00c9d6] transition-colors">
+                <span className="block text-4xl sm:text-5xl font-semibold text-slate-900 font-sans tracking-tight mb-2 group-hover:text-[#00c9d6] transition-colors">
                   {stats[1].value}
                 </span>
                 <p className="text-xs sm:text-sm text-slate-500 font-medium leading-relaxed max-w-[200px]">
@@ -103,7 +103,7 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
               <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
                 <div className="flex items-center gap-3 mb-2">
                   <ShieldCheck className="w-5 h-5 text-[#00e5ff] shrink-0" />
-                  <h4 className="text-sm font-black uppercase tracking-wider text-white">Safe & Inspiring Environment</h4>
+                  <h4 className="text-sm font-semibold uppercase tracking-wider text-white">Safe & Inspiring Environment</h4>
                 </div>
                 <p className="text-xs text-slate-300 font-medium">Personalized in-person & doorstep counseling.</p>
               </div>
@@ -113,7 +113,7 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
             <div className="md:col-span-1 lg:col-span-4 bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col justify-between group hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
               <Heart className="w-6 h-6 text-[#00c9d6] mb-4" />
               <div>
-                <span className="block text-4xl sm:text-5xl font-black text-slate-900 font-sans tracking-tight mb-2 group-hover:text-[#00c9d6] transition-colors">
+                <span className="block text-4xl sm:text-5xl font-semibold text-slate-900 font-sans tracking-tight mb-2 group-hover:text-[#00c9d6] transition-colors">
                   {stats[2].value}
                 </span>
                 <p className="text-xs sm:text-sm text-slate-500 font-medium leading-relaxed">
@@ -126,13 +126,13 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
             <div className="md:col-span-1 lg:col-span-3 bg-slate-900 text-white p-8 rounded-[2.5rem] shadow-2xl flex flex-col justify-between relative overflow-hidden group">
               <div className="absolute -top-12 -right-12 w-32 h-32 bg-[#00e5ff] rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity"></div>
               <p className="text-sm text-slate-300 font-medium leading-relaxed italic relative z-10">
-                "{stats[3].label}<span className="text-[#00e5ff] not-italic font-black text-lg leading-none">.</span>"
+                "{stats[3].label}<span className="text-[#00e5ff] not-italic font-semibold text-lg leading-none">.</span>"
               </p>
 
               <div className="mt-8 relative z-10">
                 <button
                   onClick={() => { window.spaNavigate?.('/booking'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                  className="w-full flex items-center justify-between py-3 px-5 bg-white/10 hover:bg-white/20 rounded-2xl text-xs font-black uppercase tracking-widest text-white transition-colors cursor-pointer group/btn"
+                  className="w-full flex items-center justify-between py-3 px-5 bg-white/10 hover:bg-white/20 rounded-2xl text-xs font-semibold uppercase tracking-widest text-white transition-colors cursor-pointer group/btn"
                 >
                   <span>Learn More</span>
                   <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform text-[#00e5ff]" />
@@ -146,12 +146,12 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
           {settings.aboutCards && settings.aboutCards.length > 0 && (
             <div className="mt-20 sm:mt-32">
               <div className="text-center mb-12">
-                <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-bold text-[#00c9d6] tracking-widest uppercase mb-2">
+                <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold text-[#00c9d6] tracking-widest uppercase mb-2">
                   <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
                   OUR SERVICES
                   <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
                 </span>
-                <h3 className="text-2xl sm:text-4xl font-sans font-black uppercase text-slate-900 tracking-tight leading-none">
+                <h3 className="text-2xl sm:text-4xl font-sans font-semibold uppercase text-slate-900 tracking-tight leading-none">
                   {settings.aboutTitle || 'WHAT WE OFFER'}<span className="text-[#00e5ff]">.</span>
                 </h3>
                 {settings.aboutSub && (
@@ -165,9 +165,9 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
                 {settings.aboutCards.map((card, idx) => (
                   <div key={idx} className="bg-white/80 backdrop-blur-md border border-slate-200/90 p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 group hover:-translate-y-1">
                     <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center mb-6 group-hover:bg-[#00e5ff]/10 transition-colors">
-                      <span className="text-lg font-black text-slate-400 font-sans group-hover:text-[#00c9d6]">0{idx + 1}</span>
+                      <span className="text-lg font-semibold text-slate-400 font-sans group-hover:text-[#00c9d6]">0{idx + 1}</span>
                     </div>
-                    <h4 className="text-lg font-bold text-slate-900 uppercase tracking-wide mb-3">{card.title}</h4>
+                    <h4 className="text-lg font-semibold text-slate-900 uppercase tracking-wide mb-3">{card.title}</h4>
                     <p className="text-sm text-slate-600 leading-relaxed">{card.desc}</p>
                   </div>
                 ))}

@@ -51,12 +51,12 @@ export default function ContactInquirySection() {
 
         {/* Section Header */}
         <div className="text-center mb-8">
-          <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-bold text-[#00c9d6] tracking-widest uppercase mb-2">
+          <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold text-[#00c9d6] tracking-widest uppercase mb-2">
             <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
             Get In Touch
             <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
           </span>
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 font-sans">
+          <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-slate-900 font-sans">
             Want to Know More<span className="text-[#00c9d6]">.</span>
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 mt-2 max-w-md mx-auto leading-relaxed">
@@ -72,7 +72,7 @@ export default function ContactInquirySection() {
               <div className="w-14 h-14 bg-emerald-50 border border-emerald-200 rounded-full flex items-center justify-center text-emerald-600 shadow-xs">
                 <CheckCircle2 className="w-8 h-8" />
               </div>
-              <h3 className="text-2xl font-bold text-slate-900 font-sans">
+              <h3 className="text-2xl font-semibold text-slate-900 font-sans">
                 Message Received!
               </h3>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-sm">

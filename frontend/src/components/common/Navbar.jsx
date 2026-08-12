@@ -133,7 +133,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
       {/* Top Text-Only Announcement Bar - Only shows when Admin enables & assigns details */}
       {siteSettings?.showBanner && siteSettings?.bannerNotice && (
         <div className="bg-slate-900 text-slate-200 text-xs py-2 px-4 border-b border-slate-800 font-medium flex items-center justify-center gap-3 relative z-50">
-          <span className="inline-block text-cyan-400 bg-slate-800 px-2.5 py-0.5 rounded-md text-[11px] font-bold border border-slate-700">
+          <span className="inline-block text-cyan-400 bg-slate-800 px-2.5 py-0.5 rounded-md text-[11px] font-semibold border border-slate-700">
             {siteSettings.bannerNotice}
           </span>
           {siteSettings?.contactPhone && (
@@ -141,7 +141,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
               <span className="hidden sm:inline text-slate-300">&middot;</span>
               <a
                 href={`tel:${siteSettings.contactPhone}`}
-                className="text-white hover:underline font-bold transition-colors"
+                className="text-white hover:underline font-semibold transition-colors"
               >
                 Helpline: {siteSettings.contactPhone}
               </a>
@@ -168,9 +168,9 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
                 onClick={handleLogoClick}
                 className="flex items-center gap-2 text-left bg-transparent border-none cursor-pointer p-0"
               >
-                <span className="text-2xl sm:text-3xl font-black tracking-tight font-sans text-slate-900 uppercase">
+                <span className="text-2xl sm:text-3xl font-semibold tracking-tight font-sans text-slate-900 uppercase">
                   {(siteName || 'BEHOLD').replace(/\.$/, '')}
-                  <span className="text-[#00c9d6] drop-shadow-[0_0_8px_rgba(0,201,214,0.8)] font-black">.</span>
+                  <span className="text-[#00c9d6] drop-shadow-[0_0_8px_rgba(0,201,214,0.8)] font-semibold">.</span>
                 </span>
               </button>
 
@@ -224,11 +224,11 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
                       {user.profilePic ? (
                         <img src={user.profilePic} alt={user.name} className="w-full h-full object-cover" />
                       ) : (
-                        <span className="text-xs font-bold text-[#00c9d6] uppercase">{(user.name || user.email || 'U').charAt(0)}</span>
+                        <span className="text-xs font-semibold text-[#00c9d6] uppercase">{(user.name || user.email || 'U').charAt(0)}</span>
                       )}
                     </div>
                     <div className="flex flex-col text-left leading-tight pr-1 hidden sm:flex">
-                      <span className="text-xs font-bold text-slate-900 truncate max-w-[120px]">{user.name || 'Account'}</span>
+                      <span className="text-xs font-semibold text-slate-900 truncate max-w-[120px]">{user.name || 'Account'}</span>
                       {user.email && <span className="text-[10px] text-slate-500 font-medium truncate max-w-[130px]">{user.email}</span>}
                     </div>
                   </button>
@@ -268,9 +268,9 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
           <div className="fixed top-0 right-0 bottom-0 z-[105] w-full max-w-xs bg-white shadow-2xl p-6 flex flex-col justify-between lg:hidden border-l border-slate-200 animate-slide-in-right">
             <div>
               <div className="flex items-center justify-between pb-6 border-b border-slate-200">
-                <span className="text-xl font-bold tracking-tight font-sans text-slate-900">
+                <span className="text-xl font-semibold tracking-tight font-sans text-slate-900">
                   {(siteName || 'BEHOLD').replace(/\.$/, '')}
-                  <span className="text-[#00c9d6] font-bold">.</span>
+                  <span className="text-[#00c9d6] font-semibold">.</span>
                 </span>
                 <button
                   onClick={() => setMobileMenuOpen(false)}

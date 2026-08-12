@@ -219,7 +219,7 @@ export default function AptitudeTest({ onFinishTest }) {
   <div 
         className="pt-24 pb-16 min-h-screen text-surface-900 flex items-center justify-center font-sans bg-transparent"
       >
- <p className="text-[10px] font-black tracking-widest text-surface-500 animate-pulse">Initializing quiz console...</p>
+ <p className="text-[10px] font-semibold tracking-widest text-surface-500 animate-pulse">Initializing quiz console...</p>
  </div>
  );
  }
@@ -252,7 +252,7 @@ export default function AptitudeTest({ onFinishTest }) {
  Discover your core cognitive affinities across 8 dimensions.
  </p>
  </div>
- <span className="text-surface-900 font-black text-sm sm:text-lg self-start sm:self-auto">
+ <span className="text-surface-900 font-semibold text-sm sm:text-lg self-start sm:self-auto">
  {currentQuestion + 1} <span className="text-surface-300">/</span> {shuffledQuestions.length}
  </span>
  </div>
@@ -269,10 +269,10 @@ export default function AptitudeTest({ onFinishTest }) {
  {/* Question Text */}
  <div className="mb-6 sm:mb-10">
  <div className="flex gap-4 items-start mb-6">
- <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-surface-100 text-surface-900 font-bold text-sm shrink-0 mt-0.5 ">
+ <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-surface-100 text-surface-900 font-semibold text-sm shrink-0 mt-0.5 ">
  Q
  </span>
- <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-surface-900 leading-snug">
+ <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-surface-900 leading-snug">
  {currentQObj.question}
  </h3>
  </div>
@@ -310,7 +310,7 @@ export default function AptitudeTest({ onFinishTest }) {
  <Brain className="w-6 h-6" />
  </div>
  <div>
- <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[10px] bg-surface-50 border border-surface-200 text-surface-900 text-[10px] tracking-widest font-black mb-1">
+ <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[10px] bg-surface-50 border border-surface-200 text-surface-900 text-[10px] tracking-widest font-semibold mb-1">
  <Award className="w-3.5 h-3.5 text-surface-900" /> CIGI Framework Certified
  </div>
  <h2 className="text-3xl sm:text-4xl font-extrabold text-surface-900 leading-none">
@@ -321,7 +321,7 @@ export default function AptitudeTest({ onFinishTest }) {
  <button
  id="btn-restart-test"
  onClick={handleRestart}
- className="px-5 py-2.5 bg-white border border-surface-200 hover:border-surface-900 hover:bg-surface-50 text-surface-900 rounded-full font-black text-[10px] tracking-widest transition-colors flex items-center gap-2 cursor-pointer shadow-none w-full md:w-auto justify-center"
+ className="px-5 py-2.5 bg-white border border-surface-200 hover:border-surface-900 hover:bg-surface-50 text-surface-900 rounded-full font-semibold text-[10px] tracking-widest transition-colors flex items-center gap-2 cursor-pointer shadow-none w-full md:w-auto justify-center"
  >
  <RotateCcw className="w-3.5 h-3.5" />
  <span>Retake Test</span>
@@ -333,14 +333,14 @@ export default function AptitudeTest({ onFinishTest }) {
 
  {/* Dominant Affinity Profile Card */}
  <div className="lg:col-span-7 space-y-6">
- <h3 className="text-xs font-bold text-surface-500 tracking-wider uppercase">
+ <h3 className="text-xs font-semibold text-surface-500 tracking-wider uppercase">
  Your Dominant Affinity Profile
  </h3>
 
  <div className="p-5 sm:p-6 rounded-[10px] border border-surface-200 bg-surface-50 flex gap-4 text-surface-900 shadow-square-light">
  <div className="shrink-0 mt-1">{dominantInfo.icon}</div>
  <div>
- <h4 className="text-base sm:text-lg font-black text-surface-900 tracking-wider leading-tight mb-2 uppercase">
+ <h4 className="text-base sm:text-lg font-semibold text-surface-900 tracking-wider leading-tight mb-2 uppercase">
  {dominantInfo.title}
  </h4>
  <p className="text-surface-600 text-xs sm:text-sm font-medium leading-relaxed">
@@ -353,7 +353,7 @@ export default function AptitudeTest({ onFinishTest }) {
  {/* Recommendations and Call-to-Action */}
  <div className="lg:col-span-5 lg:row-span-2 space-y-6">
  <div className="p-5 sm:p-6 bg-surface-50 border border-surface-200 rounded-[10px] space-y-6 shadow-square-light">
- <h4 className="font-black text-surface-900 text-xs tracking-wider uppercase border-b border-surface-200 pb-3">
+ <h4 className="font-semibold text-surface-900 text-xs tracking-wider uppercase border-b border-surface-200 pb-3">
  Recommended Pathways
  </h4>
  <ul className="space-y-3">
@@ -363,7 +363,7 @@ export default function AptitudeTest({ onFinishTest }) {
  className="flex flex-col bg-white p-3 sm:p-4 rounded-[10px] border border-surface-200 hover:border-surface-400 transition-all duration-200 group text-left"
  >
  <div className="flex justify-between items-center">
- <span className="text-xs font-black text-surface-900 tracking-wider">
+ <span className="text-xs font-semibold text-surface-900 tracking-wider">
  {item.career}
  </span>
  </div>
@@ -380,7 +380,7 @@ export default function AptitudeTest({ onFinishTest }) {
  id="btn-results-consult"
  onClick={handleClaimMentoring}
  disabled={isClaiming}
- className="w-full py-3.5 sm:py-4 bg-surface-900 hover:bg-surface-800 text-white font-black text-[10px] tracking-widest rounded-full transition-all flex items-center justify-center gap-2 cursor-pointer shadow-none border-none disabled:opacity-70 disabled:cursor-not-allowed disabled:scale-100"
+ className="w-full py-3.5 sm:py-4 bg-surface-900 hover:bg-surface-800 text-white font-semibold text-[10px] tracking-widest rounded-full transition-all flex items-center justify-center gap-2 cursor-pointer shadow-none border-none disabled:opacity-70 disabled:cursor-not-allowed disabled:scale-100"
  >
  {isClaiming ? (
  <>
@@ -391,7 +391,7 @@ export default function AptitudeTest({ onFinishTest }) {
  <span>Claim Free Mentoring</span>
  )}
  </button>
- <p className="text-[10px] font-bold tracking-widest text-surface-500 text-center mt-3 flex items-center justify-center gap-1">
+ <p className="text-[10px] font-semibold tracking-widest text-surface-500 text-center mt-3 flex items-center justify-center gap-1">
  Schedules with a State Coordinator.
  </p>
  </div>
@@ -400,7 +400,7 @@ export default function AptitudeTest({ onFinishTest }) {
 
  {/* Detailed Metrics Breakdown */}
  <div className="lg:col-span-7 space-y-4">
- <h4 className="font-black text-surface-900 text-[10px] tracking-widest">
+ <h4 className="font-semibold text-surface-900 text-[10px] tracking-widest">
  Cognitive Distribution Metrics
  </h4>
 
@@ -409,9 +409,9 @@ export default function AptitudeTest({ onFinishTest }) {
  const pct = scorePercentages[key];
  return (
  <div key={key} className="space-y-1 bg-white p-3 rounded-[10px] border border-surface-200" id={`score-metric-${key.toLowerCase()}`}>
- <div className="flex justify-between text-[10px] font-bold text-surface-500 tracking-widest">
+ <div className="flex justify-between text-[10px] font-semibold text-surface-500 tracking-widest">
  <span>{label}</span>
- <span className="font-black text-surface-900">{pct}%</span>
+ <span className="font-semibold text-surface-900">{pct}%</span>
  </div>
  <div className="h-2 w-full bg-surface-100 rounded-[10px] overflow-hidden">
  <div

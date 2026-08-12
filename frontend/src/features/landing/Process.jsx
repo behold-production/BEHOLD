@@ -30,13 +30,13 @@ export default function Process() {
 
         {/* Header */}
         <div className="text-center mb-16 max-w-3xl mx-auto">
-          <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-bold text-[#00c9d6] tracking-widest uppercase mb-3">
+          <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold text-[#00c9d6] tracking-widest uppercase mb-3">
             <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
             How It Works
             <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
           </span>
-          <h2 id="process-title" className="text-3xl sm:text-5xl font-sans font-bold text-[#0f172a] mb-4 tracking-tight leading-none">
-            Four Steps To Clarity<span className="text-[#00c9d6] drop-shadow-[0_0_8px_rgba(0,201,214,0.8)] font-bold">.</span>
+          <h2 id="process-title" className="text-3xl sm:text-5xl font-sans font-semibold text-[#0f172a] mb-4 tracking-tight leading-none">
+            Four Steps To Clarity<span className="text-[#00c9d6] drop-shadow-[0_0_8px_rgba(0,201,214,0.8)] font-semibold">.</span>
           </h2>
           <p className="text-sm sm:text-base text-surface-600 font-medium leading-relaxed">
             Zero cognitive friction. A clear, stress-free pathway from initial selection to ongoing mentorship.
@@ -54,20 +54,20 @@ export default function Process() {
               >
               <div>
                 <div className="flex items-center justify-between w-full mb-6">
-                  <span className="text-4xl font-bold text-[#0f172a] font-sans group-hover:text-[#00c9d6] transition-colors">
+                  <span className="text-4xl font-semibold text-[#0f172a] font-sans group-hover:text-[#00c9d6] transition-colors">
                     {step.num}
                   </span>
                   <span className="w-2 h-2 rounded-full bg-[#00c9d6] shadow-[0_0_6px_#00c9d6]" />
                 </div>
 
-                <h3 className="text-base font-bold text-[#0f172a] mb-2 font-sans">{step.title}</h3>
+                <h3 className="text-base font-semibold text-[#0f172a] mb-2 font-sans">{step.title}</h3>
                 <p className="text-surface-600 text-xs leading-relaxed font-normal">
                   {step.desc}
                 </p>
               </div>
 
               <div className="pt-4 border-t border-surface-100 mt-4">
-                <span className="text-[10px] font-bold tracking-widest text-[#007078]">Step {step.num}</span>
+                <span className="text-[10px] font-semibold tracking-widest text-[#007078]">Step {step.num}</span>
               </div>
             </div>
             );
@@ -78,7 +78,7 @@ export default function Process() {
         <div className="mt-14 text-center">
           <button
             onClick={() => { window.spaNavigate?.('/booking'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-            className="px-8 py-3.5 bg-[#0f172a] hover:bg-[#00c9d6] hover:text-slate-950 text-white font-bold text-xs tracking-wider rounded-full transition-all cursor-pointer border-none shadow-sm inline-flex items-center gap-2 hover-scale-btn"
+            className="px-8 py-3.5 bg-[#0f172a] hover:bg-[#00c9d6] hover:text-slate-950 text-white font-semibold text-xs tracking-wider rounded-full transition-all cursor-pointer border-none shadow-sm inline-flex items-center gap-2 hover-scale-btn"
           >
             <span>Start Your Session Today</span>
             <span className="text-xs text-[#00c9d6]">›</span>

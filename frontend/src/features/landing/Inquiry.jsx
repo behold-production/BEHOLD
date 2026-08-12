@@ -75,12 +75,12 @@ export default function Inquiry({ testProfile, siteSettings }) {
       {/* Ready CTA Banner */}
       <section className="py-20 sm:py-28 bg-[#0f172a] text-white relative border-b border-[#00e5ff]/30">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-bold text-[#00c9d6] tracking-widest uppercase mb-3">
+          <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold text-[#00c9d6] tracking-widest uppercase mb-3">
             <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
             {settings.inquirySectionSub || 'START YOUR JOURNEY'}
             <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
           </span>
-          <h2 className="text-3xl sm:text-5xl font-sans font-bold uppercase text-white mb-4 tracking-tight leading-none">
+          <h2 className="text-3xl sm:text-5xl font-sans font-semibold uppercase text-white mb-4 tracking-tight leading-none">
             {settings.inquirySectionTitle || 'Ready to Build Your Future'}
             <span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)]">.</span>
           </h2>
@@ -90,13 +90,13 @@ export default function Inquiry({ testProfile, siteSettings }) {
           <div className="flex flex-wrap gap-4 justify-center">
             <button
               onClick={() => { const el = document.getElementById('inquiry'); if (el) el.scrollIntoView({ behavior: 'smooth' }); }}
-              className="px-8 py-3.5 bg-[#00e5ff] hover:bg-[#00cce6] text-[#0f172a] font-bold text-xs uppercase tracking-widest rounded-full transition-all shadow-md border-none cursor-pointer"
+              className="px-8 py-3.5 bg-[#00e5ff] hover:bg-[#00cce6] text-[#0f172a] font-semibold text-xs uppercase tracking-widest rounded-full transition-all shadow-md border-none cursor-pointer"
             >
               Book Your Consultation
             </button>
             <button
               onClick={() => { window.spaNavigate?.('/sample-test'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-              className="px-8 py-3.5 bg-white/10 hover:bg-white/20 text-white font-bold text-xs uppercase tracking-widest rounded-full border border-white/30 backdrop-blur-md transition-all cursor-pointer"
+              className="px-8 py-3.5 bg-white/10 hover:bg-white/20 text-white font-semibold text-xs uppercase tracking-widest rounded-full border border-white/30 backdrop-blur-md transition-all cursor-pointer"
             >
               Take Aptitude Test
             </button>
@@ -115,7 +115,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
                 <span className="text-xs font-semibold text-[#00e5ff] flex items-center gap-1.5 mb-2">
                   Get In Touch
                 </span>
-                <h2 id="inquiry-title" className="text-3xl font-sans font-bold text-[#0f172a] mb-3 leading-tight">
+                <h2 id="inquiry-title" className="text-3xl font-sans font-semibold text-[#0f172a] mb-3 leading-tight">
                   Want to Know More<span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)]">.</span>
                 </h2>
                 <p className="text-sm text-surface-600 font-normal leading-relaxed">
@@ -131,10 +131,10 @@ export default function Inquiry({ testProfile, siteSettings }) {
 
               {submitStatus === 'success' ? (
                 <div className="text-center py-12">
-                  <div className="w-12 h-12 bg-[#0f172a] text-[#00e5ff] rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-lg border border-[#00e5ff]/40">
+                  <div className="w-12 h-12 bg-[#0f172a] text-[#00e5ff] rounded-full flex items-center justify-center mx-auto mb-4 font-semibold text-lg border border-[#00e5ff]/40">
                     ✓
                   </div>
-                  <h3 className="text-xl font-sans font-bold text-[#0f172a] mb-2">Request Sent.</h3>
+                  <h3 className="text-xl font-sans font-semibold text-[#0f172a] mb-2">Request Sent.</h3>
                   <p className="text-surface-600 text-sm">Our coordinator will contact you shortly.</p>
                   <button
                     onClick={() => setSubmitStatus(null)}
@@ -192,7 +192,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
 
             {/* Info — 5 cols */}
             <div className="lg:col-span-5 flex flex-col justify-center space-y-6">
-              <h3 className="text-2xl font-sans font-bold uppercase text-[#0f172a]">
+              <h3 className="text-2xl font-sans font-semibold uppercase text-[#0f172a]">
                 What Happens Next<span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)]">.</span>
               </h3>
               <div className="space-y-6">
@@ -202,7 +202,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
                       {step.icon}
                     </div>
                     <div>
-                      <h4 className="text-sm font-bold uppercase text-[#0f172a] mb-1 font-sans">{step.title}</h4>
+                      <h4 className="text-sm font-semibold uppercase text-[#0f172a] mb-1 font-sans">{step.title}</h4>
                       <p className="text-xs text-surface-600 font-normal leading-relaxed">{step.desc}</p>
                     </div>
                   </div>
@@ -212,7 +212,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
               {/* Contact info */}
               {(settings.contactPhone || settings.contactEmail) && (
                 <div className="mt-8 p-6 bg-white rounded-xl border border-surface-200 shadow-xs">
-                  <h4 className="font-bold text-[#0f172a] mb-3 text-xs uppercase tracking-widest">Reach Us Directly</h4>
+                  <h4 className="font-semibold text-[#0f172a] mb-3 text-xs uppercase tracking-widest">Reach Us Directly</h4>
                   {settings.contactPhone && (
                     <a href={`tel:${settings.contactPhone}`} className="flex items-center gap-2 text-[#0f172a] font-semibold text-sm mb-2 hover:underline">
                       <svg className="w-4 h-4 text-[#00e5ff]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.5a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.83h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l.76-.76a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.72 17z" /></svg>

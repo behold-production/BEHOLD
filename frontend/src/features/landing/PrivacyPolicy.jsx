@@ -21,7 +21,7 @@ const PrivacyPolicy = () => {
           <p className="text-lg text-zinc-800 max-w-2xl mx-auto font-medium">
             At Behold Aspire, we take your privacy seriously. Learn how we collect, use, and protect your information.
           </p>
-          <div className="mt-8 inline-block bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-bold">
+          <div className="mt-8 inline-block bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-semibold">
             Last Updated: August 2026
           </div>
         </div>
@@ -35,7 +35,7 @@ const PrivacyPolicy = () => {
       <section className="py-16 md:py-24 px-6">
         <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-sm border border-zinc-200/60 p-8 md:p-12">
           
-          <div className="prose prose-zinc max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-p:text-zinc-600 prose-li:text-zinc-600">
+          <div className="prose prose-zinc max-w-none prose-headings:font-semibold prose-headings:tracking-tight prose-p:text-zinc-600 prose-li:text-zinc-600">
             <p className="text-lg leading-relaxed text-zinc-700 font-medium mb-8">
               Behold Aspire ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website <strong>behold.co.in</strong> and use our services.
             </p>
@@ -91,7 +91,7 @@ const PrivacyPolicy = () => {
               If you have questions or comments about this Privacy Policy, please contact us at:
             </p>
             <div className="bg-zinc-50 p-6 rounded-2xl mt-4 border border-zinc-100">
-              <p className="font-bold text-zinc-900 mb-1">Behold Aspire</p>
+              <p className="font-semibold text-zinc-900 mb-1">Behold Aspire</p>
               <p className="text-zinc-600 mb-1">Email: support@behold.co.in</p>
               <p className="text-zinc-600">Website: https://www.behold.co.in</p>
             </div>

@@ -22,7 +22,7 @@ export default function OverviewTab({
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-slate-900 tracking-tight">Overview & Guidance Dashboard</h2>
+          <h2 className="text-xl font-semibold text-slate-900 tracking-tight">Overview & Guidance Dashboard</h2>
           <p className="text-xs text-slate-500 font-medium mt-0.5">
             {nextSession ? 'Your scheduled consultations and progress metrics.' : 'Track your counseling sessions and personal guidance path here.'}
           </p>
@@ -34,7 +34,7 @@ export default function OverviewTab({
               if (onOpenBooking) onOpenBooking();
               else navigate('/booking');
             }}
-            className="inline-block px-4 py-2 bg-slate-900 hover:bg-black text-white text-xs font-bold rounded-lg transition-colors shadow-xs cursor-pointer border-none"
+            className="inline-block px-4 py-2 bg-slate-900 hover:bg-black text-white text-xs font-semibold rounded-lg transition-colors shadow-xs cursor-pointer border-none"
           >
             Book Consultation
           </button>
@@ -49,14 +49,14 @@ export default function OverviewTab({
               <img src={nextSession.advisorProfilePic} alt={nextSession.advisorName} className="w-14 h-14 rounded-lg object-cover border border-slate-200 shrink-0" />
             )}
             <div className="min-w-0">
-              <p className="text-[10px] font-bold tracking-wider text-slate-500 uppercase mb-0.5">
+              <p className="text-[10px] font-semibold tracking-wider text-slate-500 uppercase mb-0.5">
                 Next Scheduled Session &middot; {nextSession.mode === 'ONLINE' ? 'Online Video Call' : 'Clinic Visit'}
               </p>
-              <h3 className="font-bold text-slate-900 text-lg tracking-tight truncate">{nextSession.advisorName}</h3>
+              <h3 className="font-semibold text-slate-900 text-lg tracking-tight truncate">{nextSession.advisorName}</h3>
               <p className="text-xs text-slate-600 mt-0.5 font-medium truncate">
                 {nextSession.advisorRole || 'Consultant Psychologist'}
               </p>
-              <div className="flex flex-wrap items-center gap-2 mt-2.5 text-xs font-bold text-slate-700">
+              <div className="flex flex-wrap items-center gap-2 mt-2.5 text-xs font-semibold text-slate-700">
                 <span className="bg-slate-50 px-3 py-1 rounded-md border border-slate-200">
                   {formatDateString(nextSession.date)}
                 </span>
@@ -72,8 +72,8 @@ export default function OverviewTab({
               const cd = formatCountdown(nextSession.date, nextSession.time);
               return (
                 <div className="text-left sm:text-right">
-                  <p className="text-[10px] text-slate-400 font-bold tracking-wider uppercase">Starts in</p>
-                  <p className={`text-lg font-bold tracking-tight ${cd.urgent ? 'text-rose-600 animate-pulse' : 'text-slate-900'}`}>{cd.text}</p>
+                  <p className="text-[10px] text-slate-400 font-semibold tracking-wider uppercase">Starts in</p>
+                  <p className={`text-lg font-semibold tracking-tight ${cd.urgent ? 'text-rose-600 animate-pulse' : 'text-slate-900'}`}>{cd.text}</p>
                 </div>
               );
             })()}
@@ -83,7 +83,7 @@ export default function OverviewTab({
                 href={nextSession.meetLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer border-none bg-slate-900 hover:bg-black text-white shadow-xs text-center"
+                className="px-4 py-2.5 rounded-lg text-xs font-semibold uppercase tracking-wider transition-colors cursor-pointer border-none bg-slate-900 hover:bg-black text-white shadow-xs text-center"
               >
                 Join Google Meet
               </a>
@@ -91,7 +91,7 @@ export default function OverviewTab({
               <button
                 type="button"
                 onClick={() => { handleSectionChange('booked'); setSessionSubTab('upcoming'); }}
-                className="px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer border border-slate-300 bg-white hover:bg-slate-50 text-slate-800"
+                className="px-4 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider transition-colors cursor-pointer border border-slate-300 bg-white hover:bg-slate-50 text-slate-800"
               >
                 View Details
               </button>
@@ -100,7 +100,7 @@ export default function OverviewTab({
         </div>
       ) : (
         <div className="rounded-xl p-8 text-center border border-dashed border-slate-200 bg-slate-50/50">
-          <p className="text-lg font-bold text-slate-900 tracking-tight">No upcoming sessions booked</p>
+          <p className="text-lg font-semibold text-slate-900 tracking-tight">No upcoming sessions booked</p>
           <p className="text-xs text-slate-500 mt-1 max-w-md mx-auto leading-relaxed font-medium">
             Schedule a 1-on-1 session with a certified clinical psychologist or career mentor for personal guidance.
           </p>
@@ -111,7 +111,7 @@ export default function OverviewTab({
                 if (onOpenBooking) onOpenBooking();
                 else navigate('/booking');
               }}
-              className="mt-5 inline-block px-5 py-2 bg-slate-900 hover:bg-black text-white text-xs font-bold rounded-lg transition-colors shadow-xs cursor-pointer border-none"
+              className="mt-5 inline-block px-5 py-2 bg-slate-900 hover:bg-black text-white text-xs font-semibold rounded-lg transition-colors shadow-xs cursor-pointer border-none"
             >
               Schedule Consultation Now
             </button>
@@ -124,10 +124,10 @@ export default function OverviewTab({
         {/* Expert Consultation */}
         <div className="bg-white rounded-xl p-6 border border-surface-200 shadow-xs flex flex-col justify-between space-y-4">
           <div>
-            <span className="px-3.5 py-1 bg-surface-100 text-[#0f172a] font-bold text-[10px] rounded-full uppercase tracking-wider border border-surface-200 inline-block">
+            <span className="px-3.5 py-1 bg-surface-100 text-[#0f172a] font-semibold text-[10px] rounded-full uppercase tracking-wider border border-surface-200 inline-block">
               Verified Specialists
             </span>
-            <h3 className="text-lg font-bold uppercase text-[#0f172a] mt-3 tracking-tight">1-on-1 Psychological Care</h3>
+            <h3 className="text-lg font-semibold uppercase text-[#0f172a] mt-3 tracking-tight">1-on-1 Psychological Care</h3>
             <p className="text-xs text-surface-600 font-normal mt-1 leading-relaxed">
               Connect with certified clinical psychologists for emotional support, stress relief, and mental wellness.
             </p>
@@ -140,7 +140,7 @@ export default function OverviewTab({
                 if (onOpenBooking) onOpenBooking();
                 else navigate('/booking');
               }}
-              className="px-5 py-2 bg-[#0f172a] hover:bg-[#1e293b] text-white rounded-full font-bold text-xs uppercase tracking-wider transition-colors border border-[#00e5ff]/30 cursor-pointer shadow-2xs"
+              className="px-5 py-2 bg-[#0f172a] hover:bg-[#1e293b] text-white rounded-full font-semibold text-xs uppercase tracking-wider transition-colors border border-[#00e5ff]/30 cursor-pointer shadow-2xs"
             >
               Book Now
             </button>
@@ -151,10 +151,10 @@ export default function OverviewTab({
         {enableAptitude && (
           <div className="bg-white rounded-xl p-6 border border-surface-200 shadow-xs flex flex-col justify-between space-y-4">
             <div>
-              <span className="px-3.5 py-1 bg-surface-100 text-[#0f172a] font-bold text-[10px] rounded-full uppercase tracking-wider border border-surface-200 inline-block">
+              <span className="px-3.5 py-1 bg-surface-100 text-[#0f172a] font-semibold text-[10px] rounded-full uppercase tracking-wider border border-surface-200 inline-block">
                 {testProfile ? 'Report Ready' : 'C-DAT Evaluation'}
               </span>
-              <h3 className="text-lg font-bold uppercase text-[#0f172a] mt-3 tracking-tight">C-DAT Aptitude Assessment</h3>
+              <h3 className="text-lg font-semibold uppercase text-[#0f172a] mt-3 tracking-tight">C-DAT Aptitude Assessment</h3>
               <p className="text-xs text-surface-600 font-normal mt-1 leading-relaxed">
                 Comprehensive psychometric assessment uncovering natural aptitudes, learning styles, and suitable career tracks.
               </p>
@@ -164,7 +164,7 @@ export default function OverviewTab({
               <button
                 type="button"
                 onClick={() => handleSectionChange('cdat')}
-                className="px-5 py-2 bg-[#0f172a] hover:bg-[#1e293b] text-white rounded-full font-bold text-xs uppercase tracking-wider transition-colors border border-[#00e5ff]/30 cursor-pointer shadow-2xs"
+                className="px-5 py-2 bg-[#0f172a] hover:bg-[#1e293b] text-white rounded-full font-semibold text-xs uppercase tracking-wider transition-colors border border-[#00e5ff]/30 cursor-pointer shadow-2xs"
               >
                 {testProfile ? 'View Report' : 'Take Assessment'}
               </button>
@@ -178,11 +178,11 @@ export default function OverviewTab({
         {/* Recent Session History */}
         <div className="lg:col-span-2 rounded-xl p-6 bg-white border border-surface-200 shadow-xs">
           <div className="flex items-center justify-between mb-4 border-b border-surface-100 pb-3">
-            <h4 className="text-sm font-bold uppercase tracking-tight text-[#0f172a]">Recent Session History</h4>
+            <h4 className="text-sm font-semibold uppercase tracking-tight text-[#0f172a]">Recent Session History</h4>
             <button
               type="button"
               onClick={() => { handleSectionChange('booked'); setSessionSubTab('history'); }}
-              className="text-xs text-surface-500 hover:text-[#00e5ff] font-bold uppercase cursor-pointer border-0 bg-transparent tracking-wider"
+              className="text-xs text-surface-500 hover:text-[#00e5ff] font-semibold uppercase cursor-pointer border-0 bg-transparent tracking-wider"
             >
               View all
             </button>
@@ -192,16 +192,16 @@ export default function OverviewTab({
               {completedSessions.slice(0, 3).map((s, i) => (
                 <div key={i} className="flex items-center justify-between p-3.5 rounded-xl hover:bg-surface-50 border border-surface-100 transition-colors">
                   <div>
-                    <p className="text-xs font-bold text-[#0f172a]">{s.advisorName}</p>
+                    <p className="text-xs font-semibold text-[#0f172a]">{s.advisorName}</p>
                     <p className="text-[11px] text-surface-600 font-medium">{s.advisorRole || 'Consultation'} &middot; {formatDateString(s.date)}</p>
                   </div>
-                  <span className="text-[10px] tracking-widest font-bold uppercase text-[#0f172a] bg-surface-100 border border-surface-200 px-3 py-1 rounded-full">Completed</span>
+                  <span className="text-[10px] tracking-widest font-semibold uppercase text-[#0f172a] bg-surface-100 border border-surface-200 px-3 py-1 rounded-full">Completed</span>
                 </div>
               ))}
             </div>
           ) : (
             <div className="text-center py-8 text-surface-500 border border-dashed border-surface-200 rounded-xl bg-surface-50/50">
-              <p className="text-xs font-bold text-[#0f172a] uppercase tracking-wider">No completed sessions yet</p>
+              <p className="text-xs font-semibold text-[#0f172a] uppercase tracking-wider">No completed sessions yet</p>
               <p className="text-[11px] text-surface-600 font-normal mt-1">Finished session records and doctor notes will appear here.</p>
             </div>
           )}
@@ -210,7 +210,7 @@ export default function OverviewTab({
         {/* Milestones */}
         <div className="rounded-xl p-6 bg-white border border-surface-200 shadow-xs">
           <div className="mb-4 border-b border-surface-100 pb-3">
-            <h4 className="text-sm font-bold uppercase tracking-tight text-[#0f172a]">Milestones</h4>
+            <h4 className="text-sm font-semibold uppercase tracking-tight text-[#0f172a]">Milestones</h4>
           </div>
           <div className="space-y-2">
             {[
@@ -228,10 +228,10 @@ export default function OverviewTab({
                     : 'bg-surface-50/40 border-surface-100 text-surface-400'
                   }`}
               >
-                <span className={`truncate ${a.done ? 'font-bold text-[#0f172a]' : 'line-through text-surface-400'}`}>
+                <span className={`truncate ${a.done ? 'font-semibold text-[#0f172a]' : 'line-through text-surface-400'}`}>
                   {a.label}
                 </span>
-                {a.done && <span className="text-[9px] font-bold uppercase tracking-widest text-[#00e5ff] bg-[#0f172a] px-2.5 py-0.5 rounded-full shadow-2xs border border-[#00e5ff]/30">Done</span>}
+                {a.done && <span className="text-[9px] font-semibold uppercase tracking-widest text-[#00e5ff] bg-[#0f172a] px-2.5 py-0.5 rounded-full shadow-2xs border border-[#00e5ff]/30">Done</span>}
               </div>
             ))}
           </div>

@@ -62,7 +62,7 @@ export default function LogoutConfirmModal({ isOpen, onConfirm, onCancel }) {
           <div className="space-y-2.5">
             <h3
               id="logout-confirm-title"
-              className="text-2xl font-bold text-[#0f172a] font-sans"
+              className="text-2xl font-semibold text-[#0f172a] font-sans"
             >
               Sign Out<span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.4)]">?</span>
             </h3>
@@ -76,7 +76,7 @@ export default function LogoutConfirmModal({ isOpen, onConfirm, onCancel }) {
             <button
               type="button"
               onClick={onConfirm}
-              className="group relative w-full flex items-center justify-center gap-2.5 py-3.5 bg-[#0f172a] hover:bg-[#1e293b] text-white font-bold text-sm rounded-xl transition-all cursor-pointer border-none shadow-lg shadow-[#0f172a]/25 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#0f172a]/30 overflow-hidden"
+              className="group relative w-full flex items-center justify-center gap-2.5 py-3.5 bg-[#0f172a] hover:bg-[#1e293b] text-white font-semibold text-sm rounded-xl transition-all cursor-pointer border-none shadow-lg shadow-[#0f172a]/25 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#0f172a]/30 overflow-hidden"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
               <LogOut className="w-4 h-4 text-[#00e5ff]" />
@@ -86,7 +86,7 @@ export default function LogoutConfirmModal({ isOpen, onConfirm, onCancel }) {
             <button
               type="button"
               onClick={onCancel}
-              className="w-full py-3.5 bg-surface-100 hover:bg-surface-200 text-[#0f172a] font-bold text-sm rounded-xl transition-all border-none cursor-pointer"
+              className="w-full py-3.5 bg-surface-100 hover:bg-surface-200 text-[#0f172a] font-semibold text-sm rounded-xl transition-all border-none cursor-pointer"
             >
               Stay Signed In
             </button>

@@ -38,7 +38,7 @@ export function ScrollDot({
       ref={dotRef}
       onClick={handleClick}
       title={label}
-      className={`text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.6)] font-black cursor-pointer inline transition-transform duration-200 hover:scale-125 ${className}`}
+      className={`text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.6)] font-semibold cursor-pointer inline transition-transform duration-200 hover:scale-125 ${className}`}
     >
       .
     </span>
@@ -51,7 +51,7 @@ export function ScrollDot({
 export function BrandDot({ size = 'md', pulse = false, float = false, className = '' }) {
   return (
     <span
-      className={`text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.6)] font-black inline ${className}`}
+      className={`text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.6)] font-semibold inline ${className}`}
       aria-hidden="true"
     >
       .
@@ -66,7 +66,7 @@ export function DotEyebrow({ children, className = '' }) {
   return (
     <div className={`inline-flex items-center gap-1.5 ${className}`}>
       <span className="w-2 h-2 rounded-full bg-[#00F0FF] inline-block shadow-[0_0_6px_rgba(0,240,255,0.8)]" />
-      <span className="text-sm font-bold tracking-widest uppercase text-[#00A8FF]">
+      <span className="text-sm font-semibold tracking-widest uppercase text-[#00A8FF]">
         {children}
       </span>
     </div>

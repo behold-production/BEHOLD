@@ -52,7 +52,7 @@ export default function FaqsPage() {
       {/* Header */}
       <section className="relative py-12 sm:py-16 border-b border-slate-200 bg-transparent">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black font-header tracking-tight text-slate-900 leading-tight">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold font-header tracking-tight text-slate-900 leading-tight">
             Frequently Asked <span className="text-[#00A8FF]">Questions</span>
           </h1>
           <p className="mt-3 text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed font-medium">
@@ -82,7 +82,7 @@ export default function FaqsPage() {
         ) : filteredFaqs.length === 0 ? (
           <div className="text-center py-16 bg-white rounded-lg border border-slate-200 shadow-sm">
             <HelpCircle className="w-12 h-12 text-[#00A8FF] mx-auto mb-3 opacity-70" />
-            <h3 className="text-lg font-bold text-slate-900 mb-1">No questions found</h3>
+            <h3 className="text-lg font-semibold text-slate-900 mb-1">No questions found</h3>
             <p className="text-sm text-slate-500">Try searching for a different keyword.</p>
           </div>
         ) : (
@@ -112,7 +112,7 @@ export default function FaqsPage() {
                       >
                         <HelpCircle className="w-4 h-4" />
                       </div>
-                      <span className="font-header font-bold text-base sm:text-lg text-slate-900">
+                      <span className="font-header font-semibold text-base sm:text-lg text-slate-900">
                         {faq.question}
                       </span>
                     </div>

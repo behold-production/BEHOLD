@@ -281,7 +281,7 @@ export default function DateTimePicker({
  <button
  type="button"
  onClick={() => setViewType('calendar')}
- className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-[10px] transition-all cursor-pointer ${
+ className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-[10px] transition-all cursor-pointer ${
  viewType === 'calendar'
  ? 'bg-white text-surface-950 shadow-sm border border-surface-200'
  : 'text-surface-500 hover:text-surface-900 border border-transparent'
@@ -293,7 +293,7 @@ export default function DateTimePicker({
  <button
  type="button"
  onClick={() => setViewType('strip')}
- className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-[10px] transition-all cursor-pointer ${
+ className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-[10px] transition-all cursor-pointer ${
  viewType === 'strip'
  ? 'bg-white text-surface-950 shadow-sm border border-surface-200'
  : 'text-surface-500 hover:text-surface-900 border border-transparent'
@@ -318,7 +318,7 @@ export default function DateTimePicker({
  >
  <ChevronLeft className="w-4 h-4" />
  </button>
- <span className="text-xs font-bold w-32 text-center text-surface-900 tracking-wide">
+ <span className="text-xs font-semibold w-32 text-center text-surface-900 tracking-wide">
  {currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
  </span>
  <button
@@ -334,7 +334,7 @@ export default function DateTimePicker({
  {/* Grid Weekdays Labels */}
  <div className="grid grid-cols-7 gap-1 px-3 py-2 text-center border-b border-surface-100 bg-surface-50/30">
  {['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map((wd, i) => (
- <span key={i} className="text-[9px] sm:text-[10px] font-bold text-surface-400 tracking-wider">
+ <span key={i} className="text-[9px] sm:text-[10px] font-semibold text-surface-400 tracking-wider">
  {wd.substring(0, 3)}
  </span>
  ))}
@@ -363,7 +363,7 @@ export default function DateTimePicker({
  ${meta.isPast
  ? 'bg-surface-50 border-surface-50 text-surface-300 cursor-not-allowed opacity-40'
  : isSelected
- ? 'bg-surface-900 border-surface-900 text-white shadow-md font-bold'
+ ? 'bg-surface-900 border-surface-900 text-white shadow-md font-semibold'
  : meta.isAvailable
  ? isToday
  ? 'bg-white border-surface-900 text-surface-800 hover:border-surface-900'
@@ -376,7 +376,7 @@ export default function DateTimePicker({
  `}
  >
  {/* Day Number */}
- <span className={`text-sm sm:text-base font-black leading-none ${
+ <span className={`text-sm sm:text-base font-semibold leading-none ${
  isSelected ? 'text-white' : isToday ? 'text-surface-900' : ''
  }`}>
  {cell.dayNum}
@@ -466,14 +466,14 @@ export default function DateTimePicker({
  `}
  >
  {/* Weekday */}
- <span className={`text-[9px] sm:text-[10px] font-bold tracking-widest leading-none ${
+ <span className={`text-[9px] sm:text-[10px] font-semibold tracking-widest leading-none ${
  isSelected ? 'text-surface-400' : 'text-surface-400'
  }`}>
  {day.weekday}
  </span>
 
  {/* Day Number */}
- <span className={`text-xl sm:text-2xl font-black leading-none mt-1 ${
+ <span className={`text-xl sm:text-2xl font-semibold leading-none mt-1 ${
  isSelected ? 'text-white' : isToday ? 'text-surface-900' : ''
  }`}>
  {day.day}
@@ -516,13 +516,13 @@ export default function DateTimePicker({
  {selectedDate && (
  <div className="bg-surface-50 border border-surface-200 rounded-[10px] p-3 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2 animate-in slide-in-from-top-2 duration-300">
  <div className="text-left">
- <div className="text-[10px] font-black text-surface-900 tracking-widest">
+ <div className="text-[10px] font-semibold text-surface-900 tracking-widest">
  Your Selection
  </div>
- <div className="text-xs sm:text-sm font-bold text-surface-900 mt-0.5">
+ <div className="text-xs sm:text-sm font-semibold text-surface-900 mt-0.5">
  {formatHumanDate(selectedDate)}
  </div>
- <div className="text-[10px] font-bold tracking-widest text-surface-500 mt-0.5">
+ <div className="text-[10px] font-semibold tracking-widest text-surface-500 mt-0.5">
  {selectedTime
  ? `${selectedTime} • ${bookingModeLabel(selectedMode)}`
  : 'No time slot picked yet'}

@@ -54,11 +54,11 @@ function ReviewCard({ review }) {
 
       {/* Author */}
       <div className="flex items-center gap-3 pt-4 border-t border-surface-100">
-        <div className="w-9 h-9 bg-[#0f172a] text-[#00e5ff] border border-[#00e5ff]/40 font-sans font-bold rounded-full flex items-center justify-center text-sm shrink-0">
+        <div className="w-9 h-9 bg-[#0f172a] text-[#00e5ff] border border-[#00e5ff]/40 font-sans font-semibold rounded-full flex items-center justify-center text-sm shrink-0">
           {initial}
         </div>
         <div>
-          <div className="font-bold text-[#0f172a] text-sm leading-tight group-hover:text-[#00e5ff] transition-colors">{review.name}</div>
+          <div className="font-semibold text-[#0f172a] text-sm leading-tight group-hover:text-[#00e5ff] transition-colors">{review.name}</div>
           <div className="text-surface-500 text-xs font-normal mt-0.5">{review.role || 'User'}</div>
         </div>
       </div>
@@ -87,11 +87,11 @@ function SubmitReviewForm({ onSubmitSuccess }) {
             <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
           </svg>
         </div>
-        <h4 className="text-lg font-bold text-gray-900 font-serif mb-2">Login Required</h4>
+        <h4 className="text-lg font-semibold text-gray-900 font-serif mb-2">Login Required</h4>
         <p className="text-gray-500 text-sm mb-6 max-w-xs font-medium leading-relaxed">
           You must be logged in to share your experience with the BEHOLD community.
         </p>
-        <a href="/login" className="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 text-white font-bold text-sm rounded-full hover:bg-black hover:shadow-lg transition-all transform hover:-translate-y-0.5">
+        <a href="/login" className="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 text-white font-semibold text-sm rounded-full hover:bg-black hover:shadow-lg transition-all transform hover:-translate-y-0.5">
           Login or Register
           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
@@ -128,7 +128,7 @@ function SubmitReviewForm({ onSubmitSuccess }) {
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </div>
-        <h4 className="font-bold text-gray-900 text-xl font-serif mb-2">Thank you!</h4>
+        <h4 className="font-semibold text-gray-900 text-xl font-serif mb-2">Thank you!</h4>
         <p className="text-gray-500 text-sm font-medium leading-relaxed max-w-sm mx-auto">
           Your review has been successfully submitted and is currently pending admin approval.
         </p>
@@ -140,7 +140,7 @@ function SubmitReviewForm({ onSubmitSuccess }) {
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-xs font-bold text-gray-700 mb-1.5">Name *</label>
+          <label className="block text-xs font-semibold text-gray-700 mb-1.5">Name *</label>
           <input
             type="text"
             placeholder="e.g. Priya Nair"
@@ -151,7 +151,7 @@ function SubmitReviewForm({ onSubmitSuccess }) {
           />
         </div>
         <div>
-          <label className="block text-xs font-bold text-gray-700 mb-1.5">Role</label>
+          <label className="block text-xs font-semibold text-gray-700 mb-1.5">Role</label>
           <input
             type="text"
             placeholder="e.g. User, Parent"
@@ -163,12 +163,12 @@ function SubmitReviewForm({ onSubmitSuccess }) {
       </div>
 
       <div>
-        <label className="block text-xs font-bold text-gray-700 mb-1.5">Rating *</label>
+        <label className="block text-xs font-semibold text-gray-700 mb-1.5">Rating *</label>
         <Stars count={form.rating} interactive onSelect={r => setForm(f => ({ ...f, rating: r }))} />
       </div>
 
       <div>
-        <label className="block text-xs font-bold text-gray-700 mb-1.5">Review *</label>
+        <label className="block text-xs font-semibold text-gray-700 mb-1.5">Review *</label>
         <textarea
           rows={3}
           placeholder="Share your experience with BEHOLD Aspire..."
@@ -264,14 +264,14 @@ export default function Reviews({ siteSettings }) {
 
         {/* Header */}
         <div className="text-center mb-10 px-4 sm:px-6 lg:px-8">
-          <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-bold text-[#00c9d6] tracking-widest uppercase mb-3">
+          <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold text-[#00c9d6] tracking-widest uppercase mb-3">
             <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
             Testimonials
             <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
           </span>
           <h2
             id="reviews-title"
-            className="text-3xl sm:text-4xl md:text-5xl font-sans font-bold text-[#0f172a] mb-4 tracking-tight leading-tight"
+            className="text-3xl sm:text-4xl md:text-5xl font-sans font-semibold text-[#0f172a] mb-4 tracking-tight leading-tight"
           >
             What Our Community Says<span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)]">.</span>
           </h2>
@@ -303,9 +303,9 @@ export default function Reviews({ siteSettings }) {
         ) : displayReviews.length === 0 ? (
           <div className="bg-white/80 backdrop-blur-md rounded-2xl border border-dashed border-gray-300 p-8 text-center max-w-lg mx-auto my-6 shadow-xs">
             <div className="w-14 h-14 bg-[#0f172a] rounded-full flex items-center justify-center mx-auto mb-4 border border-[#00e5ff]/40 shadow-xs">
-              <span className="text-[#00e5ff] text-xl font-bold">★</span>
+              <span className="text-[#00e5ff] text-xl font-semibold">★</span>
             </div>
-            <h3 className="text-lg font-bold text-gray-900 mb-1">Be the First to Leave a Review</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-1">Be the First to Leave a Review</h3>
             <p className="text-sm text-gray-500 mb-5 max-w-sm mx-auto">
               Share your experience with BEHOLD. Your feedback helps us shape future student & psychological support.
             </p>
@@ -360,7 +360,7 @@ export default function Reviews({ siteSettings }) {
                   onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
                   aria-label="Previous Page"
-                  className={`w-9 h-9 rounded-full text-sm font-bold transition-all cursor-pointer border flex items-center justify-center ${
+                  className={`w-9 h-9 rounded-full text-sm font-semibold transition-all cursor-pointer border flex items-center justify-center ${
                     currentPage === 1
                       ? 'border-surface-200 text-surface-400 bg-surface-100 cursor-not-allowed'
                       : 'border-[#0f172a] bg-[#0f172a] text-white hover:bg-[#1e293b]'
@@ -373,7 +373,7 @@ export default function Reviews({ siteSettings }) {
                   <button
                     key={num}
                     onClick={() => setCurrentPage(num)}
-                    className={`w-9 h-9 rounded-full text-xs font-bold transition-all cursor-pointer border flex items-center justify-center ${
+                    className={`w-9 h-9 rounded-full text-xs font-semibold transition-all cursor-pointer border flex items-center justify-center ${
                       currentPage === num
                         ? 'bg-[#0f172a] text-white border-[#00e5ff] shadow-xs'
                         : 'bg-white text-[#0f172a] border-surface-200 hover:border-[#00e5ff]'
@@ -387,7 +387,7 @@ export default function Reviews({ siteSettings }) {
                   onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                   disabled={currentPage === totalPages}
                   aria-label="Next Page"
-                  className={`w-9 h-9 rounded-full text-sm font-bold transition-all cursor-pointer border flex items-center justify-center ${
+                  className={`w-9 h-9 rounded-full text-sm font-semibold transition-all cursor-pointer border flex items-center justify-center ${
                     currentPage === totalPages
                       ? 'border-surface-200 text-surface-400 bg-surface-100 cursor-not-allowed'
                       : 'border-[#0f172a] bg-[#0f172a] text-white hover:bg-[#1e293b]'
@@ -405,7 +405,7 @@ export default function Reviews({ siteSettings }) {
           <div className="mt-10 px-4 sm:px-6 lg:px-8">
             <div className="max-w-lg mx-auto bg-white rounded-lg border border-gray-200 shadow-sm p-6 sm:p-8">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-serif font-bold text-gray-900">Share Your Experience</h3>
+                <h3 className="text-lg font-serif font-semibold text-gray-900">Share Your Experience</h3>
                 <button
                   onClick={() => setShowForm(false)}
                   className="w-8 h-8 rounded-md bg-gray-100 hover:bg-gray-200 text-gray-600 cursor-pointer border-none flex items-center justify-center transition"

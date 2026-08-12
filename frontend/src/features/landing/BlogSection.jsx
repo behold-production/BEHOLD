@@ -79,20 +79,20 @@ const BlogSection = () => {  const navigate = useNavigate();
 
         {/* Header */}
         <div className="text-center mb-10 reveal-on-scroll">
-          <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-bold text-[#00c9d6] tracking-widest uppercase mb-3">
+          <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold text-[#00c9d6] tracking-widest uppercase mb-3">
             <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
             Latest Insights
             <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
           </span>
-          <h2 id="blog-title" className="text-3xl sm:text-4xl md:text-5xl font-sans font-bold text-[#0f172a] mb-4 tracking-tight leading-tight">
-            Guidance for Your Journey<span className="text-[#00c9d6] drop-shadow-[0_0_8px_rgba(0,201,214,0.6)] font-bold">.</span>
+          <h2 id="blog-title" className="text-3xl sm:text-4xl md:text-5xl font-sans font-semibold text-[#0f172a] mb-4 tracking-tight leading-tight">
+            Guidance for Your Journey<span className="text-[#00c9d6] drop-shadow-[0_0_8px_rgba(0,201,214,0.6)] font-semibold">.</span>
           </h2>
           <p className="text-sm sm:text-base text-surface-600 max-w-xl mx-auto leading-relaxed font-medium mb-6">
             Research-backed articles, student guides, and mental health resources from our clinical team.
           </p>
           <button
             onClick={handleOpenAllBlogs}
-            className="px-6 py-2.5 bg-[#0f172a] hover:bg-[#00c9d6] hover:text-slate-950 text-white font-bold text-xs tracking-wider rounded-full transition-all border-none cursor-pointer shadow-sm hover-scale-btn"
+            className="px-6 py-2.5 bg-[#0f172a] hover:bg-[#00c9d6] hover:text-slate-950 text-white font-semibold text-xs tracking-wider rounded-full transition-all border-none cursor-pointer shadow-sm hover-scale-btn"
           >
             Explore All Articles
           </button>
@@ -140,7 +140,7 @@ const BlogSection = () => {  const navigate = useNavigate();
           </div>
         ) : blogs.length === 0 ? (
           <div className="text-center py-16 bg-white rounded-xl border border-surface-200 shadow-xs">
-            <h3 className="text-xl font-bold text-[#0f172a] mb-2">No Articles Found</h3>
+            <h3 className="text-xl font-semibold text-[#0f172a] mb-2">No Articles Found</h3>
             <p className="text-surface-600 font-normal text-sm max-w-md mx-auto">Check back soon for new insights and research articles.</p>
           </div>
         ) : (
@@ -165,7 +165,7 @@ const BlogSection = () => {  const navigate = useNavigate();
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a]/50 to-transparent opacity-50 group-hover:opacity-30 transition-opacity duration-300" />
                 {/* Category Badge */}
-                <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-white/95 backdrop-blur-sm text-[#0f172a] text-[10px] font-bold tracking-wider border border-surface-200">
+                <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-white/95 backdrop-blur-sm text-[#0f172a] text-[10px] font-semibold tracking-wider border border-surface-200">
                   {post.category || 'Career Guidance'}
                 </span>
 
@@ -179,7 +179,7 @@ const BlogSection = () => {  const navigate = useNavigate();
               {/* Content Body */}
               <div className="p-6 sm:p-7 flex-1 flex flex-col justify-between space-y-6">
                 <div className="space-y-3">
-                  <h3 className="text-lg font-bold text-[#0f172a] group-hover:text-[#00e5ff] transition-colors line-clamp-2 leading-snug font-sans">
+                  <h3 className="text-lg font-semibold text-[#0f172a] group-hover:text-[#00e5ff] transition-colors line-clamp-2 leading-snug font-sans">
                     {post.title}
                   </h3>
                   <p className="text-xs text-surface-600 line-clamp-3 leading-relaxed font-normal">
@@ -189,7 +189,7 @@ const BlogSection = () => {  const navigate = useNavigate();
 
                 {/* Card Footer */}
                 <div className="pt-4 border-t border-surface-100 flex items-center justify-between">
-                  <span className="text-xs font-bold text-[#0f172a] group-hover:text-[#00e5ff] transition-colors flex items-center gap-1">
+                  <span className="text-xs font-semibold text-[#0f172a] group-hover:text-[#00e5ff] transition-colors flex items-center gap-1">
                     Read Article →
                   </span>
                   <span className="text-[11px] text-surface-500">{post.author?.name || 'Editorial Team'}</span>
@@ -207,7 +207,7 @@ const BlogSection = () => {  const navigate = useNavigate();
               onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
               disabled={currentPage === 1}
               aria-label="Previous Page"
-              className={`w-8 h-8 rounded-full text-sm font-bold transition-all cursor-pointer border flex items-center justify-center ${currentPage === 1
+              className={`w-8 h-8 rounded-full text-sm font-semibold transition-all cursor-pointer border flex items-center justify-center ${currentPage === 1
                 ? 'border-surface-200 text-surface-400 bg-surface-100 cursor-not-allowed'
                 : 'border-[#0f172a] bg-[#0f172a] text-white hover:bg-[#1e293b]'
                 }`}
@@ -219,7 +219,7 @@ const BlogSection = () => {  const navigate = useNavigate();
               <button
                 key={num}
                 onClick={() => setCurrentPage(num)}
-                className={`w-8 h-8 rounded-full text-xs font-bold transition-all cursor-pointer border flex items-center justify-center ${currentPage === num
+                className={`w-8 h-8 rounded-full text-xs font-semibold transition-all cursor-pointer border flex items-center justify-center ${currentPage === num
                   ? 'bg-[#0f172a] text-white border-[#00e5ff] shadow-xs'
                   : 'bg-white text-[#0f172a] border-surface-200 hover:border-[#00e5ff]'
                   }`}
@@ -232,7 +232,7 @@ const BlogSection = () => {  const navigate = useNavigate();
               onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
               aria-label="Next Page"
-              className={`w-8 h-8 rounded-full text-sm font-bold transition-all cursor-pointer border flex items-center justify-center ${currentPage === totalPages
+              className={`w-8 h-8 rounded-full text-sm font-semibold transition-all cursor-pointer border flex items-center justify-center ${currentPage === totalPages
                 ? 'border-surface-200 text-surface-400 bg-surface-100 cursor-not-allowed'
                 : 'border-[#0f172a] bg-[#0f172a] text-white hover:bg-[#1e293b]'
                 }`}

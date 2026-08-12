@@ -59,12 +59,12 @@ export default function Faq({ siteSettings }) {
 
         {/* Header */}
         <div className="text-center mb-14">
-          <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-bold text-[#00c9d6] tracking-widest uppercase mb-2">
+          <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold text-[#00c9d6] tracking-widest uppercase mb-2">
             <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
             {settings.faqSectionSub || 'FREQUENTLY ASKED QUESTIONS'}
             <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
           </span>
-          <h2 id="faq-title" className="text-3xl sm:text-5xl font-sans font-bold uppercase text-[#0f172a] mb-3 tracking-tight leading-none">
+          <h2 id="faq-title" className="text-3xl sm:text-5xl font-sans font-semibold uppercase text-[#0f172a] mb-3 tracking-tight leading-none">
             {settings.faqSectionTitle || 'Everything You Need to Know'}
             <span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)]">.</span>
           </h2>
@@ -97,7 +97,7 @@ export default function Faq({ siteSettings }) {
                     onClick={() => setOpenIndex(isOpen ? null : idx)}
                     className="w-full text-left px-6 py-5 flex items-center justify-between gap-4 cursor-pointer bg-transparent border-none"
                   >
-                    <span className={`font-bold text-sm sm:text-base leading-snug ${isOpen ? 'text-[#00e5ff]' : 'text-[#0f172a]'}`}>
+                    <span className={`font-semibold text-sm sm:text-base leading-snug ${isOpen ? 'text-[#00e5ff]' : 'text-[#0f172a]'}`}>
                       {faq.question}
                     </span>
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ${isOpen ? 'bg-[#0f172a] text-[#00e5ff] rotate-180 border border-[#00e5ff]/40' : 'bg-surface-100 text-[#0f172a]'}`}>
@@ -126,7 +126,7 @@ export default function Faq({ siteSettings }) {
               const el = document.getElementById('inquiry');
               if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }}
-            className="px-7 py-3 bg-[#0f172a] hover:bg-[#1e293b] text-white font-bold text-xs uppercase tracking-widest rounded-full transition-all border border-[#00e5ff]/30 cursor-pointer shadow-xs"
+            className="px-7 py-3 bg-[#0f172a] hover:bg-[#1e293b] text-white font-semibold text-xs uppercase tracking-widest rounded-full transition-all border border-[#00e5ff]/30 cursor-pointer shadow-xs"
           >
             Contact Our Team
           </button>

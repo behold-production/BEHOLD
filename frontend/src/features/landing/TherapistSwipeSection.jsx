@@ -201,7 +201,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
         {/* Top Header Section (Light Primary Teal Background with Full Height Right Image) */}
         <div className="relative w-full h-[110px] sm:h-[125px] p-3.5 sm:p-4 bg-gradient-to-r from-[#bcf4f8] via-[#d7f9fb] to-[#a8eff4] flex items-start justify-between overflow-hidden shrink-0">
           <div className="pr-2 space-y-0.5 z-10 max-w-[62%]">
-            <h3 className="font-sans text-base sm:text-lg font-bold text-slate-900 leading-tight truncate">
+            <h3 className="font-sans text-base sm:text-lg font-semibold text-slate-900 leading-tight truncate">
               {advisor.name}
             </h3>
             <p className="text-[9.5px] sm:text-[11px] font-semibold text-slate-600 tracking-wider truncate">
@@ -224,13 +224,13 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
               />
             ) : (
               <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white/90 shadow-md flex items-center justify-center mb-2 border border-white">
-                <span className="font-bold text-xl text-[#00c9d6]">
+                <span className="font-semibold text-xl text-[#00c9d6]">
                   {getInitial(advisor.name)}
                 </span>
               </div>
             )}
             <div style={{ display: 'none' }} className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white/90 shadow-md items-center justify-center mb-2 border border-white">
-              <span className="font-bold text-xl text-[#00c9d6]">
+              <span className="font-semibold text-xl text-[#00c9d6]">
                 {getInitial(advisor.name)}
               </span>
             </div>
@@ -264,7 +264,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
                   e.stopPropagation();
                   setExpandedBios(prev => ({ ...prev, [advisor.id]: !prev[advisor.id] }));
                 }}
-                className="text-[9.5px] sm:text-[10.5px] font-bold text-[#00c9d6] hover:text-[#008b94] hover:underline cursor-pointer mt-1.5 inline-block tracking-wider"
+                className="text-[9.5px] sm:text-[10.5px] font-semibold text-[#00c9d6] hover:text-[#008b94] hover:underline cursor-pointer mt-1.5 inline-block tracking-wider"
               >
                 {expandedBios[advisor.id] ? 'Read Less ▲' : 'Read More ▼'}
               </button>
@@ -274,15 +274,15 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
           {/* 3 Metric Stat Boxes */}
           <div className="grid grid-cols-3 gap-2 shrink-0">
             <div className="bg-slate-50/70 border border-slate-150 rounded-xl p-2.5 text-left">
-              <span className="text-xs sm:text-sm font-bold text-slate-900 block leading-none">{advisor.rawYears || 3}+</span>
+              <span className="text-xs sm:text-sm font-semibold text-slate-900 block leading-none">{advisor.rawYears || 3}+</span>
               <span className="text-[9px] sm:text-[10px] font-medium text-slate-500 block mt-1">Yrs Experience</span>
             </div>
             <div className="bg-slate-50/70 border border-slate-150 rounded-xl p-2.5 text-left">
-              <span className="text-xs sm:text-sm font-bold text-slate-900 block leading-tight line-clamp-2">{advisor.languages || 'Malayalam'}</span>
+              <span className="text-xs sm:text-sm font-semibold text-slate-900 block leading-tight line-clamp-2">{advisor.languages || 'Malayalam'}</span>
               <span className="text-[9px] sm:text-[10px] font-medium text-slate-500 block mt-1">Languages</span>
             </div>
             <div className="bg-slate-50/70 border border-slate-150 rounded-xl p-2.5 text-left">
-              <span className="text-xs sm:text-sm font-bold text-slate-900 block leading-none">₹{advisor.fee <= 899 ? 499 : (advisor.fee >= 1200 ? 699 : Math.round(advisor.fee * 0.5))}</span>
+              <span className="text-xs sm:text-sm font-semibold text-slate-900 block leading-none">₹{advisor.fee <= 899 ? 499 : (advisor.fee >= 1200 ? 699 : Math.round(advisor.fee * 0.5))}</span>
               <span className="text-[9px] sm:text-[10px] font-medium text-slate-500 block mt-1">Starting from</span>
             </div>
           </div>
@@ -291,7 +291,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
           <div className="pt-2 flex items-center justify-between gap-2 border-t border-slate-100 shrink-0">
             <div className="text-left shrink-0">
               <span className="text-[9px] sm:text-[10px] font-semibold text-slate-400 block tracking-wider">Next available</span>
-              <span className="text-[10.5px] sm:text-xs font-bold text-slate-900 block mt-0.5 whitespace-nowrap">Available Today</span>
+              <span className="text-[10.5px] sm:text-xs font-semibold text-slate-900 block mt-0.5 whitespace-nowrap">Available Today</span>
             </div>
 
             <div className="flex items-center gap-1.5 shrink-0">
@@ -301,7 +301,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
                   e.stopPropagation();
                   navigate(`/advisor/${advisor.id}`);
                 }}
-                className="px-2.5 xs:px-3 sm:px-4 py-1.5 sm:py-2 border border-slate-300 hover:border-slate-900 text-slate-800 hover:bg-slate-900 hover:text-white rounded-full text-[9.5px] xs:text-[10px] sm:text-[11px] font-bold transition cursor-pointer whitespace-nowrap hover-scale-btn shadow-xs"
+                className="px-2.5 xs:px-3 sm:px-4 py-1.5 sm:py-2 border border-slate-300 hover:border-slate-900 text-slate-800 hover:bg-slate-900 hover:text-white rounded-full text-[9.5px] xs:text-[10px] sm:text-[11px] font-semibold transition cursor-pointer whitespace-nowrap hover-scale-btn shadow-xs"
               >
                 View Profile
               </button>
@@ -312,7 +312,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
                   if (onBookTherapist) onBookTherapist(advisor.id);
                   else window.spaNavigate?.('/book-session');
                 }}
-                className="bg-[#00c9d6] hover:bg-[#00b2be] text-slate-950 font-bold text-[9.5px] xs:text-[10px] sm:text-[11px] tracking-wider px-3 xs:px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer whitespace-nowrap hover-scale-btn"
+                className="bg-[#00c9d6] hover:bg-[#00b2be] text-slate-950 font-semibold text-[9.5px] xs:text-[10px] sm:text-[11px] tracking-wider px-3 xs:px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer whitespace-nowrap hover-scale-btn"
               >
                 Book Session
               </button>
@@ -339,13 +339,13 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
       </div>
       {/* SECTION TOPPER TITLE */}
       <div className="w-full max-w-7xl mx-auto mb-6 sm:mb-8 text-center">
-        <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-bold text-[#00c9d6] tracking-widest uppercase mb-3">
+        <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold text-[#00c9d6] tracking-widest uppercase mb-3">
           <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
           Our Expert Team
           <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
         </span>
-        <h2 className="font-sans text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-slate-900 leading-none">
-          Meet Our Experts<span className="text-[#00c9d6] font-bold">.</span>
+        <h2 className="font-sans text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-slate-900 leading-none">
+          Meet Our Experts<span className="text-[#00c9d6] font-semibold">.</span>
         </h2>
       </div>
 
@@ -378,7 +378,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
               <button
                 key={role.id}
                 onClick={() => { setSelectedRole(role.id); setCurrentIndex(0); }}
-                className={`px-3.5 py-1.5 rounded-full text-[11px] sm:text-xs font-bold whitespace-nowrap transition-all duration-300 cursor-pointer ${selectedRole === role.id
+                className={`px-3.5 py-1.5 rounded-full text-[11px] sm:text-xs font-semibold whitespace-nowrap transition-all duration-300 cursor-pointer ${selectedRole === role.id
                   ? 'bg-slate-900 text-white shadow-sm'
                   : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200'
                   }`}
@@ -393,7 +393,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="appearance-none bg-slate-100 hover:bg-slate-200 text-slate-800 text-[11px] sm:text-xs font-bold px-3 py-1.5 pr-7 rounded-full border border-slate-200 outline-none cursor-pointer transition-all"
+              className="appearance-none bg-slate-100 hover:bg-slate-200 text-slate-800 text-[11px] sm:text-xs font-semibold px-3 py-1.5 pr-7 rounded-full border border-slate-200 outline-none cursor-pointer transition-all"
             >
               <option value="RECOMMENDED">Recommended</option>
               <option value="FEE_LOW">Price: Low → High</option>
@@ -433,15 +433,15 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
         ) : displayAdvisors.length === 0 ? (
           <div className="w-full max-w-xl mx-auto bg-white/90 backdrop-blur-md rounded-3xl border border-dashed border-slate-300 p-8 sm:p-12 text-center shadow-sm my-6">
             <div className="w-16 h-16 bg-[#0f172a] rounded-full flex items-center justify-center mx-auto mb-4 border border-[#00e5ff]/40 shadow-xs">
-              <span className="text-[#00e5ff] text-2xl font-bold">🎓</span>
+              <span className="text-[#00e5ff] text-2xl font-semibold">🎓</span>
             </div>
-            <h3 className="text-xl font-bold text-slate-900 mb-2 tracking-tight">No Psychologists Currently Listed</h3>
+            <h3 className="text-xl font-semibold text-slate-900 mb-2 tracking-tight">No Psychologists Currently Listed</h3>
             <p className="text-sm text-slate-600 max-w-sm mx-auto leading-relaxed mb-6 font-normal">
               Our team of certified psychologists and career mentors is being onboarded. Please check back shortly or connect directly with our support desk.
             </p>
             <button
               onClick={handleConnectClick}
-              className="px-8 py-3 bg-[#0f172a] hover:bg-[#00c9d6] hover:text-slate-950 text-white font-bold text-xs tracking-wider rounded-full transition shadow-md border-none cursor-pointer hover-scale-btn"
+              className="px-8 py-3 bg-[#0f172a] hover:bg-[#00c9d6] hover:text-slate-950 text-white font-semibold text-xs tracking-wider rounded-full transition shadow-md border-none cursor-pointer hover-scale-btn"
             >
               Contact Support Desk
             </button>

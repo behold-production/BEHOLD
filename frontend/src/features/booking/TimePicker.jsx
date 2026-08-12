@@ -103,7 +103,7 @@ export default function TimePicker({
               const meta = BUCKET_META[bucket];
               return (
                 <div key={bucket} className="space-y-2">
-                  <div className={`flex items-center gap-1.5 text-xs font-bold tracking-widest ${meta.color}`}>
+                  <div className={`flex items-center gap-1.5 text-xs font-semibold tracking-widest ${meta.color}`}>
                     <span>{meta.label}</span>
                     <span className="text-surface-400 normal-case">({items.length})</span>
                   </div>
@@ -124,7 +124,7 @@ export default function TimePicker({
                             }
                             onTimeChange(time);
                           }}
-                          className={`py-3 px-2 text-[11px] xs:text-xs sm:text-[12px] font-bold border rounded-xl transition cursor-pointer text-center flex flex-col items-center justify-center min-h-[44px] ${
+                          className={`py-3 px-2 text-[11px] xs:text-xs sm:text-[12px] font-semibold border rounded-xl transition cursor-pointer text-center flex flex-col items-center justify-center min-h-[44px] ${
                             isSelected
                               ? 'bg-slate-900 text-white border-slate-900 shadow-sm ring-2 ring-[#00c9d6]/50'
                               : isBooked
@@ -146,20 +146,20 @@ export default function TimePicker({
           </div>
  ) : (
  <div className="py-8 text-center space-y-2">
- <p className="text-[10px] font-black text-rose-600 tracking-widest">
+ <p className="text-[10px] font-semibold text-rose-600 tracking-widest">
  No Slots Available
  </p>
- <p className="text-[10px] font-bold text-surface-500 tracking-widest leading-relaxed px-4 mt-2">
+ <p className="text-[10px] font-semibold text-surface-500 tracking-widest leading-relaxed px-4 mt-2">
  No advisors have availability on {formatHumanDate(selectedDate)}. Try a different day.
  </p>
  </div>
  )
  ) : (
  <div className="py-10 text-center space-y-2">
- <p className="text-[10px] font-black text-surface-500 tracking-widest">
+ <p className="text-[10px] font-semibold text-surface-500 tracking-widest">
  Pick an Advisor First
  </p>
- <p className="text-[10px] font-bold text-surface-400 tracking-widest leading-relaxed px-4 mt-2">
+ <p className="text-[10px] font-semibold text-surface-400 tracking-widest leading-relaxed px-4 mt-2">
  Select an advisor to see available 1-hour time slots.
  </p>
  </div>

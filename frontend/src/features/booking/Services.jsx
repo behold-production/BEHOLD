@@ -101,9 +101,9 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
           <span className="text-xs font-semibold text-[#00c9d6] block mb-2">
             Our Services
           </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-sans font-bold text-slate-900 tracking-tight leading-tight mb-3">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-sans font-semibold text-slate-900 tracking-tight leading-tight mb-3">
             {settings.servicesSectionTitle && settings.servicesSectionTitle !== 'BOOK YOUR SESSION' ? settings.servicesSectionTitle : 'Book Your Session'}
-            <span className="text-[#00c9d6] font-bold">.</span>
+            <span className="text-[#00c9d6] font-semibold">.</span>
           </h2>
 
           <p className="text-sm sm:text-base text-slate-600 font-normal leading-relaxed max-w-xl mx-auto">
@@ -130,7 +130,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                   </div>
 
                   {/* Service Title */}
-                  <h3 className={`${isSingle ? 'text-xl sm:text-2xl' : 'text-lg sm:text-xl'} font-bold text-slate-900 tracking-tight mb-2.5 group-hover:text-[#00c9d6] transition-colors leading-snug font-sans`}>
+                  <h3 className={`${isSingle ? 'text-xl sm:text-2xl' : 'text-lg sm:text-xl'} font-semibold text-slate-900 tracking-tight mb-2.5 group-hover:text-[#00c9d6] transition-colors leading-snug font-sans`}>
                     {service.title}
                   </h3>
 

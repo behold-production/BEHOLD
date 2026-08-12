@@ -93,7 +93,7 @@ export default function CompleteProfileModal({ isOpen, onSuccess }) {
           
           {/* Header */}
           <div className="p-6 sm:p-7 border-b border-surface-200 text-center">
-            <h2 className="text-xl sm:text-2xl font-sans font-bold tracking-tight text-[#0f172a] uppercase">
+            <h2 className="text-xl sm:text-2xl font-sans font-semibold tracking-tight text-[#0f172a] uppercase">
               Complete Your Profile
             </h2>
             <p className="text-xs text-surface-500 font-normal mt-2 leading-relaxed">
@@ -106,7 +106,7 @@ export default function CompleteProfileModal({ isOpen, onSuccess }) {
             
             {/* Full Name */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-zinc-500 block">Full Name *</label>
+              <label className="text-xs font-semibold text-zinc-500 block">Full Name *</label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
                 <input
@@ -122,7 +122,7 @@ export default function CompleteProfileModal({ isOpen, onSuccess }) {
 
             {/* Email Address */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-zinc-500 block">Email Address *</label>
+              <label className="text-xs font-semibold text-zinc-500 block">Email Address *</label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
                 <input
@@ -138,7 +138,7 @@ export default function CompleteProfileModal({ isOpen, onSuccess }) {
 
             {/* Age */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-zinc-500 block">Age *</label>
+              <label className="text-xs font-semibold text-zinc-500 block">Age *</label>
               <div className="relative">
                 <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
                 <input
@@ -156,7 +156,7 @@ export default function CompleteProfileModal({ isOpen, onSuccess }) {
 
             {/* How have you been feeling lately? (Optional) */}
             <div className="space-y-2">
-              <label className="text-xs font-bold text-zinc-500 flex items-center justify-between">
+              <label className="text-xs font-semibold text-zinc-500 flex items-center justify-between">
                 <span>How have you been feeling lately?</span>
                 <span className="text-[10px] text-zinc-400 font-normal">(Optional)</span>
               </label>

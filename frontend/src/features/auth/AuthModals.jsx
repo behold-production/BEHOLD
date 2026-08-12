@@ -184,7 +184,7 @@ export default function AuthModals({ isOpen, onClose }) {
           {/* Header */}
           <div className="flex justify-between items-start gap-4 p-6 sm:p-7 border-b border-surface-200">
             <div className="min-w-0">
-              <h2 id="auth-modal-title" className="text-xl sm:text-2xl font-sans font-bold tracking-tight text-[#0f172a]">
+              <h2 id="auth-modal-title" className="text-xl sm:text-2xl font-sans font-semibold tracking-tight text-[#0f172a]">
                 {rejectionReason ? 'Application Rejected' : isOtpSent ? 'Verify OTP' : 'Sign In'}
               </h2>
               <p className="text-xs text-surface-500 font-normal mt-1">
@@ -208,11 +208,11 @@ export default function AuthModals({ isOpen, onClose }) {
                   We regret to inform you that your professional counsellor application has been rejected by the system administrator.
                 </p>
                 <div className="bg-white border border-rose-100 p-3 rounded-xl">
-                  <span className="text-[10px] font-bold text-rose-600 tracking-wider block mb-1 uppercase">Reason for Rejection:</span>
+                  <span className="text-[10px] font-semibold text-rose-600 tracking-wider block mb-1 uppercase">Reason for Rejection:</span>
                   <p className="text-sm text-zinc-800 italic leading-relaxed">"{rejectionReason}"</p>
                 </div>
               </div>
-              <button onClick={() => setRejectionReason(null)} className="w-full py-3.5 bg-[#0f172a] hover:bg-[#1e293b] text-white font-bold text-sm rounded-full transition-all cursor-pointer border border-[#00e5ff]/30">
+              <button onClick={() => setRejectionReason(null)} className="w-full py-3.5 bg-[#0f172a] hover:bg-[#1e293b] text-white font-semibold text-sm rounded-full transition-all cursor-pointer border border-[#00e5ff]/30">
                 Return to Login
               </button>
             </div>
@@ -222,7 +222,7 @@ export default function AuthModals({ isOpen, onClose }) {
               {/* Phone input */}
               {!isOtpSent && (
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-zinc-500 block">WhatsApp Phone Number</label>
+                  <label className="text-xs font-semibold text-zinc-500 block">WhatsApp Phone Number</label>
                   <div className="relative flex items-center">
                     <Phone className="absolute left-3 w-4 h-4 text-zinc-400" />
                     <span className="absolute left-9 text-sm font-semibold text-zinc-700">+91</span>
@@ -241,7 +241,7 @@ export default function AuthModals({ isOpen, onClose }) {
               {isOtpSent && (
                 <div className="space-y-3">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-zinc-500 block">6-Digit Verification Code</label>
+                    <label className="text-xs font-semibold text-zinc-500 block">6-Digit Verification Code</label>
                     <OtpPinInput
                       value={otpCode}
                       onChange={(code) => setOtpCode(code)}
@@ -265,7 +265,7 @@ export default function AuthModals({ isOpen, onClose }) {
                     ) : (
                       <span className="text-xs font-semibold text-zinc-500 tabular-nums">
                         Resend in{' '}
-                        <span className="text-brand font-bold">{formatTimer(resendTimer)}</span>
+                        <span className="text-brand font-semibold">{formatTimer(resendTimer)}</span>
                       </span>
                     )}
                   </div>

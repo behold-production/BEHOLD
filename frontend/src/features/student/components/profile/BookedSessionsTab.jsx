@@ -36,13 +36,13 @@ const BookedSessionsTab = ({
             type="button"
             onClick={() => setSessionSubTab('upcoming')}
             className={`pb-2 text-[10px] tracking-widest border-b-2 transition-all relative cursor-pointer whitespace-nowrap flex items-center ${sessionSubTab === 'upcoming'
-              ? 'border-surface-900 text-surface-900 font-black'
-              : 'border-transparent text-surface-400 hover:text-surface-600 font-bold'
+              ? 'border-surface-900 text-surface-900 font-semibold'
+              : 'border-transparent text-surface-400 hover:text-surface-600 font-semibold'
               }`}
           >
             Upcoming Sessions
             {bookedSessions.length > 0 && (
-              <span className={`ml-1.5 text-[10px] font-black px-1.5 py-0.5 rounded-[10px] ${sessionSubTab === 'upcoming' ? 'bg-surface-900 text-white' : 'bg-surface-100 text-surface-500'
+              <span className={`ml-1.5 text-[10px] font-semibold px-1.5 py-0.5 rounded-[10px] ${sessionSubTab === 'upcoming' ? 'bg-surface-900 text-white' : 'bg-surface-100 text-surface-500'
                 }`}>
                 {bookedSessions.length}
               </span>
@@ -52,13 +52,13 @@ const BookedSessionsTab = ({
             type="button"
             onClick={() => setSessionSubTab('history')}
             className={`pb-2 text-[10px] tracking-widest border-b-2 transition-all relative cursor-pointer whitespace-nowrap flex items-center ${sessionSubTab === 'history'
-              ? 'border-surface-900 text-surface-900 font-black'
-              : 'border-transparent text-surface-400 hover:text-surface-600 font-bold'
+              ? 'border-surface-900 text-surface-900 font-semibold'
+              : 'border-transparent text-surface-400 hover:text-surface-600 font-semibold'
               }`}
           >
             History & Timeline
             {completedSessions.length > 0 && (
-              <span className={`ml-1.5 text-[10px] font-black px-1.5 py-0.5 rounded-[10px] ${sessionSubTab === 'history' ? 'bg-surface-900 text-white' : 'bg-surface-100 text-surface-500'
+              <span className={`ml-1.5 text-[10px] font-semibold px-1.5 py-0.5 rounded-[10px] ${sessionSubTab === 'history' ? 'bg-surface-900 text-white' : 'bg-surface-100 text-surface-500'
                 }`}>
                 {completedSessions.length}
               </span>
@@ -73,7 +73,7 @@ const BookedSessionsTab = ({
               if (onOpenBooking) onOpenBooking();
               else navigate('/booking');
             }}
-            className="inline-flex items-center gap-1.5 min-h-[36px] px-3.5 py-1.5 bg-surface-900 hover:bg-surface-800 text-white tracking-widest text-[10px] font-black rounded-[10px] transition-colors border-none sm:self-center cursor-pointer"
+            className="inline-flex items-center gap-1.5 min-h-[36px] px-3.5 py-1.5 bg-surface-900 hover:bg-surface-800 text-white tracking-widest text-[10px] font-semibold rounded-[10px] transition-colors border-none sm:self-center cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" /> New Booking
           </button>
@@ -90,14 +90,14 @@ const BookedSessionsTab = ({
                   key={chip.id}
                   type="button"
                   onClick={() => setSessionFilter(chip.id)}
-                  className={`shrink-0 inline-flex items-center gap-1.5 px-3 min-h-[32px] rounded-[10px] tracking-widest text-[10px] font-bold transition-all border ${sessionFilter === chip.id
+                  className={`shrink-0 inline-flex items-center gap-1.5 px-3 min-h-[32px] rounded-[10px] tracking-widest text-[10px] font-semibold transition-all border ${sessionFilter === chip.id
                     ? 'bg-surface-900 text-white border-surface-900'
                     : 'bg-white text-surface-600 border-surface-200 hover:border-surface-300'
                     }`}
                 >
                   {chip.label}
                   {chip.count > 0 && (
-                    <span className={`text-[10px] font-black px-1.5 min-w-[18px] h-4 rounded-[10px] flex items-center justify-center ${sessionFilter === chip.id ? 'bg-white/20' : 'bg-surface-100 text-surface-600'
+                    <span className={`text-[10px] font-semibold px-1.5 min-w-[18px] h-4 rounded-[10px] flex items-center justify-center ${sessionFilter === chip.id ? 'bg-white/20' : 'bg-surface-100 text-surface-600'
                       }`}>
                       {chip.count}
                     </span>
@@ -125,7 +125,7 @@ const BookedSessionsTab = ({
                           {session.mode === 'ONLINE' ? <Video className="w-5 h-5 text-surface-600" /> : <MapPin className="w-5 h-5 text-surface-600" />}
                         </div>
                         <div>
-                          <span className={`inline-flex items-center gap-1 tracking-widest text-[10px] px-2 py-0.5 rounded-[10px] font-bold ${session.status === 'EXPIRED'
+                          <span className={`inline-flex items-center gap-1 tracking-widest text-[10px] px-2 py-0.5 rounded-[10px] font-semibold ${session.status === 'EXPIRED'
                             ? 'bg-rose-50 text-rose-700 border border-rose-200'
                             : isConfirmed
                               ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
@@ -139,14 +139,14 @@ const BookedSessionsTab = ({
                               }`} />
                             {session.status}
                           </span>
-                          <p className="text-[10px] tracking-widest text-surface-500 font-bold mt-1">
+                          <p className="text-[10px] tracking-widest text-surface-500 font-semibold mt-1">
                             {session.service === 'counselling' ? 'Psychological' : 'Career'} · {session.mode}
                           </p>
                         </div>
                       </div>
                       <div className="text-right shrink-0">
-                        <p className="text-[10px] tracking-widest text-surface-500 font-bold">In</p>
-                        <p className={`text-sm font-black ${cd.urgent ? 'text-amber-600' : 'text-surface-900'}`}>{cd.text}</p>
+                        <p className="text-[10px] tracking-widest text-surface-500 font-semibold">In</p>
+                        <p className={`text-sm font-semibold ${cd.urgent ? 'text-amber-600' : 'text-surface-900'}`}>{cd.text}</p>
                       </div>
                     </div>
 
@@ -155,25 +155,25 @@ const BookedSessionsTab = ({
                         <img src={session.advisorProfilePic} alt={session.advisorName} className="w-10 h-10 rounded-[10px] object-cover border border-surface-200 shrink-0" />
                       )}
                       <div>
-                        <p className="font-black tracking-widest text-surface-900 text-lg">{session.advisorName}</p>
-                        <p className="text-[10px] tracking-widest text-surface-500 font-bold mt-0.5">{session.advisorRole || 'Consultation'}</p>
+                        <p className="font-semibold tracking-widest text-surface-900 text-lg">{session.advisorName}</p>
+                        <p className="text-[10px] tracking-widest text-surface-500 font-semibold mt-0.5">{session.advisorRole || 'Consultation'}</p>
                       </div>
                     </div>
 
                     <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      <div className="flex items-center gap-1.5 px-3 py-2 rounded-[10px] bg-surface-50 border border-surface-200 text-[10px] tracking-widest text-surface-600 font-bold">
+                      <div className="flex items-center gap-1.5 px-3 py-2 rounded-[10px] bg-surface-50 border border-surface-200 text-[10px] tracking-widest text-surface-600 font-semibold">
                         <Calendar className="w-3.5 h-3.5 text-surface-400 shrink-0" />
-                        <span className="font-black truncate">{formatDateString(session.date)}</span>
+                        <span className="font-semibold truncate">{formatDateString(session.date)}</span>
                       </div>
-                      <div className="flex items-center gap-1.5 px-3 py-2 rounded-[10px] bg-surface-50 border border-surface-200 text-[10px] tracking-widest text-surface-600 font-bold">
+                      <div className="flex items-center gap-1.5 px-3 py-2 rounded-[10px] bg-surface-50 border border-surface-200 text-[10px] tracking-widest text-surface-600 font-semibold">
                         <Clock className="w-3.5 h-3.5 text-surface-400 shrink-0" />
-                        <span className="font-black truncate">{session.time}</span>
+                        <span className="font-semibold truncate">{session.time}</span>
                       </div>
                     </div>
 
                     <div className="mt-4 pt-3 border-t border-surface-100 flex flex-wrap gap-2">
                       {session.status === 'EXPIRED' ? (
-                        <div className="w-full text-center text-[10px] tracking-widest font-black text-rose-650 bg-rose-50 border border-rose-100 py-3 rounded-[10px] flex items-center justify-center gap-1.5 px-4">
+                        <div className="w-full text-center text-[10px] tracking-widest font-semibold text-rose-650 bg-rose-50 border border-rose-100 py-3 rounded-[10px] flex items-center justify-center gap-1.5 px-4">
                           <AlertCircle className="w-4 h-4 text-rose-500 shrink-0" />
                           <span>This session expired because it wasn't joined within 1 hour.</span>
                         </div>
@@ -184,7 +184,7 @@ const BookedSessionsTab = ({
                               href={session.meetLink || 'https://meet.google.com/behold-aspire-session'}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-brand text-surface-900 hover:bg-brand-dark rounded-[10px] text-[10px] font-black tracking-widest transition-all duration-300 shadow-none border-none cursor-pointer text-decoration-none"
+                              className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-brand text-surface-900 hover:bg-brand-dark rounded-[10px] text-[10px] font-semibold tracking-widest transition-all duration-300 shadow-none border-none cursor-pointer text-decoration-none"
                             >
                               <Video className="w-3.5 h-3.5" /> Join Session
                               <ExternalLink className="w-3 h-3" />
@@ -206,7 +206,7 @@ const BookedSessionsTab = ({
                                   );
                                 }
                               }}
-                              className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-surface-100 text-surface-700 border border-surface-200 rounded-[10px] text-[10px] tracking-widest font-black shadow-none cursor-pointer"
+                              className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-surface-100 text-surface-700 border border-surface-200 rounded-[10px] text-[10px] tracking-widest font-semibold shadow-none cursor-pointer"
                             >
                               <MapPin className="w-3.5 h-3.5" /> View Location
                             </button>
@@ -215,7 +215,7 @@ const BookedSessionsTab = ({
                             <button
                               type="button"
                               onClick={() => downloadPDFReceiptForSession(session)}
-                              className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 border border-surface-200 hover:border-surface-300 rounded-[10px] text-[10px] tracking-widest font-black shadow-none text-surface-600 hover:text-surface-900 transition-colors bg-white cursor-pointer"
+                              className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 border border-surface-200 hover:border-surface-300 rounded-[10px] text-[10px] tracking-widest font-semibold shadow-none text-surface-600 hover:text-surface-900 transition-colors bg-white cursor-pointer"
                               title="Download Receipt PDF"
                             >
                               <Download className="w-3.5 h-3.5 text-surface-500" /> Receipt
@@ -252,14 +252,14 @@ const BookedSessionsTab = ({
 
                               navigate(`/booking?reschedule=${session.id}`);
                             }}
-                            className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 border border-surface-200 hover:border-surface-300 rounded-[10px] text-[10px] tracking-widest font-black text-surface-650 hover:text-surface-900 shadow-none transition-colors bg-white cursor-pointer"
+                            className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 border border-surface-200 hover:border-surface-300 rounded-[10px] text-[10px] tracking-widest font-semibold text-surface-650 hover:text-surface-900 shadow-none transition-colors bg-white cursor-pointer"
                           >
                             <RefreshCw className="w-3.5 h-3.5" /> Reschedule
                           </button>
                           <button
                             type="button"
                             onClick={() => handleCancelSession(session.id)}
-                            className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-white border border-surface-200 hover:border-rose-200 hover:bg-rose-50 text-surface-500 hover:text-rose-600 rounded-[10px] text-[10px] tracking-widest font-black transition-colors"
+                            className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-white border border-surface-200 hover:border-rose-200 hover:bg-rose-50 text-surface-500 hover:text-rose-600 rounded-[10px] text-[10px] tracking-widest font-semibold transition-colors"
                           >
                             <Trash2 className="w-3.5 h-3.5" /> Cancel
                           </button>
@@ -275,7 +275,7 @@ const BookedSessionsTab = ({
               <div className="w-12 h-12 mx-auto rounded-[10px] bg-surface-200 flex items-center justify-center mb-3">
                 <CalendarDays className="w-6 h-6 text-surface-500" />
               </div>
-              <p className="text-sm font-black text-surface-900 tracking-widest">No sessions found</p>
+              <p className="text-sm font-semibold text-surface-900 tracking-widest">No sessions found</p>
               <p className="text-xs text-surface-500 mt-1">
                 {sessionFilter === 'all'
                   ? 'Book a session with one of our experts.'
@@ -285,7 +285,7 @@ const BookedSessionsTab = ({
                 <button
                   type="button"
                   onClick={() => navigate('/booking')}
-                  className="mt-4 inline-flex items-center gap-1.5 min-h-[36px] px-5 py-2 bg-surface-900 text-white tracking-widest text-[10px] font-black rounded-[10px] hover:bg-surface-800 transition-colors border-none"
+                  className="mt-4 inline-flex items-center gap-1.5 min-h-[36px] px-5 py-2 bg-surface-900 text-white tracking-widest text-[10px] font-semibold rounded-[10px] hover:bg-surface-800 transition-colors border-none"
                 >
                   <Plus className="w-3.5 h-3.5" /> Book a Session
                 </button>
@@ -308,10 +308,10 @@ const BookedSessionsTab = ({
                   <div className="w-8 h-8 rounded-[10px] bg-surface-100 flex items-center justify-center mb-2">
                     <Icon className="w-4 h-4 text-surface-600" />
                   </div>
-                  <p className="text-lg font-black text-surface-900">
-                    {s.value}{s.suffix && <span className="text-sm text-surface-400 font-bold">{s.suffix}</span>}
+                  <p className="text-lg font-semibold text-surface-900">
+                    {s.value}{s.suffix && <span className="text-sm text-surface-400 font-semibold">{s.suffix}</span>}
                   </p>
-                  <p className="text-[10px] text-surface-500 font-bold tracking-widest mt-0.5">{s.label}</p>
+                  <p className="text-[10px] text-surface-500 font-semibold tracking-widest mt-0.5">{s.label}</p>
                 </div>
               );
             })}
@@ -330,7 +330,7 @@ const BookedSessionsTab = ({
                       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-2">
                         <div>
                           <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                            <span className={`text-[10px] px-2 py-0.5 rounded-[10px] font-bold tracking-widest border ${session.status === 'COMPLETED'
+                            <span className={`text-[10px] px-2 py-0.5 rounded-[10px] font-semibold tracking-widest border ${session.status === 'COMPLETED'
                               ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
                               : session.status === 'EXPIRED' || session.status === 'CANCELLED' || session.status === 'REJECTED'
                                 ? 'bg-rose-50 text-rose-700 border-rose-200'
@@ -338,7 +338,7 @@ const BookedSessionsTab = ({
                               }`}>
                               {session.status}
                             </span>
-                            <span className="text-[10px] text-surface-500 font-bold tracking-widest">{session.mode}</span>
+                            <span className="text-[10px] text-surface-500 font-semibold tracking-widest">{session.mode}</span>
                             {session.status === 'COMPLETED' && (
                               <div className="flex items-center gap-0.5">
                                 {[1, 2, 3, 4, 5].map(n => (
@@ -352,14 +352,14 @@ const BookedSessionsTab = ({
                               <img src={session.advisorProfilePic} alt={session.advisorName} className="w-10 h-10 rounded-[10px] object-cover border border-surface-200 shrink-0" />
                             )}
                             <div>
-                              <p className="font-black text-surface-900 tracking-widest text-lg leading-tight">{session.advisorName}</p>
-                              <p className="text-[10px] text-surface-500 font-bold tracking-widest mt-0.5">{session.advisorRole || 'Consultation'}</p>
+                              <p className="font-semibold text-surface-900 tracking-widest text-lg leading-tight">{session.advisorName}</p>
+                              <p className="text-[10px] text-surface-500 font-semibold tracking-widest mt-0.5">{session.advisorRole || 'Consultation'}</p>
                             </div>
                           </div>
                         </div>
-                        <div className="flex items-center gap-1.5 text-[10px] tracking-widest text-surface-600 bg-surface-50 border border-surface-200 px-2.5 py-1.5 rounded-[10px] shrink-0 w-fit font-bold">
+                        <div className="flex items-center gap-1.5 text-[10px] tracking-widest text-surface-600 bg-surface-50 border border-surface-200 px-2.5 py-1.5 rounded-[10px] shrink-0 w-fit font-semibold">
                           <Clock className="w-3.5 h-3.5 text-surface-400" />
-                          <span className="font-black">{formatDateString(session.date)}</span>
+                          <span className="font-semibold">{formatDateString(session.date)}</span>
                           <span className="text-surface-300">·</span>
                           <span>{session.time}</span>
                         </div>
@@ -367,19 +367,19 @@ const BookedSessionsTab = ({
 
                       {session.feedback && (
                         <div className="mt-3 p-3 bg-surface-50 border border-surface-200 rounded-[10px]">
-                          <p className="text-[10px] font-bold text-surface-500 tracking-widest mb-1.5">Psychologist Feedback</p>
+                          <p className="text-[10px] font-semibold text-surface-500 tracking-widest mb-1.5">Psychologist Feedback</p>
                           <p className="text-xs text-surface-900 font-medium leading-relaxed">"{session.feedback}"</p>
                         </div>
                       )}
 
                       <div className="mt-3 flex items-center justify-between">
-                        <span className="text-[10px] text-surface-400 font-bold tracking-widest">Session #{completedSessions.length - sIdx}</span>
+                        <span className="text-[10px] text-surface-400 font-semibold tracking-widest">Session #{completedSessions.length - sIdx}</span>
                         <div className="flex items-center gap-3">
                           {(session.paymentStatus === 'PAID' || session.amountPaid > 0) && (
                             <button
                               type="button"
                               onClick={() => downloadPDFReceiptForSession(session)}
-                              className="inline-flex items-center gap-1 text-[10px] font-black tracking-widest text-surface-500 hover:text-surface-900 transition-colors cursor-pointer"
+                              className="inline-flex items-center gap-1 text-[10px] font-semibold tracking-widest text-surface-500 hover:text-surface-900 transition-colors cursor-pointer"
                               title="Download Receipt PDF"
                             >
                               <Download className="w-3.5 h-3.5" /> Receipt
@@ -391,7 +391,7 @@ const BookedSessionsTab = ({
                                 <button
                                   type="button"
                                   onClick={() => downloadConsultationReportPDF(session)}
-                                  className="inline-flex items-center gap-1 text-[10px] font-black tracking-widest text-brand hover:text-brand-dark transition-colors cursor-pointer bg-brand/10 border border-brand/20 px-2.5 py-1 rounded-[6px]"
+                                  className="inline-flex items-center gap-1 text-[10px] font-semibold tracking-widest text-brand hover:text-brand-dark transition-colors cursor-pointer bg-brand/10 border border-brand/20 px-2.5 py-1 rounded-[6px]"
                                   title="Download Consultation Report PDF"
                                 >
                                   <Download className="w-3.5 h-3.5" /> Download Report PDF
@@ -400,7 +400,7 @@ const BookedSessionsTab = ({
                               <button
                                 type="button"
                                 onClick={() => downloadCertificatePDF(session)}
-                                className="inline-flex items-center gap-1 text-[10px] font-black tracking-widest text-surface-500 hover:text-surface-900 transition-colors cursor-pointer"
+                                className="inline-flex items-center gap-1 text-[10px] font-semibold tracking-widest text-surface-500 hover:text-surface-900 transition-colors cursor-pointer"
                                 title="Download certificate"
                               >
                                 <Download className="w-3.5 h-3.5" /> Certificate
@@ -419,13 +419,13 @@ const BookedSessionsTab = ({
               <div className="w-12 h-12 mx-auto rounded-[10px] bg-surface-200 flex items-center justify-center mb-3">
                 <Trophy className="w-6 h-6 text-surface-500" />
               </div>
-              <p className="text-sm font-black text-surface-900 tracking-widest">No completed sessions yet</p>
+              <p className="text-sm font-semibold text-surface-900 tracking-widest">No completed sessions yet</p>
               <p className="text-xs text-surface-500 mt-1">Finished sessions will appear here with psychologist feedback.</p>
               {(enablePsychology || enableCareerMentoring) && (
                 <button
                   type="button"
                   onClick={() => navigate('/booking')}
-                  className="mt-4 inline-flex items-center gap-1.5 min-h-[36px] px-5 py-2 bg-surface-900 text-white tracking-widest text-[10px] font-black rounded-[10px] hover:bg-surface-800 transition-colors border-none"
+                  className="mt-4 inline-flex items-center gap-1.5 min-h-[36px] px-5 py-2 bg-surface-900 text-white tracking-widest text-[10px] font-semibold rounded-[10px] hover:bg-surface-800 transition-colors border-none"
                 >
                   <Plus className="w-3.5 h-3.5" /> Book First Session
                 </button>

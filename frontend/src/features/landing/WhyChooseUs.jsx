@@ -30,13 +30,13 @@ export default function WhyChooseUs({ siteSettings, onOpenBooking }) {
 
               {/* Content Overlay Layer */}
               <div className="relative z-10 space-y-4">
-                <span className="inline-flex items-center gap-2 text-[11px] font-bold text-[#00c9d6] tracking-widest uppercase">
+                <span className="inline-flex items-center gap-2 text-[11px] font-semibold text-[#00c9d6] tracking-widest uppercase">
                   <span className="w-4 h-px bg-[#00c9d6]/60 inline-block" />
                   {siteSettings?.servicesSectionSub || 'Unfold With Behold'}
                   <span className="w-4 h-px bg-[#00c9d6]/60 inline-block" />
                 </span>
 
-                <h2 className="text-2xl sm:text-4xl lg:text-5xl font-sans font-bold text-white tracking-tight leading-[1.02]">
+                <h2 className="text-2xl sm:text-4xl lg:text-5xl font-sans font-semibold text-white tracking-tight leading-[1.02]">
                   {siteSettings?.servicesSectionTitle || (
                     <>
                       Comprehensive Care<br />
@@ -74,28 +74,28 @@ export default function WhyChooseUs({ siteSettings, onOpenBooking }) {
             {/* Cell 1: Dual Support */}
             <div className="p-5 sm:p-7 rounded-xl bg-white border border-surface-200 hover-scale-card hover:border-[#00e5ff] transition-all shadow-xs flex flex-col justify-between h-52 sm:h-60 space-y-3 group">
               <div>
-                <h3 className="text-xs sm:text-sm font-bold text-[#0f172a] mb-1.5 font-sans leading-snug group-hover:text-[#00e5ff] transition-colors">Dual Support Architecture</h3>
+                <h3 className="text-xs sm:text-sm font-semibold text-[#0f172a] mb-1.5 font-sans leading-snug group-hover:text-[#00e5ff] transition-colors">Dual Support Architecture</h3>
                 <p className="text-[11px] sm:text-xs text-surface-600 font-normal leading-relaxed">
                   Transition seamlessly between clinical psychologists and career strategists under one roof.
                 </p>
               </div>
               <div className="text-right pt-2 border-t border-surface-100 flex items-center justify-between">
 
-                <span className="text-2xl sm:text-4xl font-bold text-[#0f172a] font-sans">01</span>
+                <span className="text-2xl sm:text-4xl font-semibold text-[#0f172a] font-sans">01</span>
               </div>
             </div>
 
             {/* Cell 2: Safe & Scientific */}
             <div className="p-5 sm:p-7 rounded-xl bg-white border border-surface-200 hover:border-[#00e5ff] transition-all shadow-xs flex flex-col justify-between h-52 sm:h-60 space-y-3 group">
               <div>
-                <h3 className="text-xs sm:text-sm font-bold text-[#0f172a] uppercase mb-1.5 font-sans leading-snug group-hover:text-[#00e5ff] transition-colors">100% Safe & Scientific</h3>
+                <h3 className="text-xs sm:text-sm font-semibold text-[#0f172a] uppercase mb-1.5 font-sans leading-snug group-hover:text-[#00e5ff] transition-colors">100% Safe & Scientific</h3>
                 <p className="text-[11px] sm:text-xs text-surface-600 font-normal leading-relaxed">
                   Backed by CIGI assessment data and strictly private, non-judgmental counseling protocols.
                 </p>
               </div>
               <div className="text-right pt-2 border-t border-surface-100 flex items-center justify-between">
 
-                <span className="text-2xl sm:text-4xl font-bold text-[#0f172a] font-sans">100%</span>
+                <span className="text-2xl sm:text-4xl font-semibold text-[#0f172a] font-sans">100%</span>
               </div>
             </div>
 
@@ -103,27 +103,27 @@ export default function WhyChooseUs({ siteSettings, onOpenBooking }) {
             {siteSettings?.enableAptitude !== false ? (
               <div className="p-5 sm:p-7 rounded-xl bg-white border border-surface-200 hover:border-[#00e5ff] transition-all shadow-xs flex flex-col justify-between h-52 sm:h-60 space-y-3 group">
                 <div>
-                  <h3 className="text-xs sm:text-sm font-bold text-[#0f172a] uppercase mb-1.5 font-sans leading-snug group-hover:text-[#00e5ff] transition-colors">C-DAT Aptitude Assessment</h3>
+                  <h3 className="text-xs sm:text-sm font-semibold text-[#0f172a] uppercase mb-1.5 font-sans leading-snug group-hover:text-[#00e5ff] transition-colors">C-DAT Aptitude Assessment</h3>
                   <p className="text-[11px] sm:text-xs text-surface-600 font-normal leading-relaxed">
                     Evaluations designed for grades 8–12 to align cognitive strengths with career aspirations.
                   </p>
                 </div>
                 <div className="text-right pt-2 border-t border-surface-100 flex items-center justify-between">
 
-                  <span className="text-base sm:text-2xl font-bold text-[#0f172a] font-sans uppercase">C-DAT</span>
+                  <span className="text-base sm:text-2xl font-semibold text-[#0f172a] font-sans uppercase">C-DAT</span>
                 </div>
               </div>
             ) : (
               <div className="p-5 sm:p-7 rounded-xl bg-white border border-surface-200 hover:border-[#00e5ff] transition-all shadow-xs flex flex-col justify-between h-52 sm:h-60 space-y-3 group">
                 <div>
-                  <h3 className="text-xs sm:text-sm font-bold text-[#0f172a] uppercase mb-1.5 font-sans leading-snug group-hover:text-[#00e5ff] transition-colors">Personalised Career Roadmap</h3>
+                  <h3 className="text-xs sm:text-sm font-semibold text-[#0f172a] uppercase mb-1.5 font-sans leading-snug group-hover:text-[#00e5ff] transition-colors">Personalised Career Roadmap</h3>
                   <p className="text-[11px] sm:text-xs text-surface-600 font-normal leading-relaxed">
                     CIGI-certified mentors craft tailored stream & degree roadmaps aligned with each student's strengths.
                   </p>
                 </div>
                 <div className="text-right pt-2 border-t border-surface-100 flex items-center justify-between">
 
-                  <span className="text-base sm:text-2xl font-bold text-[#0f172a] font-sans uppercase">CIGI</span>
+                  <span className="text-base sm:text-2xl font-semibold text-[#0f172a] font-sans uppercase">CIGI</span>
                 </div>
               </div>
             )}
@@ -131,12 +131,12 @@ export default function WhyChooseUs({ siteSettings, onOpenBooking }) {
             {/* Cell 4: Dark Blue Statement Highlight Box */}
             <div className="p-5 sm:p-7 rounded-xl bg-[#0f172a] text-white border border-[#00e5ff]/30 shadow-md flex flex-col justify-between h-52 sm:h-60 space-y-3">
               <p className="text-xs sm:text-sm text-surface-200 font-medium leading-relaxed italic">
-                "True growth happens when emotional peace and career direction align<span className="text-[#00e5ff] not-italic font-bold">.</span>"
+                "True growth happens when emotional peace and career direction align<span className="text-[#00e5ff] not-italic font-semibold">.</span>"
               </p>
               <div className="pt-2">
                 <button
                   onClick={handleBook}
-                  className="w-full py-2.5 bg-[#00e5ff] hover:bg-[#00cce6] text-[#0f172a] font-bold text-[10px] sm:text-xs uppercase tracking-widest rounded-full transition-all border-none cursor-pointer shadow-xs text-center"
+                  className="w-full py-2.5 bg-[#00e5ff] hover:bg-[#00cce6] text-[#0f172a] font-semibold text-[10px] sm:text-xs uppercase tracking-widest rounded-full transition-all border-none cursor-pointer shadow-xs text-center"
                 >
                   Book a Session
                 </button>

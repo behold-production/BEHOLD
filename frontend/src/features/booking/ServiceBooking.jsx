@@ -276,13 +276,13 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                         </div>
 
                         <div className="space-y-2">
-                            <span className="text-sm bg-surface-900 text-white px-3 py-1 rounded-xl font-bold w-fit mx-auto block">
+                            <span className="text-sm bg-surface-900 text-white px-3 py-1 rounded-xl font-semibold w-fit mx-auto block">
                                 System Notice
                             </span>
                             <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-surface-900 ">
                                 Bookings Paused
                             </h2>
-                            <p className="text-xs sm:text-sm text-surface-600 leading-relaxed font-bold ">
+                            <p className="text-xs sm:text-sm text-surface-600 leading-relaxed font-semibold ">
                                 We are currently performing scheduled maintenance. Booking new sessions is temporarily offline.
                             </p>
                         </div>
@@ -333,11 +333,11 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
                         {/* Header */}
                         <div className="text-center flex flex-col items-center space-y-3">
-                            <span className="text-xs font-bold uppercase tracking-widest text-[#06b6d4] flex items-center justify-center gap-1.5 block mb-1">
+                            <span className="text-xs font-semibold uppercase tracking-widest text-[#06b6d4] flex items-center justify-center gap-1.5 block mb-1">
 
                                 {rescheduleSession ? 'RESCHEDULE SESSION' : 'BOOK A CONFIDENTIAL SESSION'}
                             </span>
-                            <h1 className="text-3xl sm:text-5xl md:text-6xl font-sans font-black uppercase tracking-tight leading-none text-[#0f172a] flex items-center justify-center flex-wrap gap-1">
+                            <h1 className="text-3xl sm:text-5xl md:text-6xl font-sans font-semibold uppercase tracking-tight leading-none text-[#0f172a] flex items-center justify-center flex-wrap gap-1">
                                 <span>{rescheduleSession ? 'Reschedule Your Session' : 'Book Your Session'}</span>
                                 <ScrollDot nextId="booking-console" label="Scroll to booking form ↓" size="md" inlineText={true} />
                             </h1>
@@ -351,7 +351,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                         {/* BOOKING FORM */}
                         <div id="booking-console" className="space-y-6 sm:space-y-8 w-full mt-6">
                             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-surface-200 pb-4">
-                                <h2 className="text-xl sm:text-2xl font-sans font-black uppercase text-[#0f172a] flex items-center gap-1">
+                                <h2 className="text-xl sm:text-2xl font-sans font-semibold uppercase text-[#0f172a] flex items-center gap-1">
                                     <span>Your Booking</span>
                                     <ScrollDot nextId="booking-console" label="Scroll down ↓" size="md" inlineText={true} />
                                 </h2>
@@ -367,7 +367,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                         {/* Mobile: compact progress bar */}
                                         <div className="flex sm:hidden items-center gap-2">
                                             <div className="flex items-center gap-1.5 flex-1 min-w-0">
-                                                <span className="text-xs font-bold text-[#0f172a] shrink-0">
+                                                <span className="text-xs font-semibold text-[#0f172a] shrink-0">
                                                     Step {currentStepIdx + 1} of 3
                                                 </span>
                                                 <div className="h-2 flex-1 bg-surface-100 rounded-full overflow-hidden">
@@ -377,7 +377,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                     />
                                                 </div>
                                             </div>
-                                            <span className="text-xs font-bold text-[#0f172a] truncate">
+                                            <span className="text-xs font-semibold text-[#0f172a] truncate">
                                                 {stepLabels[currentStepIdx]}
                                             </span>
                                         </div>
@@ -392,7 +392,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                     return (
                                                         <div key={idx} className="flex flex-col items-start gap-2 relative">
                                                             <div className="flex items-center w-full">
-                                                                <div className={`flex items-center justify-center w-8 h-8 rounded-xl font-bold text-xs border transition-all duration-300 shrink-0 ${isCompleted
+                                                                <div className={`flex items-center justify-center w-8 h-8 rounded-xl font-semibold text-xs border transition-all duration-300 shrink-0 ${isCompleted
                                                                     ? 'bg-[#0f172a] border-[#06b6d4] text-[#06b6d4] shadow-xs'
                                                                     : isActive
                                                                         ? 'bg-[#0f172a] border-[#06b6d4] text-[#06b6d4] shadow-sm ring-4 ring-[#06b6d4]/20'
@@ -406,7 +406,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                 )}
                                                             </div>
                                                             <div className="flex flex-col text-left min-w-0 mt-1">
-                                                                <span className={`text-xs sm:text-sm font-bold ${isActive ? 'text-[#0f172a]' : isCompleted ? 'text-[#0f172a]' : 'text-surface-400'}`}>
+                                                                <span className={`text-xs sm:text-sm font-semibold ${isActive ? 'text-[#0f172a]' : isCompleted ? 'text-[#0f172a]' : 'text-surface-400'}`}>
                                                                     {stepLabels[idx]}
                                                                 </span>
                                                                 <span className={`text-[11px] transition-colors duration-300 mt-0.5 leading-relaxed ${isActive ? 'text-surface-600 font-medium' : 'text-surface-400'}`}>
@@ -469,7 +469,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                         <span className="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-3.5 py-1 rounded-full font-semibold w-fit mx-auto block shadow-xs">
                                             {rescheduleSession ? 'Reschedule Requested' : 'Session Confirmed & Paid'}
                                         </span>
-                                        <h3 className="text-2xl sm:text-3xl font-bold font-sans text-slate-900 tracking-tight mt-2">
+                                        <h3 className="text-2xl sm:text-3xl font-semibold font-sans text-slate-900 tracking-tight mt-2">
                                             {rescheduleSession ? 'Reschedule Requested' : "Booking Confirmed!"}
                                         </h3>
                                         <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto leading-relaxed font-normal mt-1">
@@ -491,7 +491,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                             <span className="text-xs font-semibold text-slate-500">
                                                 {rescheduleSession ? 'Reschedule Details' : 'Booking Confirmation Summary'}
                                             </span>
-                                            <span className="text-xs font-bold text-emerald-600 bg-emerald-100/80 px-2.5 py-0.5 rounded-full">
+                                            <span className="text-xs font-semibold text-emerald-600 bg-emerald-100/80 px-2.5 py-0.5 rounded-full">
                                                 ✓ Paid
                                             </span>
                                         </div>
@@ -499,19 +499,19 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                                             <div className="space-y-1">
                                                 <span className="text-slate-500 block font-medium text-[11px]">Psychologist</span>
-                                                <span className="font-bold text-slate-900 text-sm block">{selectedAdvisor?.name || 'Assigned Advisor'}</span>
+                                                <span className="font-semibold text-slate-900 text-sm block">{selectedAdvisor?.name || 'Assigned Advisor'}</span>
                                                 <span className="text-slate-500 block font-normal text-xs">{selectedAdvisor?.role || 'Consultant Psychologist'}</span>
                                             </div>
                                             <div className="space-y-1">
                                                 <span className="text-slate-500 block font-medium text-[11px]">Service & Mode</span>
-                                                <span className="font-bold text-slate-900 text-sm block">
+                                                <span className="font-semibold text-slate-900 text-sm block">
                                                     {confirmedBooking?.service ? (confirmedBooking.service === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring') : (bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring')}
                                                 </span>
                                                 <span className="text-slate-500 block font-normal text-xs">{confirmedBooking?.mode === 'ONLINE' ? 'Video Call' : confirmedBooking?.mode === 'DOOR_STEP' ? 'Home Visit' : confirmedBooking?.mode === 'OFFLINE' ? 'At Center' : bookingMode === 'ONLINE' ? 'Video Call' : bookingMode === 'DOOR_STEP' ? 'Home Visit' : 'At Center'}</span>
                                             </div>
                                             <div className="space-y-1">
                                                 <span className="text-slate-500 block font-medium text-[11px]">Date & Time Slot</span>
-                                                <span className="font-bold text-slate-900 text-sm block">
+                                                <span className="font-semibold text-slate-900 text-sm block">
                                                     {formatDateString(confirmedBooking?.date || selectedDate)}
                                                 </span>
                                                 <span className="text-slate-500 block font-normal text-xs">
@@ -520,7 +520,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                             </div>
                                             <div className="space-y-1">
                                                 <span className="text-slate-500 block font-medium text-[11px]">Amount Paid</span>
-                                                <span className="font-bold text-slate-900 text-sm block">
+                                                <span className="font-semibold text-slate-900 text-sm block">
                                                     ₹{confirmedBooking?.amountPaid || netTotal}
                                                 </span>
                                                 <span className="text-slate-500 block font-normal text-xs">SSL Secure Payment</span>
@@ -535,7 +535,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                         <span className="text-[11px] font-semibold text-slate-500 block mb-0.5">
                                                             Google Meet Link
                                                         </span>
-                                                        <span className="text-xs text-slate-900 font-bold truncate block">
+                                                        <span className="text-xs text-slate-900 font-semibold truncate block">
                                                             {confirmedBooking?.meetLink || confirmedMeetLink || selectedAdvisor?.defaultMeetLink || 'https://meet.google.com/abc-defg-hij'}
                                                         </span>
                                                     </div>
@@ -634,8 +634,8 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                         {bookingStep === 'config' && (
                                             <div className="space-y-6 animate-in fade-in duration-300">
                                                 <div className="border-b border-surface-200 pb-3">
-                                                    <h3 className="text-base sm:text-lg font-bold text-surface-900 flex items-center gap-2">
-                                                        <span className="w-6 h-6 rounded-md bg-surface-900 text-white text-xs flex items-center justify-center shrink-0 font-bold">1</span>
+                                                    <h3 className="text-base sm:text-lg font-semibold text-surface-900 flex items-center gap-2">
+                                                        <span className="w-6 h-6 rounded-md bg-surface-900 text-white text-xs flex items-center justify-center shrink-0 font-semibold">1</span>
                                                         Schedule & Advisor
                                                     </h3>
                                                     <p className="text-sm text-surface-600 mt-1">Select a date, choose your psychologist, and pick a time.</p>
@@ -650,14 +650,14 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                     {selectedAdvisor.profilePic || selectedAdvisor.image ? (
                                                                         <img src={selectedAdvisor.profilePic || selectedAdvisor.image} alt={selectedAdvisor.name} className="w-full h-full object-cover" />
                                                                     ) : (
-                                                                        <span className="font-black text-lg text-[#00c9d6] uppercase">{getInitials(selectedAdvisor.name)}</span>
+                                                                        <span className="font-semibold text-lg text-[#00c9d6] uppercase">{getInitials(selectedAdvisor.name)}</span>
                                                                     )}
                                                                 </div>
                                                                 <div className="min-w-0 text-left">
                                                                     <div className="flex items-center gap-2">
-                                                                        <span className="px-2.5 py-0.5 bg-[#00c9d6] text-white text-[9.5px] font-black uppercase tracking-wider rounded-md">Selected Psychologist</span>
+                                                                        <span className="px-2.5 py-0.5 bg-[#00c9d6] text-white text-[9.5px] font-semibold uppercase tracking-wider rounded-md">Selected Psychologist</span>
                                                                     </div>
-                                                                    <h4 className="font-bold text-slate-900 text-sm sm:text-base truncate mt-0.5">{selectedAdvisor.name}</h4>
+                                                                    <h4 className="font-semibold text-slate-900 text-sm sm:text-base truncate mt-0.5">{selectedAdvisor.name}</h4>
                                                                     <p className="text-xs text-slate-600 font-medium truncate">{selectedAdvisor.role || 'Consultant Psychologist'}</p>
                                                                 </div>
                                                             </div>
@@ -668,7 +668,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                     setSelectedTime('');
                                                                     clearPreselectedAdvisor?.();
                                                                 }}
-                                                                className="px-3.5 py-1.5 bg-white border border-slate-300 hover:border-slate-800 text-slate-800 hover:bg-slate-900 hover:text-white rounded-full text-xs font-bold transition shrink-0 cursor-pointer shadow-xs"
+                                                                className="px-3.5 py-1.5 bg-white border border-slate-300 hover:border-slate-800 text-slate-800 hover:bg-slate-900 hover:text-white rounded-full text-xs font-semibold transition shrink-0 cursor-pointer shadow-xs"
                                                             >
                                                                 Change
                                                             </button>
@@ -693,7 +693,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                             if (rescheduleSession) return;
                                                                             setBookingService(s.id);
                                                                         }}
-                                                                        className={`min-h-[48px] px-4 py-3 rounded-xl transition-all duration-300 cursor-pointer flex items-center justify-center text-center border text-sm font-bold ${isSelected
+                                                                        className={`min-h-[48px] px-4 py-3 rounded-xl transition-all duration-300 cursor-pointer flex items-center justify-center text-center border text-sm font-semibold ${isSelected
                                                                             ? 'bg-[#0f172a] border-[#06b6d4] text-white shadow-xs'
                                                                             : 'bg-white border-surface-200 text-[#0f172a] hover:border-[#06b6d4] hover:bg-surface-50'
                                                                             } ${rescheduleSession ? 'opacity-65 cursor-not-allowed' : ''}`}
@@ -737,7 +737,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                 } ${rescheduleSession ? 'opacity-40 cursor-not-allowed' : ''}`}
                                                                         >
                                                                             <span className="flex flex-col items-center">
-                                                                                <span className={`font-bold text-sm ${bookingMode === m.id ? 'text-white' : 'text-[#0f172a]'}`}>{m.label}</span>
+                                                                                <span className={`font-semibold text-sm ${bookingMode === m.id ? 'text-white' : 'text-[#0f172a]'}`}>{m.label}</span>
                                                                                 <span className={`text-xs mt-0.5 ${bookingMode === m.id ? 'text-[#06b6d4]' : 'text-surface-500'}`}>{m.desc}</span>
                                                                             </span>
                                                                         </button>
@@ -769,7 +769,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                             : 'bg-white border-surface-200 text-[#0f172a] hover:border-[#06b6d4] hover:bg-surface-50'
                                                                             } ${rescheduleSession ? 'opacity-50 cursor-not-allowed' : ''}`}
                                                                     >
-                                                                        <span className="font-bold text-xs sm:text-sm">{d.label}</span>
+                                                                        <span className="font-semibold text-xs sm:text-sm">{d.label}</span>
                                                                         <span className={`text-[11px] mt-0.5 font-semibold ${bookingDuration === d.id ? 'text-[#06b6d4]' : 'text-surface-500'}`}>{d.desc}</span>
                                                                     </button>
                                                                 ));
@@ -1034,12 +1034,12 @@ const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
                                                                                                                         if (fallback) fallback.style.display = 'flex';
                                                                                                                     }}
                                                                                                                 />
-                                                                                                                <span style={{ display: 'none' }} className="font-bold text-2xl text-cyan-600 items-center justify-center w-full h-full">
+                                                                                                                <span style={{ display: 'none' }} className="font-semibold text-2xl text-cyan-600 items-center justify-center w-full h-full">
                                                                                                                     {getInitials(advisor.name)}
                                                                                                                 </span>
                                                                                                             </>
                                                                                                         ) : (
-                                                                                                            <span className="font-bold text-2xl text-cyan-600 flex items-center justify-center w-full h-full">
+                                                                                                            <span className="font-semibold text-2xl text-cyan-600 flex items-center justify-center w-full h-full">
                                                                                                                 {getInitials(advisor.name)}
                                                                                                             </span>
                                                                                                         )}
@@ -1047,7 +1047,7 @@ const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
                                                                                                 );
                                                                                             })()}
                                                                                             <div>
-                                                                                                <h4 className="font-bold text-xl text-surface-900 leading-none mb-1">{advisor.name}</h4>
+                                                                                                <h4 className="font-semibold text-xl text-surface-900 leading-none mb-1">{advisor.name}</h4>
                                                                                                 <p className="text-sm font-medium text-surface-600">{advisor.role}</p>
                                                                                             </div>
                                                                                         </div>
@@ -1069,7 +1069,7 @@ const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
                                                                                                                         e.stopPropagation();
                                                                                                                         setExpandedSpecialties(prev => ({ ...prev, [advisor.id]: !prev[advisor.id] }));
                                                                                                                     }}
-                                                                                                                    className="px-3 py-1 bg-surface-50 border border-surface-200 text-surface-700 text-xs font-bold rounded-lg hover:bg-surface-100 transition-colors cursor-pointer"
+                                                                                                                    className="px-3 py-1 bg-surface-50 border border-surface-200 text-surface-700 text-xs font-semibold rounded-lg hover:bg-surface-100 transition-colors cursor-pointer"
                                                                                                                 >
                                                                                                                     {expandedSpecialties[advisor.id] ? '- Less' : `+ ${advisor.specialties.length - 5} More`}
                                                                                                                 </button>
@@ -1091,7 +1091,7 @@ const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
                                                                                                                 e.stopPropagation();
                                                                                                                 setExpandedBios(prev => ({ ...prev, [advisor.id]: !prev[advisor.id] }));
                                                                                                             }}
-                                                                                                            className="text-brand-dark font-black hover:underline cursor-pointer text-[11px] mt-1 tracking-wider"
+                                                                                                            className="text-brand-dark font-semibold hover:underline cursor-pointer text-[11px] mt-1 tracking-wider"
                                                                                                         >
                                                                                                             {expandedBios[advisor.id] ? 'Read Less' : 'Read More'}
                                                                                                         </button>
@@ -1103,15 +1103,15 @@ const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
                                                                                         {/* MIDDLE SECTION 2: Grid Stats */}
                                                                                         <div className="grid grid-cols-3 divide-x divide-surface-200 border-b border-surface-200 bg-surface-50">
                                                                                             <div className="p-4 sm:p-5 flex flex-col items-center justify-center text-center">
-                                                                                                <span className="font-bold text-xl sm:text-2xl text-surface-900 leading-none">{advisor.hours || '100'}+</span>
+                                                                                                <span className="font-semibold text-xl sm:text-2xl text-surface-900 leading-none">{advisor.hours || '100'}+</span>
                                                                                                 <span className="text-xs font-medium text-surface-500 mt-1">Hours</span>
                                                                                             </div>
                                                                                             <div className="p-4 sm:p-5 flex flex-col items-center justify-center text-center">
-                                                                                                <span className="font-bold text-sm sm:text-lg text-surface-900 leading-none truncate w-full px-1">{advisor.lang || 'English'}</span>
+                                                                                                <span className="font-semibold text-sm sm:text-lg text-surface-900 leading-none truncate w-full px-1">{advisor.lang || 'English'}</span>
                                                                                                 <span className="text-xs font-medium text-surface-500 mt-1">Language</span>
                                                                                             </div>
                                                                                             <div className="p-4 sm:p-5 flex flex-col items-center justify-center text-center">
-                                                                                                <span className="font-bold text-xl sm:text-2xl text-surface-900 leading-none">₹{advisor.price}</span>
+                                                                                                <span className="font-semibold text-xl sm:text-2xl text-surface-900 leading-none">₹{advisor.price}</span>
                                                                                                 <span className="text-xs font-medium text-surface-500 mt-1">Session</span>
                                                                                             </div>
                                                                                         </div>
@@ -1193,12 +1193,12 @@ const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
                                                                                                                         if (fallback) fallback.style.display = 'flex';
                                                                                                                     }}
                                                                                                                 />
-                                                                                                                <span style={{ display: 'none' }} className={`font-bold text-xl sm:text-2xl items-center justify-center w-full h-full ${!isAvailable ? 'text-surface-400' : 'text-cyan-600'}`}>
+                                                                                                                <span style={{ display: 'none' }} className={`font-semibold text-xl sm:text-2xl items-center justify-center w-full h-full ${!isAvailable ? 'text-surface-400' : 'text-cyan-600'}`}>
                                                                                                                     {getInitials(advisor.name)}
                                                                                                                 </span>
                                                                                                             </>
                                                                                                         ) : (
-                                                                                                            <span className={`font-bold text-xl sm:text-2xl flex items-center justify-center w-full h-full ${!isAvailable ? 'text-surface-400' : 'text-cyan-600'}`}>
+                                                                                                            <span className={`font-semibold text-xl sm:text-2xl flex items-center justify-center w-full h-full ${!isAvailable ? 'text-surface-400' : 'text-cyan-600'}`}>
                                                                                                                 {getInitials(advisor.name)}
                                                                                                             </span>
                                                                                                         )}
@@ -1206,7 +1206,7 @@ const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
                                                                                                 );
                                                                                             })()}
                                                                                             <div className="space-y-1 text-left min-w-0 flex-1">
-                                                                                                <h4 className={`font-bold text-base sm:text-lg leading-tight truncate transition-colors duration-300 ${!isAvailable ? 'text-surface-400' : 'text-surface-900 group-hover:text-[#0f172a]'}`}>
+                                                                                                <h4 className={`font-semibold text-base sm:text-lg leading-tight truncate transition-colors duration-300 ${!isAvailable ? 'text-surface-400' : 'text-surface-900 group-hover:text-[#0f172a]'}`}>
                                                                                                     {advisor.name}
                                                                                                 </h4>
                                                                                                 <p className="text-xs sm:text-sm font-medium text-surface-600 truncate">{advisor.role}</p>
@@ -1214,12 +1214,12 @@ const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
                                                                                                 {advisor.specialties?.length > 0 && (
                                                                                                     <div className="hidden sm:flex flex-wrap gap-1.5 mt-2">
                                                                                                         {advisor.specialties.slice(0, 3).map((spec, i) => (
-                                                                                                            <span key={i} className="px-2 py-0.5 bg-surface-50 border border-surface-200 text-surface-600 text-[10px] font-bold uppercase tracking-wider rounded-md">
+                                                                                                            <span key={i} className="px-2 py-0.5 bg-surface-50 border border-surface-200 text-surface-600 text-[10px] font-semibold uppercase tracking-wider rounded-md">
                                                                                                                 {spec}
                                                                                                             </span>
                                                                                                         ))}
                                                                                                         {advisor.specialties.length > 3 && (
-                                                                                                            <span className="px-2 py-0.5 bg-surface-50 border border-surface-200 text-surface-600 text-[10px] font-bold rounded-md">
+                                                                                                            <span className="px-2 py-0.5 bg-surface-50 border border-surface-200 text-surface-600 text-[10px] font-semibold rounded-md">
                                                                                                                 +{advisor.specialties.length - 3}
                                                                                                             </span>
                                                                                                         )}
@@ -1255,18 +1255,18 @@ const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
                                                                                         </div>
                                                                                         <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-3 sm:gap-2 shrink-0 border-t sm:border-t-0 border-surface-100 pt-3 sm:pt-0 mt-3 sm:mt-0">
                                                                                             <div className="text-left sm:text-right">
-                                                                                                <span className={`font-black text-xl sm:text-2xl leading-none block ${!isAvailable ? 'text-surface-400' : 'text-surface-900'}`}>₹{advisor.price}</span>
-                                                                                                <span className="text-[10px] font-bold text-surface-500 uppercase tracking-widest mt-0.5 block">Per Session</span>
+                                                                                                <span className={`font-semibold text-xl sm:text-2xl leading-none block ${!isAvailable ? 'text-surface-400' : 'text-surface-900'}`}>₹{advisor.price}</span>
+                                                                                                <span className="text-[10px] font-semibold text-surface-500 uppercase tracking-widest mt-0.5 block">Per Session</span>
                                                                                             </div>
                                                                                             {isAvailable ? (
-                                                                                                <div className="px-4 py-2 bg-surface-50 text-[#0f172a] text-xs font-bold uppercase tracking-wider rounded-lg border border-surface-200 group-hover:bg-[#0f172a] group-hover:text-white group-hover:border-[#0f172a] transition-all duration-300 flex items-center gap-1.5 shadow-xs">
+                                                                                                <div className="px-4 py-2 bg-surface-50 text-[#0f172a] text-xs font-semibold uppercase tracking-wider rounded-lg border border-surface-200 group-hover:bg-[#0f172a] group-hover:text-white group-hover:border-[#0f172a] transition-all duration-300 flex items-center gap-1.5 shadow-xs">
                                                                                                     <span>Select</span>
                                                                                                     <svg className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
                                                                                                     </svg>
                                                                                                 </div>
                                                                                             ) : (
-                                                                                                <span className="text-xs font-bold text-rose-500 bg-rose-50 px-3 py-1.5 rounded-lg border border-rose-100 uppercase tracking-wider">No Slots</span>
+                                                                                                <span className="text-xs font-semibold text-rose-500 bg-rose-50 px-3 py-1.5 rounded-lg border border-rose-100 uppercase tracking-wider">No Slots</span>
                                                                                             )}
                                                                                         </div>
                                                                                     </div>
@@ -1281,7 +1281,7 @@ const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
                                                                                     onClick={() => setAdvisorPage(p => Math.max(1, p - 1))}
                                                                                     disabled={advisorPage === 1}
                                                                                     aria-label="Previous Page"
-                                                                                    className={`w-8 h-8 rounded-full text-sm font-bold transition-all cursor-pointer border flex items-center justify-center ${advisorPage === 1
+                                                                                    className={`w-8 h-8 rounded-full text-sm font-semibold transition-all cursor-pointer border flex items-center justify-center ${advisorPage === 1
                                                                                         ? 'border-surface-200 text-surface-400 bg-surface-100 cursor-not-allowed'
                                                                                         : 'border-[#0f172a] bg-[#0f172a] text-white hover:bg-[#1e293b]'
                                                                                         }`}
@@ -1293,7 +1293,7 @@ const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
                                                                                         key={num}
                                                                                         type="button"
                                                                                         onClick={() => setAdvisorPage(num)}
-                                                                                        className={`w-8 h-8 rounded-full text-xs font-bold transition-all cursor-pointer border flex items-center justify-center ${advisorPage === num
+                                                                                        className={`w-8 h-8 rounded-full text-xs font-semibold transition-all cursor-pointer border flex items-center justify-center ${advisorPage === num
                                                                                             ? 'bg-[#0f172a] text-[#06b6d4] border-[#06b6d4] shadow-xs'
                                                                                             : 'bg-white text-[#0f172a] border-surface-200 hover:border-[#06b6d4]'
                                                                                             }`}
@@ -1306,7 +1306,7 @@ const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
                                                                                     onClick={() => setAdvisorPage(p => Math.min(Math.ceil(availableAdvisors.length / 4), p + 1))}
                                                                                     disabled={advisorPage === Math.ceil(availableAdvisors.length / 4)}
                                                                                     aria-label="Next Page"
-                                                                                    className={`w-8 h-8 rounded-full text-sm font-bold transition-all cursor-pointer border flex items-center justify-center ${advisorPage === Math.ceil(availableAdvisors.length / 4)
+                                                                                    className={`w-8 h-8 rounded-full text-sm font-semibold transition-all cursor-pointer border flex items-center justify-center ${advisorPage === Math.ceil(availableAdvisors.length / 4)
                                                                                         ? 'border-surface-200 text-surface-400 bg-surface-100 cursor-not-allowed'
                                                                                         : 'border-[#0f172a] bg-[#0f172a] text-white hover:bg-[#1e293b]'
                                                                                         }`}
@@ -1396,8 +1396,8 @@ const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
                                                     <div className="bg-surface-50 border border-surface-200 rounded-xl p-4 flex items-center justify-between gap-3 animate-in fade-in duration-300 shadow-sm">
                                                         <div className="flex-1 min-w-0">
                                                             <span className="text-sm font-semibold text-surface-900 block truncate">{user.name}</span>
-                                                            <span className="text-sm font-bold text-surface-600 truncate block">{user.email}</span>
-                                                            {user.phone && <span className="text-sm font-bold text-surface-600 truncate block">{user.phone}</span>}
+                                                            <span className="text-sm font-semibold text-surface-600 truncate block">{user.email}</span>
+                                                            {user.phone && <span className="text-sm font-semibold text-surface-600 truncate block">{user.phone}</span>}
                                                         </div>
                                                         <span className="shrink-0 text-sm font-semibold bg-surface-900 text-white px-2.5 py-1 rounded-xl">
                                                             ✓ Authenticated
@@ -1411,8 +1411,8 @@ const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
                                                         <span className="font-semibold text-surface-900 block text-sm">
                                                             Doorstep Visit Location
                                                         </span>
-                                                        <p className="font-bold text-sm text-surface-900">{bookingForm.clientLocationName}</p>
-                                                        <p className="text-sm text-surface-500 font-bold">
+                                                        <p className="font-semibold text-sm text-surface-900">{bookingForm.clientLocationName}</p>
+                                                        <p className="text-sm text-surface-500 font-semibold">
                                                             Coordinates: {bookingForm.clientLatitude}, {bookingForm.clientLongitude}
                                                         </p>
                                                         {(() => {
@@ -1435,7 +1435,7 @@ const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
                                                         <span className="font-semibold text-surface-900 block text-sm">
                                                             Office / Center Visit Address
                                                         </span>
-                                                        <p className="font-bold text-sm text-surface-900 flex items-start gap-1.5 leading-relaxed ">
+                                                        <p className="font-semibold text-sm text-surface-900 flex items-start gap-1.5 leading-relaxed ">
                                                             <svg className="w-3.5 h-3.5 text-surface-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -1456,7 +1456,7 @@ const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
                                                             </div>
                                                             <div>
                                                                 <h5 className="text-sm font-semibold text-surface-900 ">Secure Payment Gateway</h5>
-                                                                <p className="text-sm text-surface-500 font-bold mt-1">
+                                                                <p className="text-sm text-surface-500 font-semibold mt-1">
                                                                     A secure Razorpay checkout overlay will open to complete your payment using UPI, Cards, Netbanking, or Wallet.
                                                                 </p>
                                                                 <div className="flex items-start gap-2.5 mt-3 pt-3 border-t border-surface-200/80">
@@ -1472,7 +1472,7 @@ const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
                                                                         <button
                                                                             type="button"
                                                                             onClick={() => onOpenDocs?.('terms')}
-                                                                            className="font-bold text-[#00c9d6] hover:underline bg-transparent border-none p-0 cursor-pointer text-xs inline"
+                                                                            className="font-semibold text-[#00c9d6] hover:underline bg-transparent border-none p-0 cursor-pointer text-xs inline"
                                                                         >
                                                                             Terms
                                                                         </button>{' '}
@@ -1480,7 +1480,7 @@ const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
                                                                         <button
                                                                             type="button"
                                                                             onClick={() => onOpenDocs?.('refund')}
-                                                                            className="font-bold text-[#00c9d6] hover:underline bg-transparent border-none p-0 cursor-pointer text-xs inline"
+                                                                            className="font-semibold text-[#00c9d6] hover:underline bg-transparent border-none p-0 cursor-pointer text-xs inline"
                                                                         >
                                                                             Return & Refund Policy
                                                                         </button>.
@@ -1494,7 +1494,7 @@ const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
                                                         <button
                                                             type="button"
                                                             onClick={() => handleStepChange('config')}
-                                                            className="px-5 py-3 min-h-[44px] bg-white border border-surface-200 text-surface-900 hover:bg-surface-50 font-bold text-xs rounded-full transition cursor-pointer w-full sm:w-auto text-center"
+                                                            className="px-5 py-3 min-h-[44px] bg-white border border-surface-200 text-surface-900 hover:bg-surface-50 font-semibold text-xs rounded-full transition cursor-pointer w-full sm:w-auto text-center"
                                                         >
                                                             Back to Schedule
                                                         </button>
@@ -1503,7 +1503,7 @@ const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
                                                             type="submit"
                                                             disabled={isProcessingPayment || !termsAgreed}
                                                             title={!termsAgreed ? "Please check the agreement box to proceed" : ""}
-                                                            className={`px-8 py-3.5 min-h-[48px] font-bold text-xs uppercase tracking-wider rounded-full transition flex items-center justify-center border-none w-full sm:w-auto ${
+                                                            className={`px-8 py-3.5 min-h-[48px] font-semibold text-xs uppercase tracking-wider rounded-full transition flex items-center justify-center border-none w-full sm:w-auto ${
                                                                 !termsAgreed || isProcessingPayment
                                                                     ? 'bg-slate-200 text-slate-400 cursor-not-allowed opacity-60 shadow-none'
                                                                     : 'bg-[#0f172a] hover:bg-black text-[#00c9d6] hover:text-white cursor-pointer active:scale-95 shadow-md'
@@ -1550,32 +1550,32 @@ const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
 
                                         <div className={`space-y-5 ${showSummary ? 'block' : 'hidden'} lg:block bg-white/80 backdrop-blur-md border border-surface-200 shadow-xs rounded-2xl p-5 sm:p-6 mb-6`}>
                                             <div>
-                                                <h3 className="text-base font-bold text-surface-900 border-b border-surface-200 pb-3 hidden lg:block">
+                                                <h3 className="text-base font-semibold text-surface-900 border-b border-surface-200 pb-3 hidden lg:block">
                                                     Booking Summary
                                                 </h3>
                                             </div>
 
-                                            <div className="space-y-5 text-sm font-bold ">
+                                            <div className="space-y-5 text-sm font-semibold ">
                                                 {/* Service type & Mode */}
                                                 <div>
-                                                    <span className="text-xs text-surface-400 block font-bold mb-0.5">Service & Mode</span>
-                                                    <span className="font-bold text-surface-900 block text-left">
+                                                    <span className="text-xs text-surface-400 block font-semibold mb-0.5">Service & Mode</span>
+                                                    <span className="font-semibold text-surface-900 block text-left">
                                                         {bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring'}
                                                     </span>
-                                                    <span className="text-xs text-surface-500 font-bold block mt-0.5 bg-white border border-surface-200 rounded-xl px-2 py-0.5 w-fit">
+                                                    <span className="text-xs text-surface-500 font-semibold block mt-0.5 bg-white border border-surface-200 rounded-xl px-2 py-0.5 w-fit">
                                                         {bookingMode.replace('_', ' ')}
                                                     </span>
                                                 </div>
 
                                                 {/* Date & Time Slot */}
                                                 <div>
-                                                    <span className="text-xs text-surface-400 block font-bold mb-0.5">Date & Time</span>
+                                                    <span className="text-xs text-surface-400 block font-semibold mb-0.5">Date & Time</span>
                                                     {selectedDate && selectedTime ? (
                                                         <div className="space-y-1 bg-white border border-surface-200 p-2 rounded-xl text-left">
-                                                            <span className="font-bold text-surface-900 block">
+                                                            <span className="font-semibold text-surface-900 block">
                                                                 {formatDateString(selectedDate)}
                                                             </span>
-                                                            <span className="text-xs text-surface-500 block font-bold">
+                                                            <span className="text-xs text-surface-500 block font-semibold">
                                                                 {selectedTime}
                                                             </span>
                                                         </div>
@@ -1586,10 +1586,10 @@ const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
 
                                                 {/* Selected Advisor */}
                                                 <div>
-                                                    <span className="text-xs text-surface-400 block font-bold mb-0.5">Psychologist</span>
+                                                    <span className="text-xs text-surface-400 block font-semibold mb-0.5">Psychologist</span>
                                                     {selectedAdvisor ? (
                                                         <div className="bg-white border border-surface-200 p-2.5 rounded-xl text-left">
-                                                            <span className="font-bold text-surface-900 block text-xs">{selectedAdvisor.name}</span>
+                                                            <span className="font-semibold text-surface-900 block text-xs">{selectedAdvisor.name}</span>
                                                             <span className="text-xs text-surface-500 block font-semibold">{selectedAdvisor.role}</span>
                                                         </div>
                                                     ) : (
@@ -1607,13 +1607,13 @@ const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
                                                             value={couponInput}
                                                             onChange={(e) => setCouponInput(e.target.value)}
                                                             disabled={appliedDiscount > 0}
-                                                            className="flex-1 px-3 py-1.5 bg-white border border-surface-200 rounded-xl text-sm font-bold outline-none focus:border-surface-900 transition"
+                                                            className="flex-1 px-3 py-1.5 bg-white border border-surface-200 rounded-xl text-sm font-semibold outline-none focus:border-surface-900 transition"
                                                         />
                                                         {appliedDiscount > 0 ? (
                                                             <button
                                                                 type="button"
                                                                 onClick={handleRemoveCoupon}
-                                                                className="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 rounded-full text-xs font-bold transition cursor-pointer"
+                                                                className="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 rounded-full text-xs font-semibold transition cursor-pointer"
                                                             >
                                                                 Remove
                                                             </button>
@@ -1621,14 +1621,14 @@ const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
                                                             <button
                                                                 type="button"
                                                                 onClick={handleApplyCoupon}
-                                                                className="px-3.5 py-1.5 bg-surface-900 hover:bg-black text-white rounded-full text-xs font-bold transition cursor-pointer border-none "
+                                                                className="px-3.5 py-1.5 bg-surface-900 hover:bg-black text-white rounded-full text-xs font-semibold transition cursor-pointer border-none "
                                                             >
                                                                 Apply
                                                             </button>
                                                         )}
                                                     </div>
                                                     {couponMsg.text && (
-                                                        <p className={`text-sm font-bold ${couponMsg.type === 'success' ? 'text-surface-900' : 'text-rose-500'}`}>
+                                                        <p className={`text-sm font-semibold ${couponMsg.type === 'success' ? 'text-surface-900' : 'text-rose-500'}`}>
                                                             {couponMsg.text}
                                                         </p>
                                                     )}
@@ -1636,23 +1636,23 @@ const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
 
                                                 {/* Invoice ledger calculation breakdown */}
                                                 <div className="pt-3 border-t border-surface-200 space-y-2">
-                                                    <span className="text-xs text-surface-400 block font-bold text-left">Pricing Breakdown</span>
+                                                    <span className="text-xs text-surface-400 block font-semibold text-left">Pricing Breakdown</span>
 
                                                     <div className="space-y-1.5 text-xs font-semibold text-surface-500">
                                                         <div className="flex justify-between">
                                                             <span>Session Fee</span>
-                                                            <span className="text-surface-900 font-bold">₹{baseFee}</span>
+                                                            <span className="text-surface-900 font-semibold">₹{baseFee}</span>
                                                         </div>
 
                                                         {gstEnabled && (
                                                             <div className="flex justify-between">
                                                                 <span>GST ({gstPercent}%)</span>
-                                                                <span className="text-surface-900 font-bold">₹{gstAmount}</span>
+                                                                <span className="text-surface-900 font-semibold">₹{gstAmount}</span>
                                                             </div>
                                                         )}
 
                                                         {appliedDiscount > 0 && (
-                                                            <div className="flex justify-between text-surface-900 font-bold">
+                                                            <div className="flex justify-between text-surface-900 font-semibold">
                                                                 <span>Promo Discount</span>
                                                                 <span>-₹{appliedDiscount}</span>
                                                             </div>
@@ -1666,7 +1666,7 @@ const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
                                                 </div>
 
                                                 {/* Security badge */}
-                                                <div className="pt-4 border-t border-surface-200 text-sm font-bold text-surface-400 text-center w-full">
+                                                <div className="pt-4 border-t border-surface-200 text-sm font-semibold text-surface-400 text-center w-full">
                                                     <span>SSL Secure Checkout</span>
                                                 </div>
 
@@ -1686,7 +1686,7 @@ const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
                                                         handleStepChange('payment');
                                                     }
                                                 }}
-                                                className="w-full py-4 bg-[#0f172a] hover:bg-slate-800 active:scale-[0.98] text-[#00c9d6] hover:text-white font-black text-xs uppercase tracking-widest rounded-2xl transition-all shadow-lg hover:shadow-xl cursor-pointer text-center border-none block mt-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                className="w-full py-4 bg-[#0f172a] hover:bg-slate-800 active:scale-[0.98] text-[#00c9d6] hover:text-white font-semibold text-xs uppercase tracking-widest rounded-2xl transition-all shadow-lg hover:shadow-xl cursor-pointer text-center border-none block mt-3 disabled:opacity-50 disabled:cursor-not-allowed"
                                             >
                                                 Proceed to Payment
                                             </button>
@@ -1718,7 +1718,7 @@ const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
                                 !
                             </div>
                             <div className="space-y-1">
-                                <h3 className="text-base font-bold text-zinc-900 tracking-wide">
+                                <h3 className="text-base font-semibold text-zinc-900 tracking-wide">
                                     No Counsellors Found
                                 </h3>
                                 <p className="text-xs text-zinc-505 leading-relaxed font-sans font-light">
@@ -1728,7 +1728,7 @@ const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
                             <button
                                 type="button"
                                 onClick={() => setShowNoCounsellorsModal(false)}
-                                className="w-full py-2.5 bg-surface-900 hover:bg-black text-white font-bold text-xs rounded-full cursor-pointer transition border-none shadow-none"
+                                className="w-full py-2.5 bg-surface-900 hover:bg-black text-white font-semibold text-xs rounded-full cursor-pointer transition border-none shadow-none"
                             >
                                 OK
                             </button>

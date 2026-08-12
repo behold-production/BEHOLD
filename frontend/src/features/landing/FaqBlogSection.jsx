@@ -64,7 +64,7 @@ export default function FaqBlogSection() {
           
           {/* Section Header */}
           <div className="flex items-center justify-between mb-6 h-12 border-b border-slate-200/80 pb-3">
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight font-sans text-slate-900">
+            <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight font-sans text-slate-900">
               FAQs<span className="text-[#00c9d6]">.</span>
             </h2>
             <button
@@ -91,7 +91,7 @@ export default function FaqBlogSection() {
                 <div className="w-12 h-12 rounded-full bg-[#00c9d6]/10 text-[#00c9d6] flex items-center justify-center">
                   <HelpCircle className="w-6 h-6" />
                 </div>
-                <h3 className="text-base font-bold text-slate-900 font-sans">No FAQs Listed</h3>
+                <h3 className="text-base font-semibold text-slate-900 font-sans">No FAQs Listed</h3>
                 <p className="text-xs text-slate-600 max-w-xs leading-relaxed font-normal">
                   Check back soon or send us a message through our contact section!
                 </p>
@@ -108,7 +108,7 @@ export default function FaqBlogSection() {
                     }`}
                   >
                     <div className="flex items-center justify-between gap-4">
-                      <h3 className="text-base sm:text-lg font-bold font-sans text-slate-900 group-hover:text-[#00c9d6] transition-colors leading-snug">
+                      <h3 className="text-base sm:text-lg font-semibold font-sans text-slate-900 group-hover:text-[#00c9d6] transition-colors leading-snug">
                         {faq.question}
                       </h3>
                       <div className={`w-7 h-7 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center shrink-0 transition-transform duration-300 ${isExpanded ? 'rotate-180 bg-[#00c9d6]/10 text-[#00c9d6]' : ''}`}>
@@ -130,7 +130,7 @@ export default function FaqBlogSection() {
           
           {/* Section Header */}
           <div className="flex items-center justify-between mb-6 h-12 border-b border-slate-200/80 pb-3">
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight font-sans text-slate-900">
+            <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight font-sans text-slate-900">
               Blogs<span className="text-[#00c9d6]">.</span>
             </h2>
             <button
@@ -159,7 +159,7 @@ export default function FaqBlogSection() {
                 <div className="w-12 h-12 rounded-full bg-[#00c9d6]/10 text-[#00c9d6] flex items-center justify-center">
                   <FileText className="w-6 h-6" />
                 </div>
-                <h3 className="text-base font-bold text-slate-900 font-sans">No Articles Published</h3>
+                <h3 className="text-base font-semibold text-slate-900 font-sans">No Articles Published</h3>
                 <p className="text-xs text-slate-600 max-w-xs leading-relaxed font-normal">
                   Articles and guidance posts will be published here soon!
                 </p>
@@ -175,7 +175,7 @@ export default function FaqBlogSection() {
                     <span className="text-xs font-semibold text-[#00c9d6] block">
                       {(post.readTime || '6 min read').toLowerCase()} &middot; {(post.category || 'Career Guidance')}
                     </span>
-                    <h3 className="text-lg sm:text-xl font-bold font-sans text-slate-900 group-hover:text-[#00c9d6] transition-colors leading-snug">
+                    <h3 className="text-lg sm:text-xl font-semibold font-sans text-slate-900 group-hover:text-[#00c9d6] transition-colors leading-snug">
                       {post.title}
                     </h3>
                     <p className="text-xs sm:text-sm text-slate-600 line-clamp-2 leading-relaxed font-normal">

@@ -25,14 +25,14 @@ export default function AptitudeLanding({ setView }) {
         
         <div className="w-full">
           <div className="mb-3">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#00e5ff] flex items-center justify-center gap-1.5">
+            <span className="text-xs font-semibold uppercase tracking-widest text-[#00e5ff] flex items-center justify-center gap-1.5">
 
               CIGI DIFFERENTIAL APTITUDE TEST
             </span>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl font-sans font-black uppercase text-[#0f172a] mb-6 leading-none tracking-tight">
-            KNOW YOURSELF<span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)] font-black">.</span>
+          <h1 className="text-4xl sm:text-6xl font-sans font-semibold uppercase text-[#0f172a] mb-6 leading-none tracking-tight">
+            KNOW YOURSELF<span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)] font-semibold">.</span>
           </h1>
           
           <p className="text-surface-600 text-base sm:text-lg leading-relaxed mb-12 max-w-2xl mx-auto font-normal">
@@ -44,7 +44,7 @@ export default function AptitudeLanding({ setView }) {
             <span className="inline-block px-3.5 py-1.5 rounded-full bg-[#00e5ff] text-[#0f172a] text-[10px] font-extrabold uppercase tracking-widest mb-4">
               Teaser Assessment
             </span>
-            <h3 className="text-2xl sm:text-3xl font-sans font-black uppercase text-white mb-3">
+            <h3 className="text-2xl sm:text-3xl font-sans font-semibold uppercase text-white mb-3">
               Begin Your Journey
             </h3>
             <p className="text-surface-300 text-xs sm:text-sm leading-relaxed mb-8 max-w-xl font-normal">
@@ -53,7 +53,7 @@ export default function AptitudeLanding({ setView }) {
 
             <button
               onClick={handleProceed}
-              className="w-full sm:w-auto px-8 py-3.5 bg-[#00e5ff] hover:bg-[#00cce6] text-[#0f172a] font-bold text-xs uppercase tracking-widest rounded-full transition-all shadow-md border-none cursor-pointer"
+              className="w-full sm:w-auto px-8 py-3.5 bg-[#00e5ff] hover:bg-[#00cce6] text-[#0f172a] font-semibold text-xs uppercase tracking-widest rounded-full transition-all shadow-md border-none cursor-pointer"
             >
               Try a Sample Test ›
             </button>
@@ -61,7 +61,7 @@ export default function AptitudeLanding({ setView }) {
 
           {/* Separate Linked Operations */}
           <div className="max-w-3xl mx-auto text-left">
-            <h4 className="text-xs font-bold uppercase tracking-widest text-surface-500 mb-6 text-center">
+            <h4 className="text-xs font-semibold uppercase tracking-widest text-surface-500 mb-6 text-center">
               Explore Detailed Aptitude & Mentorship Services
             </h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -70,10 +70,10 @@ export default function AptitudeLanding({ setView }) {
                 className="bg-white p-7 rounded-xl border border-surface-200 hover:border-[#00e5ff] transition-all shadow-xs cursor-pointer flex flex-col justify-between group"
               >
                 <div>
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-[#0f172a] bg-surface-100 px-3 py-1 rounded-full border border-surface-200 inline-block mb-4">
+                  <span className="text-[10px] font-semibold uppercase tracking-widest text-[#0f172a] bg-surface-100 px-3 py-1 rounded-full border border-surface-200 inline-block mb-4">
                     Full C-DAT Test
                   </span>
-                  <h5 className="font-bold uppercase text-[#0f172a] group-hover:text-[#00e5ff] transition-colors text-base mb-2 font-sans">Detailed Explanation & Pricing</h5>
+                  <h5 className="font-semibold uppercase text-[#0f172a] group-hover:text-[#00e5ff] transition-colors text-base mb-2 font-sans">Detailed Explanation & Pricing</h5>
                   <p className="text-xs text-surface-600 leading-relaxed">Complete registration, group codes, and comprehensive psychometric evaluation packages.</p>
                 </div>
               </div>
@@ -83,10 +83,10 @@ export default function AptitudeLanding({ setView }) {
                 className="bg-white p-7 rounded-xl border border-surface-200 hover:border-[#00e5ff] transition-all shadow-xs cursor-pointer flex flex-col justify-between group"
               >
                 <div>
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-[#0f172a] bg-surface-100 px-3 py-1 rounded-full border border-surface-200 inline-block mb-4">
+                  <span className="text-[10px] font-semibold uppercase tracking-widest text-[#0f172a] bg-surface-100 px-3 py-1 rounded-full border border-surface-200 inline-block mb-4">
                     Expert Assignment
                   </span>
-                  <h5 className="font-bold uppercase text-[#0f172a] group-hover:text-[#00e5ff] transition-colors text-base mb-2 font-sans">Psychologist & Mentor Assignment</h5>
+                  <h5 className="font-semibold uppercase text-[#0f172a] group-hover:text-[#00e5ff] transition-colors text-base mb-2 font-sans">Psychologist & Mentor Assignment</h5>
                   <p className="text-xs text-surface-600 leading-relaxed">Connect directly with certified career mentors and clinical psychologists for personalized roadmaps.</p>
                 </div>
               </div>

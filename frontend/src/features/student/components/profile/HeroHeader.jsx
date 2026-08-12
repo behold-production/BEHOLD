@@ -38,12 +38,12 @@ const HeroHeader = ({
                   className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-2 border-white shadow-sm bg-surface-100 ring-1 ring-surface-200"
                 />
               ) : (
-                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-[#0f172a] border-2 border-white shadow-sm ring-1 ring-surface-200 flex items-center justify-center text-[#00e5ff] font-bold text-2xl sm:text-3xl uppercase">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-[#0f172a] border-2 border-white shadow-sm ring-1 ring-surface-200 flex items-center justify-center text-[#00e5ff] font-semibold text-2xl sm:text-3xl uppercase">
                   {getInitials(profile.name, user?.name)}
                 </div>
               )}
               <label className="absolute inset-0 rounded-full bg-[#0f172a]/80 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 cursor-pointer transition-all text-[#00e5ff] gap-0.5">
-                <span className="text-[10px] font-bold uppercase tracking-wider">Update</span>
+                <span className="text-[10px] font-semibold uppercase tracking-wider">Update</span>
                 <input
                   type="file"
                   onChange={handleProfilePicUpload}
@@ -55,27 +55,27 @@ const HeroHeader = ({
 
             {/* Profile Info */}
             <div className="flex-1 text-center sm:text-left min-w-0">
-              <p className="text-xs text-[#00e5ff] font-bold mb-1 tracking-widest uppercase flex items-center justify-center sm:justify-start gap-1.5">
+              <p className="text-xs text-[#00e5ff] font-semibold mb-1 tracking-widest uppercase flex items-center justify-center sm:justify-start gap-1.5">
 
                 {greeting}
               </p>
-              <h1 className="text-2xl font-bold text-[#0f172a] tracking-tight">
+              <h1 className="text-2xl font-semibold text-[#0f172a] tracking-tight">
                 {(displayName || '').toLowerCase().replace(/\b\w/g, l => l.toUpperCase())}
               </h1>
 
               {/* Text-Only Badges */}
               <div className="mt-2.5 flex flex-wrap items-center gap-2 justify-center sm:justify-start text-xs font-semibold">
                 {profile.grade && (
-                  <span className="inline-block px-3 py-1 rounded-full bg-surface-100 border border-surface-200 text-[#0f172a] text-[10px] font-bold uppercase tracking-wider">
+                  <span className="inline-block px-3 py-1 rounded-full bg-surface-100 border border-surface-200 text-[#0f172a] text-[10px] font-semibold uppercase tracking-wider">
                     Grade {profile.grade}
                   </span>
                 )}
                 {profile.schoolName && (
-                  <span className="inline-block px-3 py-1 rounded-full bg-surface-100 border border-surface-200 text-[#0f172a] text-[10px] font-bold uppercase tracking-wider max-w-[200px] truncate">
+                  <span className="inline-block px-3 py-1 rounded-full bg-surface-100 border border-surface-200 text-[#0f172a] text-[10px] font-semibold uppercase tracking-wider max-w-[200px] truncate">
                     {profile.schoolName}
                   </span>
                 )}
-                <span className="inline-block px-3 py-1 rounded-full bg-[#0f172a] text-white border border-[#00e5ff]/30 text-[10px] font-bold uppercase tracking-widest shadow-2xs">
+                <span className="inline-block px-3 py-1 rounded-full bg-[#0f172a] text-white border border-[#00e5ff]/30 text-[10px] font-semibold uppercase tracking-widest shadow-2xs">
                   Verified User
                 </span>
               </div>
@@ -91,10 +91,10 @@ const HeroHeader = ({
               {/* Completion Bar */}
               <div className="mt-3.5 max-w-xs mx-auto sm:mx-0 bg-slate-50 border border-slate-200 rounded-lg p-3">
                 <div className="flex justify-between items-center mb-1">
-                  <span className="text-[10px] text-slate-600 font-bold tracking-wide uppercase">
+                  <span className="text-[10px] text-slate-600 font-semibold tracking-wide uppercase">
                     Profile Setup
                   </span>
-                  <span className="text-xs font-bold text-slate-900">{totalProgress}%</span>
+                  <span className="text-xs font-semibold text-slate-900">{totalProgress}%</span>
                 </div>
                 <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
                   <div
@@ -111,8 +111,8 @@ const HeroHeader = ({
             {statItems.map((s, i) => (
               <div key={i} className="flex flex-col sm:flex-row items-center gap-3 px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg transition-all min-w-[120px]">
                 <div className="text-center sm:text-left">
-                  <p className="text-base font-bold text-slate-900 leading-tight">{s.value}</p>
-                  <p className="text-[9px] text-slate-500 font-bold uppercase">{s.label}</p>
+                  <p className="text-base font-semibold text-slate-900 leading-tight">{s.value}</p>
+                  <p className="text-[9px] text-slate-500 font-semibold uppercase">{s.label}</p>
                 </div>
               </div>
             ))}
