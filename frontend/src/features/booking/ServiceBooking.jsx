@@ -423,11 +423,11 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                             })()}
 
                             {bookingStep === 'success' ? (
-                                /* STEP 5: Success & Confirmation View */
-                                <div className="p-6 sm:p-12 bg-white border border-slate-200 rounded-3xl max-w-2xl mx-auto shadow-lg shadow-slate-200/50 space-y-8 text-center animate-in fade-in duration-300 relative overflow-hidden">
+                                /* STEP 5: Success & Confirmation View - Centered & Perfectly Balanced */
+                                <div className="p-6 sm:p-10 bg-white border border-slate-200/90 rounded-3xl max-w-xl mx-auto shadow-xl shadow-slate-200/40 space-y-6 text-center animate-in fade-in duration-300 relative overflow-hidden">
 
-                                    {/* Decorative background blur */}
-                                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-brand/10 rounded-full blur-3xl pointer-events-none" />
+                                    {/* Decorative background ambient glow */}
+                                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-[#00c9d6]/10 rounded-full blur-3xl pointer-events-none" />
 
                                     <style>{`
  @keyframes checkmark-circle {
@@ -438,7 +438,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
  100% { stroke-dashoffset: 0; }
  }
  @keyframes scale-pop {
- 0% { transform: translateY(15px); opacity: 0; }
+ 0% { transform: translateY(12px); opacity: 0; }
  100% { transform: translateY(0); opacity: 1; }
  }
  .animate-checkmark-circle {
@@ -451,90 +451,92 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
  }
  .animate-scale-pop {
  opacity: 0;
- animation: scale-pop 0.5s cubic-bezier(0.34, 1.3, 0.64, 1) 0.5s forwards;
+ animation: scale-pop 0.5s cubic-bezier(0.34, 1.3, 0.64, 1) 0.4s forwards;
  }
  .animate-card-fade {
  opacity: 0;
- animation: scale-pop 0.5s cubic-bezier(0.34, 1.3, 0.64, 1) 0.7s forwards;
+ animation: scale-pop 0.5s cubic-bezier(0.34, 1.3, 0.64, 1) 0.6s forwards;
  }
  `}</style>
 
-                                    <div className="relative w-24 h-24 bg-brand/10 border border-brand/20 rounded-full flex items-center justify-center mx-auto text-brand shadow-sm animate-checkmark-circle z-10">
-                                        <svg className="w-12 h-12 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                                    <div className="relative w-20 h-20 bg-[#00c9d6]/10 border border-[#00c9d6]/30 rounded-full flex items-center justify-center mx-auto text-[#00c9d6] shadow-sm animate-checkmark-circle z-10">
+                                        <svg className="w-10 h-10 text-[#00c9d6]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                                             <path className="animate-checkmark-path" strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                                         </svg>
                                     </div>
 
-                                    <div className="space-y-3 animate-scale-pop relative z-10">
-                                        <span className="text-[10px] bg-slate-900 text-brand border border-brand/30 px-4 py-1.5 rounded-full font-bold uppercase tracking-widest w-fit mx-auto block shadow-sm">
-                                            {rescheduleSession ? 'reschedule requested' : 'session confirmed'}
+                                    <div className="space-y-2 animate-scale-pop relative z-10 text-center flex flex-col items-center justify-center">
+                                        <span className="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-3.5 py-1 rounded-full font-semibold w-fit mx-auto block shadow-xs">
+                                            {rescheduleSession ? 'Reschedule Requested' : 'Session Confirmed & Paid'}
                                         </span>
-                                        <h3 className="text-3xl sm:text-4xl font-black font-sans text-slate-900 tracking-tight mt-2 uppercase">
-                                            {rescheduleSession ? 'Reschedule Requested' : "You're All Set!"}
+                                        <h3 className="text-2xl sm:text-3xl font-bold font-sans text-slate-900 tracking-tight mt-2">
+                                            {rescheduleSession ? 'Reschedule Requested' : "Booking Confirmed!"}
                                         </h3>
-                                        <p className="text-sm text-slate-600 max-w-md mx-auto leading-relaxed font-medium mt-2">
+                                        <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto leading-relaxed font-normal mt-1">
                                             {rescheduleSession ? (
                                                 <>
-                                                    Your reschedule request for <strong>{bookingForm.name || user?.name || 'User'}</strong> has been submitted.
-                                                    The counsellor <strong>{selectedAdvisor?.name}</strong> has been notified and needs to approve this request.
+                                                    Your reschedule request for <strong className="font-semibold text-slate-900">{bookingForm.name || user?.name || 'User'}</strong> has been submitted to <strong className="font-semibold text-slate-900">{selectedAdvisor?.name}</strong>.
                                                 </>
                                             ) : (
                                                 <>
-                                                    Thank you, <strong className="text-slate-900">{bookingForm.name || 'User'}</strong>. Your payment is confirmed and your session is successfully booked. Here is your booking summary:
+                                                    Thank you, <strong className="font-semibold text-slate-900">{bookingForm.name || 'User'}</strong>. Your payment is verified and your session is successfully booked.
                                                 </>
                                             )}
                                         </p>
                                     </div>
 
                                     {/* Invoice & Meeting Card */}
-                                    <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6 sm:p-8 text-left space-y-6 shadow-sm animate-card-fade relative z-10">
-                                        <h4 className="text-[11px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-200 pb-3 mb-4 flex items-center gap-2">
-                                            {rescheduleSession ? 'Reschedule Details' : 'Booking Confirmation'}
-                                        </h4>
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm ">
+                                    <div className="bg-slate-50/80 border border-slate-200/80 rounded-2xl p-5 sm:p-6 text-left space-y-4 shadow-xs animate-card-fade relative z-10">
+                                        <div className="flex items-center justify-between border-b border-slate-200/80 pb-3 mb-2">
+                                            <span className="text-xs font-semibold text-slate-500">
+                                                {rescheduleSession ? 'Reschedule Details' : 'Booking Confirmation Summary'}
+                                            </span>
+                                            <span className="text-xs font-bold text-emerald-600 bg-emerald-100/80 px-2.5 py-0.5 rounded-full">
+                                                ✓ Paid
+                                            </span>
+                                        </div>
+
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                                             <div className="space-y-1">
-                                                <span className="text-slate-500 block font-semibold text-[10px] uppercase tracking-wider">Psychologist</span>
+                                                <span className="text-slate-500 block font-medium text-[11px]">Psychologist</span>
                                                 <span className="font-bold text-slate-900 text-sm block">{selectedAdvisor?.name || 'Assigned Advisor'}</span>
-                                                <span className="text-slate-500 block font-medium text-xs">{selectedAdvisor?.role || 'Consultant Psychologist'}</span>
+                                                <span className="text-slate-500 block font-normal text-xs">{selectedAdvisor?.role || 'Consultant Psychologist'}</span>
                                             </div>
                                             <div className="space-y-1">
-                                                <span className="text-slate-500 block font-semibold text-[10px] uppercase tracking-wider">Service</span>
+                                                <span className="text-slate-500 block font-medium text-[11px]">Service & Mode</span>
                                                 <span className="font-bold text-slate-900 text-sm block">
                                                     {confirmedBooking?.service ? (confirmedBooking.service === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring') : (bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring')}
                                                 </span>
-                                                <span className="text-slate-500 block font-medium text-xs">Mode: {confirmedBooking?.mode === 'ONLINE' ? 'Video Call' : confirmedBooking?.mode === 'DOOR_STEP' ? 'Home Visit' : confirmedBooking?.mode === 'OFFLINE' ? 'At Center' : bookingMode === 'ONLINE' ? 'Video Call' : bookingMode === 'DOOR_STEP' ? 'Home Visit' : 'At Center'}</span>
+                                                <span className="text-slate-500 block font-normal text-xs">{confirmedBooking?.mode === 'ONLINE' ? 'Video Call' : confirmedBooking?.mode === 'DOOR_STEP' ? 'Home Visit' : confirmedBooking?.mode === 'OFFLINE' ? 'At Center' : bookingMode === 'ONLINE' ? 'Video Call' : bookingMode === 'DOOR_STEP' ? 'Home Visit' : 'At Center'}</span>
                                             </div>
                                             <div className="space-y-1">
-                                                <span className="text-slate-500 block font-semibold text-[10px] uppercase tracking-wider">New Date & Time Slot</span>
+                                                <span className="text-slate-500 block font-medium text-[11px]">Date & Time Slot</span>
                                                 <span className="font-bold text-slate-900 text-sm block">
                                                     {formatDateString(confirmedBooking?.date || selectedDate)}
                                                 </span>
-                                                <span className="text-slate-500 block font-medium text-xs mt-0.5">
+                                                <span className="text-slate-500 block font-normal text-xs">
                                                     {confirmedBooking?.time || selectedTime}
                                                 </span>
                                             </div>
                                             <div className="space-y-1">
-                                                <span className="text-slate-500 block font-semibold text-[10px] uppercase tracking-wider">Status</span>
-                                                <span className="font-bold text-emerald-600 text-sm block flex items-center gap-1.5">
-                                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_6px_#10b981]"></span>
-                                                    {rescheduleSession ? 'Pending Approval' : 'Confirmed & Paid'}
+                                                <span className="text-slate-500 block font-medium text-[11px]">Amount Paid</span>
+                                                <span className="font-bold text-slate-900 text-sm block">
+                                                    ₹{confirmedBooking?.amountPaid || netTotal}
                                                 </span>
+                                                <span className="text-slate-500 block font-normal text-xs">SSL Secure Payment</span>
                                             </div>
                                         </div>
 
                                         {/* Google Meet Link if Online */}
                                         {bookingMode === 'ONLINE' && !rescheduleSession && (
-                                            <div className="pt-5 border-t border-slate-200 mt-2">
-                                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 sm:p-5 rounded-xl border border-slate-200 shadow-sm">
-                                                    <div>
-                                                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">
-                                                            Google Meet Session Link
+                                            <div className="pt-4 border-t border-slate-200/80 mt-3">
+                                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200 shadow-xs">
+                                                    <div className="min-w-0 flex-1">
+                                                        <span className="text-[11px] font-semibold text-slate-500 block mb-0.5">
+                                                            Google Meet Link
                                                         </span>
-                                                        <span className="text-sm text-slate-900 font-bold truncate block max-w-[280px] sm:max-w-xs">
+                                                        <span className="text-xs text-slate-900 font-bold truncate block">
                                                             {confirmedBooking?.meetLink || confirmedMeetLink || selectedAdvisor?.defaultMeetLink || 'https://meet.google.com/abc-defg-hij'}
-                                                        </span>
-                                                        <span className="text-[10px] text-emerald-600 font-semibold mt-1 block">
-                                                            {confirmedBooking?.meetLink || confirmedMeetLink ? '✓ Session-specific link generated' : '✓ Standard booking confirmation'}
                                                         </span>
                                                     </div>
                                                     <button
@@ -545,7 +547,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             setCopiedMeet(true);
                                                             setTimeout(() => setCopiedMeet(false), 2000);
                                                         }}
-                                                        className="px-6 py-2.5 min-h-[40px] bg-slate-900 hover:bg-slate-800 text-white text-[10px] uppercase tracking-widest font-bold rounded-full transition cursor-pointer flex items-center justify-center border-none shadow-sm whitespace-nowrap"
+                                                        className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-lg transition cursor-pointer flex items-center justify-center border-none shadow-xs whitespace-nowrap shrink-0"
                                                     >
                                                         {copiedMeet ? 'Copied!' : 'Copy Link'}
                                                     </button>
@@ -554,15 +556,15 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                         )}
                                     </div>
 
-                                    {/* Back to Profile / Restart buttons */}
-                                    <div className="flex flex-col sm:flex-row gap-4 justify-center items-center font-semibold animate-card-fade pt-2 relative z-10">
+                                    {/* Action Buttons */}
+                                    <div className="flex flex-col sm:flex-row gap-3 justify-center items-center font-semibold animate-card-fade pt-1 relative z-10">
                                         {rescheduleSession ? (
                                             <button
                                                 type="button"
                                                 onClick={() => {
                                                     window.location.href = '/profile?tab=booked';
                                                 }}
-                                                className="px-8 py-3.5 bg-slate-900 hover:bg-slate-800 text-white text-[11px] uppercase tracking-widest font-bold rounded-full transition cursor-pointer w-full sm:w-auto text-center shadow-md border border-brand/30"
+                                                className="w-full sm:w-auto px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-full transition cursor-pointer text-center shadow-sm"
                                             >
                                                 Go to My Sessions
                                             </button>
@@ -572,7 +574,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                     type="button"
                                                     disabled={downloadingPdf}
                                                     onClick={() => {
-                                                                const bookingId = confirmedBooking?.id || Date.now();
+                                                        const bookingId = confirmedBooking?.id || Date.now();
                                                         const advisorName = confirmedBooking?.counsellorName || selectedAdvisor?.name || 'Assigned Advisor';
                                                         const advisorRole = confirmedBooking?.counsellorRole || selectedAdvisor?.role || 'Consultant Psychologist';
                                                         const service = confirmedBooking?.service ? (confirmedBooking.service === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring') : (bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring');
@@ -602,7 +604,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             appliedDiscount: appliedDiscount
                                                         });
                                                     }}
-                                                    className="px-6 py-3.5 bg-white border border-slate-200 text-slate-900 hover:bg-slate-50 hover:border-slate-300 text-[11px] uppercase tracking-widest font-bold rounded-full transition cursor-pointer w-full sm:w-auto flex items-center justify-center gap-2 shadow-sm"
+                                                    className="w-full sm:w-auto px-5 py-3 bg-white border border-slate-200 text-slate-800 hover:bg-slate-50 text-xs font-semibold rounded-full transition cursor-pointer flex items-center justify-center gap-2 shadow-xs"
                                                 >
                                                     <FileDown className="w-4 h-4 text-slate-500" />
                                                     {downloadingPdf ? 'Generating PDF...' : 'Download Receipt'}
@@ -610,10 +612,12 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
                                                 <button
                                                     type="button"
-                                                    onClick={resetBookingState}
-                                                    className="px-8 py-3.5 bg-slate-900 hover:bg-slate-800 text-white text-[11px] uppercase tracking-widest font-bold rounded-full transition cursor-pointer w-full sm:w-auto text-center shadow-md border border-brand/30"
+                                                    onClick={() => {
+                                                        window.location.href = '/profile?tab=booked';
+                                                    }}
+                                                    className="w-full sm:w-auto px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-full transition cursor-pointer text-center shadow-sm"
                                                 >
-                                                    Book Another Session
+                                                    View My Sessions
                                                 </button>
                                             </>
                                         )}
