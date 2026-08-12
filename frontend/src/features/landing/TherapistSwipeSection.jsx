@@ -3,6 +3,7 @@ import shadeGreenBg from '../../assets/greygreen.png';
 import ApiService from '../../services/api';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Search, ChevronDown } from 'lucide-react';
+import { formatExperience } from '../../utils/formatters';
 
 const getInitial = (name) => {
   if (!name) return 'P';
@@ -49,13 +50,15 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
             const formatted = res.data.map((c) => {
               const rawPhoto = c.profilePic || c.photo || c.avatar || c.profilePicture || c.image || c.user?.profilePic;
               const hasValidPhoto = rawPhoto && typeof rawPhoto === 'string' && rawPhoto.trim().length > 0 && !rawPhoto.includes('via.placeholder');
+              const expData = formatExperience(c.experience || c.hours || c.completedHours);
               return {
                 id: c.id || c._id,
                 name: c.name || c.user?.name || c.fullName || 'Psychologist',
                 designation: c.designation || c.role || 'Consultant Psychologist',
                 title: c.title || c.qualification || 'Psychologist',
                 fee: c.fee || c.price || c.consultationFee || '1000',
-                hours: c.hours || 100,
+                hours: expData.rawHours,
+                expYears: expData.years,
                 bio: c.bio || 'Specializing in compassionate psychological counselling and mental wellbeing.',
                 photo: hasValidPhoto ? rawPhoto : null,
                 specialties: Array.isArray(c.specialties) ? c.specialties : (c.tags ? (Array.isArray(c.tags) ? c.tags : [c.tags]) : ['Identity Concerns', 'Anxiety Stress & Panic', 'Depression']),
