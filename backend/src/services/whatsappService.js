@@ -1,15 +1,14 @@
 const axios = require('axios');
 
 /**
- * WASenderAPI Exclusive WhatsApp Service
+ * Behold Aspire — WhatsApp Notification Service
  * ─────────────────────────────────────────────────────────────────────────────
- * Operates via WASenderAPI. Each WaSender account uses a per-session API key
- * found under the 🔑 icon on the WhatsApp session page in the dashboard.
- * Falls back to Mock/Console mode in development if no token is configured.
+ * Provider: WASenderAPI (wasenderapi.com)
+ * All messages are sent as plain text with WhatsApp bold/formatting (*bold*, _italic_).
  *
- * ⚠️  IMPORTANT: WASENDER_TOKEN must be the session-specific API key, NOT the
- *     account password or any other credential. Log in to wasenderapi.com →
- *     WhatsApp Sessions → your session → click the 🔑 key icon to copy it.
+ * Required .env:
+ *   WASENDER_TOKEN — Session-specific API key from wasenderapi.com
+ *                    Dashboard → WhatsApp Sessions → your session → 🔑 key icon
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
@@ -24,40 +23,27 @@ class WhatsAppService {
   }
 
   /**
-   * Format phone number to E.164 format with '+' prefix (e.g. +919876543210)
-   * WaSender requires the `to` field as "+<country_code><number>"
+   * Normalize phone to E.164 format (+91XXXXXXXXXX)
    */
   _formatPhoneNumber(phone) {
     if (!phone) return null;
-    // Strip everything except digits
     let cleaned = String(phone).replace(/\D/g, '');
-    // Automatically prepend country code 91 for standard 10-digit Indian numbers
-    if (cleaned.length === 10) {
-      cleaned = '91' + cleaned;
-    }
-    // Always return with '+' prefix for E.164 — WaSender requires this format
+    if (cleaned.length === 10) cleaned = '91' + cleaned;
     return `+${cleaned}`;
   }
 
   /**
-   * Send Direct Plain Text Message via WaSender API
-   * Endpoint: POST https://www.wasenderapi.com/api/send-message
-   * Auth:      Authorization: Bearer <session_api_key>
-   * Body:      { to: "+91XXXXXXXXXX", text: "..." }
+   * Low-level send via WASender API
    */
   async _sendViaWaSender(phone, text) {
     const formattedPhone = this._formatPhoneNumber(phone);
     if (!formattedPhone) {
-      return { success: false, provider: 'WASender API', error: 'Invalid phone number' };
+      return { success: false, provider: 'WASender', error: 'Invalid phone number' };
     }
-
     try {
       const response = await axios.post(
         'https://www.wasenderapi.com/api/send-message',
-        {
-          to: formattedPhone,
-          text: text
-        },
+        { to: formattedPhone, text },
         {
           headers: {
             Authorization: `Bearer ${this.waSenderToken}`,
@@ -66,120 +52,186 @@ class WhatsAppService {
           timeout: 20000
         }
       );
-      console.log(`[WASender API OK] Message sent to ${formattedPhone}:`, JSON.stringify(response.data));
-      return { success: true, provider: 'WASender API', data: response.data };
+      console.log(`[WhatsApp] ✅ Sent to ${formattedPhone}:`, response.data?.message || 'OK');
+      return { success: true, provider: 'WASender', data: response.data };
     } catch (error) {
       const errData = error.response?.data || error.message;
-      console.error('[WASender API Error]:', JSON.stringify(errData, null, 2));
-
-      // Provide helpful guidance on the "invalid API key" error
+      console.error(`[WhatsApp] ❌ Failed to send to ${formattedPhone}:`, JSON.stringify(errData));
       if (error.response?.data?.message === 'invalid API key') {
         console.error(
-          '[WASender API] HINT: The WASENDER_TOKEN is invalid or expired.\n' +
-          '  -> Log in to https://www.wasenderapi.com\n' +
-          '  -> Go to WhatsApp Sessions -> your session -> click the key icon\n' +
-          '  -> Copy the session-specific API key and update WASENDER_TOKEN in .env'
+          '[WhatsApp] HINT: WASENDER_TOKEN is invalid or expired.\n' +
+          '  → Log in to https://www.wasenderapi.com\n' +
+          '  → WhatsApp Sessions → your session → click the 🔑 key icon\n' +
+          '  → Copy the session-specific API key and update WASENDER_TOKEN in .env'
         );
       }
-
-      return { success: false, provider: 'WASender API', error: errData };
+      return { success: false, provider: 'WASender', error: errData };
     }
   }
 
   /**
-   * Unified message dispatcher
-   * @param {string} phone     - Raw phone number (any format; normalized internally)
-   * @param {string} plainText - Plain text message content
+   * Core dispatcher — sends via WASender or falls back to console mock
    */
-  async _dispatchMessage({ phone, plainText }) {
-    // Re-read env vars on every dispatch so runtime updates are picked up
-    this._init();
-
+  async _dispatch(phone, text) {
+    this._init(); // re-read env each time so .env changes take effect without restart
     if (!phone) return { success: false, error: 'Phone number is required' };
 
+    const truncated = String(text).substring(0, 4096); // WhatsApp limit
+
     if (this.isWaSenderConfigured) {
-      return await this._sendViaWaSender(phone, plainText);
+      return await this._sendViaWaSender(phone, truncated);
     }
 
-    // Fallback Mock/Dev Mode — logs to console so devs can verify OTPs without real sends
+    // Dev/Mock mode — print to console so devs can see messages without real sends
     const formatted = this._formatPhoneNumber(phone) || phone;
-    console.log('------------------------------------------------------');
-    console.log('📱 WHATSAPP MESSAGING LOG (Mock / Dev Mode — No Token)');
-    console.log('To:      ', formatted);
-    console.log('Message: ', plainText);
-    console.log('------------------------------------------------------');
-    return { success: true, mock: true, provider: 'Mock Console', message: plainText };
+    console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('📱 WHATSAPP MOCK (no WASENDER_TOKEN configured)');
+    console.log(`To:  ${formatted}`);
+    console.log(`Msg: ${truncated}`);
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+    return { success: true, mock: true, provider: 'Mock Console' };
   }
 
+  // ─── Public API ────────────────────────────────────────────────────────────
+
   /**
-   * Send OTP via WhatsApp
-   * @param {string} phone - Phone number
-   * @param {string} code  - 6-digit OTP code
+   * OTP Verification — sent when user logs in or registers via WhatsApp
    */
   async sendOTP(phone, code) {
-    const plainText =
-      `*Behold Aspire — OTP Verification*\n\n` +
-      `Your verification code is:\n\n` +
-      `*${code}*\n\n` +
-      `This code is valid for 5 minutes. Do NOT share it with anyone.`;
-    return this._dispatchMessage({ phone, plainText });
+    const text =
+      `🔐 *Behold Aspire — Verification Code*\n\n` +
+      `Hi! Your one-time verification code is:\n\n` +
+      `━━━━━━━━━━━━━\n` +
+      `  *${code}*\n` +
+      `━━━━━━━━━━━━━\n\n` +
+      `⏱ Valid for *5 minutes* only.\n` +
+      `🚫 Do *NOT* share this code with anyone.\n\n` +
+      `_If you did not request this, please ignore._`;
+    return this._dispatch(phone, text);
   }
 
   /**
-   * Send a generic notification message
-   * @param {string} phone   - Phone number
-   * @param {string} message - Message text (max 4000 chars)
+   * Generic plain notification
    */
   async sendNotification(phone, message) {
-    const plainText = String(message).substring(0, 4000);
-    return this._dispatchMessage({ phone, plainText });
+    return this._dispatch(phone, message);
   }
 
   /**
-   * Send booking-related alerts
+   * Session booking alerts — all appointment lifecycle events
+   * @param {string} phone
+   * @param {'created'|'approved'|'cancelled'|'rescheduled'|'rejected'|'reminder'} action
+   * @param {object} details - { studentName, counsellorName, date, time, mode, reason, meetLink }
    */
   async sendBookingAlert(phone, action, details) {
-    const formattedDate = details.date || 'N/A';
-    const formattedTime = details.time || 'N/A';
-    const otherParty = details.counsellorName
-      ? `Counsellor: ${details.counsellorName}`
-      : `Student: ${details.studentName}`;
-    const mode = details.mode ? `\nMode: ${details.mode}` : '';
+    const {
+      studentName  = 'Student',
+      counsellorName = 'Psychologist',
+      date         = 'N/A',
+      time         = 'N/A',
+      mode         = '',
+      reason       = '',
+      meetLink     = ''
+    } = details;
 
-    let summary = '';
+    const sessionInfo =
+      `📅 *Date:* ${date}\n` +
+      `🕐 *Time:* ${time}\n` +
+      (mode ? `📍 *Mode:* ${mode}\n` : '');
+
+    const modeLabel = mode === 'ONLINE' ? 'Online' : mode === 'OFFLINE' ? 'In-person' : mode || 'Online';
+    const meetLine  = meetLink ? `\n🔗 *Join Meeting:* ${meetLink}` : '';
+
+    let text = '';
+
     switch (action) {
+
       case 'created':
-        summary = `New Booking Request:\n${otherParty}\nDate: ${formattedDate}\nTime: ${formattedTime}${mode}`;
+        text =
+          `📋 *New Session Request — Behold Aspire*\n\n` +
+          `👤 *Student:* ${studentName}\n` +
+          `🧑‍⚕️ *Psychologist:* ${counsellorName}\n` +
+          `${sessionInfo}` +
+          `\n⏳ *Status:* Pending confirmation\n\n` +
+          `_The psychologist will review and confirm your session shortly._\n\n` +
+          `🔗 View bookings: https://www.behold.co.in/profile?tab=booked`;
         break;
+
       case 'approved':
-        summary = `Booking Confirmed!\n${otherParty}\nDate: ${formattedDate}\nTime: ${formattedTime}${mode}`;
+        text =
+          `✅ *Session Confirmed — Behold Aspire*\n\n` +
+          `Your session has been *confirmed*!\n\n` +
+          `👤 *Student:* ${studentName}\n` +
+          `🧑‍⚕️ *Psychologist:* ${counsellorName}\n` +
+          `${sessionInfo}` +
+          `🎯 *Type:* ${modeLabel}` +
+          `${meetLine}\n\n` +
+          `_Please be on time. See you at your session!_ 🙏`;
         break;
+
       case 'cancelled':
-        summary = `Booking Cancelled.\nDate: ${formattedDate}\nTime: ${formattedTime}\nReason: ${details.reason || 'N/A'}`;
+        text =
+          `❌ *Session Cancelled — Behold Aspire*\n\n` +
+          `Your session has been *cancelled*.\n\n` +
+          `📅 *Date:* ${date}\n` +
+          `🕐 *Time:* ${time}\n` +
+          (reason ? `📌 *Reason:* ${reason}\n` : '') +
+          `\n_You can book a new session anytime._\n\n` +
+          `🔗 Book again: https://www.behold.co.in/advisors`;
         break;
+
+      case 'rejected':
+        text =
+          `❌ *Session Request Declined — Behold Aspire*\n\n` +
+          `Your session request with *${counsellorName}* on *${date}* could not be confirmed.\n\n` +
+          (reason ? `📌 *Reason:* ${reason}\n\n` : '') +
+          `_Please browse other available psychologists._\n\n` +
+          `🔗 Find a psychologist: https://www.behold.co.in/advisors`;
+        break;
+
       case 'rescheduled':
-        summary = `Booking Rescheduled!\n${otherParty}\nNew Date: ${formattedDate}\nNew Time: ${formattedTime}${mode}`;
+        text =
+          `🔄 *Session Rescheduled — Behold Aspire*\n\n` +
+          `Your session has been *rescheduled* to a new time.\n\n` +
+          `👤 *Student:* ${studentName}\n` +
+          `🧑‍⚕️ *Psychologist:* ${counsellorName}\n` +
+          `📅 *New Date:* ${date}\n` +
+          `🕐 *New Time:* ${time}\n\n` +
+          `⏳ _Awaiting re-confirmation from the psychologist._\n\n` +
+          `🔗 View bookings: https://www.behold.co.in/profile?tab=booked`;
         break;
+
+      case 'reminder':
+        text =
+          `⏰ *Session Reminder — Behold Aspire*\n\n` +
+          `Your session is *today*!\n\n` +
+          `👤 *Student:* ${studentName}\n` +
+          `🧑‍⚕️ *Psychologist:* ${counsellorName}\n` +
+          `${sessionInfo}` +
+          `${meetLine}\n\n` +
+          `_Please be ready on time. All the best!_ 💙`;
+        break;
+
       default:
-        summary = `Booking Update:\n${otherParty}\nDate: ${formattedDate}\nTime: ${formattedTime}`;
+        text =
+          `📢 *Behold Aspire — Session Update*\n\n` +
+          `👤 *Student:* ${studentName}\n` +
+          `🧑‍⚕️ *Psychologist:* ${counsellorName}\n` +
+          `${sessionInfo}`;
     }
 
-    return this.sendNotification(phone, summary);
+    return this._dispatch(phone, text);
   }
 
   /**
-   * Send day-of appointment reminder
+   * Day-of appointment reminder
    */
   async sendDayOfReminder(phone, details) {
-    const otherParty = details.counsellorName
-      ? `Counsellor: ${details.counsellorName}`
-      : `Student: ${details.studentName}`;
-    const summary = `Reminder: Appointment today!\n${otherParty}\nTime: ${details.time || 'N/A'}`;
-    return this.sendNotification(phone, summary);
+    return this.sendBookingAlert(phone, 'reminder', details);
   }
 
   /**
-   * Get current service configuration status
+   * Provider status check
    */
   async getAccountStatus() {
     this._init();

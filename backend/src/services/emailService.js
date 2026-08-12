@@ -3,46 +3,56 @@ const ics = require('ics');
 
 /**
  * Behold Aspire — Email Service
- * Uses Gmail SMTP via Nodemailer.
+ * Primary provider: Resend SDK (resend.com)
+ * Fallback: Nodemailer (Brevo, custom SMTP, Gmail)
  *
  * Required .env variables:
- *   GMAIL_USER         — Your Gmail address (e.g. notifications@gmail.com)
- *   GMAIL_APP_PASSWORD — Gmail App Password (16-char, from Google Account → Security → App Passwords)
- *   EMAIL_FROM_NAME    — Display name (default: "Behold Aspire")
+ *   RESEND_API_KEY      — Resend API key (re_...)
+ *   RESEND_FROM_EMAIL   — Verified sender email (e.g. beholdoffice@behold.co.in)
+ *   EMAIL_FROM_NAME     — Display name (default: "Behold Aspire")
  */
 
-let _transporter = null;
+let _resendClient = null;
+let _nodemailerTransporter = null;
 let _etherealTransporter = null;
 
-function _getTransporter() {
-  if (_transporter) return _transporter;
-
-  // 1. Resend SMTP support
+function _getFromEmail() {
   const resendApiKey = (process.env.RESEND_API_KEY || '').trim();
   if (resendApiKey) {
-    _transporter = nodemailer.createTransport({
-      host: 'smtp.resend.com',
-      port: 465,
-      secure: true,
-      auth: { user: 'resend', pass: resendApiKey }
-    });
-    return _transporter;
+    return (process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev').trim();
   }
+  const rawFrom = (process.env.GMAIL_USER || process.env.SMTP_USER || 'beholdoffice@gmail.com').trim();
+  return rawFrom.includes('flutterclt') ? 'beholdoffice@gmail.com' : rawFrom;
+}
 
-  // 2. Brevo (Sendinblue) SMTP support
+function _getResendClient() {
+  const apiKey = (process.env.RESEND_API_KEY || '').trim();
+  if (!apiKey) return null;
+  if (_resendClient) return _resendClient;
+  const { Resend } = require('resend');
+  _resendClient = new Resend(apiKey);
+  console.log('[EmailService] ✅ Using Resend SDK (from: ' + _getFromEmail() + ')');
+  return _resendClient;
+}
+
+function _getNodemailerTransporter() {
+  if (_nodemailerTransporter) return _nodemailerTransporter;
+
+  // 1. Brevo (Sendinblue)
   const brevoKey = (process.env.BREVO_API_KEY || process.env.BREVO_SMTP_KEY || '').trim();
   if (brevoKey) {
     const brevoUser = (process.env.BREVO_USER || process.env.GMAIL_USER || 'beholdoffice@gmail.com').trim();
-    _transporter = nodemailer.createTransport({
+    _nodemailerTransporter = nodemailer.createTransport({
       host: 'smtp-relay.brevo.com',
       port: 587,
       secure: false,
       auth: { user: brevoUser, pass: brevoKey }
     });
-    return _transporter;
+    console.log('[EmailService] ✅ Using Brevo SMTP provider');
+    return _nodemailerTransporter;
   }
 
-  // 3. Custom Generic SMTP
+  // 2. Custom Generic SMTP
   const smtpHost = (process.env.SMTP_HOST || '').trim();
   const smtpPort = Number(process.env.SMTP_PORT) || 587;
   const smtpUser = (process.env.SMTP_USER || '').trim();
@@ -50,29 +60,31 @@ function _getTransporter() {
   const smtpSecure = process.env.SMTP_SECURE === 'true' || smtpPort === 465;
 
   if (smtpHost && smtpUser && smtpPass) {
-    _transporter = nodemailer.createTransport({
+    _nodemailerTransporter = nodemailer.createTransport({
       host: smtpHost,
       port: smtpPort,
       secure: smtpSecure,
       auth: { user: smtpUser, pass: smtpPass }
     });
-    return _transporter;
+    console.log('[EmailService] ✅ Using custom SMTP provider');
+    return _nodemailerTransporter;
   }
 
-  // 4. Gmail SMTP
-  const user = (process.env.GMAIL_USER || '').trim();
-  const pass = (process.env.GMAIL_APP_PASSWORD || '').trim().replace(/\s+/g, '');
+  // 3. Gmail SMTP
+  const gmailUser = (process.env.GMAIL_USER || '').trim();
+  const gmailPass = (process.env.GMAIL_APP_PASSWORD || '').trim().replace(/\s+/g, '');
 
-  if (!user || !pass || user.includes('your_gmail')) {
-    return null; // Mock mode — no credentials configured
+  if (gmailUser && gmailPass && !gmailUser.includes('your_gmail')) {
+    _nodemailerTransporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: { user: gmailUser, pass: gmailPass }
+    });
+    console.log('[EmailService] ✅ Using Gmail SMTP provider (' + gmailUser + ')');
+    return _nodemailerTransporter;
   }
 
-  _transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: { user, pass }
-  });
-
-  return _transporter;
+  console.warn('[EmailService] ⚠️  No email credentials configured — emails will not be sent');
+  return null;
 }
 
 async function _getEtherealTransporter() {
@@ -83,10 +95,7 @@ async function _getEtherealTransporter() {
       host: 'smtp.ethereal.email',
       port: 587,
       secure: false,
-      auth: {
-        user: testAccount.user,
-        pass: testAccount.pass
-      }
+      auth: { user: testAccount.user, pass: testAccount.pass }
     });
     return _etherealTransporter;
   } catch (err) {
@@ -95,7 +104,7 @@ async function _getEtherealTransporter() {
   }
 }
 
-// Helper to generate clean plain-text version from HTML for anti-spam filters
+// Helper to strip HTML tags for plain-text fallback
 const htmlToText = (htmlStr) => {
   if (!htmlStr) return '';
   return htmlStr
@@ -107,65 +116,108 @@ const htmlToText = (htmlStr) => {
 };
 
 /**
- * Core send function
+ * Core send function — tries Resend SDK first, falls back to Nodemailer.
  * @param {string} to — recipient email address
  * @param {string} subject — email subject line
  * @param {string} html — complete HTML body
- * @param {Array} attachments — array of nodemailer attachment objects
+ * @param {Array}  attachments — array of nodemailer/resend attachment objects
  */
 const sendEmail = async (to, subject, html, attachments = []) => {
-  if (!to) return { success: false, error: 'No recipient address provided' };
+  if (!to) {
+    console.warn('[Email] ⚠️  Skipped — no recipient email address provided');
+    return { success: false, error: 'No recipient address provided' };
+  }
 
-  const fromName = (process.env.EMAIL_FROM_NAME || 'BEHOLD Aspire').trim();
-  const rawFrom = (process.env.GMAIL_USER || process.env.SMTP_USER || 'beholdoffice@gmail.com').trim();
-  const fromEmail = rawFrom.includes('flutterclt') ? 'beholdoffice@gmail.com' : rawFrom;
-  const transporter = _getTransporter();
-  const plainText = htmlToText(html);
+  const fromName = (process.env.EMAIL_FROM_NAME || 'Behold Aspire').trim();
+  const fromEmail = _getFromEmail();
+  const from = `${fromName} <${fromEmail}>`;
 
+  console.log(`[Email] 📤 Sending to: ${to} | Subject: "${subject}"`);
+
+  // ── 1. Resend SDK (primary) ────────────────────────────────────────────────
+  const resend = _getResendClient();
+  if (resend) {
+    try {
+      // Convert nodemailer-style attachments to Resend format
+      const resendAttachments = attachments.map(a => ({
+        filename: a.filename,
+        content: typeof a.content === 'string' ? Buffer.from(a.content) : a.content
+      })).filter(a => a.content);
+
+      const { data, error } = await resend.emails.send({
+        from,
+        to,
+        reply_to: 'beholdoffice@gmail.com',
+        subject,
+        html,
+        text: htmlToText(html),
+        attachments: resendAttachments.length > 0 ? resendAttachments : undefined
+      });
+
+      if (error) {
+        // Resend test-mode restriction: only sends to owner email until domain is verified
+        if (error.message && error.message.includes('only send testing emails')) {
+          console.warn(`[Email] 🔒 DOMAIN NOT VERIFIED YET — Resend is blocking delivery to ${to}.`);
+          console.warn(`[Email]    Fix: Go to https://resend.com/domains and wait until behold.co.in shows as ACTIVE.`);
+          console.warn(`[Email]    Then set RESEND_FROM_EMAIL=admin@behold.co.in in .env and restart the server.`);
+        } else {
+          console.error(`[Email] ❌ Resend error sending to ${to}:`, error.message);
+        }
+      } else {
+        console.log(`[Email] ✅ Delivered via Resend → ${to} | Subject: "${subject}" | id: ${data?.id}`);
+        return { success: true, messageId: data?.id };
+      }
+    } catch (err) {
+      console.error(`[Email] ⚠️ Resend SDK threw for ${to}:`, err.message);
+    }
+  }
+
+  // ── 2. Nodemailer fallback ─────────────────────────────────────────────────
+  const transporter = _getNodemailerTransporter();
   const mailOptions = {
     from: `"${fromName}" <${fromEmail}>`,
     replyTo: `"${fromName} Support" <${fromEmail}>`,
     to,
     subject,
-    text: plainText,
+    text: htmlToText(html),
     html,
     attachments,
     headers: {
       'X-Mailer': 'BEHOLD Aspire Notification Engine',
-      'X-Auto-Response-Suppress': 'OOF, AutoReply',
       'X-Priority': '1 (Highest)',
       'X-MSMail-Priority': 'High',
-      'Importance': 'High',
-      'List-Unsubscribe': `<mailto:${fromEmail}?subject=unsubscribe>`
+      'Importance': 'High'
     }
   };
 
   if (transporter) {
     try {
       const info = await transporter.sendMail(mailOptions);
-      console.log(`[Email] ✅ Sent via primary SMTP to ${to}: ${subject} (${info.messageId})`);
+      console.log(`[Email] ✅ Sent via Nodemailer to ${to}: ${subject} (${info.messageId})`);
       return { success: true, messageId: info.messageId };
     } catch (error) {
-      console.error(`[Email] ⚠️ Primary SMTP failed to send to ${to}:`, error.message);
+      console.error(`[Email] ⚠️ Nodemailer failed for ${to}:`, error.message);
     }
   }
 
-  // Fallback to Ethereal Test Email
+  // ── 3. Ethereal test fallback ──────────────────────────────────────────────
   try {
-    const etherealTransporter = await _getEtherealTransporter();
-    if (etherealTransporter) {
-      const info = await etherealTransporter.sendMail(mailOptions);
+    const ethereal = await _getEtherealTransporter();
+    if (ethereal) {
+      const info = await ethereal.sendMail(mailOptions);
       const previewUrl = nodemailer.getTestMessageUrl(info);
-      console.log(`[Email] 📧 Delivered via Ethereal Test Service to ${to}!`);
-      console.log(`[Email] 🔗 View Email Online: ${previewUrl}`);
+      console.log(`[Email] 📧 Ethereal fallback to ${to}!`);
+      console.log(`[Email] 🔗 Preview: ${previewUrl}`);
       return { success: true, fallback: true, previewUrl, messageId: info.messageId };
     }
   } catch (e) {
     console.error('[Email] ❌ Ethereal fallback failed:', e.message);
   }
 
-  return { success: true, fallback: true };
+  console.error(`[Email] ❌ All providers failed — email to ${to} was NOT sent`);
+  return { success: false, error: 'All email providers failed' };
 };
+
 
 // ─── Convenience Wrappers ──────────────────────────────────────────────────
 
@@ -235,88 +287,97 @@ const EmailService = {
     return sendEmail(email, `BEHOLD Aspire Password Reset Code: ${otp}`, html);
   },
 
-  // Appointments
+  // ── Appointment Email Notifications ──────────────────────────────────────
+
   async sendAppointmentBooked({ user, counsellor, appointment }) {
-    const date = appointment.date;
-    const time = appointment.time;
-    const mode = appointment.mode;
+    const date     = appointment.date;
+    const time     = appointment.time;
+    const mode     = appointment.mode;
     const platform = appointment.platform;
 
-    // User-specific calendar invite with their actual email
-    const userAttachments = _createIcsAttachment(
-      appointment,
-      user.name,
-      user.email,
-      counsellor?.name,
-      counsellor?.email
-    );
+    console.log('[Email] 📋 sendAppointmentBooked triggered');
+    console.log(`[Email]    User:        ${user?.name || 'MISSING'} <${user?.email || 'NO EMAIL IN DB'}>`);
+    console.log(`[Email]    Psychologist: ${counsellor?.name || 'MISSING'} <${counsellor?.email || 'NO EMAIL IN DB'}>`);
+    console.log(`[Email]    Session:      ${date} at ${time} (${mode})`);
 
-    // Send confirmation + calendar invite to user immediately on booking
-    await sendEmail(
-      user.email,
-      '📋 Appointment Request Submitted — Behold Aspire',
-      Templates.appointmentBooked({ userName: user.name, counsellorName: counsellor?.name, date, time, mode, platform }),
-      userAttachments
-    );
+    // ── 1. Send to USER (student) ─────────────────────────────────────────
+    if (!user?.email) {
+      console.warn('[Email] ⚠️  User has no email address in database — skipping user notification');
+    } else {
+      const userAttachments = _createIcsAttachment(
+        appointment, user.name, user.email, counsellor?.name, counsellor?.email
+      );
+      await sendEmail(
+        user.email,
+        '📋 Session Request Submitted — Behold Aspire',
+        Templates.appointmentBooked({ userName: user.name, counsellorName: counsellor?.name, date, time, mode, platform }),
+        userAttachments
+      );
+    }
 
-    // Counsellor-specific calendar invite with their actual email
-    if (counsellor?.email) {
+    // ── 2. Send to PSYCHOLOGIST (counsellor) ──────────────────────────────
+    if (!counsellor?.email) {
+      console.warn('[Email] ⚠️  Psychologist has no email address in database — skipping psychologist notification');
+    } else {
       const counsellorAttachments = _createIcsAttachment(
-        appointment,
-        counsellor.name,
-        counsellor.email,
-        user.name,
-        user.email
+        appointment, counsellor.name, counsellor.email, user?.name, user?.email
       );
       await sendEmail(
         counsellor.email,
-        '📋 New Booking Request — Behold Aspire',
-        Templates.appointmentBookedCounsellor({ userName: user.name, counsellorName: counsellor.name, date, time, mode }),
+        '📋 New Session Request — Behold Aspire',
+        Templates.appointmentBookedCounsellor({ userName: user?.name, counsellorName: counsellor.name, date, time, mode }),
         counsellorAttachments
       );
     }
   },
 
   async sendAppointmentApproved({ user, counsellor, appointment }) {
-    // User-specific calendar invite with their actual email from the database
-    const userAttachments = _createIcsAttachment(
-      appointment,
-      user.name,
-      user.email,
-      counsellor?.name,
-      counsellor?.email
-    );
+    console.log('[Email] ✅ sendAppointmentApproved triggered');
+    console.log(`[Email]    User:        ${user?.name || 'MISSING'} <${user?.email || 'NO EMAIL IN DB'}>`);
+    console.log(`[Email]    Psychologist: ${counsellor?.name || 'MISSING'} <${counsellor?.email || 'NO EMAIL IN DB'}>`);
 
-    const htmlUser = Templates.appointmentApproved({
-      userName: user.name,
-      counsellorName: counsellor?.name,
-      date: appointment.date,
-      time: appointment.time,
-      mode: appointment.mode,
-      meetLink: appointment.meetLink
-    });
-    // Send confirmed appointment + calendar invite to user immediately
-    await sendEmail(user.email, '✅ Appointment Confirmed — Behold Aspire', htmlUser, userAttachments);
-
-    if (counsellor?.email) {
-      // Counsellor-specific calendar invite with their actual email from the database
-      const counsellorAttachments = _createIcsAttachment(
-        appointment,
-        counsellor.name,
-        counsellor.email,
-        user.name,
-        user.email
+    // ── 1. Confirm to USER (student) ──────────────────────────────────────
+    if (!user?.email) {
+      console.warn('[Email] ⚠️  User has no email in database — skipping user confirmation');
+    } else {
+      const userAttachments = _createIcsAttachment(
+        appointment, user.name, user.email, counsellor?.name, counsellor?.email
       );
-      const htmlCounsellor = Templates.appointmentApprovedCounsellor({
-        userName: user.name,
-        counsellorName: counsellor.name,
-        date: appointment.date,
-        time: appointment.time,
-        mode: appointment.mode,
-        meetLink: appointment.meetLink
-      });
-      // Send confirmed appointment + calendar invite to counsellor immediately
-      await sendEmail(counsellor.email, '✅ Appointment Confirmed — Behold Aspire', htmlCounsellor, counsellorAttachments);
+      await sendEmail(
+        user.email,
+        '✅ Session Confirmed — Behold Aspire',
+        Templates.appointmentApproved({
+          userName: user.name,
+          counsellorName: counsellor?.name,
+          date: appointment.date,
+          time: appointment.time,
+          mode: appointment.mode,
+          meetLink: appointment.meetLink
+        }),
+        userAttachments
+      );
+    }
+
+    // ── 2. Confirm to PSYCHOLOGIST (counsellor) ───────────────────────────
+    if (!counsellor?.email) {
+      console.warn('[Email] ⚠️  Psychologist has no email in database — skipping psychologist confirmation');
+    } else {
+      const counsellorAttachments = _createIcsAttachment(
+        appointment, counsellor.name, counsellor.email, user?.name, user?.email
+      );
+      await sendEmail(
+        counsellor.email,
+        '✅ Session Confirmed — Behold Aspire',
+        Templates.appointmentApprovedCounsellor({
+          userName: user?.name,
+          counsellorName: counsellor.name,
+          date: appointment.date,
+          time: appointment.time,
+          mode: appointment.mode,
+          meetLink: appointment.meetLink
+        }),
+        counsellorAttachments
+      );
     }
   },
 

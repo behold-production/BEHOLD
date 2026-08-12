@@ -280,20 +280,16 @@ const AppointmentController = {
             isRead: false
           });
 
-          // --- WhatsApp Alerts ---
+          // --- WhatsApp Alert (rejection goes via WhatsApp only) ---
           const user = await StorageService.findById('users', appointment.userId);
           if (user && user.phone) {
-            WhatsAppService.sendBookingAlert(user.phone, 'cancelled', {
+            WhatsAppService.sendBookingAlert(user.phone, 'rejected', {
               studentName: user.name,
-              counsellorName: counsellor ? counsellor.name : 'Counsellor',
+              counsellorName: counsellor ? counsellor.name : 'Psychologist',
               date: appointment.date,
               time: appointment.time,
-              reason: reason || 'Declined'
+              reason: reason || ''
             }).catch(err => console.error(err));
-          }
-          // --- Email Alerts ---
-          if (user) {
-            EmailService.sendAppointmentRejected({ user, counsellor, appointment, reason }).catch(err => console.error('[Email Reject Error]:', err));
           }
         } catch (bgError) {
           console.error('[Background Task Error in rejectAppointment]:', bgError);
@@ -475,8 +471,7 @@ const AppointmentController = {
 
           if (user && user.phone) WhatsAppService.sendBookingAlert(user.phone, 'rescheduled', details).catch(err => console.error(err));
           if (counsellor && counsellor.phone) WhatsAppService.sendBookingAlert(counsellor.phone, 'rescheduled', details).catch(err => console.error(err));
-          // --- Email Alerts ---
-          EmailService.sendAppointmentRescheduled({ user, counsellor, appointment: updated }).catch(err => console.error('[Email Reschedule Error]:', err));
+          // Reschedule notifications go via WhatsApp only
         } catch (bgError) {
           console.error('[Background Task Error in rescheduleAppointment]:', bgError);
         }
@@ -603,9 +598,7 @@ const AppointmentController = {
 
           if (user && user.phone) WhatsAppService.sendBookingAlert(user.phone, 'cancelled', details).catch(err => console.error(err));
           if (counsellor && counsellor.phone) WhatsAppService.sendBookingAlert(counsellor.phone, 'cancelled', details).catch(err => console.error(err));
-          // --- Email Alerts ---
-          const cancelledByLabel = req.user.role === 'user' ? user?.name : counsellor?.name || 'Admin';
-          if (user) EmailService.sendAppointmentCancelled({ user, counsellor, appointment, cancelledBy: cancelledByLabel, reason }).catch(err => console.error('[Email Cancel Error]:', err));
+          // Cancellation notifications go via WhatsApp only
         } catch (bgError) {
           console.error('[Background Task Error in cancelAppointment]:', bgError);
         }

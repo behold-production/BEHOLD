@@ -175,9 +175,31 @@ const AdminController = {
 
       const { password, ...counsellorData } = updated;
 
-      // Send email notification
+      // ── Email notification ───────────────────────────────────────────────
       if (isVerified && updated.email) {
         EmailService.sendCounsellorVerified(updated).catch(err => console.error('[Email Verify Error]:', err));
+      }
+
+      // ── WhatsApp notification ─────────────────────────────────────────
+      if (updated.phone) {
+        const waMsg = isVerified
+          ? `✅ *Behold Aspire — Account Verified!*
+
+Congratulations, *${updated.name}*!
+
+Your psychologist profile has been *approved* by our admin team. Your profile is now live and students can book sessions with you.
+
+🔗 Log in to your dashboard:
+https://www.behold.co.in/counsellor`
+          : `⚠️ *Behold Aspire — Verification Update*
+
+Hi *${updated.name}*,
+
+Your verification status has been updated. Please log in to your dashboard for details or contact support.
+
+🔗 Dashboard:
+https://www.behold.co.in/counsellor`;
+        WhatsAppService.sendNotification(updated.phone, waMsg).catch(err => console.error('[WA Verify Error]:', err));
       }
 
       res.status(200).json({
@@ -218,9 +240,26 @@ const AdminController = {
 
       const { password, ...counsellorData } = updated;
 
-      // Send email notification
+      // ── Email notification ───────────────────────────────────────────────
       if (updated.email) {
         EmailService.sendCounsellorRejected(updated, reason).catch(err => console.error('[Email Reject Counsellor Error]:', err));
+      }
+
+      // ── WhatsApp notification ─────────────────────────────────────────
+      if (updated.phone) {
+        const waMsg = `❌ *Behold Aspire — Application Update*
+
+Hi *${updated.name}*,
+
+We’ve reviewed your psychologist profile application and unfortunately we are *unable to approve* it at this time.
+
+${reason ? `*Reason:* ${reason}` : ''}
+
+If you have questions or would like to reapply with updated information, please contact our support team.
+
+📧 support@behold.co.in
+🔗 www.behold.co.in`;
+        WhatsAppService.sendNotification(updated.phone, waMsg).catch(err => console.error('[WA Reject Counsellor Error]:', err));
       }
 
       res.status(200).json({

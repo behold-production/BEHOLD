@@ -24,6 +24,7 @@ const cronRoutes = require('./routes/cronRoutes');
 const blogRoutes = require('./routes/blogRoutes');
 const whatsappRoutes = require('./routes/whatsappRoutes');
 const errorHandler = require('./middleware/errorHandler');
+const webhookRoutes = require('./routes/webhookRoutes');
 
 const app = express();
 
@@ -105,6 +106,11 @@ const authLimiter = rateLimit({
 
 app.use('/api/', generalLimiter);
 app.use('/api/auth', authLimiter);
+
+// ─── Webhook Routes (raw body needed BEFORE JSON parser) ────────────────────
+// Resend webhooks need the raw Buffer body for Svix signature verification.
+// This must be mounted BEFORE express.json() to get the raw request body.
+app.use('/api/webhooks', webhookRoutes);
 
 // ─── Body Parsers ─────────────────────────────────────────────────────────
 app.use(
