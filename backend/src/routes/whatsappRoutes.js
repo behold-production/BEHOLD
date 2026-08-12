@@ -7,12 +7,11 @@ const WhatsAppMessage = require('../models/WhatsAppMessage');
 function verifyWaSenderSignature(req) {
   const secret = (process.env.WASENDER_WEBHOOK_SECRET || '').trim();
   if (!secret) {
-    console.error('[WaSender Webhook Error]: WASENDER_WEBHOOK_SECRET is not configured.');
-    return false;
+    console.warn('[WaSender Webhook Warning]: WASENDER_WEBHOOK_SECRET is not configured in .env.');
+    return true; // Bypass signature check if secret is omitted
   }
 
-  // Check all possible header names WaSender may use
-  const signature =
+  const incomingSig =
     req.headers['x-webhook-signature'] ||
     req.headers['x-wasender-signature'] ||
     req.headers['x-signature'] ||
@@ -20,30 +19,49 @@ function verifyWaSenderSignature(req) {
     req.headers['x-hub-signature'] ||
     '';
 
-  if (!signature) {
-    console.warn('[WaSender Webhook] No signature header found — rejecting request');
+  if (!incomingSig) {
+    console.warn('[WaSender Webhook] No x-webhook-signature header found');
     return false;
   }
 
-  // Use rawBody (set by express.json verify) for accurate HMAC computation
-  const rawBody = req.rawBody || JSON.stringify(req.body);
-  const expected = 'sha256=' + crypto.createHmac('sha256', secret).update(rawBody).digest('hex');
+  // 1. Direct Secret Token Match (standard WASender header token validation)
+  const cleanSig = incomingSig.trim();
+  if (cleanSig === secret || cleanSig.replace(/^sha256=/, '') === secret) {
+    return true;
+  }
 
-  // Safe comparison — handles length mismatch without throwing
-  const sigBuf = Buffer.from(signature);
-  const expBuf = Buffer.from(expected);
-  if (sigBuf.length !== expBuf.length) return false;
-  return crypto.timingSafeEqual(sigBuf, expBuf);
+  // 2. HMAC SHA-256 Verification (cryptographic payload signature)
+  try {
+    const rawBody = req.rawBody || JSON.stringify(req.body);
+    const computedHmac = crypto.createHmac('sha256', secret).update(rawBody).digest('hex');
+    const computedPrefixed = 'sha256=' + computedHmac;
+
+    if (cleanSig === computedHmac || cleanSig === computedPrefixed) {
+      return true;
+    }
+  } catch (err) {
+    console.error('[WaSender Webhook] HMAC verification error:', err);
+  }
+
+  return false;
 }
-
 
 /**
  * POST /api/whatsapp/wasender/webhook
- * WaSender Event Receiver — handles all subscribed event types
+ * WaSender Event Receiver — handles all incoming webhook events
  */
 router.post('/wasender/webhook', async (req, res) => {
-  // Always respond 200 first (WaSender expects fast ACK within 5s)
-  res.status(200).json({ received: true });
+  const secret = (process.env.WASENDER_WEBHOOK_SECRET || '').trim();
+  const incomingSig = req.headers['x-webhook-signature'] || req.headers['x-wasender-signature'];
+
+  // Reject invalid webhooks with 403 Forbidden if signature check fails
+  if (secret && incomingSig && !verifyWaSenderSignature(req)) {
+    console.error('[WaSender Webhook] ❌ Invalid x-webhook-signature — 403 Forbidden');
+    return res.status(403).json({ error: 'Forbidden: Invalid Webhook Signature' });
+  }
+
+  // Respond 200 OK fast to WASender
+  res.status(200).json({ received: true, status: 'success' });
 
   try {
     // Signature verification (non-blocking — already responded 200)

@@ -1,8 +1,9 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const StorageService = require('../services/storageService');
-const WhatsAppService = require('../services/whatsappService');
 const EmailService = require('../services/emailService');
+const WhatsAppService = require('../services/whatsappService');
+const { normalizePhoneWithCountryCode } = require('../utils/phoneUtils');
 const PasswordResetOtp = require('../models/PasswordResetOtp');
 
 const ACCESS_EXPIRY = '15m';
@@ -199,11 +200,13 @@ const AuthController = {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
 
+      const formattedPhone = normalizePhoneWithCountryCode(phone);
+
       const newUser = await StorageService.create('users', {
         name,
         email: normalizedEmail,
         password: hashedPassword,
-        phone: phone || '',
+        phone: formattedPhone,
         role: 'user',
         schoolName: '',
         grade: '',

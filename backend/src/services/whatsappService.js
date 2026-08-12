@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { normalizePhoneWithCountryCode } = require('../utils/phoneUtils');
 
 /**
  * Behold Aspire — WhatsApp Notification Service
@@ -23,43 +24,35 @@ class WhatsAppService {
   }
 
   /**
-   * Normalize phone to clean format (e.g. 91XXXXXXXXXX or +91XXXXXXXXXX)
+   * Normalize phone to canonical format "+918075374600"
    */
   _formatPhoneNumber(phone) {
     if (!phone) return null;
-    let cleaned = String(phone).replace(/\D/g, '');
-    if (!cleaned) return null;
-    // Prepend India country code 91 if 10 digits
-    if (cleaned.length === 10) {
-      cleaned = '91' + cleaned;
-    }
-    return cleaned;
+    const formatted = normalizePhoneWithCountryCode(phone);
+    return formatted || null;
   }
 
   /**
    * Low-level send via WASender API with retry and fallback payload format
    */
   async _sendViaWaSender(phone, text) {
-    const cleanedPhone = this._formatPhoneNumber(phone);
-    if (!cleanedPhone) {
+    const formattedPhoneWithPlus = this._formatPhoneNumber(phone);
+    if (!formattedPhoneWithPlus) {
       return { success: false, provider: 'WASender', error: 'Invalid phone number' };
     }
 
-    const formattedPhoneWithPlus = `+${cleanedPhone}`;
+    const cleanedPhoneWithoutPlus = formattedPhoneWithPlus.replace(/^\+/, '');
 
-    // Payload formats to try
-    const payload = {
-      to: cleanedPhone,
-      phone: cleanedPhone,
-      recipient: formattedPhoneWithPlus,
-      text: text,
-      message: text
+    // Standard WASender payload: { to: "+918075374600", text: "..." }
+    const primaryPayload = {
+      to: formattedPhoneWithPlus,
+      text: text
     };
 
     try {
       const response = await axios.post(
-        'https://www.wasenderapi.com/api/send-message',
-        payload,
+        'https://wasenderapi.com/api/send-message',
+        primaryPayload,
         {
           headers: {
             Authorization: `Bearer ${this.waSenderToken}`,
@@ -68,17 +61,17 @@ class WhatsAppService {
           timeout: 20000
         }
       );
-      console.log(`[WhatsApp] ✅ Sent to ${cleanedPhone}:`, response.data?.message || 'OK');
+      console.log(`[WhatsApp] ✅ Sent to ${formattedPhoneWithPlus}:`, response.data?.data || response.data?.message || 'OK');
       return { success: true, provider: 'WASender', data: response.data };
     } catch (error) {
       const errData = error.response?.data || error.message;
-      console.error(`[WhatsApp] ❌ Failed to send to ${cleanedPhone}:`, JSON.stringify(errData));
+      console.error(`[WhatsApp] ⚠️ Initial payload failed for ${formattedPhoneWithPlus}:`, JSON.stringify(errData));
       
-      // Secondary fallback with '+' prefix if first call returns error
+      // Fallback with clean 91... (without +)
       try {
         const response2 = await axios.post(
-          'https://www.wasenderapi.com/api/send-message',
-          { to: formattedPhoneWithPlus, text },
+          'https://wasenderapi.com/api/send-message',
+          { to: cleanedPhoneWithoutPlus, text },
           {
             headers: {
               Authorization: `Bearer ${this.waSenderToken}`,
@@ -87,17 +80,16 @@ class WhatsAppService {
             timeout: 15000
           }
         );
-        console.log(`[WhatsApp] ✅ Retry sent to ${formattedPhoneWithPlus}:`, response2.data?.message || 'OK');
+        console.log(`[WhatsApp] ✅ Fallback sent to ${cleanedPhoneWithoutPlus}:`, response2.data?.data || response2.data?.message || 'OK');
         return { success: true, provider: 'WASender', data: response2.data };
       } catch (retryErr) {
-        console.error(`[WhatsApp] ❌ Retry failed for ${formattedPhoneWithPlus}`);
+        console.error(`[WhatsApp] ❌ Both attempts failed for ${phone}:`, retryErr.response?.data || retryErr.message);
       }
 
       if (error.response?.data?.message === 'invalid API key') {
         console.error(
           '[WhatsApp] HINT: WASENDER_TOKEN is invalid or expired.\n' +
           '  → Log in to https://www.wasenderapi.com\n' +
-          '  → WhatsApp Sessions → your session → click the 🔑 key icon\n' +
           '  → Copy the session-specific API key and update WASENDER_TOKEN in .env'
         );
       }

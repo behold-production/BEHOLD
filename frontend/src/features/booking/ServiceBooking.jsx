@@ -333,9 +333,10 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
                         {/* Header */}
                         <div className="text-center flex flex-col items-center space-y-3">
-                            <span className="text-xs font-semibold uppercase tracking-widest text-[#06b6d4] flex items-center justify-center gap-1.5 block mb-1">
-
+                            <span className="inline-flex items-center justify-center gap-2 text-[11px] sm:text-xs font-semibold text-[#00c9d6] tracking-widest uppercase mb-2 text-center">
+                                <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
                                 {rescheduleSession ? 'RESCHEDULE SESSION' : 'BOOK A CONFIDENTIAL SESSION'}
+                                <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
                             </span>
                             <h1 className="text-3xl sm:text-5xl md:text-6xl font-sans font-semibold uppercase tracking-tight leading-none text-[#0f172a] flex items-center justify-center flex-wrap gap-1">
                                 <span>{rescheduleSession ? 'Reschedule Your Session' : 'Book Your Session'}</span>
@@ -350,8 +351,8 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
                         {/* BOOKING FORM */}
                         <div id="booking-console" className="space-y-6 sm:space-y-8 w-full mt-6">
-                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-surface-200 pb-4">
-                                <h2 className="text-xl sm:text-2xl font-sans font-semibold uppercase text-[#0f172a] flex items-center gap-1">
+                            <div className="flex flex-col items-center justify-center text-center gap-2 border-b border-surface-200 pb-4">
+                                <h2 className="text-xl sm:text-2xl font-sans font-semibold uppercase text-[#0f172a] flex items-center justify-center gap-1">
                                     <span>Your Booking</span>
                                     <ScrollDot nextId="booking-console" label="Scroll down ↓" size="md" inlineText={true} />
                                 </h2>

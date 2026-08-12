@@ -4,6 +4,7 @@ const Feedback = require('../models/Feedback');
 const cloudinary = require('../config/cloudinary');
 const { uploadToCloudinary, uploadProfilePicToCloudinary } = require('../utils/cloudinaryHelper');
 const { autoExpireSessions } = require('../utils/sessionHelper');
+const { normalizePhoneWithCountryCode } = require('../utils/phoneUtils');
 
 const UserController = {
   // Get User Profile
@@ -33,13 +34,13 @@ const UserController = {
 
       if (name !== undefined) updates.name = name;
       if (email !== undefined) updates.email = email;
-      if (phone !== undefined) updates.phone = phone;
+      if (phone !== undefined) updates.phone = normalizePhoneWithCountryCode(phone);
       if (age !== undefined) updates.age = String(age).trim();
       if (feelingLately !== undefined) updates.feelingLately = String(feelingLately).trim();
       if (schoolName !== undefined) updates.schoolName = schoolName;
       if (grade !== undefined) updates.grade = grade;
       if (guardianName !== undefined) updates.guardianName = guardianName;
-      if (guardianPhone !== undefined) updates.guardianPhone = guardianPhone;
+      if (guardianPhone !== undefined) updates.guardianPhone = normalizePhoneWithCountryCode(guardianPhone);
       if (groupCode !== undefined) updates.groupCode = groupCode;
       if (locationName !== undefined) updates.locationName = locationName;
       if (latitude !== undefined) updates.latitude = Number(latitude) || 0;

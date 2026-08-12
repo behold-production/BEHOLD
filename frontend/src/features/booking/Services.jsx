@@ -98,8 +98,10 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
 
         {/* Section Header - Centered & Balanced */}
         <div className="max-w-3xl mx-auto mb-10 text-center flex flex-col items-center reveal-on-scroll">
-          <span className="text-xs font-semibold text-[#00c9d6] block mb-2">
+          <span className="inline-flex items-center justify-center gap-2 text-[11px] sm:text-xs font-semibold text-[#00c9d6] tracking-widest uppercase mb-3 text-center">
+            <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
             Our Services
+            <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
           </span>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-sans font-semibold text-slate-900 tracking-tight leading-tight mb-3">
             {settings.servicesSectionTitle && settings.servicesSectionTitle !== 'BOOK YOUR SESSION' ? settings.servicesSectionTitle : 'Book Your Session'}

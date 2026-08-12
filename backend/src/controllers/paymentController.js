@@ -4,6 +4,7 @@ const StorageService = require('../services/storageService');
 const { validateBookingDetails } = require('../utils/bookingValidator');
 const EmailService = require('../services/emailService');
 const WhatsAppService = require('../services/whatsappService');
+const { resolveAnyPhone } = require('../utils/phoneUtils');
 
 const PaymentController = {
   // Create Razorpay Order
@@ -366,8 +367,8 @@ const PaymentController = {
 
       // Awaited notification processing
       try {
-        const targetUserPhone = user?.phone || clientPhone || req.body?.clientPhone || newAppointment?.clientPhone;
-        const targetCounsellorPhone = counsellor?.phone || counsellor?.contactPhone || counsellor?.user?.phone;
+        const targetUserPhone = resolveAnyPhone(user, newAppointment, clientPhone, req.body?.clientPhone);
+        const targetCounsellorPhone = resolveAnyPhone(counsellor);
 
         await Promise.allSettled([
           StorageService.create('notifications', {

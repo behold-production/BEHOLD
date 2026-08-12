@@ -3,6 +3,7 @@ const { validateBookingDetails } = require('../utils/bookingValidator');
 const { autoExpireSessions } = require('../utils/sessionHelper');
 const WhatsAppService = require('../services/whatsappService');
 const EmailService = require('../services/emailService');
+const { resolveAnyPhone } = require('../utils/phoneUtils');
 
 const AppointmentController = {
   // Create Appointment (User / Student)
@@ -72,8 +73,8 @@ const AppointmentController = {
 
       // Synchronous/Awaited Processing for Notifications, WhatsApp & Emails
       try {
-        const userPhone = user?.phone || clientPhone || newAppointment.clientPhone;
-        const counsellorPhone = counsellor?.phone || counsellor?.contactPhone || counsellor?.user?.phone;
+        const userPhone = resolveAnyPhone(user, newAppointment, clientPhone);
+        const counsellorPhone = resolveAnyPhone(counsellor);
 
         await Promise.allSettled([
           StorageService.create('notifications', {
@@ -174,8 +175,8 @@ const AppointmentController = {
 
       // Synchronous/Awaited Processing for Notifications, WhatsApp & Emails
       try {
-        const userPhone = user?.phone || appointment.clientPhone;
-        const counsellorPhone = counsellor?.phone || counsellor?.contactPhone || counsellor?.user?.phone;
+        const userPhone = resolveAnyPhone(user, appointment);
+        const counsellorPhone = resolveAnyPhone(counsellor);
 
         await Promise.allSettled([
           StorageService.create('notifications', {
@@ -239,6 +240,7 @@ const AppointmentController = {
       try {
         const counsellor = await StorageService.findById('counsellors', appointment.counsellorId);
         const user = await StorageService.findById('users', appointment.userId);
+        const targetUserPhone = resolveAnyPhone(user, appointment);
 
         await Promise.allSettled([
           StorageService.create('notifications', {
@@ -249,7 +251,7 @@ const AppointmentController = {
             type: 'appointment_rejected',
             isRead: false
           }),
-          user && user.phone ? WhatsAppService.sendBookingAlert(user.phone, 'rejected', { studentName: user.name, counsellorName: counsellor ? counsellor.name : 'Psychologist', date: appointment.date, time: appointment.time, reason: reason || '' }) : Promise.resolve(),
+          targetUserPhone ? WhatsAppService.sendBookingAlert(targetUserPhone, 'rejected', { studentName: user ? user.name : 'Student', counsellorName: counsellor ? counsellor.name : 'Psychologist', date: appointment.date, time: appointment.time, reason: reason || '' }) : Promise.resolve(),
           user ? EmailService.sendAppointmentRejected({ user, counsellor, appointment, reason }) : Promise.resolve()
         ]);
       } catch (notifErr) {
@@ -539,6 +541,9 @@ const AppointmentController = {
           reason: reason || 'Cancelled'
         };
 
+        const userPhone = resolveAnyPhone(user, appointment);
+        const counsellorPhone = resolveAnyPhone(counsellor);
+
         await Promise.allSettled([
           StorageService.create('notifications', {
             recipientId: targetId,
@@ -548,8 +553,8 @@ const AppointmentController = {
             type: 'appointment_cancelled',
             isRead: false
           }),
-          user && user.phone ? WhatsAppService.sendBookingAlert(user.phone, 'cancelled', details) : Promise.resolve(),
-          counsellor && counsellor.phone ? WhatsAppService.sendBookingAlert(counsellor.phone, 'cancelled', details) : Promise.resolve(),
+          userPhone ? WhatsAppService.sendBookingAlert(userPhone, 'cancelled', details) : Promise.resolve(),
+          counsellorPhone ? WhatsAppService.sendBookingAlert(counsellorPhone, 'cancelled', details) : Promise.resolve(),
           user ? EmailService.sendAppointmentCancelled({ user, counsellor, appointment, cancelledBy: cancellerName, reason }) : Promise.resolve()
         ]);
       } catch (notifErr) {
