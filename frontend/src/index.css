@@ -50,10 +50,10 @@
   --color-line: #D6DBCF;
   --color-line-strong: #C3CBB9;
 
-  --font-serif: 'Poppins', sans-serif;
-  --font-sans: 'Poppins', sans-serif;
+  --font-serif: 'Plus Jakarta Sans', 'Poppins', sans-serif;
+  --font-sans: 'Plus Jakarta Sans', 'Poppins', sans-serif;
   --font-mono: ui-monospace, 'SFMono-Regular', monospace;
-  --font-header: 'Poppins', sans-serif;
+  --font-header: 'Plus Jakarta Sans', 'Poppins', sans-serif;
 
   --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.02);
   --shadow: 0 4px 16px rgba(15, 23, 42, 0.06), 0 1px 4px rgba(15, 23, 42, 0.03);

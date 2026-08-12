@@ -193,7 +193,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
                       key={label}
                       ref={(el) => (navRefs.current[idx] = el)}
                       onClick={action}
-                      className={`text-sm font-bold tracking-wider transition-colors duration-200 bg-transparent cursor-pointer py-1 border-none ${isActive
+                      className={`text-sm font-semibold transition-colors duration-200 bg-transparent cursor-pointer py-1 border-none ${isActive
                         ? 'text-[#00c9d6]'
                         : 'text-slate-700 hover:text-[#00c9d6]'
                         }`}

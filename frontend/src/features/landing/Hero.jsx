@@ -54,8 +54,8 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
 
           {/* Main Title Block */}
           <div className="relative leading-none flex flex-col items-center md:items-start group">
-            {/* Line 1 - Slender & Elegant */}
-            <h1 className="font-sans font-medium text-slate-900 text-[var(--text-4xl)] tracking-normal leading-tight transition-all duration-300 animate-fade-down">
+            {/* Line 1 - Slender & Elegant Bigger Headline */}
+            <h1 className="font-sans font-semibold text-slate-900 text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tight leading-tight transition-all duration-300 animate-fade-down">
               {eyebrowLine1}
             </h1>
 
