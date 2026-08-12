@@ -9,10 +9,11 @@ import SEO from '../../components/common/SEO';
 
 const CATEGORIES = [
   'All',
-  'Career Guidance',
-  'Aptitude Assessment',
-  'Psychological Wellbeing',
-  'Parenting & Education'
+  'Mental Wellbeing',
+  'Therapy & Relationships',
+  'Emotional Health',
+  'Parenting & Education',
+  'Personal Growth'
 ];
 
 const BlogList = () => {
@@ -69,7 +70,7 @@ const BlogList = () => {
     <>
       <SEO 
         title="Insights & Research" 
-        description="In-depth career roadmaps, stream selection psychology, C-DAT research, and parenting frameworks authored by CIGI mentors." 
+        description="Explore thoughtful, evidence-informed insights on mental wellbeing, therapy, relationships, emotional health, parenting, and personal growth." 
         canonicalUrl={typeof window !== 'undefined' ? window.location.origin + "/blog" : undefined}
       />
       <div className="min-h-screen flex flex-col text-slate-900 pt-20 pb-12 relative overflow-hidden select-none">
@@ -85,16 +86,16 @@ const BlogList = () => {
       {/* Hero Header Section */}
       <section className="relative z-10 pt-4 pb-4 sm:pt-6 sm:pb-6 px-4 sm:px-6 lg:px-8 reveal-on-scroll">
         <div className="max-w-5xl mx-auto text-center space-y-3">
-          <span className="text-[11px] sm:text-xs font-bold tracking-widest text-[#00c9d6] flex items-center justify-center gap-1.5">
+          <span className="text-[11px] sm:text-xs font-bold tracking-widest text-[#00c9d6] flex items-center justify-center gap-1.5 uppercase">
             BEHOLD INSIGHTS & RESEARCH
           </span>
 
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-sans font-bold tracking-tight text-slate-900 max-w-4xl mx-auto leading-tight">
-            Scientific Insights For <span className="text-slate-900">Future Leaders</span><span className="text-[#00c9d6] drop-shadow-[0_0_8px_rgba(0,201,214,0.6)] font-bold">.</span>
+            Understanding What Matters <span className="text-slate-900">Within</span><span className="text-[#00c9d6] drop-shadow-[0_0_8px_rgba(0,201,214,0.6)] font-bold">.</span>
           </h1>
 
-          <p className="text-xs sm:text-sm lg:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed font-medium">
-            In-depth career roadmaps, stream selection psychology, C-DAT research, and parenting frameworks authored by CIGI mentors.
+          <p className="text-xs sm:text-sm lg:text-base text-slate-600 max-w-3xl mx-auto leading-relaxed font-medium">
+            Explore thoughtful, evidence-informed insights on mental wellbeing, therapy, relationships, emotional health, parenting, and personal growth — created to help you understand yourself and those around you better.
           </p>
 
           {/* Search Bar */}
@@ -103,7 +104,7 @@ const BlogList = () => {
               <Search className="w-4 h-4 text-slate-400 absolute left-4 pointer-events-none" />
               <input
                 type="text"
-                placeholder="Search articles, streams, or guidance topics..."
+                placeholder="Search articles or topics..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-11 pr-28 py-2.5 bg-transparent text-slate-900 placeholder-slate-400 text-xs sm:text-sm font-medium outline-none"

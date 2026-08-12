@@ -55,8 +55,8 @@ export default function FaqsPage() {
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black font-header tracking-tight text-slate-900 leading-tight">
             Frequently Asked <span className="text-[#00A8FF]">Questions</span>
           </h1>
-          <p className="mt-3 text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            Complete answers regarding Behold Aspire assessment models, stream selections, counselling procedures, and lifetime support.
+          <p className="mt-3 text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed font-medium">
+            Whatever’s on your mind, we’re here to help you understand what comes next.
           </p>
 
           {/* Search Box */}

@@ -67,10 +67,7 @@ export default function Faq({ siteSettings }) {
             <span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)]">.</span>
           </h2>
           <p className="text-sm sm:text-base text-surface-600 font-normal max-w-xl mx-auto leading-relaxed">
-            {settings.faqSectionDesc || (enableAptitude
-              ? "We've answered the most common questions about our counseling model, C-DAT assessments, and mentorship programs."
-              : "We've answered the most common questions about our career mentoring and psychological counselling programs."
-            )}
+            {settings.faqSectionDesc || "Whatever’s on your mind, we’re here to help you understand what comes next."}
           </p>
         </div>
 
@@ -87,36 +84,36 @@ export default function Faq({ siteSettings }) {
         ) : (
           <div className="space-y-4">
             {displayFaqs.map((faq, idx) => {
-            const isOpen = openIndex === idx;
-            return (
-              <div
-                key={idx}
-                className={`rounded-xl border transition-all duration-300 overflow-hidden ${isOpen ? 'border-[#00e5ff] bg-white shadow-sm' : 'border-surface-200 bg-white hover:border-[#00e5ff]'}`}
-              >
-                <button
-                  type="button"
-                  onClick={() => setOpenIndex(isOpen ? null : idx)}
-                  className="w-full text-left px-6 py-5 flex items-center justify-between gap-4 cursor-pointer bg-transparent border-none"
-                >
-                  <span className={`font-bold text-sm sm:text-base leading-snug ${isOpen ? 'text-[#00e5ff]' : 'text-[#0f172a]'}`}>
-                    {faq.question}
-                  </span>
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ${isOpen ? 'bg-[#0f172a] text-[#00e5ff] rotate-180 border border-[#00e5ff]/40' : 'bg-surface-100 text-[#0f172a]'}`}>
-                    <ChevronDown className="w-4 h-4" />
-                  </div>
-                </button>
+              const isOpen = openIndex === idx;
+              return (
                 <div
-                  className="overflow-hidden transition-all duration-300 ease-in-out"
-                  style={{ maxHeight: isOpen ? '400px' : '0px' }}
+                  key={idx}
+                  className={`rounded-xl border transition-all duration-300 overflow-hidden ${isOpen ? 'border-[#00e5ff] bg-white shadow-sm' : 'border-surface-200 bg-white hover:border-[#00e5ff]'}`}
                 >
-                  <div className="px-6 pb-6 text-surface-600 leading-relaxed text-xs sm:text-sm border-t border-surface-100 pt-4 font-normal">
-                    {faq.answer}
+                  <button
+                    type="button"
+                    onClick={() => setOpenIndex(isOpen ? null : idx)}
+                    className="w-full text-left px-6 py-5 flex items-center justify-between gap-4 cursor-pointer bg-transparent border-none"
+                  >
+                    <span className={`font-bold text-sm sm:text-base leading-snug ${isOpen ? 'text-[#00e5ff]' : 'text-[#0f172a]'}`}>
+                      {faq.question}
+                    </span>
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ${isOpen ? 'bg-[#0f172a] text-[#00e5ff] rotate-180 border border-[#00e5ff]/40' : 'bg-surface-100 text-[#0f172a]'}`}>
+                      <ChevronDown className="w-4 h-4" />
+                    </div>
+                  </button>
+                  <div
+                    className="overflow-hidden transition-all duration-300 ease-in-out"
+                    style={{ maxHeight: isOpen ? '400px' : '0px' }}
+                  >
+                    <div className="px-6 pb-6 text-surface-600 leading-relaxed text-xs sm:text-sm border-t border-surface-100 pt-4 font-normal">
+                      {faq.answer}
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
         )}
 
         {/* Bottom CTA */}
