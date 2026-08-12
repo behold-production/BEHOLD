@@ -19,7 +19,7 @@ class WhatsAppService {
   }
 
   _init() {
-    this.waSenderToken = (process.env.WASENDER_TOKEN || '').trim();
+    this.waSenderToken = (process.env.WASENDER_TOKEN || '04dd74a889079fa8a0030b0d5758854885be408fa8486f84a962c7ffb18ecf50').trim();
     this.isWaSenderConfigured = Boolean(this.waSenderToken);
   }
 
