@@ -3,7 +3,8 @@ const StorageService = require('../services/storageService');
 
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/behold_aspire';
 
-mongoose.set('bufferCommands', false);
+// Allow Mongoose command buffering during serverless cold starts
+mongoose.set('bufferCommands', true);
 
 let isConnected = false;
 let dbPromise = null;
@@ -27,8 +28,8 @@ async function connectDB() {
 
   dbPromise = mongoose
     .connect(targetUri, {
-      serverSelectionTimeoutMS: 5000,
-      connectTimeoutMS: 10000,
+      serverSelectionTimeoutMS: 15000,
+      connectTimeoutMS: 20000,
       socketTimeoutMS: 45000
     })
     .then(async (mongooseInstance) => {

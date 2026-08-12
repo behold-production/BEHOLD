@@ -57,22 +57,15 @@ module.exports = (err, req, res, next) => {
     res.status(error.statusCode).json({
       status: error.status,
       error: error,
-      message: error.message,
+      message: error.message || err.message,
       stack: err.stack,
     });
   } else {
     // Production
-    if (error.isOperational) {
-      res.status(error.statusCode).json({
-        status: error.status,
-        message: error.message,
-      });
-    } else {
-      console.error('ERROR 💥', err);
-      res.status(500).json({
-        status: 'error',
-        message: 'Something went very wrong!',
-      });
-    }
+    const finalMsg = error.message || err.message || 'An error occurred on the server. Please try again.';
+    res.status(error.statusCode || 500).json({
+      status: error.status || 'error',
+      message: finalMsg
+    });
   }
 };
