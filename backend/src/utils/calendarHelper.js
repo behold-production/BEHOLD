@@ -16,7 +16,9 @@ async function generateSessionMeetingLink({ counsellor, user, date, time, servic
   const keyId = process.env.GOOGLE_CLIENT_ID;
   const keySecret = process.env.GOOGLE_CLIENT_SECRET;
   const redirectUri = process.env.GOOGLE_REDIRECT_URI || 'https://www.behold.co.in/api/google/callback';
-  const refreshToken = counsellor?.googleRefreshToken || process.env.SYSTEM_GOOGLE_REFRESH_TOKEN || process.env.GOOGLE_REFRESH_TOKEN;
+
+  // System OAuth refresh token MUST take priority so event is created by central system account (beholdoffice@gmail.com / admin@behold.co.in)
+  const refreshToken = process.env.SYSTEM_GOOGLE_REFRESH_TOKEN || process.env.GOOGLE_REFRESH_TOKEN || counsellor?.googleRefreshToken;
 
   if (keyId && keySecret && refreshToken) {
     try {
@@ -37,8 +39,9 @@ async function generateSessionMeetingLink({ counsellor, user, date, time, servic
       const durationMs = (Number(durationMinutes) || 60) * 60 * 1000;
       const endTime = new Date(startTime.getTime() + durationMs);
 
-      const frontendUrl = (process.env.FRONTEND_URL || 'https://www.behold.co.in').replace(/\/$/, '');
-      const organizerEmail = (process.env.GMAIL_USER || 'beholdoffice@gmail.com').trim();
+      const rawUrl = (process.env.FRONTEND_URL || 'https://www.behold.co.in').trim();
+      const baseDomain = rawUrl.replace(/\/counsellor\/?$/, '').replace(/\/profile\/?$/, '').replace(/\/$/, '');
+      const organizerEmail = (process.env.RESEND_FROM_EMAIL || process.env.GMAIL_USER || 'beholdoffice@gmail.com').trim();
 
       const studentName = user?.name || 'Student';
       const counsellorName = counsellor?.name || 'Psychologist';
@@ -56,7 +59,7 @@ async function generateSessionMeetingLink({ counsellor, user, date, time, servic
 
       const event = {
         summary: `BEHOLD Counselling Session: ${studentName} & ${counsellorName}`,
-        description: `Service: ${service || 'counselling'}\nMode: ONLINE (Google Meet)\n\nJoin Portals:\n- Student Portal: ${frontendUrl}/counsellor/profile\n- Advisor Console: ${frontendUrl}/counsellor/counsellor`,
+        description: `Service: ${service || 'counselling'}\nMode: ONLINE (Google Meet)\n\nJoin Portals:\n- Student Portal: ${baseDomain}/profile\n- Advisor Console: ${baseDomain}/counsellor`,
         start: { dateTime: startTime.toISOString() },
         end: { dateTime: endTime.toISOString() },
         organizer: { email: organizerEmail, displayName: 'BEHOLD Aspire', self: true },

@@ -244,14 +244,15 @@ function _createIcsAttachment(appointment, recipientName, recipientEmail, otherP
     if (timeParts[1] === 'PM' && hours < 12) hours += 12;
     if (timeParts[1] === 'AM' && hours === 12) hours = 0;
 
-    const fromEmail = (process.env.GMAIL_USER || process.env.SMTP_USER || 'beholdoffice@gmail.com').trim();
-    const frontendUrl = (process.env.FRONTEND_URL || 'https://www.behold.co.in').replace(/\/$/, '');
+    const fromEmail = _getFromEmail();
+    const rawUrl = (process.env.FRONTEND_URL || 'https://www.behold.co.in').trim();
+    const baseDomain = rawUrl.replace(/\/counsellor\/?$/, '').replace(/\/profile\/?$/, '').replace(/\/$/, '');
 
     const event = {
       start: [year, month, day, hours, minutes],
       duration: { hours: 1 },
       title: `BEHOLD Counselling Session: ${recipientName} & ${otherPartyName || 'BEHOLD Aspire'}`,
-      description: `Service: ${appointment.service || 'counselling'}\nMode: ${appointment.mode}\n\nJoin Portals:\n- Student Portal: ${frontendUrl}/counsellor/profile\n- Advisor Console: ${frontendUrl}/counsellor/counsellor${appointment.meetLink ? '\n\nJoin Link: ' + appointment.meetLink : ''}`,
+      description: `Service: ${appointment.service || 'counselling'}\nMode: ${appointment.mode}\n\nJoin Portals:\n- Student Portal: ${baseDomain}/profile\n- Advisor Console: ${baseDomain}/counsellor${appointment.meetLink ? '\n\nJoin Link: ' + appointment.meetLink : ''}`,
       location: appointment.mode === 'ONLINE' ? (appointment.meetLink || 'Online (Google Meet)') : 'Behold Aspire Center',
       status: 'CONFIRMED',
       busyStatus: 'BUSY',
