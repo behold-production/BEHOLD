@@ -149,7 +149,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                   <button
                     type="button"
                     onClick={service.onAction}
-                    className={`${isSingle ? 'px-6 py-3 text-xs' : 'px-4.5 py-2.5 text-xs'} rounded-full bg-[#0f172a] hover:bg-[#00c9d6] hover:text-slate-950 text-white font-semibold hover-scale-btn transition-all duration-200 cursor-pointer shadow-xs flex items-center gap-1.5 group/btn shrink-0 border-none`}
+                    className={`${isSingle ? 'px-6 py-3 text-xs' : 'px-4.5 py-2.5 text-xs'} rounded-xl bg-[#0f172a] hover:bg-[#00c9d6] hover:text-slate-950 text-white font-semibold hover-scale-btn transition-all duration-200 cursor-pointer shadow-xs flex items-center gap-1.5 group/btn shrink-0 border-none`}
                   >
                     <span>{service.actionText}</span>
                     <ArrowRight className="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform" />
