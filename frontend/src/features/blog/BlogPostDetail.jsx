@@ -128,7 +128,7 @@ const BlogPostDetail = () => {
     "dateModified": new Date(post.updatedAt || post.createdAt || post.date).toISOString(),
     "author": {
       "@type": "Person",
-      "name": post.authorName || 'Behold Aspire Editor'
+      "name": post.author?.name || post.authorName || 'Behold Aspire Editor'
     },
     "publisher": {
       "@type": "Organization",
@@ -151,7 +151,7 @@ const BlogPostDetail = () => {
       <div className="min-h-screen flex flex-col text-slate-900 pt-28 pb-20 selection:bg-[#0f172a] selection:text-[#00c9d6] relative overflow-hidden select-none">
       {bgLayer}
       <main className="flex-1 relative z-10">
-        <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 reveal-on-scroll">
+        <article className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 reveal-on-scroll">
 
           {/* Back Button */}
           <button
@@ -183,18 +183,18 @@ const BlogPostDetail = () => {
           </h1>
 
           {/* Author & Share Row */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5 py-6 mb-10 border-y border-slate-200/80">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-5 mb-10 border-b border-slate-200/80">
 
             {/* Author */}
-            <div className="flex items-center gap-3.5">
+            <div className="flex items-center gap-3 shrink-0">
               {post.author?.avatar ? (
                 <img
                   src={getImageUrl(post.author.avatar)}
                   alt={post.author?.name}
-                  className="w-11 h-11 rounded-xl object-cover border border-slate-200 shrink-0 shadow-sm"
+                  className="w-10 h-10 rounded-xl object-cover border border-slate-200 shrink-0 shadow-sm"
                 />
               ) : (
-                <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#0f172a] to-[#1e3a5f] text-[#00c9d6] flex items-center justify-center font-black text-base shrink-0 shadow-sm">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#0f172a] to-[#1e3a5f] text-[#00c9d6] flex items-center justify-center font-black text-sm shrink-0 shadow-sm">
                   {(post.author?.name || 'B').charAt(0)}
                 </div>
               )}
@@ -208,34 +208,34 @@ const BlogPostDetail = () => {
               </div>
             </div>
 
-            {/* Share Buttons */}
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="text-[10px] font-bold text-slate-400 tracking-widest uppercase mr-1 hidden sm:block">Share</span>
+            {/* Share Buttons — single row, no wrap */}
+            <div className="flex items-center gap-1.5 flex-nowrap overflow-x-auto scrollbar-none pb-0.5">
+              <span className="text-[10px] font-bold text-slate-400 tracking-widest uppercase mr-0.5 shrink-0 hidden sm:block">Share</span>
 
               <button
                 type="button"
                 onClick={handleShareWhatsApp}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#25D366]/10 hover:bg-[#25D366] text-[#1a9c4c] hover:text-white text-[11px] font-bold tracking-wide transition-all cursor-pointer border border-[#25D366]/30 hover:border-[#25D366] hover:shadow-sm hover-scale-btn"
+                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#25D366]/10 hover:bg-[#25D366] text-[#1a9c4c] hover:text-white text-[10px] font-bold transition-all cursor-pointer border border-[#25D366]/30 hover:border-[#25D366] hover-scale-btn shrink-0"
               >
-                <MessageCircle className="w-3.5 h-3.5" />
+                <MessageCircle className="w-3 h-3" />
                 <span>WhatsApp</span>
               </button>
 
               <button
                 type="button"
                 onClick={handleShareTelegram}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#0088cc]/10 hover:bg-[#0088cc] text-[#0077b3] hover:text-white text-[11px] font-bold tracking-wide transition-all cursor-pointer border border-[#0088cc]/30 hover:border-[#0088cc] hover:shadow-sm hover-scale-btn"
+                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#0088cc]/10 hover:bg-[#0088cc] text-[#0077b3] hover:text-white text-[10px] font-bold transition-all cursor-pointer border border-[#0088cc]/30 hover:border-[#0088cc] hover-scale-btn shrink-0"
               >
-                <Send className="w-3.5 h-3.5" />
+                <Send className="w-3 h-3" />
                 <span>Telegram</span>
               </button>
 
               <button
                 type="button"
                 onClick={handleShareLinkedIn}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#0077b5]/10 hover:bg-[#0077b5] text-[#005c8f] hover:text-white text-[11px] font-bold tracking-wide transition-all cursor-pointer border border-[#0077b5]/30 hover:border-[#0077b5] hover:shadow-sm hover-scale-btn"
+                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#0077b5]/10 hover:bg-[#0077b5] text-[#005c8f] hover:text-white text-[10px] font-bold transition-all cursor-pointer border border-[#0077b5]/30 hover:border-[#0077b5] hover-scale-btn shrink-0"
               >
-                <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
                 </svg>
                 <span>LinkedIn</span>
@@ -244,9 +244,9 @@ const BlogPostDetail = () => {
               <button
                 type="button"
                 onClick={handleCopyLink}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-[11px] font-bold tracking-wide transition-all cursor-pointer border border-slate-200 hover:shadow-sm hover-scale-btn"
+                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-[10px] font-bold transition-all cursor-pointer border border-slate-200 hover-scale-btn shrink-0"
               >
-                {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                {copied ? <Check className="w-3 h-3 text-emerald-600" /> : <Copy className="w-3 h-3" />}
                 <span>{copied ? 'Copied!' : 'Copy'}</span>
               </button>
             </div>
