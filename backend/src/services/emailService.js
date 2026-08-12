@@ -17,12 +17,12 @@ let _nodemailerTransporter = null;
 let _etherealTransporter = null;
 
 function _getFromEmail() {
-  const resendApiKey = (process.env.RESEND_API_KEY || '').trim();
-  if (resendApiKey) {
-    return (process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev').trim();
+  const resendFrom = (process.env.RESEND_FROM_EMAIL || '').trim();
+  if (resendFrom && !resendFrom.endsWith('@gmail.com') && !resendFrom.includes('resend.dev')) {
+    return resendFrom;
   }
   const rawFrom = (process.env.GMAIL_USER || process.env.SMTP_USER || 'beholdoffice@gmail.com').trim();
-  return rawFrom.includes('flutterclt') ? 'beholdoffice@gmail.com' : rawFrom;
+  return (rawFrom.includes('flutterclt') || !rawFrom.includes('@')) ? 'beholdoffice@gmail.com' : rawFrom;
 }
 
 function _getResendClient() {
