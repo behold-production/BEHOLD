@@ -13,78 +13,90 @@ async function generateSessionMeetingLink({ counsellor, user, date, time, servic
   let meetingLink = counsellor?.defaultMeetLink || '';
   const fallbackRoomLink = `https://meet.jit.si/behold-aspire-${appointmentId || Date.now()}`;
 
-  if (counsellor && counsellor.googleRefreshToken) {
+  const keyId = process.env.GOOGLE_CLIENT_ID;
+  const keySecret = process.env.GOOGLE_CLIENT_SECRET;
+  const redirectUri = process.env.GOOGLE_REDIRECT_URI || 'https://www.behold.co.in/api/google/callback';
+  const refreshToken = counsellor?.googleRefreshToken || process.env.SYSTEM_GOOGLE_REFRESH_TOKEN || process.env.GOOGLE_REFRESH_TOKEN;
+
+  if (keyId && keySecret && refreshToken) {
     try {
-      const keyId = process.env.GOOGLE_CLIENT_ID;
-      const keySecret = process.env.GOOGLE_CLIENT_SECRET;
-      const redirectUri = process.env.GOOGLE_REDIRECT_URI || 'https://www.behold.co.in/api/google/callback';
+      const oauth2Client = new google.auth.OAuth2(keyId, keySecret, redirectUri);
+      oauth2Client.setCredentials({ refresh_token: refreshToken });
 
-      if (keyId && keySecret) {
-        const oauth2Client = new google.auth.OAuth2(keyId, keySecret, redirectUri);
-        oauth2Client.setCredentials({ refresh_token: counsellor.googleRefreshToken });
+      const calendar = google.calendar({ version: 'v3', auth: oauth2Client });
 
-        const calendar = google.calendar({ version: 'v3', auth: oauth2Client });
+      // Parse date and time
+      const [year, month, day] = (date || '').split('-').map(Number);
+      let [timePart, period] = (time || '10:00 AM').split(' ');
+      let [hours, minutes] = (timePart || '10:00').split(':').map(Number);
+      if (period === 'PM' && hours < 12) hours += 12;
+      if (period === 'AM' && hours === 12) hours = 0;
 
-        // Parse date and time
-        const [year, month, day] = (date || '').split('-');
-        let [timePart, period] = (time || '10:00 AM').split(' ');
-        let [hours, minutes] = (timePart || '10:00').split(':');
-        hours = parseInt(hours, 10);
-        if (period === 'PM' && hours !== 12) hours += 12;
-        if (period === 'AM' && hours === 12) hours = 0;
+      const startTimeStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}T${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:00+05:30`;
+      const startTime = new Date(startTimeStr);
+      const durationMs = (Number(durationMinutes) || 60) * 60 * 1000;
+      const endTime = new Date(startTime.getTime() + durationMs);
 
-        const startTimeStr = `${year}-${month}-${day}T${hours.toString().padStart(2, '0')}:${minutes || '00'}:00+05:30`;
-        const startTime = new Date(startTimeStr);
-        const durationMs = (Number(durationMinutes) || 60) * 60 * 1000;
-        const endTime = new Date(startTime.getTime() + durationMs);
+      const frontendUrl = (process.env.FRONTEND_URL || 'https://www.behold.co.in').replace(/\/$/, '');
+      const organizerEmail = (process.env.GMAIL_USER || 'beholdoffice@gmail.com').trim();
 
-        const frontendUrl = process.env.FRONTEND_URL || 'https://www.behold.co.in';
-        const organizerEmail = (counsellor?.email && !counsellor.email.includes('flutterclt'))
-          ? counsellor.email
-          : (process.env.GMAIL_USER || 'beholdoffice@gmail.com').trim();
-        
-        // Construct event: Counsellor is ORGANIZER, User is ATTENDEE.
-        // DO NOT put counsellor in attendees array to avoid Google Meet treating them as guest!
-        const event = {
-          summary: `BEHOLD Counselling Session: ${user ? user.name : 'Student'} & ${counsellor.name}`,
-          description: `Service: ${service || 'Psychological Counselling'}\nMode: ONLINE (Google Meet)\n\nJoin Portals:\n- Student Portal: ${frontendUrl}/profile\n- Advisor Console: ${frontendUrl}/counsellor`,
-          start: { dateTime: startTime.toISOString() },
-          end: { dateTime: endTime.toISOString() },
-          organizer: { email: organizerEmail, displayName: counsellor.name || 'BEHOLD Aspire', self: true },
-          attendees: [
-            ...(user && user.email ? [{ email: user.email, displayName: user.name, responseStatus: 'accepted' }] : []),
-            { email: organizerEmail, displayName: counsellor.name, responseStatus: 'accepted' }
-          ],
-          guestsCanModify: true,
-          guestsCanInviteOthers: true,
-          guestsCanSeeOtherGuests: true,
-          conferenceData: {
-            createRequest: {
-              requestId: `meet-${Date.now()}-${Math.random().toString(36).substring(7)}`,
-              conferenceSolutionKey: { type: 'hangoutsMeet' }
-            }
+      const studentName = user?.name || 'Student';
+      const counsellorName = counsellor?.name || 'Psychologist';
+
+      const attendees = [];
+      if (user && user.email) {
+        attendees.push({ email: user.email, displayName: studentName, responseStatus: 'accepted' });
+      }
+      if (counsellor && counsellor.email) {
+        attendees.push({ email: counsellor.email, displayName: counsellorName, responseStatus: 'accepted' });
+      }
+      if (!attendees.some(a => a.email.toLowerCase() === organizerEmail.toLowerCase())) {
+        attendees.push({ email: organizerEmail, displayName: 'BEHOLD Aspire', responseStatus: 'accepted' });
+      }
+
+      const event = {
+        summary: `BEHOLD Counselling Session: ${studentName} & ${counsellorName}`,
+        description: `Service: ${service || 'counselling'}\nMode: ONLINE (Google Meet)\n\nJoin Portals:\n- Student Portal: ${frontendUrl}/counsellor/profile\n- Advisor Console: ${frontendUrl}/counsellor/counsellor`,
+        start: { dateTime: startTime.toISOString() },
+        end: { dateTime: endTime.toISOString() },
+        organizer: { email: organizerEmail, displayName: 'BEHOLD Aspire', self: true },
+        attendees,
+        guestsCanModify: true,
+        guestsCanInviteOthers: true,
+        guestsCanSeeOtherGuests: true,
+        reminders: {
+          useDefault: false,
+          overrides: [
+            { method: 'popup', minutes: 0 },
+            { method: 'email', minutes: 0 }
+          ]
+        },
+        conferenceData: {
+          createRequest: {
+            requestId: `meet-${Date.now()}-${Math.random().toString(36).substring(7)}`,
+            conferenceSolutionKey: { type: 'hangoutsMeet' }
           }
-        };
-
-        const response = await calendar.events.insert({
-          calendarId: 'primary',
-          resource: event,
-          conferenceDataVersion: 1,
-          sendUpdates: 'none'
-        });
-
-        if (response.data && response.data.hangoutLink) {
-          meetingLink = response.data.hangoutLink;
-          console.log(`[Google Calendar Success]: Generated Google Meet link for appointment ${appointmentId}: ${meetingLink}`);
-          return meetingLink;
         }
+      };
+
+      const response = await calendar.events.insert({
+        calendarId: 'primary',
+        resource: event,
+        conferenceDataVersion: 1,
+        sendUpdates: 'all'
+      });
+
+      if (response.data && response.data.hangoutLink) {
+        meetingLink = response.data.hangoutLink;
+        console.log(`[Google Calendar Success]: Generated Google Meet link for appointment ${appointmentId}: ${meetingLink}`);
+        return meetingLink;
       }
     } catch (calError) {
-      console.error('[Google Calendar API Warning]: Could not create event via Google API, using default/Google Meet room:', calError.message);
+      console.error('[Google Calendar API Warning]: Could not create event via Google API, using default/fallback room:', calError.message);
     }
   }
 
-  // Fallback to counsellor defaultMeetLink or Jitsi instant link (prevents 'Ask to Join' completely)
+  // Fallback to counsellor defaultMeetLink or Jitsi instant link
   if (!meetingLink || meetingLink.trim() === '') {
     meetingLink = fallbackRoomLink;
   }

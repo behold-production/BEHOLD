@@ -71,13 +71,18 @@ function _getNodemailerTransporter() {
   }
 
   // 3. Gmail SMTP
-  const gmailUser = (process.env.GMAIL_USER || '').trim();
+  const gmailUser = (process.env.GMAIL_USER || 'beholdoffice@gmail.com').trim();
   const gmailPass = (process.env.GMAIL_APP_PASSWORD || '').trim().replace(/\s+/g, '');
 
   if (gmailUser && gmailPass && !gmailUser.includes('your_gmail')) {
     _nodemailerTransporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: { user: gmailUser, pass: gmailPass }
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
+      auth: { user: gmailUser, pass: gmailPass },
+      connectionTimeout: 10000,
+      greetingTimeout: 10000,
+      socketTimeout: 10000
     });
     console.log('[EmailService] ✅ Using Gmail SMTP provider (' + gmailUser + ')');
     return _nodemailerTransporter;
@@ -240,16 +245,17 @@ function _createIcsAttachment(appointment, recipientName, recipientEmail, otherP
     if (timeParts[1] === 'AM' && hours === 12) hours = 0;
 
     const fromEmail = (process.env.GMAIL_USER || process.env.SMTP_USER || 'beholdoffice@gmail.com').trim();
+    const frontendUrl = (process.env.FRONTEND_URL || 'https://www.behold.co.in').replace(/\/$/, '');
 
     const event = {
       start: [year, month, day, hours, minutes],
       duration: { hours: 1 },
-      title: `Counselling Session — Behold Aspire`,
-      description: `Counselling session between ${recipientName} and ${otherPartyName || 'Counsellor'}. Mode: ${appointment.mode}.${appointment.meetLink ? ' Join: ' + appointment.meetLink : ''}`,
-      location: appointment.mode === 'ONLINE' ? (appointment.meetLink || 'Online — link in email') : 'Behold Aspire Center',
+      title: `BEHOLD Counselling Session: ${recipientName} & ${otherPartyName || 'BEHOLD Aspire'}`,
+      description: `Service: ${appointment.service || 'counselling'}\nMode: ${appointment.mode}\n\nJoin Portals:\n- Student Portal: ${frontendUrl}/counsellor/profile\n- Advisor Console: ${frontendUrl}/counsellor/counsellor${appointment.meetLink ? '\n\nJoin Link: ' + appointment.meetLink : ''}`,
+      location: appointment.mode === 'ONLINE' ? (appointment.meetLink || 'Online (Google Meet)') : 'Behold Aspire Center',
       status: 'CONFIRMED',
       busyStatus: 'BUSY',
-      organizer: { name: 'Behold Aspire', email: fromEmail },
+      organizer: { name: 'BEHOLD Aspire', email: fromEmail },
       attendees: [
         { name: recipientName, email: recipientEmail || fromEmail, rsvp: true, role: 'REQ-PARTICIPANT' },
         ...(otherPartyEmail ? [{ name: otherPartyName || 'Other Party', email: otherPartyEmail, rsvp: true, role: 'REQ-PARTICIPANT' }] : [])

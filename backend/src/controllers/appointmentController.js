@@ -70,57 +70,38 @@ const AppointmentController = {
         clientLongitude: Number(clientLongitude) || 0
       });
 
-      res.status(201).json({
-        success: true,
-        message: 'Appointment request created successfully',
-        data: newAppointment
-      });
-
-      // --- Background Processing for Notifications ---
-      (async () => {
-        try {
-          // Send notification to counsellor
-          await StorageService.create('notifications', {
+      // Synchronous/Awaited Processing for Notifications & Emails (Required for Vercel Lambdas)
+      try {
+        await Promise.allSettled([
+          StorageService.create('notifications', {
             recipientId: counsellorId,
             recipientRole: 'counsellor',
             title: 'New Appointment Booking Request',
             message: `Student ${user.name} has requested an appointment on ${date} at ${time}.`,
             type: 'appointment_created',
             isRead: false
-          });
-
-          // Send notification to student
-          await StorageService.create('notifications', {
+          }),
+          StorageService.create('notifications', {
             recipientId: userId,
             recipientRole: 'user',
             title: 'Appointment Request Submitted',
             message: `Your booking request with ${counsellor.name} on ${date} at ${time} has been submitted.`,
             type: 'appointment_created',
             isRead: false
-          });
+          }),
+          counsellor && counsellor.phone ? WhatsAppService.sendBookingAlert(counsellor.phone, 'created', { studentName: user.name, counsellorName: counsellor.name, date, time }) : Promise.resolve(),
+          user && user.phone ? WhatsAppService.sendBookingAlert(user.phone, 'created', { studentName: user.name, counsellorName: counsellor.name, date, time }) : Promise.resolve(),
+          EmailService.sendAppointmentBooked({ user, counsellor, appointment: newAppointment })
+        ]);
+      } catch (notifErr) {
+        console.error('[Notification Task Error in createAppointment]:', notifErr);
+      }
 
-          if (counsellor && counsellor.phone) {
-            WhatsAppService.sendBookingAlert(counsellor.phone, 'created', {
-              studentName: user.name,
-              counsellorName: counsellor.name,
-              date,
-              time
-            }).catch(err => console.error(err));
-          }
-          if (user && user.phone) {
-            WhatsAppService.sendBookingAlert(user.phone, 'created', {
-              studentName: user.name,
-              counsellorName: counsellor.name,
-              date,
-              time
-            }).catch(err => console.error(err));
-          }
-          // --- Email Alerts ---
-          EmailService.sendAppointmentBooked({ user, counsellor, appointment: newAppointment }).catch(err => console.error('[Email Booked Error]:', err));
-        } catch (bgError) {
-          console.error('[Background Task Error in createAppointment]:', bgError);
-        }
-      })();
+      res.status(201).json({
+        success: true,
+        message: 'Appointment request created successfully',
+        data: newAppointment
+      });
     } catch (error) {
       next(error);
     }
@@ -142,96 +123,83 @@ const AppointmentController = {
           .json({ success: false, message: `Cannot approve appointment with status: ${appointment.status}` });
       }
 
-      // Update appointment status to APPROVED immediately
-      const updated = await StorageService.update('appointments', id, { status: 'APPROVED' });
+      const user = await StorageService.findById('users', appointment.userId);
+      const counsellor = await StorageService.findById('counsellors', appointment.counsellorId);
 
-      // Respond immediately to the frontend to eliminate any perceived delay
-      res.status(200).json({
-        success: true,
-        message: 'Appointment approved successfully',
-        data: { appointment: updated }
-      });
+      let meetLink =
+        appointment.mode === 'ONLINE'
+          ? appointment.meetLink || (counsellor ? counsellor.defaultMeetLink : '') || ''
+          : '';
 
-      // --- Background Processing for Calendar, Session, and Notifications ---
-      (async () => {
+      if (appointment.mode === 'ONLINE') {
         try {
-          // Notify User internally
-          const user = await StorageService.findById('users', appointment.userId);
-          const counsellor = await StorageService.findById('counsellors', appointment.counsellorId);
-
-          let meetLink =
-            appointment.mode === 'ONLINE'
-              ? appointment.meetLink || (counsellor ? counsellor.defaultMeetLink : '') || ''
-              : '';
-
-          if (appointment.mode === 'ONLINE') {
-            const { generateSessionMeetingLink } = require('../utils/calendarHelper');
-            const generatedLink = await generateSessionMeetingLink({
-              counsellor,
-              user,
-              date: appointment.date,
-              time: appointment.time,
-              service: appointment.service,
-              appointmentId: appointment.id
-            });
-            if (generatedLink && generatedLink !== appointment.meetLink) {
-              meetLink = generatedLink;
-              await StorageService.update('appointments', id, { meetLink });
-            }
-          }
-
-          await StorageService.create('sessions', {
-            appointmentId: id,
-            userId: appointment.userId,
-            counsellorId: appointment.counsellorId,
+          const { generateSessionMeetingLink } = require('../utils/calendarHelper');
+          const generatedLink = await generateSessionMeetingLink({
+            counsellor,
+            user,
             date: appointment.date,
             time: appointment.time,
-            mode: appointment.mode,
-            meetLink,
-            status: 'PENDING',
-            notes: '',
-            feedback: '',
-            clientLocationName: appointment.clientLocationName || '',
-            clientLatitude: Number(appointment.clientLatitude) || 0,
-            clientLongitude: Number(appointment.clientLongitude) || 0
+            service: appointment.service,
+            appointmentId: appointment.id
           });
+          if (generatedLink) {
+            meetLink = generatedLink;
+          }
+        } catch (calErr) {
+          console.error('[Calendar Link Generation Error in approveAppointment]:', calErr.message);
+        }
+      }
 
-          await StorageService.create('notifications', {
+      // Update appointment status to APPROVED and store meetLink
+      const updated = await StorageService.update('appointments', id, { status: 'APPROVED', meetLink });
+
+      await StorageService.create('sessions', {
+        appointmentId: id,
+        userId: appointment.userId,
+        counsellorId: appointment.counsellorId,
+        date: appointment.date,
+        time: appointment.time,
+        mode: appointment.mode,
+        meetLink,
+        status: 'PENDING',
+        notes: '',
+        feedback: '',
+        clientLocationName: appointment.clientLocationName || '',
+        clientLatitude: Number(appointment.clientLatitude) || 0,
+        clientLongitude: Number(appointment.clientLongitude) || 0
+      });
+
+      // Synchronous/Awaited Processing for Notifications & Emails (Required for Vercel Lambdas)
+      try {
+        await Promise.allSettled([
+          StorageService.create('notifications', {
             recipientId: appointment.userId,
             recipientRole: 'user',
             title: 'Appointment Approved',
             message: `Your appointment with ${counsellor ? counsellor.name : 'Counsellor'} on ${appointment.date} has been approved.`,
             type: 'appointment_approved',
             isRead: false
-          });
-
-          // Notify Counsellor
-          await StorageService.create('notifications', {
+          }),
+          StorageService.create('notifications', {
             recipientId: appointment.counsellorId,
             recipientRole: 'counsellor',
             title: 'Appointment Approved',
             message: `You approved the appointment request from ${user ? user.name : 'Student'} on ${appointment.date}.`,
             type: 'appointment_approved',
             isRead: false
-          });
+          }),
+          user && user.phone ? WhatsAppService.sendBookingAlert(user.phone, 'approved', { studentName: user.name, counsellorName: counsellor ? counsellor.name : 'Your Counsellor', date: appointment.date, time: appointment.time }) : Promise.resolve(),
+          user ? EmailService.sendAppointmentApproved({ user, counsellor, appointment: { ...appointment, meetLink } }) : Promise.resolve()
+        ]);
+      } catch (notifErr) {
+        console.error('[Notification Task Error in approveAppointment]:', notifErr);
+      }
 
-          // --- WhatsApp Alerts ---
-          if (user && user.phone) {
-            WhatsAppService.sendBookingAlert(user.phone, 'approved', {
-              studentName: user.name,
-              counsellorName: counsellor ? counsellor.name : 'Your Counsellor',
-              date: appointment.date,
-              time: appointment.time
-            }).catch(err => console.error(err));
-          }
-          // --- Email Alerts ---
-          if (user) {
-            EmailService.sendAppointmentApproved({ user, counsellor, appointment: { ...appointment, meetLink } }).catch(err => console.error('[Email Approve Error]:', err));
-          }
-        } catch (bgError) {
-          console.error('[Background Task Error in approveAppointment]:', bgError);
-        }
-      })();
+      res.status(200).json({
+        success: true,
+        message: 'Appointment approved successfully',
+        data: { appointment: updated }
+      });
     } catch (error) {
       next(error);
     }
@@ -260,42 +228,32 @@ const AppointmentController = {
         cancelledBy: req.user.role || 'counsellor'
       });
 
-      res.status(200).json({
-        success: true,
-        message: 'Appointment request rejected successfully',
-        data: updated
-      });
+      // Synchronous/Awaited Processing for Notifications & Emails
+      try {
+        const counsellor = await StorageService.findById('counsellors', appointment.counsellorId);
+        const user = await StorageService.findById('users', appointment.userId);
 
-      // --- Background Processing for Notifications ---
-      (async () => {
-        try {
-          // Notify User
-          const counsellor = await StorageService.findById('counsellors', appointment.counsellorId);
-          await StorageService.create('notifications', {
+        await Promise.allSettled([
+          StorageService.create('notifications', {
             recipientId: appointment.userId,
             recipientRole: 'user',
             title: 'Appointment Declined',
             message: `Your appointment request with ${counsellor ? counsellor.name : 'Counsellor'} on ${appointment.date} was declined.${reason ? ` Reason: ${reason}` : ''}`,
             type: 'appointment_rejected',
             isRead: false
-          });
+          }),
+          user && user.phone ? WhatsAppService.sendBookingAlert(user.phone, 'rejected', { studentName: user.name, counsellorName: counsellor ? counsellor.name : 'Psychologist', date: appointment.date, time: appointment.time, reason: reason || '' }) : Promise.resolve(),
+          user ? EmailService.sendAppointmentRejected({ user, counsellor, appointment, reason }) : Promise.resolve()
+        ]);
+      } catch (notifErr) {
+        console.error('[Notification Task Error in rejectAppointment]:', notifErr);
+      }
 
-          // --- WhatsApp Alert (rejection goes via WhatsApp only) ---
-          const user = await StorageService.findById('users', appointment.userId);
-          if (user && user.phone) {
-            WhatsAppService.sendBookingAlert(user.phone, 'rejected', {
-              studentName: user.name,
-              counsellorName: counsellor ? counsellor.name : 'Psychologist',
-              date: appointment.date,
-              time: appointment.time,
-              reason: reason || ''
-            }).catch(err => console.error(err));
-          }
-        } catch (bgError) {
-          console.error('[Background Task Error in rejectAppointment]:', bgError);
-        }
-      })();
-
+      res.status(200).json({
+        success: true,
+        message: 'Appointment request rejected successfully',
+        data: updated
+      });
     } catch (error) {
       next(error);
     }
@@ -433,49 +391,45 @@ const AppointmentController = {
         await StorageService.update('sessions', session.id, { date, time, status: 'PENDING' });
       }
 
-      res.status(200).json({
-        success: true,
-        message: 'Appointment rescheduled successfully. Pending approval.',
-        warning: warning || undefined,
-        data: updated
-      });
+      // Synchronous/Awaited Processing for Notifications & Emails
+      try {
+        const isStudentRescheduling = req.user.role === 'user';
+        const targetId = isStudentRescheduling ? appointment.counsellorId : appointment.userId;
+        const targetRole = isStudentRescheduling ? 'counsellor' : 'user';
+        const actorName = req.user.role === 'user' ? 'The student' : 'The counsellor';
+        const user = await StorageService.findById('users', appointment.userId);
+        const counsellor = await StorageService.findById('counsellors', appointment.counsellorId);
 
-      // --- Background Processing for Notifications ---
-      (async () => {
-        try {
-          // Notify other participant
-          const isStudentRescheduling = req.user.role === 'user';
-          const targetId = isStudentRescheduling ? appointment.counsellorId : appointment.userId;
-          const targetRole = isStudentRescheduling ? 'counsellor' : 'user';
-          const actorName = req.user.role === 'user' ? 'The student' : 'The counsellor';
+        const details = {
+          studentName: user ? user.name : 'Student',
+          counsellorName: counsellor ? counsellor.name : 'Counsellor',
+          date,
+          time
+        };
 
-          await StorageService.create('notifications', {
+        await Promise.allSettled([
+          StorageService.create('notifications', {
             recipientId: targetId,
             recipientRole: targetRole,
             title: 'Appointment Rescheduled Request',
             message: `${actorName} has requested to reschedule the appointment on ${date} at ${time}.`,
             type: 'appointment_rescheduled',
             isRead: false
-          });
+          }),
+          user && user.phone ? WhatsAppService.sendBookingAlert(user.phone, 'rescheduled', details) : Promise.resolve(),
+          counsellor && counsellor.phone ? WhatsAppService.sendBookingAlert(counsellor.phone, 'rescheduled', details) : Promise.resolve(),
+          user ? EmailService.sendAppointmentRescheduled({ user, counsellor, appointment: { ...appointment, date, time } }) : Promise.resolve()
+        ]);
+      } catch (notifErr) {
+        console.error('[Notification Task Error in rescheduleAppointment]:', notifErr);
+      }
 
-          // --- WhatsApp Alerts ---
-          const user = await StorageService.findById('users', appointment.userId);
-          const counsellor = await StorageService.findById('counsellors', appointment.counsellorId);
-          
-          const details = {
-            studentName: user ? user.name : 'Student',
-            counsellorName: counsellor ? counsellor.name : 'Counsellor',
-            date,
-            time
-          };
-
-          if (user && user.phone) WhatsAppService.sendBookingAlert(user.phone, 'rescheduled', details).catch(err => console.error(err));
-          if (counsellor && counsellor.phone) WhatsAppService.sendBookingAlert(counsellor.phone, 'rescheduled', details).catch(err => console.error(err));
-          // Reschedule notifications go via WhatsApp only
-        } catch (bgError) {
-          console.error('[Background Task Error in rescheduleAppointment]:', bgError);
-        }
-      })();
+      res.status(200).json({
+        success: true,
+        message: 'Appointment rescheduled successfully. Pending approval.',
+        warning: warning || undefined,
+        data: updated
+      });
     } catch (error) {
       next(error);
     }
@@ -558,51 +512,48 @@ const AppointmentController = {
         });
       }
 
-      res.status(200).json({
-        success: true,
-        message: 'Appointment cancelled successfully',
-        data: updated
-      });
+      // Synchronous/Awaited Processing for Notifications & Emails
+      try {
+        const isStudentCancelling = req.user.id === appointment.userId;
+        const targetId = isStudentCancelling ? appointment.counsellorId : appointment.userId;
+        const targetRole = isStudentCancelling ? 'counsellor' : 'user';
+        const cancellerName =
+          req.user.role === 'user' ? 'Student' : req.user.role === 'admin' ? 'Administrator' : 'Counsellor';
+        const reasonText = reason ? ` Reason: "${reason}"` : '';
 
-      // --- Background Processing for Notifications ---
-      (async () => {
-        try {
-          // Notify the other party
-          const isStudentCancelling = req.user.id === appointment.userId;
-          const targetId = isStudentCancelling ? appointment.counsellorId : appointment.userId;
-          const targetRole = isStudentCancelling ? 'counsellor' : 'user';
-          const cancellerName =
-            req.user.role === 'user' ? 'Student' : req.user.role === 'admin' ? 'Administrator' : 'Counsellor';
-          const reasonText = reason ? ` Reason: "${reason}"` : '';
+        const user = await StorageService.findById('users', appointment.userId);
+        const counsellor = await StorageService.findById('counsellors', appointment.counsellorId);
 
-          await StorageService.create('notifications', {
+        const details = {
+          studentName: user ? user.name : 'Student',
+          counsellorName: counsellor ? counsellor.name : 'Counsellor',
+          date: appointment.date,
+          time: appointment.time,
+          reason: reason || 'Cancelled'
+        };
+
+        await Promise.allSettled([
+          StorageService.create('notifications', {
             recipientId: targetId,
             recipientRole: targetRole,
             title: 'Appointment Cancelled',
             message: `${cancellerName} has cancelled the appointment scheduled on ${appointment.date}.${reasonText}`,
             type: 'appointment_cancelled',
             isRead: false
-          });
+          }),
+          user && user.phone ? WhatsAppService.sendBookingAlert(user.phone, 'cancelled', details) : Promise.resolve(),
+          counsellor && counsellor.phone ? WhatsAppService.sendBookingAlert(counsellor.phone, 'cancelled', details) : Promise.resolve(),
+          user ? EmailService.sendAppointmentCancelled({ user, counsellor, appointment, cancelledBy: cancellerName, reason }) : Promise.resolve()
+        ]);
+      } catch (notifErr) {
+        console.error('[Notification Task Error in cancelAppointment]:', notifErr);
+      }
 
-          // --- WhatsApp Alerts ---
-          const user = await StorageService.findById('users', appointment.userId);
-          const counsellor = await StorageService.findById('counsellors', appointment.counsellorId);
-          
-          const details = {
-            studentName: user ? user.name : 'Student',
-            counsellorName: counsellor ? counsellor.name : 'Counsellor',
-            date: appointment.date,
-            time: appointment.time,
-            reason: reason || 'Cancelled'
-          };
-
-          if (user && user.phone) WhatsAppService.sendBookingAlert(user.phone, 'cancelled', details).catch(err => console.error(err));
-          if (counsellor && counsellor.phone) WhatsAppService.sendBookingAlert(counsellor.phone, 'cancelled', details).catch(err => console.error(err));
-          // Cancellation notifications go via WhatsApp only
-        } catch (bgError) {
-          console.error('[Background Task Error in cancelAppointment]:', bgError);
-        }
-      })();
+      res.status(200).json({
+        success: true,
+        message: 'Appointment cancelled successfully',
+        data: updated
+      });
     } catch (error) {
       next(error);
     }
