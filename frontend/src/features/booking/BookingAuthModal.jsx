@@ -95,7 +95,16 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
       } else {
         const res = await ApiService.verifyOtp(otpPhone, otpCode, true, 'user');
         if (res.success) {
-          if (setBookingForm) setBookingForm(prev => ({ ...prev, name: prev.name || res.data.user.name, phone: otpPhone, email: prev.email || res.data.user.email }));
+          if (setBookingForm) {
+            setBookingForm(prev => ({
+              ...prev,
+              name: (res.data.user?.name && !res.data.user.name.includes('Behold User')) ? res.data.user.name : prev.name,
+              phone: otpPhone,
+              email: (res.data.user?.email && !res.data.user.email.includes('@temp.behold')) ? res.data.user.email : prev.email,
+              age: res.data.user?.age || prev.age || '',
+              feelingLately: res.data.user?.feelingLately || prev.feelingLately || ''
+            }));
+          }
           if (onSuccess) onSuccess(res.data.user);
         } else throw new Error(res.message || 'Invalid OTP');
         setIsLoading(false);

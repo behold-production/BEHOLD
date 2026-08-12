@@ -653,13 +653,11 @@ export default function App() {
 
       <AuthModals isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
       
-      {/* Mandatory profile completion for WhatsApp auto-registered users */}
+      {/* Mandatory profile completion for WhatsApp auto-registered or incomplete users */}
       <CompleteProfileModal 
-        isOpen={user && user.email && user.email.startsWith('whatsapp_')} 
+        isOpen={user && (user.email?.includes('@temp.behold') || !user.name || user.name.includes('Behold User') || !user.age)} 
         onSuccess={() => {
-          // The modal relies on user state updating to close itself, 
-          // but we can trigger a re-fetch of profile if necessary.
-          // For now, the modal handles this via ApiService.updateProfile which emits 'storage' event.
+          if (window.dispatchEvent) window.dispatchEvent(new Event('storage'));
         }} 
       />
 

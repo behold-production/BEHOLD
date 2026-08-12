@@ -88,6 +88,8 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       name: '',
       phone: '',
       email: '',
+      age: '',
+      feelingLately: '',
       groupCode: '',
       clientLocationName: '',
       clientLatitude: '',
