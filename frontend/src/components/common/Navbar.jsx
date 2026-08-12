@@ -168,9 +168,9 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
                 onClick={handleLogoClick}
                 className="flex items-center gap-2 text-left bg-transparent border-none cursor-pointer p-0"
               >
-                <span className="text-2xl sm:text-3xl font-bold tracking-tight font-sans text-slate-900">
+                <span className="text-2xl sm:text-3xl font-black tracking-tight font-sans text-slate-900 uppercase">
                   {(siteName || 'BEHOLD').replace(/\.$/, '')}
-                  <span className="text-[#00c9d6] drop-shadow-[0_0_8px_rgba(0,201,214,0.8)] font-bold">.</span>
+                  <span className="text-[#00c9d6] drop-shadow-[0_0_8px_rgba(0,201,214,0.8)] font-black">.</span>
                 </span>
               </button>
 

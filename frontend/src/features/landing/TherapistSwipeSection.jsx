@@ -490,15 +490,15 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
               </div>
             </div>
 
-            {/* Text & Button Centered Under Cards */}
-            <div className="mt-8 sm:mt-10 flex flex-col items-center text-center space-y-5 max-w-lg px-4">
-              <p className="font-sans text-xs sm:text-sm md:text-base text-slate-600 font-medium leading-relaxed drop-shadow-xs">
+            {/* Text & Button Centered Under Cards - Wider & Balanced Container */}
+            <div className="mt-8 sm:mt-12 flex flex-col items-center text-center space-y-5 max-w-2xl mx-auto px-4 sm:px-6">
+              <p className="font-sans text-sm sm:text-base md:text-lg text-slate-700 font-normal leading-relaxed">
                 Sometimes healing begins with a conversation. Whenever you're ready, we'll meet you with understanding, care, and professional support.
               </p>
 
               <button
                 onClick={handleConnectClick}
-                className="bg-[#0f172a] hover:bg-[#00c9d6] hover:text-slate-950 text-white font-bold text-xs sm:text-sm tracking-wider px-8 py-3 rounded-full shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer flex items-center justify-center border-none hover-scale-btn"
+                className="bg-[#0f172a] hover:bg-[#00c9d6] hover:text-slate-950 text-white font-semibold text-xs sm:text-sm px-8 py-3.5 rounded-full shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer flex items-center justify-center border-none hover-scale-btn mt-2"
               >
                 Let's Connect
               </button>
