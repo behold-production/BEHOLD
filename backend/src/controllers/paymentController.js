@@ -522,7 +522,7 @@ const PaymentController = {
               time: notes.time,
               mode: notes.mode,
               meetLink: autoMeetLink,
-              status: 'PENDING',
+              status: 'CONFIRMED',
               service: notes.service || 'counselling',
               paymentStatus: 'PAID',
               razorpayOrderId: orderId,
