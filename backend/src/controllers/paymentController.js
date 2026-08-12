@@ -4,7 +4,7 @@ const StorageService = require('../services/storageService');
 const { validateBookingDetails } = require('../utils/bookingValidator');
 const EmailService = require('../services/emailService');
 const WhatsAppService = require('../services/whatsappService');
-const { resolveAnyPhone } = require('../utils/phoneUtils');
+const { resolveAnyPhone, normalizePhoneWithCountryCode } = require('../utils/phoneUtils');
 
 const PaymentController = {
   // Create Razorpay Order
@@ -329,6 +329,11 @@ const PaymentController = {
       const commissionPercent = counsellor.commissionPercent !== undefined ? Number(counsellor.commissionPercent) : (settings.counsellorSplitPercent !== undefined ? Number(settings.counsellorSplitPercent) : 50);
       const counsellorShareAmount = Number((netTotal * (commissionPercent / 100)).toFixed(2));
 
+      const normPhone = normalizePhoneWithCountryCode(clientPhone || user?.phone);
+      if (normPhone && user && user.phone !== normPhone) {
+        StorageService.update('users', userId, { phone: normPhone }).catch(() => {});
+      }
+
       // 5. Create appointment with CONFIRMED status
       const newAppointment = await StorageService.create('appointments', {
         userId,
@@ -347,7 +352,7 @@ const PaymentController = {
         couponCode,
         clientName: clientName || user.name || '',
         clientEmail: clientEmail || user.email || '',
-        clientPhone: clientPhone || user.phone || '',
+        clientPhone: normPhone || clientPhone || user.phone || '',
         clientLocationName: clientLocationName || '',
         clientLatitude: Number(clientLatitude) || 0,
         clientLongitude: Number(clientLongitude) || 0,

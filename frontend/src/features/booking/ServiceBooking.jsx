@@ -331,26 +331,8 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                 >
                     <div className="space-y-8 sm:space-y-10">
 
-                        {/* Header */}
-                        <div className="text-center flex flex-col items-center space-y-3">
-                            <span className="inline-flex items-center justify-center gap-2 text-[11px] sm:text-xs font-semibold text-[#00c9d6] tracking-widest uppercase mb-2 text-center">
-                                <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
-                                {rescheduleSession ? 'RESCHEDULE SESSION' : 'BOOK A CONFIDENTIAL SESSION'}
-                                <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
-                            </span>
-                            <h1 className="text-3xl sm:text-5xl md:text-6xl font-sans font-semibold uppercase tracking-tight leading-none text-[#0f172a] flex items-center justify-center flex-wrap gap-1">
-                                <span>{rescheduleSession ? 'Reschedule Your Session' : 'Book Your Session'}</span>
-                                <ScrollDot nextId="booking-console" label="Scroll to booking form ↓" size="md" inlineText={true} />
-                            </h1>
-                            <p className="text-surface-600 max-w-xl mx-auto text-sm sm:text-base leading-relaxed font-normal">
-                                {rescheduleSession
-                                    ? `Reschedule your appointment with ${rescheduleSession.advisorName || rescheduleSession.counsellorName}. Pick a new date and time.`
-                                    : 'Choose your service, pick a date and time, and confirm with a certified specialist.'}
-                            </p>
-                        </div>
-
                         {/* BOOKING FORM */}
-                        <div id="booking-console" className="space-y-6 sm:space-y-8 w-full mt-6">
+                        <div id="booking-console" className="space-y-6 sm:space-y-8 w-full">
                             <div className="flex flex-col items-center justify-center text-center gap-2 border-b border-surface-200 pb-4">
                                 <h2 className="text-xl sm:text-2xl font-sans font-semibold uppercase text-[#0f172a] flex items-center justify-center gap-1">
                                     <span>Your Booking</span>
