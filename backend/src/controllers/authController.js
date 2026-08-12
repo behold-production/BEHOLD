@@ -189,7 +189,11 @@ const AuthController = {
       // Check if email already exists
       const existing = await findAnyUserByEmail(normalizedEmail);
       if (existing) {
-        return res.status(400).json({ success: false, message: 'Email address is already in use' });
+        const roleTitle = existing.table === 'counsellors' ? 'Psychologist/Counsellor' : (existing.table === 'admins' ? 'Admin' : 'Student/User');
+        return res.status(400).json({
+          success: false,
+          message: `An account with this email address already exists as a ${roleTitle}. The same email address cannot be registered for multiple roles.`
+        });
       }
 
       const salt = await bcrypt.genSalt(10);
@@ -259,7 +263,11 @@ const AuthController = {
       // Check if email already exists
       const existing = await findAnyUserByEmail(normalizedEmail);
       if (existing) {
-        return res.status(400).json({ success: false, message: 'Email address is already in use' });
+        const roleTitle = existing.table === 'counsellors' ? 'Psychologist/Counsellor' : (existing.table === 'admins' ? 'Admin' : 'Student/User');
+        return res.status(400).json({
+          success: false,
+          message: `An account with this email address already exists as a ${roleTitle}. The same email address cannot be registered for multiple roles.`
+        });
       }
 
       const salt = await bcrypt.genSalt(10);

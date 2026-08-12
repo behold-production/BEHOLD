@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, Clock, Video, BarChart3, LogOut, X, CreditCard } from 'lucide-react';
+import { User, Clock, Video, BarChart3, LogOut, X, CreditCard, Globe } from 'lucide-react';
 import BrandIcon from '../../../../components/common/BrandIcon';
 
 const SidebarNav = ({
@@ -120,7 +120,17 @@ const SidebarNav = ({
  </div>
 
  {/* Sidebar Footer */}
- <div className="space-y-4 pt-4 border-t border-zinc-800 mt-6 lg:mt-0">
+ <div className="space-y-2 pt-4 border-t border-zinc-800 mt-6 lg:mt-0">
+ <button
+ type="button"
+ onClick={() => {
+ if (window.spaNavigate) window.spaNavigate('/');
+ else window.location.pathname = '/';
+ }}
+ className="w-full py-2 border border-brand/40 hover:border-brand text-[#00c9d6] bg-[#00c9d6]/10 hover:bg-[#00c9d6]/20 font-semibold text-xs rounded-[10px] flex items-center justify-center gap-2 transition-colors cursor-pointer"
+ >
+ <Globe className="w-3.5 h-3.5" /> Go to Website / Student View
+ </button>
  <button
  onClick={() => setIsLogoutConfirmOpen(true)}
  className="w-full py-2 border border-rose-900/50 hover:border-rose-650 text-rose-500 bg-rose-955/20 hover:bg-rose-900/40 hover:text-white font-semibold text-xs rounded-[10px] flex items-center justify-center gap-2 transition-colors cursor-pointer"
