@@ -496,14 +496,6 @@ If you have questions or would like to reapply with updated information, please 
         }
       }
 
-      if (counsellor && counsellor.phone) {
-        try {
-          await WhatsAppService.sendBookingAlert(counsellor.phone, 'approved', reminderDetails);
-          waResults.counsellor = true;
-        } catch (err) {
-          console.warn('[WhatsApp Reminder Error - Counsellor]:', err.message);
-        }
-      }
 
       // Create in-app notifications
       if (student) {

@@ -30,13 +30,9 @@ exports.sendDailyReminders = async (req, res) => {
         counsellorName: counsellor ? counsellor.name : 'Counsellor'
       };
 
-      // WhatsApp reminders
+      // WhatsApp reminder (Student/User ONLY)
       if (student && student.phone) {
         await WhatsAppService.sendDayOfReminder(student.phone, details).catch(err => console.error(err));
-        waSentCount++;
-      }
-      if (counsellor && counsellor.phone) {
-        await WhatsAppService.sendDayOfReminder(counsellor.phone, details).catch(err => console.error(err));
         waSentCount++;
       }
 

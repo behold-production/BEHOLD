@@ -101,11 +101,8 @@ const AppointmentController = {
           EmailService.sendAppointmentBooked({ user, counsellor, appointment: newAppointment })
         ]);
 
-        if (counsellorPhone) {
-          await WhatsAppService.sendBookingAlert(counsellorPhone, 'created', { studentName: sName, counsellorName: cName, date, time, recipientRole: 'counsellor' }).catch(() => {});
-        }
         if (userPhone) {
-          await WhatsAppService.sendBookingAlert(userPhone, 'created', { studentName: sName, counsellorName: cName, date, time, recipientRole: 'user' }).catch(() => {});
+          await WhatsAppService.sendBookingAlert(userPhone, 'created', { studentName: sName, counsellorName: cName, date, time, recipientRole: 'user' }).catch((err) => console.error('[WhatsApp User Alert Error]:', err));
         }
       } catch (notifErr) {
         console.error('[Notification Task Error in createAppointment]:', notifErr);
@@ -206,7 +203,6 @@ const AppointmentController = {
             isRead: false
           }),
           userPhone ? WhatsAppService.sendBookingAlert(userPhone, 'approved', { studentName: user ? user.name : 'Student', counsellorName: counsellor ? counsellor.name : 'Your Counsellor', date: appointment.date, time: appointment.time, meetLink, recipientRole: 'user' }) : Promise.resolve(),
-          counsellorPhone ? WhatsAppService.sendBookingAlert(counsellorPhone, 'approved', { studentName: user ? user.name : 'Student', counsellorName: counsellor ? counsellor.name : 'Your Counsellor', date: appointment.date, time: appointment.time, meetLink, recipientRole: 'counsellor' }) : Promise.resolve(),
           user ? EmailService.sendAppointmentApproved({ user, counsellor, appointment: { ...appointment, meetLink } }) : Promise.resolve()
         ]);
       } catch (notifErr) {
@@ -436,7 +432,6 @@ const AppointmentController = {
             isRead: false
           }),
           user && user.phone ? WhatsAppService.sendBookingAlert(user.phone, 'rescheduled', details) : Promise.resolve(),
-          counsellor && counsellor.phone ? WhatsAppService.sendBookingAlert(counsellor.phone, 'rescheduled', details) : Promise.resolve(),
           user ? EmailService.sendAppointmentRescheduled({ user, counsellor, appointment: { ...appointment, date, time } }) : Promise.resolve()
         ]);
       } catch (notifErr) {
@@ -564,7 +559,6 @@ const AppointmentController = {
             isRead: false
           }),
           userPhone ? WhatsAppService.sendBookingAlert(userPhone, 'cancelled', details) : Promise.resolve(),
-          counsellorPhone ? WhatsAppService.sendBookingAlert(counsellorPhone, 'cancelled', details) : Promise.resolve(),
           user ? EmailService.sendAppointmentCancelled({ user, counsellor, appointment, cancelledBy: cancellerName, reason }) : Promise.resolve()
         ]);
       } catch (notifErr) {

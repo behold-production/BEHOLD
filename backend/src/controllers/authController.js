@@ -322,10 +322,7 @@ const AuthController = {
       const { password: _, ...counsellorData } = newCounsellor;
       const tokens = generateTokens(newCounsellor);
 
-      if (newCounsellor.phone) {
-        WhatsAppService.sendNotification(newCounsellor.phone, `Welcome to Behold Aspire, ${newCounsellor.name}! Your application is under review by our admin team.`).catch(err => console.error(err));
-      }
-      // Send welcome email to counsellor
+      // Send welcome email to counsellor (Email ONLY for counsellors)
       EmailService.sendWelcomeCounsellor(newCounsellor).catch(err => console.error('[Email Welcome Counsellor Error]:', err));
 
       res.status(201).json({
