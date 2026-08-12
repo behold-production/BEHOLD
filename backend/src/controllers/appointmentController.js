@@ -763,6 +763,11 @@ const AppointmentController = {
 
       const populated = await Promise.all(
         appointments.map(async (a) => {
+          const isPaid = a.paymentStatus === 'PAID' || Number(a.amountPaid) > 0 || Boolean(a.razorpayPaymentId);
+          if (isPaid && a.status === 'PENDING') {
+            a.status = 'CONFIRMED';
+            StorageService.update('appointments', a.id, { status: 'CONFIRMED' }).catch(() => {});
+          }
           const user = await StorageService.findById('users', a.userId);
           const counsellor = await StorageService.findById('counsellors', a.counsellorId);
           const session = await StorageService.findOne('sessions', { appointmentId: a.id });

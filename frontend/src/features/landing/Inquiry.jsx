@@ -109,13 +109,12 @@ export default function Inquiry({ testProfile, siteSettings }) {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
 
             {/* Form — 7 cols */}
-            <div className="lg:col-span-7 bg-white rounded-xl p-6 sm:p-10 border border-surface-200 hover:border-[#00e5ff] transition-all shadow-md">
+            <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-xl shadow-slate-200/40">
               <div className="mb-8">
-                <span className="text-xs font-bold tracking-widest uppercase text-[#00e5ff] flex items-center gap-1.5 mb-2">
-
-                  GET IN TOUCH
+                <span className="text-xs font-semibold text-[#00e5ff] flex items-center gap-1.5 mb-2">
+                  Get In Touch
                 </span>
-                <h2 id="inquiry-title" className="text-3xl font-sans font-bold uppercase text-[#0f172a] mb-3 leading-tight">
+                <h2 id="inquiry-title" className="text-3xl font-sans font-bold text-[#0f172a] mb-3 leading-tight">
                   Want to Know More<span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)]">.</span>
                 </h2>
                 <p className="text-sm text-surface-600 font-normal leading-relaxed">
@@ -134,11 +133,11 @@ export default function Inquiry({ testProfile, siteSettings }) {
                   <div className="w-12 h-12 bg-[#0f172a] text-[#00e5ff] rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-lg border border-[#00e5ff]/40">
                     ✓
                   </div>
-                  <h3 className="text-xl font-sans font-bold uppercase text-[#0f172a] mb-2">Request Sent.</h3>
+                  <h3 className="text-xl font-sans font-bold text-[#0f172a] mb-2">Request Sent.</h3>
                   <p className="text-surface-600 text-sm">Our coordinator will contact you shortly.</p>
                   <button
                     onClick={() => setSubmitStatus(null)}
-                    className="mt-6 px-7 py-3 bg-[#0f172a] hover:bg-[#1e293b] text-white font-bold text-xs uppercase tracking-widest rounded-full transition-all border border-[#00e5ff]/30 cursor-pointer"
+                    className="mt-6 px-7 py-3 bg-[#0f172a] hover:bg-[#1e293b] text-white font-semibold text-xs rounded-full transition-all border border-[#00e5ff]/30 cursor-pointer"
                   >
                     Send Another
                   </button>
@@ -147,7 +146,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label htmlFor="name-input" className="block text-xs font-bold text-[#0f172a] uppercase mb-1.5">Full Name *</label>
+                      <label htmlFor="name-input" className="block text-xs font-semibold text-[#0f172a] mb-1.5">Full Name *</label>
                       <input
                         type="text" name="name" id="name-input"
                         value={formData.name} onChange={handleChange}
@@ -157,7 +156,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
                       {formErrors.name && <p className="text-rose-600 text-xs mt-1 font-semibold">{formErrors.name}</p>}
                     </div>
                     <div>
-                      <label htmlFor="email-input" className="block text-xs font-bold text-[#0f172a] uppercase mb-1.5">Email Address *</label>
+                      <label htmlFor="email-input" className="block text-xs font-semibold text-[#0f172a] mb-1.5">Email Address *</label>
                       <input
                         type="email" name="email" id="email-input"
                         value={formData.email} onChange={handleChange}
@@ -169,7 +168,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
                   </div>
 
                   <div>
-                    <label htmlFor="message-textarea" className="block text-xs font-bold text-[#0f172a] uppercase mb-1.5">Your Message</label>
+                    <label htmlFor="message-textarea" className="block text-xs font-semibold text-[#0f172a] mb-1.5">Your Message</label>
                     <textarea
                       rows={4} name="message" id="message-textarea"
                       value={formData.message} onChange={handleChange}
@@ -182,7 +181,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
 
                   <button
                     type="submit" disabled={isSubmitting}
-                    className="w-full py-4 bg-[#0f172a] hover:bg-[#1e293b] text-white font-bold text-xs uppercase tracking-widest rounded-full transition-all border border-[#00e5ff]/30 cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2 shadow-xs"
+                    className="w-full py-3.5 bg-[#0f172a] hover:bg-[#1e293b] text-[#00c9d6] font-semibold text-sm rounded-full transition-all border border-[#00e5ff]/30 cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2 shadow-xs"
                   >
                     {isSubmitting ? <><Loader2 className="w-4 h-4 animate-spin" /> Sending...</> : 'Send Request'}
                   </button>
