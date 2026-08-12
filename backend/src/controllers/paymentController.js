@@ -3,6 +3,7 @@ const crypto = require('crypto');
 const StorageService = require('../services/storageService');
 const { validateBookingDetails } = require('../utils/bookingValidator');
 const EmailService = require('../services/emailService');
+const WhatsAppService = require('../services/whatsappService');
 
 const PaymentController = {
   // Create Razorpay Order
@@ -397,6 +398,8 @@ const PaymentController = {
             type: 'appointment_created',
             isRead: false
           }),
+          counsellor && counsellor.phone ? WhatsAppService.sendBookingAlert(counsellor.phone, 'created', { studentName: user.name, counsellorName: counsellor.name, date, time }) : Promise.resolve(),
+          user && user.phone ? WhatsAppService.sendBookingAlert(user.phone, 'created', { studentName: user.name, counsellorName: counsellor.name, date, time }) : Promise.resolve(),
           user && counsellor ? EmailService.sendAppointmentBooked({ user, counsellor, appointment: newAppointment }) : Promise.resolve(),
           user && counsellor ? EmailService.sendPaymentReceipt({ user, appointment: newAppointment, counsellor, amount: netTotal, transactionId: razorpay_payment_id }) : Promise.resolve()
         ]);
