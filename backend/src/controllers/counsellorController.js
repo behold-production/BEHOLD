@@ -188,9 +188,9 @@ const CounsellorController = {
       const upcomingAppointments = appointments.filter((a) => {
         try {
           const appointmentDate = new Date(`${a.date} ${a.time.split(' ')[0]}`);
-          return appointmentDate >= now && (a.status === 'PENDING' || a.status === 'APPROVED');
+          return appointmentDate >= now && (a.status === 'PENDING' || a.status === 'APPROVED' || a.status === 'CONFIRMED');
         } catch {
-          return a.status === 'PENDING';
+          return a.status === 'PENDING' || a.status === 'CONFIRMED';
         }
       });
 
