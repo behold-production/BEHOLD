@@ -60,7 +60,7 @@ async function generateSessionMeetingLink({ counsellor, user, date, time, servic
 
       const event = {
         summary: `BEHOLD Counselling Session: ${studentName} & ${counsellorName}`,
-        description: `Service: ${service || 'counselling'}\nMode: ONLINE (Google Meet)\n\nJoin Portals:\n- Student Portal: ${baseDomain}/profile\n- Advisor Console: ${baseDomain}/counsellor`,
+        description: `Service: ${service || 'counselling'}\nMode: ONLINE (Google Meet)\n\nStudent Portal: ${baseDomain}/profile`,
         start: { dateTime: startTime.toISOString() },
         end: { dateTime: endTime.toISOString() },
         organizer: { email: organizerEmail, displayName: 'BEHOLD Aspire', self: true },

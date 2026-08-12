@@ -143,6 +143,12 @@ const sendEmail = async (to, subject, html, attachments = []) => {
   const resend = _getResendClient();
   if (resend) {
     try {
+      const resendFromEmail = (process.env.RESEND_FROM_EMAIL || '').trim();
+      const fromAddress = (resendFromEmail && !resendFromEmail.endsWith('@gmail.com')) 
+        ? resendFromEmail 
+        : 'onboarding@resend.dev';
+      const fromStr = `${fromName} <${fromAddress}>`;
+
       // Convert nodemailer-style attachments to Resend format
       const resendAttachments = attachments.map(a => ({
         filename: a.filename,
@@ -150,9 +156,9 @@ const sendEmail = async (to, subject, html, attachments = []) => {
       })).filter(a => a.content);
 
       const { data, error } = await resend.emails.send({
-        from,
-        to,
-        reply_to: 'beholdoffice@gmail.com',
+        from: fromStr,
+        to: Array.isArray(to) ? to : [to],
+        replyTo: (process.env.GMAIL_USER || 'beholdoffice@gmail.com').trim(),
         subject,
         html,
         text: htmlToText(html),
@@ -160,20 +166,13 @@ const sendEmail = async (to, subject, html, attachments = []) => {
       });
 
       if (error) {
-        // Resend test-mode restriction: only sends to owner email until domain is verified
-        if (error.message && error.message.includes('only send testing emails')) {
-          console.warn(`[Email] 🔒 DOMAIN NOT VERIFIED YET — Resend is blocking delivery to ${to}.`);
-          console.warn(`[Email]    Fix: Go to https://resend.com/domains and wait until behold.co.in shows as ACTIVE.`);
-          console.warn(`[Email]    Then set RESEND_FROM_EMAIL=admin@behold.co.in in .env and restart the server.`);
-        } else {
-          console.error(`[Email] ❌ Resend error sending to ${to}:`, error.message);
-        }
-      } else {
-        console.log(`[Email] ✅ Delivered via Resend → ${to} | Subject: "${subject}" | id: ${data?.id}`);
-        return { success: true, messageId: data?.id };
+        console.warn(`[Email] ⚠️ Resend API returned error for ${to}: ${error.message || JSON.stringify(error)}. Falling back to Nodemailer SMTP...`);
+      } else if (data && data.id) {
+        console.log(`[Email] ✅ Delivered via Resend SDK → ${to} | Subject: "${subject}" | id: ${data.id}`);
+        return { success: true, messageId: data.id };
       }
     } catch (err) {
-      console.error(`[Email] ⚠️ Resend SDK threw for ${to}:`, err.message);
+      console.warn(`[Email] ⚠️ Resend SDK exception for ${to}: ${err.message}. Falling back to Nodemailer SMTP...`);
     }
   }
 
