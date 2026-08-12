@@ -50,10 +50,10 @@ async function generateSessionMeetingLink({ counsellor, user, date, time, servic
       const attendees = [
         { email: organizerEmail, displayName: 'BEHOLD Aspire', responseStatus: 'accepted', organizer: true }
       ];
-      if (user && user.email && user.email.toLowerCase() !== organizerEmail.toLowerCase()) {
+      if (user && user.email && user.email.toLowerCase() !== organizerEmail.toLowerCase() && !user.email.includes('@temp.behold')) {
         attendees.push({ email: user.email, displayName: studentName, responseStatus: 'accepted' });
       }
-      if (counsellor && counsellor.email && counsellor.email.toLowerCase() !== organizerEmail.toLowerCase()) {
+      if (counsellor && counsellor.email && counsellor.email.toLowerCase() !== organizerEmail.toLowerCase() && !counsellor.email.includes('@temp.behold')) {
         attendees.push({ email: counsellor.email, displayName: counsellorName, responseStatus: 'accepted' });
       }
 

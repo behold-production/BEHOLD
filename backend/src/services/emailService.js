@@ -133,6 +133,11 @@ const sendEmail = async (to, subject, html, attachments = []) => {
     return { success: false, error: 'No recipient address provided' };
   }
 
+  if (!to || typeof to !== 'string' || to.includes('@temp.behold')) {
+    console.log(`[Email] ℹ️ Skipped sending email to synthetic placeholder address: ${to}`);
+    return { success: true, skipped: true };
+  }
+
   const fromName = (process.env.EMAIL_FROM_NAME || 'Behold Aspire').trim();
   const fromEmail = _getFromEmail();
   const from = `${fromName} <${fromEmail}>`;
