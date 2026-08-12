@@ -398,8 +398,8 @@ const PaymentController = {
             type: 'appointment_created',
             isRead: false
           }),
-          counsellor && counsellor.phone ? WhatsAppService.sendBookingAlert(counsellor.phone, 'created', { studentName: user.name, counsellorName: counsellor.name, date, time }) : Promise.resolve(),
-          user && user.phone ? WhatsAppService.sendBookingAlert(user.phone, 'created', { studentName: user.name, counsellorName: counsellor.name, date, time }) : Promise.resolve(),
+          counsellor && counsellor.phone ? WhatsAppService.sendBookingAlert(counsellor.phone, 'created', { studentName: user.name, counsellorName: counsellor.name, date, time, recipientRole: 'counsellor' }) : Promise.resolve(),
+          user && user.phone ? WhatsAppService.sendBookingAlert(user.phone, 'created', { studentName: user.name, counsellorName: counsellor.name, date, time, recipientRole: 'user' }) : Promise.resolve(),
           user && counsellor ? EmailService.sendPaymentReceipt({ user, appointment: newAppointment, counsellor, amount: netTotal, transactionId: razorpay_payment_id }) : Promise.resolve()
         ]);
       } catch (notifErr) {

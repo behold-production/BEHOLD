@@ -119,96 +119,130 @@ class WhatsAppService {
    */
   async sendBookingAlert(phone, action, details) {
     const {
-      studentName  = 'Student',
+      studentName    = 'Student',
       counsellorName = 'Psychologist',
-      date         = 'N/A',
-      time         = 'N/A',
-      mode         = '',
-      reason       = '',
-      meetLink     = ''
+      date           = 'N/A',
+      time           = 'N/A',
+      mode           = '',
+      reason         = '',
+      meetLink       = '',
+      recipientRole  = 'user'
     } = details;
 
-    const modeLabel = mode === 'ONLINE' ? 'Online' : mode === 'OFFLINE' ? 'In-person' : mode || 'Online';
+    const modeLabel = mode === 'ONLINE' ? 'Online (Google Meet)' : mode === 'OFFLINE' ? 'In-person' : mode || 'Online';
+    const isCounsellor = recipientRole === 'counsellor';
 
     let text = '';
 
     switch (action) {
 
       case 'created':
-        text =
-          `New Session Request - Behold Aspire\n\n` +
-          `Student: ${studentName}\n` +
-          `Psychologist: ${counsellorName}\n` +
-          `Date: ${date}\n` +
-          `Time: ${time}\n` +
-          (mode ? `Mode: ${mode}\n` : '') +
-          `Status: Pending confirmation\n\n` +
-          `The psychologist will review and confirm your session shortly.\n\n` +
-          `View bookings: https://www.behold.co.in/profile?tab=booked`;
+        if (isCounsellor) {
+          text =
+            `*New Session Request — BEHOLD Aspire*\n\n` +
+            `Hi *${counsellorName}*,\n` +
+            `You have received a new counselling session request.\n\n` +
+            `• *Student:* ${studentName}\n` +
+            `• *Date:* ${date}\n` +
+            `• *Time:* ${time}\n` +
+            `• *Mode:* ${modeLabel}\n\n` +
+            `Status: *Pending Confirmation*\n\n` +
+            `Please review in your dashboard: https://www.behold.co.in/counsellor`;
+        } else {
+          text =
+            `*Session Request Received — BEHOLD Aspire*\n\n` +
+            `Hi *${studentName}*,\n` +
+            `Your counselling session request has been submitted successfully!\n\n` +
+            `• *Psychologist:* ${counsellorName}\n` +
+            `• *Date:* ${date}\n` +
+            `• *Time:* ${time}\n` +
+            `• *Mode:* ${modeLabel}\n\n` +
+            `Status: *Pending Confirmation*\n\n` +
+            `Your psychologist will review and confirm your session shortly.\n\n` +
+            `View Bookings: https://www.behold.co.in/profile?tab=booked`;
+        }
         break;
 
       case 'approved':
-        text =
-          `Session Confirmed - Behold Aspire\n\n` +
-          `Your session has been confirmed.\n\n` +
-          `Student: ${studentName}\n` +
-          `Psychologist: ${counsellorName}\n` +
-          `Date: ${date}\n` +
-          `Time: ${time}\n` +
-          `Mode: ${modeLabel}\n` +
-          (meetLink ? `Meeting Link: ${meetLink}\n` : '') +
-          `\nPlease be on time for your session.`;
+        if (isCounsellor) {
+          text =
+            `*Session Confirmed — BEHOLD Aspire*\n\n` +
+            `Hi *${counsellorName}*,\n` +
+            `Your upcoming session is confirmed.\n\n` +
+            `• *Student:* ${studentName}\n` +
+            `• *Date:* ${date}\n` +
+            `• *Time:* ${time}\n` +
+            `• *Mode:* ${modeLabel}\n` +
+            (meetLink ? `• *Meeting Link:* ${meetLink}\n` : '') +
+            `\nDashboard: https://www.behold.co.in/counsellor`;
+        } else {
+          text =
+            `*Session Confirmed — BEHOLD Aspire*\n\n` +
+            `Hi *${studentName}*,\n` +
+            `Great news! Your counselling session is *confirmed*.\n\n` +
+            `• *Psychologist:* ${counsellorName}\n` +
+            `• *Date:* ${date}\n` +
+            `• *Time:* ${time}\n` +
+            `• *Mode:* ${modeLabel}\n` +
+            (meetLink ? `• *Meeting Link:* ${meetLink}\n` : '') +
+            `\nPlease be ready on time for your session!\n\n` +
+            `View Booking: https://www.behold.co.in/profile?tab=booked`;
+        }
         break;
 
       case 'cancelled':
         text =
-          `Session Cancelled - Behold Aspire\n\n` +
-          `Your session has been cancelled.\n\n` +
-          `Date: ${date}\n` +
-          `Time: ${time}\n` +
-          (reason ? `Reason: ${reason}\n` : '') +
-          `\nBook again: https://www.behold.co.in/advisors`;
+          `*Session Cancelled — BEHOLD Aspire*\n\n` +
+          `The following counselling session has been cancelled.\n\n` +
+          `• *Student:* ${studentName}\n` +
+          `• *Psychologist:* ${counsellorName}\n` +
+          `• *Date:* ${date}\n` +
+          `• *Time:* ${time}\n` +
+          (reason ? `• *Reason:* ${reason}\n` : '') +
+          `\nVisit Behold Aspire: https://www.behold.co.in`;
         break;
 
       case 'rejected':
         text =
-          `Session Request Declined - Behold Aspire\n\n` +
-          `Your session request with ${counsellorName} on ${date} could not be confirmed.\n\n` +
-          (reason ? `Reason: ${reason}\n` : '') +
-          `\nFind a psychologist: https://www.behold.co.in/advisors`;
+          `*Session Request Update — BEHOLD Aspire*\n\n` +
+          `Hi *${studentName}*,\n` +
+          `Your session request for ${date} at ${time} could not be confirmed at this time.\n\n` +
+          (reason ? `• *Reason:* ${reason}\n` : '') +
+          `\nYou can browse other available psychologists: https://www.behold.co.in/advisors`;
         break;
 
       case 'rescheduled':
         text =
-          `Session Rescheduled - Behold Aspire\n\n` +
-          `Your session has been rescheduled to a new time.\n\n` +
-          `Student: ${studentName}\n` +
-          `Psychologist: ${counsellorName}\n` +
-          `New Date: ${date}\n` +
-          `New Time: ${time}\n\n` +
-          `View bookings: https://www.behold.co.in/profile?tab=booked`;
+          `*Session Rescheduled — BEHOLD Aspire*\n\n` +
+          `Your session has been moved to a new time.\n\n` +
+          `• *Student:* ${studentName}\n` +
+          `• *Psychologist:* ${counsellorName}\n` +
+          `• *New Date:* ${date}\n` +
+          `• *New Time:* ${time}\n` +
+          `• *Mode:* ${modeLabel}\n\n` +
+          `View Booking: https://www.behold.co.in/profile?tab=booked`;
         break;
 
       case 'reminder':
         text =
-          `Session Reminder - Behold Aspire\n\n` +
-          `Reminder for your session today:\n\n` +
-          `Student: ${studentName}\n` +
-          `Psychologist: ${counsellorName}\n` +
-          `Date: ${date}\n` +
-          `Time: ${time}\n` +
-          (mode ? `Mode: ${mode}\n` : '') +
-          (meetLink ? `Meeting Link: ${meetLink}\n` : '') +
-          `\nPlease be ready on time.`;
+          `*Session Reminder — Today! — BEHOLD Aspire*\n\n` +
+          `Reminder for your counselling session today:\n\n` +
+          `• *Student:* ${studentName}\n` +
+          `• *Psychologist:* ${counsellorName}\n` +
+          `• *Date:* ${date}\n` +
+          `• *Time:* ${time}\n` +
+          `• *Mode:* ${modeLabel}\n` +
+          (meetLink ? `• *Meeting Link:* ${meetLink}\n` : '') +
+          `\nPlease be ready on time!`;
         break;
 
       default:
         text =
-          `Behold Aspire - Session Update\n\n` +
-          `Student: ${studentName}\n` +
-          `Psychologist: ${counsellorName}\n` +
-          `Date: ${date}\n` +
-          `Time: ${time}`;
+          `*BEHOLD Aspire — Session Update*\n\n` +
+          `• *Student:* ${studentName}\n` +
+          `• *Psychologist:* ${counsellorName}\n` +
+          `• *Date:* ${date}\n` +
+          `• *Time:* ${time}`;
     }
 
     return this._dispatch(phone, text);
