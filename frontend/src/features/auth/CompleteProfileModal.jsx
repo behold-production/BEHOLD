@@ -24,7 +24,7 @@ export default function CompleteProfileModal({ isOpen, onSuccess }) {
   });
   const [isLoading, setIsLoading] = useState(false);
 
-  if (!isOpen || !user) return null;
+  if (!isOpen || !user || user.role === 'admin' || user.role === 'counsellor') return null;
 
   const handleInputChange = (e) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));

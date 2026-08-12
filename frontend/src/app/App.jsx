@@ -653,9 +653,9 @@ export default function App() {
 
       <AuthModals isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
       
-      {/* Mandatory profile completion for WhatsApp auto-registered or incomplete users */}
+      {/* Mandatory profile completion for WhatsApp auto-registered or incomplete student users */}
       <CompleteProfileModal 
-        isOpen={user && (user.email?.includes('@temp.behold') || !user.name || user.name.includes('Behold User') || !user.age)} 
+        isOpen={user && (user.role === 'user' || !user.role) && (user.email?.includes('@temp.behold') || !user.name || user.name.includes('Behold User') || !user.age)} 
         onSuccess={() => {
           if (window.dispatchEvent) window.dispatchEvent(new Event('storage'));
         }} 
