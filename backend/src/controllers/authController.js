@@ -418,31 +418,36 @@ const AuthController = {
     }
   },
 
-  // Forgot Password — sends 6-digit OTP to user's registered Email (and WhatsApp if linked)
+  // Forgot Password — sends 6-digit OTP to user's registered WhatsApp (and Email backup)
   async forgotPassword(req, res, next) {
     try {
-      const { email } = req.body;
-      if (!email) {
-        return res.status(400).json({ success: false, message: 'Email address is required' });
+      const { email, phone } = req.body;
+      if (!email && !phone) {
+        return res.status(400).json({ success: false, message: 'Email address or phone number is required' });
       }
 
-      const cleanEmail = email.toLowerCase().trim();
-      const match = await findAnyUserByEmail(cleanEmail);
+      let match = null;
+      if (email) {
+        match = await findAnyUserByEmail(email.toLowerCase().trim());
+      } else if (phone) {
+        match = await findAnyUserByPhone(phone);
+      }
+
       if (!match) {
-        // Security: don't reveal if email exists or not
         return res.status(200).json({
           success: true,
-          message: 'If this email is registered, a 6-digit reset code has been sent to your email address.'
+          message: 'If registered, a 6-digit verification code has been sent to your WhatsApp number.'
         });
       }
 
       const { user } = match;
+      const cleanEmail = (user.email || email || '').toLowerCase().trim();
+      const targetPhone = user.phone || phone || '';
 
-      // Invalidate any previous unused OTPs for this email
-      await PasswordResetOtp.updateMany(
-        { email: cleanEmail, used: false },
-        { used: true }
-      );
+      // Invalidate previous unused OTPs
+      if (cleanEmail) {
+        await PasswordResetOtp.updateMany({ email: cleanEmail, used: false }, { used: true });
+      }
 
       // Generate 6-digit OTP
       const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
@@ -455,35 +460,40 @@ const AuthController = {
         used: false
       });
 
-      // Log for dev convenience
       console.log(`\n======================================`);
       console.log(`🔑 PASSWORD RESET OTP: ${otpCode}`);
-      console.log(`📧 FOR EMAIL: ${cleanEmail}`);
+      console.log(`📱 FOR PHONE: ${targetPhone} | EMAIL: ${cleanEmail}`);
       console.log(`======================================\n`);
 
-      // Send OTP via email (Primary)
-      const emailResult = await EmailService.sendPasswordResetOTP(cleanEmail, user.name || 'User', otpCode);
-      if (emailResult && emailResult.fallback) {
-        console.warn(`[Password Reset]: SMTP delivery fallback triggered (${emailResult.error}). OTP code ${otpCode} saved for email ${cleanEmail}.`);
-      }
-
-      // Also send via WhatsApp if registered phone exists
-      if (user.phone && user.phone.trim() !== '') {
-        const message = `*BEHOLD Aspire — Password Reset*\n\nYour password reset code is:\n\n*${otpCode}*\n\nThis code is valid for 10 minutes. Do not share it with anyone.`;
-        WhatsAppService.sendNotification(user.phone, message).catch(err => {
+      // ── 1. WhatsApp OTP Delivery (Primary) ─────────────────────────
+      let waSuccess = false;
+      if (targetPhone && targetPhone.trim() !== '') {
+        const waMsg = `*BEHOLD Aspire — Password Reset Code*\n\nYour 6-digit verification code is:\n\n*${otpCode}*\n\nThis code is valid for 10 minutes. Do not share it with anyone.`;
+        const waRes = await WhatsAppService.sendNotification(targetPhone, waMsg).catch(err => {
           console.error('[WhatsApp Reset OTP Error]:', err.message);
+          return null;
         });
+        waSuccess = Boolean(waRes && (waRes.success || waRes.mock));
       }
 
-      const maskedPhone = (user.phone && user.phone.trim()) ? user.phone.replace(/.(?=.{4})/g, '•') : '';
+      // ── 2. Email Backup Delivery ───────────────────────────────────
+      let emailResult = null;
+      if (cleanEmail) {
+        emailResult = await EmailService.sendPasswordResetOTP(cleanEmail, user.name || 'User', otpCode).catch(() => null);
+      }
+
+      const maskedPhone = targetPhone ? targetPhone.replace(/.(?=.{4})/g, '•') : '';
 
       res.status(200).json({
         success: true,
-        message: 'A 6-digit reset code has been sent to your email address.',
+        message: targetPhone 
+          ? 'A 6-digit verification code has been sent via WhatsApp to your registered phone number.' 
+          : 'A 6-digit reset code has been sent to your email address.',
         data: {
           maskedPhone,
+          waSent: waSuccess,
           ...(emailResult?.previewUrl ? { previewUrl: emailResult.previewUrl } : {}),
-          ...(emailResult?.fallback ? { devOtp: otpCode } : {})
+          ...(process.env.NODE_ENV !== 'production' || !process.env.WASENDER_TOKEN ? { devOtp: otpCode } : {})
         }
       });
     } catch (error) {
