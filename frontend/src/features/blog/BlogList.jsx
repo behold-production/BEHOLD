@@ -7,14 +7,6 @@ import { getImageUrl } from '../../utils/formatters';
 import defaultBlogImage from '../../assets/luxury_clinic_room.png';
 import SEO from '../../components/common/SEO';
 
-const CATEGORIES = [
-  'All',
-  'Mental Wellbeing',
-  'Therapy & Relationships',
-  'Emotional Health',
-  'Parenting & Education',
-  'Personal Growth'
-];
 
 const POSTS_PER_PAGE = 6;
 
@@ -25,6 +17,7 @@ const BlogList = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [allCategories, setAllCategories] = useState(['All']);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -43,6 +36,9 @@ const BlogList = () => {
       const res = await ApiService.getBlogs(params);
       if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
         setBlogs(res.data);
+        // Build dynamic category list from actual blog data (like admin side)
+        const cats = ['All', ...new Set(res.data.map(b => b.category).filter(Boolean))];
+        setAllCategories(cats);
       } else {
         setBlogs([]);
       }
@@ -138,16 +134,16 @@ const BlogList = () => {
               </div>
             </form>
 
-            {/* Category Pills */}
+            {/* Category Pills - dynamically from blog data */}
             <div className="mt-5 flex flex-wrap justify-center items-center gap-2">
-              {CATEGORIES.map((cat) => {
+              {allCategories.map((cat) => {
                 const active = selectedCategory === cat;
                 return (
                   <button
                     key={cat}
                     type="button"
                     onClick={() => setSelectedCategory(cat)}
-                    className={`px-4 py-1.5 rounded-xl text-[11px] font-bold tracking-wider transition-all duration-200 cursor-pointer border ${
+                    className={`px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider transition-all duration-200 cursor-pointer border ${
                       active
                         ? 'bg-[#0f172a] text-white border-[#0f172a] shadow-sm'
                         : 'bg-white/90 text-slate-600 border-slate-200 hover:border-slate-400 hover:text-slate-900'
