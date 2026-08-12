@@ -1,5 +1,5 @@
 export const INITIAL_STATE = {
-  name: '', email: '', phone: '', schoolName: '', grade: '',
+  name: '', email: '', phone: '', age: '', feelingLately: '', schoolName: '', grade: '',
   guardianName: '', guardianPhone: '', groupCode: '',
   locationName: '', latitude: 0, longitude: 0
 };

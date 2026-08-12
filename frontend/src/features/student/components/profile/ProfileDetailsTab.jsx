@@ -2,7 +2,7 @@ import React from 'react';
 import {
  User, GraduationCap, Users, Shield, Mail, Phone,
  BookOpen, Hash, Check, AlertCircle, Bell, Save, CheckCircle2,
- MapPin, Navigation, Search
+ MapPin, Navigation, Search, Calendar, Heart
 } from 'lucide-react';
 import { isNotificationSupported } from '../../../../services/notificationHelper';
 
@@ -121,6 +121,8 @@ const ProfileDetailsTab = ({
  { name: 'name', label: 'Full Name', type: 'text', placeholder: 'Your full name', required: true, icon: User },
  { name: 'email', label: 'Email Address', type: 'email', placeholder: 'name@email.com', required: true, icon: Mail, autoComplete: 'email', disabled: true },
  { name: 'phone', label: 'Phone Number', type: 'tel', placeholder: 'e.g. 8086664001', required: true, icon: Phone, autoComplete: 'tel' },
+ { name: 'age', label: 'Age', type: 'number', placeholder: 'e.g. 24', required: true, icon: Calendar },
+ { name: 'feelingLately', label: 'How have you been feeling lately?', type: 'text', placeholder: 'e.g. Anxious, Stressed, Good, Seeking Guidance...', required: false, icon: Heart },
  ],
  },
  {
