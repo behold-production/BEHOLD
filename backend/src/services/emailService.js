@@ -250,7 +250,7 @@ function _createIcsAttachment(appointment, recipientName, recipientEmail, otherP
     const event = {
       start: [year, month, day, hours, minutes],
       duration: { hours: 1 },
-      title: `BEHOLD Counselling Session: ${recipientName} & ${otherPartyName || 'BEHOLD Aspire'}`,
+      title: `BEHOLD Counselling Session`,
       description: `Service: ${appointment.service || 'counselling'}\nMode: ${appointment.mode}${appointment.meetLink ? '\n\nJoin Link: ' + appointment.meetLink : ''}`,
       location: appointment.mode === 'ONLINE' ? (appointment.meetLink || 'Online (Google Meet)') : 'Behold Aspire Center',
       status: 'CONFIRMED',
@@ -316,7 +316,7 @@ const EmailService = {
       );
       await sendEmail(
         user.email,
-        '📋 Session Request Submitted — Behold Aspire',
+        'Session Request Submitted — BEHOLD Aspire',
         Templates.appointmentBooked({ userName: user.name, counsellorName: counsellor?.name, date, time, mode, platform }),
         userAttachments
       );
@@ -333,7 +333,7 @@ const EmailService = {
       );
       await sendEmail(
         counsellor.email,
-        '📋 New Session Request — Behold Aspire',
+        'New Session Request — BEHOLD Aspire',
         Templates.appointmentBookedCounsellor({ userName: user?.name, counsellorName: counsellor.name, date, time, mode }),
         counsellorAttachments
       );
@@ -354,7 +354,7 @@ const EmailService = {
       );
       await sendEmail(
         user.email,
-        '✅ Session Confirmed — Behold Aspire',
+        'Session Confirmed — BEHOLD Aspire',
         Templates.appointmentApproved({
           userName: user.name,
           counsellorName: counsellor?.name,
@@ -376,7 +376,7 @@ const EmailService = {
       );
       await sendEmail(
         counsellor.email,
-        '✅ Session Confirmed — Behold Aspire',
+        'Session Confirmed — BEHOLD Aspire',
         Templates.appointmentApprovedCounsellor({
           userName: user?.name,
           counsellorName: counsellor.name,
@@ -397,7 +397,7 @@ const EmailService = {
       date: appointment.date,
       reason
     });
-    return sendEmail(user.email, 'Appointment Update — Behold Aspire', html);
+    return sendEmail(user.email, 'Session Update — BEHOLD Aspire', html);
   },
 
   async sendAppointmentCancelled({ user, counsellor, appointment, cancelledBy, reason }) {
@@ -407,7 +407,7 @@ const EmailService = {
     // Notify user
     await sendEmail(
       user.email,
-      'Appointment Cancelled — Behold Aspire',
+      'Session Cancelled — BEHOLD Aspire',
       Templates.appointmentCancelled({
         recipientName: user.name,
         otherPartyName: counsellor?.name || 'Counsellor',
@@ -418,7 +418,7 @@ const EmailService = {
     if (counsellor?.email) {
       await sendEmail(
         counsellor.email,
-        'Appointment Cancelled — Behold Aspire',
+        'Session Cancelled — BEHOLD Aspire',
         Templates.appointmentCancelledCounsellor({
           recipientName: counsellor.name,
           otherPartyName: user.name || 'Student',
@@ -437,13 +437,13 @@ const EmailService = {
 
     await sendEmail(
       user.email,
-      '🔄 Appointment Rescheduled — Behold Aspire',
+      'Session Rescheduled — BEHOLD Aspire',
       Templates.appointmentRescheduled({ recipientName: user.name, otherPartyName: counsellor?.name, ...payload })
     );
     if (counsellor?.email) {
       await sendEmail(
         counsellor.email,
-        '🔄 Appointment Rescheduled — Behold Aspire',
+        'Session Rescheduled — BEHOLD Aspire',
         Templates.appointmentRescheduledCounsellor({ recipientName: counsellor.name, otherPartyName: user.name, ...payload })
       );
     }

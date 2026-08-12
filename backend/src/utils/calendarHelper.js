@@ -58,7 +58,7 @@ async function generateSessionMeetingLink({ counsellor, user, date, time, servic
       }
 
       const event = {
-        summary: `BEHOLD Counselling Session: ${studentName} & ${counsellorName}`,
+        summary: `BEHOLD Counselling Session`,
         description: `Service: ${service || 'counselling'}\nMode: ONLINE (Google Meet)`,
         start: { dateTime: startTime.toISOString() },
         end: { dateTime: endTime.toISOString() },
