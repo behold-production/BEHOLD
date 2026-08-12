@@ -251,7 +251,7 @@ function _createIcsAttachment(appointment, recipientName, recipientEmail, otherP
       start: [year, month, day, hours, minutes],
       duration: { hours: 1 },
       title: `BEHOLD Counselling Session: ${recipientName} & ${otherPartyName || 'BEHOLD Aspire'}`,
-      description: `Service: ${appointment.service || 'counselling'}\nMode: ${appointment.mode}\n\nStudent Portal: ${baseDomain}/profile${appointment.meetLink ? '\n\nJoin Link: ' + appointment.meetLink : ''}`,
+      description: `Service: ${appointment.service || 'counselling'}\nMode: ${appointment.mode}${appointment.meetLink ? '\n\nJoin Link: ' + appointment.meetLink : ''}`,
       location: appointment.mode === 'ONLINE' ? (appointment.meetLink || 'Online (Google Meet)') : 'Behold Aspire Center',
       status: 'CONFIRMED',
       busyStatus: 'BUSY',
