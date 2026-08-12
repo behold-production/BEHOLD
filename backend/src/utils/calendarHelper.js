@@ -47,15 +47,14 @@ async function generateSessionMeetingLink({ counsellor, user, date, time, servic
       const studentName = user?.name || 'Student';
       const counsellorName = counsellor?.name || 'Psychologist';
 
-      const attendees = [];
-      if (user && user.email) {
+      const attendees = [
+        { email: organizerEmail, displayName: 'BEHOLD Aspire', responseStatus: 'accepted', organizer: true }
+      ];
+      if (user && user.email && user.email.toLowerCase() !== organizerEmail.toLowerCase()) {
         attendees.push({ email: user.email, displayName: studentName, responseStatus: 'accepted' });
       }
-      if (counsellor && counsellor.email) {
+      if (counsellor && counsellor.email && counsellor.email.toLowerCase() !== organizerEmail.toLowerCase()) {
         attendees.push({ email: counsellor.email, displayName: counsellorName, responseStatus: 'accepted' });
-      }
-      if (!attendees.some(a => a.email.toLowerCase() === organizerEmail.toLowerCase())) {
-        attendees.push({ email: organizerEmail, displayName: 'BEHOLD Aspire', responseStatus: 'accepted' });
       }
 
       const event = {

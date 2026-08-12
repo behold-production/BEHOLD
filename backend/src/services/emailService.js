@@ -251,14 +251,15 @@ function _createIcsAttachment(appointment, recipientName, recipientEmail, otherP
       start: [year, month, day, hours, minutes],
       duration: { hours: 1 },
       title: `BEHOLD Counselling Session: ${recipientName} & ${otherPartyName || 'BEHOLD Aspire'}`,
-      description: `Service: ${appointment.service || 'counselling'}\nMode: ${appointment.mode}\n\nJoin Portals:\n- Student Portal: ${baseDomain}/profile\n- Advisor Console: ${baseDomain}/counsellor${appointment.meetLink ? '\n\nJoin Link: ' + appointment.meetLink : ''}`,
+      description: `Service: ${appointment.service || 'counselling'}\nMode: ${appointment.mode}\n\nStudent Portal: ${baseDomain}/profile${appointment.meetLink ? '\n\nJoin Link: ' + appointment.meetLink : ''}`,
       location: appointment.mode === 'ONLINE' ? (appointment.meetLink || 'Online (Google Meet)') : 'Behold Aspire Center',
       status: 'CONFIRMED',
       busyStatus: 'BUSY',
       organizer: { name: 'BEHOLD Aspire', email: fromEmail },
       attendees: [
-        { name: recipientName, email: recipientEmail || fromEmail, rsvp: true, role: 'REQ-PARTICIPANT' },
-        ...(otherPartyEmail ? [{ name: otherPartyName || 'Other Party', email: otherPartyEmail, rsvp: true, role: 'REQ-PARTICIPANT' }] : [])
+        { name: 'BEHOLD Aspire', email: fromEmail, rsvp: false, partstat: 'ACCEPTED', role: 'CHAIR' },
+        ...(recipientEmail ? [{ name: recipientName, email: recipientEmail, rsvp: true, role: 'REQ-PARTICIPANT' }] : []),
+        ...(otherPartyEmail ? [{ name: otherPartyName || 'Psychologist', email: otherPartyEmail, rsvp: true, role: 'REQ-PARTICIPANT' }] : [])
       ]
     };
 
