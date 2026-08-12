@@ -360,27 +360,22 @@ const PaymentController = {
         counsellorShareAmount
       });
 
-      cleanDuplicateAppointments().catch(() => {});
-
-      // Instant JSON response for frontend checkout overlay (< 200ms response time)
-      res.status(200).json({
-        success: true,
-        message: 'Payment verified and appointment confirmed.',
-        warning: conflictWarning || undefined,
-        data: newAppointment
-      });
-
-      // Awaited notification processing
+      // Awaited notification processing (MUST be completed before res.json)
       try {
         const targetUserPhone = resolveAnyPhone(user, newAppointment, clientPhone, req.body?.clientPhone);
         const targetCounsellorPhone = resolveAnyPhone(counsellor);
+
+        const sName = clientName || user?.name || 'Student';
+        const cName = counsellor?.name || 'Psychologist';
+
+        console.log(`[Payment Booking WhatsApp] User Phone: "${targetUserPhone}" | Counsellor Phone: "${targetCounsellorPhone}"`);
 
         await Promise.allSettled([
           StorageService.create('notifications', {
             recipientId: counsellorId,
             recipientRole: 'counsellor',
             title: 'New Paid Appointment Request',
-            message: `Student ${clientName || user.name} booked an appointment on ${date} at ${time}. Payment ₹${netTotal} confirmed.`,
+            message: `Student ${sName} booked an appointment on ${date} at ${time}. Payment ₹${netTotal} confirmed.`,
             type: 'appointment_created',
             isRead: false
           }),
@@ -388,17 +383,25 @@ const PaymentController = {
             recipientId: userId,
             recipientRole: 'user',
             title: 'Payment Confirmed & Booking Submitted',
-            message: `Your booking with ${counsellor.name} on ${date} at ${time} is confirmed. Payment ₹${netTotal} received.`,
+            message: `Your booking with ${cName} on ${date} at ${time} is confirmed. Payment ₹${netTotal} received.`,
             type: 'appointment_created',
             isRead: false
           }),
-          targetCounsellorPhone ? WhatsAppService.sendBookingAlert(targetCounsellorPhone, 'approved', { studentName: user.name, counsellorName: counsellor.name, date, time, recipientRole: 'counsellor' }) : Promise.resolve(),
-          targetUserPhone ? WhatsAppService.sendBookingAlert(targetUserPhone, 'approved', { studentName: user.name, counsellorName: counsellor.name, date, time, recipientRole: 'user' }) : Promise.resolve(),
+          targetCounsellorPhone ? WhatsAppService.sendBookingAlert(targetCounsellorPhone, 'approved', { studentName: sName, counsellorName: cName, date, time, meetLink: finalMeetLink, recipientRole: 'counsellor' }) : Promise.resolve(),
+          targetUserPhone ? WhatsAppService.sendBookingAlert(targetUserPhone, 'approved', { studentName: sName, counsellorName: cName, date, time, meetLink: finalMeetLink, recipientRole: 'user' }) : Promise.resolve(),
           user && counsellor ? EmailService.sendPaymentReceipt({ user, appointment: newAppointment, counsellor, amount: netTotal, transactionId: razorpay_payment_id }) : Promise.resolve()
         ]);
       } catch (notifErr) {
-        console.error('[Background Notification Task Error]:', notifErr);
+        console.error('[Background Notification Task Error in verifyPaymentAndBook]:', notifErr);
       }
+
+      // JSON response for frontend
+      res.status(200).json({
+        success: true,
+        message: 'Payment verified and appointment confirmed.',
+        warning: conflictWarning || undefined,
+        data: newAppointment
+      });
 
     } catch (error) {
       next(error);

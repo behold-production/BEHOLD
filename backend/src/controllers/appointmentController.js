@@ -76,12 +76,17 @@ const AppointmentController = {
         const userPhone = resolveAnyPhone(user, newAppointment, clientPhone);
         const counsellorPhone = resolveAnyPhone(counsellor);
 
+        const sName = clientName || user?.name || 'Student';
+        const cName = counsellor?.name || 'Psychologist';
+
+        console.log(`[Create Booking WhatsApp] User Phone: "${userPhone}" | Counsellor Phone: "${counsellorPhone}"`);
+
         await Promise.allSettled([
           StorageService.create('notifications', {
             recipientId: counsellor.id,
             recipientRole: 'counsellor',
             title: 'New Appointment Request',
-            message: `Student ${user.name} has requested an appointment on ${date} at ${time}.`,
+            message: `Student ${sName} has requested an appointment on ${date} at ${time}.`,
             type: 'appointment_created',
             isRead: false
           }),
@@ -89,12 +94,12 @@ const AppointmentController = {
             recipientId: userId,
             recipientRole: 'user',
             title: 'Appointment Request Submitted',
-            message: `Your booking request with ${counsellor.name} on ${date} at ${time} has been submitted.`,
+            message: `Your booking request with ${cName} on ${date} at ${time} has been submitted.`,
             type: 'appointment_created',
             isRead: false
           }),
-          counsellorPhone ? WhatsAppService.sendBookingAlert(counsellorPhone, 'created', { studentName: user.name, counsellorName: counsellor.name, date, time, recipientRole: 'counsellor' }) : Promise.resolve(),
-          userPhone ? WhatsAppService.sendBookingAlert(userPhone, 'created', { studentName: user.name, counsellorName: counsellor.name, date, time, recipientRole: 'user' }) : Promise.resolve(),
+          counsellorPhone ? WhatsAppService.sendBookingAlert(counsellorPhone, 'created', { studentName: sName, counsellorName: cName, date, time, recipientRole: 'counsellor' }) : Promise.resolve(),
+          userPhone ? WhatsAppService.sendBookingAlert(userPhone, 'created', { studentName: sName, counsellorName: cName, date, time, recipientRole: 'user' }) : Promise.resolve(),
           EmailService.sendAppointmentBooked({ user, counsellor, appointment: newAppointment })
         ]);
       } catch (notifErr) {
