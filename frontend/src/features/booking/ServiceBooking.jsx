@@ -1386,13 +1386,6 @@ const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
                                                             {user ? 'Review your details and complete payment.' : 'You will be asked to sign in securely before completing payment.'}
                                                         </p>
                                                     </div>
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => handleStepChange('config')}
-                                                        className="text-sm text-surface-900 hover:text-black font-semibold transition"
-                                                    >
-                                                        ← Back to Schedule
-                                                    </button>
                                                 </div>
 
                                                 {user && (

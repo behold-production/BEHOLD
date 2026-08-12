@@ -264,13 +264,12 @@ export default function Reviews({ siteSettings }) {
 
         {/* Header */}
         <div className="text-center mb-10 px-4 sm:px-6 lg:px-8">
-          <span className="text-xs font-bold tracking-widest uppercase text-[#00e5ff] flex items-center justify-center gap-1.5 mb-3">
-
+          <span className="text-xs font-semibold text-[#00e5ff] flex items-center justify-center gap-1.5 mb-3">
             Testimonials
           </span>
           <h2
             id="reviews-title"
-            className="text-3xl sm:text-4xl md:text-5xl font-sans font-bold text-[#0f172a] mb-4 tracking-tight leading-tight uppercase"
+            className="text-3xl sm:text-4xl md:text-5xl font-sans font-bold text-[#0f172a] mb-4 tracking-tight leading-tight"
           >
             What Our Community Says<span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)]">.</span>
           </h2>

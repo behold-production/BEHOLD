@@ -208,7 +208,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
               <div className="hidden lg:flex items-center gap-3">
                 <button
                   onClick={() => { onOpenBooking(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                  className="px-5 py-2.5 font-bold text-sm uppercase tracking-wider rounded-full transition-all shadow-sm cursor-pointer border bg-[#00c9d6] hover:bg-[#00b2be] text-slate-950 border-transparent hover-scale-btn"
+                  className="px-5 py-2.5 font-semibold text-sm rounded-full transition-all shadow-sm cursor-pointer border bg-[#00c9d6] hover:bg-[#00b2be] text-slate-950 border-transparent hover-scale-btn"
                 >
                   Book Session
                 </button>
@@ -224,7 +224,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
                       {user.profilePic ? (
                         <img src={user.profilePic} alt={user.name} className="w-full h-full object-cover" />
                       ) : (
-                        <span className="text-xs font-black text-[#00c9d6] uppercase">{(user.name || user.email || 'U').charAt(0)}</span>
+                        <span className="text-xs font-bold text-[#00c9d6] uppercase">{(user.name || user.email || 'U').charAt(0)}</span>
                       )}
                     </div>
                     <div className="flex flex-col text-left leading-tight pr-1 hidden sm:flex">
@@ -235,7 +235,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
                 ) : (
                   <button
                     onClick={() => onOpenAuth?.()}
-                    className="px-5 py-2.5 font-bold text-sm uppercase tracking-wider rounded-full transition-all cursor-pointer border bg-slate-100 hover:bg-slate-200 text-slate-900 border-slate-200 hover-scale-btn"
+                    className="px-5 py-2.5 font-semibold text-sm rounded-full transition-all cursor-pointer border bg-slate-100 hover:bg-slate-200 text-slate-900 border-slate-200 hover-scale-btn"
                   >
                     Sign In
                   </button>
@@ -254,108 +254,84 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
               </div>
 
             </div>
-
-            {/* Mobile Navigation Sidebar Drawer overlay */}
-            {mobileMenuOpen && createPortal(
-              <div className="fixed inset-0 z-[9999]">
-                <div
-                  className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity animate-in fade-in duration-300"
-                  onClick={() => setMobileMenuOpen(false)}
-                />
-
-                <div className="fixed inset-y-0 right-0 z-[10000] w-80 max-w-[85vw] bg-white text-slate-900 shadow-2xl flex flex-col justify-between p-6 sm:p-8 border-l border-slate-200 animate-in slide-in-from-right duration-300 overflow-y-auto">
-
-                  <div>
-                    <div className="flex items-center justify-between pb-6 border-b border-slate-200 mb-4">
-                      <span className="text-xl font-black tracking-tight font-sans uppercase text-slate-900">
-                        {(siteName || 'BEHOLD').replace(/\.$/, '')}
-                        <span className="text-[#00c9d6] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)] font-black">.</span>
-                      </span>
-                      <button
-                        onClick={() => setMobileMenuOpen(false)}
-                        className="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-900 flex items-center justify-center cursor-pointer border border-slate-200 transition-all p-0"
-                      >
-                        <X className="w-5 h-5 text-slate-900" />
-                      </button>
-                    </div>
-
-                    {user && (
-                      <div
-                        onClick={() => { setMobileMenuOpen(false); handleProfileClick(); }}
-                        className="mb-6 p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between cursor-pointer hover:border-[#00c9d6] transition-all group shadow-xs"
-                      >
-                        <div className="flex items-center gap-3 min-w-0">
-                          <div className="w-10 h-10 rounded-full bg-slate-900 text-[#00e5ff] flex items-center justify-center font-bold overflow-hidden shrink-0 border border-[#00e5ff]/40">
-                            {user.profilePic ? (
-                              <img src={user.profilePic} alt={user.name} className="w-full h-full object-cover" />
-                            ) : (
-                              <span className="text-sm font-black text-[#00e5ff] uppercase">{(user.name || user.email || 'U').charAt(0)}</span>
-                            )}
-                          </div>
-                          <div className="min-w-0 flex-1 text-left">
-                            <p className="text-xs font-bold text-slate-900 truncate group-hover:text-[#00c9d6] transition-colors">{user.name || 'Account'}</p>
-                            {user.email && <p className="text-[10px] text-slate-500 font-medium truncate">{user.email}</p>}
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="flex flex-col gap-4">
-                      {navLinks.map(({ label, action }) => (
-                        <button
-                          key={label}
-                          onClick={() => { action(); setMobileMenuOpen(false); }}
-                          className="text-left py-2.5 text-sm font-bold uppercase tracking-widest text-slate-800 hover:text-[#00c9d6] transition-colors bg-transparent border-b border-slate-100 cursor-pointer"
-                        >
-                          {label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="pt-6 border-t border-slate-200 flex flex-col gap-3">
-                    {user && (
-                      <button
-                        onClick={handleProfileClick}
-                        className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-widest rounded-full transition-all border border-[#00e5ff]/40 cursor-pointer shadow-xs text-center flex items-center justify-center gap-2"
-                      >
-                        <User className="w-4 h-4 text-[#00e5ff]" />
-                        <span>My Profile / Dashboard</span>
-                      </button>
-                    )}
-                    <button
-                      onClick={() => { setMobileMenuOpen(false); onOpenBooking(); }}
-                      className={`w-full py-3 font-bold text-xs uppercase tracking-widest rounded-full transition-all cursor-pointer text-center ${user
-                        ? 'bg-slate-100 hover:bg-slate-200 text-slate-900 border border-slate-200'
-                        : 'bg-[#00c9d6] hover:bg-[#00b2be] text-slate-900 border border-transparent shadow-xs'
-                        }`}
-                    >
-                      Book Session
-                    </button>
-                    {user ? (
-                      <button
-                        onClick={() => { setMobileMenuOpen(false); setIsLogoutOpen(true); }}
-                        className="w-full py-2.5 border border-rose-200 text-rose-600 font-bold text-xs uppercase tracking-wider rounded-full transition bg-white hover:bg-rose-50 text-center cursor-pointer"
-                      >
-                        Sign Out
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() => { setMobileMenuOpen(false); onOpenAuth?.(); }}
-                        className="w-full py-2.5 border border-slate-200 text-slate-900 font-bold text-xs uppercase tracking-wider rounded-full transition bg-slate-100 hover:bg-slate-200 text-center cursor-pointer"
-                      >
-                        Sign In
-                      </button>
-                    )}
-                  </div>
-
-                </div>
-              </div>,
-              document.body
-            )}
           </header>
         );
       })()}
+
+      {/* Mobile Sidebar Overlay */}
+      {mobileMenuOpen && createPortal(
+        <>
+          <div
+            className="fixed inset-0 z-[100] bg-slate-900/40 backdrop-blur-sm lg:hidden transition-opacity animate-backdrop-in"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+          <div className="fixed top-0 right-0 bottom-0 z-[105] w-full max-w-xs bg-white shadow-2xl p-6 flex flex-col justify-between lg:hidden border-l border-slate-200 animate-slide-in-right">
+            <div>
+              <div className="flex items-center justify-between pb-6 border-b border-slate-200">
+                <span className="text-xl font-bold tracking-tight font-sans text-slate-900">
+                  {(siteName || 'BEHOLD').replace(/\.$/, '')}
+                  <span className="text-[#00c9d6] font-bold">.</span>
+                </span>
+                <button
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-2 text-slate-500 hover:text-slate-900 transition rounded-full hover:bg-slate-100 border-none bg-transparent cursor-pointer"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="flex flex-col gap-2 mt-6">
+                {navLinks.map(({ label, action }) => (
+                  <button
+                    key={label}
+                    onClick={action}
+                    className="text-left py-3 px-4 rounded-xl text-sm font-semibold text-slate-700 hover:text-[#00c9d6] hover:bg-slate-50 transition border-none bg-transparent cursor-pointer"
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="pt-6 border-t border-slate-200 flex flex-col gap-3">
+              {user && (
+                <button
+                  onClick={handleProfileClick}
+                  className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm rounded-full transition-all border border-[#00e5ff]/40 cursor-pointer shadow-xs text-center flex items-center justify-center gap-2"
+                >
+                  <User className="w-4 h-4 text-[#00e5ff]" />
+                  <span>My Profile / Dashboard</span>
+                </button>
+              )}
+              <button
+                onClick={() => { setMobileMenuOpen(false); onOpenBooking(); }}
+                className={`w-full py-3 font-semibold text-sm rounded-full transition-all cursor-pointer text-center ${user
+                  ? 'bg-slate-100 hover:bg-slate-200 text-slate-900 border border-slate-200'
+                  : 'bg-[#00c9d6] hover:bg-[#00b2be] text-slate-900 border border-transparent shadow-xs'
+                  }`}
+              >
+                Book Session
+              </button>
+              {user ? (
+                <button
+                  onClick={() => { setMobileMenuOpen(false); setIsLogoutOpen(true); }}
+                  className="w-full py-2.5 border border-rose-200 text-rose-600 font-semibold text-sm rounded-full transition bg-white hover:bg-rose-50 text-center cursor-pointer"
+                >
+                  Sign Out
+                </button>
+              ) : (
+                <button
+                  onClick={() => { setMobileMenuOpen(false); onOpenAuth?.(); }}
+                  className="w-full py-2.5 border border-slate-200 text-slate-900 font-semibold text-sm rounded-full transition bg-slate-100 hover:bg-slate-200 text-center cursor-pointer"
+                >
+                  Sign In
+                </button>
+              )}
+            </div>
+          </div>
+        </>,
+        document.body
+      )}
 
       {/* Logout Confirm Modal */}
       <LogoutConfirmModal
