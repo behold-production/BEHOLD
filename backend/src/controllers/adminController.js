@@ -32,8 +32,8 @@ const getNumber = (value, field, { min = 0, max = Number.MAX_SAFE_INTEGER } = {}
 
 async function ensureEmailAvailable(email, excludeId) {
   const normalizedEmail = normalizeEmail(email);
-  if (!normalizedEmail || !/^\S+@\S+\.\S+$/.test(normalizedEmail)) {
-    const error = new Error('A valid email address is required');
+  if (!normalizedEmail || !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(normalizedEmail) || normalizedEmail.includes('@temp.behold')) {
+    const error = new Error('A valid, real email address is required');
     error.statusCode = 400;
     throw error;
   }

@@ -162,6 +162,15 @@ async function findAnyUserByPhone(phone, portal = 'any') {
   return null;
 }
 
+function validateEmailSyntax(email) {
+  if (!email || typeof email !== 'string') return false;
+  const clean = email.trim().toLowerCase();
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  if (!emailRegex.test(clean)) return false;
+  if (clean.includes('@temp.behold') || clean.includes('@localhost')) return false;
+  return true;
+}
+
 const AuthController = {
   // Register Student/User
   async registerUser(req, res, next) {
@@ -171,6 +180,10 @@ const AuthController = {
 
       if (!name || !normalizedEmail || !password) {
         return res.status(400).json({ success: false, message: 'Name, email, and password are required' });
+      }
+
+      if (!validateEmailSyntax(normalizedEmail)) {
+        return res.status(400).json({ success: false, message: 'Please enter a valid, active email address.' });
       }
 
       // Check if email already exists

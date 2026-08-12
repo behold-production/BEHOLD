@@ -54,3 +54,37 @@ export const formatBlogContent = (content) => {
     })
     .join('\n');
 };
+
+/**
+ * Formats psychologist experience into Years and Consultation Hours
+ * Handles numeric values, strings like "5 yrs", or hour totals like "1500 hrs"
+ */
+export const formatExperience = (expInput) => {
+  if (!expInput && expInput !== 0) {
+    return { years: '3+ Yrs Exp', hours: '900+ Hours Consulted', rawYears: 3, rawHours: 900 };
+  }
+
+  const str = String(expInput).trim();
+  const numMatch = str.match(/\d+/);
+  const num = numMatch ? parseInt(numMatch[0], 10) : 3;
+
+  if (num > 50 || str.toLowerCase().includes('hr') || str.toLowerCase().includes('hour')) {
+    const hours = num;
+    const estimatedYears = Math.max(1, Math.round(hours / 300));
+    return {
+      years: `${estimatedYears}+ Yrs Exp`,
+      hours: `${hours.toLocaleString()}+ Hours Consulted`,
+      rawYears: estimatedYears,
+      rawHours: hours
+    };
+  } else {
+    const years = num;
+    const estimatedHours = years * 300;
+    return {
+      years: `${years}+ Yrs Exp`,
+      hours: `${estimatedHours.toLocaleString()}+ Hours Consulted`,
+      rawYears: years,
+      rawHours: estimatedHours
+    };
+  }
+};

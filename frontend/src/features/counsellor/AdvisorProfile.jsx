@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ChevronLeft, Clock, Globe, Award, BookOpen, Calendar, MapPin, Heart, GraduationCap, Star, ShieldCheck, CheckCircle2, Video, Sparkles, UserCheck, Lock } from 'lucide-react';
 import ApiService from '../../services/api';
 import { calculateNextAvailable } from '../../utils/dateFormatter';
+import { formatExperience } from '../../utils/formatters';
 
 function getInitials(name) {
   if (!name) return 'EX';
@@ -49,17 +50,20 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             return true;
           });
 
-          // Ensure proper capitalization of role and sensible experience numbers
+          // Format experience & consultation hours intelligently
+          const expData = formatExperience(psy.experience || psy.completedHours);
           const formattedRole = (psy.role || 'Consultant Psychologist').replace(/\b\w/g, l => l.toUpperCase());
-          const displayHours = (Number(psy.completedHours) && Number(psy.completedHours) > 0)
-            ? `${psy.completedHours}+ Hours Coached`
-            : '5+ Years Clinical Exp';
+          const displayHours = expData.years 
+            ? `${expData.years}+ Years Clinical Exp`
+            : (expData.hours > 0 ? `${expData.hours}+ Hours Coached` : 'Professional Specialist');
 
           setAdvisor({
             id: psy._id || psy.id,
             name: psy.name || 'Expert Counselor',
             profilePic: (psy.profilePic && psy.profilePic.includes('res.cloudinary.com')) ? psy.profilePic : '',
             role: formattedRole,
+            expYears: expData.years,
+            expHours: expData.hours,
             specs: Array.isArray(psy.specialties) && psy.specialties.length > 0
               ? psy.specialties
               : ['Anxiety & Stress Management', 'Depression & Mood Concerns', 'Academic & Career Guidance', 'Relationship Counseling'],
