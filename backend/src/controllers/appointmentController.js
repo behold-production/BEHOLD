@@ -98,10 +98,15 @@ const AppointmentController = {
             type: 'appointment_created',
             isRead: false
           }),
-          counsellorPhone ? WhatsAppService.sendBookingAlert(counsellorPhone, 'created', { studentName: sName, counsellorName: cName, date, time, recipientRole: 'counsellor' }) : Promise.resolve(),
-          userPhone ? WhatsAppService.sendBookingAlert(userPhone, 'created', { studentName: sName, counsellorName: cName, date, time, recipientRole: 'user' }) : Promise.resolve(),
           EmailService.sendAppointmentBooked({ user, counsellor, appointment: newAppointment })
         ]);
+
+        if (counsellorPhone) {
+          await WhatsAppService.sendBookingAlert(counsellorPhone, 'created', { studentName: sName, counsellorName: cName, date, time, recipientRole: 'counsellor' }).catch(() => {});
+        }
+        if (userPhone) {
+          await WhatsAppService.sendBookingAlert(userPhone, 'created', { studentName: sName, counsellorName: cName, date, time, recipientRole: 'user' }).catch(() => {});
+        }
       } catch (notifErr) {
         console.error('[Notification Task Error in createAppointment]:', notifErr);
       }

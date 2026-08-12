@@ -33,9 +33,9 @@ class WhatsAppService {
   }
 
   /**
-   * Low-level send via WASender API with retry and fallback payload format
+   * Low-level send via WASender API with automatic rate-limit handling & retries
    */
-  async _sendViaWaSender(phone, text) {
+  async _sendViaWaSender(phone, text, attempt = 1) {
     const formattedPhoneWithPlus = this._formatPhoneNumber(phone);
     if (!formattedPhoneWithPlus) {
       return { success: false, provider: 'WASender', error: 'Invalid phone number' };
@@ -64,10 +64,21 @@ class WhatsAppService {
       console.log(`[WhatsApp] ✅ Sent to ${formattedPhoneWithPlus}:`, response.data?.data || response.data?.message || 'OK');
       return { success: true, provider: 'WASender', data: response.data };
     } catch (error) {
-      const errData = error.response?.data || error.message;
+      const errData = error.response?.data || {};
+      const errMsg = String(errData.message || error.message || '');
+      const retryAfter = Number(errData.retry_after) || 0;
+
+      // Handle WASender "Account Protection" 5-second rate limit automatically
+      if ((retryAfter > 0 || errMsg.includes('5 seconds') || errMsg.includes('account protection')) && attempt <= 3) {
+        const waitSeconds = retryAfter > 0 ? retryAfter + 1 : 5.5;
+        console.warn(`[WhatsApp] ⏳ WASender Account Protection active. Auto-waiting ${waitSeconds}s before retry (Attempt ${attempt}/3)...`);
+        await new Promise((resolve) => setTimeout(resolve, waitSeconds * 1000));
+        return this._sendViaWaSender(phone, text, attempt + 1);
+      }
+
       console.error(`[WhatsApp] ⚠️ Initial payload failed for ${formattedPhoneWithPlus}:`, JSON.stringify(errData));
-      
-      // Fallback with clean 91... (without +)
+
+      // Secondary fallback with clean 91... (without +)
       try {
         const response2 = await axios.post(
           'https://wasenderapi.com/api/send-message',
@@ -83,10 +94,20 @@ class WhatsAppService {
         console.log(`[WhatsApp] ✅ Fallback sent to ${cleanedPhoneWithoutPlus}:`, response2.data?.data || response2.data?.message || 'OK');
         return { success: true, provider: 'WASender', data: response2.data };
       } catch (retryErr) {
+        const retryErrData = retryErr.response?.data || {};
+        const retryErrMsg = String(retryErrData.message || retryErr.message || '');
+        const retryWaitSec = Number(retryErrData.retry_after) || 0;
+
+        if ((retryWaitSec > 0 || retryErrMsg.includes('5 seconds') || retryErrMsg.includes('account protection')) && attempt <= 3) {
+          const waitSec = retryWaitSec > 0 ? retryWaitSec + 1 : 5.5;
+          console.warn(`[WhatsApp] ⏳ WASender fallback Account Protection active. Auto-waiting ${waitSec}s...`);
+          await new Promise((resolve) => setTimeout(resolve, waitSec * 1000));
+          return this._sendViaWaSender(phone, text, attempt + 1);
+        }
         console.error(`[WhatsApp] ❌ Both attempts failed for ${phone}:`, retryErr.response?.data || retryErr.message);
       }
 
-      if (error.response?.data?.message === 'invalid API key') {
+      if (errData.message === 'invalid API key') {
         console.error(
           '[WhatsApp] HINT: WASENDER_TOKEN is invalid or expired.\n' +
           '  → Log in to https://www.wasenderapi.com\n' +

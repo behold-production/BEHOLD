@@ -384,13 +384,15 @@ const PaymentController = {
             recipientRole: 'user',
             title: 'Payment Confirmed & Booking Submitted',
             message: `Your booking with ${cName} on ${date} at ${time} is confirmed. Payment ₹${netTotal} received.`,
-            type: 'appointment_created',
-            isRead: false
-          }),
-          targetCounsellorPhone ? WhatsAppService.sendBookingAlert(targetCounsellorPhone, 'approved', { studentName: sName, counsellorName: cName, date, time, meetLink: finalMeetLink, recipientRole: 'counsellor' }) : Promise.resolve(),
-          targetUserPhone ? WhatsAppService.sendBookingAlert(targetUserPhone, 'approved', { studentName: sName, counsellorName: cName, date, time, meetLink: finalMeetLink, recipientRole: 'user' }) : Promise.resolve(),
           user && counsellor ? EmailService.sendPaymentReceipt({ user, appointment: newAppointment, counsellor, amount: netTotal, transactionId: razorpay_payment_id }) : Promise.resolve()
         ]);
+
+        if (targetCounsellorPhone) {
+          await WhatsAppService.sendBookingAlert(targetCounsellorPhone, 'approved', { studentName: sName, counsellorName: cName, date, time, meetLink: finalMeetLink, recipientRole: 'counsellor' }).catch(() => {});
+        }
+        if (targetUserPhone) {
+          await WhatsAppService.sendBookingAlert(targetUserPhone, 'approved', { studentName: sName, counsellorName: cName, date, time, meetLink: finalMeetLink, recipientRole: 'user' }).catch(() => {});
+        }
       } catch (notifErr) {
         console.error('[Background Notification Task Error in verifyPaymentAndBook]:', notifErr);
       }
