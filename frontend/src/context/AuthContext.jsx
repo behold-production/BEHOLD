@@ -62,15 +62,24 @@ export function AuthProvider({ children }) {
  }
  };
 
- const updateUser = (updatedData) => {
- setUser(updatedData);
- localStorage.setItem('behold_auth_user', JSON.stringify(updatedData));
- };
+  const updateUser = (updatedData) => {
+    setUser((prevUser) => {
+      const newUser = typeof updatedData === 'function' 
+        ? updatedData(prevUser) 
+        : { ...(prevUser || {}), ...updatedData };
+      if (newUser) {
+        localStorage.setItem('behold_auth_user', JSON.stringify(newUser));
+      } else {
+        localStorage.removeItem('behold_auth_user');
+      }
+      return newUser;
+    });
+  };
 
- const logout = () => {
- ApiService.logout();
- setUser(null);
- };
+  const logout = () => {
+    ApiService.logout();
+    setUser(null);
+  };
 
  return (
  <AuthContext.Provider value={{ user, isLoading, login, register, logout, updateUser }}>
