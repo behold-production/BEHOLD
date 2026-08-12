@@ -26,13 +26,10 @@ const baseLayout = (content) => `
 
           <!-- ── HEADER ── -->
           <tr>
-            <td style="background:linear-gradient(135deg,${BLUE} 0%,${BLUE_DARK} 100%);padding:36px 44px 32px;text-align:center;">
-              <!-- B. Logo Badge -->
-              <div style="display:inline-block;background:rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.35);border-radius:14px;padding:10px 22px;margin-bottom:14px;">
-                <span style="font-size:28px;font-weight:900;color:#ffffff;letter-spacing:-1px;font-family:'Segoe UI',Arial,sans-serif;">B.</span>
-              </div>
-              <h1 style="margin:0;font-size:20px;font-weight:700;color:#ffffff;letter-spacing:0.3px;">Behold Aspire</h1>
-              <p style="margin:5px 0 0;color:${BLUE_GLOW};font-size:12px;font-weight:500;letter-spacing:0.5px;text-transform:uppercase;">Mental Health &amp; Career Counselling</p>
+            <td style="background:linear-gradient(135deg,${BLUE} 0%,${BLUE_DARK} 100%);padding:32px 44px;text-align:center;">
+              <img src="https://www.behold.co.in/pwa-512.png" alt="BEHOLD Logo" width="56" height="56" style="display:block;margin:0 auto 12px;border-radius:14px;box-shadow:0 4px 12px rgba(0,0,0,0.15);background:#ffffff;padding:4px;" />
+              <h1 style="margin:0;font-size:22px;font-weight:800;color:#ffffff;letter-spacing:0.5px;">BEHOLD Aspire</h1>
+              <p style="margin:4px 0 0;color:${BLUE_GLOW};font-size:12px;font-weight:500;letter-spacing:0.5px;text-transform:uppercase;">Mental Health &amp; Career Counselling</p>
             </td>
           </tr>
 

@@ -80,7 +80,7 @@ export default function RazorpayCheckoutButton({
         currency: orderRes.currency || currency,
         name: 'BEHOLD.',
         description: 'Payment Checkout',
-        image: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=120&q=80',
+        image: 'https://www.behold.co.in/pwa-512.png',
         order_id: orderId,
         handler: async function (response) {
           try {
