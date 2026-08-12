@@ -58,6 +58,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
                 title: c.title || c.qualification || 'Psychologist',
                 fee: c.fee || c.price || c.consultationFee || '1000',
                 hours: expData.rawHours,
+                rawYears: expData.rawYears,
                 expYears: expData.years,
                 bio: c.bio || 'Specializing in compassionate psychological counselling and mental wellbeing.',
                 photo: hasValidPhoto ? rawPhoto : null,
@@ -273,8 +274,8 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
           {/* 3 Metric Stat Boxes */}
           <div className="grid grid-cols-3 gap-2 shrink-0">
             <div className="bg-slate-50/70 border border-slate-150 rounded-xl p-2.5 text-left">
-              <span className="text-xs sm:text-sm font-bold text-slate-900 block leading-none">{advisor.hours}+</span>
-              <span className="text-[9px] sm:text-[10px] font-medium text-slate-500 block mt-1">Therapy hrs</span>
+              <span className="text-xs sm:text-sm font-bold text-slate-900 block leading-none">{advisor.rawYears || 3}+</span>
+              <span className="text-[9px] sm:text-[10px] font-medium text-slate-500 block mt-1">Yrs Experience</span>
             </div>
             <div className="bg-slate-50/70 border border-slate-150 rounded-xl p-2.5 text-left">
               <span className="text-xs sm:text-sm font-bold text-slate-900 block leading-tight line-clamp-2">{advisor.languages || 'Malayalam'}</span>
