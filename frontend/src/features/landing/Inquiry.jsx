@@ -75,9 +75,10 @@ export default function Inquiry({ testProfile, siteSettings }) {
       {/* Ready CTA Banner */}
       <section className="py-20 sm:py-28 bg-[#0f172a] text-white relative border-b border-[#00e5ff]/30">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <span className="text-xs font-bold tracking-widest uppercase text-[#00e5ff] flex items-center justify-center gap-1.5 mb-3">
-
+          <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-bold text-[#00c9d6] tracking-widest uppercase mb-3">
+            <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
             {settings.inquirySectionSub || 'START YOUR JOURNEY'}
+            <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
           </span>
           <h2 className="text-3xl sm:text-5xl font-sans font-bold uppercase text-white mb-4 tracking-tight leading-none">
             {settings.inquirySectionTitle || 'Ready to Build Your Future'}

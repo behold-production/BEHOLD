@@ -50,9 +50,10 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
             
             {/* Cell 1: Intro Text (lg:col-span-5) */}
             <div className="md:col-span-2 lg:col-span-5 bg-white/70 backdrop-blur-xl border border-white/80 p-8 lg:p-10 rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col justify-center reveal-on-scroll reveal-scale-in hover-scale-card">
-              <span className="text-[10px] sm:text-xs font-bold tracking-widest text-[#00c9d6] flex items-center gap-2 mb-3">
-                <span className="w-6 h-0.5 bg-[#00c9d6] rounded-full"></span>
+              <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-bold text-[#00c9d6] tracking-widest uppercase mb-3">
+                <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
                 At BEHOLD
+                <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
               </span>
               <h2 className="text-[var(--text-4xl)] font-sans font-bold text-slate-900 tracking-tight leading-[1.05] mb-5">
                 BEHOLD<span className="text-[#00e5ff] drop-shadow-[0_0_12px_rgba(0,229,255,0.6)]">.</span>
@@ -145,8 +146,10 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
           {settings.aboutCards && settings.aboutCards.length > 0 && (
             <div className="mt-20 sm:mt-32">
               <div className="text-center mb-12">
-                <span className="text-xs font-bold uppercase tracking-widest text-[#00c9d6] flex items-center justify-center gap-1.5 mb-2">
+                <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-bold text-[#00c9d6] tracking-widest uppercase mb-2">
+                  <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
                   OUR SERVICES
+                  <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
                 </span>
                 <h3 className="text-2xl sm:text-4xl font-sans font-black uppercase text-slate-900 tracking-tight leading-none">
                   {settings.aboutTitle || 'WHAT WE OFFER'}<span className="text-[#00e5ff]">.</span>

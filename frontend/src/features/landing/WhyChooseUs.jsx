@@ -30,8 +30,10 @@ export default function WhyChooseUs({ siteSettings, onOpenBooking }) {
 
               {/* Content Overlay Layer */}
               <div className="relative z-10 space-y-4">
-                <span className="text-xs font-semibold text-[#00e5ff] block flex items-center gap-1.5">
+                <span className="inline-flex items-center gap-2 text-[11px] font-bold text-[#00c9d6] tracking-widest uppercase">
+                  <span className="w-4 h-px bg-[#00c9d6]/60 inline-block" />
                   {siteSettings?.servicesSectionSub || 'Unfold With Behold'}
+                  <span className="w-4 h-px bg-[#00c9d6]/60 inline-block" />
                 </span>
 
                 <h2 className="text-2xl sm:text-4xl lg:text-5xl font-sans font-bold text-white tracking-tight leading-[1.02]">

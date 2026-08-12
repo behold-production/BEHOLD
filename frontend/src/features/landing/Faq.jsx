@@ -59,8 +59,10 @@ export default function Faq({ siteSettings }) {
 
         {/* Header */}
         <div className="text-center mb-14">
-          <span className="text-xs font-bold tracking-widest uppercase text-[#00e5ff] flex items-center justify-center gap-1.5 mb-2">
+          <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-bold text-[#00c9d6] tracking-widest uppercase mb-2">
+            <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
             {settings.faqSectionSub || 'FREQUENTLY ASKED QUESTIONS'}
+            <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
           </span>
           <h2 id="faq-title" className="text-3xl sm:text-5xl font-sans font-bold uppercase text-[#0f172a] mb-3 tracking-tight leading-none">
             {settings.faqSectionTitle || 'Everything You Need to Know'}

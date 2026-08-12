@@ -339,6 +339,11 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
       </div>
       {/* SECTION TOPPER TITLE */}
       <div className="w-full max-w-7xl mx-auto mb-6 sm:mb-8 text-center">
+        <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-bold text-[#00c9d6] tracking-widest uppercase mb-3">
+          <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
+          Our Expert Team
+          <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
+        </span>
         <h2 className="font-sans text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-slate-900 leading-none">
           Meet Our Experts<span className="text-[#00c9d6] font-bold">.</span>
         </h2>

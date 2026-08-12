@@ -79,8 +79,10 @@ const BlogSection = () => {  const navigate = useNavigate();
 
         {/* Header */}
         <div className="text-center mb-10 reveal-on-scroll">
-          <span className="text-xs font-bold tracking-widest text-[#00e5ff] flex items-center justify-center gap-1.5 mb-3">
+          <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-bold text-[#00c9d6] tracking-widest uppercase mb-3">
+            <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
             Latest Insights
+            <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
           </span>
           <h2 id="blog-title" className="text-3xl sm:text-4xl md:text-5xl font-sans font-bold text-[#0f172a] mb-4 tracking-tight leading-tight">
             Guidance for Your Journey<span className="text-[#00c9d6] drop-shadow-[0_0_8px_rgba(0,201,214,0.6)] font-bold">.</span>

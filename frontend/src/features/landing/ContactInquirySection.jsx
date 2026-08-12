@@ -51,8 +51,10 @@ export default function ContactInquirySection() {
 
         {/* Section Header */}
         <div className="text-center mb-8">
-          <span className="text-xs font-semibold text-[#00c9d6] block mb-2">
+          <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-bold text-[#00c9d6] tracking-widest uppercase mb-2">
+            <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
             Get In Touch
+            <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
           </span>
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 font-sans">
             Want to Know More<span className="text-[#00c9d6]">.</span>
