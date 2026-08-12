@@ -364,28 +364,35 @@ const PaymentController = {
         data: newAppointment
       });
 
-      // Background unblocked notification processing (dispatches without delaying user response)
-      Promise.allSettled([
-        StorageService.create('notifications', {
-          recipientId: counsellorId,
-          recipientRole: 'counsellor',
-          title: 'New Paid Appointment Request',
-          message: `Student ${clientName || user.name} booked an appointment on ${date} at ${time}. Payment ₹${netTotal} confirmed.`,
-          type: 'appointment_created',
-          isRead: false
-        }),
-        StorageService.create('notifications', {
-          recipientId: userId,
-          recipientRole: 'user',
-          title: 'Payment Confirmed & Booking Submitted',
-          message: `Your booking with ${counsellor.name} on ${date} at ${time} is confirmed. Payment ₹${netTotal} received.`,
-          type: 'appointment_created',
-          isRead: false
-        }),
-        counsellor && counsellor.phone ? WhatsAppService.sendBookingAlert(counsellor.phone, 'created', { studentName: user.name, counsellorName: counsellor.name, date, time, recipientRole: 'counsellor' }) : Promise.resolve(),
-        user && user.phone ? WhatsAppService.sendBookingAlert(user.phone, 'created', { studentName: user.name, counsellorName: counsellor.name, date, time, recipientRole: 'user' }) : Promise.resolve(),
-        user && counsellor ? EmailService.sendPaymentReceipt({ user, appointment: newAppointment, counsellor, amount: netTotal, transactionId: razorpay_payment_id }) : Promise.resolve()
-      ]).catch(notifErr => console.error('[Background Notification Task Error]:', notifErr));
+      // Awaited notification processing
+      try {
+        const targetUserPhone = user?.phone || clientPhone || req.body?.clientPhone || newAppointment?.clientPhone;
+        const targetCounsellorPhone = counsellor?.phone || counsellor?.contactPhone || counsellor?.user?.phone;
+
+        await Promise.allSettled([
+          StorageService.create('notifications', {
+            recipientId: counsellorId,
+            recipientRole: 'counsellor',
+            title: 'New Paid Appointment Request',
+            message: `Student ${clientName || user.name} booked an appointment on ${date} at ${time}. Payment ₹${netTotal} confirmed.`,
+            type: 'appointment_created',
+            isRead: false
+          }),
+          StorageService.create('notifications', {
+            recipientId: userId,
+            recipientRole: 'user',
+            title: 'Payment Confirmed & Booking Submitted',
+            message: `Your booking with ${counsellor.name} on ${date} at ${time} is confirmed. Payment ₹${netTotal} received.`,
+            type: 'appointment_created',
+            isRead: false
+          }),
+          targetCounsellorPhone ? WhatsAppService.sendBookingAlert(targetCounsellorPhone, 'approved', { studentName: user.name, counsellorName: counsellor.name, date, time, recipientRole: 'counsellor' }) : Promise.resolve(),
+          targetUserPhone ? WhatsAppService.sendBookingAlert(targetUserPhone, 'approved', { studentName: user.name, counsellorName: counsellor.name, date, time, recipientRole: 'user' }) : Promise.resolve(),
+          user && counsellor ? EmailService.sendPaymentReceipt({ user, appointment: newAppointment, counsellor, amount: netTotal, transactionId: razorpay_payment_id }) : Promise.resolve()
+        ]);
+      } catch (notifErr) {
+        console.error('[Background Notification Task Error]:', notifErr);
+      }
 
     } catch (error) {
       next(error);

@@ -70,13 +70,16 @@ const AppointmentController = {
         clientLongitude: Number(clientLongitude) || 0
       });
 
-      // Synchronous/Awaited Processing for Notifications & Emails (Required for Vercel Lambdas)
+      // Synchronous/Awaited Processing for Notifications, WhatsApp & Emails
       try {
+        const userPhone = user?.phone || clientPhone || newAppointment.clientPhone;
+        const counsellorPhone = counsellor?.phone || counsellor?.contactPhone || counsellor?.user?.phone;
+
         await Promise.allSettled([
           StorageService.create('notifications', {
-            recipientId: counsellorId,
+            recipientId: counsellor.id,
             recipientRole: 'counsellor',
-            title: 'New Appointment Booking Request',
+            title: 'New Appointment Request',
             message: `Student ${user.name} has requested an appointment on ${date} at ${time}.`,
             type: 'appointment_created',
             isRead: false
@@ -89,8 +92,8 @@ const AppointmentController = {
             type: 'appointment_created',
             isRead: false
           }),
-          counsellor && counsellor.phone ? WhatsAppService.sendBookingAlert(counsellor.phone, 'created', { studentName: user.name, counsellorName: counsellor.name, date, time, recipientRole: 'counsellor' }) : Promise.resolve(),
-          user && user.phone ? WhatsAppService.sendBookingAlert(user.phone, 'created', { studentName: user.name, counsellorName: counsellor.name, date, time, recipientRole: 'user' }) : Promise.resolve(),
+          counsellorPhone ? WhatsAppService.sendBookingAlert(counsellorPhone, 'created', { studentName: user.name, counsellorName: counsellor.name, date, time, recipientRole: 'counsellor' }) : Promise.resolve(),
+          userPhone ? WhatsAppService.sendBookingAlert(userPhone, 'created', { studentName: user.name, counsellorName: counsellor.name, date, time, recipientRole: 'user' }) : Promise.resolve(),
           EmailService.sendAppointmentBooked({ user, counsellor, appointment: newAppointment })
         ]);
       } catch (notifErr) {
@@ -169,8 +172,11 @@ const AppointmentController = {
         clientLongitude: Number(appointment.clientLongitude) || 0
       });
 
-      // Synchronous/Awaited Processing for Notifications & Emails (Required for Vercel Lambdas)
+      // Synchronous/Awaited Processing for Notifications, WhatsApp & Emails
       try {
+        const userPhone = user?.phone || appointment.clientPhone;
+        const counsellorPhone = counsellor?.phone || counsellor?.contactPhone || counsellor?.user?.phone;
+
         await Promise.allSettled([
           StorageService.create('notifications', {
             recipientId: appointment.userId,
@@ -188,7 +194,8 @@ const AppointmentController = {
             type: 'appointment_approved',
             isRead: false
           }),
-          user && user.phone ? WhatsAppService.sendBookingAlert(user.phone, 'approved', { studentName: user.name, counsellorName: counsellor ? counsellor.name : 'Your Counsellor', date: appointment.date, time: appointment.time }) : Promise.resolve(),
+          userPhone ? WhatsAppService.sendBookingAlert(userPhone, 'approved', { studentName: user ? user.name : 'Student', counsellorName: counsellor ? counsellor.name : 'Your Counsellor', date: appointment.date, time: appointment.time, meetLink, recipientRole: 'user' }) : Promise.resolve(),
+          counsellorPhone ? WhatsAppService.sendBookingAlert(counsellorPhone, 'approved', { studentName: user ? user.name : 'Student', counsellorName: counsellor ? counsellor.name : 'Your Counsellor', date: appointment.date, time: appointment.time, meetLink, recipientRole: 'counsellor' }) : Promise.resolve(),
           user ? EmailService.sendAppointmentApproved({ user, counsellor, appointment: { ...appointment, meetLink } }) : Promise.resolve()
         ]);
       } catch (notifErr) {
@@ -578,12 +585,24 @@ const AppointmentController = {
         await StorageService.update('sessions', session.id, { meetLink });
       }
 
-      // Notify user via email that meet link is ready
+      // Notify user via email & WhatsApp that meet link is ready
       if (meetLink) {
         const meetUser = await StorageService.findById('users', appointment.userId);
         const meetCounsellor = await StorageService.findById('counsellors', appointment.counsellorId);
+        const userPhone = meetUser?.phone || appointment.clientPhone;
+        
         if (meetUser) {
           EmailService.sendMeetLinkAdded({ user: meetUser, counsellor: meetCounsellor, appointment: { ...appointment, meetLink } }).catch(err => console.error('[Email MeetLink Error]:', err));
+        }
+        if (userPhone) {
+          WhatsAppService.sendBookingAlert(userPhone, 'approved', {
+            studentName: meetUser ? meetUser.name : 'Student',
+            counsellorName: meetCounsellor ? meetCounsellor.name : 'Psychologist',
+            date: appointment.date,
+            time: appointment.time,
+            meetLink,
+            recipientRole: 'user'
+          }).catch(err => console.error('[WhatsApp MeetLink Error]:', err));
         }
       }
 

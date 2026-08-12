@@ -23,27 +23,43 @@ class WhatsAppService {
   }
 
   /**
-   * Normalize phone to E.164 format (+91XXXXXXXXXX)
+   * Normalize phone to clean format (e.g. 91XXXXXXXXXX or +91XXXXXXXXXX)
    */
   _formatPhoneNumber(phone) {
     if (!phone) return null;
     let cleaned = String(phone).replace(/\D/g, '');
-    if (cleaned.length === 10) cleaned = '91' + cleaned;
-    return `+${cleaned}`;
+    if (!cleaned) return null;
+    // Prepend India country code 91 if 10 digits
+    if (cleaned.length === 10) {
+      cleaned = '91' + cleaned;
+    }
+    return cleaned;
   }
 
   /**
-   * Low-level send via WASender API
+   * Low-level send via WASender API with retry and fallback payload format
    */
   async _sendViaWaSender(phone, text) {
-    const formattedPhone = this._formatPhoneNumber(phone);
-    if (!formattedPhone) {
+    const cleanedPhone = this._formatPhoneNumber(phone);
+    if (!cleanedPhone) {
       return { success: false, provider: 'WASender', error: 'Invalid phone number' };
     }
+
+    const formattedPhoneWithPlus = `+${cleanedPhone}`;
+
+    // Payload formats to try
+    const payload = {
+      to: cleanedPhone,
+      phone: cleanedPhone,
+      recipient: formattedPhoneWithPlus,
+      text: text,
+      message: text
+    };
+
     try {
       const response = await axios.post(
         'https://www.wasenderapi.com/api/send-message',
-        { to: formattedPhone, text },
+        payload,
         {
           headers: {
             Authorization: `Bearer ${this.waSenderToken}`,
@@ -52,11 +68,31 @@ class WhatsAppService {
           timeout: 20000
         }
       );
-      console.log(`[WhatsApp] ✅ Sent to ${formattedPhone}:`, response.data?.message || 'OK');
+      console.log(`[WhatsApp] ✅ Sent to ${cleanedPhone}:`, response.data?.message || 'OK');
       return { success: true, provider: 'WASender', data: response.data };
     } catch (error) {
       const errData = error.response?.data || error.message;
-      console.error(`[WhatsApp] ❌ Failed to send to ${formattedPhone}:`, JSON.stringify(errData));
+      console.error(`[WhatsApp] ❌ Failed to send to ${cleanedPhone}:`, JSON.stringify(errData));
+      
+      // Secondary fallback with '+' prefix if first call returns error
+      try {
+        const response2 = await axios.post(
+          'https://www.wasenderapi.com/api/send-message',
+          { to: formattedPhoneWithPlus, text },
+          {
+            headers: {
+              Authorization: `Bearer ${this.waSenderToken}`,
+              'Content-Type': 'application/json'
+            },
+            timeout: 15000
+          }
+        );
+        console.log(`[WhatsApp] ✅ Retry sent to ${formattedPhoneWithPlus}:`, response2.data?.message || 'OK');
+        return { success: true, provider: 'WASender', data: response2.data };
+      } catch (retryErr) {
+        console.error(`[WhatsApp] ❌ Retry failed for ${formattedPhoneWithPlus}`);
+      }
+
       if (error.response?.data?.message === 'invalid API key') {
         console.error(
           '[WhatsApp] HINT: WASENDER_TOKEN is invalid or expired.\n' +
