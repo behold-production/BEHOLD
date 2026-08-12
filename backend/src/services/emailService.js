@@ -139,44 +139,43 @@ const sendEmail = async (to, subject, html, attachments = []) => {
 
   console.log(`[Email] 📤 Sending to: ${to} | Subject: "${subject}"`);
 
-  // ── 1. Resend SDK (primary) ────────────────────────────────────────────────
-  const resend = _getResendClient();
-  if (resend) {
-    try {
-      const resendFromEmail = (process.env.RESEND_FROM_EMAIL || '').trim();
-      const fromAddress = (resendFromEmail && !resendFromEmail.endsWith('@gmail.com')) 
-        ? resendFromEmail 
-        : 'onboarding@resend.dev';
-      const fromStr = `${fromName} <${fromAddress}>`;
+  // ── 1. Resend SDK (primary if verified custom domain is set) ───────────────
+  const resendFromEmail = (process.env.RESEND_FROM_EMAIL || '').trim();
+  const isResendConfigured = Boolean(process.env.RESEND_API_KEY);
+  const isCustomResendDomain = isResendConfigured && resendFromEmail && !resendFromEmail.endsWith('@gmail.com') && !resendFromEmail.includes('resend.dev');
 
-      // Convert nodemailer-style attachments to Resend format
-      const resendAttachments = attachments.map(a => ({
-        filename: a.filename,
-        content: typeof a.content === 'string' ? Buffer.from(a.content) : a.content
-      })).filter(a => a.content);
+  if (isCustomResendDomain) {
+    const resend = _getResendClient();
+    if (resend) {
+      try {
+        const fromStr = `${fromName} <${resendFromEmail}>`;
+        const resendAttachments = attachments.map(a => ({
+          filename: a.filename,
+          content: typeof a.content === 'string' ? Buffer.from(a.content) : a.content
+        })).filter(a => a.content);
 
-      const { data, error } = await resend.emails.send({
-        from: fromStr,
-        to: Array.isArray(to) ? to : [to],
-        replyTo: (process.env.GMAIL_USER || 'beholdoffice@gmail.com').trim(),
-        subject,
-        html,
-        text: htmlToText(html),
-        attachments: resendAttachments.length > 0 ? resendAttachments : undefined
-      });
+        const { data, error } = await resend.emails.send({
+          from: fromStr,
+          to: Array.isArray(to) ? to : [to],
+          replyTo: (process.env.GMAIL_USER || 'beholdoffice@gmail.com').trim(),
+          subject,
+          html,
+          text: htmlToText(html),
+          attachments: resendAttachments.length > 0 ? resendAttachments : undefined
+        });
 
-      if (error) {
-        console.warn(`[Email] ⚠️ Resend API returned error for ${to}: ${error.message || JSON.stringify(error)}. Falling back to Nodemailer SMTP...`);
-      } else if (data && data.id) {
-        console.log(`[Email] ✅ Delivered via Resend SDK → ${to} | Subject: "${subject}" | id: ${data.id}`);
-        return { success: true, messageId: data.id };
+        if (!error && data && data.id) {
+          console.log(`[Email] ✅ Delivered via Resend SDK → ${to} | Subject: "${subject}" | id: ${data.id}`);
+          return { success: true, messageId: data.id };
+        }
+        console.warn(`[Email] ⚠️ Resend API error for ${to}: ${error?.message || 'Unknown'}. Trying Nodemailer...`);
+      } catch (err) {
+        console.warn(`[Email] ⚠️ Resend SDK exception for ${to}: ${err.message}. Trying Nodemailer...`);
       }
-    } catch (err) {
-      console.warn(`[Email] ⚠️ Resend SDK exception for ${to}: ${err.message}. Falling back to Nodemailer SMTP...`);
     }
   }
 
-  // ── 2. Nodemailer fallback ─────────────────────────────────────────────────
+  // ── 2. Nodemailer (Gmail / Brevo / Custom SMTP) ───────────────────────────
   const transporter = _getNodemailerTransporter();
   const mailOptions = {
     from: `"${fromName}" <${fromEmail}>`,
@@ -197,10 +196,42 @@ const sendEmail = async (to, subject, html, attachments = []) => {
   if (transporter) {
     try {
       const info = await transporter.sendMail(mailOptions);
-      console.log(`[Email] ✅ Sent via Nodemailer to ${to}: ${subject} (${info.messageId})`);
+      console.log(`[Email] ✅ Delivered via Nodemailer to ${to}: ${subject} (${info.messageId})`);
       return { success: true, messageId: info.messageId };
     } catch (error) {
       console.error(`[Email] ⚠️ Nodemailer failed for ${to}:`, error.message);
+    }
+  }
+
+  // ── 3. Resend SDK Fallback (if custom domain was not explicitly flagged above) ──
+  if (isResendConfigured && !isCustomResendDomain) {
+    const resend = _getResendClient();
+    if (resend) {
+      try {
+        const fromAddress = resendFromEmail || 'onboarding@resend.dev';
+        const fromStr = `${fromName} <${fromAddress}>`;
+        const resendAttachments = attachments.map(a => ({
+          filename: a.filename,
+          content: typeof a.content === 'string' ? Buffer.from(a.content) : a.content
+        })).filter(a => a.content);
+
+        const { data, error } = await resend.emails.send({
+          from: fromStr,
+          to: Array.isArray(to) ? to : [to],
+          replyTo: (process.env.GMAIL_USER || 'beholdoffice@gmail.com').trim(),
+          subject,
+          html,
+          text: htmlToText(html),
+          attachments: resendAttachments.length > 0 ? resendAttachments : undefined
+        });
+
+        if (!error && data && data.id) {
+          console.log(`[Email] ✅ Delivered via Resend SDK Fallback → ${to} | Subject: "${subject}" | id: ${data.id}`);
+          return { success: true, messageId: data.id };
+        }
+      } catch (err) {
+        console.warn(`[Email] ⚠️ Resend SDK fallback failed for ${to}:`, err.message);
+      }
     }
   }
 
