@@ -343,19 +343,15 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
             <div id="booking-modal-scroll" ref={scrollContainerRef} className={`relative w-full ${bookingStep === 'success' ? 'max-w-3xl' : 'max-w-7xl'} h-full sm:h-auto sm:max-h-[90vh] bg-white sm:rounded-2xl shadow-2xl overflow-y-auto overflow-x-hidden text-[#0f172a] text-left overscroll-contain animate-modal-in transition-all duration-300`}>
                 {/* Top Action Bar (Back & Close) */}
                 <div className="sticky top-0 z-30 flex items-center justify-between p-4 bg-white/90 backdrop-blur-md border-b border-surface-200">
-                    {(bookingStep === 'payment' || (advisorConfirmed && !isAdvisorLocked)) ? (
-                        <button
-                            type="button"
-                            onClick={handleModalBack}
-                            className="min-h-[38px] px-4 py-1.5 bg-surface-100 hover:bg-surface-200 text-surface-900 border border-surface-200 rounded-full flex items-center gap-1.5 text-xs font-bold transition-all cursor-pointer shadow-xs"
-                            aria-label="Go Back"
-                        >
-                            <ArrowLeft className="w-4 h-4 text-surface-700" />
-                            <span>Back</span>
-                        </button>
-                    ) : (
-                        <div />
-                    )}
+                    <button
+                        type="button"
+                        onClick={handleModalBack}
+                        className="min-h-[38px] px-4 py-1.5 bg-surface-100 hover:bg-surface-200 text-surface-900 border border-surface-200 rounded-full flex items-center gap-1.5 text-xs font-bold transition-all cursor-pointer shadow-xs hover-scale-btn"
+                        aria-label="Go Back"
+                    >
+                        <ArrowLeft className="w-4 h-4 text-surface-700" />
+                        <span>Back</span>
+                    </button>
 
                     <button
                         type="button"
