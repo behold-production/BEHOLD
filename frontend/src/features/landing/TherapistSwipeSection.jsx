@@ -177,18 +177,14 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
       case 0:
         return 'translate-x-0 scale-100 opacity-100 z-30 shadow-[0_22px_55px_rgba(0,201,214,0.22)] cursor-default brightness-100';
       case -1:
-        return '-translate-x-[170px] xs:-translate-x-[220px] sm:-translate-x-[300px] md:-translate-x-[370px] lg:-translate-x-[430px] scale-[0.84] opacity-80 z-20 shadow-xl cursor-pointer hover:opacity-95 hover:scale-[0.86] brightness-[0.92]';
+        return '-translate-x-[140px] xs:-translate-x-[180px] sm:-translate-x-[250px] md:-translate-x-[310px] lg:-translate-x-[360px] scale-[0.85] opacity-85 z-20 shadow-xl cursor-pointer hover:opacity-100 hover:scale-[0.87] brightness-[0.94]';
       case 1:
-        return 'translate-x-[170px] xs:translate-x-[220px] sm:translate-x-[300px] md:translate-x-[370px] lg:translate-x-[430px] scale-[0.84] opacity-80 z-20 shadow-xl cursor-pointer hover:opacity-95 hover:scale-[0.86] brightness-[0.92]';
-      case -2:
-        return '-translate-x-[310px] xs:-translate-x-[400px] sm:-translate-x-[550px] md:-translate-x-[670px] lg:-translate-x-[770px] scale-[0.70] opacity-45 z-10 shadow-md cursor-pointer hover:opacity-65 brightness-[0.80]';
-      case 2:
-        return 'translate-x-[310px] xs:translate-x-[400px] sm:translate-x-[550px] md:translate-x-[670px] lg:translate-x-[770px] scale-[0.70] opacity-45 z-10 shadow-md cursor-pointer hover:opacity-65 brightness-[0.80]';
+        return 'translate-x-[140px] xs:translate-x-[180px] sm:translate-x-[250px] md:translate-x-[310px] lg:translate-x-[360px] scale-[0.85] opacity-85 z-20 shadow-xl cursor-pointer hover:opacity-100 hover:scale-[0.87] brightness-[0.94]';
       default:
         if (diff < 0) {
-          return '-translate-x-[600px] scale-[0.5] opacity-0 z-0 pointer-events-none';
+          return '-translate-x-[480px] scale-[0.6] opacity-0 z-0 pointer-events-none';
         } else {
-          return 'translate-x-[600px] scale-[0.5] opacity-0 z-0 pointer-events-none';
+          return 'translate-x-[480px] scale-[0.6] opacity-0 z-0 pointer-events-none';
         }
     }
   };
@@ -448,14 +444,14 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
           </div>
         ) : (
           <>
-            {/* 5-Card Coverflow Carousel Wrapper */}
-            <div className="relative w-full max-w-7xl mx-auto">
+            {/* 3-Card Focused Coverflow Carousel Wrapper */}
+            <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
 
               {/* Left Floating Navigation Arrow */}
               <button
                 onClick={(e) => { e.stopPropagation(); handlePrevCard(); }}
                 aria-label="Previous Psychologist"
-                className="absolute -left-3 sm:-left-6 lg:-left-12 top-1/2 -translate-y-1/2 z-40 w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-white/95 text-slate-800 hover:text-slate-950 hover:bg-[#00c9d6] shadow-2xl border border-slate-200/80 transition-all duration-300 cursor-pointer flex items-center justify-center group hover-scale-btn"
+                className="absolute left-1 sm:left-2 lg:left-4 top-1/2 -translate-y-1/2 z-40 w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-white/95 text-slate-800 hover:text-slate-950 hover:bg-[#00c9d6] shadow-2xl border border-slate-200/80 transition-all duration-300 cursor-pointer flex items-center justify-center group hover-scale-btn"
               >
                 <ChevronLeft className="w-6 h-6 group-hover:-translate-x-0.5 transition-transform" />
               </button>
@@ -464,14 +460,14 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
               <button
                 onClick={(e) => { e.stopPropagation(); handleNextCard(); }}
                 aria-label="Next Psychologist"
-                className="absolute -right-3 sm:-right-6 lg:-right-12 top-1/2 -translate-y-1/2 z-40 w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-white/95 text-slate-800 hover:text-slate-950 hover:bg-[#00c9d6] shadow-2xl border border-slate-200/80 transition-all duration-300 cursor-pointer flex items-center justify-center group hover-scale-btn"
+                className="absolute right-1 sm:right-2 lg:right-4 top-1/2 -translate-y-1/2 z-40 w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-white/95 text-slate-800 hover:text-slate-950 hover:bg-[#00c9d6] shadow-2xl border border-slate-200/80 transition-all duration-300 cursor-pointer flex items-center justify-center group hover-scale-btn"
               >
                 <ChevronRight className="w-6 h-6 group-hover:translate-x-0.5 transition-transform" />
               </button>
 
               {/* Card Perspective Area */}
               <div
-                className="relative w-full max-w-5xl mx-auto h-[415px] sm:h-[465px] flex items-center justify-center overflow-visible"
+                className="relative w-full max-w-5xl mx-auto h-[415px] sm:h-[465px] flex items-center justify-center overflow-hidden"
                 onMouseDown={(e) => handleTouchStart(e.clientX)}
                 onMouseMove={(e) => handleTouchMove(e.clientX)}
                 onMouseUp={handleTouchEnd}
