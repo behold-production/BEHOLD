@@ -177,18 +177,18 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
       case 0:
         return 'translate-x-0 scale-100 opacity-100 z-30 shadow-[0_22px_55px_rgba(0,201,214,0.22)] cursor-default brightness-100';
       case -1:
-        return '-translate-x-[140px] xs:-translate-x-[180px] sm:-translate-x-[250px] md:-translate-x-[300px] lg:-translate-x-[355px] scale-[0.85] opacity-80 z-20 shadow-xl cursor-pointer hover:opacity-95 hover:scale-[0.87] brightness-[0.92]';
+        return '-translate-x-[170px] xs:-translate-x-[220px] sm:-translate-x-[300px] md:-translate-x-[370px] lg:-translate-x-[430px] scale-[0.84] opacity-80 z-20 shadow-xl cursor-pointer hover:opacity-95 hover:scale-[0.86] brightness-[0.92]';
       case 1:
-        return 'translate-x-[140px] xs:translate-x-[180px] sm:translate-x-[250px] md:translate-x-[300px] lg:translate-x-[355px] scale-[0.85] opacity-80 z-20 shadow-xl cursor-pointer hover:opacity-95 hover:scale-[0.87] brightness-[0.92]';
+        return 'translate-x-[170px] xs:translate-x-[220px] sm:translate-x-[300px] md:translate-x-[370px] lg:translate-x-[430px] scale-[0.84] opacity-80 z-20 shadow-xl cursor-pointer hover:opacity-95 hover:scale-[0.86] brightness-[0.92]';
       case -2:
-        return '-translate-x-[260px] xs:-translate-x-[330px] sm:-translate-x-[450px] md:-translate-x-[530px] lg:-translate-x-[610px] scale-[0.72] opacity-45 z-10 shadow-md cursor-pointer hover:opacity-65 brightness-[0.80]';
+        return '-translate-x-[310px] xs:-translate-x-[400px] sm:-translate-x-[550px] md:-translate-x-[670px] lg:-translate-x-[770px] scale-[0.70] opacity-45 z-10 shadow-md cursor-pointer hover:opacity-65 brightness-[0.80]';
       case 2:
-        return 'translate-x-[260px] xs:translate-x-[330px] sm:translate-x-[450px] md:translate-x-[530px] lg:translate-x-[610px] scale-[0.72] opacity-45 z-10 shadow-md cursor-pointer hover:opacity-65 brightness-[0.80]';
+        return 'translate-x-[310px] xs:translate-x-[400px] sm:translate-x-[550px] md:translate-x-[670px] lg:translate-x-[770px] scale-[0.70] opacity-45 z-10 shadow-md cursor-pointer hover:opacity-65 brightness-[0.80]';
       default:
         if (diff < 0) {
-          return '-translate-x-[480px] scale-[0.5] opacity-0 z-0 pointer-events-none';
+          return '-translate-x-[600px] scale-[0.5] opacity-0 z-0 pointer-events-none';
         } else {
-          return 'translate-x-[480px] scale-[0.5] opacity-0 z-0 pointer-events-none';
+          return 'translate-x-[600px] scale-[0.5] opacity-0 z-0 pointer-events-none';
         }
     }
   };
