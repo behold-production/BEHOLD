@@ -258,14 +258,27 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
         );
       })()}
 
-      {/* Mobile Sidebar Overlay */}
-      {mobileMenuOpen && createPortal(
-        <>
+      {/* Mobile Sidebar Overlay & Drawer Portal */}
+      {createPortal(
+        <div
+          className={`fixed inset-0 z-[100] lg:hidden transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+            mobileMenuOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
+          }`}
+        >
+          {/* Backdrop */}
           <div
-            className="fixed inset-0 z-[100] bg-slate-900/40 backdrop-blur-sm lg:hidden transition-opacity animate-backdrop-in"
+            className={`absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity duration-300 ${
+              mobileMenuOpen ? 'opacity-100' : 'opacity-0'
+            }`}
             onClick={() => setMobileMenuOpen(false)}
           />
-          <div className="fixed top-0 right-0 bottom-0 z-[105] w-full max-w-xs bg-white shadow-2xl p-6 flex flex-col justify-between lg:hidden border-l border-slate-200 animate-slide-in-right">
+
+          {/* Drawer Panel */}
+          <div
+            className={`absolute top-0 right-0 bottom-0 w-full max-w-xs bg-white shadow-2xl p-6 flex flex-col justify-between border-l border-slate-200 transform transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+              mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+            }`}
+          >
             <div>
               <div className="flex items-center justify-between pb-6 border-b border-slate-200">
                 <span className="text-xl font-black font-sans text-slate-900 tracking-tight">
@@ -329,7 +342,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
               )}
             </div>
           </div>
-        </>,
+        </div>,
         document.body
       )}
 

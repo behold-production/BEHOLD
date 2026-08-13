@@ -220,16 +220,19 @@ const ProfileTab = ({
  />
  </div>
 
- <div className="space-y-1.5">
- <label className="text-zinc-400 font-bold text-xs tracking-wide">Therapy Hours</label>
- <input
- type="number"
- placeholder="0"
- value={ep.hours || 0}
- onChange={(e) => setEp({ hours: Number(e.target.value) })}
- className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-[10px] outline-none focus:border-brand transition-all"
- />
- </div>
+  <div className="space-y-1.5">
+  <label className="text-zinc-400 font-bold text-xs tracking-wide">Experience / Therapy Hours (e.g. 500)</label>
+  <input
+  type="number"
+  placeholder="0"
+  value={ep.hours !== undefined ? ep.hours : (ep.experience || 0)}
+  onChange={(e) => {
+    const val = Number(e.target.value);
+    setEp({ hours: val, experience: String(val) });
+  }}
+  className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-[10px] outline-none focus:border-brand transition-all"
+  />
+  </div>
 
  <div className="sm:col-span-2 space-y-1.5">
  <label className="text-zinc-400 font-bold text-xs tracking-wide">Specialties (comma-separated)</label>

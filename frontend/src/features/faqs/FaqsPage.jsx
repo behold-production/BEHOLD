@@ -1,30 +1,65 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronDown, HelpCircle, ArrowLeft, Search, Sparkles } from 'lucide-react';
+import { ChevronDown, HelpCircle, Search, X, MessageSquare, ArrowRight, ShieldCheck, Sparkles } from 'lucide-react';
 import Navbar from '../../components/common/Navbar';
 import Footer from '../../components/common/Footer';
 import ApiService from '../../services/api';
+import shadeGreenBg from '../../assets/greygreen.png';
+
+const DEFAULT_FAQS = [
+  {
+    category: 'Therapy & Sessions',
+    question: "How does BEHOLD's therapy work?",
+    answer: "BEHOLD connects you with certified psychologists and mental health experts for online video consultations, offline clinic visits, or doorstep sessions based on your preferences. You can choose an expert, pick a convenient time, and get personalized support."
+  },
+  {
+    category: 'Services',
+    question: 'What kind of support does BEHOLD provide?',
+    answer: 'We offer individual psychological counselling, career guidance, anxiety & stress management, depression support, aptitude assessment, and relationship wellbeing sessions.'
+  },
+  {
+    category: 'General',
+    question: "Who can use BEHOLD's services?",
+    answer: 'Our services are designed for students, young professionals, adults, and families seeking professional guidance, emotional support, or personal development.'
+  },
+  {
+    category: 'General',
+    question: 'What is BEHOLD?',
+    answer: 'BEHOLD is a holistic mental health and career aptitude platform committed to providing accessible, empathetic, and confidential psychological support.'
+  },
+  {
+    category: 'Privacy',
+    question: 'Are my therapy sessions private and confidential?',
+    answer: 'Yes, absolutely. All sessions and personal data are strictly confidential and protected by professional psychological ethics and secure data standards.'
+  },
+  {
+    category: 'Therapy & Sessions',
+    question: 'How do I book a session with a psychologist?',
+    answer: 'Simply click "Meet Our Experts", select a psychologist whose specialization matches your needs, pick an available date & time slot, and complete your booking in under 2 minutes.'
+  }
+];
 
 export default function FaqsPage() {
   const navigate = useNavigate();
-  const [faqs, setFaqs] = useState([]);
+  const [faqs, setFaqs] = useState(DEFAULT_FAQS);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [openIndex, setOpenIndex] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState('ALL');
+  const [openIndex, setOpenIndex] = useState(0);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    document.title = 'Frequently Asked Questions & Support | Behold Aspire';
+    document.title = 'Frequently Asked Questions & Support | BEHOLD';
 
     const fetchFaqs = async () => {
       setLoading(true);
       try {
         const res = await ApiService.getFaqs();
-        if (res.success && res.data) {
+        if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
           setFaqs(res.data);
         }
       } catch (err) {
-        console.error('Failed to load FAQs', err);
+        console.warn('Using default FAQs fallback', err);
       } finally {
         setLoading(false);
       }
@@ -36,111 +71,192 @@ export default function FaqsPage() {
     setOpenIndex(openIndex === index ? null : index);
   };
 
+  const categories = ['ALL', ...new Set(faqs.map((f) => f.category).filter(Boolean))];
+
   const filteredFaqs = faqs.filter((f) => {
-    if (!searchQuery.trim()) return true;
-    const q = searchQuery.toLowerCase();
-    return (
-      (f.question && f.question.toLowerCase().includes(q)) ||
-      (f.answer && f.answer.toLowerCase().includes(q))
-    );
+    if (selectedCategory !== 'ALL' && f.category && f.category !== selectedCategory) {
+      return false;
+    }
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      const qMatch = f.question && f.question.toLowerCase().includes(q);
+      const aMatch = f.answer && f.answer.toLowerCase().includes(q);
+      return qMatch || aMatch;
+    }
+    return true;
   });
 
   return (
-    <div className="min-h-screen flex flex-col bg-transparent text-slate-900 pt-28 pb-20 selection:bg-[#00E5FF] selection:text-slate-900">
+    <div className="min-h-screen flex flex-col bg-slate-50/50 text-slate-900 selection:bg-[#00c9d6] selection:text-slate-950 font-sans">
       <Navbar />
 
-      {/* Header */}
-      <section className="relative py-12 sm:py-16 border-b border-slate-200 bg-transparent">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold font-header tracking-tight text-slate-900 leading-tight">
-            Frequently Asked <span className="text-[#00A8FF]">Questions</span>
+      {/* Header Section */}
+      <section className="relative py-12 sm:py-16 pt-24 sm:pt-28 border-b border-slate-200/80 bg-white overflow-hidden">
+        {/* Background Accent Image */}
+        <div className="absolute inset-0 pointer-events-none opacity-40">
+          <img
+            src={shadeGreenBg}
+            alt=""
+            className="w-full h-full object-cover object-center [mask-image:linear-gradient(to_bottom,black_20%,transparent_100%)]"
+          />
+        </div>
+
+        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#00c9d6]/10 text-[#008b94] font-bold text-[11px] uppercase tracking-wider mb-3">
+            <Sparkles className="w-3.5 h-3.5" /> Help & Support Center
+          </span>
+
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 leading-tight">
+            Frequently Asked <span className="text-[#00c9d6]">Questions</span>
           </h1>
-          <p className="mt-3 text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed font-medium">
+
+          <p className="mt-3 text-sm sm:text-base md:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed font-normal">
             Whatever’s on your mind, we’re here to help you understand what comes next.
           </p>
 
           {/* Search Box */}
-          <div className="mt-8 max-w-xl mx-auto relative">
-            <input
-              type="text"
-              placeholder="Search questions or keywords..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-11 pr-4 py-3.5 rounded-lg bg-white border border-slate-200 focus:border-[#00A8FF] text-slate-900 placeholder-slate-400 text-sm font-medium outline-none shadow-md transition-all"
-            />
-            <Search className="w-5 h-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
+          <div className="mt-6 sm:mt-8 max-w-xl mx-auto relative">
+            <div className="relative flex items-center bg-white rounded-2xl border border-slate-200 shadow-md focus-within:border-[#00c9d6] focus-within:ring-2 focus-within:ring-[#00c9d6]/20 transition-all duration-200">
+              <Search className="w-5 h-5 text-slate-400 absolute left-4 pointer-events-none" />
+              <input
+                type="text"
+                placeholder="Search questions or keywords..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-11 pr-10 py-3.5 text-sm sm:text-base font-medium text-slate-800 placeholder-slate-400 bg-transparent outline-none border-none"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-3.5 p-1 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition cursor-pointer"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </div>
           </div>
+
+          {/* Category Filters (Horizontal Scroll on Mobile) */}
+          {categories.length > 2 && (
+            <div className="mt-6 flex items-center justify-center gap-2 overflow-x-auto scrollbar-none py-1 px-2 no-scrollbar">
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-200 cursor-pointer ${
+                    selectedCategory === cat
+                      ? 'bg-slate-900 text-white shadow-sm'
+                      : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80'
+                  }`}
+                >
+                  {cat === 'ALL' ? 'All Questions' : cat}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
       {/* Main FAQs Accordion List */}
-      <main className="flex-1 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
+      <main className="flex-1 max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12 w-full">
         {loading ? (
-          <div className="flex justify-center items-center py-20">
-            <div className="w-10 h-10 border-4 border-[#00A8FF] border-t-transparent rounded-full animate-spin"></div>
+          <div className="flex justify-center items-center py-16">
+            <div className="w-8 h-8 border-3 border-[#00c9d6] border-t-transparent rounded-full animate-spin"></div>
           </div>
         ) : filteredFaqs.length === 0 ? (
-          <div className="text-center py-16 bg-white rounded-lg border border-slate-200 shadow-sm">
-            <HelpCircle className="w-12 h-12 text-[#00A8FF] mx-auto mb-3 opacity-70" />
-            <h3 className="text-lg font-semibold text-slate-900 mb-1">No questions found</h3>
-            <p className="text-sm text-slate-500">Try searching for a different keyword.</p>
+          <div className="text-center py-12 px-6 bg-white rounded-3xl border border-dashed border-slate-300 shadow-xs my-4">
+            <div className="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-3">
+              <HelpCircle className="w-6 h-6 text-[#00c9d6]" />
+            </div>
+            <h3 className="text-base font-bold text-slate-900 mb-1">No matching questions found</h3>
+            <p className="text-xs sm:text-sm text-slate-500 max-w-xs mx-auto mb-4">
+              Try adjusting your search terms or view all questions.
+            </p>
+            <button
+              onClick={() => { setSearchQuery(''); setSelectedCategory('ALL'); }}
+              className="px-4 py-2 bg-slate-900 hover:bg-[#00c9d6] hover:text-slate-950 text-white font-bold text-xs rounded-full transition shadow-xs cursor-pointer"
+            >
+              Reset Search
+            </button>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3.5 sm:space-y-4">
             {filteredFaqs.map((faq, idx) => {
               const isOpen = openIndex === idx;
               return (
                 <div
                   key={idx}
-                  className={`bg-white rounded-lg border border-slate-200 shadow-sm transition-all duration-300 ${
-                    isOpen ? 'ring-1 ring-[#00A8FF]/30 border-[#00A8FF]' : ''
+                  className={`bg-white rounded-2xl border transition-all duration-300 overflow-hidden ${
+                    isOpen
+                      ? 'border-[#00c9d6] shadow-[0_8px_24px_rgba(0,201,214,0.12)]'
+                      : 'border-slate-200/90 hover:border-slate-300 shadow-xs'
                   }`}
                 >
                   <button
                     type="button"
                     onClick={() => toggleFaq(idx)}
-                    className="w-full p-6 text-left flex items-center justify-between cursor-pointer focus:outline-none"
+                    className="w-full p-4 sm:p-5 text-left flex items-center justify-between gap-3 cursor-pointer focus:outline-none select-none"
                     aria-expanded={isOpen}
                   >
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3.5 min-w-0">
                       <div
-                        className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 border ${
+                        className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all duration-300 ${
                           isOpen
-                            ? 'bg-[#00A8FF] text-white border-[#00A8FF]'
-                            : 'bg-slate-50 text-slate-500 border-slate-200'
+                            ? 'bg-[#00c9d6] text-slate-950 shadow-sm'
+                            : 'bg-slate-100 text-slate-500'
                         }`}
                       >
-                        <HelpCircle className="w-4 h-4" />
+                        <HelpCircle className="w-4.5 h-4.5" />
                       </div>
-                      <span className="font-header font-semibold text-base sm:text-lg text-slate-900">
+                      <span className="font-bold text-sm sm:text-base text-slate-900 leading-snug">
                         {faq.question}
                       </span>
                     </div>
+
                     <div
-                      className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 border transition-transform duration-300 ${
+                      className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 transition-all duration-300 ${
                         isOpen
-                          ? 'rotate-180 bg-slate-900 text-[#00E5FF] border-slate-900'
-                          : 'bg-white text-slate-400 border-slate-200'
+                          ? 'rotate-180 bg-slate-900 text-[#00c9d6]'
+                          : 'bg-slate-100 text-slate-400 hover:bg-slate-200'
                       }`}
                     >
                       <ChevronDown className="w-4 h-4" />
                     </div>
                   </button>
 
-                  <div
-                    className={`transition-all duration-300 overflow-hidden ${
-                      isOpen ? 'max-h-96 opacity-100 border-t border-slate-100' : 'max-h-0 opacity-0'
-                    }`}
-                  >
-                    <p className="text-slate-600 font-normal leading-relaxed text-sm sm:text-base p-6 pt-4 ml-0 sm:ml-12">
-                      {faq.answer}
-                    </p>
-                  </div>
+                  {isOpen && (
+                    <div className="px-4 pb-4 sm:px-5 sm:pb-5 pt-0 border-t border-slate-100 bg-slate-50/60 rounded-b-2xl transition-all duration-300">
+                      <p className="text-slate-600 font-normal leading-relaxed text-xs sm:text-sm pt-3 sm:pt-4 pl-0 sm:pl-12">
+                        {faq.answer}
+                      </p>
+                    </div>
+                  )}
                 </div>
               );
             })}
           </div>
         )}
+
+        {/* Contact Support Banner */}
+        <div className="mt-10 sm:mt-14 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-5 text-center sm:text-left relative overflow-hidden">
+          <div className="absolute right-0 top-0 w-48 h-48 bg-[#00c9d6]/10 rounded-full blur-2xl pointer-events-none" />
+          
+          <div className="space-y-1.5 z-10">
+            <h3 className="text-lg sm:text-xl font-bold tracking-tight text-white flex items-center justify-center sm:justify-start gap-2">
+              <MessageSquare className="w-5 h-5 text-[#00c9d6]" /> Still have questions?
+            </h3>
+            <p className="text-xs sm:text-sm text-slate-300 max-w-md font-normal leading-relaxed">
+              Can't find the answer you're looking for? Speak directly with our support team or book a consultation today.
+            </p>
+          </div>
+
+          <button
+            onClick={() => navigate('/#inquiry')}
+            className="z-10 shrink-0 px-6 py-3 bg-[#00c9d6] hover:bg-[#00b2be] text-slate-950 font-bold text-xs sm:text-sm rounded-full transition shadow-md hover:shadow-lg flex items-center gap-2 cursor-pointer whitespace-nowrap hover-scale-btn"
+          >
+            Contact Support Desk <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
       </main>
 
       <Footer />

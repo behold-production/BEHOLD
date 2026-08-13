@@ -795,6 +795,7 @@ reportRegError("Please enter a valid email address.");
   bio: formData.bio,
   defaultMeetLink: formData.defaultMeetLink,
   hours: Number(formData.hours) || 0,
+  experience: String(formData.hours || formData.experience || 0),
   modes,
   locationName: formData.locationName || '',
   latitude: Number(formData.latitude) || 0,

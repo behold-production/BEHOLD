@@ -50,7 +50,8 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
             const formatted = res.data.map((c) => {
               const rawPhoto = c.profilePic || c.photo || c.avatar || c.profilePicture || c.image || c.user?.profilePic;
               const hasValidPhoto = rawPhoto && typeof rawPhoto === 'string' && rawPhoto.trim().length > 0 && !rawPhoto.includes('via.placeholder');
-              const expData = formatExperience(c.experience || c.hours || c.completedHours);
+              const rawHoursVal = (c.hours !== undefined && c.hours !== null && c.hours !== '') ? Number(c.hours) : (typeof c.experience === 'number' ? c.experience : (parseInt(c.experience, 10) || 0));
+              const expData = formatExperience(rawHoursVal);
               const customTitle = c.title || (c.designation && c.designation.toLowerCase() !== 'counsellor' ? c.designation : null) || (c.role && c.role.toLowerCase() !== 'counsellor' ? c.role : null) || 'Consultant Psychologist';
               
               return {
@@ -150,9 +151,9 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
     if (!isDragging) return;
     setIsDragging(false);
     const deltaX = touchDeltaRef.current;
-    if (deltaX < -40) {
+    if (deltaX < -30) {
       handleNextCard();
-    } else if (deltaX > 40) {
+    } else if (deltaX > 30) {
       handlePrevCard();
     }
   };
@@ -194,16 +195,20 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
   const getCardStyles = (diff) => {
     switch (diff) {
       case 0:
-        return 'translate-x-0 scale-100 opacity-100 z-30 shadow-[0_20px_50px_rgba(0,201,214,0.20)] cursor-default brightness-100 pointer-events-auto';
+        return 'translate-x-0 scale-100 opacity-100 z-30 shadow-[0_22px_50px_rgba(0,201,214,0.22)] cursor-default brightness-100 pointer-events-auto';
       case -1:
-        return '-translate-x-[55%] xs:-translate-x-[65%] sm:-translate-x-[220px] md:-translate-x-[270px] lg:-translate-x-[320px] scale-[0.84] sm:scale-[0.86] opacity-70 sm:opacity-80 z-20 shadow-xl cursor-pointer hover:opacity-95 hover:scale-[0.86] brightness-95 pointer-events-auto';
+        return '-translate-x-[32%] xs:-translate-x-[38%] sm:-translate-x-[180px] md:-translate-x-[220px] lg:-translate-x-[260px] scale-[0.84] sm:scale-[0.86] opacity-90 z-20 shadow-xl cursor-pointer hover:opacity-100 hover:scale-[0.87] brightness-90 pointer-events-auto';
       case 1:
-        return 'translate-x-[55%] xs:translate-x-[65%] sm:translate-x-[220px] md:translate-x-[270px] lg:translate-x-[320px] scale-[0.84] sm:scale-[0.86] opacity-70 sm:opacity-80 z-20 shadow-xl cursor-pointer hover:opacity-95 hover:scale-[0.86] brightness-95 pointer-events-auto';
+        return 'translate-x-[32%] xs:translate-x-[38%] sm:translate-x-[180px] md:translate-x-[220px] lg:translate-x-[260px] scale-[0.84] sm:scale-[0.86] opacity-90 z-20 shadow-xl cursor-pointer hover:opacity-100 hover:scale-[0.87] brightness-90 pointer-events-auto';
+      case -2:
+        return '-translate-x-[60%] xs:-translate-x-[68%] sm:-translate-x-[320px] md:-translate-x-[390px] lg:-translate-x-[460px] scale-[0.70] sm:scale-[0.73] opacity-75 z-10 shadow-lg cursor-pointer hover:opacity-90 hover:scale-[0.74] brightness-75 pointer-events-auto';
+      case 2:
+        return 'translate-x-[60%] xs:translate-x-[68%] sm:translate-x-[320px] md:translate-x-[390px] lg:translate-x-[460px] scale-[0.70] sm:scale-[0.73] opacity-75 z-10 shadow-lg cursor-pointer hover:opacity-90 hover:scale-[0.74] brightness-75 pointer-events-auto';
       default:
         if (diff < 0) {
-          return '-translate-x-[140%] scale-[0.6] opacity-0 z-0 pointer-events-none';
+          return '-translate-x-[120%] scale-[0.50] opacity-0 z-0 pointer-events-none';
         } else {
-          return 'translate-x-[140%] scale-[0.6] opacity-0 z-0 pointer-events-none';
+          return 'translate-x-[120%] scale-[0.50] opacity-0 z-0 pointer-events-none';
         }
     }
   };
@@ -214,21 +219,21 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
     const minFee = advisor.halfSessionPrice || Math.round(advisor.fee * 0.5) || 499;
 
     return (
-      <div className={`w-full h-full flex flex-col overflow-hidden bg-white rounded-[26px] [transform:translateZ(0)] [isolation:isolate] transition-all duration-500 text-left ${isCenter ? 'pointer-events-auto border-[2px] border-[#00c9d6] shadow-[0_16px_40px_rgba(0,201,214,0.20)]' : 'pointer-events-none border border-slate-200/80 shadow-md'}`}>
+      <div className={`w-full h-full flex flex-col overflow-hidden bg-white rounded-[24px] sm:rounded-[26px] [transform:translateZ(0)] [isolation:isolate] transition-all duration-500 text-left ${isCenter ? 'pointer-events-auto border-[2px] border-[#00c9d6] shadow-[0_16px_40px_rgba(0,201,214,0.20)]' : 'pointer-events-none border border-slate-200/80 shadow-md'}`}>
         
         {/* Top Header Section (Light Primary Teal Background with Full Height Right Image) */}
-        <div className="relative w-full h-[115px] sm:h-[130px] p-3.5 sm:p-4.5 bg-gradient-to-r from-[#bcf4f8] via-[#d7f9fb] to-[#a8eff4] flex items-start justify-between overflow-hidden shrink-0 rounded-t-[26px]">
-          <div className="pr-2 space-y-1 z-10 max-w-[68%]">
-            <h3 className="font-sans text-base sm:text-lg font-extrabold text-slate-900 leading-tight line-clamp-1 drop-shadow-xs">
+        <div className="relative w-full h-[110px] sm:h-[130px] p-3 sm:p-4.5 bg-gradient-to-r from-[#bcf4f8] via-[#d7f9fb] to-[#a8eff4] flex items-start justify-between overflow-hidden shrink-0 rounded-t-[24px] sm:rounded-t-[26px]">
+          <div className="pr-2 space-y-0.5 sm:space-y-1 z-10 max-w-[68%]">
+            <h3 className="font-sans text-sm xs:text-base sm:text-lg font-extrabold text-slate-900 leading-tight line-clamp-1 drop-shadow-xs">
               {advisor.name}
             </h3>
-            <p className="text-xs sm:text-xs font-semibold text-slate-700 tracking-wide line-clamp-1">
+            <p className="text-[11px] sm:text-xs font-semibold text-slate-700 tracking-wide line-clamp-1">
               {cardTitle}
             </p>
           </div>
 
           {/* Counsellor Profile Image */}
-          <div className="w-[105px] sm:w-[125px] h-[115px] sm:h-[130px] absolute right-1.5 bottom-0 z-10 flex items-end justify-center pointer-events-none">
+          <div className="w-[98px] sm:w-[125px] h-[110px] sm:h-[130px] absolute right-1 bottom-0 z-10 flex items-end justify-center pointer-events-none">
             {advisor.photo ? (
               <img
                 src={advisor.photo}
@@ -241,14 +246,14 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
                 }}
               />
             ) : (
-              <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white/90 shadow-md flex items-center justify-center mb-2 border border-white">
-                <span className="font-semibold text-xl text-[#00c9d6]">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-white/90 shadow-md flex items-center justify-center mb-2 border border-white">
+                <span className="font-semibold text-lg sm:text-xl text-[#00c9d6]">
                   {getInitial(advisor.name)}
                 </span>
               </div>
             )}
-            <div style={{ display: 'none' }} className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white/90 shadow-md items-center justify-center mb-2 border border-white">
-              <span className="font-semibold text-xl text-[#00c9d6]">
+            <div style={{ display: 'none' }} className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-white/90 shadow-md items-center justify-center mb-2 border border-white">
+              <span className="font-semibold text-lg sm:text-xl text-[#00c9d6]">
                 {getInitial(advisor.name)}
               </span>
             </div>
@@ -256,14 +261,14 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
         </div>
 
         {/* White Body Card */}
-        <div className="relative z-20 -mt-4 bg-white rounded-t-[22px] rounded-b-[26px] p-3.5 sm:p-5 flex-1 flex flex-col justify-between space-y-2.5 sm:space-y-3 overflow-hidden">
+        <div className="relative z-20 -mt-3.5 sm:-mt-4 bg-white rounded-t-[20px] sm:rounded-t-[22px] rounded-b-[24px] sm:rounded-b-[26px] p-3 sm:p-5 flex-1 flex flex-col justify-between space-y-2 sm:space-y-3 overflow-hidden">
           
           {/* Specialties Tags Row */}
-          <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none pb-0.5 shrink-0">
+          <div className="flex items-center gap-1 sm:gap-1.5 overflow-x-auto scrollbar-none pb-0.5 shrink-0">
             {advisor.specialties.slice(0, 3).map((spec, i) => (
               <span
                 key={i}
-                className="px-2.5 sm:px-3 py-1 bg-slate-50 border border-slate-200/80 text-slate-800 text-[10px] sm:text-[11px] font-semibold rounded-xl whitespace-nowrap shrink-0"
+                className="px-2 sm:px-3 py-0.5 sm:py-1 bg-slate-50 border border-slate-200/80 text-slate-800 text-[9.5px] sm:text-[11px] font-semibold rounded-xl whitespace-nowrap shrink-0"
               >
                 {spec}
               </span>
@@ -271,8 +276,8 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
           </div>
 
           {/* Description Card Box */}
-          <div className="bg-slate-50/90 border border-slate-200/80 rounded-2xl p-3 sm:p-3.5 shadow-xs transition-all duration-300">
-            <p className={`text-[11px] sm:text-xs text-slate-700 italic font-medium leading-relaxed ${expandedBios[advisor.id] ? 'max-h-[100px] overflow-y-auto pr-1 scrollbar-thin' : 'line-clamp-2'}`}>
+          <div className="bg-slate-50/90 border border-slate-200/80 rounded-xl sm:rounded-2xl p-2.5 sm:p-3.5 shadow-xs transition-all duration-300">
+            <p className={`text-[10.5px] sm:text-xs text-slate-700 italic font-medium leading-relaxed ${expandedBios[advisor.id] ? 'max-h-[100px] overflow-y-auto pr-1 scrollbar-thin' : 'line-clamp-2'}`}>
               "{advisor.bio || 'Specializing in compassionate psychological counselling and mental wellbeing.'}"
             </p>
             {advisor.bio && advisor.bio.length > 45 && (
@@ -282,7 +287,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
                   e.stopPropagation();
                   setExpandedBios(prev => ({ ...prev, [advisor.id]: !prev[advisor.id] }));
                 }}
-                className="text-[10px] sm:text-[11px] font-semibold text-[#00c9d6] hover:text-[#008b94] hover:underline cursor-pointer mt-1 inline-block tracking-wider"
+                className="text-[9.5px] sm:text-[11px] font-semibold text-[#00c9d6] hover:text-[#008b94] hover:underline cursor-pointer mt-1 inline-block tracking-wider"
               >
                 {expandedBios[advisor.id] ? 'Read Less ▲' : 'Read More ▼'}
               </button>
@@ -290,36 +295,36 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
           </div>
 
           {/* 3 Metric Stat Boxes */}
-          <div className="grid grid-cols-3 gap-2 shrink-0">
-            <div className="bg-slate-50/80 border border-slate-200/80 rounded-xl p-2 sm:p-2.5 text-left">
-              <span className="text-xs sm:text-sm font-bold text-slate-900 block leading-none">{advisor.hours ? advisor.hours.toLocaleString() : '900'}+</span>
-              <span className="text-[9.5px] sm:text-[10px] font-medium text-slate-500 block mt-1">Hours Experience</span>
+          <div className="grid grid-cols-3 gap-1.5 sm:gap-2 shrink-0">
+            <div className="bg-slate-50/80 border border-slate-200/80 rounded-xl p-1.5 sm:p-2.5 text-left">
+              <span className="text-[11px] sm:text-sm font-bold text-slate-900 block leading-none">{(advisor.hours !== undefined && advisor.hours !== null) ? advisor.hours.toLocaleString() : 0}+</span>
+              <span className="text-[8.5px] sm:text-[10px] font-medium text-slate-500 block mt-0.5 sm:mt-1">Hours Experience</span>
             </div>
-            <div className="bg-slate-50/80 border border-slate-200/80 rounded-xl p-2 sm:p-2.5 text-left">
-              <span className="text-xs sm:text-sm font-bold text-slate-900 block leading-tight line-clamp-1">{advisor.languages || 'Malayalam'}</span>
-              <span className="text-[9.5px] sm:text-[10px] font-medium text-slate-500 block mt-1">Languages</span>
+            <div className="bg-slate-50/80 border border-slate-200/80 rounded-xl p-1.5 sm:p-2.5 text-left">
+              <span className="text-[11px] sm:text-sm font-bold text-slate-900 block leading-tight line-clamp-1">{advisor.languages || 'Malayalam'}</span>
+              <span className="text-[8.5px] sm:text-[10px] font-medium text-slate-500 block mt-0.5 sm:mt-1">Languages</span>
             </div>
-            <div className="bg-slate-50/80 border border-slate-200/80 rounded-xl p-2 sm:p-2.5 text-left">
-              <span className="text-xs sm:text-sm font-bold text-slate-900 block leading-none">₹{minFee}</span>
-              <span className="text-[9.5px] sm:text-[10px] font-medium text-slate-500 block mt-1">Starting from</span>
+            <div className="bg-slate-50/80 border border-slate-200/80 rounded-xl p-1.5 sm:p-2.5 text-left">
+              <span className="text-[11px] sm:text-sm font-bold text-slate-900 block leading-none">₹{minFee}</span>
+              <span className="text-[8.5px] sm:text-[10px] font-medium text-slate-500 block mt-0.5 sm:mt-1">Starting from</span>
             </div>
           </div>
 
           {/* Bottom Availability & Action Buttons Row */}
-          <div className="pt-2 flex items-center justify-between gap-2 border-t border-slate-100 shrink-0">
+          <div className="pt-1.5 sm:pt-2 flex items-center justify-between gap-1.5 sm:gap-2 border-t border-slate-100 shrink-0">
             <div className="text-left shrink-0">
-              <span className="text-[9.5px] sm:text-[10px] font-semibold text-slate-400 block tracking-wider">Next available</span>
-              <span className="text-[10.5px] sm:text-xs font-semibold text-slate-900 block mt-0.5 whitespace-nowrap">Available Today</span>
+              <span className="text-[8.5px] sm:text-[10px] font-semibold text-slate-400 block tracking-wider">Next available</span>
+              <span className="text-[10px] sm:text-xs font-semibold text-slate-900 block mt-0.5 whitespace-nowrap">Available Today</span>
             </div>
 
-            <div className="flex items-center gap-1.5 shrink-0">
+            <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
               <button
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
                   navigate(`/advisor/${advisor.id}`);
                 }}
-                className="px-2.5 sm:px-3.5 py-1.5 sm:py-2 border border-slate-300 hover:border-slate-900 text-slate-800 hover:bg-slate-900 hover:text-white rounded-full text-[10px] sm:text-xs font-bold transition cursor-pointer whitespace-nowrap hover-scale-btn shadow-xs"
+                className="px-2 sm:px-3.5 py-1.5 sm:py-2 border border-slate-300 hover:border-slate-900 text-slate-800 hover:bg-slate-900 hover:text-white rounded-full text-[9.5px] sm:text-xs font-bold transition cursor-pointer whitespace-nowrap hover-scale-btn shadow-xs"
               >
                 View Profile
               </button>
@@ -330,7 +335,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
                   if (onBookTherapist) onBookTherapist(advisor.id);
                   else window.spaNavigate?.('/book-session');
                 }}
-                className="bg-[#00c9d6] hover:bg-[#00b2be] text-slate-950 font-extrabold text-[10px] sm:text-xs tracking-wider px-3 sm:px-4 py-1.5 sm:py-2 rounded-full shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer whitespace-nowrap hover-scale-btn"
+                className="bg-[#00c9d6] hover:bg-[#00b2be] text-slate-950 font-extrabold text-[9.5px] sm:text-xs tracking-wider px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer whitespace-nowrap hover-scale-btn"
               >
                 Book Session
               </button>
@@ -384,10 +389,10 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
         </div>
 
         {/* Row 2: Role Filter Pills + Sort Dropdown */}
-        <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center justify-between gap-2 w-full">
 
-          {/* Category Role Filter Pills — wrapping on mobile */}
-          <div className="flex flex-wrap items-center gap-1.5">
+          {/* Category Role Filter Pills — smooth horizontal scroll on mobile */}
+          <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none py-0.5 shrink max-w-[calc(100%-125px)] sm:max-w-none">
             {[
               { id: 'ALL', label: 'All Roles' },
               { id: 'CONSULTANT', label: 'Consultant Psychologist' },
@@ -397,7 +402,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
               <button
                 key={role.id}
                 onClick={() => { setSelectedRole(role.id); setCurrentIndex(0); }}
-                className={`px-3.5 py-1.5 rounded-full text-[11px] sm:text-xs font-semibold whitespace-nowrap transition-all duration-300 cursor-pointer ${selectedRole === role.id
+                className={`px-3.5 py-1.5 rounded-full text-[11px] sm:text-xs font-semibold whitespace-nowrap shrink-0 transition-all duration-300 cursor-pointer ${selectedRole === role.id
                   ? 'bg-slate-900 text-white shadow-sm'
                   : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200'
                   }`}
@@ -474,23 +479,23 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
               <button
                 onClick={(e) => { e.stopPropagation(); handlePrevCard(); }}
                 aria-label="Previous Psychologist"
-                className="absolute left-2 sm:left-4 lg:left-6 top-1/2 -translate-y-1/2 z-40 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/95 text-slate-800 hover:text-slate-950 hover:bg-[#00c9d6] shadow-xl border border-slate-200/80 transition-all duration-300 cursor-pointer flex items-center justify-center group hover-scale-btn"
+                className="absolute left-1 sm:left-4 lg:left-6 top-1/2 -translate-y-1/2 z-40 w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-white/95 text-slate-800 hover:text-slate-950 hover:bg-[#00c9d6] shadow-xl border border-slate-200/80 transition-all duration-300 cursor-pointer flex items-center justify-center group hover-scale-btn"
               >
-                <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 group-hover:-translate-x-0.5 transition-transform" />
+                <ChevronLeft className="w-4 h-4 sm:w-6 sm:h-6 group-hover:-translate-x-0.5 transition-transform" />
               </button>
 
               {/* Right Floating Navigation Arrow */}
               <button
                 onClick={(e) => { e.stopPropagation(); handleNextCard(); }}
                 aria-label="Next Psychologist"
-                className="absolute right-2 sm:right-4 lg:right-6 top-1/2 -translate-y-1/2 z-40 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/95 text-slate-800 hover:text-slate-950 hover:bg-[#00c9d6] shadow-xl border border-slate-200/80 transition-all duration-300 cursor-pointer flex items-center justify-center group hover-scale-btn"
+                className="absolute right-1 sm:right-4 lg:right-6 top-1/2 -translate-y-1/2 z-40 w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-white/95 text-slate-800 hover:text-slate-950 hover:bg-[#00c9d6] shadow-xl border border-slate-200/80 transition-all duration-300 cursor-pointer flex items-center justify-center group hover-scale-btn"
               >
-                <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-0.5 transition-transform" />
+                <ChevronRight className="w-4 h-4 sm:w-6 sm:h-6 group-hover:translate-x-0.5 transition-transform" />
               </button>
 
               {/* Card Perspective Area */}
               <div
-                className="relative w-full max-w-6xl mx-auto h-[420px] sm:h-[470px] flex items-center justify-center overflow-visible touch-pan-y"
+                className="relative w-full max-w-6xl mx-auto h-[410px] sm:h-[470px] flex items-center justify-center overflow-visible touch-pan-y"
                 onMouseDown={(e) => handleTouchStart(e.clientX)}
                 onMouseMove={(e) => handleTouchMove(e.clientX)}
                 onMouseUp={handleTouchEnd}
@@ -508,7 +513,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
                       onClick={() => {
                         if (diff !== 0) setCurrentIndex(index);
                       }}
-                      className={`absolute w-[86vw] xs:w-[340px] sm:w-[380px] md:w-[410px] h-[400px] sm:h-[450px] rounded-[26px] overflow-hidden transform transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${styleClass}`}
+                      className={`absolute w-[82vw] xs:w-[325px] sm:w-[365px] md:w-[400px] h-[390px] sm:h-[450px] rounded-[24px] sm:rounded-[26px] overflow-hidden transform transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${styleClass}`}
                     >
                       {renderCard(advisor, diff === 0)}
                     </div>
@@ -525,7 +530,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
 
               <button
                 onClick={handleConnectClick}
-                className="bg-[#0f172a] hover:bg-[#00c9d6] hover:text-slate-950 text-white font-semibold text-xs sm:text-sm px-8 py-3.5 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer flex items-center justify-center border-none hover-scale-btn mt-2"
+                className="bg-[#0f172a] hover:bg-[#00c9d6] hover:text-slate-950 text-white font-bold text-xs px-6 py-2.5 rounded-full shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer flex items-center justify-center border-none hover-scale-btn mt-1"
               >
                 Let's Connect
               </button>

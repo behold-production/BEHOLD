@@ -57,24 +57,22 @@ export const formatBlogContent = (content) => {
 
 /**
  * Formats psychologist experience into Consultation Hours
- * Handles numeric values, strings like "1500 hrs", or legacy hour/year numbers
+ * Handles numeric values, strings like "1500 hrs", or hour numbers
  */
 export const formatExperience = (expInput) => {
-  if (!expInput && expInput !== 0) {
+  if (expInput === undefined || expInput === null || expInput === '') {
     return {
-      hours: '900+ Hours Consulted',
-      rawHours: 900,
-      years: '900+ Hours Consulted',
-      rawYears: 900
+      hours: '0+ Hours Consulted',
+      rawHours: 0,
+      years: '0+ Hours Consulted',
+      rawYears: 0
     };
   }
 
   const str = String(expInput).trim();
   const numMatch = str.match(/\d+/);
-  const num = numMatch ? parseInt(numMatch[0], 10) : 900;
+  const hours = numMatch ? parseInt(numMatch[0], 10) : 0;
 
-  // Convert legacy year inputs (< 50) into hours (3 -> 900 hours, 5 -> 1500 hours)
-  const hours = num < 50 ? num * 300 : num;
   return {
     hours: `${hours.toLocaleString()}+ Hours Consulted`,
     rawHours: hours,
