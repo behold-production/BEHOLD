@@ -6,6 +6,73 @@ const EmailService = require('../services/emailService');
 const WhatsAppService = require('../services/whatsappService');
 const { resolveAnyPhone, normalizePhoneWithCountryCode } = require('../utils/phoneUtils');
 
+async function dispatchBookingNotifications(appointment, reqBody = {}, fallbackClientPhone = '') {
+  try {
+    const user = await StorageService.findById('users', appointment.userId);
+    const counsellor = await StorageService.findById('counsellors', appointment.counsellorId);
+
+    const targetUserPhone = resolveAnyPhone(
+      fallbackClientPhone,
+      appointment?.clientPhone,
+      reqBody?.clientPhone,
+      reqBody?.bookingDetails?.clientPhone,
+      reqBody?.phone,
+      user?.phone,
+      user
+    );
+
+    const sName = appointment.clientName || reqBody?.clientName || reqBody?.bookingDetails?.clientName || user?.name || 'Student';
+    const cName = counsellor?.name || 'Psychologist';
+    const date = appointment.date;
+    const time = appointment.time;
+    const mode = appointment.mode;
+    const netTotal = appointment.amountPaid || 0;
+    const finalMeetLink = appointment.meetLink || '';
+
+    console.log(`[Payment Booking WhatsApp Trigger] Target User Phone: "${targetUserPhone}" | Student: "${sName}" | Counsellor: "${cName}"`);
+
+    await Promise.allSettled([
+      StorageService.create('notifications', {
+        recipientId: appointment.counsellorId,
+        recipientRole: 'counsellor',
+        title: 'New Paid Appointment Request',
+        message: `Student ${sName} booked an appointment on ${date} at ${time}. Payment confirmed.`,
+        type: 'appointment_created',
+        isRead: false
+      }),
+      StorageService.create('notifications', {
+        recipientId: appointment.userId,
+        recipientRole: 'user',
+        title: 'Payment Confirmed & Booking Submitted',
+        message: `Your booking with ${cName} on ${date} at ${time} is confirmed.`,
+        type: 'appointment_created',
+        isRead: false
+      }),
+      user && counsellor ? EmailService.sendAppointmentApproved({ user, counsellor, appointment }) : Promise.resolve(),
+      user && counsellor ? EmailService.sendPaymentReceipt({ user, appointment, counsellor, amount: netTotal, transactionId: appointment.razorpayPaymentId }) : Promise.resolve()
+    ]);
+
+    // Send WhatsApp alert to Student/User ONLY
+    if (targetUserPhone) {
+      const apptDuration = counsellor?.hours ? `${counsellor.hours} Hours Session` : '1 Hour (60 Mins)';
+      const apptBookingId = appointment.id || appointment._id || `app_${Date.now()}`;
+      await WhatsAppService.sendBookingAlert(targetUserPhone, 'approved', {
+        studentName: sName,
+        counsellorName: cName,
+        date,
+        time,
+        mode,
+        duration: apptDuration,
+        bookingId: apptBookingId,
+        meetLink: finalMeetLink,
+        recipientRole: 'user'
+      }).catch((err) => console.error('[WhatsApp User Alert Error]:', err));
+    }
+  } catch (err) {
+    console.error('[dispatchBookingNotifications Error]:', err);
+  }
+}
+
 const PaymentController = {
   // Create Razorpay Order
   async createOrder(req, res, next) {
@@ -275,6 +342,10 @@ const PaymentController = {
           Object.assign(existingAppt, updateFields);
         }
         cleanDuplicateAppointments().catch(() => {});
+
+        // Dispatch notifications & WhatsApp alert for existing pre-created appointment
+        await dispatchBookingNotifications(existingAppt, req.body, clientPhone);
+
         return res.status(200).json({
           success: true,
           message: 'Payment verified and appointment confirmed.',
@@ -360,62 +431,8 @@ const PaymentController = {
         counsellorShareAmount
       });
 
-      // Awaited notification processing (MUST be completed before res.json)
-      try {
-        const targetUserPhone = resolveAnyPhone(
-          clientPhone,
-          req.body?.clientPhone,
-          req.body?.phone,
-          newAppointment?.clientPhone,
-          user?.phone,
-          user
-        );
-        const targetCounsellorPhone = resolveAnyPhone(counsellor);
-
-        const sName = clientName || user?.name || 'Student';
-        const cName = counsellor?.name || 'Psychologist';
-
-        console.log(`[Payment Booking WhatsApp] User Phone: "${targetUserPhone}" | Counsellor Phone: "${targetCounsellorPhone}"`);
-
-        await Promise.allSettled([
-          StorageService.create('notifications', {
-            recipientId: counsellorId,
-            recipientRole: 'counsellor',
-            title: 'New Paid Appointment Request',
-            message: `Student ${sName} booked an appointment on ${date} at ${time}. Payment ₹${netTotal} confirmed.`,
-            type: 'appointment_created',
-            isRead: false
-          }),
-          StorageService.create('notifications', {
-            recipientId: userId,
-            recipientRole: 'user',
-            title: 'Payment Confirmed & Booking Submitted',
-            message: `Your booking with ${cName} on ${date} at ${time} is confirmed. Payment ₹${netTotal} received.`,
-            type: 'appointment_created',
-            isRead: false
-          }),
-          user && counsellor ? EmailService.sendPaymentReceipt({ user, appointment: newAppointment, counsellor, amount: netTotal, transactionId: razorpay_payment_id }) : Promise.resolve()
-        ]);
-
-        // Send WhatsApp alert to Student/User ONLY (Psychologists receive Email only)
-        if (targetUserPhone) {
-          const apptDuration = counsellor?.hours ? `${counsellor.hours} Hours Session` : '1 Hour (60 Mins)';
-          const apptBookingId = newAppointment?.id || newAppointment?._id || `app_${Date.now()}`;
-          await WhatsAppService.sendBookingAlert(targetUserPhone, 'approved', {
-            studentName: sName,
-            counsellorName: cName,
-            date,
-            time,
-            mode,
-            duration: apptDuration,
-            bookingId: apptBookingId,
-            meetLink: finalMeetLink,
-            recipientRole: 'user'
-          }).catch((err) => console.error('[WhatsApp User Alert Error]:', err));
-        }
-      } catch (notifErr) {
-        console.error('[Background Notification Task Error in verifyPaymentAndBook]:', notifErr);
-      }
+      // Dispatch notifications & WhatsApp alert for new appointment
+      await dispatchBookingNotifications(newAppointment, req.body, clientPhone);
 
       // JSON response for frontend
       res.status(200).json({
