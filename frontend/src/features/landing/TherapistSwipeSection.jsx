@@ -192,10 +192,10 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
   const renderCard = (advisor, isCenter) => {
     if (!advisor) return null;
     return (
-      <div className={`w-full h-full flex flex-col overflow-hidden bg-white rounded-[28px] transition-all duration-500 text-left ${isCenter ? 'pointer-events-auto border-[2.5px] border-[#00c9d6] shadow-[0_16px_40px_rgba(0,201,214,0.22)]' : 'pointer-events-none border border-slate-200/80 shadow-md'}`}>
+      <div className={`w-full h-full flex flex-col overflow-hidden bg-white rounded-[28px] [transform:translateZ(0)] [isolation:isolate] transition-all duration-500 text-left ${isCenter ? 'pointer-events-auto border-[2.5px] border-[#00c9d6] shadow-[0_16px_40px_rgba(0,201,214,0.22)]' : 'pointer-events-none border border-slate-200/80 shadow-lg'}`}>
         
         {/* Top Header Section (Light Primary Teal Background with Full Height Right Image) */}
-        <div className="relative w-full h-[110px] sm:h-[125px] p-3.5 sm:p-4 bg-gradient-to-r from-[#bcf4f8] via-[#d7f9fb] to-[#a8eff4] flex items-start justify-between overflow-hidden shrink-0">
+        <div className="relative w-full h-[110px] sm:h-[125px] p-3.5 sm:p-4 bg-gradient-to-r from-[#bcf4f8] via-[#d7f9fb] to-[#a8eff4] flex items-start justify-between overflow-hidden shrink-0 rounded-t-[28px]">
           <div className="pr-2 space-y-0.5 z-10 max-w-[62%]">
             <h3 className="font-sans text-base sm:text-lg font-bold text-slate-900 leading-tight truncate">
               {advisor.name}
@@ -234,7 +234,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
         </div>
 
         {/* White Body Card */}
-        <div className="relative z-20 -mt-4 bg-white rounded-t-[22px] rounded-b-[26px] p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3 overflow-hidden">
+        <div className="relative z-20 -mt-4 bg-white rounded-t-[22px] rounded-b-[28px] p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3 overflow-hidden">
           
           {/* Specialties Tags Row */}
           <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none pb-0.5 shrink-0">
