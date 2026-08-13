@@ -168,9 +168,9 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
                 onClick={handleLogoClick}
                 className="flex items-center gap-2 text-left bg-transparent border-none cursor-pointer p-0"
               >
-                <span className="text-2xl sm:text-3xl font-semibold tracking-tight font-sans text-slate-900 uppercase">
+                <span className="text-2xl sm:text-3xl font-black font-sans text-slate-900 uppercase tracking-tight">
                   {(siteName || 'BEHOLD').replace(/\.$/, '')}
-                  <span className="text-[#00c9d6] drop-shadow-[0_0_8px_rgba(0,201,214,0.8)] font-semibold">.</span>
+                  <span className="text-[#00c9d6] drop-shadow-[0_0_8px_rgba(0,201,214,0.8)] font-black">.</span>
                 </span>
               </button>
 
@@ -268,9 +268,9 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
           <div className="fixed top-0 right-0 bottom-0 z-[105] w-full max-w-xs bg-white shadow-2xl p-6 flex flex-col justify-between lg:hidden border-l border-slate-200 animate-slide-in-right">
             <div>
               <div className="flex items-center justify-between pb-6 border-b border-slate-200">
-                <span className="text-xl font-semibold tracking-tight font-sans text-slate-900">
+                <span className="text-xl font-black font-sans text-slate-900 tracking-tight">
                   {(siteName || 'BEHOLD').replace(/\.$/, '')}
-                  <span className="text-[#00c9d6] font-semibold">.</span>
+                  <span className="text-[#00c9d6] font-black">.</span>
                 </span>
                 <button
                   onClick={() => setMobileMenuOpen(false)}
