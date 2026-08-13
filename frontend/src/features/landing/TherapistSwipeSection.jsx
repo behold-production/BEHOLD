@@ -530,7 +530,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
 
               <button
                 onClick={handleConnectClick}
-                className="bg-[#0f172a] hover:bg-[#00c9d6] hover:text-slate-950 text-white font-bold text-xs px-6 py-2.5 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer flex items-center justify-center border-none hover-scale-btn mt-1"
+                className="bg-[#0f172a] hover:bg-[#00c9d6] hover:text-slate-950 text-white font-bold text-xs px-6 py-2.5 rounded-full shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer flex items-center justify-center border-none hover-scale-btn mt-1"
               >
                 Let's Connect
               </button>
