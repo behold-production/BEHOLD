@@ -134,8 +134,8 @@ const BlogList = () => {
               </div>
             </form>
 
-            {/* Category Pills - dynamically from blog data */}
-            <div className="mt-5 flex flex-wrap justify-center items-center gap-2">
+            {/* Category Pills - dynamically from blog data with smooth horizontal scroll on mobile */}
+            <div className="mt-5 flex items-center gap-2 overflow-x-auto scrollbar-none py-1.5 px-1 sm:flex-wrap sm:justify-center max-w-full">
               {allCategories.map((cat) => {
                 const active = selectedCategory === cat;
                 return (
@@ -143,10 +143,10 @@ const BlogList = () => {
                     key={cat}
                     type="button"
                     onClick={() => setSelectedCategory(cat)}
-                    className={`px-4 py-1.5 rounded-full text-[11px] font-semibold tracking-wider transition-all duration-200 cursor-pointer border ${
+                    className={`px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider transition-all duration-200 cursor-pointer border whitespace-nowrap shrink-0 ${
                       active
                         ? 'bg-[#0f172a] text-white border-[#0f172a] shadow-sm'
-                        : 'bg-white/90 text-slate-600 border-slate-200 hover:border-slate-400 hover:text-slate-900'
+                        : 'bg-white/90 text-slate-700 border-slate-200/90 hover:border-slate-400 hover:text-slate-900'
                     }`}
                   >
                     {cat}
