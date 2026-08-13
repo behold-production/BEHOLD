@@ -43,9 +43,9 @@ class WhatsAppService {
 
     const cleanedPhoneWithoutPlus = formattedPhoneWithPlus.replace(/^\+/, '');
 
-    // Standard WASender payload: { to: "918075374600", text: "..." }
+    // Primary WASender payload with +91 format: { to: "+919876543210", text: "..." }
     const primaryPayload = {
-      to: cleanedPhoneWithoutPlus,
+      to: formattedPhoneWithPlus,
       text: text
     };
 
@@ -61,7 +61,7 @@ class WhatsAppService {
           timeout: 20000
         }
       );
-      console.log(`[WhatsApp] ✅ Sent to ${cleanedPhoneWithoutPlus}:`, response.data?.data || response.data?.message || 'OK');
+      console.log(`[WhatsApp] ✅ Sent to ${formattedPhoneWithPlus}:`, response.data?.data || response.data?.message || 'OK');
       return { success: true, provider: 'WASender', data: response.data };
     } catch (error) {
       const errData = error.response?.data || {};
