@@ -18,6 +18,8 @@ export const DEFAULT_BLOGS_DATA = [
     },
     coverImage: luxuryHeroBg,
     tags: ['After 12th', 'Career Roadmap', 'New Age Careers'],
+    primaryKeyword: 'Career Options After 12th',
+    secondaryKeywords: ['High Growth Careers 2026', 'Kerala Student Guidance', 'AI & Design Careers', 'Aptitude Mapping'],
     content: `
       <h2>Why Traditional Careers Are Transforming</h2>
       <p>In today's rapidly evolving job landscape, students completing Class 12 face more choices than ever before. While engineering and medicine remain respected avenues, interdisciplinary fields combining technology, design, and analytical thinking are emerging as top recruiters.</p>
@@ -51,6 +53,8 @@ export const DEFAULT_BLOGS_DATA = [
     },
     coverImage: luxuryClinicRoom,
     tags: ['Aptitude Test', 'Stream Selection', 'CIGI Assessment'],
+    primaryKeyword: 'Aptitude Testing Stream Selection',
+    secondaryKeywords: ['Class 10 Stream Selection', 'Cognitive Battery C-DAT', 'Psychometric Evaluation', 'Student Strength Mapping'],
     content: `
       <h2>The Dilemma of Class 10: Science, Commerce, or Humanities?</h2>
       <p>One of the most defining moments in an Indian student's life is selecting their plus-two stream. Unfortunately, many decisions are driven by academic marks alone—assuming 90%+ automatically means Science.</p>
@@ -78,6 +82,8 @@ export const DEFAULT_BLOGS_DATA = [
     },
     coverImage: luxuryClinicRoom,
     tags: ['Exam Stress', 'Mental Health', 'Parenting'],
+    primaryKeyword: 'Managing Exam Anxiety',
+    secondaryKeywords: ['Board Exam Stress Relief', 'Academic Resilience', 'Student Mindfulness', 'Parent Communication'],
     content: `
       <h2>Understanding Exam Stress</h2>
       <p>Moderate stress can enhance alertness, but excessive anxiety impairs memory recall and problem-solving speed during critical examinations.</p>

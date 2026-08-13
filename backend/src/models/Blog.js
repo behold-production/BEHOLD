@@ -21,6 +21,8 @@ const blogSchema = new mongoose.Schema(
     readTime: { type: String, default: '5 min read' },
     isPublished: { type: Boolean, default: true },
     publishedAt: { type: Date, default: Date.now },
+    primaryKeyword: { type: String, default: '', trim: true },
+    secondaryKeywords: [{ type: String }],
     seoTitle: { type: String, default: '' },
     seoDescription: { type: String, default: '' }
   },

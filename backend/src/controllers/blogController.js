@@ -28,6 +28,8 @@ class BlogController {
             b.title?.toLowerCase().includes(lowerSearch) ||
             b.excerpt?.toLowerCase().includes(lowerSearch) ||
             b.category?.toLowerCase().includes(lowerSearch) ||
+            b.primaryKeyword?.toLowerCase().includes(lowerSearch) ||
+            (b.secondaryKeywords && b.secondaryKeywords.some((sk) => sk.toLowerCase().includes(lowerSearch))) ||
             (b.tags && b.tags.some((t) => t.toLowerCase().includes(lowerSearch)))
         );
       }
@@ -101,6 +103,8 @@ class BlogController {
         coverImage, // might be a string if no file uploaded
         category,
         tags,
+        primaryKeyword,
+        secondaryKeywords,
         authorName,
         authorRole,
         authorAvatar,
@@ -137,6 +141,12 @@ class BlogController {
         ? tags.split(',').map((t) => t.trim()).filter(Boolean)
         : [];
 
+      const secKeywordsArray = Array.isArray(secondaryKeywords)
+        ? secondaryKeywords
+        : typeof secondaryKeywords === 'string'
+        ? secondaryKeywords.split(',').map((k) => k.trim()).filter(Boolean)
+        : [];
+
       const newBlogData = {
         title: title.trim(),
         slug: finalSlug,
@@ -146,6 +156,8 @@ class BlogController {
         coverImagePublicId,
         category: category || 'Career Guidance',
         tags: tagArray,
+        primaryKeyword: primaryKeyword ? String(primaryKeyword).trim() : '',
+        secondaryKeywords: secKeywordsArray,
         author: {
           name: authorName || 'Behold Aspire Editorial Team',
           role: authorRole || 'Senior Career Counsellor',
@@ -189,6 +201,8 @@ class BlogController {
         coverImage, // fallback if no file
         category,
         tags,
+        primaryKeyword,
+        secondaryKeywords,
         authorName,
         authorRole,
         authorAvatar,
@@ -215,6 +229,14 @@ class BlogController {
       if (category !== undefined) updates.category = category;
       if (readTime !== undefined) updates.readTime = readTime;
       if (isPublished !== undefined) updates.isPublished = String(isPublished) === 'true' || isPublished === true;
+      if (primaryKeyword !== undefined) updates.primaryKeyword = String(primaryKeyword).trim();
+      if (secondaryKeywords !== undefined) {
+        updates.secondaryKeywords = Array.isArray(secondaryKeywords)
+          ? secondaryKeywords
+          : typeof secondaryKeywords === 'string'
+          ? secondaryKeywords.split(',').map((k) => k.trim()).filter(Boolean)
+          : blog.secondaryKeywords || [];
+      }
 
       // Handle Image Update
       if (req.file) {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Clock, Copy, Check, MessageCircle, BookOpen, Send } from 'lucide-react';
+import { ArrowLeft, Clock, Copy, Check, MessageCircle, BookOpen, Send, Sparkles, Tag } from 'lucide-react';
 import ApiService from '../../services/api';
 import greenTexture from '../../assets/greygreen.png';
 import { getImageUrl, formatBlogContent } from '../../utils/formatters';
@@ -145,6 +145,7 @@ const BlogPostDetail = () => {
       <SEO 
         title={post.title} 
         description={post.excerpt || (post.content?.substring(0, 150)?.replace(/<[^>]+>/g, '') + '...')} 
+        keywords={[post.primaryKeyword, ...(post.secondaryKeywords || []), ...(post.tags || [])].filter(Boolean).join(', ')}
         canonicalUrl={typeof window !== 'undefined' ? window.location.href : undefined}
         schema={schema}
       />
@@ -289,6 +290,29 @@ const BlogPostDetail = () => {
                   #{tag}
                 </span>
               ))}
+            </div>
+          )}
+
+          {/* Primary Focus Keyword & Secondary Keywords */}
+          {(post.primaryKeyword || (post.secondaryKeywords && post.secondaryKeywords.length > 0)) && (
+            <div className="mt-8 p-5 rounded-2xl bg-slate-50 border border-slate-200/90 space-y-3">
+              <div className="flex items-center gap-2 text-xs font-bold text-slate-700 uppercase tracking-wider">
+                <Sparkles className="w-4 h-4 text-[#00c9d6]" />
+                <span>Focus Keywords & Key Topics</span>
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                {post.primaryKeyword && (
+                  <span className="px-3.5 py-1.5 rounded-full bg-[#0f172a] text-white text-[11px] font-bold tracking-wide flex items-center gap-1.5 shadow-sm">
+                    <span className="w-2 h-2 rounded-full bg-[#00e5ff] animate-pulse"></span>
+                    Primary: {post.primaryKeyword}
+                  </span>
+                )}
+                {post.secondaryKeywords && post.secondaryKeywords.map((sk, idx) => (
+                  <span key={idx} className="px-3 py-1 rounded-full bg-white border border-slate-200 text-slate-700 text-[10px] font-semibold tracking-wide">
+                    {sk}
+                  </span>
+                ))}
+              </div>
             </div>
           )}
         </article>

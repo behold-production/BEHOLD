@@ -29,6 +29,8 @@ export default function BlogManagementTab() {
     authorName: 'Behold Aspire Editorial Team',
     authorRole: 'Senior Career Counsellor & Mentor',
     authorAvatar: '',
+    primaryKeyword: '',
+    secondaryKeywords: '',
     tags: '',
     content: '',
     isPublished: true
@@ -141,6 +143,8 @@ export default function BlogManagementTab() {
         authorName: blog.author?.name || 'Behold Aspire Editorial Team',
         authorRole: blog.author?.role || 'Senior Career Counsellor & Mentor',
         authorAvatar: blog.author?.avatar || '',
+        primaryKeyword: blog.primaryKeyword || '',
+        secondaryKeywords: Array.isArray(blog.secondaryKeywords) ? blog.secondaryKeywords.join(', ') : blog.secondaryKeywords || '',
         tags: Array.isArray(blog.tags) ? blog.tags.join(', ') : blog.tags || '',
         content: blog.content || '',
         isPublished: blog.isPublished !== undefined ? blog.isPublished : true
@@ -158,6 +162,8 @@ export default function BlogManagementTab() {
         authorName: 'Behold Aspire Editorial Team',
         authorRole: 'Senior Career Counsellor & Mentor',
         authorAvatar: '',
+        primaryKeyword: '',
+        secondaryKeywords: '',
         tags: '',
         content: `<h2>Introduction</h2>\n<p>Write your introduction here...</p>\n\n<h3>Key Takeaways</h3>\n<ul>\n  <li>First takeaway</li>\n  <li>Second takeaway</li>\n</ul>`,
         isPublished: true
@@ -204,6 +210,8 @@ export default function BlogManagementTab() {
       fd.append('authorName', formData.authorName);
       fd.append('authorRole', formData.authorRole);
       fd.append('authorAvatar', formData.authorAvatar || '');
+      fd.append('primaryKeyword', formData.primaryKeyword || '');
+      fd.append('secondaryKeywords', formData.secondaryKeywords || '');
       fd.append('tags', formData.tags);
       fd.append('content', formData.content);
       fd.append('isPublished', formData.isPublished);
@@ -409,9 +417,22 @@ export default function BlogManagementTab() {
                             className="w-full h-full object-cover"
                           />
                         </div>
-                        <div className="max-w-xs">
+                        <div className="max-w-xs space-y-1">
                           <h4 className="font-bold text-white line-clamp-1">{post.title}</h4>
-                          <span className="text-[10px] text-slate-400 font-mono">/blog/{post.slug}</span>
+                          <span className="text-[10px] text-slate-400 font-mono block">/blog/{post.slug}</span>
+                          {post.primaryKeyword && (
+                            <div className="flex flex-wrap items-center gap-1 mt-1">
+                              <span className="inline-flex items-center gap-1 text-[9px] font-extrabold px-2 py-0.5 rounded bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">
+                                <Sparkles className="w-2.5 h-2.5" />
+                                {post.primaryKeyword}
+                              </span>
+                              {post.secondaryKeywords && post.secondaryKeywords.slice(0, 2).map((sk, skIdx) => (
+                                <span key={skIdx} className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
+                                  {sk}
+                                </span>
+                              ))}
+                            </div>
+                          )}
                         </div>
                       </div>
                     </td>
@@ -683,6 +704,57 @@ export default function BlogManagementTab() {
                     value={formData.authorAvatar}
                     onChange={(e) => setFormData({ ...formData, authorAvatar: e.target.value })}
                     className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 focus:border-[#00E5FF] text-white text-xs font-mono outline-none"
+                  />
+                </div>
+              </div>
+
+              {/* SEO & Target Keywords Card */}
+              <div className="p-4 rounded-xl bg-slate-950/80 border border-[#00E5FF]/30 space-y-4">
+                <div className="flex items-center gap-2 pb-2 border-b border-slate-800">
+                  <Sparkles className="w-4 h-4 text-[#00E5FF]" />
+                  <h4 className="text-xs font-bold text-white uppercase tracking-wider">SEO & Keyword Optimization</h4>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                      Primary Focus Keyword *
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Career Options After 12th"
+                      value={formData.primaryKeyword}
+                      onChange={(e) => setFormData({ ...formData, primaryKeyword: e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-lg bg-slate-900 border border-slate-700 focus:border-[#00E5FF] text-white text-xs font-semibold outline-none"
+                    />
+                    <span className="text-[10px] text-slate-400 mt-1 block">Main topic keyword targeted for Google ranking</span>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                      Secondary Keywords (Comma Separated)
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Aptitude test, Stream selection, C-DAT"
+                      value={formData.secondaryKeywords}
+                      onChange={(e) => setFormData({ ...formData, secondaryKeywords: e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-lg bg-slate-900 border border-slate-700 focus:border-[#00E5FF] text-white text-xs font-semibold outline-none"
+                    />
+                    <span className="text-[10px] text-slate-400 mt-1 block">Related search terms and LSI keywords</span>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                    Topic Tags (Comma Separated)
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. After 12th, Career Roadmap, Counseling"
+                    value={formData.tags}
+                    onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-lg bg-slate-900 border border-slate-700 focus:border-[#00E5FF] text-white text-xs font-semibold outline-none"
                   />
                 </div>
               </div>
