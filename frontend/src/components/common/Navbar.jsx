@@ -161,12 +161,33 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
               : 'bg-white/90 backdrop-blur-md border-b border-slate-200/60 shadow-sm text-slate-900'
               }`}
           >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
 
-              {/* Brand Title Logo */}
+              {/* Mobile/Tablet Left Controls: Hamburger Menu Trigger + Brand Title Logo */}
+              <div className="flex items-center gap-2 sm:gap-3 lg:hidden">
+                <button
+                  onClick={() => setMobileMenuOpen(true)}
+                  className="p-1.5 rounded-xl transition-colors cursor-pointer border-none bg-slate-100/80 hover:bg-slate-200/80 text-slate-900 flex items-center justify-center"
+                  aria-label="Open Navigation Drawer"
+                >
+                  <Menu className="w-5.5 h-5.5 text-slate-900" />
+                </button>
+
+                <button
+                  onClick={handleLogoClick}
+                  className="flex items-center gap-1.5 text-left bg-transparent border-none cursor-pointer p-0"
+                >
+                  <span className="text-xl sm:text-2xl font-black font-sans text-slate-900 uppercase tracking-tight">
+                    {(siteName || 'BEHOLD').replace(/\.$/, '')}
+                    <span className="text-[#00c9d6] drop-shadow-[0_0_8px_rgba(0,201,214,0.8)] font-black">.</span>
+                  </span>
+                </button>
+              </div>
+
+              {/* Desktop Brand Title Logo (visible on lg+) */}
               <button
                 onClick={handleLogoClick}
-                className="flex items-center gap-2 text-left bg-transparent border-none cursor-pointer p-0"
+                className="hidden lg:flex items-center gap-2 text-left bg-transparent border-none cursor-pointer p-0"
               >
                 <span className="text-2xl sm:text-3xl font-black font-sans text-slate-900 uppercase tracking-tight">
                   {(siteName || 'BEHOLD').replace(/\.$/, '')}
@@ -242,15 +263,31 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
                 )}
               </div>
 
-              {/* Mobile/Tablet Hamburger Trigger */}
+              {/* Mobile Right Controls: User Profile Avatar / Sign In */}
               <div className="flex items-center gap-2 lg:hidden">
-                <button
-                  onClick={() => setMobileMenuOpen(true)}
-                  className="p-2 rounded-full transition-colors cursor-pointer border-none bg-transparent text-slate-900 hover:bg-slate-100"
-                  aria-label="Open Menu"
-                >
-                  <Menu className="w-6 h-6 text-slate-900" />
-                </button>
+                {user ? (
+                  <button
+                    onClick={handleProfileClick}
+                    title={`Logged in as ${user.name || user.email}`}
+                    aria-label="User Profile"
+                    className="flex items-center gap-1.5 p-1 sm:px-2.5 sm:py-1 rounded-full transition-all cursor-pointer border bg-slate-100/90 hover:bg-slate-200/90 text-slate-900 border-slate-200/80 shadow-xs"
+                  >
+                    <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 bg-[#00c9d6] flex items-center justify-center text-slate-950 font-extrabold text-xs shadow-xs border border-white">
+                      {user.profilePic ? (
+                        <img src={user.profilePic} alt={user.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <span>{(user.name || user.email || 'U').charAt(0).toUpperCase()}</span>
+                      )}
+                    </div>
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => onOpenAuth?.()}
+                    className="px-3.5 py-1.5 font-bold text-xs rounded-full transition-all cursor-pointer border bg-[#00c9d6] hover:bg-[#00b2be] text-slate-950 border-transparent shadow-xs"
+                  >
+                    Sign In
+                  </button>
+                )}
               </div>
 
             </div>
@@ -258,7 +295,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
         );
       })()}
 
-      {/* Mobile Sidebar Overlay & Drawer Portal */}
+      {/* Mobile Sidebar Overlay & LEFT-SIDE Drawer Portal */}
       {createPortal(
         <div
           className={`fixed inset-0 z-[100] lg:hidden transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
@@ -273,10 +310,10 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
             onClick={() => setMobileMenuOpen(false)}
           />
 
-          {/* Drawer Panel */}
+          {/* Left-Side Drawer Panel */}
           <div
-            className={`absolute top-0 right-0 bottom-0 w-full max-w-xs bg-white shadow-2xl p-6 flex flex-col justify-between border-l border-slate-200 transform transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-              mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+            className={`absolute top-0 left-0 bottom-0 w-full max-w-xs bg-white shadow-2xl p-6 flex flex-col justify-between border-r border-slate-200 transform transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+              mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
             }`}
           >
             <div>

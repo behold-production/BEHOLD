@@ -363,13 +363,13 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
 
       {/* SECTION TOPPER TITLE */}
       <div className="w-full max-w-7xl mx-auto mb-6 sm:mb-8 text-center px-4">
-        <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold text-[#00c9d6] tracking-widest uppercase mb-3">
+        <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-bold text-[#00c9d6] tracking-widest uppercase mb-3">
           <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
           Our Expert Team
           <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
         </span>
-        <h2 className="font-sans text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-slate-900 leading-none">
-          Meet Our Experts<span className="text-[#00c9d6] font-semibold">.</span>
+        <h2 className="font-sans text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 leading-none">
+          Meet Our <span className="text-[#00c9d6]">Experts</span><span className="text-[#00c9d6]">.</span>
         </h2>
       </div>
 
@@ -377,7 +377,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
       <div className="w-full max-w-4xl mx-auto mb-8 sm:mb-10 bg-white/95 backdrop-blur-md rounded-2xl shadow-md border border-slate-200/80 p-3 sm:p-4 flex flex-col gap-3 transition-all duration-300 px-4 sm:px-4">
 
         {/* Row 1: Search Input */}
-        <div className="flex items-center gap-2.5 px-3.5 py-2.5 bg-slate-50 rounded-xl border border-slate-200 w-full">
+        <div className="flex items-center gap-2.5 px-3.5 py-2.5 bg-slate-50 rounded-xl border border-slate-200 w-full focus-within:border-[#00c9d6] focus-within:ring-2 focus-within:ring-[#00c9d6]/20 transition-all">
           <Search className="w-4 h-4 text-slate-400 shrink-0" />
           <input
             type="text"
@@ -402,9 +402,9 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
               <button
                 key={role.id}
                 onClick={() => { setSelectedRole(role.id); setCurrentIndex(0); }}
-                className={`px-3.5 py-1.5 rounded-full text-[11px] sm:text-xs font-semibold whitespace-nowrap shrink-0 transition-all duration-300 cursor-pointer ${selectedRole === role.id
-                  ? 'bg-slate-900 text-white shadow-sm'
-                  : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200'
+                className={`px-3.5 py-1.5 rounded-full text-[11px] sm:text-xs font-bold whitespace-nowrap shrink-0 transition-all duration-300 cursor-pointer ${selectedRole === role.id
+                  ? 'bg-[#00c9d6] text-slate-950 shadow-md border border-[#00c9d6]'
+                  : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200/90'
                   }`}
               >
                 {role.label}
