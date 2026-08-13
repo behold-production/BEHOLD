@@ -290,27 +290,40 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Poppins everywhere */
+/* Poppins font family everywhere */
 *,
 *::before,
-*::after {
-  font-family: 'Poppins', sans-serif;
-  box-sizing: border-box;
-}
-
-/* ── Complete Poppins Typography System ────────────────────────────
-   Correct sizes + weights for every element class. Overrides
-   any Tailwind utility that might contradict these.               */
-
-/* ── Consistent heading styles ── */
+*::after,
+html,
+body,
+button,
+input,
+select,
+textarea,
 h1,
 h2,
 h3,
 h4,
 h5,
-h6 {
-  font-family: 'Poppins', sans-serif;
-  letter-spacing: -0.02em;
+h6,
+.font-sans,
+.font-serif,
+.font-mono,
+.font-header,
+.font-heading {
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+/* Exception: Cursive italic accent font ONLY */
+.font-rough,
+.font-script-hero,
+.font-caveat {
+  font-family: 'Rough', 'Caveat', cursive, sans-serif !important;
+}
+
+/* Exception: Brand Logo font ONLY */
+.font-climate {
+  font-family: 'Climate Crisis', sans-serif !important;
 }
 
 h1 {
