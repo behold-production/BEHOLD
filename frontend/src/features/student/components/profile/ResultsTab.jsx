@@ -180,17 +180,17 @@ const ResultsTab = ({
  value={cigiNote}
  onChange={(e) => setCigiNote(e.target.value)}
  rows={2}
- className="w-full p-2 border border-surface-200 rounded-[10px] text-sm font-medium bg-surface-50 text-surface-900 focus:ring-0 focus:border-surface-900 focus:bg-white outline-none resize-none"
+ className="w-full p-2 border border-surface-200 rounded-2xl text-sm font-medium bg-surface-50 text-surface-900 focus:ring-0 focus:border-surface-900 focus:bg-white outline-none resize-none"
  />
  </div>
 
  <button
  type="submit"
  disabled={isCigiUploading}
- className="w-full min-h-[38px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-surface-900 hover:bg-surface-800 disabled:bg-surface-500 text-white rounded-full tracking-widest text-[10px] font-semibold transition-colors border-none shadow-none cursor-pointer"
+ className="w-full min-h-[44px] inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-slate-900 hover:bg-slate-800 disabled:bg-slate-500 text-white rounded-xl text-xs font-bold transition-all border-none shadow-xs cursor-pointer hover-scale-btn"
  >
  {isCigiUploading ? (
- <><span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Uploading...</>
+ <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Uploading...</>
  ) : (
  <>Upload Result</>
  )}
@@ -199,7 +199,7 @@ const ResultsTab = ({
  </div>
 
  {/* Results list */}
- <div className="bg-white border border-surface-200 rounded-[10px] shadow-square-light p-5">
+ <div className="bg-white border border-surface-200 rounded-2xl shadow-square-light p-5">
  <h3 className="text-sm font-semibold text-surface-900 mb-3">Uploaded CIGI Results ({cigiResultsList.length})</h3>
 
  {cigiResultsList.length === 0 ? (
