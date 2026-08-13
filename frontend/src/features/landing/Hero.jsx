@@ -86,7 +86,7 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
           <div className="pt-2 flex justify-center md:justify-start w-full animate-fade-scale delay-300">
             <button
               onClick={handleConnectClick}
-              className="bg-brand hover:bg-brand-dark hover-scale-btn transition-all duration-300 text-slate-900 font-sans text-base sm:text-lg font-bold px-8 py-2.5 sm:py-3 rounded-full shadow-md hover:shadow-xl flex items-center justify-center border border-slate-900/10 cursor-pointer"
+              className="bg-brand hover:bg-brand-dark hover-scale-btn transition-all duration-300 text-slate-900 font-sans text-base sm:text-lg font-bold px-8 py-2.5 rounded-2xl shadow-md hover:shadow-xl flex items-center justify-center border border-slate-900/10 cursor-pointer"
             >
               {btnText}
             </button>
