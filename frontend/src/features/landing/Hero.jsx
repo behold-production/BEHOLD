@@ -55,13 +55,13 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
           {/* Main Title Block */}
           <div className="relative leading-none flex flex-col items-center md:items-start group">
             {/* Line 1 - Slender, Elegant & Moderately Sized Headline */}
-            <h1 className="font-sans font-semibold text-slate-900 text-2xl sm:text-3xl md:text-4xl lg:text-5xl tracking-tight leading-tight transition-all duration-300 animate-fade-down">
+            <h1 className="font-sans font-semibold text-slate-900 text-2xl xs:text-3xl sm:text-4xl md:text-4xl lg:text-5xl tracking-tight leading-tight transition-all duration-300 animate-fade-down">
               {eyebrowLine1}
             </h1>
 
-            {/* Accent Line 2 - Custom Cursive Font (Balanced size for md/lg >768px) */}
+            {/* Accent Line 2 - Custom Cursive Font (Slightly bigger on screens < 768px) */}
             <div className="relative inline-block mt-2 sm:mt-4">
-              <span className="font-rough text-[#00c9d6] text-[72px] sm:text-[82px] md:text-[88px] lg:text-[98px] font-normal tracking-tight [word-spacing:6px] block leading-[0.95] drop-shadow-sm select-none animate-hero-pulse">
+              <span className="font-rough text-[#00c9d6] text-[80px] xs:text-[86px] sm:text-[92px] md:text-[88px] lg:text-[98px] font-normal tracking-tight [word-spacing:6px] block leading-[0.92] drop-shadow-sm select-none animate-hero-pulse">
                 {displayTitle.toLowerCase()}
               </span>
 
