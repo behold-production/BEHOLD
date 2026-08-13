@@ -402,7 +402,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
               <button
                 key={role.id}
                 onClick={() => { setSelectedRole(role.id); setCurrentIndex(0); }}
-                className={`px-3.5 py-1.5 rounded-full text-[11px] sm:text-xs font-bold whitespace-nowrap shrink-0 transition-all duration-300 cursor-pointer ${selectedRole === role.id
+                className={`px-3.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-bold whitespace-nowrap shrink-0 transition-all duration-300 cursor-pointer ${selectedRole === role.id
                   ? 'bg-[#00c9d6] text-slate-950 shadow-md border border-[#00c9d6]'
                   : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200/90'
                   }`}
@@ -417,7 +417,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="appearance-none bg-slate-100 hover:bg-slate-200 text-slate-800 text-[11px] sm:text-xs font-semibold px-3 py-1.5 pr-7 rounded-full border border-slate-200 outline-none cursor-pointer transition-all"
+              className="appearance-none bg-slate-100 hover:bg-slate-200 text-slate-800 text-[11px] sm:text-xs font-semibold px-3 py-1.5 pr-7 rounded-xl border border-slate-200 outline-none cursor-pointer transition-all"
             >
               <option value="RECOMMENDED">Recommended</option>
               <option value="FEE_LOW">Price: Low → High</option>
@@ -465,7 +465,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
             </p>
             <button
               onClick={handleConnectClick}
-              className="px-8 py-3 bg-[#0f172a] hover:bg-[#00c9d6] hover:text-slate-950 text-white font-semibold text-xs tracking-wider rounded-full transition shadow-md border-none cursor-pointer hover-scale-btn"
+              className="px-8 py-3 bg-[#0f172a] hover:bg-[#00c9d6] hover:text-slate-950 text-white font-semibold text-xs tracking-wider rounded-xl transition shadow-md border-none cursor-pointer hover-scale-btn"
             >
               Contact Support Desk
             </button>
@@ -530,7 +530,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
 
               <button
                 onClick={handleConnectClick}
-                className="bg-[#0f172a] hover:bg-[#00c9d6] hover:text-slate-950 text-white font-bold text-xs px-6 py-2.5 rounded-full shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer flex items-center justify-center border-none hover-scale-btn mt-1"
+                className="bg-[#0f172a] hover:bg-[#00c9d6] hover:text-slate-950 text-white font-bold text-xs px-6 py-2.5 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer flex items-center justify-center border-none hover-scale-btn mt-1"
               >
                 Let's Connect
               </button>

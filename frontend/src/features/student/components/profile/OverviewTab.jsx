@@ -34,7 +34,7 @@ export default function OverviewTab({
               if (onOpenBooking) onOpenBooking();
               else navigate('/booking');
             }}
-            className="inline-block px-5 py-2 bg-[#00c9d6] hover:bg-[#00b2be] text-slate-950 text-xs font-bold rounded-full transition-all shadow-xs cursor-pointer border-none hover-scale-btn"
+            className="inline-block px-5 py-2 bg-[#00c9d6] hover:bg-[#00b2be] text-slate-950 text-xs font-bold rounded-xl transition-all shadow-xs cursor-pointer border-none hover-scale-btn"
           >
             Book Consultation
           </button>
@@ -83,7 +83,7 @@ export default function OverviewTab({
                 href={nextSession.meetLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-5 py-2 rounded-full text-xs font-bold transition-colors cursor-pointer border-none bg-slate-900 hover:bg-black text-[#00c9d6] shadow-xs text-center"
+                className="px-5 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer border-none bg-slate-900 hover:bg-black text-[#00c9d6] shadow-xs text-center"
               >
                 Join Google Meet
               </a>
@@ -91,7 +91,7 @@ export default function OverviewTab({
               <button
                 type="button"
                 onClick={() => { handleSectionChange('booked'); setSessionSubTab('upcoming'); }}
-                className="px-5 py-2 rounded-full text-xs font-bold transition-colors cursor-pointer border border-slate-300 bg-white hover:bg-slate-50 text-slate-800"
+                className="px-5 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer border border-slate-300 bg-white hover:bg-slate-50 text-slate-800"
               >
                 View Details
               </button>
@@ -111,7 +111,7 @@ export default function OverviewTab({
                 if (onOpenBooking) onOpenBooking();
                 else navigate('/booking');
               }}
-              className="mt-5 inline-block px-6 py-2.5 bg-[#00c9d6] hover:bg-[#00b2be] text-slate-950 text-xs font-bold rounded-full transition-all shadow-xs cursor-pointer border-none hover-scale-btn"
+              className="mt-5 inline-block px-6 py-2.5 bg-[#00c9d6] hover:bg-[#00b2be] text-slate-950 text-xs font-bold rounded-xl transition-all shadow-xs cursor-pointer border-none hover-scale-btn"
             >
               Schedule Consultation Now
             </button>
@@ -140,7 +140,7 @@ export default function OverviewTab({
                 if (onOpenBooking) onOpenBooking();
                 else navigate('/booking');
               }}
-              className="px-5 py-2 bg-[#0f172a] hover:bg-[#1e293b] text-white rounded-full font-bold text-xs transition-colors border border-[#00e5ff]/30 cursor-pointer shadow-2xs"
+              className="px-5 py-2 bg-[#0f172a] hover:bg-[#1e293b] text-white rounded-xl font-bold text-xs transition-colors border border-[#00e5ff]/30 cursor-pointer shadow-2xs"
             >
               Book Now
             </button>
@@ -151,7 +151,7 @@ export default function OverviewTab({
         {enableAptitude && (
           <div className="bg-white rounded-xl p-6 border border-surface-200 shadow-xs flex flex-col justify-between space-y-4">
             <div>
-              <span className="px-3.5 py-1 bg-surface-100 text-[#0f172a] font-semibold text-xs rounded-full border border-surface-200 inline-block">
+              <span className="px-3.5 py-1 bg-surface-100 text-[#0f172a] font-semibold text-xs rounded-xl border border-surface-200 inline-block">
                 {testProfile ? 'Report Ready' : 'C-DAT Evaluation'}
               </span>
               <h3 className="text-lg font-semibold text-[#0f172a] mt-3 tracking-tight">C-DAT Aptitude Assessment</h3>
@@ -164,7 +164,7 @@ export default function OverviewTab({
               <button
                 type="button"
                 onClick={() => handleSectionChange('cdat')}
-                className="px-5 py-2 bg-[#0f172a] hover:bg-[#1e293b] text-white rounded-full font-bold text-xs transition-colors border border-[#00e5ff]/30 cursor-pointer shadow-2xs"
+                className="px-5 py-2 bg-[#0f172a] hover:bg-[#1e293b] text-white rounded-xl font-bold text-xs transition-colors border border-[#00e5ff]/30 cursor-pointer shadow-2xs"
               >
                 {testProfile ? 'View Report' : 'Take Assessment'}
               </button>

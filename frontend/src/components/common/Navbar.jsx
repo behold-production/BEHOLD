@@ -283,7 +283,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
                 ) : (
                   <button
                     onClick={() => onOpenAuth?.()}
-                    className="px-3.5 py-1.5 font-bold text-xs rounded-full transition-all cursor-pointer border bg-[#00c9d6] hover:bg-[#00b2be] text-slate-950 border-transparent shadow-xs"
+                    className="px-3.5 py-1.5 font-bold text-xs rounded-xl transition-all cursor-pointer border bg-[#00c9d6] hover:bg-[#00b2be] text-slate-950 border-transparent shadow-xs"
                   >
                     Sign In
                   </button>
@@ -347,7 +347,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
               {user && (
                 <button
                   onClick={handleProfileClick}
-                  className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm rounded-full transition-all border border-[#00e5ff]/40 cursor-pointer shadow-xs text-center flex items-center justify-center gap-2"
+                  className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm rounded-xl transition-all border border-[#00e5ff]/40 cursor-pointer shadow-xs text-center flex items-center justify-center gap-2"
                 >
                   <User className="w-4 h-4 text-[#00e5ff]" />
                   <span>My Profile / Dashboard</span>
@@ -355,7 +355,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
               )}
               <button
                 onClick={() => { setMobileMenuOpen(false); onOpenBooking(); }}
-                className={`w-full py-3 font-semibold text-sm rounded-full transition-all cursor-pointer text-center ${user
+                className={`w-full py-3 font-semibold text-sm rounded-xl transition-all cursor-pointer text-center ${user
                   ? 'bg-slate-100 hover:bg-slate-200 text-slate-900 border border-slate-200'
                   : 'bg-[#00c9d6] hover:bg-[#00b2be] text-slate-900 border border-transparent shadow-xs'
                   }`}
@@ -365,14 +365,14 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
               {user ? (
                 <button
                   onClick={() => { setMobileMenuOpen(false); setIsLogoutOpen(true); }}
-                  className="w-full py-2.5 border border-rose-200 text-rose-600 font-semibold text-sm rounded-full transition bg-white hover:bg-rose-50 text-center cursor-pointer"
+                  className="w-full py-2.5 border border-rose-200 text-rose-600 font-semibold text-sm rounded-xl transition bg-white hover:bg-rose-50 text-center cursor-pointer"
                 >
                   Sign Out
                 </button>
               ) : (
                 <button
                   onClick={() => { setMobileMenuOpen(false); onOpenAuth?.(); }}
-                  className="w-full py-2.5 border border-slate-200 text-slate-900 font-semibold text-sm rounded-full transition bg-slate-100 hover:bg-slate-200 text-center cursor-pointer"
+                  className="w-full py-2.5 border border-slate-200 text-slate-900 font-semibold text-sm rounded-xl transition bg-slate-100 hover:bg-slate-200 text-center cursor-pointer"
                 >
                   Sign In
                 </button>

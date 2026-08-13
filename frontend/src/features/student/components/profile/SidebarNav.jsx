@@ -68,7 +68,7 @@ const SidebarNav = ({ currentSection, handleSectionChange, bookedSessions, testP
  </nav>
 
  {/* Mobile bottom tab bar */}
- <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-surface-200">
+ <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-[90] bg-white border-t border-surface-200 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
  <div className="grid max-w-2xl mx-auto" style={{ gridTemplateColumns: `repeat(${visibleTabs.length + 1}, minmax(0, 1fr))` }}>
  {visibleTabs.map(tab => {
  const Icon = ICON_MAP[tab.iconName];

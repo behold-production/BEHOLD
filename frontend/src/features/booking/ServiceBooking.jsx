@@ -1514,7 +1514,7 @@ const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
                                                         <button
                                                             type="button"
                                                             onClick={() => handleStepChange('config')}
-                                                            className="px-5 py-3 min-h-[44px] bg-white border border-surface-200 text-surface-900 hover:bg-surface-50 font-semibold text-xs rounded-full transition cursor-pointer w-full sm:w-auto text-center"
+                                                            className="px-5 py-3 min-h-[44px] bg-white border border-surface-200 text-surface-900 hover:bg-surface-50 font-semibold text-xs rounded-xl transition cursor-pointer w-full sm:w-auto text-center"
                                                         >
                                                             Back to Schedule
                                                         </button>
@@ -1523,7 +1523,7 @@ const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
                                                             type="submit"
                                                             disabled={isProcessingPayment || !termsAgreed}
                                                             title={!termsAgreed ? "Please check the agreement box to proceed" : ""}
-                                                            className={`px-8 py-3.5 min-h-[48px] font-bold text-xs rounded-full transition flex items-center justify-center border-none w-full sm:w-auto ${
+                                                            className={`px-8 py-3.5 min-h-[48px] font-bold text-xs rounded-xl transition flex items-center justify-center border-none w-full sm:w-auto ${
                                                                 !termsAgreed || isProcessingPayment
                                                                     ? 'bg-slate-200 text-slate-400 cursor-not-allowed opacity-60 shadow-none'
                                                                     : 'bg-[#0f172a] hover:bg-black text-[#00c9d6] hover:text-white cursor-pointer active:scale-95 shadow-md'
