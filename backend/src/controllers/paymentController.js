@@ -392,7 +392,7 @@ const PaymentController = {
 
         // Send WhatsApp alert to Student/User ONLY (Psychologists receive Email only)
         if (targetUserPhone) {
-          await WhatsAppService.sendBookingAlert(targetUserPhone, 'approved', { studentName: sName, counsellorName: cName, date, time, meetLink: finalMeetLink, recipientRole: 'user' }).catch((err) => console.error('[WhatsApp User Alert Error]:', err));
+          await WhatsAppService.sendBookingAlert(targetUserPhone, 'approved', { studentName: sName, counsellorName: cName, date, time, mode, meetLink: finalMeetLink, recipientRole: 'user' }).catch((err) => console.error('[WhatsApp User Alert Error]:', err));
         }
       } catch (notifErr) {
         console.error('[Background Notification Task Error in verifyPaymentAndBook]:', notifErr);
