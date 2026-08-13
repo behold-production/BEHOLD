@@ -5,6 +5,7 @@ const cloudinary = require('../config/cloudinary');
 const { uploadToCloudinary, uploadProfilePicToCloudinary } = require('../utils/cloudinaryHelper');
 const EmailService = require('../services/emailService');
 const { autoExpireSessions } = require('../utils/sessionHelper');
+const cacheHelper = require('../utils/cacheHelper');
 
 const COUNSELLOR_MODES = new Set(['ONLINE', 'OFFLINE', 'DOOR_STEP']);
 
@@ -1288,6 +1289,8 @@ If you have questions or would like to reapply with updated information, please 
       } else {
         settings = await StorageService.update('settings', settings.id, updates);
       }
+      cacheHelper.clear('public_settings');
+      cacheHelper.clear('counsellors_list_');
       res.status(200).json({ success: true, message: 'Settings updated successfully', data: settings });
     } catch (error) {
       next(error);

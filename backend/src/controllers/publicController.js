@@ -1,5 +1,6 @@
 const StorageService = require('../services/storageService');
 const EmailService = require('../services/emailService');
+const cacheHelper = require('../utils/cacheHelper');
 
 const PublicController = {
   // Submit inquiry
@@ -45,11 +46,13 @@ const PublicController = {
   // Get FAQs
   async getFaqs(req, res, next) {
     try {
+      const cached = cacheHelper.get('public_faqs');
+      if (cached) return res.status(200).json(cached);
+
       const faqs = await StorageService.findAll('faqs');
-      res.status(200).json({
-        success: true,
-        data: faqs
-      });
+      const payload = { success: true, data: faqs };
+      cacheHelper.set('public_faqs', payload, 120);
+      res.status(200).json(payload);
     } catch (error) {
       next(error);
     }
@@ -58,6 +61,9 @@ const PublicController = {
   // Get Settings (seeds default site settings if empty)
   async getSettings(req, res, next) {
     try {
+      const cached = cacheHelper.get('public_settings');
+      if (cached) return res.status(200).json(cached);
+
       let settingsList = await StorageService.findAll('settings');
       let settings = settingsList[0];
       if (!settings) {
@@ -121,7 +127,7 @@ const PublicController = {
           ]
         });
       }
-      res.status(200).json({
+      const settingsPayload = {
         success: true,
         data: {
           ...settings,
@@ -144,7 +150,9 @@ const PublicController = {
           enableOffline: settings.enableOffline !== false,
           enableDoorstep: settings.enableDoorstep !== false
         }
-      });
+      };
+      cacheHelper.set('public_settings', settingsPayload, 120);
+      res.status(200).json(settingsPayload);
     } catch (error) {
       next(error);
     }

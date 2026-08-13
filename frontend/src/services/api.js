@@ -426,13 +426,21 @@ const ApiService = {
 
     // Cache the default full list to prevent sudden loading screens
     if (!qs && !forceRefresh) {
-      if (this._counsellorsCache && (Date.now() - this._counsellorsCacheTime < 5 * 60 * 1000)) {
+      if (this._counsellorsCache && (Date.now() - this._counsellorsCacheTime < 10 * 60 * 1000)) {
+        request('/users/counsellors').then((res) => {
+          if (res && res.success) {
+            this._counsellorsCache = res;
+            this._counsellorsCacheTime = Date.now();
+            try { localStorage.setItem('behold_counsellors_cache', JSON.stringify(res.data)); } catch (e) {}
+          }
+        }).catch(() => {});
         return this._counsellorsCache;
       }
       const res = await request('/users/counsellors');
-      if (res.success) {
+      if (res && res.success) {
         this._counsellorsCache = res;
         this._counsellorsCacheTime = Date.now();
+        try { localStorage.setItem('behold_counsellors_cache', JSON.stringify(res.data)); } catch (e) {}
       }
       return res;
     }
@@ -758,13 +766,45 @@ const ApiService = {
   },
 
   // FAQs
-  async getFaqs() {
-    return await request('/faqs');
+  _faqsCache: null,
+  _faqsCacheTime: 0,
+  async getFaqs(forceRefresh = false) {
+    if (!forceRefresh && this._faqsCache && (Date.now() - this._faqsCacheTime < 10 * 60 * 1000)) {
+      request('/faqs').then(res => {
+        if (res && res.success) {
+          this._faqsCache = res;
+          this._faqsCacheTime = Date.now();
+        }
+      }).catch(() => {});
+      return this._faqsCache;
+    }
+    const res = await request('/faqs');
+    if (res && res.success) {
+      this._faqsCache = res;
+      this._faqsCacheTime = Date.now();
+    }
+    return res;
   },
 
   // Settings
-  async getSettings() {
-    return await request('/settings');
+  _settingsCache: null,
+  _settingsCacheTime: 0,
+  async getSettings(forceRefresh = false) {
+    if (!forceRefresh && this._settingsCache && (Date.now() - this._settingsCacheTime < 10 * 60 * 1000)) {
+      request('/settings').then(res => {
+        if (res && res.success) {
+          this._settingsCache = res;
+          this._settingsCacheTime = Date.now();
+        }
+      }).catch(() => {});
+      return this._settingsCache;
+    }
+    const res = await request('/settings');
+    if (res && res.success) {
+      this._settingsCache = res;
+      this._settingsCacheTime = Date.now();
+    }
+    return res;
   },
 
   // Test Results

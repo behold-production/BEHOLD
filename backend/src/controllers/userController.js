@@ -5,6 +5,7 @@ const cloudinary = require('../config/cloudinary');
 const { uploadToCloudinary, uploadProfilePicToCloudinary } = require('../utils/cloudinaryHelper');
 const { autoExpireSessions } = require('../utils/sessionHelper');
 const { normalizePhoneWithCountryCode } = require('../utils/phoneUtils');
+const cacheHelper = require('../utils/cacheHelper');
 
 const UserController = {
   // Get User Profile
@@ -68,6 +69,11 @@ const UserController = {
   async searchCounsellors(req, res, next) {
     try {
       const { specialty, mode, search } = req.query;
+      const cacheKey = `counsellors_list_${specialty || ''}_${mode || ''}_${search || ''}`;
+      const cachedResponse = cacheHelper.get(cacheKey);
+      if (cachedResponse) {
+        return res.status(200).json(cachedResponse);
+      }
 
       const allCounsellors = await StorageService.findAll('counsellors', { isVerified: true, isActive: true });
 
@@ -140,16 +146,16 @@ const UserController = {
           ...data,
           modes: allowedModes,
           bookedSlots: booked,
-          reviewCount: computedReviewCount,
-          rating: computedRating
         };
       });
 
-      res.status(200).json({
+      const responsePayload = {
         success: true,
         message: 'Counsellors retrieved successfully',
         data: responseData
-      });
+      };
+      cacheHelper.set(cacheKey, responsePayload, 60);
+      res.status(200).json(responsePayload);
     } catch (error) {
       next(error);
     }

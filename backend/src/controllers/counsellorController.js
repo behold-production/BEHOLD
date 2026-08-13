@@ -3,6 +3,7 @@ const Counsellor = require('../models/Counsellor');
 const cloudinary = require('../config/cloudinary');
 const { uploadProfilePicToCloudinary } = require('../utils/cloudinaryHelper');
 const { autoExpireSessions } = require('../utils/sessionHelper');
+const cacheHelper = require('../utils/cacheHelper');
 
 const COUNSELLOR_MODES = new Set(['ONLINE', 'OFFLINE', 'DOOR_STEP']);
 
@@ -127,6 +128,8 @@ const CounsellorController = {
       if (!updated) {
         return res.status(404).json({ success: false, message: 'Counsellor not found' });
       }
+
+      cacheHelper.clear('counsellors_list_');
 
       const { password, ...counsellorData } = updated;
       res.status(200).json({
