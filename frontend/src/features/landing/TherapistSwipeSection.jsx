@@ -215,6 +215,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
 
   const renderCard = (advisor, isCenter) => {
     if (!advisor) return null;
+    const cardTitle = advisor.title || advisor.designation || 'Consultant Psychologist';
     const minFee = advisor.halfSessionPrice || Math.round(advisor.fee * 0.5) || 499;
     const rawLangs = Array.isArray(advisor.lang || advisor.languages)
       ? (advisor.lang || advisor.languages)
