@@ -311,6 +311,46 @@ function _createIcsAttachment(appointment, recipientName, recipientEmail, otherP
   }
 }
 
+function _buildBookingPayload(user, counsellor, appointment) {
+  const appt = appointment || {};
+  const usr = user || {};
+  const csl = counsellor || {};
+
+  const bookingId = appt.id || appt._id || appt.appointmentId || `BEHOLD_${Date.now()}`;
+  const userEmail = usr.email || appt.clientEmail || '—';
+  const counsellorEmail = csl.email || '—';
+  const userName = usr.name || appt.clientName || 'Patient';
+  const counsellorName = csl.name || appt.counsellorName || 'Psychologist';
+  const date = appt.date || '—';
+  const time = appt.time || '—';
+  const mode = appt.mode || 'ONLINE';
+  const duration = appt.duration || (csl.hours ? `${csl.hours} Hours Session` : '1 Hour (60 Mins)');
+  const meetLink = appt.meetLink || '';
+
+  const reason = usr.feelingLately || appt.feelingLately || appt.reason || usr.reason || 'General Counselling & Mental Wellbeing';
+  const hadPriorTherapy = usr.hadPriorTherapy || appt.hadPriorTherapy || 'No';
+  const priorTherapyDetails = usr.priorTherapyDetails || appt.priorTherapyDetails || '';
+  const additionalInfo = appt.notes || appt.clientLocationName || '';
+
+  return {
+    userName,
+    counsellorName,
+    userEmail,
+    counsellorEmail,
+    date,
+    time,
+    timeZone: 'IST (Asia/Kolkata)',
+    mode,
+    duration,
+    bookingId,
+    meetLink,
+    reason,
+    hadPriorTherapy,
+    priorTherapyDetails,
+    additionalInfo
+  };
+}
+
 const EmailService = {
   sendEmail,
 
@@ -333,97 +373,48 @@ const EmailService = {
   // ── Appointment Email Notifications ──────────────────────────────────────
 
   async sendAppointmentBooked({ user, counsellor, appointment }) {
-    const date     = appointment.date;
-    const time     = appointment.time;
-    const mode     = appointment.mode;
-    const platform = appointment.platform;
+    const payload = _buildBookingPayload(user, counsellor, appointment);
 
     console.log('[Email] 📋 sendAppointmentBooked triggered');
-    console.log(`[Email]    User:        ${user?.name || 'MISSING'} <${user?.email || 'NO EMAIL IN DB'}>`);
-    console.log(`[Email]    Psychologist: ${counsellor?.name || 'MISSING'} <${counsellor?.email || 'NO EMAIL IN DB'}>`);
-    console.log(`[Email]    Session:      ${date} at ${time} (${mode})`);
+    console.log(`[Email]    User:        ${payload.userName} <${payload.userEmail}>`);
+    console.log(`[Email]    Psychologist: ${payload.counsellorName} <${payload.counsellorEmail}>`);
+    console.log(`[Email]    Session:      ${payload.date} at ${payload.time} (${payload.mode})`);
 
     // ── 1. Send to USER (student) ─────────────────────────────────────────
-    if (!user?.email) {
+    if (!payload.userEmail || payload.userEmail === '—') {
       console.warn('[Email] ⚠️  User has no email address in database — skipping user notification');
     } else {
       const userAttachments = _createIcsAttachment(
-        appointment, user.name, user.email, counsellor?.name, counsellor?.email
+        appointment, payload.userName, payload.userEmail, payload.counsellorName, payload.counsellorEmail
       );
       await sendEmail(
-        user.email,
-        'Session Request Submitted — BEHOLD Aspire',
-        Templates.appointmentBooked({ userName: user.name, counsellorName: counsellor?.name, date, time, mode, platform }),
+        payload.userEmail,
+        'Session Confirmed — BEHOLD Aspire',
+        Templates.appointmentApproved(payload),
         userAttachments
       );
     }
 
     // ── 2. Send to PSYCHOLOGIST (counsellor) ──────────────────────────────
-    if (!counsellor?.email) {
+    if (!payload.counsellorEmail || payload.counsellorEmail === '—') {
       console.warn('[Email] ⚠️  Psychologist has no email address in database — skipping psychologist notification');
-    } else if (user?.email && counsellor.email.toLowerCase() === user.email.toLowerCase()) {
+    } else if (payload.userEmail && payload.counsellorEmail.toLowerCase() === payload.userEmail.toLowerCase()) {
       console.log('[Email] ℹ️  Student & Psychologist have identical email address — skipping duplicate send.');
     } else {
       const counsellorAttachments = _createIcsAttachment(
-        appointment, counsellor.name, counsellor.email, user?.name, user?.email
+        appointment, payload.counsellorName, payload.counsellorEmail, payload.userName, payload.userEmail
       );
       await sendEmail(
-        counsellor.email,
-        'New Session Request — BEHOLD Aspire',
-        Templates.appointmentBookedCounsellor({ userName: user?.name, counsellorName: counsellor.name, date, time, mode }),
+        payload.counsellorEmail,
+        'New Session Booked — BEHOLD Aspire',
+        Templates.appointmentApprovedCounsellor(payload),
         counsellorAttachments
       );
     }
   },
 
   async sendAppointmentApproved({ user, counsellor, appointment }) {
-    console.log('[Email] ✅ sendAppointmentApproved triggered');
-    console.log(`[Email]    User:        ${user?.name || 'MISSING'} <${user?.email || 'NO EMAIL IN DB'}>`);
-    console.log(`[Email]    Psychologist: ${counsellor?.name || 'MISSING'} <${counsellor?.email || 'NO EMAIL IN DB'}>`);
-
-    // ── 1. Confirm to USER (student) ──────────────────────────────────────
-    if (!user?.email) {
-      console.warn('[Email] ⚠️  User has no email in database — skipping user confirmation');
-    } else {
-      const userAttachments = _createIcsAttachment(
-        appointment, user.name, user.email, counsellor?.name, counsellor?.email
-      );
-      await sendEmail(
-        user.email,
-        'Session Confirmed — BEHOLD Aspire',
-        Templates.appointmentApproved({
-          userName: user.name,
-          counsellorName: counsellor?.name,
-          date: appointment.date,
-          time: appointment.time,
-          mode: appointment.mode,
-          meetLink: appointment.meetLink
-        }),
-        userAttachments
-      );
-    }
-
-    // ── 2. Confirm to PSYCHOLOGIST (counsellor) ───────────────────────────
-    if (!counsellor?.email) {
-      console.warn('[Email] ⚠️  Psychologist has no email in database — skipping psychologist confirmation');
-    } else {
-      const counsellorAttachments = _createIcsAttachment(
-        appointment, counsellor.name, counsellor.email, user?.name, user?.email
-      );
-      await sendEmail(
-        counsellor.email,
-        'Session Confirmed — BEHOLD Aspire',
-        Templates.appointmentApprovedCounsellor({
-          userName: user?.name,
-          counsellorName: counsellor.name,
-          date: appointment.date,
-          time: appointment.time,
-          mode: appointment.mode,
-          meetLink: appointment.meetLink
-        }),
-        counsellorAttachments
-      );
-    }
+    return this.sendAppointmentBooked({ user, counsellor, appointment });
   },
 
   async sendAppointmentRejected({ user, counsellor, appointment, reason }) {
