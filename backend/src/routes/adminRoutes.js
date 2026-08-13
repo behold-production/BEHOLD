@@ -102,4 +102,7 @@ router.delete('/users/:id/permanent', AdminController.permanentDeleteUser);
 router.delete('/appointments/:id/permanent', AdminController.permanentDeleteAppointment);
 router.post('/trash/purge', AdminController.purgeExpiredTrash);
 
+// WhatsApp Test Route
+router.post('/test-whatsapp', AdminController.testWhatsApp);
+
 module.exports = router;

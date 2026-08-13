@@ -1973,11 +1973,22 @@ If you have questions or would like to reapply with updated information, please 
         return res.status(400).json({ success: false, message: 'Refund is not in PENDING status' });
       }
 
-      const updated = await StorageService.update('appointments', id, {
-        refundStatus: 'REJECTED'
-      });
-
       res.status(200).json({ success: true, message: 'Refund request rejected successfully', data: updated });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async testWhatsApp(req, res, next) {
+    try {
+      const { phone } = req.body;
+      const targetPhone = phone || '918075374600';
+      const WhatsAppService = require('../services/whatsappService');
+      const testResult = await WhatsAppService.sendNotification(targetPhone, '🧪 Test message from BEHOLD Aspire WASender API integration!');
+      res.status(200).json({
+        success: testResult.success,
+        data: testResult
+      });
     } catch (error) {
       next(error);
     }
