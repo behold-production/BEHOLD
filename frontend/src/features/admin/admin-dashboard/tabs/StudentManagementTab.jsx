@@ -162,6 +162,10 @@ export default function StudentManagementTab(props) {
         '',
         {
           phone: userForm.phone,
+          age: userForm.age,
+          feelingLately: userForm.feelingLately,
+          hadPriorTherapy: userForm.hadPriorTherapy,
+          priorTherapyDetails: userForm.priorTherapyDetails,
           schoolName: userForm.schoolName,
           grade: userForm.grade,
           guardianName: userForm.guardianName,
@@ -183,7 +187,7 @@ export default function StudentManagementTab(props) {
         setUsersDb(prev => [newRecord, ...prev]);
       }
       setUserFormSuccess("User created successfully!");
-      setUserForm({ id: '', name: '', email: '', password: '', phone: '', schoolName: '', grade: '', guardianName: '', guardianPhone: '', groupCode: '', profilePic: '', locationName: '', latitude: 0, longitude: 0 });
+      setUserForm({ id: '', name: '', email: '', password: '', phone: '', age: '', feelingLately: '', hadPriorTherapy: '', priorTherapyDetails: '', schoolName: '', grade: '', guardianName: '', guardianPhone: '', groupCode: '', profilePic: '', locationName: '', latitude: 0, longitude: 0 });
       setUserProfilePicFile(null);
       if (reloadData) reloadData();
       setTimeout(() => {
@@ -198,7 +202,7 @@ export default function StudentManagementTab(props) {
   };
 
   const handleOpenAddUser = () => {
-    setUserForm({ id: '', name: '', email: '', password: '', phone: '', schoolName: '', grade: '', guardianName: '', guardianPhone: '', groupCode: '', profilePic: '', locationName: '', latitude: 0, longitude: 0 });
+    setUserForm({ id: '', name: '', email: '', password: '', phone: '', age: '', feelingLately: '', hadPriorTherapy: '', priorTherapyDetails: '', schoolName: '', grade: '', guardianName: '', guardianPhone: '', groupCode: '', profilePic: '', locationName: '', latitude: 0, longitude: 0 });
     setAdminUserSearchQuery('');
     setAdminUserSearchResults([]);
     setUserProfilePicFile(null);
@@ -214,6 +218,10 @@ export default function StudentManagementTab(props) {
       email: student.email,
       password: student.password || '',
       phone: student.phone || '',
+      age: student.age || '',
+      feelingLately: student.feelingLately || '',
+      hadPriorTherapy: student.hadPriorTherapy || '',
+      priorTherapyDetails: student.priorTherapyDetails || '',
       schoolName: student.schoolName || '',
       grade: student.grade || '',
       guardianName: student.guardianName || '',
@@ -272,6 +280,10 @@ export default function StudentManagementTab(props) {
         undefined,
         {
           phone: userForm.phone,
+          age: userForm.age,
+          feelingLately: userForm.feelingLately,
+          hadPriorTherapy: userForm.hadPriorTherapy,
+          priorTherapyDetails: userForm.priorTherapyDetails,
           schoolName: userForm.schoolName,
           grade: userForm.grade,
           guardianName: userForm.guardianName,
@@ -303,6 +315,10 @@ export default function StudentManagementTab(props) {
               name: userForm.name.trim(),
               email: userForm.email.trim(),
               phone: userForm.phone,
+              age: userForm.age,
+              feelingLately: userForm.feelingLately,
+              hadPriorTherapy: userForm.hadPriorTherapy,
+              priorTherapyDetails: userForm.priorTherapyDetails,
               schoolName: userForm.schoolName,
               grade: userForm.grade,
               guardianName: userForm.guardianName,
@@ -694,9 +710,38 @@ const handleAdminCigiUpload = async (e) => {
  <input type="text" placeholder="e.g. St. Mary's School" value={userForm.schoolName} onChange={(e) => setUserForm({ ...userForm, schoolName: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors" />
  </div>
  </div>
- </div>
- <div className="border-t border-zinc-800 pt-3">
- <p className="text-xs font-bold text-zinc-500 tracking-widest mb-3">Guardian Information</p>
+  <div className="border-t border-zinc-800 pt-3">
+  <p className="text-xs font-bold text-zinc-500 tracking-widest mb-3">Prior Therapy Experience</p>
+  <div className="space-y-3">
+  <div className="space-y-1">
+  <label className="text-xs font-bold text-zinc-400 tracking-wide">1. Did you had any prefer therapy experience?</label>
+  <select
+  value={userForm.hadPriorTherapy || ''}
+  onChange={(e) => setUserForm({ ...userForm, hadPriorTherapy: e.target.value })}
+  className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+  >
+  <option value="">Select option</option>
+  <option value="Yes">Yes</option>
+  <option value="No">No</option>
+  </select>
+  </div>
+  {userForm.hadPriorTherapy === 'Yes' && (
+  <div className="space-y-1">
+  <label className="text-xs font-bold text-zinc-400 tracking-wide">2. If yes, please tell us more about it</label>
+  <textarea
+  rows={2}
+  placeholder="Details about prior therapy experience..."
+  value={userForm.priorTherapyDetails || ''}
+  onChange={(e) => setUserForm({ ...userForm, priorTherapyDetails: e.target.value })}
+  className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors resize-none"
+  />
+  </div>
+  )}
+  </div>
+  </div>
+  </div>
+  <div className="border-t border-zinc-800 pt-3">
+  <p className="text-xs font-bold text-zinc-500 tracking-widest mb-3">Guardian Information</p>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
  <div className="space-y-1">
  <label className="text-xs font-bold text-zinc-400 tracking-wide">Guardian Name</label>
@@ -899,6 +944,15 @@ const handleAdminCigiUpload = async (e) => {
  {viewingStudent.status || 'ACTIVE'}
  </span>
  </div>
+ {viewingStudent.hadPriorTherapy && (
+ <div className="pt-2 border-t border-zinc-900">
+ <span className="text-zinc-500 block text-sm font-semibold">Prior Therapy Experience</span>
+ <span className="font-bold text-brand">{viewingStudent.hadPriorTherapy}</span>
+ {viewingStudent.hadPriorTherapy === 'Yes' && viewingStudent.priorTherapyDetails && (
+ <p className="text-xs text-zinc-300 mt-1 italic font-normal">"{viewingStudent.priorTherapyDetails}"</p>
+ )}
+ </div>
+ )}
  </div>
  </div>
 

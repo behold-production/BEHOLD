@@ -29,7 +29,7 @@ const UserController = {
   // Update User Profile
   async updateProfile(req, res, next) {
     try {
-      const { name, email, phone, age, feelingLately, schoolName, grade, guardianName, guardianPhone, groupCode, locationName, latitude, longitude } = req.body;
+      const { name, email, phone, age, feelingLately, hadPriorTherapy, priorTherapyDetails, schoolName, grade, guardianName, guardianPhone, groupCode, locationName, latitude, longitude } = req.body;
       const updates = {};
 
       if (name !== undefined) updates.name = name;
@@ -37,6 +37,8 @@ const UserController = {
       if (phone !== undefined) updates.phone = normalizePhoneWithCountryCode(phone);
       if (age !== undefined) updates.age = String(age).trim();
       if (feelingLately !== undefined) updates.feelingLately = String(feelingLately).trim();
+      if (hadPriorTherapy !== undefined) updates.hadPriorTherapy = String(hadPriorTherapy).trim();
+      if (priorTherapyDetails !== undefined) updates.priorTherapyDetails = String(priorTherapyDetails).trim();
       if (schoolName !== undefined) updates.schoolName = schoolName;
       if (grade !== undefined) updates.grade = grade;
       if (guardianName !== undefined) updates.guardianName = guardianName;

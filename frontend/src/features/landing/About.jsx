@@ -9,8 +9,8 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
 
   const stats = [
     {
-      value: settings.aboutStat1Value || '10+',
-      label: settings.aboutStat1Label || 'Years into rewriting the rules of psychological care and student guidance.'
+      value: settings.aboutStat1Value || '1,500+',
+      label: settings.aboutStat1Label || 'Hours into dedicated psychological care and student guidance.'
     },
     {
       value: settings.aboutStat2Value || '50+',

@@ -5,18 +5,6 @@ import './index.css'
 import App from './app/App.jsx'
 import Providers from './app/Providers.jsx'
 
-// Register PWA service worker
-// if ('serviceWorker' in navigator) {
-// if (import.meta.env.DEV) {
-// navigator.serviceWorker.getRegistrations().then((registrations) => {
-// for (const registration of registrations) {
-// registration.unregister();
-// }
-// });
-// } else {
-// // registerSW({ immediate: true });
-// }
-// }
 
 // Intercept localStorage.setItem to trigger custom event for same-tab updates
 const originalSetItem = localStorage.setItem;

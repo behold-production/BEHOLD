@@ -138,6 +138,17 @@ const ProfileDetailsTab = ({
  ],
  },
  {
+ title: 'Prior Therapy Experience',
+ icon: Heart,
+ hint: 'Your prior counselling / therapy history',
+ accentColor: '#06b6d4',
+ accentBg: '#ecfeff',
+ fields: [
+ { name: 'hadPriorTherapy', label: '1. Did you had any prefer therapy experience?', type: 'select', options: ['', 'Yes', 'No'], required: false, icon: Heart },
+ ...(formData.hadPriorTherapy === 'Yes' ? [{ name: 'priorTherapyDetails', label: '2. If yes, please tell us more about it', type: 'textarea', placeholder: 'Tell us more about your prior therapy experience...', required: false, icon: BookOpen }] : []),
+ ],
+ },
+ {
  title: 'Guardian Information',
  icon: Users,
  hint: 'For students under 18',
@@ -249,6 +260,19 @@ const ProfileDetailsTab = ({
  <option key={i} value={o}>{o || 'Select ' + field.label}</option>
  ))}
  </select>
+ ) : field.type === 'textarea' ? (
+ <textarea
+ id={`sp-${field.name}`}
+ name={field.name}
+ value={formData[field.name]}
+ onChange={handleChange}
+ placeholder={field.placeholder}
+ rows={3}
+ className={`w-full pl-10 pr-9 py-2.5 text-sm font-medium rounded-[10px] outline-none transition-all resize-none ${hasError
+ ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10 text-surface-900'
+ : 'bg-surface-50 border-surface-200 focus:border-surface-900 focus:ring-0 focus:bg-white text-surface-900'
+ }`}
+ />
  ) : (
  <input
  id={`sp-${field.name}`}

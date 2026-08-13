@@ -544,6 +544,10 @@ If you have questions or would like to reapply with updated information, please 
         latitude,
         longitude,
         phone,
+        age,
+        feelingLately,
+        hadPriorTherapy,
+        priorTherapyDetails,
         schoolName,
         grade,
         guardianName,
@@ -565,6 +569,10 @@ If you have questions or would like to reapply with updated information, please 
         email: normalizedEmail,
         password: hashedPassword,
         phone: phone || '',
+        age: age || '',
+        feelingLately: feelingLately || '',
+        hadPriorTherapy: hadPriorTherapy || '',
+        priorTherapyDetails: priorTherapyDetails || '',
         schoolName: schoolName || '',
         grade: grade || '',
         guardianName: guardianName || '',
@@ -598,6 +606,10 @@ If you have questions or would like to reapply with updated information, please 
         customRoleTitle,
         status,
         phone,
+        age,
+        feelingLately,
+        hadPriorTherapy,
+        priorTherapyDetails,
         schoolName,
         grade,
         guardianName,
@@ -623,6 +635,10 @@ If you have questions or would like to reapply with updated information, please 
       if (longitude !== undefined) updates.longitude = Number(longitude) || 0;
       if (status !== undefined) updates.status = status;
       if (phone !== undefined) updates.phone = phone;
+      if (age !== undefined) updates.age = age;
+      if (feelingLately !== undefined) updates.feelingLately = feelingLately;
+      if (hadPriorTherapy !== undefined) updates.hadPriorTherapy = hadPriorTherapy;
+      if (priorTherapyDetails !== undefined) updates.priorTherapyDetails = priorTherapyDetails;
       if (schoolName !== undefined) updates.schoolName = schoolName;
       if (grade !== undefined) updates.grade = grade;
       if (guardianName !== undefined) updates.guardianName = guardianName;

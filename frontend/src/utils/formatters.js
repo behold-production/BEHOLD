@@ -56,35 +56,29 @@ export const formatBlogContent = (content) => {
 };
 
 /**
- * Formats psychologist experience into Years and Consultation Hours
- * Handles numeric values, strings like "5 yrs", or hour totals like "1500 hrs"
+ * Formats psychologist experience into Consultation Hours
+ * Handles numeric values, strings like "1500 hrs", or legacy hour/year numbers
  */
 export const formatExperience = (expInput) => {
   if (!expInput && expInput !== 0) {
-    return { years: '3+ Yrs Exp', hours: '900+ Hours Consulted', rawYears: 3, rawHours: 900 };
+    return {
+      hours: '900+ Hours Consulted',
+      rawHours: 900,
+      years: '900+ Hours Consulted',
+      rawYears: 900
+    };
   }
 
   const str = String(expInput).trim();
   const numMatch = str.match(/\d+/);
-  const num = numMatch ? parseInt(numMatch[0], 10) : 3;
+  const num = numMatch ? parseInt(numMatch[0], 10) : 900;
 
-  if (num > 50 || str.toLowerCase().includes('hr') || str.toLowerCase().includes('hour')) {
-    const hours = num;
-    const estimatedYears = Math.max(1, Math.round(hours / 300));
-    return {
-      years: `${estimatedYears}+ Yrs Exp`,
-      hours: `${hours.toLocaleString()}+ Hours Consulted`,
-      rawYears: estimatedYears,
-      rawHours: hours
-    };
-  } else {
-    const years = num;
-    const estimatedHours = years * 300;
-    return {
-      years: `${years}+ Yrs Exp`,
-      hours: `${estimatedHours.toLocaleString()}+ Hours Consulted`,
-      rawYears: years,
-      rawHours: estimatedHours
-    };
-  }
+  // Convert legacy year inputs (< 50) into hours (3 -> 900 hours, 5 -> 1500 hours)
+  const hours = num < 50 ? num * 300 : num;
+  return {
+    hours: `${hours.toLocaleString()}+ Hours Consulted`,
+    rawHours: hours,
+    years: `${hours.toLocaleString()}+ Hours Consulted`,
+    rawYears: hours
+  };
 };

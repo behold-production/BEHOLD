@@ -20,7 +20,9 @@ export default function CompleteProfileModal({ isOpen, onSuccess }) {
     name: user?.name && !user.name.includes('Behold User') ? user.name : '',
     email: user?.email && !user.email.includes('@temp.behold') ? user.email : '',
     age: user?.age || '',
-    feelingLately: user?.feelingLately || ''
+    feelingLately: user?.feelingLately || '',
+    hadPriorTherapy: user?.hadPriorTherapy || '',
+    priorTherapyDetails: user?.priorTherapyDetails || ''
   });
   const [isLoading, setIsLoading] = useState(false);
 
@@ -32,6 +34,14 @@ export default function CompleteProfileModal({ isOpen, onSuccess }) {
 
   const handleSelectFeeling = (opt) => {
     setFormData(prev => ({ ...prev, feelingLately: opt }));
+  };
+
+  const handleSelectPriorTherapy = (val) => {
+    setFormData(prev => ({
+      ...prev,
+      hadPriorTherapy: val,
+      priorTherapyDetails: val === 'No' ? '' : prev.priorTherapyDetails
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -64,7 +74,9 @@ export default function CompleteProfileModal({ isOpen, onSuccess }) {
         name: formData.name.trim(), 
         email: cleanEmail,
         age: String(formData.age).trim(),
-        feelingLately: formData.feelingLately.trim()
+        feelingLately: formData.feelingLately.trim(),
+        hadPriorTherapy: formData.hadPriorTherapy.trim(),
+        priorTherapyDetails: formData.priorTherapyDetails.trim()
       });
       
       if (res.success) {
@@ -194,6 +206,56 @@ export default function CompleteProfileModal({ isOpen, onSuccess }) {
                   className="w-full pl-10 pr-4 py-2.5 bg-zinc-50 border border-zinc-200 rounded-lg text-xs text-zinc-900 focus:bg-white focus:border-brand outline-none font-medium"
                 />
               </div>
+            </div>
+
+            {/* Prior Therapy Experience */}
+            <div className="pt-2 border-t border-zinc-100 space-y-3">
+              <h3 className="text-xs font-bold text-zinc-800 uppercase tracking-wider">
+                Prior Therapy Experience
+              </h3>
+
+              {/* 1. Did you had any prefer therapy experience? */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-zinc-600 block">
+                  1. Did you had any prefer therapy experience?
+                </label>
+                <div className="flex gap-2">
+                  {['Yes', 'No'].map((opt) => {
+                    const selected = formData.hadPriorTherapy === opt;
+                    return (
+                      <button
+                        key={opt}
+                        type="button"
+                        onClick={() => handleSelectPriorTherapy(opt)}
+                        className={`flex-1 py-2.5 rounded-lg text-xs font-semibold border transition-all cursor-pointer ${
+                          selected
+                            ? 'bg-[#0f172a] text-[#00c9d6] border-[#00c9d6] shadow-sm'
+                            : 'bg-zinc-50 text-zinc-700 border-zinc-200 hover:border-zinc-300'
+                        }`}
+                      >
+                        {opt}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* 2. If yes, please tell us more about it */}
+              {formData.hadPriorTherapy === 'Yes' && (
+                <div className="space-y-1.5 animate-in fade-in slide-in-from-top-1 duration-200">
+                  <label className="text-xs font-semibold text-zinc-600 block">
+                    2. If yes, please tell us more about it
+                  </label>
+                  <textarea
+                    name="priorTherapyDetails"
+                    rows={2}
+                    value={formData.priorTherapyDetails}
+                    onChange={handleInputChange}
+                    placeholder="Tell us a little more about your prior therapy experience..."
+                    className="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-lg text-xs text-zinc-900 focus:bg-white focus:border-brand outline-none font-medium resize-none"
+                  />
+                </div>
+              )}
             </div>
 
             {/* Submit */}

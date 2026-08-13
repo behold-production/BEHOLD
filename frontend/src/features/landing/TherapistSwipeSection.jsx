@@ -274,8 +274,8 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
           {/* 3 Metric Stat Boxes */}
           <div className="grid grid-cols-3 gap-2 shrink-0">
             <div className="bg-slate-50/70 border border-slate-150 rounded-xl p-2.5 text-left">
-              <span className="text-xs sm:text-sm font-semibold text-slate-900 block leading-none">{advisor.rawYears || 3}+</span>
-              <span className="text-[9px] sm:text-[10px] font-medium text-slate-500 block mt-1">Yrs Experience</span>
+              <span className="text-xs sm:text-sm font-semibold text-slate-900 block leading-none">{advisor.hours ? advisor.hours.toLocaleString() : '900'}+</span>
+              <span className="text-[9px] sm:text-[10px] font-medium text-slate-500 block mt-1">Hours Experience</span>
             </div>
             <div className="bg-slate-50/70 border border-slate-150 rounded-xl p-2.5 text-left">
               <span className="text-xs sm:text-sm font-semibold text-slate-900 block leading-tight line-clamp-2">{advisor.languages || 'Malayalam'}</span>

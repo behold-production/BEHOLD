@@ -1423,12 +1423,12 @@ reportRegError("Please enter a valid email address.");
                     <div className='flex gap-4'>
                       <div className='w-full'>
                         <label className='block text-xs font-medium text-slate-400 mb-2'>
-                          Experience (Years)
+                          Experience Hours
                         </label>
                         <input
                           type='number'
                           required
-                          placeholder='5'
+                          placeholder='150'
                           value={regForm.hours}
                           onChange={(e) => setRegForm({ ...regForm, hours: e.target.value })}
                           className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'

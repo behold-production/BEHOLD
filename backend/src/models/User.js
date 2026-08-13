@@ -9,6 +9,8 @@ const userSchema = new mongoose.Schema(
     phone: { type: String, default: '' },
     age: { type: String, default: '' },
     feelingLately: { type: String, default: '' },
+    hadPriorTherapy: { type: String, default: '' },
+    priorTherapyDetails: { type: String, default: '' },
     schoolName: { type: String, default: '' },
     grade: { type: String, default: '' },
     guardianName: { type: String, default: '' },

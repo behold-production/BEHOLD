@@ -90,6 +90,8 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       email: '',
       age: '',
       feelingLately: '',
+      hadPriorTherapy: '',
+      priorTherapyDetails: '',
       groupCode: '',
       clientLocationName: '',
       clientLatitude: '',

@@ -2813,7 +2813,7 @@ const _handleAdminDetectLocation = () => {
             { num: '50+', label: 'Certified Mentors' }
           ],
           aboutStats: [
-            { value: '10+', label: 'Years Experience' },
+            { value: '1,500+', label: 'Hours Experience' },
             { value: '500+', label: 'Users Guided' },
             { value: '50+', label: 'Expert Mentors' },
             { value: '98%', label: 'Success Rate' }

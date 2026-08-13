@@ -103,7 +103,9 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
               phone: otpPhone,
               email: (res.data.user?.email && !res.data.user.email.includes('@temp.behold')) ? res.data.user.email : prev.email,
               age: res.data.user?.age || prev.age || '',
-              feelingLately: res.data.user?.feelingLately || prev.feelingLately || ''
+              feelingLately: res.data.user?.feelingLately || prev.feelingLately || '',
+              hadPriorTherapy: res.data.user?.hadPriorTherapy || prev.hadPriorTherapy || '',
+              priorTherapyDetails: res.data.user?.priorTherapyDetails || prev.priorTherapyDetails || ''
             }));
           }
           if (onSuccess) onSuccess(res.data.user);
