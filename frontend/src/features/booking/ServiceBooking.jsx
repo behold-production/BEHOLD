@@ -1523,7 +1523,7 @@ const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
                                                             type="submit"
                                                             disabled={isProcessingPayment || !termsAgreed}
                                                             title={!termsAgreed ? "Please check the agreement box to proceed" : ""}
-                                                            className={`px-8 py-3.5 min-h-[48px] font-semibold text-xs uppercase tracking-wider rounded-full transition flex items-center justify-center border-none w-full sm:w-auto ${
+                                                            className={`px-8 py-3.5 min-h-[48px] font-bold text-xs rounded-full transition flex items-center justify-center border-none w-full sm:w-auto ${
                                                                 !termsAgreed || isProcessingPayment
                                                                     ? 'bg-slate-200 text-slate-400 cursor-not-allowed opacity-60 shadow-none'
                                                                     : 'bg-[#0f172a] hover:bg-black text-[#00c9d6] hover:text-white cursor-pointer active:scale-95 shadow-md'
@@ -1583,7 +1583,7 @@ const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
                                                         {bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring'}
                                                     </span>
                                                     <span className="text-xs text-surface-500 font-semibold block mt-0.5 bg-white border border-surface-200 rounded-xl px-2 py-0.5 w-fit">
-                                                        {bookingMode.replace('_', ' ')}
+                                                        {bookingMode === 'DOOR_STEP' ? 'Door Step' : bookingMode.charAt(0).toUpperCase() + bookingMode.slice(1).toLowerCase()}
                                                     </span>
                                                 </div>
 

@@ -34,7 +34,7 @@ export default function OverviewTab({
               if (onOpenBooking) onOpenBooking();
               else navigate('/booking');
             }}
-            className="inline-block px-4 py-2 bg-slate-900 hover:bg-black text-white text-xs font-semibold rounded-lg transition-colors shadow-xs cursor-pointer border-none"
+            className="inline-block px-5 py-2 bg-[#00c9d6] hover:bg-[#00b2be] text-slate-950 text-xs font-bold rounded-full transition-all shadow-xs cursor-pointer border-none hover-scale-btn"
           >
             Book Consultation
           </button>
@@ -49,7 +49,7 @@ export default function OverviewTab({
               <img src={nextSession.advisorProfilePic} alt={nextSession.advisorName} className="w-14 h-14 rounded-lg object-cover border border-slate-200 shrink-0" />
             )}
             <div className="min-w-0">
-              <p className="text-[10px] font-semibold tracking-wider text-slate-500 uppercase mb-0.5">
+              <p className="text-xs font-semibold text-slate-500 mb-0.5">
                 Next Scheduled Session &middot; {nextSession.mode === 'ONLINE' ? 'Online Video Call' : 'Clinic Visit'}
               </p>
               <h3 className="font-semibold text-slate-900 text-lg tracking-tight truncate">{nextSession.advisorName}</h3>
@@ -83,7 +83,7 @@ export default function OverviewTab({
                 href={nextSession.meetLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-4 py-2.5 rounded-lg text-xs font-semibold uppercase tracking-wider transition-colors cursor-pointer border-none bg-slate-900 hover:bg-black text-white shadow-xs text-center"
+                className="px-5 py-2 rounded-full text-xs font-bold transition-colors cursor-pointer border-none bg-slate-900 hover:bg-black text-[#00c9d6] shadow-xs text-center"
               >
                 Join Google Meet
               </a>
@@ -91,7 +91,7 @@ export default function OverviewTab({
               <button
                 type="button"
                 onClick={() => { handleSectionChange('booked'); setSessionSubTab('upcoming'); }}
-                className="px-4 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider transition-colors cursor-pointer border border-slate-300 bg-white hover:bg-slate-50 text-slate-800"
+                className="px-5 py-2 rounded-full text-xs font-bold transition-colors cursor-pointer border border-slate-300 bg-white hover:bg-slate-50 text-slate-800"
               >
                 View Details
               </button>
@@ -111,7 +111,7 @@ export default function OverviewTab({
                 if (onOpenBooking) onOpenBooking();
                 else navigate('/booking');
               }}
-              className="mt-5 inline-block px-5 py-2 bg-slate-900 hover:bg-black text-white text-xs font-semibold rounded-lg transition-colors shadow-xs cursor-pointer border-none"
+              className="mt-5 inline-block px-6 py-2.5 bg-[#00c9d6] hover:bg-[#00b2be] text-slate-950 text-xs font-bold rounded-full transition-all shadow-xs cursor-pointer border-none hover-scale-btn"
             >
               Schedule Consultation Now
             </button>
