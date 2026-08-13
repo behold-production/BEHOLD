@@ -175,20 +175,20 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
   const getCardStyles = (diff) => {
     switch (diff) {
       case 0:
-        return 'translate-x-0 scale-100 opacity-100 z-30 shadow-[0_20px_50px_rgba(0,201,214,0.25)] cursor-default brightness-100 rotate-y-0';
+        return 'translate-x-0 scale-100 opacity-100 z-30 shadow-[0_22px_55px_rgba(0,201,214,0.22)] cursor-default brightness-100';
       case -1:
-        return '-translate-x-[110px] xs:-translate-x-[140px] sm:-translate-x-[190px] md:-translate-x-[220px] lg:-translate-x-[255px] scale-[0.88] -rotate-y-[10deg] opacity-90 z-20 shadow-xl cursor-pointer hover:scale-[0.90] brightness-[0.88]';
+        return '-translate-x-[140px] xs:-translate-x-[180px] sm:-translate-x-[250px] md:-translate-x-[300px] lg:-translate-x-[355px] scale-[0.85] opacity-80 z-20 shadow-xl cursor-pointer hover:opacity-95 hover:scale-[0.87] brightness-[0.92]';
       case 1:
-        return 'translate-x-[110px] xs:translate-x-[140px] sm:translate-x-[190px] md:translate-x-[220px] lg:translate-x-[255px] scale-[0.88] rotate-y-[10deg] opacity-90 z-20 shadow-xl cursor-pointer hover:scale-[0.90] brightness-[0.88]';
+        return 'translate-x-[140px] xs:translate-x-[180px] sm:translate-x-[250px] md:translate-x-[300px] lg:translate-x-[355px] scale-[0.85] opacity-80 z-20 shadow-xl cursor-pointer hover:opacity-95 hover:scale-[0.87] brightness-[0.92]';
       case -2:
-        return '-translate-x-[200px] xs:-translate-x-[260px] sm:-translate-x-[350px] md:-translate-x-[410px] lg:-translate-x-[465px] scale-[0.76] -rotate-y-[18deg] opacity-75 z-10 shadow-lg cursor-pointer hover:scale-[0.78] brightness-[0.70]';
+        return '-translate-x-[260px] xs:-translate-x-[330px] sm:-translate-x-[450px] md:-translate-x-[530px] lg:-translate-x-[610px] scale-[0.72] opacity-45 z-10 shadow-md cursor-pointer hover:opacity-65 brightness-[0.80]';
       case 2:
-        return 'translate-x-[200px] xs:translate-x-[260px] sm:translate-x-[350px] md:translate-x-[410px] lg:translate-x-[465px] scale-[0.76] rotate-y-[18deg] opacity-75 z-10 shadow-lg cursor-pointer hover:scale-[0.78] brightness-[0.70]';
+        return 'translate-x-[260px] xs:translate-x-[330px] sm:translate-x-[450px] md:translate-x-[530px] lg:translate-x-[610px] scale-[0.72] opacity-45 z-10 shadow-md cursor-pointer hover:opacity-65 brightness-[0.80]';
       default:
         if (diff < 0) {
-          return '-translate-x-[350px] scale-[0.6] opacity-0 z-0 pointer-events-none';
+          return '-translate-x-[480px] scale-[0.5] opacity-0 z-0 pointer-events-none';
         } else {
-          return 'translate-x-[350px] scale-[0.6] opacity-0 z-0 pointer-events-none';
+          return 'translate-x-[480px] scale-[0.5] opacity-0 z-0 pointer-events-none';
         }
     }
   };
@@ -196,15 +196,15 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
   const renderCard = (advisor, isCenter) => {
     if (!advisor) return null;
     return (
-      <div className={`w-full h-full flex flex-col overflow-hidden bg-white rounded-[28px] transition-all duration-500 text-left ${isCenter ? 'pointer-events-auto border-[2px] border-[#00c9d6] shadow-[0_12px_36px_rgba(0,201,214,0.25)]' : 'pointer-events-none border border-slate-200/80 shadow-md'}`}>
+      <div className={`w-full h-full flex flex-col overflow-hidden bg-white rounded-[28px] transition-all duration-500 text-left ${isCenter ? 'pointer-events-auto border-[2.5px] border-[#00c9d6] shadow-[0_16px_40px_rgba(0,201,214,0.22)]' : 'pointer-events-none border border-slate-200/80 shadow-md'}`}>
         
         {/* Top Header Section (Light Primary Teal Background with Full Height Right Image) */}
         <div className="relative w-full h-[110px] sm:h-[125px] p-3.5 sm:p-4 bg-gradient-to-r from-[#bcf4f8] via-[#d7f9fb] to-[#a8eff4] flex items-start justify-between overflow-hidden shrink-0">
           <div className="pr-2 space-y-0.5 z-10 max-w-[62%]">
-            <h3 className="font-sans text-base sm:text-lg font-semibold text-slate-900 leading-tight truncate">
+            <h3 className="font-sans text-base sm:text-lg font-bold text-slate-900 leading-tight truncate">
               {advisor.name}
             </h3>
-            <p className="text-[9.5px] sm:text-[11px] font-semibold text-slate-600 tracking-wider truncate">
+            <p className="text-[10px] sm:text-[11px] font-semibold text-slate-600 tracking-wider truncate">
               {advisor.designation === 'counsellor' || advisor.designation === 'COUNSELLOR' ? 'Psychologist' : (advisor.designation || 'Consultant Psychologist')}
             </p>
           </div>
@@ -312,7 +312,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
                   if (onBookTherapist) onBookTherapist(advisor.id);
                   else window.spaNavigate?.('/book-session');
                 }}
-                className="bg-[#00c9d6] hover:bg-[#00b2be] text-slate-950 font-semibold text-[9.5px] xs:text-[10px] sm:text-[11px] tracking-wider px-3 xs:px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer whitespace-nowrap hover-scale-btn"
+                className="bg-[#00c9d6] hover:bg-[#00b2be] text-slate-950 font-bold text-[9.5px] xs:text-[10px] sm:text-[11px] tracking-wider px-3 xs:px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer whitespace-nowrap hover-scale-btn"
               >
                 Book Session
               </button>
@@ -455,23 +455,23 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
               <button
                 onClick={(e) => { e.stopPropagation(); handlePrevCard(); }}
                 aria-label="Previous Psychologist"
-                className="absolute -left-2 sm:-left-4 lg:-left-8 top-1/2 -translate-y-1/2 z-50 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/95 text-slate-800 hover:text-slate-950 hover:bg-[#00c9d6] shadow-xl border border-slate-200/80 transition-all duration-300 cursor-pointer flex items-center justify-center group hover-scale-btn"
+                className="absolute -left-3 sm:-left-6 lg:-left-12 top-1/2 -translate-y-1/2 z-40 w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-white/95 text-slate-800 hover:text-slate-950 hover:bg-[#00c9d6] shadow-2xl border border-slate-200/80 transition-all duration-300 cursor-pointer flex items-center justify-center group hover-scale-btn"
               >
-                <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 group-hover:-translate-x-0.5 transition-transform" />
+                <ChevronLeft className="w-6 h-6 group-hover:-translate-x-0.5 transition-transform" />
               </button>
 
               {/* Right Floating Navigation Arrow */}
               <button
                 onClick={(e) => { e.stopPropagation(); handleNextCard(); }}
                 aria-label="Next Psychologist"
-                className="absolute -right-2 sm:-right-4 lg:-right-8 top-1/2 -translate-y-1/2 z-50 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/95 text-slate-800 hover:text-slate-950 hover:bg-[#00c9d6] shadow-xl border border-slate-200/80 transition-all duration-300 cursor-pointer flex items-center justify-center group hover-scale-btn"
+                className="absolute -right-3 sm:-right-6 lg:-right-12 top-1/2 -translate-y-1/2 z-40 w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-white/95 text-slate-800 hover:text-slate-950 hover:bg-[#00c9d6] shadow-2xl border border-slate-200/80 transition-all duration-300 cursor-pointer flex items-center justify-center group hover-scale-btn"
               >
-                <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-0.5 transition-transform" />
+                <ChevronRight className="w-6 h-6 group-hover:translate-x-0.5 transition-transform" />
               </button>
 
               {/* Card Perspective Area */}
               <div
-                className="relative w-full max-w-5xl mx-auto h-[415px] sm:h-[465px] flex items-center justify-center [perspective:1000px] overflow-visible"
+                className="relative w-full max-w-5xl mx-auto h-[415px] sm:h-[465px] flex items-center justify-center overflow-visible"
                 onMouseDown={(e) => handleTouchStart(e.clientX)}
                 onMouseMove={(e) => handleTouchMove(e.clientX)}
                 onMouseUp={handleTouchEnd}
