@@ -50,10 +50,10 @@
   --color-line: #D6DBCF;
   --color-line-strong: #C3CBB9;
 
-  --font-serif: 'Plus Jakarta Sans', 'Poppins', sans-serif;
-  --font-sans: 'Plus Jakarta Sans', 'Poppins', sans-serif;
+  --font-serif: 'Poppins', sans-serif;
+  --font-sans: 'Poppins', sans-serif;
   --font-mono: ui-monospace, 'SFMono-Regular', monospace;
-  --font-header: 'Plus Jakarta Sans', 'Poppins', sans-serif;
+  --font-header: 'Poppins', sans-serif;
 
   --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.02);
   --shadow: 0 4px 16px rgba(15, 23, 42, 0.06), 0 1px 4px rgba(15, 23, 42, 0.03);
@@ -191,17 +191,17 @@
   }
 }
 
-/* Base Body Styles */
+/* Base Body & UI Element Styles — Poppins Font Family */
 html,
 body,
 button,
 input,
 select,
 textarea {
-  font-family: 'Work Sans', 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
-/* Headings — Poppins only */
+/* Headings — Poppins */
 h1,
 h2,
 h3,

@@ -17,8 +17,16 @@ const ProfileDetailsTab = ({
  handleTestNotification,
  handleDiscard,
  isSaving,
- isSaved
+ isSaved,
+ enableAptitude
 }) => {
+ const enableAptitudeSetting = enableAptitude !== undefined ? enableAptitude : (() => {
+   try {
+     const stored = localStorage.getItem('behold_site_settings');
+     if (stored) return JSON.parse(stored).enableAptitude !== false;
+   } catch (e) {}
+   return true;
+ })();
  const [prevLocationName, setPrevLocationName] = React.useState(formData.locationName);
  const [searchQuery, setSearchQuery] = React.useState(formData.locationName || '');
  const [searchResults, setSearchResults] = React.useState([]);
@@ -125,7 +133,7 @@ const ProfileDetailsTab = ({
  { name: 'feelingLately', label: 'How have you been feeling lately?', type: 'text', placeholder: 'e.g. Anxious, Stressed, Good, Seeking Guidance...', required: false, icon: Heart },
  ],
  },
- {
+ ...(enableAptitudeSetting ? [{
  title: 'Academic Details',
  icon: GraduationCap,
  hint: 'Optional but recommended',
@@ -136,7 +144,7 @@ const ProfileDetailsTab = ({
  { name: 'grade', label: 'Grade / Class', type: 'select', options: ['', 'Class 8', 'Class 9', 'Class 10', 'Class 11', 'Class 12', 'Graduate', 'Other'], required: false, icon: Hash },
  { name: 'groupCode', label: 'Group / School Code', type: 'text', placeholder: 'e.g. BEHOLD-CDAT-2026', required: false, icon: Hash },
  ],
- },
+ }] : []),
  {
  title: 'Prior Therapy Experience',
  icon: Heart,
@@ -168,44 +176,6 @@ const ProfileDetailsTab = ({
  <div>
  <h2 className="text-xl font-semibold text-surface-900 tracking-tight">My Profile</h2>
  <p className="text-sm text-surface-500 mt-0.5">Keep your details up to date.</p>
- </div>
- </div>
-
- {/* Progress — gradient bar */}
- <div
- className="rounded-[10px] p-5 bg-white border border-surface-200 shadow-square-light"
- >
- <div className="flex items-center justify-between mb-3">
-
- <div>
- <p className="text-sm font-semibold text-surface-900">Profile Strength</p>
- <p className="text-xs text-surface-500 mt-0.5">
- {completion < 50 ? 'Fill in more fields to strengthen your profile.' :
- completion < 100 ? 'Almost complete — just a few more fields.' :
- '🎉 Your profile is complete!'}
- </p>
- </div>
- <span
- className="text-2xl font-semibold tracking-tight"
- style={{ color: completion >= 80 ? '#10b981' : completion >= 50 ? '#f59e0b' : '#f43f5e' }}
- >{completion}%</span>
- </div>
- <div className="h-2 w-full bg-surface-100 rounded-[10px] overflow-hidden">
- <div
- className="h-full rounded-[10px] transition-all duration-700"
- style={{
- width: `${completion}%`,
- background: completion >= 80
- ? '#10b981'
- : completion >= 50
- ? '#f59e0b'
- : '#f43f5e'
- }}
- />
- </div>
- <div className="flex justify-between mt-2">
- <span className="text-[10px] text-surface-400 font-semibold tracking-widest">0%</span>
- <span className="text-[10px] text-surface-400 font-semibold tracking-widest">100% Complete</span>
  </div>
  </div>
 
@@ -531,8 +501,9 @@ const ProfileDetailsTab = ({
  </button>
  <button
  type="submit"
+ onClick={handleSave}
  disabled={isSaving}
- className="min-h-[40px] inline-flex items-center gap-1.5 px-5 py-2 bg-surface-900 hover:bg-surface-800 disabled:bg-surface-500 text-white text-[10px] tracking-widest font-semibold rounded-full shadow-none transition-colors border-none"
+ className="min-h-[40px] inline-flex items-center gap-1.5 px-5 py-2 bg-surface-900 hover:bg-surface-800 disabled:bg-surface-500 text-white text-[10px] tracking-widest font-semibold rounded-full shadow-none transition-colors border-none cursor-pointer"
  >
  {isSaving ? (
  <><span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />Saving...</>

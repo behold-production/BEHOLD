@@ -71,25 +71,28 @@ export function useStudentProfile() {
 
   const validate = () => {
     const err = {};
-    if (!formData.name.trim()) err.name = 'Required';
-    else if (formData.name.trim().length < 3) err.name = 'Min 3 characters';
-    if (!formData.email.trim()) err.email = 'Required';
-    else if (!validateEmail(formData.email)) err.email = 'Invalid email';
-    if (!formData.phone.trim()) err.phone = 'Required';
-    else if (!validateIndianPhone(formData.phone)) err.phone = 'Invalid 10-digit Indian phone';
-    if (!formData.guardianName.trim()) err.guardianName = 'Required';
-    if (formData.guardianPhone.trim()) {
-      if (!validateIndianPhone(formData.guardianPhone)) {
-        err.guardianPhone = 'Invalid 10-digit Indian phone';
-      }
+    if (!formData.name?.trim()) err.name = 'Full Name is required';
+    else if (formData.name.trim().length < 3) err.name = 'Name must be at least 3 characters';
+    if (!formData.email?.trim()) err.email = 'Email is required';
+    else if (!validateEmail(formData.email)) err.email = 'Invalid email address';
+    if (formData.phone?.trim() && !validateIndianPhone(formData.phone)) {
+      err.phone = 'Please enter a valid 10-digit Indian phone number';
+    }
+    if (formData.guardianPhone?.trim() && !validateIndianPhone(formData.guardianPhone)) {
+      err.guardianPhone = 'Please enter a valid 10-digit Indian guardian phone number';
     }
     return err;
   };
 
   const handleSave = async (e) => {
-    e.preventDefault();
+    if (e && e.preventDefault) e.preventDefault();
     const err = validate();
-    if (Object.keys(err).length > 0) { setErrors(err); return; }
+    if (Object.keys(err).length > 0) {
+      setErrors(err);
+      const firstError = Object.values(err)[0];
+      toast.error(`Please check your details: ${firstError}`);
+      return;
+    }
     setIsSaving(true);
     try {
       const res = await ApiService.updateProfile(formData);
@@ -104,6 +107,7 @@ export function useStudentProfile() {
       }
 
       setIsSaved(true);
+      toast.success('Profile saved successfully!');
       setTimeout(() => setIsSaved(false), 3000);
     } catch (error) {
       toast.error(error.message || 'Failed to update profile');

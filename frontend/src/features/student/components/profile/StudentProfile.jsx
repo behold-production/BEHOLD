@@ -188,6 +188,7 @@ export default function StudentProfile({ onOpenBooking }) {
  handleDiscard={handleDiscard}
  isSaving={isSaving}
  isSaved={isSaved}
+ enableAptitude={enableAptitude}
  />
  )}
  {currentSection === 'booked' && (

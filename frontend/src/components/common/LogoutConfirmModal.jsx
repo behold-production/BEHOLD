@@ -2,21 +2,28 @@ import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { LogOut, X, AlertTriangle } from 'lucide-react';
 
-export default function LogoutConfirmModal({ isOpen, onConfirm, onCancel }) {
+export default function LogoutConfirmModal({ isOpen, onConfirm, onCancel, onClose }) {
+  const handleClose = onClose || onCancel;
+
   useEffect(() => {
     if (!isOpen) return;
     document.body.classList.add('no-scroll');
     const handleEsc = (e) => {
-      if (e.key === 'Escape') onCancel();
+      if (e.key === 'Escape' && handleClose) handleClose();
     };
     document.addEventListener('keydown', handleEsc);
     return () => {
       document.body.classList.remove('no-scroll');
       document.removeEventListener('keydown', handleEsc);
     };
-  }, [isOpen, onCancel]);
+  }, [isOpen, handleClose]);
 
   if (!isOpen) return null;
+
+  const handleConfirm = () => {
+    if (onConfirm) onConfirm();
+    if (handleClose) handleClose();
+  };
 
   return createPortal(
     <div
@@ -28,7 +35,7 @@ export default function LogoutConfirmModal({ isOpen, onConfirm, onCancel }) {
       {/* Premium Glassmorphic Backdrop */}
       <div
         className="fixed inset-0 bg-[#0f172a]/60 backdrop-blur-md transition-opacity duration-300 animate-in fade-in z-[99999]"
-        onClick={onCancel}
+        onClick={handleClose}
         aria-hidden="true"
       />
 
@@ -44,7 +51,7 @@ export default function LogoutConfirmModal({ isOpen, onConfirm, onCancel }) {
         {/* Close button */}
         <button
           type="button"
-          onClick={onCancel}
+          onClick={handleClose}
           aria-label="Close sign out confirmation"
           className="absolute top-5 right-5 w-8 h-8 flex items-center justify-center rounded-full bg-surface-100 hover:bg-surface-200 text-surface-500 hover:text-[#0f172a] transition-all cursor-pointer border-none z-10"
         >
@@ -64,7 +71,7 @@ export default function LogoutConfirmModal({ isOpen, onConfirm, onCancel }) {
               id="logout-confirm-title"
               className="text-2xl font-semibold text-[#0f172a] font-sans"
             >
-              Sign Out<span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.4)]">?</span>
+              Sign Out
             </h3>
             <p className="text-sm text-surface-500 font-medium leading-relaxed px-1">
               You are about to end your current session. You will need to sign in again to access your dashboard.
@@ -75,7 +82,7 @@ export default function LogoutConfirmModal({ isOpen, onConfirm, onCancel }) {
           <div className="flex flex-col gap-3 pt-4">
             <button
               type="button"
-              onClick={onConfirm}
+              onClick={handleConfirm}
               className="group relative w-full flex items-center justify-center gap-2.5 py-3.5 bg-[#0f172a] hover:bg-[#1e293b] text-white font-semibold text-sm rounded-xl transition-all cursor-pointer border-none shadow-lg shadow-[#0f172a]/25 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#0f172a]/30 overflow-hidden"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
@@ -85,7 +92,7 @@ export default function LogoutConfirmModal({ isOpen, onConfirm, onCancel }) {
 
             <button
               type="button"
-              onClick={onCancel}
+              onClick={handleClose}
               className="w-full py-3.5 bg-surface-100 hover:bg-surface-200 text-[#0f172a] font-semibold text-sm rounded-xl transition-all border-none cursor-pointer"
             >
               Stay Signed In
