@@ -51,12 +51,15 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
               const rawPhoto = c.profilePic || c.photo || c.avatar || c.profilePicture || c.image || c.user?.profilePic;
               const hasValidPhoto = rawPhoto && typeof rawPhoto === 'string' && rawPhoto.trim().length > 0 && !rawPhoto.includes('via.placeholder');
               const expData = formatExperience(c.experience || c.hours || c.completedHours);
+              const customTitle = c.title || (c.designation && c.designation.toLowerCase() !== 'counsellor' ? c.designation : null) || (c.role && c.role.toLowerCase() !== 'counsellor' ? c.role : null) || 'Consultant Psychologist';
+              
               return {
                 id: c.id || c._id,
                 name: c.name || c.user?.name || c.fullName || 'Psychologist',
-                designation: c.designation || c.role || 'Consultant Psychologist',
-                title: c.title || c.qualification || 'Psychologist',
-                fee: c.fee || c.price || c.consultationFee || '1000',
+                designation: customTitle,
+                title: customTitle,
+                fee: Number(c.fee || c.price || 1200),
+                halfSessionPrice: Number(c.halfSessionPrice || Math.round((c.fee || c.price || 1200) * 0.5)),
                 hours: expData.rawHours,
                 rawYears: expData.rawYears,
                 expYears: expData.years,
@@ -128,28 +131,44 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
     setCurrentIndex((prev) => (prev - 1 + displayAdvisors.length) % displayAdvisors.length);
   };
 
-  // Drag Gesture Handlers
+  // Improved Touch & Drag Gesture Handlers
+  const touchDeltaRef = useRef(0);
+
   const handleTouchStart = (clientX) => {
     setIsDragging(true);
     startXRef.current = clientX;
+    touchDeltaRef.current = 0;
   };
 
   const handleTouchMove = (clientX) => {
     if (!isDragging) return;
     const deltaX = clientX - startXRef.current;
-    if (Math.abs(deltaX) > 60) {
-      if (deltaX < 0) {
-        handleNextCard();
-      } else {
-        handlePrevCard();
-      }
-      setIsDragging(false);
-    }
+    touchDeltaRef.current = deltaX;
   };
 
   const handleTouchEnd = () => {
+    if (!isDragging) return;
     setIsDragging(false);
+    const deltaX = touchDeltaRef.current;
+    if (deltaX < -40) {
+      handleNextCard();
+    } else if (deltaX > 40) {
+      handlePrevCard();
+    }
   };
+
+  // Keyboard Navigation Support
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'ArrowLeft') {
+        handlePrevCard();
+      } else if (e.key === 'ArrowRight') {
+        handleNextCard();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [displayAdvisors.length]);
 
   const handleConnectClick = () => {
     const contactEl = document.getElementById('inquiry');
@@ -175,38 +194,41 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
   const getCardStyles = (diff) => {
     switch (diff) {
       case 0:
-        return 'translate-x-0 scale-100 opacity-100 z-30 shadow-[0_22px_55px_rgba(0,201,214,0.22)] cursor-default brightness-100';
+        return 'translate-x-0 scale-100 opacity-100 z-30 shadow-[0_20px_50px_rgba(0,201,214,0.20)] cursor-default brightness-100 pointer-events-auto';
       case -1:
-        return '-translate-x-[140px] xs:-translate-x-[180px] sm:-translate-x-[250px] md:-translate-x-[310px] lg:-translate-x-[360px] scale-[0.85] opacity-85 z-20 shadow-xl cursor-pointer hover:opacity-100 hover:scale-[0.87] brightness-[0.94]';
+        return '-translate-x-[55%] xs:-translate-x-[65%] sm:-translate-x-[220px] md:-translate-x-[270px] lg:-translate-x-[320px] scale-[0.84] sm:scale-[0.86] opacity-70 sm:opacity-80 z-20 shadow-xl cursor-pointer hover:opacity-95 hover:scale-[0.86] brightness-95 pointer-events-auto';
       case 1:
-        return 'translate-x-[140px] xs:translate-x-[180px] sm:translate-x-[250px] md:translate-x-[310px] lg:translate-x-[360px] scale-[0.85] opacity-85 z-20 shadow-xl cursor-pointer hover:opacity-100 hover:scale-[0.87] brightness-[0.94]';
+        return 'translate-x-[55%] xs:translate-x-[65%] sm:translate-x-[220px] md:translate-x-[270px] lg:translate-x-[320px] scale-[0.84] sm:scale-[0.86] opacity-70 sm:opacity-80 z-20 shadow-xl cursor-pointer hover:opacity-95 hover:scale-[0.86] brightness-95 pointer-events-auto';
       default:
         if (diff < 0) {
-          return '-translate-x-[480px] scale-[0.6] opacity-0 z-0 pointer-events-none';
+          return '-translate-x-[140%] scale-[0.6] opacity-0 z-0 pointer-events-none';
         } else {
-          return 'translate-x-[480px] scale-[0.6] opacity-0 z-0 pointer-events-none';
+          return 'translate-x-[140%] scale-[0.6] opacity-0 z-0 pointer-events-none';
         }
     }
   };
 
   const renderCard = (advisor, isCenter) => {
     if (!advisor) return null;
+    const cardTitle = advisor.title || advisor.designation || 'Consultant Psychologist';
+    const minFee = advisor.halfSessionPrice || Math.round(advisor.fee * 0.5) || 499;
+
     return (
-      <div className={`w-full h-full flex flex-col overflow-hidden bg-white rounded-[28px] [transform:translateZ(0)] [isolation:isolate] transition-all duration-500 text-left ${isCenter ? 'pointer-events-auto border-[2.5px] border-[#00c9d6] shadow-[0_16px_40px_rgba(0,201,214,0.22)]' : 'pointer-events-none border border-slate-200/80 shadow-lg'}`}>
+      <div className={`w-full h-full flex flex-col overflow-hidden bg-white rounded-[26px] [transform:translateZ(0)] [isolation:isolate] transition-all duration-500 text-left ${isCenter ? 'pointer-events-auto border-[2px] border-[#00c9d6] shadow-[0_16px_40px_rgba(0,201,214,0.20)]' : 'pointer-events-none border border-slate-200/80 shadow-md'}`}>
         
         {/* Top Header Section (Light Primary Teal Background with Full Height Right Image) */}
-        <div className="relative w-full h-[110px] sm:h-[125px] p-3.5 sm:p-4 bg-gradient-to-r from-[#bcf4f8] via-[#d7f9fb] to-[#a8eff4] flex items-start justify-between overflow-hidden shrink-0 rounded-t-[28px]">
-          <div className="pr-2 space-y-0.5 z-10 max-w-[62%]">
-            <h3 className="font-sans text-base sm:text-lg font-bold text-slate-900 leading-tight truncate">
+        <div className="relative w-full h-[115px] sm:h-[130px] p-3.5 sm:p-4.5 bg-gradient-to-r from-[#bcf4f8] via-[#d7f9fb] to-[#a8eff4] flex items-start justify-between overflow-hidden shrink-0 rounded-t-[26px]">
+          <div className="pr-2 space-y-1 z-10 max-w-[68%]">
+            <h3 className="font-sans text-base sm:text-lg font-extrabold text-slate-900 leading-tight line-clamp-1 drop-shadow-xs">
               {advisor.name}
             </h3>
-            <p className="text-[10px] sm:text-[11px] font-semibold text-slate-600 tracking-wider truncate">
-              {advisor.designation === 'counsellor' || advisor.designation === 'COUNSELLOR' ? 'Psychologist' : (advisor.designation || 'Consultant Psychologist')}
+            <p className="text-xs sm:text-xs font-semibold text-slate-700 tracking-wide line-clamp-1">
+              {cardTitle}
             </p>
           </div>
 
           {/* Counsellor Profile Image */}
-          <div className="w-[100px] sm:w-[120px] h-[110px] sm:h-[125px] absolute right-2 bottom-0 z-10 flex items-end justify-center pointer-events-none">
+          <div className="w-[105px] sm:w-[125px] h-[115px] sm:h-[130px] absolute right-1.5 bottom-0 z-10 flex items-end justify-center pointer-events-none">
             {advisor.photo ? (
               <img
                 src={advisor.photo}
@@ -234,14 +256,14 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
         </div>
 
         {/* White Body Card */}
-        <div className="relative z-20 -mt-4 bg-white rounded-t-[22px] rounded-b-[28px] p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3 overflow-hidden">
+        <div className="relative z-20 -mt-4 bg-white rounded-t-[22px] rounded-b-[26px] p-3.5 sm:p-5 flex-1 flex flex-col justify-between space-y-2.5 sm:space-y-3 overflow-hidden">
           
           {/* Specialties Tags Row */}
           <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none pb-0.5 shrink-0">
             {advisor.specialties.slice(0, 3).map((spec, i) => (
               <span
                 key={i}
-                className="px-3 py-1 bg-slate-50 border border-slate-200/80 text-slate-800 text-[9.5px] sm:text-[10.5px] font-semibold rounded-xl whitespace-nowrap shrink-0"
+                className="px-2.5 sm:px-3 py-1 bg-slate-50 border border-slate-200/80 text-slate-800 text-[10px] sm:text-[11px] font-semibold rounded-xl whitespace-nowrap shrink-0"
               >
                 {spec}
               </span>
@@ -250,7 +272,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
 
           {/* Description Card Box */}
           <div className="bg-slate-50/90 border border-slate-200/80 rounded-2xl p-3 sm:p-3.5 shadow-xs transition-all duration-300">
-            <p className={`text-[10.5px] sm:text-xs text-slate-700 italic font-medium leading-relaxed ${expandedBios[advisor.id] ? 'max-h-[100px] overflow-y-auto pr-1 scrollbar-thin' : 'line-clamp-2'}`}>
+            <p className={`text-[11px] sm:text-xs text-slate-700 italic font-medium leading-relaxed ${expandedBios[advisor.id] ? 'max-h-[100px] overflow-y-auto pr-1 scrollbar-thin' : 'line-clamp-2'}`}>
               "{advisor.bio || 'Specializing in compassionate psychological counselling and mental wellbeing.'}"
             </p>
             {advisor.bio && advisor.bio.length > 45 && (
@@ -260,7 +282,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
                   e.stopPropagation();
                   setExpandedBios(prev => ({ ...prev, [advisor.id]: !prev[advisor.id] }));
                 }}
-                className="text-[9.5px] sm:text-[10.5px] font-semibold text-[#00c9d6] hover:text-[#008b94] hover:underline cursor-pointer mt-1.5 inline-block tracking-wider"
+                className="text-[10px] sm:text-[11px] font-semibold text-[#00c9d6] hover:text-[#008b94] hover:underline cursor-pointer mt-1 inline-block tracking-wider"
               >
                 {expandedBios[advisor.id] ? 'Read Less ▲' : 'Read More ▼'}
               </button>
@@ -269,24 +291,24 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
 
           {/* 3 Metric Stat Boxes */}
           <div className="grid grid-cols-3 gap-2 shrink-0">
-            <div className="bg-slate-50/70 border border-slate-150 rounded-xl p-2.5 text-left">
-              <span className="text-xs sm:text-sm font-semibold text-slate-900 block leading-none">{advisor.hours ? advisor.hours.toLocaleString() : '900'}+</span>
-              <span className="text-[9px] sm:text-[10px] font-medium text-slate-500 block mt-1">Hours Experience</span>
+            <div className="bg-slate-50/80 border border-slate-200/80 rounded-xl p-2 sm:p-2.5 text-left">
+              <span className="text-xs sm:text-sm font-bold text-slate-900 block leading-none">{advisor.hours ? advisor.hours.toLocaleString() : '900'}+</span>
+              <span className="text-[9.5px] sm:text-[10px] font-medium text-slate-500 block mt-1">Hours Experience</span>
             </div>
-            <div className="bg-slate-50/70 border border-slate-150 rounded-xl p-2.5 text-left">
-              <span className="text-xs sm:text-sm font-semibold text-slate-900 block leading-tight line-clamp-2">{advisor.languages || 'Malayalam'}</span>
-              <span className="text-[9px] sm:text-[10px] font-medium text-slate-500 block mt-1">Languages</span>
+            <div className="bg-slate-50/80 border border-slate-200/80 rounded-xl p-2 sm:p-2.5 text-left">
+              <span className="text-xs sm:text-sm font-bold text-slate-900 block leading-tight line-clamp-1">{advisor.languages || 'Malayalam'}</span>
+              <span className="text-[9.5px] sm:text-[10px] font-medium text-slate-500 block mt-1">Languages</span>
             </div>
-            <div className="bg-slate-50/70 border border-slate-150 rounded-xl p-2.5 text-left">
-              <span className="text-xs sm:text-sm font-semibold text-slate-900 block leading-none">₹{advisor.fee <= 899 ? 499 : (advisor.fee >= 1200 ? 699 : Math.round(advisor.fee * 0.5))}</span>
-              <span className="text-[9px] sm:text-[10px] font-medium text-slate-500 block mt-1">Starting from</span>
+            <div className="bg-slate-50/80 border border-slate-200/80 rounded-xl p-2 sm:p-2.5 text-left">
+              <span className="text-xs sm:text-sm font-bold text-slate-900 block leading-none">₹{minFee}</span>
+              <span className="text-[9.5px] sm:text-[10px] font-medium text-slate-500 block mt-1">Starting from</span>
             </div>
           </div>
 
           {/* Bottom Availability & Action Buttons Row */}
           <div className="pt-2 flex items-center justify-between gap-2 border-t border-slate-100 shrink-0">
             <div className="text-left shrink-0">
-              <span className="text-[9px] sm:text-[10px] font-semibold text-slate-400 block tracking-wider">Next available</span>
+              <span className="text-[9.5px] sm:text-[10px] font-semibold text-slate-400 block tracking-wider">Next available</span>
               <span className="text-[10.5px] sm:text-xs font-semibold text-slate-900 block mt-0.5 whitespace-nowrap">Available Today</span>
             </div>
 
@@ -297,7 +319,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
                   e.stopPropagation();
                   navigate(`/advisor/${advisor.id}`);
                 }}
-                className="px-2.5 xs:px-3 sm:px-4 py-1.5 sm:py-2 border border-slate-300 hover:border-slate-900 text-slate-800 hover:bg-slate-900 hover:text-white rounded-full text-[9.5px] xs:text-[10px] sm:text-[11px] font-semibold transition cursor-pointer whitespace-nowrap hover-scale-btn shadow-xs"
+                className="px-2.5 sm:px-3.5 py-1.5 sm:py-2 border border-slate-300 hover:border-slate-900 text-slate-800 hover:bg-slate-900 hover:text-white rounded-full text-[10px] sm:text-xs font-bold transition cursor-pointer whitespace-nowrap hover-scale-btn shadow-xs"
               >
                 View Profile
               </button>
@@ -308,7 +330,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
                   if (onBookTherapist) onBookTherapist(advisor.id);
                   else window.spaNavigate?.('/book-session');
                 }}
-                className="bg-[#00c9d6] hover:bg-[#00b2be] text-slate-950 font-bold text-[9.5px] xs:text-[10px] sm:text-[11px] tracking-wider px-3 xs:px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer whitespace-nowrap hover-scale-btn"
+                className="bg-[#00c9d6] hover:bg-[#00b2be] text-slate-950 font-extrabold text-[10px] sm:text-xs tracking-wider px-3 sm:px-4 py-1.5 sm:py-2 rounded-full shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer whitespace-nowrap hover-scale-btn"
               >
                 Book Session
               </button>
@@ -323,7 +345,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
   return (
     <section
       id="therapists"
-      className="relative w-full flex flex-col items-center justify-center py-16 sm:py-20 lg:py-24 px-[15px] sm:px-6 lg:px-10 overflow-hidden text-[#0f172a] select-none"
+      className="relative w-full flex flex-col items-center justify-center py-12 sm:py-16 lg:py-20 px-0 sm:px-4 overflow-hidden text-[#0f172a] select-none"
     >
       {/* Background Image with smooth mask-image fade (no hard cutout lines) */}
       <div className="absolute inset-0 z-0 pointer-events-none">
@@ -333,8 +355,9 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
           className="w-full h-full object-cover object-center opacity-55 [mask-image:linear-gradient(to_bottom,transparent_0%,black_15%,black_85%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_15%,black_85%,transparent_100%)]"
         />
       </div>
+
       {/* SECTION TOPPER TITLE */}
-      <div className="w-full max-w-7xl mx-auto mb-6 sm:mb-8 text-center">
+      <div className="w-full max-w-7xl mx-auto mb-6 sm:mb-8 text-center px-4">
         <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold text-[#00c9d6] tracking-widest uppercase mb-3">
           <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
           Our Expert Team
@@ -346,7 +369,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
       </div>
 
       {/* FILTER & SEARCH BAR UNDER MEET OUR EXPERTS */}
-      <div className="w-full max-w-4xl mx-auto mb-8 sm:mb-12 bg-white/95 backdrop-blur-md rounded-2xl shadow-md border border-slate-200/80 p-3 sm:p-4 flex flex-col gap-3 transition-all duration-300">
+      <div className="w-full max-w-4xl mx-auto mb-8 sm:mb-10 bg-white/95 backdrop-blur-md rounded-2xl shadow-md border border-slate-200/80 p-3 sm:p-4 flex flex-col gap-3 transition-all duration-300 px-4 sm:px-4">
 
         {/* Row 1: Search Input */}
         <div className="flex items-center gap-2.5 px-3.5 py-2.5 bg-slate-50 rounded-xl border border-slate-200 w-full">
@@ -405,7 +428,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
 
         {/* ── SHIMMER SKELETON while loading from API ── */}
         {loading ? (
-          <div className="w-full max-w-6xl mx-auto px-[10px]">
+          <div className="w-full max-w-6xl mx-auto px-4">
             {/* Skeleton cards row */}
             <div className="flex items-center justify-center gap-4 overflow-hidden h-[410px] sm:h-[470px]">
               {[0, 1, 2].map((i) => (
@@ -445,29 +468,29 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
         ) : (
           <>
             {/* 3-Card Focused Coverflow Carousel Wrapper */}
-            <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
+            <div className="relative w-full max-w-7xl mx-auto px-0 sm:px-4">
 
               {/* Left Floating Navigation Arrow */}
               <button
                 onClick={(e) => { e.stopPropagation(); handlePrevCard(); }}
                 aria-label="Previous Psychologist"
-                className="absolute left-1 sm:left-2 lg:left-4 top-1/2 -translate-y-1/2 z-40 w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-white/95 text-slate-800 hover:text-slate-950 hover:bg-[#00c9d6] shadow-2xl border border-slate-200/80 transition-all duration-300 cursor-pointer flex items-center justify-center group hover-scale-btn"
+                className="absolute left-2 sm:left-4 lg:left-6 top-1/2 -translate-y-1/2 z-40 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/95 text-slate-800 hover:text-slate-950 hover:bg-[#00c9d6] shadow-xl border border-slate-200/80 transition-all duration-300 cursor-pointer flex items-center justify-center group hover-scale-btn"
               >
-                <ChevronLeft className="w-6 h-6 group-hover:-translate-x-0.5 transition-transform" />
+                <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 group-hover:-translate-x-0.5 transition-transform" />
               </button>
 
               {/* Right Floating Navigation Arrow */}
               <button
                 onClick={(e) => { e.stopPropagation(); handleNextCard(); }}
                 aria-label="Next Psychologist"
-                className="absolute right-1 sm:right-2 lg:right-4 top-1/2 -translate-y-1/2 z-40 w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-white/95 text-slate-800 hover:text-slate-950 hover:bg-[#00c9d6] shadow-2xl border border-slate-200/80 transition-all duration-300 cursor-pointer flex items-center justify-center group hover-scale-btn"
+                className="absolute right-2 sm:right-4 lg:right-6 top-1/2 -translate-y-1/2 z-40 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/95 text-slate-800 hover:text-slate-950 hover:bg-[#00c9d6] shadow-xl border border-slate-200/80 transition-all duration-300 cursor-pointer flex items-center justify-center group hover-scale-btn"
               >
-                <ChevronRight className="w-6 h-6 group-hover:translate-x-0.5 transition-transform" />
+                <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-0.5 transition-transform" />
               </button>
 
               {/* Card Perspective Area */}
               <div
-                className="relative w-full max-w-5xl mx-auto h-[415px] sm:h-[465px] flex items-center justify-center overflow-hidden"
+                className="relative w-full max-w-6xl mx-auto h-[420px] sm:h-[470px] flex items-center justify-center overflow-visible touch-pan-y"
                 onMouseDown={(e) => handleTouchStart(e.clientX)}
                 onMouseMove={(e) => handleTouchMove(e.clientX)}
                 onMouseUp={handleTouchEnd}
@@ -482,8 +505,10 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
                   return (
                     <div
                       key={advisor.id}
-                      onClick={() => setCurrentIndex(index)}
-                      className={`absolute w-[335px] xs:w-[365px] sm:w-[395px] md:w-[410px] h-[395px] sm:h-[445px] rounded-[28px] overflow-hidden transform transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${styleClass}`}
+                      onClick={() => {
+                        if (diff !== 0) setCurrentIndex(index);
+                      }}
+                      className={`absolute w-[86vw] xs:w-[340px] sm:w-[380px] md:w-[410px] h-[400px] sm:h-[450px] rounded-[26px] overflow-hidden transform transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${styleClass}`}
                     >
                       {renderCard(advisor, diff === 0)}
                     </div>

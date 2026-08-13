@@ -38,6 +38,7 @@ const CounsellorController = {
     try {
       const {
         name,
+        title,
         phone,
         specialties,
         qualifications,
@@ -66,6 +67,7 @@ const CounsellorController = {
         }
         updates.name = String(name).trim();
       }
+      if (title !== undefined) updates.title = String(title).trim() || 'Consultant Psychologist';
       if (phone !== undefined) updates.phone = phone;
       if (specialties !== undefined) updates.specialties = normalizeList(specialties);
       if (qualifications !== undefined) updates.qualifications = normalizeList(qualifications);

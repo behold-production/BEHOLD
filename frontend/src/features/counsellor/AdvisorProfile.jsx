@@ -52,7 +52,8 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
 
           // Format experience & consultation hours intelligently
           const expData = formatExperience(psy.experience || psy.completedHours);
-          const formattedRole = (psy.role || 'Consultant Psychologist').replace(/\b\w/g, l => l.toUpperCase());
+          const rawRoleTitle = psy.title || (psy.role && psy.role.toLowerCase() !== 'counsellor' ? psy.role : 'Consultant Psychologist');
+          const formattedRole = rawRoleTitle.replace(/\b\w/g, l => l.toUpperCase());
           const displayHours = expData.hours || `${expData.rawHours || 900}+ Hours Consulted`;
 
           setAdvisor({

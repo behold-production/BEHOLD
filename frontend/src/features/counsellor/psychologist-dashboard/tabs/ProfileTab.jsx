@@ -177,6 +177,17 @@ const ProfileTab = ({
  </div>
 
  <div className="space-y-1.5">
+ <label className="text-zinc-400 font-bold text-xs tracking-wide">Professional Title / Designation</label>
+ <input
+ type="text"
+ placeholder="e.g. Consultant Psychologist, Clinical Psychologist"
+ value={ep.title || ep.role || ''}
+ onChange={(e) => setEp({ title: e.target.value, role: e.target.value })}
+ className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-[10px] outline-none focus:border-brand transition-all"
+ />
+ </div>
+
+ <div className="space-y-1.5">
  <label className="text-zinc-400 font-bold text-xs tracking-wide">Education Credentials</label>
  <input
  type="text"

@@ -1323,24 +1323,17 @@ export default function PsychologistManagementTab(props) {
 
                 <div className="space-y-1">
                   <label className="text-sm font-bold text-zinc-400">
-                    Professional Title
+                    Professional Title / Designation
                   </label>
-                  <select
+                  <input
+                    type="text"
+                    placeholder="e.g. Consultant Psychologist, Clinical Psychologist"
                     value={psyForm.title}
                     onChange={(e) =>
                       setPsyForm({ ...psyForm, title: e.target.value })
                     }
-                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none cursor-pointer"
-                  >
-                    <option value="Consultant Psychologist">
-                      Consultant Psychologist
-                    </option>
-                    <option value="Clinical Psychologist">
-                      Clinical Psychologist
-                    </option>
-                    <option value="Psychiatrist">Psychiatrist</option>
-                    <option value="Career Mentor">Career Mentor</option>
-                  </select>
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                  />
                 </div>
 
                 <div className="space-y-1">
@@ -2282,17 +2275,14 @@ export default function PsychologistManagementTab(props) {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-sm font-bold text-zinc-400">Professional Title</label>
-                  <select
+                  <label className="text-sm font-bold text-zinc-400">Professional Title / Designation</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Consultant Psychologist, Clinical Psychologist"
                     value={psyForm.title}
                     onChange={(e) => setPsyForm({ ...psyForm, title: e.target.value })}
-                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none cursor-pointer"
-                  >
-                    <option value="Consultant Psychologist">Consultant Psychologist</option>
-                    <option value="Clinical Psychologist">Clinical Psychologist</option>
-                    <option value="Psychiatrist">Psychiatrist</option>
-                    <option value="Career Mentor">Career Mentor</option>
-                  </select>
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                  />
                 </div>
 
                 <div className="space-y-1">

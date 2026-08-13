@@ -245,10 +245,11 @@ export default function PsychologistDashboard({ setView: _setView }) {
  const specialtiesStr = c.specialties
  ? (Array.isArray(c.specialties) ? c.specialties.join(', ') : c.specialties)
  : '';
- setProfile({
- name: c.name || user.name || '',
- role: c.title || 'Consultant Psychologist',
- education: c.education || '',
+  setProfile({
+  name: c.name || user.name || '',
+  title: c.title || 'Consultant Psychologist',
+  role: c.title || 'Consultant Psychologist',
+  education: c.education || '',
  specialties: specialtiesStr,
  price: c.price !== undefined ? c.price : 1200,
  halfSessionPrice: c.halfSessionPrice !== undefined ? c.halfSessionPrice : 499,
@@ -784,52 +785,60 @@ reportRegError("Please enter a valid email address.");
 
  const modes = Array.isArray(formData.modes) ? formData.modes : [];
  const payload = {
- name: formData.name,
- education: formData.education,
- specialties: specialtiesArr,
- price: Number(formData.price) || 1200,
- halfSessionPrice: Number(formData.halfSessionPrice) || 499,
- lang: formData.lang,
- bio: formData.bio,
- defaultMeetLink: formData.defaultMeetLink,
- hours: Number(formData.hours) || 0,
- modes,
- locationName: formData.locationName || '',
- latitude: Number(formData.latitude) || 0,
- longitude: Number(formData.longitude) || 0,
- 
- bankAccountNumber: formData.bankAccountNumber || '',
- bankIfscCode: formData.bankIfscCode || '',
- bankAccountName: formData.bankAccountName || ''
- };
+  name: formData.name,
+  title: formData.title || formData.role || 'Consultant Psychologist',
+  education: formData.education,
+  specialties: specialtiesArr,
+  price: Number(formData.price) || 1200,
+  halfSessionPrice: Number(formData.halfSessionPrice) || 499,
+  lang: formData.lang,
+  bio: formData.bio,
+  defaultMeetLink: formData.defaultMeetLink,
+  hours: Number(formData.hours) || 0,
+  modes,
+  locationName: formData.locationName || '',
+  latitude: Number(formData.latitude) || 0,
+  longitude: Number(formData.longitude) || 0,
+  
+  bankAccountNumber: formData.bankAccountNumber || '',
+  bankIfscCode: formData.bankIfscCode || '',
+  bankAccountName: formData.bankAccountName || ''
+  };
 
- if (payload.modes.length === 0) {
- toast.error("Select at least one supported session mode.");
- return;
- }
+  if (payload.modes.length === 0) {
+  toast.error("Select at least one supported session mode.");
+  return;
+  }
 
- if ((payload.modes.includes('DOOR_STEP') || payload.modes.includes('OFFLINE')) && (!payload.locationName.trim() || !payload.latitude || !payload.longitude)) {
- toast.error("Clinic / Office Address and coordinates are required when Offline or Doorstep modes are enabled.");
- return;
- }
+  if ((payload.modes.includes('DOOR_STEP') || payload.modes.includes('OFFLINE')) && (!payload.locationName.trim() || !payload.latitude || !payload.longitude)) {
+  toast.error("Clinic / Office Address and coordinates are required when Offline or Doorstep modes are enabled.");
+  return;
+  }
 
- const res = await ApiService.updateCounsellorProfile(payload);
- if (res.success) {
- setIsProfileSaved(true);
- setTimeout(() => setIsProfileSaved(false), 3000);
- if (updateUser && user) {
- updateUser({
- ...user,
- name: payload.name
- });
- }
- await loadBookingsData();
- }
- } catch (err) {
- console.error("Failed to save counsellor profile via API", err);
- toast.error(err.message || "Failed to save profile.");
- }
- };
+  const res = await ApiService.updateCounsellorProfile(payload);
+  if (res.success) {
+  setIsProfileSaved(true);
+  setTimeout(() => setIsProfileSaved(false), 3000);
+  if (ApiService._counsellorsCache) {
+    ApiService._counsellorsCache = null;
+    ApiService._counsellorsCacheTime = 0;
+  }
+  localStorage.removeItem('behold_counsellors_cache');
+  if (updateUser && user) {
+  updateUser({
+  ...user,
+  name: payload.name,
+  title: payload.title
+  });
+  }
+  await loadBookingsData();
+  toast.success("Profile & Designation updated successfully!");
+  }
+  } catch (err) {
+  console.error("Failed to save counsellor profile via API", err);
+  toast.error(err.message || "Failed to save profile.");
+  }
+  };
 
 
 
