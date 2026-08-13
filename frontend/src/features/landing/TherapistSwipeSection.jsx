@@ -215,8 +215,11 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
 
   const renderCard = (advisor, isCenter) => {
     if (!advisor) return null;
-    const cardTitle = advisor.title || advisor.designation || 'Consultant Psychologist';
     const minFee = advisor.halfSessionPrice || Math.round(advisor.fee * 0.5) || 499;
+    const rawLangs = Array.isArray(advisor.lang || advisor.languages)
+      ? (advisor.lang || advisor.languages)
+      : String(advisor.lang || advisor.languages || 'Malayalam, English').split(',').map(l => l.trim()).filter(Boolean);
+    const displayLanguages = rawLangs.join(', ');
 
     return (
       <div className={`w-full h-full flex flex-col overflow-hidden bg-white rounded-[24px] sm:rounded-[26px] [transform:translateZ(0)] [isolation:isolate] transition-all duration-500 text-left ${isCenter ? 'pointer-events-auto border-[2px] border-[#00c9d6] shadow-[0_16px_40px_rgba(0,201,214,0.20)]' : 'pointer-events-none border border-slate-200/80 shadow-md'}`}>
@@ -300,8 +303,10 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
               <span className="text-[11px] sm:text-sm font-bold text-slate-900 block leading-none">{(advisor.hours !== undefined && advisor.hours !== null) ? advisor.hours.toLocaleString() : 0}+</span>
               <span className="text-[8.5px] sm:text-[10px] font-medium text-slate-500 block mt-0.5 sm:mt-1">Hours Experience</span>
             </div>
-            <div className="bg-slate-50/80 border border-slate-200/80 rounded-xl p-1.5 sm:p-2.5 text-left">
-              <span className="text-[11px] sm:text-sm font-bold text-slate-900 block leading-tight line-clamp-1">{advisor.languages || 'Malayalam'}</span>
+            <div className="bg-slate-50/80 border border-slate-200/80 rounded-xl p-1.5 sm:p-2.5 text-left min-w-0" title={displayLanguages}>
+              <span className="text-[10px] sm:text-xs font-bold text-slate-900 block leading-tight truncate">
+                {displayLanguages}
+              </span>
               <span className="text-[8.5px] sm:text-[10px] font-medium text-slate-500 block mt-0.5 sm:mt-1">Languages</span>
             </div>
             <div className="bg-slate-50/80 border border-slate-200/80 rounded-xl p-1.5 sm:p-2.5 text-left">

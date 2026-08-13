@@ -3,26 +3,34 @@ import { createPortal } from 'react-dom';
 import { LogOut, X, AlertTriangle } from 'lucide-react';
 
 export default function LogoutConfirmModal({ isOpen, onConfirm, onCancel, onClose }) {
-  const handleClose = onClose || onCancel;
+  const closeAction = onClose || onCancel;
+
+  const handleClose = (e) => {
+    if (e) {
+      e.stopPropagation?.();
+    }
+    if (closeAction) closeAction();
+  };
 
   useEffect(() => {
     if (!isOpen) return;
     document.body.classList.add('no-scroll');
     const handleEsc = (e) => {
-      if (e.key === 'Escape' && handleClose) handleClose();
+      if (e.key === 'Escape') handleClose(e);
     };
     document.addEventListener('keydown', handleEsc);
     return () => {
       document.body.classList.remove('no-scroll');
       document.removeEventListener('keydown', handleEsc);
     };
-  }, [isOpen, handleClose]);
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
-  const handleConfirm = () => {
+  const handleConfirm = (e) => {
+    if (e) e.stopPropagation?.();
     if (onConfirm) onConfirm();
-    if (handleClose) handleClose();
+    handleClose(e);
   };
 
   return createPortal(
@@ -48,14 +56,18 @@ export default function LogoutConfirmModal({ isOpen, onConfirm, onCancel, onClos
         <div className="absolute -top-24 -right-24 w-48 h-48 bg-[#00e5ff]/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
 
-        {/* Close button */}
+        {/* Close button - Optimized for Touch & Mobile Tap Target */}
         <button
           type="button"
           onClick={handleClose}
+          onTouchEnd={(e) => {
+            e.preventDefault();
+            handleClose(e);
+          }}
           aria-label="Close sign out confirmation"
-          className="absolute top-5 right-5 w-8 h-8 flex items-center justify-center rounded-full bg-surface-100 hover:bg-surface-200 text-surface-500 hover:text-[#0f172a] transition-all cursor-pointer border-none z-10"
+          className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-600 hover:text-slate-900 transition-all cursor-pointer border-none z-30 touch-manipulation active:scale-95 shadow-2xs"
         >
-          <X className="w-4 h-4" />
+          <X className="w-5 h-5 pointer-events-none" />
         </button>
 
         <div className="p-8 text-center space-y-6 relative z-10">
