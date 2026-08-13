@@ -30,18 +30,18 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-10 items-start">
 
           {/* Brand Column */}
-          <div className="col-span-1 md:col-span-6 lg:col-span-5 w-full space-y-3">
+          <div className="col-span-1 md:col-span-6 lg:col-span-5 w-full space-y-3 flex flex-col items-center md:items-start text-center md:text-left">
             <button
               id="footer-brand"
               onClick={() => navigateToSection?.('top')}
-              className="text-2xl sm:text-3xl font-sans font-black text-white uppercase tracking-tight bg-transparent border-none cursor-pointer p-0 flex items-baseline gap-0.5"
+              className="text-2xl sm:text-3xl font-sans font-black text-white uppercase tracking-tight bg-transparent border-none cursor-pointer p-0 flex items-baseline gap-0.5 mx-auto md:mx-0"
             >
               <span>{(siteName || 'BEHOLD').replace(/\.$/, '')}<span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)] font-black">.</span></span>
             </button>
-            <p className="text-slate-300 text-xs sm:text-[13px] leading-relaxed font-normal max-w-md">
+            <p className="text-slate-300 text-xs sm:text-[13px] leading-relaxed font-normal max-w-md mx-auto md:mx-0">
               Professional online psychological counselling for individuals seeking better mental wellbeing. Confidential, evidence-based support from qualified psychologists—wherever you are.
             </p>
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 text-xs font-medium pt-0.5">
+            <div className="flex flex-wrap items-center justify-center md:justify-start gap-x-5 gap-y-1.5 text-xs font-medium pt-0.5">
               {emailAddr && (
                 <a href={`mailto:${emailAddr}`} className="flex items-center gap-2 text-slate-300 hover:text-[#00e5ff] transition-colors">
                   <Mail className="w-3.5 h-3.5 shrink-0 text-[#00e5ff]" />
@@ -57,9 +57,9 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
             </div>
 
             {/* Social Links */}
-            <div className="pt-1.5 flex items-center gap-2 text-slate-400 text-xs">
+            <div className="pt-1.5 flex flex-wrap items-center justify-center md:justify-start gap-2 text-slate-400 text-xs">
               <span className="text-slate-500 font-semibold uppercase text-[10px] tracking-wider shrink-0">Social:</span>
-              <div className="flex flex-wrap items-center gap-2">
+              <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
                 {socialList.map((social, idx) => (
                   social.url ? (
                     <React.Fragment key={idx}>
@@ -81,7 +81,7 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
           </div>
 
           {/* Services Column */}
-          <div className="col-span-1 md:col-span-3 lg:col-span-3 pt-2 md:pt-0 md:pl-4 lg:pl-8">
+          <div className="col-span-1 md:col-span-3 lg:col-span-3 pt-2 md:pt-0 md:pl-4 lg:pl-8 text-center md:text-left">
             <h4 className="text-white font-sans font-semibold uppercase text-[11px] tracking-widest mb-3">
               Services
             </h4>
@@ -93,7 +93,7 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
                 <li key={label}>
                   <button
                     onClick={action}
-                    className="text-slate-300 hover:text-[#00e5ff] transition-colors bg-transparent border-none cursor-pointer p-0 text-left text-xs sm:text-[13px] font-normal"
+                    className="text-slate-300 hover:text-[#00e5ff] transition-colors bg-transparent border-none cursor-pointer p-0 text-center md:text-left text-xs sm:text-[13px] font-normal"
                   >
                     {label}
                   </button>
@@ -103,7 +103,7 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
           </div>
 
           {/* Company Column */}
-          <div className="col-span-1 md:col-span-3 lg:col-span-4 pt-2 md:pt-0 md:pl-4 lg:pl-8">
+          <div className="col-span-1 md:col-span-3 lg:col-span-4 pt-2 md:pt-0 md:pl-4 lg:pl-8 text-center md:text-left">
             <h4 className="text-white font-sans font-semibold uppercase text-[11px] tracking-widest mb-3">
               Company
             </h4>
@@ -117,7 +117,7 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
                 <li key={label}>
                   <button
                     onClick={action}
-                    className="text-slate-300 hover:text-[#00e5ff] transition-colors bg-transparent border-none cursor-pointer p-0 text-left text-xs sm:text-[13px] font-normal"
+                    className="text-slate-300 hover:text-[#00e5ff] transition-colors bg-transparent border-none cursor-pointer p-0 text-center md:text-left text-xs sm:text-[13px] font-normal"
                   >
                     {label}
                   </button>
