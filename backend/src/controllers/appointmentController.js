@@ -547,7 +547,8 @@ const AppointmentController = {
         };
 
         const userPhone = resolveAnyPhone(user, appointment);
-        const counsellorPhone = resolveAnyPhone(counsellor);
+        const isPsychologist = req.user && (req.user.role === 'PSYCHOLOGIST' || req.user.role === 'COUNSELLOR');
+        const cancelAction = isPsychologist ? 'psychologist_cancelled' : 'cancelled';
 
         await Promise.allSettled([
           StorageService.create('notifications', {
@@ -558,7 +559,7 @@ const AppointmentController = {
             type: 'appointment_cancelled',
             isRead: false
           }),
-          userPhone ? WhatsAppService.sendBookingAlert(userPhone, 'cancelled', details) : Promise.resolve(),
+          userPhone ? WhatsAppService.sendBookingAlert(userPhone, cancelAction, details) : Promise.resolve(),
           user ? EmailService.sendAppointmentCancelled({ user, counsellor, appointment, cancelledBy: cancellerName, reason }) : Promise.resolve()
         ]);
       } catch (notifErr) {
@@ -693,6 +694,24 @@ const AppointmentController = {
           nextSession: nextSessionVal,
           adminNotes: adminNotesVal
         });
+      }
+
+      // Send WhatsApp Session Completed alert (User ONLY)
+      try {
+        const counsellor = await StorageService.findById('counsellors', appointment.counsellorId);
+        const user = await StorageService.findById('users', appointment.userId);
+        const userPhone = resolveAnyPhone(user, appointment);
+        if (userPhone) {
+          await WhatsAppService.sendSessionCompleted(userPhone, {
+            studentName: user ? user.name : 'Student',
+            counsellorName: counsellor ? counsellor.name : 'Psychologist',
+            date: appointment.date,
+            time: appointment.time,
+            duration: appointment.duration || '1 Hour (60 Mins)'
+          }).catch(err => console.error('[WhatsApp Session Completed Error]:', err));
+        }
+      } catch (e) {
+        console.error('[Notification Error in completeAppointment]:', e);
       }
 
       res.status(200).json({
