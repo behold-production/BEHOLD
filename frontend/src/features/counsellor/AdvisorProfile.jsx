@@ -57,10 +57,20 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
           const formattedRole = rawRoleTitle.replace(/\b\w/g, l => l.toUpperCase());
           const displayHours = `${expData.rawHours.toLocaleString()}+ Hours Consulted`;
 
+          const rawPhoto = psy.profilePic || psy.photo || psy.avatar || psy.image || psy.user?.profilePic;
+          const hasValidPhoto = rawPhoto && typeof rawPhoto === 'string' && rawPhoto.trim().length > 0 && !rawPhoto.includes('via.placeholder');
+
+          const rawPrice = Number(psy.price);
+          const rawHalf = Number(psy.halfSessionPrice);
+          const validPrice = (Number.isFinite(rawPrice) && rawPrice >= 100) ? rawPrice : ((Number.isFinite(rawHalf) && rawHalf >= 100) ? rawHalf : 1200);
+
+          const eduText = psy.education || (Array.isArray(psy.qualifications) && psy.qualifications.length > 0 ? psy.qualifications.join(' · ') : 'Certified Specialist');
+          const bioText = psy.bio || (typeof psy.experience === 'string' && psy.experience.length > 20 ? psy.experience : 'Dedicated psychologist committed to providing compassionate, evidence-based psychological counselling and mental wellbeing support.');
+
           setAdvisor({
             id: psy._id || psy.id,
-            name: psy.name || 'Expert Counselor',
-            profilePic: (psy.profilePic && psy.profilePic.includes('res.cloudinary.com')) ? psy.profilePic : '',
+            name: psy.name || 'Expert Psychologist',
+            profilePic: hasValidPhoto ? rawPhoto : '',
             role: formattedRole,
             expYears: expData.years,
             expHours: expData.hours,
@@ -68,13 +78,13 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
               ? psy.specialties
               : ['Anxiety & Stress Management', 'Depression & Mood Concerns', 'Academic & Career Guidance', 'Relationship Counseling'],
             hoursText: displayHours,
-            lang: psy.lang || 'Malayalam, English',
-            price: Number(psy.price) || 899,
-            rating: Number(psy.rating) || 4.9,
+            lang: Array.isArray(psy.lang) ? psy.lang.join(', ') : (psy.lang || 'Malayalam, English'),
+            price: validPrice,
+            rating: Number(psy.rating) || 5.0,
             reviewCount: Number(psy.reviewCount) || 0,
             nextAvailable: nextAvailable || 'Available Today',
-            education: psy.education || 'MPhil Clinical Psychology · Certified Specialist',
-            about: psy.experience || psy.bio || 'Dedicated consultant psychologist specializing in evidence-based cognitive behavioral therapy, anxiety reduction, and personalized student guidance. Committed to providing a safe, confidential, and empathetic environment for personal and academic growth.',
+            education: eduText,
+            about: bioText,
             type: 'counselling',
             modes: filteredModes
           });
