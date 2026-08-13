@@ -174,7 +174,7 @@ export default function FaqsPage() {
             </p>
             <button
               onClick={() => { setSearchQuery(''); setSelectedCategory('ALL'); }}
-              className="px-4 py-2 bg-slate-900 hover:bg-[#00c9d6] hover:text-slate-950 text-white font-bold text-xs rounded-full transition shadow-xs cursor-pointer"
+              className="px-4 py-2 bg-slate-900 hover:bg-[#00c9d6] hover:text-slate-950 text-white font-bold text-xs rounded-xl transition shadow-xs cursor-pointer"
             >
               Reset Search
             </button>
@@ -185,50 +185,23 @@ export default function FaqsPage() {
               const isOpen = openIndex === idx;
               return (
                 <div
-                  key={idx}
-                  className={`bg-white rounded-2xl border transition-all duration-300 overflow-hidden ${
-                    isOpen
-                      ? 'border-[#00c9d6] shadow-[0_8px_24px_rgba(0,201,214,0.12)]'
-                      : 'border-slate-200/90 hover:border-slate-300 shadow-xs'
-                  }`}
+                  key={faq.id || idx}
+                  className="bg-white border border-slate-200/90 rounded-2xl overflow-hidden shadow-xs hover:shadow-sm transition-all duration-200"
                 >
                   <button
-                    type="button"
                     onClick={() => toggleFaq(idx)}
-                    className="w-full p-4 sm:p-5 text-left flex items-center justify-between gap-3 cursor-pointer focus:outline-none select-none"
-                    aria-expanded={isOpen}
+                    className="w-full px-5 py-4 text-left flex items-center justify-between gap-4 cursor-pointer border-none bg-transparent hover:bg-slate-50/50 transition-colors"
                   >
-                    <div className="flex items-center gap-3.5 min-w-0">
-                      <div
-                        className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all duration-300 ${
-                          isOpen
-                            ? 'bg-[#00c9d6] text-slate-950 shadow-sm'
-                            : 'bg-slate-100 text-slate-500'
-                        }`}
-                      >
-                        <HelpCircle className="w-4.5 h-4.5" />
-                      </div>
-                      <span className="font-bold text-sm sm:text-base text-slate-900 leading-snug">
-                        {faq.question}
-                      </span>
-                    </div>
-
-                    <div
-                      className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 transition-all duration-300 ${
-                        isOpen
-                          ? 'rotate-180 bg-slate-900 text-[#00c9d6]'
-                          : 'bg-slate-100 text-slate-400 hover:bg-slate-200'
-                      }`}
-                    >
-                      <ChevronDown className="w-4 h-4" />
-                    </div>
+                    <span className="font-bold text-slate-900 text-sm sm:text-base leading-snug">
+                      {faq.question}
+                    </span>
+                    <span className="shrink-0 w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 group-hover:text-slate-900 transition-colors">
+                      {isOpen ? <Minus className="w-4 h-4 text-[#00c9d6]" /> : <Plus className="w-4 h-4" />}
+                    </span>
                   </button>
-
                   {isOpen && (
-                    <div className="px-4 pb-4 sm:px-5 sm:pb-5 pt-0 border-t border-slate-100 bg-slate-50/60 rounded-b-2xl transition-all duration-300">
-                      <p className="text-slate-600 font-normal leading-relaxed text-xs sm:text-sm pt-3 sm:pt-4 pl-0 sm:pl-12">
-                        {faq.answer}
-                      </p>
+                    <div className="px-5 pb-5 pt-1 text-slate-600 text-xs sm:text-sm leading-relaxed border-t border-slate-100 font-medium animate-fade-in">
+                      {faq.answer}
                     </div>
                   )}
                 </div>
@@ -237,11 +210,10 @@ export default function FaqsPage() {
           </div>
         )}
 
-        {/* Contact Support Banner */}
-        <div className="mt-10 sm:mt-14 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-5 text-center sm:text-left relative overflow-hidden">
+        {/* CTA Card */}
+        <div className="mt-12 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-3xl p-6 sm:p-8 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative overflow-hidden shadow-xl border border-slate-700/50">
           <div className="absolute right-0 top-0 w-48 h-48 bg-[#00c9d6]/10 rounded-full blur-2xl pointer-events-none" />
-          
-          <div className="space-y-1.5 z-10">
+          <div className="space-y-1 z-10">
             <h3 className="text-lg sm:text-xl font-bold tracking-tight text-white flex items-center justify-center sm:justify-start gap-2">
               <MessageSquare className="w-5 h-5 text-[#00c9d6]" /> Still have questions?
             </h3>
@@ -252,7 +224,7 @@ export default function FaqsPage() {
 
           <button
             onClick={() => navigate('/#inquiry')}
-            className="z-10 shrink-0 px-6 py-3 bg-[#00c9d6] hover:bg-[#00b2be] text-slate-950 font-bold text-xs sm:text-sm rounded-full transition shadow-md hover:shadow-lg flex items-center gap-2 cursor-pointer whitespace-nowrap hover-scale-btn"
+            className="z-10 shrink-0 px-6 py-3 bg-[#00c9d6] hover:bg-[#00b2be] text-slate-950 font-bold text-xs sm:text-sm rounded-xl transition shadow-md hover:shadow-lg flex items-center gap-2 cursor-pointer whitespace-nowrap hover-scale-btn"
           >
             Contact Support Desk <ArrowRight className="w-4 h-4" />
           </button>

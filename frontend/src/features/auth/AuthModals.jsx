@@ -247,7 +247,7 @@ export default function AuthModals({ isOpen, onClose }) {
                   <p className="text-sm text-zinc-800 italic leading-relaxed">"{rejectionReason}"</p>
                 </div>
               </div>
-              <button onClick={() => setRejectionReason(null)} className="w-full py-3.5 bg-[#0f172a] hover:bg-[#1e293b] text-white font-semibold text-sm rounded-full transition-all cursor-pointer border border-[#00e5ff]/30">
+              <button onClick={() => setRejectionReason(null)} className="w-full py-3.5 bg-[#0f172a] hover:bg-[#1e293b] text-white font-semibold text-sm rounded-xl transition-all cursor-pointer border border-[#00e5ff]/30">
                 Return to Login
               </button>
             </div>
@@ -320,7 +320,7 @@ export default function AuthModals({ isOpen, onClose }) {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full py-3.5 min-h-[48px] bg-zinc-900 hover:bg-zinc-800 text-white font-semibold text-sm rounded-full transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-sm"
+                  className="w-full py-3.5 min-h-[48px] bg-zinc-900 hover:bg-zinc-800 text-white font-semibold text-sm rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-sm"
                 >
                   {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <span>{!isOtpSent ? 'Send OTP via WhatsApp' : 'Verify & Sign In'}</span>}
                 </button>

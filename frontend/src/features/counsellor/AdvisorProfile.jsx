@@ -123,7 +123,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
         <button
           type="button"
           onClick={onBack}
-          className="min-h-[44px] px-6 py-2.5 bg-[#0f172a] hover:bg-[#1e293b] text-white rounded-full font-bold text-xs uppercase tracking-widest transition-all shadow-sm border border-[#06b6d4]/30 cursor-pointer"
+          className="min-h-[44px] px-6 py-2.5 bg-[#0f172a] hover:bg-[#1e293b] text-white rounded-xl font-bold text-xs uppercase tracking-widest transition-all shadow-sm border border-[#06b6d4]/30 cursor-pointer"
         >
           Go Back to Directory
         </button>

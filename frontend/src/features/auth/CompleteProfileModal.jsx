@@ -263,7 +263,7 @@ export default function CompleteProfileModal({ isOpen, onSuccess }) {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full py-3.5 min-h-[48px] bg-zinc-900 hover:bg-zinc-800 text-white font-semibold hover-scale-btn text-sm rounded-full transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-sm"
+                className="w-full py-3.5 min-h-[48px] bg-zinc-900 hover:bg-zinc-800 text-white font-semibold hover-scale-btn text-sm rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-sm"
               >
                 {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Save & Continue to Payment'}
               </button>

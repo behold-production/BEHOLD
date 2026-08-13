@@ -624,7 +624,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             appliedDiscount: appliedDiscount
                                                         });
                                                     }}
-                                                    className="w-full sm:w-auto px-5 py-3 bg-white border border-slate-200 text-slate-800 hover:bg-slate-50 text-xs font-semibold rounded-full transition cursor-pointer flex items-center justify-center gap-2 shadow-xs"
+                                                    className="w-full sm:w-auto px-5 py-3 bg-white border border-slate-200 text-slate-800 hover:bg-slate-50 text-xs font-semibold rounded-xl transition cursor-pointer flex items-center justify-center gap-2 shadow-xs"
                                                 >
                                                     <FileDown className="w-4 h-4 text-slate-500" />
                                                     {downloadingPdf ? 'Generating PDF...' : 'Download Receipt'}
@@ -635,7 +635,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                     onClick={() => {
                                                         window.location.href = '/profile?tab=booked';
                                                     }}
-                                                    className="w-full sm:w-auto px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-full transition cursor-pointer text-center shadow-sm"
+                                                    className="w-full sm:w-auto px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-xl transition cursor-pointer text-center shadow-sm"
                                                 >
                                                     View My Sessions
                                                 </button>

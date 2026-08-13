@@ -103,7 +103,7 @@ const BlogPostDetail = () => {
             <button
               type="button"
               onClick={handleBack}
-              className="px-7 py-3 rounded-full bg-[#0f172a] hover:bg-[#1e293b] text-white font-semibold text-xs uppercase tracking-widest cursor-pointer border border-[#00e5ff]/30 shadow-xs transition-all"
+              className="px-7 py-3 rounded-xl bg-[#0f172a] hover:bg-[#1e293b] text-white font-semibold text-xs uppercase tracking-widest cursor-pointer border border-[#00e5ff]/30 shadow-xs transition-all"
             >
               Back to All Articles
             </button>
