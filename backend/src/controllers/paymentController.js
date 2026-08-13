@@ -54,7 +54,7 @@ async function dispatchBookingNotifications(appointment, reqBody = {}, fallbackC
 
     // Send WhatsApp alert to Student/User ONLY
     if (targetUserPhone) {
-      const apptDuration = counsellor?.hours ? `${counsellor.hours} Hours Session` : '1 Hour (60 Mins)';
+      const apptDuration = appointment?.duration || reqBody?.duration || reqBody?.bookingDetails?.duration || '1 Hour (60 Mins)';
       const apptBookingId = appointment.id || appointment._id || `app_${Date.now()}`;
       await WhatsAppService.sendBookingAlert(targetUserPhone, 'approved', {
         studentName: sName,

@@ -324,7 +324,7 @@ function _buildBookingPayload(user, counsellor, appointment) {
   const date = appt.date || '—';
   const time = appt.time || '—';
   const mode = appt.mode || 'ONLINE';
-  const duration = appt.duration || (csl.hours ? `${csl.hours} Hours Session` : '1 Hour (60 Mins)');
+  const duration = appt.duration || appt.sessionDuration || '1 Hour (60 Mins)';
   const meetLink = appt.meetLink || '';
 
   const reason = usr.feelingLately || appt.feelingLately || appt.reason || usr.reason || 'General Counselling & Mental Wellbeing';
