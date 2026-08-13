@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Phone, Loader2, KeyRound, RefreshCw } from 'lucide-react';
+import { X, Phone, Loader2, KeyRound, RefreshCw, ArrowLeft } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import ApiService from '../../services/api';
@@ -41,6 +41,17 @@ export default function AuthModals({ isOpen, onClose }) {
     }, 1000);
   }, []);
 
+  const handleModalBack = useCallback(() => {
+    if (isOtpSent) {
+      setIsOtpSent(false);
+      setOtpCode('');
+      clearInterval(timerRef.current);
+      setResendTimer(0);
+      return;
+    }
+    onClose();
+  }, [isOtpSent, onClose]);
+
   // Reset state when modal opens/closes
   useEffect(() => {
     if (isOpen) {
@@ -60,22 +71,34 @@ export default function AuthModals({ isOpen, onClose }) {
     };
   }, [isOpen]);
 
-  // Body scroll lock + Esc to close
+  // Body scroll lock + Esc to close + popstate history back
   useEffect(() => {
     if (!isOpen) return;
+
     document.documentElement.classList.add('no-scroll');
     document.body.classList.add('no-scroll');
+
+    const stateId = `auth_modal_${Date.now()}`;
+    window.history.pushState({ modalState: stateId }, '');
+
     const handleEsc = (e) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') handleModalBack();
     };
+    const handlePopState = () => {
+      handleModalBack();
+    };
+
     document.addEventListener('keydown', handleEsc);
+    window.addEventListener('popstate', handlePopState);
+
     return () => {
       document.documentElement.classList.remove('no-scroll');
       document.body.classList.remove('no-scroll');
       document.removeEventListener('keydown', handleEsc);
+      window.removeEventListener('popstate', handlePopState);
       clearInterval(timerRef.current);
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, handleModalBack]);
 
   if (!isOpen) return null;
 
@@ -183,17 +206,29 @@ export default function AuthModals({ isOpen, onClose }) {
 
           {/* Header */}
           <div className="flex justify-between items-start gap-4 p-6 sm:p-7 border-b border-surface-200">
-            <div className="min-w-0">
-              <h2 id="auth-modal-title" className="text-xl sm:text-2xl font-sans font-semibold tracking-tight text-[#0f172a]">
-                {rejectionReason ? 'Application Rejected' : isOtpSent ? 'Verify OTP' : 'Sign In'}
-              </h2>
-              <p className="text-xs text-surface-500 font-normal mt-1">
-                {rejectionReason
-                  ? 'Your counselor application has been declined.'
-                  : isOtpSent
-                  ? `Code sent to WhatsApp +91 ${otpPhone}`
-                  : 'Enter your WhatsApp number to sign in securely.'}
-              </p>
+            <div className="flex items-center gap-3 min-w-0">
+              {isOtpSent && (
+                <button
+                  type="button"
+                  onClick={handleModalBack}
+                  className="w-9 h-9 shrink-0 bg-surface-100 hover:bg-surface-200 text-[#0f172a] rounded-full transition-colors cursor-pointer flex items-center justify-center border-none"
+                  aria-label="Back to Phone Input"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                </button>
+              )}
+              <div className="min-w-0">
+                <h2 id="auth-modal-title" className="text-xl sm:text-2xl font-sans font-semibold tracking-tight text-[#0f172a]">
+                  {rejectionReason ? 'Application Rejected' : isOtpSent ? 'Verify OTP' : 'Sign In'}
+                </h2>
+                <p className="text-xs text-surface-500 font-normal mt-1">
+                  {rejectionReason
+                    ? 'Your counselor application has been declined.'
+                    : isOtpSent
+                    ? `Code sent to WhatsApp +91 ${otpPhone}`
+                    : 'Enter your WhatsApp number to sign in securely.'}
+                </p>
+              </div>
             </div>
             <button type="button" onClick={onClose} aria-label="Close dialog" className="w-9 h-9 shrink-0 bg-surface-100 hover:bg-surface-200 rounded-full transition-colors cursor-pointer flex items-center justify-center border-none">
               <X className="w-4 h-4 text-[#0f172a]" />

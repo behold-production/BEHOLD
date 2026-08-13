@@ -3,7 +3,7 @@ import { useBookingViewModel } from './useBookingViewModel';
 import DateTimePicker from './DateTimePicker';
 import TimePicker from './TimePicker';
 import BookingAuthModal from './BookingAuthModal';
-import { FileDown, X } from 'lucide-react';
+import { FileDown, X, ArrowLeft } from 'lucide-react';
 import { formatDateString } from '../../utils/dateFormatter';
 import toast from 'react-hot-toast';
 import { ScrollDot } from '../../components/common/BrandDot';
@@ -68,6 +68,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
         selectedAdvisor,
         setSelectedAdvisor,
         setAdvisorConfirmed,
+        advisorConfirmed,
         advisors,
         showAuthModal,
         setShowAuthModal,
@@ -132,16 +133,38 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
     const [clientSearchQuery, setClientSearchQuery] = useState(bookingForm.clientLocationName || '');
     const [advisorPage, setAdvisorPage] = useState(1);
 
-    useEffect(() => {
-        if (isOpen) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = '';
+    const handleModalBack = useCallback(() => {
+        if (bookingStep === 'payment') {
+            handleStepChange('config');
+            return;
         }
+        if (advisorConfirmed && !isAdvisorLocked) {
+            setAdvisorConfirmed(false);
+            return;
+        }
+        onClose();
+    }, [bookingStep, advisorConfirmed, isAdvisorLocked, handleStepChange, setAdvisorConfirmed, onClose]);
+
+    // Handle Browser / Mobile Hardware Back Button (popstate)
+    useEffect(() => {
+        if (!isOpen) return;
+
+        document.body.style.overflow = 'hidden';
+
+        const stateId = `booking_modal_${Date.now()}`;
+        window.history.pushState({ modalState: stateId }, '');
+
+        const handlePopState = () => {
+            handleModalBack();
+        };
+
+        window.addEventListener('popstate', handlePopState);
+
         return () => {
             document.body.style.overflow = '';
+            window.removeEventListener('popstate', handlePopState);
         };
-    }, [isOpen]);
+    }, [isOpen, handleModalBack]);
 
     // Scroll to top when step changes
     useEffect(() => {
@@ -318,13 +341,31 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-0 sm:p-4 bg-black/60 backdrop-blur-md overflow-y-auto overscroll-contain animate-backdrop-in">
             <div id="booking-modal-scroll" ref={scrollContainerRef} className={`relative w-full ${bookingStep === 'success' ? 'max-w-3xl' : 'max-w-7xl'} h-full sm:h-auto sm:max-h-[90vh] bg-white sm:rounded-2xl shadow-2xl overflow-y-auto overflow-x-hidden text-[#0f172a] text-left overscroll-contain animate-modal-in transition-all duration-300`}>
-                {/* Close Button */}
-                <button
-                    onClick={onClose}
-                    className="absolute top-4 right-4 z-10 w-10 h-10 bg-white border border-surface-200 shadow-sm hover:bg-surface-50 rounded-full flex items-center justify-center transition-colors cursor-pointer"
-                >
-                    <X className="w-5 h-5 text-surface-600" />
-                </button>
+                {/* Top Action Bar (Back & Close) */}
+                <div className="sticky top-0 z-30 flex items-center justify-between p-4 bg-white/90 backdrop-blur-md border-b border-surface-200">
+                    {(bookingStep === 'payment' || (advisorConfirmed && !isAdvisorLocked)) ? (
+                        <button
+                            type="button"
+                            onClick={handleModalBack}
+                            className="min-h-[38px] px-4 py-1.5 bg-surface-100 hover:bg-surface-200 text-surface-900 border border-surface-200 rounded-full flex items-center gap-1.5 text-xs font-bold transition-all cursor-pointer shadow-xs"
+                            aria-label="Go Back"
+                        >
+                            <ArrowLeft className="w-4 h-4 text-surface-700" />
+                            <span>Back</span>
+                        </button>
+                    ) : (
+                        <div />
+                    )}
+
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        aria-label="Close Booking"
+                        className="w-9 h-9 bg-surface-100 hover:bg-surface-200 text-surface-700 rounded-full flex items-center justify-center transition-colors cursor-pointer border-none"
+                    >
+                        <X className="w-5 h-5" />
+                    </button>
+                </div>
 
                 <div
                     className="min-h-full py-10 sm:py-12 px-4 sm:px-6 lg:px-8 bg-[#f8fafc]"

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Phone, KeyRound, Loader2, RefreshCw } from 'lucide-react';
+import { X, Phone, KeyRound, Loader2, RefreshCw, ArrowLeft } from 'lucide-react';
 import ApiService from '../../services/api';
 import OtpPinInput from '../../components/common/OtpPinInput';
 
@@ -32,6 +32,17 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
     }, 1000);
   }, []);
 
+  const handleModalBack = useCallback(() => {
+    if (isOtpSent) {
+      setIsOtpSent(false);
+      setOtpCode('');
+      clearInterval(timerRef.current);
+      setResendTimer(0);
+      return;
+    }
+    onClose();
+  }, [isOtpSent, onClose]);
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -48,20 +59,30 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
     return () => { document.body.style.overflow = ''; };
   }, [isOpen, bookingForm]);
 
-  // Body scroll lock + Esc to close
+  // Body scroll lock + Esc to close + popstate history back
   useEffect(() => {
     if (!isOpen) return;
+
     document.documentElement.classList.add('no-scroll');
     document.body.classList.add('no-scroll');
-    const handleEsc = (e) => { if (e.key === 'Escape') onClose(); };
+
+    const stateId = `booking_auth_modal_${Date.now()}`;
+    window.history.pushState({ modalState: stateId }, '');
+
+    const handleEsc = (e) => { if (e.key === 'Escape') handleModalBack(); };
+    const handlePopState = () => { handleModalBack(); };
+
     document.addEventListener('keydown', handleEsc);
+    window.addEventListener('popstate', handlePopState);
+
     return () => {
       document.documentElement.classList.remove('no-scroll');
       document.body.classList.remove('no-scroll');
       document.removeEventListener('keydown', handleEsc);
+      window.removeEventListener('popstate', handlePopState);
       clearInterval(timerRef.current);
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, handleModalBack]);
 
   if (!isOpen) return null;
 
@@ -148,15 +169,27 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
 
           {/* Header */}
           <div className="flex justify-between items-start gap-4 p-6 sm:p-7 border-b border-surface-200">
-            <div className="min-w-0">
-              <h2 id="booking-auth-modal-title" className="text-xl sm:text-2xl font-sans font-semibold tracking-tight text-[#0f172a]">
-                {isOtpSent ? 'Verify OTP' : 'Sign In'}
-              </h2>
-              <p className="text-xs text-surface-500 font-normal mt-1">
-                {isOtpSent
-                  ? `Code sent to WhatsApp +91 ${otpPhone}`
-                  : 'Verify your WhatsApp number to link this booking securely.'}
-              </p>
+            <div className="flex items-center gap-3 min-w-0">
+              {isOtpSent && (
+                <button
+                  type="button"
+                  onClick={handleModalBack}
+                  className="w-9 h-9 shrink-0 bg-surface-100 hover:bg-surface-200 text-[#0f172a] rounded-full transition-colors cursor-pointer flex items-center justify-center border-none"
+                  aria-label="Back to Phone Input"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                </button>
+              )}
+              <div className="min-w-0">
+                <h2 id="booking-auth-modal-title" className="text-xl sm:text-2xl font-sans font-semibold tracking-tight text-[#0f172a]">
+                  {isOtpSent ? 'Verify OTP' : 'Sign In'}
+                </h2>
+                <p className="text-xs text-surface-500 font-normal mt-1">
+                  {isOtpSent
+                    ? `Code sent to WhatsApp +91 ${otpPhone}`
+                    : 'Verify your WhatsApp number to link this booking securely.'}
+                </p>
+              </div>
             </div>
             <button type="button" onClick={onClose} aria-label="Close dialog" className="w-9 h-9 shrink-0 bg-surface-100 hover:bg-surface-200 rounded-full transition-colors cursor-pointer flex items-center justify-center border-none">
               <X className="w-4 h-4 text-[#0f172a]" />
