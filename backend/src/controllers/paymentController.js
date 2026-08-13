@@ -362,7 +362,14 @@ const PaymentController = {
 
       // Awaited notification processing (MUST be completed before res.json)
       try {
-        const targetUserPhone = resolveAnyPhone(user, newAppointment, clientPhone, req.body?.clientPhone);
+        const targetUserPhone = resolveAnyPhone(
+          clientPhone,
+          req.body?.clientPhone,
+          req.body?.phone,
+          newAppointment?.clientPhone,
+          user?.phone,
+          user
+        );
         const targetCounsellorPhone = resolveAnyPhone(counsellor);
 
         const sName = clientName || user?.name || 'Student';
@@ -392,7 +399,19 @@ const PaymentController = {
 
         // Send WhatsApp alert to Student/User ONLY (Psychologists receive Email only)
         if (targetUserPhone) {
-          await WhatsAppService.sendBookingAlert(targetUserPhone, 'approved', { studentName: sName, counsellorName: cName, date, time, mode, meetLink: finalMeetLink, recipientRole: 'user' }).catch((err) => console.error('[WhatsApp User Alert Error]:', err));
+          const apptDuration = counsellor?.hours ? `${counsellor.hours} Hours Session` : '1 Hour (60 Mins)';
+          const apptBookingId = newAppointment?.id || newAppointment?._id || `app_${Date.now()}`;
+          await WhatsAppService.sendBookingAlert(targetUserPhone, 'approved', {
+            studentName: sName,
+            counsellorName: cName,
+            date,
+            time,
+            mode,
+            duration: apptDuration,
+            bookingId: apptBookingId,
+            meetLink: finalMeetLink,
+            recipientRole: 'user'
+          }).catch((err) => console.error('[WhatsApp User Alert Error]:', err));
         }
       } catch (notifErr) {
         console.error('[Background Notification Task Error in verifyPaymentAndBook]:', notifErr);
