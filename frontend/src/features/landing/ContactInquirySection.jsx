@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import ApiService from '../../services/api';
-import { toast } from 'react-hot-toast';
+import ApiService from '../../services/api'; //
+import { toast } from 'react-hot-toast'; //
 import { Send, CheckCircle2 } from 'lucide-react';
 import greyGreenBg from '../../assets/greygreen.png';
 
@@ -8,7 +8,7 @@ export default function ContactInquirySection() {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
@@ -16,7 +16,7 @@ export default function ContactInquirySection() {
       return;
     }
     setLoading(true);
-    try {
+    try { //
       await ApiService.submitInquiry({
         studentName: formData.name,
         email: formData.email,
@@ -27,7 +27,7 @@ export default function ContactInquirySection() {
       setSubmitted(true);
       toast.success('Thank you! We will reach out to you shortly.');
       setFormData({ name: '', email: '', message: '' });
-    } catch (err) {
+    } catch (err) { //
       console.error('Failed to submit contact inquiry', err);
       toast.error(err.message || 'Failed to submit inquiry. Please try again.');
     }

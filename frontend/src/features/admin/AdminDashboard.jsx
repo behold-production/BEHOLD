@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 
-
 import SidebarNav from './admin-dashboard/tabs/SidebarNav';
 import OverviewTab from './admin-dashboard/tabs/OverviewTab';
 import StudentManagementTab from './admin-dashboard/tabs/StudentManagementTab';
@@ -1052,23 +1051,6 @@ const _handleAdminDetectLocation = () => {
  const [isPsyPicUploading, setIsPsyPicUploading] = useState(false);
  const _psyProfilePicRef = React.useRef(null);
 
- // Admin Availability state declarations
- const [adminActiveDays, setAdminActiveDays] = useState({
- 1: true, 2: true, 3: true, 4: true, 5: true, 6: false, 0: false
- });
- const [adminAvailableSlots, setAdminAvailableSlots] = useState([]);
- const [adminAllSlots, setAdminAllSlots] = useState([]);
- const [adminCustomHour, setAdminCustomHour] = useState('09');
- const [adminCustomMinute, setAdminCustomMinute] = useState('00');
- const [adminCustomPeriod, setAdminCustomPeriod] = useState('AM');
- const [adminFromHour, setAdminFromHour] = useState('09');
- const [adminFromMinute, setAdminFromMinute] = useState('00');
- const [adminFromPeriod, setAdminFromPeriod] = useState('AM');
- const [adminToHour, setAdminToHour] = useState('05');
- const [adminToMinute, setAdminToMinute] = useState('00');
- const [adminToPeriod, setAdminToPeriod] = useState('PM');
- const [adminSlotInterval, setAdminSlotInterval] = useState(60);
-
  const [isAddBookingOpen, setIsAddBookingOpen] = useState(false);
  const [isEditBookingOpen, setIsEditBookingOpen] = useState(false);
  const [bookingForm, setBookingForm] = useState({
@@ -1085,7 +1067,7 @@ const _handleAdminDetectLocation = () => {
  const [bookingFormError, setBookingFormError] = useState('');
  const [bookingFormSuccess, setBookingFormSuccess] = useState('');
 
- // View modals states
+ // View modals states (for StudentManagementTab and PsychologistManagementTab)
  const [viewingStudent, setViewingStudent] = useState(null);
  const [viewingPsychologist, setViewingPsychologist] = useState(null);
  const [editingSubAdmin, setEditingSubAdmin] = useState(null);
@@ -1098,100 +1080,6 @@ const _handleAdminDetectLocation = () => {
  const [adminCigiEditingId, setAdminCigiEditingId] = useState(null);
  const [isAdminCigiUploading, setIsAdminCigiUploading] = useState(false);
  const adminCigiFileInputRef = React.useRef(null);
-
- const handleAdminCigiUpload = async (e) => {
- e.preventDefault();
- if (!viewingStudent) return;
- if (!adminCigiFile && !adminCigiEditingId) {
- await showAlert('Please select a file to upload');
- return;
- }
-
- if (adminCigiFile) {
- const allowedExtensions = ['jpg', 'jpeg', 'png', 'pdf'];
- const fileExt = adminCigiFile.name.split('.').pop().toLowerCase();
- if (!allowedExtensions.includes(fileExt)) {
- await showAlert('Only JPG, JPEG, PNG, and PDF files are allowed.');
- return;
- }
- }
-
- setIsAdminCigiUploading(true);
- try {
- const formData = new FormData();
- if (adminCigiFile) {
- formData.append('file', adminCigiFile);
- }
- formData.append('testDate', adminCigiDate);
- formData.append('testTime', adminCigiTime);
- formData.append('note', adminCigiNote);
-
- let res;
- if (adminCigiEditingId) {
- res = await ApiService.adminUpdateCigiResult(viewingStudent.id, adminCigiEditingId, formData);
- } else {
- res = await ApiService.adminUploadCigiResult(viewingStudent.id, formData);
- }
-
- if (res.success) {
- await showAlert(adminCigiEditingId ? 'CIGI result updated successfully' : 'CIGI result uploaded successfully');
-
- // Update local database list
- const updatedUser = res.data;
- setUsersDb(prev => prev.map(u => u.id === updatedUser.id ? { ...u, ...updatedUser } : u));
-
- // Update modal state
- setViewingStudent(prev => prev && prev.id === updatedUser.id ? { ...prev, ...updatedUser } : prev);
-
- // Reset inputs
- setAdminCigiFile(null);
- setAdminCigiDate('');
- setAdminCigiTime('');
- setAdminCigiNote('');
- setAdminCigiEditingId(null);
- if (adminCigiFileInputRef.current) adminCigiFileInputRef.current.value = '';
- }
- } catch (err) {
- await showAlert(err.message || 'Failed to manage CIGI result');
- } finally {
- setIsAdminCigiUploading(false);
- }
- };
-
- const handleAdminCigiDelete = async (resultId) => {
- if (!viewingStudent) return;
- if (!await showConfirm('Are you sure you want to delete this CIGI result?')) return;
- try {
- const res = await ApiService.adminDeleteCigiResult(viewingStudent.id, resultId);
- if (res.success) {
- await showAlert('CIGI result deleted successfully');
- const updatedUser = res.data;
- setUsersDb(prev => prev.map(u => u.id === updatedUser.id ? { ...u, ...updatedUser } : u));
- setViewingStudent(prev => prev && prev.id === updatedUser.id ? { ...prev, ...updatedUser } : prev);
- }
- } catch (err) {
- await showAlert(err.message || 'Failed to delete CIGI result');
- }
- };
-
- const handleAdminStartEditCigi = (result) => {
- setAdminCigiEditingId(result.id);
- setAdminCigiDate(result.testDate || '');
- setAdminCigiTime(result.testTime || '');
- setAdminCigiNote(result.note || '');
- setAdminCigiFile(null);
- if (adminCigiFileInputRef.current) adminCigiFileInputRef.current.value = '';
- };
-
- const handleAdminCancelEditCigi = () => {
- setAdminCigiEditingId(null);
- setAdminCigiDate('');
- setAdminCigiTime('');
- setAdminCigiNote('');
- setAdminCigiFile(null);
- if (adminCigiFileInputRef.current) adminCigiFileInputRef.current.value = '';
- };
-
 
  // Mobile menu state
  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -1207,7 +1095,7 @@ const _handleAdminDetectLocation = () => {
  const [isSavingForm, setIsSavingForm] = useState(false);
  const [selectedBookingIds, setSelectedBookingIds] = useState([]);
 
- const [settingsForm, setSettingsForm] = useState({
+  const [settingsForm, setSettingsForm] = useState({ //
  heroTitle: '',
  heroSub: '',
  whatsapp: '',
@@ -1266,7 +1154,7 @@ const _handleAdminDetectLocation = () => {
  offer6Desc: '',
  sectionOrder: ['counselling-intro', 'process', 'whyChooseUs', 'aptitude', 'counsellors', 'about', 'faq', 'blog', 'inquiry']
  });
- const [settingsSuccess, setSettingsSuccess] = useState('');
+  const [settingsSuccess, setSettingsSuccess] = useState(''); //
 
  // Inquiry notes temporary state
  const [inquiryNotesText, setInquiryNotesText] = useState({});
@@ -1312,7 +1200,7 @@ const _handleAdminDetectLocation = () => {
  return slots;
  };
 
-  const reloadData = async () => {
+  const reloadData = React.useCallback(async () => { //
   if (!user || user?.role?.toUpperCase() !== 'ADMIN') return;
   const hasCache = ApiService.hasCachedData && ApiService.hasCachedData('/admin/users');
   if (usersDb.length === 0 && !hasCache) {
@@ -1430,7 +1318,7 @@ const _handleAdminDetectLocation = () => {
   }, [user]);
 
  // Determine sub-admin permissions
- const isSuperAdmin = user?.role?.toUpperCase() === 'ADMIN';
+  const isSuperAdmin = user?.role?.toUpperCase() === 'ADMIN'; //
  const _p = user?.permissions || [];
 
  // Module-level access (broad) - legacy keys OR any action key in that module
@@ -1443,19 +1331,19 @@ const _handleAdminDetectLocation = () => {
  const hasBlogPermission = isSuperAdmin || _p.includes('MANAGE_BLOGS') || _p.includes('manage_blogs') ||
  ['view_blogs','add_blogs','edit_blogs','delete_blogs','manage_blogs'].some(k => _p.includes(k));
 
- // Granular per-action permission helpers
- const _hasModuleOrAction = (legacyKey, actionKey) =>
- isSuperAdmin || _p.includes(legacyKey) || _p.includes(legacyKey.toLowerCase().replace('manage_', 'manage_')) || _p.includes(actionKey);
+  // Granular per-action permission helpers
+  const _hasModuleOrAction = (legacyKey, actionKey) => //
+    isSuperAdmin || _p.includes(legacyKey) || _p.includes(legacyKey.toLowerCase().replace('manage_', 'manage_')) || _p.includes(actionKey);
 
- const canAddStudents = isSuperAdmin || _p.includes('MANAGE_USERS') || _p.includes('manage_users') || _p.includes('add_students');
- const canEditStudents = isSuperAdmin || _p.includes('MANAGE_USERS') || _p.includes('manage_users') || _p.includes('edit_students');
- const canDeleteStudents = isSuperAdmin || _p.includes('MANAGE_USERS') || _p.includes('manage_users') || _p.includes('delete_students');
- const canAddPsy = isSuperAdmin || _p.includes('MANAGE_PSYCHOLOGISTS') || _p.includes('manage_psychologists') || _p.includes('add_psychologists');
- const canEditPsy = isSuperAdmin || _p.includes('MANAGE_PSYCHOLOGISTS') || _p.includes('manage_psychologists') || _p.includes('edit_psychologists');
- const canDeletePsy = isSuperAdmin || _p.includes('MANAGE_PSYCHOLOGISTS') || _p.includes('manage_psychologists') || _p.includes('delete_psychologists');
- const canAddBookings = isSuperAdmin || _p.includes('MANAGE_BOOKINGS') || _p.includes('manage_bookings') || _p.includes('add_bookings');
- const canEditBookings = isSuperAdmin || _p.includes('MANAGE_BOOKINGS') || _p.includes('manage_bookings') || _p.includes('edit_bookings');
- const canDeleteBookings = isSuperAdmin || _p.includes('MANAGE_BOOKINGS') || _p.includes('manage_bookings') || _p.includes('delete_bookings');
+  const canAddStudents = _hasModuleOrAction('MANAGE_USERS', 'add_students'); //
+  const canEditStudents = _hasModuleOrAction('MANAGE_USERS', 'edit_students'); //
+  const canDeleteStudents = _hasModuleOrAction('MANAGE_USERS', 'delete_students'); //
+  const canAddPsy = _hasModuleOrAction('MANAGE_PSYCHOLOGISTS', 'add_psychologists'); //
+  const canEditPsy = _hasModuleOrAction('MANAGE_PSYCHOLOGISTS', 'edit_psychologists'); //
+  const canDeletePsy = _hasModuleOrAction('MANAGE_PSYCHOLOGISTS', 'delete_psychologists'); //
+  const canAddBookings = _hasModuleOrAction('MANAGE_BOOKINGS', 'add_bookings'); //
+  const canEditBookings = _hasModuleOrAction('MANAGE_BOOKINGS', 'edit_bookings'); //
+  const canDeleteBookings = _hasModuleOrAction('MANAGE_BOOKINGS', 'delete_bookings'); //
 
  // Automatically switch tab if sub-admin doesn't have permission for Overview
  useEffect(() => {
@@ -1498,180 +1386,6 @@ const _handleAdminDetectLocation = () => {
    } finally {
      setIsLoggingIn(false);
    }
- };
-
- // User Actions
- const handleCreateUser = async (e) => {
-   e.preventDefault();
-   if (!hasUserPermission) {
-     setUserFormError("Access Denied: You do not have permission to manage users.");
-     return;
-   }
- setUserFormError('');
- setUserFormSuccess('');
-
- if (!userForm.name.trim() || !userForm.email.trim() || !userForm.password) {
- setUserFormError("All fields are required.");
- return;
- }
-
- setIsSavingForm(true);
- try {
- await ApiService.createAdminUser(
- userForm.name.trim(),
- userForm.email.trim(),
- userForm.password,
- 'user',
- [],
- '',
- {
- phone: userForm.phone,
- schoolName: userForm.schoolName,
- grade: userForm.grade,
- guardianName: userForm.guardianName,
- guardianPhone: userForm.guardianPhone,
- groupCode: userForm.groupCode,
- locationName: userForm.locationName,
- latitude: userForm.latitude,
- longitude: userForm.longitude
- }
- );
- setUserFormSuccess("User created successfully!");
- setUserForm({ id: '', name: '', email: '', password: '', phone: '', schoolName: '', grade: '', guardianName: '', guardianPhone: '', groupCode: '', profilePic: '', locationName: '', latitude: 0, longitude: 0 });
- setUserProfilePicFile(null);
- reloadData();
- setTimeout(() => {
- setIsAddUserOpen(false);
- setUserFormSuccess('');
- }, 1500);
- } catch (err) {
- setUserFormError(err.message || "Failed to create user.");
- } finally {
- setIsSavingForm(false);
- }
- };
-
- const handleOpenAddUser = () => {
- setUserForm({ id: '', name: '', email: '', password: '', phone: '', schoolName: '', grade: '', guardianName: '', guardianPhone: '', groupCode: '', profilePic: '', locationName: '', latitude: 0, longitude: 0 });
- setAdminUserSearchQuery('');
- setAdminUserSearchResults([]);
- setUserProfilePicFile(null);
- setUserFormError('');
- setUserFormSuccess('');
- setIsAddUserOpen(true);
- };
-
- const handleOpenEditUser = (student) => {
- setUserForm({
- id: student.id,
- name: student.name,
- email: student.email,
- password: student.password || '',
- phone: student.phone || '',
- schoolName: student.schoolName || '',
- grade: student.grade || '',
- guardianName: student.guardianName || '',
- guardianPhone: student.guardianPhone || '',
- groupCode: student.groupCode || '',
- profilePic: student.profilePic || student.image || '',
- locationName: student.locationName || '',
- latitude: student.latitude || 0,
- longitude: student.longitude || 0
- });
- setUserProfilePicFile(null);
- setUserFormError('');
- setUserFormSuccess('');
- setIsEditUserOpen(true);
- };
-
- const handleUpdateUser = async (e) => {
- e.preventDefault();
- if (!hasUserPermission) {
- setUserFormError("Access Denied: You do not have permission to manage users.");
- return;
- }
- setUserFormError('');
- setUserFormSuccess('');
-
- if (!userForm.name.trim() || !userForm.email.trim()) {
- setUserFormError("Name and Email are required.");
- return;
- }
-
- setIsSavingForm(true);
- try {
- await ApiService.updateAdminUser(
- userForm.id,
- userForm.name.trim(),
- userForm.email.trim(),
- userForm.password || undefined,
- undefined,
- undefined,
- undefined,
- undefined,
- {
- phone: userForm.phone,
- schoolName: userForm.schoolName,
- grade: userForm.grade,
- guardianName: userForm.guardianName,
- guardianPhone: userForm.guardianPhone,
- groupCode: userForm.groupCode,
- locationName: userForm.locationName,
- latitude: userForm.latitude,
- longitude: userForm.longitude
- }
- );
- if (userProfilePicFile) {
- setIsUserPicUploading(true);
- const fd = new FormData();
- fd.append('profilePic', userProfilePicFile);
- await ApiService.adminUpdateUserProfilePic(userForm.id, fd);
- setIsUserPicUploading(false);
- }
- setUserFormSuccess("User details updated!");
- setUserProfilePicFile(null);
- reloadData();
- setTimeout(() => {
- setIsEditUserOpen(false);
- setUserFormSuccess('');
- }, 1500);
- } catch (err) {
- setIsUserPicUploading(false);
- setUserFormError(err.message || "Failed to update user.");
- } finally {
- setIsSavingForm(false);
- }
- };
-
- const handleDeleteUser = async (userId) => {
- if (!hasUserPermission) {
- await showAlert("Access Denied: You do not have permission to manage users.");
- return;
- }
- if (!await showConfirm("Are you sure you want to delete this account?")) return;
- try {
- await ApiService.deleteAdminUser(userId);
- reloadData();
- } catch (err) {
- await showAlert(err.message || "Failed to delete user.");
- }
- };
-
- const handleGenerateResetToken = async (email) => {
- try {
- const res = await ApiService.request('/auth/forgot-password', {
- method: 'POST',
- body: JSON.stringify({ email })
- });
- if (res.success && res.resetToken) {
- const link = window.location.origin + '/reset-password?token=' + res.resetToken;
- await showPrompt("Password reset link generated. Copy it below to share:", link);
- } else {
- await showAlert(res.message || "Failed to generate token.");
- }
- } catch (err) {
- await showAlert(err.message || "An error occurred.");
- }
  };
 
  // Aptitude Questions Actions
@@ -1784,7 +1498,7 @@ const _handleAdminDetectLocation = () => {
     }
   };
 
- // Psychologist Actions
+  // Psychologist Actions (These are specific to the PsychologistManagementTab, but some helper functions are here)
  const parseAdminTimeToMinutes = (timeStr) => {
  const [time, period] = timeStr.split(' ');
  let [hours, minutes] = time.split(':').map(Number);
@@ -1804,7 +1518,7 @@ const _handleAdminDetectLocation = () => {
  return `${hourStr}:${minStr} ${period}`;
  };
 
- const addAdminTimeRangeSlots = (fromStr, toStr, interval = 60) => {
+  const addAdminTimeRangeSlots = (fromStr, toStr, interval = 60) => { // Used in PsychologistManagementTab
  const fromMins = parseAdminTimeToMinutes(fromStr);
  const toMins = parseAdminTimeToMinutes(toStr);
  if (fromMins >= toMins) {
@@ -1845,12 +1559,12 @@ const _handleAdminDetectLocation = () => {
  setAdminAvailableSlots(prev => [...prev, slotStr]);
  };
 
- const handleRemoveAdminSlot = (slot) => {
+  const handleRemoveAdminSlot = (slot) => { // Used in PsychologistManagementTab
  setAdminAllSlots(prev => prev.filter(s => s !== slot));
  setAdminAvailableSlots(prev => prev.filter(s => s !== slot));
  };
-
- const toggleAdminDay = (dayIndex) => {
+ 
+  const toggleAdminDay = (dayIndex) => { // Used in PsychologistManagementTab
  setAdminActiveDays(prev => ({ ...prev, [dayIndex]: !prev[dayIndex] }));
  };
 
@@ -1925,10 +1639,10 @@ const _handleAdminDetectLocation = () => {
  isTopFive: false,
  isActive: true,
  locationName: '',
- latitude: 0,
- longitude: 0
+        latitude: 0,
+        longitude: 0
  });
- setAdminActiveDays({
+ setAdminActiveDays({ // This state is local to AdminDashboard, but should be local to PsychologistManagementTab
  1: true, 2: true, 3: true, 4: true, 5: true, 6: false, 0: false
  });
  setAdminAvailableSlots([]);
@@ -1965,10 +1679,10 @@ const _handleAdminDetectLocation = () => {
  isTopFive: psy.isTopFive || false,
  isActive: psy.isActive !== false,
  locationName: psy.locationName || '',
- latitude: psy.latitude || 0,
- longitude: psy.longitude || 0
+        latitude: psy.latitude || 0,
+        longitude: psy.longitude || 0
  });
- setAdminSearchQuery(psy.locationName || '');
+ setAdminSearchQuery(psy.locationName || ''); // This state is local to AdminDashboard, but should be local to PsychologistManagementTab
  setAdminSearchResults([]);
  setPsyProfilePicFile(null);
 
@@ -1984,7 +1698,7 @@ const _handleAdminDetectLocation = () => {
  setAdminAllSlots([]);
  }
  } else {
- setAdminActiveDays({
+ setAdminActiveDays({ // This state is local to AdminDashboard, but should be local to PsychologistManagementTab
  1: true, 2: true, 3: true, 4: true, 5: true, 6: false, 0: false
  });
  setAdminAvailableSlots([]);
@@ -2093,7 +1807,7 @@ const _handleAdminDetectLocation = () => {
  }
  };
 
- // Booking Actions
+  // Booking Actions (These are specific to the BookingManagementTab, but some helper functions are here)
   const handleCreateBooking = async (e) => {
     e.preventDefault();
     if (!hasBookingPermission) {
@@ -2291,7 +2005,7 @@ const _handleAdminDetectLocation = () => {
     }
   };
 
- const handleRoleChangeInForm = (roleName) => {
+  const handleRoleChangeInForm = (roleName) => { // Used in SubAdminManagementTab
  setSubAdminForm(prev => ({ ...prev, roleName }));
  const foundRole = rolesDb.find(r => r.name === roleName);
  if (foundRole) {
@@ -2299,7 +2013,7 @@ const _handleAdminDetectLocation = () => {
  }
  };
 
- const handleCreateRole = async (e) => {
+  const handleCreateRole = async (e) => { // Used in SubAdminManagementTab
  e.preventDefault();
  if (!isSuperAdmin) {
  setRoleError("Access Denied: You do not have permission to manage roles.");
@@ -2355,7 +2069,7 @@ const _handleAdminDetectLocation = () => {
  }
  };
 
- const handleDeleteRole = async (role) => {
+  const handleDeleteRole = async (role) => { // Used in SubAdminManagementTab
  if (!isSuperAdmin) {
  await showAlert("Access Denied: You do not have permission to manage roles.");
  return;
@@ -2371,7 +2085,7 @@ const _handleAdminDetectLocation = () => {
  setRoleToDelete(role);
  };
 
- const handleDuplicateRole = (role) => {
+  const handleDuplicateRole = (role) => { // Used in SubAdminManagementTab
  setEditingRoleId(null);
  setNewRoleName(`Copy of ${role.name}`);
  setNewRoleDescription(role.description || '');
@@ -2381,7 +2095,7 @@ const _handleAdminDetectLocation = () => {
  setActiveRoleTab('new_role');
  };
 
- const executeDeleteRole = async (roleId) => {
+  const executeDeleteRole = async (roleId) => { // Used in SubAdminManagementTab
  if (!isSuperAdmin) {
  await showAlert("Access Denied: You do not have permission to manage roles.");
  return;
@@ -2412,7 +2126,7 @@ const _handleAdminDetectLocation = () => {
  }
  };
 
- // Sub-admin creation handler
+  // Sub-admin creation handler (Used in SubAdminManagementTab)
  const handleCreateSubAdmin = async (e) => {
  e.preventDefault();
  if (!isSuperAdmin) {
@@ -2474,7 +2188,7 @@ const _handleAdminDetectLocation = () => {
  }
  };
 
- const togglePermission = (perm) => {
+  const togglePermission = (perm) => { // Used in SubAdminManagementTab
  setSelectedPermissions(prev => {
  if (prev.includes(perm)) {
  return prev.filter(p => p !== perm);
@@ -2484,7 +2198,7 @@ const _handleAdminDetectLocation = () => {
  });
  };
 
- const toggleNewRolePermission = (perm) => {
+  const toggleNewRolePermission = (perm) => { // Used in SubAdminManagementTab
  setNewRolePermissions(prev => {
  const next = { ...prev };
  next[perm] = !next[perm];
@@ -2502,7 +2216,7 @@ const _handleAdminDetectLocation = () => {
  });
  };
 
- const toggleModuleAllPermissions = (moduleId, actionsList, turnOn) => {
+  const toggleModuleAllPermissions = (moduleId, actionsList, turnOn) => { // Used in SubAdminManagementTab
  setNewRolePermissions(prev => {
  const next = { ...prev };
  next[moduleId] = turnOn;
@@ -2517,7 +2231,7 @@ const _handleAdminDetectLocation = () => {
  });
  };
 
- const toggleChildAction = (moduleId, actionId, actionsList) => {
+  const toggleChildAction = (moduleId, actionId, actionsList) => { // Used in SubAdminManagementTab
  setNewRolePermissions(prev => {
  const next = { ...prev };
  next[actionId] = !next[actionId];
@@ -2542,7 +2256,7 @@ const _handleAdminDetectLocation = () => {
  });
  };
 
- const handleEditRoleClick = (role) => {
+  const handleEditRoleClick = (role) => { // Used in SubAdminManagementTab
  setEditingRoleId(role._id || role.id);
  setNewRoleName(role.name);
  setNewRoleDescription(role.description || '');
@@ -2554,7 +2268,7 @@ const _handleAdminDetectLocation = () => {
  setActiveRoleTab('new_role');
  };
 
- const parseStaffDetails = (admin) => {
+  const parseStaffDetails = (admin) => { // Used in SidebarNav and SubAdminManagementTab
  let cleanName = admin.name;
  let roleTitle = admin.customRoleTitle || '';
 
@@ -2633,7 +2347,7 @@ const _handleAdminDetectLocation = () => {
     }
   };
 
- // Student active/suspended status toggle
+  // Student active/suspended status toggle (Used in StudentManagementTab)
  const handleToggleStudentStatus = async (studentId, currentStatus) => {
  if (!hasUserPermission) {
  await showAlert("Access Denied: You do not have permission to manage users.");
@@ -2659,7 +2373,7 @@ const _handleAdminDetectLocation = () => {
  }
  };
 
- // Psychologist verification toggle
+  // Psychologist verification toggle (Used in PsychologistManagementTab)
  const handleTogglePsyVerification = async (psyId, currentVerified) => {
  if (!hasPsyPermission) {
  await showAlert("Access Denied: You do not have permission to verify/unverify psychologists.");
@@ -2673,7 +2387,7 @@ const _handleAdminDetectLocation = () => {
  }
  };
 
- // Toggle Featured status directly from list
+  // Toggle Featured status directly from list (Used in PsychologistManagementTab)
  const handleTogglePsyTopFive = async (psy) => {
  if (!hasPsyPermission) {
  await showAlert("Access Denied: You do not have permission to modify psychologists.");
@@ -2708,7 +2422,7 @@ const _handleAdminDetectLocation = () => {
  }
  };
 
- const handleTogglePsyActiveStatus = async (psy) => {
+  const handleTogglePsyActiveStatus = async (psy) => { // Used in PsychologistManagementTab
  if (!hasPsyPermission) {
  await showAlert("Access Denied: You do not have permission to modify psychologists.");
  return;
@@ -2746,7 +2460,7 @@ const _handleAdminDetectLocation = () => {
  }
  };
 
- // Site Settings save handler
+  // Site Settings save handler (Used in SettingsTab)
   const handleSaveSettings = async (e) => {
     e.preventDefault();
     if (!isSuperAdmin) {
@@ -2895,14 +2609,14 @@ const _handleAdminDetectLocation = () => {
     }
   };
 
- const handleAddPromoCode = () => {
+  const handleAddPromoCode = () => { // Used in SettingsTab
  setSettingsForm(prev => ({
  ...prev,
  promoCodes: [...(prev.promoCodes || []), { code: '', type: 'PERCENTAGE', value: 0, isActive: true }]
  }));
  };
 
- const handleUpdatePromoCode = (index, field, value) => {
+  const handleUpdatePromoCode = (index, field, value) => { // Used in SettingsTab
  setSettingsForm(prev => {
  const newCodes = [...(prev.promoCodes || [])];
  newCodes[index] = { ...newCodes[index], [field]: value };
@@ -2910,14 +2624,14 @@ const _handleAdminDetectLocation = () => {
  });
  };
 
- const handleRemovePromoCode = (index) => {
+  const handleRemovePromoCode = (index) => { // Used in SettingsTab
  setSettingsForm(prev => ({
  ...prev,
  promoCodes: (prev.promoCodes || []).filter((_, i) => i !== index)
  }));
  };
 
- const handleRunSecurityCheck = () => {
+  const handleRunSecurityCheck = () => { // Used in SettingsTab
  if (isScanning) return;
  setIsScanning(true);
  setScanProgress(0);
@@ -2945,7 +2659,7 @@ const _handleAdminDetectLocation = () => {
  };
 
  // Sub-Admin edit permissions - uses the full role-based granular permission system
- const handleOpenEditSubAdmin = (admin) => {
+  const handleOpenEditSubAdmin = (admin) => { // Used in SubAdminManagementTab
  setEditingSubAdmin(admin);
  setEditSubAdminError('');
  setEditSubAdminSuccess('');
@@ -2958,7 +2672,7 @@ const _handleAdminDetectLocation = () => {
  setEditSubAdminPermissionsObj(permsObj);
  };
 
- const handleEditSubAdminRoleChange = (roleName) => {
+  const handleEditSubAdminRoleChange = (roleName) => { // Used in SubAdminManagementTab
  setEditSubAdminRoleName(roleName);
  const foundRole = rolesDb.find(r => r.name === roleName);
  if (foundRole) {
@@ -2970,7 +2684,7 @@ const _handleAdminDetectLocation = () => {
  }
  };
 
- const toggleEditSubAdminModuleAll = (moduleId, actionsList, turnOn) => {
+  const toggleEditSubAdminModuleAll = (moduleId, actionsList, turnOn) => { // Used in SubAdminManagementTab
  setEditSubAdminPermissionsObj(prev => {
  const next = { ...prev };
  next[moduleId] = turnOn;
@@ -2982,7 +2696,7 @@ const _handleAdminDetectLocation = () => {
  });
  };
 
- const toggleEditSubAdminChildAction = (moduleId, actionId, actionsList) => {
+  const toggleEditSubAdminChildAction = (moduleId, actionId, actionsList) => { // Used in SubAdminManagementTab
  setEditSubAdminPermissionsObj(prev => {
  const next = { ...prev };
  next[actionId] = !next[actionId];
@@ -2999,7 +2713,7 @@ const _handleAdminDetectLocation = () => {
  });
  };
 
- const handleSaveSubAdminPermissions = async (e) => {
+  const handleSaveSubAdminPermissions = async (e) => { // Used in SubAdminManagementTab
  e.preventDefault();
  if (!isSuperAdmin) {
  setEditSubAdminError("Access Denied: You do not have permission to manage sub-admins.");
@@ -3039,7 +2753,7 @@ const _handleAdminDetectLocation = () => {
  }
  };
 
- // Inquiry Reply/Notes
+  // Inquiry Reply/Notes (Used in InquiriesTab)
  const handleSaveInquiryNote = async (inqId, noteText) => {
  if (!isSuperAdmin) {
  await showAlert("Access Denied: You do not have permission to manage inquiries.");
@@ -3054,7 +2768,7 @@ const _handleAdminDetectLocation = () => {
  }
  };
 
- const handleBulkClearResolvedInquiries = async () => {
+  const handleBulkClearResolvedInquiries = async () => { // Used in InquiriesTab
  if (!isSuperAdmin) {
  await showAlert("Access Denied: You do not have permission to manage inquiries.");
  return;
@@ -3068,7 +2782,7 @@ const _handleAdminDetectLocation = () => {
  }
  };
 
- // Aptitude results export
+  // Aptitude results export (Used in TestResultsTab and StudentManagementTab)
  const handleExportAptitudeResults = async (res) => {
  const breakdown = Object.entries(res.scores || {})
  .map(([key, val]) => ` - ${key.toUpperCase()}: ${val}%`)
@@ -3079,7 +2793,7 @@ const _handleAdminDetectLocation = () => {
  };
 
 // Bookings Bulk Actions
- const handleToggleSelectBooking = (bookingId) => {
+  const handleToggleSelectBooking = (bookingId) => { // Used in BookingManagementTab
  setSelectedBookingIds(prev =>
  prev.includes(bookingId)
  ? prev.filter(id => id !== bookingId)
@@ -3087,7 +2801,7 @@ const _handleAdminDetectLocation = () => {
  );
  };
 
- const handleBulkBookingStatus = async (status) => {
+  const handleBulkBookingStatus = async (status) => { // Used in BookingManagementTab
     if (!hasBookingPermission) {
       await showAlert("Access Denied: You do not have permission to manage bookings.");
       return;
@@ -3106,7 +2820,7 @@ const _handleAdminDetectLocation = () => {
     }
   };
 
-  const handleBulkDeleteBookings = async () => {
+  const handleBulkDeleteBookings = async () => { // Used in BookingManagementTab
     if (!hasBookingPermission) {
       await showAlert("Access Denied: You do not have permission to manage bookings.");
       return;
@@ -3126,7 +2840,7 @@ const _handleAdminDetectLocation = () => {
     }
   };
 
-  // Test Results Actions
+  // Test Results Actions (Used in TestResultsTab)
   const handleDeleteTestResult = async (resId) => {
     if (!isSuperAdmin) {
       await showAlert("Access Denied: You do not have permission to manage test results.");
@@ -3142,7 +2856,7 @@ const _handleAdminDetectLocation = () => {
     }
   };
 
-  // FAQ Desk Actions
+  // FAQ Desk Actions (Used in FaqsTab)
   const handleCreateFaq = async (e) => {
     e.preventDefault();
     if (!isSuperAdmin) {
@@ -3179,7 +2893,7 @@ const _handleAdminDetectLocation = () => {
     }
   };
 
-  const handleOpenEditFaq = (faq, index) => {
+  const handleOpenEditFaq = (faq, index) => { // Used in FaqsTab
     setFaqForm({
       index,
       question: faq.question,
@@ -3190,7 +2904,7 @@ const _handleAdminDetectLocation = () => {
     setIsEditFaqOpen(true);
   };
 
-  const handleUpdateFaq = async (e) => {
+  const handleUpdateFaq = async (e) => { // Used in FaqsTab
     e.preventDefault();
     if (!isSuperAdmin) {
       setFaqFormError("Access Denied: You do not have permission to manage FAQs.");
@@ -3226,7 +2940,7 @@ const _handleAdminDetectLocation = () => {
     }
   };
 
-  const handleDeleteFaq = async (index) => {
+  const handleDeleteFaq = async (index) => { // Used in FaqsTab
     if (!isSuperAdmin) {
       await showAlert("Access Denied: You do not have permission to manage FAQs.");
       return;
@@ -3244,19 +2958,19 @@ const _handleAdminDetectLocation = () => {
   };
 
  // Filter inquiries
- const filteredInquiries = inquiriesDb.filter(inq =>
+  const filteredInquiries = inquiriesDb.filter(inq => //
  inq.name.toLowerCase().includes(searchInquiry.toLowerCase()) ||
  inq.email.toLowerCase().includes(searchInquiry.toLowerCase()) ||
  inq.message.toLowerCase().includes(searchInquiry.toLowerCase())
  ).sort((a, b) => {
  const aStatus = a.status === 'RESOLVED' ? 1 : 0;
  const bStatus = b.status === 'RESOLVED' ? 1 : 0;
- if (aStatus !== bStatus) return aStatus - bStatus;
- return (b.id || '').localeCompare(a.id || '');
+    if (aStatus !== bStatus) return aStatus - bStatus; //
+    return (b.id || '').localeCompare(a.id || ''); //
  });
 
  // Filter test results
- const filteredTestResults = testResultsDb.filter(res =>
+  const filteredTestResults = testResultsDb.filter(res => //
  res.studentName.toLowerCase().includes(searchTestResult.toLowerCase()) ||
  res.studentEmail.toLowerCase().includes(searchTestResult.toLowerCase()) ||
  res.dominantDomain.toLowerCase().includes(searchTestResult.toLowerCase())
@@ -3400,22 +3114,6 @@ const _handleAdminDetectLocation = () => {
  setRolesDb,
  isDbLoading,
  setIsDbLoading,
- newRoleName,
- setNewRoleName,
- newRoleDescription,
- setNewRoleDescription,
- editingRoleId,
- setEditingRoleId,
- activeRoleTab,
- setActiveRoleTab,
- newRolePermissions,
- setNewRolePermissions,
- roleError,
- setRoleError,
- roleSuccess,
- setRoleSuccess,
- roleToDelete,
- setRoleToDelete,
  searchUser,
  setSearchUser,
  searchPsy,
@@ -3452,26 +3150,8 @@ const _handleAdminDetectLocation = () => {
  setAptitudePage,
  aptitudeLimit,
  setAptitudeLimit,
- isAddFaqOpen,
- setIsAddFaqOpen,
- isEditFaqOpen,
- setIsEditFaqOpen,
- faqForm,
- setFaqForm,
- faqFormError,
- setFaqFormError,
- faqFormSuccess,
- setFaqFormSuccess,
- isAddAptitudeOpen,
- setIsAddAptitudeOpen,
- isEditAptitudeOpen,
- setIsEditAptitudeOpen,
- aptitudeForm,
- setAptitudeForm,
- aptitudeFormError,
- setAptitudeFormError,
- aptitudeFormSuccess,
- setAptitudeFormSuccess,
+ isSavingForm,
+ setIsSavingForm,
  loginEmail,
  setLoginEmail,
  loginPassword,
@@ -3482,114 +3162,8 @@ const _handleAdminDetectLocation = () => {
  setLoginError,
  isLoggingIn,
  setIsLoggingIn,
- subAdminForm,
- setSubAdminForm,
- selectedPermissions,
- setSelectedPermissions,
- subAdminError,
- setSubAdminError,
- subAdminSuccess,
- setSubAdminSuccess,
- isRegistering,
- setIsRegistering,
- isAddUserOpen,
- setIsAddUserOpen,
- isEditUserOpen,
- setIsEditUserOpen,
- userForm,
- setUserForm,
- userFormError,
- setUserFormError,
- userFormSuccess,
- setUserFormSuccess,
- userProfilePicFile,
- setUserProfilePicFile,
- isUserPicUploading,
- setIsUserPicUploading,
- isAddPsyOpen,
- setIsAddPsyOpen,
- isEditPsyOpen,
- setIsEditPsyOpen,
- psyForm,
- setPsyForm,
- psyFormError,
- setPsyFormError,
- psyFormSuccess,
- setPsyFormSuccess,
- psyProfilePicFile,
- setPsyProfilePicFile,
- isPsyPicUploading,
- setIsPsyPicUploading,
- adminActiveDays,
- setAdminActiveDays,
- adminAvailableSlots,
- setAdminAvailableSlots,
- adminAllSlots,
- setAdminAllSlots,
- adminCustomHour,
- setAdminCustomHour,
- adminCustomMinute,
- setAdminCustomMinute,
- adminCustomPeriod,
- setAdminCustomPeriod,
- adminFromHour,
- setAdminFromHour,
- adminFromMinute,
- setAdminFromMinute,
- adminFromPeriod,
- setAdminFromPeriod,
- adminToHour,
- setAdminToHour,
- adminToMinute,
- setAdminToMinute,
- adminToPeriod,
- setAdminToPeriod,
- isAddBookingOpen,
- setIsAddBookingOpen,
- isEditBookingOpen,
- setIsEditBookingOpen,
- bookingForm,
- setBookingForm,
- bookingFormError,
- setBookingFormError,
- bookingFormSuccess,
- setBookingFormSuccess,
- viewingStudent,
- setViewingStudent,
- viewingPsychologist,
- setViewingPsychologist,
- editingSubAdmin,
- setEditingSubAdmin,
- adminCigiFile,
- setAdminCigiFile,
- adminCigiDate,
- setAdminCigiDate,
- adminCigiTime,
- setAdminCigiTime,
- adminCigiNote,
- setAdminCigiNote,
- adminCigiEditingId,
- setAdminCigiEditingId,
- isAdminCigiUploading,
- setIsAdminCigiUploading,
  isMobileMenuOpen,
  setIsMobileMenuOpen,
- editSubAdminRoleName,
- setEditSubAdminRoleName,
- editSubAdminPermissionsObj,
- setEditSubAdminPermissionsObj,
- editSubAdminError,
- setEditSubAdminError,
- editSubAdminSuccess,
- setEditSubAdminSuccess,
- selectedBookingIds,
- setSelectedBookingIds,
- settingsForm,
- setSettingsForm,
- settingsSuccess,
- setSettingsSuccess,
- inquiryNotesText,
- setInquiryNotesText,
  isProfileDrawerOpen,
  setIsProfileDrawerOpen,
  isLogoutConfirmOpen,
@@ -3602,24 +3176,10 @@ const _handleAdminDetectLocation = () => {
  handleEnableNotifications,
  handleTestNotification,
  handleSendAnnouncement,
- handleAdminCigiUpload,
- handleAdminCigiDelete,
- handleAdminStartEditCigi,
- handleAdminCancelEditCigi,
  reloadData,
  getAdvisorSlotsForBookingForm,
  handleNavClick,
  handleAdminLogin,
- handleCreateUser,
- handleOpenAddUser,
- handleOpenEditUser,
- handleUpdateUser,
- handleDeleteUser,
- handleGenerateResetToken,
- handleCreateAptitudeQuestion,
- handleOpenEditAptitudeQuestion,
- handleUpdateAptitudeQuestion,
- handleDeleteAptitudeQuestion,
  parseAdminTimeToMinutes,
  formatAdminMinutesToTime,
  addAdminTimeRangeSlots,
@@ -3635,44 +3195,12 @@ const _handleAdminDetectLocation = () => {
  handleOpenEditBooking,
  handleUpdateBooking,
  handleDeleteBooking,
- handleRoleChangeInForm,
- handleCreateRole,
- handleDeleteRole,
- handleDuplicateRole,
- executeDeleteRole,
- handleCreateSubAdmin,
- togglePermission,
- toggleNewRolePermission,
- toggleModuleAllPermissions,
- toggleChildAction,
- handleEditRoleClick,
  parseStaffDetails,
- handleResolveInquiry,
- handleDeleteInquiry,
  handleToggleStudentStatus,
  handleTogglePsyVerification,
  handleTogglePsyTopFive,
- handleSaveSettings,
- handleAddPromoCode,
- handleUpdatePromoCode,
- handleRemovePromoCode,
- handleRunSecurityCheck,
- handleOpenEditSubAdmin,
- handleEditSubAdminRoleChange,
- toggleEditSubAdminModuleAll,
- toggleEditSubAdminChildAction,
- handleSaveSubAdminPermissions,
- handleSaveInquiryNote,
- handleBulkClearResolvedInquiries,
- handleExportAptitudeResults,
- handleToggleSelectBooking,
- handleBulkBookingStatus,
- handleBulkDeleteBookings,
- handleDeleteTestResult,
- handleCreateFaq,
- handleOpenEditFaq,
- handleUpdateFaq,
- handleDeleteFaq,
+ handleTogglePsyActiveStatus,
+ updatingPsyIds,
  showAlert,
  showConfirm,
  showPrompt,
@@ -3697,9 +3225,6 @@ const _handleAdminDetectLocation = () => {
  canAddPsy,
  canEditPsy,
  canDeletePsy,
- handleTogglePsyActiveStatus,
- updatingPsyIds,
- isSavingSettings,
  studentsList,
  canAddStudents,
  canEditStudents,
@@ -3713,7 +3238,7 @@ const _handleAdminDetectLocation = () => {
  <div className="absolute top-1/4 left-1/3 w-[350px] h-[350px] bg-brand/5 rounded-full blur-3xl pointer-events-none" />
  <div className="absolute bottom-1/3 right-1/4 w-[350px] h-[350px] bg-brand-accent/5 rounded-full blur-3xl pointer-events-none" />
 
- <SidebarNav {...tabProps} />
+ <SidebarNav {...tabProps} isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen} setIsProfileDrawerOpen={setIsProfileDrawerOpen} user={user} isSuperAdmin={isSuperAdmin} parseStaffDetails={parseStaffDetails} handleNavClick={handleNavClick} currentSection={currentSection} logout={logout} isLogoutConfirmOpen={isLogoutConfirmOpen} setIsLogoutConfirmOpen={setIsLogoutConfirmOpen} hasUserPermission={hasUserPermission} hasPsyPermission={hasPsyPermission} hasBookingPermission={hasBookingPermission} hasBlogPermission={hasBlogPermission} />
 
  {/* 2. Main Scrollable Content Area */}
  <div className="flex-1 flex flex-col min-h-0 relative overflow-hidden bg-zinc-955 z-10 lg:z-auto">
@@ -3724,7 +3249,7 @@ const _handleAdminDetectLocation = () => {
  {currentSection === 'psychologists' && hasPsyPermission && <PsychologistManagementTab {...tabProps} />}
  {currentSection === 'subadmins' && isSuperAdmin && <SubAdminManagementTab {...tabProps} />}
  {currentSection === 'bookings' && hasBookingPermission && <BookingManagementTab {...tabProps} />}
- {currentSection === 'inquiries' && isSuperAdmin && <InquiriesTab {...tabProps} />}
+ {currentSection === 'inquiries' && isSuperAdmin && <InquiriesTab {...tabProps} inquiriesDb={inquiriesDb} filteredInquiries={filteredInquiries} searchInquiry={setSearchInquiry} setSearchInquiry={setSearchInquiry} inquiryPage={inquiryPage} setInquiryPage={setInquiryPage} inquiryLimit={inquiryLimit} setInquiryLimit={setInquiryLimit} handleResolveInquiry={handleResolveInquiry} handleDeleteInquiry={handleDeleteInquiry} handleSaveInquiryNote={handleSaveInquiryNote} handleBulkClearResolvedInquiries={handleBulkClearResolvedInquiries} inquiryNotesText={inquiryNotesText} setInquiryNotesText={setInquiryNotesText} />}
  {currentSection === 'testresults' && isSuperAdmin && <TestResultsTab {...tabProps} />}
  {currentSection === 'aptitude' && isSuperAdmin && <AptitudeQuestionsTab {...tabProps} />}
  {currentSection === 'reviews' && isSuperAdmin && <ReviewsTab {...tabProps} />}
@@ -3732,7 +3257,7 @@ const _handleAdminDetectLocation = () => {
  {currentSection === 'blogs' && hasBlogPermission && <BlogManagementTab />}
  {currentSection === 'refunds' && isSuperAdmin && <RefundRequestsTab {...tabProps} />}
  {currentSection === 'trash' && isSuperAdmin && <TrashTab showAlert={showAlert} showConfirm={showConfirm} reloadData={reloadData} />}
- {currentSection === 'settings' && isSuperAdmin && <SettingsTab {...tabProps} />}
+ {currentSection === 'settings' && isSuperAdmin && <SettingsTab {...tabProps} settingsForm={settingsForm} setSettingsForm={setSettingsForm} settingsSuccess={settingsSuccess} setSettingsSuccess={setSettingsSuccess} handleSaveSettings={handleSaveSettings} handleAddPromoCode={handleAddPromoCode} handleUpdatePromoCode={handleUpdatePromoCode} handleRemovePromoCode={handleRemovePromoCode} handleRunSecurityCheck={handleRunSecurityCheck} isSavingSettings={isSavingSettings} scanProgress={scanProgress} scanResults={scanResults} isScanning={isScanning} />}
  {currentSection === 'analytics' && isSuperAdmin && <AnalyticsTab {...tabProps} />}
  {currentSection === 'revenue' && isSuperAdmin && <RevenueTab {...tabProps} />}
  </div>
@@ -3826,7 +3351,7 @@ const _handleAdminDetectLocation = () => {
  </div>
  )}
 
- {/* 3. BOOKING ADD / EDIT MODAL */}
+ {/* 3. BOOKING ADD / EDIT MODAL (Moved to BookingManagementTab) */}
  {(isAddBookingOpen || isEditBookingOpen) && (
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
  <div
@@ -3993,7 +3518,7 @@ const _handleAdminDetectLocation = () => {
  </div>
  )}
 
- {/* 4. FAQ ADD / EDIT MODAL */}
+ {/* 4. FAQ ADD / EDIT MODAL (Moved to FaqsTab) */}
  {(isAddFaqOpen || isEditFaqOpen) && (
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
  <div
@@ -4065,7 +3590,7 @@ const _handleAdminDetectLocation = () => {
  </div>
  )}
 
- {/* 4.5 APTITUDE QUESTION ADD / EDIT MODAL */}
+ {/* 4.5 APTITUDE QUESTION ADD / EDIT MODAL (Moved to AptitudeQuestionsTab) */}
  {(isAddAptitudeOpen || isEditAptitudeOpen) && (
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
  <div
@@ -4196,7 +3721,7 @@ const _handleAdminDetectLocation = () => {
  </div>
  )}
 
- {/* 7. SUB-ADMIN EDIT PERMISSIONS MODAL */}
+ {/* 7. SUB-ADMIN EDIT PERMISSIONS MODAL (Moved to SubAdminManagementTab) */}
  {editingSubAdmin && (() => {
  const { cleanName, roleTitle } = parseStaffDetails(editingSubAdmin);
  return (

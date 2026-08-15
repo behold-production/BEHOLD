@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ApiService from '../../../../services/api';
 import { SkeletonTableRows, PaginationBar } from '../components/SharedAdminUI';
-import { User, ShieldAlert, Award, Trash, Check, Plus, Lock, Settings, KeyRound, BarChart3, LogOut, Search, ShieldCheck, Calendar, Clock, Link, AlertCircle, Edit, Video, UserPlus, MessageSquare, FileSpreadsheet, HelpCircle, X, ChevronRight, ChevronLeft, Mail, Shield, Menu, Brain, Download, FileText, Eye, EyeOff, Bell, Send, Loader2 } from 'lucide-react';
+import { User, Trash, Check, Plus, Lock, Settings, KeyRound, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { formatDateString } from '../utils';
 
 export default function SubAdminManagementTab(props) {
@@ -21,22 +21,22 @@ export default function SubAdminManagementTab(props) {
     handleGenerateResetToken,
     handleDeleteUser,
     parseStaffDetails,
-    isDbLoading = false,
-    isRegistering = false,
-    setIsRegistering
+    isDbLoading = false
   } = props;
 
   const [activeRoleTab, setActiveRoleTab] = useState('roles');
   
   const [newRoleName, setNewRoleName] = useState('');
   const [newRoleDescription, setNewRoleDescription] = useState('');
-  const [newRolePermissions, setNewRolePermissions] = useState({});
+  const [newRolePermissions, setNewRolePermissions] = useState({}); //
   const [roleError, setRoleError] = useState('');
   const [roleSuccess, setRoleSuccess] = useState('');
   const [editingRoleId, setEditingRoleId] = useState(null);
   const [roleToDelete, setRoleToDelete] = useState(null);
 
   const [subAdminForm, setSubAdminForm] = useState({ name: '', email: '', password: '', roleId: '' });
+  const [isRegistering, setIsRegistering] = useState(false);
+
   const [selectedPermissions, setSelectedPermissions] = useState([]);
   const [subAdminError, setSubAdminError] = useState('');
   const [subAdminSuccess, setSubAdminSuccess] = useState('');
@@ -46,8 +46,6 @@ export default function SubAdminManagementTab(props) {
   const [editSubAdminPermissionsObj, setEditSubAdminPermissionsObj] = useState({});
   const [editSubAdminError, setEditSubAdminError] = useState('');
   const [editSubAdminSuccess, setEditSubAdminSuccess] = useState('');
-  const [isSavingForm, setIsSavingForm] = useState(false);
-
 
 
 
@@ -79,7 +77,7 @@ const handleRoleChangeInForm = (roleName) => {
  return;
  }
 
- setIsSavingForm(true);
+  setIsRegistering(true); // Use isRegistering for form submission state
  try {
  const permissions = Object.keys(newRolePermissions).filter(p => newRolePermissions[p]);
  let res;
@@ -116,7 +114,7 @@ const handleRoleChangeInForm = (roleName) => {
  } catch (err) {
  setRoleError(err.message || "An error occurred saving the role.");
  } finally {
- setIsSavingForm(false);
+  setIsRegistering(false);
  }
  };
 
@@ -270,7 +268,7 @@ const handleRoleChangeInForm = (roleName) => {
 
     const permsArray = Object.keys(editSubAdminPermissionsObj).filter(p => editSubAdminPermissionsObj[p]);
 
-    setIsSavingForm(true);
+    setIsRegistering(true); // Use isRegistering for form submission state
     try {
       await ApiService.updateAdminUser(
         editingSubAdmin.id,
@@ -303,8 +301,8 @@ const handleRoleChangeInForm = (roleName) => {
       }, 1000);
     } catch (err) {
       setEditSubAdminError(err.message || 'Failed to save permissions.');
-    } finally {
-      setIsSavingForm(false);
+    } finally { //
+      setIsRegistering(false);
     }
   };
 
@@ -710,7 +708,7 @@ const handleOpenEditSubAdmin = (admin) => {
  <button
  type="submit"
  disabled={isRegistering || isSavingForm}
- className="w-full py-3 bg-brand hover:bg-brand-dark text-zinc-950 font-bold text-sm rounded-full cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
+ className="w-full py-3 bg-brand hover:bg-brand-dark text-zinc-950 font-bold text-sm rounded-full cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed" //
  >
  {isRegistering || isSavingForm ? (
  <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-955" />
@@ -977,7 +975,7 @@ const handleOpenEditSubAdmin = (admin) => {
  </button>
  <button
  type="submit"
- disabled={isSavingForm}
+ disabled={isRegistering} // Use isRegistering for form submission state
  className="px-6 py-2.5 bg-brand hover:bg-brand-dark text-zinc-950 font-bold text-sm rounded-full cursor-pointer transition shadow-md flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
  >
  {isSavingForm ? (

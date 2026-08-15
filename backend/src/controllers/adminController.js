@@ -313,14 +313,14 @@ If you have questions or would like to reapply with updated information, please 
           },
           counsellor: counsellor
             ? {
-                name: counsellor.name,
-                email: counsellor.email,
-                phone: counsellor.phone,
-                title: counsellor.title,
-                education: counsellor.education,
-                specialties: counsellor.specialties,
-                qualifications: counsellor.qualifications
-              }
+              name: counsellor.name,
+              email: counsellor.email,
+              phone: counsellor.phone,
+              title: counsellor.title,
+              education: counsellor.education,
+              specialties: counsellor.specialties,
+              qualifications: counsellor.qualifications
+            }
             : null
         };
       });
@@ -853,7 +853,7 @@ If you have questions or would like to reapply with updated information, please 
       // Send WhatsApp Notification if status changed
       if (updates.isActive !== undefined && updated.phone) {
         const WhatsAppService = require('../services/whatsappService');
-        const msg = updates.isActive 
+        const msg = updates.isActive
           ? `Congratulations ${updated.name}! Your counsellor profile has been Activated by the admin team.`
           : `Notice: Your counsellor profile has been Deactivated. Please contact support.`;
         WhatsAppService.sendNotification(updated.phone, msg).catch(err => console.error(err));
@@ -1043,7 +1043,7 @@ If you have questions or would like to reapply with updated information, please 
   async purgeExpiredTrash(req, res, next) {
     try {
       const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).getTime();
-      
+
       const counsellors = await StorageService.findAll('counsellors');
       const users = await StorageService.findAll('users');
       const appointments = await StorageService.findAll('appointments');
@@ -1730,7 +1730,7 @@ If you have questions or would like to reapply with updated information, please 
       if (note !== undefined) targetResult.note = note;
 
       Cigis[resultIndex] = targetResult;
-      
+
       const updated = await StorageService.update('users', userId, { cigiResults: Cigis });
 
       const { password, ...userData } = updated || user;
@@ -1773,7 +1773,7 @@ If you have questions or would like to reapply with updated information, please 
       }
 
       Cigis.splice(resultIndex, 1);
-      
+
       const updated = await StorageService.update('users', userId, { cigiResults: Cigis });
 
       const { password, ...userData } = updated || user;

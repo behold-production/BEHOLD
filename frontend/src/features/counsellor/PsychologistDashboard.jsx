@@ -33,7 +33,7 @@ import toast from 'react-hot-toast';
 
 export default function PsychologistDashboard({ setView: _setView }) {
  const { user, login, register, logout, isLoading, updateUser } = useAuth();
- const { showPrompt } = useCustomDialog();
+ const { showPrompt } = useCustomDialog(); //
 
  const [currentSection, setCurrentSection] = useState('overview'); // overview, profile, availability, bookings
  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -117,7 +117,7 @@ export default function PsychologistDashboard({ setView: _setView }) {
  const [customMinute, setCustomMinute] = useState('00');
  const [customPeriod, setCustomPeriod] = useState('AM');
  const [slotInterval, setSlotInterval] = useState(60);
- const setSlotError = (msg) => { if (msg && !msg.includes('Status:')) import('react-hot-toast').then(mod => mod.toast.error(msg)) };
+ const setSlotError = (msg) => { if (msg && !msg.includes('Status:')) import('react-hot-toast').then(mod => mod.toast.error(msg)) }; //
 
 
  // Input meeting link state per booking
@@ -176,7 +176,7 @@ export default function PsychologistDashboard({ setView: _setView }) {
  const [regCustomHour, setRegCustomHour] = useState('09');
  const [regCustomMinute, setRegCustomMinute] = useState('00');
  const [regCustomPeriod, setRegCustomPeriod] = useState('AM');
- const setRegSlotError = (msg) => { if (msg && !msg.includes('Status:')) import('react-hot-toast').then(mod => mod.toast.error(msg)) };
+ const setRegSlotError = (msg) => { if (msg && !msg.includes('Status:')) import('react-hot-toast').then(mod => mod.toast.error(msg)) }; //
 
  // Availability time range state
  const [fromHour, setFromHour] = useState('09');
@@ -202,7 +202,7 @@ export default function PsychologistDashboard({ setView: _setView }) {
  const handleCounsellorAvatarUpload = async (file) => {
  if (!file) return;
  const allowed = ['image/jpeg', 'image/jpg', 'image/png'];
- if (!allowed.includes(file.type)) {
+ if (!allowed.includes(file.type)) { //
  import('react-hot-toast').then(mod => mod.toast.error('Only JPG/PNG images are allowed for profile picture.'));
  return;
  }
@@ -211,7 +211,7 @@ export default function PsychologistDashboard({ setView: _setView }) {
  const fd = new FormData();
  fd.append('profilePic', file);
  const res = await ApiService.updateCounsellorProfilePic(fd);
- if (res.success) {
+ if (res.success) { //
  import('react-hot-toast').then(mod => mod.toast.success('Profile picture updated!'));
  if (updateUser && user && res.data) updateUser({ ...user, profilePic: res.data.profilePic });
  }
@@ -227,7 +227,7 @@ export default function PsychologistDashboard({ setView: _setView }) {
  const loadBookingsData = useCallback(async (silent = false) => {
  try {
  const isCounsellor = user && (user?.role?.toUpperCase() === 'PSYCHOLOGIST' || user?.role?.toUpperCase() === 'COUNSELLOR');
- const hasToken = !!localStorage.getItem('behold_token');
+ const hasToken = !!localStorage.getItem('behold_token'); //
  if (!isCounsellor || !hasToken) return;
  if (!silent) setIsLoadingData(true);
 
@@ -238,7 +238,7 @@ export default function PsychologistDashboard({ setView: _setView }) {
  ]);
 
  // Load profile
- if (profileRes.success && profileRes.data) {
+ if (profileRes.success && profileRes.data) { //
  const c = profileRes.data;
  setCounsellorStatus(c.status || 'PENDING');
  setCounsellorRejectionReason(c.rejectionReason || '');
@@ -271,7 +271,7 @@ export default function PsychologistDashboard({ setView: _setView }) {
  });
 
  // Load availability
- if (c.availability) {
+ if (c.availability) { //
  const avail = c.availability;
  if (avail.activeDays) {
    setActiveDays(avail.activeDays);
@@ -293,7 +293,7 @@ export default function PsychologistDashboard({ setView: _setView }) {
  }
  }
 
- // Load bookings
+ // Load bookings //
  if (bookingsRes.success && bookingsRes.data) {
  const list = bookingsRes.data;
  const myBookings = list.map(b => ({
@@ -331,7 +331,7 @@ export default function PsychologistDashboard({ setView: _setView }) {
  }
  }, [user]);
 
- const downloadDiagnosticPDF = async (booking) => {
+  const downloadDiagnosticPDF = async (booking) => { //
  try {
  const doc = new jsPDF({
  orientation: 'portrait',
@@ -348,7 +348,7 @@ export default function PsychologistDashboard({ setView: _setView }) {
  doc.setFont('Helvetica', 'bold');
  doc.setFontSize(22);
  doc.setTextColor(15, 23, 42); // Slate-900
- doc.text('BEHOLD.', 20, 25);
+ doc.text('BEHOLD.', 20, 25); //
 
  doc.setFontSize(9);
  doc.setFont('Helvetica', 'normal');
@@ -358,7 +358,7 @@ export default function PsychologistDashboard({ setView: _setView }) {
  // Document Type Tag
  doc.setFillColor(240, 253, 250); // Light teal bg
  doc.roundedRect(138, 18, 52, 11, 2, 2, 'F');
- doc.setFont('Helvetica', 'bold');
+ doc.setFont('Helvetica', 'bold'); //
  doc.setFontSize(9);
  doc.setTextColor(13, 148, 136); // Teal text
  doc.text('CLINICAL REPORT', 144, 25);

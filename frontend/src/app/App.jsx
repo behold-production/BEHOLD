@@ -1,6 +1,6 @@
 import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { Routes, Route, Navigate, useNavigate, useLocation, useParams } from 'react-router-dom';
-import { MessageCircle, X, Download, ShieldAlert, Eye, EyeOff } from 'lucide-react';
+import { MessageCircle, X, Download, ShieldAlert, Eye, EyeOff } from 'lucide-react'; //
 import { Toaster, useToasterStore, toast } from 'react-hot-toast';
 import Navbar from '../components/common/Navbar';
 import BrandIcon from '../components/common/BrandIcon';
@@ -21,7 +21,7 @@ import ContactInquirySection from '../features/landing/ContactInquirySection';
 import globalBg from '../assets/greygreen.png';
 import globalBgTexture from '../assets/greygreen.png';
 
-function lazyWithRetry(importFn) {
+function lazyWithRetry(importFn) { //
   return lazy(() =>
     importFn().catch((error) => {
       const isChunkLoadFailed = error.message && (
@@ -56,7 +56,7 @@ import BlogSection from '../features/landing/BlogSection';
 import { useAuth } from '../context/AuthContext';
 import ApiService from '../services/api';
 import { requestNotificationPermission, syncAndNotifyLocal } from '../services/notificationHelper';
-
+ 
 function ToastLimitManager() {
   const { toasts } = useToasterStore();
   useEffect(() => {
@@ -68,7 +68,7 @@ function ToastLimitManager() {
   return null;
 }
 
-function AdvisorProfileWrapper({ handleBookTherapist, setPendingScrollSection }) {
+function AdvisorProfileWrapper({ handleBookTherapist, setPendingScrollSection }) { //
   const { id } = useParams();
   const navigate = useNavigate();
   return (
@@ -83,7 +83,7 @@ function AdvisorProfileWrapper({ handleBookTherapist, setPendingScrollSection })
   );
 }
 
-function UnauthorizedFallback({ roleRequired }) {
+function UnauthorizedFallback({ roleRequired }) { //
   const navigate = useNavigate();
   const { login, logout } = useAuth();
   const [email, setEmail] = useState('');
@@ -92,7 +92,7 @@ function UnauthorizedFallback({ roleRequired }) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (e) => {
+  const handleLogin = async (e) => { //
     e.preventDefault();
     setError('');
 
@@ -101,7 +101,7 @@ function UnauthorizedFallback({ roleRequired }) {
       return;
     }
 
-    setLoading(true);
+    setLoading(true); //
     try {
       const loggedUser = await login(email, password, 'admin');
       if (loggedUser) {
@@ -113,7 +113,7 @@ function UnauthorizedFallback({ roleRequired }) {
           navigate('/admin');
         }
       }
-    } catch (err) {
+    } catch (err) { //
       setError(err.message || 'Invalid email or password.');
       logout();
     }
@@ -122,7 +122,7 @@ function UnauthorizedFallback({ roleRequired }) {
 
   return (
     <div className='min-h-screen bg-[#030712] flex flex-col items-center justify-center text-white px-4 relative overflow-hidden text-left'>
-      {/* Ambient background glows */}
+      {/* Ambient background glows */} {/* */}
       <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[140px] opacity-10 pointer-events-none'
         style={{ background: 'radial-gradient(circle at 35% 45%, rgba(0, 229, 255, 0.08), transparent 50%), radial-gradient(circle at 65% 55%, rgba(99, 102, 241, 0.05), transparent 50%)' }} />
 
@@ -136,7 +136,7 @@ function UnauthorizedFallback({ roleRequired }) {
         </p>
       </div>
 
-      <div className='relative z-10 w-full max-w-[420px] bg-[#0c1424]/95 backdrop-blur-xl border border-slate-800/80 rounded-lg shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-300'>
+      <div className='relative z-10 w-full max-w-[420px] bg-[#0c1424]/95 backdrop-blur-xl border border-slate-800/80 rounded-lg shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-300'> {/* */}
         <div className='p-8'>
           <div>
             <h2 className='text-lg font-semibold text-white text-left font-header'>
@@ -146,7 +146,7 @@ function UnauthorizedFallback({ roleRequired }) {
               Security clearance required for system administration.
             </p>
 
-            {error && (
+            {error && ( //
               <div className='mb-5 p-3.5 bg-red-955/30 border border-red-900/50 rounded-lg text-red-200 text-xs font-medium text-left'>
                 {error}
               </div>
@@ -157,7 +157,7 @@ function UnauthorizedFallback({ roleRequired }) {
                 <label className='block text-xs font-medium text-slate-400 mb-2'>
                   Email Address
                 </label>
-                <input
+                <input //
                   type='email'
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -171,7 +171,7 @@ function UnauthorizedFallback({ roleRequired }) {
                 <label className='block text-xs font-medium text-slate-400 mb-2'>
                   Password
                 </label>
-                <div className='relative'>
+                <div className='relative'> {/* */}
                   <input
                     type={showPassword ? 'text' : 'password'}
                     value={password}
@@ -189,7 +189,7 @@ function UnauthorizedFallback({ roleRequired }) {
                   </button>
                 </div>
               </div>
-
+ 
               <div className='pt-2 flex flex-col gap-3'>
                 <button
                   type='submit'
@@ -201,7 +201,7 @@ function UnauthorizedFallback({ roleRequired }) {
                   ) : (
                     'Enter Admin Console'
                   )}
-                </button>
+                </button> {/* */}
 
                 <button
                   type='button'
@@ -253,7 +253,7 @@ export default function App() {
     return defaultSettings;
   });
   const [activeDocType, setActiveDocType] = useState(null); // 'terms' or 'privacy'
-
+ 
   const loadSettings = () => {
     try {
       const stored = localStorage.getItem('behold_site_settings');
@@ -276,7 +276,7 @@ export default function App() {
           setSiteSettings(prev => ({
             ...prev,
             ...parsed
-          }));
+          })); //
           localStorage.setItem('behold_site_settings', JSON.stringify(parsed));
         }
       } catch (err) {
@@ -288,7 +288,7 @@ export default function App() {
     const handleSettingsUpdate = (e) => {
       if (e.detail) {
         setSiteSettings(prev => ({
-          ...prev,
+          ...prev, //
           ...e.detail
         }));
         localStorage.setItem('behold_site_settings', JSON.stringify(e.detail));
@@ -312,7 +312,7 @@ export default function App() {
       window.removeEventListener('storage_update', handleStorageChange);
       window.removeEventListener('behold_settings_updated', handleSettingsUpdate);
     };
-  }, []);
+  }, []); //
 
   const { user, isLoading } = useAuth();
   const navigate = useNavigate();
@@ -321,7 +321,7 @@ export default function App() {
   // Setup global SPA navigate helper for legacy or external components
   useEffect(() => {
     window.spaNavigate = (path) => {
-      if (path) navigate(path);
+      if (path) navigate(path); //
     };
   }, [navigate]);
 
@@ -329,7 +329,7 @@ export default function App() {
   useEffect(() => {
     if (!user || !user.id) return;
 
-    // 1. Request notification permission on login/first active session
+    // 1. Request notification permission on login/first active session //
     requestNotificationPermission();
 
     // 2. Initial sync
@@ -341,7 +341,7 @@ export default function App() {
     }, 15000);
 
     return () => clearInterval(interval);
-  }, [user]);
+  }, [user]); //
 
   // Role-based routing and strict portal isolation flow
   useEffect(() => {
@@ -381,7 +381,7 @@ export default function App() {
         setTimeout(() => setIsAuthModalOpen(true), 0);
       }
     }
-  }, [user, isLoading, location.pathname, navigate]);
+  }, [user, isLoading, location.pathname, navigate]); //
 
   // Handle pending scrolls once landing or booking view is active
   useEffect(() => {
@@ -391,7 +391,7 @@ export default function App() {
       let targetId = pendingScrollSection === 'aptitude' ? 'cdat' : pendingScrollSection;
       let attempts = 0;
       const tryScroll = () => {
-        const element = document.getElementById(targetId);
+        const element = document.getElementById(targetId); //
         if (element) {
           const offset = 80;
           const bodyRect = document.body.getBoundingClientRect().top;
@@ -424,7 +424,7 @@ export default function App() {
         if (targetId === 'faq') targetId = 'faqs';
         if (targetId === 'whyChooseUs') targetId = 'why-choose-us';
 
-        const element = document.getElementById(targetId);
+        const element = document.getElementById(targetId); //
         if (element) {
           const offset = 80;
           const bodyRect = document.body.getBoundingClientRect().top;
@@ -439,7 +439,7 @@ export default function App() {
         }
       };
       setTimeout(tryScroll, 100);
-    }
+    } //
   }, [location.pathname, pendingScrollSection]);
 
   const handleBookTherapist = (advisorId) => {
@@ -447,7 +447,7 @@ export default function App() {
     setIsBookingModalOpen(true);
   };
 
-  const handleFinishTest = async (dominantDomain, scores) => {
+  const handleFinishTest = async (dominantDomain, scores) => { //
     setTestProfile({
       dominantDomain,
       scores,
@@ -456,7 +456,7 @@ export default function App() {
         return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
       })()
     });
-
+ 
     try {
       await ApiService.saveTestResult({
         userId: user ? user.id : 'guest',
@@ -468,7 +468,7 @@ export default function App() {
           const d = new Date();
           return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
         })()
-      });
+      }); //
     } catch (err) {
       console.error('Failed to save test results', err);
     }
@@ -476,7 +476,7 @@ export default function App() {
     navigateToSection('inquiry');
   };
 
-  const navigateToSection = (sectionId) => {
+  const navigateToSection = (sectionId) => { //
     if (!sectionId) return;
 
     if (sectionId === 'booking' || sectionId === '/booking') {
@@ -484,7 +484,7 @@ export default function App() {
         navigate('/booking');
       }
       window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
+      return; //
     }
 
     if (sectionId === 'services' || sectionId === 'aptitude') {
@@ -496,7 +496,7 @@ export default function App() {
           const bodyRect = document.body.getBoundingClientRect().top;
           const elementRect = el.getBoundingClientRect().top;
           window.scrollTo({ top: elementRect - bodyRect - offset, behavior: 'smooth' });
-          return;
+          return; //
         }
       } else {
         setPendingScrollSection(sectionId);
@@ -509,7 +509,7 @@ export default function App() {
       if (location.pathname === '/') {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
-        setPendingScrollSection('top');
+        setPendingScrollSection('top'); //
         navigate('/');
       }
       return;
@@ -521,7 +521,7 @@ export default function App() {
     if (targetId === 'faq') targetId = 'faqs';
     if (targetId === 'whyChooseUs') targetId = 'why-choose-us';
 
-    const element = document.getElementById(targetId);
+    const element = document.getElementById(targetId); //
     if (location.pathname === '/' && element) {
       const offset = 80;
       const bodyRect = document.body.getBoundingClientRect().top;
@@ -533,7 +533,7 @@ export default function App() {
         navigate('/');
       }
     }
-  };
+  }; //
 
   // Show blank screen while auth is resolving to avoid flash
   if (isLoading) {
@@ -554,7 +554,7 @@ export default function App() {
     );
   }
 
-  const handleDownloadPDF = async () => {
+  const handleDownloadPDF = async () => { //
     try {
       const { jsPDF } = await import('jspdf');
       const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
@@ -565,7 +565,7 @@ export default function App() {
       doc.setFont('Helvetica', 'bold');
       doc.setFontSize(16);
       doc.text(`BEHOLD - ${title}`, 20, 20);
-
+ 
       doc.setFont('Helvetica', 'normal');
       doc.setFontSize(10);
 
@@ -576,7 +576,7 @@ export default function App() {
           doc.addPage();
           y = 20;
         }
-        doc.text(splitText[i], 20, y);
+        doc.text(splitText[i], 20, y); //
         y += 6;
       }
 
@@ -586,7 +586,7 @@ export default function App() {
       } else {
         doc.save(`Behold_${activeDocType}.pdf`);
       }
-    } catch (err) {
+    } catch (err) { //
       console.error('Failed to generate PDF', err);
     }
   };
@@ -604,7 +604,7 @@ export default function App() {
     location.pathname === '/admin' ||
     location.pathname.startsWith('/admin/') ||
     location.pathname === '/counsellor' ||
-    location.pathname === '/conceller' ||
+    location.pathname === '/conceller' || //
     location.pathname === '/cousellor';
 
   return (
@@ -612,7 +612,7 @@ export default function App() {
 
       {/* Global Toast Notifications */}
       <Toaster
-        position="top-center"
+        position="top-center" //
         toastOptions={{
           duration: 4000,
           style: {
@@ -626,7 +626,7 @@ export default function App() {
         }}
       />
       <ToastLimitManager />
-
+ 
       {/* Top Banner Notice Alert */}
       {!hideNavbarAndFooter && siteSettings.showBanner && siteSettings.bannerNotice && (
         <div className="w-full bg-zinc-950 text-zinc-300 text-xs sm:text-xs font-semibold py-2.5 px-4 text-center border-b border-zinc-900 relative z-50 flex items-center justify-center gap-2 tracking-wide shadow-md animate-in slide-in-from-top duration-300">
@@ -635,7 +635,7 @@ export default function App() {
         </div>
       )}
 
-      {/* Global Fixed Background Image Layer for all sections */}
+      {/* Global Fixed Background Image Layer for all sections */} {/* */}
       {!hideNavbarAndFooter && (
         <div
           className="fixed inset-0 z-[-1] pointer-events-none overflow-hidden select-none"
@@ -646,7 +646,7 @@ export default function App() {
               backgroundImage: `url(${globalBgTexture})`,
             }}
           />
-          {/* Subtle Ambient Light Overlay */}
+          {/* Subtle Ambient Light Overlay */} {/* */}
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#d4f8fc]/5 to-transparent pointer-events-none" />
         </div>
       )}
@@ -659,7 +659,7 @@ export default function App() {
         onSuccess={() => {
           if (window.dispatchEvent) window.dispatchEvent(new Event('storage'));
         }} 
-      />
+      /> {/* */}
 
       <ServiceBooking
         isOpen={isBookingModalOpen}
@@ -668,7 +668,7 @@ export default function App() {
         clearPreselectedAdvisor={() => setBookingAdvisor(null)}
         onOpenDocs={setActiveDocType}
       />
-
+ 
       {/* Navbar — hidden on admin/counsellor dashboards */}
       {!hideNavbarAndFooter && (
         <Navbar
@@ -680,7 +680,7 @@ export default function App() {
           siteSettings={siteSettings}
         />
       )}
-
+ 
 
       <Suspense fallback={
         <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white/70 backdrop-blur-md transition-all duration-300">
@@ -699,7 +699,7 @@ export default function App() {
       }>
         <Routes>
           {/* Landing Page - Exactly 4 Sections */}
-          <Route path="/" element={
+          <Route path="/" element={ //
             <main className="fade-in-up">
               <Hero setView={() => { }} navigateToSection={navigateToSection} siteSettings={siteSettings} onOpenBooking={() => setIsBookingModalOpen(true)} />
               <TherapistSwipeSection onBookTherapist={handleBookTherapist} navigateToSection={navigateToSection} />
@@ -709,7 +709,7 @@ export default function App() {
           } />
 
           {/* About Page Route */}
-          <Route path="/about" element={
+          <Route path="/about" element={ //
             <main className="fade-in-up pt-16 sm:pt-20 bg-transparent">
               <About siteSettings={siteSettings} />
               <Reviews siteSettings={siteSettings} />
@@ -721,7 +721,7 @@ export default function App() {
           <Route path="/blog/:slug" element={<BlogPostDetail />} />
           <Route path="/faqs" element={<FaqsPage />} />
           <Route path="/test" element={<><Navbar onOpenAuth={() => { }} /><AptitudeTest /></>} />
-          <Route path="/results/:testId" element={<><Navbar onOpenAuth={() => { }} /><TestResultsTab /></>} />
+          <Route path="/results/:testId" element={<><Navbar onOpenAuth={() => { }} /><TestResultsTab /></>} /> {/* */}
           
           <Route path="/privacy" element={<><Navbar onOpenAuth={() => { }} /><PrivacyPolicy /><Footer /></>} />
 
@@ -739,7 +739,7 @@ export default function App() {
             <Route path="/sample-test" element={<Navigate to="/booking" replace />} />
           )}
 
-          {/* Services Page — Career Mentoring + Psychological Counselling + Expert Listing */}
+          {/* Services Page — Career Mentoring + Psychological Counselling + Expert Listing */} {/* */}
           {/* C-DAT section shown only when admin has enabled aptitude */}
           <Route path="/booking" element={
             <main className="fade-in-up pt-16 sm:pt-20 bg-transparent">
@@ -753,7 +753,7 @@ export default function App() {
 
 
           {/* Student Profile */}
-          <Route path="/profile" element={
+          <Route path="/profile" element={ //
             user?.role?.toUpperCase() === 'USER' ? (
               <StudentProfile onOpenBooking={() => setIsBookingModalOpen(true)} />
             ) : (
@@ -768,7 +768,7 @@ export default function App() {
           } />
 
           {/* Admin Dashboard */}
-          <Route path="/admin" element={
+          <Route path="/admin" element={ //
             <div className="admin-console-theme">
               {user ? (
                 <AdminDashboard setView={() => { }} />
@@ -781,7 +781,7 @@ export default function App() {
           } />
 
           {/* Counsellor Dashboard */}
-          <Route path="/counsellor" element={
+          <Route path="/counsellor" element={ //
             <div className="counsellor-console-theme">
               <PsychologistDashboard setView={() => { }} />
             </div>
@@ -790,7 +790,7 @@ export default function App() {
           <Route path="/cousellor" element={<Navigate to="/counsellor" replace />} />
 
           {/* Advisor Public Profile */}
-          <Route path="/advisor/:id" element={
+          <Route path="/advisor/:id" element={ //
             <AdvisorProfileWrapper
               handleBookTherapist={handleBookTherapist}
               setPendingScrollSection={setPendingScrollSection}
@@ -799,13 +799,13 @@ export default function App() {
 
           {/* Reset Password */}
           <Route path="/reset-password" element={<ResetPassword />} />
-
+ 
           {/* Intercept Google OAuth Callback if hitting frontend directly */}
           <Route path="/api/google/callback" element={<GoogleCallbackRedirect />} />
 
           {/* Catch-all fallback 404 */}
           <Route path="*" element={<NotFound />} />
-        </Routes>
+        </Routes> {/* */}
       </Suspense>
 
 
@@ -823,7 +823,7 @@ export default function App() {
           onOpenBooking={() => setIsBookingModalOpen(true)}
         />
       )}
-
+ 
       {/* Terms & Privacy Documents Modal */}
       {activeDocType && (
         <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs animate-in fade-in duration-200">
@@ -832,7 +832,7 @@ export default function App() {
             {/* Modal Header */}
             <div className="px-6 py-4 border-b border-zinc-800 flex justify-between items-center bg-zinc-950/40">
               <h3 className="text-sm font-semibold text-white font-header flex items-center gap-2">
-                <span>{activeDocType === 'terms' ? 'Terms & Conditions' : activeDocType === 'refund' ? 'Return & Refund Policy' : 'Privacy Policy'}</span>
+                <span>{activeDocType === 'terms' ? 'Terms & Conditions' : activeDocType === 'refund' ? 'Return & Refund Policy' : 'Privacy Policy'}</span> {/* */}
                 <span className="text-[7.5px] bg-zinc-800 border border-zinc-700 text-zinc-400 px-1.5 py-0.5 rounded font-semibold ">DOC</span>
               </h3>
               <button
@@ -843,7 +843,7 @@ export default function App() {
                 <X className="w-4 h-4" />
               </button>
             </div>
-
+ 
             {/* Modal Body */}
             <div className="p-6 overflow-y-auto text-left text-zinc-300 text-xs font-semibold leading-relaxed whitespace-pre-wrap font-sans max-h-[60vh] custom-scrollbar">
               {activeDocType === 'terms' ? siteSettings.termsOfUse : activeDocType === 'refund' ? siteSettings.refundPolicy : siteSettings.privacyPolicy}

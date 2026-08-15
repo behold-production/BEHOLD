@@ -1,6 +1,6 @@
 import toast from 'react-hot-toast';
 
-let envUrl = import.meta.env.VITE_API_URL || '/api';
+let envUrl = import.meta.env.VITE_API_URL || '/api'; //
 if (envUrl && !envUrl.endsWith('/api') && envUrl !== '/api') {
   // Trim trailing slash before appending /api
   envUrl = envUrl.endsWith('/') ? `${envUrl}api` : `${envUrl}/api`;
@@ -10,7 +10,7 @@ let isRefreshing = false;
 let refreshSubscribers = [];
 
 function subscribeTokenRefresh(cb) {
-  refreshSubscribers.push(cb);
+  refreshSubscribers.push(cb); //
 }
 
 function onRefreshed(token) {
@@ -20,7 +20,7 @@ function onRefreshed(token) {
 
 async function executeRequest(endpoint, options = {}) {
   const token = localStorage.getItem('behold_token');
-  const headers = {
+  const headers = { //
     'Content-Type': 'application/json',
     ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
     ...(options.headers || {})
@@ -32,7 +32,7 @@ async function executeRequest(endpoint, options = {}) {
 
   let response;
   try {
-    response = await fetch(`${BASE_URL}${endpoint}`, {
+    response = await fetch(`${BASE_URL}${endpoint}`, { //
       ...options,
       headers
     });
@@ -44,7 +44,7 @@ async function executeRequest(endpoint, options = {}) {
 
   const text = await response.text();
   let data;
-  try {
+  try { //
     data = text ? JSON.parse(text) : {};
   } catch (err) {
     if (response.ok) {
@@ -69,7 +69,7 @@ async function executeRequest(endpoint, options = {}) {
   }
 
   // Handle expired/missing token transparently
-  if (response.status === 401) {
+  if (response.status === 401) { //
     if (data.message === 'Access Denied: No Token Provided') {
       localStorage.removeItem('behold_token');
       localStorage.removeItem('behold_refresh_token');
@@ -148,7 +148,7 @@ async function executeRequest(endpoint, options = {}) {
   }
 
   if (!response.ok) {
-    let errorMsg = data.message || `HTTP error! Status: ${response.status}`;
+    let errorMsg = data.message || `HTTP error! Status: ${response.status}`; //
 
     // Map raw/system database timeout and network errors to user-friendly messages
     if (
@@ -183,7 +183,7 @@ const cache = new Map();
 const activeRequests = new Map();
 
 function clearCache() {
-  cache.clear();
+  cache.clear(); //
 }
 
 function hasCachedData(endpoint) {
@@ -192,7 +192,7 @@ function hasCachedData(endpoint) {
 }
 
 function invalidateCache(endpoint) {
-  const normalized = endpoint.toLowerCase();
+  const normalized = endpoint.toLowerCase(); //
 
   if (normalized.includes('/admin/users') || normalized.includes('/admin/counsellors') || normalized.includes('/auth/register')) {
     for (const key of cache.keys()) {
@@ -248,7 +248,7 @@ function invalidateCache(endpoint) {
 }
 
 async function request(endpoint, options = {}) {
-  const method = options.method || 'GET';
+  const method = options.method || 'GET'; //
   const forceRefresh = options.forceRefresh || false;
 
   // Invalidate cache on mutations
@@ -260,7 +260,7 @@ async function request(endpoint, options = {}) {
   if (method === 'GET' && !forceRefresh) {
     // Check completed cache
     const cached = cache.get(endpoint);
-    if (cached && (Date.now() - cached.timestamp < 30 * 1000)) {
+    if (cached && (Date.now() - cached.timestamp < 30 * 1000)) { //
       return JSON.parse(JSON.stringify(cached.data));
     }
 
@@ -306,7 +306,7 @@ const ApiService = {
 
   // Authentication
   async login(email, password, portal = 'user') {
-    const cleanEmail = typeof email === 'string' ? email.trim() : email;
+    const cleanEmail = typeof email === 'string' ? email.trim() : email; //
     const res = await request('/auth/login', {
       method: 'POST',
       body: JSON.stringify({ email: cleanEmail, password, portal })
@@ -322,7 +322,7 @@ const ApiService = {
 
   async register(name, email, password, role = 'user', extra = {}) {
     const endpoint = role === 'counsellor' ? '/auth/register-counsellor' : '/auth/register';
-    const cleanEmail = typeof email === 'string' ? email.trim() : email;
+    const cleanEmail = typeof email === 'string' ? email.trim() : email; //
     const res = await request(endpoint, {
       method: 'POST',
       body: JSON.stringify({ name, email: cleanEmail, password, ...extra })
@@ -338,7 +338,7 @@ const ApiService = {
   },
 
   logout() {
-    localStorage.removeItem('behold_token');
+    localStorage.removeItem('behold_token'); //
     localStorage.removeItem('behold_refresh_token');
     localStorage.removeItem('behold_auth_user');
     window.dispatchEvent(new Event('storage'));
@@ -381,7 +381,7 @@ const ApiService = {
     return res;
   },
 
-  // User/Student Profile
+  // User/Student Profile //
   async getProfile() {
     return await request('/users/profile');
   },
@@ -410,7 +410,7 @@ const ApiService = {
     });
   },
 
-  // Counsellor search & details
+  // Counsellor search & details //
   _counsellorsCache: null,
   _counsellorsCacheTime: 0,
 
@@ -456,7 +456,7 @@ const ApiService = {
     return await request(`/users/counsellors/${id}`);
   },
 
-  // Appointments
+  // Appointments //
   async bookAppointment(counsellorId, bookingDetails = {}) {
     return await request('/appointments', {
       method: 'POST',
@@ -548,7 +548,7 @@ const ApiService = {
     });
   },
 
-  // Sessions
+  // Sessions //
   async getSessions() {
     return await request('/sessions');
   },
@@ -571,7 +571,7 @@ const ApiService = {
     });
   },
 
-  // Feedback
+  // Feedback //
   async submitFeedback(sessionId, rating, comment) {
     return await request('/feedbacks', {
       method: 'POST',
@@ -579,7 +579,7 @@ const ApiService = {
     });
   },
 
-  // Notifications
+  // Notifications //
   async getNotifications() {
     return await request('/notifications');
   },
@@ -596,7 +596,7 @@ const ApiService = {
     });
   },
 
-  // Dashboards
+  // Dashboards //
   async getUserDashboard() {
     return await request('/users/dashboard');
   },
@@ -609,7 +609,7 @@ const ApiService = {
     return await request('/admin/dashboard');
   },
 
-  // Admin CRUD operations
+  // Admin CRUD operations //
   async getAdminUsers() {
     return await request('/admin/users');
   },
@@ -714,7 +714,7 @@ const ApiService = {
     });
   },
 
-  // Availability & Counsellor details
+  // Availability & Counsellor details //
   async getCounsellorProfile() {
     return await request('/counsellors/profile');
   },
@@ -757,7 +757,7 @@ const ApiService = {
     return res;
   },
 
-  // Inquiries
+  // Inquiries //
   async submitInquiry(name, email, message) {
     return await request('/inquiries', {
       method: 'POST',
@@ -765,7 +765,7 @@ const ApiService = {
     });
   },
 
-  // FAQs
+  // FAQs //
   _faqsCache: null,
   _faqsCacheTime: 0,
   async getFaqs(forceRefresh = false) {
@@ -786,7 +786,7 @@ const ApiService = {
     return res;
   },
 
-  // Settings
+  // Settings //
   _settingsCache: null,
   _settingsCacheTime: 0,
   async getSettings(forceRefresh = false) {
@@ -807,7 +807,7 @@ const ApiService = {
     return res;
   },
 
-  // Test Results
+  // Test Results //
   async saveTestResult(testResultData) {
     return await request('/test-results', {
       method: 'POST',
@@ -829,7 +829,7 @@ const ApiService = {
     });
   },
 
-  // Admin Inquiry Management
+  // Admin Inquiry Management //
   async getAdminInquiries() {
     return await request('/admin/inquiries');
   },
@@ -859,7 +859,7 @@ const ApiService = {
     });
   },
 
-  // Admin FAQ Management
+  // Admin FAQ Management //
   async getAdminFaqs() {
     return await request('/admin/faqs');
   },
@@ -884,7 +884,7 @@ const ApiService = {
     });
   },
 
-  // Admin Settings Management
+  // Admin Settings Management //
   async getAdminSettings() {
     return await request('/admin/settings');
   },
@@ -896,7 +896,7 @@ const ApiService = {
     });
   },
 
-  // IP Blocklist Management
+  // IP Blocklist Management //
   async getBlockedIps() {
     return await request('/admin/settings/blocked-ips');
   },
@@ -914,7 +914,7 @@ const ApiService = {
     });
   },
 
-  // Admin Roles Management
+  // Admin Roles Management //
   async getRoles() {
     return await request('/admin/roles');
   },
@@ -939,7 +939,7 @@ const ApiService = {
     });
   },
 
-  // Public Aptitude Questions
+  // Public Aptitude Questions //
   async getPublicAptitudeQuestions() {
     return await request('/aptitude-questions');
   },
@@ -969,7 +969,7 @@ const ApiService = {
     });
   },
 
-  // CIGI Aptitude Test Results
+  // CIGI Aptitude Test Results //
   async uploadCigiResult(formData) {
     const res = await request('/users/cigi-results', {
       method: 'POST',
@@ -1067,7 +1067,7 @@ const ApiService = {
     });
   },
 
-  // ─── GOOGLE CALENDAR APIs ────────────────────────────────────────────────
+  // ─── GOOGLE CALENDAR APIs ──────────────────────────────────────────────── //
   
   async getGoogleAuthUrl(counsellorId) {
     return await request(`/google/url?counsellorId=${counsellorId}`, {
@@ -1083,7 +1083,7 @@ const ApiService = {
     });
   },
 
-  // ─── REFUND MANAGEMENT APIs ──────────────────────────────────────────────
+  // ─── REFUND MANAGEMENT APIs ────────────────────────────────────────────── //
   async getRefundRequests() {
     return await request('/admin/refunds');
   },
@@ -1106,7 +1106,7 @@ const ApiService = {
     });
   },
 
-  // ─── TRASH & RESTORE APIs (Meta-style 30-day soft delete) ─────────────────
+  // ─── TRASH & RESTORE APIs (Meta-style 30-day soft delete) ───────────────── //
   async getTrashItems() {
     return await request('/admin/trash');
   },

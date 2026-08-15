@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom'; //
 import { useAuth } from '../../context/AuthContext';
 import LogoutConfirmModal from './LogoutConfirmModal';
 import BrandIcon from './BrandIcon';
@@ -10,7 +10,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
-  const { user, logout } = useAuth();
+  const { user, logout } = useAuth(); //
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -31,7 +31,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
     };
   }, [mobileMenuOpen]);
 
-  const [activeSection, setActiveSection] = useState('home');
+  const [activeSection, setActiveSection] = useState('home'); //
 
   useEffect(() => {
     if (location.pathname !== '/') return;
@@ -56,7 +56,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
 
     window.addEventListener('scroll', handleScrollSection, { passive: true });
     handleScrollSection();
-    return () => window.removeEventListener('scroll', handleScrollSection);
+    return () => window.removeEventListener('scroll', handleScrollSection); //
   }, [location.pathname]);
 
   const goTo = (section) => {
@@ -91,7 +91,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
   };
 
   const whatsappUrl = (() => {
-    const input = siteSettings?.whatsapp;
+    const input = siteSettings?.whatsapp; //
     if (!input || input === '#') return 'https://wa.link/4jpzfq';
     const str = String(input).trim();
     if (str.startsWith('http')) return str;
@@ -107,7 +107,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
     { label: 'About Us', action: () => goTo('/about'), sectionId: 'about', path: '/about' },
     { label: 'Blog', action: () => goTo('/blog'), sectionId: 'blog', path: '/blog' },
   ].filter(Boolean);
-
+ 
   const navRefs = useRef([]);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0, opacity: 0 });
 
@@ -115,7 +115,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
     location.pathname === path || (location.pathname === '/' && activeSection === sectionId)
   );
 
-  useEffect(() => {
+  useEffect(() => { //
     const targetEl = navRefs.current[activeIndex >= 0 ? activeIndex : 0];
     if (targetEl && activeIndex >= 0) {
       setIndicatorStyle({

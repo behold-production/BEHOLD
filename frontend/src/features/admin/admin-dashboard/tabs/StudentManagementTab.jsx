@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import ApiService from '../../../../services/api';
-import { User, Trash, Plus, KeyRound, Search, Edit, X, Loader2, Link } from 'lucide-react';
+import { User, Trash, Plus, KeyRound, Search, Edit, X, Loader2, Link, Navigation } from 'lucide-react';
 import { SkeletonTableRows, PaginationBar } from '../components/SharedAdminUI';
 import { validateEmail, validateIndianPhone, parseIndianPhone } from '../../../../utils/validation';
 
@@ -12,10 +12,10 @@ export default function StudentManagementTab(props) {
   const [studentPage, setStudentPage] = useState(1);
   const [studentLimit, setStudentLimit] = useState(10);
   
-  const [isAddUserOpen, setIsAddUserOpen] = useState(false);
-  const [isEditUserOpen, setIsEditUserOpen] = useState(false);
+  const [isAddUserOpen, setIsAddUserOpen] = useState(false); //
+  const [isEditUserOpen, setIsEditUserOpen] = useState(false); //
   const [userForm, setUserForm] = useState({ id: '', name: '', email: '', password: '', phone: '', schoolName: '', grade: '', guardianName: '', guardianPhone: '', groupCode: '', profilePic: '', locationName: '', latitude: 0, longitude: 0 });
-  const [userFormError, setUserFormError] = useState('');
+  const [userFormError, setUserFormError] = useState(''); //
   const [userFormSuccess, setUserFormSuccess] = useState('');
   const [userProfilePicFile, setUserProfilePicFile] = useState(null);
   const [isUserPicUploading, setIsUserPicUploading] = useState(false);
@@ -151,7 +151,7 @@ export default function StudentManagementTab(props) {
       return;
     }
 
-    setIsSavingForm(true);
+    setIsSavingForm(true); //
     try {
       const res = await ApiService.createAdminUser(
         userForm.name.trim(),
@@ -267,7 +267,7 @@ export default function StudentManagementTab(props) {
       return;
     }
 
-    setIsSavingForm(true);
+    setIsSavingForm(true); //
     try {
       const res = await ApiService.updateAdminUser(
         userForm.id,
@@ -337,7 +337,7 @@ export default function StudentManagementTab(props) {
       setUserFormSuccess("User details updated!");
       setUserProfilePicFile(null);
       if (reloadData) reloadData();
-      setTimeout(() => {
+      setTimeout(() => { //
         setIsEditUserOpen(false);
         setUserFormSuccess('');
       }, 1000);
@@ -367,7 +367,7 @@ export default function StudentManagementTab(props) {
     }
   };
 
- const handleGenerateResetToken = async (email) => {
+  const handleGenerateResetToken = async (email) => { //
  try {
  const res = await ApiService.request('/auth/forgot-password', {
  method: 'POST',
@@ -384,7 +384,7 @@ export default function StudentManagementTab(props) {
  }
  };
 
-const handleAdminCigiUpload = async (e) => {
+  const handleAdminCigiUpload = async (e) => { //
  e.preventDefault();
  if (!viewingStudent) return;
  if (!adminCigiFile && !adminCigiEditingId) {
@@ -443,7 +443,7 @@ const handleAdminCigiUpload = async (e) => {
  }
  };
 
- const handleAdminCigiDelete = async (resultId) => {
+  const handleAdminCigiDelete = async (resultId) => { //
  if (!viewingStudent) return;
  if (!await showConfirm('Are you sure you want to delete this CIGI result?')) return;
  try {
@@ -459,7 +459,7 @@ const handleAdminCigiUpload = async (e) => {
  }
  };
 
- const handleAdminStartEditCigi = (result) => {
+  const handleAdminStartEditCigi = (result) => { //
  setAdminCigiEditingId(result.id);
  setAdminCigiDate(result.testDate || '');
  setAdminCigiTime(result.testTime || '');
@@ -467,8 +467,8 @@ const handleAdminCigiUpload = async (e) => {
  setAdminCigiFile(null);
  if (adminCigiFileInputRef.current) adminCigiFileInputRef.current.value = '';
  };
-
- const handleAdminCancelEditCigi = () => {
+ 
+  const handleAdminCancelEditCigi = () => { //
  setAdminCigiEditingId(null);
  setAdminCigiDate('');
  setAdminCigiTime('');
@@ -476,9 +476,6 @@ const handleAdminCigiUpload = async (e) => {
  setAdminCigiFile(null);
  if (adminCigiFileInputRef.current) adminCigiFileInputRef.current.value = '';
  };
-
-
-
 
  const handleExportStudentsCSV = async () => {
  const headers = "ID,Name,Email,Status,BookingsCount\n";
@@ -641,7 +638,7 @@ const handleAdminCigiUpload = async (e) => {
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
  <div
  className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
- onClick={() => { setIsAddUserOpen(false); setIsEditUserOpen(false); }}
+ onClick={() => { setIsAddUserOpen(false); setIsEditUserOpen(false); setAdminUserSearchResults([]); setAdminUserSearchQuery(''); }}
  />
  <div className="relative w-full max-w-lg bg-zinc-900 border border-zinc-800 rounded-lg p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
  <div>
