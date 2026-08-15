@@ -184,7 +184,7 @@ const AdminController = {
       // ── WhatsApp notification ─────────────────────────────────────────
       if (updated.phone) {
         const waMsg = isVerified
-          ? `✅ *Behold Aspire — Account Verified!*
+          ? `✅ *BEHOLD. — Account Verified!*
 
 Congratulations, *${updated.name}*!
 
@@ -192,7 +192,7 @@ Your psychologist profile has been *approved* by our admin team. Your profile is
 
 🔗 Log in to your dashboard:
 https://www.behold.co.in/counsellor`
-          : `⚠️ *Behold Aspire — Verification Update*
+          : `⚠️ *BEHOLD. — Verification Update*
 
 Hi *${updated.name}*,
 
@@ -248,7 +248,7 @@ https://www.behold.co.in/counsellor`;
 
       // ── WhatsApp notification ─────────────────────────────────────────
       if (updated.phone) {
-        const waMsg = `❌ *Behold Aspire — Application Update*
+        const waMsg = `❌ *BEHOLD. — Application Update*
 
 Hi *${updated.name}*,
 
@@ -433,7 +433,7 @@ If you have questions or would like to reapply with updated information, please 
             try {
               await WhatsAppService.sendNotification(
                 recipient.phone,
-                `📢 ${title.toUpperCase()}\n\n${message}\n\n- Behold Aspire Team`
+                `📢 ${title.toUpperCase()}\n\n${message}\n\n- BEHOLD. Team`
               );
               waStatus.sentCount++;
             } catch (waErr) {
@@ -1987,7 +1987,7 @@ If you have questions or would like to reapply with updated information, please 
       const { phone } = req.body;
       const targetPhone = phone || '918075374600';
       const WhatsAppService = require('../services/whatsappService');
-      const testResult = await WhatsAppService.sendNotification(targetPhone, '🧪 Test message from BEHOLD Aspire WASender API integration!');
+      const testResult = await WhatsAppService.sendNotification(targetPhone, '🧪 Test message from BEHOLD. WASender API integration!');
       res.status(200).json({
         success: testResult.success,
         data: testResult

@@ -14,7 +14,7 @@ const blogSchema = new mongoose.Schema(
     category: { type: String, default: 'Career Guidance', trim: true },
     tags: [{ type: String }],
     author: {
-      name: { type: String, default: 'Behold Aspire Editorial Team' },
+      name: { type: String, default: 'BEHOLD. Editorial Team' },
       role: { type: String, default: 'Senior Career Counsellor' },
       avatar: { type: String, default: '' }
     },

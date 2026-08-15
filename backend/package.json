@@ -1,7 +1,7 @@
 {
   "name": "behold-aspire-backend",
   "version": "1.0.0",
-  "description": "Backend for Behold Aspire Mental Health & Counselling Platform",
+  "description": "Backend for BEHOLD. Mental Health & Counselling Platform",
   "main": "server.js",
   "type": "commonjs",
   "scripts": {

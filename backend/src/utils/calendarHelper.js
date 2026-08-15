@@ -48,7 +48,7 @@ async function generateSessionMeetingLink({ counsellor, user, date, time, servic
       const counsellorName = counsellor?.name || 'Psychologist';
 
       const attendees = [
-        { email: organizerEmail, displayName: 'BEHOLD Aspire', responseStatus: 'accepted', organizer: true }
+        { email: organizerEmail, displayName: 'BEHOLD.', responseStatus: 'accepted', organizer: true }
       ];
       if (user && user.email && user.email.toLowerCase() !== organizerEmail.toLowerCase() && !user.email.includes('@temp.behold')) {
         attendees.push({ email: user.email, displayName: studentName, responseStatus: 'accepted' });
@@ -62,7 +62,7 @@ async function generateSessionMeetingLink({ counsellor, user, date, time, servic
         description: `Service: ${service || 'counselling'}\nMode: ONLINE (Google Meet)`,
         start: { dateTime: startTime.toISOString() },
         end: { dateTime: endTime.toISOString() },
-        organizer: { email: organizerEmail, displayName: 'BEHOLD Aspire', self: true },
+        organizer: { email: organizerEmail, displayName: 'BEHOLD.', self: true },
         attendees,
         guestsCanModify: true,
         guestsCanInviteOthers: true,

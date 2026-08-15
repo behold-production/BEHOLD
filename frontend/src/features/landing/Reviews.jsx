@@ -171,7 +171,7 @@ function SubmitReviewForm({ onSubmitSuccess }) {
         <label className="block text-xs font-semibold text-gray-700 mb-1.5">Review *</label>
         <textarea
           rows={3}
-          placeholder="Share your experience with BEHOLD Aspire..."
+          placeholder="Share your experience with BEHOLD...."
           value={form.comment}
           onChange={e => setForm(f => ({ ...f, comment: e.target.value }))}
           className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-gray-900 transition shadow-sm hover:border-gray-300 resize-none"

@@ -219,7 +219,7 @@ const AuthController = {
       const tokens = generateTokens(newUser);
 
       if (newUser.phone) {
-        WhatsAppService.sendNotification(newUser.phone, `Welcome to Behold Aspire, ${newUser.name}! Your account has been created successfully.`).catch(err => console.error(err));
+        WhatsAppService.sendNotification(newUser.phone, `Welcome to BEHOLD., ${newUser.name}! Your account has been created successfully.`).catch(err => console.error(err));
       }
       // Send welcome email
       EmailService.sendWelcomeUser(newUser).catch(err => console.error('[Email Welcome Error]:', err));
@@ -489,7 +489,7 @@ const AuthController = {
       // ── 1. WhatsApp OTP Delivery (Primary) ─────────────────────────
       let waSuccess = false;
       if (targetPhone && targetPhone.trim() !== '') {
-        const waMsg = `*BEHOLD Aspire — Password Reset Code*\n\nYour 6-digit verification code is:\n\n*${otpCode}*\n\nThis code is valid for 10 minutes. Do not share it with anyone.`;
+        const waMsg = `*BEHOLD. — Password Reset Code*\n\nYour 6-digit verification code is:\n\n*${otpCode}*\n\nThis code is valid for 10 minutes. Do not share it with anyone.`;
         const waRes = await WhatsAppService.sendNotification(targetPhone, waMsg).catch(err => {
           console.error('[WhatsApp Reset OTP Error]:', err.message);
           return null;
@@ -567,7 +567,7 @@ const AuthController = {
       if (user.phone) {
         WhatsAppService.sendNotification(
           user.phone,
-          `*BEHOLD Aspire*\n\nYour password has been successfully reset. If you did not do this, please contact our support team immediately.`
+          `*BEHOLD.*\n\nYour password has been successfully reset. If you did not do this, please contact our support team immediately.`
         ).catch(() => {});
       }
 

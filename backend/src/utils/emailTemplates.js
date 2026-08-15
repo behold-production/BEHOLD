@@ -1,5 +1,5 @@
 /**
- * Behold Aspire — Email Templates
+ * BEHOLD. — Email Templates
  * Design: White background + Neon Blue accent (#0ea5e9)
  * Logo: "B." wordmark
  */
@@ -16,7 +16,7 @@ const baseLayout = (content) => `
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Behold Aspire</title>
+  <title>BEHOLD.</title>
 </head>
 <body style="margin:0;padding:0;background:#f1f5f9;font-family:'Segoe UI',Arial,sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background:#f1f5f9;padding:36px 0;">
@@ -28,7 +28,7 @@ const baseLayout = (content) => `
           <tr>
             <td style="background:linear-gradient(135deg,${BLUE} 0%,${BLUE_DARK} 100%);padding:32px 44px;text-align:center;">
               <img src="https://www.behold.co.in/pwa-512.png" alt="BEHOLD Logo" width="56" height="56" style="display:block;margin:0 auto 12px;border-radius:14px;box-shadow:0 4px 12px rgba(0,0,0,0.15);background:#ffffff;padding:4px;" />
-              <h1 style="margin:0;font-size:22px;font-weight:800;color:#ffffff;letter-spacing:0.5px;">BEHOLD Aspire</h1>
+              <h1 style="margin:0;font-size:22px;font-weight:800;color:#ffffff;letter-spacing:0.5px;">BEHOLD.</h1>
               <p style="margin:4px 0 0;color:${BLUE_GLOW};font-size:12px;font-weight:500;letter-spacing:0.5px;text-transform:uppercase;">Mental Health &amp; Career Counselling</p>
             </td>
           </tr>
@@ -43,7 +43,7 @@ const baseLayout = (content) => `
           <!-- ── FOOTER ── -->
           <tr>
             <td style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:24px 44px;text-align:center;">
-              <p style="margin:0;font-size:12px;color:#94a3b8;">© 2025 Behold Aspire. All rights reserved.</p>
+              <p style="margin:0;font-size:12px;color:#94a3b8;">© 2025 BEHOLD.. All rights reserved.</p>
               <p style="margin:5px 0 0;font-size:12px;color:#94a3b8;">This is an automated notification — please do not reply directly.</p>
               <p style="margin:8px 0 0;">
                 <a href="https://www.behold.co.in" style="color:${BLUE};font-size:12px;text-decoration:none;font-weight:600;">www.behold.co.in</a>
@@ -103,9 +103,9 @@ const alertBox = (text, type = 'info') => {
 const welcomeUser = ({ name }) =>
   baseLayout(`
     ${badge('Welcome!')}
-    <h2 style="margin:0 0 12px;font-size:24px;color:#0f172a;font-weight:800;">Hi ${name}, welcome to Behold Aspire!</h2>
+    <h2 style="margin:0 0 12px;font-size:24px;color:#0f172a;font-weight:800;">Hi ${name}, welcome to BEHOLD.!</h2>
     <p style="margin:0 0 16px;color:#475569;font-size:15px;line-height:1.7;">Your account has been created. We're glad to have you here.</p>
-    <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.7;">Behold Aspire connects you with expert counsellors and psychologists to help you grow and thrive.</p>
+    <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.7;">BEHOLD. connects you with expert counsellors and psychologists to help you grow and thrive.</p>
     ${divider()}
     <h3 style="color:${BLUE};font-size:15px;margin:0 0 10px;">What you can do now:</h3>
     <ul style="color:#475569;font-size:14px;line-height:2.0;padding-left:18px;margin:0 0 8px;">
@@ -113,14 +113,14 @@ const welcomeUser = ({ name }) =>
       <li>Take the CIGI career aptitude assessment</li>
       <li>Access expert mental health &amp; career resources</li>
     </ul>
-    ${btn('Explore Behold Aspire →', 'https://www.behold.co.in')}
+    ${btn('Explore BEHOLD. →', 'https://www.behold.co.in')}
   `);
 
 const welcomeCounsellor = ({ name }) =>
   baseLayout(`
     ${badge('Application Received')}
     <h2 style="margin:0 0 12px;font-size:24px;color:#0f172a;font-weight:800;">Hi ${name}!</h2>
-    <p style="margin:0 0 16px;color:#475569;font-size:15px;line-height:1.7;">Thank you for applying to join the Behold Aspire counsellor network. Your application is currently <strong>under review</strong> by our admin team.</p>
+    <p style="margin:0 0 16px;color:#475569;font-size:15px;line-height:1.7;">Thank you for applying to join the BEHOLD. counsellor network. Your application is currently <strong>under review</strong> by our admin team.</p>
     ${alertBox('⏳ Expected review time: 24–48 hours', 'warning')}
     ${btn('Go to Dashboard →', 'https://www.behold.co.in/counsellor')}
   `);
@@ -191,13 +191,13 @@ const appointmentApproved = ({
     </p>
 
     <p style="margin:0 0 24px;color:#475569;font-size:14px;line-height:1.7;">
-      Thank you for choosing <strong>BEHOLD Aspire</strong>. We look forward to supporting you.
+      Thank you for choosing <strong>BEHOLD.</strong>. We look forward to supporting you.
     </p>
 
     ${divider()}
     <p style="margin:0;font-size:13px;color:#64748b;line-height:1.7;">
       Best regards,<br/>
-      <strong>BEHOLD Aspire Team</strong><br/>
+      <strong>BEHOLD. Team</strong><br/>
       <a href="mailto:support@behold.co.in" style="color:${BLUE};text-decoration:none;">support@behold.co.in</a> | +91 94000 90106
     </p>
   `);
@@ -231,7 +231,7 @@ const appointmentApprovedCounsellor = ({
   return baseLayout(`
     ${badge('New Session Booked', BLUE)}
     <p style="margin:0 0 16px;color:#0f172a;font-size:16px;line-height:1.7;">Dear <strong>Dr. ${(counsellorName || 'Psychologist').replace(/^Dr\.\s*/i, '')}</strong>,</p>
-    <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.7;">A new counselling session has been booked with you through <strong>BEHOLD Aspire</strong>.</p>
+    <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.7;">A new counselling session has been booked with you through <strong>BEHOLD.</strong>.</p>
 
     <!-- Appointment Details Header -->
     <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:20px 24px;margin:20px 0;">
@@ -299,13 +299,13 @@ const appointmentApprovedCounsellor = ({
     ${alertBox('🔒 <strong>Confidentiality Notice:</strong> Client information is confidential and should be handled in accordance with applicable privacy and professional confidentiality requirements.', 'info')}
 
     <p style="margin:16px 0 24px;color:#475569;font-size:13px;line-height:1.7;">
-      If you have any questions regarding this appointment, please contact the <strong>BEHOLD Aspire Support Team</strong>.
+      If you have any questions regarding this appointment, please contact the <strong>BEHOLD. Support Team</strong>.
     </p>
 
     ${divider()}
     <p style="margin:0;font-size:13px;color:#64748b;line-height:1.7;">
       Best regards,<br/>
-      <strong>BEHOLD Aspire Team</strong><br/>
+      <strong>BEHOLD. Team</strong><br/>
       <a href="mailto:support@behold.co.in" style="color:${BLUE};text-decoration:none;">support@behold.co.in</a> | +91 94000 90106
     </p>
   `);
@@ -440,7 +440,7 @@ const counsellorVerified = ({ name }) =>
   baseLayout(`
     ${badge('Profile Verified ✓', '#22c55e')}
     <h2 style="margin:0 0 12px;font-size:24px;color:#0f172a;font-weight:800;">You're now verified!</h2>
-    <p style="margin:0 0 16px;color:#475569;font-size:15px;line-height:1.7;">Congratulations, <strong>${name}</strong>! Your psychologist profile has been reviewed and <strong>approved</strong> by the Behold Aspire admin team.</p>
+    <p style="margin:0 0 16px;color:#475569;font-size:15px;line-height:1.7;">Congratulations, <strong>${name}</strong>! Your psychologist profile has been reviewed and <strong>approved</strong> by the BEHOLD. admin team.</p>
     <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.7;">Your profile is now live and students can book sessions with you. Complete your availability to start receiving bookings.</p>
     ${btn('Go to Your Dashboard →', 'https://www.behold.co.in/counsellor')}
   `);
@@ -464,7 +464,7 @@ const broadcastEmail = ({ title, message, recipientName }) =>
     <div style="background:#f8fafc;border-radius:12px;padding:20px 24px;margin:16px 0;border:1px solid #e2e8f0;">
       <p style="margin:0;color:#334155;font-size:15px;line-height:1.8;white-space:pre-line;">${message}</p>
     </div>
-    ${btn('Visit Behold Aspire →', 'https://www.behold.co.in')}
+    ${btn('Visit BEHOLD. →', 'https://www.behold.co.in')}
   `);
 
 /** Meet link notification */

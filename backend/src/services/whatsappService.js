@@ -2,7 +2,7 @@ const axios = require('axios');
 const { normalizePhoneWithCountryCode } = require('../utils/phoneUtils');
 
 /**
- * Behold Aspire — WhatsApp Notification Service
+ * BEHOLD. — WhatsApp Notification Service
  * ─────────────────────────────────────────────────────────────────────────────
  * Provider: WASenderAPI (wasenderapi.com)
  * All messages are sent as plain text with WhatsApp bold/formatting (*bold*, _italic_).
@@ -148,7 +148,7 @@ class WhatsAppService {
    */
   async sendOTP(phone, code) {
     const text =
-      `Your Behold Aspire verification code is: ${code}\n\n` +
+      `Your BEHOLD. verification code is: ${code}\n\n` +
       `Valid for 5 minutes. Please do not share this code with anyone.`;
     return this._dispatch(phone, text);
   }
@@ -196,7 +196,7 @@ class WhatsAppService {
       case 'confirmed':
       case 'booking_confirmed':
         text =
-          `*Session Confirmed — BEHOLD Aspire*\n\n` +
+          `*Session Confirmed — BEHOLD.*\n\n` +
           `Hi *${studentName}* 👋\n\n` +
           `Great news! Your counselling session has been successfully confirmed.\n\n` +
           `• *Psychologist:* ${counsellorName}\n` +
@@ -207,14 +207,14 @@ class WhatsAppService {
           `🔗 *Meeting Link:* ${finalMeetLink}\n\n` +
           `Please join a few minutes before your scheduled time and ensure you have a quiet and private space for the session.\n\n` +
           `📋 *View Booking:* ${bookingUrl}\n\n` +
-          `Thank you for choosing BEHOLD Aspire. We look forward to supporting you.`;
+          `Thank you for choosing BEHOLD.. We look forward to supporting you.`;
         break;
 
       // 2. Booking Cancelled
       case 'cancelled':
       case 'booking_cancelled':
         text =
-          `*Session Cancelled — BEHOLD Aspire*\n\n` +
+          `*Session Cancelled — BEHOLD.*\n\n` +
           `Hi *${studentName}*,\n\n` +
           `Your counselling session has been cancelled.\n\n` +
           `• *Psychologist:* ${counsellorName}\n` +
@@ -224,27 +224,27 @@ class WhatsAppService {
           `\n*Cancellation Reason:* ${reason || 'Cancelled upon request'}\n\n` +
           `If you would like to book another session, you can choose a new available appointment.\n\n` +
           `📅 *Book Another Session:* ${catalogUrl}\n\n` +
-          `If you have any questions, please contact BEHOLD Aspire Support.`;
+          `If you have any questions, please contact BEHOLD. Support.`;
         break;
 
       // 3. Psychologist Cancelled
       case 'psychologist_cancelled':
       case 'rejected':
         text =
-          `*Session Update — BEHOLD Aspire*\n\n` +
+          `*Session Update — BEHOLD.*\n\n` +
           `Hi *${studentName}*,\n\n` +
           `We’re sorry to inform you that your counselling session with *${counsellorName}* scheduled for *${date}* at *${time}* has been cancelled by the psychologist.\n\n` +
           `You can choose another available psychologist or select a different appointment time.\n\n` +
           `📅 *Book Another Session:* ${catalogUrl}\n\n` +
           `We apologize for the inconvenience and appreciate your understanding.\n\n` +
-          `BEHOLD Aspire Support Team`;
+          `BEHOLD. Support Team`;
         break;
 
       // 4. Session Rescheduled
       case 'rescheduled':
       case 'session_rescheduled':
         text =
-          `*Session Rescheduled — BEHOLD Aspire*\n\n` +
+          `*Session Rescheduled — BEHOLD.*\n\n` +
           `Hi *${studentName}*,\n\n` +
           `Your counselling session has been successfully rescheduled.\n\n` +
           `*Psychologist:* ${counsellorName}\n\n` +
@@ -265,7 +265,7 @@ class WhatsAppService {
       case 'reminder_24h':
       case 'reminder_24_hour':
         text =
-          `*Reminder: Your Session Is Tomorrow — BEHOLD Aspire*\n\n` +
+          `*Reminder: Your Session Is Tomorrow — BEHOLD.*\n\n` +
           `Hi *${studentName}* 👋\n\n` +
           `This is a friendly reminder about your counselling session tomorrow.\n\n` +
           `• *Psychologist:* ${counsellorName}\n` +
@@ -284,7 +284,7 @@ class WhatsAppService {
       case 'reminder_1_hour':
       case 'reminder':
         text =
-          `*Your Session Starts Soon — BEHOLD Aspire*\n\n` +
+          `*Your Session Starts Soon — BEHOLD.*\n\n` +
           `Hi *${studentName}* 👋\n\n` +
           `Your counselling session with *${counsellorName}* starts in approximately 1 hour.\n\n` +
           `• *Time:* ${time}\n` +
@@ -292,14 +292,14 @@ class WhatsAppService {
           `• *Mode:* ${modeLabel}\n\n` +
           `🔗 *Join Session:* ${finalMeetLink}\n\n` +
           `Please join a few minutes early and make sure you have a quiet and private space for your session.\n\n` +
-          `BEHOLD Aspire`;
+          `BEHOLD.`;
         break;
 
       // 7. Session Completed
       case 'completed':
       case 'session_completed':
         text =
-          `*Session Completed — BEHOLD Aspire*\n\n` +
+          `*Session Completed — BEHOLD.*\n\n` +
           `Hi *${studentName}*,\n\n` +
           `Your counselling session with *${counsellorName}* has been completed successfully.\n\n` +
           `• *Date:* ${date}\n` +
@@ -308,12 +308,12 @@ class WhatsAppService {
           `We hope the session was helpful and supportive.\n\n` +
           `If you'd like to continue your counselling journey, you can book another session at your convenience.\n\n` +
           `📅 *Book Another Session:* ${catalogUrl}\n\n` +
-          `Thank you for choosing BEHOLD Aspire. 💙`;
+          `Thank you for choosing BEHOLD.. 💙`;
         break;
 
       default:
         text =
-          `*BEHOLD Aspire — Session Update*\n\n` +
+          `*BEHOLD. — Session Update*\n\n` +
           `Hi *${studentName}*,\n` +
           `• *Psychologist:* ${counsellorName}\n` +
           `• *Date:* ${date}\n` +

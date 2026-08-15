@@ -13,7 +13,7 @@ if (require.main === module) {
     .then(() => {
       app.listen(PORT, () => {
         console.log(
-          `[Server] Behold Aspire backend running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`
+          `[Server] BEHOLD. backend running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`
         );
       });
     })

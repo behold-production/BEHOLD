@@ -1,5 +1,5 @@
 /**
- * Behold Aspire — Phone Normalization & Resolution Utilities
+ * BEHOLD. — Phone Normalization & Resolution Utilities
  */
 
 /**

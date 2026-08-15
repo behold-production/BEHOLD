@@ -159,7 +159,7 @@ class BlogController {
         primaryKeyword: primaryKeyword ? String(primaryKeyword).trim() : '',
         secondaryKeywords: secKeywordsArray,
         author: {
-          name: authorName || 'Behold Aspire Editorial Team',
+          name: authorName || 'BEHOLD. Editorial Team',
           role: authorRole || 'Senior Career Counsellor',
           avatar: authorAvatar || ''
         },

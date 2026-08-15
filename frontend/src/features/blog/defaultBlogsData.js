@@ -34,7 +34,7 @@ export const DEFAULT_BLOGS_DATA = [
       <p>With global climate mandates, sustainability officers and renewable energy specialists are in high demand across corporate and policy sectors.</p>
       
       <h2>How Scientific Aptitude Assessment Helps</h2>
-      <p>Choosing a path solely based on peer pressure or trends often leads to career burnout. At Behold Aspire, our multi-dimensional aptitude battery measures numerical, spatial, and verbal reasoning alongside emotional aptitude to map your true potential.</p>
+      <p>Choosing a path solely based on peer pressure or trends often leads to career burnout. At BEHOLD., our multi-dimensional aptitude battery measures numerical, spatial, and verbal reasoning alongside emotional aptitude to map your true potential.</p>
     `
   },
   {
@@ -62,7 +62,7 @@ export const DEFAULT_BLOGS_DATA = [
       <h3>The Difference Between Ability and Interest</h3>
       <p>Interest fluctuates over time, whereas underlying cognitive aptitude remains relatively consistent. A student might enjoy watching legal dramas (interest) but possess exceptional logical-mathematical speed suited for computational economics (aptitude).</p>
       
-      <h2>How Behold Aspire Maps Your Strengths</h2>
+      <h2>How BEHOLD. Maps Your Strengths</h2>
       <p>Our multi-dimensional aptitude testing assesses verbal reasoning, numerical computation, abstract spatial ability, and emotional resilience to build a holistic 360-degree career report.</p>
     `
   },

@@ -28,7 +28,7 @@ const PublicController = {
           <p><strong>Message:</strong></p>
           <blockquote style="background:#f9f9f9;border-left:5px solid #ccc;padding:10px;margin:10px 0;">${message}</blockquote>
         `;
-        await EmailService.sendEmail(adminEmail, '🔔 New Contact Inquiry - Behold Aspire', html);
+        await EmailService.sendEmail(adminEmail, '🔔 New Contact Inquiry - BEHOLD.', html);
       } catch (emailErr) {
         console.error('Failed to send inquiry email:', emailErr);
       }

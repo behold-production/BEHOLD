@@ -26,7 +26,7 @@ export default function BlogManagementTab() {
     readTime: '5 min read',
     coverImage: '',
     coverImageFile: null,
-    authorName: 'Behold Aspire Editorial Team',
+    authorName: 'BEHOLD. Editorial Team',
     authorRole: 'Senior Career Counsellor & Mentor',
     authorAvatar: '',
     primaryKeyword: '',
@@ -140,7 +140,7 @@ export default function BlogManagementTab() {
         readTime: blog.readTime || '5 min read',
         coverImage: blog.coverImage || '',
         coverImageFile: null,
-        authorName: blog.author?.name || 'Behold Aspire Editorial Team',
+        authorName: blog.author?.name || 'BEHOLD. Editorial Team',
         authorRole: blog.author?.role || 'Senior Career Counsellor & Mentor',
         authorAvatar: blog.author?.avatar || '',
         primaryKeyword: blog.primaryKeyword || '',
@@ -159,7 +159,7 @@ export default function BlogManagementTab() {
         readTime: '5 min read',
         coverImage: '',
         coverImageFile: null,
-        authorName: 'Behold Aspire Editorial Team',
+        authorName: 'BEHOLD. Editorial Team',
         authorRole: 'Senior Career Counsellor & Mentor',
         authorAvatar: '',
         primaryKeyword: '',
@@ -253,7 +253,7 @@ export default function BlogManagementTab() {
   };
 
   const handleShareToTelegram = (post) => {
-    const title = post.title || 'Behold Aspire Blog';
+    const title = post.title || 'BEHOLD. Blog';
     const category = post.category ? `[${post.category}]\n\n` : '';
     const excerpt = post.excerpt ? `${post.excerpt}\n\n` : '';
     const url = `${window.location.origin}/blog/${post.slug}`;
@@ -326,7 +326,7 @@ export default function BlogManagementTab() {
             Blog & Articles Management
           </h2>
           <p className="text-xs sm:text-sm text-slate-400">
-            Create, edit, format, and publish expert career guidance and aptitude articles for Behold Aspire.
+            Create, edit, format, and publish expert career guidance and aptitude articles for BEHOLD..
           </p>
         </div>
 

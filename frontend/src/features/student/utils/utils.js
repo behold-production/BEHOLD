@@ -405,7 +405,7 @@ export const downloadCertificatePDF = async (session, profile = {}, user = {}) =
     doc.setFont('Helvetica', 'normal');
     doc.setFontSize(8);
     doc.setTextColor(113, 113, 122);
-    doc.text('BEHOLD Aspire Platform', 67.5, 171, { align: 'center' });
+    doc.text('BEHOLD. Platform', 67.5, 171, { align: 'center' });
 
     const certId = `CERT-${(session?.appointmentId || session?.id || Date.now()).toString().slice(-8)}`;
     doc.setFont('Helvetica', 'bold');
@@ -470,7 +470,7 @@ export const downloadConsultationReportPDF = async (session, profile = {}, user 
     doc.setFont('Helvetica', 'normal');
     doc.setFontSize(8);
     doc.setTextColor(113, 113, 122);
-    doc.text('BEHOLD Aspire Platform — Official Confidential Document', 20, 35);
+    doc.text('BEHOLD. Platform — Official Confidential Document', 20, 35);
 
     // Meta Box
     doc.setFillColor(248, 250, 252);

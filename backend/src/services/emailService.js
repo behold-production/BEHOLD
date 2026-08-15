@@ -2,14 +2,14 @@ const nodemailer = require('nodemailer');
 const ics = require('ics');
 
 /**
- * Behold Aspire — Email Service
+ * BEHOLD. — Email Service
  * Primary provider: Resend SDK (resend.com)
  * Fallback: Nodemailer (Brevo, custom SMTP, Gmail)
  *
  * Required .env variables:
  *   RESEND_API_KEY      — Resend API key (re_...)
  *   RESEND_FROM_EMAIL   — Verified sender email (e.g. beholdoffice@behold.co.in)
- *   EMAIL_FROM_NAME     — Display name (default: "Behold Aspire")
+ *   EMAIL_FROM_NAME     — Display name (default: "BEHOLD.")
  */
 
 let _resendClient = null;
@@ -138,7 +138,7 @@ const sendEmail = async (to, subject, html, attachments = []) => {
     return { success: true, skipped: true };
   }
 
-  const fromName = (process.env.EMAIL_FROM_NAME || 'Behold Aspire').trim();
+  const fromName = (process.env.EMAIL_FROM_NAME || 'BEHOLD.').trim();
   const fromEmail = _getFromEmail();
   const from = `${fromName} <${fromEmail}>`;
 
@@ -191,7 +191,7 @@ const sendEmail = async (to, subject, html, attachments = []) => {
     html,
     attachments,
     headers: {
-      'X-Mailer': 'BEHOLD Aspire Notification Engine',
+      'X-Mailer': 'BEHOLD. Notification Engine',
       'X-Priority': '1 (Highest)',
       'X-MSMail-Priority': 'High',
       'Importance': 'High'
@@ -288,12 +288,12 @@ function _createIcsAttachment(appointment, recipientName, recipientEmail, otherP
       duration: { hours: 1 },
       title: `BEHOLD Counselling Session`,
       description: `Service: ${appointment.service || 'counselling'}\nMode: ${appointment.mode}${appointment.meetLink ? '\n\nJoin Link: ' + appointment.meetLink : ''}`,
-      location: appointment.mode === 'ONLINE' ? (appointment.meetLink || 'Online (Google Meet)') : 'Behold Aspire Center',
+      location: appointment.mode === 'ONLINE' ? (appointment.meetLink || 'Online (Google Meet)') : 'BEHOLD. Center',
       status: 'CONFIRMED',
       busyStatus: 'BUSY',
-      organizer: { name: 'BEHOLD Aspire', email: fromEmail },
+      organizer: { name: 'BEHOLD.', email: fromEmail },
       attendees: [
-        { name: 'BEHOLD Aspire', email: fromEmail, rsvp: false, partstat: 'ACCEPTED', role: 'CHAIR' },
+        { name: 'BEHOLD.', email: fromEmail, rsvp: false, partstat: 'ACCEPTED', role: 'CHAIR' },
         ...(recipientEmail ? [{ name: recipientName, email: recipientEmail, rsvp: true, role: 'REQ-PARTICIPANT' }] : []),
         ...(otherPartyEmail ? [{ name: otherPartyName || 'Psychologist', email: otherPartyEmail, rsvp: true, role: 'REQ-PARTICIPANT' }] : [])
       ]
@@ -357,17 +357,17 @@ const EmailService = {
   // Auth
   async sendWelcomeUser(user) {
     const html = Templates.welcomeUser({ name: user.name });
-    return sendEmail(user.email, 'Welcome to BEHOLD Aspire', html);
+    return sendEmail(user.email, 'Welcome to BEHOLD.', html);
   },
 
   async sendWelcomeCounsellor(counsellor) {
     const html = Templates.welcomeCounsellor({ name: counsellor.name });
-    return sendEmail(counsellor.email, 'Application Received — BEHOLD Aspire', html);
+    return sendEmail(counsellor.email, 'Application Received — BEHOLD.', html);
   },
 
   async sendPasswordResetOTP(email, name, otp) {
     const html = Templates.passwordResetOTP({ name, otp });
-    return sendEmail(email, `BEHOLD Aspire Password Reset Code: ${otp}`, html);
+    return sendEmail(email, `BEHOLD. Password Reset Code: ${otp}`, html);
   },
 
   // ── Appointment Email Notifications ──────────────────────────────────────
@@ -389,7 +389,7 @@ const EmailService = {
       );
       await sendEmail(
         payload.userEmail,
-        'Session Confirmed — BEHOLD Aspire',
+        'Session Confirmed — BEHOLD.',
         Templates.appointmentApproved(payload),
         userAttachments
       );
@@ -406,7 +406,7 @@ const EmailService = {
       );
       await sendEmail(
         payload.counsellorEmail,
-        'New Session Booked — BEHOLD Aspire',
+        'New Session Booked — BEHOLD.',
         Templates.appointmentApprovedCounsellor(payload),
         counsellorAttachments
       );
@@ -424,7 +424,7 @@ const EmailService = {
       date: appointment.date,
       reason
     });
-    return sendEmail(user.email, 'Session Update — BEHOLD Aspire', html);
+    return sendEmail(user.email, 'Session Update — BEHOLD.', html);
   },
 
   async sendAppointmentCancelled({ user, counsellor, appointment, cancelledBy, reason }) {
@@ -434,7 +434,7 @@ const EmailService = {
     // Notify user
     await sendEmail(
       user.email,
-      'Session Cancelled — BEHOLD Aspire',
+      'Session Cancelled — BEHOLD.',
       Templates.appointmentCancelled({
         recipientName: user.name,
         otherPartyName: counsellor?.name || 'Counsellor',
@@ -445,7 +445,7 @@ const EmailService = {
     if (counsellor?.email) {
       await sendEmail(
         counsellor.email,
-        'Session Cancelled — BEHOLD Aspire',
+        'Session Cancelled — BEHOLD.',
         Templates.appointmentCancelledCounsellor({
           recipientName: counsellor.name,
           otherPartyName: user.name || 'Student',
@@ -464,13 +464,13 @@ const EmailService = {
 
     await sendEmail(
       user.email,
-      'Session Rescheduled — BEHOLD Aspire',
+      'Session Rescheduled — BEHOLD.',
       Templates.appointmentRescheduled({ recipientName: user.name, otherPartyName: counsellor?.name, ...payload })
     );
     if (counsellor?.email) {
       await sendEmail(
         counsellor.email,
-        'Session Rescheduled — BEHOLD Aspire',
+        'Session Rescheduled — BEHOLD.',
         Templates.appointmentRescheduledCounsellor({ recipientName: counsellor.name, otherPartyName: user.name, ...payload })
       );
     }
@@ -484,7 +484,7 @@ const EmailService = {
       time: appointment.time,
       meetLink: appointment.meetLink
     });
-    return sendEmail(user.email, '🔗 Meeting Link Ready — Behold Aspire', html);
+    return sendEmail(user.email, '🔗 Meeting Link Ready — BEHOLD.', html);
   },
 
   async sendAppointmentReminder({ user, counsellor, appointment }) {
@@ -497,13 +497,13 @@ const EmailService = {
 
     await sendEmail(
       user.email,
-      '⏰ Appointment Reminder — Behold Aspire',
+      '⏰ Appointment Reminder — BEHOLD.',
       Templates.appointmentReminder({ recipientName: user.name, otherPartyName: counsellor?.name, ...payload })
     );
     if (counsellor?.email) {
       await sendEmail(
         counsellor.email,
-        '⏰ Appointment Reminder — Behold Aspire',
+        '⏰ Appointment Reminder — BEHOLD.',
         Templates.appointmentReminderCounsellor({ recipientName: counsellor.name, otherPartyName: user.name, ...payload })
       );
     }
@@ -519,18 +519,18 @@ const EmailService = {
       counsellorName: counsellor?.name,
       transactionId
     });
-    return sendEmail(user.email, '💚 Payment Confirmed — Behold Aspire', html);
+    return sendEmail(user.email, '💚 Payment Confirmed — BEHOLD.', html);
   },
 
   // Admin Actions
   async sendCounsellorVerified(counsellor) {
     const html = Templates.counsellorVerified({ name: counsellor.name });
-    return sendEmail(counsellor.email, '✅ Your Profile is Now Verified — Behold Aspire', html);
+    return sendEmail(counsellor.email, '✅ Your Profile is Now Verified — BEHOLD.', html);
   },
 
   async sendCounsellorRejected(counsellor, reason) {
     const html = Templates.counsellorRejected({ name: counsellor.name, reason });
-    return sendEmail(counsellor.email, 'Application Update — Behold Aspire', html);
+    return sendEmail(counsellor.email, 'Application Update — BEHOLD.', html);
   },
 
   async sendBroadcast(recipients, title, message) {
@@ -538,7 +538,7 @@ const EmailService = {
     for (const recipient of recipients) {
       if (recipient.email) {
         const html = Templates.broadcastEmail({ title, message, recipientName: recipient.name });
-        const result = await sendEmail(recipient.email, `📢 ${title} — Behold Aspire`, html);
+        const result = await sendEmail(recipient.email, `📢 ${title} — BEHOLD.`, html);
         results.push({ email: recipient.email, ...result });
       }
     }

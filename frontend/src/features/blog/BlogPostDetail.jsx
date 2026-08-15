@@ -39,9 +39,9 @@ const BlogPostDetail = () => {
 
   useEffect(() => {
     if (post) {
-      document.title = `${post.title} | Behold Aspire`;
+      document.title = `${post.title} | BEHOLD.`;
     } else {
-      document.title = 'Behold Aspire | Student Career Guidance & Aptitude Testing';
+      document.title = 'BEHOLD. | Student Career Guidance & Aptitude Testing';
     }
   }, [post]);
 
@@ -52,12 +52,12 @@ const BlogPostDetail = () => {
   };
 
   const handleShareWhatsApp = () => {
-    const text = encodeURIComponent(`Check out this insightful article on Behold Aspire: "${post?.title}"\n${window.location.href}`);
+    const text = encodeURIComponent(`Check out this insightful article on BEHOLD.: "${post?.title}"\n${window.location.href}`);
     window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
   };
 
   const handleShareTelegram = () => {
-    const text = encodeURIComponent(`Check out this insightful article on Behold Aspire: "${post?.title}"`);
+    const text = encodeURIComponent(`Check out this insightful article on BEHOLD.: "${post?.title}"`);
     const url = encodeURIComponent(window.location.href);
     window.open(`https://t.me/share/url?url=${url}&text=${text}`, '_blank');
   };
@@ -128,11 +128,11 @@ const BlogPostDetail = () => {
     "dateModified": new Date(post.updatedAt || post.createdAt || post.date).toISOString(),
     "author": {
       "@type": "Person",
-      "name": post.author?.name || post.authorName || 'Behold Aspire Editor'
+      "name": post.author?.name || post.authorName || 'BEHOLD. Editor'
     },
     "publisher": {
       "@type": "Organization",
-      "name": "Behold Aspire",
+      "name": "BEHOLD.",
       "logo": {
         "@type": "ImageObject",
         "url": typeof window !== 'undefined' ? window.location.origin + "/favicon.ico" : ""
