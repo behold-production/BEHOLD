@@ -1306,7 +1306,7 @@ const _handleAdminDetectLocation = () => {
    } finally {
    setIsDbLoading(false);
    }
-  };
+  }, [user]);
 
   const reloadDataRef = React.useRef(null);
   reloadDataRef.current = reloadData;

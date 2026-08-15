@@ -630,7 +630,7 @@ const AppointmentController = {
   async updateFeedback(req, res, next) {
     try {
       const { id } = req.params;
-      const { notes, feedback, nextSession } = req.body;
+      const { notes, feedback, nextSession, adminNotes } = req.body;
 
       const appointment = await StorageService.findById('appointments', id);
       if (!appointment) {
@@ -641,6 +641,13 @@ const AppointmentController = {
       if (notes !== undefined) updates.notes = notes;
       if (feedback !== undefined) updates.feedback = feedback;
       if (nextSession !== undefined) updates.nextSession = nextSession;
+      if (adminNotes !== undefined) updates.adminNotes = adminNotes;
+      
+      // If the appointment was marked as EXPIRED, but the counsellor is now adding reports,
+      // it means the session actually took place. Change the status to COMPLETED.
+      if (appointment.status === 'EXPIRED') {
+        updates.status = 'COMPLETED';
+      }
 
       const updated = await StorageService.update('appointments', id, updates);
 
@@ -776,6 +783,10 @@ const AppointmentController = {
       if (notes !== undefined) updates.notes = notes.trim();
       if (feedback !== undefined) updates.feedback = feedback.trim();
       if (nextSession !== undefined) updates.nextSession = nextSession.trim();
+      
+      if (appointment.status === 'EXPIRED') {
+        updates.status = 'COMPLETED';
+      }
 
       const updated = await StorageService.update('appointments', id, updates);
 
