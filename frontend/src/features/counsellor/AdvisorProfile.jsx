@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { ChevronLeft, Clock, Globe, Award, BookOpen, Calendar, MapPin, Heart, GraduationCap, Star, ShieldCheck, CheckCircle2, Video, Sparkles, UserCheck, Lock } from 'lucide-react';
+import { ChevronLeft, Clock, Globe, Award, BookOpen, Calendar, MapPin, Heart, GraduationCap, Star, ShieldCheck, CheckCircle2, Video, Sparkles, UserCheck, Lock, Share2 } from 'lucide-react';
 import ApiService from '../../services/api';
+import { toast } from 'react-hot-toast';
 import { calculateNextAvailable } from '../../utils/dateFormatter';
 import { formatExperience } from '../../utils/formatters';
 
@@ -30,6 +31,33 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [advisorId]);
+
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text).then(() => {
+      toast.success("Profile link copied to clipboard!");
+    }).catch(() => {
+      toast.error("Failed to copy link");
+    });
+  };
+
+  const handleShare = async () => {
+    const url = window.location.href;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `Book a session with ${advisor?.name || 'this specialist'}`,
+          text: `Check out ${advisor?.name || 'this specialist'}'s profile on Behold!`,
+          url: url,
+        });
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          copyToClipboard(url);
+        }
+      }
+    } else {
+      copyToClipboard(url);
+    }
+  };
 
   useEffect(() => {
     const fetchAdvisor = async () => {
@@ -180,11 +208,21 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
               </div>
 
               {/* Name & Role */}
-              <div>
-                <h1 className="text-3xl sm:text-4xl font-sans font-black text-slate-900 tracking-tight">
-                  {advisor.name}
-                </h1>
-                <p className="text-lg text-[#00a680] font-semibold mt-1">{advisor.role}</p>
+              <div className="flex justify-between items-start gap-4">
+                <div>
+                  <h1 className="text-3xl sm:text-4xl font-sans font-black text-slate-900 tracking-tight">
+                    {advisor.name}
+                  </h1>
+                  <p className="text-lg text-[#00a680] font-semibold mt-1">{advisor.role}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleShare}
+                  className="p-2.5 text-slate-400 hover:text-[#00a680] hover:bg-[#E6F6F4] rounded-full transition-colors cursor-pointer border-none bg-transparent flex-shrink-0"
+                  title="Share Profile"
+                >
+                  <Share2 className="w-5 h-5 sm:w-6 sm:h-6" />
+                </button>
               </div>
 
               {/* Divider */}
