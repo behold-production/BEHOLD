@@ -22,6 +22,7 @@ import ProfileTab from './psychologist-dashboard/tabs/ProfileTab';
 import AvailabilityTab from './psychologist-dashboard/tabs/AvailabilityTab';
 import BookingsTab from './psychologist-dashboard/tabs/BookingsTab';
 import RevenueTab from './psychologist-dashboard/tabs/RevenueTab';
+import SEO from '../../components/common/SEO';
 
 // Shared Utils
 import {
@@ -1930,6 +1931,7 @@ reportRegError("Please enter a valid email address.");
  // --- 2. DEDICATED LOGGED-IN COUNSELLOR CONSOLE ---
  return (
  <div className="h-screen overflow-hidden bg-zinc-955 text-white text-left flex flex-col lg:flex-row relative">
+ <SEO title="Counsellor Dashboard | BEHOLD." noindex={true} />
 
  {/* Background Soft Glows */}
  <div className="absolute top-1/4 left-1/3 w-[350px] h-[350px] bg-brand/5 rounded-full blur-3xl pointer-events-none" />

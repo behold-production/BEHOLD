@@ -7,6 +7,6 @@ const router = express.Router();
 router.get('/', verifyJWT, SessionController.getSessions);
 router.get('/:id', verifyJWT, SessionController.getSessionById);
 router.put('/:id', verifyJWT, SessionController.updateSession);
-router.put('/:id/meet-link', verifyJWT, requireRole('counsellor', 'admin'), SessionController.addMeetingLink);
+router.put('/:id/meet-link', verifyJWT, requireRole('counsellor', 'psychologist', 'admin', 'super_admin', 'sub_admin'), SessionController.addMeetingLink);
 
 module.exports = router;

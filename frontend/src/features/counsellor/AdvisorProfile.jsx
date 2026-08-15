@@ -4,6 +4,7 @@ import ApiService from '../../services/api';
 import { toast } from 'react-hot-toast';
 import { calculateNextAvailable } from '../../utils/dateFormatter';
 import { formatExperience } from '../../utils/formatters';
+import SEO from '../../components/common/SEO';
 
 function getInitials(name) {
   if (!name) return 'EX';
@@ -161,6 +162,26 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-slate-900 font-sans pt-24 sm:pt-28 pb-20 animate-in fade-in duration-300">
+      <SEO 
+        title={advisor.name}
+        description={`Book an online session with ${advisor.name}, ${advisor.role}. ${advisor.about ? advisor.about.substring(0, 100) + '...' : ''}`}
+        canonicalUrl={`https://www.behold.co.in/advisor/${advisor.id}`}
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "Physician",
+          "name": advisor.name,
+          "description": advisor.about,
+          "image": advisor.profilePic || "https://www.behold.co.in/favicon.svg",
+          "medicalSpecialty": "Psychiatric",
+          "priceRange": `₹${advisor.price}`,
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": advisor.rating.toString(),
+            "reviewCount": advisor.reviewCount > 0 ? advisor.reviewCount.toString() : "1"
+          }
+        }}
+      />
+      
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Back Navigation Bar */}

@@ -14,6 +14,7 @@ import BlogManagementTab from './admin-dashboard/tabs/BlogManagementTab';
 import SettingsTab from './admin-dashboard/tabs/SettingsTab';
 import AnalyticsTab from './admin-dashboard/tabs/AnalyticsTab';
 import RefundRequestsTab from './admin-dashboard/tabs/RefundRequestsTab';
+import SEO from '../../components/common/SEO';
 import TrashTab from './admin-dashboard/tabs/TrashTab';
 import RevenueTab from './admin-dashboard/tabs/RevenueTab';
 import ReviewsTab from './admin-dashboard/tabs/ReviewsTab';
@@ -2982,11 +2983,11 @@ const _handleAdminDetectLocation = () => {
  const isUserAdmin = user && user?.role?.toUpperCase() === 'ADMIN';
 
  if (isLoading) {
- return (
- <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
- <div className="animate-spin w-8 h-8 border-2 border-brand border-t-transparent rounded-full"></div>
- </div>
- );
+  return (
+    <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
+      <div className="animate-spin w-8 h-8 border-2 border-brand border-t-transparent rounded-full"></div>
+    </div>
+  );
  }
 
  if (!isUserAdmin) {
@@ -3233,6 +3234,7 @@ const _handleAdminDetectLocation = () => {
 
  return (
  <div className="h-screen overflow-hidden bg-zinc-955 text-white text-left flex flex-col lg:flex-row relative">
+ <SEO title="Admin Dashboard | BEHOLD." noindex={true} />
  
  {/* Background Soft Glows */}
  <div className="absolute top-1/4 left-1/3 w-[350px] h-[350px] bg-brand/5 rounded-full blur-3xl pointer-events-none" />

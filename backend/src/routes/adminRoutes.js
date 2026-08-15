@@ -7,8 +7,8 @@ const upload = require('../middleware/uploadMiddleware');
 
 const router = express.Router();
 
-// All admin routes require verifyJWT and admin role
-router.use(verifyJWT, requireRole('admin'));
+// All admin routes require verifyJWT and admin/super_admin/sub_admin role
+router.use(verifyJWT, requireRole('admin', 'super_admin', 'sub_admin'));
 
 // Dashboard Statistics (not cached to ensure real-time updates)
 router.get('/dashboard', AdminController.getDashboard);

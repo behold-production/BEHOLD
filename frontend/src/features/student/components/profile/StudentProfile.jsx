@@ -18,6 +18,7 @@ import OverviewTab from './OverviewTab';
 import ProfileDetailsTab from './ProfileDetailsTab';
 import BookedSessionsTab from './BookedSessionsTab';
 import ResultsTab from './ResultsTab';
+import SEO from '../../../../components/common/SEO';
 
 export default function StudentProfile({ onOpenBooking }) {
   const { showAlert } = useCustomDialog();
@@ -98,6 +99,7 @@ export default function StudentProfile({ onOpenBooking }) {
 
  return (
  <div className="pt-24 sm:pt-32 pb-24 lg:pb-12 min-h-screen bg-transparent text-surface-900 font-sans text-left relative overflow-hidden">
+ <SEO title="Student Profile | BEHOLD." noindex={true} />
  <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 space-y-5 sm:space-y-6">
  {(isLoading || authLoading) ? (
  <div className="animate-pulse space-y-5 sm:space-y-6">

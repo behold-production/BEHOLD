@@ -9,17 +9,17 @@ const router = express.Router();
 
 // Public Counsellor Listings
 router.get('/', cacheMiddleware(60), UserController.getCounsellors);
-router.get('/profile', verifyJWT, requireRole('counsellor'), CounsellorController.getProfile);
+router.get('/profile', verifyJWT, requireRole('counsellor', 'psychologist'), CounsellorController.getProfile);
 router.get('/:id', cacheMiddleware(60), UserController.getCounsellorDetails);
-router.put('/profile', verifyJWT, requireRole('counsellor'), CounsellorController.updateProfile);
+router.put('/profile', verifyJWT, requireRole('counsellor', 'psychologist'), CounsellorController.updateProfile);
 router.put(
   '/profile-pic',
   verifyJWT,
-  requireRole('counsellor'),
+  requireRole('counsellor', 'psychologist'),
   upload.single('profilePic'),
   CounsellorController.updateProfilePic
 );
-router.put('/availability', verifyJWT, requireRole('counsellor'), CounsellorController.updateAvailability);
-router.get('/dashboard', verifyJWT, requireRole('counsellor'), CounsellorController.getDashboard);
+router.put('/availability', verifyJWT, requireRole('counsellor', 'psychologist'), CounsellorController.updateAvailability);
+router.get('/dashboard', verifyJWT, requireRole('counsellor', 'psychologist'), CounsellorController.getDashboard);
 
 module.exports = router;

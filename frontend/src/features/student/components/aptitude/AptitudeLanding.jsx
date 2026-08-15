@@ -1,5 +1,6 @@
 import React from 'react';
 import greenTexture from '../../../../assets/greygreen.png';
+import SEO from '../../../../components/common/SEO';
 
 export default function AptitudeLanding({ setView }) {
   const handleProceed = () => {
@@ -21,6 +22,11 @@ export default function AptitudeLanding({ setView }) {
     <div 
       className="w-full min-h-screen pt-28 pb-20 text-surface-900 bg-transparent"
     >
+      <SEO 
+        title="Scientific Aptitude Testing & Career Mapping" 
+        description="Our C-DAT assessment, developed in partnership with CIGI, maps your natural strengths across reasoning, language, and numerical ability."
+        canonicalUrl="https://www.behold.co.in/aptitude"
+      />
       <div className="max-w-6xl mx-auto px-6 sm:px-10 lg:px-12 flex flex-col items-center text-center">
         
         <div className="w-full">

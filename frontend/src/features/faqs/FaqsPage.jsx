@@ -5,6 +5,7 @@ import Navbar from '../../components/common/Navbar';
 import Footer from '../../components/common/Footer';
 import ApiService from '../../services/api';
 import shadeGreenBg from '../../assets/greygreen.png';
+import SEO from '../../components/common/SEO';
 
 const DEFAULT_FAQS = [
   {
@@ -49,7 +50,6 @@ export default function FaqsPage() {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    document.title = 'Frequently Asked Questions & Support | BEHOLD';
 
     const fetchFaqs = async () => {
       setLoading(true);
@@ -88,6 +88,11 @@ export default function FaqsPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50/50 text-slate-900 selection:bg-[#00c9d6] selection:text-slate-950 font-sans">
+      <SEO 
+        title="Frequently Asked Questions & Support" 
+        description="Find answers to common questions about BEHOLD's professional online therapy, career aptitude assessments, and mental wellbeing support."
+        canonicalUrl="https://www.behold.co.in/faqs"
+      />
       <Navbar />
 
       {/* Header Section */}

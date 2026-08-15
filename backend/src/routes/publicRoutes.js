@@ -11,6 +11,7 @@ router.get('/faqs', cacheMiddleware(300), PublicController.getFaqs);
 router.get('/settings', cacheMiddleware(300), PublicController.getSettings);
 router.post('/test-results', PublicController.saveTestResult);
 router.get('/aptitude-questions', cacheMiddleware(300), PublicController.getAptitudeQuestions);
+router.get('/sitemap.xml', cacheMiddleware(3600), PublicController.getSitemap);
 
 // Review routes
 router.get('/reviews', cacheMiddleware(300), reviewController.getPublicReviews);

@@ -193,6 +193,55 @@ const PublicController = {
     } catch (error) {
       next(error);
     }
+  },
+
+  // Dynamic Sitemap Generator
+  async getSitemap(req, res, next) {
+    try {
+      const baseUrl = 'https://www.behold.co.in';
+      
+      const blogs = await StorageService.findAll('blogs', { status: 'published' });
+      const counsellors = await StorageService.findAll('counsellors', { status: 'active', isVerified: true });
+      
+      let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+      xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+      
+      const addUrl = (path, priority, freq) => {
+        xml += `  <url>\n`;
+        xml += `    <loc>${baseUrl}${path}</loc>\n`;
+        xml += `    <changefreq>${freq}</changefreq>\n`;
+        xml += `    <priority>${priority}</priority>\n`;
+        xml += `  </url>\n`;
+      };
+
+      // Static routes
+      addUrl('/', '1.0', 'daily');
+      addUrl('/blog', '0.9', 'daily');
+      addUrl('/booking', '0.8', 'weekly');
+      addUrl('/sample-test', '0.8', 'monthly');
+      addUrl('/aptitude', '0.9', 'weekly');
+      addUrl('/faqs', '0.7', 'monthly');
+
+      // Dynamic blogs
+      for (const blog of blogs) {
+        addUrl(`/blog/${blog.slug}`, '0.8', 'weekly');
+      }
+
+      // Dynamic counsellors
+      for (const counsellor of counsellors) {
+        const id = counsellor.id || counsellor._id;
+        if (id) {
+          addUrl(`/advisor/${id}`, '0.8', 'weekly');
+        }
+      }
+
+      xml += `</urlset>`;
+
+      res.header('Content-Type', 'application/xml');
+      res.send(xml);
+    } catch (error) {
+      next(error);
+    }
   }
 };
 
