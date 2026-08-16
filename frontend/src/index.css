@@ -436,6 +436,43 @@ body.no-scroll {
   scrollbar-width: none !important;
 }
 
+/* Restore Scrollbars for Console and Custom Scrollable Views */
+.admin-console-theme ::-webkit-scrollbar,
+.counsellor-console-theme ::-webkit-scrollbar,
+.custom-scrollbar::-webkit-scrollbar {
+  display: block !important;
+  width: 8px !important;
+  height: 8px !important;
+}
+
+.admin-console-theme ::-webkit-scrollbar-track,
+.counsellor-console-theme ::-webkit-scrollbar-track,
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(9, 14, 26, 0.3) !important;
+  border-radius: 9999px !important;
+}
+
+.admin-console-theme ::-webkit-scrollbar-thumb,
+.counsellor-console-theme ::-webkit-scrollbar-thumb,
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(39, 39, 42, 0.7) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border-radius: 9999px !important;
+}
+
+.admin-console-theme ::-webkit-scrollbar-thumb:hover,
+.counsellor-console-theme ::-webkit-scrollbar-thumb:hover,
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #00E5FF !important; /* Premium brand neon blue hover */
+}
+
+.admin-console-theme *,
+.counsellor-console-theme *,
+.custom-scrollbar {
+  -ms-overflow-style: auto !important;
+  scrollbar-width: thin !important;
+}
+
 /* Luxury Card Base Utility */
 @utility card-luxury {
   background: rgba(255, 255, 255, 0.75);
