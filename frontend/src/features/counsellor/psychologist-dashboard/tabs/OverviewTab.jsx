@@ -1,5 +1,5 @@
-import React from 'react';
-import { Clock, AlertCircle, Video } from 'lucide-react';
+import React, { useState } from 'react';
+import { Clock, AlertCircle, Video, Link2, Copy, CheckCheck, ExternalLink, Share2 } from 'lucide-react';
 import { formatDateString } from '../../../../utils/dateFormatter';
 
 const formatAmount = (num) => {
@@ -14,6 +14,8 @@ const formatAmount = (num) => {
 };
 
 const OverviewTab = ({ profile, bookings, isSessionCompleted, setCurrentSection }) => {
+    const [copied, setCopied] = useState(false);
+
     const shadowStyle = {
         background: '#18181b', // zinc-900
         border: '1px solid #27272a', // zinc-800
@@ -166,6 +168,100 @@ const OverviewTab = ({ profile, bookings, isSessionCompleted, setCurrentSection 
                     </div>
                 </div>
             </div>
+
+            {/* ── Shareable Instagram Bio Link Card ─────────────────────────── */}
+            {(() => {
+                const counsellorId = profile?._id || profile?.id;
+                if (!counsellorId) return null;
+                const shareableLink = `${window.location.origin}/advisor/${counsellorId}`;
+
+                const handleCopy = () => {
+                    navigator.clipboard.writeText(shareableLink).then(() => {
+                        setCopied(true);
+                        setTimeout(() => setCopied(false), 2000);
+                    }).catch(() => {
+                        // Fallback for older browsers
+                        const el = document.createElement('textarea');
+                        el.value = shareableLink;
+                        document.body.appendChild(el);
+                        el.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(el);
+                        setCopied(true);
+                        setTimeout(() => setCopied(false), 2000);
+                    });
+                };
+
+                const isMobile = /iPhone|Android/i.test(navigator.userAgent);
+
+                return (
+                    <div
+                        className="rounded-[10px] p-5 relative overflow-hidden flex flex-col gap-4 transition-all hover:-translate-y-1"
+                        style={shadowStyle}
+                    >
+                        {/* Header */}
+                        <div className="flex items-start justify-between gap-3">
+                            <div className="space-y-1">
+                                <span className="text-xs bg-gradient-to-r from-purple-900/60 to-pink-900/40 border border-purple-700/40 text-purple-300 px-2 py-0.5 rounded font-bold flex items-center gap-1.5 w-fit">
+                                    <Share2 className="w-3 h-3" />
+                                    Instagram Bio Link
+                                </span>
+                                <p className="text-zinc-400 text-xs font-semibold mt-1.5">
+                                    Share this link in your Instagram bio so clients can book directly.
+                                </p>
+                            </div>
+                            <Link2 className="w-5 h-5 text-zinc-600 shrink-0 mt-0.5" />
+                        </div>
+
+                        {/* URL display */}
+                        <div className="flex items-center gap-2 bg-zinc-950/60 border border-zinc-800 rounded-[8px] px-3 py-2.5">
+                            <span className="flex-1 text-xs font-mono text-zinc-300 truncate select-all" title={shareableLink}>
+                                {shareableLink}
+                            </span>
+                        </div>
+
+                        {/* Actions */}
+                        <div className="flex items-center gap-2 flex-wrap">
+                            <button
+                                onClick={handleCopy}
+                                className={`inline-flex items-center gap-1.5 text-xs font-bold px-4 py-2 rounded-[8px] border transition-all cursor-pointer ${
+                                    copied
+                                        ? 'bg-emerald-900/40 border-emerald-700/50 text-emerald-400'
+                                        : 'bg-zinc-800 border-zinc-700 text-zinc-200 hover:bg-zinc-700 hover:text-white'
+                                }`}
+                            >
+                                {copied ? (
+                                    <><CheckCheck className="w-3.5 h-3.5" /> Copied!</>
+                                ) : (
+                                    <><Copy className="w-3.5 h-3.5" /> Copy Link</>
+                                )}
+                            </button>
+
+                            <a
+                                href={shareableLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1.5 text-xs font-bold px-4 py-2 rounded-[8px] border bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 transition-all"
+                            >
+                                <ExternalLink className="w-3.5 h-3.5" /> Preview
+                            </a>
+
+                            {isMobile ? (
+                                <a
+                                    href="instagram://"
+                                    className="inline-flex items-center gap-1.5 text-xs font-bold px-4 py-2 rounded-[8px] border bg-gradient-to-r from-purple-900/50 to-pink-900/50 border-purple-700/40 text-purple-300 hover:from-purple-800/60 hover:to-pink-800/60 transition-all"
+                                >
+                                    <Share2 className="w-3.5 h-3.5" /> Open Instagram
+                                </a>
+                            ) : (
+                                <span className="text-[10px] text-zinc-600 font-semibold tracking-wide">
+                                    💡 Copy &amp; paste into your Instagram bio → Edit Profile → Website
+                                </span>
+                            )}
+                        </div>
+                    </div>
+                );
+            })()}
         </div>
     );
 };

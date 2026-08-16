@@ -1,11 +1,117 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Plus, Video, MapPin, Calendar, Clock, AlertCircle,
   ExternalLink, Lock, Download, RefreshCw, X as XIcon,
-  CalendarDays, CheckCircle2, Star, Award, Trophy, Trash2
+  CalendarDays, CheckCircle2, Star, Award, Trophy, Trash2,
+  MessageSquare, Send, ChevronDown
 } from 'lucide-react';
 import { formatDateString } from "../../../../utils/dateFormatter";
 import { formatCountdown } from '../../utils/utils';
+
+// Inline feedback form for a single completed session
+function SessionFeedbackForm({ session, onSubmit, alreadySubmitted }) {
+  const [open, setOpen]         = useState(false);
+  const [hovered, setHovered]   = useState(0);
+  const [rating, setRating]     = useState(0);
+  const [comment, setComment]   = useState('');
+  const [submitting, setSubmitting] = useState(false);
+
+  if (alreadySubmitted) {
+    return (
+      <div className="mt-3 flex items-center gap-2 text-emerald-600 bg-emerald-50 border border-emerald-200 rounded-[10px] px-3 py-2 w-fit">
+        <CheckCircle2 className="w-3.5 h-3.5" />
+        <span className="text-[10px] font-semibold tracking-widest">Review Submitted ✓</span>
+      </div>
+    );
+  }
+
+  const handleSubmit = async () => {
+    if (!rating) return;
+    setSubmitting(true);
+    await onSubmit(session, rating, comment);
+    setSubmitting(false);
+    setOpen(false);
+  };
+
+  return (
+    <div className="mt-3">
+      {!open ? (
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className="inline-flex items-center gap-1.5 text-[10px] font-semibold tracking-widest text-amber-600 hover:text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200 px-3 py-1.5 rounded-[8px] transition-all cursor-pointer"
+        >
+          <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+          Leave a Review
+          <ChevronDown className="w-3 h-3" />
+        </button>
+      ) : (
+        <div className="border border-amber-200 bg-amber-50/60 rounded-[10px] p-3.5 space-y-3 animate-fade-scale">
+          <p className="text-[10px] font-semibold tracking-widest text-surface-600">Rate your session with <span className="text-surface-900">{session.advisorName}</span></p>
+
+          {/* Star picker */}
+          <div className="flex items-center gap-1">
+            {[1, 2, 3, 4, 5].map(n => (
+              <button
+                key={n}
+                type="button"
+                onMouseEnter={() => setHovered(n)}
+                onMouseLeave={() => setHovered(0)}
+                onClick={() => setRating(n)}
+                className="cursor-pointer transition-transform hover:scale-110 active:scale-95"
+              >
+                <Star
+                  className={`w-6 h-6 transition-colors ${
+                    n <= (hovered || rating)
+                      ? 'fill-amber-400 text-amber-400'
+                      : 'fill-surface-100 text-surface-300'
+                  }`}
+                />
+              </button>
+            ))}
+            {rating > 0 && (
+              <span className="ml-2 text-[10px] font-semibold text-surface-600 tracking-widest">
+                {['', 'Poor', 'Fair', 'Good', 'Very Good', 'Excellent!'][rating]}
+              </span>
+            )}
+          </div>
+
+          {/* Comment */}
+          <textarea
+            value={comment}
+            onChange={e => setComment(e.target.value)}
+            placeholder="Share your experience (optional)…"
+            rows={3}
+            className="w-full text-xs font-medium text-surface-900 placeholder-surface-400 bg-white border border-surface-200 focus:border-amber-400 focus:ring-2 focus:ring-amber-100 rounded-[8px] px-3 py-2 resize-none outline-none transition-all"
+          />
+
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={handleSubmit}
+              disabled={!rating || submitting}
+              className="inline-flex items-center gap-1.5 text-[10px] font-semibold tracking-widest text-white bg-amber-500 hover:bg-amber-600 disabled:opacity-50 disabled:cursor-not-allowed border border-amber-500 px-3.5 py-1.5 rounded-[8px] transition-all cursor-pointer"
+            >
+              {submitting ? (
+                <RefreshCw className="w-3 h-3 animate-spin" />
+              ) : (
+                <Send className="w-3 h-3" />
+              )}
+              {submitting ? 'Submitting…' : 'Submit Review'}
+            </button>
+            <button
+              type="button"
+              onClick={() => { setOpen(false); setRating(0); setComment(''); }}
+              className="text-[10px] font-semibold tracking-widest text-surface-500 hover:text-surface-700 cursor-pointer transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 const BookedSessionsTab = ({
   sessionSubTab,
@@ -25,7 +131,9 @@ const BookedSessionsTab = ({
   downloadPDFReceiptForSession,
   downloadCertificatePDF,
   downloadConsultationReportPDF,
-  onOpenBooking
+  onOpenBooking,
+  submittedFeedbackIds = new Set(),
+  onSubmitFeedback
 }) => {
   return (
     <div className="space-y-5">
@@ -409,6 +517,15 @@ const BookedSessionsTab = ({
                           )}
                         </div>
                       </div>
+
+                      {/* Inline feedback form for completed sessions */}
+                      {session.status === 'COMPLETED' && onSubmitFeedback && (
+                        <SessionFeedbackForm
+                          session={session}
+                          onSubmit={onSubmitFeedback}
+                          alreadySubmitted={submittedFeedbackIds.has(session._id || session.id || session.bookingId)}
+                        />
+                      )}
                     </div>
                   </div>
                 ))}

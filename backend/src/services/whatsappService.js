@@ -305,10 +305,12 @@ class WhatsAppService {
           `• *Date:* ${date}\n` +
           `• *Time:* ${time}\n` +
           `• *Duration:* ${duration}\n\n` +
-          `We hope the session was helpful and supportive.\n\n` +
+          `We hope the session was helpful and supportive. Your wellbeing matters to us. 💙\n\n` +
+          `⭐ *Share Your Experience* — Your feedback helps future students find the right support.\n` +
+          `👉 Leave a Review: ${bookingUrl}\n\n` +
           `If you'd like to continue your counselling journey, you can book another session at your convenience.\n\n` +
           `📅 *Book Another Session:* ${catalogUrl}\n\n` +
-          `Thank you for choosing BEHOLD.. 💙`;
+          `Thank you for choosing BEHOLD..`;
         break;
 
       default:
@@ -355,6 +357,34 @@ class WhatsAppService {
 
   async sendDayOfReminder(phone, details) {
     return this.sendBookingAlert(phone, 'reminder_1h', details);
+  }
+
+  /**
+   * Notify a psychologist when a client submits a star rating / review
+   */
+  async sendFeedbackReceived(phone, details = {}) {
+    const {
+      counsellorName = 'Psychologist',
+      studentName    = 'A client',
+      rating         = 5,
+      comment        = ''
+    } = details;
+
+    const stars = '⭐'.repeat(Math.max(1, Math.min(5, Number(rating))));
+    const profileUrl = 'https://www.behold.co.in/counsellor';
+
+    const text =
+      `*New Client Review — BEHOLD.*\n\n` +
+      `Hi *${counsellorName}*,\n\n` +
+      `Great news! *${studentName}* just left you a review.\n\n` +
+      `${stars} *${rating}/5 Stars*\n` +
+      (comment ? `_"${comment}"_\n\n` : '\n') +
+      `This review has been recorded and will be reflected in your public rating.\n\n` +
+      `📊 *View Your Dashboard:* ${profileUrl}\n\n` +
+      `Thank you for your dedication to supporting students. 💙\n\n` +
+      `BEHOLD. Support Team`;
+
+    return this._dispatch(phone, text);
   }
 
   /**

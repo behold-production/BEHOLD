@@ -1,4 +1,5 @@
 const StorageService = require('../services/storageService');
+const WhatsAppService = require('../services/whatsappService');
 
 const FeedbackController = {
   // Submit Feedback (User / Student)
@@ -71,6 +72,22 @@ const FeedbackController = {
         type: 'feedback_received',
         isRead: false
       });
+
+      // Send WhatsApp alert to counsellor about the new review
+      try {
+        const counsellor = await StorageService.findById('counsellors', counsellorId);
+        const counsellorPhone = counsellor?.phone || counsellor?.whatsappPhone;
+        if (counsellorPhone) {
+          await WhatsAppService.sendFeedbackReceived(counsellorPhone, {
+            counsellorName: counsellor.name || 'Psychologist',
+            studentName: student ? student.name : 'A client',
+            rating: parseInt(rating),
+            comment: comment || ''
+          }).catch(err => console.error('[WhatsApp Feedback Alert Error]:', err));
+        }
+      } catch (waErr) {
+        console.error('[Feedback WhatsApp Notification Error]:', waErr);
+      }
 
       res.status(201).json({
         success: true,

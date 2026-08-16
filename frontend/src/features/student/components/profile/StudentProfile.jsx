@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { 
@@ -7,6 +7,7 @@ import {
   getNotificationPermission
 } from '../../../../services/notificationHelper';
 import { useCustomDialog } from '../../../../context/CustomDialogContext';
+import ApiService from '../../../../services/api';
 
 import { useStudentProfile } from '../../hooks/useStudentProfile';
 import { useStudentSessions } from '../../hooks/useStudentSessions';
@@ -48,6 +49,34 @@ export default function StudentProfile({ onOpenBooking }) {
 
   const authLoading = isLoading; // alias for UI compatibility
   const user = { name: displayName, role: 'USER' }; // simplified compatibility
+
+  // Track which sessions have already been reviewed (persist in localStorage)
+  const [submittedFeedbackIds, setSubmittedFeedbackIds] = useState(() => {
+    try {
+      const stored = localStorage.getItem('behold_submitted_feedbacks');
+      return stored ? new Set(JSON.parse(stored)) : new Set();
+    } catch { return new Set(); }
+  });
+
+  const handleSubmitFeedback = useCallback(async (session, rating, comment) => {
+    const sessionId = session._id || session.id || session.bookingId;
+    try {
+      await ApiService.post('/api/feedbacks', {
+        counsellorId: session.advisorId || session.counsellorId,
+        rating: parseInt(rating),
+        comment: comment.trim()
+      });
+      setSubmittedFeedbackIds(prev => {
+        const next = new Set(prev);
+        next.add(sessionId);
+        try { localStorage.setItem('behold_submitted_feedbacks', JSON.stringify([...next])); } catch {}
+        return next;
+      });
+      toast.success('Thank you for your review! ⭐');
+    } catch (err) {
+      toast.error('Failed to submit review. Please try again.');
+    }
+  }, []);
 
   // App settings
   const enablePsychology = useMemo(() => {
@@ -213,6 +242,8 @@ export default function StudentProfile({ onOpenBooking }) {
  downloadCertificatePDF={downloadCertificatePDF}
  downloadConsultationReportPDF={(session) => downloadConsultationReportPDF(session, profile, user)}
  onOpenBooking={onOpenBooking}
+ submittedFeedbackIds={submittedFeedbackIds}
+ onSubmitFeedback={handleSubmitFeedback}
  />
  )}
  {currentSection === 'results' && (
