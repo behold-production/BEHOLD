@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronDown, HelpCircle, Search, X, MessageSquare, ArrowRight, ShieldCheck, Sparkles } from 'lucide-react';
+import { ChevronDown, HelpCircle, Search, X, MessageSquare, ArrowRight, ShieldCheck, Sparkles, Minus, Plus } from 'lucide-react';
 import Navbar from '../../components/common/Navbar';
 import Footer from '../../components/common/Footer';
 import ApiService from '../../services/api';

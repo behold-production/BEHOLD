@@ -21,7 +21,9 @@ export default function SubAdminManagementTab(props) {
     handleGenerateResetToken,
     handleDeleteUser,
     parseStaffDetails,
-    isDbLoading = false
+    isDbLoading = false,
+    isSavingForm,
+    setIsSavingForm
   } = props;
 
   const [activeRoleTab, setActiveRoleTab] = useState('roles');

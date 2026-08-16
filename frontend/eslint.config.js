@@ -32,4 +32,10 @@ export default defineConfig([
       'react-hooks/preserve-manual-memoization': 'off'
     }
   },
+  {
+    files: ['api/**/*.{js,jsx}'],
+    languageOptions: {
+      globals: globals.node,
+    }
+  }
 ])

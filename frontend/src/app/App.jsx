@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, useNavigate, useLocation, useParams } from 're
 import { MessageCircle, X, Download, ShieldAlert, Eye, EyeOff } from 'lucide-react'; //
 import { Toaster, useToasterStore, toast } from 'react-hot-toast';
 import ProtectedRoute from '../components/common/ProtectedRoute';
+import UnauthorizedFallback from '../features/admin/UnauthorizedFallback';
 import Navbar from '../components/common/Navbar';
 import BrandIcon from '../components/common/BrandIcon';
 import Hero from '../features/landing/Hero';
@@ -627,21 +628,21 @@ export default function App() {
           } />
 
           {/* Admin Dashboard */}
-          <Route path="/admin" element={ //
-            <ProtectedRoute allowedRoles={['ADMIN', 'SUPER_ADMIN', 'SUB_ADMIN']}>
-              <div className="admin-console-theme">
+          <Route path="/admin" element={
+            <div className="admin-console-theme">
+              {user && ['ADMIN', 'SUPER_ADMIN', 'SUB_ADMIN'].includes(user.role?.toUpperCase()) ? (
                 <AdminDashboard setView={() => { }} />
-              </div>
-            </ProtectedRoute>
+              ) : (
+                <UnauthorizedFallback roleRequired="ADMIN" />
+              )}
+            </div>
           } />
 
           {/* Counsellor Dashboard */}
-          <Route path="/counsellor" element={ //
-            <ProtectedRoute allowedRoles={['COUNSELLOR', 'PSYCHOLOGIST']}>
-              <div className="counsellor-console-theme">
-                <PsychologistDashboard setView={() => { }} />
-              </div>
-            </ProtectedRoute>
+          <Route path="/counsellor" element={
+            <div className="counsellor-console-theme">
+              <PsychologistDashboard setView={() => { }} />
+            </div>
           } />
           <Route path="/conceller" element={<Navigate to="/counsellor" replace />} />
           <Route path="/cousellor" element={<Navigate to="/counsellor" replace />} />

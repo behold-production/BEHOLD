@@ -878,7 +878,24 @@ export default function AdminDashboard({ setView: _setView }) {
  latitude: 0,
  longitude: 0
  });
- const [adminSearchQuery, setAdminSearchQuery] = useState('');
+  // Admin Psychologist Availability states
+  const [adminActiveDays, setAdminActiveDays] = useState({
+    1: true,
+    2: true,
+    3: true,
+    4: true,
+    5: true,
+    6: false,
+    0: false
+  });
+  const [adminAvailableSlots, setAdminAvailableSlots] = useState([]);
+  const [adminAllSlots, setAdminAllSlots] = useState([]);
+  const [adminCustomHour, setAdminCustomHour] = useState('09');
+  const [adminCustomMinute, setAdminCustomMinute] = useState('00');
+  const [adminCustomPeriod, setAdminCustomPeriod] = useState('AM');
+  const [adminSlotInterval, setAdminSlotInterval] = useState(60);
+
+  const [adminSearchQuery, setAdminSearchQuery] = useState('');
  const [adminSearchResults, setAdminSearchResults] = useState([]);
  const [isAdminSearching, setIsAdminSearching] = useState(false);
  const [isAdminLocating, setIsAdminLocating] = useState(false);
@@ -3068,13 +3085,9 @@ const _handleAdminDetectLocation = () => {
  // --- DEDICATED LOGGED-IN ADMIN DASHBOARD UI ---
  const tabProps = {
   hasBlogPermission,
-
  isSavingForm,
- setIsSavingForm,
  currentSection,
  setCurrentSection,
- permissionState,
- setPermissionState,
  announcementTitle,
  setAnnouncementTitle,
  announcementMessage,
@@ -3151,8 +3164,6 @@ const _handleAdminDetectLocation = () => {
  setAptitudePage,
  aptitudeLimit,
  setAptitudeLimit,
- isSavingForm,
- setIsSavingForm,
  loginEmail,
  setLoginEmail,
  loginPassword,
