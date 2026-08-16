@@ -3083,10 +3083,15 @@ const _handleAdminDetectLocation = () => {
 
 
  // --- DEDICATED LOGGED-IN ADMIN DASHBOARD UI ---
- const tabProps = {
-  hasBlogPermission,
- isSavingForm,
- currentSection,
+  const tabProps = {
+   hasBlogPermission,
+  isSavingForm,
+  setIsSavingForm,
+  selectedBookingIds,
+  setSelectedBookingIds,
+  permissionState,
+  setPermissionState,
+  currentSection,
  setCurrentSection,
  announcementTitle,
  setAnnouncementTitle,
@@ -3203,6 +3208,16 @@ const _handleAdminDetectLocation = () => {
  handleUpdatePsy,
  handleDeletePsy,
  handleRejectPsy,
+ isAddBookingOpen,
+ setIsAddBookingOpen,
+ isEditBookingOpen,
+ setIsEditBookingOpen,
+ bookingForm,
+ setBookingForm,
+ bookingFormError,
+ setBookingFormError,
+ bookingFormSuccess,
+ setBookingFormSuccess,
  handleCreateBooking,
  handleOpenEditBooking,
  handleUpdateBooking,
