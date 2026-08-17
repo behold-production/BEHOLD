@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { User, ShieldAlert, Award, Trash, Check, Plus, Lock, Settings, KeyRound, BarChart3, LogOut, Search, ShieldCheck, Calendar, Clock, Link, AlertCircle, Edit, Video, UserPlus, MessageSquare, FileSpreadsheet, HelpCircle, X, ChevronRight, ChevronLeft, Mail, Shield, Menu, Brain, Download, FileText, Eye, EyeOff, Bell, Send } from 'lucide-react';
 import { SkeletonTableRows, PaginationBar } from '../components/SharedAdminUI';
 import { formatDateString } from '../utils';
@@ -366,10 +366,10 @@ export default function BookingManagementTab(props) {
   }).sort((a, b) => {
     if (a.status === 'PENDING' && b.status !== 'PENDING') return -1;
     if (a.status !== 'PENDING' && b.status === 'PENDING') return 1;
-    if (a.status === 'CONFIRMED' && b.status !== 'CONFIRMED' && b.status !== 'PENDING') return -1;
-    if (b.status === 'CONFIRMED' && a.status !== 'CONFIRMED' && a.status !== 'PENDING') return 1;
     return (b.date || '').localeCompare(a.date || '');
   });
+
+  const [viewingReportBooking, setViewingReportBooking] = useState(null);
 
  return (
  <div className="space-y-6 animate-in fade-in duration-200 text-sm">
@@ -626,11 +626,11 @@ export default function BookingManagementTab(props) {
   )}
  {booking.status === 'COMPLETED' && (
  <button
- onClick={() => downloadDiagnosticPDF(booking)}
+ onClick={() => setViewingReportBooking(booking)}
  className="p-1.5 bg-zinc-900 text-emerald-500 hover:text-white hover:bg-emerald-900 rounded border border-zinc-800 transition cursor-pointer"
- title="Download Clinical Report PDF"
+ title="View Clinical Report"
  >
- <FileText className="w-3.5 h-3.5" />
+ <Eye className="w-3.5 h-3.5" />
  </button>
  )}
  {canEditBookings && (
@@ -660,13 +660,116 @@ export default function BookingManagementTab(props) {
  </table>
  </div>
  </div>
- <PaginationBar
- total={filteredBookings.length}
- page={bookingPage}
- limit={bookingLimit}
- onPageChange={setBookingPage}
- onLimitChange={setBookingLimit}
- />
- </div>
- );
+  <PaginationBar
+  total={filteredBookings.length}
+  page={bookingPage}
+  limit={bookingLimit}
+  onPageChange={setBookingPage}
+  onLimitChange={setBookingLimit}
+  />
+
+  {/* View Report Modal */}
+  {viewingReportBooking && (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="bg-zinc-950 border border-zinc-800 rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+        
+        {/* Header */}
+        <div className="flex items-center justify-between p-5 border-b border-zinc-800 bg-zinc-900/50">
+          <div>
+            <h2 className="text-lg font-bold text-white flex items-center gap-2">
+              <FileText className="w-5 h-5 text-emerald-400" />
+              Clinical Consultation Report
+            </h2>
+            <p className="text-sm text-zinc-400 mt-1">
+              Report ID: CL-REP-{viewingReportBooking.id ? viewingReportBooking.id.toString().substring(Math.max(0, viewingReportBooking.id.toString().length - 6)) : 'N/A'}
+            </p>
+          </div>
+          <button
+            onClick={() => setViewingReportBooking(null)}
+            className="p-2 bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white rounded-xl transition-colors cursor-pointer"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Body */}
+        <div className="p-6 overflow-y-auto space-y-6 flex-1 scrollbar-thin scrollbar-thumb-zinc-800 scrollbar-track-transparent">
+          
+          {/* Patient Info */}
+          <div className="grid grid-cols-2 gap-4 bg-zinc-900/30 p-4 rounded-xl border border-zinc-800/50">
+            <div>
+              <p className="text-xs text-zinc-500 font-bold mb-1">PATIENT / CLIENT</p>
+              <p className="text-sm text-zinc-200 font-medium">{viewingReportBooking.studentName || viewingReportBooking.student?.name || 'N/A'}</p>
+            </div>
+            <div>
+              <p className="text-xs text-zinc-500 font-bold mb-1">CONSULTANT</p>
+              <p className="text-sm text-zinc-200 font-medium">{viewingReportBooking.counsellorName || viewingReportBooking.counsellor?.psychologist?.name || 'N/A'}</p>
+            </div>
+          </div>
+
+          {/* Notes */}
+          <div className="space-y-2">
+            <h3 className="text-sm font-bold text-emerald-400 uppercase tracking-wide flex items-center gap-2">
+              <span className="w-6 h-px bg-emerald-900"></span> Clinical Assessment & Observation
+            </h3>
+            <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4">
+              <p className="text-sm text-zinc-300 leading-relaxed whitespace-pre-wrap">
+                {viewingReportBooking.notes || 'No clinical/diagnostic notes recorded for this session.'}
+              </p>
+            </div>
+          </div>
+
+          {/* Recommendations */}
+          <div className="space-y-2">
+            <h3 className="text-sm font-bold text-emerald-400 uppercase tracking-wide flex items-center gap-2">
+              <span className="w-6 h-px bg-emerald-900"></span> Recommendations & Feedback
+            </h3>
+            <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4">
+              <p className="text-sm text-zinc-300 leading-relaxed whitespace-pre-wrap">
+                {viewingReportBooking.feedback || 'No user-facing feedback or recommendations recorded.'}
+              </p>
+            </div>
+          </div>
+
+          {/* Next Session */}
+          {(viewingReportBooking.nextSession && 
+            viewingReportBooking.nextSession.trim() !== '' && 
+            viewingReportBooking.nextSession.trim().toLowerCase() !== 'n/a' && 
+            viewingReportBooking.nextSession.trim().toLowerCase() !== 'none' && 
+            viewingReportBooking.nextSession.trim().toLowerCase() !== 'no' && 
+            viewingReportBooking.nextSession.trim().toLowerCase() !== 'null') && (
+            <div className="space-y-2">
+              <h3 className="text-sm font-bold text-emerald-400 uppercase tracking-wide flex items-center gap-2">
+                <span className="w-6 h-px bg-emerald-900"></span> Next Session Timeline
+              </h3>
+              <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4">
+                <p className="text-sm text-zinc-300">
+                  {viewingReportBooking.nextSession}
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div className="p-5 border-t border-zinc-800 bg-zinc-900/30 flex justify-end gap-3">
+          <button
+            onClick={() => setViewingReportBooking(null)}
+            className="px-4 py-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-300 font-bold rounded-xl transition-colors cursor-pointer text-sm"
+          >
+            Close
+          </button>
+          <button
+            onClick={() => downloadDiagnosticPDF(viewingReportBooking)}
+            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition-colors cursor-pointer text-sm flex items-center gap-2 shadow-lg shadow-emerald-900/20"
+          >
+            <Download className="w-4 h-4" />
+            Download PDF
+          </button>
+        </div>
+      </div>
+    </div>
+  )}
+  </div>
+  );
 }

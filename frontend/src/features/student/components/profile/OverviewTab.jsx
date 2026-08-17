@@ -213,14 +213,16 @@ export default function OverviewTab({
             <h4 className="text-base sm:text-lg font-bold tracking-tight text-[#0f172a]">Milestones</h4>
           </div>
           <div className="space-y-2.5">
-            {[
-              { label: 'Profile Created', done: !!profile.name },
-              { label: 'Email Verified', done: !!profile.email },
-              { label: 'Phone Linked', done: !!profile.phone },
-              { label: 'First Booking', done: stats.total > 0 },
-              { label: 'C-DAT Assessment', done: !!testProfile, condition: enableAptitude },
-              { label: '5 Sessions Goal', done: stats.completed >= 5 },
-            ].filter(a => a.condition !== false).map((a, i) => (
+            {(() => {
+              const isSet = (val) => val && String(val).trim() !== '' && String(val).trim().toLowerCase() !== 'undefined' && String(val).trim().toLowerCase() !== 'null';
+              return [
+                { label: 'Profile Created', done: isSet(profile.name) },
+                { label: 'Email Verified', done: isSet(profile.email) },
+                { label: 'Phone Linked', done: isSet(profile.phone) },
+                { label: 'First Booking', done: stats.total > 0 },
+                { label: 'C-DAT Assessment', done: !!testProfile, condition: enableAptitude },
+                { label: '5 Sessions Goal', done: stats.completed >= 5 },
+              ].filter(a => a.condition !== false).map((a, i) => (
               <div
                 key={i}
                 className={`flex items-center justify-between text-xs sm:text-sm px-3.5 py-2.5 rounded-xl border transition-colors ${a.done
@@ -228,12 +230,17 @@ export default function OverviewTab({
                     : 'bg-surface-50/40 border-surface-100 text-surface-400'
                   }`}
               >
-                <span className={`truncate ${a.done ? 'font-semibold text-[#0f172a]' : 'line-through text-surface-400'}`}>
+                <span className={`truncate ${a.done ? 'font-semibold text-[#0f172a]' : 'font-medium text-surface-500'}`}>
                   {a.label}
                 </span>
-                {a.done && <span className="text-xs font-bold text-[#00c9d6] bg-slate-900 px-2.5 py-0.5 rounded-full shadow-2xs border border-[#00c9d6]/30">Done</span>}
+                {a.done ? (
+                  <span className="text-[10px] sm:text-xs font-bold text-[#00c9d6] bg-slate-900 px-2.5 py-0.5 rounded-full shadow-2xs border border-[#00c9d6]/30">Done</span>
+                ) : (
+                  <span className="text-[10px] sm:text-xs font-bold text-surface-500 bg-surface-100 px-2.5 py-0.5 rounded-full border border-surface-200">Pending</span>
+                )}
               </div>
-            ))}
+            ))
+            })()}
           </div>
         </div>
       </div>
