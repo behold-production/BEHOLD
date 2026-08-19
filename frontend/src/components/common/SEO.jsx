@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet-async';
 
 const SEO = ({ title, description, canonicalUrl, schema, noindex }) => {
   const siteName = 'BEHOLD';
-  const fullTitle = title ? `${title} | ${siteName}` : siteName;
+  const fullTitle = title ? (title.includes(siteName) ? title : `${title} | ${siteName}`) : siteName;
 
   return (
     <Helmet>

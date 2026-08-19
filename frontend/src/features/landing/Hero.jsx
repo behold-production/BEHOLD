@@ -25,8 +25,8 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
   return (
     <>
       <SEO 
-        title="Psychological Care & Mentoring" 
-        description={subtitleText} 
+        title="BEHOLD | Professional Online Therapy & Psychological Counselling" 
+        description="A safe space for psychological counselling and mental wellbeing. Professional online therapy that helps you better understand yourself, navigate challenges, and grow with confidence. Mental Wellbeing Begins With Feeling Understood." 
         canonicalUrl={window.location.origin + "/"}
       />
       <section

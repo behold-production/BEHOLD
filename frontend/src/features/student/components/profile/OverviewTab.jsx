@@ -221,7 +221,6 @@ export default function OverviewTab({
                 { label: 'Phone Linked', done: isSet(profile.phone) },
                 { label: 'First Booking', done: stats.total > 0 },
                 { label: 'C-DAT Assessment', done: !!testProfile, condition: enableAptitude },
-                { label: '5 Sessions Goal', done: stats.completed >= 5 },
               ].filter(a => a.condition !== false).map((a, i) => (
               <div
                 key={i}
