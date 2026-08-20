@@ -1089,13 +1089,13 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         throw new Error(orderRes.message || 'Failed to create payment order');
       }
 
-      const { keyId, orderId, amount, currency } = orderRes.data;
+      const { keyId, orderId, amount: orderAmountPaise, currency } = orderRes.data;
 
       setPaymentStepText("Awaiting payment...");
 
       const options = {
         key: keyId || import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_THJcTWUaeHzOnn',
-        amount: amount,
+        amount: orderAmountPaise || orderRes.amount || Math.round(netTotal * 100),
         currency: currency || 'INR',
         name: "BEHOLD.",
         description: `${bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring'} Session (${bookingDuration === 30 ? '30 Mins' : '1 Hour'})`,

@@ -111,23 +111,8 @@ const PaymentController = {
       let calculatedGstAmount = 0;
       let calculatedDuration = '1 Hour (60 Mins)';
 
-      // Scenario 1: Direct amount provided (e.g. standard checkout payload)
-      if (amount !== undefined && amount !== null && amount !== '') {
-        amountInPaise = Number(amount);
-        if (isNaN(amountInPaise) || amountInPaise < 100) {
-          return res.status(400).json({
-            success: false,
-            message: 'Invalid amount. Minimum amount is 100 paise'
-          });
-        }
-        netTotal = amountInPaise / 100;
-        calculatedBaseFee = netTotal;
-        if (req.user && req.user.id) {
-          orderNotes.userId = req.user.id;
-        }
-      }
-      // Scenario 2: Booking details provided
-      else if (counsellorId && date && time && mode) {
+      // Scenario 1: Booking details provided (Session Booking) - ALWAYS takes precedence
+      if (counsellorId && date && time && mode) {
         // Validate booking details (availability, double booking, past date)
         const validation = await validateBookingDetails(
           counsellorId,
@@ -178,7 +163,7 @@ const PaymentController = {
           }
         }
         netTotal = Math.max(1, totalBeforeDiscount - appliedDiscount);
-        amountInPaise = netTotal * 100;
+        amountInPaise = Math.round(netTotal * 100); // 100 paise = ₹1, so ₹499 = 49900 paise
 
         if (amountInPaise < 100) {
           return res.status(400).json({
@@ -206,10 +191,33 @@ const PaymentController = {
           gstAmount: String(gstAmount),
           netTotal: String(netTotal)
         };
+      }
+      // Scenario 2: Direct amount provided (e.g. standalone payment checkout)
+      else if (amount !== undefined && amount !== null && amount !== '') {
+        const rawAmt = Number(amount);
+        if (isNaN(rawAmt) || rawAmt <= 0) {
+          return res.status(400).json({
+            success: false,
+            message: 'Invalid amount.'
+          });
+        }
+        // If amount is >= 100 (in paise), treat as paise
+        amountInPaise = rawAmt;
+        if (amountInPaise < 100) {
+          return res.status(400).json({
+            success: false,
+            message: 'Minimum amount is 100 paise (₹1)'
+          });
+        }
+        netTotal = amountInPaise / 100;
+        calculatedBaseFee = netTotal;
+        if (req.user && req.user.id) {
+          orderNotes.userId = req.user.id;
+        }
       } else {
         return res.status(400).json({
           success: false,
-          message: 'Either amount (in paise, >= 100) or complete booking details (counsellorId, date, time, mode) are required'
+          message: 'Either complete booking details (counsellorId, date, time, mode) or amount (in paise, >= 100) are required'
         });
       }
 
