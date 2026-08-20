@@ -3,12 +3,12 @@ import { Helmet } from 'react-helmet-async';
 
 const SITE_NAME = 'BEHOLD';
 const DEFAULT_TITLE = 'BEHOLD | Professional Online Therapy & Psychological Counselling';
-const DEFAULT_DESCRIPTION = 'A safe space for psychological counselling and mental wellbeing. Professional online therapy that helps you better understand yourself, navigate challenges, and grow with confidence. Mental Wellbeing Begins With Feeling Understood.';
+const DEFAULT_DESCRIPTION = 'A safe space for psychological counselling and mental wellbeing. Professional online therapy that helps you better understand yourself, navigate challenges, and grow with confidence.';
 const DEFAULT_KEYWORDS = 'BEHOLD, professional online therapy, psychological counselling, mental wellbeing, online therapy, clinical psychologist, mental health counselling, psychological consultation, online psychologist';
 const DEFAULT_OG_IMAGE = 'https://www.behold.co.in/og-image.png';
 const BASE_URL = 'https://www.behold.co.in';
 
-export default function SEO({
+export default function SEOHead({
   title,
   description = DEFAULT_DESCRIPTION,
   keywords = DEFAULT_KEYWORDS,
@@ -19,36 +19,22 @@ export default function SEO({
   modifiedTime,
   author,
   noIndex = false,
-  noindex = false,
-  schema,
   structuredData
 }) {
   const pageTitle = title ? (title.includes(SITE_NAME) ? title : `${title} | ${SITE_NAME}`) : DEFAULT_TITLE;
-  const shouldNoIndex = noIndex || noindex;
-  
-  let canonical = canonicalUrl;
-  if (!canonical && typeof window !== 'undefined') {
-    canonical = window.location.origin + window.location.pathname;
-  }
-  if (!canonical) {
-    canonical = BASE_URL;
-  } else if (!canonical.startsWith('http')) {
-    canonical = `${BASE_URL}${canonical.startsWith('/') ? '' : '/'}${canonical}`;
-  }
-
-  const activeSchema = structuredData || schema;
+  const canonical = canonicalUrl ? (canonicalUrl.startsWith('http') ? canonicalUrl : `${BASE_URL}${canonicalUrl.startsWith('/') ? '' : '/'}${canonicalUrl}`) : BASE_URL;
 
   return (
     <Helmet>
-      {/* Primary HTML Meta Tags */}
+      {/* Basic Metadata */}
       <title>{pageTitle}</title>
       <meta name="title" content={pageTitle} />
       <meta name="description" content={description} />
       <meta name="keywords" content={keywords} />
       {canonical && <link rel="canonical" href={canonical} />}
       
-      {/* Robots Indexing Directives */}
-      <meta name="robots" content={shouldNoIndex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'} />
+      {/* Robots indexing directive */}
+      <meta name="robots" content={noIndex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'} />
 
       {/* Open Graph / Facebook */}
       <meta property="og:type" content={ogType} />
@@ -67,15 +53,15 @@ export default function SEO({
       <meta name="twitter:image" content={ogImage} />
       <meta name="twitter:image:alt" content={pageTitle} />
 
-      {/* Article Specific Open Graph */}
+      {/* Article specific metadata if present */}
       {publishedTime && <meta property="article:published_time" content={publishedTime} />}
       {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
       {author && <meta property="article:author" content={author} />}
 
       {/* Structured Data (JSON-LD) */}
-      {activeSchema && (
+      {structuredData && (
         <script type="application/ld+json">
-          {JSON.stringify(activeSchema)}
+          {JSON.stringify(structuredData)}
         </script>
       )}
     </Helmet>

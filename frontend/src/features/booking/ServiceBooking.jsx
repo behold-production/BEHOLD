@@ -7,6 +7,7 @@ import { FileDown, X, ArrowLeft } from 'lucide-react';
 import { formatDateString } from '../../utils/dateFormatter';
 import toast from 'react-hot-toast';
 import { ScrollDot } from '../../components/common/BrandDot';
+import SEO from '../../components/common/SEO';
 
 const getInitials = (name) => {
     if (!name) return '';
@@ -340,6 +341,11 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-0 sm:p-4 bg-black/60 backdrop-blur-md overflow-y-auto overscroll-contain animate-backdrop-in">
+            <SEO 
+                title="Book a Session | Psychological Counselling & Career Mentoring"
+                description="Book an online, doorstep, or offline therapy session with certified clinical psychologists and career mentors on BEHOLD."
+                canonicalUrl="https://www.behold.co.in/booking"
+            />
             <div id="booking-modal-scroll" ref={scrollContainerRef} className={`relative w-full ${bookingStep === 'success' ? 'max-w-3xl' : 'max-w-7xl'} h-full sm:h-auto sm:max-h-[90vh] bg-white sm:rounded-2xl shadow-2xl overflow-y-auto overflow-x-hidden text-[#0f172a] text-left overscroll-contain animate-modal-in transition-all duration-300`}>
                 {/* Top Action Bar (Back & Close) */}
                 <div className="sticky top-0 z-30 flex items-center justify-between p-4 bg-white/90 backdrop-blur-md border-b border-surface-200">

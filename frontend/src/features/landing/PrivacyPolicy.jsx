@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import Navbar from '../../components/common/Navbar';
 import Footer from '../../components/common/Footer';
+import SEO from '../../components/common/SEO';
 
 const PrivacyPolicy = () => {
   useEffect(() => {
@@ -9,6 +10,11 @@ const PrivacyPolicy = () => {
 
   return (
     <div className="min-h-screen bg-[#F5F5F5] font-sans selection:bg-brand/30">
+      <SEO 
+        title="Privacy Policy | BEHOLD"
+        description="Learn how BEHOLD collects, uses, and protects your personal data, therapy session confidentiality, and privacy."
+        canonicalUrl="https://www.behold.co.in/privacy-policy"
+      />
       {/* Navbar spacer */}
       <div className="h-20 lg:h-24 bg-[#F5F5F5] w-full" />
       

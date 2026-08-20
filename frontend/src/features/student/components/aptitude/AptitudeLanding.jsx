@@ -18,14 +18,28 @@ export default function AptitudeLanding({ setView }) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const cdatSchema = {
+    "@context": "https://schema.org",
+    "@type": "EducationalOccupationalProgram",
+    "name": "C-DAT Differential Aptitude Assessment & Career Mapping",
+    "description": "Scientific aptitude testing mapped to natural strengths across numerical, verbal, and abstract reasoning for students and professionals.",
+    "provider": {
+      "@type": "Organization",
+      "name": "BEHOLD",
+      "url": "https://www.behold.co.in"
+    }
+  };
+
   return (
     <div 
       className="w-full min-h-screen pt-28 pb-20 text-surface-900 bg-transparent"
     >
       <SEO 
-        title="Scientific Aptitude Testing & Career Mapping" 
+        title="Scientific Aptitude Testing & Career Mapping (C-DAT)" 
         description="Our C-DAT assessment, developed in partnership with CIGI, maps your natural strengths across reasoning, language, and numerical ability."
+        keywords="C-DAT, aptitude test, career assessment, CIGI test, career mapping, career guidance India, student aptitude"
         canonicalUrl="https://www.behold.co.in/aptitude"
+        schema={cdatSchema}
       />
       <div className="max-w-6xl mx-auto px-6 sm:px-10 lg:px-12 flex flex-col items-center text-center">
         

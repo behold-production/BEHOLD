@@ -86,12 +86,27 @@ export default function FaqsPage() {
     return true;
   });
 
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.slice(0, 10).map((f) => ({
+      "@type": "Question",
+      "name": f.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": f.answer
+      }
+    }))
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-slate-50/50 text-slate-900 selection:bg-[#00c9d6] selection:text-slate-950 font-sans">
       <SEO 
-        title="Frequently Asked Questions & Support" 
+        title="Frequently Asked Questions & Support | Online Therapy & Counselling" 
         description="Find answers to common questions about BEHOLD's professional online therapy, career aptitude assessments, and mental wellbeing support."
+        keywords="therapy faqs, online counselling questions, psychologist consultation FAQ, mental health support answers, BEHOLD faqs"
         canonicalUrl="https://www.behold.co.in/faqs"
+        schema={faqSchema}
       />
       <Navbar />
 

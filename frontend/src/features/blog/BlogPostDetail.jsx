@@ -146,7 +146,12 @@ const BlogPostDetail = () => {
         title={post.title} 
         description={post.excerpt || (post.content?.substring(0, 150)?.replace(/<[^>]+>/g, '') + '...')} 
         keywords={[post.primaryKeyword, ...(post.secondaryKeywords || []), ...(post.tags || [])].filter(Boolean).join(', ')}
-        canonicalUrl={typeof window !== 'undefined' ? window.location.href : undefined}
+        canonicalUrl={typeof window !== 'undefined' ? window.location.href : `https://www.behold.co.in/blog/${post.slug}`}
+        ogImage={post.coverImage ? getImageUrl(post.coverImage) : undefined}
+        ogType="article"
+        publishedTime={post.createdAt || post.date ? new Date(post.createdAt || post.date).toISOString() : undefined}
+        modifiedTime={post.updatedAt || post.createdAt || post.date ? new Date(post.updatedAt || post.createdAt || post.date).toISOString() : undefined}
+        author={post.author?.name || post.authorName || 'BEHOLD Editorial Team'}
         schema={schema}
       />
       <div className="min-h-screen flex flex-col text-slate-900 pt-28 pb-20 selection:bg-[#0f172a] selection:text-[#00c9d6] relative overflow-hidden select-none">

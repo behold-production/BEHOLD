@@ -1,6 +1,9 @@
 User-agent: *
 Allow: /
-Disallow: /admin
+Disallow: /admin/
+Disallow: /admin-login
+Disallow: /counsellor/dashboard
+Disallow: /profile
 Disallow: /api/
 
-Sitemap: https://behold.co.in/sitemap.xml
+Sitemap: https://www.behold.co.in/sitemap.xml

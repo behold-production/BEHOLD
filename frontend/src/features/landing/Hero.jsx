@@ -22,12 +22,46 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
     }
   };
 
+  const homeSchema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://www.behold.co.in/#organization",
+        "name": "BEHOLD",
+        "url": "https://www.behold.co.in",
+        "logo": "https://www.behold.co.in/favicon.png",
+        "description": "A personal development and psychological counselling ecosystem providing compassionate online therapy and career guidance.",
+        "sameAs": [
+          "https://www.instagram.com/behold.wellbeing",
+          "https://www.linkedin.com/company/behold-aspire"
+        ]
+      },
+      {
+        "@type": "MedicalBusiness",
+        "@id": "https://www.behold.co.in/#medicalbusiness",
+        "name": "BEHOLD Psychological Counselling & Therapy",
+        "url": "https://www.behold.co.in",
+        "image": "https://www.behold.co.in/og-image.png",
+        "description": "A safe space for psychological counselling, emotional resilience, and mental wellbeing with certified psychologists.",
+        "medicalSpecialty": "Psychiatric",
+        "priceRange": "$$",
+        "availableService": {
+          "@type": "MedicalTherapy",
+          "name": "Online Psychological Counselling",
+          "description": "Evidence-based mental health counselling and therapy sessions."
+        }
+      }
+    ]
+  };
+
   return (
     <>
       <SEO 
         title="BEHOLD | Professional Online Therapy & Psychological Counselling" 
         description="A safe space for psychological counselling and mental wellbeing. Professional online therapy that helps you better understand yourself, navigate challenges, and grow with confidence. Mental Wellbeing Begins With Feeling Understood." 
-        canonicalUrl={window.location.origin + "/"}
+        canonicalUrl="https://www.behold.co.in/"
+        schema={homeSchema}
       />
       <section
       id="home"

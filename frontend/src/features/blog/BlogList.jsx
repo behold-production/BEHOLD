@@ -78,12 +78,30 @@ const BlogList = () => {
     return Array.from({ length: end - start + 1 }, (_, i) => start + i);
   };
 
+  const blogListSchema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "BEHOLD Mental Wellbeing & Psychology Articles",
+    "description": "Explore thoughtful, evidence-informed insights on mental wellbeing, therapy, relationships, emotional health, parenting, and personal growth.",
+    "url": "https://www.behold.co.in/blog",
+    "publisher": {
+      "@type": "Organization",
+      "name": "BEHOLD",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.behold.co.in/favicon.png"
+      }
+    }
+  };
+
   return (
     <>
       <SEO
-        title="Insights & Research"
+        title="Insights & Research | Mental Wellbeing & Psychology Blog"
         description="Explore thoughtful, evidence-informed insights on mental wellbeing, therapy, relationships, emotional health, parenting, and personal growth."
-        canonicalUrl={typeof window !== 'undefined' ? window.location.origin + '/blog' : undefined}
+        keywords="psychology blog, mental health articles, therapy insights, emotional wellbeing, parenting guidance, self care tips, BEHOLD blog"
+        canonicalUrl="https://www.behold.co.in/blog"
+        schema={blogListSchema}
       />
       <div className="min-h-screen flex flex-col text-slate-900 pt-20 pb-16 relative overflow-hidden select-none">
 
